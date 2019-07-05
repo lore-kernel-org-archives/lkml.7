@@ -2,143 +2,103 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAD0C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F60C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA98216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2EA216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nQ4gNPxk"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G3MgsvQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbfGELJX (ORCPT
+        id S1728102AbfGELJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:09:23 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41952 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfGELJW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:09:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id w25so18310569ioc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 04:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GveihlYZs0J+F63zH48aj5g/7oHU0pJxNq9JZx6zqiE=;
-        b=nQ4gNPxk3/R7IVfzsEbOSzY7Sn8pZD/5ZB/GTPJt5IAPqD5xUfxRzcw4AmsJ+OaowW
-         DGsBzzqNMp4MBfvdOCS2PU8RQ61UvtYN5/Hirg6okDeKGQusapYtlZoB10NyGSIa+SiH
-         U/cVsvuG//b1KUQ0VaIkxx2IxHQoRWt+SAelK0foNqWwdtXh7yRncOtZDFkL5Xq9Knyi
-         LAVcp1wmpZqBXBLy0ZTCTVaRMQlEmxJhpHohxJV8QbMc+YKPo98pcsM9natWjQnZp9Cc
-         CQJAoAwv+BywGt9gRE4McZT4SCbVTXiZMNoYS5dv2jdsJ8WniX5LLcsTpCdGrzJdMTy3
-         UBKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GveihlYZs0J+F63zH48aj5g/7oHU0pJxNq9JZx6zqiE=;
-        b=TPQ3zuhC+5WjnRn1uXl4ZpSOS4eD9sRcLfx6QJUCpMRryQUT7hhVuklm5uSfkaygkY
-         /NgZelK1A9SyktDHW04Vb5ahuHdpbvmlSmzYLeAYKQvjK2pBt3sp8xSGkvTLls19+zkL
-         r7KD6XOKJiag8Gbl8iwr4kL1K4BWnMJ+QNIy/dr/sM2x2gLeiRUEjRysSfJCIg3HCZaf
-         TyaNgXfQNW78/E+HXbrx/qUzZ69j7egGg4E2jEt7WWkV8JVyQ4gOD7nkCwuHHL9sP2Ef
-         G2mG+HDdXCF2QW5Vdhs2sC9N3Wb0eZU+fCbzHFOycYkIjgB6ZlPXu/uqdd2snGQq/zRS
-         fZKA==
-X-Gm-Message-State: APjAAAX/hoJq9hg8XaRWAzhO1+kOsOP2Q+5yyQsIXI5N9mj4bIU/dpzd
-        /Q6GHFsdaeluEZ7J8GQwKXbfDEOf1OlXwdYnYzNbOg==
-X-Google-Smtp-Source: APXvYqzieDKax8cSZMjUhPSJts36HOWhQYKiRDMAb+mh3A4BqOLHGhh0uiJJQDQlUoOJne5M+hvtW4l0ZUQUVoCzviE=
-X-Received: by 2002:a5d:80d6:: with SMTP id h22mr3460690ior.231.1562324961640;
- Fri, 05 Jul 2019 04:09:21 -0700 (PDT)
+        Fri, 5 Jul 2019 07:09:56 -0400
+Received: from ozlabs.org ([203.11.71.1]:49163 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbfGELJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:09:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45gBvN2X9Rz9sNf;
+        Fri,  5 Jul 2019 21:09:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562324993;
+        bh=OXtbk1b4fFm1R1JUKIm0/9hTWgjDEdLQvvS+zollgOU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G3MgsvQyAmYt5urUQ6AzpSDvoKudKW3EWi6fUqBodclkx5xpU/skwj/XwZf29RhnY
+         uAx1dqZp+S8GjBd+GLGf+BhkboqlUqvZS2MiLxsRmQ+B6K1C73U3vk+FZ4M9rhOIYg
+         aaLvRNEuYNpLqWbr/sxB6qWVAVFQlZ185hmyqs/pi1olhrjywUoz2szLQq1jWwvouq
+         wp0Fle6SyxWv/BAqUTdH4QCp6AAslhlDrF1buqdHcohe0kMnH9v1lZhcJzPg6shII9
+         DkC1KV/cUqTwYccq0r51cPTG9VDeCIe5WXzdkHG3tsq5zdYBb7HQiukikd+xpapgPJ
+         xEmbcsgOjVjRw==
+Date:   Fri, 5 Jul 2019 21:09:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yuval Shaia <yuval.shaia@oracle.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jakub Staron <jstaron@google.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: linux-next: build failure after merge of the nvdimm tree
+Message-ID: <20190705210950.6b77ec77@canb.auug.org.au>
+In-Reply-To: <616554090.39241752.1562316343431.JavaMail.zimbra@redhat.com>
+References: <20190705172025.46abf71e@canb.auug.org.au>
+        <616554090.39241752.1562316343431.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-References: <0000000000005bf6c3058cde49a7@google.com> <8755905.1UUJr7qOyo@kreacher>
- <CACT4Y+awzZOSAseosiUDvs_zk7hFRuQrrr0LjRmVwesVbF_+aQ@mail.gmail.com>
- <20190705104152.wniaje2u5d77iaoa@vireshk-i7> <20190705105442.kpvvyxakpa6mrxlu@vireshk-i7>
-In-Reply-To: <20190705105442.kpvvyxakpa6mrxlu@vireshk-i7>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 5 Jul 2019 13:09:08 +0200
-Message-ID: <CACT4Y+Y-_F03jqYz1swzpsQRKB3Y-tGZWFOfjKfYY7h9G5psMA@mail.gmail.com>
-Subject: Re: linux-next boot error: WARNING in corrupted
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        syzbot <syzbot+de771ae9390dffed7266@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/gp22g0z1_Tgphjq1B8VeR1e"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 12:54 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 05-07-19, 16:11, Viresh Kumar wrote:
-> > This fixes it for me (after faking the failure). @Rafael this needs to
-> > be merged to the top commit:
-> >
-> > 0d4c2a013b32 cpufreq: Add QoS requests for userspace constraints
->
-> @Rafael: I have sent V7 of this patch now after merging below diff
-> (and improving it further). Thanks.
+--Sig_/gp22g0z1_Tgphjq1B8VeR1e
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Please include:
+Hi Pankaj,
 
-Tested-by: syzbot+de771ae9390dffed7266@syzkaller.appspotmail.com
-
-into the commit, or it will be messy to resolve this bug later.
-
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index 13c2f119cc0c..5eecd54195a9 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -1228,12 +1228,6 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
-> >                 goto err_min_qos_notifier;
-> >         }
-> >
-> > -       policy->min_freq_req = kzalloc(2 * sizeof(*policy->min_freq_req),
-> > -                                      GFP_KERNEL);
-> > -       if (!policy->min_freq_req)
-> > -               goto err_max_qos_notifier;
-> > -
-> > -       policy->max_freq_req = policy->min_freq_req + 1;
-> >         INIT_LIST_HEAD(&policy->policy_list);
-> >         init_rwsem(&policy->rwsem);
-> >         spin_lock_init(&policy->transition_lock);
-> > @@ -1244,9 +1238,6 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
-> >         policy->cpu = cpu;
-> >         return policy;
-> >
-> > -err_max_qos_notifier:
-> > -       dev_pm_qos_remove_notifier(dev, &policy->nb_max,
-> > -                                  DEV_PM_QOS_MAX_FREQUENCY);
-> >  err_min_qos_notifier:
-> >         dev_pm_qos_remove_notifier(dev, &policy->nb_min,
-> >                                    DEV_PM_QOS_MIN_FREQUENCY);
-> > @@ -1370,6 +1361,13 @@ static int cpufreq_online(unsigned int cpu)
-> >                         add_cpu_dev_symlink(policy, j);
-> >                 }
-> >
-> > +               policy->min_freq_req = kzalloc(2 * sizeof(*policy->min_freq_req),
-> > +                                              GFP_KERNEL);
-> > +               if (!policy->min_freq_req)
-> > +                       goto out_destroy_policy;
-> > +
-> > +               policy->max_freq_req = policy->min_freq_req + 1;
-> > +
-> >                 ret = dev_pm_qos_add_request(dev, policy->min_freq_req,
-> >                                              DEV_PM_QOS_MIN_FREQUENCY,
-> >                                              policy->min);
+On Fri, 5 Jul 2019 04:45:43 -0400 (EDT) Pankaj Gupta <pagupta@redhat.com> w=
+rote:
 >
-> --
-> viresh
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20190705105442.kpvvyxakpa6mrxlu%40vireshk-i7.
-> For more options, visit https://groups.google.com/d/optout.
+> Thank you for the report.
+
+That's what I am here for :-)
+
+> Can we apply below patch [1] on top to complete linux-next build for toda=
+y.
+> I have tested this locally.
+
+Its a bit of a pain to go back and linux-next is done for today (after
+13 hours :-)).  You really should do a proper fix patch and get it
+added to the nvdimm tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gp22g0z1_Tgphjq1B8VeR1e
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0fL/4ACgkQAVBC80lX
+0GyG2gf/Xe6VyKK1naUX+/PKN76T06iz58l9CRpjhS40BUeEYwwfWTADN9z/Th2S
+xc1bWUeSIfpOn5mtxGrf0x85QHizUh9Nxt4k0h9lDulpR6/y8DS6ECHf5/X5YwTG
+aIBlqDnDeKARR3/K6yfYW8O9KEKVo9u+tj7F62hrg9tPnVv1AG6jLak8ul4dMM1i
+9Mcv5jFhzpsrBNl01chTayDvdrXD5q3ClwKLJuIDiPscEAIf0/dNog1mPmOg7ivx
+aLE0+4IoSY9T+yXHG9xdM2OED1HV+ohwXRY8Rvl7sX+csGgAPjDRYhvAmMSvIi+B
+A3y/T4Mrwxr0bl69Wvm1LJWS3re9Xw==
+=JDAT
+-----END PGP SIGNATURE-----
+
+--Sig_/gp22g0z1_Tgphjq1B8VeR1e--
