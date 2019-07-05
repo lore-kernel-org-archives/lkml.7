@@ -2,137 +2,156 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CC8C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20998C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3317B2082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E836E2082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:13:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="paysDx96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbfGEMJu (ORCPT
+        id S1728425AbfGEMNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 08:09:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47170 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727700AbfGEMJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:09:49 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63664C057F3C;
-        Fri,  5 Jul 2019 12:09:41 +0000 (UTC)
-Received: from [10.36.116.95] (ovpn-116-95.ams2.redhat.com [10.36.116.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 366B88227E;
-        Fri,  5 Jul 2019 12:09:33 +0000 (UTC)
-Subject: Re: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
- update iova list
-To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>
-References: <20190626151248.11776-1-shameerali.kolothum.thodi@huawei.com>
- <20190626151248.11776-3-shameerali.kolothum.thodi@huawei.com>
- <20190703143427.2d63c15f@x1.home>
- <5FC3163CFD30C246ABAA99954A238FA83F2DDB68@lhreml524-mbs.china.huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <d70c59ec-e837-7697-acb1-c2b5027570ee@redhat.com>
-Date:   Fri, 5 Jul 2019 14:09:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 5 Jul 2019 08:13:01 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38145 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfGEMNB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 08:13:01 -0400
+Received: by mail-io1-f68.google.com with SMTP id j6so18702278ioa.5
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 05:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZjSi1phh9bs9cO7L1xnR1XrPIATfNuDiH5azONYl06E=;
+        b=paysDx96hoCWePm5oMMcsaQJqv9GUq2HdAxau0cn7Ksk6cmgX/E/PlM5wdfq5dRaA0
+         ZqfcyHQ2vyGLupa/17Bi628ZopXct62bX+iu86AaaOSDWPB/eCU7I4pgc0pcEAFbZsme
+         9MaeRHSIqr4CSKAdIBG0a1ARSdeKfhKCMgejPLo7sfBYsywQ+OlqtkK3IbyRCI6hrcX1
+         cQTHU7JFEA2LX6BzxxnD00D2n6KC6CuXMACz8oPaLF9i5f6vQAww+HkeYI/SosdEfErW
+         Vv0CMPvxnRXwC8pMxyNZBRGISsqrOM2cgnoMEU8AQld0WjodU460hcpGJVlGx3fL+AR+
+         QaFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZjSi1phh9bs9cO7L1xnR1XrPIATfNuDiH5azONYl06E=;
+        b=erxijEf1FxYMvNeCKTPGCE7bT0/0OLm94i1BRRkFKpbWHjHI6gGHbkU24threoa50L
+         A+EtUU9xLLVaI8qYkVDTXnoIbb675OnLYRnzzzgwIeWKjx2Zs/iL5W1A5XPOOvoTd+9W
+         YwquzawOhe+2UAzYK1+BuIjaEQBW1XJfYpCktUQGoNFtISg1f87sjYQCidSgoKZyTOoT
+         7VQioIJwUr2q+KVsE1QgzCC0U4p8wgIP1d6/1iATj2j8Bbg04ukRZOokedcO2wlBITfe
+         tFC8scf7dPcZuC7peQLttW4KOfJSuzbhIAzk1MVKeICfbOC6ZZV6wgiXlasH2MTE3/Gb
+         OrOw==
+X-Gm-Message-State: APjAAAWwg/OH41x5yRlvcCDdOISJL5jD1qIdDLl+mvbYsKn/zgIjQk24
+        Be8n7PxmfBLZ8nLYtWvDo9gr7ueidz1rB0Ag7QPrUQ==
+X-Google-Smtp-Source: APXvYqz7ZT1v+Nqu10I2/ufgDaj6I6GvF4VP462R+l2op+FhKm5UWHNcYFV/bqFT/3p6G+nQ9qnf4pMo9wkiq6tiTNg=
+X-Received: by 2002:a02:c7c9:: with SMTP id s9mr4012381jao.82.1562328780417;
+ Fri, 05 Jul 2019 05:13:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5FC3163CFD30C246ABAA99954A238FA83F2DDB68@lhreml524-mbs.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 05 Jul 2019 12:09:49 +0000 (UTC)
+References: <0000000000004c2416058c594b30@google.com> <24282.1562074644@warthog.procyon.org.uk>
+In-Reply-To: <24282.1562074644@warthog.procyon.org.uk>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 5 Jul 2019 14:12:48 +0200
+Message-ID: <CACT4Y+YjdV8CqX5=PzKsHnLsJOzsydqiq3igYDm_=nSdmFo2YQ@mail.gmail.com>
+Subject: Re: kernel BUG at net/rxrpc/local_object.c:LINE!
+To:     David Howells <dhowells@redhat.com>
+Cc:     syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shameer,
+,On Tue, Jul 2, 2019 at 3:37 PM David Howells <dhowells@redhat.com> wrote:
+>
+> syzbot <syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com> wrote:
+>
+> I *think* the reproducer boils down to the attached, but I can't get syzkaller
+> to work and the attached sample does not cause the oops to occur.  Can you try
+> it in your environment?
+>
+> > The bug was bisected to:
+> >
+> > commit 46894a13599a977ac35411b536fb3e0b2feefa95
+> > Author: David Howells <dhowells@redhat.com>
+> > Date:   Thu Oct 4 08:32:28 2018 +0000
+> >
+> >     rxrpc: Use IPv4 addresses throught the IPv6
+>
+> This might not be the correct bisection point.  If you look at the attached
+> sample, you're mixing AF_INET and AF_INET6.  If you try AF_INET throughout,
+> that might get a different point.  On the other hand, since you've bound the
+> socket, the AF_INET6 passed to socket() should be ignored.
+>
+> David
+> ---
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <string.h>
+> #include <unistd.h>
+> #include <sys/socket.h>
+> #include <arpa/inet.h>
+> #include <linux/rxrpc.h>
+>
+> static const unsigned char inet4_addr[4] = {
+>         0xe0, 0x00, 0x00, 0x01
+> };
+>
+> int main(void)
+> {
+>         struct sockaddr_rxrpc srx;
+>         int fd;
+>
+>         memset(&srx, 0, sizeof(srx));
+>         srx.srx_family                  = AF_RXRPC;
+>         srx.srx_service                 = 0;
+>         srx.transport_type              = AF_INET;
+>         srx.transport_len               = sizeof(srx.transport.sin);
+>         srx.transport.sin.sin_family    = AF_INET;
+>         srx.transport.sin.sin_port      = htons(0x4e21);
+>         memcpy(&srx.transport.sin.sin_addr, inet4_addr, 4);
+>
+>         fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET6);
+>         if (fd == -1) {
+>                 perror("socket");
+>                 exit(1);
+>         }
+>
+>         if (bind(fd, (struct sockaddr *)&srx, sizeof(srx)) == -1) {
+>                 perror("bind");
+>                 exit(1);
+>         }
+>
+>         sleep(20);
+>
+>         // Whilst sleeping, hit with:
+>         // echo -e '\0\0\0\0\0\0\0\0' | ncat -4u --send-only 224.0.0.1 20001
+>
+>         return 0;
+> }
 
-On 7/4/19 2:51 PM, Shameerali Kolothum Thodi wrote:
-> 
-> 
->> -----Original Message-----
->> From: kvm-owner@vger.kernel.org [mailto:kvm-owner@vger.kernel.org] On
->> Behalf Of Alex Williamson
->> Sent: 03 July 2019 21:34
->> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
->> Cc: eric.auger@redhat.com; pmorel@linux.vnet.ibm.com;
->> kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
->> iommu@lists.linux-foundation.org; Linuxarm <linuxarm@huawei.com>; John
->> Garry <john.garry@huawei.com>; xuwei (O) <xuwei5@huawei.com>;
->> kevin.tian@intel.com
->> Subject: Re: [PATCH v7 2/6] vfio/type1: Check reserve region conflict and
->> update iova list
->>
->> On Wed, 26 Jun 2019 16:12:44 +0100
->> Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
->>
->>> This retrieves the reserved regions associated with dev group and
->>> checks for conflicts with any existing dma mappings. Also update
->>> the iova list excluding the reserved regions.
->>>
->>> Reserved regions with type IOMMU_RESV_DIRECT_RELAXABLE are
->>> excluded from above checks as they are considered as directly
->>> mapped regions which are known to be relaxable.
->>>
->>> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
->>> ---
->>>  drivers/vfio/vfio_iommu_type1.c | 96
->> +++++++++++++++++++++++++++++++++
->>>  1 file changed, 96 insertions(+)
->>>
->>> diff --git a/drivers/vfio/vfio_iommu_type1.c
->> b/drivers/vfio/vfio_iommu_type1.c
->>> index 970d1ec06aed..b6bfdfa16c33 100644
->>> --- a/drivers/vfio/vfio_iommu_type1.c
->>> +++ b/drivers/vfio/vfio_iommu_type1.c
->>> @@ -1559,6 +1641,7 @@ static int vfio_iommu_type1_attach_group(void
->> *iommu_data,
->>>  	phys_addr_t resv_msi_base;
->>>  	struct iommu_domain_geometry geo;
->>>  	LIST_HEAD(iova_copy);
->>> +	LIST_HEAD(group_resv_regions);
->>>
->>>  	mutex_lock(&iommu->lock);
->>>
->>> @@ -1644,6 +1727,13 @@ static int vfio_iommu_type1_attach_group(void
->> *iommu_data,
->>>  		goto out_detach;
->>>  	}
->>>
->>> +	iommu_get_group_resv_regions(iommu_group, &group_resv_regions);
->>
->> This can fail and should have an error case.  I assume we'd fail the
->> group attach on failure.  Thanks,
-> 
-> Right. I will add the check. Do you think we should do the same in vfio_iommu_has_sw_msi()
-> as well? (In fact, it looks like iommu_get_group_resv_regions() ret is not checked anywhere in
-> kernel). 
+Hi David,
 
-I think the can be the topic of another series. I just noticed that in
-iommu_insert_resv_region(), which is recursive in case ot merge, I
-failed to propagate returned value or recursive calls. This also needs
-to be fixed. I volunteer to work on those changes if you prefer. Just
-let me know.
+I can't re-reproduce it locally in qemu either. Though, syzbot managed
+to re-reproduce it reliably during bisection (maybe there is some
+difference in hardware and as the result the injected ethernet packet
+would need some different values). Let's try to ask it again to make
+sure:
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+master
 
-Thanks
-
-Eric
-> 
-> Thanks,
-> Shameer
-> 
-> 
+Re bisection, I don't know if there are some more subtle things as
+play (you are in the better position to judge that), but bisection log
+looks good, it tracked the target crash throughout and wasn't
+distracted by any unrelated bugs, etc. So I don't see any obvious
+reasons to not trust it.
