@@ -3,252 +3,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E41C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72A6C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BD2218BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6573218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfGENvs (ORCPT
+        id S1728606AbfGENwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:51:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33469 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfGENvr (ORCPT
+        Fri, 5 Jul 2019 09:52:03 -0400
+Received: from mail02.asahi-net.or.jp ([202.224.55.14]:34326 "EHLO
+        mail02.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727940AbfGENwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:51:47 -0400
-Received: from mail-pf1-f198.google.com ([209.85.210.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hjOcq-0002Ow-4K
-        for linux-kernel@vger.kernel.org; Fri, 05 Jul 2019 13:51:44 +0000
-Received: by mail-pf1-f198.google.com with SMTP id 145so5614398pfv.18
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 06:51:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=YNguRT3VdYqQwZjKNQS52cI6hAGLZ3x6rPPYR/rKEKA=;
-        b=LqvUVg7qS2guKeRbOeX06anBhWKRxf4Gbt/Qytt4qjRzsLYcsz/IOOJ6mPaG/s3/xA
-         M/Shsa/lheullpVd2VdBOI/9GVEr28Vhaw57WkSRKO1e4mUq0NE37gwBniaG2MlKEVyl
-         fBaeYzME/P68eJuB2DC53a2p0G1BnDhhboVxfAiRtMTzJUylkDR6boX/A5ShiKKgm684
-         3dtN7pZHaiuz8S+84K6ViLpRBNPP+FV4sWQBObqiIOXBR1LxuZY8KsqrpAYe1GlyAFCM
-         oPqRx4a2UOBypT4RykN8GeNdOREv0nd35ocmSJ/uqa0MOK5Y45ROHVB9RU9L3GaPqqLh
-         KVaA==
-X-Gm-Message-State: APjAAAViwYNsOwbKIDwQhdqSpNiSAvqIltK5tRB6ZTs3KF6nqZYGSV3t
-        pLP/OyU2PT28+jEdXi2NbpXpPPw7TK+oO2ZK38WKCSBnnS5L/JKlzOOSxloQK3DEvZ3tH5Oew+n
-        +5rhQVQD+DLAR5EWXXD4XEWzTqCnUzxD8IeOpAazaWA==
-X-Received: by 2002:a63:6b07:: with SMTP id g7mr5899665pgc.325.1562334702786;
-        Fri, 05 Jul 2019 06:51:42 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz1NYy+OXhkmgOsgIAs7QkwNkkbjEIdrxYNXrmiO+nSeuTs0BUjocoDARsdAgBemJLpGveq5g==
-X-Received: by 2002:a63:6b07:: with SMTP id g7mr5899635pgc.325.1562334702413;
-        Fri, 05 Jul 2019 06:51:42 -0700 (PDT)
-Received: from 2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net (2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net. [2001:b011:380f:3511:154d:4126:51e3:28cb])
-        by smtp.gmail.com with ESMTPSA id a25sm8766164pfn.1.2019.07.05.06.51.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 06:51:41 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
- wakeup from D0
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <2067449.jKPth8Qelp@kreacher>
-Date:   Fri, 5 Jul 2019 21:51:39 +0800
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Content-Transfer-Encoding: 8bit
-Message-Id: <3EF5C3B9-F7D0-49C3-9CC0-88DDDDAF4616@canonical.com>
-References: <20190522181157.GC79339@google.com>
- <20190605115724.GE84290@google.com>
- <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
- <2067449.jKPth8Qelp@kreacher>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Fri, 5 Jul 2019 09:52:03 -0400
+Received: from h61-195-96-97.vps.ablenet.jp (h61-195-96-97.ablenetvps.ne.jp [61.195.96.97])
+        (Authenticated sender: PQ4Y-STU)
+        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id B5C37498AF;
+        Fri,  5 Jul 2019 22:51:58 +0900 (JST)
+Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
+        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 43A79240085;
+        Fri,  5 Jul 2019 22:51:56 +0900 (JST)
+Date:   Fri, 05 Jul 2019 22:51:55 +0900
+Message-ID: <87a7ds4mis.wl-ysato@users.sourceforge.jp>
+From:   Yoshinori Sato <ysato@users.sourceforge.jp>
+To:     Rich Felker <dalias@libc.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] remove arch/sh?
+In-Reply-To: <20190626153820.GP1506@brightrain.aerifal.cx>
+References: <20190625085616.GA32399@lst.de>
+        <ccfa78f3-35c2-1d26-98b5-b21a76b90e1e@physik.fu-berlin.de>
+        <20190625112146.GA9580@angband.pl>
+        <401b12c0-d175-2720-d26c-b96ce3b28c71@physik.fu-berlin.de>
+        <CAK8P3a3irwwwCQ_kPh5BTg-jGGbJOj=3fhVrTDBUZgH1V7bpFQ@mail.gmail.com>
+        <20190625142832.GD1506@brightrain.aerifal.cx>
+        <CAK8P3a0j_9fzZxhxqCMHfoJ5DdZpHFvANEPqs1pbP23TCei6ng@mail.gmail.com>
+        <87tvccr3kv.wl-ysato@users.sourceforge.jp>
+        <20190626153820.GP1506@brightrain.aerifal.cx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/25.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 17:39, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+On Thu, 27 Jun 2019 00:38:21 +0900,
+Rich Felker wrote:
+> 
+> On Wed, Jun 26, 2019 at 08:25:20PM +0900, Yoshinori Sato wrote:
+> > On Wed, 26 Jun 2019 00:48:09 +0900,
+> > Arnd Bergmann wrote:
+> > > 
+> > > On Tue, Jun 25, 2019 at 4:28 PM Rich Felker <dalias@libc.org> wrote:
+> > > > On Tue, Jun 25, 2019 at 02:50:01PM +0200, Arnd Bergmann wrote:
+> > > > > don't build, or are incomplete and not worked on for a long
+> > > > > time, compared to the bits that are known to work and that someone
+> > > > > is still using or at least playing with.
+> > > > > I guess a lot of the SoCs that have no board support other than
+> > > > > the Hitachi/Renesas reference platform can go away too, as any products
+> > > > > based on those boards have long stopped updating their kernels.
+> > > >
+> > > > My intent here was always, after getting device tree theoretically
+> > > > working for some reasonable subset of socs/boards, drop the rest and
+> > > > add them back as dts files (possibly plus some small drivers) only if
+> > > > there's demand/complaint about regression.
+> > > 
+> > > Do you still think that this is a likely scenario for the future though?
+> > > 
+> > > If nobody's actively working on the DT support for the old chips and
+> > > this is unlikely to change soon, removing the known-broken bits earlier
+> > > should at least make it easier to keep maintaining the working bits
+> > > afterwards.
+> > > 
+> > > FWIW, I went through the SH2, SH2A and SH3 based boards that
+> > > are supported in the kernel and found almost all of them to
+> > > be just reference platforms, with no actual product ever merged.
+> > > IIRC the idea back then was that users would supply their
+> > > own board files as an add-on patch, but I would consider all the
+> > > ones that did to be obsolete now.
+> > > 
+> > > HP Jornada 6xx is the main machine that was once supported, but
+> > > given that according to the defconfig file it only comes with 4MB
+> > > of RAM, it is unlikely to still boot any 5.x kernel, let alone user
+> > > space (wikipedia claims there were models with 16MB of RAM,
+> > > but that is still not a lot these days).
+> > > 
+> > > "Magicpanel" was another product that is supported in theory, but
+> > > the google search showed the 2007 patch for the required
+> > > flash storage driver that was never merged.
+> > > 
+> > > Maybe everything but J2 and SH4(a) can just get retired?
+> > > 
+> > >      Arnd
+> > 
+> > I also have some boards, so it's possible to rewrite more.
+> > I can not rewrite the target I do not have, so I think that
+> > there is nothing but to retire.
+> 
+> To clarify, are you agreeing with Arnd's suggestion to retire/remove
+> everything but jcore and sh4[a]?
+> 
+> Rich
 
-> On Friday, July 5, 2019 9:02:01 AM CEST Kai-Heng Feng wrote:
->> at 19:57, Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->>> On Mon, May 27, 2019 at 11:57:47AM -0500, Bjorn Helgaas wrote:
->>>> On Thu, May 23, 2019 at 12:39:23PM +0800, Kai-Heng Feng wrote:
->>>>> at 04:52, Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>>>> On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
->>>>>>> On Wed, 22 May 2019, Bjorn Helgaas wrote:
->>>>>>>> On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
->>>>>>>>>> On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org>
->>>>>>>>>> wrote:
->>>>>>>>>> On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
->>>>>>>>>>> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>>>>>>>>>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
->>>>>>>>>>>>> There's an xHC device that doesn't wake when
->>>>>>>>>>>>> a USB device gets plugged
->>>>>>>>>>>>> to its USB port. The driver's own runtime
->>>>>>>>>>>>> suspend callback was called,
->>>>>>>>>>>>> PME signaling was enabled, but it stays at PCI D0.
->>>>>>>>
->>>>>>>>>> ...
->>>>>>>>>> And I guess this patch basically means we wouldn't call
->>>>>>>>>> the driver's suspend callback if we're merely going to
->>>>>>>>>> stay at D0, so the driver would have no idea anything
->>>>>>>>>> happened.  That might match Documentation/power/pci.txt
->>>>>>>>>> better, because it suggests that the suspend callback is
->>>>>>>>>> related to putting a device in a low-power state, and D0
->>>>>>>>>> is not a low-power state.
->>>>>>>>>
->>>>>>>>> Yes, the patch is to let the device stay at D0 and don’t run
->>>>>>>>> driver’s own runtime suspend routine.
->>>>>>>>>
->>>>>>>>> I guess I’ll just proceed to send a V2 with updated commit message?
->>>>>>>>
->>>>>>>> Now that I understand what "runtime suspended to D0" means, help me
->>>>>>>> understand what's actually wrong.
->>>>>>>
->>>>>>> Kai's point is that the xhci-hcd driver thinks the device is now
->>>>>>> in runtime suspend, because the runtime_suspend method has been
->>>>>>> executed.  But in fact the device is still in D0, and as a
->>>>>>> result, PME signalling may not work correctly.
->>>>>>
->>>>>> The device claims to be able to signal PME from D0 (this is from the
->>>>>> lspci
->>>>>> in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
->>>>>>
->>>>>>   00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
->>>>>>     Capabilities: [50] Power Management version 3
->>>>>>       Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
->>>>>>
->>>>>> From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
->>>>>> detected while in D0 should assert PME# if enabled (and WCE is
->>>>>> set).
->>>>>
->>>>> I think section 4.15.2.3 is about S3 wake up, no S0 we are
->>>>> discussing here.
->>>>
->>>> S0 and S3 are system-level ideas and have no meaning to an individual
->>>> PCI device.  The xHC is a PCI device and can't tell whether the system
->>>> as a whole is in S0 or S3.  If a PCI device claims to be able to
->>>> generate PME while in D0, that applies regardless of the system state.
->>>>
->>>> xHCI r1.0, sec A.1 says "The host controller should be capable of
->>>> asserting PME# when in any supported device state."  In sec 4.19.2,
->>>> Figure 42 says PME# should be asserted whenever PMCSR.PME_En=1 and
->>>> WCE=1 and a connection is detected.
->>>>
->>>> Figure 42 also shows that CSC (Connect Status Change) and related bits
->>>> feed into Port Status Change Event Generation.  So I assume the xhci
->>>> driver normally detects connect/disconnect via CSC, but the runtime
->>>> suspend method makes it use PME# instead?
->>>>
->>>> And the way your patch works is by avoiding that xhci runtime suspend
->>>> method, so it *always* uses CSC and never uses PME#?  If that's the
->>>> case, we're just papering over a problem without really understanding
->>>> it.
->>>>
->>>> I'm wondering if this platform has a firmware defect.  Here's my
->>>> thinking.  The xHC is a Root Complex Integrated Endpoint, so its PME
->>>> signaling is a little unusual.
->>>>
->>>> The typical scenario is that a PCIe device is below a Root Port.  In
->>>> that case, it would send a PME Message upstream to the Root Port.  Per
->>>> PCIe r4.0, sec 6.1.6, when configured for native PME support (for ACPI
->>>> systems, I assume this means "when firmware has granted PME control to
->>>> the OS via _OSC"), the Root Port would generate a normal PCI INTx or
->>>> MSI interrupt:
->>>>
->>>>   PCI Express-aware software can enable a mode where the Root Complex
->>>>   signals PME via an interrupt. When configured for native PME
->>>>   support, a Root Port receives the PME Message and sets the PME
->>>>   Status bit in its Root Status register. If software has set the PME
->>>>   Interrupt Enable bit in the Root Control register to 1b, the Root
->>>>   Port then generates an interrupt.
->>>>
->>>> But on this platform the xHC is a Root Complex Integrated Endpoint, so
->>>> there is no Root Port upstream from it, and that mechanism can't be
->>>> used.  Per PCIe r4.0, sec 1.3.2.3, RCiEPs signal PME via "the same
->>>> mechanism as PCI systems" or via Root Complex Event Collectors:
->>>>
->>>>   An RCiEP must signal PME and error conditions through the same
->>>>   mechanisms used on PCI systems. If a Root Complex Event Collector is
->>>>   implemented, an RCiEP may optionally signal PME and error conditions
->>>>   through a Root Complex Event Collector.
->>>>
->>>> This platform has no Root Complex Event Collectors, so the xHC should
->>>> signal PME via the same mechanism as PCI systems, i.e., asserting a
->>>> PME# signal.  I think this means the OS cannot use native PCIe PME
->>>> control because it doesn't know what interrupt PME# is connected to.
->>>> The PCI Firmware Spec r3.2, sec 4.5.1 (also quoted in ACPI v6.2, sec
->>>> 6.2.11.3), says:
->>>>
->>>>   PCI Express Native Power Management Events control
->>>>
->>>>   The firmware sets this bit to 1 to grant control over PCI Express
->>>>   native power management event interrupts (PMEs). If firmware
->>>>   allows the operating system control of this feature, then in the
->>>>   context of the _OSC method, it must ensure that all PMEs are
->>>>   routed to root port interrupts as described in the PCI Express
->>>>   Base Specification.
->>>>
->>>> This platform cannot route all PMEs to Root Port interrupts because
->>>> the xHC RCiEP cannot report PME via a Root Port, so I think its _OSC
->>>> method should not grant control of PCIe Native Power Management Events
->>>> to the OS, and I think that would mean we have to use the ACPI
->>>> mechanism for PME on this platform.
->>>>
->>>> Can you confirm or deny any of this line of reasoning?  I'm wondering
->>>> if there's something wrong with the platform's _OSC, so Linux thinks
->>>> it can use native PME, but that doesn't work for this device.
->>>>
->>>>> It’s a platform in development so the name can’t be disclosed.
->>>>
->>>> Please attach a complete dmesg log to the bugzilla.  You can remove
->>>> identifying details like the platform name, but I want to see the
->>>> results of the _OSC negotiation.
->>>
->>> Thanks for the dmesg log
->>> (https://bugzilla.kernel.org/attachment.cgi?id=283109).  It shows:
->>>
->>>   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
->>>   acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
->>>   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
->>>
->>> I think it is incorrect for the platform to give the OS native control
->>> over PME because the OS has no way to know how the RCiEP PMEs are
->>> routed.  But it would be interesting to know how BIOSes on other
->>> platforms with RCiEPs handle this, and I did post a question to the
->>> PCI-SIG to see if there's any guidance there.
->>
->> Is there any update from PCI-SIG?
->>
->> I really think we don’t need wakeup capability in D0 because D0 is a
->> working state.
->
-> Well, in theory, devices may stay in D0 over suspend-to-idle and they may  
-> need to
-> signal wakeup then.  Using PME for that would be kind of handy (if it  
-> worked) as it
-> would allow special handling of in-band IRQs to be avoided in that case.
+I have SH2/2A/3 target board.
+So can mantain CPU support.
+But with board support it will be difficult.
+I would like to make the transition to a common framework.
+I also have to fix the parts that depend on each board for migration,
+so I would like to limit the target for maintenance to only those
+that can be used now.
 
-That makes sense but doesn’t apply to this case.
-This patch only avoids D0 runtime suspend, suspend-to-idle will call  
-system-wide suspend routine which still enables D0 PME.
-
-It’ll be great if you can review my v3 patch here:
-https://patchwork.kernel.org/patch/10960271/
-
-Kai-Heng
-
+-- 
+Yosinori Sato
