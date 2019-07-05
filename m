@@ -2,67 +2,146 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37F4C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F508C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46C321850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YZjVKFTA"
+	by mail.kernel.org (Postfix) with ESMTP id 7269E20828
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbfGELrI (ORCPT
+        id S1728866AbfGELsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:47:08 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34064 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728756AbfGELrI (ORCPT
+        Fri, 5 Jul 2019 07:48:05 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5258 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726505AbfGELsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:47:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fgcIB8dSUev3YqJ1JWPZab5C8w5JtTrTGWHkF5Kw0pI=; b=YZjVKFTASSc+GLe9Qv6UnL4j7
-        cYG1jw5rTwdC/ZRDDkwCT3Fj+1sUuAcjccYWXofzwDValDd7MbGN0Uh4U5GqgCgRQ+CdGE+sIFhtb
-        /er+/geFJOQZbHcDQ8dZ0Md2gdRN3vSZBvmH3x0jluyjxM1mhCIZhYc5atvgym/L/STb2D36HyIgx
-        WhXl4aAGM5Liqs0y5oUsLaPtnqoXiyVatT3me/Vf98cXOPSIV+CYS8b4bxEVw/x10IFZ5CdVy+O8m
-        0jaBCPa4h3OrSwoKMoxu0airgMufV/YV0oqgQY2PPTzpuwUaAXLrMxrz1rU1WllbD+QQnlg+dH2qb
-        e0cfXt7Aw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjMg0-0001QY-9W; Fri, 05 Jul 2019 11:46:52 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0FC6E2026E806; Fri,  5 Jul 2019 13:46:51 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 13:46:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] Convert get_task_struct to return the task
-Message-ID: <20190705114651.GR3402@hirez.programming.kicks-ass.net>
-References: <20190704221323.24290-1-willy@infradead.org>
+        Fri, 5 Jul 2019 07:48:05 -0400
+X-UUID: 52c8e7680f8e49a59d113a524c37eb73-20190705
+X-UUID: 52c8e7680f8e49a59d113a524c37eb73-20190705
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <lecopzer.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1234003082; Fri, 05 Jul 2019 19:47:52 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 5 Jul 2019 19:47:51 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 5 Jul 2019 19:47:51 +0800
+From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
+To:     <linux-mm@kvack.org>
+CC:     Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Mark-PK Tsai <Mark-PK.Tsai@mediatek.com>,
+        YJ Chiang <yj.chiang@mediatek.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm/sparse: fix memory leak of sparsemap_buf in aliged memory
+Date:   Fri, 5 Jul 2019 19:47:30 +0800
+Message-ID: <20190705114730.28534-1-lecopzer.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704221323.24290-1-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: B5F96B9A41F2DD2F8286049F36ABA0FB5319729559A93CF5867822CD45F83C7F2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 03:13:23PM -0700, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Returning the pointer that was passed in allows us to write
-> slightly more idiomatic code.  Convert a few users.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+sparse_buffer_alloc(size) get size of memory from sparsemap_buf after
+being aligned with the size. However, the size is at least
+PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION) and usually larger
+than PAGE_SIZE.
+Also, the Sparse_buffer_fini() only frees memory between
+sparsemap_buf and sparsemap_buf_end, since sparsemap_buf may be changed
+by PTR_ALIGN() first, the aligned space before sparsemap_buf is
+wasted and no one will touch it.
 
-Sure, thanks!
+In our ARM32 platform (without SPARSEMEM_VMEMMAP)
+  Sparse_buffer_init
+    Reserve d359c000 - d3e9c000 (9M)
+  Sparse_buffer_alloc
+    Alloc   d3a00000 - d3E80000 (4.5M)
+  Sparse_buffer_fini
+    Free    d3e80000 - d3e9c000 (~=100k)
+ The reserved memory between d359c000 - d3a00000 (~=4.4M) is unfreed.
+
+In ARM64 platform (with SPARSEMEM_VMEMMAP)
+
+  sparse_buffer_init
+    Reserve ffffffc07d623000 - ffffffc07f623000 (32M)
+  Sparse_buffer_alloc
+    Alloc   ffffffc07d800000 - ffffffc07f600000 (30M)
+  Sparse_buffer_fini
+    Free    ffffffc07f600000 - ffffffc07f623000 (140K)
+ The reserved memory between ffffffc07d623000 - ffffffc07d800000
+ (~=1.9M) is unfreed.
+
+Let explicit free redundant aligned memory.
+
+Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Signed-off-by: Mark-PK Tsai <Mark-PK.Tsai@mediatek.com>
+Cc: YJ Chiang <yj.chiang@mediatek.com>
+Cc: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/sparse.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index fd13166949b5..2b3b5be85120 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -428,6 +428,12 @@ struct page __init *sparse_mem_map_populate(unsigned long pnum, int nid,
+ static void *sparsemap_buf __meminitdata;
+ static void *sparsemap_buf_end __meminitdata;
+ 
++static inline void __init sparse_buffer_free(unsigned long size)
++{
++	WARN_ON(!sparsemap_buf || size == 0);
++	memblock_free_early(__pa(sparsemap_buf), size);
++}
++
+ static void __init sparse_buffer_init(unsigned long size, int nid)
+ {
+ 	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
+@@ -444,7 +450,7 @@ static void __init sparse_buffer_fini(void)
+ 	unsigned long size = sparsemap_buf_end - sparsemap_buf;
+ 
+ 	if (sparsemap_buf && size > 0)
+-		memblock_free_early(__pa(sparsemap_buf), size);
++		sparse_buffer_free(size);
+ 	sparsemap_buf = NULL;
+ }
+ 
+@@ -456,8 +462,12 @@ void * __meminit sparse_buffer_alloc(unsigned long size)
+ 		ptr = PTR_ALIGN(sparsemap_buf, size);
+ 		if (ptr + size > sparsemap_buf_end)
+ 			ptr = NULL;
+-		else
++		else {
++			/* Free redundant aligned space */
++			if ((unsigned long)(ptr - sparsemap_buf) > 0)
++				sparse_buffer_free((unsigned long)(ptr - sparsemap_buf));
+ 			sparsemap_buf = ptr + size;
++		}
+ 	}
+ 	return ptr;
+ }
+-- 
+2.18.0
+
