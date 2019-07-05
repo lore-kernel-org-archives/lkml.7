@@ -2,106 +2,95 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A9DC468A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB8FC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1EC21670
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649C0216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:39:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsjGyWu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfGERXn (ORCPT
+        id S1728174AbfGERjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 13:23:43 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:41944 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfGERXn (ORCPT
+        Fri, 5 Jul 2019 13:39:11 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33141 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728046AbfGERjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 13:23:43 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 89D6980513;
-        Fri,  5 Jul 2019 19:23:39 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 19:23:38 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
-        airlied@linux.ie, daniel@ffwll.ch, bjorn.andersson@linaro.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: panel: Add Sharp LD-D5116Z01B
-Message-ID: <20190705172338.GB2788@ravnborg.org>
-References: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
- <20190705165655.456-1-jeffrey.l.hugo@gmail.com>
+        Fri, 5 Jul 2019 13:39:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h19so8058249wme.0;
+        Fri, 05 Jul 2019 10:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=O9swPDSYJr7EZr0T51si6Xds/FIWrNpB8I77hOVCdac=;
+        b=AsjGyWu0MHdt/aDHe2ScBNnWcXK2JghONx4e7bVU/PT/gIxmdT7GSSZBqfQ+ACsqHJ
+         tuIR66s+1jTR12Awc09QCIcX8iULwNyjA29Euk4BmJZH2k4Vccjoo6Z295zetx8EcGnG
+         LgqZY5iKixA54ah6GVs2OjsNjm7D8Nz4r4lfFO0cX+8EUudkm3d5O0iS+G/GGFSylON4
+         3vx/v+2SlQ5PngJ4PhU0wFChELrxEa+9U01/+Nlu6N87JLdHVRGwRExGVFMgFboUOfZH
+         UxltwTJ1a76+06JpAUzDHGZukNB8YsCZjWYvZboOsvKt77WON9hHkBx/Fjax4mBcjvCd
+         pVVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=O9swPDSYJr7EZr0T51si6Xds/FIWrNpB8I77hOVCdac=;
+        b=COwFyBk+ZuDloiytsuQUeLusEFUBhvsWDJI7QjSKtDs0St9cbVhNvsLNgynBZecLqW
+         vEloIURTKLT5S555bLnj4G8FmYu+m2YHf/jpDIhM4TvTl3g0WGI14E7m+9WG93ph8tXZ
+         zdABj65Dn64eYzsJ0ZbR/5jS6t5ieLgVZbFVvLhbLjjsBOvCS5sGXCDBG4pkiEu/Odg5
+         JkTuHSwwdBUp3vDSA711sX/lQ8fccsA3/30e//oCXaRIj2ikiMnkjCLrYTy/wgl3hYSe
+         XmG5D7N5NqNCkw68Q8pGph/2E7MkmLvlBqSgGdVtDlyFWXwGonHnxqshH3dO7C+Ep1cK
+         s9kw==
+X-Gm-Message-State: APjAAAVbsq7vYpJHTU/C0IxlkGReeG7qSp1mcv6jf4p68xG9imEL6dDB
+        GSFZGYHxB4/qNBQoHn/jIh8=
+X-Google-Smtp-Source: APXvYqw5WcQTpZtNvpZ+cJoxIYsaxIoyD7mLrOjU6KaPopbVyzxZhfATA+8fFZQon60yNsmXWnHIBQ==
+X-Received: by 2002:a05:600c:389:: with SMTP id w9mr4093632wmd.139.1562348348266;
+        Fri, 05 Jul 2019 10:39:08 -0700 (PDT)
+Received: from debian64.daheim (p5B0D78D1.dip0.t-ipconnect.de. [91.13.120.209])
+        by smtp.gmail.com with ESMTPSA id q15sm6435218wrr.19.2019.07.05.10.39.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 10:39:06 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1hjSAs-0004pn-CZ; Fri, 05 Jul 2019 19:39:06 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     chunkeey@googlemail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        kvalo@codeaurora.org, davem@davemloft.net
+Subject: Re: [PATCH -next] carl9170: remove set but not used variable 'udev'
+Date:   Fri, 05 Jul 2019 19:39:06 +0200
+Message-ID: <3184726.muxUovjW6g@debian64>
+In-Reply-To: <20190702141207.47552-1-yuehaibing@huawei.com>
+References: <20190702141207.47552-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190705165655.456-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=X-qxmLeW_QAlauPjm30A:9 a=CjuIK1q_8ugA:10
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey.
-
-On Fri, Jul 05, 2019 at 09:56:55AM -0700, Jeffrey Hugo wrote:
-> The Sharp LD-D5116Z01B is a 12.3" eDP panel with a 1920X1280 resolution.
+On Tuesday, July 2, 2019 4:12:07 PM CEST YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  .../display/panel/sharp,ld-d5116z01b.txt      | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
+> drivers/net/wireless/ath/carl9170/usb.c: In function carl9170_usb_disconnect:
+> drivers/net/wireless/ath/carl9170/usb.c:1110:21:
+>  warning: variable udev set but not used [-Wunused-but-set-variable]
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
-> new file mode 100644
-> index 000000000000..3938c2847fe5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
-> @@ -0,0 +1,27 @@
-> +Sharp LD-D5116Z01B 12.3" WUXGA+ eDP panel
-> +
-> +Required properties:
-> +- compatible: should be "sharp,ld-d5116z01b"
-> +- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
-> +
-> +This binding is compatible with the simple-panel binding.
-> +
-> +The device node can contain one 'port' child node with one child
-> +'endpoint' node, according to the bindings defined in [1]. This
-> +node should describe panel's video bus.
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	panel: panel {
-> +		compatible = "sharp,ld-d5116z01b";
-> +		power-supply = <&vlcd_3v3>;
-> +		no-hpd
-The binding do not mention no-hpd - but it is part of panel-simple
-binding. Is it included in the example for any special reason?
-
-Also there is a syntax error, ";" is missing.
+> It is not use since commit feb09b293327 ("carl9170:
+> fix misuse of device driver API")
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Christian Lamparter <chunkeey@gmail.com>
 
 
-	Sam
 
-> +
-> +		port {
-> +			panel_ep: endpoint {
-> +				remote-endpoint = <&bridge_out_ep>;
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.17.1
