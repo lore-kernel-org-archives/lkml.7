@@ -6,85 +6,84 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5260CC4649C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4FAC4649C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29445218BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C534218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfGELO2 (ORCPT
+        id S1728464AbfGELPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:14:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57906 "EHLO mx1.redhat.com"
+        Fri, 5 Jul 2019 07:15:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:29098 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727760AbfGELO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:14:27 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D0435308402F;
-        Fri,  5 Jul 2019 11:14:27 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BF2B617509;
-        Fri,  5 Jul 2019 11:14:27 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 68A7F18184AC;
-        Fri,  5 Jul 2019 11:14:26 +0000 (UTC)
-Date:   Fri, 5 Jul 2019 07:14:26 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yuval Shaia <yuval.shaia@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jakub Staron <jstaron@google.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Message-ID: <631342573.39265254.1562325266039.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190705210950.6b77ec77@canb.auug.org.au>
-References: <20190705172025.46abf71e@canb.auug.org.au> <616554090.39241752.1562316343431.JavaMail.zimbra@redhat.com> <20190705210950.6b77ec77@canb.auug.org.au>
-Subject: Re: linux-next: build failure after merge of the nvdimm tree
+        id S1726005AbfGELPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:15:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 04:15:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
+   d="scan'208";a="167032354"
+Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
+  by orsmga003.jf.intel.com with ESMTP; 05 Jul 2019 04:15:39 -0700
+Message-ID: <2e2e646c3fae87307a149ee06e9fd4a7e493830d.camel@linux.intel.com>
+Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Oshri Alkoby <oshrialkoby85@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com,
+        dan.morav@nuvoton.com, tomer.maimon@nuvoton.com
+Date:   Fri, 05 Jul 2019 14:15:37 +0300
+In-Reply-To: <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
+References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+         <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
+         <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.94, 10.4.195.14]
-Thread-Topic: linux-next: build failure after merge of the nvdimm tree
-Thread-Index: f+SU09VqGmarpUONhbtt5EFHpdMF4A==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 05 Jul 2019 11:14:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2019-07-04 at 13:29 +0200, Alexander Steffen wrote:
+> On 04.07.2019 10:43, Jarkko Sakkinen wrote:
+> > Check out tpm_tis_core.c and tpm_tis_spi.c. TPM TIS driver implements
+> > that spec so you should only implement a new physical layer.
+> 
+> I had the same thought. Unfortunately, the I2C-TIS specification 
+> introduces two relevant changes compared to tpm_tis/tpm_tis_spi:
 
-> 
-> Hi Pankaj,
-> 
-> On Fri, 5 Jul 2019 04:45:43 -0400 (EDT) Pankaj Gupta <pagupta@redhat.com>
-> wrote:
-> >
-> > Thank you for the report.
-> 
-> That's what I am here for :-)
+I doubt that there was any comparison made.
 
-:-)
-
+> 1. Locality is not encoded into register addresses anymore, but stored 
+> in a separate register.
+> 2. Several register addresses have changed (but still contain compatible 
+> contents).
 > 
-> > Can we apply below patch [1] on top to complete linux-next build for today.
-> > I have tested this locally.
-> 
-> Its a bit of a pain to go back and linux-next is done for today (after
-> 13 hours :-)).  You really should do a proper fix patch and get it
-> added to the nvdimm tree.
+> I'd still prefer not to duplicate all the high-level logic from 
+> tpm_tis_core. But this will probably mean to introduce some new 
+> interfaces between tpm_tis_core and the physical layers.
 
-Sure, Thank you! Stephen.
+Agreed. Some plumbing needs to be done in tpm_tis_core to make it work
+for this. We definitely do not want to duplicate code that has been
+field tested for years.
 
-Best regards,
-Pankaj
+> Also, shouldn't the new driver be called tpm_tis_i2c, to group it with 
+> all the other (TIS) drivers, that implement a vendor-independent 
+> protocol? With tpm_i2c_ptp users might assume that ptp is just another 
+> vendor.
 
-> 
-> --
-> Cheers,
-> Stephen Rothwell
-> 
+Yes, absolutely. I guess the driver has been done without looking at
+what already exist in the TPM kernel stack.
+
+/Jarkko
+
