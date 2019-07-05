@@ -2,141 +2,111 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1B1C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE65C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD95B218BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882C2218BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfGEHMr convert rfc822-to-8bit (ORCPT
+        id S1727906AbfGEHOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 03:12:47 -0400
-Received: from mailout01.agenturserver.de ([185.15.192.32]:49125 "EHLO
-        mailout01.agenturserver.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725862AbfGEHMq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 03:12:46 -0400
-Received: from mail02.agenturserver.de (mail02.internal [172.16.51.35])
-        by mailout01.agenturserver.de (Postfix) with ESMTP id 2BC0166DE1;
-        Fri,  5 Jul 2019 09:12:42 +0200 (CEST)
-Received: from localhost (ac02.internal [172.16.51.82])
-        by mail02.agenturserver.de (Postfix) with ESMTP id 1B8DB807EC;
-        Fri,  5 Jul 2019 09:12:42 +0200 (CEST)
-Received: from mail.agenturserver.de ([172.16.51.35])
-        by localhost (ac02.mittwald.de [172.16.51.82]) (amavisd-new, port 10026)
-        with ESMTP id caKduJbWk4PB; Fri,  5 Jul 2019 09:12:41 +0200 (CEST)
-Received: from karo-electronics.de (unknown [89.1.81.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: lw@karo-electronics.de)
-        by mail.agenturserver.de (Postfix) with ESMTPSA;
-        Fri,  5 Jul 2019 09:12:36 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 09:12:35 +0200
-From:   Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH nvmem 1/1] nvmem: imx: correct the fuse word
- index
-Message-ID: <20190705091235.365b93cb@karo-electronics.de>
-In-Reply-To: <VI1PR0402MB360040318C9FB6656B46C566FFF50@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <20190704142015.10701-1-fugang.duan@nxp.com>
-        <20190704174543.194a0158@karo-electronics.de>
-        <VI1PR0402MB3600D635FF12DC861FAD9BF6FFFA0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-        <VI1PR0402MB360040318C9FB6656B46C566FFF50@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-Organization: Ka-Ro electronics GmbH
+        Fri, 5 Jul 2019 03:14:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56500 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726427AbfGEHOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 03:14:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2DE28B016;
+        Fri,  5 Jul 2019 07:13:59 +0000 (UTC)
+Subject: Re: [PATCH 0/2] scsi: add support for request batching
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jejb@linux.ibm.com, linux-scsi@vger.kernel.org, stefanha@redhat.com
+References: <20190530112811.3066-1-pbonzini@redhat.com>
+ <746ad64a-4047-1597-a0d4-f14f3529cc19@redhat.com>
+ <yq1lfxnk8ar.fsf@oracle.com>
+ <48c7d581-6ec8-260a-b4ba-217aef516305@redhat.com>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <80dd68bf-a544-25ec-568f-cee1cf0c8cfd@suse.de>
+Date:   Fri, 5 Jul 2019 09:13:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <48c7d581-6ec8-260a-b4ba-217aef516305@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 6/27/19 10:17 AM, Paolo Bonzini wrote:
+> On 27/06/19 05:37, Martin K. Petersen wrote:
+>>> Ping?  Are there any more objections?
+>> It's a core change so we'll need some more reviews. I suggest you
+>> resubmit.
+> 
+> Resubmit exactly the same patches?
+> Where is the ->commit_rqs() callback invoked?
+I don't seem to be able to find it...
 
-On Fri, 5 Jul 2019 02:46:32 +0000 Andy Duan wrote:
-> From: Andy Duan Sent: Friday, July 5, 2019 12:08 AM
-> > From: Lothar Waßmann <LW@KARO-electronics.de> Sent: Thursday, July 4,
-> > 2019 11:46 PM  
-> > > Hi,
-> > >
-> > > On Thu,  4 Jul 2019 22:20:15 +0800 fugang.duan@nxp.com wrote:  
-> > > > From: Fugang Duan <fugang.duan@nxp.com>
-> > > >
-> > > > iMX8 fuse word index represent as one 4-bytes word, it should not be
-> > > > divided by 4.
-> > > >
-> > > > Exp:
-> > > > - MAC0 address layout in fuse:
-> > > > offset 708: MAC[3] MAC[2] MAC[1] MAC[0]
-> > > > offset 709: XX     xx     MAC[5] MAC[4]
-> > > >
-> > > > Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-> > > > ---
-> > > >  drivers/nvmem/imx-ocotp-scu.c | 6 +++---
-> > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/nvmem/imx-ocotp-scu.c
-> > > > b/drivers/nvmem/imx-ocotp-scu.c index d9dc482..be2f5f0 100644
-> > > > --- a/drivers/nvmem/imx-ocotp-scu.c
-> > > > +++ b/drivers/nvmem/imx-ocotp-scu.c
-> > > > @@ -71,8 +71,8 @@ static int imx_scu_ocotp_read(void *context,
-> > > > unsigned  
-> > > int offset,  
-> > > >       void *p;
-> > > >       int i, ret;
-> > > >
-> > > > -     index = offset >> 2;
-> > > > -     num_bytes = round_up((offset % 4) + bytes, 4);
-> > > > +     index = offset;
-> > > > +     num_bytes = round_up(bytes, 4);
-> > > >       count = num_bytes >> 2;
-> > > >
-> > > >       if (count > (priv->data->nregs - index)) @@ -100,7 +100,7 @@
-> > > > static int imx_scu_ocotp_read(void *context, unsigned int offset,
-> > > >               buf++;
-> > > >       }
-> > > >
-> > > > -     memcpy(val, (u8 *)p + offset % 4, bytes);
-> > > > +     memcpy(val, (u8 *)p, bytes);
-> > > >
-> > > >       kfree(p);
-> > > >  
-> > > With these changes you could use the 'val' pointer directly as the
-> > > destination for ocotp_read() without need for an intermediate buffer.
-> > >
-> > >
-> > > Lothar Waßmann  
-> > 
-> > You are right, in fact, we can remove "p" and "buf" pointer.
-> > Thanks for your review, I will send out the V2.  
-> 
-> Hi Lothar,
-> 
-> It still need intermediate buffer to read out n words (n * 4 bytes) from eFuse.
-> Because 'val' buffer size is real count parsed from DT, which is not an integer multiple of 4.
-> 
-> For example, cell->bytes is parsed from "reg" property and it is real count like 6.
->                         fec_mac0: mac@2c4 {
->                                 reg = <0x2c4 6>;
->                         }; 
-> 
-> So we have to use intermediate buffer here.
->
-val is a u32 pointer, so legally it cannot point to any buffer whose
-size is not divisible by four!
+Cheers,
 
-
-Lothar Waßmann
+Hannes
+-- 
+Dr. Hannes Reinecke		   Teamlead Storage & Networking
+hare@suse.de			               +49 911 74053 688
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
