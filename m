@@ -2,134 +2,89 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441C6C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6094C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CEA0218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y78t9ohm"
+	by mail.kernel.org (Postfix) with ESMTP id B3190218C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 12:46:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfGEMpK (ORCPT
+        id S1728807AbfGEMqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 08:45:10 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44806 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727652AbfGEMpJ (ORCPT
+        Fri, 5 Jul 2019 08:46:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44124 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbfGEMqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:45:09 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so1490534plr.11
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 05:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dF5ldfW86FJCU5Kc3o1c+7BuYCZNz4gnsUxsM2MILhg=;
-        b=Y78t9ohm9IjqJTYbAV0G0UpCaRpc5X9RScVdIdmz4eqVB1CtoQpRVENQv5H9OJB6u3
-         IHW38yAnNbwzW6vcGSiPkXs9kW4CnIKtbKQQihf+CPDRaHhL04ZyRYbRyfKQffGvavIp
-         D8IdAu4ImWWGg3ot7QhkuD+LT+WNmRKXlpEXE=
+        Fri, 5 Jul 2019 08:46:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b2so8583805wrx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 05:46:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dF5ldfW86FJCU5Kc3o1c+7BuYCZNz4gnsUxsM2MILhg=;
-        b=I9ujp4KkW1XcW5pTsdi6bMmDsd3BK83LxcLkrT7JK8jSEELJUshWlIpE640q/oa89u
-         aRBfuVtcIbwh1T1bWFpoV7KqN8oftBuX3gAWyLkGTZo1foAEQbQ7b+8poQ7LplGt8DWs
-         9VvKwPdAhZXPezFugIq07B1u6QbMh9ndiKoT6PbYvQem3KEP1Cp9hKaq3K7Dv7l/n0Pi
-         YKE+AOv83b6MlEvW4AG3yY23ZBpwAtKDxOLnItVx305DaJS1+B188MAWCUOSYEjZ7374
-         AsjI2pARxMahU7ya3JpOfQpW8XwCG8D+NupnmX496D3M5YsZ66UNTTraHQY4eq0sC8x7
-         5eVw==
-X-Gm-Message-State: APjAAAXvIkASRjDEk4SLFEWjirBi1QAOHWn/cK+aMhisI3AZbNylLoKH
-        ZpbnKbjxipRjsh6I+werBBKS
-X-Google-Smtp-Source: APXvYqxMUTixTbN+cdcvlkTjbvWDrPyHAWnhOqeIT0sxQ7x+/ZOrGTKueCUPUnH3QwRNCyffO+Wgnw==
-X-Received: by 2002:a17:902:8b88:: with SMTP id ay8mr5266993plb.139.1562330709214;
-        Fri, 05 Jul 2019 05:45:09 -0700 (PDT)
-Received: from google.com ([2401:fa00:1:b:d89e:cfa6:3c8:e61b])
-        by smtp.gmail.com with ESMTPSA id y22sm8626527pgj.38.2019.07.05.05.45.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 05:45:08 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 20:45:05 +0800
-From:   Kuo-Hsin Yang <vovoy@chromium.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Sonny Rao <sonnyrao@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] mm: vmscan: scan anonymous pages on file refaults
-Message-ID: <20190705124505.GA173726@google.com>
-References: <20190628111627.GA107040@google.com>
- <20190701081038.GA83398@google.com>
- <20190703143057.GQ978@dhcp22.suse.cz>
- <20190704094716.GA245276@google.com>
- <20190704110425.GD5620@dhcp22.suse.cz>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b+rUgDFc8Xj3OzxPRTReIh2TVRm86cFh+ybCvMQ5Hic=;
+        b=os9KWC5kyC9si7+qqUNr4ehybHU8+frhGN/MZ1hBp9XEEE9u3rYEY33j5Q2hklh+6j
+         1bUmHOEsviDiz1Z/Hy95gWbjAj1strBcOg3W0zhO45lxd1LBe6Zc5uBuip+vJVI+tWk5
+         Dw8h21ceIVAgUhXwfzvwc/CwAccsV5lVhX0lDgwnHA2UvTPB7dr21TScOH/Q4zwlXJmx
+         jv5YDVz94eDBRuCBNRTsnMEFpci59b2trL2AsbGwXo41KN9MuZ16+vSAyH/MCaaoy0rg
+         tpvLUqIOVgENOn/8P5LbkRPxyAOYzect4+gMk7Url21zq1XNGG1Em1OZmXe+eAkRj8G8
+         NNyQ==
+X-Gm-Message-State: APjAAAX9K6mNPKEuFOI1Avixj9DArUgHoP5DZrEx71faSrkvumTiVIWu
+        gcXJ/Li2n8F2AeUfofROm/HWGA==
+X-Google-Smtp-Source: APXvYqyqp47fm5Ov3nASK6uQBAIXIoVpy72iyvaVIJ7JLTUX/Dy715g93EFgYnDXLc0la/0pbC5toA==
+X-Received: by 2002:adf:91c2:: with SMTP id 60mr4271400wri.334.1562330771790;
+        Fri, 05 Jul 2019 05:46:11 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e943:5a4e:e068:244a? ([2001:b07:6468:f312:e943:5a4e:e068:244a])
+        by smtp.gmail.com with ESMTPSA id t140sm9922367wmt.0.2019.07.05.05.46.11
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 05:46:11 -0700 (PDT)
+Subject: Re: [PATCH] KVM: LAPIC: ARBPRI is a reserved register for x2APIC
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <1562328872-27659-1-git-send-email-pbonzini@redhat.com>
+ <D76638DF-1934-4B1C-84CD-FFCE11AA175F@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e8926d53-173b-c525-1c6e-36df9315337a@redhat.com>
+Date:   Fri, 5 Jul 2019 14:46:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704110425.GD5620@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <D76638DF-1934-4B1C-84CD-FFCE11AA175F@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 01:04:25PM +0200, Michal Hocko wrote:
-> On Thu 04-07-19 17:47:16, Kuo-Hsin Yang wrote:
-> > On Wed, Jul 03, 2019 at 04:30:57PM +0200, Michal Hocko wrote:
-> > > 
-> > > How does the reclaim behave with workloads with file backed data set
-> > > not fitting into the memory? Aren't we going to to swap a lot -
-> > > something that the heuristic is protecting from?
-> > > 
-> > 
-> > In common case, most of the pages in a large file backed data set are
-> > non-executable. When there are a lot of non-executable file pages,
-> > usually more file pages are scanned because of the recent_scanned /
-> > recent_rotated ratio.
-> > 
-> > I modified the test program to set the accessed sizes of the executable
-> > and non-executable file pages respectively. The test program runs on 2GB
-> > RAM VM with kernel 5.2.0-rc7 and this patch, allocates 2000 MB anonymous
-> > memory, then accesses 100 MB executable file pages and 2100 MB
-> > non-executable file pages for 10 times. The test also prints the file
-> > and anonymous page sizes in kB from /proc/meminfo. There are not too
-> > many swaps in this test case. I got similar test result without this
-> > patch.
+On 05/07/19 14:37, Liran Alon wrote:
+>> +	u64 rmask = 0x43ff01ffffffe70cULL;
+> Why not rename this to “used_bits_mask” and calculate it properly by macros?
+> It seems a lot nicer than having a pre-calculated magic.
+
+Yes, I wanted to do the same but I didn't have time right now.  I am
+planning to cleanup after the merge window, but if a patch comes soon I
+can apply it instead of course. :)
+
+Something like
+
+#define APIC_VALID_REG_MASK(reg)	(1ull << ((reg) >> 4))
+#define APIC_VALID_REGS_MASK(first, count) \
+	(APIC_VALID_REG_MASK(first) * (1ull << ((count) - 1)))
+
+followed by
+
+	if (offset > 0x3f0 ||
+	    !(valid_regs_mask & APIC_VALID_REG_MASK(offset))
+
+Paolo
+
+> -Liran
 > 
-> Could you record swap out stats please? Also what happens if you have
-> multiple readers?
 
-Checked the swap out stats during the test [1], 19006 pages swapped out
-with this patch, 3418 pages swapped out without this patch. There are
-more swap out, but I think it's within reasonable range when file backed
-data set doesn't fit into the memory.
-
-$ ./thrash 2000 100 2100 5 1 # ANON_MB FILE_EXEC FILE_NOEXEC ROUNDS PROCESSES
-Allocate 2000 MB anonymous pages
-active_anon: 1613644, inactive_anon: 348656, active_file: 892, inactive_file: 1384 (kB)
-pswpout: 7972443, pgpgin: 478615246
-Access 100 MB executable file pages
-Access 2100 MB regular file pages
-File access time, round 0: 12.165, (sec)
-active_anon: 1433788, inactive_anon: 478116, active_file: 17896, inactive_file: 24328 (kB)
-File access time, round 1: 11.493, (sec)
-active_anon: 1430576, inactive_anon: 477144, active_file: 25440, inactive_file: 26172 (kB)
-File access time, round 2: 11.455, (sec)
-active_anon: 1427436, inactive_anon: 476060, active_file: 21112, inactive_file: 28808 (kB)
-File access time, round 3: 11.454, (sec)
-active_anon: 1420444, inactive_anon: 473632, active_file: 23216, inactive_file: 35036 (kB)
-File access time, round 4: 11.479, (sec)
-active_anon: 1413964, inactive_anon: 471460, active_file: 31728, inactive_file: 32224 (kB)
-pswpout: 7991449 (+ 19006), pgpgin: 489924366 (+ 11309120)
-
-With 4 processes accessing non-overlapping parts of a large file, 30316
-pages swapped out with this patch, 5152 pages swapped out without this
-patch. The swapout number is small comparing to pgpgin.
-
-[1]: https://github.com/vovo/testing/blob/master/mem_thrash.c
