@@ -2,148 +2,81 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3FCC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1650C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAFC218C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A62218C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfGENlo (ORCPT
+        id S1728681AbfGENma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:41:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:38504 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbfGENlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:41:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C082360;
-        Fri,  5 Jul 2019 06:41:43 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B0AF3F718;
-        Fri,  5 Jul 2019 06:41:40 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 14:41:38 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>,
+        Fri, 5 Jul 2019 09:42:30 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51715 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727702AbfGENma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 09:42:30 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so8936442wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 06:42:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4iYb0bYihJJMXivPTPv/aHyJFdI8X6+6Oc7sOAPuN1M=;
+        b=R/MF727vANL29lZIbalPtecrV9Yi2/Ez9Yyak6KGyXOoeuVS1Wn2q9FB23TY5FZwYH
+         o5bUe6i22Tn9xuo2Wus6+mNTkb1/XLP+M5jys9xWB7vBgey7ClfNKBGmw06+6MtEx3rI
+         2k4GXLdONzwzm4D6Qvsp/owDdwb4hmYFxM0bIi+WloSFYGjITo1dScYTjndurBv1QxyZ
+         GuL4jkvQ048K4cpyyLOVxD5BgRxqYXolJ/iltHrdj+rMP9LpzwVGkFcavoYyHMRHNo8O
+         hKOHqIa5XSliHWbFMgAtWW1Goj5LoINTM42gVeLRrUptFJizQT0N724hC/iQGQUZGGEh
+         3cbA==
+X-Gm-Message-State: APjAAAU9JCXycG3XDHjKM+YeNzGZt9R7s8SyC5mKqR2FXCFo1QZUxZYS
+        pWtnee+kG+CO13qAKTdXdzUasQ==
+X-Google-Smtp-Source: APXvYqwByfMM85jOStUZAupRZVHqj/o4S1sAo5LiNDj2LzVzhMiMpbI+BtNslxzqagrl2r99Avs0hQ==
+X-Received: by 2002:a1c:cb43:: with SMTP id b64mr3748628wmg.86.1562334147882;
+        Fri, 05 Jul 2019 06:42:27 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e943:5a4e:e068:244a? ([2001:b07:6468:f312:e943:5a4e:e068:244a])
+        by smtp.gmail.com with ESMTPSA id j189sm8346421wmb.48.2019.07.05.06.42.26
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 06:42:26 -0700 (PDT)
+Subject: Re: [PATCH v5 2/4] KVM: LAPIC: Inject timer interrupt via posted
+ interrupt
+To:     Wanpeng Li <wanpeng.li@hotmail.com>,
+        Wanpeng Li <kernellwp@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>
-Subject: Re: [PATCH v2] PCI: hv: Fix a use-after-free bug in
- hv_eject_device_work()
-Message-ID: <20190705134138.GB31464@e121166-lin.cambridge.arm.com>
-References: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+References: <1561110002-4438-1-git-send-email-wanpengli@tencent.com>
+ <1561110002-4438-3-git-send-email-wanpengli@tencent.com>
+ <587f329a-4920-fcbf-b2b1-9265a1d6d364@redhat.com>
+ <HK2PR02MB4145BBA5B72DD70AC622FD0E80F50@HK2PR02MB4145.apcprd02.prod.outlook.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7614bc43-d9b1-7287-deef-1494f61d0b58@redhat.com>
+Date:   Fri, 5 Jul 2019 15:42:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169D420EAB61757DF4B337FBFE70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <HK2PR02MB4145BBA5B72DD70AC622FD0E80F50@HK2PR02MB4145.apcprd02.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:45:23PM +0000, Dexuan Cui wrote:
-> 
-> The commit 05f151a73ec2 itself is correct, but it exposes this
-> use-after-free bug, which is caught by some memory debug options.
-> 
-> Add a Fixes tag to indicate the dependency.
-> 
-> Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Cc: stable@vger.kernel.org
-> ---
-> 
-> In v2:
-> Replaced "hpdev->hbus" with "hbus", since we have the new "hbus" variable. [Michael Kelley]
-> 
->  drivers/pci/controller/pci-hyperv.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+On 05/07/19 15:32, Wanpeng Li wrote:
+> -bool __read_mostly pi_inject_timer = 0;
+> -module_param(pi_inject_timer, bool, S_IRUGO | S_IWUSR);
+> +int __read_mostly pi_inject_timer = -1;
+> +module_param(pi_inject_timer, int, S_IRUGO | S_IWUSR);
 
-Applied to pci/hv for v5.3, thanks.
+Use "bint" instead of "int" please, so that it accepts 0/1 only and
+prints as Y/N.
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 808a182830e5..5dadc964ad3b 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1880,6 +1880,7 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->  static void hv_eject_device_work(struct work_struct *work)
->  {
->  	struct pci_eject_response *ejct_pkt;
-> +	struct hv_pcibus_device *hbus;
->  	struct hv_pci_dev *hpdev;
->  	struct pci_dev *pdev;
->  	unsigned long flags;
-> @@ -1890,6 +1891,7 @@ static void hv_eject_device_work(struct work_struct *work)
->  	} ctxt;
->  
->  	hpdev = container_of(work, struct hv_pci_dev, wrk);
-> +	hbus = hpdev->hbus;
->  
->  	WARN_ON(hpdev->state != hv_pcichild_ejecting);
->  
-> @@ -1900,8 +1902,7 @@ static void hv_eject_device_work(struct work_struct *work)
->  	 * because hbus->pci_bus may not exist yet.
->  	 */
->  	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
-> -	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
-> -					   wslot);
-> +	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
->  	if (pdev) {
->  		pci_lock_rescan_remove();
->  		pci_stop_and_remove_bus_device(pdev);
-> @@ -1909,9 +1910,9 @@ static void hv_eject_device_work(struct work_struct *work)
->  		pci_unlock_rescan_remove();
->  	}
->  
-> -	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
-> +	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  	list_del(&hpdev->list_entry);
-> -	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
-> +	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
->  
->  	if (hpdev->pci_slot)
->  		pci_destroy_slot(hpdev->pci_slot);
-> @@ -1920,7 +1921,7 @@ static void hv_eject_device_work(struct work_struct *work)
->  	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
->  	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
->  	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
-> -	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
-> +	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
->  			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
->  			 VM_PKT_DATA_INBAND, 0);
->  
-> @@ -1929,7 +1930,9 @@ static void hv_eject_device_work(struct work_struct *work)
->  	/* For the two refs got in new_pcichild_device() */
->  	put_pcichild(hpdev);
->  	put_pcichild(hpdev);
-> -	put_hvpcibus(hpdev->hbus);
-> +	/* hpdev has been freed. Do not use it any more. */
-> +
-> +	put_hvpcibus(hbus);
->  }
->  
->  /**
-> -- 
-> 2.17.1
-> 
+Paolo
