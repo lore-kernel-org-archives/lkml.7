@@ -2,89 +2,112 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD48C0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D02DC0651F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B1021852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65CBA218A0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DtAwDjdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfGEBlF (ORCPT
+        id S1727462AbfGECC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 21:41:05 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:57257 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726871AbfGEBlF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 21:41:05 -0400
-Received: (qmail 1325 invoked by uid 500); 4 Jul 2019 21:41:04 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 4 Jul 2019 21:41:04 -0400
-Date:   Thu, 4 Jul 2019 21:41:04 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Suwan Kim <suwan.kim027@gmail.com>
-cc:     shuah@kernel.org, <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] usbip: Implement SG support to vhci
-In-Reply-To: <20190704172435.GA11673@localhost.localdomain>
-Message-ID: <Pine.LNX.4.44L0.1907042138091.840-100000@netrider.rowland.org>
+        Thu, 4 Jul 2019 22:02:58 -0400
+Received: from mail-eopbgr150074.outbound.protection.outlook.com ([40.107.15.74]:44676
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726404AbfGECC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 22:02:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iwYYW5jA8cmmW5WbGVaf8ZM9/irshHrXUXkxUt1pkCY=;
+ b=DtAwDjddTNy2z5ycfByxi8zIUHV7QH+uejwHfQGZkzKHDXel2C36/0YNNuIDYkshaa9jE4tn107WBdY60flyGoxeroWemz+w45IBv2yPJHIOsn3zoglwiCaK7mE9wlzvp3f/11yW2MafyW7kEKuXhkOf53TvGwPj89gGS+a5SGg=
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.159) by
+ VI1PR04MB4173.eurprd04.prod.outlook.com (52.133.15.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Fri, 5 Jul 2019 02:02:53 +0000
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::e8aa:b70a:82ad:9309]) by VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::e8aa:b70a:82ad:9309%7]) with mapi id 15.20.2052.010; Fri, 5 Jul 2019
+ 02:02:53 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     =?utf-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski.k@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>, Andy Tang <andy.tang@nxp.com>
+Subject: RE: [EXT] [BUG BISECT] Net boot fails on VF50 after "dmaengine:
+ fsl-edma: support little endian for edma driver"
+Thread-Topic: [EXT] [BUG BISECT] Net boot fails on VF50 after "dmaengine:
+ fsl-edma: support little endian for edma driver"
+Thread-Index: AQHVMM97bioibA225kez47O1R7Lss6a5tHCwgACryoCAAOi/UA==
+Date:   Fri, 5 Jul 2019 02:02:53 +0000
+Message-ID: <VI1PR04MB4431B489B4DCAB40A326D479EDF50@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <CAJKOXPfx6HeJgTu9TiusGACyt+uXVSmnpibO0m-qzCvFQNGK7g@mail.gmail.com>
+ <VI1PR04MB44316904F765E93CC1DFA0EDEDFA0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <CAOMZO5BFim2tWxH3nKV08Y1C2-rB7kr8_9v=Qgj+6AXa30-ExQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5BFim2tWxH3nKV08Y1C2-rB7kr8_9v=Qgj+6AXa30-ExQ@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d17d5fe4-8275-4683-5468-08d700ece445
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4173;
+x-ms-traffictypediagnostic: VI1PR04MB4173:
+x-microsoft-antispam-prvs: <VI1PR04MB417358B5CFDD4757F7CEF685EDF50@VI1PR04MB4173.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 008960E8EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(396003)(376002)(39860400002)(199004)(189003)(13464003)(229853002)(6116002)(14454004)(66446008)(54906003)(86362001)(478600001)(52536014)(66476007)(6246003)(55016002)(73956011)(316002)(9686003)(102836004)(66556008)(66946007)(76116006)(5660300002)(64756008)(6506007)(4744005)(33656002)(53936002)(66066001)(3846002)(7696005)(6436002)(26005)(4326008)(99286004)(11346002)(25786009)(81166006)(8676002)(81156014)(8936002)(486006)(446003)(66574012)(6916009)(2906002)(7736002)(44832011)(476003)(76176011)(256004)(74316002)(186003)(305945005)(1411001)(68736007)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4173;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Amf7NrOcXaKCe1bqw4VLbrBfVUEc9UzxfnrQsyd3FkHJqidNFwrh9Bj5NzH642dkF0DHVBg1i7/QVqtiO1jSpzk+WIlDM8nQ0or4BnP1vzgOvz29jY91pXfAC1id5qG15zmj+kD8U+30JwxPdloSiNrWIF0w0BexxaYtoDNrtv3+CKKYtTo8TYi5DU3oJWQx4+23+CvrHsuHh/SZlpe24dW0lFyn9Ee6Q2BWNQxBrvJ1jMw1m+JwlfHsYLd5cx9hPuWye0souNMexVMbeAo+u6AbmJbYYJgHTAUJf6bqFpprQAhvl6evoQM6fXvbspOSdFBAFSss41wbYIWQkuCzVpQGgZOII6yqVm3OsbtMVI9uJTwB8ZuPBRuIYZFRWdHnFmGCv18FrqArLpglFrHSkwbROJokstNOlrVRS9mRyCU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d17d5fe4-8275-4683-5468-08d700ece445
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 02:02:53.7115
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peng.ma@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Jul 2019, Suwan Kim wrote:
-
-> On Mon, Jun 24, 2019 at 01:24:15PM -0400, Alan Stern wrote:
-> > On Mon, 24 Jun 2019, Suwan Kim wrote:
-> > 
-> > > > > +	hcd->self.sg_tablesize = ~0;
-> > > > > +	hcd->self.no_sg_constraint = 1;
-> > > > 
-> > > > You probably shouldn't do this, for two reasons.  First, sg_tablesize
-> > > > of the server's HCD may be smaller than ~0.  If the client's value is
-> > > > larger than the server's, a transfer could be accepted on the client
-> > > > but then fail on the server because the SG list was too big.
-> > 
-> > On the other hand, I don't know of any examples where an HCD has 
-> > sg_tablesize set to anything other than 0 or ~0.  vhci-hcd might end up 
-> > being the only one.
-> > 
-> > > > Also, you may want to restrict the size of SG transfers even further,
-> > > > so that you don't have to allocate a tremendous amount of memory all at
-> > > > once on the server.  An SG transfer can be quite large.  I don't know 
-> > > > what a reasonable limit would be -- 16 perhaps?
-> > > 
-> > > Is there any reason why you think that 16 is ok? Or Can I set this
-> > > value as the smallest value of all HC? I think that sg_tablesize
-> > > cannot be a variable value because vhci interacts with different
-> > > machines and all machines has different sg_tablesize value.
-> > 
-> > I didn't have any good reason for picking 16.  Using the smallest value 
-> > of all the HCDs seems like a good idea.
-> 
-> I also have not seen an HCD with a value other than ~0 or 0 except for
-> whci which uses 2048, but is not 2048 the maximum value of sg_tablesize?
-> If so, ~0 is the minimum value of sg_tablesize that supports SG. Then
-> can vhci use ~0 if we don't consider memory pressure of the server?
-> 
-> If all of the HCDs supporting SG have ~0 as sg_tablesize value, I
-> think that whether we use an HCD locally or remotely, the degree of
-> memory pressure is same in both local and remote usage.
-
-You have a lot of leeway.  For example, there's no reason a single SG
-transfer on the client has to correspond to a single SG transfer on the
-host.  In theory the client's vhci-hcd can break a large SG transfer up
-into a bunch of smaller pieces and send them to the host one by one,
-then reassemble the results to complete the original transfer.  That
-way the memory pressure on the host would be a lot smaller than on the
-client.
-
-Alan Stern
-
+SGkgRmFiaW8sDQoNClRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHlvdXIgc3VnZ2VzdGlvbiwgSSB3aWxs
+IGRvIHNvbWUgY2hhbmdlcyB0aGVuIHRvDQpTZW5kIHVwc3RyZWFtIHJldmlldy4NCg0KQmVzdCBS
+ZWdhcmRzLA0KUGVuZw0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogRmFiaW8g
+RXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPlNlbnQ6IDIwMTnlubQ35pyINOaXpSAyMDow
+Nw0KPlRvOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+Q2M6IEtyenlzenRvZiBLb3rFgm93
+c2tpIDxrLmtvemxvd3NraS5rQGdtYWlsLmNvbT47IFZpbm9kIEtvdWwNCj48dmtvdWxAa2VybmVs
+Lm9yZz47IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgRmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgTGVvDQo+TGkg
+PGxlb3lhbmcubGlAbnhwLmNvbT47IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+U3Vi
+amVjdDogUmU6IFtFWFRdIFtCVUcgQklTRUNUXSBOZXQgYm9vdCBmYWlscyBvbiBWRjUwIGFmdGVy
+ICJkbWFlbmdpbmU6DQo+ZnNsLWVkbWE6IHN1cHBvcnQgbGl0dGxlIGVuZGlhbiBmb3IgZWRtYSBk
+cml2ZXIiDQo+DQo+Q2F1dGlvbjogRVhUIEVtYWlsDQo+DQo+SGkgUGVuZywNCj4NCj5PbiBXZWQs
+IEp1bCAzLCAyMDE5IGF0IDExOjEwIFBNIFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT4gd3JvdGU6
+DQo+DQo+PiBTbyB3ZSBuZWVkIHRoaXMgcGF0Y2gsIEkgbWFrZSBzb21lIGNoYW5nZXMsUGxlYXNl
+IGhlbHAgbWUgdG8gdGVzdA0KPmF0dGF0Y2htZW50IG9uIFZGNTAgYm9hcmQsDQo+DQo+WW91IG5l
+ZWQgdG8gY2hhbmdlIHRoZSBTdWJqZWN0IHRvIHNvbWV0aGluZyBsaWtlOg0KPg0KPlN1YmplY3Q6
+IFtQQVRDSF0gZG1hZW5naW5lOiBmc2wtZWRtYTogQWRkIHN1cHBvcnQgZm9yIExTMTAyOEENCj4N
+Cj5BbHNvLCBpbiB0aGUgY29tbWl0IGxvZywgcGxlYXNlIGNoYW5nZSAiT3VyIHBsYXRmb3JtcyIg
+dG8gIkxTMTAyOEEiDQo+DQo+UGxlYXNlIHJlbW92ZSB0aGlzIHBhcnQ6ICJDdXJyZW50IGVETUEg
+ZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgTGl0dGxlIGVuZGlhbiINCj4NCj4sd2hpY2ggaXMgbm90
+IGNvcnJlY3QuDQo=
