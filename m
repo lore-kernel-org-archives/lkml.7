@@ -2,80 +2,141 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF1EC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80D5C468A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D2B20989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF07D20989
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfGESof (ORCPT
+        id S1725917AbfGESqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 14:44:35 -0400
-Received: from sauhun.de ([88.99.104.3]:53616 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfGESof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 14:44:35 -0400
-Received: from localhost (p54B334DF.dip0.t-ipconnect.de [84.179.52.223])
-        by pokefinder.org (Postfix) with ESMTPSA id D69772C0398;
-        Fri,  5 Jul 2019 20:44:33 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 20:44:33 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Vasyl Gomonovych <gomonovych@gmail.com>
-Cc:     jochen@scram.de, linuxppc-dev@lists.ozlabs.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: remove casting dma_alloc
-Message-ID: <20190705184433.GI4717@kunai>
-References: <20190623211354.24181-1-gomonovych@gmail.com>
+        Fri, 5 Jul 2019 14:46:52 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:49576 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfGESqv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 14:46:51 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C0E0720065;
+        Fri,  5 Jul 2019 20:46:46 +0200 (CEST)
+Date:   Fri, 5 Jul 2019 20:46:44 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     thierry.reding@gmail.com, Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for Sharp
+ LD-D5116Z01B panel
+Message-ID: <20190705184644.GA5044@ravnborg.org>
+References: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
+ <20190705165755.515-1-jeffrey.l.hugo@gmail.com>
+ <20190705172058.GA2788@ravnborg.org>
+ <CAOCk7NrVSCt18QfMs+_nW1rDMuhK_dPKWL0roESmwEEy4u3BZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Az4VpBrmI9+OyhK/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190623211354.24181-1-gomonovych@gmail.com>
+In-Reply-To: <CAOCk7NrVSCt18QfMs+_nW1rDMuhK_dPKWL0roESmwEEy4u3BZQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=pGLkceISAAAA:8 a=XCh60BrB9CTw4ms3EqwA:9 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jeffrey.
 
---Az4VpBrmI9+OyhK/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 05, 2019 at 12:35:30PM -0600, Jeffrey Hugo wrote:
+> On Fri, Jul 5, 2019 at 11:21 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Jeffrey.
+> >
+> > Patch looks good, but there is a few fields that are not initialized.
+> > Did you forget them, or are they not needed?
+> 
+> Thanks for the review.  Overlooked some of them.
+> 
+> >
+> > On Fri, Jul 05, 2019 at 09:57:55AM -0700, Jeffrey Hugo wrote:
+> > > The Sharp LD-D5116Z01B is a 12.3" eDP panel with a 1920X1280 resolution.
+> > >
+> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
+> > >  1 file changed, 26 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > > index 5a93c4edf1e4..e6f578667324 100644
+> > > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > > @@ -2354,6 +2354,29 @@ static const struct panel_desc samsung_ltn140at29_301 = {
+> > >       },
+> > >  };
+> > >
+> > > +static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
+> > > +     .clock = 168480,
+> > > +     .hdisplay = 1920,
+> > > +     .hsync_start = 1920 + 48,
+> > > +     .hsync_end = 1920 + 48 + 32,
+> > > +     .htotal = 1920 + 48 + 32 + 80,
+> > > +     .vdisplay = 1280,
+> > > +     .vsync_start = 1280 + 3,
+> > > +     .vsync_end = 1280 + 3 + 10,
+> > > +     .vtotal = 1280 + 3 + 10 + 57,
+> > > +     .vrefresh = 60,
+> > > +};
+> > No .flags? Is it not needed for an eDP panel?
+> 
+> The flags don't appear to make sense per my understanding of eDP.
+> Therefore I intended .flags to be 0, which it implicitly is because
+> this is a static struct.  Would you prefer I explicitly list .flags =
+> 0?
+I was not sure hence my Q. And do not set it to 0, as then someone will
+come and say this is default and delete it.
+Maybe mention it in the changelog.
 
-On Sun, Jun 23, 2019 at 11:13:53PM +0200, Vasyl Gomonovych wrote:
-> From: Vasyl <gomonovych@gmail.com>
->=20
-> Generated by:  alloc_cast.cocci
->=20
-> Signed-off-by: Vasyl <gomonovych@gmail.com>
 
-Applied to for-next, thanks! I fixed the missing full name for you, but
-please fix your setup.
+> 
+> >
+> > > +
+> > > +static const struct panel_desc sharp_ld_d5116z01b = {
+> > > +     .modes = &sharp_ld_d5116z01b_mode,
+> > > +     .num_modes = 1,
+> > > +     .bpc = 8,
+> > > +     .size = {
+> > > +             .width = 260,
+> > > +             .height = 120,
+> > > +     },
+> > > +};
+> > No .bus_format?
+> 
+> Ah, yes.  Looks like it should be MEDIA_BUS_FMT_RGB888_1X24
+> Will fix.
+> 
+> > No .bus_flags?
+> 
+> eDP is differential signaling, so what I see generally doesn't apply,
+> but DRM_BUS_FLAG_DATA_MSB_TO_LSB does apply, so I'll add that.
 
+With your changes you can add my:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
---Az4VpBrmI9+OyhK/
-Content-Type: application/pgp-signature; name="signature.asc"
+On both patches.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0fmpEACgkQFA3kzBSg
-KbapiQ//RulLYA/Vhf6vaqi1yN51qtVTkoWd0biT0etVBbgXqytgIvXRwikrruqK
-lyZkaTSuftFynpK2x+XRmB8ZVfNCV0ecOdggPqPs6F3VZ4FQmegkrq5XgVmWlr1A
-5sOgR2HHaQkmkyFyPAPPrGk4UAHQyewA+7aA0aZLqQvN4cxejbOyW+KTxaih4JBW
-aXoD2wo+UK3crsUuP/pDkOEFl+VUlkHZ5MCEhP5ZdCixrol3faT84zS+jSmq1LXz
-2Q5BQlc2hIfduO+C0GZtabrR2uvWg/y8D8isR/AJhJRL7xDFsrCGuDEQUFu6ysnO
-12T90vOmr9KI/xFC9qBT6zySjMSJFG1pFvdAXg3r4PYGgcc3cXoxuNT2XHpGwMip
-vP+Q271MGX00B6KNaXh0f6kaN9shj5tHGznvF67QPxhdHS1VED2kSGaje/ji406V
-YednRzTWb4p0/FYoyIW5MSr3E7Bdh8TpMo70vXlCFKKitgx2pJMtvxt4rsPHexvN
-05SRjv90aQYfVz4+kELjRh2YzruOOjSlDK8+mNHkjwnil8xxX4GruqwP6lkZQo/O
-EOpgaxQbZ/C/NQaMPGavah1Bo37rcJZ1fSKDiV8gJ4hvstAJ4fON16W42TPf/ME6
-JyG/19ECAf/IylSmNpUNzhOaEKOn7T4fr6KdkfSG4AaHLRCNffw=
-=+lNR
------END PGP SIGNATURE-----
-
---Az4VpBrmI9+OyhK/--
+	Sam
