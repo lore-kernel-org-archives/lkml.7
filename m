@@ -2,92 +2,80 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A3FC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF1EC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E1120989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHAshVYu"
+	by mail.kernel.org (Postfix) with ESMTP id 46D2B20989
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfGESjG (ORCPT
+        id S1727810AbfGESof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 14:39:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43558 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfGESjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 14:39:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id k20so20978335ios.10;
-        Fri, 05 Jul 2019 11:39:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e1s/k43Uef/oTZ066ashsVWzI7Tt+ue2hhBa4/5vSY8=;
-        b=HHAshVYuxSLMcBpfsVyE710re2bMPnXjz2lor83rqUHC7wpBI9j0Umy9JS8PGUz1me
-         8bg7v5s3JYFtsPMXh47sH2xaxAkW9mvENDvNv9xQBVr+C0ZMksvV/mGRD5S6C9uEabIE
-         +iC9o+j2DqDoMgcUwu7y4xDDVWui30NxDWrxsgZ1uAFymPyeOeNWZtWXTeug/+Lzz9xR
-         MYpiM1BKSM9WNckqLDqIgdHZg5dOa38Ijwea7yN8Q4UdfuBAq64mj1AGIdETJuOXFCnr
-         s/10ufHZIWrSd9Hpq7qJQTan33d1nUwTL3l7SzJZeA73XocbIY4KW9K6pa3rL+yR6w5h
-         CbcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e1s/k43Uef/oTZ066ashsVWzI7Tt+ue2hhBa4/5vSY8=;
-        b=qpkJO/1RUg+WlZaVW/jzKKVK2mJVaiBBE4wOx+W6du4gfNhPlqy02lSEmnNuY/wOQI
-         5oMQmzm3/oD7WCrPKKT3pQbwx2ffFsTdoOOhwPgNjnCAq9dWknRpgaj6ZshPfBrdQfnq
-         EPLVB1Ta2GJObpz+ZvRY4Hr0xsAgNS5FHSruCRTB3av1lWJVocRVBydXV2YZ5tbOPxAU
-         pPIgyOeiUnFaDIi8nzBoqX7bbcCboAQ5idQSva8D0nwincNgUAFmOGeqmUJ5RLzMS90V
-         v6V4c471Aobtp5z26ijCGyv7OodZUfb7tVl7VhgLMpvln53klkflS5O4jWuo6KYu+8Id
-         cGZg==
-X-Gm-Message-State: APjAAAVGb8ehiNwrH+Sxe1C6uuThLB7Ja1pIGXcpftsTwvh2FOeJtkvN
-        Shgas0BIwziG28uor85KiJh72DX2iNXSM1IGI5o=
-X-Google-Smtp-Source: APXvYqwe/lOZqTMnRDY7Swtv9Fp4sctE1ATThpdg1r/J8kj+FhdaVVgjYdjeXRQ1YQvjfA/lu8RkKXTGyy+WWuejpmQ=
-X-Received: by 2002:a02:c50a:: with SMTP id s10mr6427939jam.106.1562351944338;
- Fri, 05 Jul 2019 11:39:04 -0700 (PDT)
+        Fri, 5 Jul 2019 14:44:35 -0400
+Received: from sauhun.de ([88.99.104.3]:53616 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfGESof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 14:44:35 -0400
+Received: from localhost (p54B334DF.dip0.t-ipconnect.de [84.179.52.223])
+        by pokefinder.org (Postfix) with ESMTPSA id D69772C0398;
+        Fri,  5 Jul 2019 20:44:33 +0200 (CEST)
+Date:   Fri, 5 Jul 2019 20:44:33 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Vasyl Gomonovych <gomonovych@gmail.com>
+Cc:     jochen@scram.de, linuxppc-dev@lists.ozlabs.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: remove casting dma_alloc
+Message-ID: <20190705184433.GI4717@kunai>
+References: <20190623211354.24181-1-gomonovych@gmail.com>
 MIME-Version: 1.0
-References: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
- <20190705165655.456-1-jeffrey.l.hugo@gmail.com> <20190705172338.GB2788@ravnborg.org>
-In-Reply-To: <20190705172338.GB2788@ravnborg.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Fri, 5 Jul 2019 12:38:54 -0600
-Message-ID: <CAOCk7NoCq0k2rCC4XQm_yLxgQir1bqLwJMGwD1qDCHQJRUEC8g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: panel: Add Sharp LD-D5116Z01B
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, thierry.reding@gmail.com,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Az4VpBrmI9+OyhK/"
+Content-Disposition: inline
+In-Reply-To: <20190623211354.24181-1-gomonovych@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 11:23 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Jeffrey.
->
-> On Fri, Jul 05, 2019 at 09:56:55AM -0700, Jeffrey Hugo wrote:
-> > +     panel: panel {
-> > +             compatible = "sharp,ld-d5116z01b";
-> > +             power-supply = <&vlcd_3v3>;
-> > +             no-hpd
-> The binding do not mention no-hpd - but it is part of panel-simple
-> binding. Is it included in the example for any special reason?
 
-I just copied (poorly apparently since a ";" is missing) from my
-platform's dt.  There is no particular reason the example lists
-no-hpd.  I'll drop it in the next rev.
+--Az4VpBrmI9+OyhK/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jun 23, 2019 at 11:13:53PM +0200, Vasyl Gomonovych wrote:
+> From: Vasyl <gomonovych@gmail.com>
+>=20
+> Generated by:  alloc_cast.cocci
+>=20
+> Signed-off-by: Vasyl <gomonovych@gmail.com>
+
+Applied to for-next, thanks! I fixed the missing full name for you, but
+please fix your setup.
+
+
+--Az4VpBrmI9+OyhK/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0fmpEACgkQFA3kzBSg
+KbapiQ//RulLYA/Vhf6vaqi1yN51qtVTkoWd0biT0etVBbgXqytgIvXRwikrruqK
+lyZkaTSuftFynpK2x+XRmB8ZVfNCV0ecOdggPqPs6F3VZ4FQmegkrq5XgVmWlr1A
+5sOgR2HHaQkmkyFyPAPPrGk4UAHQyewA+7aA0aZLqQvN4cxejbOyW+KTxaih4JBW
+aXoD2wo+UK3crsUuP/pDkOEFl+VUlkHZ5MCEhP5ZdCixrol3faT84zS+jSmq1LXz
+2Q5BQlc2hIfduO+C0GZtabrR2uvWg/y8D8isR/AJhJRL7xDFsrCGuDEQUFu6ysnO
+12T90vOmr9KI/xFC9qBT6zySjMSJFG1pFvdAXg3r4PYGgcc3cXoxuNT2XHpGwMip
+vP+Q271MGX00B6KNaXh0f6kaN9shj5tHGznvF67QPxhdHS1VED2kSGaje/ji406V
+YednRzTWb4p0/FYoyIW5MSr3E7Bdh8TpMo70vXlCFKKitgx2pJMtvxt4rsPHexvN
+05SRjv90aQYfVz4+kELjRh2YzruOOjSlDK8+mNHkjwnil8xxX4GruqwP6lkZQo/O
+EOpgaxQbZ/C/NQaMPGavah1Bo37rcJZ1fSKDiV8gJ4hvstAJ4fON16W42TPf/ME6
+JyG/19ECAf/IylSmNpUNzhOaEKOn7T4fr6KdkfSG4AaHLRCNffw=
+=+lNR
+-----END PGP SIGNATURE-----
+
+--Az4VpBrmI9+OyhK/--
