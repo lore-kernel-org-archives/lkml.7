@@ -2,236 +2,138 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CEFC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC77C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C2921852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mc33cekh"
+	by mail.kernel.org (Postfix) with ESMTP id A9AD2218BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfGEHKE (ORCPT
+        id S1727790AbfGEHMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 03:10:04 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39309 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfGEHKE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 03:10:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m202so6487199oig.6
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 00:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gxBN84xswbhhWfhJZ4vJ56rbkxQJ6uMES8Lq5hzLdBY=;
-        b=mc33cekhckA7wJjQPFB96WQWGU23cxC27TC5cLWhp1tkIGBdYA3u5o1I17M1ckqlQd
-         zFZm1wF32d0kzplRgk9f+FK97QneoXTF+BUYf5NuDMGFDmxhI7P7x6djrqp7Aih7DRb+
-         L0PWOaB0R1SQfDkhqQMvbEzlmLlm62KLmQ6n9n9ryzaaDAQOcPdh71DVU/KfEHOpIU+S
-         maqwuTUWDwen5vjdE19DurUUEl/sqsqu+jbp90i6znc6XdV9POHpZR0mzfmXlA5DIei5
-         4VA1xvTQfzYrzVl8AyFB+X3uvWz0jJfdnYQdjTX0krPFmiuU+ihk42PbP7UvgPeYDJDj
-         cFeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gxBN84xswbhhWfhJZ4vJ56rbkxQJ6uMES8Lq5hzLdBY=;
-        b=WfYFiCUjsHZfLUrXopX6b7SMjlxHe3ESLY+jUzqNE1hqI6fbrQhNKo20erweb/5cnx
-         64hFAK2bTTzZ0jHPpBro/ovuDCMiz0htNWZygWe5a7NvBb3A0eBPeU6ldKJdMQiUp/Kd
-         n0piR1r5dnGiybjEZ4rLyK1oW3j/1kUYYsNj1oN9/yse1nWLxS7oFVqAmFEtzE28fbC0
-         A0fjJ1TqOCDaeDdf5hotDXClxkpY3uLhB331lvhKo8Cy6ZDf5lF6LjkHvDYOukhF5Wbl
-         o91KCHqFDQbbqSTdWfLbLoifOKXz53Lp8PwXnKhIYEFupjMaQf8aTMD7b71FYgAYuBm3
-         Gcag==
-X-Gm-Message-State: APjAAAVqjqB68kAtdgwPG5CB173h9I9hIk9cVjQOsYiLjn2f/9llR1dZ
-        GP1aL3UOxmXW+hGgD7SoBaPgmK7cn6S2UGT/RcRqAg==
-X-Google-Smtp-Source: APXvYqylRoOrXW9piygIdp/MUCNdlQwgFS7OKeAodWKUYf14PwDLt6pn2w/rrprynkga74yQySStlO0D+Em9QWuAc3Q=
-X-Received: by 2002:aca:ecc1:: with SMTP id k184mr1195557oih.82.1562310603045;
- Fri, 05 Jul 2019 00:10:03 -0700 (PDT)
+        Fri, 5 Jul 2019 03:12:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56066 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725862AbfGEHMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 03:12:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89C00AFA9;
+        Fri,  5 Jul 2019 07:12:38 +0000 (UTC)
+Subject: Re: [PATCH 1/2] scsi_host: add support for request batching
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, stefanha@redhat.com
+References: <20190530112811.3066-1-pbonzini@redhat.com>
+ <20190530112811.3066-2-pbonzini@redhat.com>
+ <760164a0-589d-d9fa-fb63-79b5e0899c00@suse.de>
+ <aaa344bf-af29-0485-4e83-5442331a2c9c@redhat.com>
+ <afea12a1-47b3-0ebe-a3c2-6adc615bbddf@redhat.com>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <c1d16dbf-713d-3528-78d7-a3f49c056f74@suse.de>
+Date:   Fri, 5 Jul 2019 09:12:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190705042623.129541-1-cychiang@chromium.org> <20190705042623.129541-4-cychiang@chromium.org>
-In-Reply-To: <20190705042623.129541-4-cychiang@chromium.org>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Fri, 5 Jul 2019 15:09:52 +0800
-Message-ID: <CA+Px+wXVghbk8k0WE5TEsGRQXx26K0-=h3O7cje-F1phwBGrbQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] ASoC: rockchip_max98090: Add dai_link for HDMI
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <afea12a1-47b3-0ebe-a3c2-6adc615bbddf@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 12:26 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
-> diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-> index c5fc24675a33..195309d1225a 100644
-> --- a/sound/soc/rockchip/rockchip_max98090.c
-> +++ b/sound/soc/rockchip/rockchip_max98090.c
->  static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
-> @@ -92,38 +95,59 @@ static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
->
->         ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
->                                      SND_SOC_CLOCK_OUT);
-> -       if (ret < 0) {
-> -               dev_err(codec_dai->dev, "Can't set codec clock %d\n", ret);
-> +       if (ret && ret != -ENOTSUPP) {
-> +               dev_err(cpu_dai->dev, "Can't set cpu dai clock %d\n", ret);
->                 return ret;
->         }
->
->         ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
->                                      SND_SOC_CLOCK_IN);
-> -       if (ret < 0) {
-> -               dev_err(codec_dai->dev, "Can't set codec clock %d\n", ret);
-> +       if (ret && ret != -ENOTSUPP) {
-> +               dev_err(codec_dai->dev, "Can't set codec dai clock %d\n", ret);
->                 return ret;
->         }
-Does it imply: it is acceptable even if they are "not supported"?
+On 7/4/19 3:19 PM, Paolo Bonzini wrote:
+> On 19/06/19 12:31, Paolo Bonzini wrote:
+>>> I'm a bit unsure if 'bd->last' is always set; it's quite obvious that
+>>> it's present if set, but what about requests with 'bd->last == false' ?
+>>> Is there a guarantee that they will _always_ be followed with a request
+>>> with bd->last == true?
+>>> And if so, is there a guarantee that this request is part of the same batch?
+>> It's complicated.  A request with bd->last == false _will_ always be
+>> followed by a request with bd->last == true in the same batch.  However,
+>> due to e.g. errors it may be possible that the last request is not sent.
+>>  In that case, the block layer sends commit_rqs, as documented in the
+>> comment above, to flush the requests that have been sent already.
+>>
+>> So, a driver that obeys bd->last (or SCMD_LAST) but does not implement
+>> commit_rqs is bound to have bugs, which is why this patch was not split
+>> further.
+>>
+>> Makes sense?
+> 
+> Hannes, can you provide your Reviewed-by?
+> 
+Well ... since you asked for it:
 
+Where is the 'commit_rqs' callback actually used?
+I seem to be going blind, but I can't find it; should be somewhere in
+the first patch, no?
+As per description:
 
->
-> -       return ret;
-> +       return 0;
->  }
->
->  static const struct snd_soc_ops rk_aif1_ops = {
->         .hw_params = rk_aif1_hw_params,
->  };
->
-> -SND_SOC_DAILINK_DEFS(hifi,
-> +SND_SOC_DAILINK_DEFS(analog,
->         DAILINK_COMP_ARRAY(COMP_EMPTY()),
->         DAILINK_COMP_ARRAY(COMP_CODEC(NULL, "HiFi")),
->         DAILINK_COMP_ARRAY(COMP_EMPTY()));
->
-> -static struct snd_soc_dai_link rk_dailink = {
-> -       .name = "max98090",
-> -       .stream_name = "Audio",
-> -       .ops = &rk_aif1_ops,
-> -       /* set max98090 as slave */
-> -       .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-> -               SND_SOC_DAIFMT_CBS_CFS,
-> -       SND_SOC_DAILINK_REG(hifi),
-> +SND_SOC_DAILINK_DEFS(hdmi,
-> +       DAILINK_COMP_ARRAY(COMP_EMPTY()),
-> +       DAILINK_COMP_ARRAY(COMP_CODEC("hdmi-audio-codec.3.auto", "i2s-hifi")),
-> +       DAILINK_COMP_ARRAY(COMP_EMPTY()));
-> +
-> +enum {
-> +       DAILINK_MAX98090,
-> +       DAILINK_HDMI,
-> +};
-> +
-> +/* max98090 and HDMI codec dai_link */
-> +static struct snd_soc_dai_link rk_dailinks[] = {
-> +       [DAILINK_MAX98090] = {
-> +               .name = "max98090",
-> +               .stream_name = "Analog",
-> +               .ops = &rk_aif1_ops,
-> +               /* set max98090 as slave */
-> +               .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-> +                       SND_SOC_DAIFMT_CBS_CFS,
-> +               SND_SOC_DAILINK_REG(analog),
-> +       },
-> +       [DAILINK_HDMI] = {
-> +               .name = "HDMI",
-> +               .stream_name = "HDMI",
-> +               .ops = &rk_aif1_ops,
-> +               .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-> +                       SND_SOC_DAIFMT_CBS_CFS,
-> +               SND_SOC_DAILINK_REG(hdmi),
-> +       }
->  };
->
->  static int rk_98090_headset_init(struct snd_soc_component *component);
-> @@ -136,8 +160,8 @@ static struct snd_soc_aux_dev rk_98090_headset_dev = {
->  static struct snd_soc_card snd_soc_card_rk = {
->         .name = "ROCKCHIP-I2S",
->         .owner = THIS_MODULE,
-> -       .dai_link = &rk_dailink,
-> -       .num_links = 1,
-> +       .dai_link = rk_dailinks,
-> +       .num_links = ARRAY_SIZE(rk_dailinks),
->         .aux_dev = &rk_98090_headset_dev,
->         .num_aux_devs = 1,
->         .dapm_widgets = rk_dapm_widgets,
-> @@ -173,27 +197,48 @@ static int snd_rk_mc_probe(struct platform_device *pdev)
->         int ret = 0;
->         struct snd_soc_card *card = &snd_soc_card_rk;
->         struct device_node *np = pdev->dev.of_node;
-> +       struct device_node *np_analog;
-> +       struct device_node *np_cpu;
-> +       struct of_phandle_args args;
->
->         /* register the soc card */
->         card->dev = &pdev->dev;
->
-> -       rk_dailink.codecs->of_node = of_parse_phandle(np,
-> -                       "rockchip,audio-codec", 0);
-> -       if (!rk_dailink.codecs->of_node) {
-> +       np_analog = of_parse_phandle(np, "rockchip,audio-codec", 0);
-> +       if (!np_analog) {
->                 dev_err(&pdev->dev,
->                         "Property 'rockchip,audio-codec' missing or invalid\n");
->                 return -EINVAL;
->         }
-> +       rk_dailinks[DAILINK_MAX98090].codecs->of_node = np_analog;
-> +
-> +       ret = of_parse_phandle_with_fixed_args(np, "rockchip,audio-codec",
-> +                                              0, 0, &args);
-> +       if (ret) {
-> +               dev_err(&pdev->dev,
-> +                       "Unable to parse property 'rockchip,audio-codec'\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = snd_soc_get_dai_name(
-> +                       &args, &rk_dailinks[DAILINK_MAX98090].codecs->dai_name);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Unable to get codec dai_name\n");
-> +               return ret;
-> +       }
-> +
-> +       np_cpu = of_parse_phandle(np, "rockchip,i2s-controller", 0);
->
-> -       rk_dailink.cpus->of_node = of_parse_phandle(np,
-> -                       "rockchip,i2s-controller", 0);
-> -       if (!rk_dailink.cpus->of_node) {
-> +       if (!np_cpu) {
->                 dev_err(&pdev->dev,
->                         "Property 'rockchip,i2s-controller' missing or invalid\n");
->                 return -EINVAL;
->         }
->
-> -       rk_dailink.platforms->of_node = rk_dailink.cpus->of_node;
-> +       rk_dailinks[DAILINK_MAX98090].cpus->of_node = np_cpu;
-> +       rk_dailinks[DAILINK_MAX98090].platforms->of_node = np_cpu;
-> +       rk_dailinks[DAILINK_HDMI].cpus->of_node = np_cpu;
-> +       rk_dailinks[DAILINK_HDMI].platforms->of_node = np_cpu;
->
->         rk_98090_headset_dev.codec_of_node = of_parse_phandle(np,
->                         "rockchip,headset-codec", 0);
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+ * The commit_rqs function is used to trigger a hardware
+ * doorbell after some requests have been queued with
+ * queuecommand, when an error is encountered before sending
+ * the request with SCMD_LAST set.
+
+So it should be somewhere in the error path, probably scsi_error or
+something. But I don't seem to be able to find it ...
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke		   Teamlead Storage & Networking
+hare@suse.de			               +49 911 74053 688
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
