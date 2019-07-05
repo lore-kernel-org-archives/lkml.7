@@ -2,92 +2,141 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A25AC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81404C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4FA218CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53ED7218A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:24:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3GP3RPKu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBaJj5t9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbfGENT1 (ORCPT
+        id S1728831AbfGENYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:19:27 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55782 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbfGENT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:19:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nWbKLFHL+b+hFBq0825QJ0Fh8N/yT85HADdlrJpqwCQ=; b=3GP3RPKu7ZpFV7+cfZjE+vohUc
-        Bex/2CpZC7Ala0E0eG4LZVetEHQEb/pfJHowfchWGZpWrdgaXwHw7j7iVZVhdnGDzqhJtwb9f/Eeo
-        KLOig8uZwjFnSMbwTDYL8WRA0Mk0Pe6SrZtuUPnX5rsJaDgQ9SE3ZqwIKhT9NdjVOm9A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hjO7O-0001Br-S6; Fri, 05 Jul 2019 15:19:14 +0200
-Date:   Fri, 5 Jul 2019 15:19:14 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Allan Nielsen <Allan.Nielsen@microsemi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
- port DT node
-Message-ID: <20190705131914.GA4428@lunn.ch>
-References: <20190621164940.GL31306@lunn.ch>
- <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
- <20190624115558.GA5690@piout.net>
- <20190624142625.GR31306@lunn.ch>
- <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
- <20190624162431.GX31306@lunn.ch>
- <20190624182614.GC5690@piout.net>
- <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
- <20190705044945.GA30115@lunn.ch>
- <VI1PR04MB4880DEA9D7836A68E0EE141396F50@VI1PR04MB4880.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB4880DEA9D7836A68E0EE141396F50@VI1PR04MB4880.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Fri, 5 Jul 2019 09:24:15 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44999 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727638AbfGENYO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 09:24:14 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b2so8709321wrx.11;
+        Fri, 05 Jul 2019 06:24:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=TJB2RTWPulLTRLLXY7TRiipk7F2VO6sEuWjT2mECMZc=;
+        b=eBaJj5t9Vh7vXV+6/AWcm3bcSY6qaQpVxzf5xY0+RCnz9c6aW0RbG5zntpnmE8/lKh
+         vm18z1/ac0HjV6KPkcJGv4T7XB/2/rzVVeqvXKo5CqlGMvsxE/DLC0MAd6qSGteSPF5P
+         ggOKk4R9cebWHOAseQroACiL9Xr9iDk/TXWyH7qsjjM9BzcPMTLQKwsRdErjr8RkeJBj
+         CKAH6H5sH3ijZHpD4tM3KEBLt9zcLN5YS1teO5LMSK+8/J1VIKzY3XlnXXVrSGK6imAe
+         5vJIf1+h3tGfrw7xGbKnTqJnrBiA67ZYMiAVXCfEngxVrq7IRasgGrPhfwj7+FZaPewh
+         D6xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=TJB2RTWPulLTRLLXY7TRiipk7F2VO6sEuWjT2mECMZc=;
+        b=EfiSv9nAjpgVZQUPNLfr/PQRxmdb5gIde9pMz2Q4ywJEiEp6Si+ogSHoIsjSBS6400
+         gJpi1/6CkYbJzgP6Lmi2dXbQziBaeTpyCccB+YTN0ZYET9D8zbbkcU+iMebC5JMH86Tg
+         RgUnAbBVe0NWc9vrctsyt5lcOgReeSAmq4l8x0bnozcZqftgKZ+bP1YYYyDzyleRyrtN
+         oBPl4jfrdCPnjXgC7r3+HuSNdcXU4XU5DgcuMDDyrI6Hq3BCe5+vMl/pevf8hiOjpz0E
+         VHtshk/Ok7VGVAKELbcNorIRUWEShaJeMkOmUdKN84iij76OOCHvyKp5c27LWsNNK+Co
+         4wHg==
+X-Gm-Message-State: APjAAAUSYGYeNOW2xMT5ZksFkO2+ijHLW0w8qrO4DLw9IUIRYFA9SYCn
+        PkvOBdHiY1TN9p9Bxi4aBGs+HS+/WaY=
+X-Google-Smtp-Source: APXvYqztVaMAws9Nkb+c/1WXl9AxD1Zq34BWkiRhVLpdovI5Ur6r8SsqGJqDgtDNcJ8fVlAD/dxbhg==
+X-Received: by 2002:adf:e588:: with SMTP id l8mr2570227wrm.139.1562333052230;
+        Fri, 05 Jul 2019 06:24:12 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id y7sm3649664wmm.19.2019.07.05.06.24.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 06:24:11 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     liran.alon@oracle.com
+Subject: [PATCH] kvm: LAPIC: write down valid APIC registers
+Date:   Fri,  5 Jul 2019 15:24:10 +0200
+Message-Id: <1562333050-4745-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Nice discussion, again, but there's a missing point that has not been
-> brought up yet.  We actually intend to support the following hardware
-> configuration: a single PCI device consisting of the Microsemi's switch core
-> and our DMA rings.
-> The hardware supports this configuration into a single PCI function (PF), 
-> with a unique PCI function id (0xe111), so that the same driver has access to 
-> both switch registers and DMA rings connected to the CPU port.  This device
-> would qualify  as a  switchdev device, and we can simply reuse the existing
-> ocelot code for the switch core part.  The initial patch set was the first step in
-> supporting the switch core on our platform, we just need to add the support
-> for the DMA rings part, to make it a complete switchdev solution.
+Replace a magic 64-bit mask with a list of valid registers, computing
+the same mask in the end.
 
-Hi Claudiu
+Suggested-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/lapic.c | 44 ++++++++++++++++++++++++++++++++------------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
-It sound like in the end you will have a core library and then two
-drivers wrapped around it, giving a pure switchdev device with polled
-IO or DMA, and a DSA driver using a CPU port.
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 2e4470f2685a..e4227ceab0c6 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1312,25 +1312,45 @@ static inline struct kvm_lapic *to_lapic(struct kvm_io_device *dev)
+ 	return container_of(dev, struct kvm_lapic, dev);
+ }
+ 
++#define APIC_REG_MASK(reg)	(1ull << ((reg) >> 4))
++#define APIC_REGS_MASK(first, count) \
++	(APIC_REG_MASK(first) * ((1ull << (count)) - 1))
++
+ int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
+ 		void *data)
+ {
+ 	unsigned char alignment = offset & 0xf;
+ 	u32 result;
+ 	/* this bitmask has a bit cleared for each reserved register */
+-	u64 rmask = 0x43ff01ffffffe70cULL;
+-
+-	if ((alignment + len) > 4) {
+-		apic_debug("KVM_APIC_READ: alignment error %x %d\n",
+-			   offset, len);
+-		return 1;
+-	}
+-
+-	/* ARBPRI is also reserved on x2APIC */
+-	if (apic_x2apic_mode(apic))
+-		rmask &= ~(1 << (APIC_ARBPRI >> 4));
++	u64 valid_reg_mask =
++		APIC_REG_MASK(APIC_ID) |
++		APIC_REG_MASK(APIC_LVR) |
++		APIC_REG_MASK(APIC_TASKPRI) |
++		APIC_REG_MASK(APIC_PROCPRI) |
++		APIC_REG_MASK(APIC_LDR) |
++		APIC_REG_MASK(APIC_DFR) |
++		APIC_REG_MASK(APIC_SPIV) |
++		APIC_REGS_MASK(APIC_ISR, APIC_ISR_NR) |
++		APIC_REGS_MASK(APIC_TMR, APIC_ISR_NR) |
++		APIC_REGS_MASK(APIC_IRR, APIC_ISR_NR) |
++		APIC_REG_MASK(APIC_ESR) |
++		APIC_REG_MASK(APIC_ICR) |
++		APIC_REG_MASK(APIC_ICR2) |
++		APIC_REG_MASK(APIC_LVTT) |
++		APIC_REG_MASK(APIC_LVTTHMR) |
++		APIC_REG_MASK(APIC_LVTPC) |
++		APIC_REG_MASK(APIC_LVT0) |
++		APIC_REG_MASK(APIC_LVT1) |
++		APIC_REG_MASK(APIC_LVTERR) |
++		APIC_REG_MASK(APIC_TMICT) |
++		APIC_REG_MASK(APIC_TMCCT) |
++		APIC_REG_MASK(APIC_TDCR);
++
++	/* ARBPRI is not valid on x2APIC */
++	if (!apic_x2apic_mode(apic))
++		valid_reg_mask |= APIC_REG_MASK(APIC_ARBPRI);
+ 
+-	if (offset > 0x3f0 || !(rmask & (1ULL << (offset >> 4)))) {
++	if (offset > 0x3f0 || !(valid_reg_mask & APIC_REG_MASK(offset))) {
+ 		apic_debug("KVM_APIC_READ: read reserved register %x\n",
+ 			   offset);
+ 		return 1;
+-- 
+1.8.3.1
 
-   Andrew
