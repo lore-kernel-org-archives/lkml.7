@@ -6,83 +6,82 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E48FC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18309C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274B221850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2FC2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfGELCm convert rfc822-to-8bit (ORCPT
+        id S1728425AbfGELDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:02:42 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:57954 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfGELCl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:02:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id CAA1B6089351;
-        Fri,  5 Jul 2019 13:02:38 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yZBS0NU-Tcjd; Fri,  5 Jul 2019 13:02:36 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id C57C46089339;
-        Fri,  5 Jul 2019 13:02:36 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 5-_R_tkPqtN4; Fri,  5 Jul 2019 13:02:36 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 93528608898B;
-        Fri,  5 Jul 2019 13:02:36 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 13:02:36 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1328785502.28643.1562324556415.JavaMail.zimbra@nod.at>
-In-Reply-To: <e97cc68c-c59a-1f5f-6580-40868bf16e90@cogentembedded.com>
-References: <20190704222803.4328-1-colin.king@canonical.com> <b5e7709b-3494-d415-b36c-b19939a15fb5@cogentembedded.com> <4741f358-7c21-f721-e9fd-59d73876c62c@canonical.com> <e97cc68c-c59a-1f5f-6580-40868bf16e90@cogentembedded.com>
-Subject: Re: [PATCH][next] ubifs: remove redundant assignment to pointer
- fname
+        Fri, 5 Jul 2019 07:03:15 -0400
+Received: from mga06.intel.com ([134.134.136.31]:51250 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfGELDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:03:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 04:03:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
+   d="scan'208";a="316065024"
+Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
+  by orsmga004.jf.intel.com with ESMTP; 05 Jul 2019 04:03:09 -0700
+Message-ID: <1b890d9a1a949683fdb7104e395c7f92022772fe.camel@linux.intel.com>
+Subject: Re: [PATCH] Revert "tpm: pass an array of tpm_extend_digest
+ structures to tpm_pcr_extend()"
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Michal Suchanek <msuchanek@suse.de>,
+        linux-integrity@vger.kernel.org
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Fri, 05 Jul 2019 14:03:08 +0300
+In-Reply-To: <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
+References: <20190701131505.17759-1-msuchanek@suse.de>
+         <8e4cc105b748c5395132b4d3d29d0d9b30a8720c.camel@linux.intel.com>
+         <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Topic: ubifs: remove redundant assignment to pointer fname
-Thread-Index: k8dwB2k8+EY4AbsA12EzIID8bvM6yg==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
-> An: "Colin Ian King" <colin.king@canonical.com>, "richard" <richard@nod.at>, "Artem Bityutskiy" <dedekind1@gmail.com>,
-> "Adrian Hunter" <adrian.hunter@intel.com>, "linux-mtd" <linux-mtd@lists.infradead.org>
-> CC: kernel-janitors@vger.kernel.org, "linux-kernel" <linux-kernel@vger.kernel.org>
-> Gesendet: Freitag, 5. Juli 2019 12:51:53
-> Betreff: Re: [PATCH][next] ubifs: remove redundant assignment to pointer fname
-
-> On 07/05/2019 11:31 AM, Colin Ian King wrote:
+On Thu, 2019-07-04 at 13:28 +0200, Roberto Sassu wrote:
+> On 7/4/2019 12:03 PM, Jarkko Sakkinen wrote:
+> > On Mon, 2019-07-01 at 15:15 +0200, Michal Suchanek wrote:
+> > > This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid
+> > > following crash:
+> > 
+> > Thank you. I think this the right choice for the moment. I fixed
+> > a trivial checkpatch.pl error and added the mandatory tags. Can
+> > you check quickly v2 (just posted)?
+> > 
+> > I already made it available in my master and next.
 > 
->>>> From: Colin Ian King <colin.king@canonical.com>
->>>>
->>>> The pointer fname rc is being assigned with a value that is never
->>>
->>>    rc?
->> 
->> Oops, cut'n'paste error. Do you want me to resend to can this be fixed
->> when it's applied?
-> 
->   That's the question to the maintainers...
+> Could you please wait few days? I would prefer to fix this issue instead
+> of reverting the whole patch.
 
-Please resend.
+Nayna provided a fix should be ok.
 
-Thanks,
-//richard
+/Jarkko
+
