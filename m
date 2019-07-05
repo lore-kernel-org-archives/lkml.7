@@ -2,203 +2,153 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1075C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECA3C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7BE2089C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571E12089C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:16:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="M1+6PiKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfGETLC (ORCPT
+        id S1727908AbfGETQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 15:11:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45636 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727547AbfGETLC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 15:11:02 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x65J6cfg139408
-        for <linux-kernel@vger.kernel.org>; Fri, 5 Jul 2019 15:11:00 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tjc5wgq1d-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 15:11:00 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 5 Jul 2019 20:10:59 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 5 Jul 2019 20:10:54 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x65JArWj10158776
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jul 2019 19:10:53 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCBD8B205F;
-        Fri,  5 Jul 2019 19:10:53 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86FAFB2064;
-        Fri,  5 Jul 2019 19:10:53 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.224])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jul 2019 19:10:53 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D912D16C5D80; Fri,  5 Jul 2019 12:10:55 -0700 (PDT)
-Date:   Fri, 5 Jul 2019 12:10:55 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        David Miller <davem@davemloft.net>, eladr@mellanox.com,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: INFO: rcu detected stall in ext4_write_checks
-Reply-To: paulmck@linux.ibm.com
-References: <000000000000d3f34b058c3d5a4f@google.com>
- <20190626184251.GE3116@mit.edu>
- <20190626210351.GF3116@mit.edu>
- <20190626224709.GH3116@mit.edu>
- <CACT4Y+YTpUErjEmjrqki-tJ0Lyx0c53MQDGVS4CixfmcAnuY=A@mail.gmail.com>
- <20190705151658.GP26519@linux.ibm.com>
- <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
+        Fri, 5 Jul 2019 15:16:00 -0400
+Received: from mout.web.de ([212.227.15.14]:38771 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbfGETP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 15:15:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1562354134;
+        bh=pbYTbmFg5+9MUs+Xq9U8VQNqI7dxSqfuIjlnzkc6lpQ=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=M1+6PiKyqNM+06i8ByDyR1wS5u+goSGY9+reKMncZcmMfUlzWnlIsSQVjuCbXYrUx
+         lJa/uAFINkduHgHvpzx9Q0I1SIjDpbmjsZTfx9R0HJz8dBIMt1PvZJgAz5Fjyx1jr7
+         csXhDywM14iXqpJk+ozwzBwB63wJ2HLuWXpWI+Kc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.45.164]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MhlP1-1hvwFp0Zmd-00Mt90; Fri, 05
+ Jul 2019 21:15:34 +0200
+To:     linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] nvme: One function call less in nvme_update_disk_info()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <38f864df-9c90-31a3-d78d-7aaf2d726e4f@web.de>
+Date:   Fri, 5 Jul 2019 21:15:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19070519-2213-0000-0000-000003AA4A2C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011384; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01227912; UDB=6.00646562; IPR=6.01009154;
- MB=3.00027600; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-05 19:10:59
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070519-2214-0000-0000-00005F1F1C33
-Message-Id: <20190705191055.GT26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907050239
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ANMk+Cgq9cYCEBwg4q5PhHWWyXZJCCasPJFZ1XSjkkJr2srE/mm
+ wevMJjKH3eLpC2CkN0QIIhYmG7ZdupzQDTY3jtOSE58TJN43o0CABqoN/FDnYrj8/eEfJWJ
+ xEv6qVRR8nVaznopsr78h/G3L71xX6pyNWxCRF5TopTVOeNpX/vwDTdWAh4ibo4ZymZxD+F
+ S99ZbsGgvYv0v5iBFHTxg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6LQdEfRKV9A=:690brpmga8cWk+XLBPnrnE
+ OQzlKSaBMkuM4sBSQjnoqRAKBnilpm8rJV6p+4p6/otMmews6Zq+UJwv1EkT9WRa6J8HGOxYY
+ p6boq5AOWUMhNNKVREahvFXHi8taInH/D6d5njfv5eD6dFKr4HTHT7XIrRznyc+PfXagMj3tz
+ XbQuxDowN177JpSUISVvgu+jcGJObw5kmnL1BlaoA3GeQpijzk+kALajnsCcaKwsCal6JoTnO
+ xGbOdL3THgxT9BuqzV+Tllx9ByhBsH7dtVsmSt5q6avbEkiFDZKVPUwdbhheNvCCfF0GNiLAM
+ +zm9ec/YDY91pFBQk8SC1fPGMUdiC/jg1oABigj+veHwgCQTo7yq/UpQBsH8HYrOirSDcpC+c
+ roGFngIN2dSflvVgXK26f0Dtj3+YESD1nYSHU4wpccjTvnhrtp4U5nWBjEoMjkQCBFX19VrAr
+ QUW426/Fs9QBUNvH2B6Ced7UVkqj6uw3OmjqKkVS60OAU6LN0emzdKgq6HsfOpO0qQ8BZTNJT
+ 2OmZD/8IOYh47XAy2UoOIHU+pDqUriXq99nxPs7LbzGz0Crn16X3oGsf+fmPXgUfkpD1gQMAJ
+ BrznoLiAdTUQUH8Hc0ueVailrmLL8RoJKaQd1/ntFdbKFTe4IEr5Tm0N30rBB/OCfdOA5J69k
+ E1Hc9CNrf9kIbQd/zAKQGRNObiXk3mOMZ0ZSfEVI/rtIwgO7Qq6G2dbzGXfe5+vj4Mo8rD21k
+ W7fh2aI8YjVJxedY3a0vCN9R8sFuYkNWZdAIurov8UJ4+j3roKhE5l5oH/lGoBSbOc/SiSCyf
+ sP5jawQSbYiYPzN3C6UwrmEgIPxeubc0j2ix17b9mpu5PNXgp+X6+526nKuLJfQ+Zv+IqjJCS
+ PcwTcCh5W+ovIlm/5oClalFzsTV6J9465mdYwtzfKjVAPS9/3DvxHyQ2QDJ+fCySwpYn9rNdc
+ 9DdVlQqtcvEU2/w6dNGVA36IsyOJFwloxaRrWyAFMHwWFuZxGF0kdnqtoDXRfz4d6HRei2chN
+ 6tzoGpVeN4pSkRY0DrO5LEoazKEkJnrB3OydpBBw60Zda+ACJ6E2QAnCiPECAScfGP0ayw9St
+ u3zAoi52J/O0yMMIoCbW94iI89gxK5WapRk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 05:48:31PM +0200, Dmitry Vyukov wrote:
-> On Fri, Jul 5, 2019 at 5:17 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> >
-> > On Fri, Jul 05, 2019 at 03:24:26PM +0200, Dmitry Vyukov wrote:
-> > > On Thu, Jun 27, 2019 at 12:47 AM Theodore Ts'o <tytso@mit.edu> wrote:
-> > > >
-> > > > More details about what is going on.  First, it requires root, because
-> > > > one of that is required is using sched_setattr (which is enough to
-> > > > shoot yourself in the foot):
-> > > >
-> > > > sched_setattr(0, {size=0, sched_policy=0x6 /* SCHED_??? */, sched_flags=0, sched_nice=0, sched_priority=0, sched_runtime=2251799813724439, sched_deadline=4611686018427453437, sched_period=0}, 0) = 0
-> > > >
-> > > > This is setting the scheduler policy to be SCHED_DEADLINE, with a
-> > > > runtime parameter of 2251799.813724439 seconds (or 26 days) and a
-> > > > deadline of 4611686018.427453437 seconds (or 146 *years*).  This means
-> > > > a particular kernel thread can run for up to 26 **days** before it is
-> > > > scheduled away, and if a kernel reads gets woken up or sent a signal,
-> > > > no worries, it will wake up roughly seven times the interval that Rip
-> > > > Van Winkle spent snoozing in a cave in the Catskill Mountains (in
-> > > > Washington Irving's short story).
-> > > >
-> > > > We then kick off a half-dozen threads all running:
-> > > >
-> > > >    sendfile(fd, fd, &pos, 0x8080fffffffe);
-> > > >
-> > > > (and since count is a ridiculously large number, this gets cut down to):
-> > > >
-> > > >    sendfile(fd, fd, &pos, 2147479552);
-> > > >
-> > > > Is it any wonder that we are seeing RCU stalls?   :-)
-> > >
-> > > +Peter, Ingo for sched_setattr and +Paul for rcu
-> > >
-> > > First of all: is it a semi-intended result of a root (CAP_SYS_NICE)
-> > > doing local DoS abusing sched_setattr? It would perfectly reasonable
-> > > to starve other processes, but I am not sure about rcu. In the end the
-> > > high prio process can use rcu itself, and then it will simply blow
-> > > system memory by stalling rcu. So it seems that rcu stalls should not
-> > > happen as a result of weird sched_setattr values. If that is the case,
-> > > what needs to be fixed? sched_setattr? rcu? sendfile?
-> >
-> > Does the (untested, probably does not even build) patch shown below help?
-> > This patch assumes that the kernel was built with CONFIG_PREEMPT=n.
-> > And that I found all the tight loops on the do_sendfile() code path.
-> 
-> The config used when this happened is referenced from here:
-> https://syzkaller.appspot.com/bug?extid=4bfbbf28a2e50ab07368
-> and it contains:
-> CONFIG_PREEMPT=y
-> 
-> So... what does this mean? The loop should have been preempted without
-> the cond_resched() then, right?
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 5 Jul 2019 21:08:12 +0200
 
-Exactly, so although my patch might help for CONFIG_PREEMPT=n, it won't
-help in your scenario.  But looking at the dmesg from your URL above,
-I see the following:
+Avoid an extra function call by using a ternary operator instead of
+a conditional statement.
 
-rcu: rcu_preempt kthread starved for 10549 jiffies! g8969 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
+This issue was detected by using the Coccinelle software.
 
-And, prior to that:
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/nvme/host/core.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-rcu: All QSes seen, last rcu_preempt kthread activity 10503 (4295056736-4295046233), jiffies_till_next_fqs=1, root ->qsmask 0x0
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index b2dd4e391f5c..73888195bdb2 100644
+=2D-- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1650,10 +1650,7 @@ static void nvme_update_disk_info(struct gendisk *d=
+isk,
+ 	nvme_config_discard(disk, ns);
+ 	nvme_config_write_zeroes(disk, ns);
 
-In other words, the grace period has finished, but RCU's grace-period
-kthread hasn't gotten a chance to run, and thus hasn't marked it as
-completed.  The standard workaround is to set the rcutree.kthread_prio
-kernel boot parameter to a comfortably high real-time priority.
+-	if (id->nsattr & (1 << 0))
+-		set_disk_ro(disk, true);
+-	else
+-		set_disk_ro(disk, false);
++	set_disk_ro(disk, id->nsattr & (1 << 0) ? true : false);
 
-At least assuming that syzkaller isn't setting the scheduling priority
-of random CPU-bound tasks to RT priority 99 or some such.  ;-)
-
-Does that work for you?
-
-							Thanx, Paul
-
-> > > If this is semi-intended, the only option I see is to disable
-> > > something in syzkaller: sched_setattr entirely, or drop CAP_SYS_NICE,
-> > > or ...? Any preference either way?
-> >
-> > Long-running tight loops in the kernel really should contain
-> > cond_resched() or better.
-> >
-> >                                                         Thanx, Paul
-> >
-> > ------------------------------------------------------------------------
-> >
-> > diff --git a/fs/splice.c b/fs/splice.c
-> > index 25212dcca2df..50aa3286764a 100644
-> > --- a/fs/splice.c
-> > +++ b/fs/splice.c
-> > @@ -985,6 +985,7 @@ ssize_t splice_direct_to_actor(struct file *in, struct splice_desc *sd,
-> >                         sd->pos = prev_pos + ret;
-> >                         goto out_release;
-> >                 }
-> > +               cond_resched();
-> >         }
-> >
-> >  done:
-> >
-> 
+ 	blk_mq_unfreeze_queue(disk->queue);
+ }
+=2D-
+2.22.0
 
