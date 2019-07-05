@@ -2,164 +2,149 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62FDC0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E208C0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8083321852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:27:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="v7bzRvkK"
+	by mail.kernel.org (Postfix) with ESMTP id CA8BF21850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 02:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfGEC1Q (ORCPT
+        id S1727604AbfGEC3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 22:27:16 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46198 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfGEC1Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 22:27:16 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h21so7560146qtn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 19:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O5KZM3VrT8RC6G2toh1ISaY4NA4LnxOKM8Y2rCcQe00=;
-        b=v7bzRvkK8e6Z351NmC9om4MYfvAA5AAzqAxRqT7y5gRpXBfM9kWjSkzep04nq69Ygy
-         2LtMeN45mT8nePK9RETcMlaEiwCnnO6jWsbpuXaw314ks+sFIctzRp1vnNAbXYSKGlHW
-         vnwRSluLevcfklbnV323d7Cp4xUwjgbZxNcgCMH84bqDRgTcSzyoLLDjsvLB82M5HD0x
-         76518+07Yuf1y1QPkS/bi8jIQLCkTPONMbqvMfgwf+SV+6m+rH11j9zPFc+cPDBz3p9W
-         aRV3e2p99tTnNCY0q50e14jsABC9YnM3fa+7456EETLL4LFHNikpw5yiaI5n+WzX8WAp
-         Nn1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O5KZM3VrT8RC6G2toh1ISaY4NA4LnxOKM8Y2rCcQe00=;
-        b=qpmUl9oiP9DROOfV/J+Fw9nIlsNX95oXZqeUpf5T4txxAIZbX4cPehjYOuzZ6ABm0G
-         Bm3svV4x3/xqmIn3Tt9HHJ5fso9KWGDHrJ5chztNHihrIjfYjblbOKhmkqK+u5hAlmqV
-         R3eqP8x35CDdtjw3zUJ2VpqiBPlMMIDfQiEPwH9kuufROiQay58FeMcgiGDxHWqCoVgr
-         c5t08MLebPKjFQmtUH88oAuyoAlhi4ySXUxxiPy1uvzKVd03dko7OTvTEjHDsXzm8RiB
-         j/2Z/sxQpaxALZeFvQ2u2j6em9LzVZN48dkYJEaN+Wdw0AOH6mig/tWMxOT3DyHW82IE
-         VQhQ==
-X-Gm-Message-State: APjAAAWR3OdPUhoxVQGWrkiRkBQ7R8VnM23wN06WV6nI/B19TMbzSnN0
-        pDzodlKSgzIeo/M98SyB8aBFn+56/lbc0IEv0NA08Q==
-X-Google-Smtp-Source: APXvYqwRMB1LlaiHHHFDLQ5+ZRm2dPOx+7B3Io2yOJepgWVcxg3fxIbMumiRoohpyRlH9SrLAgluF75AV4XlKaJ2NIU=
-X-Received: by 2002:a0c:95a2:: with SMTP id s31mr1198547qvs.120.1562293634851;
- Thu, 04 Jul 2019 19:27:14 -0700 (PDT)
+        Thu, 4 Jul 2019 22:29:08 -0400
+Received: from mga04.intel.com ([192.55.52.120]:41777 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727305AbfGEC3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 22:29:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jul 2019 19:29:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,453,1557212400"; 
+   d="scan'208";a="248066440"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga001.jf.intel.com with ESMTP; 04 Jul 2019 19:29:05 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 20/22] iommu/vt-d: Add bind guest PASID support
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1560087862-57608-21-git-send-email-jacob.jun.pan@linux.intel.com>
+ <f183139b-b5a8-f6b5-58e6-f93e01f7be6a@linux.intel.com>
+ <20190627132244.351c7426@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <840a6943-87ab-938f-5f8d-3a2c21e08549@linux.intel.com>
+Date:   Fri, 5 Jul 2019 10:21:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190704105528.74028-1-chiu@endlessm.com> <8f1454ca-4610-03d0-82c4-06174083d463@gmail.com>
-In-Reply-To: <8f1454ca-4610-03d0-82c4-06174083d463@gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Fri, 5 Jul 2019 10:27:03 +0800
-Message-ID: <CAB4CAwc8jJQ2f8vpoB0Y6sc0fJmmrq+5rRuJ+TqGMMgCczRi+A@mail.gmail.com>
-Subject: Re: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
-To:     Jes Sorensen <jes.sorensen@gmail.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190627132244.351c7426@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 12:43 AM Jes Sorensen <jes.sorensen@gmail.com> wrote:
->
-> On 7/4/19 6:55 AM, Chris Chiu wrote:
-> > The WiFi tx power of RTL8723BU is extremely low after booting. So
-> > the WiFi scan gives very limited AP list and it always fails to
-> > connect to the selected AP. This module only supports 1x1 antenna
-> > and the antenna is switched to bluetooth due to some incorrect
-> > register settings.
-> >
-> > Compare with the vendor driver https://github.com/lwfinger/rtl8723bu,
-> > we realized that the 8723bu's enable_rf() does the same thing as
-> > rtw_btcoex_HAL_Initialize() in vendor driver. And it by default
-> > sets the antenna path to BTC_ANT_PATH_BT which we verified it's
-> > the cause of the wifi weak tx power. The vendor driver will set
-> > the antenna path to BTC_ANT_PATH_PTA in the consequent btcoexist
-> > mechanism, by the function halbtc8723b1ant_PsTdma.
-> >
-> > This commit hand over the antenna control to PTA(Packet Traffic
-> > Arbitration), which compares the weight of bluetooth/wifi traffic
-> > then determine whether to continue current wifi traffic or not.
-> > After PTA take control, The wifi signal will be back to normal and
-> > the bluetooth scan can also work at the same time. However, the
-> > btcoexist still needs to be handled under different circumstances.
-> > If there's a BT connection established, the wifi still fails to
-> > connect until BT disconnected.
-> >
-> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> > ---
-> >
-> >
-> > Note:
-> >  v2:
-> >   - Replace BIT(11) with the descriptive definition
-> >   - Meaningful comment for the REG_S0S1_PATH_SWITCH setting
-> >
-> >
-> >  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 11 ++++++++---
-> >  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |  3 ++-
-> >  2 files changed, 10 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> > index 3adb1d3d47ac..ceffe05bd65b 100644
-> > --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> > +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-> > @@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
-> >       /*
-> >        * WLAN action by PTA
-> >        */
-> > -     rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
-> > +     rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
-> >
-> >       /*
-> >        * BT select S0/S1 controlled by WiFi
-> > @@ -1568,9 +1568,14 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
-> >       rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
-> >
-> >       /*
-> > -      * 0x280, 0x00, 0x200, 0x80 - not clear
-> > +      * Different settings per different antenna position.
-> > +      *      Antenna Position:   | Normal   Inverse
-> > +      * --------------------------------------------------
-> > +      * Antenna switch to BT:    |  0x280,   0x00
-> > +      * Antenna switch to WiFi:  |  0x0,     0x280
-> > +      * Antenna switch to PTA:   |  0x200,   0x80
-> >        */
-> > -     rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
-> > +     rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
->
-> Per the documentation, shouldn't this be set to 0x200 then rather than 0x80?
->
-Per the code before REG_S0S1_PATH_SWITCH setting, the driver has told
-the co-processor the antenna is inverse.
-        memset(&h2c, 0, sizeof(struct h2c_cmd));
-        h2c.ant_sel_rsv.cmd = H2C_8723B_ANT_SEL_RSV;
-        h2c.ant_sel_rsv.ant_inverse = 1;
-        h2c.ant_sel_rsv.int_switch_type = 0;
-        rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
+Hi Jacob,
 
-At least the current modification is consistent with the antenna
-inverse setting.
-I'll verify on vendor driver about when/how the inverse be determined.
+On 6/28/19 4:22 AM, Jacob Pan wrote:
+>>> +		}
+>>> +		refcount_set(&svm->refs, 0);
+>>> +		ioasid_set_data(data->hpasid, svm);
+>>> +		INIT_LIST_HEAD_RCU(&svm->devs);
+>>> +		INIT_LIST_HEAD(&svm->list);
+>>> +
+>>> +		mmput(svm->mm);
+>>> +	}
+>>> +	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
+>>> +	if (!sdev) {
+>>> +		ret = -ENOMEM;
+>>> +		goto out;
+>> I think you need to clean up svm if its device list is empty here, as
+>> you said above:
+>>
+> No, we come here only if the device list is not empty and the new
+> device to bind is different than any existing device in the list. If we
+> cannot allocate memory for the new device, should not free the existing
+> SVM, right?
+> 
 
-Chris
+I'm sorry, but the code doesn't show this. We come here even an svm data
+structure was newly created with an empty device list. I post the code
+below to ensure that we are reading a same piece of code.
 
-> We may need to put in place so
->
-> Cheers,
-> Jesme code to detect whether we have normal
-> or inverse configuration of the dongle otherwise?
->
-> I really appreciate you're digging into this!
+         mutex_lock(&pasid_mutex);
+         svm = ioasid_find(NULL, data->hpasid, NULL);
+         if (IS_ERR(svm)) {
+                 ret = PTR_ERR(svm);
+                 goto out;
+         }
+         if (svm) {
+                 /*
+                  * If we found svm for the PASID, there must be at
+                  * least one device bond, otherwise svm should be freed.
+                  */
+                 BUG_ON(list_empty(&svm->devs));
+
+                 for_each_svm_dev() {
+                         /* In case of multiple sub-devices of the same 
+pdev assigned, we should
+                          * allow multiple bind calls with the same 
+PASID and pdev.
+                          */
+                         sdev->users++;
+                         goto out;
+                 }
+         } else {
+                 /* We come here when PASID has never been bond to a 
+device. */
+                 svm = kzalloc(sizeof(*svm), GFP_KERNEL);
+                 if (!svm) {
+                         ret = -ENOMEM;
+                         goto out;
+                 }
+                 /* REVISIT: upper layer/VFIO can track host process 
+that bind the PASID.
+                  * ioasid_set = mm might be sufficient for vfio to 
+check pasid VMM
+                  * ownership.
+                  */
+                 svm->mm = get_task_mm(current);
+                 svm->pasid = data->hpasid;
+                 if (data->flags & IOMMU_SVA_GPASID_VAL) {
+                         svm->gpasid = data->gpasid;
+                         svm->flags &= SVM_FLAG_GUEST_PASID;
+                 }
+                 refcount_set(&svm->refs, 0);
+                 ioasid_set_data(data->hpasid, svm);
+                 INIT_LIST_HEAD_RCU(&svm->devs);
+                 INIT_LIST_HEAD(&svm->list);
+
+                 mmput(svm->mm);
+         }
+         sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
+         if (!sdev) {
+                 ret = -ENOMEM;
+                 goto out;
+         }
+         sdev->dev = dev;
+         sdev->users = 1;
+
+Best regards,
+Baolu
