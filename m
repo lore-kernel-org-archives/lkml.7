@@ -2,177 +2,128 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE657C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597CFC468A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B1E20449
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562360956;
-	bh=zy4SXhrp9jiZqBkC6elc4q0hK9jGGrlY0sGqHRcDNGw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TSLAJGzebZOpOwXv5Ohl33Woj8QXqTeUjYC1j48T9KfE4ITpvhvo8ZgZqvWTRgCLZ
-	 hWbjxe4tEQXNZ38xxaJwrG9FZHH6dBCPGp1gQWaxo/Mohg7DlcaSrdgQ34bXB1OQ83
-	 rc25e8a6bijpAubftzYOBgtdiLRqtmHsj3hWHJW8=
+	by mail.kernel.org (Postfix) with ESMTP id 3D9B721738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfGEVJP (ORCPT
+        id S1728159AbfGEVNi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:09:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41658 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbfGEVJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:09:14 -0400
-Received: by mail-pg1-f196.google.com with SMTP id q4so4776658pgj.8;
-        Fri, 05 Jul 2019 14:09:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0V9sHkDoDZ2ti13DRCJKAl1jtpHUiUPra2GCaGAZam0=;
-        b=fEyryHs1jqPC6ANz6uHtLQOvlWSbFF9aD8BhPXAzSEfpwC/eZWy+4MDdsVmkOcokFe
-         gfCpOKoBYBvcWo+yT3TMUB74O2oIqDF9aL76MAL4odJvg57eQPljwE+awUQfhSeRH4va
-         vKzfXBkZXAj+1Ii6CXwg57U0QUwENd1MtjJwKnlNYE4EPzguMAOQ1xc3KIMbBzDTtbu0
-         QW5JWXmRYqDUQPee7WWB9LQ4HAPc1rKEJPrHLwuyHuMssvW+RM5z6yzWUYyzTNtguLg7
-         RIDMNSplaOwQWkWhGPsRzTczsF+lrYbV0CY8fqyFNqId/kJYcgxb06vPJ5IZ0hpPOWfM
-         JQzw==
-X-Gm-Message-State: APjAAAWES0dM6yzyRuC3eKfi69QPcIb4SBCW5fgBPopiRUb1OR6CzeBj
-        BiEiPoCFlXC0oUe7vJXQ44+mHlQj
-X-Google-Smtp-Source: APXvYqyIXUmSRc7ObN8oWAQnw8hhZMyOLg5PIN6p5ZqbAyIuYYBzNNBgl2bM1LDN7PmMmzeY0fCQ6A==
-X-Received: by 2002:a63:1657:: with SMTP id 23mr7149268pgw.98.1562360954138;
-        Fri, 05 Jul 2019 14:09:14 -0700 (PDT)
-Received: from dennisz-mbp.thefacebook.com ([163.114.130.128])
-        by smtp.gmail.com with ESMTPSA id t11sm11018194pgb.33.2019.07.05.14.09.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 05 Jul 2019 14:09:13 -0700 (PDT)
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>
-Cc:     kernel-team@fb.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>
-Subject: [PATCH v2] blk-iolatency: fix STS_AGAIN handling
-Date:   Fri,  5 Jul 2019 17:09:09 -0400
-Message-Id: <20190705210909.82263-1-dennis@kernel.org>
-X-Mailer: git-send-email 2.13.5
+        Fri, 5 Jul 2019 17:13:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41820 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727010AbfGEVNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 17:13:37 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B2C1330260;
+        Fri,  5 Jul 2019 21:13:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B35C719692;
+        Fri,  5 Jul 2019 21:13:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, jmorris@namei.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Keys: Set 2 - request_key() improvements for 5.3
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <27326.1562361214.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 05 Jul 2019 22:13:34 +0100
+Message-ID: <27327.1562361214@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 05 Jul 2019 21:13:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iolatency controller is based on rq_qos. It increments on
-rq_qos_throttle() and decrements on either rq_qos_cleanup() or
-rq_qos_done_bio(). a3fb01ba5af0 fixes the double accounting issue where
-blk_mq_make_request() may call both rq_qos_cleanup() and
-rq_qos_done_bio() on REQ_NO_WAIT. So checking STS_AGAIN prevents the
-double decrement.
+Hi Linus,
 
-The above works upstream as the only way we can get STS_AGAIN is from
-blk_mq_get_request() failing. The STS_AGAIN handling isn't a real
-problem as bio_endio() skipping only happens on reserved tag allocation
-failures which can only be caused by driver bugs and already triggers
-WARN.
+Here's my second block of keyrings changes for the next merge window.
 
-However, the fix creates a not so great dependency on how STS_AGAIN can
-be propagated. Internally, we (Facebook) carry a patch that kills read
-ahead if a cgroup is io congested or a fatal signal is pending. This
-combined with chained bios progagate their bi_status to the parent is
-not already set can can cause the parent bio to not clean up properly
-even though it was successful. This consequently leaks the inflight
-counter and can hang all IOs under that blkg.
+These are all request_key()-related, including a fix and some improvements:
 
-To nip the adverse interaction early, this removes the rq_qos_cleanup()
-callback in iolatency in favor of cleaning up always on the
-rq_qos_done_bio() path.
+ (1) Fix the lack of a Link permission check on a key found by
+     request_key(), thereby enabling request_key() to link keys that don't
+     grant this permission to the target keyring (which must still grant
+     Write permission).
 
-Fixes: a3fb01ba5af0 ("blk-iolatency: only account submitted bios")
-Debugged-by: Tejun Heo <tj@kernel.org>
-Debugged-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
+     Note that the key must be in the caller's keyrings already to be
+     found.
+
+ (2) Invalidate used request_key authentication keys rather than revoking
+     them, so that they get cleaned up immediately rather than hanging
+     around till the expiry time is passed.
+
+ (3) Move the RCU locks outwards from the keyring search functions so that
+     a request_key_rcu() can be provided.  This can be called in RCU mode,
+     so it can't sleep and can't upcall - but it can be called from
+     LOOKUP_RCU pathwalk mode.
+
+ (4) Cache the latest positive result of request_key*() temporarily in
+     task_struct so that filesystems that make a lot of request_key() calls
+     during pathwalk can take advantage of it to avoid having to redo the
+     searching.  This requires CONFIG_KEYS_REQUEST_CACHE=y.
+
+     It is assumed that the key just found is likely to be used multiple
+     times in each step in an RCU pathwalk, and is likely to be reused for
+     the next step too.
+
+     Note that the cleanup of the cache is done on TIF_NOTIFY_RESUME, just
+     before userspace resumes, and on exit.
+
+David
 ---
- block/blk-iolatency.c | 51 ++++++++++++-------------------------------
- 1 file changed, 14 insertions(+), 37 deletions(-)
+The following changes since commit 45e0f30c30bb131663fbe1752974d6f2e39611e2:
 
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index e8859350ab6e..d973c38ee4fd 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -600,10 +600,6 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	if (!blkg || !bio_flagged(bio, BIO_TRACKED))
- 		return;
- 
--	/* We didn't actually submit this bio, don't account it. */
--	if (bio->bi_status == BLK_STS_AGAIN)
--		return;
--
- 	iolat = blkg_to_lat(bio->bi_blkg);
- 	if (!iolat)
- 		return;
-@@ -622,40 +618,22 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 
- 		inflight = atomic_dec_return(&rqw->inflight);
- 		WARN_ON_ONCE(inflight < 0);
--		if (iolat->min_lat_nsec == 0)
--			goto next;
--		iolatency_record_time(iolat, &bio->bi_issue, now,
--				      issue_as_root);
--		window_start = atomic64_read(&iolat->window_start);
--		if (now > window_start &&
--		    (now - window_start) >= iolat->cur_win_nsec) {
--			if (atomic64_cmpxchg(&iolat->window_start,
--					window_start, now) == window_start)
--				iolatency_check_latencies(iolat, now);
-+		/*
-+		 * If bi_status is BLK_STS_AGAIN, the bio wasn't actually
-+		 * submitted, so do not account for it.
-+		 */
-+		if (iolat->min_lat_nsec && bio->bi_status != BLK_STS_AGAIN) {
-+			iolatency_record_time(iolat, &bio->bi_issue, now,
-+					      issue_as_root);
-+			window_start = atomic64_read(&iolat->window_start);
-+			if (now > window_start &&
-+			    (now - window_start) >= iolat->cur_win_nsec) {
-+				if (atomic64_cmpxchg(&iolat->window_start,
-+					     window_start, now) == window_start)
-+					iolatency_check_latencies(iolat, now);
-+			}
- 		}
--next:
--		wake_up(&rqw->wait);
--		blkg = blkg->parent;
--	}
--}
--
--static void blkcg_iolatency_cleanup(struct rq_qos *rqos, struct bio *bio)
--{
--	struct blkcg_gq *blkg;
--
--	blkg = bio->bi_blkg;
--	while (blkg && blkg->parent) {
--		struct rq_wait *rqw;
--		struct iolatency_grp *iolat;
--
--		iolat = blkg_to_lat(blkg);
--		if (!iolat)
--			goto next;
--
--		rqw = &iolat->rq_wait;
--		atomic_dec(&rqw->inflight);
- 		wake_up(&rqw->wait);
--next:
- 		blkg = blkg->parent;
- 	}
- }
-@@ -671,7 +649,6 @@ static void blkcg_iolatency_exit(struct rq_qos *rqos)
- 
- static struct rq_qos_ops blkcg_iolatency_ops = {
- 	.throttle = blkcg_iolatency_throttle,
--	.cleanup = blkcg_iolatency_cleanup,
- 	.done_bio = blkcg_iolatency_done_bio,
- 	.exit = blkcg_iolatency_exit,
- };
--- 
-2.17.1
+  keys: Add capability-checking keyctl function (2019-06-19 13:27:45 +0100)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-request-20190626
+
+for you to fetch changes up to 3b8c4a08a471d56ecaaca939c972fdf5b8255629:
+
+  keys: Kill off request_key_async{,_with_auxdata} (2019-06-26 20:58:13 +0100)
+
+----------------------------------------------------------------
+request_key improvements
+
+----------------------------------------------------------------
+David Howells (6):
+      keys: Fix request_key() lack of Link perm check on found key
+      keys: Invalidate used request_key authentication keys
+      keys: Move the RCU locks outwards from the keyring search functions
+      keys: Provide request_key_rcu()
+      keys: Cache result of request_key*() temporarily in task_struct
+      keys: Kill off request_key_async{,_with_auxdata}
+
+ Documentation/security/keys/core.rst        |  38 ++------
+ Documentation/security/keys/request-key.rst |  33 +++----
+ include/keys/request_key_auth-type.h        |   1 +
+ include/linux/key.h                         |  14 +--
+ include/linux/sched.h                       |   5 +
+ include/linux/tracehook.h                   |   7 ++
+ kernel/cred.c                               |   9 ++
+ security/keys/Kconfig                       |  18 ++++
+ security/keys/internal.h                    |   6 +-
+ security/keys/key.c                         |   4 +-
+ security/keys/keyring.c                     |  16 ++--
+ security/keys/proc.c                        |   4 +-
+ security/keys/process_keys.c                |  41 ++++-----
+ security/keys/request_key.c                 | 137 ++++++++++++++++++----------
+ security/keys/request_key_auth.c            |  60 +++++++-----
+ 15 files changed, 229 insertions(+), 164 deletions(-)
