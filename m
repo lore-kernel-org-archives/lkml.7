@@ -5,69 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51512C4649C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC828C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5272147A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5370218C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="quRGeLJj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A7ANQjbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbfGEJ62 (ORCPT
+        id S1728532AbfGEJ6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:58:28 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45919 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728503AbfGEJ60 (ORCPT
+        Fri, 5 Jul 2019 05:58:33 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45914 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728490AbfGEJ6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:58:26 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u10so5921722lfm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:58:25 -0700 (PDT)
+        Fri, 5 Jul 2019 05:58:24 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u10so5921672lfm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:58:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T9WpS+HVMWD8ur8SuhCnKoutTiVOWrWJ89RfcZ9PQgs=;
-        b=quRGeLJjnlYqiflrezgM9kTuvWWmR1zElFnf5iYvD6ljqXJwm3FmkqeRkRI8tu9o55
-         pxGzSYze1Z/rEWljHvZYqpXsWpx0qSEKUk12LrEB7Dorbpjf/PwlfpvkyEy2KxeCXbgF
-         xAnbDlYHPjDVY9wr1ilAS6D1dP/LI6zC06Idbk+lP67Giqvc/CZ1Oj+40YW484PcRmQl
-         FMV4k0tkNpGw5VEtUwmeq5FghK2vS5XB7cIrrenYBqeOjWPjuZ6tZ9LnfRtRn0QTnFXD
-         1db1A99zKgpkWI/fh8808GVMPvpVu64sB7wCPFfXjDKzA0vIO7cWiSzMlfzeZZhuk8oN
-         tMzQ==
+        bh=3d7DZVDxTF+1P1r04sZgrqNLdKAcaTJiZmOQo0Hf0lo=;
+        b=A7ANQjbzgETo8bypTd7CTupdPefiX80rr3iB1lplbcFGJ6Lj/pEend7B5Yar5Obj58
+         b9syE3gDdc0YxdFoY7jgQ4YuhUJsSAIMW4t/iN2py89kVd5pmUYKfHiEVbIzJodiEFY9
+         REW23yadtF1F9/NphlTSuc9JY4ds7EUyt9t6OgqYh/3aZU+P93J/bZevFJYs9xu+PFov
+         Trbk5dYDBDS550f6U/ryk9FiTqppLaFfXAHeHSvpDXaZEMrIf8k0GEZaQiYFKh0bk4cb
+         lEwDZ6EN1CZI0y4fr3RkOMzfStU4VYn5NcRXBxW5cxO3GJ0T+nmsEXtC8qmAFITi9D67
+         oeHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T9WpS+HVMWD8ur8SuhCnKoutTiVOWrWJ89RfcZ9PQgs=;
-        b=NqE2RUMx6H4hbq623j6RJodwPG1p4JwOM8pEJgD8ab/1Lla3i/1VoLyvUv8aXylp/h
-         uKn9OULjEvePz3U5HhyrQteFxqD8u3YQDvQXxcqbgM+4sNsSGZ9O+y4AlPM1DhCCxZgJ
-         g7Kp7Fs45bxh5rNoMolPMaJZMz1acS11QK3J7NWAOd6VgXwZbL8fmjccQpFsM+LX1pZB
-         QSI3HHGppc5nN7d1yAapRJTvnSpxp2q6A4DzFhouiPwcgcjECHdeSYdkCxfDhOxKNEQE
-         yRVGuvGaqeLhqd8IDcG23owg170SUbxq0oZYUOu9iOVQT6BI12eB+gI6WVj/h/AnXX46
-         Pt6A==
-X-Gm-Message-State: APjAAAX3y6buvQ6mIHah+Uzi8j6QBys4atAHhxVQs6VV0IY1N/PZe7b0
-        Py6UxhooIFAOtUyjltQI3Jf1BfxYhDg=
-X-Google-Smtp-Source: APXvYqzGZq9cBAG/9YdbDllNDNna+6azYgs4EKNX4aNr+IHo7Lltk3lagnCn4o+pTRCRoswpV++XEw==
-X-Received: by 2002:a05:6512:288:: with SMTP id j8mr1701505lfp.181.1562320704609;
-        Fri, 05 Jul 2019 02:58:24 -0700 (PDT)
-Received: from localhost.localdomain (ua-83-226-34-119.bbcust.telenor.se. [83.226.34.119])
-        by smtp.gmail.com with ESMTPSA id o24sm1674955ljg.6.2019.07.05.02.58.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        bh=3d7DZVDxTF+1P1r04sZgrqNLdKAcaTJiZmOQo0Hf0lo=;
+        b=kk3PZ1Vb8Z7yJ8YVdD1ewY+9hb6/VfIJbwudd7vDZjinuY/BWqjDp1KB5oTYhAIzpD
+         rgG5RcVGiv5fb52FVKYglNk1dGann/RBP0gR/kLMw2XxPcIljsxL6bgFHRT5tVGTo60r
+         MCWEcLOp5ZHO8U5FHNzE+g60dLRePp/Bd70CEZBryKOYclMjR84XUD8p9R63N9hHstZc
+         siJMszAhR+6Uf3UovwVCQfbt0S2DEIiGN/CgyhMt81zGWHWPEunL+r8cwdrViroVA1J9
+         sCqOojAbcxPJelqnQqFBOggetxxFiyUNNMQW9AsLQge3bUpthauwyacW4hi1yEczfjW3
+         jSpw==
+X-Gm-Message-State: APjAAAVnog62Cn05I2ZPrfaYIOA4kLVP/pEPTPhr+4DEJWQW2GGjvnr4
+        +9dDM/R2f1CzR22jTHpyg0iBUg==
+X-Google-Smtp-Source: APXvYqwjbM7AX8hHIJs5YC6nRjkyBuavTgd0+gyyiJpufgKhogx9bn+W5bDoNQhNintlVXWZmy1smg==
+X-Received: by 2002:a19:8c57:: with SMTP id i23mr1531184lfj.192.1562320703024;
         Fri, 05 Jul 2019 02:58:23 -0700 (PDT)
+Received: from localhost.localdomain (ua-83-226-34-119.bbcust.telenor.se. [83.226.34.119])
+        by smtp.gmail.com with ESMTPSA id o24sm1674955ljg.6.2019.07.05.02.58.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 02:58:22 -0700 (PDT)
 From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Andy Gross <agross@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/13] dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
-Date:   Fri,  5 Jul 2019 11:57:19 +0200
-Message-Id: <20190705095726.21433-9-niklas.cassel@linaro.org>
+        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 07/13] cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
+Date:   Fri,  5 Jul 2019 11:57:18 +0200
+Message-Id: <20190705095726.21433-8-niklas.cassel@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190705095726.21433-1-niklas.cassel@linaro.org>
 References: <20190705095726.21433-1-niklas.cassel@linaro.org>
@@ -78,49 +76,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add qcom-opp bindings with properties needed for Core Power Reduction
-(CPR).
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-CPR is included in a great variety of Qualcomm SoCs, e.g. msm8916 and
-msm8996. CPR was first introduced in msm8974.
+Add qcs404 to cpufreq-dt-platdev blacklist.
 
-Changes since RFC:
--Removed opp-hz. It is already an optional property in opp.txt
-so no need to specify it with the same definition here.
-
-Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 ---
- .../devicetree/bindings/opp/qcom-opp.txt      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+ drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
-new file mode 100644
-index 000000000000..f204685d029c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
-@@ -0,0 +1,19 @@
-+Qualcomm OPP bindings to describe OPP nodes
-+
-+The bindings are based on top of the operating-points-v2 bindings
-+described in Documentation/devicetree/bindings/opp/opp.txt
-+Additional properties are described below.
-+
-+* OPP Table Node
-+
-+Required properties:
-+- compatible: Allow OPPs to express their compatibility. It should be:
-+  "operating-points-v2-qcom-level"
-+
-+* OPP Node
-+
-+Optional properties:
-+- qcom,opp-fuse-level: A positive value representing the fuse corner/level
-+  associated with this OPP node. Sometimes several corners/levels shares
-+  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
-+  min uV, and max uV.
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index 03dc4244ab00..ec6ef996e637 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -123,6 +123,7 @@ static const struct of_device_id blacklist[] __initconst = {
+ 
+ 	{ .compatible = "qcom,apq8096", },
+ 	{ .compatible = "qcom,msm8996", },
++	{ .compatible = "qcom,qcs404", },
+ 
+ 	{ .compatible = "st,stih407", },
+ 	{ .compatible = "st,stih410", },
 -- 
 2.21.0
 
