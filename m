@@ -2,158 +2,118 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAADC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA7FC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6BD218E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:03:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QpX6MdG+"
+	by mail.kernel.org (Postfix) with ESMTP id 6D47420843
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfGEJDm (ORCPT
+        id S1728139AbfGEJEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:03:42 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45520 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728003AbfGEJDl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:03:41 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x658xWvl187487;
-        Fri, 5 Jul 2019 09:03:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=1g1pDf5Otmvxw/VYPR3CC5244T59MboONzYhSU/S7LA=;
- b=QpX6MdG+eGOdrPIHnITLpxK1JW0TBiUfePLdu+fVR6qlR1oHg6f43StMcycND18fcTIS
- pxNZz3LMYUDiUl0iixVsip36/x3vjNsy9FdAWH0scxs39jUZukr4jGUdVC6q3Pdo5KxM
- dFIFy8uATPsmmIclFjN2Mu1vgaW55p/nhDQ1CXoezeehavSkskgXIk9AY+jzfaT6KeMO
- IO3qylfY9VnLTH6oxUYRdTfeWdw8TyYASirkf5FoXSJMcNjz0w5rj4QqibJZem8bPe6v
- UI1fscDMgUzVjEBjOPq6CNNnjbRO1pgIr+s8iNv6dowHnQPGg1e1mKXD51O79f2Byyd1 rw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2te61qa109-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jul 2019 09:03:16 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x65933R7010009;
-        Fri, 5 Jul 2019 09:03:15 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2th5qmdr72-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jul 2019 09:03:15 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6593DPs021563;
-        Fri, 5 Jul 2019 09:03:13 GMT
-Received: from [192.168.1.14] (/109.189.94.158)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Jul 2019 02:03:13 -0700
-Subject: Re: [PATCH v2] RDMA/core: Fix race when resolving IP address
-To:     Parav Pandit <pandit.parav@gmail.com>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1561711763-24705-1-git-send-email-dag.moxnes@oracle.com>
- <CAG53R5VQqqr0S6OU+13tcuxcvz922iuqoP-mWbaQERPc48964A@mail.gmail.com>
-From:   Dag Moxnes <dag.moxnes@oracle.com>
-Message-ID: <4e46889a-0b13-fa9b-fe8e-d9f6a44d714a@oracle.com>
-Date:   Fri, 5 Jul 2019 11:03:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAG53R5VQqqr0S6OU+13tcuxcvz922iuqoP-mWbaQERPc48964A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9308 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907050117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9308 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907050117
+        Fri, 5 Jul 2019 05:04:08 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:55016 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727982AbfGEJEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:04:07 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 823F65DFFAA7B06D2835;
+        Fri,  5 Jul 2019 17:04:00 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x6591Fw5033077;
+        Fri, 5 Jul 2019 17:01:15 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070517014955-2109273 ;
+          Fri, 5 Jul 2019 17:01:49 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Rob Herring <robh@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] powerpc: fix use-after-free on fixup_port_irq()
+Date:   Fri, 5 Jul 2019 16:59:36 +0800
+Message-Id: <1562317176-13317-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-05 17:01:49,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-05 17:01:21,
+        Serialize complete at 2019-07-05 17:01:21
+X-MAIL: mse-fl1.zte.com.cn x6591Fw5033077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is a possible use-after-free issue in the fixup_port_irq():
 
-Den 05.07.2019 04:19, skrev Parav Pandit:
-> On Fri, Jun 28, 2019 at 2:20 PM Dag Moxnes <dag.moxnes@oracle.com> wrote:
->> Use neighbour lock when copying MAC address from neighbour data struct
->> in dst_fetch_ha.
->>
->> When not using the lock, it is possible for the function to race with
->> neigh_update, causing it to copy an invalid MAC address.
->>
->> It is possible to provoke this error by calling rdma_resolve_addr in a
->> tight loop, while deleting the corresponding ARP entry in another tight
->> loop.
->>
->> Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
->> Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
->>
->> ---
->> v1 -> v2:
->>     * Modified implementation to improve readability
->> ---
->>   drivers/infiniband/core/addr.c | 9 ++++++---
->>   1 file changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
->> index 2f7d141598..51323ffbc5 100644
->> --- a/drivers/infiniband/core/addr.c
->> +++ b/drivers/infiniband/core/addr.c
->> @@ -333,11 +333,14 @@ static int dst_fetch_ha(const struct dst_entry *dst,
->>          if (!n)
->>                  return -ENODATA;
->>
->> -       if (!(n->nud_state & NUD_VALID)) {
->> +       read_lock_bh(&n->lock);
->> +       if (n->nud_state & NUD_VALID) {
->> +               memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
->> +               read_unlock_bh(&n->lock);
->> +       } else {
->> +               read_unlock_bh(&n->lock);
->>                  neigh_event_send(n, NULL);
->>                  ret = -ENODATA;
->> -       } else {
->> -               memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
->>          }
->>
->>          neigh_release(n);
->> --
->> 2.20.1
->>
-> Reviewed-by: Parav Pandit <parav@mellanox.com>
->
-> A sample trace such as below in commit message would be good to have.
-> Or the similar one that you noticed with ARP delete sequence.
->
-> neigh_changeaddr()
->    neigh_flush_dev()
->     n->nud_state = NUD_NOARP;
->
-> Having some issues with office outlook, so replying via gmail.
+460 static void __init fixup_port_irq(int index,
+461                                   struct device_node *np,
+462                                   struct plat_serial8250_port *port)
+463 {
+...
+469         if (!virq && legacy_serial_infos[index].irq_check_parent) {
+470                 np = of_get_parent(np);  --> modified here.
+...
+474                 of_node_put(np); ---> released here
+475         }
+...
+481 #ifdef CONFIG_SERIAL_8250_FSL
+482   if (of_device_is_compatible(np, "fsl,ns16550")) --> dereferenced here
+...
+484 #endif
+485 }
 
-Hi Parav,
+We solve this problem by introducing a new parent_np variable.
 
-Thanks for your review. I'll add a sample trace to the commit message as
+Fixes: 9deaa53ac7fa ("serial: add irq handler for Freescale 16550 errata.")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Rob Herring <robh@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/powerpc/kernel/legacy_serial.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-you suggest.
-
-
-Regards,
-
--Dag
+diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kernel/legacy_serial.c
+index 7cea597..0105f3e 100644
+--- a/arch/powerpc/kernel/legacy_serial.c
++++ b/arch/powerpc/kernel/legacy_serial.c
+@@ -461,17 +461,18 @@ static void __init fixup_port_irq(int index,
+ 				  struct device_node *np,
+ 				  struct plat_serial8250_port *port)
+ {
++	struct device_node *parent_np;
+ 	unsigned int virq;
+ 
+ 	DBG("fixup_port_irq(%d)\n", index);
+ 
+ 	virq = irq_of_parse_and_map(np, 0);
+ 	if (!virq && legacy_serial_infos[index].irq_check_parent) {
+-		np = of_get_parent(np);
+-		if (np == NULL)
++		parent_np = of_get_parent(np);
++		if (parent_np == NULL)
+ 			return;
+-		virq = irq_of_parse_and_map(np, 0);
+-		of_node_put(np);
++		virq = irq_of_parse_and_map(parent_np, 0);
++		of_node_put(parent_np);
+ 	}
+ 	if (!virq)
+ 		return;
+-- 
+2.9.5
 
