@@ -2,128 +2,91 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D54C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F29C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4A921850
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="mfJTkIGi";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="GQ/H+cQR"
+	by mail.kernel.org (Postfix) with ESMTP id A494E21850
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbfGELia (ORCPT
+        id S1728767AbfGELja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:38:30 -0400
-Received: from node.akkea.ca ([192.155.83.177]:41794 "EHLO node.akkea.ca"
+        Fri, 5 Jul 2019 07:39:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45408 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728741AbfGELi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:38:29 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 2131E4E2051;
-        Fri,  5 Jul 2019 11:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1562326708; bh=18P+AMytcx3lv76RTtEolvqR25huJYtRlXkpaF9f5yE=;
-        h=From:To:Cc:Subject:Date;
-        b=mfJTkIGivYuAi4DCALqY13+hqDe09cDBGciyJM5EwsH+Ha/iNCKEXUAOwO9FAUjzM
-         cLaRPELssKRLCF+LyPFzeDWOl3ALnaXYkmmXxKxPxtwPVh9cpJCvy+mBs4B2ULabj1
-         TCmIwW+Jvj6bCxv/esdptNJMXrl4H1tlQ/AVsaNU=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 68gWECsqC91D; Fri,  5 Jul 2019 11:38:27 +0000 (UTC)
-Received: from media.hitronhub.home (S0106ac202e1e3ee3.cg.shawcable.net [96.51.227.121])
-        by node.akkea.ca (Postfix) with ESMTPSA id 7A70A4E204E;
-        Fri,  5 Jul 2019 11:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1562326707; bh=18P+AMytcx3lv76RTtEolvqR25huJYtRlXkpaF9f5yE=;
-        h=From:To:Cc:Subject:Date;
-        b=GQ/H+cQREUeTwBG7+qcyZMDRjUAVUI9784QoRD/mDpJuss9+bmJqLcMwveXscH9WL
-         2pTQcWnuMiDW+JjPkkKqXABLoqcpkDuZZPzKk7oFG+IXTVd4iBVXNKox68i5ObGyT2
-         h1J4frsHlDpoyCGRBZt70Gbhyp6lwxESagY4BPAY=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus.ainslie@puri.sm
-Cc:     krzk@kernel.org, Sebastian Reichel <sre@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH] power: supply: bq25890_charger: Add the BQ25895 part
-Date:   Fri,  5 Jul 2019 05:37:51 -0600
-Message-Id: <20190705113751.18116-1-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
+        id S1727758AbfGELja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:39:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 04:39:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
+   d="scan'208";a="155261669"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga007.jf.intel.com with ESMTP; 05 Jul 2019 04:39:25 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        hdegoede@redhat.com, heikki.krogerus@linux.intel.com,
+        robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org,
+        jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com,
+        peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com,
+        Pawel Laszczak <pawell@cadence.com>
+Subject: Re: [PATCH v9 2/6] usb:gadget Separated decoding functions from dwc3 driver.
+In-Reply-To: <1562324238-16655-3-git-send-email-pawell@cadence.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-3-git-send-email-pawell@cadence.com>
+Date:   Fri, 05 Jul 2019 14:39:24 +0300
+Message-ID: <87tvc0lngz.fsf@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BQ25895 is almost identical to the BQ25890.
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- drivers/power/supply/bq25890_charger.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Hi,
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index d333f2b321b9..9d1ec8d677de 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -22,6 +22,7 @@
- #define BQ25890_IRQ_PIN			"bq25890_irq"
- 
- #define BQ25890_ID			3
-+#define BQ25895_ID			7
- #define BQ25896_ID			0
- 
- enum bq25890_fields {
-@@ -171,7 +172,7 @@ static const struct reg_field bq25890_reg_fields[] = {
- 	[F_WD]			= REG_FIELD(0x07, 4, 5),
- 	[F_TMR_EN]		= REG_FIELD(0x07, 3, 3),
- 	[F_CHG_TMR]		= REG_FIELD(0x07, 1, 2),
--	[F_JEITA_ISET]		= REG_FIELD(0x07, 0, 0),
-+	[F_JEITA_ISET]		= REG_FIELD(0x07, 0, 0), // reserved on BQ25895
- 	/* REG08 */
- 	[F_BATCMP]		= REG_FIELD(0x08, 5, 7),
- 	[F_VCLAMP]		= REG_FIELD(0x08, 2, 4),
-@@ -180,7 +181,7 @@ static const struct reg_field bq25890_reg_fields[] = {
- 	[F_FORCE_ICO]		= REG_FIELD(0x09, 7, 7),
- 	[F_TMR2X_EN]		= REG_FIELD(0x09, 6, 6),
- 	[F_BATFET_DIS]		= REG_FIELD(0x09, 5, 5),
--	[F_JEITA_VSET]		= REG_FIELD(0x09, 4, 4),
-+	[F_JEITA_VSET]		= REG_FIELD(0x09, 4, 4), // reserved on BQ25895
- 	[F_BATFET_DLY]		= REG_FIELD(0x09, 3, 3),
- 	[F_BATFET_RST_EN]	= REG_FIELD(0x09, 2, 2),
- 	[F_PUMPX_UP]		= REG_FIELD(0x09, 1, 1),
-@@ -188,7 +189,7 @@ static const struct reg_field bq25890_reg_fields[] = {
- 	/* REG0A */
- 	[F_BOOSTV]		= REG_FIELD(0x0A, 4, 7),
- 	/* PFM_OTG_DIS 3 on BQ25896 */
--	[F_BOOSTI]		= REG_FIELD(0x0A, 0, 2),
-+	[F_BOOSTI]		= REG_FIELD(0x0A, 0, 2), // reserved on BQ25895
- 	/* REG0B */
- 	[F_VBUS_STAT]		= REG_FIELD(0x0B, 5, 7),
- 	[F_CHG_STAT]		= REG_FIELD(0x0B, 3, 4),
-@@ -392,6 +393,8 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_MODEL_NAME:
- 		if (bq->chip_id == BQ25890_ID)
- 			val->strval = "BQ25890";
-+		else if (bq->chip_id == BQ25895_ID)
-+			val->strval = "BQ25895";
- 		else if (bq->chip_id == BQ25896_ID)
- 			val->strval = "BQ25896";
- 		else
-@@ -862,7 +865,8 @@ static int bq25890_probe(struct i2c_client *client,
- 		return bq->chip_id;
- 	}
- 
--	if ((bq->chip_id != BQ25890_ID) && (bq->chip_id != BQ25896_ID)) {
-+	if ((bq->chip_id != BQ25890_ID) && (bq->chip_id != BQ25895_ID)
-+			&& (bq->chip_id != BQ25896_ID)) {
- 		dev_err(dev, "Chip with ID=%d, not supported!\n", bq->chip_id);
- 		return -ENODEV;
- 	}
+Pawel Laszczak <pawell@cadence.com> writes:
+> diff --git a/include/linux/usb/ch9.h b/include/linux/usb/ch9.h
+> index da82606be605..d388a3a5ab7e 100644
+> --- a/include/linux/usb/ch9.h
+> +++ b/include/linux/usb/ch9.h
+> @@ -70,4 +70,29 @@ extern enum usb_device_speed usb_get_maximum_speed(struct device *dev);
+>   */
+>  extern const char *usb_state_string(enum usb_device_state state);
+>  
+> +/**
+> + * usb_decode_ctrl - Returns human readable representation of control request.
+> + * @str: buffer to return a human-readable representation of control request.
+> + *       This buffer should have about 200 bytes.
+> + * @size: size of str buffer.
+> + * @bRequestType: matches the USB bmRequestType field
+> + * @bRequest: matches the USB bRequest field
+> + * @wValue: matches the USB wValue field (CPU byte order)
+> + * @wIndex: matches the USB wIndex field (CPU byte order)
+> + * @wLength: matches the USB wLength field (CPU byte order)
+> + *
+> + * Function returns decoded, formatted and human-readable description of
+> + * control request packet.
+> + *
+> + * The usage scenario for this is for tracepoints, so function as a return
+> + * use the same value as in parameters. This approach allows to use this
+> + * function in TP_printk
+> + *
+> + * Important: wValue, wIndex, wLength parameters before invoking this function
+> + * should be processed by le16_to_cpu macro.
+> + */
+> +extern const char *usb_decode_ctrl(char *str, size_t size, __u8 bRequestType,
+> +				   __u8 bRequest, __u16 wValue, __u16 wIndex,
+> +				   __u16 wLength);
+> +
+
+where's the stub when !TRACING?
+
 -- 
-2.17.1
-
+balbi
