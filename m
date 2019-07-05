@@ -2,109 +2,155 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF725C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4898C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE7E218A0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562297291;
-	bh=zgyK+Eu7zqLO/BtcJotgRYO4v9dObt0Cf2+AFvQYMKA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gida/Oci1jkAxKliOz7oVpX3JHuqiO4Uad4gsp7H7LAcTOd5Vgk/OW0/gVEWJQRms
-	 FRktmG0M5HCs5kKNHF7svlp19895rqaHbJN8PDbFAIBd29Ztjr+aVjtPbwNONs/Bcr
-	 47nYytXXBuf6Aoc5ZZcEwOje4wo+zVf9X0PNuFW8=
+	by mail.kernel.org (Postfix) with ESMTP id 8F0DF2083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:41:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="K3X9Th2k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfGED2K (ORCPT
+        id S1727808AbfGEDly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 23:28:10 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36124 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfGED2K (ORCPT
+        Thu, 4 Jul 2019 23:41:54 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40317 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727710AbfGEDlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 23:28:10 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i21so7819249ljj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 20:28:08 -0700 (PDT)
+        Thu, 4 Jul 2019 23:41:53 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a15so9854545qtn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 20:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TgCG2v/18aLvVnJHA93hfe9UUNoDJjfM4smfbeOmGTs=;
-        b=ZKAENLkGf1r+fUGMW12YDOU0HGdQRO+qsTxUG0bZTYQqCvkduK6W3gq0wUb+5AXGha
-         ecmSYa9uzB5kyzf/pLjBmRSSMG3uBQqWlnqvMd5F2KGYxmAA06Xu2NofTloVlimN5tio
-         RNP8VVKzRv1mW6VhS6LEbSnR6Y4vCzkYijDRo=
+         :cc;
+        bh=QNksPQ+a6LXq8db+Dw4OJOgNhGrCLmReslnkT14eo4U=;
+        b=K3X9Th2kR+FpbObMQC5vGJwaKgEaXQ+qlodCTGoLEfnJcVlfZX9P5YWdyUoPmTVJpO
+         1U7tNXA5xeh2cp9m5UsJUJC8d254S3AyBzQakVFKSZzedFmUoXM2BTxTV5WyCOTxnC2h
+         eXWnYZI4nicmXoj+xr9LNu4GeufKGt9/sFWNRmQa49UaLSX4nlCrKq1E/whqrIOn6Sux
+         eTqaefONPhVfntQNVB9QN7EI/6Tiwj0nY4cCm5IhD81g20LEAresP2qPUWbi8l6UTzfp
+         utyXD62pwMCoXNo/5X591F1OzghGcg2xulJYLvjXFWaB7xK/Ja0e6xGFzcEX9wBt0ZVc
+         aEhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TgCG2v/18aLvVnJHA93hfe9UUNoDJjfM4smfbeOmGTs=;
-        b=c5BiocTYv7dKk2AuV9S+OP/kDcxUvAoYfCt3pvozMz+d7e9EsA+9kU1ILBqiRkEeQI
-         MCAizATshOIY9fxE5yLLLlvqb4fIMb45aroL4nGYkdd/PkOkevq3+PA/qlqf4ZrGPr+h
-         72VpSDZ2TYEYeF2gGbIeeZJZJXkU/uNJMmsr43hgsbahfZUmImlh76nuk2b9BkQk1oWx
-         CTUkipS8AyzXlSXYBozVTHeYResiQ2n8DIfieS7eSvSzt26nr0yBBclbjWv57TxyG4QB
-         qxI2ryVuzWJEApVK9vwYI2WpSJTs/o5+BpbgdiuCx79BRFS4ymEJljxMeBsiUC0crqfH
-         31iQ==
-X-Gm-Message-State: APjAAAUY6IfpOI0CB7bnzwdXwpiPDPWsy0EPCbktRpKm64uANNmKui0a
-        QmBZsWsDgHuMdpLBGoTEkgOZpRHz+osJZg==
-X-Google-Smtp-Source: APXvYqw2ixwtHgyYwmC+go1be6OYl2nLLipOuvjSEEJ3BrWxznlIU8S7NXXkiZm/9cr3MD7gYuEk0w==
-X-Received: by 2002:a2e:9754:: with SMTP id f20mr719433ljj.151.1562297287642;
-        Thu, 04 Jul 2019 20:28:07 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id t21sm1152045lfd.85.2019.07.04.20.28.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 20:28:06 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id 205so7799424ljj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 20:28:06 -0700 (PDT)
-X-Received: by 2002:a2e:b003:: with SMTP id y3mr781826ljk.72.1562297285520;
- Thu, 04 Jul 2019 20:28:05 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=QNksPQ+a6LXq8db+Dw4OJOgNhGrCLmReslnkT14eo4U=;
+        b=dFsC5AhyAXeFNM+W35Y+km7YzG/oF70+XmU4p1aRXh+8eykFQYjymXWRwZD7OyQAoT
+         FIn1E59td9zL49ChMiSRtUtudKtl+rwKhcvEgDO/R5ay7zrHWquDXUJf42ep9fJ0PKmx
+         rAqFI+Mc76AF+0AhV0OQu0tvcVU9xcwbGZ+lpkrDEo6QwzmENfNpu9qQH+6pOvflhzjP
+         L3vtVqfEJEa9eJGapHDXECmB9YvnoS/agwHKlxHSfb8izlBUoH5tLzVou3EAg5IzHi3P
+         zmSfsY9qb25UVbnsiYW5zJ3FjIGDUMzQpFS4dLgX0LVbBybCsojvH3xIbWCYwTHDVko3
+         jRQA==
+X-Gm-Message-State: APjAAAUWYMsX3CKF3TFnvCMchAdX1FWuWrTua11QqoSuqI0UF0edhHau
+        LGi+GC/1gNvXp1Vb/qkhNRqUH1CzAUJ5gBOTU2tlaw==
+X-Google-Smtp-Source: APXvYqwXWzYcjQij3doAHDi9lJcxfefyacZTXp/ajLN7K/CoFno3PvlDWnYeLlU3mzs7SVpYED9ewekftLQUfUmVKVg=
+X-Received: by 2002:aed:3644:: with SMTP id e62mr877924qtb.80.1562298112714;
+ Thu, 04 Jul 2019 20:41:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190704195555.580363209@infradead.org> <20190704200050.534802824@infradead.org>
- <CAHk-=wiJ4no+TW-8KTfpO-Q5+aaTGVoBJzrnFTvj_zGpVbrGfA@mail.gmail.com> <41D6F2E2-C4CF-41DF-A843-FCBD03B7BEEB@amacapital.net>
-In-Reply-To: <41D6F2E2-C4CF-41DF-A843-FCBD03B7BEEB@amacapital.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 5 Jul 2019 12:27:49 +0900
-X-Gmail-Original-Message-ID: <CAHk-=whzQDR+hjhontUhsCbQOryU7VZ9K79EVjL2KCduZWDc1Q@mail.gmail.com>
-Message-ID: <CAHk-=whzQDR+hjhontUhsCbQOryU7VZ9K79EVjL2KCduZWDc1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] x86/mm, tracing: Fix CR2 corruption
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
+References: <20190704105528.74028-1-chiu@endlessm.com>
+In-Reply-To: <20190704105528.74028-1-chiu@endlessm.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Fri, 5 Jul 2019 11:41:41 +0800
+Message-ID: <CAD8Lp45rYuE5WHx4vSbUhF10hOHam1aBLd52_aDKP8z2eeL4vA@mail.gmail.com>
+Subject: Re: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 12:16 PM Andy Lutomirski <luto@amacapital.net> wrote=
-:
+On Thu, Jul 4, 2019 at 6:55 PM Chris Chiu <chiu@endlessm.com> wrote:
+> The WiFi tx power of RTL8723BU is extremely low after booting. So
+> the WiFi scan gives very limited AP list and it always fails to
+> connect to the selected AP. This module only supports 1x1 antenna
+> and the antenna is switched to bluetooth due to some incorrect
+> register settings.
 >
-> If nothing else, MOV to CR2 is architecturally serializing, so, unless th=
-ere=E2=80=99s some fancy unwinding involved, this will be quite slow.
+> Compare with the vendor driver https://github.com/lwfinger/rtl8723bu,
+> we realized that the 8723bu's enable_rf() does the same thing as
+> rtw_btcoex_HAL_Initialize() in vendor driver. And it by default
+> sets the antenna path to BTC_ANT_PATH_BT which we verified it's
+> the cause of the wifi weak tx power. The vendor driver will set
+> the antenna path to BTC_ANT_PATH_PTA in the consequent btcoexist
+> mechanism, by the function halbtc8723b1ant_PsTdma.
 
-That's why the NMI code does this:
+Checking these details in the vendor driver:
+EXhalbtc8723b1ant_PowerOnSetting sets:
+        pBoardInfo->btdmAntPos = BTC_ANTENNA_AT_AUX_PORT;
 
-        if (unlikely(this_cpu_read(nmi_cr2) !=3D read_cr2()))
-                write_cr2(this_cpu_read(nmi_cr2));
+Following the code flow from rtw_btcoex_HAL_Initialize(), this has a
+bWifiOnly parameter which will ultimately influence the final register
+value.
+Continuing the flow, we reach halbtc8723b1ant_SetAntPath() with
+bInitHwCfg=TRUE, bWifiOff=FALSE. antPosType is set to WIFI in the
+bWifiOnly case, and BT otherwise.
 
-so that it normally only does a read. Only if you actually took a page
-fault will it restore cr2 to the old value (and if you took a page
-fault the performance issues will be _there_, not in the "restore cr2"
-part)
+I'm assuming that bUseExtSwitch = FALSE (existing rtl8xxxu code also
+seems to make the same assumption).
+For the bWifiOnly=FALSE case, it uses BT,
+                    pBtCoexist->fBtcWrite4Byte(pBtCoexist, 0x948, 0x0);
+and rtl8xxxu seems to do the same - seemingly routing the antenna path
+for BT only.
 
-                Linus
+As for halbtc8723b1ant_PsTdma() then being called in a way that causes
+it to switch to the PTA path a little later, it's more difficult to
+point out how that happens in an email, but I thin kwe can trust you
+on that :) There are certainly many callsites that would pass those
+parameters.
+
+> +        * Different settings per different antenna position.
+> +        *      Antenna Position:   | Normal   Inverse
+> +        * --------------------------------------------------
+> +        * Antenna switch to BT:    |  0x280,   0x00
+> +        * Antenna switch to WiFi:  |  0x0,     0x280
+> +        * Antenna switch to PTA:   |  0x200,   0x80
+>          */
+> -       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
+> +       rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
+
+I don't really understand what we mean by an "inverse" antenna and my
+reading of the vendor driver leads me to another interpretation.
+
+The logic is based around an antenna position - btdmAntPos. It takes
+one of two values:
+    BTC_ANTENNA_AT_MAIN_PORT                = 0x1,
+    BTC_ANTENNA_AT_AUX_PORT                = 0x2,
+
+So the chip has pins to support two antennas - a "main" antenna and an
+"aux" one.
+
+We know we're dealing with a single antenna, so the actual module is
+going to only be using one of those antenna interfaces. If the chip
+tries to use the other antenna interface, it's effectively not using
+the antenna. So it's rather important to tell the chip to use the
+right interface.
+
+And that's exactly what happens here. btdmAntPos is hardcoded that the
+antenna is on the aux port for these devices, and this code is telling
+the chip that this is how things are wired up.
+
+The alternative way of calling this an antenna inverse (which the
+vendor driver also does in another section), i.e. "antenna is not
+connected to the main port but instead it's connected to the other
+one", seems less clear to me.
+
+Even if we don't fully understand what's going on here, I'm convinced
+that your code change is fixing an inconsistency with the vendor
+driver, and most significantly, making the signal level actually
+usable on our devices. But if you agree with my interpretation of
+these values then maybe you could update the comment here!
+
+Daniel
