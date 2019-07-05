@@ -2,99 +2,103 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A37DC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3525C468AA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451722133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90BC521738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 19:24:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBwKZc9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbfGETVc (ORCPT
+        id S1727954AbfGETYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 15:21:32 -0400
-Received: from sauhun.de ([88.99.104.3]:53992 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfGETVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 15:21:31 -0400
-Received: from localhost (p54B334DF.dip0.t-ipconnect.de [84.179.52.223])
-        by pokefinder.org (Postfix) with ESMTPSA id 2C5D62C0398;
-        Fri,  5 Jul 2019 21:21:30 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 21:21:29 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.2
-Message-ID: <20190705192126.GA13751@kunai>
+        Fri, 5 Jul 2019 15:24:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33631 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfGETYs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 15:24:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id z3so6310360iog.0;
+        Fri, 05 Jul 2019 12:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zRb65W3CSh6kt4Vgzb6vItxrEN29lrJAYQzpEQzbVII=;
+        b=VBwKZc9v6eG+kEN6cYdqeUM8TLOB0E4CdynlREvI2S6FYkq015fmIZjeB680Av4quX
+         GTY/G8e/miWfQ/DbeDV8WRsL6DzzEqjH7s8TmsZyiQrkilyYliTWJZFJkwpwEb95VuaH
+         MRyPFaIkHOAehbOLR2EwoagnYUmM2jdan5yq1m1SxOlEdfIEvh21U+PKDYuP0DlgdIdd
+         eReyvta7q++lyFlUY0XWJr6bY2JcjiimWY8v8xdMd+fStaOp6ZLY4ZbENlUqLvlj44Xd
+         L/Sfm91Xzsrz46gi2/GvxsJWRa+oy4YV3iSn1UtY2V86A3Gji/0wm9GdnPRNNnweoEs3
+         sbdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zRb65W3CSh6kt4Vgzb6vItxrEN29lrJAYQzpEQzbVII=;
+        b=NRy4JVSVVTodguLwRuf9vEAGd0ViL/YQsbeG1gJMqm+xXVqUqPkAKB2nBWDx2BIKbt
+         eVpygcKiQvGTq2HUR5fa6YneeWzpiCo3+n8MAv4Wko9syL2T6X2j0PaqV9VXQQOhH7by
+         xnsJK46MuCvX2vOh6sS/1GO+H4kWiIjaJNVTSGw1hjbcCETNa4PwPM+ViIckk7mSj1tP
+         590Nz6tqBYnshjyjW5pJvG9xu5DBNozEZzqVVVSd0BG7N+3IQuBTo+xoO5LAu1cfFNwi
+         0g0LTkGXKn7dF9+0oHEISswXqrBYxon8XlnnP+2cVzbq+si73W7zTgdDq9iR1ngd8vTA
+         fLaA==
+X-Gm-Message-State: APjAAAVuwiSMpjRNfHxTMO/XGXjVK2dBX+1FQt/5+wkpzVsfO84GwRZK
+        R2EvxCIHiSHiVDafRvZOgbpWh4cPVKA/QHV+VUU=
+X-Google-Smtp-Source: APXvYqzBIuakKtxq8PhyT5SD6ZKgdCKGE0KpmSS7hRvQNo8wkQr2muelU6+8A9w9N+1CFSl0An79Y6QAV/ejkoJl1QA=
+X-Received: by 2002:a6b:f607:: with SMTP id n7mr4367876ioh.263.1562354687930;
+ Fri, 05 Jul 2019 12:24:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190701174120.15551-1-jeffrey.l.hugo@gmail.com> <CAF6AEGsGRcuk3xnWG8KspW4wzG38o-Xg8tybnND9Lb24PWP5dw@mail.gmail.com>
+In-Reply-To: <CAF6AEGsGRcuk3xnWG8KspW4wzG38o-Xg8tybnND9Lb24PWP5dw@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Fri, 5 Jul 2019 13:24:37 -0600
+Message-ID: <CAOCk7Nrxhf7YNkmtM1G-TE=rNC=L2zk4AJcGNvvcHpOMEMW6Tg@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/mdp5: Use eariler mixers when possible
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 1, 2019 at 1:55 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Mon, Jul 1, 2019 at 10:41 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >
+> > When assigning a mixer, we will iterate through the entire list looking for
+> > a suitable match.  This results in selecting the last match.  We should
+> > stop at the first match, since lower numbered mixers will typically have
+> > more capabilities, and are likely to be what the bootloader used, if we
+> > are looking to reuse the bootloader config in future.
+>
+> I think for matching bootloader config, we need to read it out of the
+> hw and do it the hard way, rather than making assumptions.
+>
+> For picking hwpipe for a plane, I made an effort to pick the available
+> hwpipe w/ the *least* capabilities that fit the requirements (ie.
+> scaling/yuv/etc) in order to leave the more capable hwpipe available
+> for future use.  Not sure if same approach would make sense for
+> mixers?  But not sure if picking something that bootloader probably
+> also would have picked is a great argument.
+>
+> I do have some (now ancient) code from db410/mdp5 to read out he hw
+> state.. I *think* that might have post-dated dynamically picking
+> mixers.  (The older mdp5 on db410c also had to deal with figuring out
+> SMP block config, iirc.. thankfully newer mdp5 doesn't have to deal
+> with that.)
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Linus,
-
-I2C has a MAINTAINERS update which will be benfitial for developers, so
-let's add it right away.
-
-Please pull.
-
-Thanks,
-
-   Wolfram
-
-
-The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
-
-  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to f3a3ea28edd9a17588fede4ff53bc02d986cf4d1:
-
-  i2c: tegra: Add Dmitry as a reviewer (2019-07-05 20:46:56 +0200)
-
-----------------------------------------------------------------
-Dmitry Osipenko (1):
-      i2c: tegra: Add Dmitry as a reviewer
-
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0fozEACgkQFA3kzBSg
-KbbvtxAAtDtIFBQq4LzR8NsNxLg1RYtW/63y/WUMrikqCqG2DoUApdTy1IrOPrXJ
-jSCeJOHNh2KVDLYRbIu6Ry2MdJNsvQvgez1QBgDPgkPV3byLQoYSLbGzwMQ8dBsX
-QbmAEF+8jzuxF2jq4fjF1tHZUfZJssuBaeQ3Uj1ayDW/M8VuM3jGsdSISB16KVWN
-KpotLElxS17Ddubo+qb1zyED7qxqZPTGhQsyaNKw8it/5Vl7jvUBCgvfQyZSvjaC
-osMkgLYbSMsJvSUV/eWHbs6q8NDK9XD1dwSIwg+tkOIz7ZKxtTHecHJz7ilhgJWW
-mzhYMyp7mMPeD9dTQOntGR83qfj7hJjLibcA0ybMMAPAlOrTuOvj6YHmP/tkIJBj
-4nwhaMmPQKKL1BhNd430tFMMWLOIUIEMtwshkpqSJ+KthrU0vSyGmdSB1h6TKWsk
-Tf0r8uwaQHuSTjSYBtMkB8aa+Mrw6swsArfazCr+E6/pO497hF0TsyoXKvacNX/Q
-Th+xwO5MdaWekOyTfufNGdhJXMmfTWj6LBH4c0l2ZCoapm3RO7Wx4maFPTXmKSC5
-+DGIUi0BJ2tIClcura0zLLYql5NphILON7rfCy09AhAOOajo3fPre36qLNvudy1D
-GWsBkCQVfP2Gyekbfa3bBeqWKc5aRL62uSlebIZcORWi2Px7p6E=
-=dvvr
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
+So I ripped this out and retested as I was looking back at it.  Things
+still work.  I probably saw a need for this in the middle of my
+hacking, but its clearly not needed anymore so lets drop it for now.
