@@ -2,129 +2,300 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734BCC0651F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6592C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47EF5216E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GhC55MLd"
+	by mail.kernel.org (Postfix) with ESMTP id 6D715216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 03:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfGEDOm (ORCPT
+        id S1727722AbfGEDQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 23:14:42 -0400
-Received: from ozlabs.org ([203.11.71.1]:35949 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfGEDOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 23:14:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45g0M01Bpkz9sCJ;
-        Fri,  5 Jul 2019 13:14:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562296478;
-        bh=9605ZP4bn3MDqq1dxNaUUk8pwn4UP4BwvE48o+dZvLc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GhC55MLdQI6+V6yk9r3D9bck989EmS1gkht04wQVl4SzEPMOQYHM/P5vA63uV7sqg
-         FN+idxpEy1o7z/fQ33UoAB7/CqSXXme3SgQrm0EIAYsAVnWT4VXNRh+aCNM7xZiwOh
-         wIextEEub2oHRaqXTc+x6FzGXhtvwK3ly1PNvJurf4J43hMZJ37/caL8YSp5W8PNTI
-         EEJOFnmWsUbaWQ+0RRkYBowGKqsPL9Uy3JWkfYLYXGRfv7NIWOTi+s2IrIuSWkiNkr
-         P5fYU/z0+rTc5hjbZExP4Q+2OsKXy8bD3CoYWNRAwIR6BXe6faQASmYntNmoEtbEeX
-         XJ1xe+wWT0B2Q==
-Date:   Fri, 5 Jul 2019 13:14:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        mhocko@suse.cz, mm-commits@vger.kernel.org,
-        Michal Wajdeczko <michal.wajdeczko@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: mmotm 2019-07-04-15-01 uploaded (gpu/drm/i915/oa/)
-Message-ID: <20190705131435.58c2be19@canb.auug.org.au>
-In-Reply-To: <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
-References: <20190704220152.1bF4q6uyw%akpm@linux-foundation.org>
-        <80bf2204-558a-6d3f-c493-bf17b891fc8a@infradead.org>
-        <CAK7LNAQc1xYoet1o8HJVGKuonUV40MZGpK7eHLyUmqet50djLw@mail.gmail.com>
+        Thu, 4 Jul 2019 23:16:36 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54229 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726404AbfGEDQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jul 2019 23:16:35 -0400
+X-UUID: 9cd6be45711545b1b7e865ae69250a74-20190705
+X-UUID: 9cd6be45711545b1b7e865ae69250a74-20190705
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1322901554; Fri, 05 Jul 2019 11:16:28 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 5 Jul 2019 11:16:27 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 5 Jul 2019 11:16:27 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        "Yingjoe Chen" <yingjoe.chen@mediatek.com>
+Subject: [PATCH v3] checkpatch: add several Kconfig default value tests
+Date:   Fri, 5 Jul 2019 11:16:26 +0800
+Message-ID: <20190705031626.13859-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/cNeLSVReMpluqwcRRAFLlp8"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/cNeLSVReMpluqwcRRAFLlp8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This change adds 3 Kconfig default value tests.
 
-Hi Masahiro,
+1. discourage default n cases:
+e.g.,
+default n
 
-On Fri, 5 Jul 2019 12:05:49 +0900 Masahiro Yamada <yamada.masahiro@socionex=
-t.com> wrote:
->
-> On Fri, Jul 5, 2019 at 10:09 AM Randy Dunlap <rdunlap@infradead.org> wrot=
-e:
-> >
-> > I get a lot of these but don't see/know what causes them:
-> >
-> > ../scripts/Makefile.build:42: ../drivers/gpu/drm/i915/oa/Makefile: No s=
-uch file or directory
-> > make[6]: *** No rule to make target '../drivers/gpu/drm/i915/oa/Makefil=
-e'.  Stop.
-> > ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915/=
-oa' failed
-> > make[5]: *** [drivers/gpu/drm/i915/oa] Error 2
-> > ../scripts/Makefile.build:498: recipe for target 'drivers/gpu/drm/i915'=
- failed
-> > =20
->=20
-> I checked next-20190704 tag.
->=20
-> I see the empty file
-> drivers/gpu/drm/i915/oa/Makefile
->=20
-> Did someone delete it?
+2. discourage default "[ynm]" cases:
+e.g.,
+arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+arch/powerpc/Kconfig:   default "y" if PPC_POWERNV
+arch/powerpc/Kconfig:   default "n"
+drivers/auxdisplay/Kconfig:     default "n"
+drivers/crypto/Kconfig: default "m"
+drivers/rapidio/devices/Kconfig:        default "n"
 
-Commit
+3. discourage default EXPERT or default !EXPERT cases:
+e.g.,
+drivers/hid/Kconfig:    default !EXPERT
 
-  5ed7a0cf3394 ("drm/i915: Move OA files to separate folder")
+tested cases:
+default m
+default n if ALPHA_EV5 || ALPHA_EV56 || (ALPHA_EV4 && !ALPHA_LCA)
+default y if ALPHA_QEMU
+default n if PPC_POWERNV
+default n
+default EXPERT
+default !EXPERT
+default "m"
+default "n"
+default "y" if EXPERT
+default "y" if PPC_POWERNV
 
-from the drm-intel tree seems to have created it as an empty file.
+test result:
+WARNING: 'default n' is the default value, no need to write it explicitly
++       default n
 
---=20
-Cheers,
-Stephen Rothwell
+WARNING: Avoid using default EXPERT
++       default EXPERT
 
---Sig_/cNeLSVReMpluqwcRRAFLlp8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+WARNING: Avoid using default EXPERT
++       default !EXPERT
 
------BEGIN PGP SIGNATURE-----
+WARNING: Use 'default m' not 'default "m"'
++       default "m"
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ewJsACgkQAVBC80lX
-0GzYcQf+OqWJhVTJLbJLiBqRgQanYK7S/8DokAFj+dkgb9foQZIjp8ln1by3QDXg
-gGAcxB9xEuIW1oxR6QUXlrWJtEJuC55Ka6LHo9DzUxF1ul9WgHLnWftKegzKG6+d
-5mcol7HG8rVryx7FeEErXxZmubGS/Ws/1kh8KuZriCw2bgyZFp4Y73gqwrfGi7Pl
-+PDWw1W9dnZj+mrwFMFGOA7CTKFab2paP+YOXTjrdjc0QxzaCNZjBpjT1Mo0nNbm
-IJQwtCSQWTmLwfK+GEuxAQO3Z37B92G9ckWHqysmubvaWpYop3V2QUUN0PKfPdgN
-s/qoynBRgRZo5pZ+E+9pICS8pwhjSQ==
-=Z/Nz
------END PGP SIGNATURE-----
+WARNING: Use 'default n' not 'default "n"'
++       default "n"
 
---Sig_/cNeLSVReMpluqwcRRAFLlp8--
+WARNING: Use 'default y' not 'default "y"'
++       default "y" if EXPERT
+
+WARNING: Use 'default y' not 'default "y"'
++       default "y" if PPC_POWERNV
+
+test --fix capability:
+default n => delete line
+default "m" => default m
+default "n" => default n
+default "y" if EXPERT => default y if EXPERT
+default "y" if PPC_POWERNV => default y if PPC_POWERNV
+default !EXPERT => no change
+default EXPERT => no change
+
+Change since v1:
+discourage default n$
+discourage default "[ynm]"
+discourage default \!?EXPERT
+
+Change since v2:
+(Joe has provided the whole patch and I just post it)
+test Kconfig in a single block
+print precise message such as 'default "m"', not 'default "[ynm]"'
+provide --fix capability
+
+Cc: Joe Perches <joe@perches.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+---
+ scripts/checkpatch.pl | 139 ++++++++++++++++++++++++++----------------
+ 1 file changed, 85 insertions(+), 54 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 342c7c781ba5..94799f23339c 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2932,60 +2932,98 @@ sub process {
+ 				      "Do not include the paragraph about writing to the Free Software Foundation's mailing address from the sample GPL notice. The FSF has changed addresses in the past, and may do so again. Linux already includes a copy of the GPL.\n" . $herevet)
+ 		}
+ 
+-# check for Kconfig help text having a real description
+-# Only applies when adding the entry originally, after that we do not have
+-# sufficient context to determine whether it is indeed long enough.
+-		if ($realfile =~ /Kconfig/ &&
+-		    # 'choice' is usually the last thing on the line (though
+-		    # Kconfig supports named choices), so use a word boundary
+-		    # (\b) rather than a whitespace character (\s)
+-		    $line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
+-			my $length = 0;
+-			my $cnt = $realcnt;
+-			my $ln = $linenr + 1;
+-			my $f;
+-			my $is_start = 0;
+-			my $is_end = 0;
+-			for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
+-				$f = $lines[$ln - 1];
+-				$cnt-- if ($lines[$ln - 1] !~ /^-/);
+-				$is_end = $lines[$ln - 1] =~ /^\+/;
+-
+-				next if ($f =~ /^-/);
+-				last if (!$file && $f =~ /^\@\@/);
+-
+-				if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
+-					$is_start = 1;
+-				} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
+-					if ($lines[$ln - 1] =~ "---help---") {
+-						WARN("CONFIG_DESCRIPTION",
+-						     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
++# Kconfig tests
++		if ($realfile =~ /Kconfig/) {
++			# check for Kconfig help text having a real description
++			# Only applies when adding the entry originally, after
++			# that we do not have sufficient context to determine
++			# whether it is indeed long enough.
++			# 'choice' is usually the last thing on the line (though
++			# Kconfig supports named choices), so use a word
++			# boundary (\b) rather than a whitespace character (\s)
++			if ($line =~ /^\+\s*(?:config|menuconfig|choice)\b/) {
++				my $length = 0;
++				my $cnt = $realcnt;
++				my $ln = $linenr + 1;
++				my $f;
++				my $is_start = 0;
++				my $is_end = 0;
++				for (; $cnt > 0 && defined $lines[$ln - 1]; $ln++) {
++					$f = $lines[$ln - 1];
++					$cnt-- if ($lines[$ln - 1] !~ /^-/);
++					$is_end = $lines[$ln - 1] =~ /^\+/;
++
++					next if ($f =~ /^-/);
++					last if (!$file && $f =~ /^\@\@/);
++
++					if ($lines[$ln - 1] =~ /^\+\s*(?:bool|tristate|prompt)\s*["']/) {
++						$is_start = 1;
++					} elsif ($lines[$ln - 1] =~ /^\+\s*(?:help|---help---)\s*$/) {
++						if ($lines[$ln - 1] =~ "---help---") {
++							WARN("CONFIG_DESCRIPTION",
++							     "prefer 'help' over '---help---' for new help texts\n" . $herecurr);
++						}
++						$length = -1;
++					}
++
++					$f =~ s/^.//;
++					$f =~ s/#.*//;
++					$f =~ s/^\s+//;
++					next if ($f =~ /^$/);
++
++					# This only checks context lines in the patch
++					# and so hopefully shouldn't trigger false
++					# positives, even though some of these are
++					# common words in help texts
++					if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
++							   if|endif|menu|endmenu|source)\b/x) {
++						$is_end = 1;
++						last;
+ 					}
+-					$length = -1;
++					$length++;
++				}
++				if ($is_start && $is_end && $length < $min_conf_desc_length) {
++					WARN("CONFIG_DESCRIPTION",
++					     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
+ 				}
++				#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
++			}
+ 
+-				$f =~ s/^.//;
+-				$f =~ s/#.*//;
+-				$f =~ s/^\s+//;
+-				next if ($f =~ /^$/);
+-
+-				# This only checks context lines in the patch
+-				# and so hopefully shouldn't trigger false
+-				# positives, even though some of these are
+-				# common words in help texts
+-				if ($f =~ /^\s*(?:config|menuconfig|choice|endchoice|
+-						  if|endif|menu|endmenu|source)\b/x) {
+-					$is_end = 1;
+-					last;
++# discourage the use of boolean for type definition attributes
++			if ($line =~ /^\+\s*\bboolean\b/) {
++				if (WARN("CONFIG_TYPE_BOOLEAN",
++					 "Use of boolean is deprecated, please use bool instead\n" . $herecurr) &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/\bboolean\b/bool/;
++				}
++			}
++
++# Kconfig: discourage redundant 'default n'
++			if ($line =~ /^\+\s*default\s+n$/) {
++				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
++					 "'default n' is the default value, no need to write it explicitly\n" . $herecurr) &&
++				    $fix) {
++					fix_delete_line($fixlinenr, $rawline);
+ 				}
+-				$length++;
+ 			}
+-			if ($is_start && $is_end && $length < $min_conf_desc_length) {
+-				WARN("CONFIG_DESCRIPTION",
+-				     "please write a paragraph that describes the config symbol fully\n" . $herecurr);
++
++# Kconfig: discourage quoted defaults: use default [ynm], not default "[ynm]"
++			if ($rawline =~ /^\+\s*default\s+"([ynm])"/) {
++				if (WARN("CONFIG_DEFAULT_VALUE_STYLE",
++					 "Use 'default $1' not 'default \"$1\"'\n" . $herecurr) &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/\b(default\s+)"(.)"/$1$2/;
++				}
++			}
++
++# Kconfig: discourage using default EXPERT or !EXPERT
++			if ($line =~ /^\+\s*default\s+\!?\s*EXPERT\b/) {
++				WARN("CONFIG_DEFAULT_VALUE_STYLE",
++				     "Avoid using default EXPERT\n" . $herecurr);
+ 			}
+-			#print "is_start<$is_start> is_end<$is_end> length<$length>\n";
+ 		}
++# End of Kconfig tests
++
+ 
+ # check for MAINTAINERS entries that don't have the right form
+ 		if ($realfile =~ /^MAINTAINERS$/ &&
+@@ -2998,13 +3036,6 @@ sub process {
+ 			}
+ 		}
+ 
+-# discourage the use of boolean for type definition attributes of Kconfig options
+-		if ($realfile =~ /Kconfig/ &&
+-		    $line =~ /^\+\s*\bboolean\b/) {
+-			WARN("CONFIG_TYPE_BOOLEAN",
+-			     "Use of boolean is deprecated, please use bool instead.\n" . $herecurr);
+-		}
+-
+ 		if (($realfile =~ /Makefile.*/ || $realfile =~ /Kbuild.*/) &&
+ 		    ($line =~ /\+(EXTRA_[A-Z]+FLAGS).*/)) {
+ 			my $flag = $1;
+-- 
+2.18.0
+
