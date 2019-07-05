@@ -2,224 +2,197 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36E6C4649A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF46C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855EC218BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D37218BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:57:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="gvDCDQzo";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="f5OMHV8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfGEHz1 (ORCPT
+        id S1728026AbfGEH5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 03:55:27 -0400
-Received: from mga14.intel.com ([192.55.52.115]:53242 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbfGEHz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 03:55:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 00:55:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
-   d="scan'208";a="187755810"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Jul 2019 00:55:23 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id EE1FA2036A; Fri,  5 Jul 2019 10:55:22 +0300 (EEST)
-Date:   Fri, 5 Jul 2019 10:55:22 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Hugues FRUCHET <hugues.fruchet@st.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Fri, 5 Jul 2019 03:57:47 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:16104 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbfGEH5q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 03:57:46 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x657tP3H001598;
+        Fri, 5 Jul 2019 00:56:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=hANK4Rn8H539ugz+gNIMv2tZNOtAOeYjC5INbzDlbwU=;
+ b=gvDCDQzoOYZkQqhkhgTu/KCMtsm2iGGWbIJPBvtJFl4/BSqJlyo3oJhW70ia85vS0xmj
+ fuZpC287ysRzDV/U/mT3GdvyOAuhz2edySbaljMBxoScqFcC6cmvR9eWzR+ac/R6Qq4S
+ Uz5HrbHybCWwa1xlmxo9kpeJarvGROJXLMLdqMEe1qro1qvPltPPmcv6Oaa8DbkHPDdr
+ GM+P21x9m+WBdq+oObms64sWfSQxWlHN4RBtXGi2dcCWg2JwBUrjzAeUrTBZKAs2GvKa
+ NYQBXluWkBi/qeoRcgZxRoaI7LkAM+2HN+6cBCGgF6ZC6vCKedbAFctxrdqzETDwPc7F dQ== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2thjyraww4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jul 2019 00:56:27 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Fri, 5 Jul
+ 2019 00:56:26 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.56) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Fri, 5 Jul 2019 00:56:26 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hANK4Rn8H539ugz+gNIMv2tZNOtAOeYjC5INbzDlbwU=;
+ b=f5OMHV8eMRPfTAvgH0QaedDImlqIse4D/OV10NV9J/Vihgru7YJj9qvahbSKAm77GYyfT6S1ZKfZW+qogKxEV0tAFZ9xtevFLX88MnSXaBzMf2GcbaOrDAwhyy7xwoeGfMz/5qV+CuxalZhCA9kyARvLxoanuMm5Dp5lpMpr6/g=
+Received: from MN2PR18MB3055.namprd18.prod.outlook.com (20.178.255.209) by
+ MN2PR18MB3117.namprd18.prod.outlook.com (10.255.86.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Fri, 5 Jul 2019 07:56:21 +0000
+Received: from MN2PR18MB3055.namprd18.prod.outlook.com
+ ([fe80::600f:38e6:1583:487d]) by MN2PR18MB3055.namprd18.prod.outlook.com
+ ([fe80::600f:38e6:1583:487d%7]) with mapi id 15.20.2052.019; Fri, 5 Jul 2019
+ 07:56:21 +0000
+From:   Shijith Thotton <sthotton@marvell.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Julien Thierry <julien.thierry@arm.com>
+CC:     Shijith Thotton <sthotton@marvell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v2 0/3] DCMI bridge support
-Message-ID: <20190705075522.o7kuptdy3p3o64l7@paasikivi.fi.intel.com>
-References: <1560242912-17138-1-git-send-email-hugues.fruchet@st.com>
- <20190620161721.h3wn4nibomrvriw4@kekkonen.localdomain>
- <ae097d67-58fe-82d7-78d6-2445664f28db@st.com>
- <20190626172503.GB6118@pendragon.ideasonboard.com>
- <b21efe64-7762-308b-c2e5-503589041c35@st.com>
- <20190627133824.GC5021@pendragon.ideasonboard.com>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Jayachandran Chandrasekharan Nair" <jnair@marvell.com>,
+        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Robert Richter <rrichter@marvell.com>,
+        George Cherian <gcherian@marvell.com>
+Subject: [PATCH v2] genirq: update irq stats from NMI handlers
+Thread-Topic: [PATCH v2] genirq: update irq stats from NMI handlers
+Thread-Index: AQHVMwciauGSRMuvEU240iVDoNUQJw==
+Date:   Fri, 5 Jul 2019 07:56:20 +0000
+Message-ID: <1562313336-11888-1-git-send-email-sthotton@marvell.com>
+References: <1562214115-14022-1-git-send-email-sthotton@marvell.com>
+In-Reply-To: <1562214115-14022-1-git-send-email-sthotton@marvell.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR16CA0004.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::17) To MN2PR18MB3055.namprd18.prod.outlook.com
+ (2603:10b6:208:ff::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [199.233.59.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 92b21098-7645-4af8-58fb-08d7011e4489
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3117;
+x-ms-traffictypediagnostic: MN2PR18MB3117:
+x-microsoft-antispam-prvs: <MN2PR18MB3117C21225627DEFBFA3C700D9F50@MN2PR18MB3117.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:580;
+x-forefront-prvs: 008960E8EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(396003)(39850400004)(366004)(199004)(189003)(14454004)(110136005)(66476007)(52116002)(6506007)(54906003)(4720700003)(25786009)(7736002)(66446008)(66556008)(64756008)(107886003)(15650500001)(186003)(102836004)(73956011)(66946007)(71200400001)(81166006)(81156014)(71190400001)(386003)(53936002)(305945005)(478600001)(316002)(68736007)(4326008)(256004)(14444005)(66066001)(76176011)(36756003)(6512007)(6116002)(86362001)(486006)(476003)(3846002)(2616005)(446003)(2906002)(11346002)(6436002)(6486002)(8936002)(26005)(8676002)(50226002)(99286004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3117;H:MN2PR18MB3055.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Vn/T+tNopTKfUdcpWVcQwl3/G4Yf6oBOlOp60VK3L/U5Q/Pdjg22+ndkDgHhJw78BJoRUhoObZc4Oatx6WMATaB7y0/AcKW0eDvPoxXn+AjJdvSYge7nwU3fSrdTdL/pqeUZeIGxyiFf7R2mpgmHKr+Eeort1J19Rd0BYb2vBrc2HNcRbjKEcnDOI0yLwMVMbJNUz1IbZQzJRCf8uG9qkRVzfGr+vIT8DA5rwW3R7Xp3F1J/LADntkJ8MknOREcLFzlidwlchw6qZ870cRX69Wppx4uCJJFm3ARyCQAzaign0/XnVhIr3ARNRYAMNryOPGqoWl2tjEvP8jC+AOZ3y3bxItcs/rF9U4V8PjDVhAqgwOtYI98a6QrdqCiD9oQWzhxmM6zFxabDAO7G4WMs5QFHumAcDtOHFVLlK5MHQCU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627133824.GC5021@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92b21098-7645-4af8-58fb-08d7011e4489
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 07:56:20.9681
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sthotton@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3117
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+The NMI handlers handle_percpu_devid_fasteoi_nmi() and
+handle_fasteoi_nmi() added by commit 2dcf1fbcad35 ("genirq: Provide NMI
+handlers") do not update the interrupt counts. Due to that the NMI
+interrupt count does not show up correctly in /proc/interrupts.
 
-On Thu, Jun 27, 2019 at 04:38:24PM +0300, Laurent Pinchart wrote:
-> Hi Hugues,
-> 
-> On Thu, Jun 27, 2019 at 12:38:40PM +0000, Hugues FRUCHET wrote:
-> > On 6/26/19 7:25 PM, Laurent Pinchart wrote:
-> > > On Mon, Jun 24, 2019 at 10:10:05AM +0000, Hugues FRUCHET wrote:
-> > >> Hi Sakari,
-> > >>
-> > >>> - Where's the sub-device representing the bridge itself?
-> > >>
-> > >> This is pointed by [1]: drivers/media/i2c/st-mipid02.c
-> > >>
-> > >>> - As the driver becomes MC-centric, crop configuration takes place through
-> > >>>   V4L2 sub-device interface, not through the video device node.
-> > >>> - Same goes for accessing sensor configuration: it does not take place
-> > >>>   through video node but through the sub-device nodes.
-> > >>
-> > >> Our objective is to be able to support either a simple parallel sensor
-> > >> or a CSI-2 sensor connected through a bridge without any changes on
-> > >> userspace side because no additional processing or conversion involved,
-> > >> only deserialisation is m.
-> > >> With the proposed set of patches, we succeeded to do so, the same
-> > >> non-regression tests campaign is passed with OV5640 parallel sensor
-> > >> (STM32MP1 evaluation board) or OV5640 CSI-2 sensor (Avenger96 board with
-> > >> D3 mezzanine board).
-> > >>
-> > >> We don't want driver to be MC-centric, media controller support was
-> > >> required only to get access to the set of functions needed to link and
-> > >> walk trough subdevices: media_create_pad_link(),
-> > >> media_entity_remote_pad(), etc...
-> > >>
-> > >> We did a try with the v1 version of this patchset, delegating subdevices
-> > >> handling to userspace, by using media-controller, but this require to
-> > >> configure first the pipeline for each single change of resolution and
-> > >> format before making any capture using v4l2-ctl or GStreamer, quite
-> > >> heavy in fact.
-> > >> Benjamin did another try using new libcamera codebase, but even for a
-> > >> basic capture use-case, negotiation code is quite tricky in order to
-> > >> match the right subdevices bus format to the required V4L2 format.
-> > > 
-> > > Why would it be trickier in userspace than in the kernel ? The V4L2
-> > > subdev operations are more or less expose verbatim through the subdev
-> > > userspace API.
-> > > 
-> > >> Moreover, it was not clear how to call libcamera library prior to any
-> > >> v4l2-ctl or GStreamer calls.
-> > > 
-> > > libcamera isn't meant to be called before v4l2-ctl or GStreamer.
-> > > Applications are supposed to be based directly on libcamera, or, for
-> > > existing userspace APIs such as V4L2 or GStreamer, compatibility layers
-> > > are supposed to be developed. For V4L2 it will take the form of a
-> > > LD_PRELOAD-able .so that will intercept the V4L2 API calls, making most
-> > > V4L2 applications work with libcamera unmodified (I said most as 100%
-> > > compatibility will likely not be achievable). For GStreamer it will take
-> > > the form of a GStreamer libcamera element that will replace the V4L2
-> > > source element.
-> > > 
-> > >> Adding 100 lines of code into DCMI to well configure resolution and
-> > >> formats fixes the point and allows us to keep backward compatibility
-> > >> as per our objective, so it seems far more reasonable to us to do so
-> > >> even if DCMI controls more than the subdevice it is connected to.
-> > >> Moreover we found similar code in other video interfaces code like
-> > >> qcom/camss/camss.c and xilinx/xilinx-dma.c, controlling the whole
-> > >> pipeline, so it seems to us quite natural to go this way.
-> > > 
-> > > I can't comment on the qcom-camss driver as I'm not aware of its
-> > > internals, but where have you found such code in the Xilinx V4L2 drivers
-> > > ?
-> > 
-> > For ex. in xilinx/xilinx-dma.c, stream on/off is propagated to all 
-> > subdevices within pipeline:
-> >   * Walk the entities chain starting at the pipeline output video node 
-> > static int xvip_pipeline_start_stop(struct xvip_pipeline *pipe, bool start)
-> > 
-> > Same for qcom/camss/camss-video.c:
-> > static int video_start_streaming(struct vb2_queue *q, unsigned int count)
-> 
-> For stream start/stop, that's expected. Userspace only controls the
-> stream start/stop on the video node, and the kernel propagates that
-> along the pipeline. There is no VIDIOC_STREAMON or VIDIOC_STREAMOFF
-> ioctl exposed to userspace for V4L2 subdevs. What is not propagated in
-> the kernel for MC-centric devices is the pipeline configuration (formats
-> and selection rectangles).
-> 
-> > For resolution/format, in exynos4-is/fimc-capture.c:
-> > static int fimc_pipeline_try_format(struct fimc_ctx *ctx,
-> > ...
-> > 	while (1) {
-> > ...
-> > 		/* set format on all pipeline subdevs */
-> > 		while (me != &fimc->vid_cap.subdev.entity) {
-> > ...
-> > 			ret = v4l2_subdev_call(sd, pad, set_fmt, NULL, &sfmt);
-> 
-> As explained below, propagating formats is fine for video node-centric
-> drivers, but comes with limitations.
-> 
-> > >> To summarize, if we cannot do the negotiation within kernel, delegating
-> > >> this to userspace implies far more complexity and breaks compatibility
-> > >> with existing applications without adding new functionalities.
-> > >>
-> > >> Having all that in mind, what should be reconsidered in your opinion
-> > >> Sakari ? Do you have some alternatives ?
-> > > 
-> > > First of all, let's note that your patch series performs to related but
-> > > still independent changes: it enables MC support, *and* enables the V4L2
-> > > subdev userspace API. The former is clearly needed and will allow you to
-> > > use the MC API internally in the kernel, simplifying pipeline traversal.
-> > > The latter then enables the V4L2 subdev userspace API, moving the
-> > > pipeline configuration responsibility to userspace.
-> > > 
-> > > You could in theory move to the MC API inside the kernel, without
-> > > enabling support for the V4L2 subdev userspace API. Configuring the
-> > > pipeline and propagating the formats would then be the responsibility of
-> > > the kernel driver.
-> > 
-> > Yes this is exactly what we want to do.
-> > If I understand well, to disable the V4L2 subdev userspace API, I just 
-> > have to remove the media device registry:
-> > 
-> > -	/* Register the media device */
-> > -	ret = media_device_register(&dcmi->mdev);
-> > -	if (ret) {
-> > -		dev_err(dcmi->dev, "Failed to register media device (%d)\n",
-> > -			ret);
-> > -		goto err_media_device_cleanup;
-> > -	}
-> > 
-> > Do you see any additional things to do ?
-> 
-> That should be it. Note that in that case pipeline configuration has to
-> be handled by the master driver (DCMI in this case), the external
-> subdevs involved (such as the CSI-2 to parallel bridge) must not handle
-> any propagation of formats or selection rectangles.
+Update the functions to fix this. With this change, we can see stats of
+the perf NMI interrupts on arm64.
 
-I wonder what we'd do in the case when someone needs to connect something
-else to the pipeline, such as a sensor with more than one sub-device, or a
-flash or a lens controller.
+As NMI handlers can't update tot_count in irq descriptor, kstat_irqs()
+has been updated not to return tot_count for NMI.
 
-For future-proofness, I'd just use MC for hardware that may be part of a
-complex pipeline. In this case, if you think backwards compatibility is
-important (and for most hardware it probably is), I don't think there are
-perfect solutions if your existing driver is not MC-enabled.
+Fixes: 2dcf1fbcad35 ("genirq: Provide NMI handlers")
 
-A reasonable compromise would be to add a Kconfig option that allows
-enabling MC. This way you can provide backwards compatibility and allow
-making use of the full potential of the hardware. That's also why hardware
-that may be part of a non-trivial MC pipeline should start with MC-enabled
-so we wouldn't run into this.
+Signed-off-by: Shijith Thotton <sthotton@marvell.com>
+---
+Changes since v1:
+- Don't touch tot_count from NMI handler.
+- Update kstat_irqs() to not return tot_count for NMI.
 
--- 
-Kind regards,
+ kernel/irq/chip.c    | 4 ++++
+ kernel/irq/irqdesc.c | 8 +++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 29d6c7d070b4..04c850fb70cb 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -748,6 +748,8 @@ void handle_fasteoi_nmi(struct irq_desc *desc)
+ 	unsigned int irq =3D irq_desc_get_irq(desc);
+ 	irqreturn_t res;
+=20
++	__kstat_incr_irqs_this_cpu(desc);
++
+ 	trace_irq_handler_entry(irq, action);
+ 	/*
+ 	 * NMIs cannot be shared, there is only one action.
+@@ -962,6 +964,8 @@ void handle_percpu_devid_fasteoi_nmi(struct irq_desc *d=
+esc)
+ 	unsigned int irq =3D irq_desc_get_irq(desc);
+ 	irqreturn_t res;
+=20
++	__kstat_incr_irqs_this_cpu(desc);
++
+ 	trace_irq_handler_entry(irq, action);
+ 	res =3D action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
+ 	trace_irq_handler_exit(irq, action, res);
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index c52b737ab8e3..9149dde5a7b0 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -946,6 +946,11 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
+ 			*per_cpu_ptr(desc->kstat_irqs, cpu) : 0;
+ }
+=20
++static bool irq_is_nmi(struct irq_desc *desc)
++{
++	return desc->istate & IRQS_NMI;
++}
++
+ /**
+  * kstat_irqs - Get the statistics for an interrupt
+  * @irq:	The interrupt number
+@@ -963,7 +968,8 @@ unsigned int kstat_irqs(unsigned int irq)
+ 	if (!desc || !desc->kstat_irqs)
+ 		return 0;
+ 	if (!irq_settings_is_per_cpu_devid(desc) &&
+-	    !irq_settings_is_per_cpu(desc))
++	    !irq_settings_is_per_cpu(desc) &&
++	    !irq_is_nmi(desc))
+ 	    return desc->tot_count;
+=20
+ 	for_each_possible_cpu(cpu)
+--=20
+2.17.0
+
