@@ -2,160 +2,189 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F75C468AA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0699EC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0483621670
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562358756;
-	bh=kKGSEqENuRUKk/uUHjETJ/Jtf1hqB16djJfPnhAmsGo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RhB/vse5SmC4cvbcRmQmpyLvj4rO+npxmTA5stV4wbZbObrhfpA9LCKaPoJECuJw3
-	 Z7Bhc3NuT0HU7Sq8z3wfQ790cqjSQp7BHnF0RjAUJiyv9O+ZiSPJlZ4yB5HgdqSnQG
-	 kE3t3lp30c7SAunlVg56X4hIo2Y/8ukUodJLg1D4=
+	by mail.kernel.org (Postfix) with ESMTP id C37F121670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWlp+1ux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbfGEUce (ORCPT
+        id S1727983AbfGEUcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:32:34 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40064 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfGEUce (ORCPT
+        Fri, 5 Jul 2019 16:32:54 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35825 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfGEUcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:32:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so5085444pla.7;
-        Fri, 05 Jul 2019 13:32:33 -0700 (PDT)
+        Fri, 5 Jul 2019 16:32:53 -0400
+Received: by mail-wm1-f68.google.com with SMTP id l2so3548813wmg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 13:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yoxxCJSZxSTE9St2leMIv+/L5lNU4jc2bI6FtTm18Vo=;
+        b=YWlp+1ux3L09iNQ+B6wbqMHO1Z6hMUvH3hk6l+IfauxLlrkkzcX6VUSLGaV00RpJfQ
+         b3bD+R5XvH6BRa9VK7j/hWmKsUPd/AV58VVBvKGmIz4jeqjGuHKqISQcnpWo+Pa2dBuq
+         4hVoqp9NsQpM2qdEgyE4iQEBUAAQTLkvgBfly0agOg8JzaJuugzRMMhCTZtUh1iVfsuQ
+         BSQA9/CeTA5mP29J7aP3QzqAvrkRK13l+2Lc9lnkIITQhAnFbHXonCFlipvKFwXJHC5D
+         b7bIhUUCgfrss1m/lu3T+K1N4wI/9nod/TAILbLI/pH/cYPyjbDcwiH9YJ1oBTVvpYiS
+         PQ3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3b4cKuNKKiQcE/sh1Kj/1ITgsHODRvYTQD//jYRx2DA=;
-        b=tfkiTBQA7zkv1LpHyKX0Qv7psoSXRdl7rmSHqcJrIKKUdKt/5/qhLYnElR1CA8vCTf
-         XIwch91wlle5+81U/xQH0ghVoyvnsGqWdeDr7SjgZy3MM2obFVk47T+LCwS3h/HIbwhT
-         6FIeqz9WZNBBVquEimPqLYG1QqlCmPoncg/XtX9k1tmOKWEnH/6J2RSXbqGHhOtmond+
-         v0UDOVkbC5e8C8GQuDhiRUNGo3co2PO5lBqs3kwYLQupcY7UVOn0BgZd3ci4CVN1vAwm
-         v/zfHQjdlZViGOxADaztXX6P0/3aQV78tun/u+AfcEpBNvw0+yJxyaYIw+2jYXzVIwXe
-         0ATg==
-X-Gm-Message-State: APjAAAX0Es5F5A0GZEeObp4459+8QIwQ7pP2Ts1+zR38DwmpyFSHfRW7
-        5yHlQ+4rmIuIMsbLWeohN8I=
-X-Google-Smtp-Source: APXvYqxVZqNO854Twbw3y8zdpu7DMvmMYAU1EffN9udZm5KcVdm+ZvvCm3DPmvts6zUa7YOlEb5CNg==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr7233369plb.164.1562358753610;
-        Fri, 05 Jul 2019 13:32:33 -0700 (PDT)
-Received: from dennisz-mbp.thefacebook.com ([163.114.130.128])
-        by smtp.gmail.com with ESMTPSA id j1sm11330773pfe.101.2019.07.05.13.32.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 05 Jul 2019 13:32:33 -0700 (PDT)
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>
-Cc:     kernel-team@fb.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>
-Subject: [PATCH] blk-iolatency: fix STS_AGAIN handling
-Date:   Fri,  5 Jul 2019 16:32:28 -0400
-Message-Id: <20190705203228.77695-1-dennis@kernel.org>
-X-Mailer: git-send-email 2.13.5
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yoxxCJSZxSTE9St2leMIv+/L5lNU4jc2bI6FtTm18Vo=;
+        b=BpFCY4Z0f2z3YN5420o3OS3bqcm3wZrFL930GbwulP/e42nvRYqT329UaFulXOu4PG
+         3LHYxrkrQVfkbxP1fm/Kl2sDrrz4/k2aEhrqOPQa5yhTC4744Vj2w/gdMR/m3fv7B4gd
+         /BB9Cze1Af41DLEMk8h7KKuf5Pty4po5Sbut6JfK7DDQ2FkUY+NVlZa+moMZhul6q5At
+         +8V/IkL4cWVMYZVw9SssLpHORoyxapOOr9eEJpUzl3FZ1Q00nNfnNcv3fFAUyV+aB6tD
+         7joQJFbZSfYZfNM7qaYpeRHuTeb12B912/9s0S232FE0w5ptZp72IhVO93TxUjm2uJFJ
+         SZFQ==
+X-Gm-Message-State: APjAAAUOX7d1WX9+/88iMjv0+48tTxzYs2bVeqUYuitOc19mMa4tVQBX
+        M3xBWcs2Ghlp1S/CchMBiLCOMQMxW49A8QXBQ8XH0MfX
+X-Google-Smtp-Source: APXvYqwfDP/THUkpCtIM4cUZw/Yfty+ps9KY+d54LP6mdlU+haOrDt6MQjz6RaQlZues5DSTJFl6119KvB99/4BPxqU=
+X-Received: by 2002:a05:600c:20d:: with SMTP id 13mr4557378wmi.141.1562358770831;
+ Fri, 05 Jul 2019 13:32:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190703162718.32184-1-huangfq.daxian@gmail.com>
+In-Reply-To: <20190703162718.32184-1-huangfq.daxian@gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 5 Jul 2019 16:32:39 -0400
+Message-ID: <CADnq5_Pr1=69rwce-bkDA7y-16MgYwCg8z2ghOvDqooMMj3r6A@mail.gmail.com>
+Subject: Re: [PATCH v2 07/35] drm/amdgpu: Use kmemdup rather than duplicating
+ its implementation
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     David Zhou <David1.Zhou@amd.com>, David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Leo Li <sunpeng.li@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iolatency controller is based on rq_qos. It increments on
-rq_qos_throttle() and decrements on either rq_qos_cleanup() or
-rq_qos_done_bio(). a3fb01ba5af0 fixes the double accounting issue where
-blk_mq_make_request() may call both rq_qos_cleanup() and
-rq_qos_done_bio() on REQ_NO_WAIT. So checking STS_AGAIN prevents the
-double decrement.
+On Wed, Jul 3, 2019 at 1:13 PM Fuqian Huang <huangfq.daxian@gmail.com> wrote:
+>
+> kmemdup is introduced to duplicate a region of memory in a neat way.
+> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
+> write the size twice (sometimes lead to mistakes), kmemdup improves
+> readability, leads to smaller code and also reduce the chances of mistakes.
+> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
+>
+> Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
+> Changes in v2:
+>   - Fix a typo in commit message (memset -> memcpy)
+>
+>  drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c           | 5 ++---
+>  drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c           | 5 ++---
+>  drivers/gpu/drm/amd/display/dc/core/dc.c        | 6 ++----
+>  drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 4 +---
+>  4 files changed, 7 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> index 02955e6e9dd9..48e38479d634 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> @@ -3925,11 +3925,10 @@ static int gfx_v8_0_init_save_restore_list(struct amdgpu_device *adev)
+>
+>         int list_size;
+>         unsigned int *register_list_format =
+> -               kmalloc(adev->gfx.rlc.reg_list_format_size_bytes, GFP_KERNEL);
+> +               kmemdup(adev->gfx.rlc.register_list_format,
+> +                       adev->gfx.rlc.reg_list_format_size_bytes, GFP_KERNEL);
+>         if (!register_list_format)
+>                 return -ENOMEM;
+> -       memcpy(register_list_format, adev->gfx.rlc.register_list_format,
+> -                       adev->gfx.rlc.reg_list_format_size_bytes);
+>
+>         gfx_v8_0_parse_ind_reg_list(register_list_format,
+>                                 RLC_FormatDirectRegListLength,
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+> index b610e3b30d95..09d901ef216d 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+> @@ -2092,11 +2092,10 @@ static int gfx_v9_1_init_rlc_save_restore_list(struct amdgpu_device *adev)
+>         u32 tmp = 0;
+>
+>         u32 *register_list_format =
+> -               kmalloc(adev->gfx.rlc.reg_list_format_size_bytes, GFP_KERNEL);
+> +               kmemdup(adev->gfx.rlc.register_list_format,
+> +                       adev->gfx.rlc.reg_list_format_size_bytes, GFP_KERNEL);
+>         if (!register_list_format)
+>                 return -ENOMEM;
+> -       memcpy(register_list_format, adev->gfx.rlc.register_list_format,
+> -               adev->gfx.rlc.reg_list_format_size_bytes);
+>
+>         /* setup unique_indirect_regs array and indirect_start_offsets array */
+>         unique_indirect_reg_count = ARRAY_SIZE(unique_indirect_regs);
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> index 18c775a950cc..6ced3b9cdce2 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> @@ -1263,14 +1263,12 @@ struct dc_state *dc_create_state(struct dc *dc)
+>  struct dc_state *dc_copy_state(struct dc_state *src_ctx)
+>  {
+>         int i, j;
+> -       struct dc_state *new_ctx = kzalloc(sizeof(struct dc_state),
+> -                                          GFP_KERNEL);
+> +       struct dc_state *new_ctx = kmemdup(src_ctx,
+> +                       sizeof(struct dc_state), GFP_KERNEL);
+>
+>         if (!new_ctx)
+>                 return NULL;
+>
+> -       memcpy(new_ctx, src_ctx, sizeof(struct dc_state));
+> -
+>         for (i = 0; i < MAX_PIPES; i++) {
+>                         struct pipe_ctx *cur_pipe = &new_ctx->res_ctx.pipe_ctx[i];
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+> index 96e97d25d639..d4b563a2e220 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+> @@ -167,12 +167,10 @@ struct dc_stream_state *dc_copy_stream(const struct dc_stream_state *stream)
+>  {
+>         struct dc_stream_state *new_stream;
+>
+> -       new_stream = kzalloc(sizeof(struct dc_stream_state), GFP_KERNEL);
+> +       new_stream = kzalloc(stream, sizeof(struct dc_stream_state), GFP_KERNEL);
 
-The above works upstream as the only way we can get STS_AGAIN is from
-blk_mq_get_request() failing. The STS_AGAIN handling isn't a real
-problem as bio_endio() skipping only happens on reserved tag allocation
-failures which can only be caused by driver bugs and already triggers
-WARN.
+This doesn't compile.  I've gone ahead and fixed it up locally and
+applied it.  Please check that your patches compile before sending
+them out.
 
-However, the fix creates a not so great dependency on how STS_AGAIN can
-be propagated. Internally, we (Facebook) carry a patch that kills read
-ahead if a cgroup is io congested or a fatal signal is pending. This
-combined with chained bios progagate their bi_status to the parent is
-not already set can can cause the parent bio to not clean up properly
-even though it was successful. This consequently leaks the inflight
-counter and can hang all IOs under that blkg.
+Thanks,
 
-To nip the adverse interaction early, this removes the rq_qos_cleanup()
-callback in iolatency in favor of cleaning up always on the
-rq_qos_done_bio() path.
+Alex
 
-Fixes: a3fb01ba5af0 ("blk-iolatency: only account submitted bios")
-Debugged-by: Tejun Heo <tj@kernel.org>
-Debugged-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
----
- block/blk-iolatency.c | 29 +++--------------------------
- 1 file changed, 3 insertions(+), 26 deletions(-)
-
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index e8859350ab6e..c956eebf2d97 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -600,10 +600,6 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	if (!blkg || !bio_flagged(bio, BIO_TRACKED))
- 		return;
- 
--	/* We didn't actually submit this bio, don't account it. */
--	if (bio->bi_status == BLK_STS_AGAIN)
--		return;
--
- 	iolat = blkg_to_lat(bio->bi_blkg);
- 	if (!iolat)
- 		return;
-@@ -622,6 +618,9 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 
- 		inflight = atomic_dec_return(&rqw->inflight);
- 		WARN_ON_ONCE(inflight < 0);
-+		/* We didn't actually submit this bio, don't account for it. */
-+		if (bio->bi_status == BLK_STS_AGAIN)
-+			goto next;
- 		if (iolat->min_lat_nsec == 0)
- 			goto next;
- 		iolatency_record_time(iolat, &bio->bi_issue, now,
-@@ -639,27 +638,6 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	}
- }
- 
--static void blkcg_iolatency_cleanup(struct rq_qos *rqos, struct bio *bio)
--{
--	struct blkcg_gq *blkg;
--
--	blkg = bio->bi_blkg;
--	while (blkg && blkg->parent) {
--		struct rq_wait *rqw;
--		struct iolatency_grp *iolat;
--
--		iolat = blkg_to_lat(blkg);
--		if (!iolat)
--			goto next;
--
--		rqw = &iolat->rq_wait;
--		atomic_dec(&rqw->inflight);
--		wake_up(&rqw->wait);
--next:
--		blkg = blkg->parent;
--	}
--}
--
- static void blkcg_iolatency_exit(struct rq_qos *rqos)
- {
- 	struct blk_iolatency *blkiolat = BLKIOLATENCY(rqos);
-@@ -671,7 +649,6 @@ static void blkcg_iolatency_exit(struct rq_qos *rqos)
- 
- static struct rq_qos_ops blkcg_iolatency_ops = {
- 	.throttle = blkcg_iolatency_throttle,
--	.cleanup = blkcg_iolatency_cleanup,
- 	.done_bio = blkcg_iolatency_done_bio,
- 	.exit = blkcg_iolatency_exit,
- };
--- 
-2.17.1
-
+>         if (!new_stream)
+>                 return NULL;
+>
+> -       memcpy(new_stream, stream, sizeof(struct dc_stream_state));
+> -
+>         if (new_stream->sink)
+>                 dc_sink_retain(new_stream->sink);
+>
+> --
+> 2.11.0
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
