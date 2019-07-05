@@ -2,135 +2,134 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A76C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EECC4649A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7EC218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501FE218BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RGGuau4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfGEIbc (ORCPT
+        id S1727565AbfGEIbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 04:31:32 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38195 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbfGEIbb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 04:31:31 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hjJcu-0005bG-FJ; Fri, 05 Jul 2019 08:31:28 +0000
-Subject: Re: [PATCH][next] ubifs: remove redundant assignment to pointer fname
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mtd@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190704222803.4328-1-colin.king@canonical.com>
- <b5e7709b-3494-d415-b36c-b19939a15fb5@cogentembedded.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4741f358-7c21-f721-e9fd-59d73876c62c@canonical.com>
-Date:   Fri, 5 Jul 2019 09:31:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 5 Jul 2019 04:31:38 -0400
+Received: from ozlabs.org ([203.11.71.1]:35597 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727151AbfGEIbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 04:31:38 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45g7Nh68pjz9sN4;
+        Fri,  5 Jul 2019 18:31:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562315494;
+        bh=+8dEVa9QNOdvFUEq8sFcyzUwGBanjYLMkbOx+A36zCQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RGGuau4cyOx+l8fccQPOYrb5TKG7k/c0H3bvVb0An2ye43Alf1h/ahqsHqDVMk3Ur
+         hhzFh/DiLLySEmGofyqzAF/AGVQ91ZzhHw/1Ha1Sanb+Pv72Wl9T0ej3JeZ+W7LxjK
+         ht0yDwi962p07TA1R3l/tTY2iYNIXQiFkHpjrBDrWxffpcMS/pQuvIaLTiDgjIb1he
+         RDj2OL3a5g0FMESvya7Z2v7TCpIqHlgdmg/Ji4bQHr+C7aW8DB6GCxhDO9cKXR505j
+         hItiD02spqNJudOaMCQOHoxPC8zEcrnVAmLTMubX3Pu1uvsKz7ch5zluGGDbuqgFaj
+         XAnLEOBkatIbA==
+Date:   Fri, 5 Jul 2019 18:31:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: linux-next: build failure after merge of the kbuild tree
+Message-ID: <20190705183104.6fb50bd0@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <b5e7709b-3494-d415-b36c-b19939a15fb5@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Ny3WjfBqFeBWAOFWZ7JQBF8"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07/2019 09:24, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 05.07.2019 1:28, Colin King wrote:
-> 
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The pointer fname rc is being assigned with a value that is never
-> 
->    rc?
+--Sig_/Ny3WjfBqFeBWAOFWZ7JQBF8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Oops, cut'n'paste error. Do you want me to resend to can this be fixed
-when it's applied?
+Hi all,
 
-Colin
+After merging the kbuild tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
 
-> 
->> read because the function returns after the assignment. The assignment
->> is redundant and can be removed.
->>
->> Addresses-Coverity: ("Unused value")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>   fs/ubifs/debug.c | 1 -
->>   1 file changed, 1 deletion(-)
->>
->> diff --git a/fs/ubifs/debug.c b/fs/ubifs/debug.c
->> index 92fe5c5ed78a..95da71e13fc8 100644
->> --- a/fs/ubifs/debug.c
->> +++ b/fs/ubifs/debug.c
->> @@ -2817,7 +2817,6 @@ void dbg_debugfs_init_fs(struct ubifs_info *c)
->>                c->vi.ubi_num, c->vi.vol_id);
->>       if (n == UBIFS_DFS_DIR_LEN) {
->>           /* The array size is too small */
->> -        fname = UBIFS_DFS_DIR_NAME;
->>           return;
->>       }
->>   
-> 
-> MBR, Sergei
-> 
+In file included from <command-line>:
+include/clocksource/hyperv_timer.h:18:10: fatal error: asm/mshyperv.h: No s=
+uch file or directory
+ #include <asm/mshyperv.h>
+          ^~~~~~~~~~~~~~~~
 
+Caused by commit
+
+  34085aeb5816 ("kbuild: compile-test kernel headers to ensure they are sel=
+f-contained")
+
+interacting with commit
+
+  dd2cb348613b ("clocksource/drivers: Continue making Hyper-V clocksource I=
+SA agnostic")
+
+from the tip tree.
+
+I have added the following patch for today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 5 Jul 2019 18:17:44 +1000
+Subject: [PATCH] kbuild: only compile test clocksource/hyperv_timer.h on X86
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ include/Kbuild | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/Kbuild b/include/Kbuild
+index 4f9524d92a75..a7ab060552c2 100644
+--- a/include/Kbuild
++++ b/include/Kbuild
+@@ -29,6 +29,7 @@ header-test-			+=3D acpi/platform/acintel.h
+ header-test-			+=3D acpi/platform/aclinux.h
+ header-test-			+=3D acpi/platform/aclinuxex.h
+ header-test-			+=3D acpi/processor.h
++header-test-$(CONFIG_X86)	+=3D clocksource/hyperv_timer.h
+ header-test-			+=3D clocksource/timer-sp804.h
+ header-test-			+=3D crypto/cast_common.h
+ header-test-			+=3D crypto/internal/cryptouser.h
+--=20
+2.20.1
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Ny3WjfBqFeBWAOFWZ7JQBF8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0fCsgACgkQAVBC80lX
+0GzP7gf+IhRYREYoLbajvJ0eJP6dSNxtX7JAt/glEA3NMG4vgp3sxcfYMbLueOhJ
+z6tXnVCZE1UTvSti8dZMLfr4fAtyhnYxxdXHvim5nJXfku47A8vHPHeXWhyClKdl
+wj601UvGNQw7TagngFshKfhzculu0YMDAc4RPOdd+dubhuiUvMzzIVXK/DvWyzB2
+1seRp1jT1cCzjUOLXTzGv9UR3lF2hDPwnh9X37m+JmxxzzZ3PB/wBoxSD7vmVVzv
+N0H5VU7NB6ZUmgHeU9/c8O6I18OHF06R3OulUq2Y0HhHGGzRcJT0TVG7atbNFAZ+
+xTCFATmEb8fT99a5/7/OXnXSq0WEGA==
+=nxCx
+-----END PGP SIGNATURE-----
+
+--Sig_/Ny3WjfBqFeBWAOFWZ7JQBF8--
