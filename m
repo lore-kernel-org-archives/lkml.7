@@ -2,150 +2,106 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21159C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14097C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE3B3218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BEJ0jTND"
+	by mail.kernel.org (Postfix) with ESMTP id E01E1218BC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 11:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbfGELKD (ORCPT
+        id S1728121AbfGELOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 07:10:03 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45236 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfGELKC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 07:10:02 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u10so6052333lfm.12;
-        Fri, 05 Jul 2019 04:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5RdEr/X79ZzCf783w6bsQHLAIWzpq3B5zyX8W61fTzI=;
-        b=BEJ0jTNDgxkIrq5B0EAyVPWrcib5p8ltZW1kqENTIzzMAgI7BvHjiV/4/6ExHMMu/W
-         zUgdPUTxMP9mDx7qjrfhIWGFKrmyqL1BYxrjt9ma+pJklavUO+Gw02cp+gF6aAdicDDt
-         L6klAFIcohzWpJ69+fMRgmpGz2V9cGiyVLY9x33LulH/ORwdrqKCqff7tZ5CgI+hNgUW
-         Yls2gurLdNlhgGxVt6zNnIxwmwCIZo9FTAT7dnfQF68ainZ5ieky7dGuqhk02eCV/0xI
-         T9vtA6u77fb/A1cepU9CKQ4IaFYmz4nsGtM1xwZWQhMxcS3rwzQk1pdr3wjpEidokcGu
-         EWAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5RdEr/X79ZzCf783w6bsQHLAIWzpq3B5zyX8W61fTzI=;
-        b=KST1WL8jbFzRsF/qfKTU/cLalpHHKYVkRNRgxaKSN5Psc+CPxloavbOlnrxnDEhNn0
-         WmENE8zNYT7A0LI3N4Xl9BuJ+SefufXllXl2/n9u9EKl79e8dbOLTMt1TOL4es/w04l4
-         OR8vlT0bvTZk/YDWehbMKEKZrtyd4hOgqqrmQlDa/ly+uquSq+umMvP86bRhjJ9myALb
-         AbW1cOXLe8BnOikLNJ1+yWq16sBMMZ7/3188rfol6PgMD4uyxRlR+jTjIKTV6g3UbIJy
-         bDjj3aNSuS32UjRFhyAyBpfzMib20JTJwcEmJH9od5rSMT5Q2uGYVFG0npdfNVX5hW3/
-         H28w==
-X-Gm-Message-State: APjAAAX3g+kN9sbZya/g3Kvj4+tgpRbpgkTtJ5ENkmC82k9sYt8MOSSA
-        JFcODeTnVwT0GaKrMXXa8YKl4BQBukgue5c/Eo4=
-X-Google-Smtp-Source: APXvYqz949oo2/kA7nq/uLcOQSgvG3b3xUHzgNiXeOmOmSGCD3sqOvcoaQa63QGtwoIvsSuETPtkwACwhlOwk2WqOJU=
-X-Received: by 2002:ac2:5189:: with SMTP id u9mr1742156lfi.189.1562325000643;
- Fri, 05 Jul 2019 04:10:00 -0700 (PDT)
+        Fri, 5 Jul 2019 07:14:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40716 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbfGELOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 07:14:07 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5538F34CF;
+        Fri,  5 Jul 2019 11:14:06 +0000 (UTC)
+Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F6ED7F76E;
+        Fri,  5 Jul 2019 11:13:56 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 13:13:54 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v7 net-next 5/5] net: ethernet: ti: cpsw: add XDP
+ support
+Message-ID: <20190705131354.15a9313c@carbon>
+In-Reply-To: <20190704231406.27083-6-ivan.khoronzhuk@linaro.org>
+References: <20190704231406.27083-1-ivan.khoronzhuk@linaro.org>
+        <20190704231406.27083-6-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com> <20190705095800.43534-4-mika.westerberg@linux.intel.com>
-In-Reply-To: <20190705095800.43534-4-mika.westerberg@linux.intel.com>
-From:   Yehezkel Bernat <yehezkelshb@gmail.com>
-Date:   Fri, 5 Jul 2019 14:09:44 +0300
-Message-ID: <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
-Subject: Re: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring producer/consumer
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 05 Jul 2019 11:14:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 12:58 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> The register access should be using 32-bit reads/writes according to the
-> datasheet. With the previous generation hardware 16-bit writes have been
-> working but starting with ICL this is not the case anymore so fix
-> producer/consumer register update to use correct width register address.
->
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/thunderbolt/nhi.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
-> index 27fbe62c7ddd..09242653da67 100644
-> --- a/drivers/thunderbolt/nhi.c
-> +++ b/drivers/thunderbolt/nhi.c
-> @@ -143,9 +143,24 @@ static void __iomem *ring_options_base(struct tb_ring *ring)
->         return io;
->  }
->
-> -static void ring_iowrite16desc(struct tb_ring *ring, u32 value, u32 offset)
-> +static void ring_iowrite_prod(struct tb_ring *ring, u16 prod)
->  {
-> -       iowrite16(value, ring_desc_base(ring) + offset);
-> +       u32 val;
-> +
-> +       val = ioread32(ring_desc_base(ring) + 8);
-> +       val &= 0x0000ffff;
-> +       val |= prod << 16;
-> +       iowrite32(val, ring_desc_base(ring) + 8);
-> +}
-> +
-> +static void ring_iowrite_cons(struct tb_ring *ring, u16 cons)
+On Fri,  5 Jul 2019 02:14:06 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+
+> +static int cpsw_xdp_tx_frame(struct cpsw_priv *priv, struct xdp_frame *xdpf,
+> +			     struct page *page)
 > +{
-> +       u32 val;
+> +	struct cpsw_common *cpsw = priv->cpsw;
+> +	struct cpsw_meta_xdp *xmeta;
+> +	struct cpdma_chan *txch;
+> +	dma_addr_t dma;
+> +	int ret, port;
 > +
-> +       val = ioread32(ring_desc_base(ring) + 8);
-> +       val &= 0xffff0000;
-> +       val |= cons;
-> +       iowrite32(val, ring_desc_base(ring) + 8);
->  }
->
->  static void ring_iowrite32desc(struct tb_ring *ring, u32 value, u32 offset)
-> @@ -197,7 +212,10 @@ static void ring_write_descriptors(struct tb_ring *ring)
->                         descriptor->sof = frame->sof;
->                 }
->                 ring->head = (ring->head + 1) % ring->size;
-> -               ring_iowrite16desc(ring, ring->head, ring->is_tx ? 10 : 8);
-> +               if (ring->is_tx)
-> +                       ring_iowrite_prod(ring, ring->head);
-> +               else
-> +                       ring_iowrite_cons(ring, ring->head);
+> +	xmeta = (void *)xdpf + CPSW_XMETA_OFFSET;
+> +	xmeta->ndev = priv->ndev;
+> +	xmeta->ch = 0;
+> +	txch = cpsw->txv[0].ch;
+> +
+> +	port = priv->emac_port + cpsw->data.dual_emac;
+> +	if (page) {
+> +		dma = page_pool_get_dma_addr(page);
+> +		dma += xdpf->data - (void *)xdpf;
 
-Really a matter of taste, but maybe you want to consider having a single
-function, with a 3rd parameter, bool is_tx.
-The calls here will be unified to:
-        ring_iowrite(ring, ring->head, ring->is_tx);
-(No condition is needed here).
+This code is only okay because this only happens for XDP_TX, where you
+know this head-room calculation will be true.  The "correct"
+calculation of the head-room would be:
 
-The implementation uses the new parameter to decide which part of the register
-to mask, reducing the code duplication (in my eyes):
+  dma += xdpf->headroom + sizeof(struct xdp_frame);
 
-        val = ioread32(ring_desc_base(ring) + 8);
-        if (is_tx) {
-                val &= 0x0000ffff;
-                val |= value << 16;
-        } else {
-                val &= 0xffff0000;
-                val |= value;
-        }
-        iowrite32(val, ring_desc_base(ring) + 8);
+The reason behind not using xdpf pointer itself as "data_hard_start",
+is to allow struct xdp_frame to be located in another memory area.
+This will be useful for e.g. AF_XDP transmit, or other zero-copy
+transmit to go through ndo_xdp_xmit() (as we don't want userspace to
+be-able to e.g. "race" change xdpf->len during transmit/DMA-completion).
 
-I'm not sure if it improves the readability or makes it worse. Your call.
+
+> +		ret = cpdma_chan_submit_mapped(txch, cpsw_xdpf_to_handle(xdpf),
+> +					       dma, xdpf->len, port);
+> +	} else {
+> +		if (sizeof(*xmeta) > xdpf->headroom) {
+> +			xdp_return_frame_rx_napi(xdpf);
+> +			return -EINVAL;
+> +		}
+> +
+> +		ret = cpdma_chan_submit(txch, cpsw_xdpf_to_handle(xdpf),
+> +					xdpf->data, xdpf->len, port);
+> +	}
+
+
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
