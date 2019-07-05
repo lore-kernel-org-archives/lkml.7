@@ -2,129 +2,149 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B68AC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820C1C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7936B216E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66572216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfGEVZB (ORCPT
+        id S1728197AbfGEVao convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:25:01 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58063 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfGEVZB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:25:01 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 5B1981C0003;
-        Fri,  5 Jul 2019 21:24:48 +0000 (UTC)
-Date:   Fri, 5 Jul 2019 23:24:48 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Josef Friedl <josef.friedl@speed.at>
-Subject: Re: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
-Message-ID: <20190705212448.GB12409@piout.net>
-References: <20190703164822.17924-1-frank-w@public-files.de>
- <20190703164822.17924-4-frank-w@public-files.de>
- <20190704204336.GJ3692@piout.net>
- <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
+        Fri, 5 Jul 2019 17:30:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56964 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbfGEVan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 17:30:43 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 10022308FEC0;
+        Fri,  5 Jul 2019 21:30:43 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAF9618A41;
+        Fri,  5 Jul 2019 21:30:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, jmorris@namei.org, keyrings@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <28476.1562362239.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 05 Jul 2019 22:30:39 +0100
+Message-ID: <28477.1562362239@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 05 Jul 2019 21:30:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07/2019 17:35:46+0200, Frank Wunderlich wrote:
-> Hi Alexander,
-> 
-> thank you for the Review
-> 
-> > Gesendet: Donnerstag, 04. Juli 2019 um 22:43 Uhr
-> > Von: "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-> > > -	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
-> > > -	if (IS_ERR(rtc->rtc_dev))
-> > > -		return PTR_ERR(rtc->rtc_dev);
-> > > +	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-> > > +					mtk_rtc_irq_handler_thread,
-> > > +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> > > +					"mt6397-rtc", rtc);
-> > >
-> >
-> > This change may lead to a crash and the allocation was intentionally
-> > placed before the irq request.
-> 
-> i got no crash till now, but i will try to move the allocation before irq-request
-> 
+Hi Linus,
 
-Let's say the RTC has been used to start your platform, then the irq
-handler will be called as soon as the irq is requested, leading to a
-null pointer dereference.
+Here's my fourth block of keyrings changes for the next merge window.  They
+change the permissions model used by keys and keyrings to be based on an
+internal ACL by the following means:
 
-> > > -	ret = request_threaded_irq(rtc->irq, NULL,
-> > > -				   mtk_rtc_irq_handler_thread,
-> > > -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> > > -				   "mt6397-rtc", rtc);
-> > >  	if (ret) {
-> > >  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
-> > >  			rtc->irq, ret);
-> > > @@ -287,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
-> > >
-> > >  	device_init_wakeup(&pdev->dev, 1);
-> > >
-> > > +	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-> > > +	if (IS_ERR(rtc->rtc_dev))
-> > > +		return PTR_ERR(rtc->rtc_dev);
-> > > +
-> > >  	rtc->rtc_dev->ops = &mtk_rtc_ops;
-> 
-> 
-> > >  static const struct of_device_id mt6397_rtc_of_match[] = {
-> > > +	{ .compatible = "mediatek,mt6323-rtc", },
-> >
-> > Unrelated change, this is not an improvement and must be accompanied by
-> > a documentation change.
-> 
-> documentation is changed in 1/7 defining this compatible. i called it improvement because existing driver now supports another chip
-> 
+ (1) Replace the permissions mask internally with an ACL that contains a
+     list of ACEs, each with a specific subject with a permissions mask.
+     Potted default ACLs are available for new keys and keyrings.
 
-Yes and IIRC, I did comment that the rtc change also had to be separated
-from 1/7.
+     ACE subjects can be macroised to indicate the UID and GID specified on
+     the key (which remain).  Future commits will be able to add additional
+     subject types, such as specific UIDs or domain tags/namespaces.
 
-Also, I really doubt this new compatible is necessary at all as you
-could simply directly use mediatek,mt6397-rtc.
+     Also split a number of permissions to give finer control.  Examples
+     include splitting the revocation permit from the change-attributes
+     permit, thereby allowing someone to be granted permission to revoke a
+     key without allowing them to change the owner; also the ability to
+     join a keyring is split from the ability to link to it, thereby
+     stopping a process accessing a keyring by joining it and thus
+     acquiring use of possessor permits.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ (2) Provide a keyctl to allow the granting or denial of one or more
+     permits to a specific subject.  Direct access to the ACL is not
+     granted, and the ACL cannot be viewed.
+
+David
+---
+The following changes since commit a58946c158a040068e7c94dc1d58bbd273258068:
+
+  keys: Pass the network namespace into request_key mechanism (2019-06-27 23:02:12 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-acl-20190703
+
+for you to fetch changes up to 7a1ade847596dadc94b37e49f8c03f167fd71748:
+
+  keys: Provide KEYCTL_GRANT_PERMISSION (2019-07-03 13:05:22 +0100)
+
+----------------------------------------------------------------
+Keyrings ACL
+
+----------------------------------------------------------------
+David Howells (2):
+      keys: Replace uid/gid/perm permissions checking with an ACL
+      keys: Provide KEYCTL_GRANT_PERMISSION
+
+ Documentation/security/keys/core.rst               | 128 ++++++--
+ Documentation/security/keys/request-key.rst        |   9 +-
+ certs/blacklist.c                                  |   7 +-
+ certs/system_keyring.c                             |  12 +-
+ drivers/md/dm-crypt.c                              |   2 +-
+ drivers/nvdimm/security.c                          |   2 +-
+ fs/afs/security.c                                  |   2 +-
+ fs/cifs/cifs_spnego.c                              |  25 +-
+ fs/cifs/cifsacl.c                                  |  28 +-
+ fs/cifs/connect.c                                  |   4 +-
+ fs/crypto/keyinfo.c                                |   2 +-
+ fs/ecryptfs/ecryptfs_kernel.h                      |   2 +-
+ fs/ecryptfs/keystore.c                             |   2 +-
+ fs/fscache/object-list.c                           |   2 +-
+ fs/nfs/nfs4idmap.c                                 |  30 +-
+ fs/ubifs/auth.c                                    |   2 +-
+ include/linux/key.h                                | 121 +++----
+ include/uapi/linux/keyctl.h                        |  65 ++++
+ lib/digsig.c                                       |   2 +-
+ net/ceph/ceph_common.c                             |   2 +-
+ net/dns_resolver/dns_key.c                         |  12 +-
+ net/dns_resolver/dns_query.c                       |  15 +-
+ net/rxrpc/key.c                                    |  19 +-
+ net/wireless/reg.c                                 |   6 +-
+ security/integrity/digsig.c                        |  31 +-
+ security/integrity/digsig_asymmetric.c             |   2 +-
+ security/integrity/evm/evm_crypto.c                |   2 +-
+ security/integrity/ima/ima_mok.c                   |  13 +-
+ security/integrity/integrity.h                     |   6 +-
+ .../integrity/platform_certs/platform_keyring.c    |  14 +-
+ security/keys/compat.c                             |   2 +
+ security/keys/encrypted-keys/encrypted.c           |   2 +-
+ security/keys/encrypted-keys/masterkey_trusted.c   |   2 +-
+ security/keys/gc.c                                 |   2 +-
+ security/keys/internal.h                           |  16 +-
+ security/keys/key.c                                |  29 +-
+ security/keys/keyctl.c                             | 104 ++++--
+ security/keys/keyring.c                            |  27 +-
+ security/keys/permission.c                         | 361 +++++++++++++++++++--
+ security/keys/persistent.c                         |  27 +-
+ security/keys/proc.c                               |  22 +-
+ security/keys/process_keys.c                       |  86 +++--
+ security/keys/request_key.c                        |  34 +-
+ security/keys/request_key_auth.c                   |  15 +-
+ security/selinux/hooks.c                           |  16 +-
+ security/smack/smack_lsm.c                         |   3 +-
+ 46 files changed, 992 insertions(+), 325 deletions(-)
