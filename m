@@ -2,100 +2,97 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518C9C468AA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABF4C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222A72133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:32:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XBE4SDcA"
+	by mail.kernel.org (Postfix) with ESMTP id A68BB2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbfGEWcb (ORCPT
+        id S1726164AbfGEWgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 18:32:31 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33114 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfGEWcb (ORCPT
+        Fri, 5 Jul 2019 18:36:24 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:53881 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfGEWgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 18:32:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q20so10469686otl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 15:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1wm0pw4O8jGrQBiDWGY1iI0LWQ3L51MTQbW4ZCjLQSg=;
-        b=XBE4SDcAEoyDwNhulgwMtQTbrBG037H4PVtb7nFjbFfO2ZNN3pM/nd7NEiDXajAFdW
-         TLFKn4/fILMTGTiYgco+0kEADRLiWR6qV1l7Jt9KrVk23UB+dGn9VZeuMt15OingZftG
-         0qbCE9oI4nHFuHXjSBfgmZCrbqxHvK79C1hHZ8lo6ZSm13TyURqE9pB3FvoP9FZBK7px
-         Pzr+ZC405VKPGBR2+d7wRb74aL0Rypv7pyUWdIkqlLs4pW6YR8g0RhG/YFfMoGmHxsit
-         YNsAgMdgjZ2zn0HTOGzhE9tfNAQ0fQSh2rNWvjCGLLfhE+N2D7vYGs7MSu7wKz/AlHFC
-         R4pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1wm0pw4O8jGrQBiDWGY1iI0LWQ3L51MTQbW4ZCjLQSg=;
-        b=ozx62hgWEJrxrwZZg4qCbV348B7z4y6Y1GIjSKnQTd7H7CREHIto9BUuqKXuhTe+sJ
-         lscuAacAaayvdbplP0RTTtQO6QCBdWHMLOuLmiNFKPuXYWAgCIRemz+l2pLeiTe+TyKK
-         1PSu0xgw3BfDDnAYRC/HX1g59jzlcal0aUcpVyl45EuEjhmEjJdK95uIW3GTb3hOLeEC
-         v7FV4B9EhidRdCTyaYX/bmRZdUrXfl450Ci3dC1cRonlsqyb7A1fubMYFkn+SzDvCL5D
-         VY5zNj5DJbTcuv6M1RWZ8CmFZlCt4JR0cs7puX8sZubqC77kB+zIhdO4bIi1S+rQ44AK
-         FLBg==
-X-Gm-Message-State: APjAAAUBeu3VlOLN+wLiG4KIGh0Vc4nAgFcAAXxKYtTcxSr6ZQztxVYS
-        Df0Dx3JFFz1lHEqNXhMEL/dDzV3MVZvws1PEfWjJLljj
-X-Google-Smtp-Source: APXvYqwGQbiNPwIE2byyxn0tHolot0gPU6NwuDBWiOyEImIrwg3SDFRjKvMGl+cUVDjhjAMM1pAdKSMDIUS/iPsAT8w=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr4626247oto.207.1562365950689;
- Fri, 05 Jul 2019 15:32:30 -0700 (PDT)
+        Fri, 5 Jul 2019 18:36:23 -0400
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7A95A200006;
+        Fri,  5 Jul 2019 22:36:17 +0000 (UTC)
+Date:   Sat, 6 Jul 2019 00:36:17 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Michal Simek <michal.simek@xilinx.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] rtc: zynqmp: One function call less in
+ xlnx_rtc_alarm_irq_enable()
+Message-ID: <20190705223617.GC12409@piout.net>
+References: <6f1db217-cb0a-9f6c-0e2e-5d932103f6ef@web.de>
 MIME-Version: 1.0
-References: <20190705172025.46abf71e@canb.auug.org.au>
-In-Reply-To: <20190705172025.46abf71e@canb.auug.org.au>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 5 Jul 2019 15:32:19 -0700
-Message-ID: <CAPcyv4gU7TfBucm2WoAyUng8qaUQOxGu0PuuJNVd1u0m9Q_tQw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the nvdimm tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Yuval Shaia <yuval.shaia@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jakub Staron <jstaron@google.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f1db217-cb0a-9f6c-0e2e-5d932103f6ef@web.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 12:20 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the nvdimm tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> In file included from <command-line>:32:
-> ./usr/include/linux/virtio_pmem.h:19:2: error: unknown type name 'uint64_t'
->   uint64_t start;
->   ^~~~~~~~
-> ./usr/include/linux/virtio_pmem.h:20:2: error: unknown type name 'uint64_t'
->   uint64_t size;
->   ^~~~~~~~
+On 05/07/2019 22:45:39+0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 5 Jul 2019 22:37:58 +0200
+> 
+> Avoid an extra function call by using a ternary operator instead of
+> a conditional statement for a setting selection.
+> 
 
-/me boggles at how this sat in 0day visible tree for a long while
-without this report?
+Please elaborate on why this is a good thing.
 
->
-> Caused by commit
->
->   403b7f973855 ("virtio-pmem: Add virtio pmem driver")
->
-> I have used the nvdimm tree from next-20190704 for today.
+> This issue was detected by using the Coccinelle software.
+> 
 
-Thanks Stephen, sorry for the noise.
+Unless you use an upstream coccinelle script or you share the one you
+are using, this is not a useful information.
+
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/rtc/rtc-zynqmp.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
+> index 00639594de0c..4631019a54e2 100644
+> --- a/drivers/rtc/rtc-zynqmp.c
+> +++ b/drivers/rtc/rtc-zynqmp.c
+> @@ -124,11 +124,8 @@ static int xlnx_rtc_alarm_irq_enable(struct device *dev, u32 enabled)
+>  {
+>  	struct xlnx_rtc_dev *xrtcdev = dev_get_drvdata(dev);
+> 
+> -	if (enabled)
+> -		writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_EN);
+> -	else
+> -		writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_DIS);
+> -
+> +	writel(RTC_INT_ALRM,
+> +	       xrtcdev->reg_base + (enabled ? RTC_INT_EN : RTC_INT_DIS));
+
+This makes the code less readable.
+
+>  	return 0;
+>  }
+> 
+> --
+> 2.22.0
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
