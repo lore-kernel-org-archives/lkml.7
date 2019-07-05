@@ -2,152 +2,111 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0A7C468A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428B0C468AA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8812133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231232133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 21:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbfGEVow (ORCPT
+        id S1728316AbfGEVpn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 17:44:52 -0400
-Received: from www62.your-server.de ([213.133.104.62]:49732 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfGEVow (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 17:44:52 -0400
-Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hjW0b-0002eV-FV; Fri, 05 Jul 2019 23:44:45 +0200
-Received: from [178.193.45.231] (helo=linux.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hjW0b-0000iX-6b; Fri, 05 Jul 2019 23:44:45 +0200
-Subject: Re: [PATCH bpf-next 1/2] bpf, libbpf: add a new API
- bpf_object__reuse_maps()
-To:     Anton Protopopov <a.s.protopopov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriin@fb.com
-References: <cover.1562359091.git.a.s.protopopov@gmail.com>
- <e183c0af99056f8ea4de06acb358ace7f3a3d6ae.1562359091.git.a.s.protopopov@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <734dd45a-95b0-a7fd-9e1d-0535ef4d3e12@iogearbox.net>
-Date:   Fri, 5 Jul 2019 23:44:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Fri, 5 Jul 2019 17:45:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38512 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726559AbfGEVpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 17:45:42 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6F5C9307D84D;
+        Fri,  5 Jul 2019 21:45:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5FFE918958;
+        Fri,  5 Jul 2019 21:45:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, jmorris@namei.org,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] afs: Miscellany for 5.3
 MIME-Version: 1.0
-In-Reply-To: <e183c0af99056f8ea4de06acb358ace7f3a3d6ae.1562359091.git.a.s.protopopov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25501/Fri Jul  5 10:01:52 2019)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <29484.1562363139.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 05 Jul 2019 22:45:39 +0100
+Message-ID: <29485.1562363139@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 05 Jul 2019 21:45:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/2019 10:44 PM, Anton Protopopov wrote:
-> Add a new API bpf_object__reuse_maps() which can be used to replace all maps in
-> an object by maps pinned to a directory provided in the path argument.  Namely,
-> each map M in the object will be replaced by a map pinned to path/M.name.
-> 
-> Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
-> ---
->  tools/lib/bpf/libbpf.c   | 34 ++++++++++++++++++++++++++++++++++
->  tools/lib/bpf/libbpf.h   |  2 ++
->  tools/lib/bpf/libbpf.map |  1 +
->  3 files changed, 37 insertions(+)
-> 
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 4907997289e9..84c9e8f7bfd3 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -3144,6 +3144,40 @@ int bpf_object__unpin_maps(struct bpf_object *obj, const char *path)
->  	return 0;
->  }
->  
-> +int bpf_object__reuse_maps(struct bpf_object *obj, const char *path)
-> +{
-> +	struct bpf_map *map;
-> +
-> +	if (!obj)
-> +		return -ENOENT;
-> +
-> +	if (!path)
-> +		return -EINVAL;
-> +
-> +	bpf_object__for_each_map(map, obj) {
-> +		int len, err;
-> +		int pinned_map_fd;
-> +		char buf[PATH_MAX];
+Hi Linus,
 
-We'd need to skip the case of bpf_map__is_internal(map) since they are always
-recreated for the given object.
+Here's a set of minor changes for AFS for the next merge window:
 
-> +		len = snprintf(buf, PATH_MAX, "%s/%s", path, bpf_map__name(map));
-> +		if (len < 0) {
-> +			return -EINVAL;
-> +		} else if (len >= PATH_MAX) {
-> +			return -ENAMETOOLONG;
-> +		}
-> +
-> +		pinned_map_fd = bpf_obj_get(buf);
-> +		if (pinned_map_fd < 0)
-> +			return pinned_map_fd;
+ (1) Remove an unnecessary check in afs_unlink().
 
-Should we rather have a new map definition attribute that tells to reuse
-the map if it's pinned in bpf fs, and if not, we create it and later on
-pin it? This is what iproute2 is doing and which we're making use of heavily.
-In bpf_object__reuse_maps() bailing out if bpf_obj_get() fails is perhaps
-too limiting for a generic API as new version of an object file may contain
-new maps which are not yet present in bpf fs at that point.
+ (2) Add a tracepoint for tracking callback management.
 
-> +		err = bpf_map__reuse_fd(map, pinned_map_fd);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int bpf_object__pin_programs(struct bpf_object *obj, const char *path)
->  {
->  	struct bpf_program *prog;
-> diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-> index d639f47e3110..7fe465a1be76 100644
-> --- a/tools/lib/bpf/libbpf.h
-> +++ b/tools/lib/bpf/libbpf.h
-> @@ -82,6 +82,8 @@ int bpf_object__variable_offset(const struct bpf_object *obj, const char *name,
->  LIBBPF_API int bpf_object__pin_maps(struct bpf_object *obj, const char *path);
->  LIBBPF_API int bpf_object__unpin_maps(struct bpf_object *obj,
->  				      const char *path);
-> +LIBBPF_API int bpf_object__reuse_maps(struct bpf_object *obj,
-> +				      const char *path);
->  LIBBPF_API int bpf_object__pin_programs(struct bpf_object *obj,
->  					const char *path);
->  LIBBPF_API int bpf_object__unpin_programs(struct bpf_object *obj,
-> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-> index 2c6d835620d2..66a30be6696c 100644
-> --- a/tools/lib/bpf/libbpf.map
-> +++ b/tools/lib/bpf/libbpf.map
-> @@ -172,5 +172,6 @@ LIBBPF_0.0.4 {
->  		btf_dump__new;
->  		btf__parse_elf;
->  		bpf_object__load_xattr;
-> +		bpf_object__reuse_maps;
->  		libbpf_num_possible_cpus;
->  } LIBBPF_0.0.3;
-> 
+ (3) Add a tracepoint for afs_server object usage.
+
+ (4) Use struct_size().
+
+ (5) Add mappings for AFS UAE abort codes to Linux error codes, using
+     symbolic names rather than hex numbers in the .c file.
+
+David
+---
+The following changes since commit 2cd42d19cffa0ec3dfb57b1b3e1a07a9bf4ed80a:
+
+  afs: Fix setting of i_blocks (2019-06-20 18:12:02 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-next-20190628
+
+for you to fetch changes up to 1eda8bab70ca7d353b4e865140eaec06fedbf871:
+
+  afs: Add support for the UAE error table (2019-06-28 18:37:53 +0100)
+
+----------------------------------------------------------------
+AFS development
+
+----------------------------------------------------------------
+David Howells (4):
+      afs: afs_unlink() doesn't need to check dentry->d_inode
+      afs: Add some callback management tracepoints
+      afs: Trace afs_server usage
+      afs: Add support for the UAE error table
+
+Zhengyuan Liu (1):
+      fs/afs: use struct_size() in kzalloc()
+
+ fs/afs/callback.c          |  20 ++++---
+ fs/afs/cmservice.c         |   5 +-
+ fs/afs/dir.c               |  21 ++++----
+ fs/afs/file.c              |   6 +--
+ fs/afs/fsclient.c          |   2 +-
+ fs/afs/inode.c             |  17 +++---
+ fs/afs/internal.h          |  18 +++----
+ fs/afs/misc.c              |  48 +++++++----------
+ fs/afs/protocol_uae.h      | 132 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/afs/rxrpc.c             |   2 +-
+ fs/afs/server.c            |  39 +++++++++++---
+ fs/afs/server_list.c       |   6 ++-
+ fs/afs/write.c             |   3 +-
+ include/trace/events/afs.h | 132 +++++++++++++++++++++++++++++++++++++++++++++
+ 14 files changed, 369 insertions(+), 82 deletions(-)
+ create mode 100644 fs/afs/protocol_uae.h
 
