@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA8DC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E233FC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2B72133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03D4218B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfGEO1b (ORCPT
+        id S1727460AbfGEO1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:27:31 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:50634 "EHLO inva021.nxp.com"
+        Fri, 5 Jul 2019 10:27:30 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:36128 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfGEO1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:27:20 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 26EE1200761;
+        id S1726978AbfGEO1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 10:27:21 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C56611A07CE;
         Fri,  5 Jul 2019 16:27:19 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1A631200E8B;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B92EA1A07CD;
         Fri,  5 Jul 2019 16:27:19 +0200 (CEST)
 Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CDEE9204D6;
-        Fri,  5 Jul 2019 16:27:18 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 78BAC204D6;
+        Fri,  5 Jul 2019 16:27:19 +0200 (CEST)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     ruxandra.radulescu@nxp.com,
         Razvan Stefanescu <razvan.stefanescu@nxp.com>,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH v2 4/6] staging: fsl-dpaa2/ethsw: Add ndo_get_phys_port_name
-Date:   Fri,  5 Jul 2019 17:27:14 +0300
-Message-Id: <1562336836-17119-5-git-send-email-ioana.ciornei@nxp.com>
+Subject: [PATCH v2 6/6] staging: fsl-dpaa2/ethsw: Add comments to ETHSW_VLAN flags
+Date:   Fri,  5 Jul 2019 17:27:16 +0300
+Message-Id: <1562336836-17119-7-git-send-email-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1562336836-17119-1-git-send-email-ioana.ciornei@nxp.com>
 References: <1562336836-17119-1-git-send-email-ioana.ciornei@nxp.com>
@@ -49,7 +49,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Razvan Stefanescu <razvan.stefanescu@nxp.com>
 
-Add the ndo_get_phys_port_name callback to the ethsw driver.
+Document each ETHSW_VLAN flag with the appropriate comment.
 
 Signed-off-by: Razvan Stefanescu <razvan.stefanescu@nxp.com>
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
@@ -57,41 +57,27 @@ Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 Changes in v2:
  - none
 
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index 9f1617164865..341c36b3a76d 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -516,6 +516,19 @@ static int swdev_get_port_parent_id(struct net_device *dev,
- 	return 0;
- }
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
+index c48783680a05..3ea8a0ad8c10 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
+@@ -23,9 +23,13 @@
+ /* Number of IRQs supported */
+ #define DPSW_IRQ_NUM	2
  
-+static int port_get_phys_name(struct net_device *netdev, char *name,
-+			      size_t len)
-+{
-+	struct ethsw_port_priv *port_priv = netdev_priv(netdev);
-+	int err;
-+
-+	err = snprintf(name, len, "p%d", port_priv->idx);
-+	if (err >= len)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static const struct net_device_ops ethsw_port_ops = {
- 	.ndo_open		= port_open,
- 	.ndo_stop		= port_stop,
-@@ -528,6 +541,7 @@ static int swdev_get_port_parent_id(struct net_device *dev,
++/* Port is member of VLAN */
+ #define ETHSW_VLAN_MEMBER	1
++/* VLAN to be treated as untagged on egress */
+ #define ETHSW_VLAN_UNTAGGED	2
++/* Untagged frames will be assigned to this VLAN */
+ #define ETHSW_VLAN_PVID		4
++/* VLAN configured on the switch */
+ #define ETHSW_VLAN_GLOBAL	8
  
- 	.ndo_start_xmit		= port_dropframe,
- 	.ndo_get_port_parent_id	= swdev_get_port_parent_id,
-+	.ndo_get_phys_port_name = port_get_phys_name,
- };
- 
- static void ethsw_links_state_update(struct ethsw_core *ethsw)
+ /* Maximum Frame Length supported by HW (currently 10k) */
 -- 
 1.9.1
 
