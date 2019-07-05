@@ -2,134 +2,99 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B1FC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F57C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88577218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9ED216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLp+9NqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfGEPP1 (ORCPT
+        id S1728143AbfGEPPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 11:15:27 -0400
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:38922 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfGEPPZ (ORCPT
+        Fri, 5 Jul 2019 11:15:30 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35675 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbfGEPP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:15:25 -0400
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1hjPvP-0004CV-00; Fri, 05 Jul 2019 15:14:59 +0000
-Date:   Fri, 5 Jul 2019 11:14:59 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] remove arch/sh?
-Message-ID: <20190705151459.GF1506@brightrain.aerifal.cx>
-References: <20190625085616.GA32399@lst.de>
- <ccfa78f3-35c2-1d26-98b5-b21a76b90e1e@physik.fu-berlin.de>
- <20190625112146.GA9580@angband.pl>
- <401b12c0-d175-2720-d26c-b96ce3b28c71@physik.fu-berlin.de>
- <CAK8P3a3irwwwCQ_kPh5BTg-jGGbJOj=3fhVrTDBUZgH1V7bpFQ@mail.gmail.com>
- <20190625142832.GD1506@brightrain.aerifal.cx>
- <CAK8P3a0j_9fzZxhxqCMHfoJ5DdZpHFvANEPqs1pbP23TCei6ng@mail.gmail.com>
- <87tvccr3kv.wl-ysato@users.sourceforge.jp>
- <20190626153820.GP1506@brightrain.aerifal.cx>
- <87a7ds4mis.wl-ysato@users.sourceforge.jp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a7ds4mis.wl-ysato@users.sourceforge.jp>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Fri, 5 Jul 2019 11:15:28 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s27so4455736pgl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 08:15:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=W3shWyjUMuq9t5Vu5n5b4WyN7Fp07Hz5BxwWZP81hBQ=;
+        b=GLp+9NqHTitbzc/EsYIplus2wwytDD1COg7tthvJ2z5C8u6TdKlK6E52+9zQmpo/WA
+         vr2Ea2RI3BbF84Mjk8+R3Ql1MGPwxtXnLPOc0v6pelHEkoPT1mrL1wgi6ZR6EmyyHvAI
+         jS8p0xLZHL2Pkqpa341OyGhxtca7Ga12OwWYTVagEvFpGj5CIhDJxSCMW0JasKA5K9mG
+         ZyaqF8WakEI2giuswI29XVelWqw+Jy+oFJ+0oIeFIF5mADrGyv8nsL0DG5Vn1F3pE01R
+         Hb10poYOGOSaXMvo7zwOHatpZhAqtyIwKRaMsnKjgtURH+zuyJLF2xJcCEC/5xNRlbOG
+         mLdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=W3shWyjUMuq9t5Vu5n5b4WyN7Fp07Hz5BxwWZP81hBQ=;
+        b=IMSA7Z4f0Gj8WaTp5TnMrtbbMD6YH2DltgthKclj5WM7stih4Xp4NMgJEOlBqEWTVo
+         4GV+vugS377ZSCi5quJC+5KjAsiRMB2i45cIXYaD9MPy9zkBbQQZFlq1eQQuq40AfVpv
+         03BG8A8PkS2X1MfGKy4ofvwPJc0ybsbYvhdSnfIdsjctHGRAbvdI03O3EDRGJT3BiYSR
+         yMMh3VjVP3kOV1f8LP/f5OPqaWK1ez/Vsq5vjvHolQ2pUg9yJ7SLX+CU11+sCrBtKPCt
+         z4uMsSObDi+cM21UlxTyzcvEHI8aEOGWeGq0VKZYP+V1clSM/M1SAYraBcFLYZH4Eluw
+         bcNQ==
+X-Gm-Message-State: APjAAAVCnsZxJwYpZyIIWlyk1zwDipCf9lfH8qeXsbSviokc+xq48Eef
+        Q3Dcq4lvnBY2Jc568memUKMi
+X-Google-Smtp-Source: APXvYqw6EQk4uR8VqbeRigjfRsmWR1YAaEHXOOQRQW99S4UWiNDtnjOUj1yeXWg4KdwRNP1FZyRfPw==
+X-Received: by 2002:a17:90a:25e6:: with SMTP id k93mr6322707pje.100.1562339727172;
+        Fri, 05 Jul 2019 08:15:27 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:916:7317:a59d:72b6:ef7f:a938])
+        by smtp.gmail.com with ESMTPSA id w3sm8248778pgl.31.2019.07.05.08.15.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 08:15:26 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 5/5] MAINTAINERS: Add entry for Bitmain BM1880 SoC clock driver
+Date:   Fri,  5 Jul 2019 20:44:40 +0530
+Message-Id: <20190705151440.20844-6-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org>
+References: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 10:51:55PM +0900, Yoshinori Sato wrote:
-> On Thu, 27 Jun 2019 00:38:21 +0900,
-> Rich Felker wrote:
-> > 
-> > On Wed, Jun 26, 2019 at 08:25:20PM +0900, Yoshinori Sato wrote:
-> > > On Wed, 26 Jun 2019 00:48:09 +0900,
-> > > Arnd Bergmann wrote:
-> > > > 
-> > > > On Tue, Jun 25, 2019 at 4:28 PM Rich Felker <dalias@libc.org> wrote:
-> > > > > On Tue, Jun 25, 2019 at 02:50:01PM +0200, Arnd Bergmann wrote:
-> > > > > > don't build, or are incomplete and not worked on for a long
-> > > > > > time, compared to the bits that are known to work and that someone
-> > > > > > is still using or at least playing with.
-> > > > > > I guess a lot of the SoCs that have no board support other than
-> > > > > > the Hitachi/Renesas reference platform can go away too, as any products
-> > > > > > based on those boards have long stopped updating their kernels.
-> > > > >
-> > > > > My intent here was always, after getting device tree theoretically
-> > > > > working for some reasonable subset of socs/boards, drop the rest and
-> > > > > add them back as dts files (possibly plus some small drivers) only if
-> > > > > there's demand/complaint about regression.
-> > > > 
-> > > > Do you still think that this is a likely scenario for the future though?
-> > > > 
-> > > > If nobody's actively working on the DT support for the old chips and
-> > > > this is unlikely to change soon, removing the known-broken bits earlier
-> > > > should at least make it easier to keep maintaining the working bits
-> > > > afterwards.
-> > > > 
-> > > > FWIW, I went through the SH2, SH2A and SH3 based boards that
-> > > > are supported in the kernel and found almost all of them to
-> > > > be just reference platforms, with no actual product ever merged.
-> > > > IIRC the idea back then was that users would supply their
-> > > > own board files as an add-on patch, but I would consider all the
-> > > > ones that did to be obsolete now.
-> > > > 
-> > > > HP Jornada 6xx is the main machine that was once supported, but
-> > > > given that according to the defconfig file it only comes with 4MB
-> > > > of RAM, it is unlikely to still boot any 5.x kernel, let alone user
-> > > > space (wikipedia claims there were models with 16MB of RAM,
-> > > > but that is still not a lot these days).
-> > > > 
-> > > > "Magicpanel" was another product that is supported in theory, but
-> > > > the google search showed the 2007 patch for the required
-> > > > flash storage driver that was never merged.
-> > > > 
-> > > > Maybe everything but J2 and SH4(a) can just get retired?
-> > > > 
-> > > >      Arnd
-> > > 
-> > > I also have some boards, so it's possible to rewrite more.
-> > > I can not rewrite the target I do not have, so I think that
-> > > there is nothing but to retire.
-> > 
-> > To clarify, are you agreeing with Arnd's suggestion to retire/remove
-> > everything but jcore and sh4[a]?
-> > 
-> > Rich
-> 
-> I have SH2/2A/3 target board.
-> So can mantain CPU support.
-> But with board support it will be difficult.
-> I would like to make the transition to a common framework.
-> I also have to fix the parts that depend on each board for migration,
-> so I would like to limit the target for maintenance to only those
-> that can be used now.
+Add MAINTAINERS entry for Bitmain BM1880 SoC clock driver.
 
-Do you still have a working version of your device tree patches that
-applies to current kernel? If not, could I post the forward-ported
-versions I have right now (they're not up to current kernel but newer)
-for you to take a look and see what might be wrong?
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Your original version with the kernel version it applied to worked,
-but my forward-port one doesn't. PCI is crashing during boot with the
-qemu-emulated board, so I can't get disks or network, and I eventually
-got frustrated trying to fix it and set it aside.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 01a52fc964da..f9259161cb5c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1464,8 +1464,10 @@ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm64/boot/dts/bitmain/
++F:	drivers/clk/clk-bm1880.c
+ F:	drivers/pinctrl/pinctrl-bm1880.c
+ F:	Documentation/devicetree/bindings/arm/bitmain.yaml
++F:	Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.txt
+ F:	Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
+ 
+ ARM/CALXEDA HIGHBANK ARCHITECTURE
+-- 
+2.17.1
 
-Rich
