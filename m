@@ -2,170 +2,94 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D7EC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B79C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BB120836
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E1720836
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d8v8nKDd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r7qFxfkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfGENqe (ORCPT
+        id S1728494AbfGENrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:46:34 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3129 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfGENqe (ORCPT
+        Fri, 5 Jul 2019 09:47:35 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33566 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbfGENre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:46:34 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1f54bb0000>; Fri, 05 Jul 2019 06:46:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 05 Jul 2019 06:46:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 05 Jul 2019 06:46:31 -0700
-Received: from [10.25.73.124] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
- 2019 13:46:25 +0000
-Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
- features
-To:     <bhelgaas@google.com>
-CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190701124010.7484-1-vidyas@nvidia.com>
- <20190701124010.7484-2-vidyas@nvidia.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
-Date:   Fri, 5 Jul 2019 19:16:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190701124010.7484-2-vidyas@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Fri, 5 Jul 2019 09:47:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so4380658pfq.0;
+        Fri, 05 Jul 2019 06:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=FZ0X0bC9AHQc2jRDWtnIb2cairGd0Neb1HrNsRi3tYg=;
+        b=r7qFxfkxFdNokvFU3DH0kcaoAI8CEDkyN5mTkNW3Xcmmn8ku+0M+/bO+orFjh7vrcK
+         6wTCojB86FuYCgVpw81BkbPXVr53PZOtRqQ+uaAeb2ghbhjDibpNt4oyvFfZTwnTOZhS
+         SaFf6ukc3GWANf/x4rHz4nLvBxNvXJF1yM4vsOBDcejbBEZEssmlulJXTuivl0DsyD+P
+         PSLZ+gPLela4Vys3rSftmzHTKBkdAkUYyl1ALWiRYNgvOYbOynV5PXCjsPFQYDBI/eJ4
+         tXsK/6dF6uM/2GhxA1LOIXc2ULCQJHNGTCUoZDAqoZK8wYovlTiSczZ5sHX/DCqfc7LR
+         yABg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=FZ0X0bC9AHQc2jRDWtnIb2cairGd0Neb1HrNsRi3tYg=;
+        b=BxCZQ3ZlKPSN2Q0Lm0y6frBA5kXVQXj8dTcnjWgEU3Ed6baT0MNK8jAWciYrgsu8Mc
+         kYpm/PCzczmh8J+GsWHMtTQzsq6SaAD15FoGA5/bIiaKduLjHDmPMOO54vY/I7JSahTq
+         RBOQB6YhkrUhai05RgqHihGlqatpRQqM0IkjR4glvV9cjAIMlFM+PrQ/rVCocdlcIGkk
+         C5oLDntE9Zg2YeV9xnO5o7MLzw7Ncwga6nAwfud/VHu+jDP981lH2VmEfbKK57mlFj9l
+         6O4ELcOj2qxxYRsS8Eq2wlUeAlYKGjGBATWNEsiPK3vQDl+Ea76/4EhrxnBxNYd04i5W
+         yVbw==
+X-Gm-Message-State: APjAAAUHTskHUB/Nepy5BX+M+NvLHI+xRfKwjRixe2BT4Dm87Jzwc3UC
+        hYvKnYaGS4lw3XSLadt8qcU=
+X-Google-Smtp-Source: APXvYqy/FcOiFGN0BOR4dgOfUuVm7cQx8W+3tAtA9NkICU9/oMvNJsb/CwlkA/TzbTh8d1RicYsVtA==
+X-Received: by 2002:a63:e506:: with SMTP id r6mr5750049pgh.324.1562334453840;
+        Fri, 05 Jul 2019 06:47:33 -0700 (PDT)
+Received: from ?IPv6:2601:647:4580:b719:ac8c:5fbe:1262:33d4? ([2601:647:4580:b719:ac8c:5fbe:1262:33d4])
+        by smtp.gmail.com with ESMTPSA id m100sm18878643pje.12.2019.07.05.06.47.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 06:47:33 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] KVM: LAPIC: ARBPRI is a reserved register for x2APIC
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <7335396e-d82f-456f-b086-3e8d613186b6@redhat.com>
+Date:   Fri, 5 Jul 2019 06:47:31 -0700
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562334395; bh=2Qy6ORAWvrbTlmfqAnF7zDdNOiozdPJ+e9fLmQAmT2s=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=d8v8nKDdjlIXTfXIOi5GsRbdP041QsfRpBLjjsMPdizHbCbmFMgqe8vGkmjLZUxlu
-         NK/YbczaGAoQS/BKbjd/Wv6g8aVfD439ngxFzxcZ5qoqMsv0H1UpmSpjzFoCf4XeLf
-         OJbNSYjItvis6SB6QQK17u2YFfpf9wkIO32L3JY8lRrIoYVaHA9ZfGtmHDZnm9tOze
-         jdwSvge5JeajNERQZLcTM/UzTtAqjuMAhOy4htXvPMQ08CpeWSMrSWkPtLP4SZr78U
-         HtqFZIjipMnFXuDTYyP8f0hRfHxVU2PUP+aPVeuAhjPE1vwPWjiCSvRunnYzmHvPWZ
-         SRRX2lPQXaBXg==
+Message-Id: <E4B6D7F9-8F3C-48D1-B414-0E62A95CEDD5@gmail.com>
+References: <1562328872-27659-1-git-send-email-pbonzini@redhat.com>
+ <2624F5BF-1601-4A7B-8CA2-7D3328184E46@gmail.com>
+ <7335396e-d82f-456f-b086-3e8d613186b6@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/2019 6:09 PM, Vidya Sagar wrote:
-Bjorn,
-Can you please provide Ack for this patch?
+> On Jul 5, 2019, at 6:43 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> 
+> On 05/07/19 15:37, Nadav Amit wrote:
+>>> On Jul 5, 2019, at 5:14 AM, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>> 
+>>> kvm-unit-tests were adjusted to match bare metal behavior, but KVM
+>>> itself was not doing what bare metal does; fix that.
+>>> 
+>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>> 
+>> Reported-by ?
+> 
+> I found it myself while running the tests, was there a report too?
 
-Thanks,
-Vidya Sagar
-
-> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
-> features.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes since [v11]:
-> * None
-> 
-> Changes since [v10]:
-> * None
-> 
-> Changes since [v9]:
-> * None
-> 
-> Changes since [v8]:
-> * None
-> 
-> Changes since [v7]:
-> * None
-> 
-> Changes since [v6]:
-> * None
-> 
-> Changes since [v5]:
-> * None
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Updated commit message and description to explicitly mention that defines are
->    added only for some of the features and not all.
-> 
-> Changes since [v1]:
-> * None
-> 
->   include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->   1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f28e562d7ca8..1c79f6a097d2 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -713,7 +713,9 @@
->   #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->   #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->   #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
-> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
->   
->   #define PCI_EXT_CAP_DSN_SIZEOF	12
->   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1053,4 +1055,22 @@
->   #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
->   #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
->   
-> +/* Data Link Feature */
-> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
-> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
-> +#define PCI_DLF_STS		0x08	/* Status Register */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
-> +
-> +/* Physical Layer 16.0 GT/s */
-> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
-> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
-> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
-> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
-> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
-> +
->   #endif /* LINUX_PCI_REGS_H */
-> 
+Perhaps it is in my mind. I thought that fixing a test is equivalent to a
+bug report.
 
