@@ -2,130 +2,133 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF84C468A0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74140C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992CF216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:58:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aw4Wd9tt"
+	by mail.kernel.org (Postfix) with ESMTP id 45D8421738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 17:07:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562346465;
+	bh=OZxT04gFLaytkGm/DzGBYCBCGqk5NGXSEVy2rS3EiwI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Xh3svwCmiDCoFRc67AkEVV0+3eWv2Baa1yIWWv0b9wE+DDWkH5U9YgG1eAVjSjfAy
+	 gTcrinF6yxTVBp4USrapUv4sChblkVmgKs9CyiRQtzKKPU1Vxs+HnDfgP3y0xa3LIY
+	 mHBNSBxz9xzZPo5NmnhED/VzswK2S3qx/e5vtQys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfGEQ57 (ORCPT
+        id S1727684AbfGERHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:57:59 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35900 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfGEQ57 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:57:59 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k8so4873810plt.3;
-        Fri, 05 Jul 2019 09:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EMo2sIUAdM2t9ksGkmQROdMoH8vxWbe9ivlhPSrt+vI=;
-        b=Aw4Wd9tthSW64a6ZKiLJjfEyAgaABmJFwgwEaEPTYJ1oi5N5NDzZA4uN1W7SDD/90V
-         EduPRk2IxoI5sh+fxq3m4w5W6VNLwk2Ac9sIzFMqjSq0dZJ+fiyiZ4+IB/rRD1zQxDfu
-         CBReQV8eos0//ZG67acEWFCt0CUKcJ95wH5rbZ0vhdjR5Nu01kLxGyIA6fPcW2s46GIO
-         zpBfoM/vzT9/PL/9pcyPwd6RxWZpvRqFBEpqICQ3rf1ju9IUBV2YQBzQBIZUlQlmwHrv
-         qbM1X09V/v9auDId/vPRk/jadLEnpCvpEJDXLhTQq0sLx3H7Hxt9OP+D6siiEiKCVNlB
-         OsJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EMo2sIUAdM2t9ksGkmQROdMoH8vxWbe9ivlhPSrt+vI=;
-        b=ZDZkD1tBQlEeit04qdXLm6xeNqo9IHIKc6PY0+PKCZ1I2fUoKN8fORigf76bK6cNXf
-         gjm9EARBUMaE6cbn5wvqPtdQQm7pZCZ88ZgI3xvCGxVhBfDjwFHYoWuuQMJiX4Jj3M+S
-         CoabgqmRQ4Cuw1it3iAdJAK1EGZrsrEt+Yo+oo/geL6RAnQXA0NPm2lfzeJgBFE6FsOm
-         +Cqg4/aCLHWai7GbBW0NBXauP9ptTrorCuNT13j7wQFkV/nRYHZPyAuacOAyAtCy7vV+
-         siRp01UhJS/L4eSGxBF2qQZQIcpYKm8F7st183VFzeUDBbOd0F0ExIEZsDobbTrDbGyO
-         DHlA==
-X-Gm-Message-State: APjAAAWJJsaUeV4vWZY2DQ6QxWi9hMcahwLQ0YsXq3OchEOuMYLuGWMI
-        8Jk8oA94/hS4WUCjjgfBYKQ=
-X-Google-Smtp-Source: APXvYqy9E9YbthMyh/f84RHQz3Zq3bHJdWGugD0F0kOJ1Anu5XKQEHANzKBajC0m2agogW1KYP4lMg==
-X-Received: by 2002:a17:902:f301:: with SMTP id gb1mr6663381plb.292.1562345878574;
-        Fri, 05 Jul 2019 09:57:58 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id 125sm11573309pfg.23.2019.07.05.09.57.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 09:57:58 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
-        daniel@ffwll.ch
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 2/2] drm/panel: simple: Add support for Sharp LD-D5116Z01B panel
-Date:   Fri,  5 Jul 2019 09:57:55 -0700
-Message-Id: <20190705165755.515-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
-References: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
+        Fri, 5 Jul 2019 13:07:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727459AbfGERHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 13:07:43 -0400
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7438E2184C;
+        Fri,  5 Jul 2019 17:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562346462;
+        bh=OZxT04gFLaytkGm/DzGBYCBCGqk5NGXSEVy2rS3EiwI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cL1wObRoQenEIXsCCKDarEPhPCAIkA44+i28Z4Iwx050I/EAAm3u/7u7xuHLnObdI
+         ZU+TI07MpefFoZRe1d4xMc5kGx6FJr1p8BDAYGn46woqrkYBlEC85vbgHFzMHO8Vok
+         NYLz4M8AaxPGX0zlpAmVfjD/GXa4Py27Czdb4BiI=
+Received: by mail-qt1-f180.google.com with SMTP id l9so3548318qtu.6;
+        Fri, 05 Jul 2019 10:07:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAUtqXHCK9RNtUBzCxP/6rBRdZ182qN9hCSGHTblXkusGrDnhY0/
+        +jFwyrrkz6uEezXyMZ14QHbj0JULIgCs77h5Ig==
+X-Google-Smtp-Source: APXvYqzRPnqHPiK5FtXZdlxd9J+MzOxznX+s3EKmFaJzKSLY3lHZQBXNK8cSmAjCk9VbXcP6xQOkNISe2GnXfNFemLc=
+X-Received: by 2002:ac8:36b9:: with SMTP id a54mr3646411qtc.300.1562346461718;
+ Fri, 05 Jul 2019 10:07:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190703193724.246854-1-mka@chromium.org> <CAL_JsqJdBAMPc1sZJfL7V9cxGgCb4GWwRokwJDmac5L2AO2-wg@mail.gmail.com>
+ <20190703213327.GH18473@lunn.ch> <CAL_Jsq+dqz7n0_+Y5R4772-rh=9x=k20A69hnDwxH3OyZXQneQ@mail.gmail.com>
+ <20190705162926.GM18473@lunn.ch>
+In-Reply-To: <20190705162926.GM18473@lunn.ch>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 5 Jul 2019 11:07:29 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+bS5qAGhFa0q5sjOaajokDoO-5yc23MkrrCE=Y-jt=ZQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+bS5qAGhFa0q5sjOaajokDoO-5yc23MkrrCE=Y-jt=ZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Sharp LD-D5116Z01B is a 12.3" eDP panel with a 1920X1280 resolution.
+On Fri, Jul 5, 2019 at 10:29 AM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Fri, Jul 05, 2019 at 10:17:16AM -0600, Rob Herring wrote:
+> > On Wed, Jul 3, 2019 at 3:33 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> > >
+> > > > I think if we're going to have custom properties for phys, we should
+> > > > have a compatible string to at least validate whether the custom
+> > > > properties are even valid for the node.
+> > >
+> > > Hi Rob
+> > >
+> > > What happens with other enumerable busses where a compatible string is
+> > > not used?
+> >
+> > We usually have a compatible. USB and PCI both do. Sometimes it is a
+> > defined format based on VID/PID.
+>
+> Hi Rob
+>
+> Is it defined what to do with this compatible? Just totally ignore it?
+> Validate it against the hardware and warning if it is wrong? Force
+> load the driver that implements the compatible, even thought bus
+> enumeration says it is the wrong driver?
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+The short answer is either the problems get fixed or if DTs exist and
+need to be supported which are wrong then the OS deals with the
+problem to make things work as desired (see PowerMac code).
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5a93c4edf1e4..e6f578667324 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2354,6 +2354,29 @@ static const struct panel_desc samsung_ltn140at29_301 = {
- 	},
- };
- 
-+static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
-+	.clock = 168480,
-+	.hdisplay = 1920,
-+	.hsync_start = 1920 + 48,
-+	.hsync_end = 1920 + 48 + 32,
-+	.htotal = 1920 + 48 + 32 + 80,
-+	.vdisplay = 1280,
-+	.vsync_start = 1280 + 3,
-+	.vsync_end = 1280 + 3 + 10,
-+	.vtotal = 1280 + 3 + 10 + 57,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc sharp_ld_d5116z01b = {
-+	.modes = &sharp_ld_d5116z01b_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 260,
-+		.height = 120,
-+	},
-+};
-+
- static const struct drm_display_mode sharp_lq035q7db03_mode = {
- 	.clock = 5500,
- 	.hdisplay = 240,
-@@ -3002,6 +3025,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "samsung,ltn140at29-301",
- 		.data = &samsung_ltn140at29_301,
-+	}, {
-+		.compatible = "sharp,ld-d5116z01b",
-+		.data = &sharp_ld_d5116z01b,
- 	}, {
- 		.compatible = "sharp,lq035q7db03",
- 		.data = &sharp_lq035q7db03,
--- 
-2.17.1
+If the ethernet phy subsystem wants to ignore compatible, that is totally fine.
 
+> > > The Ethernet PHY subsystem will ignore the compatible string and load
+> > > the driver which fits the enumeration data. Using the compatible
+> > > string only to get the right YAML validator seems wrong. I would
+> > > prefer adding some other property with a clear name indicates its is
+> > > selecting the validator, and has nothing to do with loading the
+> > > correct driver. And it can then be used as well for USB and PCI
+> > > devices etc.
+> >
+> > Just because Linux happens to not use compatible really has nothing to
+> > do with whether or not the nodes should have a compatible. What does
+> > FreeBSD want? U-boot?
+> >
+> > I don't follow how adding a validate property would help. It would
+> > need to be 'validate-node-as-a-realtek-phy'.
+>
+> This makes it clear it is all about validating the DT, and nothing
+> about the actual running hardware. What i don't really want to see is
+> the poorly defined situation that DT contains a compatible string, but
+> we have no idea what it is actually used for. See the question above.
+
+What's poorly defined are the current bindings, type definitions of
+properties, and what properties are valid or not in specific nodes. If
+we only had to better define the rules around compatible use or
+mismatches, we'd be a lot better off.
+
+I'm not going to add properties solely for validation when we already
+have a well defined, 15 year+ pattern for defining what a node
+contains that practically every other subsystem and node uses. I guess
+we just won't worry about validating ethernet phy nodes beyond some
+basic checks.
+
+Rob
