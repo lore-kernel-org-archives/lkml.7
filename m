@@ -7,79 +7,84 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01955C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF38EC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F22218DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15CA216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbfGEO1o (ORCPT
+        id S1727635AbfGEOaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:27:44 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:50594 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfGEO1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:27:19 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E6F0A20076B;
-        Fri,  5 Jul 2019 16:27:17 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DA71C20076A;
-        Fri,  5 Jul 2019 16:27:17 +0200 (CEST)
-Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 99FEA204D6;
-        Fri,  5 Jul 2019 16:27:17 +0200 (CEST)
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc:     ruxandra.radulescu@nxp.com,
-        Razvan Stefanescu <razvan.stefanescu@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH v2 1/6] staging: fsl-dpaa2/ethsw: Fix setting port learning/flooding flags
-Date:   Fri,  5 Jul 2019 17:27:11 +0300
-Message-Id: <1562336836-17119-2-git-send-email-ioana.ciornei@nxp.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1562336836-17119-1-git-send-email-ioana.ciornei@nxp.com>
-References: <1562336836-17119-1-git-send-email-ioana.ciornei@nxp.com>
-Reply-to: ioana.ciornei@nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 5 Jul 2019 10:30:55 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:35714 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725763AbfGEOay (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 10:30:54 -0400
+Received: from [109.168.11.45] (port=37718 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1hjPEh-0008XB-NR; Fri, 05 Jul 2019 16:30:51 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] docs/pinctrl: fix compile errors in example code
+Date:   Fri,  5 Jul 2019 16:30:43 +0200
+Message-Id: <20190705143043.1929-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Razvan Stefanescu <razvan.stefanescu@nxp.com>
+The code in the example does not build for a few trivial errors: type
+mismatch in callback, missing semicolon. Fix them to help newcomers using
+the example as a starting point.
 
-ethsw_set_learning()/ethsw_set_flood() use flags parameter as an
-enable/disable (1/0) indicator. Previous usage sent incorrect values.
-
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@nxp.com>
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 ---
-Changes in v2:
- - none
+ Documentation/driver-api/pinctl.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index f73edaf6ce87..87470070c3a5 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-+++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -673,11 +673,12 @@ static int port_attr_br_flags_set(struct net_device *netdev,
+diff --git a/Documentation/driver-api/pinctl.rst b/Documentation/driver-api/pinctl.rst
+index 2bb1bc484278..3d2deaf48841 100644
+--- a/Documentation/driver-api/pinctl.rst
++++ b/Documentation/driver-api/pinctl.rst
+@@ -638,8 +638,8 @@ group of pins would work something like this::
+ 	}
+ 
+ 	static int foo_get_group_pins(struct pinctrl_dev *pctldev, unsigned selector,
+-				unsigned ** const pins,
+-				unsigned * const num_pins)
++				const unsigned ** pins,
++				unsigned * num_pins)
+ 	{
+ 		*pins = (unsigned *) foo_groups[selector].pins;
+ 		*num_pins = foo_groups[selector].num_pins;
+@@ -705,7 +705,7 @@ group of pins would work something like this::
+ 	{
+ 		u8 regbit = (1 << selector + group);
+ 
+-		writeb((readb(MUX)|regbit), MUX)
++		writeb((readb(MUX)|regbit), MUX);
  		return 0;
+ 	}
  
- 	/* Learning is enabled per switch */
--	err = ethsw_set_learning(port_priv->ethsw_data, flags & BR_LEARNING);
-+	err = ethsw_set_learning(port_priv->ethsw_data,
-+				 !!(flags & BR_LEARNING));
- 	if (err)
- 		goto exit;
- 
--	err = ethsw_port_set_flood(port_priv, flags & BR_FLOOD);
-+	err = ethsw_port_set_flood(port_priv, !!(flags & BR_FLOOD));
- 
- exit:
- 	return err;
 -- 
-1.9.1
+2.22.0
 
