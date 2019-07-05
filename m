@@ -2,142 +2,100 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882D1C4649E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA37FC4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3E421738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37C021738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="N0/iBvJc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sZ4OLw4D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfGEPhQ (ORCPT
+        id S1727910AbfGEPhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 5 Jul 2019 11:37:20 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42451 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfGEPhQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jul 2019 11:37:16 -0400
-Received: from mout.gmx.net ([212.227.15.19]:56819 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfGEPhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:37:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1562340946;
-        bh=+xG973BWcEz2x94VZcUAPePu5GwCe5fwDn2xc5iFqo0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=N0/iBvJc6HtX2nJ4b7IPEhJQHze0yGnFVfDsrmD7ZCrkY1o/NEmt/GfIh0sEBoPZk
-         pUwgP+xFM6zSWbqJykxww7GN6eLJ2skqyA7owjZiCfEOBg042cwWIgn7mjUyrBCEpv
-         jE/dN7C0LP0estl9Ivtpd/Id2IV8oTVe4Tp9sxUo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.53.41.182] ([185.53.41.182]) by web-mail.gmx.net
- (3c-app-gmx-bs68.server.lan [172.19.170.213]) (via HTTP); Fri, 5 Jul 2019
- 17:35:46 +0200
+Received: by mail-oi1-f195.google.com with SMTP id s184so7408504oie.9;
+        Fri, 05 Jul 2019 08:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GL9oaQ7aSmi87cgYtRx3op+78jgv3Fv6Jy0wzvHhBt8=;
+        b=sZ4OLw4Dc6sqhgU4Mq+GY/FN1BgB1Y13l2wW8vgl9NBVZLbQLQtWe/pNH765J2su2S
+         5V8eA6+btAIuXz9laMNsqX3ji96AGLdHypTbXJus0EbqSVzd0pem6m7zad0CLXjsSrwo
+         dfAF8Wjw1reBJzaonp+KxbubbGFK8oXAnCUaNYs5UFCZDmrrdRfj3qKaesYc/tVMFxhG
+         kzkY9v+F+j2+fiI1QeVmHdCTBh14BEybC17StzOJPB+dP0bHVJglnGZYD4vynSKdrur+
+         RLWAdogjw48SYBgJdfmTLteTxeL7ZmB7Ho87nwYnJSgflHqRo8FdwOLTpvL8pQV7ush4
+         c3UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GL9oaQ7aSmi87cgYtRx3op+78jgv3Fv6Jy0wzvHhBt8=;
+        b=SKb5arAQ6d0v/mobfDgNGevZpx/fkJ4GI8yxMef88Tm3R0Fi3scXQ5hRRC0h0VuHdw
+         ecHaRjHcxzjPKhiGpezJ7902ZL6adXmjWEzhEnAp5LaxpS37cqQg4IIvSvLlh0sbFAlE
+         Z0egvB1SOQSXZQ7t5HuyALAFQuAVHMtkj6q9tkQ/RT+ApjTPaoz68Rsv82H8FYWMOLmk
+         ZGuxWAj5nddOGh6NyqxgAHpwks2E5umnWDPUgH7xUjl2WAH9VPUYL005YAustLe5+H3R
+         1w3qRxHDDwCnIUc7osc3ncTsF0P+HCYqkdQKYe8wz5MmQOHYrenb7qomqHLTtiT6+Skq
+         ZnIQ==
+X-Gm-Message-State: APjAAAWxm6amOiY63Ro5uxYItz9gOujv3EisdrsYBUheeueUwuMYJ5/w
+        Fh7BV/p/UkC01ttg34iakZOUXMS8
+X-Google-Smtp-Source: APXvYqyP8GjJc1akuas2Yhv+I0GMhMqsycyajMD5d0MKgEHdLPf6bazVxYepkqGauzX+ifvt1bc5Jg==
+X-Received: by 2002:aca:d648:: with SMTP id n69mr568317oig.46.1562341035523;
+        Fri, 05 Jul 2019 08:37:15 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
+        by smtp.gmail.com with ESMTPSA id y4sm3222371otj.56.2019.07.05.08.37.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 08:37:14 -0700 (PDT)
+Subject: Re: [PATCH v3 3/4] net: dsa: vsc73xx: add support for parallel mode
+To:     Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     linus.walleij@linaro.org, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190704222907.2888-1-paweldembicki@gmail.com>
+ <20190704222907.2888-4-paweldembicki@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <f40b8651-05b5-3e1d-6f6a-2d9f5cf2d2d3@gmail.com>
+Date:   Fri, 5 Jul 2019 08:37:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Message-ID: <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-Cc:     "Lee Jones" <lee.jones@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "Sean Wang" <sean.wang@mediatek.com>,
-        "Sebastian Reichel" <sre@kernel.org>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        "Eddie Huang" <eddie.huang@mediatek.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Richard Fontana" <rfontana@redhat.com>,
-        "Allison Randal" <allison@lohutok.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Rob Herring" <robh@kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        "Josef Friedl" <josef.friedl@speed.at>
-Subject: Aw: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 5 Jul 2019 17:35:46 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20190704204336.GJ3692@piout.net>
-References: <20190703164822.17924-1-frank-w@public-files.de>
- <20190703164822.17924-4-frank-w@public-files.de>
- <20190704204336.GJ3692@piout.net>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:3DQjnrcP0qQkneq0N2KGXDypFxKC70Y6B/6Wz6gG83c+zzU8tPfyJ7R1HE1HqAXh3hB2I
- tgJSbOVBlcwfm2+5WrNhSjWxrIe4AmFQkfXZmEFAprfzxqChBFn9HnyAR9YWrNvCPuG17yU7Op4d
- ugpFGrIo4Tf+JcmINzOK23uQEhN2f8orMVc5A246lEDzSCXmCflOxlZ6PHU1xgJelMk9hVPkR8fZ
- DhVDomXvArd2HR4UT+Ec00/BFdO1KKd8+sxf1crLqLghjGrqQGEuEjQemQPPAcQJzokFsPSPjEgJ
- Ok=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:U5UYnBEkf+0=:lL1CL6XEoZrqJz8T2zwkL5
- 4VYvmDYvZ5WzNABcDNBejMTkwRG1c67XpMAnjTSAn1VKRZ87YyW8Fes8PHzncewehLQUqaLue
- LVS2SFGPFzRxC0khTzvlus1KUr5oZY7QijfOK9hocquUSx+iHzpI9TDlAnmWe4UaoMF/42CDH
- WGqzSesYNDhJ7QrAjfxtUFBYbMU6YGR/80HNhJeKizPb9hMhw1PNX2FTuEKhB9AhTNWDwj9jf
- iz2TYEYzFWXqIjVYcbNyIpCk5fhnRvSvMFgGnv8nXdIrk/aesBOoI1tMC5dY47eKVhwcxbF3G
- D+sXhAC/j9gEmrB19oC5cSMkvSvUHyXuG49+ftF/sz8bwRecT//qfKlBN/CWfLF+KTKQ0W48R
- xrcCxWA4aVF7JhOIHm0iuSzma7jniESyMdd9UufoYSt+hBWPgp+BB9+EF6Ufu4+PeO1WxdTxr
- CO5FuMMppqZq0zy35n31R7Y7AqTSK4X0aeIIY0rtWO4BOnrtCnxD4Kxjj93N0FpJ/y3CWdPFE
- r2AHMveJE7FwuKD4IPTmai0ubwLDHQJximoqtKtj7ibjV+W5K1jLBN8QCGyFm+7WaavnB4il9
- jtB6YIWXJrrwvYpdopClbcSNQtobLh8iTwP4OAZnwlQXtwCqyeKBff4O3dDbmq/Ihzy05qfUB
- Zrmc=
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190704222907.2888-4-paweldembicki@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
-
-thank you for the Review
-
-> Gesendet: Donnerstag, 04. Juli 2019 um 22:43 Uhr
-> Von: "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-> > -	rtc->rtc_dev =3D devm_rtc_allocate_device(rtc->dev);
-> > -	if (IS_ERR(rtc->rtc_dev))
-> > -		return PTR_ERR(rtc->rtc_dev);
-> > +	ret =3D devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-> > +					mtk_rtc_irq_handler_thread,
-> > +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> > +					"mt6397-rtc", rtc);
-> >
->
-> This change may lead to a crash and the allocation was intentionally
-> placed before the irq request.
-
-i got no crash till now, but i will try to move the allocation before irq-=
-request
-
-> > -	ret =3D request_threaded_irq(rtc->irq, NULL,
-> > -				   mtk_rtc_irq_handler_thread,
-> > -				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-> > -				   "mt6397-rtc", rtc);
-> >  	if (ret) {
-> >  		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
-> >  			rtc->irq, ret);
-> > @@ -287,6 +281,10 @@ static int mtk_rtc_probe(struct platform_device *=
-pdev)
-> >
-> >  	device_init_wakeup(&pdev->dev, 1);
-> >
-> > +	rtc->rtc_dev =3D devm_rtc_allocate_device(&pdev->dev);
-> > +	if (IS_ERR(rtc->rtc_dev))
-> > +		return PTR_ERR(rtc->rtc_dev);
-> > +
-> >  	rtc->rtc_dev->ops =3D &mtk_rtc_ops;
 
 
-> >  static const struct of_device_id mt6397_rtc_of_match[] =3D {
-> > +	{ .compatible =3D "mediatek,mt6323-rtc", },
->
-> Unrelated change, this is not an improvement and must be accompanied by
-> a documentation change.
+On 7/4/2019 3:29 PM, Pawel Dembicki wrote:
+> This patch add platform part of vsc73xx driver.
+> It allows to use chip connected to a parallel memory bus and work in
+> memory-mapped I/O mode. (aka PI bus in chip manual)
+> 
+> By default device is working in big endian mode.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-documentation is changed in 1/7 defining this compatible. i called it impr=
-ovement because existing driver now supports another chip
-
-regards Frank
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
