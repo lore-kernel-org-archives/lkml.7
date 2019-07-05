@@ -2,150 +2,105 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1284AC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6393C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B1C21670
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B1C21670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:29:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc08+EVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfGEUZp (ORCPT
+        id S1727810AbfGEU3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:25:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36006 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfGEUZo (ORCPT
+        Fri, 5 Jul 2019 16:29:35 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54772 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfGEU3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:25:44 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hjUm4-0007CQ-Oe; Fri, 05 Jul 2019 22:25:40 +0200
-Date:   Fri, 5 Jul 2019 22:25:39 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Nadav Amit <namit@vmware.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [patch V2 04/25] x86/apic: Make apic_pending_intr_clear() more
- robust
-In-Reply-To: <958a67c2-4dc0-52e6-43b2-1ebd25a59232@citrix.com>
-Message-ID: <alpine.DEB.2.21.1907052213360.3648@nanos.tec.linutronix.de>
-References: <20190704155145.617706117@linutronix.de> <20190704155608.636478018@linutronix.de> <958a67c2-4dc0-52e6-43b2-1ebd25a59232@citrix.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-737971544-1562358340=:3648"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 5 Jul 2019 16:29:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so7255465wme.4;
+        Fri, 05 Jul 2019 13:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=M3dkrI3CMPn3rN9TDQJJwhfDQQ8sL5SyNtyTfXwJzzo=;
+        b=Mc08+EVTa3nQ+N8+MKpSDN7Tab6Zpb0xuoryurg+TQJ5MpCPe55jIGSYqXHmkRNBFu
+         qn2ONSrBwuQfL0mvmLQ6Bhhcgee1NJUfT3TdvTvzBc9HrnGx1yrEvvu/cS35/D5FB2Wj
+         rJhxT5ZtTQzjov88N9PHw5SOHq0KLL+WX1BcbcO7zTks51pbK5K8UKWrLSQHUSzAlTai
+         Tip4FJku2QFicbOdQNjYKN+l4pVtTmdfGAq7JGE5k56H1CHXLes6K8eJXTBN0a7FpGcP
+         fDG7JvlI1AtyqQXi5gMPAdzcNphkuoeeVPdtXpR1bCCBlm3AodwZvYtY1uVBC4/dqmtj
+         3B7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=M3dkrI3CMPn3rN9TDQJJwhfDQQ8sL5SyNtyTfXwJzzo=;
+        b=QDrFtWkK+wqRrkkJ8DfO7ehe9ePx+EK3n++me6r9xz5XklGm1T9WD7A49zuKPu7O9c
+         WQ3FQXZQU1pDLPojSHa+qiCPXfdGjxMs8kLLv2vuDFwk1f9mSk9YaQ7tM4aEgcp2/mlo
+         NhSYpJwBziW69R7cjXui7Owh2IFXXOZgIY3OF1DumyAeeyHv5tzFnjmIEOIZJ8c55iFR
+         PHi5VelCKs6wyI+H7CR2LByGsM3aP1P6T2+F/i7+LENeBtCG66otwPh/mpCchTdJk1m/
+         PqH83T/Q07gl2aTDPrBVnGwW92G8p2HOluS1g/HHGM6oslO/gcYJTKC6u5qZieeiuwno
+         ij3Q==
+X-Gm-Message-State: APjAAAVStODeIJD8bRG+B2l0021onk+AgJCi9t5k4FhGsIZ95nXwenH1
+        WQcYdNzv9r2VwJpoE9aPjzWt6bDJ9/M=
+X-Google-Smtp-Source: APXvYqy1vKnVPyrO0/F6dzES3KaiZnIr+MsNh3p70HMZ3qLIwOqc5RJ4dxIhIsB2sHolVwCuhmXupQ==
+X-Received: by 2002:a05:600c:20c3:: with SMTP id y3mr4739636wmm.3.1562358572643;
+        Fri, 05 Jul 2019 13:29:32 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id h11sm11090408wrx.93.2019.07.05.13.29.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 13:29:31 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
+        kvm@vger.kernel.org
+Subject: [GIT PULL] Final KVM changes for 5.2
+Date:   Fri,  5 Jul 2019 22:29:30 +0200
+Message-Id: <1562358570-30670-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Linus,
 
---8323329-737971544-1562358340=:3648
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
 
-Andrew,
+  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
 
-On Fri, 5 Jul 2019, Andrew Cooper wrote:
+are available in the git repository at:
 
-> On 04/07/2019 16:51, Thomas Gleixner wrote:
-> >   2) The loop termination logic is interesting at best.
-> >
-> >      If the machine has no TSC or cpu_khz is not known yet it tries 1
-> >      million times to ack stale IRR/ISR bits. What?
-> >
-> >      With TSC it uses the TSC to calculate the loop termination. It takes a
-> >      timestamp at entry and terminates the loop when:
-> >
-> >      	  (rdtsc() - start_timestamp) >= (cpu_hkz << 10)
-> >
-> >      That's roughly one second.
-> >
-> >      Both methods are problematic. The APIC has 256 vectors, which means
-> >      that in theory max. 256 IRR/ISR bits can be set. In practice this is
-> >      impossible as the first 32 vectors are reserved and not affected and
-> >      the chance that more than a few bits are set is close to zero.
-> 
-> [Disclaimer.  I talked to Thomas in private first, and he asked me to
-> post this publicly as the CVE is almost a decade old already.]
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-thanks for bringing this up!
+for you to fetch changes up to e644fa18e2ffc8895ca30dade503ae10128573a6:
 
-> I'm afraid that this isn't quite true.
-> 
-> In terms of IDT vectors, the first 32 are reserved for exceptions, but
-> only the first 16 are reserved in the LAPIC.  Vectors 16-31 are fair
-> game for incoming IPIs (SDM Vol3, 10.5.2 Valid Interrupt Vectors).
+  KVM: arm64/sve: Fix vq_present() macro to yield a bool (2019-07-05 12:07:51 +0200)
 
-Indeed.
+----------------------------------------------------------------
+x86 bugfix patches and one compilation fix for ARM.
 
-> In practice, this makes Linux vulnerable to CVE-2011-1898 / XSA-3, which
-> I'm disappointed to see wasn't shared with other software vendors at the
-> time.
+----------------------------------------------------------------
+Liran Alon (2):
+      KVM: nVMX: Allow restore nested-state to enable eVMCS when vCPU in SMM
+      KVM: nVMX: Change KVM_STATE_NESTED_EVMCS to signal vmcs12 is copied from eVMCS
 
-No comment.
+Paolo Bonzini (1):
+      KVM: x86: degrade WARN to pr_warn_ratelimited
 
-> Because TPR is 0, an incoming IPI can trigger #AC, #CP, #VC or #SX
-> without an error code on the stack, which results in a corrupt pt_regs
-> in the exception handler, and a stack underflow on the way back out,
-> most likely with a fault on IRET.
-> 
-> These can be addressed by setting TPR to 0x10, which will inhibit
+Wanpeng Li (1):
+      KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable LAPIC
 
-Right, that's easy and obvious.
+Zhang Lei (1):
+      KVM: arm64/sve: Fix vq_present() macro to yield a bool
 
-> delivery of any errant IPIs in this range, but some extra sanity logic
-> may not go amiss.  An error code on a 64bit stack can be spotted with
-> `testb $8, %spl` due to %rsp being aligned before pushing the exception
-> frame.
-
-The question is what we do with that information :)
-
-> Another interesting problem is an IPI which its vector 0x80.  A cunning
-> attacker can use this to simulate system calls from unsuspecting
-> positions in userspace, or for interrupting kernel context.  At the very
-> least the int0x80 path does an unconditional swapgs, so will try to run
-> with the user gs, and I expect things will explode quickly from there.
-
-Cute.
-
-> One option here is to look at ISR and complain if it is found to be set.
-
-That's sloooow, but could at least provide an option to do so.
-
-> Another option, which I've only just remembered, is that AMD hardware
-> has the Interrupt Enable Register in its extended APIC space, which may
-> or may not be good enough to prohibit delivery of 0x80.  There isn't
-> enough information in the APM to be clear, but the name suggests it is
-> worth experimenting with.
-
-I doubt it. Clearing a bit in the IER takes the interrupt out of the
-priority decision logic. That's a SVM feature so interrupts directed
-directly to guests cannot block other interrupts if they are not
-serviced. It's grossly misnomed and won't help with the int80 issue.
-
-The more interesting question is whether this is all relevant. If I
-understood the issue correctly then this is mitigated by proper interrupt
-remapping.
-
-Is there any serious usage of virtualization w/o interrupt remapping left
-or have the machines which are not capable been retired already?
-
-Thanks,
-
-	tglx
---8323329-737971544-1562358340=:3648--
+ arch/arm64/kvm/guest.c                          |  2 +-
+ arch/x86/kvm/lapic.c                            |  2 +-
+ arch/x86/kvm/vmx/nested.c                       | 30 ++++++++++++++++---------
+ arch/x86/kvm/x86.c                              |  6 ++---
+ tools/testing/selftests/kvm/x86_64/evmcs_test.c |  1 +
+ 5 files changed, 26 insertions(+), 15 deletions(-)
