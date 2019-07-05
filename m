@@ -2,118 +2,75 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA7FC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B95C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D47420843
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC7520843
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562317474;
+	bh=VQbkOn7IFuvTzmG2wEcraG9t0ivU+flYsDDf5txco0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c/W6T1p39syZ1XggLq82QUdMKVr13aVxpjP15HJKS0Qlee6JvrgkL49l1CBtCgY8P
+	 97gWN+UlXHTRU0EsktuMJHNH8PJ9/5xXJ1qSmEJqMXidFMXA/0ueGOx2I+xb/Oq0R+
+	 FeZq1H+PZ5pqPgC3tVienjDGUtf6iAVQdx8V1PWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfGEJEI (ORCPT
+        id S1728148AbfGEJEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:04:08 -0400
-Received: from mx7.zte.com.cn ([202.103.147.169]:55016 "EHLO mxct.zte.com.cn"
+        Fri, 5 Jul 2019 05:04:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727982AbfGEJEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:04:07 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 823F65DFFAA7B06D2835;
-        Fri,  5 Jul 2019 17:04:00 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x6591Fw5033077;
-        Fri, 5 Jul 2019 17:01:15 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070517014955-2109273 ;
-          Fri, 5 Jul 2019 17:01:49 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Rob Herring <robh@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] powerpc: fix use-after-free on fixup_port_irq()
-Date:   Fri, 5 Jul 2019 16:59:36 +0800
-Message-Id: <1562317176-13317-1-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-05 17:01:49,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-05 17:01:21,
-        Serialize complete at 2019-07-05 17:01:21
-X-MAIL: mse-fl1.zte.com.cn x6591Fw5033077
+        id S1727714AbfGEJEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:04:33 -0400
+Received: from localhost (83-84-126-242.cable.dynamic.v4.ziggo.nl [83.84.126.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E51218C5;
+        Fri,  5 Jul 2019 09:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562317472;
+        bh=VQbkOn7IFuvTzmG2wEcraG9t0ivU+flYsDDf5txco0Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F2vgdcD1xE0NEdTC7ImGhLkeVwGZbKhLqdMC7aUXUuQfEo3J/FmSq5/zy8TWO4m6h
+         l2TSf59Mjzs9RjEcClaIIp0nxtR3PGx5E6sQJTvOTh4T0pUjsSoT5fHdYuilQQYpZw
+         wtyBLhlESTIZ31TlrG0p0718GYWegFB/f4MfOePE=
+Date:   Fri, 5 Jul 2019 11:04:22 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     jeyentam <je.yen.tam@ni.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] serial/8250: Add support for NI-Serial PXI/PXIe+485
+ devices
+Message-ID: <20190705090422.GA32289@kroah.com>
+References: <20190705083349.44047-1-je.yen.tam@ni.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705083349.44047-1-je.yen.tam@ni.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a possible use-after-free issue in the fixup_port_irq():
+On Fri, Jul 05, 2019 at 01:33:49AM -0700, jeyentam wrote:
+> Add support for NI-Serial PXIe-RS232, PXI-RS485 and PXIe-RS485 devices.
+> 
+> Signed-off-by: Je Yen Tam <je.yen.tam@ni.com>
+> ---
+>  drivers/tty/serial/8250/8250_pci.c | 298 ++++++++++++++++++++++++++++-
+>  1 file changed, 294 insertions(+), 4 deletions(-)
 
-460 static void __init fixup_port_irq(int index,
-461                                   struct device_node *np,
-462                                   struct plat_serial8250_port *port)
-463 {
-...
-469         if (!virq && legacy_serial_infos[index].irq_check_parent) {
-470                 np = of_get_parent(np);  --> modified here.
-...
-474                 of_node_put(np); ---> released here
-475         }
-...
-481 #ifdef CONFIG_SERIAL_8250_FSL
-482   if (of_device_is_compatible(np, "fsl,ns16550")) --> dereferenced here
-...
-484 #endif
-485 }
+What changed from the previous versions?
 
-We solve this problem by introducing a new parent_np variable.
+Always put that below the --- line.
 
-Fixes: 9deaa53ac7fa ("serial: add irq handler for Freescale 16550 errata.")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/powerpc/kernel/legacy_serial.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Please fix up and send a v4 with that information.
 
-diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kernel/legacy_serial.c
-index 7cea597..0105f3e 100644
---- a/arch/powerpc/kernel/legacy_serial.c
-+++ b/arch/powerpc/kernel/legacy_serial.c
-@@ -461,17 +461,18 @@ static void __init fixup_port_irq(int index,
- 				  struct device_node *np,
- 				  struct plat_serial8250_port *port)
- {
-+	struct device_node *parent_np;
- 	unsigned int virq;
- 
- 	DBG("fixup_port_irq(%d)\n", index);
- 
- 	virq = irq_of_parse_and_map(np, 0);
- 	if (!virq && legacy_serial_infos[index].irq_check_parent) {
--		np = of_get_parent(np);
--		if (np == NULL)
-+		parent_np = of_get_parent(np);
-+		if (parent_np == NULL)
- 			return;
--		virq = irq_of_parse_and_map(np, 0);
--		of_node_put(np);
-+		virq = irq_of_parse_and_map(parent_np, 0);
-+		of_node_put(parent_np);
- 	}
- 	if (!virq)
- 		return;
--- 
-2.9.5
+thanks,
 
+greg k-h
