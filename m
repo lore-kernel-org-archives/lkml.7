@@ -2,98 +2,184 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E028C4649C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03689C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F6820989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5AD20989
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbfGEK1U (ORCPT
+        id S1728268AbfGEK2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 06:27:20 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:52366 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfGEK1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 06:27:19 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6549B1A0782;
-        Fri,  5 Jul 2019 12:27:17 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 85C6C1A0176;
-        Fri,  5 Jul 2019 12:27:12 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 535FD40297;
-        Fri,  5 Jul 2019 18:27:06 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        leoyang.li@nxp.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com,
-        Biwen Li <biwen.li@nxp.com>
-Subject: [PATCH 2/2] Documentation: dt: binding: rtc: add binding for ftm alarm driver
-Date:   Fri,  5 Jul 2019 18:18:00 +0800
-Message-Id: <20190705101800.44561-2-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190705101800.44561-1-biwen.li@nxp.com>
-References: <20190705101800.44561-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 5 Jul 2019 06:28:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43388 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727212AbfGEK2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 06:28:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 052CFB071;
+        Fri,  5 Jul 2019 10:28:32 +0000 (UTC)
+Message-ID: <a161110383396b4d51238bb375a7fd818c575eb3.camel@suse.de>
+Subject: Re: [PATCH v2] HID: input: fix a4tech horizontal wheel custom usage
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>, wbauer1@a1.net
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Fri, 05 Jul 2019 12:28:03 +0200
+In-Reply-To: <9ff9f804a2fa3abf1249a358f64c2d39a04c8ed1.camel@suse.de>
+References: <20190611121320.30267-1-nsaenzjulienne@suse.de>
+         <CAO-hwJLAiC1o-kZ5epZHtO2GK+zc5x28pYbZH-XsY4yAuBmHWw@mail.gmail.com>
+         <5346893.KeHrH3GHoD@linux-lf90.site>
+         <CAO-hwJ+Nm+i+ehGurAxD3EQBX8-TFQ7p4J-1rV55fVA=NazgAw@mail.gmail.com>
+         <9ff9f804a2fa3abf1249a358f64c2d39a04c8ed1.camel@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-eqt0RDKAIGZzpzPNv9ma"
+User-Agent: Evolution 3.32.3 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds binding for ftm alarm driver
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+--=-eqt0RDKAIGZzpzPNv9ma
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-new file mode 100644
-index 0000000..0f330b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-@@ -0,0 +1,33 @@
-+Freescale FlexTimer Module (FTM) Alarm
-+
-+Required properties:
-+
-+- compatible : Should be "fsl,ftm-alarm" or "fsl,<chip>-ftm-alarm", the
-+	       supported chips include
-+	       "fsl,ls1012a-ftm-alarm"
-+	       "fsl,ls1021a-ftm-alarm"
-+	       "fsl,ls1028a-ftm-alarm"
-+	       "fsl,ls1043a-ftm-alarm"
-+	       "fsl,ls1046a-ftm-alarm"
-+	       "fsl,ls1088a-ftm-alarm"
-+	       "fsl,ls208xa-ftm-alarm"
-+- reg : Specifies base physical address and size of the register sets for the
-+  FlexTimer Module and base physical address of IP Powerdown Exception Control
-+  Register.
-+- reg-names: names of the mapped memory regions listed in regs property.
-+  should include the following entries:
-+  "ftm":    Address of the register sets for FlexTimer Module
-+  "pmctrl": Address of IP Powerdown Exception Control register
-+- interrupts : Should be the FlexTimer Module interrupt.
-+- big-endian: If the host controller is big-endian mode, specify this property.
-+  The default endian mode is little-endian.
-+
-+Example:
-+ftm_alarm0: timer@29d0000 {
-+	compatible = "fsl,ls1043a-ftm-alarm";
-+	reg = <0x0 0x29d0000 0x0 0x10000>,
-+	      <0x0 0x1ee2140 0x0 0x4>;
-+	reg-names = "ftm", "pmctrl";
-+	interrupts = <0 86 0x4>;
-+	big-endian;
-+};
--- 
-2.7.4
+On Fri, 2019-06-14 at 16:25 +0200, Nicolas Saenz Julienne wrote:
+> On Fri, 2019-06-14 at 15:36 +0200, Benjamin Tissoires wrote:
+> > Hi Wolfgang,
+> >=20
+> > On Thu, Jun 13, 2019 at 1:49 PM Wolfgang Bauer <wbauer@tmo.at> wrote:
+> > > On Tuesday, 11. Juni 2019, 16:42:37 Benjamin Tissoires wrote:
+> > > > On Tue, Jun 11, 2019 at 2:13 PM Nicolas Saenz Julienne
+> > > >=20
+> > > > <nsaenzjulienne@suse.de> wrote:
+> > > > > NOTE: I CC'd Wolfgang as he's the one who can test this.
+> > > >=20
+> > > > I'll wait for Wolfram to confirm that the patch works before pushin=
+g
+> > > > then.
+> > >=20
+> > > My name is Wolfgang, not Wolfram... ;-)
+> >=20
+> > ouch, sorry for that (I am more used to talk to the I2C maintainer
+> > apparently)
+> >=20
+> > > But never mind.
+> > >=20
+> > > I tested the patch meanwhile on top of kernel 5.2.rc4, where the mous=
+e
+> > > wheel
+> > > actually worked.
+> >=20
+> > Actually, I am a little bit lost here.
+> >=20
+> > The patch mentions a fix of c01908a14bf73, which is in 5.1 final.
+> > So if your mouse works in 5.2.rc4, I am not sure how
+> > HID-a4tech-fix-horizontal-scrolling.patch could break it.
+> >=20
+> > Could you be slightly more specific in what "works" and what doesn't?
+>=20
+> Hi Benjamin,
+>=20
+> First of all here's the descriptor:
+> 0x05, 0x01, /*  Usage Page (Desktop),               */
+> 0x09, 0x02, /*  Usage (Mouse),                      */
+> 0xA1, 0x01, /*  Collection (Application),           */
+> 0x09, 0x01, /*      Usage (Pointer),                */
+> 0xA1, 0x00, /*      Collection (Physical),          */
+> 0x05, 0x09, /*          Usage Page (Button),        */
+> 0x19, 0x01, /*          Usage Minimum (01h),        */
+> 0x29, 0x08, /*          Usage Maximum (08h),        */
+> 0x15, 0x00, /*          Logical Minimum (0),        */
+> 0x25, 0x01, /*          Logical Maximum (1),        */
+> 0x75, 0x01, /*          Report Size (1),            */
+> 0x95, 0x08, /*          Report Count (8),           */
+> 0x81, 0x02, /*          Input (Variable),           */
+> 0x05, 0x01, /*          Usage Page (Desktop),       */
+> 0x09, 0x30, /*          Usage (X),                  */
+> 0x09, 0x31, /*          Usage (Y),                  */
+> 0x09, 0x38, /*          Usage (Wheel),              */
+> 0x09, 0xB8, /*          Usage (B8h),                */
+> 0x15, 0x81, /*          Logical Minimum (-127),     */
+> 0x25, 0x7F, /*          Logical Maximum (127),      */
+> 0x75, 0x08, /*          Report Size (8),            */
+> 0x95, 0x04, /*          Report Count (4),           */
+> 0x81, 0x06, /*          Input (Variable, Relative), */
+> 0xC0,       /*      End Collection,                 */
+> 0xC0        /*  End Collection
+>=20
+>=20
+> Sorry for the confusion, I'll try to explain the situation:
+>=20
+> In v5.2-rc4 without "HID-a4tech-fix-horizontal-scrolling.patch" the verti=
+cal
+> wheel works out of luck as it's mapped to REL_WHEEL_HIGH_RES, which hid-a=
+4tech
+> ignores and lets hid-input process, the horizontal wheel is broken. On to=
+p of
+> that Usage(0xB8) is also ignored by both hid-a4tech and hid-input as it i=
+sn't
+> mapped to anything.
+>=20
+> There are two distinct bugs here:
+>   - High resolution wheel processing in hid-a4tech not being implemented,
+>     breaking horizontal wheels.
+>   - hid-a4tech not taking care of Usage(0xB8) correctly as it depended on=
+ it
+>     being mapped to "Rel.Misc". That behaviour changed in v5.1 with "HID:
+>     input: add mapping for "Toggle Display" key".
+>=20
+> Once high resolution wheel reports are fixed and handled in hid-a4tech's
+> custom
+> event, the mouse breaks as it's the processing of Usage(0xB8) that trigge=
+rs
+> the
+> input_events, which is being ignored.
+>=20
+> You'll probably ask how come we didn't see this when
+> "HID-a4tech-fix-horizontal-scrolling.patch" was merged. It's due to the f=
+act
+> it
+> was tested on an older kernel, v5.0.15, that didn't contain "HID: input: =
+add
+> mapping for "Toggle Display" key"[1].
+>=20
+> So that's why I added that specific fix tag. For LTS kernels, it is possi=
+ble
+> that "Toggle Display" support was back-ported but not the high resolution
+> wheels support.
+
+Hi,
+Any thoughts on this?
+
+Regards,
+Nicolas
+
+
+--=-eqt0RDKAIGZzpzPNv9ma
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl0fJjMACgkQlfZmHno8
+x/78CQf/YcW+nGAU8CTPYU14v5EuJlIihtlFPJttPXpZxJGhrpKvBYakjV5ADC+m
+eKzeONjJA7IwRNTL1QJtc+L56H8at/H9f0ny0+pc+N2cqWKNgYrzU9To1+wTtkpy
++wvsSTnPCuUhJMyCGYXukEOI1OdVUbtqixPAYNszLm/XPWGvAtMBy8kAwBYHmdJd
+C3uWxuD7X7jNemBvniFBZDISwHjYK7CD9Zo0bjTQ0SZI5ZFdYMS8Kee9CUsytw/O
+iwvCMiEqwKAKrCcLk+6XfYmGUHzBOnCe0gsAQ2cRMXeb2/xxwlYrl0mS3ALEbSJv
+iMNIZbltK0rYSHqcsy3c6gdXtLr7OQ==
+=PoYc
+-----END PGP SIGNATURE-----
+
+--=-eqt0RDKAIGZzpzPNv9ma--
 
