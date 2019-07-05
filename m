@@ -2,109 +2,307 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ED8C4649A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0511C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71ECE2082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:15:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C6iECg2x"
+	by mail.kernel.org (Postfix) with ESMTP id 7FB642082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfGEGPm (ORCPT
+        id S1727834AbfGEGRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 02:15:42 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15854 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfGEGPm (ORCPT
+        Fri, 5 Jul 2019 02:17:07 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:43829
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725827AbfGEGRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 02:15:42 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1eeb0c0001>; Thu, 04 Jul 2019 23:15:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 04 Jul 2019 23:15:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 04 Jul 2019 23:15:41 -0700
-Received: from [10.24.44.191] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
- 2019 06:15:38 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
-References: <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
- <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
- <20190618043308.GJ2962@vkoul-mobl>
- <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
- <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
-Message-ID: <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
-Date:   Fri, 5 Jul 2019 11:45:34 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 5 Jul 2019 02:17:07 -0400
+X-IronPort-AV: E=Sophos;i="5.63,454,1557180000"; 
+   d="scan'208";a="312501121"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 08:17:03 +0200
+Date:   Fri, 5 Jul 2019 08:17:03 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     wen.yang99@zte.com.cn
+cc:     Markus.Elfring@web.de, linux-kernel@vger.kernel.org,
+        wang.yi59@zte.com.cn, Gilles Muller <Gilles.Muller@lip6.fr>,
+        nicolas.palix@imag.fr, michal.lkml@markovi.net,
+        yamada.masahiro@socionext.com, cocci@systeme.lip6.fr
+Subject: Re: [PATCH v2] coccinelle: semantic code search
+ formissingof_node_put
+In-Reply-To: <201907051357245235750@zte.com.cn>
+Message-ID: <alpine.DEB.2.21.1907050811110.18245@hadrien>
+References: 1561690732-20694-1-git-send-email-wen.yang99@zte.com.cn,201907041103003504524@zte.com.cn,alpine.DEB.2.21.1907050727550.18245@hadrien <201907051357245235750@zte.com.cn>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562307340; bh=uupu10u8U57FrqvgnS4PO2oXDfDg79qXfQJzeJWeUjM=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=C6iECg2xIEcGku37Aprky92wsyMNCnrvzB4XXD73mKb4/wEV0/RLmdnuvV1nSAmGb
-         KfhE49bRt2BMdPre2zp2hEJbq/rxbh+kgcnI9vRa49X7AnOx+PkNTR/Q7ofVstaW17
-         zSN1D28FI6nGEKP256VtAE34mjlPhIpq48X4S3V5bO19Bq1gy1okqLz4sFWe8Pa4OI
-         b8hdF25CdmSGotUFYqczOJD1hXOt1GoSm53m/0LuQuvTEDEhWfpisvR66TRN8sHAFe
-         jslOOqO8ZwjLRvwHUoRRNpxsNuCW6npm/qDsWMTfoD6bcZD75RIs4SqoUgHaAHI7Nz
-         260yfyE6U1wBw==
+Content-Type: multipart/mixed; boundary="8323329-1434881685-1562307423=:18245"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-What are your final thoughts regarding this?
+--8323329-1434881685-1562307423=:18245
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Thanks,
-Sameer.
 
->> Where does ADMAIF driver reside in kernel, who configures it for normal
->> dma txns..?
-> Not yet, we are in the process of upstreaming ADMAIF driver.
-> To describe briefly, audio subsystem is using ALSA SoC(ASoC) layer. 
-> ADMAIF is
-> registered as platform driver and exports DMA functionality. It 
-> registers PCM
-> devices for each Rx/Tx ADMAIF channel. During PCM playback/capture 
-> operations,
-> ALSA callbacks configure DMA channel using API dmaengine_slave_config().
-> RFC patch proposed, is to help populate FIFO_SIZE value as well during 
-> above
-> call, since ADMA requires it.
->>
->> Also it wold have helped the long discussion if that part was made clear
->> rather than talking about peripheral all this time :(
-> Thought it was clear, though should have avoided using 'peripheral' in 
-> the
-> discussions. Sorry for the confusion.
 
+On Fri, 5 Jul 2019, wen.yang99@zte.com.cn wrote:
+
+> > > > > > +x = @p1\(of_find_all_nodes\|
+> > > > >
+> > > > > I would find this SmPL disjunction easier to read without the usage
+> > > > > of extra backslashes.
+> > > > >
+> > > > > +x =
+> > > > > +(of_…
+> > > > > +|of_…
+> > > > > +)@p1(...);
+> > > >
+> > > > Did you actually test this?  I doubt that a position metavariable can be
+> > > > put on a ) of a disjunction.
+> > > >
+> > > > > > +|
+> > > > > > +return x;
+> > > > > > +|
+> > > > > > +return of_fwnode_handle(x);
+> > > > >
+> > > > > Can a nested SmPL disjunction be helpful at such places?
+> > > > >
+> > > > > +|return
+> > > > > +(x
+> > > > > +|of_fwnode_handle(x)
+> > > > > +);
+> > > >
+> > > > The original code is much more readable.  The internal representation will
+> > > > be the same.
+> > > >
+> > > > > > +    when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
+> > > > >
+> > > > > Would the specification variant “<+... x ...+>” be relevant
+> > > > > for the parameter selection?
+> > > >
+> > > > I'm indeed quite surprised that <...x...> would be accepted by the parser..
+> > >
+> > > Hi julia,
+> > >
+> > > Thank you for your comments.
+> > > We tested and found that both <...x...> and <+... x ...+> variants work fine.
+> > > We use <... x ...> instead of <+... x ...+> here to eliminate the following false positives:
+> > >
+> > > ./drivers/media/platform/qcom/camss/camss.c:504:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 479, but without a corresponding object release within this function.
+> > >
+> > > 465 static int camss_of_parse_ports(struct camss *camss)
+> > > 466 {
+> > > ...
+> > > 479 remote = of_graph_get_remote_port_parent(node);
+> > > ...
+> > > 486 asd = v4l2_async_notifier_add_fwnode_subdev(
+> > > 487 &camss->notifier, of_fwnode_handle(remote), ---> v4l2_async_notifier_add_fwnode_subdev will pass remote to camss->notifier.
+> > > 488 sizeof(*csd));
+> > > ...
+> > > 504 return num_subdevs;
+> >
+> > I suspect that what is happening is that there is a runtime error, but
+> > that error is caught somewhere and you don't see it.
+>
+> Thanks.
+> You are right, there is indeed a runtime error.
+> Since make coccicheck adds the "-very-quiet" parameter by default, we didn't find it.
+>
+> $ spatch --sp-file   of_node_put.cocci   -D report drivers/media/platform/am437x/am437x-vpfe.c
+> init_defs_builtins: /usr/local/bin/../lib/coccinelle/standard.h
+> HANDLING: drivers/media/platform/am437x/am437x-vpfe.c
+> exn while in timeout_function
+> only handling multi and no when code in a nest expr
+>
+> >  Could you send me again the entire semantic patch so I can check on this?
+> >
+>
+> Thanks.
+> The entire SmPL is as follows:
+>
+> $ cat of_node_put.cocci
+> // SPDX-License-Identifier: GPL-2.0
+> /// Find missing of_node_put
+> ///
+> // Confidence: Moderate
+> // Copyright: (C) 2018-2019 Wen Yang, ZTE.
+> // Comments:
+> // Options: --no-includes --include-headers
+>
+> virtual report
+> virtual org
+>
+> @initialize:python@
+> @@
+>
+> seen = set()
+>
+> def add_if_not_present (p1, p2):
+>     if (p1, p2) not in seen:
+>         seen.add((p1, p2))
+>         return True
+>     return False
+
+Did you need this?  Normally a script rule is run only once for each set
+of bindings for the inherited variables.  I guess that multiple p1s could
+lead to the same p2, and you only want to report on one of them?
+
+This set is going to be global to the whole kernel, or at least to all of
+the files considered by a given thread, if you use -j.  To clean it up on
+each file, you can make another python at the end that depends on r1 or r2
+and depends on report.  This rule can clear seen.
+
+Otherwise, it looks fine.
+
+julia
+
+
+>
+> def display_report(p1, p2):
+>     if add_if_not_present(p1[0].line, p2[0].line):
+>        coccilib.report.print_report(p2[0],
+>                                     "ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line "
+>                                     + p1[0].line
+>                                     + ", but without a corresponding object release within this function.")
+>
+> def display_org(p1, p2):
+>     cocci.print_main("acquired a node pointer with refcount incremented", p1)
+>     cocci.print_secs("needed of_node_put", p2)
+>
+> @r1 exists@
+> local idexpression struct device_node *x;
+> expression e, e1;
+> position p1, p2;
+> statement S;
+> type T;
+> @@
+>
+> x = @p1\(of_find_all_nodes\|
+>          of_get_cpu_node\|
+>          of_get_parent\|
+>          of_get_next_parent\|
+>          of_get_next_child\|
+>          of_get_next_cpu_node\|
+>          of_get_compatible_child\|
+>          of_get_child_by_name\|
+>          of_find_node_opts_by_path\|
+>          of_find_node_by_name\|
+>          of_find_node_by_type\|
+>          of_find_compatible_node\|
+>          of_find_node_with_property\|
+>          of_find_matching_node_and_match\|
+>          of_find_node_by_phandle\|
+>          of_parse_phandle\|
+>          of_find_next_cache_node\|
+>          of_get_next_available_child\)(...);
+> ...
+> if (x == NULL || ...) S
+> ... when != e = (T)x
+>     when != true x == NULL
+>     when != of_node_put(x)
+>     when != of_get_next_parent(x)
+>     when != of_find_matching_node(x, ...)
+>     when != if (x) { ... return x; }
+>     when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
+>     when != e1 = of_fwnode_handle(x)
+> (
+> if (x) { ... when forall
+>          of_node_put(x) ... }
+> |
+> return x;
+> |
+> return of_fwnode_handle(x);
+> |
+> return@p2 ...;
+> )
+>
+> @script:python depends on report && r1@
+
+No need to depend on r1.  That is guaranteed by the inheritance on the
+metavariables below.
+
+> p1 << r1.p1;
+> p2 << r1.p2;
+> @@
+>
+> display_report(p1, p2)
+>
+> @script:python depends on org && r1@
+> p1 << r1.p1;
+> p2 << r1.p2;
+> @@
+>
+> display_org(p1, p2)
+>
+> @r2 exists@
+> local idexpression struct device_node *x;
+> expression e, e1;
+> position p1, p2;
+> identifier f;
+> statement S;
+> type T;
+> @@
+>
+> (
+> x = f@p1(...);
+> ... when != e = (T)x
+>     when != true x == NULL
+>     when != of_node_put(x)
+>     when != of_get_next_parent(x)
+>     when != of_find_matching_node(x, ...)
+>     when != if (x) { ... return x; }
+>     when != v4l2_async_notifier_add_fwnode_subdev(<...x...>)
+>     when != e1 = of_fwnode_handle(x)
+> (
+> if (x) { ... when forall
+>          of_node_put(x) ... }
+> |
+> return x;
+> |
+> return of_fwnode_handle(x);
+> |
+> return@p2 ...;
+> )
+> &
+> x = f(...)
+> ...
+> if (<+...x...+>) S
+> ...
+> of_node_put(x);
+> )
+> @script:python depends on report && r2@
+> p1 << r2.p1;
+> p2 << r2.p2;
+> @@
+>
+> display_report(p1, p2)
+>
+> @script:python depends on org && r2@
+> p1 << r2.p1;
+> p2 << r2.p2;
+> @@
+>
+> display_org(p1, p2)
+>
+> > I think that what you want is:
+> >
+> > when != v4l2_async_notifier_add_fwnode_subdev(...,<+...x...+>,...)
+> >
+> > ie x occurring somewhere within some argument.
+>
+> Thank you very much for your suggestion.
+> Applying it will solve this problem, thank you.
+>
+> --
+> Thanks and regards,
+> Wen
+--8323329-1434881685-1562307423=:18245--
