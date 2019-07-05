@@ -2,79 +2,187 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D3DC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C86C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E8D218A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562308156;
-	bh=rtqDsA1dt41jmY4HH8dyLkub/U82sQVRFe+2M0a+nCg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bwTl9tRrNzRhFnFJDqmy2QsNBIK1MryIWFDRBI5yHnNfEMtSbuAYwBoQUv0uT/322
-	 N3N91DFRv+wlPLZH70X/lu4Bb6ybS/hqanJBBWXiFEMhjD0/3S98AF0zEo6vXCMbpJ
-	 Aw2Ya4c6fRJysMDVzS5I2NJ30WsOW6SBvHIvqiWg=
+	by mail.kernel.org (Postfix) with ESMTP id 92677218BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTYoIrLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfGEG3N (ORCPT
+        id S1727925AbfGEGbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 02:29:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbfGEG3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 02:29:13 -0400
-Received: from localhost (c-98-234-77-170.hsd1.ca.comcast.net [98.234.77.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5809A21852;
-        Fri,  5 Jul 2019 06:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562308152;
-        bh=rtqDsA1dt41jmY4HH8dyLkub/U82sQVRFe+2M0a+nCg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TCMhTSfTG6e8HjcjQ/khzcsPcnDqritHcZ6OLjp9322MVS1Z7TRWENemxx7rQcdBf
-         zuUSYXaA35XA/Y6p7t5ICwKKLNWBzM1njkLJ3b+rJiKLpqwQdQ1JE7BM1KSjicYuUK
-         Bf6cGP5MRnee4uZaaImcS3ge3cKgNAci8zDG9Utg=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: allow all the users to pin a file
-Date:   Thu,  4 Jul 2019 23:29:10 -0700
-Message-Id: <20190705062910.39163-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.19.0.605.g01d371f741-goog
+        Fri, 5 Jul 2019 02:31:23 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43440 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727840AbfGEGbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 02:31:23 -0400
+Received: by mail-qt1-f195.google.com with SMTP id w17so6998722qto.10;
+        Thu, 04 Jul 2019 23:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PZ7J1xjsbzm1U/of1KhsZpOdk4BLy/jqSSNr0GyJ1Og=;
+        b=kTYoIrLiHNVlf8mJdGVchtMrXO9vACuma/1M3y8WcbkCkzbhmbYnkZl8hU4MqPhxq0
+         hzQffvUAThjMmmzI5zAEXXgjNVoZgmKvm3ihA9NSyjGYlJwKXUFfforoHouQkgDJLXEq
+         wbVWB2nsiaAAvRpjGjoGburer6g8LpVI/kqtqvtKZufX1lzDwZasK4EteXjgWs50RVEA
+         +Sd4UvQM9A5makPgQEWm4jcafa3xbYhd4rvMqUe8fsP3iRokKTOs8MDq40DSw0fxPcHz
+         fwGAptLf7RHmQPOLX/Q9abKKO+yNhJnxiqzgTDce+xU/KqZeUGUSR/LDS3vvqIJBDGlu
+         ArGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PZ7J1xjsbzm1U/of1KhsZpOdk4BLy/jqSSNr0GyJ1Og=;
+        b=NGfEYhiTeXBIHIYR8Pei05UM1/oJlwJEoz1J+za2uID+aIflyQWocC8wBH+vebSfBf
+         drCvDREqPhdJkU/1efELaZk0VHibuyiLN04ezRbfXC1xk43GkZp75eZzOGgXdvBVaBl7
+         D/2kwYrz9Kb8bQfgJ0emULNcB8V6xe5RsZz+BHc1JgV9VSoKI0UNVtlKSmqyYeMESDtm
+         1AjIw49EPkgwM4kIMhh9uJyjgmr+RuaXFHiH7cH5tgYrrbXHced6nY1Td+4YcVw9s1gW
+         8KCDN8Z98AD8ByHCeh6Oj4I6AO3emotIlL0zC+8F303WlzUxsCYG+mtI0QLEPPy2ZJg8
+         pgew==
+X-Gm-Message-State: APjAAAUFOQV+mG6oaT6BYJPsU6hQs0l43a7VBiioGZWZqBDsTZpMqGea
+        3ETwgMF2nCTJ/6NskHZm1eGrEaPcMI7Pxeny5Ww=
+X-Google-Smtp-Source: APXvYqw3vejO55KsDt2ror9eB4zeFm4nWnhBt43Suis0p/V+EMnZEYIJGlrfJDBKGxdHEF9s4pqQwSDDwOwxjLlIWis=
+X-Received: by 2002:a0c:ac98:: with SMTP id m24mr1873564qvc.9.1562308282034;
+ Thu, 04 Jul 2019 23:31:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190705001803.30094-1-luke.r.nels@gmail.com>
+In-Reply-To: <20190705001803.30094-1-luke.r.nels@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Fri, 5 Jul 2019 08:31:10 +0200
+Message-ID: <CAJ+HfNi0Svv6w6_Xx-YPqBaOJnjGtxim_u0YdZacHynmfQaJTg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] Enable zext optimization for more RV64G ALU ops
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Song Liu <liu.song.a23@gmail.com>,
+        Jiong Wang <jiong.wang@netronome.com>,
+        Xi Wang <xi.wang@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows users to pin files.
+On Fri, 5 Jul 2019 at 02:18, Luke Nelson <lukenels@cs.washington.edu> wrote=
+:
+>
+> commit 66d0d5a854a6 ("riscv: bpf: eliminate zero extension code-gen")
+> added the new zero-extension optimization for some BPF ALU operations.
+>
+> Since then, bugs in the JIT that have been fixed in the bpf tree require
+> this optimization to be added to other operations: commit 1e692f09e091
+> ("bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh"),
+> and commit fe121ee531d1 ("bpf, riscv: clear target register high 32-bits
+> for and/or/xor on ALU32")
+>
+> Now that these have been merged to bpf-next, the zext optimization can
+> be enabled for the fixed operations.
+>
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/file.c | 3 ---
- 1 file changed, 3 deletions(-)
+Thanks for the patch, Luke!
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index b164f48e0f31..f8d46df8fa9e 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2964,9 +2964,6 @@ static int f2fs_ioc_set_pin_file(struct file *filp, unsigned long arg)
- 	__u32 pin;
- 	int ret = 0;
- 
--	if (!capable(CAP_SYS_ADMIN))
--		return -EPERM;
--
- 	if (get_user(pin, (__u32 __user *)arg))
- 		return -EFAULT;
- 
--- 
-2.19.0.605.g01d371f741-goog
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
 
+> Cc: Song Liu <liu.song.a23@gmail.com>
+> Cc: Jiong Wang <jiong.wang@netronome.com>
+> Cc: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+> ---
+>  arch/riscv/net/bpf_jit_comp.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.=
+c
+> index 876cb9c705ce..5451ef3845f2 100644
+> --- a/arch/riscv/net/bpf_jit_comp.c
+> +++ b/arch/riscv/net/bpf_jit_comp.c
+> @@ -757,31 +757,31 @@ static int emit_insn(const struct bpf_insn *insn, s=
+truct rv_jit_context *ctx,
+>         case BPF_ALU | BPF_ADD | BPF_X:
+>         case BPF_ALU64 | BPF_ADD | BPF_X:
+>                 emit(is64 ? rv_add(rd, rd, rs) : rv_addw(rd, rd, rs), ctx=
+);
+> -               if (!is64)
+> +               if (!is64 && !aux->verifier_zext)
+>                         emit_zext_32(rd, ctx);
+>                 break;
+>         case BPF_ALU | BPF_SUB | BPF_X:
+>         case BPF_ALU64 | BPF_SUB | BPF_X:
+>                 emit(is64 ? rv_sub(rd, rd, rs) : rv_subw(rd, rd, rs), ctx=
+);
+> -               if (!is64)
+> +               if (!is64 && !aux->verifier_zext)
+>                         emit_zext_32(rd, ctx);
+>                 break;
+>         case BPF_ALU | BPF_AND | BPF_X:
+>         case BPF_ALU64 | BPF_AND | BPF_X:
+>                 emit(rv_and(rd, rd, rs), ctx);
+> -               if (!is64)
+> +               if (!is64 && !aux->verifier_zext)
+>                         emit_zext_32(rd, ctx);
+>                 break;
+>         case BPF_ALU | BPF_OR | BPF_X:
+>         case BPF_ALU64 | BPF_OR | BPF_X:
+>                 emit(rv_or(rd, rd, rs), ctx);
+> -               if (!is64)
+> +               if (!is64 && !aux->verifier_zext)
+>                         emit_zext_32(rd, ctx);
+>                 break;
+>         case BPF_ALU | BPF_XOR | BPF_X:
+>         case BPF_ALU64 | BPF_XOR | BPF_X:
+>                 emit(rv_xor(rd, rd, rs), ctx);
+> -               if (!is64)
+> +               if (!is64 && !aux->verifier_zext)
+>                         emit_zext_32(rd, ctx);
+>                 break;
+>         case BPF_ALU | BPF_MUL | BPF_X:
+> @@ -811,13 +811,13 @@ static int emit_insn(const struct bpf_insn *insn, s=
+truct rv_jit_context *ctx,
+>         case BPF_ALU | BPF_RSH | BPF_X:
+>         case BPF_ALU64 | BPF_RSH | BPF_X:
+>                 emit(is64 ? rv_srl(rd, rd, rs) : rv_srlw(rd, rd, rs), ctx=
+);
+> -               if (!is64)
+> +               if (!is64 && !aux->verifier_zext)
+>                         emit_zext_32(rd, ctx);
+>                 break;
+>         case BPF_ALU | BPF_ARSH | BPF_X:
+>         case BPF_ALU64 | BPF_ARSH | BPF_X:
+>                 emit(is64 ? rv_sra(rd, rd, rs) : rv_sraw(rd, rd, rs), ctx=
+);
+> -               if (!is64)
+> +               if (!is64 && !aux->verifier_zext)
+>                         emit_zext_32(rd, ctx);
+>                 break;
+>
+> @@ -826,7 +826,7 @@ static int emit_insn(const struct bpf_insn *insn, str=
+uct rv_jit_context *ctx,
+>         case BPF_ALU64 | BPF_NEG:
+>                 emit(is64 ? rv_sub(rd, RV_REG_ZERO, rd) :
+>                      rv_subw(rd, RV_REG_ZERO, rd), ctx);
+> -               if (!is64)
+> +               if (!is64 && !aux->verifier_zext)
+>                         emit_zext_32(rd, ctx);
+>                 break;
+>
+> --
+> 2.20.1
+>
