@@ -2,259 +2,173 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E98C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE1FC468AA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D26320843
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C62621670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:18:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="J98QdbdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfGEUSD (ORCPT
+        id S1727873AbfGEUSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:18:03 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:28118 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfGEUSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:18:02 -0400
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="andrew.cooper3@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
-  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="Andrew.Cooper3@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: iyBg88caDLISw+Jsz4crYchtylLUuqOz1SbOTMEvFVWAV+t4dfhmoqHoaPZZoQXk7P/XvFagr1
- guGLpKcwMbP4oXip0PTpGOWeD6Wu4mE8I1x0tqz6TRrhquh7R5fF+Lxmpm8vi6BqsYCRuQZfAq
- IscpyxsooZnPQ+aOTJl022Q/1B7vBxbYnJawzH+ZTDEbgXjLKMxjzBXLkH/GAoGtH1dihDayib
- XMeIUVJVekoJuDiUT0l3pb5a0UQLQnPQm4BtncVDSiOah9c9Z9+mBZRwpPimiMzs1oEjWRp3uJ
- q48=
-X-SBRS: 2.7
-X-MesageID: 2658662
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.63,456,1557201600"; 
-   d="scan'208";a="2658662"
-Subject: Re: [patch V2 04/25] x86/apic: Make apic_pending_intr_clear() more
- robust
-To:     Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Nadav Amit <namit@vmware.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Andrew Cooper <Andrew.Cooper3@citrix.com>
-References: <20190704155145.617706117@linutronix.de>
- <20190704155608.636478018@linutronix.de>
- <958a67c2-4dc0-52e6-43b2-1ebd25a59232@citrix.com>
- <CALCETrVomGF-OmWxdaX9axih1kz345rEFop=vZtcKwGR8U-gwQ@mail.gmail.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
- 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
- 6+ahAA==
-Message-ID: <40db3bec-6dbb-4957-f50f-b72b0920885f@citrix.com>
-Date:   Fri, 5 Jul 2019 21:17:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 5 Jul 2019 16:18:55 -0400
+Received: from mail-eopbgr1300108.outbound.protection.outlook.com ([40.107.130.108]:9839
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725813AbfGEUSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 16:18:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WUNKAMgcOhxoL00Vg53yugy+ogJRXHM1hLbB6ViZQ7yY2we62BQFsVYinvcB8Be9pnLoj3ZHycKPJMgs2UP032tCd38rwkYWkcDSeGWkzyw2hKR8pY3Vqt1WrnHU2xoMKXcqmZPvmR8yg+OTqaEj2IN1pjAanXGtbq9nVsFD8yLA70SnM65siAKoeZCc2uTdyBMfYf8NDUanlv5I8Z+Ejm3kjbFpdRh5lz/BHwl3jb8D93/QSOGFbUR4gUDXF6lXN0JHAW6cp9AWtrBgyMbTFmU9KfMtpkRBGCiuTqVc+ViXFfbndyNXxdAW2HfDsJLOpjvlf5IJ66+VrmVm38UVng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IUUnPjDRIFgNYOKz+XOgJc8n6yxkDv3Y4ldBTjHj27M=;
+ b=T8er6NWA7RLnVzHcu5VgNC83TU1Blgjk4v7/bw7X/Ywf0pSFxa4RQ7W3+DguB3D5RLgH/H/rOe3Bw6XJduQ1EFX7sOXWMI3gqZ04DW/DfEx3yw+mhCYEJOXIBEQ+QbNRDeiJpjwydWyOq40uwoI3jBz9ZUxLNhmjAqecmIeKTX3T2evTkOzGUI6PIPvgyTLrDQOkZ/ssQ31pebGJtguBXZd3eiFv8IVwvTbk0n2PJRiO9b+u804IWy1UZoFQcQSIvoAYg8PHhqpIpufonQlmQuqcNDd0djkZndamLlEmpM1RJRLFNmM6TwkodGz4q9gRbuZjVV94E3UR+NymsC/ZNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IUUnPjDRIFgNYOKz+XOgJc8n6yxkDv3Y4ldBTjHj27M=;
+ b=J98QdbdP49lqGJJTMiAqpTAe1hrBgbpbHMih4VnaUGXxXJ01MKjl64iS0C4js0MJxFdvhakfae/b7djyWNwdDBEFMHobfTtap06TuPZ0cZ1DynEbg8XKptKe8D9LL5+DXu1GWVzpQWYMbnbXUGfW8bs661MxYWemgstrzmMemTc=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0139.APCP153.PROD.OUTLOOK.COM (10.170.188.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.2; Fri, 5 Jul 2019 20:18:44 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::61b3:885f:a7e4:ec0b]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::61b3:885f:a7e4:ec0b%9]) with mapi id 15.20.2073.007; Fri, 5 Jul 2019
+ 20:18:44 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Pavel Machek <pavel@ucw.cz>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "robert.moore@intel.com" <robert.moore@intel.com>,
+        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Russ Dill <Russ.Dill@ti.com>,
+        Sebastian Capella <sebastian.capella@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: [PATCH] ACPI: PM: Fix "multiple definition of
+ acpi_sleep_state_supported" for ARM64
+Thread-Topic: [PATCH] ACPI: PM: Fix "multiple definition of
+ acpi_sleep_state_supported" for ARM64
+Thread-Index: AdUzbmM4XUj6neW+TFKprEoFjAWlBA==
+Date:   Fri, 5 Jul 2019 20:18:43 +0000
+Message-ID: <PU1P153MB0169731042EFE4D6B08F04A5BFF50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-05T20:18:41.4014074Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=42a7c061-4d29-4fcd-9ae8-d829837adbb9;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:5896:cf8a:cefe:fd7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0cccd131-22dc-445c-80b8-08d70185fa90
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0139;
+x-ms-traffictypediagnostic: PU1P153MB0139:|PU1P153MB0139:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0139B7D25B696EAB9FF74F1DBFF50@PU1P153MB0139.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 008960E8EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(396003)(376002)(136003)(346002)(189003)(199004)(110136005)(2501003)(9686003)(71190400001)(71200400001)(316002)(55016002)(8990500004)(86362001)(54906003)(4326008)(6116002)(22452003)(186003)(10290500003)(7736002)(305945005)(1511001)(10090500001)(99286004)(66446008)(25786009)(14454004)(6436002)(486006)(33656002)(68736007)(74316002)(478600001)(46003)(14444005)(256004)(8676002)(7416002)(81156014)(81166006)(6506007)(102836004)(7696005)(5660300002)(53936002)(476003)(52536014)(2906002)(76116006)(73956011)(66476007)(66556008)(8936002)(64756008)(66946007)(2201001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0139;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9lpp7EBoPVK4bZ0lsYsjOt7vhha0m2XMLgqGezTaE03D76b9/Ei1jIU7HhKjpL7WYpgfKM392v+dwrY+BmpcCgWsyCZuBJ3zY1nG8J6UZr2mKwRuVlFB+uTzJAHLKQ1xYXyi6+NfSlC4jIupwbppl7egnDYzSKQngfuFEs2BFZXIffMQwSdWAkesvMT2OFdBqLagRWKjrm6UDWGJgegKljKRu6qbKuI8g9vZE90K4ks1KWOwtdsplYJ23/FjYrwZu7fW3uy6ZkRNml45pfM2uBeqfhWWbZKMP0sSKLxQROewKK9BzCXWVIU0SzPS629pS2Cli4SxtfPQ5t2n9vh+yPLgiBq1AWJjxNHkjgSVTdqBPRoPo1/UaZqkRlPXhhJxDAtt5P5/seNCqA90yROCZum17O//NMRuHH5dXX7+zsk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CALCETrVomGF-OmWxdaX9axih1kz345rEFop=vZtcKwGR8U-gwQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0cccd131-22dc-445c-80b8-08d70185fa90
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 20:18:43.6729
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/07/2019 20:06, Andy Lutomirski wrote:
-> On Fri, Jul 5, 2019 at 8:47 AM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->> On 04/07/2019 16:51, Thomas Gleixner wrote:
->>>   2) The loop termination logic is interesting at best.
->>>
->>>      If the machine has no TSC or cpu_khz is not known yet it tries 1
->>>      million times to ack stale IRR/ISR bits. What?
->>>
->>>      With TSC it uses the TSC to calculate the loop termination. It takes a
->>>      timestamp at entry and terminates the loop when:
->>>
->>>         (rdtsc() - start_timestamp) >= (cpu_hkz << 10)
->>>
->>>      That's roughly one second.
->>>
->>>      Both methods are problematic. The APIC has 256 vectors, which means
->>>      that in theory max. 256 IRR/ISR bits can be set. In practice this is
->>>      impossible as the first 32 vectors are reserved and not affected and
->>>      the chance that more than a few bits are set is close to zero.
->> [Disclaimer.  I talked to Thomas in private first, and he asked me to
->> post this publicly as the CVE is almost a decade old already.]
->>
->> I'm afraid that this isn't quite true.
->>
->> In terms of IDT vectors, the first 32 are reserved for exceptions, but
->> only the first 16 are reserved in the LAPIC.  Vectors 16-31 are fair
->> game for incoming IPIs (SDM Vol3, 10.5.2 Valid Interrupt Vectors).
->>
->> In practice, this makes Linux vulnerable to CVE-2011-1898 / XSA-3, which
->> I'm disappointed to see wasn't shared with other software vendors at the
->> time.
->>
->> Because TPR is 0, an incoming IPI can trigger #AC, #CP, #VC or #SX
->> without an error code on the stack, which results in a corrupt pt_regs
->> in the exception handler, and a stack underflow on the way back out,
->> most likely with a fault on IRET.
->>
->> These can be addressed by setting TPR to 0x10, which will inhibit
->> delivery of any errant IPIs in this range, but some extra sanity logic
->> may not go amiss.  An error code on a 64bit stack can be spotted with
->> `testb $8, %spl` due to %rsp being aligned before pushing the exception
->> frame.
-> Several years ago, I remember having a discussion with someone (Jan
-> Beulich, maybe?) about how to efficiently make the entry code figure
-> out the error code situation automatically.  I suspect it was on IRC
-> and I can't find the logs.
 
-It was on IRC, but I don't remember exactly when, either.
+If CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT is not set, the dummy version of
+the function should be static.
 
-> I'm thinking that maybe we should just
-> make Linux's idtentry code do something like this.
->
-> If nothing else, we could make idtentry do:
->
-> testl $8, %esp   /* shorter than testb IIRC */
+Fixes: 1e2c3f0f1e93 ("ACPI: PM: Make acpi_sleep_state_supported() non-stati=
+c")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
 
-Sadly not.  test (unlike cmp and the basic mutative opcodes) doesn't
-have a sign-extendable imm8 encoding.  The two options are:
+Sorry for not doing it right in the previous patch!
 
-f7 c4 08 00 00 00        test   $0x8,%esp
-40 f6 c4 08              test   $0x8,%spl
+The patch fixes the build errors on ARM64:
 
-> jz 1f  /* or jnz -- too lazy to figure it out */
-> pushq $-1
-> 1:
+   drivers/net/ethernet/qualcomm/emac/emac-phy.o: In function `acpi_sleep_s=
+tate_supported':
+>> emac-phy.c:(.text+0x1d8): multiple definition of `acpi_sleep_state_suppo=
+rted'
+   drivers/net/ethernet/qualcomm/emac/emac.o:emac.c:(.text+0xbf8): first de=
+fined here
+   drivers/net/ethernet/qualcomm/emac/emac-sgmii.o: In function `acpi_sleep=
+_state_supported':
+   emac-sgmii.c:(.text+0x548): multiple definition of `acpi_sleep_state_sup=
+ported'
+   drivers/net/ethernet/qualcomm/emac/emac.o:emac.c:(.text+0xbf8): first de=
+fined here
 
-It is jz, and Xen does use this sequence for reserved/unimplemented
-vectors, but we expect those codepaths never to be executed.
 
->
-> instead of the current hardcoded push.  The cost of a mispredicted
-> branch here will be smallish compared to the absurdly large cost of
-> the entry itself.  But I thought I had something more clever than
-> this.  This sequence works, but it still feels like it should be
-> possible to do better:
->
-> .macro PUSH_ERROR_IF_NEEDED
->     /*
->      * Before the IRET frame is pushed, RSP is aligned to a 16-byte
->      * boundary.  After SS .. RIP and the error code are pushed, RSP is
->      * once again aligned.  Pushing -1 will put -1 in the error code slot
->      * (regs->orig_ax) if there was no error code.
->     */
->
->     pushq    $-1                /* orig_ax = -1, maybe */
->     /* now RSP points to orig_ax (aligned) or di (misaligned) */
->     pushq    $0
->     /* now RSP points to di (misaligned) or si (aligned) */
->     orq    $8, %rsp
->     /* now RSP points to di */
->     addq    $8, %rsp
->     /* now RSP points to orig_ax, and we're in good shape */
-> .endm
->
-> Is there a better sequence for this?
+ include/acpi/acpi_bus.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The only aspect I can think of is whether mixing the push/pops with
-explicit updates updates to %rsp is better or worse than a very well
-predicted branch, given that various frontends have special tracking to
-reduce instruction dependencies on %rsp.  I'll have to defer to the CPU
-microachitects as to which of the two options is the lesser evil.
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index 4ce59bdc852e..8ffc4acf2b56 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -657,7 +657,7 @@ static inline int acpi_pm_set_bridge_wakeup(struct devi=
+ce *dev, bool enable)
+ #ifdef CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT
+ bool acpi_sleep_state_supported(u8 sleep_state);
+ #else
+-bool acpi_sleep_state_supported(u8 sleep_state) { return false; }
++static bool acpi_sleep_state_supported(u8 sleep_state) { return false; }
+ #endif
+=20
+ #ifdef CONFIG_ACPI_SLEEP
+--=20
+2.17.1
 
-That said, both Intel and AMD's Optimisation guides have stack alignment
-suggestions which mix push/sub/and on function prolog, so I expect this
-is as optimised as it can reasonably be in the pipelines.
-
->> Another interesting problem is an IPI which its vector 0x80.  A cunning
->> attacker can use this to simulate system calls from unsuspecting
->> positions in userspace, or for interrupting kernel context.  At the very
->> least the int0x80 path does an unconditional swapgs, so will try to run
->> with the user gs, and I expect things will explode quickly from there.
-> At least SMAP helps here on non-FSGSBASE systems.  With FSGSBASE, I
-> suppose we could harden this by adding a special check to int $0x80 to
-> validate GSBASE.
->
->> One option here is to look at ISR and complain if it is found to be set.
-> Barring some real hackery, we're toast long before we get far enough to do that.
-
-Even if the path moves to be like a regular idtentry?  How much more
-expensive is that in reality?  Ultimately, it is that which needs to be
-weighed against any extra wanted robustness.
-
-~Andrew
