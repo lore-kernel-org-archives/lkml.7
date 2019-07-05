@@ -2,125 +2,107 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8202C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B8AC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81581216E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3E9216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:14:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rm6csqc1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fc5wkPe+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfGEPOy (ORCPT
+        id S1728003AbfGEPO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 11:14:54 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:45678 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbfGEPOu (ORCPT
+        Fri, 5 Jul 2019 11:14:56 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45702 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727841AbfGEPOy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:14:50 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x65FEYof003506;
-        Sat, 6 Jul 2019 00:14:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x65FEYof003506
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562339676;
-        bh=j1X2qsh6YtfDSqime3qySV5hLLz1eF8cUUX82OnMgDs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rm6csqc1Tk9DadRlazYBhRDKDg4cDmtlXOrmKWA0fRDAOdNVvYRQrxKRTvQCk2ufr
-         02bG5KER/FYeJCNrem0hPapgW5RO7YnI1Y4gRTOiT3zVZgmQ3exZmfChAEVSPUl8dY
-         UEWy5T9beoVNcZkKljuE6SnG5Gp+rc2M50p9pCUjYa2caY5TGwW9HBSCAuN+VIJUpf
-         +pjgTwlV+vmPHGec+S4nlV2StzcxXpg36UnFinsh8w/dnOTQQAZZfOvqt0khgBxvW0
-         rpssVZ/DdWsyeJ3taxJ7dr1zwvEso5jUeAaWxEsMlh01yhAaDvsSE32xQvyvmM344k
-         Oy5RMqP4HMF5Q==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] scripts/tags.sh: drop SUBARCH support for ARM
-Date:   Sat,  6 Jul 2019 00:14:30 +0900
-Message-Id: <20190705151431.29122-1-yamada.masahiro@socionext.com>
+        Fri, 5 Jul 2019 11:14:54 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y8so38040plr.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 08:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=LG/wQK5eDhZO2JkmChNMhmQOYOK1XGmyw1rFFuxqroU=;
+        b=fc5wkPe+dcpEqURdBxoMZHkCu7ruRwywX8u94KSlg4PtNUUKv1XNQ2h+hPrPex7hXK
+         VD2FrV3QrNPFHljlLp9iA3TAwyCJpbQfIZMu6IeYhFFbqVNCG+4dRcpTTex9MIDA8isg
+         MFmW4PlzYaU+rHd8q7Ml+nbonIDBGxC7smUnWlWgqx65ULvaH0VoOPEpDYz/AlfiLjSP
+         cas8EcLbYQ59WCanZWRNFY1apouJ4wbEn9R7Px2mQNL9hTgQbIqhPKx99nOoihYL2EXK
+         o64Bn2pewcsOvDIoscJDs8Pw2X+wWGYA4h5uX7U+sSA6S495hfr2tgBdrTazwNhv1WYd
+         NN9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LG/wQK5eDhZO2JkmChNMhmQOYOK1XGmyw1rFFuxqroU=;
+        b=i3bi8AnAPR/KwcwzzCQZHZOZS6S+PMu5KbymAi9eZTc0TpSk386W1rwoDVQJn3f7H9
+         i+YeqWw8JvVXZo5DHe0Vcy76wd1olhYeDWTFkQAxYIPWI7eDL7KfFQ4omBqNroOY0hC/
+         /EmYPmmPMp7WyiEij8ZS3Z/8NbgXzthO7tlM01UDX38i1ZfxMXmdTMWO/2pem1X/8DG5
+         BGYThiywUAmgndvVBuyUENvKZ1GXVMeL3/KtT2E+02s+PYOhb4/9XwXa3cgQWKzawhQF
+         ETTj2FicPup1X4vOMpQ0BttzvFzI57LIp9njWXsM5st/a0cubfTECAmfH0pEXz/ff9W8
+         B5oA==
+X-Gm-Message-State: APjAAAUBlww9bPvW+eOVXVCkBpVNms+nXcfSFVxvdYi7HxfI0vZfFLjE
+        inQZ4WzTnaGMImFnO26x0KJj
+X-Google-Smtp-Source: APXvYqyuyWM051xgjkop2EkbkL9HbE7ns7a3MbZMkVaSgI+NVgtU3F46u+LXPNsBGqLnjeIMdq97bg==
+X-Received: by 2002:a17:902:16f:: with SMTP id 102mr6040122plb.94.1562339693237;
+        Fri, 05 Jul 2019 08:14:53 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:916:7317:a59d:72b6:ef7f:a938])
+        by smtp.gmail.com with ESMTPSA id w3sm8248778pgl.31.2019.07.05.08.14.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 08:14:52 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/5] Add Bitmain BM1880 clock driver
+Date:   Fri,  5 Jul 2019 20:44:35 +0530
+Message-Id: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our goal is to have more and more sub-architectures to join the
-ARM multi-platform, and support them in a single configuration.
+Hello,
 
-Remove the ARM SUBARCH support because it is ugly.
+This patchset adds common clock driver for Bitmain BM1880 SoC clock
+controller. The clock controller consists of gate, divider, mux
+and pll clocks with different compositions. Hence, the driver uses
+composite clock structure in place where multiple clocking units are
+combined together.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+This patchset also removes UART fixed clock and sources clocks from clock
+controller for Sophon Edge board where the driver has been validated.
 
- scripts/tags.sh | 36 ++----------------------------------
- 1 file changed, 2 insertions(+), 34 deletions(-)
+Thanks,
+Mani
 
-diff --git a/scripts/tags.sh b/scripts/tags.sh
-index cc991e18f4d1..f56edeb08739 100755
---- a/scripts/tags.sh
-+++ b/scripts/tags.sh
-@@ -41,15 +41,13 @@ find_arch_sources()
- 	for i in $archincludedir; do
- 		prune="$prune -wholename $i -prune -o"
- 	done
--	find ${tree}arch/$1 $ignore $subarchprune $prune -name "$2" \
--		-not -type l -print;
-+	find ${tree}arch/$1 $ignore $prune -name "$2" -not -type l -print;
- }
- 
- # find sources in arch/$1/include
- find_arch_include_sources()
- {
--	include=$(find ${tree}arch/$1/ $subarchprune \
--					-name include -type d -print);
-+	include=$(find ${tree}arch/$1/ -name include -type d -print);
- 	if [ -n "$include" ]; then
- 		archincludedir="$archincludedir $include"
- 		find $include $ignore -name "$2" -not -type l -print;
-@@ -305,36 +303,6 @@ if [ "${ARCH}" = "um" ]; then
- 	else
- 		archinclude=${SUBARCH}
- 	fi
--elif [ "${SRCARCH}" = "arm" -a "${SUBARCH}" != "" ]; then
--	subarchdir=$(find ${tree}arch/$SRCARCH/ -name "mach-*" -type d -o \
--							-name "plat-*" -type d);
--	mach_suffix=$SUBARCH
--	plat_suffix=$SUBARCH
--
--	# Special cases when $plat_suffix != $mach_suffix
--	case $mach_suffix in
--		"omap1" | "omap2")
--			plat_suffix="omap"
--			;;
--	esac
--
--	if [ ! -d ${tree}arch/$SRCARCH/mach-$mach_suffix ]; then
--		echo "Warning: arch/arm/mach-$mach_suffix/ not found." >&2
--		echo "         Fix your \$SUBARCH appropriately" >&2
--	fi
--
--	for i in $subarchdir; do
--		case "$i" in
--			*"mach-"${mach_suffix})
--				;;
--			*"plat-"${plat_suffix})
--				;;
--			*)
--				subarchprune="$subarchprune \
--						-wholename $i -prune -o"
--				;;
--		esac
--	done
- fi
- 
- remove_structs=
+Manivannan Sadhasivam (5):
+  dt-bindings: clock: Add Bitmain BM1880 SoC clock controller binding
+  arm64: dts: bitmain: Add clock controller support for BM1880 SoC
+  arm64: dts: bitmain: Source common clock for UART controllers
+  clk: Add driver for Bitmain BM1880 SoC clock controller
+  MAINTAINERS: Add entry for Bitmain BM1880 SoC clock driver
+
+ .../bindings/clock/bitmain,bm1880-clk.txt     |  47 +
+ MAINTAINERS                                   |   2 +
+ .../boot/dts/bitmain/bm1880-sophon-edge.dts   |   9 -
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  27 +
+ drivers/clk/Kconfig                           |   6 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-bm1880.c                      | 947 ++++++++++++++++++
+ include/dt-bindings/clock/bm1880-clock.h      |  82 ++
+ 8 files changed, 1112 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.txt
+ create mode 100644 drivers/clk/clk-bm1880.c
+ create mode 100644 include/dt-bindings/clock/bm1880-clock.h
+
 -- 
 2.17.1
 
