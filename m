@@ -2,124 +2,125 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2639C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7480BC468A1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2AF21670
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:40:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrlGXo+n"
+	by mail.kernel.org (Postfix) with ESMTP id 532C021670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfGEQk3 (ORCPT
+        id S1728576AbfGEQlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:40:29 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36444 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfGEQk3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:40:29 -0400
-Received: by mail-qk1-f195.google.com with SMTP id g18so8319715qkl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 09:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t/6ftpa8KEJE9o6IFoYpCHZyzY+Y35BOpCfDAYSShIo=;
-        b=QrlGXo+n9D7RfqENzPoBWhYPPJo4DOGzNfXDJ6gek3sJJ2nxqhKaIOYO3QcD00I6iW
-         AcbDZR3FiGlgKdKa1Ilj3Rwz7SWTdeopaYRNAia4DCf+BlX/KTkKjUnaJj8I66UScgRJ
-         +/ulSBJrmCi3DYYoWFjrmPPrKe+wPX9PTI24cS3yrYpbbF4Fyqm6CD2FH06nRJczSz04
-         gi31/VBd0Kfg0r3RRFpNAaGIRu251/LtkLga/NkTnT3/fhf2hFDiQ0YmfmXp14Pr40wj
-         cTzB9FPH362gM4F7YqAU4BFjh95pp6b2wuV7iyOy/AcPql7m2NxcBfqbsM7mjk5o/zDn
-         loNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t/6ftpa8KEJE9o6IFoYpCHZyzY+Y35BOpCfDAYSShIo=;
-        b=lRZ2dSFCHFNG7K176CUhMgTp5iIJIGkDR8OCyImg+usngIkQAX4aEEPvYeLkbgUj4/
-         d6OAag8hNbj7gGm1qxpg0OOJdjJROhRbD2fUeY0q3FOjiaYuxJsDCEP512uNyl6GfjbY
-         zpyjdhhYGmcIDt85qgwLWV+1hE4f//dwd0oblmMUMRAyNoQhavaMJ6t0G3e9Zb2APt9Y
-         YEEiFc81Adue8RHVXN4e0287v5PQOq+qHpdrYpeu4FzQNeK3uqRtqDWpsUM/0HLI6/zv
-         SRxvqcAiRmeS5Wj0q6szNBzoL399pyEnWj5mFLHMc5eOK8Lj4JBwAZuoGjeb+2QoRfds
-         GJQg==
-X-Gm-Message-State: APjAAAUjmdedPgOl6lLEAL7QZ4auXtj8U6qUm/jdvpNDFOZAhzx4wWtu
-        xwgpx4F+I/UwiwilcxxBZvw=
-X-Google-Smtp-Source: APXvYqwvMysi2jFsaYfZhHAVRTT5IFmPQJA3YpSu2oYgAes+UNdrnvAxUAEVk+7N6i0rwop/DBdHEw==
-X-Received: by 2002:a37:4bc5:: with SMTP id y188mr3548298qka.13.1562344827870;
-        Fri, 05 Jul 2019 09:40:27 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id r26sm3950383qkm.57.2019.07.05.09.40.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 09:40:27 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 675D740495; Fri,  5 Jul 2019 13:40:25 -0300 (-03)
-Date:   Fri, 5 Jul 2019 13:40:25 -0300
-To:     Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com,
-        linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com
-Subject: Re: [PATCH 2/2] Fix perf-hooks test
-Message-ID: <20190705164025.GB8600@kernel.org>
-References: <20190702173716.181223-1-nums@google.com>
- <20190702173716.181223-2-nums@google.com>
+        Fri, 5 Jul 2019 12:41:02 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33057 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726302AbfGEQlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 12:41:02 -0400
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 01758ED5E91E14B571A7;
+        Fri,  5 Jul 2019 17:41:00 +0100 (IST)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
+ by smtpsuk.huawei.com (10.201.108.34) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 5 Jul 2019 17:40:52 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <jarkko.sakkinen@linux.intel.com>, <jejb@linux.ibm.com>,
+        <zohar@linux.ibm.com>, <jgg@ziepe.ca>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <crazyt2019+lml@gmail.com>, <tyhicks@canonical.com>,
+        <nayna@linux.vnet.ibm.com>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH] KEYS: trusted: allow module init if TPM is inactive or deactivated
+Date:   Fri, 5 Jul 2019 18:37:35 +0200
+Message-ID: <20190705163735.11539-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702173716.181223-2-nums@google.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jul 02, 2019 at 10:37:16AM -0700, Numfor Mbiziwo-Tiapo escreveu:
-> The perf-hooks test fails with Address Sanitizer and Memory
-> Sanitizer builds because it purposefully generates a segfault.
-> Checking if these sanitizers are active when running this test
-> will allow the perf-hooks test to pass.
+Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize w/o a
+TPM") allows the trusted module to be loaded even a TPM is not found to
+avoid module dependency problems.
 
-Can you please add to the commit log message, here, the sequence of
-steps needed to build with these sanitizers, so that one can replicate
-the steps and reproduce the results?
+Unfortunately, this does not completely solve the issue, as there could be
+a case where a TPM is found but is not functional (the TPM commands return
+an error). Specifically, after the tpm_chip structure is returned by
+tpm_default_chip() in init_trusted(), the execution terminates after
+init_digests() returns -EFAULT (due to the fact that tpm_get_random()
+returns a positive value, but less than TPM_MAX_DIGEST_SIZE).
 
-- Arnaldo
+This patch fixes the issue by ignoring the TPM_ERR_DEACTIVATED and
+TPM_ERR_DISABLED errors.
+
+Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ drivers/char/tpm/tpm.h  | 2 --
+ include/linux/tpm.h     | 3 +++
+ security/keys/trusted.c | 6 +++++-
+ 3 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index e503ffc3aa39..a216ac396711 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -54,8 +54,6 @@ enum tpm_addr {
  
-> Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> ---
->  tools/perf/tests/perf-hooks.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
-> index a693bcf017ea..524ecba63615 100644
-> --- a/tools/perf/tests/perf-hooks.c
-> +++ b/tools/perf/tests/perf-hooks.c
-> @@ -25,7 +25,12 @@ static void the_hook(void *_hook_flags)
->  	*hook_flags = 1234;
->  
->  	/* Generate a segfault, test perf_hooks__recover */
-> +#if defined(ADDRESS_SANITIZER) || defined(MEMORY_SANITIZER) || \
-> +defined(THREAD_SANITIZER) || defined(SAFESTACK_SANITIZER)
-> +	raise(SIGSEGV);
-> +#else
->  	*p = 0;
-> +#endif
->  }
->  
->  int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-
+ #define TPM_WARN_RETRY          0x800
+ #define TPM_WARN_DOING_SELFTEST 0x802
+-#define TPM_ERR_DEACTIVATED     0x6
+-#define TPM_ERR_DISABLED        0x7
+ #define TPM_ERR_INVALID_POSTINIT 38
+ 
+ #define TPM_HEADER_SIZE		10
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 53c0ea9ec9df..efd3ccbb6aee 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -26,6 +26,9 @@
+ #define TPM_DIGEST_SIZE 20	/* Max TPM v1.2 PCR size */
+ #define TPM_MAX_DIGEST_SIZE SHA512_DIGEST_SIZE
+ 
++#define TPM_ERR_DEACTIVATED     0x6
++#define TPM_ERR_DISABLED        0x7
++
+ struct tpm_chip;
+ struct trusted_key_payload;
+ struct trusted_key_options;
+diff --git a/security/keys/trusted.c b/security/keys/trusted.c
+index 9a94672e7adc..430d85090b3b 100644
+--- a/security/keys/trusted.c
++++ b/security/keys/trusted.c
+@@ -389,6 +389,10 @@ static int pcrlock(const int pcrnum)
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
++	/* This can happen if the TPM is inactive. */
++	if (!digests)
++		return -EINVAL;
++
+ 	return tpm_pcr_extend(chip, pcrnum, digests) ? -EINVAL : 0;
+ }
+ 
+@@ -1233,7 +1237,7 @@ static int __init init_digests(void)
+ 	int i;
+ 
+ 	ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
+-	if (ret < 0)
++	if (ret < 0 || ret == TPM_ERR_DEACTIVATED || ret == TPM_ERR_DISABLED)
+ 		return ret;
+ 	if (ret < TPM_MAX_DIGEST_SIZE)
+ 		return -EFAULT;
 -- 
+2.17.1
 
-- Arnaldo
