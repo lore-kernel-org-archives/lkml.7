@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5718BC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D386C4649C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E20216E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25D702184C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JgBTE6hy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QkeXIR22"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfGEPNV (ORCPT
+        id S1727933AbfGEPN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 11:13:21 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56944 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbfGEPNU (ORCPT
+        Fri, 5 Jul 2019 11:13:29 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36960 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfGEPN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:13:20 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x65FDEoi087516;
-        Fri, 5 Jul 2019 10:13:14 -0500
+        Fri, 5 Jul 2019 11:13:28 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x65FDLDO059321;
+        Fri, 5 Jul 2019 10:13:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562339594;
-        bh=xdHvCdOlgRH9td30gOXrpwOJLLdGgZhCVDyggJQOTdQ=;
+        s=ti-com-17Q1; t=1562339601;
+        bh=AznSeI2qecv3FPLBtJdM/efVn5C8LoHjb0YeI/MvakI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JgBTE6hyPzKf4aRNqqvMM3DsLLP4GpZ/dx1s4LccFelNmXDvWUx0m3I3v1BtltHcP
-         HZrq93cFD1DiQgQ+GrQD61dhUFGK2paq0+rM2iHqRqTifKz3nFnVlxBHOZC8EB5TWw
-         BaGCdVBO4Oz4fYrWgjCNRbk1JMCfIMrkOuIRzxdc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x65FDE7D088974
+        b=QkeXIR22QaQA0RdT+rvE3tKSG+PvryDasZGIOLzqpPvLT5vz9RauaCyPtxoEAfMMN
+         GLopovH2o0/Rh8XtmZuMy6UPev/sp/MkIP5YCQ5Zu6z6s91C30NrI20b/HoGsSrU7r
+         K3eZSPvu6TSeyfQPfRbr7ErihCUicFtjMR/oim1w=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x65FDLRo015208
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Jul 2019 10:13:14 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 5 Jul 2019 10:13:21 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Jul
- 2019 10:13:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 10:13:21 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 5 Jul 2019 10:13:14 -0500
+ Frontend Transport; Fri, 5 Jul 2019 10:13:20 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x65FDD4P033601;
-        Fri, 5 Jul 2019 10:13:13 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x65FDKQT033754;
+        Fri, 5 Jul 2019 10:13:20 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Santosh Shilimkar <ssantosh@kernel.org>
 CC:     Sekhar Nori <nsekhar@ti.com>,
@@ -55,9 +55,9 @@ CC:     Sekhar Nori <nsekhar@ti.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RESEND PATCH next v2 3/6] ARM: dts: k2e-netcp: add cpts refclk_mux node
-Date:   Fri, 5 Jul 2019 18:12:44 +0300
-Message-ID: <20190705151247.30422-4-grygorii.strashko@ti.com>
+Subject: [RESEND PATCH next v2 4/6] ARM: dts: k2hk-netcp: add cpts refclk_mux node
+Date:   Fri, 5 Jul 2019 18:12:45 +0300
+Message-ID: <20190705151247.30422-5-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190705151247.30422-1-grygorii.strashko@ti.com>
 References: <20190705151247.30422-1-grygorii.strashko@ti.com>
@@ -69,28 +69,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KeyStone 66AK2E 1G Ethernet Switch Subsystems, can control an external
+KeyStone 66AK2H/K 1G Ethernet Switch Subsystems, can control an external
 multiplexer that selects one of up to 32 clocks for time sync reference
 (RFTCLK) clock. This feature can be configured through CPTS_RFTCLK_SEL
 register (offset: x08) in CPTS module and modelled as multiplexer clock.
 
 Hence, add cpts-refclk-mux clock node which allows to mux one of SYSCLK2,
-SYSCLK3, TIMI0, TIMI1, TSIPCLKA, TSREFCLK, TSIPCLKB clocks as CPTS
-reference clock [1] and group all CPTS properties under "cpts" subnode.
+SYSCLK3, TIMI0, TIMI1, TSREFCLK clocks as CPTS reference clock [1] and
+group all CPTS properties under "cpts" subnode.
 
-[1] http://www.ti.com/lit/gpn/66ak2e05
+[1] http://www.ti.com/lit/gpn/66ak2h14
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2e-netcp.dtsi | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/keystone-k2hk-netcp.dtsi | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-index 1db17ec744b1..ad15e77874b1 100644
---- a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-@@ -135,8 +135,8 @@ netcp: netcp@24000000 {
+diff --git a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
+index e203145acbea..d5a6c1f5633c 100644
+--- a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
++++ b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
+@@ -152,8 +152,8 @@ netcp: netcp@2000000 {
  	/* NetCP address range */
- 	ranges = <0 0x24000000 0x1000000>;
+ 	ranges  = <0 0x2000000 0x100000>;
  
 -	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
 -	clock-names = "pa_clk", "ethss_clk", "cpts";
@@ -98,9 +98,9 @@ index 1db17ec744b1..ad15e77874b1 100644
 +	clock-names = "pa_clk", "ethss_clk";
  	dma-coherent;
  
- 	ti,navigator-dmas = <&dma_gbe 0>,
-@@ -156,6 +156,23 @@ netcp: netcp@24000000 {
- 			tx-queue = <896>;
+ 	ti,navigator-dmas = <&dma_gbe 22>,
+@@ -175,6 +175,22 @@ netcp: netcp@2000000 {
+ 			tx-queue = <648>;
  			tx-channel = "nettx";
  
 +			cpts {
@@ -111,10 +111,9 @@ index 1db17ec744b1..ad15e77874b1 100644
 +					#clock-cells = <0>;
 +					clocks = <&chipclk12>, <&chipclk13>,
 +						 <&timi0>, <&timi1>,
-+						 <&tsipclka>, <&tsrefclk>,
-+						 <&tsipclkb>;
++						 <&tsrefclk>;
 +					ti,mux-tbl = <0x0>, <0x1>, <0x2>,
-+						<0x3>, <0x4>, <0x8>, <0xC>;
++						<0x3>, <0x8>;
 +					assigned-clocks = <&cpts_refclk_mux>;
 +					assigned-clock-parents = <&chipclk12>;
 +				};
