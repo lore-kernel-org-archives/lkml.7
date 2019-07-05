@@ -2,124 +2,61 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C1BC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72B1C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD8221721
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562344395;
-	bh=WUOVlI9P777cOYtJ8vLo2uR/7ubU0s7Mvhc0KMg3nU4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=iGwMCye0SkqOEuWQ3pUkIyrBXzzceZ6CMntW6H4MGUkv5ytVtLVBDiM2yExBS9jKS
-	 JVW59LtH++i01qCfxqH3r+u/Kf7VnvnK3IeKxPrzja4iny5HSk0QzipGj0UCD4fo/E
-	 NE6b2r01CwGBplYzxmq4zyq5ilbMLN8zZsnhTaNE=
+	by mail.kernel.org (Postfix) with ESMTP id CB22521721
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbfGEQdO (ORCPT
+        id S1728482AbfGEQeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53830 "EHLO mail.kernel.org"
+        Fri, 5 Jul 2019 12:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbfGEQdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:33:13 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        id S1726851AbfGEQeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 12:34:14 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F252216E3;
-        Fri,  5 Jul 2019 16:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562344392;
-        bh=WUOVlI9P777cOYtJ8vLo2uR/7ubU0s7Mvhc0KMg3nU4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=i3J4qn7Q81b6M9KSKGv6KZHLQaByXapmsOlXrNy0gt7tq6SvPPGRav7dxGw3THExT
-         eszsr2ZEJqlS/0+rkX+3sGQRnDf/jRoLcOcwE5fOfMuRO/PqTPmVOBN1U/HnfU7vyn
-         B1DTitaGTaMA1lT0/yIXL8gsX6yKPMK4g15fk568=
-Message-ID: <8d9232639f77b64aad91c8d7c4134a2f9c120ed6.camel@kernel.org>
-Subject: Re: [PATCH] ceph: use generic_delete_inode() for ->drop_inode
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 05 Jul 2019 12:33:10 -0400
-In-Reply-To: <20190705161456.5138-1-lhenriques@suse.com>
-References: <20190705161456.5138-1-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B0BF2184C;
+        Fri,  5 Jul 2019 16:34:13 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 12:34:11 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-trace-users@vger.kernel.org" 
+        <linux-trace-users@vger.kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
+Subject: [ANNOUNCE] trace-cmd v2.8.1
+Message-ID: <20190705123411.4285e625@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-05 at 17:14 +0100, Luis Henriques wrote:
-> ceph_drop_inode() implementation is not any different from the generic
-> function, thus there's no point in keeping it around.
-> 
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
->  fs/ceph/inode.c | 10 ----------
->  fs/ceph/super.c |  2 +-
->  fs/ceph/super.h |  1 -
->  3 files changed, 1 insertion(+), 12 deletions(-)
-> 
-> diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-> index 761451f36e2d..211140e6ef9c 100644
-> --- a/fs/ceph/inode.c
-> +++ b/fs/ceph/inode.c
-> @@ -578,16 +578,6 @@ void ceph_destroy_inode(struct inode *inode)
->  	ceph_put_string(rcu_dereference_raw(ci->i_layout.pool_ns));
->  }
->  
-> -int ceph_drop_inode(struct inode *inode)
-> -{
-> -	/*
-> -	 * Positve dentry and corresponding inode are always accompanied
-> -	 * in MDS reply. So no need to keep inode in the cache after
-> -	 * dropping all its aliases.
-> -	 */
-> -	return 1;
-> -}
-> -
->  static inline blkcnt_t calc_inode_blocks(u64 size)
->  {
->  	return (size + (1<<9) - 1) >> 9;
-> diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-> index d57fa60dcd43..b4a4772756cb 100644
-> --- a/fs/ceph/super.c
-> +++ b/fs/ceph/super.c
-> @@ -843,7 +843,7 @@ static const struct super_operations ceph_super_ops = {
->  	.destroy_inode	= ceph_destroy_inode,
->  	.free_inode	= ceph_free_inode,
->  	.write_inode    = ceph_write_inode,
-> -	.drop_inode	= ceph_drop_inode,
-> +	.drop_inode	= generic_delete_inode,
->  	.sync_fs        = ceph_sync_fs,
->  	.put_super	= ceph_put_super,
->  	.remount_fs	= ceph_remount,
-> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-> index 5f27e1f7f2d6..622e6c96c960 100644
-> --- a/fs/ceph/super.h
-> +++ b/fs/ceph/super.h
-> @@ -878,7 +878,6 @@ extern const struct inode_operations ceph_file_iops;
->  extern struct inode *ceph_alloc_inode(struct super_block *sb);
->  extern void ceph_destroy_inode(struct inode *inode);
->  extern void ceph_free_inode(struct inode *inode);
-> -extern int ceph_drop_inode(struct inode *inode);
->  
->  extern struct inode *ceph_get_inode(struct super_block *sb,
->  				    struct ceph_vino vino);
 
-Merged into ceph-client/testing. We should be able to get this in for
-5.3.
+Just after releasing 2.8, some bugs were found (isn't that always the
+case?). Now we have 2.8.1 stable release:
 
-Thanks!
--- 
-Jeff Layton <jlayton@kernel.org>
+  http://trace-cmd.org
 
+-- Steve
+
+Short log here:
+
+Greg Thelen (2):
+      trace-cmd: Always initialize write_record() len
+      trace-cmd: Avoid using uninitialized handle
+
+Steven Rostedt (VMware) (1):
+      trace-cmd: Version 2.8.1
+
+Tzvetomir Stoyanov (VMware) (1):
+      trace-cmd: Do not free pages from the lookup table in struct cpu_data in case trace file is loaded.
