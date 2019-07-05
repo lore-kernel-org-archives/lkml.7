@@ -2,299 +2,130 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B674C4649C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8404FC4649C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52DB2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B47B2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A6r3FjjX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OA2PnFR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfGEKwM (ORCPT
+        id S1728640AbfGEKxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 06:52:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35415 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728526AbfGEKwM (ORCPT
+        Fri, 5 Jul 2019 06:53:08 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41721 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbfGEKxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 06:52:12 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s27so4156700pgl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 03:52:11 -0700 (PDT)
+        Fri, 5 Jul 2019 06:53:07 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 205so8840379ljj.8;
+        Fri, 05 Jul 2019 03:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WIDYV8mZhZsD7MlUb6ge3Loy8e0Hvg52Npd39IL8pBk=;
-        b=A6r3FjjXpjXEra/w1mO6d/azgSTIXPFpkrC3kjmoXr6TETjU1NBUuxK0tPNZUHkDCq
-         L7xFSO1phgxh23m7mxBPI84+W38lrUfesquSP7KwpOz06ipAwT/OlE6u00/19uwql5EA
-         8+V8tqZLmFBLMtmVlbTzy0iFSEJMQ/hE2tAW6i3jfSSn7JMkM6sa1hyih3Y2La5AuvZE
-         8q3Oj5pLxSkhbPJ+y9PEPpDnDH+uvvGfLBA1trT5mW9bpcvOgrQwMOZ08swM9/hAOVhh
-         unRUc/mQrg1+pTrTg+WyqqTjkeoiSg/bgHh93SGs1hAWV9OgbJyIGsslYo6+SnYa8N0f
-         KUhQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8gIVLlJGyzOZpvjymn0qndBI/DyFM3MnfYbrUU7cLfg=;
+        b=OA2PnFR3Tq37k/UFYwFzRwjmKtHHjpPm1KOu2EZ2zfy4XJnDqIUxkz6TOSv87f2Cm2
+         VvNvXX3OmA6EWINmFxVXk7cy5aD1jRGNTtL5WUQGgU5JQDB02djNhsXceZWYcul0YJ7W
+         3t93vxkqdYwTlXk5I9xpGcairN+6Cx1cdRea/kRYjym8eDKer0rE1VvNV5RcCP9UZKx1
+         7Q5Atd62ugXFb3LXMZkjz0ZsE1ZEFNXRvtkQYTCnn/oWN/MW3jzIHgbdDjLRzJ8YXffs
+         czIcA/nPmtcENuDAkJQikgmcb2XbWTZXplSszq7+28y/hT3+u+K3026w4pVDrv4O+2GJ
+         tWtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WIDYV8mZhZsD7MlUb6ge3Loy8e0Hvg52Npd39IL8pBk=;
-        b=kUGk6qYcKcpsbp31sTH5CWONYofXOuWJO+YPw57sXL49qd5BGJDG7IDgBmi4SRbY7o
-         uieePyl5GQcXAgb5Ruuv7rgW2cezxKI8yGPaisP9mZBoxGvEwthGx4CAxC2/4W2y7CJI
-         p2p2Z9VWnbRgx4SWd8wbRjf0ZjxAW5AU0anCLzdFqtzrB/pSVFckoBz/PFhAuIfbD1yP
-         O4pcIrWZX9cWttkC/dfh8Nm5JJGhioHwWK8rDS5zfRSrV71L45iTWC/z0nk68eSxNeZA
-         xpwinJ0Kz3uKffIxXJjwXz4pe/FST2nZTSKyBdl8hVV4+dq1bJcOsUANvNCt+GNcU2Zc
-         MEEw==
-X-Gm-Message-State: APjAAAVzO4/wLPGLr3M3tugslIegaLWVNwtrkpPci7Kamp5D5PHUcjYA
-        2IMdCwGkbb/Dp04txDw82uO6Og==
-X-Google-Smtp-Source: APXvYqy+PnEw3OXHK/bWTHHeqhQEqzjrlagWcaChljxZseu9UrJkcCUAQj6aPDplPOalXGy90QaE6g==
-X-Received: by 2002:a63:221c:: with SMTP id i28mr4832526pgi.114.1562323931337;
-        Fri, 05 Jul 2019 03:52:11 -0700 (PDT)
-Received: from localhost ([223.226.51.128])
-        by smtp.gmail.com with ESMTPSA id i124sm22458799pfe.61.2019.07.05.03.52.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 03:52:10 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V7 7/7] cpufreq: Add QoS requests for userspace constraints
-Date:   Fri,  5 Jul 2019 16:21:24 +0530
-Message-Id: <7589f158a5522ff04ba2b63daca77bcdd4952f74.1562323803.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
-In-Reply-To: <0d4c2a013b32bf18d45817011b028918220580f5.1562210705.git.viresh.kumar@linaro.org>
-References: <0d4c2a013b32bf18d45817011b028918220580f5.1562210705.git.viresh.kumar@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8gIVLlJGyzOZpvjymn0qndBI/DyFM3MnfYbrUU7cLfg=;
+        b=I6RFra5dq1JxB3sBO/56jGgyfVhEV6+NN4Ei9L6WswswGWloW6p3Oi/ENsWP3iS/rY
+         0T10rjLvXodAjwvomyWC0QPn0S1LpyH8Z0Vz96iFZpsCoXmCTmKZZSSH7ngIdm0YRCla
+         TpCzbpT81jW+ONu7G8NyFe5UOEH9bz6gL5Rjs8G7g6TCeQjlB5k8tOH/KCwn3kusi5Aw
+         y++N6zg4v3gKaC8v6aG+TkVt6Z8faJjYYe1q6UvPGWRDv5s61qYbMP1s4BrbTx8wD3Mk
+         Yy8kyaLMoNs3k+MvVazosOd1A5Y+AvAwHaeWNPuI1KaIOvVGB6Tf7OVTCsTNRuTPJT9U
+         FuAA==
+X-Gm-Message-State: APjAAAVqZybHgtseNPJ9f/o6McB2NVGkJavCsWbO5MIx+Cy9MDVGpKHh
+        SvfpabR1InuW7leajZwFvN+eojYyyl8fLFMe0kU=
+X-Google-Smtp-Source: APXvYqz6ZY+WPH/vHYMs8HE/XsQEqzjygvkCpC2gpWEDQgnwjxE3DGgLoRNh6dulgUEU0YsKTi8QZAHzKJNR45mtFGA=
+X-Received: by 2002:a2e:3013:: with SMTP id w19mr1811339ljw.73.1562323985628;
+ Fri, 05 Jul 2019 03:53:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com> <20190705095800.43534-3-mika.westerberg@linux.intel.com>
+In-Reply-To: <20190705095800.43534-3-mika.westerberg@linux.intel.com>
+From:   Yehezkel Bernat <yehezkelshb@gmail.com>
+Date:   Fri, 5 Jul 2019 13:52:49 +0300
+Message-ID: <CA+CmpXt5q93e2TQJzfY4afSEMPWijPU+Ks+cgrVDVqUM4=y3Cw@mail.gmail.com>
+Subject: Re: [PATCH 2/8] thunderbolt: Move NVM upgrade support flag to struct icm
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This implements QoS requests to manage userspace configuration of min
-and max frequency.
+On Fri, Jul 5, 2019 at 12:58 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> @@ -1913,12 +1915,7 @@ static int icm_start(struct tb *tb)
+>         if (IS_ERR(tb->root_switch))
+>                 return PTR_ERR(tb->root_switch);
+>
+> -       /*
+> -        * NVM upgrade has not been tested on Apple systems and they
+> -        * don't provide images publicly either. To be on the safe side
+> -        * prevent root switch NVM upgrade on Macs for now.
+> -        */
+> -       tb->root_switch->no_nvm_upgrade = x86_apple_machine;
+> +       tb->root_switch->no_nvm_upgrade = !icm->can_upgrade_nvm;
+>         tb->root_switch->rpm = icm->rpm;
+>
+>         ret = tb_switch_add(tb->root_switch);
+> @@ -2021,6 +2018,7 @@ struct tb *icm_probe(struct tb_nhi *nhi)
+>         switch (nhi->pdev->device) {
+>         case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI:
+>         case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI:
+> +               icm->can_upgrade_nvm = true;
+>                 icm->is_supported = icm_fr_is_supported;
+>                 icm->get_route = icm_fr_get_route;
+>                 icm->save_devices = icm_fr_save_devices;
+> @@ -2038,6 +2036,13 @@ struct tb *icm_probe(struct tb_nhi *nhi)
+>         case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_NHI:
+>         case PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_2C_NHI:
+>                 icm->max_boot_acl = ICM_AR_PREBOOT_ACL_ENTRIES;
+> +               /*
+> +                * NVM upgrade has not been tested on Apple systems and
+> +                * they don't provide images publicly either. To be on
+> +                * the safe side prevent root switch NVM upgrade on Macs
+> +                * for now.
+> +                */
+> +               icm->can_upgrade_nvm = !x86_apple_machine;
+>                 icm->is_supported = icm_ar_is_supported;
+>                 icm->cio_reset = icm_ar_cio_reset;
+>                 icm->get_mode = icm_ar_get_mode;
+> @@ -2054,6 +2059,7 @@ struct tb *icm_probe(struct tb_nhi *nhi)
+>         case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI:
+>         case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI:
+>                 icm->max_boot_acl = ICM_AR_PREBOOT_ACL_ENTRIES;
+> +               icm->can_upgrade_nvm = true;
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-V6->V7:
-- We can't call dev_pm_qos_remove_request() for a request which was
-  never added. This happened in one of the error paths. Fixed that by
-  allocating the requests only right before we try to add them and also
-  take care of things properly during errors.
+Shouldn't this be also !x86_apple_machine just like AR?
+(For FR, we don't use ICM on Apple machines, as much as I remember, so it's fine
+to enable it there unconditionally for ICM code path.)
 
-@Rafael: Please apply this version instead of the diff I supplied on the
-WARN email earlier. This has proper protection in place at many places.
-
- drivers/cpufreq/cpufreq.c | 98 ++++++++++++++++++++++-----------------
- include/linux/cpufreq.h   |  8 +---
- 2 files changed, 57 insertions(+), 49 deletions(-)
-
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 091789e868ee..a46abd738cfd 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -718,23 +718,15 @@ static ssize_t show_scaling_cur_freq(struct cpufreq_policy *policy, char *buf)
- static ssize_t store_##file_name					\
- (struct cpufreq_policy *policy, const char *buf, size_t count)		\
- {									\
--	int ret, temp;							\
--	struct cpufreq_policy new_policy;				\
-+	unsigned long val;						\
-+	int ret;							\
- 									\
--	memcpy(&new_policy, policy, sizeof(*policy));			\
--	new_policy.min = policy->user_policy.min;			\
--	new_policy.max = policy->user_policy.max;			\
--									\
--	ret = sscanf(buf, "%u", &new_policy.object);			\
-+	ret = sscanf(buf, "%lu", &val);					\
- 	if (ret != 1)							\
- 		return -EINVAL;						\
- 									\
--	temp = new_policy.object;					\
--	ret = cpufreq_set_policy(policy, &new_policy);		\
--	if (!ret)							\
--		policy->user_policy.object = temp;			\
--									\
--	return ret ? ret : count;					\
-+	ret = dev_pm_qos_update_request(policy->object##_freq_req, val);\
-+	return ret >= 0 ? count : ret;					\
- }
- 
- store_one(scaling_min_freq, min);
-@@ -1126,8 +1118,6 @@ void refresh_frequency_limits(struct cpufreq_policy *policy)
- 		new_policy = *policy;
- 		pr_debug("updating policy for CPU %u\n", policy->cpu);
- 
--		new_policy.min = policy->user_policy.min;
--		new_policy.max = policy->user_policy.max;
- 		cpufreq_set_policy(policy, &new_policy);
- 	}
- 
-@@ -1283,6 +1273,9 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
- 				   DEV_PM_QOS_MAX_FREQUENCY);
- 	dev_pm_qos_remove_notifier(dev, &policy->nb_min,
- 				   DEV_PM_QOS_MIN_FREQUENCY);
-+	dev_pm_qos_remove_request(policy->max_freq_req);
-+	dev_pm_qos_remove_request(policy->min_freq_req);
-+	kfree(policy->min_freq_req);
- 
- 	cpufreq_policy_put_kobj(policy);
- 	free_cpumask_var(policy->real_cpus);
-@@ -1361,16 +1354,50 @@ static int cpufreq_online(unsigned int cpu)
- 	cpumask_and(policy->cpus, policy->cpus, cpu_online_mask);
- 
- 	if (new_policy) {
--		policy->user_policy.min = policy->min;
--		policy->user_policy.max = policy->max;
-+		struct device *dev = get_cpu_device(cpu);
- 
- 		for_each_cpu(j, policy->related_cpus) {
- 			per_cpu(cpufreq_cpu_data, j) = policy;
- 			add_cpu_dev_symlink(policy, j);
- 		}
--	} else {
--		policy->min = policy->user_policy.min;
--		policy->max = policy->user_policy.max;
-+
-+		policy->min_freq_req = kzalloc(2 * sizeof(*policy->min_freq_req),
-+					       GFP_KERNEL);
-+		if (!policy->min_freq_req)
-+			goto out_destroy_policy;
-+
-+		ret = dev_pm_qos_add_request(dev, policy->min_freq_req,
-+					     DEV_PM_QOS_MIN_FREQUENCY,
-+					     policy->min);
-+		if (ret < 0) {
-+			/*
-+			 * So we don't call dev_pm_qos_remove_request() for an
-+			 * uninitialized request.
-+			 */
-+			kfree(policy->min_freq_req);
-+			policy->min_freq_req = NULL;
-+
-+			dev_err(dev, "Failed to add min-freq constraint (%d)\n",
-+				ret);
-+			goto out_destroy_policy;
-+		}
-+
-+		/*
-+		 * This must be initialized right here to avoid calling
-+		 * dev_pm_qos_remove_request() on uninitialized request in case
-+		 * of errors.
-+		 */
-+		policy->max_freq_req = policy->min_freq_req + 1;
-+
-+		ret = dev_pm_qos_add_request(dev, policy->max_freq_req,
-+					     DEV_PM_QOS_MAX_FREQUENCY,
-+					     policy->max);
-+		if (ret < 0) {
-+			policy->max_freq_req = NULL;
-+			dev_err(dev, "Failed to add max-freq constraint (%d)\n",
-+				ret);
-+			goto out_destroy_policy;
-+		}
- 	}
- 
- 	if (cpufreq_driver->get && has_target()) {
-@@ -2344,7 +2371,6 @@ int cpufreq_set_policy(struct cpufreq_policy *policy,
- {
- 	struct cpufreq_governor *old_gov;
- 	struct device *cpu_dev = get_cpu_device(policy->cpu);
--	unsigned long min, max;
- 	int ret;
- 
- 	pr_debug("setting new policy for CPU %u: %u - %u kHz\n",
-@@ -2352,24 +2378,12 @@ int cpufreq_set_policy(struct cpufreq_policy *policy,
- 
- 	memcpy(&new_policy->cpuinfo, &policy->cpuinfo, sizeof(policy->cpuinfo));
- 
--	/*
--	* This check works well when we store new min/max freq attributes,
--	* because new_policy is a copy of policy with one field updated.
--	*/
--	if (new_policy->min > new_policy->max)
--		return -EINVAL;
--
- 	/*
- 	 * PM QoS framework collects all the requests from users and provide us
- 	 * the final aggregated value here.
- 	 */
--	min = dev_pm_qos_read_value(cpu_dev, DEV_PM_QOS_MIN_FREQUENCY);
--	max = dev_pm_qos_read_value(cpu_dev, DEV_PM_QOS_MAX_FREQUENCY);
--
--	if (min > new_policy->min)
--		new_policy->min = min;
--	if (max < new_policy->max)
--		new_policy->max = max;
-+	new_policy->min = dev_pm_qos_read_value(cpu_dev, DEV_PM_QOS_MIN_FREQUENCY);
-+	new_policy->max = dev_pm_qos_read_value(cpu_dev, DEV_PM_QOS_MAX_FREQUENCY);
- 
- 	/* verify the cpu speed can be set within this limit */
- 	ret = cpufreq_driver->verify(new_policy);
-@@ -2458,10 +2472,9 @@ int cpufreq_set_policy(struct cpufreq_policy *policy,
-  * @cpu: CPU to re-evaluate the policy for.
-  *
-  * Update the current frequency for the cpufreq policy of @cpu and use
-- * cpufreq_set_policy() to re-apply the min and max limits saved in the
-- * user_policy sub-structure of that policy, which triggers the evaluation
-- * of policy notifiers and the cpufreq driver's ->verify() callback for the
-- * policy in question, among other things.
-+ * cpufreq_set_policy() to re-apply the min and max limits, which triggers the
-+ * evaluation of policy notifiers and the cpufreq driver's ->verify() callback
-+ * for the policy in question, among other things.
-  */
- void cpufreq_update_policy(unsigned int cpu)
- {
-@@ -2521,10 +2534,9 @@ static int cpufreq_boost_set_sw(int state)
- 			break;
- 		}
- 
--		down_write(&policy->rwsem);
--		policy->user_policy.max = policy->max;
--		cpufreq_governor_limits(policy);
--		up_write(&policy->rwsem);
-+		ret = dev_pm_qos_update_request(policy->max_freq_req, policy->max);
-+		if (ret)
-+			break;
- 	}
- 
- 	return ret;
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 1fa37b675a80..afc683021ac5 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -50,11 +50,6 @@ struct cpufreq_cpuinfo {
- 	unsigned int		transition_latency;
- };
- 
--struct cpufreq_user_policy {
--	unsigned int		min;    /* in kHz */
--	unsigned int		max;    /* in kHz */
--};
--
- struct cpufreq_policy {
- 	/* CPUs sharing clock, require sw coordination */
- 	cpumask_var_t		cpus;	/* Online CPUs only */
-@@ -84,7 +79,8 @@ struct cpufreq_policy {
- 	struct work_struct	update; /* if update_policy() needs to be
- 					 * called, but you're in IRQ context */
- 
--	struct cpufreq_user_policy user_policy;
-+	struct dev_pm_qos_request *min_freq_req;
-+	struct dev_pm_qos_request *max_freq_req;
- 	struct cpufreq_frequency_table	*freq_table;
- 	enum cpufreq_table_sorting freq_table_sorted;
- 
--- 
-2.21.0.rc0.269.g1a574e7a288b
-
+>                 icm->is_supported = icm_ar_is_supported;
+>                 icm->cio_reset = icm_tr_cio_reset;
+>                 icm->get_mode = icm_ar_get_mode;
+> --
+> 2.20.1
+>
