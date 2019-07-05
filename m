@@ -2,93 +2,119 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA93AC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64C9C468A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE12216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F31B216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8evzbtH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tz8DX/jK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfGEQy4 (ORCPT
+        id S1726800AbfGEQ5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:54:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41875 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfGEQy4 (ORCPT
+        Fri, 5 Jul 2019 12:57:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46188 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfGEQ5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:54:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id m30so4549925pff.8;
-        Fri, 05 Jul 2019 09:54:55 -0700 (PDT)
+        Fri, 5 Jul 2019 12:57:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i8so4531478pgm.13;
+        Fri, 05 Jul 2019 09:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=L0b++Cz1DwGWHz8E2aHIDiGlzeh1G15jnzGEGv6N1Ps=;
-        b=r8evzbtHvy2h/zqYmnDCCyQvt4RnwSQxMKEapzC+A3hoFUeqAbWZt4hsZqtLoeBxQl
-         EVwT7iSyFNtnkWNqWnmn+GvUTetKo8BkVXiYAtEtUUyj5MaPS6F9FCQcpGgyjbXSUaCp
-         ILN+BsrEu8QfBHKNV2AsgY8i/SJeqGJk5YTF6n9QPiw/fjmU/QZiRtsvJwLkLrDW1Bxx
-         Bmg+AR4rjNJnGNIc6muTjci9aUduBqGvVMJ8CDAJHiv2EwAloA+KdaSEud7MGnoBUIV5
-         UsfyezlvYuj+lvLVIeU012tTXnFG83JOTlskReNgxz3nPGImHj7Wo5tFv6ovRfprmvZO
-         +jsw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=aJ9A33XeWtxV0qN7kevtyk3VxBBowXnZfu+VcAnor48=;
+        b=tz8DX/jKoInhtLlLZaBLfxK3HCjQCvrIbHkC4j+EqgsDTfRoUcyvqIxLOOH3r0KvzH
+         NoAMntP26vyOTlx5Q63WRr3rgXn7UX/fHGGuyjAnjpNl7zSOdOxkTijfhawjIl1OV03V
+         roC8k3Ptfl7gPSWwO0tb+pWguCp7M95yIZ6eL+pE8t2/eKZN7tCA0RmY8P00SAhMiZ6B
+         GK/AtvtJLyXJHe4OIx2cBYmKrWhvjTp53Zk/Qz1gWoeguE2NhnWRCaN0Gh00pjvmnj0Q
+         T2B5NxnjCIPvY/q/0gagoimqpsrvadlA9HuAyrrYtoX6c6uInqBHZIy3T+Yu3CDMtRzm
+         hOmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=L0b++Cz1DwGWHz8E2aHIDiGlzeh1G15jnzGEGv6N1Ps=;
-        b=EABaCzWw8KlSvE23kG8fsh0ixBx4+nf7DXCvSj7teXN1NVt+R/QAdmNTAyBUuTvDZ+
-         BViNhuy6BWJ3T1wA80QIdS7S29rtpj7Df/91IYQWZLNP70bcEeOFyGBkPDrvy1CbdSmy
-         nKzhbHRJLcJsV8sGDnS3kqW9b1ECO35T455b40Y4Oe3Nt9x4mx1wVyhFGgUwqrDAjtHK
-         Bbh1zGUFTJj5J7CoP519f+ZJH+XuRciXpSGGIs0soawl3rRTVdCWSQZjQSsEgpKspKDa
-         tKUC4EbU7+rfOn4UD/twBQ+xLARcl4tbr22D0PKBtKjQRkRh62lraA5Xhx1W6E2kfdpO
-         tFgA==
-X-Gm-Message-State: APjAAAUgXRaioY6OIXlBOwot9fVdWCEadbrLej8OKRvVyNdxMxpBgDB2
-        QuCkgK3O6u3mU3BDILro/24=
-X-Google-Smtp-Source: APXvYqyyW8jKS41MUK89FU5reGeNsJZYJND8bEG5SSJ2bU/tlPCV9U3sQ4VgzxjWQuHQfXZRtNcTsw==
-X-Received: by 2002:a63:5610:: with SMTP id k16mr6565617pgb.335.1562345695389;
-        Fri, 05 Jul 2019 09:54:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=aJ9A33XeWtxV0qN7kevtyk3VxBBowXnZfu+VcAnor48=;
+        b=doIcLyWEmgVUWEbV97SbMjm74sZAmFFRUCJ+CZCZz4rSofxbR6w94jMkU43jRcPx9G
+         xBl8j8KOTb70mvMmDoMcXQM6rRJ/1YnrcPHb7XpSZ7pouVuOmMD462YGdh6VjHb4AEmO
+         vYNq8EOozznbIhzmF2sftkQCDonSJVev7m7WATrEU60CUMDSDA9CJb8oUAjtH7YSmPFj
+         iP6Nm/LQS8knbDPAX/u6KVCYuGv2w5RomQ5eKUOd4T5Eo8bZ/r7VOXPW+sQe9WbnqP3q
+         a/YYTj/x4MQPK5XD7mq34PiGcFNJWlRWV8uZaFPEJwfkYjKoB81aifaPeUSJoSPvsiL6
+         COPg==
+X-Gm-Message-State: APjAAAX3HXWyvjyHjSTBBByCR/lZaHdJigUVRoRpjszlOkh/3iExytag
+        uoGeVD6ijcuTNzCenlfTFCk=
+X-Google-Smtp-Source: APXvYqzLkG4W3qE9HCpmT4BW/IS4oA24stCeA7+cpzx8H5U5MOt5gzOL5CxjX+fL+kFC2K4XhRjd4w==
+X-Received: by 2002:a63:1f47:: with SMTP id q7mr6615825pgm.264.1562345819395;
+        Fri, 05 Jul 2019 09:56:59 -0700 (PDT)
 Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id b126sm11066744pfa.126.2019.07.05.09.54.53
+        by smtp.gmail.com with ESMTPSA id e26sm9285734pfn.94.2019.07.05.09.56.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 09:54:54 -0700 (PDT)
+        Fri, 05 Jul 2019 09:56:58 -0700 (PDT)
 From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
-        sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch,
-        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
+To:     robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
+        sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch
+Cc:     bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 0/2] Add Sharp panel option for Lenovo Miix 630
-Date:   Fri,  5 Jul 2019 09:54:50 -0700
-Message-Id: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: panel: Add Sharp LD-D5116Z01B
+Date:   Fri,  5 Jul 2019 09:56:55 -0700
+Message-Id: <20190705165655.456-1-jeffrey.l.hugo@gmail.com>
 X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
+References: <20190705165450.329-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Lenovo Miix 630 laptop can be found with one of two panels - a BOE
-or Sharp option.  This likely provides options during manufacturing.
+The Sharp LD-D5116Z01B is a 12.3" eDP panel with a 1920X1280 resolution.
 
-These panels connect via eDP, however they sit behind a DSI to eDP
-bridge on the laptop, so they can easily be handled by the existing
-simple panel code.
-
-This series adds support for the Sharp option.
-
-Jeffrey Hugo (2):
-  dt-bindings: panel: Add Sharp LD-D5116Z01B
-  drm/panel: simple: Add support for Sharp LD-D5116Z01B panel
-
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
  .../display/panel/sharp,ld-d5116z01b.txt      | 27 +++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c          | 26 ++++++++++++++++++
- 2 files changed, 53 insertions(+)
+ 1 file changed, 27 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
 
+diff --git a/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
+new file mode 100644
+index 000000000000..3938c2847fe5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/sharp,ld-d5116z01b.txt
+@@ -0,0 +1,27 @@
++Sharp LD-D5116Z01B 12.3" WUXGA+ eDP panel
++
++Required properties:
++- compatible: should be "sharp,ld-d5116z01b"
++- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
++
++This binding is compatible with the simple-panel binding.
++
++The device node can contain one 'port' child node with one child
++'endpoint' node, according to the bindings defined in [1]. This
++node should describe panel's video bus.
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++	panel: panel {
++		compatible = "sharp,ld-d5116z01b";
++		power-supply = <&vlcd_3v3>;
++		no-hpd
++
++		port {
++			panel_ep: endpoint {
++				remote-endpoint = <&bridge_out_ep>;
++			};
++		};
++	};
 -- 
 2.17.1
 
