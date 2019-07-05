@@ -2,91 +2,88 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB999C4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9754C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A435D2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39FE2133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 10:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbfGEKcH (ORCPT
+        id S1728424AbfGEKdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 06:32:07 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54081 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfGEKcG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 06:32:06 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hjLVc-0008Jm-Pl; Fri, 05 Jul 2019 12:32:04 +0200
-Message-ID: <1562322724.4291.5.camel@pengutronix.de>
-Subject: Re: [v1] gpu: ipu-v3: allow to build with ARCH_LAYERSCAPE
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Wen He <wen.he_1@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Cc:     Leo Li <leoyang.li@nxp.com>
-Date:   Fri, 05 Jul 2019 12:32:04 +0200
-In-Reply-To: <20190508105755.5881-1-wen.he_1@nxp.com>
-References: <20190508105755.5881-1-wen.he_1@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 5 Jul 2019 06:33:19 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62640 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726568AbfGEKdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 06:33:19 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 03:33:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
+   d="scan'208";a="185148881"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 05 Jul 2019 03:33:15 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 05 Jul 2019 13:33:14 +0300
+Date:   Fri, 5 Jul 2019 13:33:14 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-acpi@vger.kernel.org,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Raanan Avargil <raanan.avargil@intel.com>
+Subject: Re: [PATCH 0/8] thunderbolt: Intel Ice Lake support
+Message-ID: <20190705103314.GS2640@lahna.fi.intel.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wen,
-
-On Wed, 2019-05-08 at 10:56 +0000, Wen He wrote:
-> The new LS1028A DP driver code causes a link failure when DRM_IMX built-in,
-> but platform is ARCH_LAYERSCAPE:
+On Fri, Jul 05, 2019 at 12:57:52PM +0300, Mika Westerberg wrote:
+> Hi all,
 > 
-> drivers/gpu/drm/imx/ipuv3-crtc.c:51: undefined reference to `ipu_prg_enable'
-> drivers/gpu/drm/imx/ipuv3-crtc.c:52: undefined reference to `ipu_dc_enable'
-> drivers/gpu/drm/imx/ipuv3-crtc.c:53: undefined reference to `ipu_dc_enable_channel'
-> drivers/gpu/drm/imx/ipuv3-crtc.c:54: undefined reference to `ipu_di_enable'
-> drivers/gpu/drm/imx/ipuv3-crtc.o: In function `ipu_crtc_mode_set_nofb
+> With the exception of the first patch which is fix, this series enables
+> Thunderbolt on Intel Ice Lake. Biggest difference from the previous
+> controllers is that the Thunderbolt controller is now integrated as part of
+> the SoC. The firmware messages pretty much follow Titan Ridge but there are
+> some differences as well (such as the new RTD3 veto notification). Also Ice
+> Lake does not implement security levels so DMA protection is handled by IOMMU.
 > 
-> Adding a Kconfig dependency allow to build if ARCH_LAYERSCAPE is enable.
+> This is v5.4 material but I'm sending it out now because I will be on
+> vacation next 4 weeks mostly without internet access. When I get back I'll
+> gather all the comments and update the series accordingly.
 > 
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
-> ---
->  drivers/gpu/ipu-v3/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Thanks!
 > 
-> diff --git a/drivers/gpu/ipu-v3/Kconfig b/drivers/gpu/ipu-v3/Kconfig
-> index fe6f8c5b4445..51ea88c440df 100644
-> --- a/drivers/gpu/ipu-v3/Kconfig
-> +++ b/drivers/gpu/ipu-v3/Kconfig
-> @@ -1,6 +1,6 @@
->  config IMX_IPUV3_CORE
->  	tristate "IPUv3 core support"
-> -	depends on SOC_IMX5 || SOC_IMX6Q || ARCH_MULTIPLATFORM || COMPILE_TEST
-> +	depends on SOC_IMX5 || SOC_IMX6Q || ARCH_MULTIPLATFORM || COMPILE_TEST || ARCH_LAYERSCAPE
->  	depends on DRM || !DRM # if DRM=m, this can't be 'y'
->  	select BITREVERSE
->  	select GENERIC_ALLOCATOR if DRM
-> -- 
-> 2.17.1
+> Mika Westerberg (8):
+>   thunderbolt: Correct path indices for PCIe tunnel
+>   thunderbolt: Move NVM upgrade support flag to struct icm
+>   thunderbolt: Use 32-bit writes when writing ring producer/consumer
+>   thunderbolt: Do not fail adding switch if some port is not implemented
+>   thunderbolt: Hide switch attributes that are not set
+>   thunderbolt: Expose active parts of NVM even if upgrade is not supported
+>   thunderbolt: Add support for Intel Ice Lake
+>   ACPI / property: Add two new Thunderbolt property GUIDs to the list
 
-Thank you for the patch, but this does not seem right.
-ipuv3-crtc.c is part of DRM_IMX, which already depends on
-IMX_IPUV3_CORE. How did you manage to make it try to compile imxdrm?
+Forgot to Cc Raanan and Raj, now added. Sorry about that. The patch
+series can also be viewed here:
 
-Since LS1028A does not have the IPUv3, keeping this under COMPILE_TEST
-should be correct.
-
-regards
-Philipp
+  https://lore.kernel.org/lkml/20190705095800.43534-1-mika.westerberg@linux.intel.com/T/#m9cb5a393dfc79f1c2212d0787b6bad5b689db6bd
