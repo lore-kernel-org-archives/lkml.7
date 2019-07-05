@@ -3,105 +3,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FD9C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518C9C468AA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA912133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222A72133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 22:32:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="kEgPCwAN"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XBE4SDcA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfGEW37 (ORCPT
+        id S1726199AbfGEWcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 18:29:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40467 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfGEW36 (ORCPT
+        Fri, 5 Jul 2019 18:32:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33114 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfGEWcb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 18:29:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id h6so13920635iom.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 15:29:58 -0700 (PDT)
+        Fri, 5 Jul 2019 18:32:31 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q20so10469686otl.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 15:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TiHoVMsFcSLIQMr9uOZIpXIgFEvQNZbBssFZ43ZIIe8=;
-        b=kEgPCwANMUFzB8Tbmw0ykNs9VmJkGcKJRMnmQpfjnitHffAN6aT8hGO0cfsK5uox5+
-         P0rr3Dc8i0HzwW0k8l/P5waoyng9xc6GttS9MlwMqNljBTc+pUEr9k9F16iopjSwPkkp
-         JGxvgcJ3Evzu7W928BVVu8+Bvu4rHhjlX3wxvWpm5GlRYby/ni5DX+/B4sIrXwxyQcW3
-         UNy/7pEyCeCC466IWnOqIoDp73E85Yy6cvfo1+E46aMGrkb5U9HAub/FQ2mU3IrnoW8f
-         BUcOVZDvtwhXrXo+6XjEZ5X0a6ZE782e3NTITo2MZ2jCidpIpR2uXlVuv2ljV2fTVYWM
-         a0Dw==
+        bh=1wm0pw4O8jGrQBiDWGY1iI0LWQ3L51MTQbW4ZCjLQSg=;
+        b=XBE4SDcAEoyDwNhulgwMtQTbrBG037H4PVtb7nFjbFfO2ZNN3pM/nd7NEiDXajAFdW
+         TLFKn4/fILMTGTiYgco+0kEADRLiWR6qV1l7Jt9KrVk23UB+dGn9VZeuMt15OingZftG
+         0qbCE9oI4nHFuHXjSBfgmZCrbqxHvK79C1hHZ8lo6ZSm13TyURqE9pB3FvoP9FZBK7px
+         Pzr+ZC405VKPGBR2+d7wRb74aL0Rypv7pyUWdIkqlLs4pW6YR8g0RhG/YFfMoGmHxsit
+         YNsAgMdgjZ2zn0HTOGzhE9tfNAQ0fQSh2rNWvjCGLLfhE+N2D7vYGs7MSu7wKz/AlHFC
+         R4pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TiHoVMsFcSLIQMr9uOZIpXIgFEvQNZbBssFZ43ZIIe8=;
-        b=poaqVZKyQEewlXPsMRHg7s1GZQ+uMLcqskelHQWyfVC9CsSvLxYtIlYfW42ODVq/wG
-         MmVIsI3hEWr/UtPPaSRuNQeVD0BpnRh/+eHeiY4Ccv3L8dkmVtwNEljjpgaEUZEzT9X4
-         7waieOUD6amKRdr8BlCqsCa4lBZBwPUt+gPHwFj6Gu3unLM+6ivSBr0dXkgk2ZrQi/1r
-         o0BU17oOlww+2bt6ZCGo1DbRfBbZ4gR04TqssksMpZeuudn2QboE4X2n0FrmyvSdD+hA
-         Q08IBwyCCli4YgrTkFG3WuQE0Jsnh62uhxJsTxI0NpGkHc6iSVMiLSB+/LXOZ2EYVxVM
-         kH4w==
-X-Gm-Message-State: APjAAAUJs5U9ubhSYiLc+ZpRXE7L0/VKZOWHx9IH1ar/LmpLAEtpPdrF
-        oH07ADq/6OrkxEFn7x9wl9aIaS0iDdRrQCdy2wkaqg==
-X-Google-Smtp-Source: APXvYqxkIW246ER+0x11WTY5HcsLZYgY0kDKBdaZ85h3vZe4O7pl2xjdYiJwW2/mXxrxy6EmgNSpsuwt+g6Gcc/XNPg=
-X-Received: by 2002:a5d:9282:: with SMTP id s2mr6264093iom.36.1562365798212;
- Fri, 05 Jul 2019 15:29:58 -0700 (PDT)
+        bh=1wm0pw4O8jGrQBiDWGY1iI0LWQ3L51MTQbW4ZCjLQSg=;
+        b=ozx62hgWEJrxrwZZg4qCbV348B7z4y6Y1GIjSKnQTd7H7CREHIto9BUuqKXuhTe+sJ
+         lscuAacAaayvdbplP0RTTtQO6QCBdWHMLOuLmiNFKPuXYWAgCIRemz+l2pLeiTe+TyKK
+         1PSu0xgw3BfDDnAYRC/HX1g59jzlcal0aUcpVyl45EuEjhmEjJdK95uIW3GTb3hOLeEC
+         v7FV4B9EhidRdCTyaYX/bmRZdUrXfl450Ci3dC1cRonlsqyb7A1fubMYFkn+SzDvCL5D
+         VY5zNj5DJbTcuv6M1RWZ8CmFZlCt4JR0cs7puX8sZubqC77kB+zIhdO4bIi1S+rQ44AK
+         FLBg==
+X-Gm-Message-State: APjAAAUBeu3VlOLN+wLiG4KIGh0Vc4nAgFcAAXxKYtTcxSr6ZQztxVYS
+        Df0Dx3JFFz1lHEqNXhMEL/dDzV3MVZvws1PEfWjJLljj
+X-Google-Smtp-Source: APXvYqwGQbiNPwIE2byyxn0tHolot0gPU6NwuDBWiOyEImIrwg3SDFRjKvMGl+cUVDjhjAMM1pAdKSMDIUS/iPsAT8w=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr4626247oto.207.1562365950689;
+ Fri, 05 Jul 2019 15:32:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <1559636093-26005-1-git-send-email-krzk@kernel.org> <15AEA3356BFC1A54.4080@linux.kernel.org>
-In-Reply-To: <15AEA3356BFC1A54.4080@linux.kernel.org>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 5 Jul 2019 15:29:46 -0700
-Message-ID: <CAOesGMhBs4qJPis4cO3f6kmwgqpbP2OF00y2PZ3_AE82mYnDkw@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: configs: Remove useless UEVENT_HELPER_PATH
-To:     patchwork-soc+owner@linux.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        ARM-SoC Maintainers <arm@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+References: <20190705172025.46abf71e@canb.auug.org.au>
+In-Reply-To: <20190705172025.46abf71e@canb.auug.org.au>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 5 Jul 2019 15:32:19 -0700
+Message-ID: <CAPcyv4gU7TfBucm2WoAyUng8qaUQOxGu0PuuJNVd1u0m9Q_tQw@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the nvdimm tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed@lists.ozlabs.org,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
+        Pankaj Gupta <pagupta@redhat.com>,
+        Yuval Shaia <yuval.shaia@oracle.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jakub Staron <jstaron@google.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        kbuild test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 3:26 PM Olof Johansson via Linux.Kernel.Org
-<olof=lixom.net@linux.kernel.org> wrote:
+On Fri, Jul 5, 2019 at 12:20 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the nvdimm tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> In file included from <command-line>:32:
+> ./usr/include/linux/virtio_pmem.h:19:2: error: unknown type name 'uint64_t'
+>   uint64_t start;
+>   ^~~~~~~~
+> ./usr/include/linux/virtio_pmem.h:20:2: error: unknown type name 'uint64_t'
+>   uint64_t size;
+>   ^~~~~~~~
 
-This didn't work as I anticipated. Please ignore, apologies for the spam.
+/me boggles at how this sat in 0day visible tree for a long while
+without this report?
 
+>
+> Caused by commit
+>
+>   403b7f973855 ("virtio-pmem: Add virtio pmem driver")
+>
+> I have used the nvdimm tree from next-20190704 for today.
 
--Olof
+Thanks Stephen, sorry for the noise.
