@@ -2,209 +2,151 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28873C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE82C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B0C21670
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 06:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666B921670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:01:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F3EJXJly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfGEG6f (ORCPT
+        id S1727649AbfGEHBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 02:58:35 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36631 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfGEG6f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 02:58:35 -0400
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hjIAy-0006YY-Cl
-        for linux-kernel@vger.kernel.org; Fri, 05 Jul 2019 06:58:32 +0000
-Received: by mail-pg1-f198.google.com with SMTP id t2so5028801pgs.21
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jul 2019 23:58:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=eZqEf7xmNMA5rKDyuD/VrM2oNxltKYjl6KQelNpHGU0=;
-        b=V9+8ZKIhQ88z6Dhtg69+mJpURuqlGb2ok/emiR0fak/3oz0L/LjTh66jIeHUxg1kcT
-         cSSE50+D86RblJmoGhnErTsYK8HiuD3t1YPHKHSP7AYJXjQNMSh+vcKZPuBcIqHtehfU
-         23CDKLhvcQuv0Of66cj2uQ3pBwKmtp0NFr3ydfILJnt1Zb9aC+docRkkF6s1LzpZ2lDz
-         gKqXolnCZCy7s+fuaI+gsLoKqEpd2Ds5TWT+U3XqpHZ/GFVonFshqrY704pdCsm/gaQQ
-         CovcAOP9l+GDxAWDexpjYH0QOiAfA5kqLV8Aic5rKehSyC+qPudMMt3ZpNp2rb4/u4mL
-         /XPw==
-X-Gm-Message-State: APjAAAUU/JNxD3cztsSyb1C7y0oBeZ0MQ4EZrLywmuYkJsVqe/mV5FOG
-        mmgg3etowidx0iiYaQEWt/xBqJ8IYRz6Zp1TO5l/SjEnqsMuV4cX30pSV3/hql1PtBTPQ2d5Lox
-        lZ902EdXAALrqeaWy5f6ld5XdbGi1PeT5dL/f0wyswg==
-X-Received: by 2002:a17:902:44f:: with SMTP id 73mr3214083ple.192.1562309911068;
-        Thu, 04 Jul 2019 23:58:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxBm9SG0ZQzZ64kySYWGAdtvXFMn9O0/qVGQhPZocuEH4uFbJqztt2EWTn/JflEVJBdM4+NcA==
-X-Received: by 2002:a17:902:44f:: with SMTP id 73mr3214051ple.192.1562309910800;
-        Thu, 04 Jul 2019 23:58:30 -0700 (PDT)
-Received: from 2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net (2001-b011-380f-3511-154d-4126-51e3-28cb.dynamic-ip6.hinet.net. [2001:b011:380f:3511:154d:4126:51e3:28cb])
-        by smtp.gmail.com with ESMTPSA id 196sm8945565pfy.167.2019.07.04.23.58.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jul 2019 23:58:30 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2 1/2] Bluetooth: Disable LE Advertising in
- hci_suspend_dev()
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <329E5979-6716-4776-9B1A-1859998D19D0@canonical.com>
-Date:   Fri, 5 Jul 2019 14:58:27 +0800
-Cc:     Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <E5997B89-4FEF-4FD5-BA4E-852E39DCFA75@canonical.com>
-References: <20190430092544.13653-1-kai.heng.feng@canonical.com>
- <329E5979-6716-4776-9B1A-1859998D19D0@canonical.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Fri, 5 Jul 2019 03:01:14 -0400
+Received: from mail-eopbgr20078.outbound.protection.outlook.com ([40.107.2.78]:11654
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726012AbfGEHBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 03:01:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s7Sb5iXnQeq6a4whQIZqloWLVF73UJr240vQ6vJkYPY=;
+ b=F3EJXJly6N0kYOQvvHDl7H0nhoHJK0dMcCZMVg0jozw+OiLOonNPnxYqMTezEpJW70wtuMnGBDrCCUcxjreXrMcm1/3GdrpMYRnoHbfag4b/dpGkEz8ftZnn+RjClRXYAt28/54E40JRYzp2+1KYp/sAsNNfmnIIbfFgNQu3mNw=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB6467.eurprd04.prod.outlook.com (20.179.253.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Fri, 5 Jul 2019 07:01:08 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::a126:d121:200:367]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::a126:d121:200:367%7]) with mapi id 15.20.2032.019; Fri, 5 Jul 2019
+ 07:01:08 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>
+CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Thread-Topic: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Thread-Index: AQHVMu9QFutD3B96ckCJ5EoT7khMLqa7mPeA
+Date:   Fri, 5 Jul 2019 07:01:08 +0000
+Message-ID: <20190705070107.xsxvnh7b36w4q4c6@fsr-ub1664-175>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-5-Anson.Huang@nxp.com>
+In-Reply-To: <20190705045612.27665-5-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7684758f-e8cb-482a-b8b0-08d701168e4d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6467;
+x-ms-traffictypediagnostic: AM0PR04MB6467:
+x-microsoft-antispam-prvs: <AM0PR04MB646733A05AF6FEDFEC7A1F12F6F50@AM0PR04MB6467.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-forefront-prvs: 008960E8EC
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(396003)(366004)(346002)(136003)(39860400002)(189003)(199004)(6116002)(99286004)(14444005)(102836004)(256004)(5660300002)(6506007)(64756008)(66446008)(66556008)(6486002)(3846002)(2906002)(229853002)(6862004)(76176011)(6436002)(26005)(4326008)(71200400001)(86362001)(14454004)(6512007)(25786009)(71190400001)(9686003)(53546011)(186003)(66066001)(44832011)(54906003)(305945005)(476003)(11346002)(8936002)(1076003)(7736002)(486006)(478600001)(8676002)(81166006)(33716001)(81156014)(6636002)(68736007)(66946007)(6246003)(66476007)(316002)(73956011)(446003)(7416002)(91956017)(76116006)(53936002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6467;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yRndkOOzP1IjQoa9e0O0lRa0djhHRhUDJq9EGcWsEGysrDhAt9g97LiiFDlaUTNV35w4x2m7hzeObgcG9fNNXRgKxEQmNTjGBja9Ep96602mspQ8bPCA7Xf+5pITd1YbQ4Ij6izQEFW1l3TpcJwCjYfMBZwLp134XRodxcXyQ9vpqFS52jqjcUF4+IahWizFAHvZrG4dTRxuybJtyyerT+Yl3AZUgTVengyOkMrVqprAv5Fm4O1RTEyGoVS6JpKyaaQHhals2BIO5e8skwACooRmsJPzENZ5fhM4n3TK1Vnjdib6EUxOiJmXlMxO6C00i70hIoD0c5SMXsdGc9ICgonlRc3/nopnYd+8ZU/VwthieYmp0REPkJEh5ciduW6EJwmMJUS4iiCTQcJ//TrpnZPYNygN0x0uDQAHjSCUNSk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F7A714F4FD2FF54F9AF66368F4FEFA79@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7684758f-e8cb-482a-b8b0-08d701168e4d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 07:01:08.2502
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: abel.vesa@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6467
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 11:00, Kai Heng Feng <kai.heng.feng@canonical.com> wrote:
+On 19-07-05 12:56:11, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+>=20
+> IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+> should manage this clock, so no need to have CLK_IS_CRITICAL flag
+> set.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-> Hi Marcel,
->
-> at 5:25 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->
->> LE Advertising may wake up system during system-wide sleep, disable it
->> to prevent this issue from happening.
->>
->> Do the reverse in hci_resume_dev().
->
-> Do you have any suggestion for this patch?
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-Please let me know where I can do further improvement.
-
-This can solve a hard freeze during system suspend.
-
-Kai-Heng
-
->
-> Kai-Heng
->
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->> v2:
->> - Abstract away enabling/disabling LE advertising from btusb.
->>
->>  include/net/bluetooth/hci_core.h |  1 +
->>  net/bluetooth/hci_core.c         | 47 ++++++++++++++++++++++++++++++++
->>  2 files changed, 48 insertions(+)
->>
->> diff --git a/include/net/bluetooth/hci_core.h  
->> b/include/net/bluetooth/hci_core.h
->> index 094e61e07030..65574943131d 100644
->> --- a/include/net/bluetooth/hci_core.h
->> +++ b/include/net/bluetooth/hci_core.h
->> @@ -269,6 +269,7 @@ struct hci_dev {
->>  	__u16		le_max_rx_time;
->>  	__u8		le_max_key_size;
->>  	__u8		le_min_key_size;
->> +	__u8		le_events[8];
->>  	__u16		discov_interleaved_timeout;
->>  	__u16		conn_info_min_age;
->>  	__u16		conn_info_max_age;
->> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
->> index d6b2540ba7f8..7c19e3b9294c 100644
->> --- a/net/bluetooth/hci_core.c
->> +++ b/net/bluetooth/hci_core.c
->> @@ -412,6 +412,49 @@ static void hci_setup_event_mask(struct hci_request  
->> *req)
->>  	hci_req_add(req, HCI_OP_SET_EVENT_MASK, sizeof(events), events);
->>  }
->>
->> +static int hci_enable_le_advertising_req(struct hci_request *req,  
->> unsigned long opt)
->> +{
->> +	struct hci_dev *hdev = req->hdev;
->> +	u8 events[8];
->> +	memcpy(events, hdev->le_events, sizeof(events));
->> +
->> +	hci_req_add(req, HCI_OP_LE_SET_EVENT_MASK, sizeof(events),
->> +			events);
->> +
->> +	return 0;
->> +}
->> +
->> +static int hci_disable_le_advertising_req(struct hci_request *req,  
->> unsigned long opt)
->> +{
->> +	struct hci_dev *hdev = req->hdev;
->> +
->> +	u8 events[8];
->> +	memcpy(events, hdev->le_events, sizeof(events));
->> +
->> +	events[0] &= ~(u8)0x02;	/* LE Advertising Report */
->> +
->> +	hci_req_add(req, HCI_OP_LE_SET_EVENT_MASK, sizeof(events),
->> +			events);
->> +
->> +	return 0;
->> +}
->> +
->> +static int hci_enable_le_advertising(struct hci_dev *hdev)
->> +{
->> +	if (!lmp_le_capable(hdev))
->> +		return 0;
->> +
->> +	return __hci_req_sync(hdev, hci_enable_le_advertising_req, 0,  
->> HCI_CMD_TIMEOUT, NULL);
->> +}
->> +
->> +static int hci_disable_le_advertising(struct hci_dev *hdev)
->> +{
->> +	if (!lmp_le_capable(hdev))
->> +		return 0;
->> +
->> +	return __hci_req_sync(hdev, hci_disable_le_advertising_req, 0,  
->> HCI_CMD_TIMEOUT, NULL);
->> +}
->> +
->>  static int hci_init2_req(struct hci_request *req, unsigned long opt)
->>  {
->>  	struct hci_dev *hdev = req->hdev;
->> @@ -772,6 +815,8 @@ static int hci_init3_req(struct hci_request *req,  
->> unsigned long opt)
->>  		}
->>
->>  		hci_set_le_support(req);
->> +
->> +		memcpy(hdev->le_events, events, sizeof(events));
->>  	}
->>
->>  	/* Read features beyond page 1 if available */
->> @@ -3431,6 +3476,7 @@ EXPORT_SYMBOL(hci_unregister_dev);
->>  /* Suspend HCI device */
->>  int hci_suspend_dev(struct hci_dev *hdev)
->>  {
->> +	hci_disable_le_advertising(hdev);
->>  	hci_sock_dev_event(hdev, HCI_DEV_SUSPEND);
->>  	return 0;
->>  }
->> @@ -3440,6 +3486,7 @@ EXPORT_SYMBOL(hci_suspend_dev);
->>  int hci_resume_dev(struct hci_dev *hdev)
->>  {
->>  	hci_sock_dev_event(hdev, HCI_DEV_RESUME);
->> +	hci_enable_le_advertising(hdev);
->>  	return 0;
->>  }
->>  EXPORT_SYMBOL(hci_resume_dev);
->> -- 
->> 2.17.1
-
-
+> ---
+>  drivers/clk/imx/clk-imx8mq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+> index d407a07..91de69a 100644
+> --- a/drivers/clk/imx/clk-imx8mq.c
+> +++ b/drivers/clk/imx/clk-imx8mq.c
+> @@ -539,7 +539,7 @@ static int imx8mq_clocks_probe(struct platform_device=
+ *pdev)
+>  	clks[IMX8MQ_CLK_DISP_AXI_ROOT]  =3D imx_clk_gate2_shared2("disp_axi_roo=
+t_clk", "disp_axi", base + 0x45d0, 0, &share_count_dcss);
+>  	clks[IMX8MQ_CLK_DISP_APB_ROOT]  =3D imx_clk_gate2_shared2("disp_apb_roo=
+t_clk", "disp_apb", base + 0x45d0, 0, &share_count_dcss);
+>  	clks[IMX8MQ_CLK_DISP_RTRM_ROOT] =3D imx_clk_gate2_shared2("disp_rtrm_ro=
+ot_clk", "disp_rtrm", base + 0x45d0, 0, &share_count_dcss);
+> -	clks[IMX8MQ_CLK_TMU_ROOT] =3D imx_clk_gate4_flags("tmu_root_clk", "ipg_=
+root", base + 0x4620, 0, CLK_IS_CRITICAL);
+> +	clks[IMX8MQ_CLK_TMU_ROOT] =3D imx_clk_gate4("tmu_root_clk", "ipg_root",=
+ base + 0x4620, 0);
+>  	clks[IMX8MQ_CLK_VPU_DEC_ROOT] =3D imx_clk_gate2_flags("vpu_dec_root_clk=
+", "vpu_bus", base + 0x4630, 0, CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE=
+);
+>  	clks[IMX8MQ_CLK_CSI1_ROOT] =3D imx_clk_gate4("csi1_root_clk", "csi1_cor=
+e", base + 0x4650, 0);
+>  	clks[IMX8MQ_CLK_CSI2_ROOT] =3D imx_clk_gate4("csi2_root_clk", "csi2_cor=
+e", base + 0x4660, 0);
+> --=20
+> 2.7.4
+> =
