@@ -7,60 +7,59 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E391AC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD4DC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCF52184C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F71321721
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562344992;
-	bh=6AWJxdzggq8jdRaQwBhACvdN0GiYYF6qgZP2ZobE3Dc=;
+	s=default; t=1562344998;
+	bh=cjn1RDgAvn7mPSLQ3RGUdAXR8GwCs11TRXQyqqRLwJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1nZWZRMtmdHv/O56PQVlOjXG4bXuYTKJWiOhJYkXowyFF1XQlr+zL7oe8kxevJIBI
-	 xSLv0btmYyD6picmW8Bv3/bcxNddVxadPMhnOKq2FRujlYEzHMUdeQDBeSAbS/KLMN
-	 j6KnOQ2052YHIcJPX78qveWaEXp5DykaIXwLfs5o=
+	b=ILP6qf3WLKpZ9syfTiuWJQsjF1tQl4oyFz23Cy4icp9fHDSVqmmALDzgodnxTlTo0
+	 3K04Ld2qWOzS+PHsA+3ZGhWjXK/ap5ah9NofkXbrVadJI4uMFMUlkDP67je+w2sXld
+	 WCtliUtyx0S5K+s7sKWegGji28uGCVSogQrXB+H0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbfGEQnL (ORCPT
+        id S1728577AbfGEQmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:43:11 -0400
-Received: from mail-io1-f42.google.com ([209.85.166.42]:34422 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728690AbfGEQmh (ORCPT
+        Fri, 5 Jul 2019 12:42:35 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40718 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728648AbfGEQmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:42:37 -0400
-Received: by mail-io1-f42.google.com with SMTP id k8so20433065iot.1;
-        Fri, 05 Jul 2019 09:42:36 -0700 (PDT)
+        Fri, 5 Jul 2019 12:42:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id h6so12147489iom.7;
+        Fri, 05 Jul 2019 09:42:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XS98x+56z0gRiNEek56gSNwAwH+14pgGnF4eQrePkmg=;
-        b=qRmHyiJMq+wAQyJmEuMsc/uX6SAOH1aOwPIL+oix6NEKxxTMfo5UHCPgs0yOZ0CNQC
-         HG7BulH9u11hu3G1fTMWq6IAQh9Bhca4NUlq3xQQQH2KT1k8IxKoWCy2gCcsRxeZVqKT
-         L5BLJtvKc68aSH1ckhlhQI7VBFi+DZot08hJIlGFT1QK0oAlnEsNvZii3ulFCuDVA5vW
-         rNjN2UvXwXyIbu474dwCExmLfNmeBq7JlWsp2n9872Wbaiwb1rbTR68Cg5xA2WiluDwh
-         1VegEKMe3uyWq9xmWoc+s51P+nGb7wvjXR0KNxdc5gID20nam++9OEA/1snNRE1ML5zO
-         k/pw==
-X-Gm-Message-State: APjAAAUNQRXXhpvZ2U2M1joWIzSOeylVS8ycdGAoEfwe37iNdT9CwhDV
-        YCkfLGBTFswNS0rKHEqLYQYJfgk=
-X-Google-Smtp-Source: APXvYqxb4qPpf2440NuEycGWkpJEhmYJgIh5tlmZHPrGm2Bz2vlqn70s1akoqenPe8BuOKMGI+gjdA==
-X-Received: by 2002:a6b:790a:: with SMTP id i10mr4957673iop.150.1562344956206;
-        Fri, 05 Jul 2019 09:42:36 -0700 (PDT)
+        bh=QmMSkEMpERvJyjJRrG5g4f+OapV9H/whTXHG0VCoTaM=;
+        b=bAJ3dJsSEDx37lDcdylhtFwIh+zzgw//9MuFylvBiiSvjLMHFjA3f+aRyu/oRmFSJ6
+         WeCSzXthiWLFFMLj1rq0BqborXHW4OPV6BvGl+fePzpTLC6RsTbuwStFQ/p5P0GsQFgW
+         doTR6zM6Dj0te9P4QgtKgIivDz8XeWCh4iv2fOXHdxIizzcHV6OVOBLqRY7XqV91TMx9
+         uBsHiamciOnPFm3fBWed7O/OOfHXVIZK+ldgCsfeY1U6W0PKJmPO9J3OCKf2s1uCCfcd
+         T9KTY+0zulJ+QnVbb25bNp97n685OLVWSGvqNbkxqQ4DWWWcrAf5+qma1sQbAvjboA5W
+         AwYw==
+X-Gm-Message-State: APjAAAXpydqqNmkC8I5v6HajtIjDGg73uIEyNKxzmqARQJ9waVX9e9ob
+        w8BwUBONEa3qbHl9ZXs0Fw==
+X-Google-Smtp-Source: APXvYqwgijG0bDl9MQ8QMzy7JFWGEXki+c5Gsm88CadBQrl5AZgvMPes1qJpGkDYhMRNkc9YrsNmpg==
+X-Received: by 2002:a02:8a:: with SMTP id 132mr5543519jaa.89.1562344950866;
+        Fri, 05 Jul 2019 09:42:30 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.252])
-        by smtp.googlemail.com with ESMTPSA id b8sm6878104ioj.16.2019.07.05.09.42.34
+        by smtp.googlemail.com with ESMTPSA id b8sm6878104ioj.16.2019.07.05.09.42.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 09:42:35 -0700 (PDT)
+        Fri, 05 Jul 2019 09:42:30 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Eric Anholt <eric@anholt.net>
-Subject: [PATCH v3 07/13] dt-bindings: display: Convert raspberrypi,7inch-touchscreen panel to DT schema
-Date:   Fri,  5 Jul 2019 10:42:15 -0600
-Message-Id: <20190705164221.4462-8-robh@kernel.org>
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v3 04/13] dt-bindings: display: Convert bananapi,s070wv20-ct16 panel to DT schema
+Date:   Fri,  5 Jul 2019 10:42:12 -0600
+Message-Id: <20190705164221.4462-5-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190705164221.4462-1-robh@kernel.org>
 References: <20190705164221.4462-1-robh@kernel.org>
@@ -71,152 +70,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the raspberrypi,7inch-touchscreen panel binding to DT schema.
+Convert the bananapi,s070wv20-ct16 panel binding to DT schema.
 
-Cc: Eric Anholt <eric@anholt.net>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: dri-devel@lists.freedesktop.org
 Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../panel/raspberrypi,7inch-touchscreen.txt   | 49 -------------
- .../panel/raspberrypi,7inch-touchscreen.yaml  | 71 +++++++++++++++++++
- 2 files changed, 71 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
+ .../display/panel/bananapi,s070wv20-ct16.txt  | 12 -------
+ .../display/panel/bananapi,s070wv20-ct16.yaml | 31 +++++++++++++++++++
+ 2 files changed, 31 insertions(+), 12 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt b/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
 deleted file mode 100644
-index e9e19c059260..000000000000
---- a/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt
+index 35bc0c839f49..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
 +++ /dev/null
-@@ -1,49 +0,0 @@
--This binding covers the official 7" (800x480) Raspberry Pi touchscreen
--panel.
--
--This DSI panel contains:
--
--- TC358762 DSI->DPI bridge
--- Atmel microcontroller on I2C for power sequencing the DSI bridge and
--  controlling backlight
--- Touchscreen controller on I2C for touch input
--
--and this binding covers the DSI display parts but not its touch input.
+@@ -1,12 +0,0 @@
+-Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
 -
 -Required properties:
--- compatible:	Must be "raspberrypi,7inch-touchscreen-panel"
--- reg:		Must be "45"
--- port:		See panel-common.txt
+-- compatible: should be "bananapi,s070wv20-ct16"
+-- power-supply: see ./panel-common.txt
 -
--Example:
+-Optional properties:
+-- enable-gpios: see ./simple-panel.txt
+-- backlight: see ./simple-panel.txt
 -
--dsi1: dsi@7e700000 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--	<...>
--
--	port {
--		dsi_out_port: endpoint {
--			remote-endpoint = <&panel_dsi_port>;
--		};
--	};
--};
--
--i2c_dsi: i2c {
--	compatible = "i2c-gpio";
--	#address-cells = <1>;
--	#size-cells = <0>;
--	gpios = <&gpio 28 0
--		 &gpio 29 0>;
--
--	lcd@45 {
--		compatible = "raspberrypi,7inch-touchscreen-panel";
--		reg = <0x45>;
--
--		port {
--			panel_dsi_port: endpoint {
--				remote-endpoint = <&dsi_out_port>;
--			};
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml b/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
+-This binding is compatible with the simple-panel binding, which is specified
+-in ./simple-panel.txt.
+diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
 new file mode 100644
-index 000000000000..22a083f7bc8e
+index 000000000000..bbf127fb28f7
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
-@@ -0,0 +1,71 @@
++++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.yaml
+@@ -0,0 +1,31 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/raspberrypi,7inch-touchscreen.yaml#
++$id: http://devicetree.org/schemas/display/panel/bananapi,s070wv20-ct16.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: The official 7" (800x480) Raspberry Pi touchscreen
++title: Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
 +
 +maintainers:
-+  - Eric Anholt <eric@anholt.net>
++  - Chen-Yu Tsai <wens@csie.org>
 +  - Thierry Reding <thierry.reding@gmail.com>
 +
-+description: |+
-+  This DSI panel contains:
-+
-+  - TC358762 DSI->DPI bridge
-+  - Atmel microcontroller on I2C for power sequencing the DSI bridge and
-+    controlling backlight
-+  - Touchscreen controller on I2C for touch input
-+
-+  and this binding covers the DSI display parts but not its touch input.
++allOf:
++  - $ref: panel-common.yaml#
 +
 +properties:
 +  compatible:
-+    const: raspberrypi,7inch-touchscreen-panel
++    const: bananapi,s070wv20-ct16
 +
-+  reg:
-+    const: 0x45
-+
++  power-supply: true
++  backlight: true
++  enable-gpios: true
 +  port: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - port
 +
 +additionalProperties: false
 +
-+examples:
-+  - |+
-+    dsi1: dsi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      port {
-+        dsi_out_port: endpoint {
-+          remote-endpoint = <&panel_dsi_port>;
-+        };
-+      };
-+    };
-+
-+    i2c_dsi: i2c {
-+      compatible = "i2c-gpio";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      scl-gpios = <&gpio 28 0>;
-+      sda-gpios = <&gpio 29 0>;
-+
-+      lcd@45 {
-+        compatible = "raspberrypi,7inch-touchscreen-panel";
-+        reg = <0x45>;
-+
-+        port {
-+          panel_dsi_port: endpoint {
-+            remote-endpoint = <&dsi_out_port>;
-+          };
-+        };
-+      };
-+    };
++required:
++  - compatible
++  - power-supply
 +
 +...
 -- 
