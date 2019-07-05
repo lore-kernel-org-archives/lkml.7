@@ -2,70 +2,101 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3160C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD526C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB3C218A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C06F218A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfGEIcs (ORCPT
+        id S1727358AbfGEIgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 04:32:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38234 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfGEIcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 04:32:48 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hjJeA-0005fi-AX; Fri, 05 Jul 2019 08:32:46 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [media] saa7134: remove redundant assignment to variable value
-Date:   Fri,  5 Jul 2019 09:32:46 +0100
-Message-Id: <20190705083246.15849-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 5 Jul 2019 04:36:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35140 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfGEIgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 04:36:51 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6D78B85541;
+        Fri,  5 Jul 2019 08:36:50 +0000 (UTC)
+Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A1DD852C5;
+        Fri,  5 Jul 2019 08:36:43 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 10:36:42 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v7 net-next 5/5] net: ethernet: ti: cpsw: add XDP
+ support
+Message-ID: <20190705103642.5489bc87@carbon>
+In-Reply-To: <20190704231406.27083-6-ivan.khoronzhuk@linaro.org>
+References: <20190704231406.27083-1-ivan.khoronzhuk@linaro.org>
+        <20190704231406.27083-6-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 05 Jul 2019 08:36:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri,  5 Jul 2019 02:14:06 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-The variable value is being assigned with a value that is never
-read and it is being updated later with a new value. The
-assignment is redundant and can be removed.
+> Add XDP support based on rx page_pool allocator, one frame per page.
+> Page pool allocator is used with assumption that only one rx_handler
+> is running simultaneously. DMA map/unmap is reused from page pool
+> despite there is no need to map whole page.
+> 
+> Due to specific of cpsw, the same TX/RX handler can be used by 2
+> network devices, so special fields in buffer are added to identify
+> an interface the frame is destined to. Thus XDP works for both
+> interfaces, that allows to test xdp redirect between two interfaces
+> easily. Aslo, each rx queue have own page pools, but common for both
+          ^^^^
+          Also
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/media/pci/saa7134/saa7134-tvaudio.c | 1 -
- 1 file changed, 1 deletion(-)
+> netdevs.
+> 
+> XDP prog is common for all channels till appropriate changes are added
+> in XDP infrastructure. Also, once page_pool recycling becomes part of
+> skb netstack some simplifications can be added, like removing
+> page_pool_release_page() before skb receive.
+> 
+> In order to keep rx_dev while redirect, that can be somehow used in
+> future, do flush in rx_handler, that allows to keep rx dev the same
+> while reidrect. It allows to conform with tracing rx_dev pointed
+        ^^^^^^^^
+        redirect
 
-diff --git a/drivers/media/pci/saa7134/saa7134-tvaudio.c b/drivers/media/pci/saa7134/saa7134-tvaudio.c
-index 5beff534d5e1..79e1afb71075 100644
---- a/drivers/media/pci/saa7134/saa7134-tvaudio.c
-+++ b/drivers/media/pci/saa7134/saa7134-tvaudio.c
-@@ -319,7 +319,6 @@ static int tvaudio_checkcarrier(struct saa7134_dev *dev, struct mainscan *scan)
- 	__s32 left,right,value;
- 
- 	if (!(dev->tvnorm->id & scan->std)) {
--		value = 0;
- 		audio_dbg(1, "skipping %d.%03d MHz [%4s]\n",
- 			  scan->carr / 1000, scan->carr % 1000, scan->name);
- 		return 0;
+> by Jesper.
+> 
+> Also, there is probability, that XDP generic code can be extended to
+> support multi ndev drivers like this one, using same rx queue for
+> several ndevs, based on switchdev for instance or else. In this case,
+> driver can be modified like exposed here:
+> https://lkml.org/lkml/2019/7/3/243
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+
+I didn't spot any issues, but I don't have access to this hardware, so
+I've not tested it.
+
 -- 
-2.20.1
-
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
