@@ -2,146 +2,116 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7C9C0650E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037CAC0650E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802652184C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:30:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ygznaC3T"
+	by mail.kernel.org (Postfix) with ESMTP id D7B352189E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 01:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfGEBao (ORCPT
+        id S1727481AbfGEBfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jul 2019 21:30:44 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33588 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfGEBao (ORCPT
+        Thu, 4 Jul 2019 21:35:38 -0400
+Received: from mailgw01.mediatek.com ([216.200.240.184]:51577 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727345AbfGEBfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jul 2019 21:30:44 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x651TvDZ070913;
-        Fri, 5 Jul 2019 01:30:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=bGTIYI8717dWhfhyxjBDcmBLshj15C0WoZw3LyJTbjY=;
- b=ygznaC3TRQTJxjiTK/uVUVJAtodhn55yD08HaeSvhF0rwZ0rJJAm0qQEnyD+bnMZ6s99
- R4r470Ga3knHIM4sr4NRiXdYmbsLKTvxZEHXML1YvFjSkx7llr0d6KjPjB4ZTAOJJZx0
- Fq0ZF0fM6mvPvqFhPNtBZM2CxsVDX2+XKO6J6DyA/oAP+5ms04okPSzkOQJqb0XFtGBn
- HUh7CMxBWjmp3dmnE5H4xXPHgJutrKqulR/ELGYnLGok+EnwfsO0Il9Py/TB91e//Hbz
- +yIOmJWLw4RDPLUuUhP2W1pfn0ebbQ+xGOxf16hlYRDsDqOpEu8sp7F3k/CwYjNNYyMs og== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2te61q8m9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jul 2019 01:30:36 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x651Rk6N158408;
-        Fri, 5 Jul 2019 01:30:36 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2th5qm8vqd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jul 2019 01:30:36 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x651UZeD022100;
-        Fri, 5 Jul 2019 01:30:35 GMT
-Received: from [192.168.1.119] (/39.109.145.141)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Jul 2019 18:30:35 -0700
-Subject: Re: [PATCH][next][V2] btrfs: fix memory leak of path on error return
- path
-To:     Colin King <colin.king@canonical.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190704230303.5583-1-colin.king@canonical.com>
-From:   Anand Jain <anand.jain@oracle.com>
-Message-ID: <50990311-dc66-677b-0bd8-4a2ea62eba9c@oracle.com>
-Date:   Fri, 5 Jul 2019 09:30:29 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Thu, 4 Jul 2019 21:35:37 -0400
+X-UUID: 27620e949d0c4445b1dce6282ae5c56c-20190704
+X-UUID: 27620e949d0c4445b1dce6282ae5c56c-20190704
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1737695922; Thu, 04 Jul 2019 17:35:33 -0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS62DR.mediatek.inc (172.29.94.18) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 4 Jul 2019 18:35:32 -0700
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 5 Jul 2019 09:35:30 +0800
+Message-ID: <1562290530.10428.6.camel@mtksdaap41>
+Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
+ mmsys clocks
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Ulrich Hecht <uli@fpond.eu>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <matthias.bgg@kernel.org>,
+        "Ulrich Hecht" <ulrich.hecht+renesas@gmail.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Date:   Fri, 5 Jul 2019 09:35:30 +0800
+In-Reply-To: <100944512.353257.1562254420397@webmail.strato.com>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+         <20181116125449.23581-9-matthias.bgg@kernel.org>
+         <20181116231522.GA18006@bogus>
+         <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
+         <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
+         <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
+         <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
+         <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
+         <a229bfc7-683f-5b0d-7b71-54f934de6214@suse.com>
+         <1561953318.25914.9.camel@mtksdaap41>
+         <84d1c444-d6cb-9537-1bf5-b4e736443239@gmail.com>
+         <100944512.353257.1562254420397@webmail.strato.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190704230303.5583-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9308 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907050018
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9308 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907050018
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 7:03 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently if the allocation of roots or tmp_ulist fails the error handling
-> does not free up the allocation of path causing a memory leak. Fix this and
-> other similar leaks by moving the call of btrfs_free_path from label out
-> to label out_free_ulist.
-> 
-> Kudos to David Sterba for spotting the issue in my original fix and
-> providing the correct way to fix the leak.
-> 
-> Addresses-Coverity: ("Resource leak")
-> Fixes: 5911c8fe05c5 ("btrfs: fiemap: preallocate ulists for btrfs_check_shared")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-> 
-> V2: move the btrfs_free_path to the out_free_ulist label as suggested by
->      David Sterba as the correct fix.
-> 
-> ---
->   fs/btrfs/extent_io.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index 1eb671c16ff1..31127f6d2971 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -4766,11 +4766,11 @@ int extent_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
->   		ret = emit_last_fiemap_cache(fieinfo, &cache);
->   	free_extent_map(em);
->   out:
-> -	btrfs_free_path(path);
->   	unlock_extent_cached(&BTRFS_I(inode)->io_tree, start, start + len - 1,
->   			     &cached_state);
->   
->   out_free_ulist:
-> +	btrfs_free_path(path);
->   	ulist_free(roots);
->   	ulist_free(tmp_ulist);
->   	return ret;
-> 
+Hi, Uli:
 
-Now this causes double free.
+On Thu, 2019-07-04 at 17:33 +0200, Ulrich Hecht wrote:
+> > On July 4, 2019 at 11:08 AM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> > You are right, it took far too long for me to respond with a new version of the
+> > series. The problem I face is, that I use my mt8173 based chromebook for
+> > testing. It needs some downstream patches and broke somewhere between my last
+> > email and a few month ago.
+> 
+> If that Chromebook is an Acer R13 and you need a working kernel, you may want to have a look at https://github.com/uli/kernel/tree/elm-working-5.2 .
 
-$ git diff
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 6b154bce5687..61ebdccca04b 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4611,7 +4611,6 @@ int extent_fiemap(struct inode *inode, struct 
-fiemap_extent_info *fieinfo,
-         ret = btrfs_lookup_file_extent(NULL, root, path,
-                         btrfs_ino(BTRFS_I(inode)), -1, 0);
-         if (ret < 0) {
--               btrfs_free_path(path);
-                 goto out_free_ulist;
-         } else {
-                 WARN_ON(!ret);
+Thanks for your sample code, and your implementation is different than
+Matthias' version. In your version, mmsys is a single device which has
+clock function and display function, the clock function is placed in
+clock driver folder and display function is placed in drm driver folder.
+In Matthias' version, clock function is a sub device of mmsys. I've no
+idea of which one is better. I would get more information to make better
+decision.
+
+Regards,
+CK
+
+> 
+> CU
+> Uli
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
 
 
