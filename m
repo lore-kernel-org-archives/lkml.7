@@ -2,52 +2,74 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FEAC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEFBC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A79218C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2690B21670
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 09:58:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zwiyMKjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfGEJ6X (ORCPT
+        id S1728509AbfGEJ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 05:58:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:42367 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbfGEJ6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 05:58:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 02:58:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,454,1557212400"; 
-   d="scan'208";a="166448218"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Jul 2019 02:58:04 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 0AD0E445; Fri,  5 Jul 2019 12:58:01 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH 5/8] thunderbolt: Hide switch attributes that are not set
-Date:   Fri,  5 Jul 2019 12:57:57 +0300
-Message-Id: <20190705095800.43534-6-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+        Fri, 5 Jul 2019 05:58:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35895 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728483AbfGEJ6Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 05:58:24 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so8710145ljj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 02:58:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=u8/u3bwXkZOSy6eu5Z2KZv4GqIpK73hvpV5W7nEAtr8=;
+        b=zwiyMKjlZMwH8lIXSWo0y8pv7/y9FQ3ndFZlbQXwbt2CgMSHLw59lKvqVT5NLf4Nue
+         //0Xa5ov/+9HP2LeL3DPtc8TMao2ZsZU+fxiged59/1r6aTSaGy+NF2Bs/1gEyVbf7bs
+         vCPqrxOoV4We3Q+XOhXrP3ruQzV8RmCvrpSHDFv88QY/PONG5zkyfMoY5RA/pLf1D5wa
+         wHp5u5FTVwS2mUNLe6EOXxKsNu+5Ygl0EqAmqX3XLmTETdYgAoicSB16q+PDOviJf2hO
+         3XF+0rQrWpr7pHNDf140WQa/6WZixjxUexnMSKz7XcYmZ49Hos0OfneEwVNijyENt8dB
+         ou4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=u8/u3bwXkZOSy6eu5Z2KZv4GqIpK73hvpV5W7nEAtr8=;
+        b=MOMYKemeLj53eiQGIwsqBWNSiRDTOReCL24W6foACNHWfPEIjX0Bj7D73Q1tExbXdT
+         HRYyxVLk+/EHPDCbI0CmLpLvpNgATWmuNRVUcYt/Oo+y7of/PCqirYEG4kIum2mXgMkd
+         2W6smlUuVV1qFt0mCuI8LGl+qswyd7ifuaKlayKJhb8e3tiuIyS57ib2ImwuaXUl3J7o
+         pMoW/t+udTLK0Wkjs6/tBpHQ3ao9VEDnjwIfOYMFn1KLvhx/Gqcwxx866mQ05CeZiROI
+         Oc7hZ6Wd4OcpVrhzOIpkORBwPmKOA2m8H/ljwRj0NfUXgK2ZsbvPEIXAFT6uPV354hYT
+         6Vqw==
+X-Gm-Message-State: APjAAAUYgsIJaKLzVoxNwMQ4Ex1Z+pDYJyyRV3V3YsMGQx9bXQb7Dn5a
+        o5/gDj75qicAIo81BBeNRUROyQ==
+X-Google-Smtp-Source: APXvYqy9qyxO4byetmUOuxjcwJQ/AdDI4S8b8jwDDftgCLI9lrDWCz0l5rilbiAT1LRClw/eDjpHmg==
+X-Received: by 2002:a2e:1290:: with SMTP id 16mr1601420ljs.88.1562320701743;
+        Fri, 05 Jul 2019 02:58:21 -0700 (PDT)
+Received: from localhost.localdomain (ua-83-226-34-119.bbcust.telenor.se. [83.226.34.119])
+        by smtp.gmail.com with ESMTPSA id o24sm1674955ljg.6.2019.07.05.02.58.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 02:58:21 -0700 (PDT)
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
+        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 06/13] cpufreq: qcom: Add support for qcs404 on nvmem driver
+Date:   Fri,  5 Jul 2019 11:57:17 +0200
+Message-Id: <20190705095726.21433-7-niklas.cassel@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190705095726.21433-1-niklas.cassel@linaro.org>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,42 +77,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thunderbolt host routers may not always contain DROM that includes
-device identification information. This is mostly needed for Ice Lake
-systems but some Falcon Ridge controllers on PCs also do not have DROM.
+Add support for qcs404 on nvmem driver.
 
-In that case hide the identification attributes.
+The qcs404 SoC has support for Core Power Reduction (CPR), which is
+implemented as a power domain provider, therefore add optional support
+in this driver to attach to a genpd power domain.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 ---
- drivers/thunderbolt/switch.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+Changes since RFC:
+-Remove empty stub.
+-Add power domain attach as a feature in the match_data struct.
+-Failing to attach to the power domain is treated as a hard error.
 
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index eac62ff1b85c..e84067084dcd 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -1337,7 +1337,19 @@ static umode_t switch_attr_is_visible(struct kobject *kobj,
- 	struct device *dev = container_of(kobj, struct device, kobj);
- 	struct tb_switch *sw = tb_to_switch(dev);
+ drivers/cpufreq/qcom-cpufreq-nvmem.c | 49 ++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+index c0377b0eb2f4..ec87c14b598c 100644
+--- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
++++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+@@ -24,6 +24,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_domain.h>
+ #include <linux/pm_opp.h>
+ #include <linux/slab.h>
+ #include <linux/soc/qcom/smem.h>
+@@ -49,10 +50,12 @@ struct qcom_cpufreq_match_data {
+ 	int (*get_version)(struct device *cpu_dev,
+ 			   struct nvmem_cell *speedbin_nvmem,
+ 			   struct qcom_cpufreq_drv *drv);
++	const char **genpd_names;
+ };
  
--	if (attr == &dev_attr_key.attr) {
-+	if (attr == &dev_attr_device.attr) {
-+		if (!sw->device)
-+			return 0;
-+	} else if (attr == &dev_attr_device_name.attr) {
-+		if (!sw->device_name)
-+			return 0;
-+	} else if (attr == &dev_attr_vendor.attr)  {
-+		if (!sw->vendor)
-+			return 0;
-+	} else if (attr == &dev_attr_vendor_name.attr)  {
-+		if (!sw->vendor_name)
-+			return 0;
-+	} else if (attr == &dev_attr_key.attr) {
- 		if (tb_route(sw) &&
- 		    sw->tb->security_level == TB_SECURITY_SECURE &&
- 		    sw->security_level == TB_SECURITY_SECURE)
+ struct qcom_cpufreq_drv {
+ 	struct opp_table **opp_tables;
++	struct opp_table **genpd_opp_tables;
+ 	u32 versions;
+ 	const struct qcom_cpufreq_match_data *data;
+ };
+@@ -126,6 +129,12 @@ static const struct qcom_cpufreq_match_data match_data_kryo = {
+ 	.get_version = qcom_cpufreq_kryo_name_version,
+ };
+ 
++static const char *qcs404_genpd_names[] = { "cpr", NULL };
++
++static const struct qcom_cpufreq_match_data match_data_qcs404 = {
++	.genpd_names = qcs404_genpd_names,
++};
++
+ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ {
+ 	struct qcom_cpufreq_drv *drv;
+@@ -188,11 +197,19 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 		goto free_drv;
+ 	}
+ 
++	drv->genpd_opp_tables = kcalloc(num_possible_cpus(),
++					sizeof(*drv->genpd_opp_tables),
++					GFP_KERNEL);
++	if (!drv->genpd_opp_tables) {
++		ret = -ENOMEM;
++		goto free_opp;
++	}
++
+ 	for_each_possible_cpu(cpu) {
+ 		cpu_dev = get_cpu_device(cpu);
+ 		if (NULL == cpu_dev) {
+ 			ret = -ENODEV;
+-			goto free_opp;
++			goto free_genpd_opp;
+ 		}
+ 
+ 		if (drv->data->get_version) {
+@@ -203,7 +220,21 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 				ret = PTR_ERR(drv->opp_tables[cpu]);
+ 				dev_err(cpu_dev,
+ 					"Failed to set supported hardware\n");
+-				goto free_opp;
++				goto free_genpd_opp;
++			}
++		}
++
++		if (drv->data->genpd_names) {
++			drv->genpd_opp_tables[cpu] =
++				dev_pm_opp_attach_genpd(cpu_dev,
++							drv->data->genpd_names);
++			if (IS_ERR(drv->genpd_opp_tables[cpu])) {
++				ret = PTR_ERR(drv->genpd_opp_tables[cpu]);
++				if (ret != -EPROBE_DEFER)
++					dev_err(cpu_dev,
++						"Could not attach to pm_domain: %d\n",
++						ret);
++				goto free_genpd_opp;
+ 			}
+ 		}
+ 	}
+@@ -218,6 +249,13 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 	ret = PTR_ERR(cpufreq_dt_pdev);
+ 	dev_err(cpu_dev, "Failed to register platform device\n");
+ 
++free_genpd_opp:
++	for_each_possible_cpu(cpu) {
++		if (IS_ERR_OR_NULL(drv->genpd_opp_tables[cpu]))
++			break;
++		dev_pm_opp_detach_genpd(drv->genpd_opp_tables[cpu]);
++	}
++	kfree(drv->genpd_opp_tables);
+ free_opp:
+ 	for_each_possible_cpu(cpu) {
+ 		if (IS_ERR_OR_NULL(drv->opp_tables[cpu]))
+@@ -238,11 +276,15 @@ static int qcom_cpufreq_remove(struct platform_device *pdev)
+ 
+ 	platform_device_unregister(cpufreq_dt_pdev);
+ 
+-	for_each_possible_cpu(cpu)
++	for_each_possible_cpu(cpu) {
+ 		if (drv->opp_tables[cpu])
+ 			dev_pm_opp_put_supported_hw(drv->opp_tables[cpu]);
++		if (drv->genpd_opp_tables[cpu])
++			dev_pm_opp_detach_genpd(drv->genpd_opp_tables[cpu]);
++	}
+ 
+ 	kfree(drv->opp_tables);
++	kfree(drv->genpd_opp_tables);
+ 	kfree(drv);
+ 
+ 	return 0;
+@@ -259,6 +301,7 @@ static struct platform_driver qcom_cpufreq_driver = {
+ static const struct of_device_id qcom_cpufreq_match_list[] __initconst = {
+ 	{ .compatible = "qcom,apq8096", .data = &match_data_kryo },
+ 	{ .compatible = "qcom,msm8996", .data = &match_data_kryo },
++	{ .compatible = "qcom,qcs404", .data = &match_data_qcs404 },
+ 	{},
+ };
+ 
 -- 
-2.20.1
+2.21.0
 
