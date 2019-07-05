@@ -2,200 +2,166 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F2EC4649B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B712C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3226F2133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512BB20856
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 14:16:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="regnXF4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfGEOPU (ORCPT
+        id S1727878AbfGEOQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 10:15:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33148 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727841AbfGEOPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 10:15:19 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x65EClo5011417;
-        Fri, 5 Jul 2019 10:14:01 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tj5bhf26p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jul 2019 10:14:01 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x65EDkYp014399;
-        Fri, 5 Jul 2019 10:14:00 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tj5bhf262-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jul 2019 10:14:00 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x65EDt6k024551;
-        Fri, 5 Jul 2019 14:13:59 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma03dal.us.ibm.com with ESMTP id 2tdym7mhvb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jul 2019 14:13:59 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x65EDvvm52560328
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jul 2019 14:13:57 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1E816A063;
-        Fri,  5 Jul 2019 14:13:57 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B0CAB6A04F;
-        Fri,  5 Jul 2019 14:13:56 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jul 2019 14:13:56 +0000 (GMT)
-Subject: Re: [PATCH] tpm: fixes uninitialized allocated banks for IBM vtpm
- driver
-To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Michal Suchanek <msuchanek@suse.de>
-References: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <1998ebcf-1521-778f-2c80-55ad2c855023@linux.ibm.com>
-Date:   Fri, 5 Jul 2019 10:13:56 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 5 Jul 2019 10:16:03 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56064 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfGEOQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 10:16:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GURrO8zgnCuCWI7WBuIEssCv1NdAAbLTM7NAgckfxS8=; b=regnXF4lkzwCetZZfcSAd4XQeG
+        9D8cSvAplxUVBOHQi04vypGLshUFcPOgOsXOPGJrAQ5N023ounVLA+9yIcqhN3vIRtMw6KTWr6aPT
+        fsG1rayVXOsgSI41FX05TnDZWudG/33PrwsD6XWlG8AqUmzc0VdF0ENyAJn8mHQjIG+w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hjP0F-0001PA-P4; Fri, 05 Jul 2019 16:15:55 +0200
+Date:   Fri, 5 Jul 2019 16:15:55 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+Message-ID: <20190705141555.GB4428@lunn.ch>
+References: <20190621164940.GL31306@lunn.ch>
+ <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net>
+ <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+ <20190624162431.GX31306@lunn.ch>
+ <20190624182614.GC5690@piout.net>
+ <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
+ <20190705044945.GA30115@lunn.ch>
+ <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-MW
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907050173
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/3/19 11:32 PM, Nayna Jain wrote:
-> The nr_allocated_banks and allocated banks are initialized as part of
-> tpm_chip_register. Currently, this is done as part of auto startup
-> function. However, some drivers, like the ibm vtpm driver, do not run
-> auto startup during initialization. This results in uninitialized memory
-> issue and causes a kernel panic during boot.
->
-> This patch moves the pcr allocation outside the auto startup function
-> into tpm_chip_register. This ensures that allocated banks are initialized
-> in any case.
->
-> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
-> PCR read")
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
->   drivers/char/tpm/tpm-chip.c | 37 +++++++++++++++++++++++++++++++++++++
->   drivers/char/tpm/tpm.h      |  1 +
->   drivers/char/tpm/tpm1-cmd.c | 12 ------------
->   drivers/char/tpm/tpm2-cmd.c |  6 +-----
->   4 files changed, 39 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-> index 8804c9e916fd..958508bb8379 100644
-> --- a/drivers/char/tpm/tpm-chip.c
-> +++ b/drivers/char/tpm/tpm-chip.c
-> @@ -550,6 +550,39 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
->   	return hwrng_register(&chip->hwrng);
->   }
->
-> +/*
-> + * tpm_pcr_allocation() - initializes the chip allocated banks for PCRs
-> + */
-> +static int tpm_pcr_allocation(struct tpm_chip *chip)
-> +{
-> +	int rc = 0;
-> +
-> +	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-> +		rc = tpm2_get_pcr_allocation(chip);
-> +		if (rc)
-> +			goto out;
-> +	}
-> +
-> +	/* Initialize TPM 1.2 */
-> +	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
-> +			GFP_KERNEL);
-> +	if (!chip->allocated_banks) {
-> +		rc = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
-> +	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
-> +	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
-> +	chip->nr_allocated_banks = 1;
-> +
-> +	return 0;
-> +out:
-> +	if (rc < 0)
-> +		rc = -ENODEV;
+> Let me see if I get your point.
+> The D is optional, and the S is optional. So what's left? :)
 
+A collection of interfaces.
 
-The old code where you lifted this from said:
+switchdev and by extension DSA is all about using hardware as an
+accelerator. Linux can do switching in software. It can do routing in
+software, it can do bonding in software, etc. switchdev gives you an
+API to offload this to hardware. And if the hardware or the driver
+does not support it, linux will just keep on doing it in software.
 
-out:
-     if (rc > 0)
-         rc = -ENODEV;
-     return rc;
+Once you get the idea it is just an accelerator, the rest falls into
+place. Why there are no new configuration tools, why we expect network
+daemons to just work, why users don't need to learn anything new. It
+is all just linux networking as normal.
 
-It would not overwrite -ENOMEM with -ENODEV but yours does.
+> Also, there's a big difference between "the hardware can't do it" and
+> "the driver doesn't implement it". If I follow your argument, would
+> you write a DSA driver for a device that doesn't do L2 switching?
 
-I think the correct fix would be to use:
+Sure i would. Such a device is a port multiplexor. The user sees the
+user ports as linux interfaces. They can use those interfaces just
+like any other linux interfaces. Configure them using iproute2, add
+them to bridges, run bonding, etc. All just linux as normal.
 
-if (rc > 0)
+> Along that same line, what benefit does the DSA model bring to a
+> switch that can't do cascading, compared to switchdev? I'm asking this
+> as a user, not as a developer.
 
-     rc = -ENODEV;
+DSA builds on top of switchdev. switchdev gives you an API to offload
+things which are happening in software to the hardware. It is the glue
+which allows you to configure the accelerator.
 
+There is also a common pattern for some switches. They connect a
+switch port MAC to a host port MAC, so that frames can be passed from
+the CPU to the switch. This pattern is common enough that
+infrastructure has been put in place to support this model. That
+infrastructure is DSA.
 
+But that is mostly about details for the driver writer. From the users
+perspective, you have a bunch of interfaces which you just use as
+normal, and some stuff can get accelerated by the hardware. We don't
+want the user to have to known about, or do anything, with the host
+port or the switch port it is connected to. DSA very nearly takes care
+of everything to do with those two. The only thing you need to do is
+configure the master interface up. Then things just work as a bunch of
+Linux interfaces.
 
+Now think about a pure switchdev switch, with a port connected to the
+host. The model breaks down. How do you use that link to the switch?
+It is just a plane link. You would not have tagging in operation. So
+you cannot send frames out specific ports. In order to do that, you
+need to add vlans, and configure the switch to map vlans to ports,
+etc. You also then have two linux interfaces representing one
+port. The pure switchdev interface, and the VLAN interface. That is
+going to confuse the user. You SNMP agent is not just going to
+work. You get the statistics from the pure switchdev interface, but
+the IP configuration from the vlan interface? How do you bridge two
+ports together? You need to put the same VLAN on two interfaces. Where
+as the DSA model you just use linux as normal and create a bridge, add
+the two interfaces, and then the stack transparently offloads it to
+the accelerator. How does STP work?
 
+Using DSA without using the D means switch ports just work as linux
+interfaces.
 
-> +	return rc;
-> +}
-> +
->   /*
->    * tpm_chip_register() - create a character device for the TPM chip
->    * @chip: TPM chip to use.
-> @@ -573,6 +606,10 @@ int tpm_chip_register(struct tpm_chip *chip)
->   	if (rc)
->   		return rc;
+> 
+> > > So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
+> > > sense if the whole purpose is to hide the CPU-facing netdev.
+> >
+> > You actually convinced me the exact opposite. You described the
+> > headers which are needed to implement DSA. The switch sounds like it
+> > can do what DSA requires. So DSA is the correct model.
+> >
+> >      Andrew
+> 
+> Somebody actually asked, with the intention of building a board, if
+> it's possible to cascade the LS1028A embedded switch (Felix) with
+> discrete SJA1105 devices - Felix being at the top of the switch tree.
 
-Above this is tpm_chip_stop(chip) because (afaik) none of the following 
-function calls in tpm_chip_register() needed the TPM, but now with 
-tpm_pcr_allocation() you will need to send a command to the TPM. So I 
-would say you should move the tpm_chip_stop() into the error branch 
-visible above and also after the tpm_pcr_allocation().
+Florian has done something very similar. He used a Broadcom SoC with
+an in built SF2 switch, and an external B53 roboswitch connected to
+one of the SF2 ports. But in that setup, the master interface for the
+b53 is a slave port of the SF2. Configure everything in device tree,
+bring up the SoC master interface, then the SF2 port acting as a
+master interface for the B53, and everything just worked. You have a
+bunch of Linux interfaces you can just use as normal.
 
+This is not using D in DSA. It is two instances of DSA. But because
+the model is that you get normal linux interfaces, it just works. I
+don't see why you cannot do the same with a LS1028A and a SJA1105.
 
-> +	rc = tpm_pcr_allocation(chip);
-tpm_chip_stop(chip);
-> +	if (rc)
-> +		return rc;
-> +
->   	tpm_sysfs_add_device(chip);
->
->   	rc = tpm_bios_log_setup(chip);
-
-
-   Stefan
-
+    Andrew
