@@ -2,172 +2,80 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E61C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EA8C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D675C21852
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBEB21852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 13:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lJIBBAa4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucPR/0qu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfGENSS (ORCPT
+        id S1729035AbfGENS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 09:18:18 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36582 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbfGENSS (ORCPT
+        Fri, 5 Jul 2019 09:18:28 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42461 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729026AbfGENS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 09:18:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id o9so3487224iom.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 06:18:17 -0700 (PDT)
+        Fri, 5 Jul 2019 09:18:27 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so9010400otn.9
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 06:18:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pRtQGOFldLgGE7qJqe1c/CUsqsRLF9F1riuLbw6yyJs=;
-        b=lJIBBAa4dahLP/b9AXN6UgjzFVq0DrkIuIt64/jaRG20TBTpO3CnEPoPccNo6QbN51
-         Rn889prtBvG0KxRt98TgSvQSWsDPFicrLqsuVPEN7IwewqSzO5TvAUG/87lLsqDH5tw4
-         ejt7pCK0lFDN0EOFSf9x3L02OlEYPq3w5ZHv/+z7da0E+d/CNtKw45lIKPhTpZrQ2nYt
-         C6YBCClsw8L58BDpl3mJ2RUk1UnMxKFQPopYvw83EAfI4S1Se/H61yPYj3UQFbsx3nBi
-         lwojRqpap0CC6R14IJyex23CYqqVBmQy5r02PRJG4HhZDR4aoQY2qiQOyJvTapTakmNS
-         sTmw==
+         :cc;
+        bh=nzoXo3/htFR31LA8s3Fj/XgdNRyw0c3OLiqfSUlNP70=;
+        b=ucPR/0quxKGLxIUb9Fysde/5/WskQOU1F7/mjtGZ3gpanKQW8COcu7UBrVGoJr1jPa
+         IO41prY3nvOiDU2Y9rIHe2xtUipl4sR2OfvQNFp7V3xnRT4WBsFfFKQyv1rjmgDLiT9d
+         IdHgdL0EhF+0uV3DKuO84sFyoFFg9zH3yNe9yI9MdHCl/cQpwF8Hc8DL9HFMle0F34xD
+         TfkuxKGJ9pnOdqxjVQ83heK+wKEyI2Nwrv/bAgRLZJ5lJg2O0bjCbm23g+1ysHzS/DQ4
+         eE03+ELaSa4dylEDoSSXeKtD9S6nDBl6JFst3lPJSf3Yfm4BUdjYpk/cJZTiz1oOhUCG
+         VeAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pRtQGOFldLgGE7qJqe1c/CUsqsRLF9F1riuLbw6yyJs=;
-        b=epEqoQlnBdr7tgepFGi0yPuFfggRr6QPNEJYUsuF0lBljePj3L/jPo7nEyHUiLqycE
-         RXSP6hPQj0yrEQJnfnGXI82GNl09im/aMlD08vZw0XpLjyIcO2FTHsFY/mEh9JmTcWEp
-         B0bbToOrmQx4Fu03H3Wyvfx7HBxRx0ABDQKIcgWdJOanuwKVuQMND7+xbkscJ7z/+eOp
-         S258xe/z2WMnRWOnZcnRKoYxypWhGlIpMYbxxP21L/KLUy02onVcUP7axZokgxz+CsjG
-         AP0NRbdXNf3oR5duHwjtoyEO8851gMmEHasiuPtoeCf/+ohjr3t36YycTYas9JWHAlX1
-         4q3A==
-X-Gm-Message-State: APjAAAVsAiABCrrEM35Wd7hUN8w9l1geekm05c/aWiJveO3r4AiI/XQK
-        fv/KG08J2BqU8Chc00NeIGmIhTrY/kC/bFjqrfBHmw==
-X-Google-Smtp-Source: APXvYqwHcTdVO68Zki0+63QSWBONxJLklr7LXnf8O1UNup1dM0NT4WpEphqYVGaOt5adDzriIMut7G9Wn7lr0NEz8U0=
-X-Received: by 2002:a6b:641a:: with SMTP id t26mr4198845iog.3.1562332697230;
- Fri, 05 Jul 2019 06:18:17 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=nzoXo3/htFR31LA8s3Fj/XgdNRyw0c3OLiqfSUlNP70=;
+        b=Ehc43Bjzh0VvbaajUHo4y7Rvt+bSsWkVyg9fBvHhqehQiecKZTnP/z7oTv7pV1WVmu
+         KTa68M2v79s4lA9V+4+W6JJApWdCGY8RzSSY9W9rLhc/9Ko47RRbhFXfmmZ/8tEvDE04
+         PIo4kndlYru8O/Ab3BRzLGz5jQjs2xxtjJnzL5Og+6jj95ozeLaXW+DUSRq3zKBckOeQ
+         HOydYSfDEbwJOTeMEZ0gyBiivbITF290IGfr8tP/GJFySNR86RFSXxZPk3pdEuW3JCHW
+         13AHBX5tvShR+YtMfMAVsYlGQtrcn1PkvymPyVPkvy1wrVcmYKyXiv5HoQhd9zBr2GrP
+         Yy1A==
+X-Gm-Message-State: APjAAAUYdgfLpPG69jXK8jx3sL1R5aMllVOAETUfyJYqr+QRuWVSI15O
+        nqyCDGZPOvI1yt09CWaPmpFMei+9Xk/+3rM1TTE=
+X-Google-Smtp-Source: APXvYqxFkYTLtJ5jfERlyBEPVUyKkNbQC9gBFh5BnS2AudwX6DCwCumL1SMCveo3Ef87ZvF5C3kVRU1B+91dGKp+K2E=
+X-Received: by 2002:a05:6830:1319:: with SMTP id p25mr2936371otq.224.1562332706828;
+ Fri, 05 Jul 2019 06:18:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000d3f34b058c3d5a4f@google.com> <20190626184251.GE3116@mit.edu>
-In-Reply-To: <20190626184251.GE3116@mit.edu>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 5 Jul 2019 15:18:06 +0200
-Message-ID: <CACT4Y+aHgz9cPa7OnVsNeHim72i6zVdjnbvVb0Z1oN2B8QLZqg@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in ext4_write_checks
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        David Miller <davem@davemloft.net>, eladr@mellanox.com,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     syzkaller <syzkaller@googlegroups.com>
+References: <CAGngYiVsUZwCUEsqRk-YtZPGYxsqzHzD7U5GeeHyAa2Yw9Z6WA@mail.gmail.com>
+ <20190624140731.24080-1-TheSven73@gmail.com> <20190705124646.GD2911@vkoul-mobl>
+ <CAGngYiW2+sBv1WqB8+csb=mZm2owziJ5wWcWLNPy7=m72ppypw@mail.gmail.com> <20190705131049.GF2911@vkoul-mobl>
+In-Reply-To: <20190705131049.GF2911@vkoul-mobl>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Fri, 5 Jul 2019 09:18:15 -0400
+Message-ID: <CAGngYiWrKSaNHMjh6n8Aoy7VfUVe3p9469YcL9hB0FZXwZLzLw@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error path
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 8:43 PM Theodore Ts'o <tytso@mit.edu> wrote:
+On Fri, Jul 5, 2019 at 9:13 AM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> On Wed, Jun 26, 2019 at 10:27:08AM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org=
-/pu..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D1435aaf6a00=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3De5c77f8090a=
-3b96b
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D4bfbbf28a2e50=
-ab07368
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D11234c41a=
-00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15d7f026a00=
-000
-> >
-> > The bug was bisected to:
-> >
-> > commit 0c81ea5db25986fb2a704105db454a790c59709c
-> > Author: Elad Raz <eladr@mellanox.com>
-> > Date:   Fri Oct 28 19:35:58 2016 +0000
-> >
-> >     mlxsw: core: Add port type (Eth/IB) set API
->
-> Um, so this doesn't pass the laugh test.
->
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D10393a89=
-a00000
->
-> It looks like the automated bisection machinery got confused by two
-> failures getting triggered by the same repro; the symptoms changed
-> over time.  Initially, the failure was:
->
-> crashed: INFO: rcu detected stall in {sys_sendfile64,ext4_file_write_iter=
-}
->
-> Later, the failure changed to something completely different, and much
-> earlier (before the test was even started):
->
-> run #5: basic kernel testing failed: failed to copy test binary to VM: fa=
-iled to run ["scp" "-P" "22" "-F" "/dev/null" "-o" "UserKnownHostsFile=3D/d=
-ev/null" "-o" "BatchMode=3Dyes" "-o" "IdentitiesOnly=3Dyes" "-o" "StrictHos=
-tKeyChecking=3Dno" "-o" "ConnectTimeout=3D10" "-i" "/syzkaller/jobs/linux/w=
-orkdir/image/key" "/tmp/syz-executor216456474" "root@10.128.15.205:./syz-ex=
-ecutor216456474"]: exit status 1
-> Connection timed out during banner exchange
-> lost connection
->
-> Looks like an opportunity to improve the bisection engine?
+> To quote David you need to move to 21st century (like me).
 
-Hi Ted,
+So true :)
 
-Yes, these infrastructure errors plague bisections episodically.
-That's https://github.com/google/syzkaller/issues/1250
-
-It did not confuse bisection explicitly as it understands that these
-are infrastructure failures rather then a kernel crash, e.g. here you
-may that it correctly identified that this run was OK and started
-bisection in v4.10 v4.9 range besides 2 scp failures:
-
-testing release v4.9
-testing commit 69973b830859bc6529a7a0468ba0d80ee5117826 with gcc (GCC) 5.5.=
-0
-run #0: basic kernel testing failed: failed to copy test binary to VM:
-failed to run ["scp" ...]: exit status 1
-Connection timed out during banner exchange
-run #1: basic kernel testing failed: failed to copy test binary to VM:
-failed to run ["scp" ....]: exit status 1
-Connection timed out during banner exchange
-run #2: OK
-run #3: OK
-run #4: OK
-run #5: OK
-run #6: OK
-run #7: OK
-run #8: OK
-run #9: OK
-# git bisect start v4.10 v4.9
-
-Though, of course, it may confuse bisection indirectly by reducing
-number of tests per commit.
-
-So far I wasn't able to gather any significant info about these
-failures. We gather console logs, but on these runs they are empty.
-It's easy to blame everything onto GCE but I don't have any bit of
-information that would point either way. These failures just appear
-randomly in production and usually in batches...
+Your MAINTAINERS entry in linux-next is still pointing to
+infradead, though. But that's becoming less and less useful,
+now that most developers are moving to kernel.org ...
