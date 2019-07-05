@@ -2,86 +2,134 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3EAC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15950C468A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0546920989
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA28216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727651AbfGEStu (ORCPT
+        id S1727883AbfGESuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 14:49:50 -0400
-Received: from sauhun.de ([88.99.104.3]:53736 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbfGEStu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 14:49:50 -0400
-Received: from localhost (p54B334DF.dip0.t-ipconnect.de [84.179.52.223])
-        by pokefinder.org (Postfix) with ESMTPSA id 69EB02C0398;
-        Fri,  5 Jul 2019 20:49:48 +0200 (CEST)
-Date:   Fri, 5 Jul 2019 20:49:48 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: tegra: Add Dmitry as a reviewer
-Message-ID: <20190705184947.GJ4717@kunai>
-References: <20190623174655.25445-1-digetx@gmail.com>
+        Fri, 5 Jul 2019 14:50:05 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:34941 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfGESuF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 14:50:05 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id ACFC0803D0; Fri,  5 Jul 2019 20:49:51 +0200 (CEST)
+Date:   Fri, 5 Jul 2019 20:50:01 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: suspend broken in next-20190704 on Thinkpad X60
+Message-ID: <20190705185001.GA4068@amd>
+References: <20190704192020.GA3771@amd>
+ <CAJZ5v0gn7FWpqW+WmCzj1=K-pjY=SjRNuEsMR3bRTSO8FzFG=Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="apbmkPN6Hu/1dI3g"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
 Content-Disposition: inline
-In-Reply-To: <20190623174655.25445-1-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJZ5v0gn7FWpqW+WmCzj1=K-pjY=SjRNuEsMR3bRTSO8FzFG=Q@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---apbmkPN6Hu/1dI3g
+--PNTmBPCT7hxwcZjr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 23, 2019 at 08:46:55PM +0300, Dmitry Osipenko wrote:
-> I'm contributing to Tegra's upstream development in general and happened
-> to review the Tegra's I2C patches for awhile because I'm actively using
-> upstream kernel on all of my Tegra-powered devices and initially some of
-> the submitted patches were getting my attention since they were causing
-> problems. Recently Wolfram Sang asked whether I'm interested in becoming
-> a reviewer for the driver and I don't mind at all.
+On Fri 2019-07-05 00:59:35, Rafael J. Wysocki wrote:
+> On Thu, Jul 4, 2019 at 9:20 PM Pavel Machek <pavel@ucw.cz> wrote:
+> >
+> > Hi!
+> >
+> > Suspend is broken in next-20190704 on Thinkpad X60.
 >=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Broken in what way?  Any details?
+>=20
+> > It very very probably worked ok in 20190701.
+>=20
+> Well, please try the linux-next branch from linux-pm.git
+> (git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git)
+> alone and see if that fails.
 
-Applied to for-current with a comment that Thierry acked this in the
-mail thread prior this patch. Thanks!
+So... let me try this one?
 
+commit	1e2a4c9019eb53f62790fadf86c14a54f4cf4888 (patch)
+tree	cb5339fcaae2166832f91f4ce9f40575cc6cb6e5
+parent	3836c60c063581294c3a82f8cbccf3f702951358 (diff)
+parent	0a811974f3f79eea299af79c29595d8e1cb80a15 (diff)
+download
+linux-pm-1e2a4c9019eb53f62790fadf86c14a54f4cf4888.tar.gz
+Merge branch 'pm-cpufreq-new' into
+linux-nexttestinglinux-nextbleeding-edge
+* pm-cpufreq-new:
 
---apbmkPN6Hu/1dI3g
+That one is broken, too.
+
+pavel@amd:~$ sudo pm-suspend
+
+Machine suspends, resumes, but I don't get my prompt back.
+
+Nothing suspect in dmesg:
+
+[   63.925151] usb 5-1: reset full-speed USB device number 2 using
+uhci_hcd
+[   67.105121] ata1: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[   67.106401] ata1.00: ACPI cmd ef/02:00:00:00:00:a0 (SET FEATURES)
+succeeded
+[   67.106410] ata1.00: ACPI cmd f5/00:00:00:00:00:a0 (SECURITY FREEZE
+LOCK) filtered out
+[   67.106418] ata1.00: ACPI cmd ef/10:03:00:00:00:a0 (SET FEATURES)
+filtered out
+[   67.108575] ata1.00: ACPI cmd ef/02:00:00:00:00:a0 (SET FEATURES)
+succeeded
+[   67.108585] ata1.00: ACPI cmd f5/00:00:00:00:00:a0 (SECURITY FREEZE
+LOCK) filtered out
+[   67.108593] ata1.00: ACPI cmd ef/10:03:00:00:00:a0 (SET FEATURES)
+filtered out
+[   67.109152] ata1.00: configured for UDMA/133
+[   71.672932] PM: resume devices took 8.668 seconds
+[   71.673955] OOM killer enabled.
+[   71.673961] Restarting tasks ... done.
+[   73.970718] wlan0: authenticate with 30:b5:c2:f5:9f:1e
+[   73.972610] wlan0: send auth to 30:b5:c2:f5:9f:1e (try 1/3)
+[   73.977518] wlan0: authenticated
+[   73.985092] wlan0: associate with 30:b5:c2:f5:9f:1e (try 1/3)
+[   73.989844] wlan0: RX AssocResp from 30:b5:c2:f5:9f:1e (capab=3D0x431
+status=3D0 aid=3D2)
+[   74.002908] wlan0: associated
+pavel@amd:~$
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--PNTmBPCT7hxwcZjr
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0fm8sACgkQFA3kzBSg
-KbZY2Q/+JxDQL3UNgJmHcRs3I4U9y2MsEo6jLh6uYCGKEqZgDGIVHCTOFz47yia4
-nSuDFqwe4K4X8obmzJUT8lP5sr9A8atNWZOrWBCoB/WG9WNbzgYXnhY2wy6NdFP0
-VZ96OF+O91U0OkDtemY+4kuFihfLj/iwbhZ8uGBptFVRdkmy1L8aFoxXzGf8Onz9
-a5CXn0IDgBU224KqY9f02fvmWlNtii8jPgJZ4E/FdnvIioX0CrZYZW2p9yldDAHG
-9CVGCFAlqB2Vpcdb+ZFVSiJY0YIFgRciVhH7itNryh2tHbG7zHltiH0k09CYZGUu
-VQ03yyceQsIeJQoVq054LWHOwckMNldMwnhZW5eWkebgNI4g5BieMY0ES0+i21EJ
-WqsopjL2kWs+Vq9n4QY5wu0ocucjULfiP/BlZ0wQblPQbreQUJ6z+HiSpIcV0DOd
-jVeN78LH10Za9t7NKGAsbBLZSErHRJltFFSrKSKi58WgdpaoM1MzMU33ku/MiFft
-W9LPhg1BOiob64sUXHD8uFOCYFXTrbdusgtfNCZYRlFg/d+mOZdJG2Dn3Ajc6Q3w
-znWC/4uq5CMmxoUAmPxDnrj/PtyxEsTjMRJlbgnuUPTYcxUvzL4jkLOlcZIan9HH
-2O4pj7dRV9pv4i4DZUDVAUW4hCQdvmb5/iHm8sn/Pes06ja2MSI=
-=v1gr
+iEYEARECAAYFAl0fm9kACgkQMOfwapXb+vIQqQCgiOVfWnJo6ZsG5owL92uTz0wS
+m5AAoLQTX35gNTNvpVbkhMDrM1PV6czj
+=W/c4
 -----END PGP SIGNATURE-----
 
---apbmkPN6Hu/1dI3g--
+--PNTmBPCT7hxwcZjr--
