@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A4EC46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E391AC46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1707020828
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCF52184C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 16:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562344984;
-	bh=fafMgM4/c6F/XGUFt+rdYYgxWLfOwXetANrE6ixNRx0=;
+	s=default; t=1562344992;
+	bh=6AWJxdzggq8jdRaQwBhACvdN0GiYYF6qgZP2ZobE3Dc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ih/vY3oDG2MjtyZCFK+09Bmc4we01nLnuivkaue/HXk624sUyVt12UuFgnickrhhj
-	 CQ1SkAclhuWn4a78ZPPxLCBNuNN4e22fAEyZe0lzhXfPgQ0s+Ra6z4rlCtDjafnEK6
-	 58QLm5xV5Uo0ELk8y/zoyx2kou/o8eexYpJzYoeI=
+	b=1nZWZRMtmdHv/O56PQVlOjXG4bXuYTKJWiOhJYkXowyFF1XQlr+zL7oe8kxevJIBI
+	 xSLv0btmYyD6picmW8Bv3/bcxNddVxadPMhnOKq2FRujlYEzHMUdeQDBeSAbS/KLMN
+	 j6KnOQ2052YHIcJPX78qveWaEXp5DykaIXwLfs5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfGEQnC (ORCPT
+        id S1728822AbfGEQnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 12:43:02 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35021 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728750AbfGEQmn (ORCPT
+        Fri, 5 Jul 2019 12:43:11 -0400
+Received: from mail-io1-f42.google.com ([209.85.166.42]:34422 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbfGEQmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 12:42:43 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so10882200ioo.2;
-        Fri, 05 Jul 2019 09:42:43 -0700 (PDT)
+        Fri, 5 Jul 2019 12:42:37 -0400
+Received: by mail-io1-f42.google.com with SMTP id k8so20433065iot.1;
+        Fri, 05 Jul 2019 09:42:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LabiQkmC1Rr/HV25LNsfRozq8YmiX5RtewiyO4nDttY=;
-        b=U+8RLWR283EBnRsETZDyGcIj+wQAxUAmVO7UNsHxiv45qmDLBNTB2NwXn+kk3D8nGO
-         zpRmcMP1OIJ/tYrFrH1FjZtRMyagC9Mt6UXr7ydcrs2UY8f8HSxbw0GK2Tz6tQ9Bu5sL
-         FEv5GqUgq7QjjW4ktvo5J+vmyiMb451cL21LYELz31KRRMaz2xINpgyobsFdZ/2Y0cLv
-         jpKTB9iKrfsUjt+8u+Vavn7piWOFOhdzjS4EuEmeGJDPzn5gAaHDdR5Ae+Rrc1B2dP+a
-         gTBNPTFPEtgGlIl+NRySBmvojM9RmavY4i9ME2lZ+AwVGkY615bNUie0pQt5EX/mqJjs
-         s4cQ==
-X-Gm-Message-State: APjAAAU2BChjEHIck7DBQExWmI9FlaCBVxyamJpwmhoA+WJrz+kvPhho
-        QrJ7ki5cID2HdBFDy7zC1Q==
-X-Google-Smtp-Source: APXvYqw0S+v3RBEWr5++JbeIs7jwUoCLta54JTucXWP2s5b/WJV3U306/CJRgBrW4MrUJK3uquh4xA==
-X-Received: by 2002:a6b:c98c:: with SMTP id z134mr892385iof.276.1562344962954;
-        Fri, 05 Jul 2019 09:42:42 -0700 (PDT)
+        bh=XS98x+56z0gRiNEek56gSNwAwH+14pgGnF4eQrePkmg=;
+        b=qRmHyiJMq+wAQyJmEuMsc/uX6SAOH1aOwPIL+oix6NEKxxTMfo5UHCPgs0yOZ0CNQC
+         HG7BulH9u11hu3G1fTMWq6IAQh9Bhca4NUlq3xQQQH2KT1k8IxKoWCy2gCcsRxeZVqKT
+         L5BLJtvKc68aSH1ckhlhQI7VBFi+DZot08hJIlGFT1QK0oAlnEsNvZii3ulFCuDVA5vW
+         rNjN2UvXwXyIbu474dwCExmLfNmeBq7JlWsp2n9872Wbaiwb1rbTR68Cg5xA2WiluDwh
+         1VegEKMe3uyWq9xmWoc+s51P+nGb7wvjXR0KNxdc5gID20nam++9OEA/1snNRE1ML5zO
+         k/pw==
+X-Gm-Message-State: APjAAAUNQRXXhpvZ2U2M1joWIzSOeylVS8ycdGAoEfwe37iNdT9CwhDV
+        YCkfLGBTFswNS0rKHEqLYQYJfgk=
+X-Google-Smtp-Source: APXvYqxb4qPpf2440NuEycGWkpJEhmYJgIh5tlmZHPrGm2Bz2vlqn70s1akoqenPe8BuOKMGI+gjdA==
+X-Received: by 2002:a6b:790a:: with SMTP id i10mr4957673iop.150.1562344956206;
+        Fri, 05 Jul 2019 09:42:36 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.252])
-        by smtp.googlemail.com with ESMTPSA id b8sm6878104ioj.16.2019.07.05.09.42.41
+        by smtp.googlemail.com with ESMTPSA id b8sm6878104ioj.16.2019.07.05.09.42.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 09:42:42 -0700 (PDT)
+        Fri, 05 Jul 2019 09:42:35 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v3 11/13] dt-bindings: display: Convert mitsubishi,aa104xd12 panel to DT schema
-Date:   Fri,  5 Jul 2019 10:42:19 -0600
-Message-Id: <20190705164221.4462-12-robh@kernel.org>
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Eric Anholt <eric@anholt.net>
+Subject: [PATCH v3 07/13] dt-bindings: display: Convert raspberrypi,7inch-touchscreen panel to DT schema
+Date:   Fri,  5 Jul 2019 10:42:15 -0600
+Message-Id: <20190705164221.4462-8-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190705164221.4462-1-robh@kernel.org>
 References: <20190705164221.4462-1-robh@kernel.org>
@@ -70,149 +71,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the mitsubishi,aa104xd12 LVDS panel binding to DT schema.
+Convert the raspberrypi,7inch-touchscreen panel binding to DT schema.
 
+Cc: Eric Anholt <eric@anholt.net>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
 Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../display/panel/mitsubishi,aa104xd12.txt    | 47 ------------
- .../display/panel/mitsubishi,aa104xd12.yaml   | 75 +++++++++++++++++++
- 2 files changed, 75 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
+ .../panel/raspberrypi,7inch-touchscreen.txt   | 49 -------------
+ .../panel/raspberrypi,7inch-touchscreen.yaml  | 71 +++++++++++++++++++
+ 2 files changed, 71 insertions(+), 49 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt b/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt
 deleted file mode 100644
-index ced0121aed7d..000000000000
---- a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
+index e9e19c059260..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.txt
 +++ /dev/null
-@@ -1,47 +0,0 @@
--Mitsubishi AA204XD12 LVDS Display Panel
--=======================================
+@@ -1,49 +0,0 @@
+-This binding covers the official 7" (800x480) Raspberry Pi touchscreen
+-panel.
 -
--The AA104XD12 is a 10.4" XGA TFT-LCD display panel.
+-This DSI panel contains:
 -
--These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
--with the following device-specific properties.
+-- TC358762 DSI->DPI bridge
+-- Atmel microcontroller on I2C for power sequencing the DSI bridge and
+-  controlling backlight
+-- Touchscreen controller on I2C for touch input
 -
+-and this binding covers the DSI display parts but not its touch input.
 -
 -Required properties:
+-- compatible:	Must be "raspberrypi,7inch-touchscreen-panel"
+-- reg:		Must be "45"
+-- port:		See panel-common.txt
 -
--- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
--  order.
--- vcc-supply: Reference to the regulator powering the panel VCC pins.
+-Example:
 -
--
--Example
---------
--
--panel {
--	compatible = "mitsubishi,aa104xd12", "panel-lvds";
--	vcc-supply = <&vcc_3v3>;
--
--	width-mm = <210>;
--	height-mm = <158>;
--
--	data-mapping = "jeida-24";
--
--	panel-timing {
--		/* 1024x768 @65Hz */
--		clock-frequency = <65000000>;
--		hactive = <1024>;
--		vactive = <768>;
--		hsync-len = <136>;
--		hfront-porch = <20>;
--		hback-porch = <160>;
--		vfront-porch = <3>;
--		vback-porch = <29>;
--		vsync-len = <6>;
--	};
+-dsi1: dsi@7e700000 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	<...>
 -
 -	port {
--		panel_in: endpoint {
--			remote-endpoint = <&lvds_encoder>;
+-		dsi_out_port: endpoint {
+-			remote-endpoint = <&panel_dsi_port>;
 -		};
 -	};
 -};
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
+-
+-i2c_dsi: i2c {
+-	compatible = "i2c-gpio";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	gpios = <&gpio 28 0
+-		 &gpio 29 0>;
+-
+-	lcd@45 {
+-		compatible = "raspberrypi,7inch-touchscreen-panel";
+-		reg = <0x45>;
+-
+-		port {
+-			panel_dsi_port: endpoint {
+-				remote-endpoint = <&dsi_out_port>;
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml b/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
 new file mode 100644
-index 000000000000..b5e7ee230fa6
+index 000000000000..22a083f7bc8e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
-@@ -0,0 +1,75 @@
++++ b/Documentation/devicetree/bindings/display/panel/raspberrypi,7inch-touchscreen.yaml
+@@ -0,0 +1,71 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/mitsubishi,aa104xd12.yaml#
++$id: http://devicetree.org/schemas/display/panel/raspberrypi,7inch-touchscreen.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Mitsubishi AA104XD12 10.4" XGA LVDS Display Panel
++title: The official 7" (800x480) Raspberry Pi touchscreen
 +
 +maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++  - Eric Anholt <eric@anholt.net>
 +  - Thierry Reding <thierry.reding@gmail.com>
 +
-+allOf:
-+  - $ref: lvds.yaml#
++description: |+
++  This DSI panel contains:
++
++  - TC358762 DSI->DPI bridge
++  - Atmel microcontroller on I2C for power sequencing the DSI bridge and
++    controlling backlight
++  - Touchscreen controller on I2C for touch input
++
++  and this binding covers the DSI display parts but not its touch input.
 +
 +properties:
 +  compatible:
-+    items:
-+      - const: mitsubishi,aa104xd12
-+      - {} # panel-lvds, but not listed here to avoid false select
++    const: raspberrypi,7inch-touchscreen-panel
 +
-+  vcc-supply:
-+    description: Reference to the regulator powering the panel VCC pins.
++  reg:
++    const: 0x45
 +
-+  data-mapping:
-+    const: jeida-24
-+
-+  width-mm:
-+    const: 210
-+
-+  height-mm:
-+    const: 158
-+
-+  panel-timing: true
 +  port: true
-+
-+additionalProperties: false
 +
 +required:
 +  - compatible
-+  - vcc-supply
++  - reg
++  - port
++
++additionalProperties: false
 +
 +examples:
 +  - |+
-+
-+    panel {
-+      compatible = "mitsubishi,aa104xd12", "panel-lvds";
-+      vcc-supply = <&vcc_3v3>;
-+
-+      width-mm = <210>;
-+      height-mm = <158>;
-+
-+      data-mapping = "jeida-24";
-+
-+      panel-timing {
-+        /* 1024x768 @65Hz */
-+        clock-frequency = <65000000>;
-+        hactive = <1024>;
-+        vactive = <768>;
-+        hsync-len = <136>;
-+        hfront-porch = <20>;
-+        hback-porch = <160>;
-+        vfront-porch = <3>;
-+        vback-porch = <29>;
-+        vsync-len = <6>;
-+      };
++    dsi1: dsi {
++      #address-cells = <1>;
++      #size-cells = <0>;
 +
 +      port {
-+        panel_in: endpoint {
-+          remote-endpoint = <&lvds_encoder>;
++        dsi_out_port: endpoint {
++          remote-endpoint = <&panel_dsi_port>;
++        };
++      };
++    };
++
++    i2c_dsi: i2c {
++      compatible = "i2c-gpio";
++      #address-cells = <1>;
++      #size-cells = <0>;
++      scl-gpios = <&gpio 28 0>;
++      sda-gpios = <&gpio 29 0>;
++
++      lcd@45 {
++        compatible = "raspberrypi,7inch-touchscreen-panel";
++        reg = <0x45>;
++
++        port {
++          panel_dsi_port: endpoint {
++            remote-endpoint = <&dsi_out_port>;
++          };
 +        };
 +      };
 +    };
