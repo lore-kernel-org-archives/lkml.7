@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D386C4649C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAD3C4649B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D702184C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3570216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QkeXIR22"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KnLiD+7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfGEPN3 (ORCPT
+        id S1727959AbfGEPNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 11:13:29 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36960 "EHLO
+        Fri, 5 Jul 2019 11:13:33 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36968 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfGEPN2 (ORCPT
+        with ESMTP id S1725497AbfGEPNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:13:28 -0400
+        Fri, 5 Jul 2019 11:13:32 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x65FDLDO059321;
-        Fri, 5 Jul 2019 10:13:21 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x65FDSmH059357;
+        Fri, 5 Jul 2019 10:13:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562339601;
-        bh=AznSeI2qecv3FPLBtJdM/efVn5C8LoHjb0YeI/MvakI=;
+        s=ti-com-17Q1; t=1562339608;
+        bh=gxtJhkuG7IPxei2RhexfsQ5UaZGWrzpnLrzOoKIishA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=QkeXIR22QaQA0RdT+rvE3tKSG+PvryDasZGIOLzqpPvLT5vz9RauaCyPtxoEAfMMN
-         GLopovH2o0/Rh8XtmZuMy6UPev/sp/MkIP5YCQ5Zu6z6s91C30NrI20b/HoGsSrU7r
-         K3eZSPvu6TSeyfQPfRbr7ErihCUicFtjMR/oim1w=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x65FDLRo015208
+        b=KnLiD+7Yy/I/h52+Sxvsj+RJgs9pgp5qHf5QEk8OeDO5TfxyqbpRKLvjvtKSjWtmk
+         r4qhOqXQyuOZNQgatj6SWzTTljoKxseXLO59ljlzY/8xzjT7MhtHe2db3AhWpzgv6O
+         oagHVkyjArYdLm4e6sfjTUwCO29jq4xjnxcxl410=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x65FDSdC015260
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Jul 2019 10:13:21 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 5 Jul 2019 10:13:28 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 5 Jul
- 2019 10:13:21 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 10:13:28 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 5 Jul 2019 10:13:20 -0500
+ Frontend Transport; Fri, 5 Jul 2019 10:13:28 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x65FDKQT033754;
-        Fri, 5 Jul 2019 10:13:20 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x65FDRuA095039;
+        Fri, 5 Jul 2019 10:13:27 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Santosh Shilimkar <ssantosh@kernel.org>
 CC:     Sekhar Nori <nsekhar@ti.com>,
@@ -55,9 +55,9 @@ CC:     Sekhar Nori <nsekhar@ti.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RESEND PATCH next v2 4/6] ARM: dts: k2hk-netcp: add cpts refclk_mux node
-Date:   Fri, 5 Jul 2019 18:12:45 +0300
-Message-ID: <20190705151247.30422-5-grygorii.strashko@ti.com>
+Subject: [RESEND PATCH next v2 5/6] ARM: dts: k2l-netcp: add cpts refclk_mux node
+Date:   Fri, 5 Jul 2019 18:12:46 +0300
+Message-ID: <20190705151247.30422-6-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190705151247.30422-1-grygorii.strashko@ti.com>
 References: <20190705151247.30422-1-grygorii.strashko@ti.com>
@@ -69,28 +69,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KeyStone 66AK2H/K 1G Ethernet Switch Subsystems, can control an external
+KeyStone 66AK2L 1G Ethernet Switch Subsystems, can control an external
 multiplexer that selects one of up to 32 clocks for time sync reference
 (RFTCLK) clock. This feature can be configured through CPTS_RFTCLK_SEL
 register (offset: x08) in CPTS module and modelled as multiplexer clock.
 
 Hence, add cpts-refclk-mux clock node which allows to mux one of SYSCLK2,
-SYSCLK3, TIMI0, TIMI1, TSREFCLK clocks as CPTS reference clock [1] and
-group all CPTS properties under "cpts" subnode.
+SYSCLK3, TIMI0, TIMI1, TSREFCLK clocks as CPTS
+reference clock [1] and group all CPTS properties under "cpts" subnode.
 
-[1] http://www.ti.com/lit/gpn/66ak2h14
+[1] http://www.ti.com/lit/gpn/66ak2l06
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2hk-netcp.dtsi | 20 ++++++++++++++++++--
+ arch/arm/boot/dts/keystone-k2l-netcp.dtsi | 20 ++++++++++++++++++--
  1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-index e203145acbea..d5a6c1f5633c 100644
---- a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-@@ -152,8 +152,8 @@ netcp: netcp@2000000 {
+diff --git a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+index a2e47bad3307..c1f982604145 100644
+--- a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+@@ -134,8 +134,8 @@ netcp: netcp@26000000 {
  	/* NetCP address range */
- 	ranges  = <0 0x2000000 0x100000>;
+ 	ranges = <0 0x26000000 0x1000000>;
  
 -	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
 -	clock-names = "pa_clk", "ethss_clk", "cpts";
@@ -98,9 +98,9 @@ index e203145acbea..d5a6c1f5633c 100644
 +	clock-names = "pa_clk", "ethss_clk";
  	dma-coherent;
  
- 	ti,navigator-dmas = <&dma_gbe 22>,
-@@ -175,6 +175,22 @@ netcp: netcp@2000000 {
- 			tx-queue = <648>;
+ 	ti,navigator-dmas = <&dma_gbe 0>,
+@@ -155,6 +155,22 @@ netcp: netcp@26000000 {
+ 			tx-queue = <896>;
  			tx-channel = "nettx";
  
 +			cpts {
