@@ -2,136 +2,67 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C2AC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A054AC5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6226B218BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1A3218BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfGEICo (ORCPT
+        id S1728112AbfGEIEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 04:02:44 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59333 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfGEICn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 04:02:43 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hjJAu-0001cv-SN; Fri, 05 Jul 2019 10:02:32 +0200
-Message-ID: <1562313748.4291.3.camel@pengutronix.de>
-Subject: Re: [PATCH V3 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-Date:   Fri, 05 Jul 2019 10:02:28 +0200
-In-Reply-To: <DB3PR0402MB39167B9A3CFAE6D8798B3CAEF5F50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190704094416.4757-1-Anson.Huang@nxp.com>
-         <1562235363.6641.10.camel@pengutronix.de>
-         <DB3PR0402MB39167B9A3CFAE6D8798B3CAEF5F50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 5 Jul 2019 04:04:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53188 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727506AbfGEIEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 04:04:33 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 66E8A88304;
+        Fri,  5 Jul 2019 08:04:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-9.rdu2.redhat.com [10.10.120.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E5BE8D66B;
+        Fri,  5 Jul 2019 08:04:18 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190705051733.GA15821@kroah.com>
+References: <20190705051733.GA15821@kroah.com> <20190703190846.GA15663@kroah.com> <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk> <156173697086.15137.9549379251509621554.stgit@warthog.procyon.org.uk> <10295.1562256260@warthog.procyon.org.uk>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        raven@themaw.net, Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] Add a general, global device notification watch list [ver #5]
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <12945.1562313857.1@warthog.procyon.org.uk>
+Date:   Fri, 05 Jul 2019 09:04:17 +0100
+Message-ID: <12946.1562313857@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 05 Jul 2019 08:04:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-On Fri, 2019-07-05 at 00:26 +0000, Anson Huang wrote:
-> Hi, Philipp
-> 
-> > On Thu, 2019-07-04 at 17:44 +0800, Anson.Huang@nxp.com wrote:
-> > > From: Anson Huang <Anson.Huang@nxp.com>
-> > > 
-> > > i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
-> > > property and related info to support i.MX8MM.
-> > > 
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > > Changes since V2:
-> > > 	- Add separate line for i.MX8MM in case anything different later for
-> > 
-> > i.MX8MM.
-> > > ---
-> > >  Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> > > b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> > > index 13e0951..c2489e4 100644
-> > > --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> > > +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> > > @@ -8,6 +8,7 @@ Required properties:
-> > >  - compatible:
-> > >  	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
-> > >  	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
-> > > +	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src",
-> > 
-> > "syscon"
-> > >  - reg: should be register base and length as documented in the
-> > >    datasheet
-> > >  - interrupts: Should contain SRC interrupt @@ -46,5 +47,6 @@ Example:
-> > > 
-> > > 
-> > >  For list of all valid reset indices see
-> > > -<dt-bindings/reset/imx7-reset.h> for i.MX7 and
-> > > -<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
-> > > +<dt-bindings/reset/imx7-reset.h> for i.MX7,
-> > > +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
-> > > +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
-> > 
-> > The last line is misleading, as that file contains reset indices that are invalid
-> > for i.MX8MM.
-> 
-> What is your suggestion about this line?
+> Hm, good point, but there should be some way to test this to verify it
+> works.  Maybe for the other types of events?
 
-I would prefer to add an imx8mm-reset.h with only the existing reset
-bits, using the IMX8MM_RESET_ prefix. That would make it easy to spot
-errors in the dtsi (anything starting with IMX8MQ_ is potentially
-wrong).
+Keyrings is the simplest.  keyutils's testsuite will handle that.  I'm trying
+to work out if I can simply make every macro in there that does a modification
+perform a watch automatically to make sure the appropriate events happen.
 
-> Just NOT change it?
-
-The change is good in principle. It just should point to an imx8mm-
-reset.h with only the existing resets on i.MX8MM, or imx8mq-reset.h
-should be modified to actually make clear which resets are valid on
-i.MX8MM.
-
-> Or adding a new file imx8mm-reset.h but still use the IMX8MQ_RESET_ as
-> prefix ?
-
-I don't think you should redefine the same macros in imx8mm-reset.h. In
-this case using IMX8MM_RESET_ would be better.
-
-> Or keep what I changed, but adding some comments in those macros that
-> i.MX8MM does NOT support?
-
-That would be acceptable as well.
-
-regards
-Philipp
+David
