@@ -2,102 +2,129 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BBBC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16943C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D86D218C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CFC20663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 08:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8Jq1h8p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PFcRN8vq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfGEI4b (ORCPT
+        id S1728060AbfGEI6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 04:56:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44113 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727462AbfGEI4b (ORCPT
+        Fri, 5 Jul 2019 04:58:08 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35002 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfGEI6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 04:56:31 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t14so1211303plr.11
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 01:56:31 -0700 (PDT)
+        Fri, 5 Jul 2019 04:58:08 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so1774195ljh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 01:58:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1YPlHtNgTN1G0od1SzkjELx9HewbPSo2GNnCAZJ9hb8=;
-        b=E8Jq1h8pS4+Brm0rvsAfnwUSvN0RwgYU8sdYmdtRuWP21u1i+lCGYQL6/Y/sgCHfF9
-         ZSnMGKSzXCSC9vsZmGDagepg0vPFU4yl22jxdN2k/SvpggYdlvY9QtKjjrAIYCT8bw8M
-         2js32oP+jFjHueasQ5HbcSehBIaC/3usnew40IPZdfMgEDnBPTVDMU5rX6a78sRWhXBI
-         k+byDQQgmqTOYGyfjWeCSQt3TuoaWoWlRgG3LfMrkUmuAyS9M+dhni/VIG/4Q88dbhXD
-         Jve23Z7G4W1qWAaFb/Ym9pXjXCx9Jkw7SzaX0Gn6x3EhKu+0pO4sKIJ2U595pTn1pZWE
-         4/KA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IAK+HQXm4zM3yGamuT9+AVKxhqMcm5jL9vd/N5ksk0c=;
+        b=PFcRN8vqdRs1XHo8CJhFwUNk8C4nKxTRtfakN+VIAqiU13A5AmaFxUqKZ30/l/FwnL
+         bKpcOoCPVKMFtc13bNUjJ9M8TsmeBQFJsN3OBOcjicVqRx4TdMzJU+OUqe0o5XlLjuXv
+         kJ+aDUXLBozQJZ6wCB1IIbCgJ1BCcrzav/c85c72u00VCD0jrnoTSIBir2hi7Z9coK+P
+         IiR1fSkMZyxu44Ry6JOMtA54Yxq1TGUeANIlWVS8qeC4BzzQoYHc2gIt0Ycj5sYeeQO1
+         sVh9M8wX9ti5G5m4dJGGLlrsgLGqXw2aXsrZEbwm7XmLHzKi1RDu8XtRgDSd4hEWSXVK
+         4Z6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1YPlHtNgTN1G0od1SzkjELx9HewbPSo2GNnCAZJ9hb8=;
-        b=Ka+W3v/NmZ2e+RJ5K3B/FFGi5uSZRu/sfQRROiWG55ZRfv4BRLoAOqpauGu6E4d97p
-         lF1PEvBBBY6yPujC8+tJ+GmAK/TMXU8Kw8Xcj7/z9XIpV6s9zCMvyCuVJp27XM421rl4
-         TAhXZFgZO+lt8J7uC/N2cHGeUMgnGVtRG4hfyoDdwu939iyk1lNUSdQAEKwfPVqCo14s
-         Uv0ODkmLJzdduNnpH+YKIofmy/v2GMGnNL1gfpMw9JG+AdgP1aWr/BFp+j1Svv7mVe8P
-         IO30S7DD4Yx4A/OGEGEY0zFpTshLulMcbRDM2WxLyGzLaTKsDwsxhT4fCp4m+WNU6Qa5
-         ih5Q==
-X-Gm-Message-State: APjAAAV1owZBa2PNAInFyjWT07E2/hDlKw7szdZFhwBcGoz1eB8Bo7S9
-        utwdCi5xHokrDfWGbnMqM0k=
-X-Google-Smtp-Source: APXvYqyQBTT8qRZzKlQCeZ9irJTIkExtAyXVL/ZyLHGLSKUB5FFfj2IeI8Xcnd5OPKdaIfN8BzG1RQ==
-X-Received: by 2002:a17:902:9b81:: with SMTP id y1mr4140472plp.194.1562316990530;
-        Fri, 05 Jul 2019 01:56:30 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:7148:c4d0:6a65:6774:f88c:ebeb])
-        by smtp.googlemail.com with ESMTPSA id n89sm19478906pjc.0.2019.07.05.01.56.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 01:56:29 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org (open list:SCHEDULER),
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] Sched: Change type of 'overrun' from int to u64
-Date:   Fri,  5 Jul 2019 14:26:09 +0530
-Message-Id: <20190705085609.24453-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IAK+HQXm4zM3yGamuT9+AVKxhqMcm5jL9vd/N5ksk0c=;
+        b=lZTbmTYPqQ2HVA3Ut5ABww0/kYcEPtdwIDktd5yIlh+4nm5dhjhv9XHWkYeOpXg8LS
+         IlSPdbzc5UMeoi6zCjOnrsBUcK8JKe7hRixGXzTjPFMkUZA+YLfPJkWDplKeLEpGETGv
+         eccV9n8YkHRJ2MSuSCgTGf4meF/G6RchoCBBbwaHGLPQVBB3egye2IxKBpC0QwwLnlJb
+         M51l+eSqXmk6g44O4VRMopzDbHehXiIPrHH1XS+K3Er8ipMjEqRxnhSa72BPZbrp1hVG
+         3oeyGHIndUyir49l5fKe/Gd6rtQuDabDcXuARl/lO5+Xhv2aIJUcVUcUFqjo8nlPQm1u
+         SnSw==
+X-Gm-Message-State: APjAAAVliKIgXinGXZEwO10JVdyiBOUiVXyScZCljYSq1UQUcdsslzUq
+        I47CeoY4qGOttIS5Wnqlz2iJCsLqZULK9PqMF04LAtKZ
+X-Google-Smtp-Source: APXvYqzNMxvRsv1RC7618zL4v00ohASaVxdpPgJfg3fqsJFb0iBwJWWMqhbHh7stOpLPPgEyrZAElm3JpEKzhJ9IIAI=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr1562120ljm.180.1562317086652;
+ Fri, 05 Jul 2019 01:58:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <tip-f3d705d506a2afa6c21c2c728783967e80863b31@git.kernel.org>
+ <CACRpkdboWWKfaTu=TKqnZgjy4HNWr+fjmQXLBBmePsaDihkbSA@mail.gmail.com>
+ <be57afd0-5a81-4d79-3ee4-1fb23644f424@arm.com> <CACRpkdbgyWmMM+3L6rjpWr4Z=qu4w6cri3cv0DG51JpFd9Ej4g@mail.gmail.com>
+ <CAKv+Gu_=4P=caK4mFiAf+sqnKSZciCH0w8wUp19ef4xDVLH9-w@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_=4P=caK4mFiAf+sqnKSZciCH0w8wUp19ef4xDVLH9-w@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 5 Jul 2019 10:57:55 +0200
+Message-ID: <CACRpkdZTkMzEBX5b8LCdxkSPoY2pTcTZWEPTHuS3WpX6a5=cnA@mail.gmail.com>
+Subject: Re: [tip:irq/core] gpio: mb86s7x: Enable ACPI support
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-tip-commits@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Callers of hrtimer_forward_now() should save the return value in u64.
-function sched_rt_period_timer() stores
-it in variable 'overrun' of type int
-change type of overrun from int to u64 to solve the issue.
+On Thu, Jul 4, 2019 at 8:18 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> On Thu, 4 Jul 2019 at 09:52, Linus Walleij <linus.walleij@linaro.org> wrote:
+> >
+> > On Wed, Jul 3, 2019 at 3:50 PM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> > > On 03/07/2019 13:26, Linus Walleij wrote:
+> > > > On Wed, Jul 3, 2019 at 11:24 AM tip-bot for Ard Biesheuvel
+> > > > <tipbot@zytor.com> wrote:
+> > > >
+> > > >> Committer:  Marc Zyngier <marc.zyngier@arm.com>
+> > > >> CommitDate: Wed, 29 May 2019 10:42:19 +0100
+> > > >>
+> > > >> gpio: mb86s7x: Enable ACPI support
+> > > >>
+> > > >> Make the mb86s7x GPIO block discoverable via ACPI. In addition, add
+> > > >> support for ACPI GPIO interrupts routed via platform interrupts, by
+> > > >> wiring the two together via the to_irq() gpiochip callback.
+> > > >>
+> > > >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > > >> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > >> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > >> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> > > >
+> > > > OK!
+> > > >
+> > > >> +#include "gpiolib.h"
+> > > >> +
+> > > >
+> > > > But this isn't needed anymore, is it?
+> > >
+> > > You tell me! ;-)
+> > >
+> > > > I can try to remember to remove it later though.
+> > >
+> > > Yeah, please send a separate patch. tip is stable, and we can't roll
+> > > this back.
+> >
+> > I'll just fix it in the GPIO tree after -rc1.
+> > Made a personal TODO note!
+>
+> Why wouldn't it be needed anymore?
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- kernel/sched/rt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I looked over the code like 5 times and I can't see it touching any
+gpiolib internals anymore, but maybe I'm still wrong?
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 1e6b909dca36..f5d3893914f5 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -19,7 +19,7 @@ static enum hrtimer_restart sched_rt_period_timer(struct hrtimer *timer)
- 	struct rt_bandwidth *rt_b =
- 		container_of(timer, struct rt_bandwidth, rt_period_timer);
- 	int idle = 0;
--	int overrun;
-+	u64 overrun;
- 
- 	raw_spin_lock(&rt_b->rt_runtime_lock);
- 	for (;;) {
--- 
-2.21.0
+Normally GPIO drivers should get all symbols it needs from
+<linux/gpio/driver.h> and "gpiolib.h" is not something drivers
+should include.
 
+Anyways I will get to know from compile tests if I'm wrong.
+
+Yours,
+Linus Walleij
