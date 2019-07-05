@@ -2,138 +2,127 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E667C46499
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED82FC468A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0AEF21738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:55:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hwq3MtMg"
+	by mail.kernel.org (Postfix) with ESMTP id D2EA4216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfGESzl (ORCPT
+        id S1727898AbfGES4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 14:55:41 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42129 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbfGESzl (ORCPT
+        Fri, 5 Jul 2019 14:56:16 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:36485 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfGES4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 14:55:41 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay6so4965344plb.9;
-        Fri, 05 Jul 2019 11:55:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=SEw+f+WvSmW4ZE4Ix9oVBZdz8BUyqrL3rZLhlP8kF3w=;
-        b=Hwq3MtMgrXzlCba1rAUyQnQPYMyf9O41lrJvgv0jf/QiHGgc7QVvrGQgMYq6V2ETEU
-         eWa+2HdTM1R/TPYWU6esr2gkb4eBXAVNTBau36JnnfZ1kbg9n5koLiH/Up4Gk0mr9EGP
-         7x6jtG0m2kqJDjHo0Eo2CCxd8I4foehy8Nrp8eqQDLeugbKVDhP63nj0EwM7EyC/kFpI
-         kZ2HkMmyZmP0Paqz/NzG5GQVXAzzTazVFnDLbseqzDBOG9HpyZG1WwqUILiWgeV99BdD
-         t/5fFA+d8UOYxlCuoh32QeYJiUUlIUR5+uysabpmQtyTpsy/MhjonO3FQeiYqeP40jy6
-         O3rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SEw+f+WvSmW4ZE4Ix9oVBZdz8BUyqrL3rZLhlP8kF3w=;
-        b=HVlR49qwS3QS9PQuAYl2dAdEeub+Y5eNIjfSHjn52reH381sXGUi6XP4BJJcZMHbGT
-         sXZfcj9KZsDhx9G73bmHyCoPxn12OeOHnbHUi3oHDa5R4X/bc/U9nTcXdvYjzuzTepf4
-         QhmA/YvQiYvB64iiTyfkr6MAzR1oGQlrI9G+/p3egwmlNsB75EFgk1luf3nWMp4ubAyv
-         cg9oUirxefNy1fIoeO1dZOc3hdO9+Y7DTCzO/vASNlsjNSCXGKFRDpFTBSdyY4NBVtFF
-         RPcAirz6tUOWHOJyE86iep6/RRh21uOeehUB2N7RSai4nC1OVMKSE13PttdYAu4VNneP
-         nQxw==
-X-Gm-Message-State: APjAAAVKNcIrGnnZ/ubm7TjTp3rtihoNGt6qRtAZUpL8Ch+HzhCA3k/l
-        R5pLYOiC9AJdMwgoAEJ//uc=
-X-Google-Smtp-Source: APXvYqzG0MQIdevaUAq4AnUl9vDE9sY2FiUD//CskItSu3ZLMv6JHfS/Un4WlwTwGx1YysOT3Su+GQ==
-X-Received: by 2002:a17:902:b28b:: with SMTP id u11mr7042427plr.11.1562352940444;
-        Fri, 05 Jul 2019 11:55:40 -0700 (PDT)
-Received: from debian.net.fpt ([2405:4800:58f7:1cb1:98e0:87d3:2c8b:b6ed])
-        by smtp.gmail.com with ESMTPSA id j24sm13447599pgg.86.2019.07.05.11.55.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Jul 2019 11:55:39 -0700 (PDT)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     corbet@lwn.net, gregkh@linuxfoundation.org,
-        skhan@linuxfoundation.org, mchehab@kernel.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH] Documentation: usb: convert usb-help to rst
-Date:   Sat,  6 Jul 2019 01:55:19 +0700
-Message-Id: <20190705185519.31033-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 5 Jul 2019 14:56:16 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MFL8J-1hlPCN00kL-00FjKe; Fri, 05 Jul 2019 20:56:02 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     stable@kernel.org
+Cc:     Sasha Levin <alexander.levin@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jisheng Zhang <jszhang@marvell.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [STABLE backport 4.9] arm64, vdso: Define vdso_{start,end} as array
+Date:   Fri,  5 Jul 2019 20:55:50 +0200
+Message-Id: <20190705185558.3655220-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:9JINqZTxsunxdoxm0iUUSQeQ4/ecEkdB/hce9tuBRM0t29UkQyB
+ lwdaoYveWTZgF/lUUJRSrqK5WYjQEc/k/B3bNFv2gb4NGga/CJxMU+NjQfEXT5gqJQt5kuo
+ ZIons8w8mls3aB9ApHEnSFneR8RVUzIEHFM6caPOzmfKpEPQ4qNwFkjikgCKvQzq8szf9bK
+ I3Y3ygKkOawd/NWlaivqQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qLH4Ljn1ftU=:7RYumwgeDzndatUw45Gd63
+ ankahKZDnMs8XbshANZqkIXJWYw+tKq4O4ySHlOhOuVekatL3/OZ/PWpMIvepxQ4jYTTseMAL
+ D2Lwf7INkibOSaGg1/Eoo8ClWXQZ12MdSGun7BrflypAZjXnuqosuMtplMwTkdld2cC5YvLBW
+ tYlqcXqfkzMqdcOUpgY40AxRWxkOJj0UZmHF8S2NJqLZp9ako89YdArPE/qAdr0SdM/Xg8mDs
+ mMzCZm5VXJbwjskhasHVFRiwYeV3GjBST+hyfwOQ7Frd9Ailqn8DVpZ8dOEIb+VfifAt4Hlz0
+ uMLvUpts4xuJFepYSagTZ67NegJrBfAKgVMqeXQGMnzUkK4JqzgpHK/VXRDxeeiiQa+g5Pg7C
+ l1MWXr7PQA8AHZc1nTuYg39Ko3PbZJCNKLQZhSy6sTrPLggOQMH9Hdeg3annYY9dbfdgD+Yye
+ l7aLSJRiCfUZA53vI51/eLHzCgsVXqAODgvOY+pe2nfVGqElXrv+JTu67RB9Rh3AwhQfBWbrO
+ hKbKPCPGB0jPqkFh9DVefMw+lIx75MwDOF5zJJRflQRB+c1+v7Y0R+wj/bKLkVh2hvmgHcyBA
+ q1I63aheIZu2AoC+NUmOJtYCq7eTp9TvPDcHzuuP5T9LbqdHsZVUEE9KUj6ibgdS+xOb48tai
+ PtDKRxILS9xvJAIvdeesvCglw1pGNbAYZApVwMXppFEHlyzfXN4hnMHpwK2z9Gputf6thSCEK
+ ZTG6x/wWfQPWxr+ozBXhNhAklu9pxcSE9y/Gsw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new index.rst and change usb-help.txt format
-to rst.
+From: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Commit dbbb08f500d6146398b794fdc68a8e811366b451 upstream.
+
+Adjust vdso_{start|end} to be char arrays to avoid compile-time analysis
+that flags "too large" memcmp() calls with CONFIG_FORTIFY_SOURCE.
+
+Cc: Jisheng Zhang <jszhang@marvell.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- Documentation/index.rst                          |  1 +
- Documentation/usb/index.rst                      | 22 ++++++++++++++++++++++
- Documentation/usb/{usb-help.txt => usb-help.rst} |  1 -
- 3 files changed, 23 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/usb/index.rst
- rename Documentation/usb/{usb-help.txt => usb-help.rst} (97%)
+Backported to 4.4, which predates the rework from
+2077be6783b5 ("arm64: Use __pa_symbol for kernel symbols") and
+5a9e3e156ec1 ("arm64: apply __ro_after_init to some objects")
+---
+ arch/arm64/kernel/vdso.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index a7566ef62411..4e7498f39063 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -102,6 +102,7 @@ needed).
-    vm/index
-    bpf/index
-    misc-devices/index
-+   usb/index
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 97bc68f4c689..908bc5ab94c1 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -36,7 +36,7 @@
+ #include <asm/vdso.h>
+ #include <asm/vdso_datapage.h>
  
- Architecture-specific documentation
- -----------------------------------
-diff --git a/Documentation/usb/index.rst b/Documentation/usb/index.rst
-new file mode 100644
-index 000000000000..5688ceaf0826
---- /dev/null
-+++ b/Documentation/usb/index.rst
-@@ -0,0 +1,22 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Linux USB Subsystem Documentation
-+===================================
-+
-+.. only:: html
-+
-+   .. class:: toc-title
-+
-+        Table of Contents
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   usb-help
-+
-+.. only:: html and subproject
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/usb/usb-help.txt b/Documentation/usb/usb-help.rst
-similarity index 97%
-rename from Documentation/usb/usb-help.txt
-rename to Documentation/usb/usb-help.rst
-index dc23ecd4d802..03abc4e501ae 100644
---- a/Documentation/usb/usb-help.txt
-+++ b/Documentation/usb/usb-help.rst
-@@ -1,4 +1,3 @@
--==============
- USB references
- ==============
+-extern char vdso_start, vdso_end;
++extern char vdso_start[], vdso_end[];
+ static unsigned long vdso_pages;
+ static struct page **vdso_pagelist;
  
+@@ -115,14 +115,14 @@ static int __init vdso_init(void)
+ {
+ 	int i;
+ 
+-	if (memcmp(&vdso_start, "\177ELF", 4)) {
++	if (memcmp(vdso_start, "\177ELF", 4)) {
+ 		pr_err("vDSO is not a valid ELF object!\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	vdso_pages = (&vdso_end - &vdso_start) >> PAGE_SHIFT;
++	vdso_pages = (vdso_end - vdso_start) >> PAGE_SHIFT;
+ 	pr_info("vdso: %ld pages (%ld code @ %p, %ld data @ %p)\n",
+-		vdso_pages + 1, vdso_pages, &vdso_start, 1L, vdso_data);
++		vdso_pages + 1, vdso_pages, vdso_start, 1L, vdso_data);
+ 
+ 	/* Allocate the vDSO pagelist, plus a page for the data. */
+ 	vdso_pagelist = kcalloc(vdso_pages + 1, sizeof(struct page *),
+@@ -135,7 +135,7 @@ static int __init vdso_init(void)
+ 
+ 	/* Grab the vDSO code pages. */
+ 	for (i = 0; i < vdso_pages; i++)
+-		vdso_pagelist[i + 1] = virt_to_page(&vdso_start + i * PAGE_SIZE);
++		vdso_pagelist[i + 1] = virt_to_page(vdso_start + i * PAGE_SIZE);
+ 
+ 	/* Populate the special mapping structures */
+ 	vdso_spec[0] = (struct vm_special_mapping) {
 -- 
-2.11.0
+2.20.0
 
