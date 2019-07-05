@@ -2,159 +2,118 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1CBC4649C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274E3C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D83E2184C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB59721721
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 15:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIE7h60j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfGEPVf (ORCPT
+        id S1727817AbfGEPXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 11:21:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56616 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726302AbfGEPVe (ORCPT
+        Fri, 5 Jul 2019 11:23:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41033 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbfGEPXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 11:21:34 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x65FHEwU139689;
-        Fri, 5 Jul 2019 11:20:58 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tj80kaywk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jul 2019 11:20:58 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x65FKvOt003765;
-        Fri, 5 Jul 2019 11:20:57 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tj80kayw2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jul 2019 11:20:57 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x65FEcfC024677;
-        Fri, 5 Jul 2019 15:20:56 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03dal.us.ibm.com with ESMTP id 2tdym7mvjr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jul 2019 15:20:56 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x65FKtnE52625730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jul 2019 15:20:55 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F7AD124053;
-        Fri,  5 Jul 2019 15:20:55 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0BB1F124052;
-        Fri,  5 Jul 2019 15:20:54 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.85.133.199])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jul 2019 15:20:53 +0000 (GMT)
-Subject: Re: [PATCH] Revert "tpm: pass an array of tpm_extend_digest
- structures to tpm_pcr_extend()"
-To:     Tyler Hicks <tyhicks@canonical.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        linux-integrity@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-References: <20190701131505.17759-1-msuchanek@suse.de>
- <8e4cc105b748c5395132b4d3d29d0d9b30a8720c.camel@linux.intel.com>
- <cf2ea579-41c2-42da-2df3-0b1f12e1c639@huawei.com>
- <1562240882.6165.78.camel@linux.ibm.com>
- <1562255201.6165.143.camel@linux.ibm.com> <20190704195857.GB6105@elm>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <abcc3748-8471-8965-046e-9d9431b4f0e9@linux.vnet.ibm.com>
-Date:   Fri, 5 Jul 2019 11:20:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 5 Jul 2019 11:23:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q4so4453864pgj.8;
+        Fri, 05 Jul 2019 08:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6+TO8x752f6vXrFXdGdKz2ORTM7cjlLRwSUng/658nA=;
+        b=DIE7h60jObGRoVc47IG9ZiNF+Bhmp2bJPyIuQ86xCO7ud4uMZiZZ4pxIEgtPMTBs3c
+         o/VPeTbK7TQ+HE3OBIYwNt6w3vtzZDpHyps/w9JbDFsvFjLO4AqEJhAFhKGadjg/8iEN
+         pVf2mgnFOnVye/zBr7JO76dYtZ5NoXA2x070oyH6YnL05qr3+WuVPi5lRTB9w7gMGE+W
+         qBJOt0KFZR1UlVlVYCUBcLUJ9R2zdP4f/yM7d2tDh1cfZlM7neowt+1fto46TM2zII4/
+         sAMVAiEV+chBWUHPjD0/ivvM5CiShDokuUa5b9UbaVbMWH6dwbMx1IZSvuwaOEzA9OaN
+         D66A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6+TO8x752f6vXrFXdGdKz2ORTM7cjlLRwSUng/658nA=;
+        b=VfF2LTfv/mdwtD4RWt/PFLO93ipxucPLJAE3v2veBdsQsZiN3KnzaS6Lp7Ylm+0y2w
+         neXlyy5s1hEMvSILMUupMLXXVTJ3AZXvlR8DCQGm9cU+jhzK3UIrhx0AtoHyNKH3iapl
+         siFlDLYYqDcXDuvnfOcztApRpCrpkePOABVza4KokqwzDeSvUdx9ebW8SJ2WlQkjBKZ2
+         23vNzhJUH2yeYu1WjCP7sZkl66Ru4sgQYQg3gke6IbSHxoz4wieHB0fctuhTthC9iYqm
+         sjx3q8Gw6hHaFJKjWMLWZgHhipXfu4kb2FxUeJtGMCHWFnmD7zRG4K5wXxpFN69/uqrj
+         CBpQ==
+X-Gm-Message-State: APjAAAVO3RSJC39O+YkscB9qmdzR2HZHyGSCqyK46i7mog9kUguRg8oH
+        9dESbVbLDg0SW6HmllffFWAhuxhSiyw=
+X-Google-Smtp-Source: APXvYqyG08eDSggmR81KJmQCvANkOaJgsaRUJUgQWnwXRNNC55d6FkcuXzynZsoxQjurdCOkrt9Ojg==
+X-Received: by 2002:a63:5107:: with SMTP id f7mr6113640pgb.266.1562340228531;
+        Fri, 05 Jul 2019 08:23:48 -0700 (PDT)
+Received: from localhost ([2409:8a00:7815:93e0:4a4d:7eff:feb0:5c9a])
+        by smtp.gmail.com with ESMTPSA id h1sm12203284pfg.55.2019.07.05.08.23.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 08:23:47 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v2] KVM: LAPIC: Retry tune per-vCPU timer_advance_ns if adaptive tuning goes insane
+Date:   Fri,  5 Jul 2019 23:23:42 +0800
+Message-Id: <1562340222-31324-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190704195857.GB6105@elm>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-05_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907050186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tyler,
+From: Wanpeng Li <wanpengli@tencent.com>
 
+Retry tune per-vCPU timer_advance_ns if adaptive tuning goes insane which 
+can happen sporadically in product environment.
 
-On 07/04/2019 03:58 PM, Tyler Hicks wrote:
-> Hey Mimi!
->
-> On 2019-07-04 11:46:41, Mimi Zohar wrote:
->> Hi Jarkko,
->>
->> On Thu, 2019-07-04 at 07:48 -0400, Mimi Zohar wrote:
->>> On Thu, 2019-07-04 at 13:28 +0200, Roberto Sassu wrote:
->>>> On 7/4/2019 12:03 PM, Jarkko Sakkinen wrote:
->>>>> On Mon, 2019-07-01 at 15:15 +0200, Michal Suchanek wrote:
->>>>>> This reverts commit 0b6cf6b97b7ef1fa3c7fefab0cac897a1c4a3400 to avoid
->>>>>> following crash:
->>>>> Thank you. I think this the right choice for the moment. I fixed
->>>>> a trivial checkpatch.pl error and added the mandatory tags. Can
->>>>> you check quickly v2 (just posted)?
->>>>>
->>>>> I already made it available in my master and next.
->>>> Could you please wait few days? I would prefer to fix this issue instead
->>>> of reverting the whole patch.
->>> Nayna posted a patch late yesterday titled "tpm: fixes uninitialized
->>> allocated banks for IBM vtpm driver", which addresses this bug.
->> Now with my review, and with Sachin Sant's and Michal Suchánek
->> testing, instead of reverting this patch could you pick up Nayna's
->> patch instead?
-> It looks to me like the revert would also fix a bug that is keeping the
-> eCryptfs module from loading when the TPM is in an "inactive" state:
->
->    https://bugzilla.kernel.org/show_bug.cgi?id=203953
->
-> I just noticed that it was recently discussed here, too:
->
->    https://lore.kernel.org/linux-integrity/1562244125.6165.95.camel@linux.ibm.com/T/#t
->
-> I believe that the revert would fix it because the call to
-> init_digests()/tpm_get_random() would no longer be in the path of
-> loading ecryptfs.ko (which depends on encrypted-keys.ko, which depends
-> on trusted.ko).
->
-> If the revert isn't used, we'll need a different fix for bug 203953. It
-> should be an easy fix but I don't want it to be forgotten.
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+v1 -> v2:
+ * retry max 10 times if adaptive tuning goes insane
 
+ arch/x86/kvm/lapic.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-I think if TPM is inactive/disabled, it needs to be handled during 
-tpm_chip_register() itself. However, probably that needs more analysis 
-and discussion. For now, in context of the trusted.ko module, it seems 
-init_trusted() should "put_device", but continue even if init_digests() 
-fails, that will fix the issue.
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 95affa5..bd0dbe5 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1538,6 +1538,7 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+ 	u64 ns;
++	uint retry_count = 0;
+ 
+ 	/* too early */
+ 	if (advance_expire_delta < 0) {
+@@ -1556,8 +1557,10 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+ 		apic->lapic_timer.timer_advance_adjust_done = true;
+ 	if (unlikely(timer_advance_ns > 5000)) {
+-		timer_advance_ns = 0;
+-		apic->lapic_timer.timer_advance_adjust_done = true;
++		timer_advance_ns = 1000;
++		apic->lapic_timer.timer_advance_adjust_done = false;
++		if (++retry_count > 10)
++			apic->lapic_timer.timer_advance_adjust_done = true;
+ 	}
+ 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ }
+-- 
+1.8.3.1
 
-
-Thanks & Regards,
-         - Nayna
