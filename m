@@ -2,116 +2,101 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCF9C468A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C70C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45784216E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1812216E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 20:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562359687;
-	bh=WPjrPAJc8jUDE0PFgMh7HVyr5P4sYGHdpbEYbdaExJ4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJCOgmQJCVHN3B3I4FU6ZpCZdK4lixUtUDuavaZZ+9TbC+adq97zW1Lp+rRjqssmZ
-	 5mSlUScK+eA1AlDvxBHHn8n2xFkONkF2VCnc4PghpCbfaGxpZgHoKWpdM/LvpM0/oK
-	 14/krQVe1hb8FEPcMyLzoNY9k4IqkoqltRkZdA1s=
+	s=default; t=1562359695;
+	bh=AWMWbpTxCOW9mzzWQpXl9pcjKxJ1xDKBKWvokVU2YjI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ko7c0gdMIN0IbOPnQOjBUg9R/Ij5uGqZpDObtKA89dG6NvpTvLsXi9L+3C2+K9kki
+	 VkSt1FIsypEWAmHeQQOHe88L+FynWYZFzOPVuZ+o6qhREWxFUpr/s1fZCVWIR0GFbr
+	 PsBAhAAs0BNwb+5NaIT5L4tXLsivdsA87eYa+VcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbfGEUsG (ORCPT
+        id S1728343AbfGEUsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 16:48:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbfGEUsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 16:48:00 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE7CE2184C;
-        Fri,  5 Jul 2019 20:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562359679;
-        bh=WPjrPAJc8jUDE0PFgMh7HVyr5P4sYGHdpbEYbdaExJ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=be5FRRugD8ZAe/sXSDQJ64XGyzD+iWFYVCmlZyFDCwu7uNhxLDCk7crmkEuy8cRWa
-         aqEi3XNzehDBFmd1cszzMH1BJDpKniM3NLzRE4aBhLCWryX7oNXkqIDio/K4t2hSem
-         sAwWaq3XM45RkNqI1vELXYhaWylD52Oky9TDH7OQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
-Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@microsoft.com, thiruan@microsoft.com,
-        bryankel@microsoft.com, tee-dev@lists.linaro.org,
-        ilias.apalodimas@linaro.org, sumit.garg@linaro.org,
-        rdunlap@infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v8 2/2] fTPM: add documentation for ftpm driver
-Date:   Fri,  5 Jul 2019 16:47:46 -0400
-Message-Id: <20190705204746.27543-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190705204746.27543-1-sashal@kernel.org>
-References: <20190705204746.27543-1-sashal@kernel.org>
+        Fri, 5 Jul 2019 16:48:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33691 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbfGEUsN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 16:48:13 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x15so4783636pfq.0;
+        Fri, 05 Jul 2019 13:48:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AcnoVRibB2N6fZ+Yp6hO160ET8GdPKrkYOq4kfDG3/o=;
+        b=U+A52T7uN8wFdktHUnLIZDXucd2tGsN+Yc1acydhtUhVA6g71/vXY/zPVbtz/wofy6
+         +ewZk9kdrIen3fy6pacm+NXGg2uHjV6z1/Lpnc0GcZh+GwF/SMbT/6aP35WXTuFrq8Ei
+         z6ND45p35bhuF4Rxhgt8Hiju2HSTHvzM5JdPcL30yPK/LZCjk4tu+61hk3aktBFBhiD0
+         qMx1nibJWaDtPMH7ZlvdJkhJnGkLxRjgHw1ZAQ+JC/js3djI3Itp+zCfbgv9gR5ntp0P
+         hWUT4tc05R44rTuyqFSfupf4MET8jzDwHPVRsbTBPNN1pVWfGdvj7XJASs84XG0UVx2W
+         PmaA==
+X-Gm-Message-State: APjAAAV2yao8D8E3u+kh2jmLTgrklxXu7dAmUETPhKApTXU0B05iM6Pq
+        eGP9pQU9sEZD3UeHXjcnZSY=
+X-Google-Smtp-Source: APXvYqzYFkN68Owkq9koxWESGSYcLlSN0sO/MqwSKxCi7MUUXmOztl1dSndkrgfsbD0HEg9i6sStdg==
+X-Received: by 2002:a63:6986:: with SMTP id e128mr7831367pgc.220.1562359692276;
+        Fri, 05 Jul 2019 13:48:12 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id p7sm13219309pfp.131.2019.07.05.13.48.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 05 Jul 2019 13:48:11 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 568B940190; Fri,  5 Jul 2019 20:48:10 +0000 (UTC)
+Date:   Fri, 5 Jul 2019 20:48:10 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, peterz@infradead.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu,
+        yamada.masahiro@socionext.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com,
+        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
+        rdunlap@infradead.org, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+Subject: Re: [PATCH v6 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
+ SYSCTL section
+Message-ID: <20190705204810.GE19023@42.do-not-panic.com>
+References: <20190704003615.204860-1-brendanhiggins@google.com>
+ <20190704003615.204860-19-brendanhiggins@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704003615.204860-19-brendanhiggins@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds basic documentation to describe the new fTPM driver.
+On Wed, Jul 03, 2019 at 05:36:15PM -0700, Brendan Higgins wrote:
+> Add entry for the new proc sysctl KUnit test to the PROC SYSCTL section.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Documentation/security/tpm/index.rst        |  1 +
- Documentation/security/tpm/tpm_ftpm_tee.rst | 27 +++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
+Come to think of it, I'd welcome Iurii to be added as a maintainer,
+with the hope Iurii would be up to review only the kunit changes. Of
+course if Iurii would be up to also help review future proc changes,
+even better. 3 pair of eyeballs is better than 2 pairs.
 
-diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
-index af77a7bbb070..15783668644f 100644
---- a/Documentation/security/tpm/index.rst
-+++ b/Documentation/security/tpm/index.rst
-@@ -4,4 +4,5 @@ Trusted Platform Module documentation
- 
- .. toctree::
- 
-+   tpm_ftpm_tee
-    tpm_vtpm_proxy
-diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst b/Documentation/security/tpm/tpm_ftpm_tee.rst
-new file mode 100644
-index 000000000000..8c2bae16e3d9
---- /dev/null
-+++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
-@@ -0,0 +1,27 @@
-+=============================================
-+Firmware TPM Driver
-+=============================================
-+
-+This document describes the firmware Trusted Platform Module (fTPM)
-+device driver.
-+
-+Introduction
-+============
-+
-+This driver is a shim for firmware implemented in ARM's TrustZone
-+environment. The driver allows programs to interact with the TPM in the same
-+way they would interact with a hardware TPM.
-+
-+Design
-+======
-+
-+The driver acts as a thin layer that passes commands to and from a TPM
-+implemented in firmware. The driver itself doesn't contain much logic and is
-+used more like a dumb pipe between firmware and kernel/userspace.
-+
-+The firmware itself is based on the following paper:
-+https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/ftpm1.pdf
-+
-+When the driver is loaded it will expose ``/dev/tpmX`` character devices to
-+userspace which will enable userspace to communicate with the firmware TPM
-+through this device.
--- 
-2.20.1
-
+  Luis
