@@ -2,68 +2,176 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CFBC468A9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4826C46499
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD486216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF1F2089C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 18:25:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMXd1i8a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfGESPv (ORCPT
+        id S1727547AbfGESZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 14:15:51 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19835 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfGESPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 14:15:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jul 2019 11:15:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,455,1557212400"; 
-   d="scan'208";a="155323175"
-Received: from hsolima-mobl1.ger.corp.intel.com ([10.252.48.252])
-  by orsmga007.jf.intel.com with ESMTP; 05 Jul 2019 11:15:45 -0700
-Message-ID: <c891924bf40af9cf3be724687edc6c24c14c08b2.camel@linux.intel.com>
-Subject: Re: [PATCH] tpm: fixes uninitialized allocated banks for IBM vtpm
- driver
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nayna <nayna@linux.vnet.ibm.com>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        George Wilson <gcwilson@linux.ibm.com>
-Date:   Fri, 05 Jul 2019 21:15:43 +0300
-In-Reply-To: <1270cd6ab2ceae1ad01e4b83b75fc4c6fc70027d.camel@linux.intel.com>
-References: <1562211121-2188-1-git-send-email-nayna@linux.ibm.com>
-         <1998ebcf-1521-778f-2c80-55ad2c855023@linux.ibm.com>
-         <164b9c6e-9b6d-324d-9df8-d2f7d1ac8cfc@linux.vnet.ibm.com>
-         <1270cd6ab2ceae1ad01e4b83b75fc4c6fc70027d.camel@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 5 Jul 2019 14:25:02 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42770 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfGESZB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 14:25:01 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 201so6401356qkm.9;
+        Fri, 05 Jul 2019 11:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EGPVypn6CKAAN7UHHn0KvjwCwIhSqraRSiekyt3NwfU=;
+        b=bMXd1i8a2cZiAC/g0/DWJxB6nY60Ra3aWdS1SaTItqFB1aiwx2oLFB/65/QzFuLbIH
+         FD6wWCis+PUlYWc8MZAItrEjxZE1hA5F7nOysU2xP4CNxDfvv+FKRyfj+Vk+b9td5mUy
+         r4wysSmsAx+Gbi353wH+nd6zYl4kjAGve+QMYA9LMGrwjZ/Osit7h1ezIRLRp8PjfOur
+         qMtXhKs/zWLIT8osrD3FzLPQ+WZUhI/0mtWTmUV6Nl2lqKPOKch+7H64BEkSM/GrxL6u
+         M+iGif7K7eUwyjfUtdW4htg8eSOCcVMoE4JCXUlQ1ke5EMVl/7mhCslzOp8qhqIKiW2R
+         lYaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EGPVypn6CKAAN7UHHn0KvjwCwIhSqraRSiekyt3NwfU=;
+        b=RiOven2QvRwUZYOlMmIiAa7CctZ73PbWyZzDg2ckmt8qR1VaBiefqWmRY5cbbLd8eP
+         TN0HhqhfY9oEYAo3Iu+VLydeK2s++iNmMRQxuymyudwaWNVvO+M61765qk/c2Pf4ndcR
+         gIBisEw9RjXf65/0nXwElT2nB1qY/DJoj1YLWlXl5I4bNKTld6uN7indQcrgRM06w6bc
+         +ZXeYmJqumANMvE9Tr75fQcNXAOAbGRbbN5LRTez39M28Ah5Q5yDJ4dxYZv32qar9jEe
+         cFDlXzpIOKerX7O+ZFVeXeAbDaH3K6VoXFAfpd9XZunHspDyNNQt/DQ772Efp1YLy4ap
+         fCOg==
+X-Gm-Message-State: APjAAAUNq4k3VNZNeHfUNALLxR57MpAgBhzCDwFyAdQEoJ6vnc+wp53n
+        BWOduv/DvB2uwmQ8/BMLGZU=
+X-Google-Smtp-Source: APXvYqwzEBrVmSKcUKg1bt+Hr27s3R/Z8WyEUHSpT+W84+y4zHJEaU0FMvaiRD+WOkFg4Ynbm3mcrA==
+X-Received: by 2002:a37:7643:: with SMTP id r64mr4105639qkc.467.1562351099833;
+        Fri, 05 Jul 2019 11:24:59 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11d1::107e? ([2620:10d:c091:480::a5e6])
+        by smtp.gmail.com with ESMTPSA id r26sm4081395qkm.57.2019.07.05.11.24.58
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 11:24:59 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH v2] rtl8xxxu: Fix wifi low signal strength issue of
+ RTL8723BU
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+References: <20190704105528.74028-1-chiu@endlessm.com>
+ <8f1454ca-4610-03d0-82c4-06174083d463@gmail.com>
+ <CAB4CAwc8jJQ2f8vpoB0Y6sc0fJmmrq+5rRuJ+TqGMMgCczRi+A@mail.gmail.com>
+Message-ID: <9d971d4c-8bad-75a5-5b69-d10082d5f2ab@gmail.com>
+Date:   Fri, 5 Jul 2019 14:24:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <CAB4CAwc8jJQ2f8vpoB0Y6sc0fJmmrq+5rRuJ+TqGMMgCczRi+A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-05 at 20:50 +0300, Jarkko Sakkinen wrote:
-> To summarize this patch fixes one regression and introduces two
-> completely new ones...
+On 7/4/19 10:27 PM, Chris Chiu wrote:
+> On Fri, Jul 5, 2019 at 12:43 AM Jes Sorensen <jes.sorensen@gmail.com> wrote:
+>>
+>> On 7/4/19 6:55 AM, Chris Chiu wrote:
+>>> The WiFi tx power of RTL8723BU is extremely low after booting. So
+>>> the WiFi scan gives very limited AP list and it always fails to
+>>> connect to the selected AP. This module only supports 1x1 antenna
+>>> and the antenna is switched to bluetooth due to some incorrect
+>>> register settings.
+>>>
+>>> Compare with the vendor driver https://github.com/lwfinger/rtl8723bu,
+>>> we realized that the 8723bu's enable_rf() does the same thing as
+>>> rtw_btcoex_HAL_Initialize() in vendor driver. And it by default
+>>> sets the antenna path to BTC_ANT_PATH_BT which we verified it's
+>>> the cause of the wifi weak tx power. The vendor driver will set
+>>> the antenna path to BTC_ANT_PATH_PTA in the consequent btcoexist
+>>> mechanism, by the function halbtc8723b1ant_PsTdma.
+>>>
+>>> This commit hand over the antenna control to PTA(Packet Traffic
+>>> Arbitration), which compares the weight of bluetooth/wifi traffic
+>>> then determine whether to continue current wifi traffic or not.
+>>> After PTA take control, The wifi signal will be back to normal and
+>>> the bluetooth scan can also work at the same time. However, the
+>>> btcoexist still needs to be handled under different circumstances.
+>>> If there's a BT connection established, the wifi still fails to
+>>> connect until BT disconnected.
+>>>
+>>> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+>>> ---
+>>>
+>>>
+>>> Note:
+>>>  v2:
+>>>   - Replace BIT(11) with the descriptive definition
+>>>   - Meaningful comment for the REG_S0S1_PATH_SWITCH setting
+>>>
+>>>
+>>>  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 11 ++++++++---
+>>>  drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |  3 ++-
+>>>  2 files changed, 10 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+>>> index 3adb1d3d47ac..ceffe05bd65b 100644
+>>> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+>>> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+>>> @@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+>>>       /*
+>>>        * WLAN action by PTA
+>>>        */
+>>> -     rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
+>>> +     rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
+>>>
+>>>       /*
+>>>        * BT select S0/S1 controlled by WiFi
+>>> @@ -1568,9 +1568,14 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+>>>       rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
+>>>
+>>>       /*
+>>> -      * 0x280, 0x00, 0x200, 0x80 - not clear
+>>> +      * Different settings per different antenna position.
+>>> +      *      Antenna Position:   | Normal   Inverse
+>>> +      * --------------------------------------------------
+>>> +      * Antenna switch to BT:    |  0x280,   0x00
+>>> +      * Antenna switch to WiFi:  |  0x0,     0x280
+>>> +      * Antenna switch to PTA:   |  0x200,   0x80
+>>>        */
+>>> -     rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
+>>> +     rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
+>>
+>> Per the documentation, shouldn't this be set to 0x200 then rather than 0x80?
+>>
+> Per the code before REG_S0S1_PATH_SWITCH setting, the driver has told
+> the co-processor the antenna is inverse.
+>         memset(&h2c, 0, sizeof(struct h2c_cmd));
+>         h2c.ant_sel_rsv.cmd = H2C_8723B_ANT_SEL_RSV;
+>         h2c.ant_sel_rsv.ant_inverse = 1;
+>         h2c.ant_sel_rsv.int_switch_type = 0;
+>         rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
+> 
+> At least the current modification is consistent with the antenna
+> inverse setting.
+> I'll verify on vendor driver about when/how the inverse be determined.
 
-Anyway, take the time and update it. The principle is right
-anyway. I'll merge it once it is in a better shape...
+Fair enough :)
 
-/Jarkko
+Cheers,
+Jes
+
 
