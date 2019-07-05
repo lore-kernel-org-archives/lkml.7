@@ -2,113 +2,115 @@ Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14CBC5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84093C5B57D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90959218BC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461F121852
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 07:08:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PrezOeEJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gh/Toz6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfGEHDv (ORCPT
+        id S1727722AbfGEHIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 03:03:51 -0400
-Received: from mail-eopbgr80048.outbound.protection.outlook.com ([40.107.8.48]:37345
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725827AbfGEHDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 03:03:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pc7H8JZvi5b5UBWgWjaKfr+XUoJO+fPtC8xJ63htuLk=;
- b=PrezOeEJn+Px6OHq/TmJCADMukMTFav+xRbm4Jw0uLoHqmqsXl/ga5auMBgK42FLMmrog+anVicUg/0/g2g4GFQ3fvv6yUujEtAeobd8CFCTTYmBF1fEP9WHRVRtv1AzO0thhTs5w2WjPjUMq4wzPed1pwfAakQK/ddRO34bY04=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6734.eurprd04.prod.outlook.com (20.179.234.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Fri, 5 Jul 2019 07:03:48 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::9818:813d:1b75:61fe]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::9818:813d:1b75:61fe%7]) with mapi id 15.20.2032.019; Fri, 5 Jul 2019
- 07:03:48 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 2/2] ASoC: fsl_esai: recover the channel swap after
- xrun
-Thread-Topic: [PATCH V2 2/2] ASoC: fsl_esai: recover the channel swap after
- xrun
-Thread-Index: AdUy/vnfzjEA6p6XSCSN/32Dn+RQkA==
-Date:   Fri, 5 Jul 2019 07:03:47 +0000
-Message-ID: <VE1PR04MB64796C22C2D41B9A45E726BEE3F50@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 704f6f43-6dc0-4db1-9421-08d70116ed66
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6734;
-x-ms-traffictypediagnostic: VE1PR04MB6734:
-x-microsoft-antispam-prvs: <VE1PR04MB67346B87306CAD03C691E4DFE3F50@VE1PR04MB6734.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 008960E8EC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(376002)(346002)(136003)(189003)(199004)(478600001)(71190400001)(6116002)(66066001)(3846002)(486006)(71200400001)(53936002)(9686003)(8676002)(256004)(81156014)(14454004)(81166006)(4744005)(5660300002)(186003)(68736007)(14444005)(6436002)(33656002)(8936002)(229853002)(66556008)(74316002)(6916009)(55016002)(6246003)(476003)(54906003)(99286004)(305945005)(102836004)(7696005)(7736002)(66446008)(2906002)(6506007)(52536014)(26005)(64756008)(66476007)(1411001)(316002)(66946007)(86362001)(76116006)(25786009)(73956011)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6734;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XG4zzy2vM7nLn5q66oq9XBTbKzr6dpxGugTy5iiSDGvPgCcLKjr0PA8E4adTLJO7uVHWevY7v+4zz4FP+p0nnOLmi7TXzxyBAQGLim5qWhGOM7Ysv2gwqRh9diJ2SpFGF8Cr8nFH2LS3mVz9KtdMOaKnIsfoMKcr2RKtvce7B4H7F3Avs3aNFS6e1mTbJzaVyI9azy2EC9r/7i8Aj4a2GbngTle7xzD5piOiqom+Il+Q9XQY5FtrkNInbilPioAWXwqFwxtbxe+onS2qwil4SzyQP8eGhdWkwJ5jK746efxb1QVHk+o3OjY1r6H1ru99OM6cZ0P3snka1oYS9UE5ZXddVY+K9NTDL4BLbJrRZ1r/vHhwyuVOiGx5+qYCSAtycbAvqFLwgDfEmpV2eJEZwCYjxICYToW4g31Ss0TSEco=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 5 Jul 2019 03:08:50 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43413 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfGEHIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 03:08:49 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q10so8090980otk.10
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 00:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0IIqKWzRaNse3XXjc9VJC174hdKsP3di+1IIb5DajLs=;
+        b=gh/Toz6V7CixdKGLGkGy9rPXkrdYpbSEI9toJWHRYaf4kHmQ/0QfMBxGBHsJtDl9i9
+         ZwjZg2XdbTSBvk5L41Rc7GwtWbT43JorS2dYawqFZq0UF8xiHjUn30KcpEdiKuzYv91k
+         2BB6vbDpC26WiSr5OAiV+1AjkluoSR+vFoFQMvBNdGLTUnZXsqoqP7zX8GOOFaR7IoFU
+         P+hfc0NAZuTMJOgudDmWkfHCqRRGjxoW92AgSBMRCJlCTYcgBMm4iLSXUKDrvBhMNGUj
+         kOa6/YuH0gC2IBEeHA1yriXC0QfOWUIpElqf+l3HO/EvIv3/ubknXhnXBQU+SJadHsUV
+         kP2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0IIqKWzRaNse3XXjc9VJC174hdKsP3di+1IIb5DajLs=;
+        b=lQYTCXRRDJQyV/vJQV8hkG9+LYEkroKYKX686HANYCH83Er0j2AGwD793Ixw/KToGc
+         SkvNgYIkSi5ORykPhyEc3OHnE2Tk23O4Q/rKsnq+s6eT1fmhvfws9I10DwrFJFmCTbD1
+         ucgEdoFLw4e3qfsNlaINjq4OzWZydFKrNPH2shR9G8RpMzdDnhe4ZZDJb6eoG7163l7i
+         wOyiD6sc+fv01PsL5deopL+XLIAamUnt47XjoXvDAnuAxb1AWGjuorP5rbOkBfqx9Z8M
+         V4DxGrHl4bw9lGpAjd9sc7PSrGViclPTJQV5hS7gKol5xhjIvrfdkJzEowxfguOMJPqg
+         XBRQ==
+X-Gm-Message-State: APjAAAVrBQAPHqoLhLMYEXssGuppTQcajtPJzVx9b5HOJk1pCwhi+SEP
+        nMoEnCcSC7EpPbc6E9v1EPM+2twLFKlOn99inRnADw==
+X-Google-Smtp-Source: APXvYqzldGMEKIRPPEJ0vaUfI2lFQ29kQgI2QwiHDaDqpSbGSw2Xx3CIMBQjB6qsF1gXZ8S1OcSQCm9TeiE6wueHYB4=
+X-Received: by 2002:a9d:4f02:: with SMTP id d2mr1738812otl.328.1562310528818;
+ Fri, 05 Jul 2019 00:08:48 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 704f6f43-6dc0-4db1-9421-08d70116ed66
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jul 2019 07:03:47.8956
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: shengjiu.wang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6734
+References: <20190705042623.129541-1-cychiang@chromium.org> <20190705042623.129541-2-cychiang@chromium.org>
+In-Reply-To: <20190705042623.129541-2-cychiang@chromium.org>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Fri, 5 Jul 2019 15:08:37 +0800
+Message-ID: <CA+Px+wXtmf9dQQP7ywPLp7Qbbvqau=WnO3qhZ8+qmbJD1gjx+A@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ASoC: hdmi-codec: Add an op to set callback function
+ for plug event
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        ALSA development <alsa-devel@alsa-project.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> > +
-> > +     /* restore registers by regcache_sync */
-> > +     fsl_esai_register_restore(esai_priv);
-> > +
-> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-> > +                        ESAI_xCR_xPR_MASK, 0);
-> > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-> > +                        ESAI_xCR_xPR_MASK, 0);
->=20
-> And just for curious, can (or shall) we stuff this personal reset to the =
-reset()
-> function? I found this one is a part of the reset routine being mentioned=
- in
-> the RM -- it was done after ESAI reset is done via ECR register.
->=20
+On Fri, Jul 5, 2019 at 12:26 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+> diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
+> index 7fea496f1f34..26c02abb8eba 100644
+> --- a/include/sound/hdmi-codec.h
+> +++ b/include/sound/hdmi-codec.h
+> @@ -47,6 +47,9 @@ struct hdmi_codec_params {
+>         int channels;
+>  };
+>
+> +typedef void (*hdmi_codec_plugged_cb)(struct platform_device *dev,
+> +                                     bool plugged);
+> +
+The callback prototype is "weird" by struct platform_device.  Is it
+possible to having snd_soc_component instead of platform_device?
 
-There is a problem to do this, TPR/RPR need to be clear after configure the=
- control
-register. (TCCR, TCR). So it seems not only one place (reset function) need=
- to be
-changed.
-
-Best regards
-Wang shengjiu
+>  struct hdmi_codec_pdata;
+>  struct hdmi_codec_ops {
+>         /*
+> @@ -88,6 +91,13 @@ struct hdmi_codec_ops {
+>          */
+>         int (*get_dai_id)(struct snd_soc_component *comment,
+>                           struct device_node *endpoint);
+> +
+> +       /*
+> +        * Hook callback function to handle connector plug event.
+> +        * Optional
+> +        */
+> +       int (*hook_plugged_cb)(struct device *dev, void *data,
+> +                              hdmi_codec_plugged_cb fn);
+>  };
+The first parameter dev could be removed.  Not used.
