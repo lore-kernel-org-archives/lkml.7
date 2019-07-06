@@ -2,150 +2,101 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CC7C468AB
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC933C468AB
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220092184C
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="WubaS67x"
+	by mail.kernel.org (Postfix) with ESMTP id 9621F21738
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfGFDIH (ORCPT
+        id S1726743AbfGFDjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 23:08:07 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:48657 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfGFDIG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 23:08:06 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x6637E3O030660;
-        Sat, 6 Jul 2019 12:07:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6637E3O030660
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562382437;
-        bh=BXranRnGobQsHmPdkgRbmYAS0JjPT04S0nMG/+Roa7I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WubaS67xUsMj78YonzUEFRxs7Ogw/ltP28Bl+bOOgceIgHJ0CqbRy5zTGeiHsoxS9
-         i1a+a3A54Ph5hW/bvFf7EZRKnFArJQMwvz5CNmDFVzcQy0kyofx3l1LNkNBxDxJnk0
-         F9sU/q5ZKQDkwHhcfVBOJuhpdSkwYk0p8nRN5e57K/b1UyKSIiF5CXo6Ie3FZqc682
-         cl75+fzxeRFpTJNAx+k/w+/Is4tRXsA9RjvjUOKKP1Zl7MQfWo8JjCp6WtLjtZuUFx
-         g1LrVFUjK97hgxZbVFmEBFlcqYV0dPPk0he3+No2OC9SD/jOCKyWXLYVMFmNr8b5MR
-         IJX3mqdMV9MVQ==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 3/3] kbuild: add a flag to force absolute path for srctree
-Date:   Sat,  6 Jul 2019 12:07:13 +0900
-Message-Id: <20190706030713.6221-3-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190706030713.6221-1-yamada.masahiro@socionext.com>
-References: <20190706030713.6221-1-yamada.masahiro@socionext.com>
+        Fri, 5 Jul 2019 23:39:14 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:19562 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbfGFDjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 23:39:13 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id F081A44A3710DFFE5160;
+        Sat,  6 Jul 2019 11:39:10 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x663cvi1081481;
+        Sat, 6 Jul 2019 11:38:57 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070611394122-2124336 ;
+          Sat, 6 Jul 2019 11:39:41 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH] can: flexcan: fix an use-after-free in flexcan_setup_stop_mode()
+Date:   Sat, 6 Jul 2019 11:37:20 +0800
+Message-Id: <1562384240-46581-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-06 11:39:41,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-06 11:39:04,
+        Serialize complete at 2019-07-06 11:39:04
+X-MAIL: mse-fl1.zte.com.cn x663cvi1081481
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In old days, Kbuild always used an absolute path for $(srctree).
+The gpr_np variable is still being used in dev_dbg() after the
+of_node_put() call, which may result in use-after-free.
 
-Since commit 890676c65d69 ("kbuild: Use relative path when building in
-the source tree"), $(srctree) is '.' when not using O=.
-
-Yet, using absolute paths is useful in some cases even without O=, for
-instance, to create a cscope file with absolute path tags.
-
-O=. was used as an idiom to force Kbuild to use absolute paths even
-when you are building in the source tree.
-
-Since commit 25b146c5b8ce ("kbuild: allow Kbuild to start from any
-directory"), Kbuild is too clever to be tricked. Even if you pass O=.
-Kbuild notices you are building in the source tree, then use '.' for
-$(srctree).
-
-So, "make O=. cscope" is no help to create absolute path tags.
-
-We cannot force one or the other according to commit e93bc1a0cab3
-("Revert "kbuild: specify absolute paths for cscope""). Both of
-relative path and absolute path have pros and cons.
-
-This commit adds a new flag KBUILD_ABS_SRCTREE to allow users to
-choose the absolute path for $(srctree).
-
-"make KBUILD_ABS_SRCTREE=1 cscope" will work as a replacement of
-"make O=. cscope".
-
-I added Fixes since that commit broke some users' workflow.
-
-Fixes: 25b146c5b8ce ("kbuild: allow Kbuild to start from any directory")
-Reported-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: de3578c198c6 ("can: flexcan: add self wakeup support")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/can/flexcan.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
- Documentation/kbuild/kbuild.txt | 9 +++++++++
- Makefile                        | 4 ++++
- scripts/tags.sh                 | 3 +--
- 3 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/kbuild/kbuild.txt b/Documentation/kbuild/kbuild.txt
-index 7a7e2aa2fab5..3ef42f87f275 100644
---- a/Documentation/kbuild/kbuild.txt
-+++ b/Documentation/kbuild/kbuild.txt
-@@ -182,6 +182,15 @@ The output directory is often set using "O=..." on the commandline.
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index f2fe344..33ce45d 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -1437,10 +1437,10 @@ static int flexcan_setup_stop_mode(struct platform_device *pdev)
  
- The value can be overridden in which case the default value is ignored.
+ 	priv = netdev_priv(dev);
+ 	priv->stm.gpr = syscon_node_to_regmap(gpr_np);
+-	of_node_put(gpr_np);
+ 	if (IS_ERR(priv->stm.gpr)) {
+ 		dev_dbg(&pdev->dev, "could not find gpr regmap\n");
+-		return PTR_ERR(priv->stm.gpr);
++		ret = PTR_ERR(priv->stm.gpr);
++		goto out_put_node;
+ 	}
  
-+KBUILD_ABS_SRCTREE
-+--------------------------------------------------
-+Kbuild uses a relative path to point to the tree when possible. For instance,
-+when building in the source tree, the source tree path is '.'
-+
-+Setting this flag requests Kbuild to use absolute path to the source tree.
-+There are some useful cases to do so, like when generating tag files with
-+absolute path entries etc.
-+
- KBUILD_SIGN_PIN
- --------------------------------------------------
- This variable allows a passphrase or PIN to be passed to the sign-file
-diff --git a/Makefile b/Makefile
-index 534a5dc796b1..6dc453f86f00 100644
---- a/Makefile
-+++ b/Makefile
-@@ -244,6 +244,10 @@ else
- 	building_out_of_srctree := 1
- endif
+ 	priv->stm.req_gpr = out_val[1];
+@@ -1455,7 +1455,9 @@ static int flexcan_setup_stop_mode(struct platform_device *pdev)
  
-+ifneq ($(KBUILD_ABS_SRCTREE),)
-+srctree := $(abs_srctree)
-+endif
-+
- objtree		:= .
- VPATH		:= $(srctree)
+ 	device_set_wakeup_capable(&pdev->dev, true);
  
-diff --git a/scripts/tags.sh b/scripts/tags.sh
-index 7fea4044749b..4e18ae5282a6 100755
---- a/scripts/tags.sh
-+++ b/scripts/tags.sh
-@@ -17,8 +17,7 @@ ignore="$(echo "$RCS_FIND_IGNORE" | sed 's|\\||g' )"
- # tags and cscope files should also ignore MODVERSION *.mod.c files
- ignore="$ignore ( -name *.mod.c ) -prune -o"
+-	return 0;
++out_put_node:
++	of_node_put(gpr_np);
++	return ret;
+ }
  
--# Do not use full path if we do not use O=.. builds
--# Use make O=. {tags|cscope}
-+# Use make KBUILD_ABS_SRCTREE=1 {tags|cscope}
- # to force full paths for a non-O= build
- if [ "${srctree}" = "." -o -z "${srctree}" ]; then
- 	tree=
+ static const struct of_device_id flexcan_of_match[] = {
 -- 
-2.17.1
+2.9.5
 
