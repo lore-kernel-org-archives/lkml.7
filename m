@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA5DC46499
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 00:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7851DC5B57D
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 00:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEACF216B7
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 00:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1C2216B7
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 00:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfGFAWr (ORCPT
+        id S1727056AbfGFAWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 20:22:47 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:47720 "EHLO
+        Fri, 5 Jul 2019 20:22:44 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:47708 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfGFAWi (ORCPT
+        with ESMTP id S1726267AbfGFAWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 20:22:38 -0400
+        Fri, 5 Jul 2019 20:22:39 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjYTN-0006oF-1q; Sat, 06 Jul 2019 00:22:37 +0000
+        id 1hjYTM-0006nu-GO; Sat, 06 Jul 2019 00:22:36 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-fsdevel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] switch the remnants of releasing the mountpoint away from fs_pin
-Date:   Sat,  6 Jul 2019 01:22:36 +0100
-Message-Id: <20190706002236.26113-6-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 3/6] Teach shrink_dcache_parent() to cope with mixed-filesystem shrink lists
+Date:   Sat,  6 Jul 2019 01:22:33 +0100
+Message-Id: <20190706002236.26113-3-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190706002236.26113-1-viro@ZenIV.linux.org.uk>
 References: <20190706001612.GM17978@ZenIV.linux.org.uk>
@@ -43,194 +43,219 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-We used to need rather convoluted ordering trickery to guarantee
-that dput() of ex-mountpoints happens before the final mntput()
-of the same.  Since we don't need that anymore, there's no point
-playing with fs_pin for that.
+Currently, running into a shrink list that contains dentries from different
+filesystems can cause several unpleasant things for shrink_dcache_parent()
+and for umount(2).
+
+The first problem is that there's a window during shrink_dentry_list() between
+__dentry_kill() takes a victim out and dropping reference to its parent.  During
+that window the parent looks like a genuine busy dentry.  shrink_dcache_parent()
+(or, worse yet, shrink_dcache_for_umount()) coming at that time will see no
+eviction candidates and no indication that it needs to wait for some
+shrink_dentry_list() to proceed further.
+
+That applies for any shrink list that might intersect with the subtree we are
+trying to shrink; the only reason it does not blow on umount(2) in the mainline
+is that we unregister the memory shrinker before hitting shrink_dcache_for_umount().
+
+Another problem happens if something in a mixed-filesystem shrink list gets
+be stuck in e.g. iput(), getting umount of unrelated fs to spin waiting for
+the stuck shrinker to get around to our dentries.
+
+Solution:
+        1) have shrink_dentry_list() decrement the parent's refcount and
+make sure it's on a shrink list (ours unless it already had been on some
+other) before calling __dentry_kill().  That eliminates the window when
+shrink_dcache_parent() would've blown past the entire subtree without
+noticing anything with zero refcount not on shrink lists.
+	2) when shrink_dcache_parent() has found no eviction candidates,
+but some dentries are still sitting on shrink lists, rather than
+repeating the scan in hope that shrinkers have progressed, scan looking
+for something on shrink lists with zero refcount.  If such a thing is
+found, grab rcu_read_lock() and stop the scan, with caller locking
+it for eviction, dropping out of RCU and doing __dentry_kill(), with
+the same treatment for parent as shrink_dentry_list() would do.
+
+Note that right now mixed-filesystem shrink lists do not occur, so this
+is not a mainline bug.  Howevere, there's a bunch of uses for such
+beasts (e.g. the "try and evict everything we can out of given page"
+patches; there are potential uses in mount-related code, considerably
+simplifying the life in fs/namespace.c, etc.)
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/fs_pin.c            | 10 ++--------
- fs/mount.h             |  7 +++++--
- fs/namespace.c         | 37 +++++++++++++++++++------------------
- include/linux/fs_pin.h |  1 -
- 4 files changed, 26 insertions(+), 29 deletions(-)
+ fs/dcache.c   | 98 ++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ fs/internal.h |  2 ++
+ 2 files changed, 83 insertions(+), 17 deletions(-)
 
-diff --git a/fs/fs_pin.c b/fs/fs_pin.c
-index a6497cf8ae53..47ef3c71ce90 100644
---- a/fs/fs_pin.c
-+++ b/fs/fs_pin.c
-@@ -19,20 +19,14 @@ void pin_remove(struct fs_pin *pin)
- 	spin_unlock_irq(&pin->wait.lock);
+diff --git a/fs/dcache.c b/fs/dcache.c
+index c435398f2c81..d8732cf2e302 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -861,6 +861,32 @@ void dput(struct dentry *dentry)
+ }
+ EXPORT_SYMBOL(dput);
+ 
++static void __dput_to_list(struct dentry *dentry, struct list_head *list)
++__must_hold(&dentry->d_lock)
++{
++	if (dentry->d_flags & DCACHE_SHRINK_LIST) {
++		/* let the owner of the list it's on deal with it */
++		--dentry->d_lockref.count;
++	} else {
++		if (dentry->d_flags & DCACHE_LRU_LIST)
++			d_lru_del(dentry);
++		if (!--dentry->d_lockref.count)
++			d_shrink_add(dentry, list);
++	}
++}
++
++void dput_to_list(struct dentry *dentry, struct list_head *list)
++{
++	rcu_read_lock();
++	if (likely(fast_dput(dentry))) {
++		rcu_read_unlock();
++		return;
++	}
++	rcu_read_unlock();
++	if (!retain_dentry(dentry))
++		__dput_to_list(dentry, list);
++	spin_unlock(&dentry->d_lock);
++}
+ 
+ /* This must be called with d_lock held */
+ static inline void __dget_dlock(struct dentry *dentry)
+@@ -1067,7 +1093,7 @@ static bool shrink_lock_dentry(struct dentry *dentry)
+ 	return false;
  }
  
--void pin_insert_group(struct fs_pin *pin, struct vfsmount *m, struct hlist_head *p)
-+void pin_insert(struct fs_pin *pin, struct vfsmount *m)
+-static void shrink_dentry_list(struct list_head *list)
++void shrink_dentry_list(struct list_head *list)
  {
- 	spin_lock(&pin_lock);
--	if (p)
--		hlist_add_head(&pin->s_list, p);
-+	hlist_add_head(&pin->s_list, &m->mnt_sb->s_pins);
- 	hlist_add_head(&pin->m_list, &real_mount(m)->mnt_pins);
- 	spin_unlock(&pin_lock);
+ 	while (!list_empty(list)) {
+ 		struct dentry *dentry, *parent;
+@@ -1089,18 +1115,9 @@ static void shrink_dentry_list(struct list_head *list)
+ 		rcu_read_unlock();
+ 		d_shrink_del(dentry);
+ 		parent = dentry->d_parent;
++		if (parent != dentry)
++			__dput_to_list(parent, list);
+ 		__dentry_kill(dentry);
+-		if (parent == dentry)
+-			continue;
+-		/*
+-		 * We need to prune ancestors too. This is necessary to prevent
+-		 * quadratic behavior of shrink_dcache_parent(), but is also
+-		 * expected to be beneficial in reducing dentry cache
+-		 * fragmentation.
+-		 */
+-		dentry = parent;
+-		while (dentry && !lockref_put_or_lock(&dentry->d_lockref))
+-			dentry = dentry_kill(dentry);
+ 	}
  }
  
--void pin_insert(struct fs_pin *pin, struct vfsmount *m)
--{
--	pin_insert_group(pin, m, &m->mnt_sb->s_pins);
--}
--
- void pin_kill(struct fs_pin *p)
- {
- 	wait_queue_entry_t wait;
-diff --git a/fs/mount.h b/fs/mount.h
-index 84aa8cdf4971..711a4093e475 100644
---- a/fs/mount.h
-+++ b/fs/mount.h
-@@ -58,7 +58,10 @@ struct mount {
- 	struct mount *mnt_master;	/* slave is on master->mnt_slave_list */
- 	struct mnt_namespace *mnt_ns;	/* containing namespace */
- 	struct mountpoint *mnt_mp;	/* where is it mounted */
--	struct hlist_node mnt_mp_list;	/* list mounts with the same mountpoint */
+@@ -1445,8 +1462,11 @@ int d_set_mounted(struct dentry *dentry)
+ 
+ struct select_data {
+ 	struct dentry *start;
 +	union {
-+		struct hlist_node mnt_mp_list;	/* list mounts with the same mountpoint */
-+		struct hlist_node mnt_umount;
++		long found;
++		struct dentry *victim;
 +	};
- 	struct list_head mnt_umounting; /* list entry for umount propagation */
- #ifdef CONFIG_FSNOTIFY
- 	struct fsnotify_mark_connector __rcu *mnt_fsnotify_marks;
-@@ -68,7 +71,7 @@ struct mount {
- 	int mnt_group_id;		/* peer group identifier */
- 	int mnt_expiry_mark;		/* true if marked for expiry */
- 	struct hlist_head mnt_pins;
--	struct fs_pin mnt_umount;
-+	struct hlist_head mnt_stuck_children;
- } __randomize_layout;
+ 	struct list_head dispose;
+-	int found;
+ };
  
- #define MNT_NS_INTERNAL ERR_PTR(-EINVAL) /* distinct from any mnt_namespace */
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 326a9ab591bc..a5d0eac9749d 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -171,13 +171,6 @@ unsigned int mnt_get_count(struct mount *mnt)
- #endif
+ static enum d_walk_ret select_collect(void *_data, struct dentry *dentry)
+@@ -1478,6 +1498,37 @@ static enum d_walk_ret select_collect(void *_data, struct dentry *dentry)
+ 	return ret;
  }
  
--static void drop_mountpoint(struct fs_pin *p)
--{
--	struct mount *m = container_of(p, struct mount, mnt_umount);
--	pin_remove(p);
--	mntput(&m->mnt);
--}
++static enum d_walk_ret select_collect2(void *_data, struct dentry *dentry)
++{
++	struct select_data *data = _data;
++	enum d_walk_ret ret = D_WALK_CONTINUE;
++
++	if (data->start == dentry)
++		goto out;
++
++	if (dentry->d_flags & DCACHE_SHRINK_LIST) {
++		if (!dentry->d_lockref.count) {
++			rcu_read_lock();
++			data->victim = dentry;
++			return D_WALK_QUIT;
++		}
++	} else {
++		if (dentry->d_flags & DCACHE_LRU_LIST)
++			d_lru_del(dentry);
++		if (!dentry->d_lockref.count)
++			d_shrink_add(dentry, &data->dispose);
++	}
++	/*
++	 * We can return to the caller if we have found some (this
++	 * ensures forward progress). We'll be coming back to find
++	 * the rest.
++	 */
++	if (!list_empty(&data->dispose))
++		ret = need_resched() ? D_WALK_QUIT : D_WALK_NORETRY;
++out:
++	return ret;
++}
++
+ /**
+  * shrink_dcache_parent - prune dcache
+  * @parent: parent of entries to prune
+@@ -1487,12 +1538,9 @@ static enum d_walk_ret select_collect(void *_data, struct dentry *dentry)
+ void shrink_dcache_parent(struct dentry *parent)
+ {
+ 	for (;;) {
+-		struct select_data data;
++		struct select_data data = {.start = parent};
+ 
+ 		INIT_LIST_HEAD(&data.dispose);
+-		data.start = parent;
+-		data.found = 0;
 -
- static struct mount *alloc_vfsmnt(const char *name)
- {
- 	struct mount *mnt = kmem_cache_zalloc(mnt_cache, GFP_KERNEL);
-@@ -215,7 +208,7 @@ static struct mount *alloc_vfsmnt(const char *name)
- 		INIT_LIST_HEAD(&mnt->mnt_slave);
- 		INIT_HLIST_NODE(&mnt->mnt_mp_list);
- 		INIT_LIST_HEAD(&mnt->mnt_umounting);
--		init_fs_pin(&mnt->mnt_umount, drop_mountpoint);
-+		INIT_HLIST_HEAD(&mnt->mnt_stuck_children);
+ 		d_walk(parent, &data, select_collect);
+ 
+ 		if (!list_empty(&data.dispose)) {
+@@ -1503,6 +1551,22 @@ void shrink_dcache_parent(struct dentry *parent)
+ 		cond_resched();
+ 		if (!data.found)
+ 			break;
++		data.victim = NULL;
++		d_walk(parent, &data, select_collect2);
++		if (data.victim) {
++			struct dentry *parent;
++			if (!shrink_lock_dentry(data.victim)) {
++				rcu_read_unlock();
++			} else {
++				rcu_read_unlock();
++				parent = data.victim->d_parent;
++				if (parent != data.victim)
++					__dput_to_list(parent, &data.dispose);
++				__dentry_kill(data.victim);
++			}
++		}
++		if (!list_empty(&data.dispose))
++			shrink_dentry_list(&data.dispose);
  	}
- 	return mnt;
- 
-@@ -1079,19 +1072,22 @@ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
- 
- static void cleanup_mnt(struct mount *mnt)
- {
-+	struct hlist_node *p;
-+	struct mount *m;
- 	/*
--	 * This probably indicates that somebody messed
--	 * up a mnt_want/drop_write() pair.  If this
--	 * happens, the filesystem was probably unable
--	 * to make r/w->r/o transitions.
--	 */
--	/*
-+	 * The warning here probably indicates that somebody messed
-+	 * up a mnt_want/drop_write() pair.  If this happens, the
-+	 * filesystem was probably unable to make r/w->r/o transitions.
- 	 * The locking used to deal with mnt_count decrement provides barriers,
- 	 * so mnt_get_writers() below is safe.
- 	 */
- 	WARN_ON(mnt_get_writers(mnt));
- 	if (unlikely(mnt->mnt_pins.first))
- 		mnt_pin_kill(mnt);
-+	hlist_for_each_entry_safe(m, p, &mnt->mnt_stuck_children, mnt_umount) {
-+		hlist_del(&m->mnt_umount);
-+		mntput(&m->mnt);
-+	}
- 	fsnotify_vfsmount_delete(&mnt->mnt);
- 	dput(mnt->mnt.mnt_root);
- 	deactivate_super(mnt->mnt.mnt_sb);
-@@ -1160,6 +1156,7 @@ static void mntput_no_expire(struct mount *mnt)
- 		struct mount *p, *tmp;
- 		list_for_each_entry_safe(p, tmp, &mnt->mnt_mounts,  mnt_child) {
- 			umount_mnt(p, &list);
-+			hlist_add_head(&p->mnt_umount, &mnt->mnt_stuck_children);
- 		}
- 	}
- 	unlock_mount_hash();
-@@ -1352,6 +1349,8 @@ EXPORT_SYMBOL(may_umount);
- static void namespace_unlock(void)
- {
- 	struct hlist_head head;
-+	struct hlist_node *p;
-+	struct mount *m;
- 	LIST_HEAD(list);
- 
- 	hlist_move_list(&unmounted, &head);
-@@ -1366,7 +1365,10 @@ static void namespace_unlock(void)
- 
- 	synchronize_rcu_expedited();
- 
--	group_pin_kill(&head);
-+	hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
-+		hlist_del(&m->mnt_umount);
-+		mntput(&m->mnt);
-+	}
  }
+ EXPORT_SYMBOL(shrink_dcache_parent);
+diff --git a/fs/internal.h b/fs/internal.h
+index a48ef81be37d..dc317abe31b5 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -156,6 +156,8 @@ extern int d_set_mounted(struct dentry *dentry);
+ extern long prune_dcache_sb(struct super_block *sb, struct shrink_control *sc);
+ extern struct dentry *d_alloc_cursor(struct dentry *);
+ extern struct dentry * d_alloc_pseudo(struct super_block *, const struct qstr *);
++extern void dput_to_list(struct dentry *, struct list_head *);
++extern void shrink_dentry_list(struct list_head *);
  
- static inline void namespace_lock(void)
-@@ -1453,8 +1455,6 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
- 
- 		disconnect = disconnect_mount(p, how);
- 
--		pin_insert_group(&p->mnt_umount, &p->mnt_parent->mnt,
--				 disconnect ? &unmounted : NULL);
- 		if (mnt_has_parent(p)) {
- 			mnt_add_count(p->mnt_parent, -1);
- 			if (!disconnect) {
-@@ -1462,6 +1462,7 @@ static void umount_tree(struct mount *mnt, enum umount_tree_flags how)
- 				list_add_tail(&p->mnt_child, &p->mnt_parent->mnt_mounts);
- 			} else {
- 				umount_mnt(p, NULL);
-+				hlist_add_head(&p->mnt_umount, &unmounted);
- 			}
- 		}
- 		change_mnt_propagation(p, MS_PRIVATE);
-@@ -1614,8 +1615,8 @@ void __detach_mounts(struct dentry *dentry)
- 	while (!hlist_empty(&mp->m_list)) {
- 		mnt = hlist_entry(mp->m_list.first, struct mount, mnt_mp_list);
- 		if (mnt->mnt.mnt_flags & MNT_UMOUNT) {
--			hlist_add_head(&mnt->mnt_umount.s_list, &unmounted);
- 			umount_mnt(mnt, NULL);
-+			hlist_add_head(&mnt->mnt_umount, &unmounted);
- 		}
- 		else umount_tree(mnt, UMOUNT_CONNECTED);
- 	}
-diff --git a/include/linux/fs_pin.h b/include/linux/fs_pin.h
-index 7cab74d66f85..bdd09fd2520c 100644
---- a/include/linux/fs_pin.h
-+++ b/include/linux/fs_pin.h
-@@ -20,6 +20,5 @@ static inline void init_fs_pin(struct fs_pin *p, void (*kill)(struct fs_pin *))
- }
- 
- void pin_remove(struct fs_pin *);
--void pin_insert_group(struct fs_pin *, struct vfsmount *, struct hlist_head *);
- void pin_insert(struct fs_pin *, struct vfsmount *);
- void pin_kill(struct fs_pin *);
+ /*
+  * read_write.c
 -- 
 2.11.0
 
