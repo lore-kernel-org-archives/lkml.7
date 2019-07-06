@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC22C5B578
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA5CC5B578
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18EC216B7
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED59216B7
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="sAkBH4wT"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="laNct8PS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfGFInP (ORCPT
+        id S1726411AbfGFIoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 04:43:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46223 "EHLO
+        Sat, 6 Jul 2019 04:44:03 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42199 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfGFInP (ORCPT
+        with ESMTP id S1725934AbfGFIoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 04:43:15 -0400
+        Sat, 6 Jul 2019 04:44:02 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x668h4HP351377
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x668hlA9351457
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 6 Jul 2019 01:43:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x668h4HP351377
+        Sat, 6 Jul 2019 01:43:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x668hlA9351457
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562402585;
-        bh=Uo4rkYrgZmi4bhQTRyfMXE8q9YNR3nRwhlV+/Wf6dYM=;
+        s=2019061801; t=1562402628;
+        bh=3e3bg69DEadrCh1Oa4RxROE8+viHlLBFLZHHmQ+MlY8=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=sAkBH4wTQf904dGRI6IP1F/6vvDIAP/MjfERem12V6BWCXLDq1TM0dJ9GGekmnqXO
-         /yEO8MPLPMTcRq/ZaTXln362oPPS8J7LevO6DtbxVvfL5sy7lrs2vy0d1iBMDctQ0e
-         FYwjyGqSfpEn7ONmsWravPcn2VqkMkZN308rRziMi0IYjmcrrVPSPn631OxP/5PiyZ
-         kJGnY2Xzk4pFpOIm9LATtttgdZznmnfMzp3zwShxBM+TwdpTKWX94x0HTAjR+A1YN/
-         OuhZS2dNbKtrhOPBkT2Y86iaU4Z19h/5+6XTE9KlvBzzEItZsZek6GHQKYeOEPH55v
-         cAhz5AV1Kxs8Q==
+        b=laNct8PSNrL9723ae4YjOcG+5x25oOFV6Srj2xDyZPB1A0RNuuMT7NKAz4ctnO5Qc
+         VJtfUhSxIJ+EKp+bwCqyUgxBMc2vDh4z/J8G+4EU+GNV0sZdZE6eXmEa4vfBvIYXlY
+         cii3ICjm1mP/tHpFOCJNmTVCzJT2+XcOoNfNl297ODSaGJHZSGBGi9y/9cwkePwmBg
+         +2/6XSUc5+ElS21Ufzl2gIm/UFhOv7WfzNpaVYtrMY41+IrysWSZd5i228H8krHkst
+         kgZvpQC+sdQSCzMPnHOUTYzyz245WFJgFR/Ez5R4nsf2Ll4V/n/4WnT5ibkWjq1rw9
+         UPujUxZ1XuCPQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x668h4Z1351374;
-        Sat, 6 Jul 2019 01:43:04 -0700
-Date:   Sat, 6 Jul 2019 01:43:04 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x668hlhq351454;
+        Sat, 6 Jul 2019 01:43:47 -0700
+Date:   Sat, 6 Jul 2019 01:43:47 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Shijith Thotton <tipbot@zytor.com>
-Message-ID: <tip-c09cb1293523dd786ae54a12fd88001542cba2f6@git.kernel.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        hpa@zytor.com, sthotton@marvell.com
-Reply-To: tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, hpa@zytor.com, sthotton@marvell.com
-In-Reply-To: <1562313336-11888-1-git-send-email-sthotton@marvell.com>
-References: <1562313336-11888-1-git-send-email-sthotton@marvell.com>
+From:   tip-bot for Zenghui Yu <tipbot@zytor.com>
+Message-ID: <tip-3a1d24ca9573fbc74a3d32c972c333b161e0e9dc@git.kernel.org>
+Cc:     mingo@kernel.org, yuzenghui@huawei.com,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de
+Reply-To: linux-kernel@vger.kernel.org, yuzenghui@huawei.com,
+          mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com
+In-Reply-To: <1562388072-23492-1-git-send-email-yuzenghui@huawei.com>
+References: <1562388072-23492-1-git-send-email-yuzenghui@huawei.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:irq/core] genirq: Update irq stats from NMI handlers
-Git-Commit-ID: c09cb1293523dd786ae54a12fd88001542cba2f6
+Subject: [tip:irq/core] irq/irqdomain: Fix comment typo
+Git-Commit-ID: 3a1d24ca9573fbc74a3d32c972c333b161e0e9dc
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -67,79 +67,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c09cb1293523dd786ae54a12fd88001542cba2f6
-Gitweb:     https://git.kernel.org/tip/c09cb1293523dd786ae54a12fd88001542cba2f6
-Author:     Shijith Thotton <sthotton@marvell.com>
-AuthorDate: Fri, 5 Jul 2019 07:56:20 +0000
+Commit-ID:  3a1d24ca9573fbc74a3d32c972c333b161e0e9dc
+Gitweb:     https://git.kernel.org/tip/3a1d24ca9573fbc74a3d32c972c333b161e0e9dc
+Author:     Zenghui Yu <yuzenghui@huawei.com>
+AuthorDate: Sat, 6 Jul 2019 04:41:12 +0000
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 6 Jul 2019 10:40:19 +0200
+CommitDate: Sat, 6 Jul 2019 10:40:20 +0200
 
-genirq: Update irq stats from NMI handlers
+irq/irqdomain: Fix comment typo
 
-The NMI handlers handle_percpu_devid_fasteoi_nmi() and handle_fasteoi_nmi()
-do not update the interrupt counts. Due to that the NMI interrupt count
-does not show up correctly in /proc/interrupts.
+Fix typo in the comment on top of __irq_domain_add().
 
-Add the statistics and treat the NMI handlers in the same way as per cpu
-interrupts and prevent them from updating irq_desc::tot_count as this might
-be corrupted due to concurrency.
-
-[ tglx: Massaged changelog ]
-
-Fixes: 2dcf1fbcad35 ("genirq: Provide NMI handlers")
-Signed-off-by: Shijith Thotton <sthotton@marvell.com>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1562313336-11888-1-git-send-email-sthotton@marvell.com
----
- kernel/irq/chip.c    | 4 ++++
- kernel/irq/irqdesc.c | 8 +++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+Link: https://lkml.kernel.org/r/1562388072-23492-1-git-send-email-yuzenghui@huawei.com
 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 29d6c7d070b4..04c850fb70cb 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -748,6 +748,8 @@ void handle_fasteoi_nmi(struct irq_desc *desc)
- 	unsigned int irq = irq_desc_get_irq(desc);
- 	irqreturn_t res;
- 
-+	__kstat_incr_irqs_this_cpu(desc);
-+
- 	trace_irq_handler_entry(irq, action);
- 	/*
- 	 * NMIs cannot be shared, there is only one action.
-@@ -962,6 +964,8 @@ void handle_percpu_devid_fasteoi_nmi(struct irq_desc *desc)
- 	unsigned int irq = irq_desc_get_irq(desc);
- 	irqreturn_t res;
- 
-+	__kstat_incr_irqs_this_cpu(desc);
-+
- 	trace_irq_handler_entry(irq, action);
- 	res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
- 	trace_irq_handler_exit(irq, action, res);
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index c52b737ab8e3..9149dde5a7b0 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -946,6 +946,11 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
- 			*per_cpu_ptr(desc->kstat_irqs, cpu) : 0;
- }
- 
-+static bool irq_is_nmi(struct irq_desc *desc)
-+{
-+	return desc->istate & IRQS_NMI;
-+}
-+
- /**
-  * kstat_irqs - Get the statistics for an interrupt
-  * @irq:	The interrupt number
-@@ -963,7 +968,8 @@ unsigned int kstat_irqs(unsigned int irq)
- 	if (!desc || !desc->kstat_irqs)
- 		return 0;
- 	if (!irq_settings_is_per_cpu_devid(desc) &&
--	    !irq_settings_is_per_cpu(desc))
-+	    !irq_settings_is_per_cpu(desc) &&
-+	    !irq_is_nmi(desc))
- 	    return desc->tot_count;
- 
- 	for_each_possible_cpu(cpu)
+---
+ kernel/irq/irqdomain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index e7d17cc3a3d7..3078d0e48bba 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -123,7 +123,7 @@ EXPORT_SYMBOL_GPL(irq_domain_free_fwnode);
+  * @ops: domain callbacks
+  * @host_data: Controller private data pointer
+  *
+- * Allocates and initialize and irq_domain structure.
++ * Allocates and initializes an irq_domain structure.
+  * Returns pointer to IRQ domain, or NULL on failure.
+  */
+ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
