@@ -2,29 +2,30 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266BEC0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B545C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0907D20856
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F01C20856
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfGFOGt (ORCPT
+        id S1726973AbfGFOGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 10:06:49 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:46841 "EHLO
+        Sat, 6 Jul 2019 10:06:53 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:42149 "EHLO
         relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfGFOGr (ORCPT
+        with ESMTP id S1726607AbfGFOGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 10:06:47 -0400
+        Sat, 6 Jul 2019 10:06:48 -0400
 X-Originating-IP: 2.224.242.101
 Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B700AC0004;
-        Sat,  6 Jul 2019 14:06:35 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 59FD1C000A;
+        Sat,  6 Jul 2019 14:06:45 +0000 (UTC)
 From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
 To:     laurent.pinchart@ideasonboard.com,
         kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
@@ -35,10 +36,12 @@ Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
         Harsha.ManjulaMallikarjun@in.bosch.com,
         linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/19] drm: rcar-du: Add Color Management Module (CMM)
-Date:   Sat,  6 Jul 2019 16:07:27 +0200
-Message-Id: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 02/19] dt-bindings: display, renesas,du: Document cmms property
+Date:   Sat,  6 Jul 2019 16:07:29 +0200
+Message-Id: <20190706140746.29132-3-jacopo+renesas@jmondi.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,78 +49,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-  second iteration of CMM support for Renesas R-Car devices, where I have
-fixed comments from Laurent, Geert and Daniel.
+Document the newly added 'cmms' property which accepts a list of phandle
+and channel index pairs that point to the CMM units available for each
+Display Unit output video channel.
 
-A reference to the v1 cover letter, with some background on the CMM is
-available here:
-https://lkml.org/lkml/2019/6/6/583
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Notable changes:
-- Rebased on v5.2-rc7
-- clock patches rebased, but already collected by Geert for v5.3
-- Changed cmm compatible string as suggested by Geert in bindings and
-  DTS files
-- CMM driver updated to include comments from Laurent, thanks!
-- Integration in R-Car DU is very similar, I have squashed a few patches
-- Add legagy gamma interface support with .gamma_set callback as suggested
-  by Daniel.
-
-Thanks
-   j
-
-Jacopo Mondi (19):
-  dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-  dt-bindings: display, renesas,du: Document cmms property
-  arm64: renesas: Update 'vsps' property
-  clk: renesas: r8a7796: Add CMM clocks
-  clk: renesas: r8a7795: Add CMM clocks
-  clk: renesas: r8a77965: Add CMM clocks
-  clk: renesas: r8a77990: Add CMM clocks
-  clk: renesas: r8a77995: Add CMM clocks
-  arm64: dts: renesas: r8a7796: Add CMM units
-  arm64: dts: renesas: r8a7795: Add CMM units
-  arm64: dts: renesas: r8a77965: Add CMM units
-  arm64: dts: renesas: r8a77990: Add CMM units
-  arm64: dts: renesas: r8a77995: Add CMM units
-  drm: rcar-du: Add support for CMM
-  drm: rcar-du: Claim CMM support for Gen3 SoCs
-  drm: rcar-du: kms: Collect CMM instances
-  drm: rcar-du: crtc: Enable and disable CMMs
-  drm: rcar-du: crtc: Register GAMMA_LUT properties
-  drm: rcar-du: kms: Update CMM in atomic commit tail
-
- .../bindings/display/renesas,cmm.txt          |  25 ++
- .../bindings/display/renesas,du.txt           |   5 +
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi     |   2 +-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi      |  36 ++-
- arch/arm64/boot/dts/renesas/r8a7796.dtsi      |  25 ++
- arch/arm64/boot/dts/renesas/r8a77965.dtsi     |  27 +-
- arch/arm64/boot/dts/renesas/r8a77990.dtsi     |  20 +-
- arch/arm64/boot/dts/renesas/r8a77995.dtsi     |  20 +-
- drivers/clk/renesas/r8a7795-cpg-mssr.c        |   4 +
- drivers/clk/renesas/r8a7796-cpg-mssr.c        |   3 +
- drivers/clk/renesas/r8a77965-cpg-mssr.c       |   3 +
- drivers/clk/renesas/r8a77990-cpg-mssr.c       |   2 +
- drivers/clk/renesas/r8a77995-cpg-mssr.c       |   2 +
- drivers/gpu/drm/rcar-du/Kconfig               |   7 +
- drivers/gpu/drm/rcar-du/Makefile              |   1 +
- drivers/gpu/drm/rcar-du/rcar_cmm.c            | 291 ++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_cmm.h            |  38 +++
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c        |  17 +
- drivers/gpu/drm/rcar-du/rcar_du_crtc.h        |   2 +
- drivers/gpu/drm/rcar-du/rcar_du_drv.c         |  12 +-
- drivers/gpu/drm/rcar-du/rcar_du_drv.h         |   4 +
- drivers/gpu/drm/rcar-du/rcar_du_group.c       |   8 +
- drivers/gpu/drm/rcar-du/rcar_du_group.h       |   2 +
- drivers/gpu/drm/rcar-du/rcar_du_kms.c         |  86 ++++++
- drivers/gpu/drm/rcar-du/rcar_du_regs.h        |   5 +
- 25 files changed, 638 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.txt
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
-
---
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index aedb22b4d161..0f42af5b91cf 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -44,6 +44,10 @@ Required Properties:
+     instance that serves the DU channel, and the channel index identifies the
+     LIF instance in that VSP.
+ 
++  - cmms: A list of phandles to the CMM instances present in the SoC, one
++    for each available DU channel. The property shall not be specified for
++    SoCs that do not provide any CMM (such as V3M and V3H).
++
+ Required nodes:
+ 
+ The connections to the DU output video ports are modeled using the OF graph
+@@ -89,6 +93,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
+ 			 <&cpg CPG_MOD 721>;
+ 		clock-names = "du.0", "du.1", "du.2", "du.3";
+ 		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
++		cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+-- 
 2.21.0
 
