@@ -7,99 +7,145 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2173CC5B57D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CC7C468AB
 	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA716216FD
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220092184C
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Xupetkh3"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="WubaS67x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfGFDIF (ORCPT
+        id S1726903AbfGFDIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 23:08:05 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:48638 "EHLO
+        Fri, 5 Jul 2019 23:08:07 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:48657 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfGFDIF (ORCPT
+        with ESMTP id S1725917AbfGFDIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 23:08:05 -0400
+        Fri, 5 Jul 2019 23:08:06 -0400
 Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x6637E3M030660;
-        Sat, 6 Jul 2019 12:07:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6637E3M030660
+        by conuserg-09.nifty.com with ESMTP id x6637E3O030660;
+        Sat, 6 Jul 2019 12:07:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6637E3O030660
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562382435;
-        bh=NVx1Ga77bNYYYlQkkNzV5nPWpsmBD+I7gojwThxsH2o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Xupetkh3p7qOZRG+fNWqqwNgT5BxHZxn+A6FsJIQgTBZgseca0NY4fomzPQrExsxv
-         TS31swD0wzKw3tmzyQIG8DQNKbOq5x3cVv0C1zDA7Vul4XJukIQuP8c2Wh576tJzV+
-         6Q3ULwK/o5XIE1rSZgnU70peMJrlfTKbYHpMSNXUFotPMlfObDO/I2t1HI3y59jH0k
-         lKfEY5AF+PsgXh1YnFSJ5yeAuXmnm6cscyjPUq75f6Fy/OoWPdqXF0xPIDblhKH7v4
-         P4WMITUr5HzEBd9VAXTZTDskdaYiKDTFvw5+OfGt5CE37024inINZzYOe7GoFF51jB
-         pzJ86LfoJybpg==
+        s=dec2015msa; t=1562382437;
+        bh=BXranRnGobQsHmPdkgRbmYAS0JjPT04S0nMG/+Roa7I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WubaS67xUsMj78YonzUEFRxs7Ogw/ltP28Bl+bOOgceIgHJ0CqbRy5zTGeiHsoxS9
+         i1a+a3A54Ph5hW/bvFf7EZRKnFArJQMwvz5CNmDFVzcQy0kyofx3l1LNkNBxDxJnk0
+         F9sU/q5ZKQDkwHhcfVBOJuhpdSkwYk0p8nRN5e57K/b1UyKSIiF5CXo6Ie3FZqc682
+         cl75+fzxeRFpTJNAx+k/w+/Is4tRXsA9RjvjUOKKP1Zl7MQfWo8JjCp6WtLjtZuUFx
+         g1LrVFUjK97hgxZbVFmEBFlcqYV0dPPk0he3+No2OC9SD/jOCKyWXLYVMFmNr8b5MR
+         IJX3mqdMV9MVQ==
 X-Nifty-SrcIP: [126.26.94.249]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Sam Ravnborg <sam@ravnborg.org>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] kbuild: remove obj and src from the top Makefile
-Date:   Sat,  6 Jul 2019 12:07:11 +0900
-Message-Id: <20190706030713.6221-1-yamada.masahiro@socionext.com>
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH 3/3] kbuild: add a flag to force absolute path for srctree
+Date:   Sat,  6 Jul 2019 12:07:13 +0900
+Message-Id: <20190706030713.6221-3-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190706030713.6221-1-yamada.masahiro@socionext.com>
+References: <20190706030713.6221-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-$(obj) is not used in the top Makefile at all. $(src) is used in
-3 sites, but they can be replaced with $(srctree).
+In old days, Kbuild always used an absolute path for $(srctree).
 
+Since commit 890676c65d69 ("kbuild: Use relative path when building in
+the source tree"), $(srctree) is '.' when not using O=.
+
+Yet, using absolute paths is useful in some cases even without O=, for
+instance, to create a cscope file with absolute path tags.
+
+O=. was used as an idiom to force Kbuild to use absolute paths even
+when you are building in the source tree.
+
+Since commit 25b146c5b8ce ("kbuild: allow Kbuild to start from any
+directory"), Kbuild is too clever to be tricked. Even if you pass O=.
+Kbuild notices you are building in the source tree, then use '.' for
+$(srctree).
+
+So, "make O=. cscope" is no help to create absolute path tags.
+
+We cannot force one or the other according to commit e93bc1a0cab3
+("Revert "kbuild: specify absolute paths for cscope""). Both of
+relative path and absolute path have pros and cons.
+
+This commit adds a new flag KBUILD_ABS_SRCTREE to allow users to
+choose the absolute path for $(srctree).
+
+"make KBUILD_ABS_SRCTREE=1 cscope" will work as a replacement of
+"make O=. cscope".
+
+I added Fixes since that commit broke some users' workflow.
+
+Fixes: 25b146c5b8ce ("kbuild: allow Kbuild to start from any directory")
+Reported-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Makefile | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ Documentation/kbuild/kbuild.txt | 9 +++++++++
+ Makefile                        | 4 ++++
+ scripts/tags.sh                 | 3 +--
+ 3 files changed, 14 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/kbuild/kbuild.txt b/Documentation/kbuild/kbuild.txt
+index 7a7e2aa2fab5..3ef42f87f275 100644
+--- a/Documentation/kbuild/kbuild.txt
++++ b/Documentation/kbuild/kbuild.txt
+@@ -182,6 +182,15 @@ The output directory is often set using "O=..." on the commandline.
+ 
+ The value can be overridden in which case the default value is ignored.
+ 
++KBUILD_ABS_SRCTREE
++--------------------------------------------------
++Kbuild uses a relative path to point to the tree when possible. For instance,
++when building in the source tree, the source tree path is '.'
++
++Setting this flag requests Kbuild to use absolute path to the source tree.
++There are some useful cases to do so, like when generating tag files with
++absolute path entries etc.
++
+ KBUILD_SIGN_PIN
+ --------------------------------------------------
+ This variable allows a passphrase or PIN to be passed to the sign-file
 diff --git a/Makefile b/Makefile
-index 014390e32b0e..a5615edf2196 100644
+index 534a5dc796b1..6dc453f86f00 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -248,9 +248,6 @@ endif
- export KBUILD_CHECKSRC KBUILD_EXTMOD KBUILD_SRC
+@@ -244,6 +244,10 @@ else
+ 	building_out_of_srctree := 1
+ endif
  
++ifneq ($(KBUILD_ABS_SRCTREE),)
++srctree := $(abs_srctree)
++endif
++
  objtree		:= .
--src		:= $(srctree)
--obj		:= $(objtree)
--
  VPATH		:= $(srctree)
  
- export srctree objtree VPATH
-@@ -1705,7 +1702,7 @@ CHECKSTACK_ARCH := $(ARCH)
- endif
- checkstack:
- 	$(OBJDUMP) -d vmlinux $$(find . -name '*.ko') | \
--	$(PERL) $(src)/scripts/checkstack.pl $(CHECKSTACK_ARCH)
-+	$(PERL) $(srctree)/scripts/checkstack.pl $(CHECKSTACK_ARCH)
+diff --git a/scripts/tags.sh b/scripts/tags.sh
+index 7fea4044749b..4e18ae5282a6 100755
+--- a/scripts/tags.sh
++++ b/scripts/tags.sh
+@@ -17,8 +17,7 @@ ignore="$(echo "$RCS_FIND_IGNORE" | sed 's|\\||g' )"
+ # tags and cscope files should also ignore MODVERSION *.mod.c files
+ ignore="$ignore ( -name *.mod.c ) -prune -o"
  
- kernelrelease:
- 	@echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
-@@ -1724,11 +1721,11 @@ endif
- 
- tools/: FORCE
- 	$(Q)mkdir -p $(objtree)/tools
--	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(src)/tools/
-+	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
- 
- tools/%: FORCE
- 	$(Q)mkdir -p $(objtree)/tools
--	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(src)/tools/ $*
-+	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
- 
- # Single targets
- # ---------------------------------------------------------------------------
+-# Do not use full path if we do not use O=.. builds
+-# Use make O=. {tags|cscope}
++# Use make KBUILD_ABS_SRCTREE=1 {tags|cscope}
+ # to force full paths for a non-O= build
+ if [ "${srctree}" = "." -o -z "${srctree}" ]; then
+ 	tree=
 -- 
 2.17.1
 
