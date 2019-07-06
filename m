@@ -2,126 +2,86 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA23C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 07:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9261C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 07:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A45AD216B7
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 07:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8035C216B7
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 07:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562399641;
-	bh=SL58GbW5h343HEakJ02bx/bRsqwrFAJtkG3Rl+qQMyQ=;
+	s=default; t=1562399935;
+	bh=6COQkh4U3VVQoN9CAk4HX81w+sKnxIMS3dtGDN2ojSg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MemRnlOwtzv3xQ+JQQWKo/ROqkoT+5ysy8JFaqn06sAGKCCMSjeGDmrVf1p128W+L
-	 VJTmGq/iFn6z+Cyj2jp6IZ5nxspMmw2zSIY8hIuYX6oL0bVTCSrEXJpX9nWbryIIdv
-	 Agi4234AHTP9FrxSrAnWwMGevckWPAfEMAAu/sCE=
+	b=PaWO4OOaMP0SdcH8tE8GCtEAsOq33ZCCzn1mqxNfq7l6iqFscTCs05rzhlVOhk7Px
+	 aFM+iPYbUcgQA9X4bRaol72jxGLePKNCSYL8FFWalOsnl+TA3KU+GXg7EYqLtWSD2F
+	 rlIoxAXq4khj11SOIPGtdZlVCA5wkWnR03RB8nA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbfGFHyA (ORCPT
+        id S1726061AbfGFH6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 03:54:00 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46739 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfGFHx7 (ORCPT
+        Sat, 6 Jul 2019 03:58:54 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38346 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfGFH6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 03:53:59 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z23so11158285ote.13;
-        Sat, 06 Jul 2019 00:53:59 -0700 (PDT)
+        Sat, 6 Jul 2019 03:58:54 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d17so11213785oth.5;
+        Sat, 06 Jul 2019 00:58:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=q6mY2CfnJn0z6m6PWk92q2rVFU6R3KZLNmdBvZJpNLg=;
-        b=ku79V/Ehw34nV+rjPJO6dhAGasHYEKvhJvCw1tvprS4gXx56MVlnJVWEcDK8jG9X31
-         /8QymLli6PIfj/m86a+79Q36C4n16lWDBcx46zTeXF4w+YzH8NBxkNb2fn4T8xJ0hgGK
-         jLwqo52oVPClNsWMyqqIH7s+5GsldO1LyzSCp6oe/28GrjBz0Fma4QGVoEgvDtpVYUAf
-         EjA1FFfbrxvldiqTL/FRz/fLZj4prU51DJS+/CPs7hmEHH2O9nfK7uqmgigvouDPXXmr
-         ZYLnCCJigpKd0Y8AcSVD4Osh8NbDPmlcDw6AZQrwDQ+8TlVWCkAe5SHqlYjsWV8AckFx
-         wAYA==
-X-Gm-Message-State: APjAAAWNLYERqI1RvxN/Xr8hbddUIC1U9vTHbzLAXMdYMUY3tVVHB/31
-        u5fojnUCU9RC3z70SorzmAMYWnPLb4mNkrot994=
-X-Google-Smtp-Source: APXvYqwTSqbL/OKY4+prlMpOtaJSQmc+yPsHR+RTeokBw6aGC5mz5ZwTCZPuKAOApRdbIvPNxY6ovXXaFeRXTpBKGyE=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr3981699otn.266.1562399638756;
- Sat, 06 Jul 2019 00:53:58 -0700 (PDT)
+        bh=6COQkh4U3VVQoN9CAk4HX81w+sKnxIMS3dtGDN2ojSg=;
+        b=HAm/hdwGGTZVcxch7AvFGw/12QWng1eb8dg7DWpzgXzbCgLHdNXi0FDTD1HTQK8Pmx
+         3crSy4c7sIDakBtQ9J77KOyb+JToPTJoTTm4SZi0Bp7Tw5dHN3AgOPFOrrJOo0FDxKmq
+         bBmatNDbZUBUHE7kwel43de3PbNY2w40CfdG6tTNp7UVKw4NyMoh6CjmUjvdu8oXQKJO
+         m7Evjj3Wk/4I0RxHJevPpkErvqAmFusVlzcp940IzUficF8hkF9aZ7RcJ7egJFZZE+iz
+         anxsFTXZwenTgzvO6nFfTWlJ59b0pqnCbCq+WS5bDzuWUfcKZrFomojJlnGCF244iF+Z
+         lOLg==
+X-Gm-Message-State: APjAAAWBoh5fCIfJBl04ou55wUEn11PTST4cZn5l8Z8bmNdOBkIwwczJ
+        4vuPAgzLaiAxXjNgOkyMlbqP5mBZiLhTPVuY+nc=
+X-Google-Smtp-Source: APXvYqxs3fkYFf33MB5x0z6dgHzIdnZjiX1d3PHTwjm1UPH9bFhoAYVt7Ku/aN9dAKvbh4TU03F/cBhIR4URNsMsFXw=
+X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr3991551otn.266.1562399933246;
+ Sat, 06 Jul 2019 00:58:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <PU1P153MB0169731042EFE4D6B08F04A5BFF50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <PU1P153MB0169731042EFE4D6B08F04A5BFF50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20190705210428.8039-1-shreeya.patel23498@gmail.com>
+In-Reply-To: <20190705210428.8039-1-shreeya.patel23498@gmail.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 6 Jul 2019 09:53:45 +0200
-Message-ID: <CAJZ5v0i+UL7kVPWp_fLOKpLJtHTyy6NccU0JMxcaRnuSHoQALg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: PM: Fix "multiple definition of acpi_sleep_state_supported"
- for ARM64
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Russ Dill <Russ.Dill@ti.com>,
-        Sebastian Capella <sebastian.capella@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Date:   Sat, 6 Jul 2019 09:58:40 +0200
+Message-ID: <CAJZ5v0hovK+BY0kozGvkyCgR5CFHpZUu71BZRjUUdCYV8fM5Hg@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: cpu-freq: Convert core.txt file to ReST format
+To:     Shreeya Patel <shreeya.patel23498@gmail.com>
+Cc:     skhan@linuxfoundation.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 10:18 PM Dexuan Cui <decui@microsoft.com> wrote:
+On Fri, Jul 5, 2019 at 11:04 PM Shreeya Patel
+<shreeya.patel23498@gmail.com> wrote:
 >
+> Convert core file to ReST format, in order to allow it to
+> be parsed by Sphinx. Make a minor change of correcting the wrong
+> function name cpufreq_put_cpu to cpufreq_cpu_put.
+> Also create an index.rst file in cpu-freq and add it's entry
+> in the main Documentation/index.rst file.
 >
-> If CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT is not set, the dummy version of
-> the function should be static.
->
-> Fixes: 1e2c3f0f1e93 ("ACPI: PM: Make acpi_sleep_state_supported() non-static")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> ---
->
-> Sorry for not doing it right in the previous patch!
->
-> The patch fixes the build errors on ARM64:
->
->    drivers/net/ethernet/qualcomm/emac/emac-phy.o: In function `acpi_sleep_state_supported':
-> >> emac-phy.c:(.text+0x1d8): multiple definition of `acpi_sleep_state_supported'
->    drivers/net/ethernet/qualcomm/emac/emac.o:emac.c:(.text+0xbf8): first defined here
->    drivers/net/ethernet/qualcomm/emac/emac-sgmii.o: In function `acpi_sleep_state_supported':
->    emac-sgmii.c:(.text+0x548): multiple definition of `acpi_sleep_state_supported'
->    drivers/net/ethernet/qualcomm/emac/emac.o:emac.c:(.text+0xbf8): first defined here
->
->
->  include/acpi/acpi_bus.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 4ce59bdc852e..8ffc4acf2b56 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -657,7 +657,7 @@ static inline int acpi_pm_set_bridge_wakeup(struct device *dev, bool enable)
->  #ifdef CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT
->  bool acpi_sleep_state_supported(u8 sleep_state);
->  #else
-> -bool acpi_sleep_state_supported(u8 sleep_state) { return false; }
-> +static bool acpi_sleep_state_supported(u8 sleep_state) { return false; }
+> Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
 
-This should be static inline even.
+I've said "no" no three previous attempts and this one is not different.
 
-I've reapplied the original patch with this change folded in.
+I don't want to have anything .rst in Documentation/cpu-freq/.
+
+There is a *new* admin-guide doc for cpufreq already and what is
+missing is a *new* driver-api one.
 
 Thanks!
