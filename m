@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BE2C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFC9C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A99214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1A4216B7
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/hv3oql"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7AvK11r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfGFKzX (ORCPT
+        id S1727185AbfGFKzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 06:55:23 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53935 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfGFKzU (ORCPT
+        Sat, 6 Jul 2019 06:55:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50411 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfGFKzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 06:55:20 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x15so11410168wmj.3;
-        Sat, 06 Jul 2019 03:55:18 -0700 (PDT)
+        Sat, 6 Jul 2019 06:55:22 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v15so1040441wml.0;
+        Sat, 06 Jul 2019 03:55:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tc9nxOt0YynZlg4DtgqDwIM4b55l1zqGz9yWCnOUqxc=;
-        b=H/hv3oqlvBbndX96qLPf5yWClDQ6sRuTVt5tRUmkZdBjqfNT8QP6eSS48eMgnLnX3M
-         WMQ4grRnDFsHfzcmJCa2NZW22qa3lXOGIluOW5jgh2LpcgL7DkJ54y1w0C6Xhkpp2ntZ
-         I/av/JjLtKAzbQq7e3mH2IiGg67xxHpyAjtACqs2raUphqFhtSD3uoAU+89+iqorUH8i
-         Taggjzu3zY8qh5GVcr/ruUdLkoTpT4zqR8vtjxaqQtGYSk/tQjq/DHcYhOTPMA3P0Zf2
-         4XSF8AjFUnGcVP26TnVi4uep/PBucOaPpgJiMZ2o/nHHHTtddc59KmP2z9DdGZLZZfYC
-         2KfA==
+        bh=HSNnsoi40sXC9a5NBIzV0J+z/SUw5gqWPuXVFawRMYc=;
+        b=V7AvK11reWJTiJ1DMourV1U4KNoutKJGDoiTGDXXM3R+PR5LpFynIPMuHGWbUmIT6N
+         62QOnfL7Spg5I7UppXlkG9bH566FlMkdYX2c5mITv+X49REEJ7TzTRD5C+iQfoN/4rPl
+         UgKMTPNUamuI84pgZfGnM+KdecKNvQnLCdW9YiA5ieNyU+3CJjFBApwua+MKXWYTWR3W
+         cDjDfWnzPiKTGrdUhnTZwNc+HFKvMUxWxCZ7CxTIxdI37rHw++WBf8TzZNY7DbiPJbPx
+         Vi4i+Oh39vDEODfCMLRruFPTteb2P7fgj4MRU+BMXpmRVkxdZYPg4w23p2aEvnIp8KBu
+         br5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=tc9nxOt0YynZlg4DtgqDwIM4b55l1zqGz9yWCnOUqxc=;
-        b=XcbYNAfwegS4BdpitcHNLlKBTGZShEIrSoHaF7jzyoTJucsA7NtOu/fdOKG/TNxREh
-         dKuPcbw7ojNQTbwNwgoxV++SSqdRGMohIllVnRBStdv+/g8ctroHOVTc4ydUjNQbxcyQ
-         ubYqqR3sxpp5AKvtmTBGAKhiKLxOFoi2YrLxT8f71ovaV7uWv3nJaVbqWu8nn86gIuOE
-         26seZ/tmf/Zl0M4KsTvThftoZF6EC0OozSQz+22ttUOiMT7xgx0GX1oekzL35937/BE6
-         sz3cu/NO4g0AEBoWZVQdDtHkRzXWhO8Y8Z5cqeRcPBe9cTtHMK6CJZxYuIWOLdRUdSRx
-         oJGw==
-X-Gm-Message-State: APjAAAXVhxsGlXYXIESJE6M+Zh8MbcotmE8ZuqfYB7XHJo5uoZqcay5n
-        +gKinUD3YDyTC0soA9Qm2r4742Ib7qoidw==
-X-Google-Smtp-Source: APXvYqwjn5IyS6SWM65IBzeh/bdnAqkvGqGa6i9TXN3uin56hMILK/3JcH3obevfA3uL9Qb6/jMB4g==
-X-Received: by 2002:a1c:4d6:: with SMTP id 205mr7201683wme.148.1562410517083;
-        Sat, 06 Jul 2019 03:55:17 -0700 (PDT)
+        bh=HSNnsoi40sXC9a5NBIzV0J+z/SUw5gqWPuXVFawRMYc=;
+        b=alHoR7aS+a2OjMWB1mlH8/CwwhHX+kw8FGpma7M+jkEbLTPHfpq9FtuWOhreRVRwld
+         19z5cesZDMsKeYcWZO+HS8DQodGEaX0IvOmeVhESHxcizaVYjpM6rSOdZJQkghAbcHZB
+         Nz1m3HqIeVTEs+h4/ZWOpgq57bTO1KvZ5toDCHoPY1M1hpv7TNgTkR2D2koVjzFAj5Ty
+         s1OjPu/rfLN2KurWDFokrSZUmae9OJS1CLDaUsZPBAjLgONqaIp/7TBh/fWUvwwijiqg
+         VdW5kNDGzwNwA0fvkadwDOoo5qI1c2bU+GDT1Ux84kihPyHwOqMspJeQm49GMG5P6nvG
+         Zh4g==
+X-Gm-Message-State: APjAAAXs6SyAPCat3RxKXA+ObWfivpGPVGDL263AG6+FXQ9wG/BkC/cu
+        sMv7Cs8aJxS8OxJEl9bzQbwQEL79o6RcmQ==
+X-Google-Smtp-Source: APXvYqxTOz8ZdoRBiRrROUWhnI6SyewPlaUzoSCGW9GiCDm2WtNdoe4eOEEH3/a8B3ek3jvZ4FdMSg==
+X-Received: by 2002:a7b:cbc6:: with SMTP id n6mr8125351wmi.14.1562410519789;
+        Sat, 06 Jul 2019 03:55:19 -0700 (PDT)
 Received: from localhost (net-93-71-3-102.cust.vodafonedsl.it. [93.71.3.102])
-        by smtp.gmail.com with ESMTPSA id h11sm12578794wrx.93.2019.07.06.03.55.16
+        by smtp.gmail.com with ESMTPSA id h11sm12578794wrx.93.2019.07.06.03.55.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 06 Jul 2019 03:55:16 -0700 (PDT)
+        Sat, 06 Jul 2019 03:55:18 -0700 (PDT)
 From:   Salvatore Mesoraca <s.mesoraca16@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-hardening@lists.openwall.com, linux-mm@kvack.org,
@@ -71,9 +71,9 @@ Cc:     kernel-hardening@lists.openwall.com, linux-mm@kvack.org,
         Salvatore Mesoraca <s.mesoraca16@gmail.com>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v5 05/12] LSM: creation of "check_vmflags" LSM hook
-Date:   Sat,  6 Jul 2019 12:54:46 +0200
-Message-Id: <1562410493-8661-6-git-send-email-s.mesoraca16@gmail.com>
+Subject: [PATCH v5 07/12] LSM: creation of "pagefault_handler" LSM hook
+Date:   Sat,  6 Jul 2019 12:54:48 +0200
+Message-Id: <1562410493-8661-8-git-send-email-s.mesoraca16@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
 References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
@@ -82,118 +82,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Creation of a new LSM hook to check if a given configuration of vmflags,
-for a new memory allocation request, should be allowed or not.
-It's placed in "do_mmap", "do_brk_flags", "__install_special_mapping"
-and "setup_arg_pages".
-When loading an ELF, this hook is also used to determine what to do
-with an RWE PT_GNU_STACK header. This allows LSM to force the loader
-to silently ignore executable stack markings, which is useful a thing to
-do when trampoline emulation is available.
+Creation of a new hook to let LSM modules handle user-space pagefaults on
+x86.
+It can be used to avoid segfaulting the originating process.
+If it's the case it can modify process registers before returning.
+This is not a security feature by itself, it's a way to soften some
+unwanted side-effects of restrictive security features.
+In particular this is used by S.A.R.A. to implement what PaX call
+"trampoline emulation" that, in practice, allows for some specific
+code sequences to be executed even if they are in non executable memory.
+This may look like a bad thing at first, but you have to consider
+that:
+- This allows for strict memory restrictions (e.g. W^X) to stay on even
+  when they should be turned off. And, even if this emulation
+  makes those features less effective, it's still better than having
+  them turned off completely.
+- The only code sequences emulated are trampolines used to make
+  function calls. In many cases, when you have the chance to
+  make arbitrary memory writes, you can already manipulate the
+  control flow of the program by overwriting function pointers or
+  return values. So, in many cases, "trampoline emulation"
+  doesn't introduce new exploit vectors.
+- It's a feature that can be turned on only if needed, on a per
+  executable file basis.
 
 Signed-off-by: Salvatore Mesoraca <s.mesoraca16@gmail.com>
 ---
- fs/binfmt_elf.c           |  3 ++-
- fs/binfmt_elf_fdpic.c     |  3 ++-
- fs/exec.c                 |  4 ++++
- include/linux/lsm_hooks.h |  7 +++++++
- include/linux/security.h  |  6 ++++++
- mm/mmap.c                 | 13 +++++++++++++
- security/security.c       |  5 +++++
- 7 files changed, 39 insertions(+), 2 deletions(-)
+ arch/Kconfig              |  6 ++++++
+ arch/x86/Kconfig          |  1 +
+ arch/x86/mm/fault.c       |  6 ++++++
+ include/linux/lsm_hooks.h | 12 ++++++++++++
+ include/linux/security.h  | 11 +++++++++++
+ security/security.c       | 11 +++++++++++
+ 6 files changed, 47 insertions(+)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 8264b46..1d98737 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -806,7 +806,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	for (i = 0; i < loc->elf_ex.e_phnum; i++, elf_ppnt++)
- 		switch (elf_ppnt->p_type) {
- 		case PT_GNU_STACK:
--			if (elf_ppnt->p_flags & PF_X)
-+			if (elf_ppnt->p_flags & PF_X &&
-+			    !security_check_vmflags(VM_EXEC|VM_READ|VM_WRITE))
- 				executable_stack = EXSTACK_ENABLE_X;
- 			else
- 				executable_stack = EXSTACK_DISABLE_X;
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index d86ebd0d..6e0dee1 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -163,7 +163,8 @@ static int elf_fdpic_fetch_phdrs(struct elf_fdpic_params *params,
- 		if (phdr->p_type != PT_GNU_STACK)
- 			continue;
+diff --git a/arch/Kconfig b/arch/Kconfig
+index c47b328..16997c3 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -252,6 +252,12 @@ config ARCH_HAS_FORTIFY_SOURCE
+ config ARCH_HAS_KEEPINITRD
+ 	bool
  
--		if (phdr->p_flags & PF_X)
-+		if (phdr->p_flags & PF_X &&
-+		    !security_check_vmflags(VM_EXEC|VM_READ|VM_WRITE))
- 			params->flags |= ELF_FDPIC_FLAG_EXEC_STACK;
- 		else
- 			params->flags |= ELF_FDPIC_FLAG_NOEXEC_STACK;
-diff --git a/fs/exec.c b/fs/exec.c
-index 89a500b..abf770a 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -756,6 +756,10 @@ int setup_arg_pages(struct linux_binprm *bprm,
- 	vm_flags |= mm->def_flags;
- 	vm_flags |= VM_STACK_INCOMPLETE_SETUP;
- 
-+	ret = security_check_vmflags(vm_flags);
-+	if (ret)
-+		goto out_unlock;
++config ARCH_HAS_LSM_PAGEFAULT
++	bool
++	help
++	  An architecture should select this if it supports
++	  "pagefault_handler" LSM hook.
 +
- 	ret = mprotect_fixup(vma, &prev, vma->vm_start, vma->vm_end,
- 			vm_flags);
- 	if (ret)
+ # Select if arch has all set_memory_ro/rw/x/nx() functions in asm/cacheflush.h
+ config ARCH_HAS_SET_MEMORY
+ 	bool
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 2bbbd4d..a3c7660 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -67,6 +67,7 @@ config X86
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_KCOV			if X86_64
++	select ARCH_HAS_LSM_PAGEFAULT
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+ 	select ARCH_HAS_PMEM_API		if X86_64
+ 	select ARCH_HAS_PTE_SPECIAL
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 46df4c6..7fe36f1 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -18,6 +18,7 @@
+ #include <linux/uaccess.h>		/* faulthandler_disabled()	*/
+ #include <linux/efi.h>			/* efi_recover_from_page_fault()*/
+ #include <linux/mm_types.h>
++#include <linux/security.h>		/* security_pagefault_handler	*/
+ 
+ #include <asm/cpufeature.h>		/* boot_cpu_has, ...		*/
+ #include <asm/traps.h>			/* dotraplinkage, ...		*/
+@@ -1360,6 +1361,11 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 			local_irq_enable();
+ 	}
+ 
++	if (unlikely(security_pagefault_handler(regs,
++						hw_error_code,
++						address)))
++		return;
++
+ 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+ 
+ 	if (hw_error_code & X86_PF_WRITE)
 diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 47f58cf..12ce609 100644
+index 12ce609..478a187 100644
 --- a/include/linux/lsm_hooks.h
 +++ b/include/linux/lsm_hooks.h
-@@ -513,6 +513,11 @@
-  *	@reqprot contains the protection requested by the application.
-  *	@prot contains the protection that will be applied by the kernel.
-  *	Return 0 if permission is granted.
-+ * @check_vmflags:
-+ *	Check if the requested @vmflags are allowed.
-+ *	@vmflags contains the requested vmflags.
-+ *	Return 0 if the operation is allowed to continue otherwise return
-+ *	the appropriate error code.
+@@ -518,6 +518,14 @@
+  *	@vmflags contains the requested vmflags.
+  *	Return 0 if the operation is allowed to continue otherwise return
+  *	the appropriate error code.
++ * @pagefault_handler:
++ *	Handle pagefaults on supported architectures, that is any architecture
++ *	which defines CONFIG_ARCH_HAS_LSM_PAGEFAULT.
++ *	@regs contains process' registers.
++ *	@error_code contains error code for the pagefault.
++ *	@address contains the address that caused the pagefault.
++ *	Return 0 to let the kernel handle the pagefault as usually, any other
++ *	value to let the process continue its execution.
   * @file_lock:
   *	Check permission before performing file locking operations.
   *	Note the hook mediates both flock and fcntl style locks.
-@@ -1597,6 +1602,7 @@
- 				unsigned long prot, unsigned long flags);
+@@ -1603,6 +1611,9 @@
  	int (*file_mprotect)(struct vm_area_struct *vma, unsigned long reqprot,
  				unsigned long prot);
-+	int (*check_vmflags)(vm_flags_t vmflags);
+ 	int (*check_vmflags)(vm_flags_t vmflags);
++	int (*pagefault_handler)(struct pt_regs *regs,
++				 unsigned long error_code,
++				 unsigned long address);
  	int (*file_lock)(struct file *file, unsigned int cmd);
  	int (*file_fcntl)(struct file *file, unsigned int cmd,
  				unsigned long arg);
-@@ -1897,6 +1903,7 @@ struct security_hook_heads {
- 	struct hlist_head mmap_addr;
+@@ -1904,6 +1915,7 @@ struct security_hook_heads {
  	struct hlist_head mmap_file;
  	struct hlist_head file_mprotect;
-+	struct hlist_head check_vmflags;
+ 	struct hlist_head check_vmflags;
++	struct hlist_head pagefault_handler;
  	struct hlist_head file_lock;
  	struct hlist_head file_fcntl;
  	struct hlist_head file_set_fowner;
 diff --git a/include/linux/security.h b/include/linux/security.h
-index 659071c..aed78eb 100644
+index aed78eb..c287eb2 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -312,6 +312,7 @@ int security_mmap_file(struct file *file, unsigned long prot,
- int security_mmap_addr(unsigned long addr);
+@@ -313,6 +313,9 @@ int security_mmap_file(struct file *file, unsigned long prot,
  int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
  			   unsigned long prot);
-+int security_check_vmflags(vm_flags_t vmflags);
+ int security_check_vmflags(vm_flags_t vmflags);
++int __maybe_unused security_pagefault_handler(struct pt_regs *regs,
++					      unsigned long error_code,
++					      unsigned long address);
  int security_file_lock(struct file *file, unsigned int cmd);
  int security_file_fcntl(struct file *file, unsigned int cmd, unsigned long arg);
  void security_file_set_fowner(struct file *file);
-@@ -859,6 +860,11 @@ static inline int security_file_mprotect(struct vm_area_struct *vma,
+@@ -865,6 +868,14 @@ static inline int security_check_vmflags(vm_flags_t vmflags)
  	return 0;
  }
  
-+static inline int security_check_vmflags(vm_flags_t vmflags)
++static inline int __maybe_unused security_pagefault_handler(
++						struct pt_regs *regs,
++						unsigned long error_code,
++						unsigned long address)
 +{
 +	return 0;
 +}
@@ -201,62 +235,23 @@ index 659071c..aed78eb 100644
  static inline int security_file_lock(struct file *file, unsigned int cmd)
  {
  	return 0;
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 7e8c3e8a..ec9c0e3d 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1390,6 +1390,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- {
- 	struct mm_struct *mm = current->mm;
- 	int pkey = 0;
-+	int error;
- 
- 	*populate = 0;
- 
-@@ -1453,6 +1454,10 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 	vm_flags |= calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
- 			mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
- 
-+	error = security_check_vmflags(vm_flags);
-+	if (error)
-+		return error;
-+
- 	if (flags & MAP_LOCKED)
- 		if (!can_do_mlock())
- 			return -EPERM;
-@@ -2996,6 +3001,10 @@ static int do_brk_flags(unsigned long addr, unsigned long len, unsigned long fla
- 		return -EINVAL;
- 	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
- 
-+	error = security_check_vmflags(flags);
-+	if (error)
-+		return error;
-+
- 	error = get_unmapped_area(NULL, addr, len, 0, MAP_FIXED);
- 	if (offset_in_page(error))
- 		return error;
-@@ -3393,6 +3402,10 @@ static struct vm_area_struct *__install_special_mapping(
- 	int ret;
- 	struct vm_area_struct *vma;
- 
-+	ret = security_check_vmflags(vm_flags);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
- 	vma = vm_area_alloc(mm);
- 	if (unlikely(vma == NULL))
- 		return ERR_PTR(-ENOMEM);
 diff --git a/security/security.c b/security/security.c
-index f493db0..3308e89 100644
+index 3308e89..a8bdcf3 100644
 --- a/security/security.c
 +++ b/security/security.c
-@@ -1421,6 +1421,11 @@ int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
- 	return call_int_hook(file_mprotect, 0, vma, reqprot, prot);
+@@ -1426,6 +1426,17 @@ int security_check_vmflags(vm_flags_t vmflags)
+ 	return call_int_hook(check_vmflags, 0, vmflags);
  }
  
-+int security_check_vmflags(vm_flags_t vmflags)
++int __maybe_unused security_pagefault_handler(struct pt_regs *regs,
++					      unsigned long error_code,
++					      unsigned long address)
 +{
-+	return call_int_hook(check_vmflags, 0, vmflags);
++	return call_int_hook(pagefault_handler,
++			     0,
++			     regs,
++			     error_code,
++			     address);
 +}
 +
  int security_file_lock(struct file *file, unsigned int cmd)
