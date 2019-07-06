@@ -2,60 +2,60 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,GAPPY_SUBJECT,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88544C468AD
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BE2C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5704721670
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A99214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thNRn6TJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/hv3oql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfGFKzh (ORCPT
+        id S1726983AbfGFKzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 06:55:37 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40883 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbfGFKz1 (ORCPT
+        Sat, 6 Jul 2019 06:55:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53935 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfGFKzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 06:55:27 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so11941394wmj.5;
-        Sat, 06 Jul 2019 03:55:25 -0700 (PDT)
+        Sat, 6 Jul 2019 06:55:20 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x15so11410168wmj.3;
+        Sat, 06 Jul 2019 03:55:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=u2RjwdUFNE3OIK/3bCmlFikIsAzp11hkr0vwILrcAOk=;
-        b=thNRn6TJGPSAjqCTr1tPi/WxernvhpJlmpA3TOqpdYJiE30WEHmKtQQLBhQkPRLOPw
-         6LdBMJiwQeRDj45LsQ+CyPeBPtz6Sm/DVPA/1jFuQwsFGykkDeEEAkecFk+eI93fAHD1
-         qYlH4joBKaM50/AAsI6LhYNjkSKoWjJohjBdSbGLIHp32dQu3tN7YZr1eYxcsB+bqXUy
-         bX3ZLkExfr5FGb8+TAw/oOIVBNNg7ayqAkWV/3r6PYpzR3qHiM4xg4ORrndOJWzJXK+K
-         OUQHzEOkfBbfQCpO4tDaUbNknqB74EkTe516YzXQIsCHfecezahJQP/7fVtAx2XeBD7c
-         +9Fw==
+        bh=tc9nxOt0YynZlg4DtgqDwIM4b55l1zqGz9yWCnOUqxc=;
+        b=H/hv3oqlvBbndX96qLPf5yWClDQ6sRuTVt5tRUmkZdBjqfNT8QP6eSS48eMgnLnX3M
+         WMQ4grRnDFsHfzcmJCa2NZW22qa3lXOGIluOW5jgh2LpcgL7DkJ54y1w0C6Xhkpp2ntZ
+         I/av/JjLtKAzbQq7e3mH2IiGg67xxHpyAjtACqs2raUphqFhtSD3uoAU+89+iqorUH8i
+         Taggjzu3zY8qh5GVcr/ruUdLkoTpT4zqR8vtjxaqQtGYSk/tQjq/DHcYhOTPMA3P0Zf2
+         4XSF8AjFUnGcVP26TnVi4uep/PBucOaPpgJiMZ2o/nHHHTtddc59KmP2z9DdGZLZZfYC
+         2KfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=u2RjwdUFNE3OIK/3bCmlFikIsAzp11hkr0vwILrcAOk=;
-        b=eDrGL44MRUA86Mk8sjVGtgkww0yi39ok0Mn2EnsMtKpwyRNyJi73HvJZcxZYNg7TQ+
-         u4Gy/RJv7neDJnSInjCwsh4z8BptxWMsJ++2iXcW0CbTHwd61iS92mz7mu6FRxC1QB76
-         Rlb/6gKI34MbyMk2MQ7EfSnR8FtfCYFR1uevtyyl26Mx31Ei6zDLE539HKStZGHiXTXF
-         gwqAezlNEY6tDElezDXgQ2icGvXZGBUnHqHu28ugFyAtIMsVbLYyM71NV+DLIIYX8RNq
-         6UfKhUfoUg0lYaV23z7wEkcBJhVItsqTFx6AMsbRgkr9x5KLKe7dZw+J5Cf43A0ddhds
-         TimA==
-X-Gm-Message-State: APjAAAXpuhJXa390AkHldeITDMcT8zFQ0uDJTsG6o+FJJEh0I/vkjhIG
-        KKqMX19TnfHAId0Boid/T/plGKboALI25g==
-X-Google-Smtp-Source: APXvYqxxhkCkToEoUM8bgIOUXQl0J7gFqXqis0ZuQI5jP94wYx8vI8XERZcndoRkmUp3pDS0ZQ935g==
-X-Received: by 2002:a1c:5f87:: with SMTP id t129mr8243038wmb.150.1562410524445;
-        Sat, 06 Jul 2019 03:55:24 -0700 (PDT)
+        bh=tc9nxOt0YynZlg4DtgqDwIM4b55l1zqGz9yWCnOUqxc=;
+        b=XcbYNAfwegS4BdpitcHNLlKBTGZShEIrSoHaF7jzyoTJucsA7NtOu/fdOKG/TNxREh
+         dKuPcbw7ojNQTbwNwgoxV++SSqdRGMohIllVnRBStdv+/g8ctroHOVTc4ydUjNQbxcyQ
+         ubYqqR3sxpp5AKvtmTBGAKhiKLxOFoi2YrLxT8f71ovaV7uWv3nJaVbqWu8nn86gIuOE
+         26seZ/tmf/Zl0M4KsTvThftoZF6EC0OozSQz+22ttUOiMT7xgx0GX1oekzL35937/BE6
+         sz3cu/NO4g0AEBoWZVQdDtHkRzXWhO8Y8Z5cqeRcPBe9cTtHMK6CJZxYuIWOLdRUdSRx
+         oJGw==
+X-Gm-Message-State: APjAAAXVhxsGlXYXIESJE6M+Zh8MbcotmE8ZuqfYB7XHJo5uoZqcay5n
+        +gKinUD3YDyTC0soA9Qm2r4742Ib7qoidw==
+X-Google-Smtp-Source: APXvYqwjn5IyS6SWM65IBzeh/bdnAqkvGqGa6i9TXN3uin56hMILK/3JcH3obevfA3uL9Qb6/jMB4g==
+X-Received: by 2002:a1c:4d6:: with SMTP id 205mr7201683wme.148.1562410517083;
+        Sat, 06 Jul 2019 03:55:17 -0700 (PDT)
 Received: from localhost (net-93-71-3-102.cust.vodafonedsl.it. [93.71.3.102])
-        by smtp.gmail.com with ESMTPSA id h11sm12578794wrx.93.2019.07.06.03.55.23
+        by smtp.gmail.com with ESMTPSA id h11sm12578794wrx.93.2019.07.06.03.55.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 06 Jul 2019 03:55:23 -0700 (PDT)
+        Sat, 06 Jul 2019 03:55:16 -0700 (PDT)
 From:   Salvatore Mesoraca <s.mesoraca16@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-hardening@lists.openwall.com, linux-mm@kvack.org,
@@ -71,9 +71,9 @@ Cc:     kernel-hardening@lists.openwall.com, linux-mm@kvack.org,
         Salvatore Mesoraca <s.mesoraca16@gmail.com>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v5 11/12] S.A.R.A.: /proc/*/mem write limitation
-Date:   Sat,  6 Jul 2019 12:54:52 +0200
-Message-Id: <1562410493-8661-12-git-send-email-s.mesoraca16@gmail.com>
+Subject: [PATCH v5 05/12] LSM: creation of "check_vmflags" LSM hook
+Date:   Sat,  6 Jul 2019 12:54:46 +0200
+Message-Id: <1562410493-8661-6-git-send-email-s.mesoraca16@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
 References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
@@ -82,163 +82,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prevent a task from opening, in "write" mode, any /proc/*/mem
-file that operates on the task's mm.
-A process could use it to overwrite read-only memory, bypassing
-S.A.R.A. restrictions.
+Creation of a new LSM hook to check if a given configuration of vmflags,
+for a new memory allocation request, should be allowed or not.
+It's placed in "do_mmap", "do_brk_flags", "__install_special_mapping"
+and "setup_arg_pages".
+When loading an ELF, this hook is also used to determine what to do
+with an RWE PT_GNU_STACK header. This allows LSM to force the loader
+to silently ignore executable stack markings, which is useful a thing to
+do when trampoline emulation is available.
 
 Signed-off-by: Salvatore Mesoraca <s.mesoraca16@gmail.com>
 ---
- security/sara/include/sara_data.h | 18 ++++++++++++++++-
- security/sara/sara_data.c         |  8 ++++++++
- security/sara/wxprot.c            | 41 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 66 insertions(+), 1 deletion(-)
+ fs/binfmt_elf.c           |  3 ++-
+ fs/binfmt_elf_fdpic.c     |  3 ++-
+ fs/exec.c                 |  4 ++++
+ include/linux/lsm_hooks.h |  7 +++++++
+ include/linux/security.h  |  6 ++++++
+ mm/mmap.c                 | 13 +++++++++++++
+ security/security.c       |  5 +++++
+ 7 files changed, 39 insertions(+), 2 deletions(-)
 
-diff --git a/security/sara/include/sara_data.h b/security/sara/include/sara_data.h
-index 9216c47..ee95f74 100644
---- a/security/sara/include/sara_data.h
-+++ b/security/sara/include/sara_data.h
-@@ -15,6 +15,7 @@
- #define __SARA_DATA_H
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 8264b46..1d98737 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -806,7 +806,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	for (i = 0; i < loc->elf_ex.e_phnum; i++, elf_ppnt++)
+ 		switch (elf_ppnt->p_type) {
+ 		case PT_GNU_STACK:
+-			if (elf_ppnt->p_flags & PF_X)
++			if (elf_ppnt->p_flags & PF_X &&
++			    !security_check_vmflags(VM_EXEC|VM_READ|VM_WRITE))
+ 				executable_stack = EXSTACK_ENABLE_X;
+ 			else
+ 				executable_stack = EXSTACK_DISABLE_X;
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index d86ebd0d..6e0dee1 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -163,7 +163,8 @@ static int elf_fdpic_fetch_phdrs(struct elf_fdpic_params *params,
+ 		if (phdr->p_type != PT_GNU_STACK)
+ 			continue;
  
- #include <linux/cred.h>
-+#include <linux/fs.h>
- #include <linux/init.h>
- #include <linux/lsm_hooks.h>
- #include <linux/spinlock.h>
-@@ -40,6 +41,10 @@ struct sara_shm_data {
- 	spinlock_t	lock;
- };
+-		if (phdr->p_flags & PF_X)
++		if (phdr->p_flags & PF_X &&
++		    !security_check_vmflags(VM_EXEC|VM_READ|VM_WRITE))
+ 			params->flags |= ELF_FDPIC_FLAG_EXEC_STACK;
+ 		else
+ 			params->flags |= ELF_FDPIC_FLAG_NOEXEC_STACK;
+diff --git a/fs/exec.c b/fs/exec.c
+index 89a500b..abf770a 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -756,6 +756,10 @@ int setup_arg_pages(struct linux_binprm *bprm,
+ 	vm_flags |= mm->def_flags;
+ 	vm_flags |= VM_STACK_INCOMPLETE_SETUP;
  
-+struct sara_inode_data {
-+	struct task_struct *task;
-+};
++	ret = security_check_vmflags(vm_flags);
++	if (ret)
++		goto out_unlock;
 +
- 
- static inline struct sara_data *get_sara_data(const struct cred *cred)
- {
-@@ -79,6 +84,17 @@ static inline struct sara_shm_data *get_sara_shm_data(
- #define lock_sara_shm(X) (spin_lock(&get_sara_shm_data((X))->lock))
- #define unlock_sara_shm(X) (spin_unlock(&get_sara_shm_data((X))->lock))
- 
--#endif
-+
-+static inline struct sara_inode_data *get_sara_inode_data(
-+						const struct inode *inode)
-+{
-+	if (unlikely(!inode->i_security))
-+		return NULL;
-+	return inode->i_security + sara_blob_sizes.lbs_inode;
-+}
-+
-+#define get_sara_inode_task(X) (get_sara_inode_data((X))->task)
-+
-+#endif /* CONFIG_SECURITY_SARA_WXPROT */
- 
- #endif /* __SARA_H */
-diff --git a/security/sara/sara_data.c b/security/sara/sara_data.c
-index 9afca37..e875cf0 100644
---- a/security/sara/sara_data.c
-+++ b/security/sara/sara_data.c
-@@ -17,6 +17,7 @@
- #include <linux/cred.h>
- #include <linux/lsm_hooks.h>
- #include <linux/mm.h>
-+#include <linux/slab.h>
- #include <linux/spinlock.h>
- 
- static int sara_cred_prepare(struct cred *new, const struct cred *old,
-@@ -40,15 +41,22 @@ static int sara_shm_alloc_security(struct kern_ipc_perm *shp)
+ 	ret = mprotect_fixup(vma, &prev, vma->vm_start, vma->vm_end,
+ 			vm_flags);
+ 	if (ret)
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 47f58cf..12ce609 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -513,6 +513,11 @@
+  *	@reqprot contains the protection requested by the application.
+  *	@prot contains the protection that will be applied by the kernel.
+  *	Return 0 if permission is granted.
++ * @check_vmflags:
++ *	Check if the requested @vmflags are allowed.
++ *	@vmflags contains the requested vmflags.
++ *	Return 0 if the operation is allowed to continue otherwise return
++ *	the appropriate error code.
+  * @file_lock:
+  *	Check permission before performing file locking operations.
+  *	Note the hook mediates both flock and fcntl style locks.
+@@ -1597,6 +1602,7 @@
+ 				unsigned long prot, unsigned long flags);
+ 	int (*file_mprotect)(struct vm_area_struct *vma, unsigned long reqprot,
+ 				unsigned long prot);
++	int (*check_vmflags)(vm_flags_t vmflags);
+ 	int (*file_lock)(struct file *file, unsigned int cmd);
+ 	int (*file_fcntl)(struct file *file, unsigned int cmd,
+ 				unsigned long arg);
+@@ -1897,6 +1903,7 @@ struct security_hook_heads {
+ 	struct hlist_head mmap_addr;
+ 	struct hlist_head mmap_file;
+ 	struct hlist_head file_mprotect;
++	struct hlist_head check_vmflags;
+ 	struct hlist_head file_lock;
+ 	struct hlist_head file_fcntl;
+ 	struct hlist_head file_set_fowner;
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 659071c..aed78eb 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -312,6 +312,7 @@ int security_mmap_file(struct file *file, unsigned long prot,
+ int security_mmap_addr(unsigned long addr);
+ int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
+ 			   unsigned long prot);
++int security_check_vmflags(vm_flags_t vmflags);
+ int security_file_lock(struct file *file, unsigned int cmd);
+ int security_file_fcntl(struct file *file, unsigned int cmd, unsigned long arg);
+ void security_file_set_fowner(struct file *file);
+@@ -859,6 +860,11 @@ static inline int security_file_mprotect(struct vm_area_struct *vma,
  	return 0;
  }
  
-+static void sara_task_to_inode(struct task_struct *t, struct inode *i)
++static inline int security_check_vmflags(vm_flags_t vmflags)
 +{
-+	get_sara_inode_task(i) = t;
-+}
-+
- static struct security_hook_list data_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(cred_prepare, sara_cred_prepare),
- 	LSM_HOOK_INIT(cred_transfer, sara_cred_transfer),
- 	LSM_HOOK_INIT(shm_alloc_security, sara_shm_alloc_security),
-+	LSM_HOOK_INIT(task_to_inode, sara_task_to_inode),
- };
- 
- struct lsm_blob_sizes sara_blob_sizes __lsm_ro_after_init = {
- 	.lbs_cred = sizeof(struct sara_data),
- 	.lbs_ipc = sizeof(struct sara_shm_data),
-+	.lbs_inode = sizeof(struct sara_inode_data),
- };
- 
- int __init sara_data_init(void)
-diff --git a/security/sara/wxprot.c b/security/sara/wxprot.c
-index 773d1fd..1a8d132 100644
---- a/security/sara/wxprot.c
-+++ b/security/sara/wxprot.c
-@@ -22,8 +22,11 @@
- #include <linux/mm.h>
- #include <linux/mman.h>
- #include <linux/module.h>
-+#include <linux/mount.h>
- #include <linux/printk.h>
- #include <linux/ratelimit.h>
-+#include <linux/sched/mm.h>
-+#include <linux/sched/task.h>
- #include <linux/spinlock.h>
- #include <linux/xattr.h>
- 
-@@ -615,6 +618,43 @@ static int sara_file_mprotect(struct vm_area_struct *vma,
- 	return 0;
- }
- 
-+static int sara_file_open(struct file *file)
-+{
-+	struct task_struct *t;
-+	struct mm_struct *mm;
-+	u16 sara_wxp_flags = get_current_sara_wxp_flags();
-+
-+	/*
-+	 * Prevent write access to /proc/.../mem
-+	 * if it operates on the mm_struct of the
-+	 * current process: it could be used to
-+	 * bypass W^X.
-+	 */
-+
-+	if (!sara_enabled ||
-+	    !wxprot_enabled ||
-+	    !(sara_wxp_flags & SARA_WXP_WXORX) ||
-+	    !(file->f_mode & FMODE_WRITE))
-+		return 0;
-+
-+	t = get_sara_inode_task(file_inode(file));
-+	if (unlikely(t != NULL &&
-+		     strcmp(file->f_path.dentry->d_name.name,
-+			    "mem") == 0)) {
-+		get_task_struct(t);
-+		mm = get_task_mm(t);
-+		put_task_struct(t);
-+		if (unlikely(mm == current->mm))
-+			sara_warn_or_goto(error,
-+					  "write access to /proc/*/mem");
-+		mmput(mm);
-+	}
 +	return 0;
-+error:
-+	mmput(mm);
-+	return -EACCES;
 +}
 +
- #ifdef CONFIG_SECURITY_SARA_WXPROT_EMUTRAMP
- static int sara_pagefault_handler(struct pt_regs *regs,
- 				  unsigned long error_code,
-@@ -778,6 +818,7 @@ static int sara_setprocattr(const char *name, void *value, size_t size)
- 	LSM_HOOK_INIT(check_vmflags, sara_check_vmflags),
- 	LSM_HOOK_INIT(shm_shmat, sara_shm_shmat),
- 	LSM_HOOK_INIT(file_mprotect, sara_file_mprotect),
-+	LSM_HOOK_INIT(file_open, sara_file_open),
- #ifdef CONFIG_SECURITY_SARA_WXPROT_EMUTRAMP
- 	LSM_HOOK_INIT(pagefault_handler, sara_pagefault_handler),
- #endif
+ static inline int security_file_lock(struct file *file, unsigned int cmd)
+ {
+ 	return 0;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 7e8c3e8a..ec9c0e3d 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1390,6 +1390,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ {
+ 	struct mm_struct *mm = current->mm;
+ 	int pkey = 0;
++	int error;
+ 
+ 	*populate = 0;
+ 
+@@ -1453,6 +1454,10 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ 	vm_flags |= calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
+ 			mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
+ 
++	error = security_check_vmflags(vm_flags);
++	if (error)
++		return error;
++
+ 	if (flags & MAP_LOCKED)
+ 		if (!can_do_mlock())
+ 			return -EPERM;
+@@ -2996,6 +3001,10 @@ static int do_brk_flags(unsigned long addr, unsigned long len, unsigned long fla
+ 		return -EINVAL;
+ 	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
+ 
++	error = security_check_vmflags(flags);
++	if (error)
++		return error;
++
+ 	error = get_unmapped_area(NULL, addr, len, 0, MAP_FIXED);
+ 	if (offset_in_page(error))
+ 		return error;
+@@ -3393,6 +3402,10 @@ static struct vm_area_struct *__install_special_mapping(
+ 	int ret;
+ 	struct vm_area_struct *vma;
+ 
++	ret = security_check_vmflags(vm_flags);
++	if (ret)
++		return ERR_PTR(ret);
++
+ 	vma = vm_area_alloc(mm);
+ 	if (unlikely(vma == NULL))
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/security/security.c b/security/security.c
+index f493db0..3308e89 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1421,6 +1421,11 @@ int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
+ 	return call_int_hook(file_mprotect, 0, vma, reqprot, prot);
+ }
+ 
++int security_check_vmflags(vm_flags_t vmflags)
++{
++	return call_int_hook(check_vmflags, 0, vmflags);
++}
++
+ int security_file_lock(struct file *file, unsigned int cmd)
+ {
+ 	return call_int_hook(file_lock, 0, file, cmd);
 -- 
 1.9.1
 
