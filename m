@@ -2,151 +2,116 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8078DC0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FB5C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F012083B
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:26:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GB2BXtfe"
+	by mail.kernel.org (Postfix) with ESMTP id 3F1532063F
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:28:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562430529;
+	bh=L2vsSk/6LP8Bvd+1I4wyQyKhWgjobOWT3CxR063DJsI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HxlA/9I6lNb2aKPJnjhjdniIdEU+/f12DsTv0ji832I/9ivRpqr4/gTyBYWBFCUNl
+	 DbvF9jw5zPFv3IfFvlsDxyWS/tsn6SNN3kKEUOTfvf2cZ4lrjBBU/Z4wn7wSBgmgZV
+	 9nX0Z9Y9MVRxcLvmKDkhyyJPJpSvx4/pP6J1UZz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfGFQ0P (ORCPT
+        id S1727050AbfGFQ2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 12:26:15 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:38596 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfGFQ0P (ORCPT
+        Sat, 6 Jul 2019 12:28:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43842 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfGFQ2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 12:26:15 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x66GPBsN009054;
-        Sun, 7 Jul 2019 01:25:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x66GPBsN009054
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562430312;
-        bh=X6cih5B3K2ei50R7X1Bl4X3Q5BgxxbeaDmtWdcAgytM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GB2BXtfeXIx3aQHmtoCkIutsS3zwmBEq76NmgPcHEhZBjOWNsBx2L+MziWBruk7NH
-         12ywrIxdo1fWios7cK8sjwd0UcIavrJqfw1HRhuPnGtGL0Dk3Xc+Fwq88Nw20C4AJM
-         T3yK6L3q45/MHsST+jLPn92s+jTCCyJQxU1XpzrFDoLZa811vkAnYnWzKqAKTnOnfG
-         /VRtJUTpCa3x1YjZkjS9nAwXs8gc46wXmCoeN+0fi9AlIn76WhUv1LKddhuZnq0HDE
-         RZ4Jm9tyYElZ4EbvVaz/x7dcXHWVe8EFyLzM22SKj4ty55VOIsRLAX6e6IbG591SEs
-         zqqouvEgQRy/w==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH v2] kbuild: get rid of misleading $(AS) from documents
-Date:   Sun,  7 Jul 2019 01:25:08 +0900
-Message-Id: <20190706162508.8529-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 6 Jul 2019 12:28:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ghL77CchQXZL/1OYqkjXukfJ+VErUY5D2o/FDaCKbfY=; b=UjLH+DhWCO9f+D1rCXCq6GLrd
+        jWUsUOA68M8jrRdMuVNaqbcH2PnpNFmOYC53qO3XFxJK5C0h7knV3Cm2ZK9mwuIE4bidJZ4zvvttv
+        KShBF7wfmr/o+5CV/knJki0YDBX9ahYnld3Ze/HUGjDEbjsU/uKWnk4KiIM0VjaYA+h+GvITywWCk
+        vzzb+wM0oHO9WaK6NhKsYYPLOEZtCHvSJpGZrNZbZ5Xf7WeKV8HS4PrEQpQHhD3kysLhPjHN65Se6
+        HsQSQMxgTHiqva+mtckU6vKqEiE2NhyQ4H5DFxylUSI6d2Z1Ys3L4cebegC16l1w33U3yZ9N0/LRQ
+        TTKRdHRSg==;
+Received: from [179.95.10.178] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hjnYM-00077F-P3; Sat, 06 Jul 2019 16:28:46 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hjnYJ-0005Ue-J0; Sat, 06 Jul 2019 13:28:43 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] docs: automarkup.py: ignore exceptions when seeking for xrefs
+Date:   Sat,  6 Jul 2019 13:28:42 -0300
+Message-Id: <d9b1c85769ba659dba6c7c8b459e385be28ca478.1562430514.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The assembler files in the kernel are *.S instead of *.s, so they must
-be preprocessed. Since 'as' of GNU binutils is not able to preprocess,
-we always use $(CC) as an assembler driver.
+When using the automarkup extension with:
+	make pdfdocs
 
-$(AS) is almost unused in Kbuild. As of writing, there is just one place
-that directly invokes $(AS).
+without passing an specific book, the code will raise an exception:
 
-  $ git grep -e '$(AS)' -e '${AS}' -e '$AS' -e '$(AS:' -e '${AS:' -- :^Documentation
-  drivers/net/wan/Makefile:  AS68K = $(AS)
+	  File "/devel/v4l/docs/Documentation/sphinx/automarkup.py", line 86, in auto_markup
+	    node.parent.replace(node, markup_funcs(name, app, node))
+	  File "/devel/v4l/docs/Documentation/sphinx/automarkup.py", line 59, in markup_funcs
+	    'function', target, pxref, lit_text)
+	  File "/devel/v4l/docs/sphinx_2.0/lib/python3.7/site-packages/sphinx/domains/c.py", line 308, in resolve_xref
+	    contnode, target)
+	  File "/devel/v4l/docs/sphinx_2.0/lib/python3.7/site-packages/sphinx/util/nodes.py", line 450, in make_refnode
+	    '#' + targetid)
+	  File "/devel/v4l/docs/sphinx_2.0/lib/python3.7/site-packages/sphinx/builders/latex/__init__.py", line 159, in get_relative_uri
+	    return self.get_target_uri(to, typ)
+	  File "/devel/v4l/docs/sphinx_2.0/lib/python3.7/site-packages/sphinx/builders/latex/__init__.py", line 152, in get_target_uri
+	    raise NoUri
+	sphinx.environment.NoUri
 
-The documentation about *_AFLAGS* sounds like the flags were passed
-to $(AS). This is somewhat misleading.
+This happens because not all references will belong to a single
+PDF/LaTeX document.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Better to just ignore those than breaking Sphinx build.
+
+Fixes: d74b0d31ddde ("Docs: An initial automarkup extension for sphinx")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
+ Documentation/sphinx/automarkup.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Changes in v2:
-  - Rephrase without using "assembling"
-
- Documentation/kbuild/kbuild.txt    |  5 ++---
- Documentation/kbuild/makefiles.txt | 12 ++++++------
- 2 files changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/kbuild/kbuild.txt b/Documentation/kbuild/kbuild.txt
-index 9c230ea71963..2c6188abb213 100644
---- a/Documentation/kbuild/kbuild.txt
-+++ b/Documentation/kbuild/kbuild.txt
-@@ -31,12 +31,11 @@ Additional options to the assembler (for built-in and modules).
- 
- AFLAGS_MODULE
- --------------------------------------------------
--Additional module specific options to use for $(AS).
-+Additional assembler options for modules.
- 
- AFLAGS_KERNEL
- --------------------------------------------------
--Additional options for $(AS) when used for assembler
--code for code that is compiled as built-in.
-+Additional assembler options for built-in.
- 
- KCFLAGS
- --------------------------------------------------
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index d65ad5746f94..895bbbf38a0c 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -306,7 +306,7 @@ more details, with real examples.
- 	variable $(KBUILD_CFLAGS) and uses it for compilation flags for the
- 	entire tree.
- 
--	asflags-y specifies options for assembling with $(AS).
-+	asflags-y specifies assembler options.
- 
- 	Example:
- 		#arch/sparc/kernel/Makefile
-@@ -441,7 +441,7 @@ more details, with real examples.
- 	as-instr checks if the assembler reports a specific instruction
- 	and then outputs either option1 or option2
- 	C escapes are supported in the test instruction
--	Note: as-instr-option uses KBUILD_AFLAGS for $(AS) options
-+	Note: as-instr-option uses KBUILD_AFLAGS for assembler options
- 
-     cc-option
- 	cc-option is used to check if $(CC) supports a given option, and if
-@@ -814,7 +814,7 @@ When kbuild executes, the following steps are followed (roughly):
- 	In this example, the binary $(obj)/image is a binary version of
- 	vmlinux. The usage of $(call if_changed,xxx) will be described later.
- 
--    KBUILD_AFLAGS		$(AS) assembler flags
-+    KBUILD_AFLAGS		assembler flags
- 
- 	Default value - see top level Makefile
- 	Append or modify as required per architecture.
-@@ -853,15 +853,15 @@ When kbuild executes, the following steps are followed (roughly):
- 	The first example utilises the trick that a config option expands
- 	to 'y' when selected.
- 
--    KBUILD_AFLAGS_KERNEL	$(AS) options specific for built-in
-+    KBUILD_AFLAGS_KERNEL	Assembler options specific for built-in
- 
- 	$(KBUILD_AFLAGS_KERNEL) contains extra C compiler flags used to compile
- 	resident kernel code.
- 
--    KBUILD_AFLAGS_MODULE   Options for $(AS) when building modules
-+    KBUILD_AFLAGS_MODULE   Assembler options specific for modules
- 
- 	$(KBUILD_AFLAGS_MODULE) is used to add arch-specific options that
--	are used for $(AS).
-+	are used for assembler.
- 	From commandline AFLAGS_MODULE shall be used (see kbuild.txt).
- 
-     KBUILD_CFLAGS_KERNEL	$(CC) options specific for built-in
+diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
+index b300cf129869..dba14374f269 100644
+--- a/Documentation/sphinx/automarkup.py
++++ b/Documentation/sphinx/automarkup.py
+@@ -55,8 +55,13 @@ def markup_funcs(docname, app, node):
+                                           reftype = 'function',
+                                           reftarget = target, modname = None,
+                                           classname = None)
+-            xref = cdom.resolve_xref(app.env, docname, app.builder,
+-                                     'function', target, pxref, lit_text)
++
++            # When building pdf documents, this may raise a NoUri exception
++            try:
++                xref = cdom.resolve_xref(app.env, docname, app.builder,
++                                         'function', target, pxref, lit_text)
++            except:
++                xref = None
+         #
+         # Toss the xref into the list if we got it; otherwise just put
+         # the function text.
 -- 
-2.17.1
+2.21.0
 
