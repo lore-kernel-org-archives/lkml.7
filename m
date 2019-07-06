@@ -1,264 +1,142 @@
-Return-Path: <SRS0=fBTF=VC=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA95C5B57D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 23:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F97C46499
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 00:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A9620830
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jul 2019 23:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A84218AD
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 00:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e3kBZcgE"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YphLAoX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfGEX5n (ORCPT
+        id S1726672AbfGFAFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 19:57:43 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41821 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfGEX5l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 19:57:41 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d24so1552777ljg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 16:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FOOdXogZL2vDHEfOpwyLAfpnSunCRf1ktSXTScEaYbc=;
-        b=e3kBZcgE4AAfwzUSIJXnvpmBp0um3fKmC8Po2fg5Y7z3/zUCBkazsNoPuemPp90sHI
-         L0/qrEQcN+M2DqMKs4AQzR3TkxvFWxMq+KaupBzzrGMJdHfdxqB/4adwbodSfroEhopY
-         kk9vSXdOcZVhduFnRkyP1SBq7rwvNDEOlS1j9luEBCB+OWIMZvpNUddiFK1q0p7+jOXd
-         25a3iYl3kgxBY12bW0mqqIq/iy+dlflZ76kjd7rX0Z1RRT3LafMliwGQtI1xFeau8LbN
-         6igetIBmn+Dey/Oq7QUVG2rcAdwZrwQQyR5AFTU02F+UlX7pxyioJa8HIPBokpJjohE9
-         v/Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=FOOdXogZL2vDHEfOpwyLAfpnSunCRf1ktSXTScEaYbc=;
-        b=INLrqH4P+U0ux5xIMckrm/WfqylfsUSqskvxN8zasu5In212WNp+2W3pXevgJd9oCl
-         J/P/OBV8atoUPb9KDkjhVrcSTr8PhKHIj3koM/0vY5Wrwqv/YtzqfmpJaE8P2Dzdp2Ay
-         0HTTHuFFa23h7Lg+pEyr+PPnqpZNzK1jnSgyc5MR+jkHF0PN+lsbVjSmYTEH9NxAwZNi
-         RHzx2VPiaah2AboiwFUw9sQwjPClc53Wt1RpKdhT03XAZltiG09Rh5JIqa+paWxrD/GN
-         dRc7hEIH+r2S+yuXMauPfQWgPFMxDOI1fiWMUAtqQNmP/WVFjf+HdssVKdHYjywqsVVA
-         fq+g==
-X-Gm-Message-State: APjAAAUMt5lGv15frWL4rkmJYtFbIH15RvcEx/ylw2ciX9eWpe2l01vQ
-        7FH1iGNLvF49dpB2e7LNH28dow==
-X-Google-Smtp-Source: APXvYqxe0w5H5Lbp3dMEIZwHUQGUfuP7CAE1qp4H3oP/Way0mfB+mOYm7wPaWPRw3rhpzwkBl3uYMA==
-X-Received: by 2002:a05:651c:92:: with SMTP id 18mr3575260ljq.35.1562371059181;
-        Fri, 05 Jul 2019 16:57:39 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id d7sm263922lfa.86.2019.07.05.16.57.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 16:57:38 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
-Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v9 net-next 2/5] net: ethernet: ti: davinci_cpdma: add dma mapped submit
-Date:   Sat,  6 Jul 2019 02:57:34 +0300
-Message-Id: <20190705235734.10776-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190705150502.6600-3-ivan.khoronzhuk@linaro.org>
-References: <20190705150502.6600-3-ivan.khoronzhuk@linaro.org>
+        Fri, 5 Jul 2019 20:05:31 -0400
+Received: from mail-eopbgr680123.outbound.protection.outlook.com ([40.107.68.123]:41552
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725878AbfGFAFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jul 2019 20:05:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gbKXS/dY9CvCyXj57HGrAGLLvdN2ycdY5RVTU+s9aCBUAsh+1RsdI9tG8IBuJbjie8+qRAQIcL6yzirdEiIGD16ORCK3vNncknC2gqjBW5NLs91Kclvel/CbhBRrnjiYqXZHY6UwgnYZ5lVCJU5h0dvoJoKaYUzbVi/PNE3Kqp8wrTD/Gq4zQPJxI3a3/N0ov9mqOIkyh1Bf5fSAcITY8ch/qarFVLH077+r2k5m5MfG0ovIE7b+vqfgJOF1pWABChl3Kbg0pCDYuWIPfUEhycN+XEgMWZSqtNWnWPape8TZfKa5llivvk4vvtUeZ+zzlAtPn6JcAEQk9Bu+dE5S/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gzc4Xrn4M5mGt2oX7S9QPC72c7MAvWtH6v4dQlKNEGc=;
+ b=fdhyDvwpZb5Oknv2kBMA2ecHffwWunn3UCBeCgARcb8Rb5tk3Kx4JPzTSg11f2eeFBOd540q/MF+no2rbBtb8R+L7kiYQ3vROUV95Ntwrh8zHYHuMfg2kMZlhcB+g/thWfpHWUE1KfYMXNU4yGuKS63Pdw48uTEjvmTfeqznzcWvQbRigu/RhpiuLOHAmUzPXcl2go7hYUp3egkHgqhexvpqwPBCOX2YBwFNt+HNl6wrQJGi9xGXsaIfODovQhJNc7QY8Gt3YsiPUq6LuZZcVbbMK554+d95t4R+cu116ihZtsfTZQYbM97XQlB8z6Rrzr5nC67O84hyF6xEenpsYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microsoft.com;dmarc=pass action=none
+ header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gzc4Xrn4M5mGt2oX7S9QPC72c7MAvWtH6v4dQlKNEGc=;
+ b=YphLAoX2Rmw07+2ib+g7z7WltSj7sYyuhcRe4ZnfAXNBNs22G9BqlKwk5IMrt0b5YGtSk9QIFU14a2Vo60xyHpb2uEC9HyD6CmADfNSz7y1GbWibIMECZ9Xx8E1Zm8c/M3ARRZ2KbhFwlkTQ+8A8vhWwuvGFSp0C6LjS+jDQBl0=
+Received: from MWHPR21MB0784.namprd21.prod.outlook.com (10.173.51.150) by
+ MWHPR21MB0478.namprd21.prod.outlook.com (10.172.102.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.2; Sat, 6 Jul 2019 00:05:27 +0000
+Received: from MWHPR21MB0784.namprd21.prod.outlook.com
+ ([fe80::69c0:8cb:908c:f221]) by MWHPR21MB0784.namprd21.prod.outlook.com
+ ([fe80::69c0:8cb:908c:f221%8]) with mapi id 15.20.2073.001; Sat, 6 Jul 2019
+ 00:05:27 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: linux-next: build failure after merge of the kbuild tree
+Thread-Topic: linux-next: build failure after merge of the kbuild tree
+Thread-Index: AQHVMwwREwrvW6WqyUmShlwUSoJDuKa8teXQ
+Date:   Sat, 6 Jul 2019 00:05:27 +0000
+Message-ID: <MWHPR21MB07845807FA6F9C772D08C8B5D7F40@MWHPR21MB0784.namprd21.prod.outlook.com>
+References: <20190705183104.6fb50bd0@canb.auug.org.au>
+In-Reply-To: <20190705183104.6fb50bd0@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-06T00:05:25.4562832Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=98319eec-39c7-42a5-a931-33955c9e4ff7;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 16efa677-e01c-47a1-844b-08d701a5a6ad
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR21MB0478;
+x-ms-traffictypediagnostic: MWHPR21MB0478:
+x-microsoft-antispam-prvs: <MWHPR21MB04787BD194BA9DA5FB916823D7F40@MWHPR21MB0478.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:188;
+x-forefront-prvs: 00909363D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(199004)(189003)(8936002)(55016002)(71200400001)(6436002)(71190400001)(26005)(52536014)(14454004)(186003)(53936002)(9686003)(5660300002)(10290500003)(4744005)(10090500001)(76116006)(81166006)(305945005)(6246003)(8676002)(478600001)(3846002)(6116002)(81156014)(73956011)(33656002)(110136005)(99286004)(66066001)(68736007)(66446008)(66476007)(22452003)(7736002)(2906002)(102836004)(7696005)(25786009)(8990500004)(86362001)(66946007)(6506007)(256004)(4326008)(64756008)(229853002)(76176011)(486006)(11346002)(54906003)(66556008)(476003)(446003)(316002)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR21MB0478;H:MWHPR21MB0784.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3jtgqQR67uRzoqD7RM7EIhtrnfRapd66n4yIRC6zCOFygwOv/i8OalEq7Sm/P7qopCf7soC386RIljTIWaZ1atsIoUtyO9WUl0hDK/fYD7QtwRlOfmgx8tefUqnegd06UtUpO0fzWQGJucWoM6v2pL2X+WCQ+1RbK/lO0oEC/R2auN/FArG+o3kcbMfs8uGJqzoGWJTLb7hszvxtze2DhkbgGVHoZGm7AA/CLzY67FGTsyOgrTxizFX+4UnjTuTturYN6jMhTeVBxlkqxytLc/PAV4+PNiKY5NoEDiKinpqZqZWba/xJ4uniXzsmabNbWrHsHwSOabPgiPIMBFKyf4Gf7FShp1gkKiLBpsdEvB2yCjv8un1bO/JfBeFMIZ5mdiTC89cFZdfRPLNtYGWSdcIAH4GN3HFzxUKWarM4pDY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16efa677-e01c-47a1-844b-08d701a5a6ad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2019 00:05:27.3285
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0478
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case if dma mapped packet needs to be sent, like with XDP
-page pool, the "mapped" submit can be used. This patch adds dma
-mapped submit based on regular one.
+From: Stephen Rothwell <sfr@canb.auug.org.au>  Sent: Friday, July 5, 2019 1=
+:31 AM
+>=20
+> After merging the kbuild tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
+>=20
+> In file included from <command-line>:
+> include/clocksource/hyperv_timer.h:18:10: fatal error: asm/mshyperv.h: No=
+ such file or
+> directory
+>  #include <asm/mshyperv.h>
+>           ^~~~~~~~~~~~~~~~
+>=20
+> Caused by commit
+>=20
+>   34085aeb5816 ("kbuild: compile-test kernel headers to ensure they are s=
+elf-contained")
+>=20
+> interacting with commit
+>=20
+>   dd2cb348613b ("clocksource/drivers: Continue making Hyper-V clocksource=
+ ISA agnostic")
+>=20
+> from the tip tree.
+>=20
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
+Thomas -- let's remove my two clocksource patches from your 'tip' tree.  I'=
+ll need
+a little time to fully understand the self-contained header requirements an=
+d restructure
+hyperv_timer.h to avoid this problem.
 
-v9..v8
-- fix potential warnings on arm64 caused by typos in type casting
-
- drivers/net/ethernet/ti/davinci_cpdma.c | 89 ++++++++++++++++++++++---
- drivers/net/ethernet/ti/davinci_cpdma.h |  4 ++
- 2 files changed, 83 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 5cf1758d425b..4e693c3aab27 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -139,6 +139,7 @@ struct submit_info {
- 	int directed;
- 	void *token;
- 	void *data;
-+	int flags;
- 	int len;
- };
- 
-@@ -184,6 +185,8 @@ static struct cpdma_control_info controls[] = {
- 				 (directed << CPDMA_TO_PORT_SHIFT));	\
- 	} while (0)
- 
-+#define CPDMA_DMA_EXT_MAP		BIT(16)
-+
- static void cpdma_desc_pool_destroy(struct cpdma_ctlr *ctlr)
- {
- 	struct cpdma_desc_pool *pool = ctlr->pool;
-@@ -1015,6 +1018,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 	struct cpdma_chan		*chan = si->chan;
- 	struct cpdma_ctlr		*ctlr = chan->ctlr;
- 	int				len = si->len;
-+	int				swlen = len;
- 	struct cpdma_desc __iomem	*desc;
- 	dma_addr_t			buffer;
- 	u32				mode;
-@@ -1036,16 +1040,22 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 		chan->stats.runt_transmit_buff++;
- 	}
- 
--	buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
--	ret = dma_mapping_error(ctlr->dev, buffer);
--	if (ret) {
--		cpdma_desc_free(ctlr->pool, desc, 1);
--		return -EINVAL;
--	}
--
- 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
- 	cpdma_desc_to_port(chan, mode, si->directed);
- 
-+	if (si->flags & CPDMA_DMA_EXT_MAP) {
-+		buffer = (dma_addr_t)si->data;
-+		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
-+		swlen |= CPDMA_DMA_EXT_MAP;
-+	} else {
-+		buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
-+		ret = dma_mapping_error(ctlr->dev, buffer);
-+		if (ret) {
-+			cpdma_desc_free(ctlr->pool, desc, 1);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	/* Relaxed IO accessors can be used here as there is read barrier
- 	 * at the end of write sequence.
- 	 */
-@@ -1055,7 +1065,7 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 	writel_relaxed(mode | len, &desc->hw_mode);
- 	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
- 	writel_relaxed(buffer, &desc->sw_buffer);
--	writel_relaxed(len, &desc->sw_len);
-+	writel_relaxed(swlen, &desc->sw_len);
- 	desc_read(desc, sw_len);
- 
- 	__cpdma_chan_submit(chan, desc);
-@@ -1079,6 +1089,32 @@ int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
- 	si.data = data;
- 	si.len = len;
- 	si.directed = directed;
-+	si.flags = 0;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->state == CPDMA_STATE_TEARDOWN) {
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		return -EINVAL;
-+	}
-+
-+	ret = cpdma_chan_submit_si(&si);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+	return ret;
-+}
-+
-+int cpdma_chan_idle_submit_mapped(struct cpdma_chan *chan, void *token,
-+				  dma_addr_t data, int len, int directed)
-+{
-+	struct submit_info si;
-+	unsigned long flags;
-+	int ret;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = (void *)data;
-+	si.len = len;
-+	si.directed = directed;
-+	si.flags = CPDMA_DMA_EXT_MAP;
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 	if (chan->state == CPDMA_STATE_TEARDOWN) {
-@@ -1103,6 +1139,32 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 	si.data = data;
- 	si.len = len;
- 	si.directed = directed;
-+	si.flags = 0;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->state != CPDMA_STATE_ACTIVE) {
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		return -EINVAL;
-+	}
-+
-+	ret = cpdma_chan_submit_si(&si);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+	return ret;
-+}
-+
-+int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
-+			     dma_addr_t data, int len, int directed)
-+{
-+	struct submit_info si;
-+	unsigned long flags;
-+	int ret;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = (void *)data;
-+	si.len = len;
-+	si.directed = directed;
-+	si.flags = CPDMA_DMA_EXT_MAP;
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 	if (chan->state != CPDMA_STATE_ACTIVE) {
-@@ -1140,10 +1202,17 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
- 	uintptr_t			token;
- 
- 	token      = desc_read(desc, sw_token);
--	buff_dma   = desc_read(desc, sw_buffer);
- 	origlen    = desc_read(desc, sw_len);
- 
--	dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
-+	buff_dma   = desc_read(desc, sw_buffer);
-+	if (origlen & CPDMA_DMA_EXT_MAP) {
-+		origlen &= ~CPDMA_DMA_EXT_MAP;
-+		dma_sync_single_for_cpu(ctlr->dev, buff_dma, origlen,
-+					chan->dir);
-+	} else {
-+		dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
-+	}
-+
- 	cpdma_desc_free(pool, desc, 1);
- 	(*chan->handler)((void *)token, outlen, status);
- }
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index 9343c8c73c1b..0271a20c2e09 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.h
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -77,8 +77,12 @@ int cpdma_chan_stop(struct cpdma_chan *chan);
- 
- int cpdma_chan_get_stats(struct cpdma_chan *chan,
- 			 struct cpdma_chan_stats *stats);
-+int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
-+			     dma_addr_t data, int len, int directed);
- int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		      int len, int directed);
-+int cpdma_chan_idle_submit_mapped(struct cpdma_chan *chan, void *token,
-+				  dma_addr_t data, int len, int directed);
- int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
- 			   int len, int directed);
- int cpdma_chan_process(struct cpdma_chan *chan, int quota);
--- 
-2.17.1
-
+Michael
