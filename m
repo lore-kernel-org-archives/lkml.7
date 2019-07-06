@@ -2,155 +2,192 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CE7C5B578
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 05:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272F6C5B578
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 06:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05552089C
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 05:22:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dAkN4F6u";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ac3q7uyz"
+	by mail.kernel.org (Postfix) with ESMTP id F037C2089C
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 06:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726023AbfGFFW4 (ORCPT
+        id S1726248AbfGFGRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 01:22:56 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38654 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725900AbfGFFW4 (ORCPT
+        Sat, 6 Jul 2019 02:17:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46210 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725973AbfGFGRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 01:22:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 292BC8EE1F7;
-        Fri,  5 Jul 2019 22:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562390575;
-        bh=8jmEOU50I7YWCZs78zwZmgKTRzKugItrfou5fNlhW1g=;
-        h=Subject:From:To:Cc:Date:From;
-        b=dAkN4F6u2tVoHUkaYx9ZGWuiRKx6uZ4Gw85Z+hvli3hDl4g4c5oE0jmrHjkEqrU4v
-         QxUvfvPpr419emydHeaD4rQdDsEvksiAq56twZPWpqNxBFtlsoOOkxLyHpFuQCiSpw
-         N+RjnQKM67ygjQ+Lyikh/lcZ1Xrpxb1XaL3Gb8Gk=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aUCthC6yLCvf; Fri,  5 Jul 2019 22:22:55 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id AD4738EE0CF;
-        Fri,  5 Jul 2019 22:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562390574;
-        bh=8jmEOU50I7YWCZs78zwZmgKTRzKugItrfou5fNlhW1g=;
-        h=Subject:From:To:Cc:Date:From;
-        b=ac3q7uyz9KL8F5dR3yxgQ9/uOvfatrH65g8I00o5JQC/yUgY+h5wd2ePM9Szx4ntv
-         0lEzON9VXWAnQQNrz5WLuPUCFVN6s8c59q/NmYgtJZwotGLv9LtBGg67NJN2neSkPf
-         QcU8HzWzHQ9VMPYdqRJ2tE6DsrOvB85hvdKbnu0s=
-Message-ID: <1562390573.10899.20.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.2-rc7
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 05 Jul 2019 22:22:53 -0700
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 6 Jul 2019 02:17:01 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x66690oq022216;
+        Sat, 6 Jul 2019 02:16:33 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tjnsngkuv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 06 Jul 2019 02:16:33 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x66694lV022634;
+        Sat, 6 Jul 2019 02:16:32 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tjnsngkuq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 06 Jul 2019 02:16:32 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6664SRP027778;
+        Sat, 6 Jul 2019 06:16:32 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tjk95rtv1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 06 Jul 2019 06:16:32 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x666GVZt42795392
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 6 Jul 2019 06:16:31 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B09C1B205F;
+        Sat,  6 Jul 2019 06:16:31 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7A76DB2065;
+        Sat,  6 Jul 2019 06:16:31 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.215.71])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat,  6 Jul 2019 06:16:31 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 49D5216C6AC7; Fri,  5 Jul 2019 23:16:31 -0700 (PDT)
+Date:   Fri, 5 Jul 2019 23:16:31 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Message-ID: <20190706061631.GV26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <000000000000d3f34b058c3d5a4f@google.com>
+ <20190626184251.GE3116@mit.edu>
+ <20190626210351.GF3116@mit.edu>
+ <20190626224709.GH3116@mit.edu>
+ <CACT4Y+YTpUErjEmjrqki-tJ0Lyx0c53MQDGVS4CixfmcAnuY=A@mail.gmail.com>
+ <20190705151658.GP26519@linux.ibm.com>
+ <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
+ <20190705191055.GT26519@linux.ibm.com>
+ <20190706042801.GD11665@mit.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190706042801.GD11665@mit.edu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-06_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907060080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two iscsi fixes.  One for an oops in the client which can be triggered
-by the server authentication protocol and the other in the target code
-which causes data corruption.
+On Sat, Jul 06, 2019 at 12:28:01AM -0400, Theodore Ts'o wrote:
+> On Fri, Jul 05, 2019 at 12:10:55PM -0700, Paul E. McKenney wrote:
+> > 
+> > Exactly, so although my patch might help for CONFIG_PREEMPT=n, it won't
+> > help in your scenario.  But looking at the dmesg from your URL above,
+> > I see the following:
+> 
+> I just tested with CONFIG_PREEMPT=n
+> 
+> % grep CONFIG_PREEMPT /build/ext4-64/.config
+> CONFIG_PREEMPT_NONE=y
+> # CONFIG_PREEMPT_VOLUNTARY is not set
+> # CONFIG_PREEMPT is not set
+> CONFIG_PREEMPT_COUNT=y
+> CONFIG_PREEMPTIRQ_TRACEPOINTS=y
+> # CONFIG_PREEMPTIRQ_EVENTS is not set
+> 
+> And with your patch, it's still not helping.
+> 
+> I think that's because SCHED_DEADLINE is a real-time style scheduler:
+> 
+>        In  order  to fulfill the guarantees that are made when a thread is ad‐
+>        mitted to the SCHED_DEADLINE policy,  SCHED_DEADLINE  threads  are  the
+>        highest  priority  (user  controllable)  threads  in the system; if any
+>        SCHED_DEADLINE thread is runnable, it will preempt any thread scheduled
+>        under one of the other policies.
+> 
+> So a SCHED_DEADLINE process is not going yield control of the CPU,
+> even if it calls cond_resched() until the thread has run for more than
+> the sched_runtime parameter --- which for the syzkaller repro, was set
+> at 26 days.
+> 
+> There are some safety checks when using SCHED_DEADLINE:
+> 
+>        The kernel requires that:
+> 
+>            sched_runtime <= sched_deadline <= sched_period
+> 
+>        In  addition,  under  the  current implementation, all of the parameter
+>        values must be at least 1024 (i.e., just over one microsecond, which is
+>        the  resolution  of the implementation), and less than 2^63.  If any of
+>        these checks fails, sched_setattr(2) fails with the error EINVAL.
+> 
+>        The  CBS  guarantees  non-interference  between  tasks,  by  throttling
+>        threads that attempt to over-run their specified Runtime.
+> 
+>        To ensure deadline scheduling guarantees, the kernel must prevent situ‐
+>        ations where the set of SCHED_DEADLINE threads is not feasible (schedu‐
+>        lable)  within  the given constraints.  The kernel thus performs an ad‐
+>        mittance test when setting or changing SCHED_DEADLINE  policy  and  at‐
+>        tributes.   This admission test calculates whether the change is feasi‐
+>        ble; if it is not, sched_setattr(2) fails with the error EBUSY.
+> 
+> The problem is that SCHED_DEADLINE is designed for sporadic tasks:
+> 
+>        A  sporadic  task is one that has a sequence of jobs, where each job is
+>        activated at most once per period.  Each job also has a relative  dead‐
+>        line,  before which it should finish execution, and a computation time,
+>        which is the CPU time necessary for executing the job.  The moment when
+>        a  task wakes up because a new job has to be executed is called the ar‐
+>        rival time (also referred to as the request time or release time).  The
+>        start time is the time at which a task starts its execution.  The abso‐
+>        lute deadline is thus obtained by adding the relative deadline  to  the
+>        arrival time.
+> 
+> It appears that kernel's admission control before allowing
+> SCHED_DEADLINE to be set on a thread was designed for sane
+> applications, and not abusive ones.  Given that process started doing
+> abusive things *after* SCHED_DEADLINE policy was set, in order kernel
+> to figure out that in fact SCHED_DEADLINE should be denied for any
+> arbitrary kernel thread would require either (a) solving the halting
+> problem, or (b) being able to anticipate the future (in which case,
+> we should be using that kernel algorithm to play the stock market  :-)
 
-The patch is available here:
+26 days will definitely get you a large collection of RCU CPU stall
+warnings!  Thank you for digging into this, Ted.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+I suppose RCU could take the dueling-banjos approach and use increasingly
+aggressive scheduler policies itself, up to and including SCHED_DEADLINE,
+until it started getting decent forward progress.  However, that
+sounds like the something that just might have unintended consequences,
+particularly if other kernel subsystems were to also play similar
+games of dueling banjos.
 
-The short changelog is:
+Alternatively, is it possible to provide stricter admission control?
+For example, what sorts of policies do SCHED_DEADLINE users actually use?
 
-Maurizio Lombardi (1):
-      scsi: iscsi: set auth_protocol back to NULL if CHAP_A value is not supported
-
-Roman Bolshakov (1):
-      scsi: target/iblock: Fix overrun in WRITE SAME emulation
-
-And the diffstat:
-
- drivers/target/iscsi/iscsi_target_auth.c | 16 ++++++++--------
- drivers/target/target_core_iblock.c      |  2 +-
- 2 files changed, 9 insertions(+), 9 deletions(-)
-
-With full diff below.
-
-James
-
----
-
-diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
-index 4e680d753941..e2fa3a3bc81d 100644
---- a/drivers/target/iscsi/iscsi_target_auth.c
-+++ b/drivers/target/iscsi/iscsi_target_auth.c
-@@ -89,6 +89,12 @@ static int chap_check_algorithm(const char *a_str)
- 	return CHAP_DIGEST_UNKNOWN;
- }
- 
-+static void chap_close(struct iscsi_conn *conn)
-+{
-+	kfree(conn->auth_protocol);
-+	conn->auth_protocol = NULL;
-+}
-+
- static struct iscsi_chap *chap_server_open(
- 	struct iscsi_conn *conn,
- 	struct iscsi_node_auth *auth,
-@@ -126,7 +132,7 @@ static struct iscsi_chap *chap_server_open(
- 	case CHAP_DIGEST_UNKNOWN:
- 	default:
- 		pr_err("Unsupported CHAP_A value\n");
--		kfree(conn->auth_protocol);
-+		chap_close(conn);
- 		return NULL;
- 	}
- 
-@@ -141,19 +147,13 @@ static struct iscsi_chap *chap_server_open(
- 	 * Generate Challenge.
- 	 */
- 	if (chap_gen_challenge(conn, 1, aic_str, aic_len) < 0) {
--		kfree(conn->auth_protocol);
-+		chap_close(conn);
- 		return NULL;
- 	}
- 
- 	return chap;
- }
- 
--static void chap_close(struct iscsi_conn *conn)
--{
--	kfree(conn->auth_protocol);
--	conn->auth_protocol = NULL;
--}
--
- static int chap_server_compute_md5(
- 	struct iscsi_conn *conn,
- 	struct iscsi_node_auth *auth,
-diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
-index b5ed9c377060..efebacd36101 100644
---- a/drivers/target/target_core_iblock.c
-+++ b/drivers/target/target_core_iblock.c
-@@ -515,7 +515,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
- 
- 		/* Always in 512 byte units for Linux/Block */
- 		block_lba += sg->length >> SECTOR_SHIFT;
--		sectors -= 1;
-+		sectors -= sg->length >> SECTOR_SHIFT;
- 	}
- 
- 	iblock_submit_bios(&list);
+							Thanx, Paul
