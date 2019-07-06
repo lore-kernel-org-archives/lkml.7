@@ -2,100 +2,161 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA5CC5B578
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F02C5B578
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED59216B7
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD1021670
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="laNct8PS"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hCo3095G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfGFIoD (ORCPT
+        id S1726061AbfGFI5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 04:44:03 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42199 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfGFIoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 04:44:02 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x668hlA9351457
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 6 Jul 2019 01:43:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x668hlA9351457
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562402628;
-        bh=3e3bg69DEadrCh1Oa4RxROE8+viHlLBFLZHHmQ+MlY8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=laNct8PSNrL9723ae4YjOcG+5x25oOFV6Srj2xDyZPB1A0RNuuMT7NKAz4ctnO5Qc
-         VJtfUhSxIJ+EKp+bwCqyUgxBMc2vDh4z/J8G+4EU+GNV0sZdZE6eXmEa4vfBvIYXlY
-         cii3ICjm1mP/tHpFOCJNmTVCzJT2+XcOoNfNl297ODSaGJHZSGBGi9y/9cwkePwmBg
-         +2/6XSUc5+ElS21Ufzl2gIm/UFhOv7WfzNpaVYtrMY41+IrysWSZd5i228H8krHkst
-         kgZvpQC+sdQSCzMPnHOUTYzyz245WFJgFR/Ez5R4nsf2Ll4V/n/4WnT5ibkWjq1rw9
-         UPujUxZ1XuCPQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x668hlhq351454;
-        Sat, 6 Jul 2019 01:43:47 -0700
-Date:   Sat, 6 Jul 2019 01:43:47 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Zenghui Yu <tipbot@zytor.com>
-Message-ID: <tip-3a1d24ca9573fbc74a3d32c972c333b161e0e9dc@git.kernel.org>
-Cc:     mingo@kernel.org, yuzenghui@huawei.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de
-Reply-To: linux-kernel@vger.kernel.org, yuzenghui@huawei.com,
-          mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com
-In-Reply-To: <1562388072-23492-1-git-send-email-yuzenghui@huawei.com>
-References: <1562388072-23492-1-git-send-email-yuzenghui@huawei.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:irq/core] irq/irqdomain: Fix comment typo
-Git-Commit-ID: 3a1d24ca9573fbc74a3d32c972c333b161e0e9dc
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 6 Jul 2019 04:57:14 -0400
+Received: from mout.web.de ([217.72.192.78]:44239 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbfGFI5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 04:57:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1562403418;
+        bh=mga3jcoqarNpM03f1VZ9ZEB8Apx+m+Akum97wS1Kp74=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=hCo3095G193LGVFu1cJcDkTvKcTlSSnEtJpxD1eUsJBDOE1qZIgnCnM9+QO+LfuKA
+         FNU/CvdgL3bdribx1CrKUYAsWXefFxH+UNs7Iiwhk5RKKvIK7xSYhM9Nd6u1MGXgk7
+         biR+RLlsKzHIPE3pgmINNfV4lyBnTRoUKKOzKTYI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.148.45]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MfHsM-1i8O5A065C-00Onja; Sat, 06
+ Jul 2019 10:56:58 +0200
+To:     devel@driverdev.osuosl.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ioannis Valasakis <code@wizofe.uk>,
+        =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] staging: octeon: One function call less in
+ cvm_oct_common_set_multicast_list()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <877404bb-a9e4-ffa5-a621-d87fbca549ef@web.de>
+Date:   Sat, 6 Jul 2019 10:56:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3SOAS6OIFImhnFeCq412wwiEs+6NcGPbuGVNRS4Jm2jfPZq2Kq0
+ ohsWa0K578Qm16/yGXW2Gh40EGmfDosYUZMsLjn4AQxTKT4AiviO++ddene9jfv/98Ug4Q2
+ QeHAO18L/1qSsTenV9Zqoao/DO8Ekf0NkuxPc7mz/VZ/6J5dSEPnacE/QqEKbsC2+MSvGf8
+ eq34JgIBTT038wGEfG73w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OPlnqBzK9f4=:rOcU37DcUhjiB1pgh72XCQ
+ gw+iKVem0qpNNgCgxc+2JzxyydefFW4XC0gVjSipyoArnI9OkTAcs5OPhZ6MGPwS2MnGZYsrK
+ QFKZ0cfWeI1cdPU1ru1Alx+SWndCTXjZgwLOvT5z807OHlXViJ9W4ZSfhNjJ/WHwIgeAFJlb3
+ ukW8USSCoeeLiMRIhO/XcVXFDTvsGWvf/JL7MBAsW4ZLWyUopFXQC31sCn3K3u+gb+f8lATdP
+ jqowoaTn0CvZP+OvjszdH4mh45lNta2LDkzsM1tCwHCBTydwIiSuttHrxbrW+3gJVq/1EFryt
+ 5u/CBz7/s6Xd+9lfRTAZ3nzeqXP0bL9OzQM6hz8GuwYW6g02utv14GbZbQcAPv7M8Z08PhpOz
+ CBV6swQXSvk2syWPg1Ip8pqgeFW/+hxNQCiw1zyqdEw4WozcXOhxsSrp8WbiLQHKGedUrqlYf
+ Dv0NdM2JF+NpaXmErsYyGTvDBuW8iVSH25XvnzoWufZcUrrher+dim3bJ1PlMG/3Ip6LxyT/y
+ tibUWzzGYuuUGu8Fe5E6EyH9HLtuvlJCNM8LgomX2IY80dSh6Hyqvlpum5BvOg8vJSXYtYohM
+ JEhJ3PseVzBMfiT7dQMNZHBY6kx0TAEWFCjgWxZwzQV0hbvcWpuIBnn551TbSt+zg4EhnAf2g
+ D5nLH6zfB76Q6YQK0xGO6nFfMvu+Xgyy64ts5+NQENs2SGU7aBHmBc/V8xO6xejLzM6DzWbho
+ UKqe16sn3ysQgYEl0HCcgusN+8Yi4ZDuzNacYECUk/O4DV6kXq87nlvU1eChG80oGpSSBJ40A
+ cpqxB3EO2vqmQguLmPEnvexbXy/qMb9gfMwKzMtMV7OOir/7vvTUIzrZlpkrxVGm+VBKJZUQG
+ /gMmjb94n/7HSQ7yoAyBLPjJEDjZs1GWSlX6Nl9BrCcc2+fN/L8Y7Ch6cLFerShor/0MxW01s
+ wcaLow9FUMG0gaHtZCXbNEg01Dwn2S0F7XaVmEj8p3rOVPjrSVjcWo2y0fudv10uQNxa5f4uh
+ rPc/cfXP0Ky9ZCWyyrqnSqA86ERZb6sHUFm3jRltWDWwkPCoDcjYFgMfFm5jpJfl4wfbuYGaN
+ fyNt3wKdWk1NviwEpPciDvwHBHY9kLlSh7f
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3a1d24ca9573fbc74a3d32c972c333b161e0e9dc
-Gitweb:     https://git.kernel.org/tip/3a1d24ca9573fbc74a3d32c972c333b161e0e9dc
-Author:     Zenghui Yu <yuzenghui@huawei.com>
-AuthorDate: Sat, 6 Jul 2019 04:41:12 +0000
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sat, 6 Jul 2019 10:40:20 +0200
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 6 Jul 2019 10:48:23 +0200
 
-irq/irqdomain: Fix comment typo
+Avoid an extra function call by using a ternary operator instead of
+a conditional statement.
 
-Fix typo in the comment on top of __irq_domain_add().
+This issue was detected by using the Coccinelle software.
 
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1562388072-23492-1-git-send-email-yuzenghui@huawei.com
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/staging/octeon/ethernet.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
----
- kernel/irq/irqdomain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/drivers/staging/octeon/ethernet.c b/drivers/staging/octeon/et=
+hernet.c
+index 8847a11c212f..93f127a0b287 100644
+=2D-- a/drivers/staging/octeon/ethernet.c
++++ b/drivers/staging/octeon/ethernet.c
+@@ -337,13 +337,8 @@ static void cvm_oct_common_set_multicast_list(struct =
+net_device *dev)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index e7d17cc3a3d7..3078d0e48bba 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -123,7 +123,7 @@ EXPORT_SYMBOL_GPL(irq_domain_free_fwnode);
-  * @ops: domain callbacks
-  * @host_data: Controller private data pointer
-  *
-- * Allocates and initialize and irq_domain structure.
-+ * Allocates and initializes an irq_domain structure.
-  * Returns pointer to IRQ domain, or NULL on failure.
-  */
- struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 		cvmx_write_csr(CVMX_GMXX_RXX_ADR_CTL(index, interface),
+ 			       control.u64);
+-		if (dev->flags & IFF_PROMISC)
+-			cvmx_write_csr(CVMX_GMXX_RXX_ADR_CAM_EN
+-				       (index, interface), 0);
+-		else
+-			cvmx_write_csr(CVMX_GMXX_RXX_ADR_CAM_EN
+-				       (index, interface), 1);
+-
++		cvmx_write_csr(CVMX_GMXX_RXX_ADR_CAM_EN(index, interface),
++			       dev->flags & IFF_PROMISC ? 0 : 1);
+ 		cvmx_write_csr(CVMX_GMXX_PRTX_CFG(index, interface),
+ 			       gmx_cfg.u64);
+ 	}
+=2D-
+2.22.0
+
