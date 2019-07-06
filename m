@@ -5,27 +5,27 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DED1C468AD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A78FC48BD3
 	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168A820989
+	by mail.kernel.org (Postfix) with ESMTP id 43A0620856
 	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfGFOG6 (ORCPT
+        id S1727103AbfGFOHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 10:06:58 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:34497 "EHLO
+        Sat, 6 Jul 2019 10:07:03 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:36529 "EHLO
         relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbfGFOGx (ORCPT
+        with ESMTP id S1727060AbfGFOHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 10:06:53 -0400
+        Sat, 6 Jul 2019 10:07:01 -0400
 X-Originating-IP: 2.224.242.101
 Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id F3A59C0005;
-        Sat,  6 Jul 2019 14:06:49 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 84E84C000C;
+        Sat,  6 Jul 2019 14:06:57 +0000 (UTC)
 From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
 To:     laurent.pinchart@ideasonboard.com,
         kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
@@ -37,9 +37,9 @@ Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
         linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 04/19] clk: renesas: r8a7796: Add CMM clocks
-Date:   Sat,  6 Jul 2019 16:07:31 +0200
-Message-Id: <20190706140746.29132-5-jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 07/19] clk: renesas: r8a77990: Add CMM clocks
+Date:   Sat,  6 Jul 2019 16:07:34 +0200
+Message-Id: <20190706140746.29132-8-jacopo+renesas@jmondi.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
 References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
@@ -50,29 +50,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock definitions for CMM units on Renesas R-Car Gen3 M3-W.
+Add clock definitions for CMM units on Renesas R-Car Gen3 E3.
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- drivers/clk/renesas/r8a7796-cpg-mssr.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/clk/renesas/r8a77990-cpg-mssr.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-index d8e9af5d9ae9..39efc254555b 100644
---- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-@@ -180,6 +180,9 @@ static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
- 	DEF_MOD("ehci1",		 702,	R8A7796_CLK_S3D2),
- 	DEF_MOD("ehci0",		 703,	R8A7796_CLK_S3D2),
- 	DEF_MOD("hsusb",		 704,	R8A7796_CLK_S3D2),
-+	DEF_MOD("cmm2",			 709,	R8A7796_CLK_S2D1),
-+	DEF_MOD("cmm1",			 710,	R8A7796_CLK_S2D1),
-+	DEF_MOD("cmm0",			 711,	R8A7796_CLK_S2D1),
- 	DEF_MOD("csi20",		 714,	R8A7796_CLK_CSI0),
- 	DEF_MOD("csi40",		 716,	R8A7796_CLK_CSI0),
- 	DEF_MOD("du2",			 722,	R8A7796_CLK_S2D1),
+diff --git a/drivers/clk/renesas/r8a77990-cpg-mssr.c b/drivers/clk/renesas/r8a77990-cpg-mssr.c
+index 9570404baa58..ceabf55c21c2 100644
+--- a/drivers/clk/renesas/r8a77990-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
+@@ -183,6 +183,8 @@ static const struct mssr_mod_clk r8a77990_mod_clks[] __initconst = {
+ 
+ 	DEF_MOD("ehci0",		 703,	R8A77990_CLK_S3D2),
+ 	DEF_MOD("hsusb",		 704,	R8A77990_CLK_S3D2),
++	DEF_MOD("cmm1",			 710,	R8A77990_CLK_S1D1),
++	DEF_MOD("cmm0",			 711,	R8A77990_CLK_S1D1),
+ 	DEF_MOD("csi40",		 716,	R8A77990_CLK_CSI0),
+ 	DEF_MOD("du1",			 723,	R8A77990_CLK_S1D1),
+ 	DEF_MOD("du0",			 724,	R8A77990_CLK_S1D1),
 -- 
 2.21.0
 
