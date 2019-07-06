@@ -2,120 +2,98 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DFBC5B578
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125F2C468AE
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E89BE20989
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:26:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ru2p0jnF"
+	by mail.kernel.org (Postfix) with ESMTP id E014520989
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfGFI0y (ORCPT
+        id S1726038AbfGFIc1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 04:26:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9518 "EHLO pegase1.c-s.fr"
+        Sat, 6 Jul 2019 04:32:27 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:42402 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbfGFI0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 04:26:54 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45glDq6ZjYz9vBmT;
-        Sat,  6 Jul 2019 10:26:51 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ru2p0jnF; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id AECzU9flJshk; Sat,  6 Jul 2019 10:26:51 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45glDq4qGpz9vBmQ;
-        Sat,  6 Jul 2019 10:26:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1562401611; bh=mh8ujrNVmKQnrW9nDzbu+49uRl2+DM2LFGY+iQ49uaE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ru2p0jnF3ids7fmZpTgeYrASFyvoVkL72KL/HeYQ+FTu3BKXtl3xPhH5MVCevoRU5
-         ujz7aVUOcCi7kYFlJeRsd9lMWRlLVvjxRFDOamnDYT9QN93qZB0IWNb1IKUooXuOTZ
-         rE509HWZ5soWFRwGVdAFSl/JOYdXdrOteQE3s3Ok=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BA47F8B768;
-        Sat,  6 Jul 2019 10:26:52 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id IektAObbTzti; Sat,  6 Jul 2019 10:26:52 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 47A948B74C;
-        Sat,  6 Jul 2019 10:26:52 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/hw_breakpoint: move instruction stepping out of
- hw_breakpoint_handler()
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <f8cdc3f1c66ad3c43ebc568abcc6c39ed4676284.1561737231.git.christophe.leroy@c-s.fr>
- <57148696-b9a5-d3c1-1e29-82673c558927@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <bef43f48-fa40-284e-a299-bc73ebc3e725@c-s.fr>
-Date:   Sat, 6 Jul 2019 10:26:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1725900AbfGFIc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 04:32:26 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id A9F99EBE0698D4D08D85;
+        Sat,  6 Jul 2019 16:32:19 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x668Vowc018517;
+        Sat, 6 Jul 2019 16:31:50 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070616323549-2128101 ;
+          Sat, 6 Jul 2019 16:32:35 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     pbonzini@redhat.com
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: [PATCH] kvm: x86: Fix -Wmissing-prototypes warnings
+Date:   Sat, 6 Jul 2019 16:29:50 +0800
+Message-Id: <1562401790-49030-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <57148696-b9a5-d3c1-1e29-82673c558927@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-06 16:32:35,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-06 16:31:57
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl2.zte.com.cn x668Vowc018517
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We get a warning when build kernel W=1:
 
+arch/x86/kvm/../../../virt/kvm/eventfd.c:48:1: warning: no previous prototype for ‘kvm_arch_irqfd_allowed’ [-Wmissing-prototypes]
+ kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
+ ^
 
-Le 03/07/2019 à 08:20, Ravi Bangoria a écrit :
-> 
-> 
-> On 6/28/19 9:25 PM, Christophe Leroy wrote:
->> On 8xx, breakpoints stop after executing the instruction, so
->> stepping/emulation is not needed. Move it into a sub-function and
->> remove the #ifdefs.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
-> 
-> Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> 
-> Just one neat below...
+The reason is kvm_arch_irqfd_allowed is declared in arch/x86/kvm/irq.h,
+which is not included by eventfd.c. Remove the declaration to kvm_host.h
+can fix this.
 
-Thanks for the review.
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ arch/x86/kvm/irq.h       | 1 -
+ include/linux/kvm_host.h | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> [...]
-> 
->> -#ifndef CONFIG_PPC_8xx
->> -	/* Do not emulate user-space instructions, instead single-step them */
->> -	if (user_mode(regs)) {
->> -		current->thread.last_hit_ubp = bp;
->> -		regs->msr |= MSR_SE;
->> +	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info->address))
-> 
-> May be split this line. It's 86 chars long and checkpatch.pl is warning
-> about this:
+diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
+index d6519a3..7c6233d 100644
+--- a/arch/x86/kvm/irq.h
++++ b/arch/x86/kvm/irq.h
+@@ -102,7 +102,6 @@ static inline int irqchip_in_kernel(struct kvm *kvm)
+ 	return mode != KVM_IRQCHIP_NONE;
+ }
+ 
+-bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
+ void kvm_inject_pending_timer_irqs(struct kvm_vcpu *vcpu);
+ void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu);
+ void kvm_apic_nmi_wd_deliver(struct kvm_vcpu *vcpu);
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index d1ad38a..5f04005 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -990,6 +990,7 @@ void kvm_unregister_irq_ack_notifier(struct kvm *kvm,
+ 				   struct kvm_irq_ack_notifier *kian);
+ int kvm_request_irq_source_id(struct kvm *kvm);
+ void kvm_free_irq_source_id(struct kvm *kvm, int irq_source_id);
++bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
+ 
+ /*
+  * search_memslots() and __gfn_to_memslot() are here because they are
+-- 
+1.8.3.1
 
-Didn't you use arch/powerpc/tools/checkpatch.sh ?
-
-powerpc accepts 90 chars per line.
-
-Christophe
-
-> 
-> WARNING: line over 80 characters
-> #257: FILE: arch/powerpc/kernel/hw_breakpoint.c:282:
-> +	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info->address))
-> 
