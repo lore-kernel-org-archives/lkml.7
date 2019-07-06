@@ -2,136 +2,100 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349FDC48BD3
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B073C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7F720863
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562423694;
-	bh=LuMsXodBcIYO5eNJy1UWIhFx12cvKxOlb5oy7Fbn6K8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=tLw7EFAAaMhrdEt3GdeZoj2dBQhvRUYOnH8eF3YdjqOSho1MbQt+NeNKRSVocc0B4
-	 LCIeOWYTsdpeFwuZyEfwGcOi6q6qtBw46HVnFgIKXI+B1WVL1QqXmf9/LS2TRKgHF2
-	 lOIDiEr//xY+CI2iOgyZPtq0xLvRX+vB+O7ptFu0=
+	by mail.kernel.org (Postfix) with ESMTP id D7D6220838
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:38:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qnCXUPNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfGFOex (ORCPT
+        id S1726794AbfGFOi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 10:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbfGFOew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 10:34:52 -0400
-Received: from localhost (unknown [49.207.57.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE17620828;
-        Sat,  6 Jul 2019 14:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562423691;
-        bh=LuMsXodBcIYO5eNJy1UWIhFx12cvKxOlb5oy7Fbn6K8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YJp27jL9evkZ2rCFcpAZRgbPh8U/ewi1VMH6aTN/QGrPYvyGUNFuitS/DJu/J7GM1
-         c+OHKldgJpCh2OoBvNfnXmZUc3SP8Ht2hg/NMI8b+uh0OOyyClDatBVzwLm3rg/hEw
-         8DDSLGifaCYbSTC3iIFfX/4jcnEEIPPOt++qRHu8=
-Date:   Sat, 6 Jul 2019 20:01:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] dmaengine fixes for 5.2
-Message-ID: <20190706143142.GG2911@vkoul-mobl>
+        Sat, 6 Jul 2019 10:38:26 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:28682 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfGFOi0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 10:38:26 -0400
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x66EcKkt000659;
+        Sat, 6 Jul 2019 23:38:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x66EcKkt000659
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562423901;
+        bh=PVCFVmyvT9EjILIv3Kkv4dgmBeJ8MNfOpTsOuaznyq4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qnCXUPNXNGSEmzhaBqa6BtS3Qsngwd+3SkaZRZDyVIbBIc89wP8T482xmFnk54qHn
+         69VUChZpoyGGKrrTrKPvLL/pXF7oOX3XWHveA9UtVHH4cRH55cMaUzaqZ7oeLR7PR8
+         mPTrAG4rTBFa2U0KJ0lJkiYvw70Atw/akVmPP1UKviYgs8Po6oeQd3MOfITv+wgG0C
+         q2EUFrXcZQjppAmNPE9kv0/orYJ2tX7Le0d/oLFLWFQK5ZNJEeBFxzRq33EhXVTeXi
+         owetfSsdeWVhyxgiFo7xHGnHNKgK9XXxM/uKun/2esEs+WG4n/yIQP/zKpqnNj8HhA
+         6/ca8wFfqDIcw==
+X-Nifty-SrcIP: [209.85.217.43]
+Received: by mail-vs1-f43.google.com with SMTP id m8so5512102vsj.0;
+        Sat, 06 Jul 2019 07:38:20 -0700 (PDT)
+X-Gm-Message-State: APjAAAUMZ1NgKZBUSwI920aPSte06d/Ae6CF2X3T61OLQijmLoD2HKMK
+        nMG7v1vnNHhEa/UvHzrFGHqZalduBbCyjDcBSd8=
+X-Google-Smtp-Source: APXvYqz/0CW3uSWzYLP0qJaZZfTTulvrddvSBI1PPL8hvcZkBfYdco9ohdL/wybUc7dPXzoEe2XVFJQF2dXRFskUk6U=
+X-Received: by 2002:a67:f495:: with SMTP id o21mr5369277vsn.54.1562423899788;
+ Sat, 06 Jul 2019 07:38:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190628051300.30678-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190628051300.30678-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 6 Jul 2019 23:37:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ8M_z-z8tp-OiU=n13iggqEyY084S5HNS3p8LwM3qc1g@mail.gmail.com>
+Message-ID: <CAK7LNAQ8M_z-z8tp-OiU=n13iggqEyY084S5HNS3p8LwM3qc1g@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: use -E instead of -c for __cc-option
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 28, 2019 at 2:13 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Use -E instead of -c like scripts/Kconfig.include
+> This makes the compiler flag evaluation slightly faster.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to linux-kbuild.
 
-Hi Linus,
 
-Couple for fixes came for dmaengine drivers. One fixes a patch in
-5.2-rc1 and others and cced stable.
 
-Please pull to receive:
+>  scripts/Kbuild.include | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+> index f641bb0aa63f..e4329b92d165 100644
+> --- a/scripts/Kbuild.include
+> +++ b/scripts/Kbuild.include
+> @@ -113,7 +113,7 @@ as-instr = $(call try-run,\
+>  # __cc-option
+>  # Usage: MY_CFLAGS += $(call __cc-option,$(CC),$(MY_CFLAGS),-march=winchip-c6,-march=i586)
+>  __cc-option = $(call try-run,\
+> -       $(1) -Werror $(2) $(3) -c -x c /dev/null -o "$$TMP",$(3),$(4))
+> +       $(1) -Werror $(2) $(3) -E -x c /dev/null -o "$$TMP",$(3),$(4))
+>
+>  # Do not attempt to build with gcc plugins during cc-option tests.
+>  # (And this uses delayed resolution so the flags will be up to date.)
+> --
+> 2.17.1
+>
 
-The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
 
-  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.2
-
-for you to fetch changes up to f6034225442c4a87906d36e975fd9e99a8f95487:
-
-  dmaengine: qcom: bam_dma: Fix completed descriptors count (2019-07-05 13:=
-18:27 +0530)
-
-----------------------------------------------------------------
-dmaengine fixes for v5.2
-
-The fixes for 5.2 are:
- - bam_dma fix for completed descriptor count
- - fix for imx-sdma remove BD_INTR for channel0 and use-after-free on
-   probe error path
- - endian bug fix in jz4780 IRQ handler
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      dmaengine: jz4780: Fix an endian bug in IRQ handler
-
-Robin Gong (1):
-      dmaengine: imx-sdma: remove BD_INTR for channel0
-
-Sricharan R (1):
-      dmaengine: qcom: bam_dma: Fix completed descriptors count
-
-Sven Van Asbroeck (1):
-      dmaengine: imx-sdma: fix use-after-free on probe error path
-
- drivers/dma/dma-jz4780.c   |  5 +++--
- drivers/dma/imx-sdma.c     | 52 ++++++++++++++++++++++++++----------------=
-----
- drivers/dma/qcom/bam_dma.c |  3 +++
- 3 files changed, 35 insertions(+), 25 deletions(-)
-
-Thanks
---=20
-~Vinod
-
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJdILDOAAoJEHwUBw8lI4NHHGUQAL9/DG/9ImiN2Hhq1oiUJ6HU
-atwOkfsa0/EWKnPPbdlaMHzYdSkCDYFUz7lxf6ASADVYdmvfuc5snDBV5XlAXf5M
-CsCBSIZEukdGR+gaXLFctz56udwMxuUCaC/sf//GoY4dHcVA4ObUL14VV9PptnUu
-VkgkZA/yVZfrUFDjxl14BTcm2pRZGpDXf4VNgXTWsX01hl3e29L6pIl9NEHprAvU
-SXtmEVQlN23xI4foSK6b99LhSbuv2w2zdJqXbdIYrxee0o+Ybo/BCSgBk3Iq3yeu
-yFDnknDRGOZ1FUwM4Dz+07oMePoGrEIsaycsXlKVksKXHQVxRB/tBOWbNi9YmiPz
-BRq8JSR9XDE7c0iBHWUPPAlgZn+9AikBF7LZ1TX7+tmS2oofcPVCSAcpcZRuRkZ7
-N7tFgIhY5cEstiCJTCvdnSIfOd3GQ0vBMd+OKs/XLyiEE/955SimwRuzroctsx4h
-xxxwliNy4UgXADzL70ofDw2oiCO+37h9K4FQpApWg1pN4K7POc7V4r/IPiNC8+7X
-H/czBZriHbxlMQqsyw9i1KrYX2taU7HZStDqZkV6Qd0IcemgyqLt+DuRUVJZyEU/
-HaxWpMH7Iz1fMUnfQIi0f1zGehY4ozoWUzIbARA45JT+xz9f0hfBoiIKsFV0lPM6
-IC5/XlSkCqKnMSJ3qZ6j
-=zV0F
------END PGP SIGNATURE-----
-
---i9LlY+UWpKt15+FH--
+-- 
+Best Regards
+Masahiro Yamada
