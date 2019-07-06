@@ -2,116 +2,92 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C446C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B12C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39922089C
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A662089C
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562411997;
-	bh=7xmHSUCGmVXofFIGqKxozPl19NLyGyciMLQ7tGV2oag=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bQD+0mygS/mXLIcJZZqFbpbooCwsH3/Sj/4ooEyzvnJhJM6NO/ggY1BmYe/GG5hhL
-	 JMDG7uuNAJg6+Ivfpmw14HlcBF9zP8hHDl65lvya1i1UpDq+lHyqqBIqdjClB8Xfcj
-	 4dDLF9pUsykuT6EJQHtJTcMbXzEEx8oGvIO5mdYQ=
+	s=default; t=1562412111;
+	bh=l9zh9YCOWXRRrpVjr6FE4iQKwindWBK+wynvEueKbts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pZ3jUoLHDzx2+WVSrK8E7G4LRtg2P8IlCtPQeo1lqmNFyckhCVkOWt2wXUjEDOsLq
+	 ZJiB7//0pGJiAiHgTrEyttzOrtMUVPSO239Xc+ZfSe2iM5SvRLVl2x1NvdF6rnJ/GL
+	 J2d9TwK2MIioCAfJp1swT7loGOkq8q749Z2BvdVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfGFLTz (ORCPT
+        id S1726671AbfGFLVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 07:19:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43010 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfGFLTz (ORCPT
+        Sat, 6 Jul 2019 07:21:50 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33654 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfGFLVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 07:19:55 -0400
+        Sat, 6 Jul 2019 07:21:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eAaoeydu5/7mUiHaUSIJXkqgFNZi4v8q6elnU4LELEc=; b=HM9aBZZ88EbUMezo9xeghq0JB
-        BOxyGdDGNE3KI259r57Tvc8tCjHrFND3Uw6hWJ8OzwZgyntlankqMNX4agY0yNi5NEmlPpSBJPWLU
-        QXO7JFKABLWhvMXrKmgg5mLflV4M2gvt3efrMzOYrpBJqUpkfrDLoFsxNkglg0vbf5VCkJmQ4fEtp
-        Ffyri9Y2+TBpeQrJvoPxAS++QEiTMTeOJKSHIOi9rbWBlCMa01nsQPGmagErGtqB5tR0tu8Gf2csN
-        ddIMqv9tSZDECrwFtIstUZxdc5i/p+1bL1CSk5EhF9wFrkYGw+BPkb1WR5zf/UgChAj+40UYUP0xo
-        25/8N+HLg==;
-Received: from 177.205.70.5.dynamic.adsl.gvt.net.br ([177.205.70.5] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjijR-0002Ls-VR; Sat, 06 Jul 2019 11:19:54 +0000
-Date:   Sat, 6 Jul 2019 08:19:50 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 35/39] docs: infiniband: add it to the driver-api
- bookset
-Message-ID: <20190706081950.4a629537@coco.lan>
-In-Reply-To: <20190703180802.GA26557@ziepe.ca>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
-        <12743088687a9b0b305c05b62a5093056a4190b8.1561724493.git.mchehab+samsung@kernel.org>
-        <20190703180802.GA26557@ziepe.ca>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+         bh=l9zh9YCOWXRRrpVjr6FE4iQKwindWBK+wynvEueKbts=; b=k9BfuLr5+/5fmwnwq1xqsd88Z
+        9yNY4LTEjqsm2KTwYdd1LAo19KSFkyPyr+9djkZIbL2U28uKvRjxRSZRjqk7wZw3sfLcLXslw3wjY
+        NmcqddEHa/PQo31eHv5KbHU0k++tVe2Vd6YPAB7gE57dhkamb72Ety/h6n9cXx2rSPuuI=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hjilF-0006nj-9K; Sat, 06 Jul 2019 11:21:45 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 5E8B227437E5; Sat,  6 Jul 2019 12:21:44 +0100 (BST)
+Date:   Sat, 6 Jul 2019 12:21:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] regulator: axp20x: fix DCDCA and DCDCD for AXP806
+Message-ID: <20190706112144.GH20625@sirena.org.uk>
+References: <20190706100545.22759-1-jernej.skrabec@siol.net>
+ <20190706100545.22759-2-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XaUbO9McV5wPQijU"
+Content-Disposition: inline
+In-Reply-To: <20190706100545.22759-2-jernej.skrabec@siol.net>
+X-Cookie: How you look depends on where you go.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 3 Jul 2019 15:08:02 -0300
-Jason Gunthorpe <jgg@ziepe.ca> escreveu:
 
-> On Fri, Jun 28, 2019 at 09:30:28AM -0300, Mauro Carvalho Chehab wrote:
-> > While this contains some uAPI stuff, it was intended to be
-> > read by a kernel doc. So, let's not move it to a different
-> > dir, but, instead, just add it to the driver-api bookset.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> >  Documentation/index.rst            | 1 +
-> >  Documentation/infiniband/index.rst | 2 +-
-> >  2 files changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/index.rst b/Documentation/index.rst
-> > index ea33cbbccd9d..e69d2fde7735 100644
-> > +++ b/Documentation/index.rst
-> > @@ -96,6 +96,7 @@ needed).
-> >     block/index
-> >     hid/index
-> >     iio/index
-> > +   infiniband/index
-> >     leds/index
-> >     media/index
-> >     networking/index
-> > diff --git a/Documentation/infiniband/index.rst b/Documentation/infiniband/index.rst
-> > index 22eea64de722..9cd7615438b9 100644
-> > +++ b/Documentation/infiniband/index.rst
-> > @@ -1,4 +1,4 @@
-> > -:orphan:
-> > +.. SPDX-License-Identifier: GPL-2.0
-> >  
-> >  ==========
-> >  InfiniBand  
-> 
-> Should this one go to the rdma.git as well? It looks like yes
+--XaUbO9McV5wPQijU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm OK if you want to add to rdma.git. However, this will likely rise 
-conflicts, though, as this series has lots of other patches touching
-Documentation/index.rst. 
+On Sat, Jul 06, 2019 at 12:05:44PM +0200, Jernej Skrabec wrote:
+> Refactoring of the driver introduced few bugs in AXP806's DCDCA and
+> DCDCD regulator definitions.
 
-So, I suspect that it would be easier to merge this together with the
-other patches via the docs tree, by the end of the merge window.
+This is not a great changelog - what are the bugs and how does
+this patch fix them?
 
-If you prefer to apply it against your tree, my plan is to do
-a final rebase at the second week of the merge window, in order to
-avoid such conflicts.
+--XaUbO9McV5wPQijU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Mauro
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0ghEcACgkQJNaLcl1U
+h9DPrAf/aYMgVdPbOheAhHM40pMN7HcxSHYkqgEiPN+guqERGPAeHV6xTn9VsX5I
+iZavyKfuFLfY3b66PgFrRa0DU8giSxQZOAN5tFGjysEuyiwrhG2W+ZpMtGalnJ7V
+VEKvkzgOR9HofD2uGoXmA7/3iNynObgWlfziL3NYtWEQur64A8pmW/6nXAr4g6FM
+LiwL/oU612MJ9np0Edg8sh7qV3ZpfRTcpg4lhVvZR7sYEJ0LAsWJLNFoLnMTmWtS
+F9GVVR1w5JJn48yp/Ub2I6VyPbhtbvuAtGttT1UWkJokkjkbj/oPooUMjHU2gsY6
+a4vRDWOVdwb3KYKWy8OiMRH+tOajoQ==
+=wt9e
+-----END PGP SIGNATURE-----
+
+--XaUbO9McV5wPQijU--
