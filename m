@@ -2,109 +2,123 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F47C46499
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 00:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F652C468AA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 01:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88398218A4
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 00:59:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hmawQpkS"
+	by mail.kernel.org (Postfix) with ESMTP id 775B720989
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 01:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562375173;
+	bh=8gWBHeKNDNjuhlu21bI3kDawN4nTwZAUWh6+zhh+NxA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VykplenuvbQvc7y/YqLHrHqU3rg93cErxYtQXnFfIXeOT/tilZIXbEGTXbcsZFU8Y
+	 O7Q4/eSAAfVJIB67c956NlLu59ULPnGOQct13NQ7qndCOgZd2AmX611WYBeMzTXqra
+	 0UXqWUSsGV/iqE21cUMLY8KApg9fYnDggXM20xO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfGFA71 (ORCPT
+        id S1726523AbfGFBGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 20:59:27 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:43521 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfGFA71 (ORCPT
+        Fri, 5 Jul 2019 21:06:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43702 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfGFBGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 20:59:27 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x660xLCW011087;
-        Sat, 6 Jul 2019 09:59:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x660xLCW011087
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562374762;
-        bh=EeZy6/p1xFhPkT8b/ANqMRnyDdlUActKvI7Kj7ETqYA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hmawQpkSR79H3xWUqP6Zu/Hpsiphaumev5mfOqhVgr7ATQnS3YjQanTOYuFW3S4Ha
-         YV0a5fWt4jtYhp1bv6Skq59fVy8glhQ3gXSyMiII2RPrSXxS3pNbfaKLnQXpHOZJvR
-         O/CauaC0XKy1aREiSnm8lWIkhvIBkmzOXoT0K1UnqZ9+yeHn0v1rKvU3DTSGaQX334
-         thlVvvsVKFEz9YjK4nYxTL3KZW9T4OODtM8cBIwjEXDKbOR+Hn36n29Tv9jwwK/r/I
-         TlpkhegoPw680vpQ2O8mMx09PbY5/eYHsiTLLHBkYflSMt0J86D1k588aVmblqI/ug
-         T/Ec9z3yPIVdQ==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id u3so4794613vsh.6;
-        Fri, 05 Jul 2019 17:59:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAUR8zO/ifxRmFm1ytwyc9uTfh5pdCWnlL3tHhHhFINjwsb14L2t
-        wTY7ofhrNsiXty5Vx8XDmqL0H4at3JCtpJbNTJs=
-X-Google-Smtp-Source: APXvYqyxenVC7SaKdwciyiNNZrv4ISN6acClFMSfaNgT8TvBBYOWwdaUwuDEpgNiFcYp1+EOUqkdtYanWi5ZdN/oDcc=
-X-Received: by 2002:a67:fc45:: with SMTP id p5mr3872043vsq.179.1562374760874;
- Fri, 05 Jul 2019 17:59:20 -0700 (PDT)
+        Fri, 5 Jul 2019 21:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1rzhIg/gYP6gF2nEYMswqh8XqxzTA32GFXstzYxorB4=; b=KudHSDPC0DOxrL4bzrXfgXPvI
+        blqp4J86MiyWDbwHDjff5nHw7GQdLV+f/elOrwbzEl5WR5T4plWZwxpIJpduZ28kKqHRAfWXDDncL
+        CASTS0Q07yXzT51sGF7o0z1geuBnhXP9A32zoH36gLwQ18oBTlUg62pXK22RBr/dsW0ho=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hjZ9R-0005M0-9c; Sat, 06 Jul 2019 01:06:05 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id AA75D2742B3A; Sat,  6 Jul 2019 02:06:04 +0100 (BST)
+Date:   Sat, 6 Jul 2019 02:06:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        airlied@linux.ie, daniel@ffwll.ch, robdclark@gmail.com,
+        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
+Message-ID: <20190706010604.GG20625@sirena.org.uk>
+References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
+ <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-References: <20190705183104.6fb50bd0@canb.auug.org.au> <MWHPR21MB07845807FA6F9C772D08C8B5D7F40@MWHPR21MB0784.namprd21.prod.outlook.com>
-In-Reply-To: <MWHPR21MB07845807FA6F9C772D08C8B5D7F40@MWHPR21MB0784.namprd21.prod.outlook.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 6 Jul 2019 09:58:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARCyOZFAtiXbH1OCbC8o0eHNzY9m6_Z_XoF7ZUyCZGb4w@mail.gmail.com>
-Message-ID: <CAK7LNARCyOZFAtiXbH1OCbC8o0eHNzY9m6_Z_XoF7ZUyCZGb4w@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the kbuild tree
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3yNHWXBV/QO9xKNm"
+Content-Disposition: inline
+In-Reply-To: <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
+X-Cookie: How you look depends on where you go.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
 
-On Sat, Jul 6, 2019 at 9:05 AM Michael Kelley <mikelley@microsoft.com> wrote:
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>  Sent: Friday, July 5, 2019 1:31 AM
-> >
-> > After merging the kbuild tree, today's linux-next build (powerpc
-> > allyesconfig) failed like this:
-> >
-> > In file included from <command-line>:
-> > include/clocksource/hyperv_timer.h:18:10: fatal error: asm/mshyperv.h: No such file or
-> > directory
-> >  #include <asm/mshyperv.h>
-> >           ^~~~~~~~~~~~~~~~
-> >
-> > Caused by commit
-> >
-> >   34085aeb5816 ("kbuild: compile-test kernel headers to ensure they are self-contained")
-> >
-> > interacting with commit
-> >
-> >   dd2cb348613b ("clocksource/drivers: Continue making Hyper-V clocksource ISA agnostic")
-> >
-> > from the tip tree.
-> >
->
-> Thomas -- let's remove my two clocksource patches from your 'tip' tree.  I'll need
-> a little time to fully understand the self-contained header requirements and restructure
-> hyperv_timer.h to avoid this problem.
+--3yNHWXBV/QO9xKNm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I do not think you have to drop your patches.
+On Wed, Jul 03, 2019 at 02:45:12PM -0700, Jeffrey Hugo wrote:
+> Add basic support with a simple implementation that utilizes the generic
+> read/write commands to allow device registers to be configured.
 
-Since <asm/mshyperv.h> only exists in x86,
-guarding it by CONFIG_X86 is OK.
-So, I think Stephen's patch is OK as-is.
+This looks good to me but I really don't know anything about DSI,
+I'd appreciate some review from other people who do.  I take it
+there's some spec thing in DSI that says registers and bytes must
+both be 8 bit?
 
-Perhaps, Kbuild is imposing too much burden,
-but I'd like to try it and see how it goes.
+A couple of minor comments, no need to resend just for these:
 
+> +       payload[0] = (char)reg;
+> +       payload[1] = (char)val;
 
--- 
-Best Regards
-Masahiro Yamada
+Do you need the casts?
+
+> +	ret = mipi_dsi_generic_write(dsi, payload, 2);
+> +	return ret < 0 ? ret : 0;
+
+Please just write an if statement, it helps with legibility.
+
+> +struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
+> +				 const struct regmap_config *config,
+> +				 struct lock_class_key *lock_key,
+> +				 const char *lock_name)
+> +{
+> +	return __regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
+> +			     lock_key, lock_name);
+> +}
+> +EXPORT_SYMBOL_GPL(__regmap_init_dsi);
+
+Perhaps validate that the config is OK (mainly the register/value
+sizes)?  Though I'm not sure it's worth it so perhaps not - up to
+you.
+
+--3yNHWXBV/QO9xKNm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0f8/sACgkQJNaLcl1U
+h9B+BAf+OQ42/IKead1kROPCuJvRz9xl+9GDQTLlYbT3gv9XzJqILZvnKJdtFtnQ
+FIjvDBpN7fxvlXZtGAwrMOa5udFoKi2r1HTWeXW9qO3YYOrm06gt22+EsO/176rb
+BGCshVkG6DOZGHT858SLkWlNN6pXuu7//4vJMfGsnKNI3KEc9jGHI3U3KoF3jNyi
+pGlJPPGvvJhA9Nr3bdJuCD5eo/zAyjqsFE5NaynitGMU5Gzc9qZZWx7XtqA6qbz+
+mPMDlUK9mXLu5/HkFyyTptJAZrbDGGWnpSMBDt4X92plAc07q82hWWlgEdaq2pEW
+O8LOCJGyLJrkFlhw41aL4GO7nqMMqg==
+=xAto
+-----END PGP SIGNATURE-----
+
+--3yNHWXBV/QO9xKNm--
