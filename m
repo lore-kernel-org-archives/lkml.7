@@ -2,138 +2,104 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38DAC48BDA
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 20:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9C1C48BDA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 20:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CA32083B
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 20:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647D320830
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 20:31:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRFQgRmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfGFUag (ORCPT
+        id S1727169AbfGFUbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 16:30:36 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47804 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbfGFUag (ORCPT
+        Sat, 6 Jul 2019 16:31:20 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39306 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbfGFUbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 16:30:36 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id D7FB180476; Sat,  6 Jul 2019 22:30:21 +0200 (CEST)
-Date:   Sat, 6 Jul 2019 22:30:32 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>, viresh.kumar@linaro.org,
-        mka@chromium.org, ulf.hansson@linaro.org
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: cpufreq notifiers break suspend -- Re: suspend broken in
- next-20190704 on Thinkpad X60
-Message-ID: <20190706203032.GA26828@amd>
-References: <20190704192020.GA3771@amd>
- <CAJZ5v0gn7FWpqW+WmCzj1=K-pjY=SjRNuEsMR3bRTSO8FzFG=Q@mail.gmail.com>
- <20190705185001.GA4068@amd>
- <CAJZ5v0irbn-Xd47KExw=h7On7KShCm6rThCo0q4-zn=o_x6_HQ@mail.gmail.com>
+        Sat, 6 Jul 2019 16:31:19 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l9so6189575qtu.6;
+        Sat, 06 Jul 2019 13:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QTdDNTekunAUgyaGQ3/RJxJLYyFWDwZXUg6Q2Wj8Aqc=;
+        b=cRFQgRmvTZBqx1Do7XLHfkgnGFACGebj//05Gx/ZyVFgynRoeEbYGqAszY5FPBuP/i
+         wdOyGTGwCQIzBH90QM1qW4L/buGk+4a5jwHdX/o29RyvZ+XHd4UhD4P+p/oegjBLKVql
+         5T3zkhPosT6nnmgtycmM3KtapPYe2MzQRpkzJSPqdvz2RhznuXC7t17Vpw7ZTkMN0oaM
+         LatQtCQY3pTeaVLGZOMmQKBF7/keE9OxfskkpYQ/M7Kl8ZYla4e5JQGWyis5tYzLL1YY
+         ukpm76IK6dyRKxUlfzereOjE7B5LpcI1rOOW/7jb510TVSs9YwTVoYP8HYnPhwNtrHUo
+         95cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QTdDNTekunAUgyaGQ3/RJxJLYyFWDwZXUg6Q2Wj8Aqc=;
+        b=eARbi/dfsWoihSktlSyXTxxcBfvKd0SC6sVtqGvK5FLM0O4HjJxAoVYaZ0K10dytd0
+         83lzFS65q0U3kvkcNdoUw7M1IGTiDN8YkAtF4A6Sq+b6k8vmDLi29mcs659hNN6NZp7J
+         JNDfJbuZj0IB4mAcriMjo8/4mCtdpaLTl02yKe/H3Jyzo63K+3+P44Mrv86etchCxjxd
+         yW8ehoBospIKqJWmd0yIz8c7Dng8Pit3xBfedu+0WYgKMp5b1PAb9bgDFepGUnlzo9ov
+         lavqRJOuS78DFSTCrbFmBztRSKz8qzz7ZkYniKv1wrw9UeMLjPaVkxFODB+9ai7oBt6f
+         MgIw==
+X-Gm-Message-State: APjAAAWcrOmQygWhWGqsAK6MZi6WF7qjwA+K7+Qcnb6Bq63M0xIieHUq
+        toVU3sks4w4o0a9T+jeTO3w=
+X-Google-Smtp-Source: APXvYqxLv1LQbz6LycfXjpzAR167HsHiq08tHengu2WXsBxNFIWXpbY+Fe7YNPGA7DHT97SWJu2JBQ==
+X-Received: by 2002:ac8:70cd:: with SMTP id g13mr7513436qtp.325.1562445078775;
+        Sat, 06 Jul 2019 13:31:18 -0700 (PDT)
+Received: from localhost ([2601:184:4780:7861:fe2e:a8ba:927f:edd9])
+        by smtp.gmail.com with ESMTPSA id x20sm4770818qtr.72.2019.07.06.13.31.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 06 Jul 2019 13:31:17 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/bridge: ti-sn65dsi86: use dev name for debugfs
+Date:   Sat,  6 Jul 2019 13:31:02 -0700
+Message-Id: <20190706203105.7810-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0irbn-Xd47KExw=h7On7KShCm6rThCo0q4-zn=o_x6_HQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rob Clark <robdclark@chromium.org>
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This should be more future-proof if we ever encounter a device with two
+of these bridges.
 
-Hi!
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Anyway, if 5.2-rc7 is OK, something in this branch causes the problem
-> to happen for you.
->=20
-> I would try
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commi=
-t/?h=3Dlinux-next&id=3Df012a132824fc870b90980540f727c76fc72e244
->=20
-> to narrow down the scope somewhat.
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index c8fb45e7b06d..9f4ff88d4a10 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -204,7 +204,7 @@ DEFINE_SHOW_ATTRIBUTE(status);
+ 
+ static void ti_sn_debugfs_init(struct ti_sn_bridge *pdata)
+ {
+-	pdata->debugfs = debugfs_create_dir("ti_sn65dsi86", NULL);
++	pdata->debugfs = debugfs_create_dir(dev_name(pdata->dev), NULL);
+ 
+ 	debugfs_create_file("status", 0600, pdata->debugfs, pdata,
+ 			&status_fops);
+-- 
+2.20.1
 
-Bisect says:
-
-572542c81dec533b7dd3778ea9f5949a00595f68 is the first bad commit
-Author: Viresh Kumar <viresh.kumar@linaro.org>
-
-    cpufreq: Register notifiers with the PM QoS framework
-
-    This registers the notifiers for min/max frequency constraints
-    with the
-
- Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
- Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
- Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-Unfortunately, it does not revert cleanly:
-
-pavel@duo:/data/l/linux-next-32$ git show
-572542c81dec533b7dd3778ea9f5949a00595f68 | patch -REsp1
-6 out of 11 hunks FAILED -- saving rejects to file
-drivers/cpufreq/cpufreq.c.rej
-
-
-pavel@duo:/data/l/linux-next-32$  git bisect log
-# bad: [1e2a4c9019eb53f62790fadf86c14a54f4cf4888] Merge branch
-'pm-cpufreq-new' into linux-next
-# good: [f012a132824fc870b90980540f727c76fc72e244] Merge branches
-'acpica', 'acpi-osl', 'acpi-tables', 'acpi-misc' and 'acpi-tools' into
-linux-next
-git bisect start '1e2a4c9019eb53f62790fadf86c14a54f4cf4888'
-'f012a132824fc870b90980540f727c76fc72e244'
-# good: [48a8a5f9a326d1c1a5505d51fb98086e5003f37e] Add linux-next
-specific files for 20190701
-git bisect good 48a8a5f9a326d1c1a5505d51fb98086e5003f37e
-# good: [96021e491dbf30bd1c5c1a753992838c8d8d00cb] Merge branches
-'acpi-apei', 'acpi-doc', 'acpi-soc' and 'acpi-pmic' into linux-next
-git bisect good 96021e491dbf30bd1c5c1a753992838c8d8d00cb
-# bad: [141467868c1f7bf1c4e8394a39d47d4db38cd2f1] cpufreq:
-intel_pstate: Reuse refresh_frequency_limits()
-git bisect bad 141467868c1f7bf1c4e8394a39d47d4db38cd2f1
-# good: [2a79ea5ec53973c8711b54d33ace5c77659dc8f8] PM / QOS: Pass
-request type to dev_pm_qos_read_value()
-git bisect good 2a79ea5ec53973c8711b54d33ace5c77659dc8f8
-# bad: [572542c81dec533b7dd3778ea9f5949a00595f68] cpufreq: Register
-notifiers with the PM QoS framework
-git bisect bad 572542c81dec533b7dd3778ea9f5949a00595f68
-# good: [208637b37824c8956fe28d277835a403ee35fa84] PM / QoS: Add
-support for MIN/MAX frequency constraints
-git bisect good 208637b37824c8956fe28d277835a403ee35fa84
-# first bad commit: [572542c81dec533b7dd3778ea9f5949a00595f68]
-cpufreq: Register notifiers with the PM QoS framework
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0hBOgACgkQMOfwapXb+vK1xQCeK5YNPvOJMTUEZAlO3pq6sQi/
-VeAAn2eTZuWwiYd17VkY2A0aOxlpZH/p
-=rJBJ
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
