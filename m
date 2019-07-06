@@ -2,174 +2,151 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2CBC0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8078DC0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC462083B
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F012083B
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:26:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="QKqRGA7I"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GB2BXtfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfGFQYB (ORCPT
+        id S1727016AbfGFQ0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 12:24:01 -0400
-Received: from mail-eopbgr820123.outbound.protection.outlook.com ([40.107.82.123]:24504
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726522AbfGFQYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 12:24:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4SJj09mkhZKhCos/jfVKyJqtSHNLfCBE2NPOYdlsL94=;
- b=QKqRGA7Itlb66IfzA6qWViayWzg1hhWQZA/yo+dcLtJMSo2fX7zzbc7OOLt4IWyKhLoaI/XLAA1EzmllJmYTSe9XhuV1eT6W6TwCpG3fhXeVx0VbrlzI/ZVA1/f88mvgEpWj7EhjTx3k8q7bV7EfpMjhwcNV36pdGrDkaBVumCE=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1325.namprd22.prod.outlook.com (10.172.60.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.17; Sat, 6 Jul 2019 16:23:57 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::746d:883d:31:522e]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::746d:883d:31:522e%5]) with mapi id 15.20.2052.019; Sat, 6 Jul 2019
- 16:23:57 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: [GIT PULL] MIPS fixes
-Thread-Topic: [GIT PULL] MIPS fixes
-Thread-Index: AQHVNBc1hSVSr+AmPkKmbakhcJ9Ddw==
-Date:   Sat, 6 Jul 2019 16:23:57 +0000
-Message-ID: <20190706162350.4tyzj44jppjb4hwq@pburton-laptop>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR06CA0032.eurprd06.prod.outlook.com
- (2603:10a6:206:2::45) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [46.233.116.40]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04900152-5ef8-4f5f-9f8a-08d7022e5846
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(49563074)(7193020);SRVR:MWHPR2201MB1325;
-x-ms-traffictypediagnostic: MWHPR2201MB1325:
-x-microsoft-antispam-prvs: <MWHPR2201MB132535FC2496D8DDDFF66F45C1F40@MWHPR2201MB1325.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 00909363D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(346002)(376002)(39830400003)(396003)(136003)(189003)(199004)(54906003)(186003)(68736007)(476003)(102836004)(6436002)(486006)(8936002)(66066001)(52116002)(58126008)(99936001)(33716001)(26005)(316002)(99286004)(25786009)(6116002)(3846002)(71190400001)(14454004)(478600001)(6486002)(1076003)(81166006)(81156014)(14444005)(256004)(6506007)(386003)(2906002)(305945005)(5660300002)(42882007)(53936002)(6512007)(64756008)(66946007)(8676002)(9686003)(4326008)(66476007)(7736002)(66446008)(44832011)(66556008)(71200400001)(6916009)(66616009)(73956011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1325;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: l5ayjxd8R+YWuijbOFL5SpF/X6DScM9fJ2A7LEy0bC6cFfrh1oOAveAS70j+/xJnMFCx0R+3X2spo+gVtxw+ZiquuMQF5JYGI1YCqcQksliPoe2kN79wYgwblP/s+duKXRkBip6JPx0O2UOhzGDIk60N6jBIc6RlNMNOS2IBLO5siceuNeiQ1MKPF9Xyvi+O5khB7EJqRmv1Qc6R9QE5jUVkOf1HFb6jiizkqm8s1ts0xy+XjgOHdbO1jrIT2or6vOl6nMFcX42KnVuL0DXITDBsA8k8cPr14gGg8Mzb12iseRAuIfvu4iRSjApMZQrXSA9iXCWDDoHyeQhoXGKvdIy7jXVD8PturDJVsbkZ3dQx5kxmK+49ff6rY7wLJEdyigktuIX3BwQ1qt2Qi6N+dGM7+0hrDiRIrG4t89gdtRQ=
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mxxb6aqztjohx32p"
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04900152-5ef8-4f5f-9f8a-08d7022e5846
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2019 16:23:57.1060
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1325
+        Sat, 6 Jul 2019 12:26:15 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:38596 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfGFQ0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 12:26:15 -0400
+Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x66GPBsN009054;
+        Sun, 7 Jul 2019 01:25:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x66GPBsN009054
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562430312;
+        bh=X6cih5B3K2ei50R7X1Bl4X3Q5BgxxbeaDmtWdcAgytM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GB2BXtfeXIx3aQHmtoCkIutsS3zwmBEq76NmgPcHEhZBjOWNsBx2L+MziWBruk7NH
+         12ywrIxdo1fWios7cK8sjwd0UcIavrJqfw1HRhuPnGtGL0Dk3Xc+Fwq88Nw20C4AJM
+         T3yK6L3q45/MHsST+jLPn92s+jTCCyJQxU1XpzrFDoLZa811vkAnYnWzKqAKTnOnfG
+         /VRtJUTpCa3x1YjZkjS9nAwXs8gc46wXmCoeN+0fi9AlIn76WhUv1LKddhuZnq0HDE
+         RZ4Jm9tyYElZ4EbvVaz/x7dcXHWVe8EFyLzM22SKj4ty55VOIsRLAX6e6IbG591SEs
+         zqqouvEgQRy/w==
+X-Nifty-SrcIP: [126.26.94.249]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH v2] kbuild: get rid of misleading $(AS) from documents
+Date:   Sun,  7 Jul 2019 01:25:08 +0900
+Message-Id: <20190706162508.8529-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---mxxb6aqztjohx32p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The assembler files in the kernel are *.S instead of *.s, so they must
+be preprocessed. Since 'as' of GNU binutils is not able to preprocess,
+we always use $(CC) as an assembler driver.
 
-Hi Linus,
+$(AS) is almost unused in Kbuild. As of writing, there is just one place
+that directly invokes $(AS).
 
-Apologies that these are arriving so late in the game, but here are a
-few MIPS fixes heading your way from a beachside cafe. It's all pretty
-small, nothing too scary or invasive. Please pull.
+  $ git grep -e '$(AS)' -e '${AS}' -e '$AS' -e '$(AS:' -e '${AS:' -- :^Documentation
+  drivers/net/wan/Makefile:  AS68K = $(AS)
 
-Thanks,
-    Paul
+The documentation about *_AFLAGS* sounds like the flags were passed
+to $(AS). This is somewhat misleading.
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
-The following changes since commit 9e0babf2c06c73cda2c0cd37a1653d823adb40ec:
+Changes in v2:
+  - Rephrase without using "assembling"
 
-  Linux 5.2-rc5 (2019-06-16 08:49:45 -1000)
+ Documentation/kbuild/kbuild.txt    |  5 ++---
+ Documentation/kbuild/makefiles.txt | 12 ++++++------
+ 2 files changed, 8 insertions(+), 9 deletions(-)
 
-are available in the Git repository at:
+diff --git a/Documentation/kbuild/kbuild.txt b/Documentation/kbuild/kbuild.txt
+index 9c230ea71963..2c6188abb213 100644
+--- a/Documentation/kbuild/kbuild.txt
++++ b/Documentation/kbuild/kbuild.txt
+@@ -31,12 +31,11 @@ Additional options to the assembler (for built-in and modules).
+ 
+ AFLAGS_MODULE
+ --------------------------------------------------
+-Additional module specific options to use for $(AS).
++Additional assembler options for modules.
+ 
+ AFLAGS_KERNEL
+ --------------------------------------------------
+-Additional options for $(AS) when used for assembler
+-code for code that is compiled as built-in.
++Additional assembler options for built-in.
+ 
+ KCFLAGS
+ --------------------------------------------------
+diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+index d65ad5746f94..895bbbf38a0c 100644
+--- a/Documentation/kbuild/makefiles.txt
++++ b/Documentation/kbuild/makefiles.txt
+@@ -306,7 +306,7 @@ more details, with real examples.
+ 	variable $(KBUILD_CFLAGS) and uses it for compilation flags for the
+ 	entire tree.
+ 
+-	asflags-y specifies options for assembling with $(AS).
++	asflags-y specifies assembler options.
+ 
+ 	Example:
+ 		#arch/sparc/kernel/Makefile
+@@ -441,7 +441,7 @@ more details, with real examples.
+ 	as-instr checks if the assembler reports a specific instruction
+ 	and then outputs either option1 or option2
+ 	C escapes are supported in the test instruction
+-	Note: as-instr-option uses KBUILD_AFLAGS for $(AS) options
++	Note: as-instr-option uses KBUILD_AFLAGS for assembler options
+ 
+     cc-option
+ 	cc-option is used to check if $(CC) supports a given option, and if
+@@ -814,7 +814,7 @@ When kbuild executes, the following steps are followed (roughly):
+ 	In this example, the binary $(obj)/image is a binary version of
+ 	vmlinux. The usage of $(call if_changed,xxx) will be described later.
+ 
+-    KBUILD_AFLAGS		$(AS) assembler flags
++    KBUILD_AFLAGS		assembler flags
+ 
+ 	Default value - see top level Makefile
+ 	Append or modify as required per architecture.
+@@ -853,15 +853,15 @@ When kbuild executes, the following steps are followed (roughly):
+ 	The first example utilises the trick that a config option expands
+ 	to 'y' when selected.
+ 
+-    KBUILD_AFLAGS_KERNEL	$(AS) options specific for built-in
++    KBUILD_AFLAGS_KERNEL	Assembler options specific for built-in
+ 
+ 	$(KBUILD_AFLAGS_KERNEL) contains extra C compiler flags used to compile
+ 	resident kernel code.
+ 
+-    KBUILD_AFLAGS_MODULE   Options for $(AS) when building modules
++    KBUILD_AFLAGS_MODULE   Assembler options specific for modules
+ 
+ 	$(KBUILD_AFLAGS_MODULE) is used to add arch-specific options that
+-	are used for $(AS).
++	are used for assembler.
+ 	From commandline AFLAGS_MODULE shall be used (see kbuild.txt).
+ 
+     KBUILD_CFLAGS_KERNEL	$(CC) options specific for built-in
+-- 
+2.17.1
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.2_2
-
-for you to fetch changes up to f2ff671f894151a611eae246a1f25b61d6c0354b:
-
-  MAINTAINERS: Correct path to moved files (2019-06-24 14:45:41 -0700)
-
-----------------------------------------------------------------
-A few more MIPS fixes:
-
-- Fix a silly typo in virt_addr_valid which led to completely bogus
-  behavior (that happened to stop tripping up hardened usercopy despite
-  being broken).
-
-- Fix UART parity setup on AR933x systems.
-
-- A build fix for non-Linux build machines.
-
-- Have the 'all' make target build DTBs, primarily to fit in with the
-  behavior of scripts/package/builddeb.
-
-- Handle an execution hazard in TLB exceptions that use KScratch
-  registers, which could inadvertently clobber the $1 register on some
-  generally higher-end out-of-order CPUs.
-
-- A MAINTAINERS update to fix the path to the NAND driver for Ingenic
-  systems.
-
-----------------------------------------------------------------
-Cedric Hombourger (1):
-      MIPS: have "plain" make calls build dtbs for selected platforms
-
-Dmitry Korotin (1):
-      MIPS: Add missing EHB in mtc0 -> mfc0 sequence.
-
-Hauke Mehrtens (1):
-      MIPS: Fix bounds check virt_addr_valid
-
-Kevin Darbyshire-Bryant (1):
-      MIPS: fix build on non-linux hosts
-
-Paul Cercueil (1):
-      MAINTAINERS: Correct path to moved files
-
-Stefan Hellermann (1):
-      MIPS: ath79: fix ar933x uart parity mode
-
- MAINTAINERS                                        |  2 +-
- arch/mips/Makefile                                 |  3 ++-
- arch/mips/boot/compressed/Makefile                 |  2 ++
- arch/mips/boot/compressed/calc_vmlinuz_load_addr.c |  2 +-
- arch/mips/include/asm/mach-ath79/ar933x_uart.h     |  4 +--
- arch/mips/mm/mmap.c                                |  2 +-
- arch/mips/mm/tlbex.c                               | 29 +++++++++++++++-------
- 7 files changed, 29 insertions(+), 15 deletions(-)
-
---mxxb6aqztjohx32p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXSDLFgAKCRA+p5+stXUA
-3QfdAP9Jluo6qDB8iSnoNKp9kN7D/iw7jL8Sz3k8FLuV/x27TwEA5G8Y0c+0vqtU
-v5+OMCp4Ec1CGASzPhggFgpw57gkVgo=
-=hvjf
------END PGP SIGNATURE-----
-
---mxxb6aqztjohx32p--
