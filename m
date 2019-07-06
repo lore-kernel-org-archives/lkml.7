@@ -7,99 +7,147 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA833C468AD
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9738C468AD
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB792214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DCC214AF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562413394;
-	bh=Ddv2AGXiqhJC+UEj71nw04DyjeHdUryao6vo8IBe3Uw=;
+	s=default; t=1562413617;
+	bh=SsBzDlruO3CL8J3QDhb5B1k7nqQRRO06XDDHFP/NN1M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JjAkbRuuvm2o/cx8JqpEg2cqPQOJJdpjZ3U6IU4VlV5KxJ/BK6WboFoMN0+josR6L
-	 e5kPZhfTKWIAZQU6/RSU/66QxH/uJ5dD76kdMz9LYamof234cQ6Gx8c57RqGzpTgPd
-	 sOvpTs8hPY5OKA6NOYRVSiokIIuupRXRqfUToSio=
+	b=aYLOBqCrwbXdxVcdFLmex+zjvx/od20wH1x+5qbZh8OEIz/F+PLxNIJtgzDbU1H1U
+	 85aA77acR48a6G5ZR5PvK5NgDia25EcY2zYQMHdQSsGW9UEqGh2R7f08poZ0S3kciO
+	 1S0YueNKCzc/RnCPuoVwwNHwi2S5Tm+7nWTSNgNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfGFLnN (ORCPT
+        id S1726549AbfGFLq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 07:43:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43394 "EHLO
+        Sat, 6 Jul 2019 07:46:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43480 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfGFLnN (ORCPT
+        with ESMTP id S1726023AbfGFLqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 07:43:13 -0400
+        Sat, 6 Jul 2019 07:46:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
         From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=h4V3ZBI0FoiW9U4A7MoCEA3P8Nxtu03FgBYGvwN2wds=; b=dZWNuWG7t17scVwtDp0hcELzP
-        7FuWeX0o1hkpcP8DTnZBpv6YgADHytOoYFCbz5md5XR9RmiXkUI4P+Ur1+qi3wFffcM5UQMx0UZG7
-        zZ0IK5/xT9VlTU8+3hBxHv7AXatlkDMxvIFy25hDjxYn9z+AIDXp0Uhl3iOIEk7gdiHqneLCYhF3q
-        5NPHERrSRvyvWG0EtDfVqWp6EGbshR6kyMgzZfMNkNHfK5VjfEREeDJg5Gvb62k1knnCwhuqXUAF+
-        8mfU036WJ8o369L4yDJ5h6OBCT7Q9krOnXb+u+02wq5SpvFTqYhGmdc39Amo4PdvibPDujGEI6w5U
-        OmnRQnm+g==;
+         bh=j6y676QYR/iHJJ649Hu4pguKBc+26wcukAE46ESMMlo=; b=dOTYigO14yG8pQxnEPFBC19DX
+        /Ww8mAJLwcfe1SJqp/NylfCiIiI9REBU4NBiWe4dYMw9xdQP6lV0y+pUltL/gztWxW7BxkiF1kRXE
+        w6XA7g9pa5LjIsiEu0S8st2kB2gzhI15q6uEUzs4XQgoqkyabISla1WvfKEt7LUVcsysRFNZryzy2
+        Vt4rLjvEjd+OfhIGQpJR1++ZVceLUOM/+IRXvzm2znfchAZwwCauZYISTmjywQAOsgIR2YmU3+vzt
+        0KvSoXLLqm4bOXutzWmOhE1jpX4jFMrPYVTRcXNwmtfs/ro27ahj9vrDH17GltUK57PchaGmotAd6
+        Zh3YctvFg==;
 Received: from 177.205.70.5.dynamic.adsl.gvt.net.br ([177.205.70.5] helo=coco.lan)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjj5y-0000yv-Uf; Sat, 06 Jul 2019 11:43:11 +0000
-Date:   Sat, 6 Jul 2019 08:43:05 -0300
+        id 1hjj9S-0002M7-Qh; Sat, 06 Jul 2019 11:46:47 +0000
+Date:   Sat, 6 Jul 2019 08:46:38 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 39/39] docs: gpio: add sysfs interface to the
- admin-guide
-Message-ID: <20190706084305.010f2d77@coco.lan>
-In-Reply-To: <CACRpkdbBA612W0x6Y-dwe3E4dhH2ospmn+m2YJ8Sh_Um6XGYhA@mail.gmail.com>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
+Subject: Re: [PATCH 18/39] docs: admin-guide: add kdump documentation into
+ it
+Message-ID: <20190706084638.7dc875f2@coco.lan>
+In-Reply-To: <20190705055904.GB2790@localhost.localdomain>
 References: <cover.1561724493.git.mchehab+samsung@kernel.org>
-        <1ecff14ec37c0c434f003d93c4b86b1cd3dac834.1561724493.git.mchehab+samsung@kernel.org>
-        <CACRpkdbBA612W0x6Y-dwe3E4dhH2ospmn+m2YJ8Sh_Um6XGYhA@mail.gmail.com>
+        <654e7591c044632c06257e0f069a52c0bb993554.1561724493.git.mchehab+samsung@kernel.org>
+        <6911b74c-848f-0060-3db5-b5d7e8061cb5@linux.alibaba.com>
+        <20190705055904.GB2790@localhost.localdomain>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 3 Jul 2019 10:44:38 +0200
-Linus Walleij <linus.walleij@linaro.org> escreveu:
+Em Fri, 5 Jul 2019 13:59:04 +0800
+Dave Young <dyoung@redhat.com> escreveu:
 
-> On Fri, Jun 28, 2019 at 2:30 PM Mauro Carvalho Chehab
-> <mchehab+samsung@kernel.org> wrote:
-> 
-> > While this is stated as obsoleted, the sysfs interface described
-> > there is still valid, and belongs to the admin-guide.
-> >
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
-> 
-> This doesn't apply to my tree because of dependencies in the
-> index 
+> On 07/05/19 at 11:43am, Alex Shi wrote:
+> >=20
+> >=20
+> > =E5=9C=A8 2019/6/28 =E4=B8=8B=E5=8D=888:30, Mauro Carvalho Chehab =E5=
+=86=99=E9=81=93: =20
+> > > The Kdump documentation describes procedures with admins use
+> > > in order to solve issues on their systems.
+> > >=20
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > > ---
+> > >  Documentation/admin-guide/bug-hunting.rst            | 4 ++--
+> > >  Documentation/admin-guide/index.rst                  | 1 +
+> > >  Documentation/{ =3D> admin-guide}/kdump/gdbmacros.txt  | 0
+> > >  Documentation/{ =3D> admin-guide}/kdump/index.rst      | 1 -
+> > >  Documentation/{ =3D> admin-guide}/kdump/kdump.rst      | 0
+> > >  Documentation/{ =3D> admin-guide}/kdump/vmcoreinfo.rst | 0 =20
+> >=20
+> > I am not sure if it's convenience for people to have more levels in doc=
+s.
+> >=20
+> > But I guess, move archs into a Documentation/arch/ dir should be fine. =
+like Documentation/arch/{x86,arm,arm64,ia64,m68k,s390,powerpc,...} =20
+>=20
+> Alex, moving kdump to admin-guide sounds reasonable to me.  I also agree
+> with you for those arch dependent files can be moved to
+> Documentation/arch/, maybe you are talking about some other patches in
+> the series for the arch/?=20
 
-Yeah, this /39 patch series heavily touch the index files.
-Better to merge them altogether.
+Alex,
 
-> so I guess it's best if you merge it:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+It makes sense for me to have a Documentation/arch directory, and place
+the arch-specific docs over there.
 
-Thanks!
-Mauro
+There's actually a technical advantage on doing that: Sphinx is dumb
+with regards to PDF/LaTeX output: it requires all top documents to be
+listed at Documentation/conf.py, under this var:
 
-> 
-> Yours,
-> Linus Walleij
+	latex_documents =3D [
+		...
+	]
 
+As it creates one runtime Makefile at Documentation/output per listed
+document there. So, the more we group such documents, the less merge
+conflicts we'll have at Documentation/conf.py.
 
+Btw, there's a [TECH TOPIC] proposal for KS/2019 meant to discuss=20
+Documentation.
+
+I suspect we could discuss the pros/cons of doing such change there.
+
+My personal view is that we should keep the Documentation/ root dir as
+clean as possible as a long term goal.
+
+On the other hand, it makes the path bigger and harder to rename.
+
+On a side note, last time we discussed documentation at KS I remember
+I proposed to shortcut "Documentation/" to just "docs/". The consensus
+on that time were to keep the big name. I still think that a shorter
+one could help people to remind where documentation will be located.
 
 Thanks,
 Mauro
