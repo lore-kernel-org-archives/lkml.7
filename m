@@ -2,98 +2,163 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125F2C468AE
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F5FC5B578
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E014520989
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F7C21738
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562401980;
+	bh=ggILC5ns02IYBE7bnvypQaUgBVlj2sYoZUaGLRW2I28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=In4wd7tXnHwWRlOfdqJw/TFbr8qyBiL2CvzjyKYtW6ifzL52ZRL5n+QKpX0ZKlOWL
+	 wuGF7Q5YBPezXUBXYIrwy8T8j6pLQcG/CHPmpVMG8pyXUaIZ5WpJkqMDUVgOYOpiqf
+	 sBMWtNYElXoBzapHV1uuH1UAyKCH3j+C+t0dFpDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbfGFIc1 convert rfc822-to-8bit (ORCPT
+        id S1726177AbfGFIc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 04:32:27 -0400
-Received: from mx7.zte.com.cn ([202.103.147.169]:42402 "EHLO mxct.zte.com.cn"
+        Sat, 6 Jul 2019 04:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbfGFIc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 04:32:26 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id A9F99EBE0698D4D08D85;
-        Sat,  6 Jul 2019 16:32:19 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x668Vowc018517;
-        Sat, 6 Jul 2019 16:31:50 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070616323549-2128101 ;
-          Sat, 6 Jul 2019 16:32:35 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     pbonzini@redhat.com
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
-Subject: [PATCH] kvm: x86: Fix -Wmissing-prototypes warnings
-Date:   Sat, 6 Jul 2019 16:29:50 +0800
-Message-Id: <1562401790-49030-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
+        id S1725900AbfGFIc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 04:32:59 -0400
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0140020989;
+        Sat,  6 Jul 2019 08:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562401977;
+        bh=ggILC5ns02IYBE7bnvypQaUgBVlj2sYoZUaGLRW2I28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uhAMN8tijFT3xet7uhxaUWxGPcwy1MzO9IJM5AoaUowrTLQKgmb4xsOTS33HVQUOM
+         88IFn5DYfKzm1ULZ0fbCepD19SSSYLafquBS2lH9QXV/7rBAflvhCVWpvU53sWhow7
+         Wdm2EvxGGWpKoojCge2x+nHvpxadulHR+OC/nBMQ=
+Date:   Sat, 6 Jul 2019 10:32:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Romain Izard <romain.izard.pro@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 01/12 v2] Platform: add a dev_groups pointer to struct
+ platform_driver
+Message-ID: <20190706083251.GA9249@kroah.com>
+References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
+ <20190704084617.3602-2-gregkh@linuxfoundation.org>
+ <20190704093200.GM13424@localhost>
+ <20190704104311.GA16681@kroah.com>
+ <20190704121143.GA5007@kroah.com>
+ <CAKdAkRQ4W7wjYjZcBn4_s+PD26pv_8mrjUt-ne24GkimGEXoiA@mail.gmail.com>
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-06 16:32:35,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-06 16:31:57
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl2.zte.com.cn x668Vowc018517
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKdAkRQ4W7wjYjZcBn4_s+PD26pv_8mrjUt-ne24GkimGEXoiA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get a warning when build kernel W=1:
+On Thu, Jul 04, 2019 at 02:17:22PM -0700, Dmitry Torokhov wrote:
+> Hi Greg,
+> 
+> On Thu, Jul 4, 2019 at 5:15 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > Platform drivers like to add sysfs groups to their device, but right now
+> > they have to do it "by hand".  The driver core should handle this for
+> > them, but there is no way to get to the bus-default attribute groups as
+> > all platform devices are "special and unique" one-off drivers/devices.
+> >
+> > To combat this, add a dev_groups pointer to platform_driver which allows
+> > a platform driver to set up a list of default attributes that will be
+> > properly created and removed by the platform driver core when a probe()
+> > function is successful and removed right before the device is unbound.
+> 
+> Why is this limited to platform bus? Drivers for other buses also
+> often want to augment list of their attributes during probe(). I'd
+> move it to generic probe handling.
 
-arch/x86/kvm/../../../virt/kvm/eventfd.c:48:1: warning: no previous prototype for ‘kvm_arch_irqfd_allowed’ [-Wmissing-prototypes]
- kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
- ^
+This is not limited to the platform at all, the driver core supports
+this for any bus type today, but it's then up to the bus-specific code
+to pass that on to the driver core.  That's usually set for the
+bus-specific attributes that they want exposed for all devices of that
+bus type (see the bus_groups, dev_groups, and drv_groups pointers in
+struct bus_type).
 
-The reason is kvm_arch_irqfd_allowed is declared in arch/x86/kvm/irq.h,
-which is not included by eventfd.c. Remove the declaration to kvm_host.h
-can fix this.
+For the platform devices, the problem is that this is something that the
+individual drivers want after they bind to the device.  And as all
+platform devices are "different" they can't be a "common" set of
+attributes, so they need to be created after the device is bound to the
+driver.
 
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- arch/x86/kvm/irq.h       | 1 -
- include/linux/kvm_host.h | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+> > Cc: Richard Gong <richard.gong@linux.intel.com>
+> > Cc: Romain Izard <romain.izard.pro@gmail.com>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Mans Rullgard <mans@mansr.com>
+> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Johan Hovold <johan@kernel.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> > v2: addressed Johan's comments by reordering when we remove the files
+> >     from the device, and clean up on an error in a nicer way.  Ended up
+> >     making the patch smaller overall, always nice.
+> >
+> >  drivers/base/platform.c         | 16 +++++++++++++++-
+> >  include/linux/platform_device.h |  1 +
+> >  2 files changed, 16 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 713903290385..74428a1e03f3 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -614,8 +614,20 @@ static int platform_drv_probe(struct device *_dev)
+> >
+> >         if (drv->probe) {
+> >                 ret = drv->probe(dev);
+> > -               if (ret)
+> > +               if (ret) {
+> > +                       dev_pm_domain_detach(_dev, true);
+> > +                       goto out;
+> > +               }
+> > +       }
+> > +       if (drv->dev_groups) {
+> > +               ret = device_add_groups(_dev, drv->dev_groups);
+> > +               if (ret) {
+> > +                       if (drv->remove)
+> > +                               drv->remove(dev);
+> >                         dev_pm_domain_detach(_dev, true);
+> > +                       return ret;
+> > +               }
+> > +               kobject_uevent(&_dev->kobj, KOBJ_CHANGE);
+> 
+> We already emit KOBJ_BIND when we finish binding device to a driver,
+> regardless of the bus. I know we still need to teach systemd to handle
+> it properly, but I think it is better than sprinkling KOBJ_CHANGE
+> around.
 
-diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-index d6519a3..7c6233d 100644
---- a/arch/x86/kvm/irq.h
-+++ b/arch/x86/kvm/irq.h
-@@ -102,7 +102,6 @@ static inline int irqchip_in_kernel(struct kvm *kvm)
- 	return mode != KVM_IRQCHIP_NONE;
- }
- 
--bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
- void kvm_inject_pending_timer_irqs(struct kvm_vcpu *vcpu);
- void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu);
- void kvm_apic_nmi_wd_deliver(struct kvm_vcpu *vcpu);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index d1ad38a..5f04005 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -990,6 +990,7 @@ void kvm_unregister_irq_ack_notifier(struct kvm *kvm,
- 				   struct kvm_irq_ack_notifier *kian);
- int kvm_request_irq_source_id(struct kvm *kvm);
- void kvm_free_irq_source_id(struct kvm *kvm, int irq_source_id);
-+bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
- 
- /*
-  * search_memslots() and __gfn_to_memslot() are here because they are
--- 
-1.8.3.1
+But the object's attributes did just change, which is what KOBJ_CHANGE
+tells userspace, so this should be the correct thing to say to
+userspace.
 
+And yes, ideally KOBJ_BIND would be handled, and it will be sent once
+the device's probe function succeeds, but we have to deal with old
+userspaces as well, right?
+
+thanks,
+
+greg k-h
