@@ -2,104 +2,140 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC25DC468AD
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CC3C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A52F120856
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562424398;
-	bh=knYcU2Aa2Ho+pdnq/bJk+Ot/7i4nJwilFpkw41OHVkQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fmgSBDCLippL9SX0TWg+zVYGiaD/RkRulfaORXsu5YuQfAcLOc4N/pqVUEM7Utogm
-	 z1XveRLrlNUgr+cvvRz7qBJbZhBKBqp9MDSM9db/z9QI0crBgSAna7lI8TxFyd5pIs
-	 87+0x+6Lc0nl2wzrBQ7CQVPiae3h02RGi//gL/9U=
+	by mail.kernel.org (Postfix) with ESMTP id A98F920856
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:46:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Iz/T/QGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfGFOqf (ORCPT
+        id S1726980AbfGFOqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 10:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfGFOqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 10:46:34 -0400
-Received: from localhost (unknown [49.207.57.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0509D20838;
-        Sat,  6 Jul 2019 14:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562424393;
-        bh=knYcU2Aa2Ho+pdnq/bJk+Ot/7i4nJwilFpkw41OHVkQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WmVn8W91aCfS152h9t6f9AOye+flepkY5uYIzPO4QH4JS6MqV5pkUWiKxGsRwWYU0
-         LNus9lW/ru0xQ7q5bdPPUMK5a3riFHy6rVfs5tFcnaSbzm11ngiRrNAu38eHzeUi47
-         ocVwO/t/UiAiZcwy6VVmgjuz/yzCVBTIDLiL0bZ4=
-Date:   Sat, 6 Jul 2019 20:13:24 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Angelo Dureghello <angelo@sysam.it>
-Subject: Re: linux-next: build failure after merge of the slave-dma tree
-Message-ID: <20190706144324.GH2911@vkoul-mobl>
-References: <20190704173108.0646eef8@canb.auug.org.au>
- <VE1PR04MB6638782ADA8BFB8A17BAF19D89F40@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        Sat, 6 Jul 2019 10:46:39 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:22881 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfGFOqi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 10:46:38 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x66EkULl016033;
+        Sat, 6 Jul 2019 23:46:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x66EkULl016033
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562424391;
+        bh=ZJ10EKLPrCltaw+PSBLcUT4O4A9NpW6iZ5g1mBNFBBc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Iz/T/QGrjWfKD9+rki3JKLTSOKGnHolC+sPKp64PvnpNdOc8ROna0g5fqViD4Wudu
+         9GrYHNWSH7UORY3NUFww5t5iYvN2FWYmlRxBmIkUAEba9ek53zNaALLNT7hGopjnwH
+         8FfJ1Z/jpiqM1LQ29owJo0OGZmoYAVVkp68YdlPFz7TPxnBD5f6PpGRMvrncL8YDSl
+         NGlzy7nwlbRyvDteCWlpU+luxxK6U6FJs35wrZUuxTrfJ+shuFEzSXPRqqpKEYUg3t
+         3zyt0VT2Pk7LecPKNxmogGjgiST0dVKQ/x9JEmUaj2lKXXzq6uVW07jzK1rBEnwovU
+         dkFMJ8yTgiCug==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id r3so5522638vsr.13;
+        Sat, 06 Jul 2019 07:46:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAWUUREZ7ufTiCGywIm4Tv61vbqC3/vWwQojWvSMHcCXmG83lTl2
+        vj5wB1k1X1CM0UJIPtmsg+WNONdWMMtRcTKydhg=
+X-Google-Smtp-Source: APXvYqxWN82nJ1XdKGDR+rQ6OJH+iZCanU+/hg7ucTSn4jv2te+dio6J+QsAsC7rCMCkOHjxedOHbCTC4KQ5bf/x/B8=
+X-Received: by 2002:a67:8e0a:: with SMTP id q10mr5144105vsd.215.1562424389636;
+ Sat, 06 Jul 2019 07:46:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638782ADA8BFB8A17BAF19D89F40@VE1PR04MB6638.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190622160705.17071-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190622160705.17071-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 6 Jul 2019 23:45:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQsdbV5MD4nBiSwky9jQue8+tRGwAxkFwYwyV-b17cYMw@mail.gmail.com>
+Message-ID: <CAK7LNAQsdbV5MD4nBiSwky9jQue8+tRGwAxkFwYwyV-b17cYMw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] kbuild: rename arg-check to cmd-check
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-07-19, 13:43, Robin Gong wrote:
-> Hi Stephen,
+On Sun, Jun 23, 2019 at 1:07 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> I prefer 'cmd-check' for consistency.
+>
+> We have 'echo-cmd', 'cmd', 'cmd_and_fixdep', etc. in this file.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Please **do not** top post!
+Series, applied to linux-kbuild.
 
-> 	That's caused by 'of_irq_count' NOT export to global symbol, and I'm curious why it has been
-> here for so long since Zhangfei found it in 2015. https://patchwork.kernel.org/patch/7404681/
 
-Yes this does not seem to be applied, perhaps Rob can explain why. But
-this was not exported how did you test it?
+>  scripts/Kbuild.include | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+> index f641bb0aa63f..4bec04c89750 100644
+> --- a/scripts/Kbuild.include
+> +++ b/scripts/Kbuild.include
+> @@ -213,12 +213,12 @@ objectify = $(foreach o,$(1),$(if $(filter /%,$(o)),$(o),$(obj)/$(o)))
+>  # See Documentation/kbuild/makefiles.txt for more info
+>
+>  ifneq ($(KBUILD_NOCMDDEP),1)
+> -# Check if both arguments are the same including their order. Result is empty
+> +# Check if both commands are the same including their order. Result is empty
+>  # string if equal. User may override this check using make KBUILD_NOCMDDEP=1
+> -arg-check = $(filter-out $(subst $(space),$(space_escape),$(strip $(cmd_$@))), \
+> +cmd-check = $(filter-out $(subst $(space),$(space_escape),$(strip $(cmd_$@))), \
+>                           $(subst $(space),$(space_escape),$(strip $(cmd_$1))))
+>  else
+> -arg-check = $(if $(strip $(cmd_$@)),,1)
+> +cmd-check = $(if $(strip $(cmd_$@)),,1)
+>  endif
+>
+>  # Replace >$< with >$$< to preserve $ when reloading the .cmd file
+> @@ -234,12 +234,12 @@ make-cmd = $(call escsq,$(subst $(pound),$$(pound),$(subst $$,$$$$,$(cmd_$(1))))
+>  any-prereq = $(filter-out $(PHONY),$?) $(filter-out $(PHONY) $(wildcard $^),$^)
+>
+>  # Execute command if command has changed or prerequisite(s) are updated.
+> -if_changed = $(if $(strip $(any-prereq) $(arg-check)),                       \
+> +if_changed = $(if $(strip $(any-prereq) $(cmd-check)),                       \
+>         $(cmd);                                                              \
+>         printf '%s\n' 'cmd_$@ := $(make-cmd)' > $(dot-target).cmd, @:)
+>
+>  # Execute the command and also postprocess generated .d dependencies file.
+> -if_changed_dep = $(if $(strip $(any-prereq) $(arg-check)),$(cmd_and_fixdep),@:)
+> +if_changed_dep = $(if $(strip $(any-prereq) $(cmd-check)),$(cmd_and_fixdep),@:)
+>
+>  cmd_and_fixdep =                                                             \
+>         $(cmd);                                                              \
+> @@ -249,7 +249,7 @@ cmd_and_fixdep =                                                             \
+>  # Usage: $(call if_changed_rule,foo)
+>  # Will check if $(cmd_foo) or any of the prerequisites changed,
+>  # and if so will execute $(rule_foo).
+> -if_changed_rule = $(if $(strip $(any-prereq) $(arg-check)),$(rule_$(1)),@:)
+> +if_changed_rule = $(if $(strip $(any-prereq) $(cmd-check)),$(rule_$(1)),@:)
+>
+>  ###
+>  # why - tell why a target got built
+> @@ -275,7 +275,7 @@ why =                                                                        \
+>      $(if $(filter $@, $(PHONY)),- due to target is PHONY,                    \
+>          $(if $(wildcard $@),                                                 \
+>              $(if $(strip $(any-prereq)),- due to: $(any-prereq),             \
+> -                $(if $(arg-check),                                           \
+> +                $(if $(cmd-check),                                           \
+>                      $(if $(cmd_$@),- due to command line change,             \
+>                          $(if $(filter $@, $(targets)),                       \
+>                              - due to missing .cmd file,                      \
+> --
+> 2.17.1
+>
 
-> Hi Rob,
-> 	Is there something I miss so that Zhangfei's patch not accepted finally?
-
-Rob, the commit in question is [1] and uses of_irq_count. Should it use
-that if not what is the alternate?
-
-> On 04-07-19, 15:31 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > Hi all,
-> > 
-> > After merging the slave-dma tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > ERROR: "of_irq_count" [drivers/dma/fsl-edma.ko] undefined!
-> > 
-> > Caused by commit
-> > 
-> >   7144afd025b2 ("dmaengine: fsl-edma: add i.mx7ulp edma2 version
-> > support")
-> > 
-> > I have reverted that commit for today.
-> > 
-> > --
-> > Cheers,
-> > Stephen Rothwell
-
-[1]: http://git.infradead.org/users/vkoul/slave-dma.git/commitdiff/7144afd025b23b042c158582160d7d2b10a754b7?hp=a7c5c6f6bc295d6c158db4ef9d1ca6770032669d
 
 -- 
-~Vinod
+Best Regards
+Masahiro Yamada
