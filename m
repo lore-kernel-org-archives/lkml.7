@@ -2,152 +2,241 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9738C468AD
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E182AC0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 12:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DCC214AF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 11:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562413617;
-	bh=SsBzDlruO3CL8J3QDhb5B1k7nqQRRO06XDDHFP/NN1M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aYLOBqCrwbXdxVcdFLmex+zjvx/od20wH1x+5qbZh8OEIz/F+PLxNIJtgzDbU1H1U
-	 85aA77acR48a6G5ZR5PvK5NgDia25EcY2zYQMHdQSsGW9UEqGh2R7f08poZ0S3kciO
-	 1S0YueNKCzc/RnCPuoVwwNHwi2S5Tm+7nWTSNgNQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5C37220989
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 12:16:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="z1qZbRql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfGFLq4 (ORCPT
+        id S1726446AbfGFMQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 07:46:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43480 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfGFLqz (ORCPT
+        Sat, 6 Jul 2019 08:16:48 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:36236 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfGFMQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 07:46:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=j6y676QYR/iHJJ649Hu4pguKBc+26wcukAE46ESMMlo=; b=dOTYigO14yG8pQxnEPFBC19DX
-        /Ww8mAJLwcfe1SJqp/NylfCiIiI9REBU4NBiWe4dYMw9xdQP6lV0y+pUltL/gztWxW7BxkiF1kRXE
-        w6XA7g9pa5LjIsiEu0S8st2kB2gzhI15q6uEUzs4XQgoqkyabISla1WvfKEt7LUVcsysRFNZryzy2
-        Vt4rLjvEjd+OfhIGQpJR1++ZVceLUOM/+IRXvzm2znfchAZwwCauZYISTmjywQAOsgIR2YmU3+vzt
-        0KvSoXLLqm4bOXutzWmOhE1jpX4jFMrPYVTRcXNwmtfs/ro27ahj9vrDH17GltUK57PchaGmotAd6
-        Zh3YctvFg==;
-Received: from 177.205.70.5.dynamic.adsl.gvt.net.br ([177.205.70.5] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hjj9S-0002M7-Qh; Sat, 06 Jul 2019 11:46:47 +0000
-Date:   Sat, 6 Jul 2019 08:46:38 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
-Subject: Re: [PATCH 18/39] docs: admin-guide: add kdump documentation into
- it
-Message-ID: <20190706084638.7dc875f2@coco.lan>
-In-Reply-To: <20190705055904.GB2790@localhost.localdomain>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
-        <654e7591c044632c06257e0f069a52c0bb993554.1561724493.git.mchehab+samsung@kernel.org>
-        <6911b74c-848f-0060-3db5-b5d7e8061cb5@linux.alibaba.com>
-        <20190705055904.GB2790@localhost.localdomain>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 6 Jul 2019 08:16:47 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x66CGepq018678;
+        Sat, 6 Jul 2019 21:16:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x66CGepq018678
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562415401;
+        bh=FfB1NqG/gE92yWOnQ6/KTKMCyYbR4uXXTkbKQtydcMY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=z1qZbRqlSOwyuHHKhQBoYCFvqKKDWmvl1D/q9ZoGTvDTc9KQbA7s2fNaiuaOrWELp
+         tyXp0ubtEfPmXO106o48+YO8FKkmOeO1rCjEgGklBWeEjuoc9xcZzknaaSPs8O9nyF
+         KhM+FPiZnVB0rzSMFVBC2Uy6cJGYR4B1/LeTXMm2Rhrf9w/M5TH6YylgJHRzwQ+agf
+         224PGH/+TOod4n5PVDi265irVfi41Mh+iSdQ2UdjhZH3RWZNyZNFGa4LYLgkGfgWOM
+         RD+OUaaF2kUM7k4OBsUKkvZ96u1Z2LrYASV9YQ45pnCtDHwXjTTVDCdTShkOMLVZyc
+         gfUlhkDqodoQw==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id j26so5384240vsn.10;
+        Sat, 06 Jul 2019 05:16:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAVMRqw9e+7F1jUo0hxfx7E5Ld/tGYamm3bweumsQWHFzF5ixz33
+        0l2X5igNtxrApANLqDnikNMtGKcK5ZVdtxIItqk=
+X-Google-Smtp-Source: APXvYqygMpGz0NVEVvFeGd+Pele9Hueqk0n/t5IwyE+OhHb7yi3tGYRZBW3SzE6pLj+Hqa4UtocBm+uPgajacg0+6AY=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr4689375vsl.155.1562415399561;
+ Sat, 06 Jul 2019 05:16:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190406061112.31620-1-himanshujha199640@gmail.com>
+ <alpine.DEB.2.21.1904060831120.4486@hadrien> <alpine.DEB.2.21.1904060833160.4486@hadrien>
+In-Reply-To: <alpine.DEB.2.21.1904060833160.4486@hadrien>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 6 Jul 2019 21:16:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARTJpxRmQzx+vQGfOC5YFuw8QsRQ=_9=9E=g5p62UUf6g@mail.gmail.com>
+Message-ID: <CAK7LNARTJpxRmQzx+vQGfOC5YFuw8QsRQ=_9=9E=g5p62UUf6g@mail.gmail.com>
+Subject: Re: [Cocci] [PATCH] coccinelle: api: add devm_platform_ioremap_resource
+ script
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Himanshu Jha <himanshujha199640@gmail.com>,
+        kernel-janitors@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        cocci@systeme.lip6.fr
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 5 Jul 2019 13:59:04 +0800
-Dave Young <dyoung@redhat.com> escreveu:
+On Sat, Apr 6, 2019 at 3:34 PM Julia Lawall <julia.lawall@lip6.fr> wrote:
+>
+>
+>
+> On Sat, 6 Apr 2019, Julia Lawall wrote:
+>
+> >
+> >
+> > On Sat, 6 Apr 2019, Himanshu Jha wrote:
+> >
+> > > Use recently introduced devm_platform_ioremap_resource
+> > > helper which wraps platform_get_resource() and
+> > > devm_ioremap_resource() together. This helps produce much
+> > > cleaner code while removing local `struct resource` declaration.
+> > >
+> > > Signed-off-by: Himanshu Jha <himanshujha199640@gmail.com>
+> >
+> > Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+> >
+> > Thanks for taking up this issue.
+>
+> Maybe this should be
+>
+> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+>
+> since I contributed two lines to the script :)
 
-> On 07/05/19 at 11:43am, Alex Shi wrote:
-> >=20
-> >=20
-> > =E5=9C=A8 2019/6/28 =E4=B8=8B=E5=8D=888:30, Mauro Carvalho Chehab =E5=
-=86=99=E9=81=93: =20
-> > > The Kdump documentation describes procedures with admins use
-> > > in order to solve issues on their systems.
-> > >=20
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+I will apply with Julia's Signed-off-by instead of Acked-by.
+I will also add SPDX tag.
+
+Is this OK?
+
+
+
+> julia
+>
+> >
+> > julia
+> >
 > > > ---
-> > >  Documentation/admin-guide/bug-hunting.rst            | 4 ++--
-> > >  Documentation/admin-guide/index.rst                  | 1 +
-> > >  Documentation/{ =3D> admin-guide}/kdump/gdbmacros.txt  | 0
-> > >  Documentation/{ =3D> admin-guide}/kdump/index.rst      | 1 -
-> > >  Documentation/{ =3D> admin-guide}/kdump/kdump.rst      | 0
-> > >  Documentation/{ =3D> admin-guide}/kdump/vmcoreinfo.rst | 0 =20
-> >=20
-> > I am not sure if it's convenience for people to have more levels in doc=
-s.
-> >=20
-> > But I guess, move archs into a Documentation/arch/ dir should be fine. =
-like Documentation/arch/{x86,arm,arm64,ia64,m68k,s390,powerpc,...} =20
->=20
-> Alex, moving kdump to admin-guide sounds reasonable to me.  I also agree
-> with you for those arch dependent files can be moved to
-> Documentation/arch/, maybe you are talking about some other patches in
-> the series for the arch/?=20
+> > >
+> > > Tree wide changes has been tested through 0-day test service
+> > > with build success.
+> > >
+> > > BUILD SUCCESS 74ebaaca5d14d3d9b03e911f0b4995b78a4d60f0
+> > > tree/branch: https://github.com/himanshujha199640/linux-next  20190401-devm_platform_ioremap_resource-final
+> > > branch HEAD: 74ebaaca5d14d3d9b03e911f0b4995b78a4d60f0  Coccinelle: api: Add devm_platform_ioremap_resource.cocci
+> > >
+> > > elapsed time: 385m
+> > > configs tested: 162
+> > >
+> > >
+> > > Stats:
+> > > 916 files changed, 1028 insertions(+), 2921 deletions(-)
+> > >
+> > > Note: cases where the `struct resource *res` variable is
+> > > used subsequently in the function have been ignored out because
+> > > those cases produce:
+> > >
+> > > eg., drivers/bus/da8xx-mstpri.c
+> > >
+> > > warning: 'res' may be used uninitialized in this function [-Wmaybe-uninitialized]
+> > >
+> > > due to:
+> > >     if (prio_descr->reg + sizeof(u32) > resource_size(res)) {
+> > >
+> > > which seems correct as `res` isn't initialized in the scope of
+> > > the function(da8xx_mstpri_probe) and instead initialized inside:
+> > >
+> > >    void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+> > >                                                 unsigned int index)
+> > >    {
+> > >            struct resource *res;
+> > >
+> > >            res = platform_get_resource(pdev, IORESOURCE_MEM, index);
+> > >            return devm_ioremap_resource(&pdev->dev, res);
+> > >    }
+> > >    EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
+> > >
+> > >
+> > >  .../api/devm_platform_ioremap_resource.cocci  | 63 +++++++++++++++++++
+> > >  1 file changed, 63 insertions(+)
+> > >  create mode 100644 scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+> > >
+> > > diff --git a/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci b/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+> > > new file mode 100644
+> > > index 000000000000..a28274af14df
+> > > --- /dev/null
+> > > +++ b/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+> > > @@ -0,0 +1,63 @@
+> > > +/// Use devm_platform_ioremap_resource helper which wraps
+> > > +/// platform_get_resource() and devm_ioremap_resource() together.
+> > > +///
+> > > +// Confidence: High
+> > > +// Copyright: (C) 2019 Himanshu Jha GPLv2.
+> > > +// Copyright: (C) 2019 Julia Lawall, Inria/LIP6. GPLv2.
+> > > +// Keywords: platform_get_resource, devm_ioremap_resource,
+> > > +// Keywords: devm_platform_ioremap_resource
+> > > +
+> > > +virtual patch
+> > > +virtual report
+> > > +
+> > > +@r depends on patch && !report@
+> > > +expression e1, e2, arg1, arg2, arg3, arg4;
+> > > +identifier id;
+> > > +@@
+> > > +
+> > > +(
+> > > +- id = platform_get_resource(arg1, arg2, arg3);
+> > > +|
+> > > +- struct resource *id = platform_get_resource(arg1, arg2, arg3);
+> > > +)
+> > > +  ... when != id
+> > > +- e1 = devm_ioremap_resource(arg4, id);
+> > > ++ e1 = devm_platform_ioremap_resource(arg1, arg3);
+> > > +  ... when != id
+> > > +? id = e2
+> > > +
+> > > +@r1 depends on patch && !report@
+> > > +identifier r.id;
+> > > +type T;
+> > > +@@
+> > > +
+> > > +- T *id;
+> > > +  ...when != id
+> > > +
+> > > +// ----------------------------------------------------------------------------
+> > > +
+> > > +@r2 depends on report && !patch@
+> > > +identifier id;
+> > > +expression e1, e2, arg1, arg2, arg3, arg4;
+> > > +position j0;
+> > > +@@
+> > > +
+> > > +(
+> > > +  id = platform_get_resource(arg1, arg2, arg3);
+> > > +|
+> > > +  struct resource *id = platform_get_resource(arg1, arg2, arg3);
+> > > +)
+> > > +  ... when != id
+> > > +  e1@j0 = devm_ioremap_resource(arg4, id);
+> > > +  ... when != id
+> > > +? id = e2
+> > > +
+> > > +// ----------------------------------------------------------------------------
+> > > +
+> > > +@script:python depends on report && !patch@
+> > > +e1 << r2.e1;
+> > > +j0 << r2.j0;
+> > > +@@
+> > > +
+> > > +msg = "WARNING: Use devm_platform_ioremap_resource for %s" % (e1)
+> > > +coccilib.report.print_report(j0[0], msg)
+> > > --
+> > > 2.17.1
+> > >
+> > >
+> >
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
 
-Alex,
 
-It makes sense for me to have a Documentation/arch directory, and place
-the arch-specific docs over there.
 
-There's actually a technical advantage on doing that: Sphinx is dumb
-with regards to PDF/LaTeX output: it requires all top documents to be
-listed at Documentation/conf.py, under this var:
-
-	latex_documents =3D [
-		...
-	]
-
-As it creates one runtime Makefile at Documentation/output per listed
-document there. So, the more we group such documents, the less merge
-conflicts we'll have at Documentation/conf.py.
-
-Btw, there's a [TECH TOPIC] proposal for KS/2019 meant to discuss=20
-Documentation.
-
-I suspect we could discuss the pros/cons of doing such change there.
-
-My personal view is that we should keep the Documentation/ root dir as
-clean as possible as a long term goal.
-
-On the other hand, it makes the path bigger and harder to rename.
-
-On a side note, last time we discussed documentation at KS I remember
-I proposed to shortcut "Documentation/" to just "docs/". The consensus
-on that time were to keep the big name. I still think that a shorter
-one could help people to remind where documentation will be located.
-
-Thanks,
-Mauro
+-- 
+Best Regards
+Masahiro Yamada
