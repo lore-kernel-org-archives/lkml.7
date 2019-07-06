@@ -2,231 +2,115 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43C8C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 13:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F7AC468AD
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 13:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5572075B
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 13:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F88E20828
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 13:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kgsc629a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfGFNjP (ORCPT
+        id S1726698AbfGFNnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 09:39:15 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:41061
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726248AbfGFNjP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 09:39:15 -0400
-X-IronPort-AV: E=Sophos;i="5.63,458,1557180000"; 
-   d="scan'208";a="312640623"
-Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jul 2019 15:39:12 +0200
-Date:   Sat, 6 Jul 2019 15:39:11 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     Himanshu Jha <himanshujha199640@gmail.com>,
-        kernel-janitors@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
+        Sat, 6 Jul 2019 09:43:35 -0400
+Received: from mail-eopbgr10079.outbound.protection.outlook.com ([40.107.1.79]:36071
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726065AbfGFNnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 09:43:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q2iz7yaacijSKO9oEt6QqOfXTsgWcAScl2A2PfWskYI=;
+ b=kgsc629aXVixMa93vgJH60agjG2e+InwqgPhGpqybPEYyXyKxjOLHGJciceTOjQi5OnHFBpMJyUrx42Jqphgvrg1GVL35//MWMrxeNStgq9ipJaJR1N6na/bZf3SbHkqtbMWcFpzsy9Lhp1gVSTWS8QChFIwvPeHsUrYSd1gOro=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
+ VE1PR04MB6383.eurprd04.prod.outlook.com (20.179.232.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Sat, 6 Jul 2019 13:43:31 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a4a8:729f:e664:fa8]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a4a8:729f:e664:fa8%2]) with mapi id 15.20.2052.019; Sat, 6 Jul 2019
+ 13:43:31 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Vinod Koul <vkoul@kernel.org>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        cocci@systeme.lip6.fr
-Subject: Re: [Cocci] [PATCH] coccinelle: api: add devm_platform_ioremap_resource
- script
-In-Reply-To: <CAK7LNARTJpxRmQzx+vQGfOC5YFuw8QsRQ=_9=9E=g5p62UUf6g@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907061538580.2523@hadrien>
-References: <20190406061112.31620-1-himanshujha199640@gmail.com> <alpine.DEB.2.21.1904060831120.4486@hadrien> <alpine.DEB.2.21.1904060833160.4486@hadrien> <CAK7LNARTJpxRmQzx+vQGfOC5YFuw8QsRQ=_9=9E=g5p62UUf6g@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Angelo Dureghello <angelo@sysam.it>
+Subject: RE: linux-next: build failure after merge of the slave-dma tree
+Thread-Topic: linux-next: build failure after merge of the slave-dma tree
+Thread-Index: AQHVMjqAoCw3ift/eE+RdAWMvGtRgaa75B+Q
+Date:   Sat, 6 Jul 2019 13:43:30 +0000
+Message-ID: <VE1PR04MB6638782ADA8BFB8A17BAF19D89F40@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20190704173108.0646eef8@canb.auug.org.au>
+In-Reply-To: <20190704173108.0646eef8@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [116.232.30.238]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 883d7b9e-8af1-46c7-3963-08d70217ef02
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6383;
+x-ms-traffictypediagnostic: VE1PR04MB6383:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VE1PR04MB6383562C6038269C62748F8389F40@VE1PR04MB6383.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:669;
+x-forefront-prvs: 00909363D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(366004)(346002)(189003)(199004)(53754006)(256004)(74316002)(305945005)(7736002)(476003)(3846002)(229853002)(486006)(6246003)(6116002)(71200400001)(71190400001)(55016002)(9686003)(4744005)(6436002)(2906002)(6306002)(53936002)(64756008)(8676002)(52536014)(66446008)(81156014)(76116006)(8936002)(81166006)(66556008)(66476007)(66946007)(73956011)(5660300002)(86362001)(68736007)(25786009)(478600001)(966005)(4326008)(316002)(110136005)(54906003)(33656002)(99286004)(7696005)(446003)(14454004)(6506007)(186003)(66066001)(102836004)(76176011)(26005)(11346002)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6383;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: iWzP0QFIFiDrnFPnmSeT9X2CPM//zHBhArQjMqBQNceA6k+/vyF/WwNYiukhOmKMCjVsl7OkWq9rOrqsk9Fbf4UZqI/quta2rjmiKqx158AFIa051dkMVDBuJY82sNb+U4n27Sp8NUT4YPQfHZPbENPOS3AA6THgF3r1IHzjevoe5nbLUXadSa0Ytftv/igVJBC/jJzHB+KAULriShMVJHgQtIUyaoIKKj74owy3MfKdAOk3ZOA3H93mxAPXPy3TKwoZUDxUZZP5P3+k9COy9SnK49g9THv4pNfvJePskYokRUPR8hw5dld76xt1SaEyiuW8L2vR3b8W0F4XUBrZD3ipwoC+RYzKw5mByY5zDtyjypq+iLR3nCUJbMkv0+ntSmzqAeo0PhEb/cScwPrIZ0bf8ncGrctW04x8YSGOT/s=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 883d7b9e-8af1-46c7-3963-08d70217ef02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2019 13:43:31.2688
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6383
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
+	That's caused by 'of_irq_count' NOT export to global symbol, and I'm curio=
+us why it has been
+here for so long since Zhangfei found it in 2015. https://patchwork.kernel.=
+org/patch/7404681/
+Hi Rob,
+	Is there something I miss so that Zhangfei's patch not accepted finally?
 
-
-On Sat, 6 Jul 2019, Masahiro Yamada wrote:
-
-> On Sat, Apr 6, 2019 at 3:34 PM Julia Lawall <julia.lawall@lip6.fr> wrote:
-> >
-> >
-> >
-> > On Sat, 6 Apr 2019, Julia Lawall wrote:
-> >
-> > >
-> > >
-> > > On Sat, 6 Apr 2019, Himanshu Jha wrote:
-> > >
-> > > > Use recently introduced devm_platform_ioremap_resource
-> > > > helper which wraps platform_get_resource() and
-> > > > devm_ioremap_resource() together. This helps produce much
-> > > > cleaner code while removing local `struct resource` declaration.
-> > > >
-> > > > Signed-off-by: Himanshu Jha <himanshujha199640@gmail.com>
-> > >
-> > > Acked-by: Julia Lawall <julia.lawall@lip6.fr>
-> > >
-> > > Thanks for taking up this issue.
-> >
-> > Maybe this should be
-> >
-> > Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
-> >
-> > since I contributed two lines to the script :)
->
-> I will apply with Julia's Signed-off-by instead of Acked-by.
-> I will also add SPDX tag.
->
-> Is this OK?
-
-Yes, thanks.
-
-julia
-
->
->
->
-> > julia
-> >
-> > >
-> > > julia
-> > >
-> > > > ---
-> > > >
-> > > > Tree wide changes has been tested through 0-day test service
-> > > > with build success.
-> > > >
-> > > > BUILD SUCCESS 74ebaaca5d14d3d9b03e911f0b4995b78a4d60f0
-> > > > tree/branch: https://github.com/himanshujha199640/linux-next  20190401-devm_platform_ioremap_resource-final
-> > > > branch HEAD: 74ebaaca5d14d3d9b03e911f0b4995b78a4d60f0  Coccinelle: api: Add devm_platform_ioremap_resource.cocci
-> > > >
-> > > > elapsed time: 385m
-> > > > configs tested: 162
-> > > >
-> > > >
-> > > > Stats:
-> > > > 916 files changed, 1028 insertions(+), 2921 deletions(-)
-> > > >
-> > > > Note: cases where the `struct resource *res` variable is
-> > > > used subsequently in the function have been ignored out because
-> > > > those cases produce:
-> > > >
-> > > > eg., drivers/bus/da8xx-mstpri.c
-> > > >
-> > > > warning: 'res' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> > > >
-> > > > due to:
-> > > >     if (prio_descr->reg + sizeof(u32) > resource_size(res)) {
-> > > >
-> > > > which seems correct as `res` isn't initialized in the scope of
-> > > > the function(da8xx_mstpri_probe) and instead initialized inside:
-> > > >
-> > > >    void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
-> > > >                                                 unsigned int index)
-> > > >    {
-> > > >            struct resource *res;
-> > > >
-> > > >            res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-> > > >            return devm_ioremap_resource(&pdev->dev, res);
-> > > >    }
-> > > >    EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
-> > > >
-> > > >
-> > > >  .../api/devm_platform_ioremap_resource.cocci  | 63 +++++++++++++++++++
-> > > >  1 file changed, 63 insertions(+)
-> > > >  create mode 100644 scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-> > > >
-> > > > diff --git a/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci b/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-> > > > new file mode 100644
-> > > > index 000000000000..a28274af14df
-> > > > --- /dev/null
-> > > > +++ b/scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-> > > > @@ -0,0 +1,63 @@
-> > > > +/// Use devm_platform_ioremap_resource helper which wraps
-> > > > +/// platform_get_resource() and devm_ioremap_resource() together.
-> > > > +///
-> > > > +// Confidence: High
-> > > > +// Copyright: (C) 2019 Himanshu Jha GPLv2.
-> > > > +// Copyright: (C) 2019 Julia Lawall, Inria/LIP6. GPLv2.
-> > > > +// Keywords: platform_get_resource, devm_ioremap_resource,
-> > > > +// Keywords: devm_platform_ioremap_resource
-> > > > +
-> > > > +virtual patch
-> > > > +virtual report
-> > > > +
-> > > > +@r depends on patch && !report@
-> > > > +expression e1, e2, arg1, arg2, arg3, arg4;
-> > > > +identifier id;
-> > > > +@@
-> > > > +
-> > > > +(
-> > > > +- id = platform_get_resource(arg1, arg2, arg3);
-> > > > +|
-> > > > +- struct resource *id = platform_get_resource(arg1, arg2, arg3);
-> > > > +)
-> > > > +  ... when != id
-> > > > +- e1 = devm_ioremap_resource(arg4, id);
-> > > > ++ e1 = devm_platform_ioremap_resource(arg1, arg3);
-> > > > +  ... when != id
-> > > > +? id = e2
-> > > > +
-> > > > +@r1 depends on patch && !report@
-> > > > +identifier r.id;
-> > > > +type T;
-> > > > +@@
-> > > > +
-> > > > +- T *id;
-> > > > +  ...when != id
-> > > > +
-> > > > +// ----------------------------------------------------------------------------
-> > > > +
-> > > > +@r2 depends on report && !patch@
-> > > > +identifier id;
-> > > > +expression e1, e2, arg1, arg2, arg3, arg4;
-> > > > +position j0;
-> > > > +@@
-> > > > +
-> > > > +(
-> > > > +  id = platform_get_resource(arg1, arg2, arg3);
-> > > > +|
-> > > > +  struct resource *id = platform_get_resource(arg1, arg2, arg3);
-> > > > +)
-> > > > +  ... when != id
-> > > > +  e1@j0 = devm_ioremap_resource(arg4, id);
-> > > > +  ... when != id
-> > > > +? id = e2
-> > > > +
-> > > > +// ----------------------------------------------------------------------------
-> > > > +
-> > > > +@script:python depends on report && !patch@
-> > > > +e1 << r2.e1;
-> > > > +j0 << r2.j0;
-> > > > +@@
-> > > > +
-> > > > +msg = "WARNING: Use devm_platform_ioremap_resource for %s" % (e1)
-> > > > +coccilib.report.print_report(j0[0], msg)
-> > > > --
-> > > > 2.17.1
-> > > >
-> > > >
-> > >
-> > _______________________________________________
-> > Cocci mailing list
-> > Cocci@systeme.lip6.fr
-> > https://systeme.lip6.fr/mailman/listinfo/cocci
->
->
->
+On 04-07-19, 15:31 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> Hi all,
+>=20
+> After merging the slave-dma tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> ERROR: "of_irq_count" [drivers/dma/fsl-edma.ko] undefined!
+>=20
+> Caused by commit
+>=20
+>   7144afd025b2 ("dmaengine: fsl-edma: add i.mx7ulp edma2 version
+> support")
+>=20
+> I have reverted that commit for today.
+>=20
 > --
-> Best Regards
-> Masahiro Yamada
->
+> Cheers,
+> Stephen Rothwell
