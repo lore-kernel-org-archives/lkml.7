@@ -2,124 +2,88 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9044AC48BD3
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3235C468AD
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FA920843
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD2F20665
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfGFPQt (ORCPT
+        id S1726870AbfGFPTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 11:16:49 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39502 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfGFPQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 11:16:48 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 62389804C8; Sat,  6 Jul 2019 17:16:34 +0200 (CEST)
-Date:   Sat, 6 Jul 2019 17:16:45 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: suspend broken in next-20190704 on Thinkpad X60
-Message-ID: <20190706151645.GA9856@amd>
-References: <20190704192020.GA3771@amd>
- <CAJZ5v0gn7FWpqW+WmCzj1=K-pjY=SjRNuEsMR3bRTSO8FzFG=Q@mail.gmail.com>
- <20190705185001.GA4068@amd>
- <CAJZ5v0irbn-Xd47KExw=h7On7KShCm6rThCo0q4-zn=o_x6_HQ@mail.gmail.com>
+        Sat, 6 Jul 2019 11:19:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32814 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726446AbfGFPTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 11:19:04 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 83CDC86658;
+        Sat,  6 Jul 2019 15:19:03 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 38CF717102;
+        Sat,  6 Jul 2019 15:19:03 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 081E44E9E2;
+        Sat,  6 Jul 2019 15:19:02 +0000 (UTC)
+Date:   Sat, 6 Jul 2019 11:19:02 -0400 (EDT)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Loic Poulain <loic.poulain@intel.com>,
+        Ilya Faenson <ifaenson@broadcom.com>
+Message-ID: <1938318038.39428333.1562426342706.JavaMail.zimbra@redhat.com>
+In-Reply-To: <37673EE8-2391-425D-9957-D6FDAEFB03FA@holtmann.org>
+References: <20190625173215.25999-1-vdronov@redhat.com> <37673EE8-2391-425D-9957-D6FDAEFB03FA@holtmann.org>
+Subject: Re: [PATCH] Bluetooth: hci_ldisc: check for missing tty operations
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0irbn-Xd47KExw=h7On7KShCm6rThCo0q4-zn=o_x6_HQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.2.20, 10.4.195.25]
+Thread-Topic: Bluetooth: hci_ldisc: check for missing tty operations
+Thread-Index: Y6PSNA1ggdS0XuGkMbW9gMaqSx7KUg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sat, 06 Jul 2019 15:19:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Marcel,
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > > > Suspend is broken in next-20190704 on Thinkpad X60.
-> > >
-> > > Broken in what way?  Any details?
-> > >
-> > > > It very very probably worked ok in 20190701.
-> > >
-> > > Well, please try the linux-next branch from linux-pm.git
-> > > (git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git)
-> > > alone and see if that fails.
-> >
-> > So... let me try this one?
-> >
-> > commit  1e2a4c9019eb53f62790fadf86c14a54f4cf4888 (patch)
-> > tree    cb5339fcaae2166832f91f4ce9f40575cc6cb6e5
-> > parent  3836c60c063581294c3a82f8cbccf3f702951358 (diff)
-> > parent  0a811974f3f79eea299af79c29595d8e1cb80a15 (diff)
-> > download
-> > linux-pm-1e2a4c9019eb53f62790fadf86c14a54f4cf4888.tar.gz
-> > Merge branch 'pm-cpufreq-new' into
-> > linux-nexttestinglinux-nextbleeding-edge
-> > * pm-cpufreq-new:
-> >
-> > That one is broken, too.
-> >
-> > pavel@amd:~$ sudo pm-suspend
-> >
-> > Machine suspends, resumes, but I don't get my prompt back.
->=20
-> I'm not sure what you mean here.  I'm guessing that you don't get back
-> to the console from which you ran the pm-suspend command, but is X
-> restored, for example?  Is there any way to get into the system in
-> that state?
-
-X is restored, and the rest of system works, but "pm-suspend" command
-never completes, so I don't get shell prompt back in that window.
-
-> Anyway, if 5.2-rc7 is OK, something in this branch causes the problem
-> to happen for you.
->=20
-> I would try
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commi=
-t/?h=3Dlinux-next&id=3Df012a132824fc870b90980540f727c76fc72e244
->=20
-> to narrow down the scope somewhat.
-
-next-20190701 is ok, next-20190704 is broken. Can we use that to
-narrow it down?
+I totally agree, the same came to my mind some time after sending the patch.
+Let me send a v2 in a while with drivers checking for needed tty operations
+presence.
 
 Best regards,
-							Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
 
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0gu10ACgkQMOfwapXb+vKBNwCgsPIFW0w2JRAYRKvTsCknjYyF
-9cQAnREuGPkxHWjdswVLotnC2sd8oXlp
-=3in7
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
+----- Original Message -----
+> From: "Marcel Holtmann" <marcel@holtmann.org>
+> To: "Vladis Dronov" <vdronov@redhat.com>
+> Cc: "Johan Hedberg" <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+> syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com, stable@vger.kernel.org, "Loic Poulain"
+> <loic.poulain@intel.com>, "Ilya Faenson" <ifaenson@broadcom.com>
+> Sent: Saturday, July 6, 2019 12:35:39 PM
+> Subject: Re: [PATCH] Bluetooth: hci_ldisc: check for missing tty operations
+> 
+> Hi Vladis,
+> 
+> > Certain ttys lack operations (eg: pty_unix98_ops) which still can be
+> > called by certain hci uart proto (eg: mrvl, ath). Currently this leads
+> > to execution at address 0x0. Fix this by adding checks for missing tty
+> > operations.
+> 
+> so I really prefer that we just fail setting the line discipline. These
+> drivers need to check that the underlying transport has all the operations
+> available they need. We can not just ignore them.
+> 
+> Regards
+> 
+> Marcel
