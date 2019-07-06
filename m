@@ -2,89 +2,120 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4EAC468AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DFBC5B578
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C396721670
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562401048;
-	bh=xT5/8HhtJWTdFqgpYLq3Whw//n88mTizA7vqoT4lgwU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PHM7hAEaQzNGCYGWyrJFkMccgs76hu92bbNXBtrXr1NtLSZXypLDb9q23BN8AIp8Q
-	 h4XlaoI+4cJgOJt5ieYZ+cNxWww2EfEFu/znB8CQETDCV5E95b1A+2sWXuAKcNlRhS
-	 nToBYvYkx6BtrNBNiYzSXhBwXynpPxf/Hmac+LVY=
+	by mail.kernel.org (Postfix) with ESMTP id E89BE20989
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 08:26:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ru2p0jnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfGFIR1 convert rfc822-to-8bit (ORCPT
+        id S1726065AbfGFI0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 04:17:27 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40286 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfGFIR1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 04:17:27 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so11214106otl.7;
-        Sat, 06 Jul 2019 01:17:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BmjS73XlAr/xExYyGQ/UHQ+KTYtukJa8bAxRUnVmDcg=;
-        b=hr4kZONchUsldLXs4gsKEpLO43E+E2ZQ5ZWfVEKAhnA00j8JjAANZ3Lmhqp3Pbv3ZO
-         6MP/XY91biXb+/DIAgXGKNRNI7vrOj+R7LbcvSakusBroLzoPGGpxWW6cG/e+Ey24PH9
-         yQk2o+MMy2JVS64jDAerbmjYs9xYJjMTDk8j7N/Ak5aDHNmEQ7iOV+uRUui8fLNKuOd1
-         c6npUbiDurafKwM6bmE7HwX9Xa56ZNVfgkY/bZsR4JHmSWSr4WGFkrOW7EC01gOoheIY
-         VH/6i/sHIQYTVTgUnrB46WxgB3pJKqqVBoaKw3j/y6TUDZcnng5Ubl3ZGshFz46owNqs
-         geeQ==
-X-Gm-Message-State: APjAAAUH0M+pq1IF15jFbTqXH5lSYlPX7ISR8TyL2PScTXZlsxLwNRpg
-        PvVcZlplZBzEB+4meTaZ0JUsQ6E2NlVhJatAwg0=
-X-Google-Smtp-Source: APXvYqwpaq0rDzPcnpj3pFXRl4h+ABXahe/kTwqQ4V/E9YVuoErUBySOPi3W44AsrLPO0L5ONQSP22LLfEke6J2swjs=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr4036175otn.266.1562401046081;
- Sat, 06 Jul 2019 01:17:26 -0700 (PDT)
+        Sat, 6 Jul 2019 04:26:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9518 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbfGFI0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 04:26:54 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45glDq6ZjYz9vBmT;
+        Sat,  6 Jul 2019 10:26:51 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ru2p0jnF; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id AECzU9flJshk; Sat,  6 Jul 2019 10:26:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45glDq4qGpz9vBmQ;
+        Sat,  6 Jul 2019 10:26:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1562401611; bh=mh8ujrNVmKQnrW9nDzbu+49uRl2+DM2LFGY+iQ49uaE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ru2p0jnF3ids7fmZpTgeYrASFyvoVkL72KL/HeYQ+FTu3BKXtl3xPhH5MVCevoRU5
+         ujz7aVUOcCi7kYFlJeRsd9lMWRlLVvjxRFDOamnDYT9QN93qZB0IWNb1IKUooXuOTZ
+         rE509HWZ5soWFRwGVdAFSl/JOYdXdrOteQE3s3Ok=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BA47F8B768;
+        Sat,  6 Jul 2019 10:26:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id IektAObbTzti; Sat,  6 Jul 2019 10:26:52 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 47A948B74C;
+        Sat,  6 Jul 2019 10:26:52 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/hw_breakpoint: move instruction stepping out of
+ hw_breakpoint_handler()
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <f8cdc3f1c66ad3c43ebc568abcc6c39ed4676284.1561737231.git.christophe.leroy@c-s.fr>
+ <57148696-b9a5-d3c1-1e29-82673c558927@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <bef43f48-fa40-284e-a299-bc73ebc3e725@c-s.fr>
+Date:   Sat, 6 Jul 2019 10:26:52 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <79b247b3-e056-610e-9a07-e685dfdaa6c9@gmail.com>
-In-Reply-To: <79b247b3-e056-610e-9a07-e685dfdaa6c9@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sat, 6 Jul 2019 10:17:15 +0200
-Message-ID: <CAJZ5v0grOas+Wh0h09fKZmUnOJ3PRX2Fc=2fv7=zCFJiZ09-Bg@mail.gmail.com>
-Subject: Re: The tick is active on idle adaptive-tick CPUs when
- /dev/cpu_dma_latency is used
-To:     Thomas Lindroth <thomas.lindroth@gmail.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <57148696-b9a5-d3c1-1e29-82673c558927@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 7:22 PM Thomas Lindroth
-<thomas.lindroth@gmail.com> wrote:
->
-> On recent kernels the tick remains active on idle adaptive-tick CPUs when a small value is written to /dev/cpu_dma_latency to restrict the highest C-state. Before the idle loop redesign in 4.17 idle CPUs had the tick disabled even when C-state were restricted. Is this change intentional or a regression?
 
-It was intentional, but this kind of is a gray area.
 
-At least for the menu governor you may argue that the decision on
-whether or not to stop the tick should be based on the predicted idle
-duration.
+Le 03/07/2019 à 08:20, Ravi Bangoria a écrit :
+> 
+> 
+> On 6/28/19 9:25 PM, Christophe Leroy wrote:
+>> On 8xx, breakpoints stop after executing the instruction, so
+>> stepping/emulation is not needed. Move it into a sub-function and
+>> remove the #ifdefs.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+> 
+> Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> 
+> Just one neat below...
 
-> I use an x86_64 system built with CONFIG_NO_HZ_FULL that I recently upgraded to the 4.19 series from the 4.14 series. I noticed that adaptive-tick CPUs (nohz_full=1-7) still fire timer interrupts about 1000 times/s (CONFIG_HZ_1000=y) even when they are mostly idle. Some debugging showed that this only happens when a program is writing to /dev/cpu_dma_latency to restrict C-states. The old 4.14 kernel only have around 10 timer interrupts per second on idle adaptive-tick CPU even when C-states are restricted that way.
->
-> I would expect an adaptive-tick CPU to turn off the tick when it has 0 or 1 processes to run and enable the tick for >2 processes. Kernels after 4.17 instead have the tick on when 0 or >2 processes are running and the tick off in the 1 process case. Since the tick is off when a single process is running that workload isn't directly harmed by the change but if the CPU use hyperthreading the constant wakeups on an idle HT sibling will reduce performance on the other sibling.
->
-> They way I look for timer interrupts is by comparing the LOC line in /proc/interrupts or using the hrtimer_expire_entry tracepoint when function=tick_sched_timer. Both methods seem to give the same results.
->
-> I can reproduce the problem using an i7-4790K CPU with /sys/devices/system/cpu/cpuidle/current_driver:intel_idle. I can also reproduce the problem on an old core2duo laptop with current_driver:acpi_idle but I can't reproduce the problem in a virtual machine where current_driver:none. I also can't reproduce the problem if C-states are restricted using the intel_idle.max_cstate=1 kernel argument instead of /dev/cpu_dma_latency.
->
-> The commit that introduced the change is 554c8aa8ec "sched: idle: Select idle state before stopping the tick" in v4.17 and the problem exists at least up to kernel 5.1 using the menu cpuidle governor.
+Thanks for the review.
 
-Restoring the previous behavior in this case should be relatively
-straightforward.  I'll send you a patch to do that later.
+> 
+> [...]
+> 
+>> -#ifndef CONFIG_PPC_8xx
+>> -	/* Do not emulate user-space instructions, instead single-step them */
+>> -	if (user_mode(regs)) {
+>> -		current->thread.last_hit_ubp = bp;
+>> -		regs->msr |= MSR_SE;
+>> +	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info->address))
+> 
+> May be split this line. It's 86 chars long and checkpatch.pl is warning
+> about this:
+
+Didn't you use arch/powerpc/tools/checkpatch.sh ?
+
+powerpc accepts 90 chars per line.
+
+Christophe
+
+> 
+> WARNING: line over 80 characters
+> #257: FILE: arch/powerpc/kernel/hw_breakpoint.c:282:
+> +	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info->address))
+> 
