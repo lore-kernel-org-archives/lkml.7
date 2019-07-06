@@ -2,95 +2,95 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7881C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0CDC0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6881520856
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562428435;
-	bh=uT3EnJ1csJNvVEUQ9BXrl6vxOcXvYVkS8DMZsOFZjIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q/lNzb6Bgg0QixmRl8/UtFnI5UID5H9bSbiHfN/k8IXPgs8mOOh+/b1D+vY80Wamt
-	 0tm1+gtZUjPLGJXDT0JmgPCzKLE1X7OCcCRJUbMd0NwnhEImVJlK1Fdt34D2oUNxUs
-	 v9K35nn4Hf62S4F3zcoQSE1c//xSIaRBAP5I9vbU=
+	by mail.kernel.org (Postfix) with ESMTP id A9B5D20843
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:07:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="qicd/fun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfGFPxy (ORCPT
+        id S1726876AbfGFQHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 11:53:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39022 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfGFPxx (ORCPT
+        Sat, 6 Jul 2019 12:07:20 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35233 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfGFQHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 11:53:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uT3EnJ1csJNvVEUQ9BXrl6vxOcXvYVkS8DMZsOFZjIs=; b=H7qkrD3Ue4J7TvYoknFUj8/Mr
-        sR8rWPLAT/YPjzf8/MKnBxtoGLrf4AwGPc1PsbxwuA4JgyfS0Bo6ky8Va8syfmuVSEQzb/cEq6yOe
-        9tNpHZyjsq0kG1tC4zE1kZ189GCwPL1qdYoDmRL3PLdiWz/7/NHaNrR85rzpQO5NVdRqI=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hjn0S-000770-Rc; Sat, 06 Jul 2019 15:53:44 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D8B9E2742D9E; Sat,  6 Jul 2019 16:53:43 +0100 (BST)
-Date:   Sat, 6 Jul 2019 16:53:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH] debugfs: make error message a bit more verbose
-Message-ID: <20190706155343.GI20625@sirena.org.uk>
-References: <20190706154256.GA2683@kroah.com>
+        Sat, 6 Jul 2019 12:07:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s27so5579841pgl.2
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 09:07:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bnmQjEH1vYixqqvcA510E7VkS1LxWaG+p2Hix3E3JqU=;
+        b=qicd/funjrpa2MxTNeuQoPhPDV7SU+qyw6BwWY6yh7r1IaDvoqyQ07St8p9OEgylYS
+         GqFgK/mDeKxRdWK9fBISg1CxtaYg0ECsLe8zIijMLfzhffg7KiWwNAXftRDwUfCUGYrn
+         O/idl9gZ9KvApAbkKOZ6eJsjiPWhqoy93KMjk8awTsCUr7DprObuPppW5lQJQMN125aL
+         zURFvuFcGZ/rBDROj87VJSuqvVu+ubO6rtbMzAXybEdbD7WKL5craHDFUxMEvLZL4W5M
+         7T5Epsk0F7jirsFnQ4sr6t/u7WS16NEWaF9EnF2IGLidGdRU1zxI8z+4ZP0HLQcIzZYB
+         qzAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bnmQjEH1vYixqqvcA510E7VkS1LxWaG+p2Hix3E3JqU=;
+        b=gFtVYICb5VbUPonTErqurKd0OM8ayIc/9U504olOlFQyxNRXUNNdBLq6vUlv5gih0Q
+         os64RB1vWDygpk2nSTKdXSRxmMRrFh5Hqorx8i0c7KcTylIvucwC8QuXHedxbiz/K4/Q
+         5gFe9hNC7HA1j/86A8D/oG5nRAccIpcdGW7ne9/4NaYqyB1MTWhkNBrzOLJI4qpfGLKO
+         QrBvyTYWbZeJfwjxQgtwsUc//m6ltS/q6VlcLdr8Kzz0Mh/4WoOQFs3b4y/0SpwEZpS1
+         OOEKZvHH9Ures1vehA9vA8kL9TI/4x3Jt+rMdswan5E1RWiCTDogiTPyUt3vFFKDBkCQ
+         /hEQ==
+X-Gm-Message-State: APjAAAWLKeQ/biQe9m8pOcQV0RLZD/HdNhG5W1EgCs0g7k6iHJF6XAzG
+        OzuZomD8mS/VHHk17QRhwx42Gg==
+X-Google-Smtp-Source: APXvYqyO0Zbgcab0FOZETV4bJlTWSr88APdiToWut3pIn34c0C0iG+3cGDkmAcy9GC9UBH5M7iDOdQ==
+X-Received: by 2002:a63:5610:: with SMTP id k16mr11733599pgb.335.1562429239012;
+        Sat, 06 Jul 2019 09:07:19 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id b126sm14572448pfa.126.2019.07.06.09.07.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Jul 2019 09:07:18 -0700 (PDT)
+Subject: Re: [PATCH] blk-mq: fix up placement of debugfs directory of queue
+ files
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+References: <20190706155032.GA3106@kroah.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a4e28385-6f87-05f5-edb2-d68446771b7c@kernel.dk>
+Date:   Sat, 6 Jul 2019 10:07:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="54u2kuW9sGWg/X+X"
-Content-Disposition: inline
-In-Reply-To: <20190706154256.GA2683@kroah.com>
-X-Cookie: How you look depends on where you go.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190706155032.GA3106@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/6/19 9:50 AM, Greg Kroah-Hartman wrote:
+> When the blk-mq debugfs file creation logic was "cleaned up" it was
+> cleaned up too much, causing the queue file to not be created in the
+> correct location.  Turns out the check for the directory being present
+> is needed as if that has not happened yet, the files should not be
+> created, and the function will be called later on in the initialization
+> code so that the files can be created in the correct location.
 
---54u2kuW9sGWg/X+X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+How about we shove this in for 5.2 final? Trivial enough to do, and it
+would suck to have 5.2 released with this. Though not sure what
+devices this actually impacts, I haven't noticed anything awry on
+my setups?
 
-On Sat, Jul 06, 2019 at 05:42:56PM +0200, Greg Kroah-Hartman wrote:
-> When a file/directory is already present in debugfs, and it is attempted
-> to be created again, be more specific about what file/directory is being
-> created and where it is trying to be created to give a bit more help to
-> developers to figure out the problem.
+-- 
+Jens Axboe
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---54u2kuW9sGWg/X+X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0gxAcACgkQJNaLcl1U
-h9CgEQf/bH/ALZv7b7d9lTDRogs0FI8baJvBAUVbFnxy6l7jIs4xHjIHCzYH9uFT
-P94K5PwJVRyg3A8JU3xDt/mBiJ36qpz9eoyTW9vtcWV0QAcj3Zb/H61PxeKVxwf3
-DVigmFOHOWeqAqMKH9x32xvh+3235z5ALSqJRzs94p+0q4cXGfWI7GG4hAX5GAdy
-iecUAwuolo42kux5AB+rONFy81zWdJfsUuHCE7/u+/jMNP+MVHQ1hN1TM4mO0P1V
-6pR/jKxKf3xhTKGLg/ucVenTDGqfReXguzKGEBuWo4N+6dwB7AR90jB4iLEfy1bo
-7GO7Za5akavM9VgSw51E3h6LZV2STA==
-=bfOD
------END PGP SIGNATURE-----
-
---54u2kuW9sGWg/X+X--
