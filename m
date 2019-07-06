@@ -2,130 +2,93 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5688C5B578
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 024C3C5B578
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 04:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9B921670
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 03:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BC721670
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 04:25:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfGFDo2 (ORCPT
+        id S1725934AbfGFEZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 23:44:28 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:54442 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725813AbfGFDo2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 23:44:28 -0400
-Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x663iQXd024331
-        for <linux-kernel@vger.kernel.org>; Fri, 5 Jul 2019 23:44:26 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x663iLI2005371
-        for <linux-kernel@vger.kernel.org>; Fri, 5 Jul 2019 23:44:26 -0400
-Received: by mail-qt1-f199.google.com with SMTP id k31so10969814qte.13
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jul 2019 20:44:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version
-         :content-transfer-encoding:date:message-id;
-        bh=8fXsS/qCFMlK3IfJe0o+L9zW5hwu1Njz/pHhxSynS10=;
-        b=MY21nqgn0vlsWC8hxTJLX9FdqB/oT6ISboip0BZHLWc6bKZTxdJ8np9O9fRclxkEF5
-         OaKe8YRlFNPNUxVmaeN5g+v05PaOtnp+tUmmQW5Tf4xi8I5ERASH3Zshk/rFnWC1Lu0+
-         xc8TpTNVM+LrSAAV3aoYMmijVnTxYug9P1D9HZQ2WzZ7ai5KLUa9ZYF/PrkPlplm9a+I
-         u+gpY77dq+MN3QeVKl50X+Wz4J2EsraIyIqrfP2QpA22gI2t+EgEXTivNMH2OyhMtBJ3
-         /mJzTbHOXMuneJIVy8T3B2zgN88PMfJaIPuyDcmGvUEBm1AGge3O4Gx9f/pdgE/q7Wcc
-         OP6Q==
-X-Gm-Message-State: APjAAAX25dt/WWSngbBQbosqLE/0KefCILOfAw3X6rSJYu2Dey3LL4eo
-        NNcrkjq2X6ZbJS8vpkxyYrDHd46J7UjE1A9UOHEbjFX5hXZrXTfNaERwD2NX9DR3PZwrgKrtcVD
-        4wunPpmDJfPdinosCTQ6O4RLHmC/a6bWr4BU=
-X-Received: by 2002:a37:47d1:: with SMTP id u200mr5455030qka.21.1562384661387;
-        Fri, 05 Jul 2019 20:44:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx77CAOwb57kHTbH+rwRZca8Ng8B9IqTqMLwAaJTBXpsHS9IRbrpNxlEUt0uLu50+3hRR3OtQ==
-X-Received: by 2002:a37:47d1:: with SMTP id u200mr5455020qka.21.1562384661140;
-        Fri, 05 Jul 2019 20:44:21 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::7ca])
-        by smtp.gmail.com with ESMTPSA id w9sm2251091qts.25.2019.07.05.20.44.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 20:44:19 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: next-20190705 - problems generating certs/x509_certificate_list
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1562384658_2389P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jul 2019 23:44:18 -0400
-Message-ID: <27671.1562384658@turing-police>
+        Sat, 6 Jul 2019 00:25:34 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:34856 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725826AbfGFEZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 00:25:34 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id CFF7F6B20F06A45CBED8;
+        Sat,  6 Jul 2019 12:25:31 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x664PI4U092176;
+        Sat, 6 Jul 2019 12:25:18 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070612260251-2124852 ;
+          Sat, 6 Jul 2019 12:26:02 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org
+Subject: [PATCH] net: pasemi: fix an use-after-free in pasemi_mac_phy_init()
+Date:   Sat, 6 Jul 2019 12:23:41 +0800
+Message-Id: <1562387021-951-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-06 12:26:02,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-06 12:25:25,
+        Serialize complete at 2019-07-06 12:25:25
+X-MAIL: mse-fl1.zte.com.cn x664PI4U092176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1562384658_2389P
-Content-Type: text/plain; charset=us-ascii
+The phy_dn variable is still being used in of_phy_connect() after the
+of_node_put() call, which may result in use-after-free.
 
-This worked fine in next-20190618, but in next-20190701 I'm seeing dmesg
-entries at boot:
+Fixes: 1dd2d06c0459 ("net: Rework pasemi_mac driver to use of_mdio infrastructure")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/pasemi/pasemi_mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-dmesg | grep -i x.509
-[    8.345699] Loading compiled-in X.509 certificates
-[    8.366137] Problem loading in-kernel X.509 certificate (-13)
-[    8.507348] cfg80211: Loading compiled-in X.509 certificates for regulatory database
-[    8.526556] cfg80211: Problem loading in-kernel X.509 certificate (-13)
+diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
+index bf5a7bc..be66601 100644
+--- a/drivers/net/ethernet/pasemi/pasemi_mac.c
++++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
+@@ -1042,7 +1042,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+ 
+ 	dn = pci_device_to_OF_node(mac->pdev);
+ 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
+-	of_node_put(phy_dn);
+ 
+ 	mac->link = 0;
+ 	mac->speed = 0;
+@@ -1051,6 +1050,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+ 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
+ 				PHY_INTERFACE_MODE_SGMII);
+ 
++	of_node_put(phy_dn);
+ 	if (!phydev) {
+ 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
+ 		return -ENODEV;
+-- 
+2.9.5
 
-I start debugging, and discover that certs/x509_certificate_list is a zero-length file.
-I rm it, and 'make V=1 certs/system_certificates.o', which tells me:
-
-(....)
-make -f ./scripts/Makefile.headersinst obj=include/uapi
-make -f ./scripts/Makefile.headersinst obj=arch/x86/include/uapi
-make -f ./scripts/Makefile.build obj=certs certs/system_certificates.o
----- smoking gun alert
-  scripts/extract-cert "" certs/x509_certificate_list
-----
-  gcc -Wp,-MD,certs/.system_certificates.o.d  -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/9/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/kconfig.h -D__KERNEL__ -D__ASSEMBLY__ -fno-PIE -m64 -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DCONFIG_AS_CFI_SECTIONS=1 -DCONFIG_AS_SSSE3=1 -DCONFIG_AS_AVX=1 -DCONFIG_AS_AVX2=1 -DCONFIG_AS_AVX512=1 -DCONFIG_AS_SHA1_NI=1 -DCONFIG_AS_SHA256_NI=1 -Wa,-gdwarf-2 -DCC_USING_FENTRY -I.   -c -o certs/system_certificates.o certs/system_certificates.S
-
-I go look at extract-cert.c, and sure enough, if the first parameter is a null string
-it just goes and creates an empty file.
-
-The Makefile says:
-
-quiet_cmd_extract_certs  = EXTRACT_CERTS   $(patsubst "%",%,$(2))
-      cmd_extract_certs  = scripts/extract-cert $(2) $@
-
-and damned if I know why $(2) is "". Diffed the config files from -0618 and -0705,
-not seeing anything relevant difference.
-
-Any ideas?
-
-
---==_Exmh_1562384658_2389P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXSAZEgdmEQWDXROgAQJdfBAAh0OK5AXK+UV3PLU7Zf5MEVbiRWdArkQl
-/Mq2xWj7D7T/cNw5C6rkF+15mZr/Jrn7hQS2pdAXf2bBJ1yt+09dDr5+fCMkIzCv
-+XKxE876Cd6CnrmyKHprKeitoRxs2Lgre1WPamzWwDKcq3HYgEl1mKrNEnk+bYhp
-h/U7qQgpxxRKx+rZU0ZwejwpJw4wgtiYELHUP5ibaGjLwzqZhzQ6prfIW/ow9zRi
-m08yxe1THhXs/3ZBAZsXx/LeoUZQhhb7H6WfKYMMU+mwnUSw0rw6fUI0VkOVHV6P
-VRcaDpWOV8gAgO6rZffunApCZrRPlTMa+wZwh1vCXApEn1vCtgul6jLKBh9H0XSR
-+TS5z90I2BBx9TpmjR2aP04DqATir2CBeXRm1KubQUKPeXJUnjxJF2y/uURUsK52
-Uvb5lYRcdPWoYwDsi9eikPKPda8y7H+TQGuygzV9VQAbYyffHfXR3cQMnAVltxko
-ZZqtxIBG+/7WtfmTUqN8hzKThHieF92yF1bGgJk8mIjppvUAsoReZgSKqGKePvHX
-F3NZoKtMW4A78Yc6PYl9rVADMj0wtapdo8Y7hAjogaf27M/Qu7g94nITro2p8lVx
-rJLj61K7Q644ChMjWodkFxNnI4UiiBR5ut+bwVb5IQE/8TSU/eRC1wuuEJk76gQD
-MCKeD0Nx+bI=
-=etAO
------END PGP SIGNATURE-----
-
---==_Exmh_1562384658_2389P--
