@@ -2,93 +2,77 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3419C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A1AC0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C958A20989
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562427783;
-	bh=+04iMwl0S65cpe+AUJ19IdTwN/SHj80MNd8p9amvXec=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=lu4B2e5LWCzD/e679mMzRlmjr+qFemWjKrMH/27pS1aOFuanBvyI+5nuyYqF9Rwny
-	 1eRBuEe7eD5wJVNRnVPJueAS296CHfjzPTECxGdg4GyiWT3p4ETTcEu2qjwwvqRGq0
-	 wsHQnfqGjpvvLYYwizpX0kN3hmkyh9iUIjun5Fcs=
+	by mail.kernel.org (Postfix) with ESMTP id 92E1820856
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 15:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfGFPnC (ORCPT
+        id S1727045AbfGFPuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 11:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37010 "EHLO mail.kernel.org"
+        Sat, 6 Jul 2019 11:50:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58976 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbfGFPnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 11:43:02 -0400
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726794AbfGFPuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 11:50:05 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45ECA20838;
-        Sat,  6 Jul 2019 15:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562427781;
-        bh=+04iMwl0S65cpe+AUJ19IdTwN/SHj80MNd8p9amvXec=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GwoQrmVWx1LouwCkDHrhhvFh1D9g8eMdIZQ8aI9hS3YpmA+SQPC1ZJpjyt80Wxxsj
-         m2oYkNgob6QYVxp8HJqKhbt+jBO2/88U8h60gsomuGdBEGOiknarYgfNn6gY7eb3na
-         uIO703UKyFIC3cD6JrVyxGLBHeWa8DERfDguxeQs=
-Date:   Sat, 6 Jul 2019 17:42:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH] debugfs: make error message a bit more verbose
-Message-ID: <20190706154256.GA2683@kroah.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 6F32C3082201;
+        Sat,  6 Jul 2019 15:50:05 +0000 (UTC)
+Received: from treble (ovpn-122-197.rdu2.redhat.com [10.10.122.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00C9C1714B;
+        Sat,  6 Jul 2019 15:50:03 +0000 (UTC)
+Date:   Sat, 6 Jul 2019 10:50:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Craig Topper <craig.topper@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Bill Wendling <morbo@google.com>,
+        Stephen Hines <srhines@google.com>
+Subject: Re: objtool warnings in prerelease clang-9
+Message-ID: <20190706155001.yrfxqj7c2bmqtbid@treble>
+References: <CAKwvOdnGL_9cJ+ETNce89+z7CTDctjACS8DFsLu=ev4+vkVkUw@mail.gmail.com>
+ <alpine.DEB.2.21.1907022332000.1802@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <alpine.DEB.2.21.1907022332000.1802@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Sat, 06 Jul 2019 15:50:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a file/directory is already present in debugfs, and it is attempted
-to be created again, be more specific about what file/directory is being
-created and where it is trying to be created to give a bit more help to
-developers to figure out the problem.
+On Tue, Jul 02, 2019 at 11:58:27PM +0200, Thomas Gleixner wrote:
+> platform-quirks.o:
+> 
+>         if (x86_platform.set_legacy_features)
+>   74:   4c 8b 1d 00 00 00 00    mov    0x0(%rip),%r11        # 7b <x86_early_init_platform_quirks+0x7b>
+>   7b:   4d 85 db                test   %r11,%r11
+>   7e:   0f 85 00 00 00 00       jne    84 <x86_early_init_platform_quirks+0x84>
+>                 x86_platform.set_legacy_features();
+> }
+>   84:   c3                      retq   
+> 
+> That jne jumps to __x86_indirect_thunk_r11, aka. ratpoutine.
+> 
+> No idea why objtool thinks that the instruction at 0x84 is not
+> reachable. Josh?
 
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/debugfs/inode.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+That's a conditional tail call, which is something GCC never does.
+Objtool doesn't understand that, so we'll need to fix it.
 
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index 7f43c8acfcbf..5836312269e0 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -311,8 +311,13 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
- 	inode_lock(d_inode(parent));
- 	dentry = lookup_one_len(name, parent, strlen(name));
- 	if (!IS_ERR(dentry) && d_really_is_positive(dentry)) {
-+		if (d_is_dir(dentry))
-+			pr_err("Directory '%s' with parent '%s' already present!\n",
-+			       name, parent->d_name.name);
-+		else
-+			pr_err("File '%s' in directory '%s' already present!\n",
-+			       name, parent->d_name.name);
- 		dput(dentry);
--		pr_err("File '%s' already present!\n", name);
- 		dentry = ERR_PTR(-EEXIST);
- 	}
- 
 -- 
-2.22.0
-
+Josh
