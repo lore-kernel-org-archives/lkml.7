@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5D0C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27781C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2A120989
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0780521670
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 10:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfGFKvP (ORCPT
+        id S1726817AbfGFKvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 06:51:15 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:49470 "EHLO
+        Sat, 6 Jul 2019 06:51:20 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:59394 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfGFKvP (ORCPT
+        with ESMTP id S1725926AbfGFKvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 06:51:15 -0400
+        Sat, 6 Jul 2019 06:51:18 -0400
 Received: from [192.168.0.113] (CMPC-089-239-107-172.CNet.Gawex.PL [89.239.107.172])
-        by mail.holtmann.org (Postfix) with ESMTPSA id B31F9CF12E;
-        Sat,  6 Jul 2019 12:59:45 +0200 (CEST)
+        by mail.holtmann.org (Postfix) with ESMTPSA id 891EBCEFAE;
+        Sat,  6 Jul 2019 12:59:48 +0200 (CEST)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v4] Bluetooth: hci_qca: wcn3990: Drop baudrate change
- vendor event
+Subject: Re: [PATCH v9] Bluetooth: btqca: inject command complete event during
+ fw download
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190521195307.23874-1-mka@chromium.org>
-Date:   Sat, 6 Jul 2019 12:51:13 +0200
+In-Reply-To: <20190528214322.171922-1-mka@chromium.org>
+Date:   Sat, 6 Jul 2019 12:51:16 +0200
 Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
         Balakrishna Godavarthi <bgodavar@codeaurora.org>,
         Harish Bandi <c-hbandi@codeaurora.org>,
         Rocky Liao <rjliao@codeaurora.org>
 Content-Transfer-Encoding: 7bit
-Message-Id: <9052566C-2880-4771-AAA5-DCF0E23C9C0D@holtmann.org>
-References: <20190521195307.23874-1-mka@chromium.org>
+Message-Id: <AE7AB525-CFAC-411E-A615-54AF4E6B645E@holtmann.org>
+References: <20190528214322.171922-1-mka@chromium.org>
 To:     Matthias Kaehlcke <mka@chromium.org>
 X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,53 +48,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Matthias,
 
-> Firmware download to the WCN3990 often fails with a 'TLV response size
-> mismatch' error:
+> Latest qualcomm chips are not sending an command complete event for
+> every firmware packet sent to chip. They only respond with a vendor
+> specific event for the last firmware packet. This optimization will
+> decrease the BT ON time. Due to this we are seeing a timeout error
+> message logs on the console during firmware download. Now we are
+> injecting a command complete event once we receive an vendor specific
+> event for the last RAM firmware packet.
 > 
-> [  133.064659] Bluetooth: hci0: setting up wcn3990
-> [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
-> [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
-> [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
-> [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
-> 
-> This is caused by a vendor event that corresponds to an earlier command
-> to change the baudrate. The event is not processed in the context of the
-> baudrate change and is later interpreted as response to the firmware
-> download command (which is also a vendor command), but the driver detects
-> that the event doesn't have the expected amount of associated data.
-> 
-> More details:
-> 
-> For the WCN3990 the vendor command for a baudrate change isn't sent as
-> synchronous HCI command, because the controller sends the corresponding
-> vendor event with the new baudrate. The event is received and decoded
-> after the baudrate change of the host port.
-> 
-> Identify the 'unused' event when it is received and don't add it to
-> the queue of RX frames.
-> 
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> Tested-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
-> Changes in v4:
-> - limit the fix to WCN3990 instead of applying it to all WCN399x.
->  Harish Bandi <c-hbandi@codeaurora.org> reported frame reassembly
->  errors with WCN3998 and v3. At this point it is unknown in how far
->  WCN3998 behaves different from WCN3990, we can revisit
->  it later if it turns that it has the same problem.
+> Changes in v9:
+> - define QCA_HCI_CC_SUCCESS (again)
+> - use QCA_HCI_CC_OPCODE instead of HCI_OP_NOP
 > 
-> Changes in v3:
-> - rebased on latest bluetooth-next/master
-> - removed barrier calls again, bit routines include barriers
-> 
-> Changes in v2:
-> - make QCA_DROP_VENDOR_EVENT an enum value and don't use BIT()
-> - free skb in qca_recv_event()
-> - add barriers to ensure qca_recv_event() sees updated flags
-> - return -ETIMEDOUT instead of -EPROTO if the vendor event isn't
->  received in time
+> Changes in v8:
+> - renamed QCA_HCI_CC_SUCCESS to QCA_HCI_CC_OPCODE
+> - use 0xFC00 as opcode of the injected event instead of 0
+> - added Matthias' tags from the v7 review
 > ---
-> drivers/bluetooth/hci_qca.c | 55 ++++++++++++++++++++++++++++++++++++-
-> 1 file changed, 54 insertions(+), 1 deletion(-)
+> drivers/bluetooth/btqca.c | 39 ++++++++++++++++++++++++++++++++++++++-
+> drivers/bluetooth/btqca.h |  4 ++++
+> 2 files changed, 42 insertions(+), 1 deletion(-)
 
 patch has been applied to bluetooth-next tree.
 
