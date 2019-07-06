@@ -2,123 +2,159 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F652C468AA
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 01:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 736AFC468AA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 01:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775B720989
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 01:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562375173;
-	bh=8gWBHeKNDNjuhlu21bI3kDawN4nTwZAUWh6+zhh+NxA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VykplenuvbQvc7y/YqLHrHqU3rg93cErxYtQXnFfIXeOT/tilZIXbEGTXbcsZFU8Y
-	 O7Q4/eSAAfVJIB67c956NlLu59ULPnGOQct13NQ7qndCOgZd2AmX611WYBeMzTXqra
-	 0UXqWUSsGV/iqE21cUMLY8KApg9fYnDggXM20xO0=
+	by mail.kernel.org (Postfix) with ESMTP id 4C21F216E3
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 01:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXZCa+Ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfGFBGM (ORCPT
+        id S1726585AbfGFB05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jul 2019 21:06:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43702 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfGFBGM (ORCPT
+        Fri, 5 Jul 2019 21:26:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42154 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfGFB04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jul 2019 21:06:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1rzhIg/gYP6gF2nEYMswqh8XqxzTA32GFXstzYxorB4=; b=KudHSDPC0DOxrL4bzrXfgXPvI
-        blqp4J86MiyWDbwHDjff5nHw7GQdLV+f/elOrwbzEl5WR5T4plWZwxpIJpduZ28kKqHRAfWXDDncL
-        CASTS0Q07yXzT51sGF7o0z1geuBnhXP9A32zoH36gLwQ18oBTlUg62pXK22RBr/dsW0ho=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hjZ9R-0005M0-9c; Sat, 06 Jul 2019 01:06:05 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id AA75D2742B3A; Sat,  6 Jul 2019 02:06:04 +0100 (BST)
-Date:   Sat, 6 Jul 2019 02:06:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
-        airlied@linux.ie, daniel@ffwll.ch, robdclark@gmail.com,
-        bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] regmap: Add DSI bus support
-Message-ID: <20190706010604.GG20625@sirena.org.uk>
-References: <20190703214326.41269-1-jeffrey.l.hugo@gmail.com>
- <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
+        Fri, 5 Jul 2019 21:26:56 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t132so4952177pgb.9;
+        Fri, 05 Jul 2019 18:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XVB/qxc195E6rDp2lOgsfW+eYTkI+LAWzMzryJMzQSk=;
+        b=KXZCa+EzNBZp5Yw+K4V0TF/G0VGUntbrmM8kAUtUebgKWQXBQr8tWPm41bMJY6aJAI
+         U8CazoMogtMjlTqIULdBkeNx6P5I6sxDuDkeogav9g4N0CHOppud2BHSfwZMPDXRd9aq
+         9Ucnb5OSDu6yw1WmVNhtJQTzE3Mgdcpkiqo7bCWD+jK2CNNeNa6Dg1MVzn5DdQzDZLnN
+         tyQ6U3kTWj3hrwAqlAyH8kVrMXzjitBR1Vo5IintqGgIpiBByxwTeQwQ/fen40cfcqmB
+         YSq8pzKIU9prd9j+zZn09uTyu3KaMZieNtWh2iM9UwP9Oy62Adfr6j7KzYJg01LThGGN
+         zwiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XVB/qxc195E6rDp2lOgsfW+eYTkI+LAWzMzryJMzQSk=;
+        b=S2wQbfB86Y69jGUqTcarxBggN52uJlLTY1CnZT4kdEUpBmVp8x3wLv2gdm1KUvxrL2
+         E3RQYhb1I4v7o+MT+PaN68bMMQP/6TYTt016fPVhKkQXkuvP0Q1/5R324zAtoSefVXf8
+         JeHOQFJwZCKn3FCYG2atrJdO55e4jCV8XzmMf7CXXWWJiM+QCbZ5nGqffNibhr3DkTAk
+         vspk8MatRWlPdq+sHoxnGEN8i9A8gjrO04ZqcqcCO+9z0Hp7ldMbBmbvXVVw8NbKvTIi
+         VCObuXWQTQFe3DmCZ2YlsRnQBfzRxU1A75e/y+TOK857lgomekmdoAfNRbUKgSn5wjXj
+         YnhQ==
+X-Gm-Message-State: APjAAAWAkHU8z6ijShYbe1LomQebLvawPrOT0BICpZ1GyaSCjcONuXMU
+        dYYvMVZ0GKj1OSO3ZyofCGmxj0VhHXI=
+X-Google-Smtp-Source: APXvYqwBI0IE3A//wbtIIbFn4B3zfmeIVg7QHrQhbtjdtVITsZx2Yp1Oz/8MgBn6t1ivdu4I97Gzuw==
+X-Received: by 2002:a63:755e:: with SMTP id f30mr8580435pgn.246.1562376415631;
+        Fri, 05 Jul 2019 18:26:55 -0700 (PDT)
+Received: from localhost ([2409:8a00:7815:93e0:4a4d:7eff:feb0:5c9a])
+        by smtp.gmail.com with ESMTPSA id h6sm10826144pfb.20.2019.07.05.18.26.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jul 2019 18:26:55 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: [PATCH v7 0/2] KVM: LAPIC: Implement Exitless Timer
+Date:   Sat,  6 Jul 2019 09:26:49 +0800
+Message-Id: <1562376411-3533-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3yNHWXBV/QO9xKNm"
-Content-Disposition: inline
-In-Reply-To: <20190703214512.41319-1-jeffrey.l.hugo@gmail.com>
-X-Cookie: How you look depends on where you go.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dedicated instances are currently disturbed by unnecessary jitter due 
+to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+There is no hardware virtual timer on Intel for guest like ARM. Both 
+programming timer in guest and the emulated timer fires incur vmexits.
+This patchset tries to avoid vmexit which is incurred by the emulated 
+timer fires in dedicated instance scenario. 
 
---3yNHWXBV/QO9xKNm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+When nohz_full is enabled in dedicated instances scenario, the unpinned 
+timer will be moved to the nearest busy housekeepers after commit
+9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit 
+444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However, 
+KVM always makes lapic timer pinned to the pCPU which vCPU residents, the 
+reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer 
+pinned). Actually, these emulated timers can be offload to the housekeeping 
+cpus since APICv is really common in recent years. The guest timer interrupt 
+is injected by posted-interrupt which is delivered by housekeeping cpu 
+once the emulated timer fires. 
 
-On Wed, Jul 03, 2019 at 02:45:12PM -0700, Jeffrey Hugo wrote:
-> Add basic support with a simple implementation that utilizes the generic
-> read/write commands to allow device registers to be configured.
+The host admin should fine tuned, e.g. dedicated instances scenario w/ 
+nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
+for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root  
+mode, ~3% redis performance benefit can be observed on Skylake server.
 
-This looks good to me but I really don't know anything about DSI,
-I'd appreciate some review from other people who do.  I take it
-there's some spec thing in DSI that says registers and bytes must
-both be 8 bit?
+w/o patchset:
 
-A couple of minor comments, no need to resend just for these:
+            VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
 
-> +       payload[0] = (char)reg;
-> +       payload[1] = (char)val;
+EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
 
-Do you need the casts?
+w/ patchset:
 
-> +	ret = mipi_dsi_generic_write(dsi, payload, 2);
-> +	return ret < 0 ? ret : 0;
+            VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
 
-Please just write an if statement, it helps with legibility.
+EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
 
-> +struct regmap *__regmap_init_dsi(struct mipi_dsi_device *dsi,
-> +				 const struct regmap_config *config,
-> +				 struct lock_class_key *lock_key,
-> +				 const char *lock_name)
-> +{
-> +	return __regmap_init(&dsi->dev, &dsi_bus, &dsi->dev, config,
-> +			     lock_key, lock_name);
-> +}
-> +EXPORT_SYMBOL_GPL(__regmap_init_dsi);
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
 
-Perhaps validate that the config is OK (mainly the register/value
-sizes)?  Though I'm not sure it's worth it so perhaps not - up to
-you.
+v6 -> v7:
+ * remove bool argument
 
---3yNHWXBV/QO9xKNm
-Content-Type: application/pgp-signature; name="signature.asc"
+v5 -> v6:
+ * don't overwrites whatever the user specified
+ * introduce kvm_can_post_timer_interrupt and kvm_use_posted_timer_interrupt
+ * remove kvm_hlt_in_guest() condition
+ * squash all of 2/3/4 together
 
------BEGIN PGP SIGNATURE-----
+v4 -> v5:
+ * update patch description in patch 1/4
+ * feed latest apic->lapic_timer.expired_tscdeadline to kvm_wait_lapic_expire()
+ * squash advance timer handling to patch 2/4
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0f8/sACgkQJNaLcl1U
-h9B+BAf+OQ42/IKead1kROPCuJvRz9xl+9GDQTLlYbT3gv9XzJqILZvnKJdtFtnQ
-FIjvDBpN7fxvlXZtGAwrMOa5udFoKi2r1HTWeXW9qO3YYOrm06gt22+EsO/176rb
-BGCshVkG6DOZGHT858SLkWlNN6pXuu7//4vJMfGsnKNI3KEc9jGHI3U3KoF3jNyi
-pGlJPPGvvJhA9Nr3bdJuCD5eo/zAyjqsFE5NaynitGMU5Gzc9qZZWx7XtqA6qbz+
-mPMDlUK9mXLu5/HkFyyTptJAZrbDGGWnpSMBDt4X92plAc07q82hWWlgEdaq2pEW
-O8LOCJGyLJrkFlhw41aL4GO7nqMMqg==
-=xAto
------END PGP SIGNATURE-----
+v3 -> v4:
+ * drop the HRTIMER_MODE_ABS_PINNED, add kick after set pending timer
+ * don't posted inject already-expired timer
 
---3yNHWXBV/QO9xKNm--
+v2 -> v3:
+ * disarming the vmx preemption timer when posted_interrupt_inject_timer_enabled()
+ * check kvm_hlt_in_guest instead
+
+v1 -> v2:
+ * check vcpu_halt_in_guest
+ * move module parameter from kvm-intel to kvm
+ * add housekeeping_enabled
+ * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
+
+
+Wanpeng Li (2):
+  KVM: LAPIC: Make lapic timer unpinned
+  KVM: LAPIC: Inject timer interrupt via posted interrupt
+
+ arch/x86/kvm/lapic.c            | 109 ++++++++++++++++++++++++++--------------
+ arch/x86/kvm/lapic.h            |   1 +
+ arch/x86/kvm/vmx/vmx.c          |   3 +-
+ arch/x86/kvm/x86.c              |  12 +++--
+ arch/x86/kvm/x86.h              |   2 +
+ include/linux/sched/isolation.h |   2 +
+ kernel/sched/isolation.c        |   6 +++
+ 7 files changed, 90 insertions(+), 45 deletions(-)
+
+-- 
+1.8.3.1
+
