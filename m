@@ -2,112 +2,114 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A269C48BDA
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 18:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C087C48BD5
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 18:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0C520843
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 18:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA7A2083B
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 18:41:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMLJmYNu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2atDKi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfGFSdQ (ORCPT
+        id S1727103AbfGFSlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 14:33:16 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33295 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfGFSdP (ORCPT
+        Sat, 6 Jul 2019 14:41:17 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34241 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfGFSlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 14:33:15 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q20so12157677otl.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 11:33:15 -0700 (PDT)
+        Sat, 6 Jul 2019 14:41:17 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so6121890plt.1
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 11:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L8R4z3fd/pNkVMb+89dxA4ui8k10ocj37Bt7whLaC1Q=;
-        b=rMLJmYNuSevuKWuCiVdI43bNmxi2G3pHLMt7d6UgYRzPT5IXjgo/GT6keDasRoZK4g
-         /OBhvjWjUYS2v0qo9lkIJjfjkWE4kQLRuB6HOjB54kxbMOj7Ibd3pgQiMMTDL/I/5iCg
-         2BeOM0HRHns6OEvAIi7NDoj2y/dlF3VxnijP9I+3HzHbLr7M1LTr+5Cg10Syh3dz5oTS
-         pBae4r8DF086crOJ38wMkDHMpLDL60ovH7rl6Se08aUjhSzMzcn0vQpNsNrr1cgMoU/P
-         YlfFMVxPhwry/SRvgTR1K80hTe9zWiuHkC34F1tIefAjUxRB4y7wu0+32btM3e8V9hGs
-         3xLA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=aOXdMqFM49qwxjBJs+4NYgYXPEPkbakFKpkGoCXkxdo=;
+        b=U2atDKi7l+WkVgOuT7m/IPf37h4Jl0gh5TqnHzmPFkySaa8YO2vfBWUP13d//UgwiA
+         RvMjxE43EKjznbNx3x0jLZ1/9VBzzAv2pIjvzoFOF/jMO+9F7/Q0R5hwAtK19t3Pvxwa
+         LL1fh2WhZUW8zv7CNpd/a3gUjzCyFR08X456FCOVX0JxseuLy49XFvTchJBolX2oTwvr
+         XIyda6PyQBh/FxUc76q/HXd7+DtcoYKnrkJ2A+TzKYbJi5pfa91TMZMcRYt884NmGSsj
+         kfHNWhja2Yuf5ZOLeUwM55jYCvnCL1zaKpikNyeNyJkjnHu24XZcuO15Modrs6397Sgb
+         tsMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L8R4z3fd/pNkVMb+89dxA4ui8k10ocj37Bt7whLaC1Q=;
-        b=G0E1LwzfT07wW/jdRNqEGfK5H6fpzEQh7RugKA25ci/TONODiU0f8CMoJVKjAy+aNr
-         5S91Mqi22AbQ5ZU3BxfHxk6/iABJofw7Blmbegz9ipdECNfmJ4sbPf2VoFyU8qjrj+Nr
-         uHU/rkSkz0A+cOsEodfib6Dbw40qZy8nMw6IlNf0tEtYbNJKth+WEkSyoCZvrEA5TygV
-         OG0Vj+gSk8xxaxCeifxIT/QLk372NhuC4Sywa/5yOsb7Aa7V+Q4dPLqTLwiIIsqFNrov
-         tTTFZQkOo1iL4aUao3EwnO2Ox3sBrp1NhomG29B/jLT/E8uNlpTIslB/B/iQ6bjjCssQ
-         YIsQ==
-X-Gm-Message-State: APjAAAWR/5R/Jry2SdXSjwh2d5aAttmXawyb2BCdNeXyATPO3oi1BALw
-        IRgXsLx2ZfRm5O6eUsOHK4M+GGGIvuK38HPge6LWCe4hvLv2jQ==
-X-Google-Smtp-Source: APXvYqyBcck06VlUCnJhTINmdA4ZJqB4oH2g6lhQMqchyhM/oF3KhFa6xeVxaox70u4OowtbK7dZn6ufESL4f0s1zvE=
-X-Received: by 2002:a9d:774a:: with SMTP id t10mr7301075otl.228.1562437994877;
- Sat, 06 Jul 2019 11:33:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=aOXdMqFM49qwxjBJs+4NYgYXPEPkbakFKpkGoCXkxdo=;
+        b=N3HyCkCh63gOkRfqofr8uEUi7YkeVzUXGVCzkgEtGIW9Ynck2jmYhr8XoRAPxPO6P6
+         mzC15M7EjIv/+0oAMes2tdGQJ0HogS6cmG5UER/4Hu3603s7Mz4b1cX5FzzbwQ5XgNB6
+         SpLW6KDpnAmelRM4uYUR/nHwYpxN2yLdg7CkjAtW9GrbVlzM8RXvHpQmW3kqGV6VXLAt
+         ou8D3u+0g+8yrszpiZ3pXUK5ymSWUdSNkZaBB70TnlT1ElGEgWPVUTeJTvE05I9VuF/B
+         0Gby5c0v4vsPRDEqSZP6A6WHivfHSJG7BKMBE9z8ZWN387TFEwwqYwDSvQB+5l2umPDQ
+         g2FQ==
+X-Gm-Message-State: APjAAAUvH7jrrk+5/jWMobwfEz0of+XLH0sjQFY9oWnN5t0f1rx6sXzc
+        4aAb3hrRNyg033Wc0Twp8+k=
+X-Google-Smtp-Source: APXvYqyAm4RMzl6kuXCJQEzf4ic2tJ8zFHfNjZbL8uy5oDQF7UGWEw7pnM4Ad88uLhIIaQR9cpwgCA==
+X-Received: by 2002:a17:902:7087:: with SMTP id z7mr12613285plk.184.1562438476986;
+        Sat, 06 Jul 2019 11:41:16 -0700 (PDT)
+Received: from t-1000 (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
+        by smtp.gmail.com with ESMTPSA id v185sm16976966pfb.14.2019.07.06.11.41.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Jul 2019 11:41:16 -0700 (PDT)
+Date:   Sat, 6 Jul 2019 11:41:14 -0700
+From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Cc:     shobhitkukreti@gmail.com
+Subject: [PATCH] video: radeon.h Fix Shifting signed 32 bit value by 31 bits
+ problem
+Message-ID: <20190706184111.GA13070@t-1000>
 MIME-Version: 1.0
-References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com> <1562410493-8661-5-git-send-email-s.mesoraca16@gmail.com>
-In-Reply-To: <1562410493-8661-5-git-send-email-s.mesoraca16@gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Sat, 6 Jul 2019 20:32:48 +0200
-Message-ID: <CAG48ez35oJhey5WNzMQR14ko6RPJUJp+nCuAHVUJqX7EPPPokA@mail.gmail.com>
-Subject: Re: [PATCH v5 04/12] S.A.R.A.: generic DFA for string matching
-To:     Salvatore Mesoraca <s.mesoraca16@gmail.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Brad Spengler <spender@grsecurity.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        James Morris <james.l.morris@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        PaX Team <pageexec@freemail.hu>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 6, 2019 at 12:55 PM Salvatore Mesoraca
-<s.mesoraca16@gmail.com> wrote:
-> Creation of a generic Discrete Finite Automata implementation
-> for string matching. The transition tables have to be produced
-> in user-space.
-> This allows us to possibly support advanced string matching
-> patterns like regular expressions, but they need to be supported
-> by user-space tools.
+Fix RB2D_DC_BUSY and HORZ_AUTO_RATIO_INC defines to use "U" cast to
+avoid shifting signed 32 bit values by 31 bit problem. This is not a
+problem for gcc built kernel.
 
-AppArmor already has a DFA implementation that takes a DFA machine
-from userspace and runs it against file paths; see e.g.
-aa_dfa_match(). Did you look into whether you could move their DFA to
-some place like lib/ and reuse it instead of adding yet another
-generic rule interface to the kernel?
+However, the header file being a public api, other compilers may not
+handle the condition safely resulting in undefined behavior.
 
-[...]
-> +++ b/security/sara/dfa.c
-> @@ -0,0 +1,335 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * S.A.R.A. Linux Security Module
-> + *
-> + * Copyright (C) 2017 Salvatore Mesoraca <s.mesoraca16@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2, as
-> + * published by the Free Software Foundation.
+Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
+---
+ include/video/radeon.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Throughout the series, you are adding files that both add an SPDX
-identifier and have a description of the license in the comment block
-at the top. The SPDX identifier already identifies the license.
+diff --git a/include/video/radeon.h b/include/video/radeon.h
+index 005eae1..cb0a5f6 100644
+--- a/include/video/radeon.h
++++ b/include/video/radeon.h
+@@ -531,7 +531,7 @@
+ #define RB2D_DC_FLUSH_2D			   (1 << 0)
+ #define RB2D_DC_FREE_2D				   (1 << 2)
+ #define RB2D_DC_FLUSH_ALL			   (RB2D_DC_FLUSH_2D | RB2D_DC_FREE_2D)
+-#define RB2D_DC_BUSY				   (1 << 31)
++#define RB2D_DC_BUSY				   (1U << 31)
+ 
+ /* DSTCACHE_MODE bits constants */
+ #define RB2D_DC_AUTOFLUSH_ENABLE                   (1 << 8)
+@@ -672,7 +672,7 @@
+ #define HORZ_STRETCH_ENABLE			   (1 << 25)
+ #define HORZ_AUTO_RATIO				   (1 << 27)
+ #define HORZ_FP_LOOP_STRETCH			   (0x7 << 28)
+-#define HORZ_AUTO_RATIO_INC			   (1 << 31)
++#define HORZ_AUTO_RATIO_INC			   (1U << 31)
+ 
+ 
+ /* FP_VERT_STRETCH bit constants */
+-- 
+2.7.4
+
