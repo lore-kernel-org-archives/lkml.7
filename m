@@ -6,60 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133C4C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 17:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC84C0650E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 17:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD1B206A2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 17:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9CF8206A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 17:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562434807;
-	bh=pHqG+3wUkwYmZT8u347ETlONmM+7jjaToqfAVu8hqws=;
+	s=default; t=1562434812;
+	bh=DDGJyMOZp6RA66h0wOjZeXelwe+hP66LdsWVhq9eM/E=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=E8VfIcSIlI1cG8uhQep8vSxjiMlJsxgNo0KhOkCz8pjRc/EzUyV3mXBtC73H/4H4F
-	 zMTma0Dty3zIkvMdSS5tQN7cUoWyNh+I5U9K71c1Nr3kM6FvGYYCFTNU1rXE4B6PGQ
-	 kyM58zR76LciBqXy+1qulVrwTUVuBKSrpgSzI990=
+	b=GdIslkyqGN97nZQ53IiCjHQnOVoLqg0gFmSlLkE1WJ3RPWlIfvmV3nzvnXYVs9uq/
+	 V/9I+iHwd/WhPV3zmF0ugvK2CwkGFSbN1YAqQtgDJg3XVhLwqPuY2DYiFEVYPlOtF2
+	 wSt4Sm2ZWp7ZHxKJ9rxVa46Ps2XHn4j3ENxBzxcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfGFRkD (ORCPT
+        id S1727189AbfGFRkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 13:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39078 "EHLO mail.kernel.org"
+        Sat, 6 Jul 2019 13:40:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbfGFRkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 13:40:03 -0400
-Subject: Re: [git pull] fix bogus default y in Kconfig (VALIDATE_FS_PARSER)
+        id S1727130AbfGFRkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 13:40:07 -0400
+Subject: Re: [GIT PULL] dmaengine fixes for 5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562434802;
-        bh=pHqG+3wUkwYmZT8u347ETlONmM+7jjaToqfAVu8hqws=;
+        s=default; t=1562434806;
+        bh=DDGJyMOZp6RA66h0wOjZeXelwe+hP66LdsWVhq9eM/E=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=0pdZzJbmQmjONWcCTCA4F0D01yBMOreMo8p0EJF9Ea30LkQ66AUClZQLJkJpKCG/c
-         IZjPZ1niWPhotu495g1n6SjxPlOWdv4bPq1nqueXKks9rCBE/V6KW+k82xA6sxS7Yo
-         lyfJghIBlmU7LKC31naPh37r2OQw4JuW7UkywLoQ=
+        b=cR7DBsuIdEFT4W9eEvBrvyqTojKvslfsdidcKkXVrRKufxGr+tC5efq5DFd8tBnFB
+         39MBXrvPN3dkxqRwF3qPRR0MuKP9rMMQleN4zF5vqNZth1ECddY3dYjWmwBL+Rbjxk
+         6/Nums1JE2fUy98m41UPce9J6ccUUQ1ILFowmE6w=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190706030339.GN17978@ZenIV.linux.org.uk>
-References: <20190706030339.GN17978@ZenIV.linux.org.uk>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190706030339.GN17978@ZenIV.linux.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
-X-PR-Tracked-Commit-Id: 75f2d86b20bf6aec0392d6dd2ae3ffff26d2ae0e
+In-Reply-To: <20190706143142.GG2911@vkoul-mobl>
+References: <20190706143142.GG2911@vkoul-mobl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190706143142.GG2911@vkoul-mobl>
+X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
+ tags/dmaengine-fix-5.2
+X-PR-Tracked-Commit-Id: f6034225442c4a87906d36e975fd9e99a8f95487
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ceacbc0e145e3b27d8b12eecb881f9d87702765a
-Message-Id: <156243480229.9000.2527846125338607267.pr-tracker-bot@kernel.org>
-Date:   Sat, 06 Jul 2019 17:40:02 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
+X-PR-Merge-Commit-Id: 2692982b0800c6f6446e9edd4743239666e69f2e
+Message-Id: <156243480674.9000.918287204310707655.pr-tracker-bot@kernel.org>
+Date:   Sat, 06 Jul 2019 17:40:06 +0000
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+        dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 6 Jul 2019 04:03:39 +0100:
+The pull request you sent on Sat, 6 Jul 2019 20:01:42 +0530:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ceacbc0e145e3b27d8b12eecb881f9d87702765a
+https://git.kernel.org/torvalds/c/2692982b0800c6f6446e9edd4743239666e69f2e
 
 Thank you!
 
