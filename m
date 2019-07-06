@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1E8C0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 18:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A269C48BDA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 18:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8600A2070D
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 18:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0C520843
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 18:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UjWcfa2y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMLJmYNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfGFSVD (ORCPT
+        id S1727060AbfGFSdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 14:21:03 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39643 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfGFSVD (ORCPT
+        Sat, 6 Jul 2019 14:33:16 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33295 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfGFSdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 14:21:03 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r21so7395135otq.6
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 11:21:02 -0700 (PDT)
+        Sat, 6 Jul 2019 14:33:15 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q20so12157677otl.0
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 11:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vjy9ZMLMCWdJezrwnUnOrpuuoAl0MqUTiwkUbUfsV0k=;
-        b=UjWcfa2yuiQr3pr6jvHS9G7b7/XrW6vhOl4h4FyA2pkmQyD/Ukwh09WsYtkSmGlf36
-         NaUNZYVoR4bKyHeWOylNLEXv5vLpalbjvzXxCYVwPOWxoj3K9lMpnkwGWJIVWHgk/Aam
-         fgp58HCVxZAA3ggPprt8eU47o+2iD3IHtRrmkvzuzEKjw9xrg42OYiz27ZrFCVg3ZiAw
-         PPhz7cmQ8J6Y7yCj4QkHQyabon240CsqoSLHPPTtKWV93yHoxLdYcTf8yeghcgy4y7Y1
-         B9Juh+11Z1nJ1KPi3G3ufLi7AjloCOX15qfZkMELt6FbO4ouAg7q+pMykjE4c8bjWO5z
-         4bhw==
+        bh=L8R4z3fd/pNkVMb+89dxA4ui8k10ocj37Bt7whLaC1Q=;
+        b=rMLJmYNuSevuKWuCiVdI43bNmxi2G3pHLMt7d6UgYRzPT5IXjgo/GT6keDasRoZK4g
+         /OBhvjWjUYS2v0qo9lkIJjfjkWE4kQLRuB6HOjB54kxbMOj7Ibd3pgQiMMTDL/I/5iCg
+         2BeOM0HRHns6OEvAIi7NDoj2y/dlF3VxnijP9I+3HzHbLr7M1LTr+5Cg10Syh3dz5oTS
+         pBae4r8DF086crOJ38wMkDHMpLDL60ovH7rl6Se08aUjhSzMzcn0vQpNsNrr1cgMoU/P
+         YlfFMVxPhwry/SRvgTR1K80hTe9zWiuHkC34F1tIefAjUxRB4y7wu0+32btM3e8V9hGs
+         3xLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vjy9ZMLMCWdJezrwnUnOrpuuoAl0MqUTiwkUbUfsV0k=;
-        b=kqCbTwTxxOvd7kWLOpLn9dR8+9eF8eaQZSL1sR4JVYPK8AlGVxuOkrtnEEWf6t56tY
-         ANDB4KDEZgo7PS5c/GNaYqUyLCrby9XB2KylA6rvd3m6TDLEj5VN77wWnIix1a0kIZMp
-         HMiNLEwM8tKR0pDgf7QEZRW4JwkP6BcCnxM5jXTqdMSYy5ZF19vawgTtVHPBK0SbC3Ae
-         QUg1LmXQ3nDd2yyTmyPYxbftlaMFUdYbxB0VARnmBk46hFV4ZKA+ok3Y6lR2FGimw6li
-         UqYUQDqu2dQ2TcupJsbAhxKq3fbz5QYVFoyZi9ubLqlk9JFGg0wfzNtbI+i09beuUllt
-         boHw==
-X-Gm-Message-State: APjAAAVuL3U0JQAFR3zqHG2DlvkExlXfj9307rWAxp/wQ5B/u4Nn7RDF
-        zHnPAlBKH4xurKqMmxLvJ0t9Y9tSiLdw1Kd0upLhWx38a9w=
-X-Google-Smtp-Source: APXvYqzj5WEE2VrNr3N+Gwhig3lJufmMH6pDUKtfm7kJ7qx1O0a+Ca76u4RhV3hyGQEys/0AWVBDs6sVNq/tKZ0qalw=
-X-Received: by 2002:a9d:5a91:: with SMTP id w17mr4400771oth.32.1562437262037;
- Sat, 06 Jul 2019 11:21:02 -0700 (PDT)
+        bh=L8R4z3fd/pNkVMb+89dxA4ui8k10ocj37Bt7whLaC1Q=;
+        b=G0E1LwzfT07wW/jdRNqEGfK5H6fpzEQh7RugKA25ci/TONODiU0f8CMoJVKjAy+aNr
+         5S91Mqi22AbQ5ZU3BxfHxk6/iABJofw7Blmbegz9ipdECNfmJ4sbPf2VoFyU8qjrj+Nr
+         uHU/rkSkz0A+cOsEodfib6Dbw40qZy8nMw6IlNf0tEtYbNJKth+WEkSyoCZvrEA5TygV
+         OG0Vj+gSk8xxaxCeifxIT/QLk372NhuC4Sywa/5yOsb7Aa7V+Q4dPLqTLwiIIsqFNrov
+         tTTFZQkOo1iL4aUao3EwnO2Ox3sBrp1NhomG29B/jLT/E8uNlpTIslB/B/iQ6bjjCssQ
+         YIsQ==
+X-Gm-Message-State: APjAAAWR/5R/Jry2SdXSjwh2d5aAttmXawyb2BCdNeXyATPO3oi1BALw
+        IRgXsLx2ZfRm5O6eUsOHK4M+GGGIvuK38HPge6LWCe4hvLv2jQ==
+X-Google-Smtp-Source: APXvYqyBcck06VlUCnJhTINmdA4ZJqB4oH2g6lhQMqchyhM/oF3KhFa6xeVxaox70u4OowtbK7dZn6ufESL4f0s1zvE=
+X-Received: by 2002:a9d:774a:: with SMTP id t10mr7301075otl.228.1562437994877;
+ Sat, 06 Jul 2019 11:33:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com> <1562410493-8661-12-git-send-email-s.mesoraca16@gmail.com>
-In-Reply-To: <1562410493-8661-12-git-send-email-s.mesoraca16@gmail.com>
+References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com> <1562410493-8661-5-git-send-email-s.mesoraca16@gmail.com>
+In-Reply-To: <1562410493-8661-5-git-send-email-s.mesoraca16@gmail.com>
 From:   Jann Horn <jannh@google.com>
-Date:   Sat, 6 Jul 2019 20:20:35 +0200
-Message-ID: <CAG48ez0uFX4AniOk1W0Vs6j=7Q5QfSFQTrBBzC2qL2bpWn_yCg@mail.gmail.com>
-Subject: Re: [PATCH v5 11/12] S.A.R.A.: /proc/*/mem write limitation
+Date:   Sat, 6 Jul 2019 20:32:48 +0200
+Message-ID: <CAG48ez35oJhey5WNzMQR14ko6RPJUJp+nCuAHVUJqX7EPPPokA@mail.gmail.com>
+Subject: Re: [PATCH v5 04/12] S.A.R.A.: generic DFA for string matching
 To:     Salvatore Mesoraca <s.mesoraca16@gmail.com>
 Cc:     kernel list <linux-kernel@vger.kernel.org>,
         Kernel Hardening <kernel-hardening@lists.openwall.com>,
@@ -81,75 +81,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sat, Jul 6, 2019 at 12:55 PM Salvatore Mesoraca
 <s.mesoraca16@gmail.com> wrote:
-> Prevent a task from opening, in "write" mode, any /proc/*/mem
-> file that operates on the task's mm.
-> A process could use it to overwrite read-only memory, bypassing
-> S.A.R.A. restrictions.
+> Creation of a generic Discrete Finite Automata implementation
+> for string matching. The transition tables have to be produced
+> in user-space.
+> This allows us to possibly support advanced string matching
+> patterns like regular expressions, but they need to be supported
+> by user-space tools.
+
+AppArmor already has a DFA implementation that takes a DFA machine
+from userspace and runs it against file paths; see e.g.
+aa_dfa_match(). Did you look into whether you could move their DFA to
+some place like lib/ and reuse it instead of adding yet another
+generic rule interface to the kernel?
+
 [...]
-> +static void sara_task_to_inode(struct task_struct *t, struct inode *i)
-> +{
-> +       get_sara_inode_task(i) = t;
-
-This looks bogus. Nothing is actually holding a reference to `t` here, right?
-
-> +}
+> +++ b/security/sara/dfa.c
+> @@ -0,0 +1,335 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +
->  static struct security_hook_list data_hooks[] __lsm_ro_after_init = {
->         LSM_HOOK_INIT(cred_prepare, sara_cred_prepare),
->         LSM_HOOK_INIT(cred_transfer, sara_cred_transfer),
->         LSM_HOOK_INIT(shm_alloc_security, sara_shm_alloc_security),
-> +       LSM_HOOK_INIT(task_to_inode, sara_task_to_inode),
->  };
-[...]
-> +static int sara_file_open(struct file *file)
-> +{
-> +       struct task_struct *t;
-> +       struct mm_struct *mm;
-> +       u16 sara_wxp_flags = get_current_sara_wxp_flags();
-> +
-> +       /*
-> +        * Prevent write access to /proc/.../mem
-> +        * if it operates on the mm_struct of the
-> +        * current process: it could be used to
-> +        * bypass W^X.
-> +        */
-> +
-> +       if (!sara_enabled ||
-> +           !wxprot_enabled ||
-> +           !(sara_wxp_flags & SARA_WXP_WXORX) ||
-> +           !(file->f_mode & FMODE_WRITE))
-> +               return 0;
-> +
-> +       t = get_sara_inode_task(file_inode(file));
-> +       if (unlikely(t != NULL &&
-> +                    strcmp(file->f_path.dentry->d_name.name,
-> +                           "mem") == 0)) {
+> +/*
+> + * S.A.R.A. Linux Security Module
+> + *
+> + * Copyright (C) 2017 Salvatore Mesoraca <s.mesoraca16@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2, as
+> + * published by the Free Software Foundation.
 
-This should probably at least have a READ_ONCE() somewhere in case the
-file concurrently gets renamed?
-
-> +               get_task_struct(t);
-> +               mm = get_task_mm(t);
-> +               put_task_struct(t);
-
-Getting and dropping a reference to the task_struct here is completely
-useless. Either you have a reference, in which case you don't need to
-take another one, or you don't have a reference, in which case you
-also can't take one.
-
-> +               if (unlikely(mm == current->mm))
-> +                       sara_warn_or_goto(error,
-> +                                         "write access to /proc/*/mem");
-
-Why is the current process so special that it must be protected more
-than other processes? Is the idea here to rely on other protections to
-protect all other tasks? This should probably come with a comment that
-explains this choice.
-
-> +               mmput(mm);
-> +       }
-> +       return 0;
-> +error:
-> +       mmput(mm);
-> +       return -EACCES;
-> +}
+Throughout the series, you are adding files that both add an SPDX
+identifier and have a description of the license in the comment block
+at the top. The SPDX identifier already identifies the license.
