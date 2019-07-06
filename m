@@ -2,119 +2,112 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02457C48BD5
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 19:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F12BC48BDA
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 19:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8152075C
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 19:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A512083B
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 19:56:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cqvb9HBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfGFTrp convert rfc822-to-8bit (ORCPT
+        id S1727094AbfGFT4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 15:47:45 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:53489 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfGFTrp (ORCPT
+        Sat, 6 Jul 2019 15:56:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36583 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfGFT4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 15:47:45 -0400
-Received: from [192.168.1.175] (apn-37-247-209-172.dynamic.gprs.plus.pl [37.247.209.172])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 288F5CF165;
-        Sat,  6 Jul 2019 21:54:20 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v7 0/2] Bluetooth: btusb: Add protocol support for
- MediaTek USB devices
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <1559433769-23749-1-git-send-email-sean.wang@mediatek.com>
-Date:   Sat, 6 Jul 2019 21:45:31 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <CB48D0A4-0564-42A6-847F-08E64AAF4842@holtmann.org>
-References: <1559433769-23749-1-git-send-email-sean.wang@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Sat, 6 Jul 2019 15:56:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r7so5692558pfl.3;
+        Sat, 06 Jul 2019 12:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rdIXRuC7NtBV4U1/w6LEafkVG7RzW7TEmbreVlueNKA=;
+        b=Cqvb9HBEcixv91n56a2YxAnRpUeggG7y5cXiyagiVu7Vs9OM71q1RhrTZ4Jk4DBqLC
+         oR10n5MBlJbouu5999P3lWVOZG/WzqqmFtlqhJ7q4gvoGDUP2d09sJGsREXFpNUzssRV
+         jIaRwKRoHGEdOUOcXFoLkvwkvmRy4eTw40Ivuo5x5mkJyg7uKxURLwRakU12vMEuTMrP
+         GiD2zv8+3zC0UC8LohxaoYBVDp3BodkhtoZKSbbUDQcEq7z71AS5bKcHVqBw7YEJTUFQ
+         BbwwBi7SwN7pp5U24GtPzRVlitkOhHqf0fTYKNq6xKa7wtnyzZzRsHB8Xd+3zbZlZVi5
+         osPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rdIXRuC7NtBV4U1/w6LEafkVG7RzW7TEmbreVlueNKA=;
+        b=KQfnerXf8qdHY84t4fqx2PGdmIZZawfCKmZZnP4gZAuRBTFZmE+EAjgk0xiIh19kzl
+         Duo7nRVaG/q4/FtYU5Gi9Z3oyfw8zHKyaaO8GP5jJL6obQrxsQ4t15WG5BoMRV3Aolok
+         we3HhMwZYqmYeLGPEal+Eu5IQEoOUgJFLPgLbTJcwUmJ2xFIxIXwHxBv+Oc29NB6fGhW
+         Qrr2Qx0uyK3NESPBrhlR5GVcvQQn+DJu3omg/f2r0Hif8S5Asy3MepbFLxOY5nFunWQR
+         xIA+SeeL3EkdmY5lABX0wNpQw2NAET4lqYPzkpQUA9rA2Pfrw32hMwLsf7GBg2JxJsJM
+         EaoA==
+X-Gm-Message-State: APjAAAUzQYuV+lyXkDwoGAawbJUEELfcrBJgMNJIt1I1QNESSrcuHa1V
+        IvlTM8kG04H2ay3qXbE4kBk=
+X-Google-Smtp-Source: APXvYqxL2fcdJMRm7Zr4rY9qTpSt3wgEXavqeaaNwMzlyQE7DqTdBwn62soMZFefr4wMjd/ZDjwUmw==
+X-Received: by 2002:a17:90a:cb97:: with SMTP id a23mr13025330pju.67.1562442974920;
+        Sat, 06 Jul 2019 12:56:14 -0700 (PDT)
+Received: from Shreeya-Patel ([49.34.71.227])
+        by smtp.googlemail.com with ESMTPSA id y11sm18657887pfb.119.2019.07.06.12.56.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 06 Jul 2019 12:56:14 -0700 (PDT)
+Message-ID: <dcbc0088f31f26f80ab05e51787099df9b70262f.camel@gmail.com>
+Subject: Re: [PATCH] Documentation: cpu-freq: Convert core.txt file to ReST
+ format
+From:   Shreeya Patel <shreeya.patel23498@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     skhan@linuxfoundation.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Date:   Sun, 07 Jul 2019 01:26:07 +0530
+In-Reply-To: <CAJZ5v0hovK+BY0kozGvkyCgR5CFHpZUu71BZRjUUdCYV8fM5Hg@mail.gmail.com>
+References: <20190705210428.8039-1-shreeya.patel23498@gmail.com>
+         <CAJZ5v0hovK+BY0kozGvkyCgR5CFHpZUu71BZRjUUdCYV8fM5Hg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
+On Sat, 2019-07-06 at 09:58 +0200, Rafael J. Wysocki wrote:
+> On Fri, Jul 5, 2019 at 11:04 PM Shreeya Patel
+> <shreeya.patel23498@gmail.com> wrote:
+> > 
+> > Convert core file to ReST format, in order to allow it to
+> > be parsed by Sphinx. Make a minor change of correcting the wrong
+> > function name cpufreq_put_cpu to cpufreq_cpu_put.
+> > Also create an index.rst file in cpu-freq and add it's entry
+> > in the main Documentation/index.rst file.
+> > 
+> > Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+> 
+> I've said "no" no three previous attempts and this one is not
+> different.
+> 
+Sorry, I was not knowing about it.
 
-> v7:
-> * rebase to latest code base.
+> I don't want to have anything .rst in Documentation/cpu-freq/.
 > 
-> v6:
-> * fix drivers/bluetooth/btusb.c:2683:2-3: Unneeded semicolon based reported by [1]
-> * update power-on sequence with adding neccesary tci sleep comand to set up
->  low-power environmnet and a delay to wait the device to be stable.
-> * sort variables declarations in reverse xmas order.
+> There is a *new* admin-guide doc for cpufreq already and what is
+> missing is a *new* driver-api one.
 > 
-> [1]
-> http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017017.html
-> 
-> v5:
-> * rebase to latest code base.
-> * change the subject prefix.
-> * change the place the firmware located at.
-> 
-> v4:
-> * use new BTUSB_TX_WAIT_VND_EVT instead of BTMTKUSB_TX_WAIT_VND_EVT
->  to avoid definition conflict and to fix bulk data transfer fails.
-> * use the bluetooth-next as the base
-> 
-> v3:
-> add fixes and enhancements based on [1]
-> * reuse flags and evt_skb btusb already had
-> * add ctrl_anchor and the corresponding handling
-> * apply mtk specific recv function
-> * add more comments explaining wmt ctrl urbs behavior.
-> 
-> [1]
-> http://lists.infradead.org/pipermail/linux-mediatek/2018-August/014724.html
-> 
-> v2:
-> 
-> add fixes and enhancements based on [1]
-> * include /sys/kernel/debug/usb/devices portion in the commit message.
-> * turn default into n for config BT_HCIBTUSB_MTK in Kconfig
-> * only add MediaTek support to btusb.c
-> * drop cmd_sync callback usage
-> * use __hci_cmd_send to send WMT commands
-> * add wait event handling similar to what is being done in btmtkuart.c
-> * submit a control IN URB similar to interrupt IN URB on demand for the WMT
->  commands during setup 
-> * add cosmetic changes
-> 
-> [1]
-> http://lists.infradead.org/pipermail/linux-mediatek/2018-August/014650.html
-> http://lists.infradead.org/pipermail/linux-mediatek/2018-August/014656.html
-> 
-> v1:
-> 
-> This adds the support of enabling MT7668U and MT7663U Bluetooth
-> function running on the top of btusb driver. The patch also adds
-> a newly created file mtkbt.c able to be reused independently from
-> the transport type such as UART, USB and SDIO.
-> 
-> Sean Wang (2):
->  Bluetooth: btusb: Add protocol support for MediaTek MT7668U USB
->    devices
->  Bluetooth: btusb: Add protocol support for MediaTek MT7663U USB
->    devices
-> 
-> drivers/bluetooth/Kconfig |  11 +
-> drivers/bluetooth/btusb.c | 581 ++++++++++++++++++++++++++++++++++++++
-> 2 files changed, 592 insertions(+)
+Yes I saw that but it didn't include all the details given in
+Documentation/cpu-freq hence I thought of sending this initial patch.
 
-both patches have been applied to bluetooth-next tree.
+Thanks
 
-Regards
-
-Marcel
+> Thanks!
 
