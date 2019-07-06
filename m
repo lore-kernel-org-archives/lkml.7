@@ -2,95 +2,116 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0CDC0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7643C48BD9
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B5D20843
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCE421530
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 16:16:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="qicd/fun"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CJHkPYNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfGFQHU (ORCPT
+        id S1727060AbfGFQQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 12:07:20 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35233 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfGFQHT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 12:07:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s27so5579841pgl.2
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 09:07:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bnmQjEH1vYixqqvcA510E7VkS1LxWaG+p2Hix3E3JqU=;
-        b=qicd/funjrpa2MxTNeuQoPhPDV7SU+qyw6BwWY6yh7r1IaDvoqyQ07St8p9OEgylYS
-         GqFgK/mDeKxRdWK9fBISg1CxtaYg0ECsLe8zIijMLfzhffg7KiWwNAXftRDwUfCUGYrn
-         O/idl9gZ9KvApAbkKOZ6eJsjiPWhqoy93KMjk8awTsCUr7DprObuPppW5lQJQMN125aL
-         zURFvuFcGZ/rBDROj87VJSuqvVu+ubO6rtbMzAXybEdbD7WKL5craHDFUxMEvLZL4W5M
-         7T5Epsk0F7jirsFnQ4sr6t/u7WS16NEWaF9EnF2IGLidGdRU1zxI8z+4ZP0HLQcIzZYB
-         qzAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bnmQjEH1vYixqqvcA510E7VkS1LxWaG+p2Hix3E3JqU=;
-        b=gFtVYICb5VbUPonTErqurKd0OM8ayIc/9U504olOlFQyxNRXUNNdBLq6vUlv5gih0Q
-         os64RB1vWDygpk2nSTKdXSRxmMRrFh5Hqorx8i0c7KcTylIvucwC8QuXHedxbiz/K4/Q
-         5gFe9hNC7HA1j/86A8D/oG5nRAccIpcdGW7ne9/4NaYqyB1MTWhkNBrzOLJI4qpfGLKO
-         QrBvyTYWbZeJfwjxQgtwsUc//m6ltS/q6VlcLdr8Kzz0Mh/4WoOQFs3b4y/0SpwEZpS1
-         OOEKZvHH9Ures1vehA9vA8kL9TI/4x3Jt+rMdswan5E1RWiCTDogiTPyUt3vFFKDBkCQ
-         /hEQ==
-X-Gm-Message-State: APjAAAWLKeQ/biQe9m8pOcQV0RLZD/HdNhG5W1EgCs0g7k6iHJF6XAzG
-        OzuZomD8mS/VHHk17QRhwx42Gg==
-X-Google-Smtp-Source: APXvYqyO0Zbgcab0FOZETV4bJlTWSr88APdiToWut3pIn34c0C0iG+3cGDkmAcy9GC9UBH5M7iDOdQ==
-X-Received: by 2002:a63:5610:: with SMTP id k16mr11733599pgb.335.1562429239012;
-        Sat, 06 Jul 2019 09:07:19 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id b126sm14572448pfa.126.2019.07.06.09.07.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Jul 2019 09:07:18 -0700 (PDT)
-Subject: Re: [PATCH] blk-mq: fix up placement of debugfs directory of queue
- files
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>
-References: <20190706155032.GA3106@kroah.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a4e28385-6f87-05f5-edb2-d68446771b7c@kernel.dk>
-Date:   Sat, 6 Jul 2019 10:07:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sat, 6 Jul 2019 12:16:55 -0400
+Received: from mout.gmx.net ([212.227.15.19]:38535 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbfGFQQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 12:16:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1562429720;
+        bh=v/j4XiFKCPBK6S3apqY0k2vzFHqTLRdaz8I12SI1NC0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=CJHkPYNHKpYJZeE8b5exv7hkag9LhEEk+oMaVu7xO2FhAqyFGWXwh1VMzFLMBIQAt
+         SUzlzlLPzNa+VycQIqxK3jP7pFWAWr+3NfSKAIasrPtmMrq1Jf0xTkOFJyAUjG4ip+
+         eZ/Fmx5yUrwrEjw564ZtBuE2gG9/dHoIoBaWeMSc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.53.41.182] ([185.53.41.182]) by web-mail.gmx.net
+ (3c-app-gmx-bs42.server.lan [172.19.170.94]) (via HTTP); Sat, 6 Jul 2019
+ 18:15:20 +0200
 MIME-Version: 1.0
-In-Reply-To: <20190706155032.GA3106@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-ID: <trinity-a4e5f99f-00bc-4e90-9a48-64dbc6ba9c08-1562429720701@3c-app-gmx-bs42>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+Cc:     "Lee Jones" <lee.jones@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "Sean Wang" <sean.wang@mediatek.com>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        "Eddie Huang" <eddie.huang@mediatek.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Richard Fontana" <rfontana@redhat.com>,
+        "Allison Randal" <allison@lohutok.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Rob Herring" <robh@kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        "Josef Friedl" <josef.friedl@speed.at>
+Subject: Aw: Re: Re: [PATCH v2 3/7] rtc: mt6397: improvements of rtc driver
+Content-Type: text/plain; charset=UTF-8
+Date:   Sat, 6 Jul 2019 18:15:20 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20190705212448.GB12409@piout.net>
+References: <20190703164822.17924-1-frank-w@public-files.de>
+ <20190703164822.17924-4-frank-w@public-files.de>
+ <20190704204336.GJ3692@piout.net>
+ <trinity-7b1977bd-252b-4482-b708-cf704a9d3da1-1562340946396@3c-app-gmx-bs68>
+ <20190705212448.GB12409@piout.net>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:HL+BGyIiUKA788YDI9SjshqIgoMva0CxAoF0FNbmiWgikilC3yiUX3XktaeBDjK0IKEwF
+ M5OzAzR5nw+t+4CRs1I9g+sSK9MWMfSk/mKhmsVI5WIq/vtS3pVX1YuGkdLkf/v3EPW6LKS0H0fH
+ MEGQbEULdeuovwyZr1yP9Tpo/P2sY+g5b5YLZja/sE2f9jGjj/jjGqHWsp1kdhzEMjXYJMc5vSNc
+ dfl7xrTKVwXPYNGVBc9EZLwMTCrtuqST4Fgc+OvmRPpC724OLngAkRDCyKKMuFK307+DLk1V/cdV
+ FQ=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dyLM7KxLlUY=:rEe9h1ie4NZfHvWUktHHgZ
+ wGYyOhfZILpnEZ9Mc5xv/j/t5C7oJ/KSAvlrJYU5WMOFIXloz16TCcbtXrc+MXq5y+9Pp0yWn
+ /fcu5HNIpjz8tXE9yfRZ6E7xrDRaCCxo66a0w6VTfpZypL+UJSarOf2DvVSf2GqRaFmXlPB69
+ WNCtysh7zssF8h3itBz5jY/CtpUPdiL7ycY4Pgh37j0fDS0fn7nM8v2TR6osYKCBYrdTeFjHU
+ HleenrgDa8iGGTiYyHUWzXCdNO2ppoUKiHnTSpBEFVXFxP7JIwvekGpFALoE3aRZeLT+fze9T
+ 4T+8fwwqzV5OHA+UJgFaHnCzgJr/NqZEvJb6bDNoeGi1kgrD+QBn7Vwm7dZQwKMsoZ9agtiA1
+ +tPco/SEoeaAUgsQnmaIlPA6tUzYFTxuRbQqMYzOYDJWXtyxplXDcLueUlMvtLPYZcGQZWBME
+ JASBkNFwFm4MjMeu5nzlgUuw6KDoyJm3cINY+DPewJc51PjyO5puYKREvSFnzKMKIfSsThaxN
+ L1nE9hTZGtGw9cq4Npn6TC4mZFzVBU/P6rQ72e683HS4W0hRjzlmKxB7DeKv41qFQPhugeZFQ
+ wlQRAG8d1atCBJ+ncStUtIuL8Ft/x3w/oFsEkK7VO6aTN5lyXftWeNXEqGPd0FWxquNe6FOq7
+ UoSo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/19 9:50 AM, Greg Kroah-Hartman wrote:
-> When the blk-mq debugfs file creation logic was "cleaned up" it was
-> cleaned up too much, causing the queue file to not be created in the
-> correct location.  Turns out the check for the directory being present
-> is needed as if that has not happened yet, the files should not be
-> created, and the function will be called later on in the initialization
-> code so that the files can be created in the correct location.
+> Gesendet: Freitag, 05. Juli 2019 um 23:24 Uhr
+> Von: "Alexandre Belloni" <alexandre.belloni@bootlin.com>
 
-How about we shove this in for 5.2 final? Trivial enough to do, and it
-would suck to have 5.2 released with this. Though not sure what
-devices this actually impacts, I haven't noticed anything awry on
-my setups?
+> Let's say the RTC has been used to start your platform, then the irq
+> handler will be called as soon as the irq is requested, leading to a
+> null pointer dereference.
 
--- 
-Jens Axboe
+i cannot test this with my platform, but i have changed it in my repo
 
+https://github.com/frank-w/BPI-R2-4.14/commits/5.2-poweroff-mainline
+
+> Yes and IIRC, I did comment that the rtc change also had to be separated
+> from 1/7.
+
+also this is put in separate commit, can you take a look before i post v3?
+
+> Also, I really doubt this new compatible is necessary at all as you
+> could simply directly use mediatek,mt6397-rtc.
+
+imho this can confuse because the wrong chip-name is used in dts
+
+regards Frank
