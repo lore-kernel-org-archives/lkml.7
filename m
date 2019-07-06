@@ -4,107 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA29EC48BD3
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 13:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1D7C468AD
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 13:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DF420989
+	by mail.kernel.org (Postfix) with ESMTP id DF78820843
 	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 13:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="n0OGt9lY"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MyY4GQM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfGFNOP (ORCPT
+        id S1726618AbfGFNSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 09:14:15 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:25638 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfGFNOO (ORCPT
+        Sat, 6 Jul 2019 09:18:05 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:30556 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfGFNSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 09:14:14 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x66DE1pa022118
-        for <linux-kernel@vger.kernel.org>; Sat, 6 Jul 2019 22:14:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x66DE1pa022118
+        Sat, 6 Jul 2019 09:18:05 -0400
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x66DHtil031897
+        for <linux-kernel@vger.kernel.org>; Sat, 6 Jul 2019 22:17:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x66DHtil031897
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562418842;
-        bh=yR96820x8dCsUN7jsyb8LhZwwDE7H4JmOUSfV5/t9ow=;
+        s=dec2015msa; t=1562419076;
+        bh=lkt34pKxsLaqteqRnzNAHUoXLSqpNK8tuJBHhve1u6k=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=n0OGt9lYpUV3X8BVIBRNfCVFkAbpM8YUX6etjGciXbbg58GpQlVo48ed8yh/e6LOw
-         4XqaFs4Kancu2+A3eWAoSim/EnGZWAF4kGsGzbbMUd1q9VTOdXS6nquq4u0BFLfPit
-         eS+JYR6h1An/lBqh6PUFd5bUAf3PPnVN4pPQK3kk7K3HXkAT5ktz4LrNi7GAxQ+oab
-         e2aOn1wP3LvmWpWH0+4HnHB92TJl+nqRiahhIYPMoQokotxNhaNccaezg3fp5gM0IC
-         Kmnh5exBPfmxex5/ktMCWk5PWIPpNrx+DG7prpd1OS4Pd0uxyLMPqHj1MUa3c1tV6p
-         yqtl8/cuWBHLA==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id o2so3175022uae.10
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 06:14:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAW/g/OU2SEK0Gc9zsCEUCUFK8sdLeaAtJzL/arGyAhrnhYtVTeZ
-        BFOQb2c9VNo6rO4rPL2QmNIV+loGnyakylA5S7M=
-X-Google-Smtp-Source: APXvYqzJ89qUy8ATJQiEXDG2nXMrBJeh3RIwp0lned5asyXvyR9wOUeOo4ghtOWnxd9GXq6uo9GMfDtI5G9j6t8OLew=
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr4960816uaf.95.1562418840867;
- Sat, 06 Jul 2019 06:14:00 -0700 (PDT)
+        b=MyY4GQM5U+waAw/qOsyaOyYkcwODHnlxFShswOqRKR0z44ld3On+auS3zxi2CDTQB
+         GUdCEHZLU/ca6BSMogpLYFGVQlaAByl0rzLRbukxeVo8LbLYU5vniKeodIexx8VrNo
+         RbHUzb1M550rQgYegVaHtiG6zLBqEA4lrkbFNg00Y1Kr80uJmxMk47DEdo7GH3xT3e
+         yDz/wQQoqPK8v86pD5QGB+H/gWexV/ErNw6DJH8Uvl+99EhteWvKrXnajCWiGJz32w
+         u4p+tc/B5i9Mruzdeoq1khaTT0BPdoFwlDrU8OX7q+C7TBWst5wqGahxmGK/Y60vvf
+         qJZGWpvgGQ12g==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id z13so3177880uaa.4
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 06:17:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAXKG4lyJh4o1V5VeZVCG7IEVy6TYWNBxjPQdYacbuth7SGBKP1l
+        2p6piT6ymurd/Bgpnxq6vPOzlOzOF/AW+Fm61xs=
+X-Google-Smtp-Source: APXvYqzQZ4eOtd5x95ZKMUQ/9lCpzBAvI2GlNaD5CsdRO8+OU8zEPPF96/7ZpZ/ZQ5xa0EdEP2X7DRb9nRyg5wps5io=
+X-Received: by 2002:ab0:70d9:: with SMTP id r25mr4487674ual.109.1562419074733;
+ Sat, 06 Jul 2019 06:17:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn>
- <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de> <07e17d87-09ff-311f-015c-d201df053f56@web.de>
-In-Reply-To: <07e17d87-09ff-311f-015c-d201df053f56@web.de>
+References: <20190623072838.31234-1-kirr@nexedi.com>
+In-Reply-To: <20190623072838.31234-1-kirr@nexedi.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 6 Jul 2019 22:13:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ=oVfmHWYSp2hsKTGGAkrY7faDfNYCfx88k7fTdnoKLQ@mail.gmail.com>
-Message-ID: <CAK7LNAQ=oVfmHWYSp2hsKTGGAkrY7faDfNYCfx88k7fTdnoKLQ@mail.gmail.com>
-Subject: Re: [Cocci] [PATCH 2/5] Coccinelle: put_device: Add a cast to an
- expression for an assignment
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>, cocci@systeme.lip6.fr,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Sat, 6 Jul 2019 22:17:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT2tt+pCX54=L9qN9pzZ+rCOQ5-9p-o1jMLa3GD9jhG8A@mail.gmail.com>
+Message-ID: <CAK7LNAT2tt+pCX54=L9qN9pzZ+rCOQ5-9p-o1jMLa3GD9jhG8A@mail.gmail.com>
+Subject: Re: [Cocci] [PATCH 1/2] coccinelle: api/stream_open: treat all
+ wait_.*() calls as blocking
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     cocci@systeme.lip6.fr,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 6:02 PM Markus Elfring <Markus.Elfring@web.de> wrote:
+On Sun, Jun 23, 2019 at 4:29 PM Kirill Smelkov <kirr@nexedi.com> wrote:
 >
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Wed, 8 May 2019 13:50:49 +0200
+> Previously steam_open.cocci was treating only wait_event_.* - e.g.
+> wait_event_interruptible - as a blocking operation. However e.g.
+> wait_for_completion_interruptible is also blocking, and so from this
+> point of view it would be more logical to treat all wait_.* as a
+> blocking point.
 >
-> Extend a when constraint in a SmPL rule so that an additional cast
-> is optionally excluded from source code searches for an expression
-> in assignments.
+> The logic of this change actually came up for real when
+> drivers/pci/switch/switchtec.c changed from using
+> wait_event_interruptible to wait_for_completion_interruptible:
 >
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> Suggested-by: Julia Lawall <Julia.Lawall@lip6.fr>
-> Link: https://lore.kernel.org/lkml/alpine.DEB.2.21.1902160934400.3212@hadrien/
-> Link: https://systeme.lip6.fr/pipermail/cocci/2019-February/005592.html
+>         https://lore.kernel.org/linux-pci/20190413170056.GA11293@deco.navytux.spb.ru/
+>         https://lore.kernel.org/linux-pci/20190415145456.GA15280@deco.navytux.spb.ru/
+>         https://lore.kernel.org/linux-pci/20190415154102.GB17661@deco.navytux.spb.ru/
+>
+> For a driver that uses nonseekable_open with read/write having stream
+> semantic and read also calling e.g. wait_for_completion_interruptible,
+> running stream_open.cocci before this patch would produce:
+>
+>         WARNING: <driver>_fops: .read() and .write() have stream semantic; safe to change nonseekable_open -> stream_open.
+>
+> while after this patch it will report:
+>
+>         ERROR: <driver>_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+>
+> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
 > ---
 
-Applied to linux-kbuild.
+Applied to linux-kbuild. Thanks.
 
->  scripts/coccinelle/free/put_device.cocci | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  scripts/coccinelle/api/stream_open.cocci | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 >
-> diff --git a/scripts/coccinelle/free/put_device.cocci b/scripts/coccinelle/free/put_device.cocci
-> index 3ebebc064f10..120921366e84 100644
-> --- a/scripts/coccinelle/free/put_device.cocci
-> +++ b/scripts/coccinelle/free/put_device.cocci
-> @@ -24,7 +24,7 @@ if (id == NULL || ...) { ... return ...; }
->      when != of_dev_put(id)
->      when != if (id) { ... put_device(&id->dev) ... }
->      when != e1 = (T)id
-> -    when != e1 = &id->dev
-> +    when != e1 = (T)(&id->dev)
->      when != e1 = get_device(&id->dev)
->      when != e1 = (T1)platform_get_drvdata(id)
->  (
+> diff --git a/scripts/coccinelle/api/stream_open.cocci b/scripts/coccinelle/api/stream_open.cocci
+> index 350145da7669..12ce18fa6b74 100644
+> --- a/scripts/coccinelle/api/stream_open.cocci
+> +++ b/scripts/coccinelle/api/stream_open.cocci
+> @@ -35,11 +35,11 @@ type loff_t;
+>  // a function that blocks
+>  @ blocks @
+>  identifier block_f;
+> -identifier wait_event =~ "^wait_event_.*";
+> +identifier wait =~ "^wait_.*";
+>  @@
+>    block_f(...) {
+>      ... when exists
+> -    wait_event(...)
+> +    wait(...)
+>      ... when exists
+>    }
+>
+> @@ -49,12 +49,12 @@ identifier wait_event =~ "^wait_event_.*";
+>  // XXX currently reader_blocks supports only direct and 1-level indirect cases.
+>  @ reader_blocks_direct @
+>  identifier stream_reader.readstream;
+> -identifier wait_event =~ "^wait_event_.*";
+> +identifier wait =~ "^wait_.*";
+>  @@
+>    readstream(...)
+>    {
+>      ... when exists
+> -    wait_event(...)
+> +    wait(...)
+>      ... when exists
+>    }
+>
 > --
-> 2.21.0
->
+> 2.20.1
 > _______________________________________________
 > Cocci mailing list
 > Cocci@systeme.lip6.fr
