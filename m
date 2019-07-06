@@ -2,138 +2,104 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0699AC5B578
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 06:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC63C5B578
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 06:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D96C22089C
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 06:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2EDA21670
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 06:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbfGFGSX (ORCPT
+        id S1725999AbfGFGrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 02:18:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35006 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725900AbfGFGSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 02:18:23 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 55ECC99253F3C03CB4B3;
-        Sat,  6 Jul 2019 14:18:17 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 6 Jul 2019
- 14:18:10 +0800
-Subject: Re: [PATCH v2] module: add usage links when calling ref_module func
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-To:     Jessica Yu <jeyu@kernel.org>, <rusty@rustcorp.com.au>,
-        <kay.sievers@vrfy.org>, <clabbe.montjoie@gmail.com>
-CC:     LKML <linux-kernel@vger.kernel.org>, <wangxiaogang3@huawei.com>,
-        <zhoukang7@huawei.com>, Mingfangsen <mingfangsen@huawei.com>
-References: <4fec6c3b-03b8-dd57-4009-99431105a8a5@huawei.com>
-Message-ID: <7c865af8-a178-a10f-bdcb-7750ab27c2ce@huawei.com>
-Date:   Sat, 6 Jul 2019 14:17:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <4fec6c3b-03b8-dd57-4009-99431105a8a5@huawei.com>
-Content-Type: text/plain; charset="gb18030"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+        Sat, 6 Jul 2019 02:47:14 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:28044 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbfGFGrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 02:47:14 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 18AAF49C2BE7C4472856;
+        Sat,  6 Jul 2019 14:47:10 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x666ko2S087166;
+        Sat, 6 Jul 2019 14:46:50 +0800 (GMT-8)
+        (envelope-from huang.junhua@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070614473487-2126688 ;
+          Sat, 6 Jul 2019 14:47:34 +0800 
+From:   Junhua Huang <huang.junhua@zte.com.cn>
+To:     catalin.marinas@arm.com
+Cc:     will.deacon@arm.com, akpm@linux-foundation.org,
+        rppt@linux.vnet.ibm.com, f.fainelli@gmail.com, logang@deltatee.com,
+        robin.murphy@arm.com, ghackmann@android.com, hannes@cmpxchg.org,
+        david@redhat.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn,
+        Junhua Huang <huang.junhua@zte.com.cn>
+Subject: [PATCH v2] arm64: mm: free the initrd reserved memblock in a aligned manner
+Date:   Sat, 6 Jul 2019 14:41:15 +0800
+Message-Id: <1562395275-10772-1-git-send-email-huang.junhua@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-06 14:47:34,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-06 14:46:57,
+        Serialize complete at 2019-07-06 14:46:57
+X-MAIL: mse-fl2.zte.com.cn x666ko2S087166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly ping ...
+We should free the initrd reserved memblock in an aligned manner, 
+because the initrd reserves the memblock in an aligned manner 
+in arm64_memblock_init(). 
+Otherwise there are some fragments in memblock_reserved regions
+after free_initrd_mem(). e.g.:
+/sys/kernel/debug/memblock # cat reserved 
+   0: 0x0000000080080000..0x00000000817fafff
+   1: 0x0000000083400000..0x0000000083ffffff
+   2: 0x0000000090000000..0x000000009000407f
+   3: 0x00000000b0000000..0x00000000b000003f
+   4: 0x00000000b26184ea..0x00000000b2618fff
+The fragments like the ranges from b0000000 to b000003f and 
+from b26184ea to b2618fff should be freed.
 
-On 2019/7/3 10:09, Zhiqiang Liu wrote:
-> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> 
-> Users can call ref_module func in their modules to construct
-> relationships with other modules. However, the holders
-> '/sys/module/<mod-name>/holders' of the target module donot include
-> the users` module. So lsmod command misses detailed info of 'Used by'.
-> 
-> When load module, the process is given as follows,
-> load_module()
-> 	-> mod_sysfs_setup()
-> 		-> add_usage_links
-> 	-> do_init_module
-> 		-> mod->init()
-> 
-> add_usage_links func creates holders of target modules linking to
-> this module. If ref_module is called in mod->init() func, the usage
-> links cannot be added.
-> 
-> Here, we will add usage link of a to b's holder_dir.
-> 
-> V1->V2:
-> - remove incorrect Fixes tag
-> - fix error handling of sysfs_create_link as suggested by Jessica Yu
-> 
-> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> Suggested-by: Jessica Yu <jeyu@kernel.org>
-> Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
-> ---
->  kernel/module.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 80c7c09584cf..672abce2222c 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -837,25 +837,26 @@ static int already_uses(struct module *a, struct module *b)
->   *    'b' can walk the list to see who sourced them), and of 'a'
->   *    targets (so 'a' can see what modules it targets).
->   */
-> -static int add_module_usage(struct module *a, struct module *b)
-> +static struct module_use *add_module_usage(struct module *a, struct module *b)
->  {
->  	struct module_use *use;
-> 
->  	pr_debug("Allocating new usage for %s.\n", a->name);
->  	use = kmalloc(sizeof(*use), GFP_ATOMIC);
->  	if (!use)
-> -		return -ENOMEM;
-> +		return NULL;
-> 
->  	use->source = a;
->  	use->target = b;
->  	list_add(&use->source_list, &b->source_list);
->  	list_add(&use->target_list, &a->target_list);
-> -	return 0;
-> +	return use;
->  }
-> 
->  /* Module a uses b: caller needs module_mutex() */
->  int ref_module(struct module *a, struct module *b)
->  {
-> +	struct module_use *use;
->  	int err;
-> 
->  	if (b == NULL || already_uses(a, b))
-> @@ -866,9 +867,18 @@ int ref_module(struct module *a, struct module *b)
->  	if (err)
->  		return err;
-> 
-> -	err = add_module_usage(a, b);
-> +	use = add_module_usage(a, b);
-> +	if (!use) {
-> +		module_put(b);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
->  	if (err) {
->  		module_put(b);
-> +		list_del(&use->source_list);
-> +		list_del(&use->target_list);
-> +		kfree(use);
->  		return err;
->  	}
->  	return 0;
-> 
+And we can do free_reserved_area() after memblock_free(),
+as free_reserved_area() calls __free_pages(), once we've done 
+that it could be allocated somewhere else, 
+but memblock and iomem still say this is reserved memory.
+
+Signed-off-by: Junhua Huang <huang.junhua@zte.com.cn>
+---
+v2: fix the start/end typo to free the same memory that we reserved
+and remove the blank line.
+
+ arch/arm64/mm/init.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index d2adffb81b5d..2e9e42d06362 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -580,8 +580,12 @@ void free_initmem(void)
+ #ifdef CONFIG_BLK_DEV_INITRD
+ void __init free_initrd_mem(unsigned long start, unsigned long end)
+ {
++	unsigned long aligned_start, aligned_end;
++
++	aligned_start = __virt_to_phys(start) & PAGE_MASK;
++	aligned_end = PAGE_ALIGN(__virt_to_phys(end));
++	memblock_free(aligned_start, aligned_end - aligned_start);
+ 	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+-	memblock_free(__virt_to_phys(start), end - start);
+ }
+ #endif
+ 
+-- 
+2.15.2
 
