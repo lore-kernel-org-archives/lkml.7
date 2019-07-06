@@ -2,117 +2,104 @@ Return-Path: <SRS0=CMjL=VD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F9DC0650E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC25DC468AD
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D8820838
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:46:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="apdTQHIV"
+	by mail.kernel.org (Postfix) with ESMTP id A52F120856
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jul 2019 14:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562424398;
+	bh=knYcU2Aa2Ho+pdnq/bJk+Ot/7i4nJwilFpkw41OHVkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fmgSBDCLippL9SX0TWg+zVYGiaD/RkRulfaORXsu5YuQfAcLOc4N/pqVUEM7Utogm
+	 z1XveRLrlNUgr+cvvRz7qBJbZhBKBqp9MDSM9db/z9QI0crBgSAna7lI8TxFyd5pIs
+	 87+0x+6Lc0nl2wzrBQ7CQVPiae3h02RGi//gL/9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfGFOqQ (ORCPT
+        id S1726910AbfGFOqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 10:46:16 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:37234 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfGFOqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 10:46:16 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x66Ejqiu028151;
-        Sat, 6 Jul 2019 23:45:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x66Ejqiu028151
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562424353;
-        bh=m+KMPujBNkWshaRj44UmELQEZTKnrk+VC+L/Y3HqoRg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=apdTQHIVboLfyIX7rk1fG8LB4HOSjr7x+MnrH9XlfHIDzdw199vqSY6/4HdkXCB3A
-         Ib5SI0jLmvl9y4X8q1Wgh+OLCKl6oXyOIRyFDtCgwv+0CP5Czx1l+6RB03ToqZUEUm
-         u4MYtzziNwY1UeQWGJ6+oxC8sJvtFmL7954RL28AXb9IoxRGCAmFbjvn+qgTWuP//r
-         WTJ04Dz64sQABlbbwzF8VMEjwVRUowEoD5tcCCuxXLTe0P/jp2uwd44Eda8Uhtp74x
-         bWHvIqXZ7T/Lu7pRE3vVPCJuqLCpPaxIHohM01IV+6V69bvGcHxQsQyPRs7Sm/zbrc
-         KFsSkqw2GExFA==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id 190so5512150vsf.9;
-        Sat, 06 Jul 2019 07:45:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAWQ+IhSxkhgVib2oX7fwKU4bVNHpdm470WtOr/Tlp7N6P+IzAxp
-        nb6x7x2KseDAuXJX99E+oSlN9mDCabaikLAkE6o=
-X-Google-Smtp-Source: APXvYqzmLzDXaJfRfw+GqXrk4Wa7gUZ4GvT0Ss2POjrHHzxXbr5LY1Ef+woCyb7HPKJAzXG4nxczcmw4hHO1vrYodtQ=
-X-Received: by 2002:a67:fc45:: with SMTP id p5mr5221656vsq.179.1562424351592;
- Sat, 06 Jul 2019 07:45:51 -0700 (PDT)
+        Sat, 6 Jul 2019 10:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbfGFOqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 10:46:34 -0400
+Received: from localhost (unknown [49.207.57.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0509D20838;
+        Sat,  6 Jul 2019 14:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562424393;
+        bh=knYcU2Aa2Ho+pdnq/bJk+Ot/7i4nJwilFpkw41OHVkQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WmVn8W91aCfS152h9t6f9AOye+flepkY5uYIzPO4QH4JS6MqV5pkUWiKxGsRwWYU0
+         LNus9lW/ru0xQ7q5bdPPUMK5a3riFHy6rVfs5tFcnaSbzm11ngiRrNAu38eHzeUi47
+         ocVwO/t/UiAiZcwy6VVmgjuz/yzCVBTIDLiL0bZ4=
+Date:   Sat, 6 Jul 2019 20:13:24 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Angelo Dureghello <angelo@sysam.it>
+Subject: Re: linux-next: build failure after merge of the slave-dma tree
+Message-ID: <20190706144324.GH2911@vkoul-mobl>
+References: <20190704173108.0646eef8@canb.auug.org.au>
+ <VE1PR04MB6638782ADA8BFB8A17BAF19D89F40@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190623161328.22461-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190623161328.22461-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 6 Jul 2019 23:45:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARCHQ3Tv91txwnLAVwFuZaOJeA+tJe2TpJ0NA8Q6ThnDw@mail.gmail.com>
-Message-ID: <CAK7LNARCHQ3Tv91txwnLAVwFuZaOJeA+tJe2TpJ0NA8Q6ThnDw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kbuild: fix missed rebuild of modules.builtin
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6638782ADA8BFB8A17BAF19D89F40@VE1PR04MB6638.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 1:13 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Unlike modules.order, modules.builtin is not rebuilt every time.
-> Once modules.builtin is created, it will not be updated until
-> auto.conf or tristate.conf is changed.
->
-> So, it misses to notice a change in Makefile, for example, renaming
-> of modules.
->
-> Kbuild must always descend into directories for modules.builtin too.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+On 06-07-19, 13:43, Robin Gong wrote:
+> Hi Stephen,
 
-Both applied to linux-kbuild.
+Please **do not** top post!
 
->
->  Makefile | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 9514dac2660a..19c33bc69bb1 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1289,12 +1289,16 @@ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
->         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
->         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
->
-> -modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
-> -       $(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
-> +modbuiltin-dirs := $(addprefix _modbuiltin_, $(vmlinux-dirs))
->
-> -%/modules.builtin: include/config/auto.conf include/config/tristate.conf
-> -       $(Q)$(MAKE) $(modbuiltin)=$*
-> +modules.builtin: $(modbuiltin-dirs)
-> +       $(Q)$(AWK) '!x[$$0]++' $(addsuffix /$@, $(vmlinux-dirs)) > $@
->
-> +PHONY += $(modbuiltin-dirs)
-> +# tristate.conf is not included from this Makefile. Add it as a prerequisite
-> +# here to make it self-healing in case somebody accidentally removes it.
-> +$(modbuiltin-dirs): include/config/tristate.conf
-> +       $(Q)$(MAKE) $(modbuiltin)=$(patsubst _modbuiltin_%,%,$@)
->
->  # Target to prepare building external modules
->  PHONY += modules_prepare
-> --
-> 2.17.1
->
+> 	That's caused by 'of_irq_count' NOT export to global symbol, and I'm curious why it has been
+> here for so long since Zhangfei found it in 2015. https://patchwork.kernel.org/patch/7404681/
 
+Yes this does not seem to be applied, perhaps Rob can explain why. But
+this was not exported how did you test it?
+
+> Hi Rob,
+> 	Is there something I miss so that Zhangfei's patch not accepted finally?
+
+Rob, the commit in question is [1] and uses of_irq_count. Should it use
+that if not what is the alternate?
+
+> On 04-07-19, 15:31 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > Hi all,
+> > 
+> > After merging the slave-dma tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> > 
+> > ERROR: "of_irq_count" [drivers/dma/fsl-edma.ko] undefined!
+> > 
+> > Caused by commit
+> > 
+> >   7144afd025b2 ("dmaengine: fsl-edma: add i.mx7ulp edma2 version
+> > support")
+> > 
+> > I have reverted that commit for today.
+> > 
+> > --
+> > Cheers,
+> > Stephen Rothwell
+
+[1]: http://git.infradead.org/users/vkoul/slave-dma.git/commitdiff/7144afd025b23b042c158582160d7d2b10a754b7?hp=a7c5c6f6bc295d6c158db4ef9d1ca6770032669d
 
 -- 
-Best Regards
-Masahiro Yamada
+~Vinod
