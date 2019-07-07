@@ -2,237 +2,259 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C5AC5B578
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 01:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFBDC0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 02:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B07820838
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 01:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610982083E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 02:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n2JgFU2a"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="meQffMhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfGGBjy (ORCPT
+        id S1727183AbfGGCNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 21:39:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33525 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfGGBjx (ORCPT
+        Sat, 6 Jul 2019 22:13:42 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:36960 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfGGCNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 21:39:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so1096125pfq.0;
-        Sat, 06 Jul 2019 18:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=RAReVEOZmlivAeYvp7txSpBTLyvirIUwwGJli98Rrx0=;
-        b=n2JgFU2aAq3X2tvy6uw/KC2BIMGm/8irRzy4dan+oJPPCGJ7JuHekluzEZJluazsWQ
-         Dl9WE92bSWDxzA3dcnCM238p6ZW0HyJLYKmM36mUdJKh2eWWU0fQg1RvzrA/wfm19lr5
-         LsK7IFMUJANbnpE38SA9fRlM0o5WAiugwTG6joGoE4bw17KOJB5zREbzqnm+22yNLAXB
-         c6RiBq4NKbBrhYP6lonBz36bxxd5AdssNg17IJT2kzXcQ+puleL8o9K3XpfihethJfi7
-         Rl8I5tcEyBNQjxHeNcPpOTJ9dy/8puLM7iMxcp3W39cKoDmmWKuCexF8kbWcMHDrpE3t
-         4KkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=RAReVEOZmlivAeYvp7txSpBTLyvirIUwwGJli98Rrx0=;
-        b=NVzC0+wzRPf49go6KfLT1594gHX1XA8upGpGakIUApg3fmmpgun4jWllfYrcPnz4GF
-         GO3opz6pJ4fvnhEsYvYF9S6l8001tvdvajJHdEC1Xatm5xVYj33fzgYkwCHI98pAOEqL
-         IebATX7mQI5RhAg9VMT2bZmGPt6CwfbwLJp5Q0ibMmdjBI7JWQunr3N7b4SFBH/W7LOm
-         m5kgqb0CTTaJI4t9bI5G6c3eex9V6gs4D5jPvQs8nZz3LEa1yxQe4o+G3l2Z2cbaAYGr
-         hQ9auiVGtuQlCWay8+/NDKGUmsAmjd5cgrsXGcMyXrYzEIA1ZRr2sq362xVXBOQyIu/3
-         1Www==
-X-Gm-Message-State: APjAAAVXWWDzqtJAeVTEhMN7+8nrRYF+/LLdxDgklP5o7rq6RcEzWX/8
-        iB3lBW82qDzsQn06Dh3rTz4=
-X-Google-Smtp-Source: APXvYqwnz0yH7ZUrlCoDE5ejIsOIBtUON6v3scy19wq+Hr2seQiZ/3GBRaRBPjnkBrDZuM+N/gM1EQ==
-X-Received: by 2002:a17:90a:8c18:: with SMTP id a24mr14189130pjo.111.1562463592643;
-        Sat, 06 Jul 2019 18:39:52 -0700 (PDT)
-Received: from t-1000 (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
-        by smtp.gmail.com with ESMTPSA id r27sm22320962pgn.25.2019.07.06.18.39.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 06 Jul 2019 18:39:52 -0700 (PDT)
-Date:   Sat, 6 Jul 2019 18:39:50 -0700
-From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     shobhitkukreti@gmail.com
-Subject: [Linux-kernel-mentees] [PATCH] Documentation: filesystems: Convert
- ufs.txt to reStructuredText format
-Message-ID: <20190707013947.GA10663@t-1000>
+        Sat, 6 Jul 2019 22:13:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1562465617; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fznRMUZAZm3iHbL6qyuoO4hMPI4FOSHJ7kLY24FuOZI=;
+        b=meQffMhT7/byhhbXYDtJprcmMUATZqkEpI4hd/tl1CTIQpbwPpKL89XDPJuGJoZs1xXYOl
+        Ll9syGbefwxlBQmfKwnalmU4Phk/ERo+/kUKCFpZNrPFfY7s6C5i0V1XXjsm/WPD0yd+L8
+        V/7mBH4OZfdNPMa2cY/1IwKj2Q3cOKQ=
+Date:   Sat, 06 Jul 2019 22:13:13 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1562465593.2019.0@crapouillou.net>
+In-Reply-To: <20190625094756.GC1516@ulmo>
+References: <20190522163428.7078-1-paul@crapouillou.net>
+        <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+        <20190621135608.GB11839@ulmo> <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
+        <1561386717.20436.0@crapouillou.net> <20190625094756.GC1516@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation of ufs.txt to reStructuredText format.
-Added to documentation build process and verified with make htmldocs
 
-Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
----
- Documentation/filesystems/index.rst |  1 +
- Documentation/filesystems/ufs.rst   | 65 +++++++++++++++++++++++++++++++++++++
- Documentation/filesystems/ufs.txt   | 60 ----------------------------------
- 3 files changed, 66 insertions(+), 60 deletions(-)
- create mode 100644 Documentation/filesystems/ufs.rst
- delete mode 100644 Documentation/filesystems/ufs.txt
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index d700330..2b4f870 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -42,3 +42,4 @@ Documentation for individual filesystem types can be found here.
- 
-    binderfs.rst
-    jfs
-+   ufs
-diff --git a/Documentation/filesystems/ufs.rst b/Documentation/filesystems/ufs.rst
-new file mode 100644
-index 0000000..d6aeef0
---- /dev/null
-+++ b/Documentation/filesystems/ufs.rst
-@@ -0,0 +1,65 @@
-+=========
-+USING UFS
-+=========
-+
-+mount -t ufs -o ufstype=type_of_ufs device dir
-+
-+UFS OPTIONS
-+===========
-+
-+.. tabularcolumns:: |p{0.5cm}|p{0.5cm}|p{8.0cm}|
-+
-+.. cssclass:: longtable
-+
-+.. flat-table::   
-+   :header-rows:  0
-+   :stub-columns: 0
-+
-+   * - :rspan:`10` ufstype
-+     - =type_of_ufs
-+     - UFS is a file system widely used in different operating systems. The problem are differences among implementations. Features of some implementations 
-+       are undocumented, so its hard to recognize type of ufs automatically. That's why user must specify type of ufs manually by mount option ufstype.
-+       Possible values are below.
-+
-+   * - old 
-+     - old format of ufs default value, supported as read-only
-+   
-+   * - 44bsd	
-+     - used in FreeBSD, NetBSD, OpenBSD supported as read-write
-+   
-+   * - ufs2
-+     - used in FreeBSD 5.x supported as read-write
-+
-+   * - 5xbsd	
-+     - synonym for ufs2
-+
-+   * - sun
-+     - used in SunOS (Solaris) supported as read-write
-+
-+   * - sunx86	
-+     - used in SunOS for Intel (Solarisx86) supported as read-write
-+
-+   * - hp	
-+     - used in HP-UX 	supported as read-only
-+
-+   * - nextstep
-+     - used in NextStep supported as read-only
-+
-+   * - nextstep-cd
-+     - used for NextStep CDROMs (block_size == 2048) supported as read-only
-+
-+   * - openstep
-+     - used in OpenStep supported as read-only
-+
-+
-+POSSIBLE PROBLEMS
-+-----------------
-+
-+See next section, if you have any.
-+
-+
-+BUG REPORTS
-+-----------
-+
-+Any ufs bug report you can send to daniel.pirkl@email.cz or
-+to dushistov@mail.ru (do not send partition tables bug reports).
-diff --git a/Documentation/filesystems/ufs.txt b/Documentation/filesystems/ufs.txt
-deleted file mode 100644
-index 7a602ad..0000000
---- a/Documentation/filesystems/ufs.txt
-+++ /dev/null
-@@ -1,60 +0,0 @@
--USING UFS
--=========
--
--mount -t ufs -o ufstype=type_of_ufs device dir
--
--
--UFS OPTIONS
--===========
--
--ufstype=type_of_ufs
--	UFS is a file system widely used in different operating systems.
--	The problem are differences among implementations. Features of
--	some implementations are undocumented, so its hard to recognize
--	type of ufs automatically. That's why user must specify type of 
--	ufs manually by mount option ufstype. Possible values are:
--
--	old	old format of ufs
--		default value, supported as read-only
--
--	44bsd	used in FreeBSD, NetBSD, OpenBSD
--		supported as read-write
--
--	ufs2    used in FreeBSD 5.x
--		supported as read-write
--
--	5xbsd	synonym for ufs2
--
--	sun	used in SunOS (Solaris)
--		supported as read-write
--
--	sunx86	used in SunOS for Intel (Solarisx86)
--		supported as read-write
--
--	hp	used in HP-UX
--		supported as read-only
--
--	nextstep
--		used in NextStep
--		supported as read-only
--
--	nextstep-cd
--		used for NextStep CDROMs (block_size == 2048)
--		supported as read-only
--
--	openstep
--		used in OpenStep
--		supported as read-only
--
--
--POSSIBLE PROBLEMS
--=================
--
--See next section, if you have any.
--
--
--BUG REPORTS
--===========
--
--Any ufs bug report you can send to daniel.pirkl@email.cz or
--to dushistov@mail.ru (do not send partition tables bug reports).
--- 
-2.7.4
+Le mar. 25 juin 2019 =E0 5:47, Thierry Reding <thierry.reding@gmail.com>=20
+a =E9crit :
+> On Mon, Jun 24, 2019 at 04:31:57PM +0200, Paul Cercueil wrote:
+>>=20
+>>=20
+>>  Le lun. 24 juin 2019 =E0 13:28, Daniel Thompson=20
+>> <daniel.thompson@linaro.org> a
+>>  =E9crit :
+>>  > On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
+>>  > >  On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson=20
+>> wrote:
+>>  > >  > On 22/05/2019 17:34, Paul Cercueil wrote:
+>>  > >  > > When the driver probes, the PWM pin is automatically=20
+>> configured
+>>  > > to its
+>>  > >  > > default state, which should be the "pwm" function.
+>>  > >  >
+>>  > >  > At which point in the probe... and by who?
+>>  > >
+>>  > >  The driver core will select the "default" state of a device=20
+>> right
+>>  > > before
+>>  > >  calling the driver's probe, see:
+>>  > >
+>>  > >  	drivers/base/pinctrl.c: pinctrl_bind_pins()
+>>  > >
+>>  > >  which is called from:
+>>  > >
+>>  > >  	drivers/base/dd.c: really_probe()
+>>  > >
+>>  >
+>>  > Thanks. I assumed it would be something like that... although=20
+>> given
+>>  > pwm-backlight is essentially a wrapper driver round a PWM I=20
+>> wondered why
+>>  > the pinctrl was on the backlight node (rather than the PWM node).
+>>  >
+>>  > Looking at the DTs in the upstream kernel it looks like ~20% of=20
+>> the
+>>  > backlight drivers have pinctrl on the backlight node. Others=20
+>> presumable
+>>  > have none or have it on the PWM node (and it looks like support=20
+>> for
+>>  > sleeping the pins is *very* rare amoung the PWM drivers).
+>>=20
+>>  If your PWM driver has more than one channel and has the pinctrl=20
+>> node, you
+>>  cannot fine-tune the state of individual pins. They all share the=20
+>> same
+>>  state.
+>=20
+> But that's something that could be changed, right? We could for=20
+> example
+> extend the PWM bindings to allow describing each PWM instance via a=20
+> sub-
+> node of the controller node. Pin control states could be described on=20
+> a
+> per-channel basis that way.
+
+There could be an API to dynamically add/remove pin groups to a given
+pinctrl state. The PWM driver would start with an empty (no groups)
+"default" state, then when enabling e.g. PWM1, the driver would call
+a function to add the "pwm1" pin group to the "default" state.
+
+Does that sound like a good idea?
+
+Thanks,
+-Paul
+
+
+>>  > >  > > However, at this
+>>  > >  > > point we don't know the actual level of the pin, which may=20
+>> be
+>>  > > active or
+>>  > >  > > inactive. As a result, if the driver probes without=20
+>> enabling the
+>>  > >  > > backlight, the PWM pin might be active, and the backlight=20
+>> would
+>>  > > be
+>>  > >  > > lit way before being officially enabled.
+>>  > >  > >
+>>  > >  > > To work around this, if the probe function doesn't enable=20
+>> the
+>>  > > backlight,
+>>  > >  > > the pin is set to its sleep state instead of the default=20
+>> one,
+>>  > > until the
+>>  > >  > > backlight is enabled. Whenk the backlight is disabled, the=20
+>> pin
+>>  > > is reset
+>>  > >  > > to its sleep state.
+>>  > >  > Doesn't this workaround result in a backlight flash between
+>>  > > whatever enables
+>>  > >  > it and the new code turning it off again?
+>>  > >
+>>  > >  Yeah, I think it would. I guess if you're very careful on how=20
+>> you
+>>  > > set up
+>>  > >  the device tree you might be able to work around it. Besides=20
+>> the
+>>  > > default
+>>  > >  and idle standard pinctrl states, there's also the "init"=20
+>> state. The
+>>  > >  core will select that instead of the default state if=20
+>> available.
+>>  > > However
+>>  > >  there's also pinctrl_init_done() which will try again to=20
+>> switch to
+>>  > > the
+>>  > >  default state after probe has finished and the driver didn't=20
+>> switch
+>>  > > away
+>>  > >  from the init state.
+>>  > >
+>>  > >  So you could presumably set up the device tree such that you=20
+>> have
+>>  > > three
+>>  > >  states defined: "default" would be the one where the PWM pin is
+>>  > > active,
+>>  > >  "idle" would be used when backlight is off (PWM pin inactive)=20
+>> and
+>>  > > then
+>>  > >  another "init" state that would be the same as "idle" to be=20
+>> used
+>>  > > during
+>>  > >  probe. During probe the driver could then switch to the "idle"
+>>  > > state so
+>>  > >  that the pin shouldn't glitch.
+>>  > >
+>>  > >  I'm not sure this would actually work because I think the way=20
+>> that
+>>  > >  pinctrl handles states both "init" and "idle" would be the same
+>>  > > pointer
+>>  > >  values and therefore pinctrl_init_done() would think the driver
+>>  > > didn't
+>>  > >  change away from the "init" state because it is the same=20
+>> pointer
+>>  > > value
+>>  > >  as the "idle" state that the driver selected. One way to work=20
+>> around
+>>  > >  that would be to duplicate the "idle" state definition and
+>>  > > associate one
+>>  > >  instance of it with the "idle" state and the other with the=20
+>> "init"
+>>  > >  state. At that point both states should be different (different
+>>  > > pointer
+>>  > >  values) and we'd get the init state selected automatically=20
+>> before
+>>  > > probe,
+>>  > >  select "idle" during probe and then the core will leave it=20
+>> alone.
+>>  > > That's
+>>  > >  of course ugly because we duplicate the pinctrl state in DT,=20
+>> but
+>>  > > perhaps
+>>  > >  it's the least ugly solution.
+>>  > >  Adding Linus for visibility. Perhaps he can share some insight.
+>>  >
+>>  > To be honest I'm happy to summarize in my head as "if it flashes=20
+>> then
+>>  > it's not
+>>  > a pwm_bl.c's problem" ;-).
+>>=20
+>>  It does not flash. But the backlight lits way too early, so we have=20
+>> a 1-2
+>>  seconds
+>>  of "white screen" before the panel driver starts.
+>=20
+> I think this always goes both ways. If you set the sleep state for the
+> PWM on backlight probe with this patch, you may be able to work around
+> the problem of the backlight lighting up too early. But what if your
+> bootloader had already enabled the backlight and is showing a splash
+> screen during boot? Your patch would turn off the backlight and then=20
+> it
+> would turn on again after everything else was initialized. That's one
+> type of flashing.
+>=20
+> What we need in this case are explicit pin control states that will
+> enable fine-grained control over what happens. Anything implicit is
+> bound to fail because it bakes in an assumption (either that the
+> backlight is off during boot, or that it has been turned on already).
+>=20
+> Ideally we'd need to detect that the backlight is on and if it is we
+> just don't do anything with it. Actually, I think that's what we want
+> even if the backlight is off. During probe the backlight state should
+> not be modified. You only want to modify it when you know that some
+> display driver is going to take over. If you can't seamlessly=20
+> transition
+> to the kernel display driver, flashing may be okay. If your display
+> driver can take over seamlessly, then the backlight is likely already=20
+> in
+> the desired state anyway.
+>=20
+> Thierry
+
+=
 
