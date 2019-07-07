@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED98C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3536C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B03920651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C819E20659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfGGTiZ (ORCPT
+        id S1727755AbfGGTi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:25 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56964 "EHLO
+        Sun, 7 Jul 2019 15:38:27 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56974 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727486AbfGGTiD (ORCPT
+        by vger.kernel.org with ESMTP id S1727491AbfGGTiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:03 -0400
+        Sun, 7 Jul 2019 15:38:04 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz2-0006eK-Mg; Sun, 07 Jul 2019 20:38:00 +0100
+        id 1hkCz2-0006eI-MX; Sun, 07 Jul 2019 20:38:00 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz1-0005YM-7l; Sun, 07 Jul 2019 20:37:59 +0100
+        id 1hkCz1-0005YG-5Z; Sun, 07 Jul 2019 20:37:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Jacek Anaszewski" <jacek.anaszewski@gmail.com>,
-        "Pawe? Chmiel" <pawel.mikolaj.chmiel@gmail.com>
+        "Christophe Leroy" <christophe.leroy@c-s.fr>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Michael Ellerman" <mpe@ellerman.id.au>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.126870290@decadent.org.uk>
+Message-ID: <lsq.1562518457.922014486@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 026/129] media: s5p-jpeg: Check for fmt_ver_flag when
- doing fmt enumeration
+Subject: [PATCH 3.16 025/129] powerpc/irq: drop arch_early_irq_init()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,82 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 upstream.
+commit 607ea5090b3fb61fea1d0bc5278e6c1d40ab5bd6 upstream.
 
-Previously when doing format enumeration, it was returning all
- formats supported by driver, even if they're not supported by hw.
-Add missing check for fmt_ver_flag, so it'll be fixed and only those
- supported by hw will be returned. Similar thing is already done
- in s5p_jpeg_find_format.
+arch_early_irq_init() does nothing different than the weak
+arch_early_irq_init() in kernel/softirq.c
 
-It was found by using v4l2-compliance tool and checking result
- of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
-and using v4l2-ctl to get list of all supported formats.
-
-Tested on s5pv210-galaxys (Samsung i9000 phone).
-
-Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
-
-Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 089fb442f301 ("powerpc: Use ARCH_IRQ_INIT_FLAGS")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ arch/powerpc/kernel/irq.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -859,13 +859,16 @@ static int s5p_jpeg_querycap(struct file
- 	return 0;
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -662,11 +662,6 @@ int irq_choose_cpu(const struct cpumask
  }
+ #endif
  
--static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
-+static int enum_fmt(struct s5p_jpeg_ctx *ctx,
-+		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
- 		    struct v4l2_fmtdesc *f, u32 type)
+-int arch_early_irq_init(void)
+-{
+-	return 0;
+-}
+-
+ #ifdef CONFIG_PPC64
+ static int __init setup_noirqdistrib(char *str)
  {
- 	int i, num = 0;
-+	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
- 
- 	for (i = 0; i < n; ++i) {
--		if (sjpeg_formats[i].flags & type) {
-+		if (sjpeg_formats[i].flags & type &&
-+		    sjpeg_formats[i].flags & fmt_ver_flag) {
- 			/* index-th format of type type found ? */
- 			if (num == f->index)
- 				break;
-@@ -891,11 +894,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(str
- 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
--		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
- 				SJPEG_FMT_FLAG_ENC_CAPTURE);
- 
--	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
--					SJPEG_FMT_FLAG_DEC_CAPTURE);
-+	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+			SJPEG_FMT_FLAG_DEC_CAPTURE);
- }
- 
- static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
-@@ -904,11 +907,11 @@ static int s5p_jpeg_enum_fmt_vid_out(str
- 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
--		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
- 				SJPEG_FMT_FLAG_ENC_OUTPUT);
- 
--	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
--					SJPEG_FMT_FLAG_DEC_OUTPUT);
-+	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+			SJPEG_FMT_FLAG_DEC_OUTPUT);
- }
- 
- static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 
