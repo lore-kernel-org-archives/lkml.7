@@ -2,141 +2,114 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E11C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 14:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42892C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 14:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7663D2082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 14:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD522082F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 14:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JJGOHMK2"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WeNFDzV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfGGOlM (ORCPT
+        id S1727148AbfGGOo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 10:41:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34829 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfGGOlL (ORCPT
+        Sun, 7 Jul 2019 10:44:26 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35798 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfGGOo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 10:41:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s27so6358350pgl.2
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 07:41:11 -0700 (PDT)
+        Sun, 7 Jul 2019 10:44:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so5135857pfn.2
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 07:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hg+2F4CQEXTPGuzXZHgWpeWud+WKMzNK6Pc5pT307kM=;
-        b=JJGOHMK2ecBPtywHW+pwEEByqzswqKCHObyjZWXEVxFiTcAEhRTBI1Aaso+HqQNaYf
-         w77emYzzGqa8xlvmUTTPz2E/T5pNla2Q9nZVIY2keM65vyK7548yvj4UhvRui34hsNof
-         uaUFHKvBdztXLVaQc9cc3BwuhFxbTwmu+1EL4=
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=llINxd7chWMQYSAAyJoEbONP27hNSFFLJxUayxqRxU8=;
+        b=WeNFDzV60cDo1nguHaheWGmnBM8pQnuimPwSW6wzwIDUeAvyLHkF0EMM1lo4ItrWMZ
+         4qHfyHfCdotZ2qyxAVZDNjQYaPnwwiHT94B3k715RvttE3sJE4iUA6aUpiPYQFCosXyM
+         8JWlgxbvBJLWgybUuFba14Nu7r6bxjHFRPqMA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hg+2F4CQEXTPGuzXZHgWpeWud+WKMzNK6Pc5pT307kM=;
-        b=LkDriMzPVKxN+A4ETXYx9LO85tzpctGKhbIA9JYKspAFWIJA4HpmS7l7WZ1GRuKwx6
-         uzRpG8b4GJWe2lzJss/NuWuF3VJwlc1foSwGLPjlnxAtBgcIZMxGuhZ7HIz7nFabOZ/B
-         StjAg6bhjKtB0MUdX3uW24kZNUknEPoTtsJ0kGmErtTAtrItaAr77QMvlCynsZKF+lsx
-         bR3zQrpOP1LtWoR61AfQ7SDtGbVOUEsXiMrMoa4tLUS8c23jt1CqxdbbrKRfMDIMc0Qg
-         5T50AHCwQsu2poGNDoZAlavvNtgXtf2E2aDuzpqniFx+ReQTy+8/pSrDPZVoLP5sbBlM
-         B6JQ==
-X-Gm-Message-State: APjAAAXk/y4CNwF1vnakPc3suhqqkvgk4Kl+gu/V+yd2KR5U1LRqYC+1
-        JyzWAPPjgn8PoC0eWIl439KRNA==
-X-Google-Smtp-Source: APXvYqwoFkA7zB3NISebB7rck4JJBsMvhQVhl6urEfNNYp+x5Eh1QSRUAOBb52JpqyJmGjIupV0V4g==
-X-Received: by 2002:a17:90a:f98a:: with SMTP id cq10mr18462409pjb.43.1562510471215;
-        Sun, 07 Jul 2019 07:41:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i74sm16400681pje.16.2019.07.07.07.41.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 07 Jul 2019 07:41:10 -0700 (PDT)
-Date:   Sun, 7 Jul 2019 07:41:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Norbert Manthey <nmanthey@amazon.de>
-Cc:     linux-kernel@vger.kernel.org, David Woodhouse <dwmw@amazon.co.uk>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH pstore fix v1] pstore: fix use after free
-Message-ID: <201907070734.86DE450@keescook>
-References: <1562331960-26198-1-git-send-email-nmanthey@amazon.de>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=llINxd7chWMQYSAAyJoEbONP27hNSFFLJxUayxqRxU8=;
+        b=Nj/2odBIri7QaKrglrByGcn/ufHmE3PY40JwPTrdrs3uFhB5zN07ZjILyjDR8mfeCt
+         vxrr7vBr5kSRRu/Jw71mcvYi6WMB3ZuS8Mar3/6w8CYw+nKD7ZTE33eMwbiOed2oFAwb
+         lxyjSkQ4YJnYMFA2b/kyUOpBSe8AnYeOvzVaaDxKIX9I3ki+DzjmFG+GwvO1cnBO+48I
+         I+CoyZO5YGYphdItX81MHPLBQr0Ohwpao4jvZl9sY+wTi22FUNR6YDy9TWbWeF77kmqX
+         RKgVNC5+5FsLvA7PwZB3sFnfvt/zuQalF1zWT1lsv5v3ah0m06vrKiu+6qCgNGAfYmp4
+         gAlw==
+X-Gm-Message-State: APjAAAXxLtuxF7NLUzBsvJsK4UGrU1R3lAhq0b14wdhD0IJ8Cb19fkda
+        YAxyC7UEnYWSG/SfMh/pjBuKK34uWIU=
+X-Google-Smtp-Source: APXvYqxu7HRbHsOuM3+rCbDIFEiAwYtA3JiDauASBsUxhU1jkKRE20/qOxlOEycD4ziUrTwKFwGRFA==
+X-Received: by 2002:a63:7b4d:: with SMTP id k13mr6565283pgn.182.1562510665202;
+        Sun, 07 Jul 2019 07:44:25 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 14sm12757014pgp.37.2019.07.07.07.44.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 07 Jul 2019 07:44:24 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        acme@kernel.org, jolsa@redhat.com, Jiri Olsa <jolsa@kernel.org>
+Subject: [RFC] Fix python feature detection
+Date:   Sun,  7 Jul 2019 10:44:17 -0400
+Message-Id: <20190707144417.237913-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562331960-26198-1-git-send-email-nmanthey@amazon.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 03:06:00PM +0200, Norbert Manthey wrote:
-> The pstore_mkfile() function is passed a pointer to a struct
-> pstore_record. On success it consumes this 'record' pointer and
-> references it from the created inode.
-> 
-> On failure, however, it may or may not free the record. There are even
-> two different code paths which return -ENOMEM -- one of which does and
-> the other doesn't free the record.
-> 
-> Make the behaviour deterministic by never consuming and freeing the
-> record when returning failure, allowing the caller to do the cleanup
-> consistently.
+I am having a hard time building BPF samples by doing a make in
+samples/bpf. While I am debugging that, I ran into the Python issue.
+Even though the system has libpython2.7-dev:
 
-Yup, good catch. Looks like a double-free in the one failure case.
+If I just do a 'make' inside tools/build/feature/ I get:
+Python.h: No such file or directory
 
-> Signed-off-by: Norbert Manthey <nmanthey@amazon.de>
+This led me to this patch which fixes Python feature detection for me.
+I am not sure if it is the right fix for Python since it is hardcoded
+for Python version 2, but I thought it could be useful.
 
-Fixes: 83f70f0769ddd ("pstore: Do not duplicate record metadata")
-Fixes: 1dfff7dd67d1a ("pstore: Pass record contents instead of copying")
-Cc: stable@vger.kernel.org
+My system is a Debian buster release.
 
-Applied to my pstore tree. :)
+Cc: acme@kernel.org
+Cc: jolsa@redhat.com
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ tools/build/feature/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
--Kees
-
-> ---
->  fs/pstore/inode.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-> --- a/fs/pstore/inode.c
-> +++ b/fs/pstore/inode.c
-> @@ -333,7 +333,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
->  	private = kzalloc(sizeof(*private), GFP_KERNEL);
->  	if (!private)
->  		goto fail_alloc;
-> -	private->record = record;
->  
->  	switch (record->type) {
->  	case PSTORE_TYPE_DMESG:
-> @@ -387,6 +386,8 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
->  	if (!dentry)
->  		goto fail_private;
->  
-> +	private->record = record;
-> +
->  	inode->i_size = private->total_size = size;
->  
->  	inode->i_private = private;
-> -- 
-> 2.7.4
-> 
-> 
-> 
-> 
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
-> 
-> 
-> 
-
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 4b8244ee65ce..cde44cb38a5e 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -83,7 +83,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
+ ###############################
+ 
+ $(OUTPUT)test-all.bin:
+-	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -laudit -I/usr/include/slang -lslang $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null) $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma
++	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -laudit -I/usr/include/slang -lslang $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null) $(shell $(PKG_CONFIG) --libs --cflags python2 2>/dev/null) $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma
+ 
+ $(OUTPUT)test-hello.bin:
+ 	$(BUILD)
+@@ -205,7 +205,7 @@ $(OUTPUT)test-libperl.bin:
+ 	$(BUILD) $(FLAGS_PERL_EMBED)
+ 
+ $(OUTPUT)test-libpython.bin:
+-	$(BUILD) $(FLAGS_PYTHON_EMBED)
++	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags python2 2>/dev/null) $(FLAGS_PYTHON_EMBED)
+ 
+ $(OUTPUT)test-libpython-version.bin:
+ 	$(BUILD)
 -- 
-Kees Cook
+2.22.0.410.gd8fdbe21b5-goog
+
