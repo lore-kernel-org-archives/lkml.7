@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CA7C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AB2C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619A220659
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E7F20684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfGGTiY (ORCPT
+        id S1727722AbfGGTiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56956 "EHLO
+        Sun, 7 Jul 2019 15:38:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56914 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727485AbfGGTiD (ORCPT
+        by vger.kernel.org with ESMTP id S1727431AbfGGTiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:03 -0400
+        Sun, 7 Jul 2019 15:38:02 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz2-0006dx-DF; Sun, 07 Jul 2019 20:38:00 +0100
+        id 1hkCz1-0006dj-L4; Sun, 07 Jul 2019 20:37:59 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz0-0005Y2-Td; Sun, 07 Jul 2019 20:37:58 +0100
+        id 1hkCz0-0005Xn-LM; Sun, 07 Jul 2019 20:37:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Al Viro" <viro@zeniv.linux.org.uk>, "NeilBrown" <neilb@suse.de>
+        "Krzysztof Kozlowski" <krzk@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.895426084@decadent.org.uk>
+Message-ID: <lsq.1562518457.752203004@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 022/129] security/selinux: pass 'flags' arg to
- avc_audit() and avc_has_perm_flags()
+Subject: [PATCH 3.16 019/129] ARM: s3c24xx: Fix boolean expressions in
+ osiris_dvs_notify
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,92 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: NeilBrown <neilb@suse.de>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 7b20ea2579238f5e0da4bc93276c1b63c960c9ef upstream.
+commit e2477233145f2156434afb799583bccd878f3e9f upstream.
 
-This allows MAY_NOT_BLOCK to be passed, in RCU-walk mode, through
-the new avc_has_perm_flags() to avc_audit() and thence the slow_avc_audit.
+Fix boolean expressions by using logical AND operator '&&' instead of
+bitwise operator '&'.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-[bwh: Backported to 3.16 as dependency of commit 3a28cff3bd4b
- "selinux: avoid silent denials in permissive mode under RCU walk"]
+This issue was detected with the help of Coccinelle.
+
+Fixes: 4fa084af28ca ("ARM: OSIRIS: DVS (Dynamic Voltage Scaling) supoort.")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[krzk: Fix -Wparentheses warning]
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- security/selinux/avc.c         | 18 +++++++++++++++++-
- security/selinux/hooks.c       |  2 +-
- security/selinux/include/avc.h |  9 +++++++--
- 3 files changed, 25 insertions(+), 4 deletions(-)
+ arch/arm/mach-s3c24xx/mach-osiris-dvs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -768,7 +768,23 @@ int avc_has_perm(u32 ssid, u32 tsid, u16
+--- a/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
++++ b/arch/arm/mach-s3c24xx/mach-osiris-dvs.c
+@@ -70,16 +70,16 @@ static int osiris_dvs_notify(struct noti
  
- 	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, 0, &avd);
- 
--	rc2 = avc_audit(ssid, tsid, tclass, requested, &avd, rc, auditdata);
-+	rc2 = avc_audit(ssid, tsid, tclass, requested, &avd, rc, auditdata, 0);
-+	if (rc2)
-+		return rc2;
-+	return rc;
-+}
-+
-+int avc_has_perm_flags(u32 ssid, u32 tsid, u16 tclass,
-+		       u32 requested, struct common_audit_data *auditdata,
-+		       int flags)
-+{
-+	struct av_decision avd;
-+	int rc, rc2;
-+
-+	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, 0, &avd);
-+
-+	rc2 = avc_audit(ssid, tsid, tclass, requested, &avd, rc,
-+			auditdata, flags);
- 	if (rc2)
- 		return rc2;
- 	return rc;
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -1569,7 +1569,7 @@ static int cred_has_capability(const str
- 
- 	rc = avc_has_perm_noaudit(sid, sid, sclass, av, 0, &avd);
- 	if (audit == SECURITY_CAP_AUDIT) {
--		int rc2 = avc_audit(sid, sid, sclass, av, &avd, rc, &ad);
-+		int rc2 = avc_audit(sid, sid, sclass, av, &avd, rc, &ad, 0);
- 		if (rc2)
- 			return rc2;
- 	}
---- a/security/selinux/include/avc.h
-+++ b/security/selinux/include/avc.h
-@@ -130,7 +130,8 @@ static inline int avc_audit(u32 ssid, u3
- 			    u16 tclass, u32 requested,
- 			    struct av_decision *avd,
- 			    int result,
--			    struct common_audit_data *a)
-+			    struct common_audit_data *a,
-+			    int flags)
- {
- 	u32 audited, denied;
- 	audited = avc_audit_required(requested, avd, result, 0, &denied);
-@@ -138,7 +139,7 @@ static inline int avc_audit(u32 ssid, u3
- 		return 0;
- 	return slow_avc_audit(ssid, tsid, tclass,
- 			      requested, audited, denied, result,
--			      a, 0);
-+			      a, flags);
- }
- 
- #define AVC_STRICT 1 /* Ignore permissive mode. */
-@@ -150,6 +151,10 @@ int avc_has_perm_noaudit(u32 ssid, u32 t
- int avc_has_perm(u32 ssid, u32 tsid,
- 		 u16 tclass, u32 requested,
- 		 struct common_audit_data *auditdata);
-+int avc_has_perm_flags(u32 ssid, u32 tsid,
-+		       u16 tclass, u32 requested,
-+		       struct common_audit_data *auditdata,
-+		       int flags);
- 
- u32 avc_policy_seqno(void);
- 
+ 	switch (val) {
+ 	case CPUFREQ_PRECHANGE:
+-		if (old_dvs & !new_dvs ||
+-		    cur_dvs & !new_dvs) {
++		if ((old_dvs && !new_dvs) ||
++		    (cur_dvs && !new_dvs)) {
+ 			pr_debug("%s: exiting dvs\n", __func__);
+ 			cur_dvs = false;
+ 			gpio_set_value(OSIRIS_GPIO_DVS, 1);
+ 		}
+ 		break;
+ 	case CPUFREQ_POSTCHANGE:
+-		if (!old_dvs & new_dvs ||
+-		    !cur_dvs & new_dvs) {
++		if ((!old_dvs && new_dvs) ||
++		    (!cur_dvs && new_dvs)) {
+ 			pr_debug("entering dvs\n");
+ 			cur_dvs = true;
+ 			gpio_set_value(OSIRIS_GPIO_DVS, 0);
 
