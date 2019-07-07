@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D1C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C78C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448C820684
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251FE20663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfGGTq1 (ORCPT
+        id S1728730AbfGGTq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:46:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57006 "EHLO
+        Sun, 7 Jul 2019 15:46:26 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56990 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727500AbfGGTiE (ORCPT
+        by vger.kernel.org with ESMTP id S1727494AbfGGTiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:04 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0006f5-6E; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz3-0006fQ-Ey; Sun, 07 Jul 2019 20:38:01 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz1-0005YQ-Aa; Sun, 07 Jul 2019 20:37:59 +0100
+        id 1hkCz1-0005Yk-LY; Sun, 07 Jul 2019 20:37:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jacek Anaszewski" <jacek.anaszewski@gmail.com>,
-        "Sylwester Nawrocki" <s.nawrocki@samsung.com>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Pawe? Chmiel" <pawel.mikolaj.chmiel@gmail.com>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
+        "Nicolin Chen" <nicoleotsuka@gmail.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Fabio Estevam" <festevam@gmail.com>,
+        "Stefan Agner" <stefan@agner.ch>,
+        "Daniel Baluta" <daniel.baluta@nxp.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.887968802@decadent.org.uk>
+Message-ID: <lsq.1562518457.215668785@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 027/129] media: s5p-jpeg: Correct step and max values
- for V4L2_CID_JPEG_RESTART_INTERVAL
+Subject: [PATCH 3.16 031/129] ASoC: imx-sgtl5000: put of nodes if finding
+ codec fails
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,38 +59,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
 
-commit 19c624c6b29e244c418f8b44a711cbf5e82e3cd4 upstream.
+commit d9866572486802bc598a3e8576a5231378d190de upstream.
 
-This commit corrects max and step values for v4l2 control for
-V4L2_CID_JPEG_RESTART_INTERVAL. Max should be 0xffff and step should be 1.
-It was found by using v4l2-compliance tool and checking result of
-VIDIOC_QUERY_EXT_CTRL/QUERYMENU test.
-Previously it was complaining that step was bigger than difference
-between max and min.
+Make sure to properly put the of node in case finding the codec
+fails.
 
-Fixes: 15f4bc3b1f42 ("[media] s5p-jpeg: Add JPEG controls support")
-
-Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 81e8e4926167 ("ASoC: fsl: add sgtl5000 clock support for imx-sgtl5000")
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/platform/s5p-jpeg/jpeg-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/imx-sgtl5000.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -1363,7 +1363,7 @@ static int s5p_jpeg_controls_create(stru
- 
- 		v4l2_ctrl_new_std(&ctx->ctrl_handler, &s5p_jpeg_ctrl_ops,
- 				  V4L2_CID_JPEG_RESTART_INTERVAL,
--				  0, 3, 0xffff, 0);
-+				  0, 0xffff, 1, 0);
- 		if (ctx->jpeg->variant->version == SJPEG_S5P)
- 			mask = ~0x06; /* 422, 420 */
+--- a/sound/soc/fsl/imx-sgtl5000.c
++++ b/sound/soc/fsl/imx-sgtl5000.c
+@@ -118,7 +118,8 @@ static int imx_sgtl5000_probe(struct pla
+ 	codec_dev = of_find_i2c_device_by_node(codec_np);
+ 	if (!codec_dev) {
+ 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+-		return -EPROBE_DEFER;
++		ret = -EPROBE_DEFER;
++		goto fail;
  	}
+ 
+ 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
 
