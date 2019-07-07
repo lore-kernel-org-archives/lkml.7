@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F12C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD87CC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3EA20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20212082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfGGTmf (ORCPT
+        id S1728220AbfGGTmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:42:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57652 "EHLO
+        Sun, 7 Jul 2019 15:42:33 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57606 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727618AbfGGTiM (ORCPT
+        by vger.kernel.org with ESMTP id S1727434AbfGGTiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:12 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzA-0006kg-7U; Sun, 07 Jul 2019 20:38:08 +0100
+        id 1hkCz7-0006jB-U1; Sun, 07 Jul 2019 20:38:06 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz7-0005eY-RS; Sun, 07 Jul 2019 20:38:05 +0100
+        id 1hkCz6-0005d5-6k; Sun, 07 Jul 2019 20:38:04 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andrey Konovalov" <andreyknvl@google.com>,
-        "Hugh Dickins" <hughd@google.com>,
-        "Al Viro" <viro@zeniv.linux.org.uk>
+        "Nikolay Borisov" <nborisov@suse.com>,
+        "David Sterba" <dsterba@suse.com>,
+        "Dan Robertson" <dan@dlrobertson.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.978666923@decadent.org.uk>
+Message-ID: <lsq.1562518457.537362158@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 102/129] mm: fix potential data race in SyS_swapon
+Subject: [PATCH 3.16 084/129] btrfs: init csum_list before possible free
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,104 +56,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hugh Dickins <hughd@google.com>
+From: Dan Robertson <dan@dlrobertson.com>
 
-commit 6f179af88f60b32c2855e7f3e16ea8e336a7043f upstream.
+commit e49be14b8d80e23bb7c53d78c21717a474ade76b upstream.
 
-While running KernelThreadSanitizer (ktsan) on upstream kernel with
-trinity, we got a few reports from SyS_swapon, here is one of them:
+The scrub_ctx csum_list member must be initialized before scrub_free_ctx
+is called. If the csum_list is not initialized beforehand, the
+list_empty call in scrub_free_csums will result in a null deref if the
+allocation fails in the for loop.
 
-Read of size 8 by thread T307 (K7621):
- [<     inlined    >] SyS_swapon+0x3c0/0x1850 SYSC_swapon mm/swapfile.c:2395
- [<ffffffff812242c0>] SyS_swapon+0x3c0/0x1850 mm/swapfile.c:2345
- [<ffffffff81e97c8a>] ia32_do_call+0x1b/0x25
-
-Looks like the swap_lock should be taken when iterating through the
-swap_info array on lines 2392 - 2401: q->swap_file may be reset to
-NULL by another thread before it is dereferenced for f_mapping.
-
-But why is that iteration needed at all?  Doesn't the claim_swapfile()
-which follows do all that is needed to check for a duplicate entry -
-FMODE_EXCL on a bdev, testing IS_SWAPFILE under i_mutex on a regfile?
-
-Well, not quite: bd_may_claim() allows the same "holder" to claim the
-bdev again, so we do need to use a different holder than "sys_swapon";
-and we should not replace appropriate -EBUSY by inappropriate -EINVAL.
-
-Index i was reused in a cpu loop further down: renamed cpu there.
-
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: a2de733c78fa ("btrfs: scrub")
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- mm/swapfile.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+ fs/btrfs/scrub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -2144,11 +2144,10 @@ static int claim_swapfile(struct swap_in
- 	if (S_ISBLK(inode->i_mode)) {
- 		p->bdev = bdgrab(I_BDEV(inode));
- 		error = blkdev_get(p->bdev,
--				   FMODE_READ | FMODE_WRITE | FMODE_EXCL,
--				   sys_swapon);
-+				   FMODE_READ | FMODE_WRITE | FMODE_EXCL, p);
- 		if (error < 0) {
- 			p->bdev = NULL;
--			return -EINVAL;
-+			return error;
- 		}
- 		p->old_block_size = block_size(p->bdev);
- 		error = set_blocksize(p->bdev, PAGE_SIZE);
-@@ -2365,7 +2364,6 @@ SYSCALL_DEFINE2(swapon, const char __use
- 	struct filename *name;
- 	struct file *swap_file = NULL;
- 	struct address_space *mapping;
--	int i;
- 	int prio;
- 	int error;
- 	union swap_header *swap_header;
-@@ -2405,19 +2403,8 @@ SYSCALL_DEFINE2(swapon, const char __use
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -417,6 +417,7 @@ struct scrub_ctx *scrub_setup_ctx(struct
+ 	sctx->pages_per_rd_bio = pages_per_rd_bio;
+ 	sctx->curr = -1;
+ 	sctx->dev_root = dev->dev_root;
++	INIT_LIST_HEAD(&sctx->csum_list);
+ 	for (i = 0; i < SCRUB_BIOS_PER_SCTX; ++i) {
+ 		struct scrub_bio *sbio;
  
- 	p->swap_file = swap_file;
- 	mapping = swap_file->f_mapping;
--
--	for (i = 0; i < nr_swapfiles; i++) {
--		struct swap_info_struct *q = swap_info[i];
--
--		if (q == p || !q->swap_file)
--			continue;
--		if (mapping == q->swap_file->f_mapping) {
--			error = -EBUSY;
--			goto bad_swap;
--		}
--	}
--
- 	inode = mapping->host;
-+
- 	/* If S_ISREG(inode->i_mode) will do mutex_lock(&inode->i_mutex); */
- 	error = claim_swapfile(p, inode);
- 	if (unlikely(error))
-@@ -2450,6 +2437,8 @@ SYSCALL_DEFINE2(swapon, const char __use
- 		goto bad_swap;
- 	}
- 	if (p->bdev && blk_queue_nonrot(bdev_get_queue(p->bdev))) {
-+		int cpu;
-+
- 		p->flags |= SWP_SOLIDSTATE;
- 		/*
- 		 * select a random position to start with to help wear leveling
-@@ -2468,9 +2457,9 @@ SYSCALL_DEFINE2(swapon, const char __use
- 			error = -ENOMEM;
- 			goto bad_swap;
- 		}
--		for_each_possible_cpu(i) {
-+		for_each_possible_cpu(cpu) {
- 			struct percpu_cluster *cluster;
--			cluster = per_cpu_ptr(p->percpu_cluster, i);
-+			cluster = per_cpu_ptr(p->percpu_cluster, cpu);
- 			cluster_set_null(&cluster->index);
- 		}
- 	}
+@@ -444,7 +445,6 @@ struct scrub_ctx *scrub_setup_ctx(struct
+ 	atomic_set(&sctx->workers_pending, 0);
+ 	atomic_set(&sctx->cancel_req, 0);
+ 	sctx->csum_size = btrfs_super_csum_size(fs_info->super_copy);
+-	INIT_LIST_HEAD(&sctx->csum_list);
+ 
+ 	spin_lock_init(&sctx->list_lock);
+ 	spin_lock_init(&sctx->stat_lock);
 
