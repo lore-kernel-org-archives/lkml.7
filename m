@@ -2,32 +2,32 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C5EC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A74C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7D320659
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0856720659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfGGTkW (ORCPT
+        id S1728034AbfGGTk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:40:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58158 "EHLO
+        Sun, 7 Jul 2019 15:40:28 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58054 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727690AbfGGTiT (ORCPT
+        by vger.kernel.org with ESMTP id S1727673AbfGGTiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:19 -0400
+        Sun, 7 Jul 2019 15:38:17 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzG-0006j1-7y; Sun, 07 Jul 2019 20:38:14 +0100
+        id 1hkCzG-0006jV-7a; Sun, 07 Jul 2019 20:38:14 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz9-0005gL-GM; Sun, 07 Jul 2019 20:38:07 +0100
+        id 1hkCz9-0005gp-VC; Sun, 07 Jul 2019 20:38:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kirill Smelkov" <kirr@nexedi.com>,
-        "Miklos Szeredi" <mszeredi@redhat.com>, stable@vger.kernel.org
+        "David S. Miller" <davem@davemloft.net>,
+        "Amit Klein" <aksecurity@gmail.com>,
+        "Pavel Emelyanov" <xemul@openvz.org>,
+        "Benny Pinkas" <benny@pinkas.net>,
+        "Eric Dumazet" <edumazet@google.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.894543405@decadent.org.uk>
+Message-ID: <lsq.1562518457.845864780@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 123/129] fuse: Add FOPEN_STREAM to use stream_open()
+Subject: [PATCH 3.16 129/129] netns: provide pure entropy for net_hash_mix()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,88 +58,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kirill Smelkov <kirr@nexedi.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
+commit 355b98553789b646ed97ad801a619ff898471b92 upstream.
 
-Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
-POSIX") files opened even via nonseekable_open gate read and write via lock
-and do not allow them to be run simultaneously. This can create read vs
-write deadlock if a filesystem is trying to implement a socket-like file
-which is intended to be simultaneously used for both read and write from
-filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
-stream-like files so that read and write can run simultaneously without
-deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
-on writes to /proc/xen/xenbus") for a similar deadlock example on
-/proc/xen/xenbus.
+net_hash_mix() currently uses kernel address of a struct net,
+and is used in many places that could be used to reveal this
+address to a patient attacker, thus defeating KASLR, for
+the typical case (initial net namespace, &init_net is
+not dynamically allocated)
 
-To avoid such deadlock it was tempting to adjust fuse_finish_open to use
-stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
-but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
-and in particular GVFS which actually uses offset in its read and write
-handlers
+I believe the original implementation tried to avoid spending
+too many cycles in this function, but security comes first.
 
-	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+Also provide entropy regardless of CONFIG_NET_NS.
 
-so if we would do such a change it will break a real user.
-
-Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
-opened handler is having stream-like semantics; does not use file position
-and thus the kernel is free to issue simultaneous read and write request on
-opened file handle.
-
-This patch together with stream_open() should be added to stable kernels
-starting from v3.14+. This will allow to patch OSSPD and other FUSE
-filesystems that provide stream-like files to return FOPEN_STREAM |
-FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
-kernel versions. This should work because fuse_finish_open ignores unknown
-open flags returned from a filesystem and so passing FOPEN_STREAM to a
-kernel that is not aware of this flag cannot hurt. In turn the kernel that
-is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
-is sufficient to implement streams without read vs write deadlock.
-
-Cc: stable@vger.kernel.org # v3.14+
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 0b4419162aa6 ("netns: introduce the net_hash_mix "salt" for hashes")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Reported-by: Benny Pinkas <benny@pinkas.net>
+Cc: Pavel Emelyanov <xemul@openvz.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/fuse/file.c            | 4 +++-
- include/uapi/linux/fuse.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index bc8f5de48fd9..69e471b042a6 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -214,7 +214,9 @@ void fuse_finish_open(struct inode *inode, struct file *file)
- 		file->f_op = &fuse_direct_io_file_operations;
- 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
- 		invalidate_inode_pages2(inode->i_mapping);
--	if (ff->open_flags & FOPEN_NONSEEKABLE)
-+	if (ff->open_flags & FOPEN_STREAM)
-+		stream_open(inode, file);
-+	else if (ff->open_flags & FOPEN_NONSEEKABLE)
- 		nonseekable_open(inode, file);
- 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
- 		struct fuse_inode *fi = get_fuse_inode(inode);
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index 25084a052a1e..cff91b018953 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -205,10 +205,12 @@ struct fuse_file_lock {
-  * FOPEN_DIRECT_IO: bypass page cache for this open file
-  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
-  * FOPEN_NONSEEKABLE: the file is not seekable
-+ * FOPEN_STREAM: the file is stream-like (no file position at all)
-  */
- #define FOPEN_DIRECT_IO		(1 << 0)
- #define FOPEN_KEEP_CACHE	(1 << 1)
- #define FOPEN_NONSEEKABLE	(1 << 2)
-+#define FOPEN_STREAM		(1 << 4)
+--- a/include/net/net_namespace.h
++++ b/include/net/net_namespace.h
+@@ -54,6 +54,8 @@ struct net {
+ #endif
+ 	spinlock_t		rules_mod_lock;
  
- /**
-  * INIT request/reply flags
++	u32			hash_mix;
++
+ 	struct list_head	list;		/* list of network namespaces */
+ 	struct list_head	cleanup_list;	/* namespaces on death row */
+ 	struct list_head	exit_list;	/* Use only net_mutex */
+--- a/include/net/netns/hash.h
++++ b/include/net/netns/hash.h
+@@ -1,21 +1,10 @@
+ #ifndef __NET_NS_HASH_H__
+ #define __NET_NS_HASH_H__
+ 
+-#include <asm/cache.h>
++#include <net/net_namespace.h>
+ 
+-struct net;
+-
+-static inline unsigned int net_hash_mix(struct net *net)
++static inline u32 net_hash_mix(const struct net *net)
+ {
+-#ifdef CONFIG_NET_NS
+-	/*
+-	 * shift this right to eliminate bits, that are
+-	 * always zeroed
+-	 */
+-
+-	return (unsigned)(((unsigned long)net) >> L1_CACHE_SHIFT);
+-#else
+-	return 0;
+-#endif
++	return net->hash_mix;
+ }
+ #endif
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -156,6 +156,7 @@ static __net_init int setup_net(struct n
+ 
+ 	atomic_set(&net->count, 1);
+ 	atomic_set(&net->passive, 1);
++	get_random_bytes(&net->hash_mix, sizeof(u32));
+ 	net->dev_base_seq = 1;
+ 	net->user_ns = user_ns;
+ 
 
