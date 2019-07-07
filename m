@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F159FC48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 22:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49A0C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 22:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C540620684
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 22:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CB220684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 22:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj4CGCsL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8uspIoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfGGWgA (ORCPT
+        id S1728509AbfGGWfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 18:36:00 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46997 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbfGGWfy (ORCPT
+        Sun, 7 Jul 2019 18:35:53 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36429 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728454AbfGGWft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 18:35:54 -0400
-Received: by mail-qk1-f194.google.com with SMTP id r4so11824295qkm.13;
-        Sun, 07 Jul 2019 15:35:53 -0700 (PDT)
+        Sun, 7 Jul 2019 18:35:49 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z4so12806877qtc.3;
+        Sun, 07 Jul 2019 15:35:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zYZMMVB0p2vPiUsxM7xlHTtkTuiIoBu14nXRTurteBU=;
-        b=Dj4CGCsLeD650+nQjlgz0ZPQ5dExQ8Y7KAzdCDqRn6gSOx13yKk38EsvVTOmSdzwf9
-         ADoBTzdFe5PvByqJbzwar5z/iqq+GVOdgHNzzFB484qcmzc2paK5RgxutdQwOINylWYG
-         +1cHnYwVjE6SHvmVNccFq6D/Spsu0v5C0NsdiEA0CHKm2TonQ9tWPh1GnD40qYcpzPYO
-         fX4qC/8a44mmutcbTp2FxFukGy9wW4leBJZyiuZHa+ToKoYfLo036xIT99c6KiiV809B
-         ZTBPC+lVNaVi8VoRW1hmqFr6pvaO69ho18NRJswDulJ05Wdj5wf6yEMBnhB1DGImFwBx
-         ucvA==
+        bh=p+2r/O+E4fvVLMNxUO8qZK4WdlrN268i+UKH01Ji1MI=;
+        b=X8uspIoSYM48jLCv6CptdUc+JDEoF4OvijWUkQ9RMcZgIzZe+aeJgHcLzSzTz/8Fdf
+         2CcSRJA6E8DVtlvf7TdYkVlM/aaHN7y5YbfAjsDMmzq3punQ0GVA1PpzdDLNepttcjXc
+         MBcljxrBHuI61no6qQjHRFsaaI3udS/PYU2Nuxpw3R3dpmBC4OY02Rmdg1ilHk7tT5Gq
+         3DpipdiiV7AC+Fqfwlg6Bgjm1/rgekeU8yedIUNM+Bxf/fUgObZx84qJ1JpTC5v715tA
+         gOkXfgRbDXgJzV6fAKXlQ1SxKL+1d3okZBjmV0W2Er4D2S5eHqz8wfwGFzQBxPAhqMj+
+         GBbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zYZMMVB0p2vPiUsxM7xlHTtkTuiIoBu14nXRTurteBU=;
-        b=Kv2dwXCE95yFVsqXiTErkLkkKrD893J3RrxyWDZCricqer/y+nKTu4rJnGduveJP+f
-         pS2IwK2KHuChfLX7QbaC8Uw5YfJpnrMmyshK81v68Lj27ILbNgHlMPcjyuL/dbFEeO1V
-         UMBGPziYt5+BSR66uLOeWxYHaf0GzSAuiXyT8gRi8FtYgDIZYOhStGEoJRAhDmYtGo2a
-         7FAq33D4nNEtNZ1azffsOi8KCzLdDKZEE5Pan5Yi0379VbMCESuACq2F/hCuJIZ0rL2y
-         JgXSIb/qSna+ZUN0ptvax5xZdHgv6t5DXKOztrnC47Bo7RgjD/3u0/Vm5lfs5lRs/qHp
-         x3EA==
-X-Gm-Message-State: APjAAAUe2+GY2/to0NvoTkWDPpGx2ef1HlMbLyTPN/4XDMWeY/gSmU6W
-        HLI0+27R/W7RPaz4Cc1wLCI=
-X-Google-Smtp-Source: APXvYqyntEvL8BaKmjjASARnHCPbkwUcYPtDsaVd6FdncEMzylJMgU9a9OfY9U2aBIv0HlJXjGx5bA==
-X-Received: by 2002:ae9:e64d:: with SMTP id x13mr11143733qkl.445.1562538953226;
-        Sun, 07 Jul 2019 15:35:53 -0700 (PDT)
+        bh=p+2r/O+E4fvVLMNxUO8qZK4WdlrN268i+UKH01Ji1MI=;
+        b=rWsukh0c18Ba6Fj95AIgkPROo+56uiuvGI28tVPRG6bilrNL6xwjRhk8se1CIWa1kW
+         hC7gIJjP45bbJDUsIAw9BoB/vQxBJ0+oiyXoBdvm3Kmolz+Uz2DmdlBvylbVInde2A/y
+         Al4H6kAHqFvkEzO/OWjubUegwBHu9BCUT3CcQ1MjUNXZSfka4scUER/v0PYN/ibkk7Ti
+         Rbd59s5c2xQqxLBboZOAQe9N+GyX9bizn7FrTqbKUw0gurhtef5m7w9MxxqFlhqsOtUM
+         EuYDm+oAar1FPInl/LtPHtkATmfaA+6k8uGno2vlTBjiHSIQNhd8en2K8vM7JymDnKii
+         Fviw==
+X-Gm-Message-State: APjAAAX1P8gJ08cNhq87zFOl/zADNcKfqUZLErfscXC3C/3YXPyiiTt3
+        F4NTys9EZFhJHY0TlCJagwA=
+X-Google-Smtp-Source: APXvYqwkzBBxiZBWgjovlFz21cgelqs9FVXG4UTIF9SQUitStZ0cvbkQVcf47vrFK16eq5ZsTw/hHw==
+X-Received: by 2002:a05:6214:3a5:: with SMTP id m5mr12364645qvy.7.1562538948728;
+        Sun, 07 Jul 2019 15:35:48 -0700 (PDT)
 Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id p4sm6998453qkb.84.2019.07.07.15.35.51
+        by smtp.gmail.com with ESMTPSA id p4sm6998453qkb.84.2019.07.07.15.35.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Jul 2019 15:35:52 -0700 (PDT)
+        Sun, 07 Jul 2019 15:35:48 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 23/24] PM / devfreq: tegra30: Increase sampling period to 16ms
-Date:   Mon,  8 Jul 2019 01:33:02 +0300
-Message-Id: <20190707223303.6755-24-digetx@gmail.com>
+Subject: [PATCH v4 21/24] PM / devfreq: tegra30: Synchronize average count on target's update
+Date:   Mon,  8 Jul 2019 01:33:00 +0300
+Message-Id: <20190707223303.6755-22-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190707223303.6755-1-digetx@gmail.com>
 References: <20190707223303.6755-1-digetx@gmail.com>
@@ -79,29 +79,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Increase sampling period by 4ms to get a nicer pow2 value, converting
-diving into shifts in the code. That's more preferable for Tegra30 that
-doesn't have hardware divider instructions because of older Cortex-A9 CPU.
-In a result boosting events are delayed by 4ms, which is not sensible in
-practice at all.
+The average count may get out of sync if interrupt was disabled / avoided
+for a long time due to upper watermark optimization, hence it should be
+re-synced on each target's update to ensure that watermarks are set up
+correctly on EMC rate-change notification and that a correct frequency
+is selected for device.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/devfreq/tegra30-devfreq.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 19e872a64148..bde19b758643 100644
+index 4d582809acb6..8a674fad26be 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -71,7 +71,7 @@
-  * translates to 2 ^ (K_VAL + 1). ex: 2 ^ (6 + 1) = 128
-  */
- #define ACTMON_AVERAGE_WINDOW_LOG2				6
--#define ACTMON_SAMPLING_PERIOD					12 /* ms */
-+#define ACTMON_SAMPLING_PERIOD					16 /* ms */
+@@ -466,11 +466,41 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+ 			      dev->boost_freq, cpufreq_get(0));
+ }
  
- #define KHZ							1000
++static void tegra_devfreq_sync_avg_count(struct tegra_devfreq *tegra,
++					 struct tegra_devfreq_device *dev)
++{
++	u32 avg_count, avg_freq, old_upper, new_upper;
++
++	avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
++	avg_freq = avg_count / ACTMON_SAMPLING_PERIOD;
++
++	old_upper = tegra_actmon_upper_freq(tegra, dev->avg_freq);
++	new_upper = tegra_actmon_upper_freq(tegra, avg_freq);
++
++	/* similar to ISR, see comments in actmon_isr_device() */
++	if (old_upper != new_upper) {
++		dev->avg_freq = avg_freq;
++		dev->boost_freq = 0;
++	}
++}
++
+ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
+ 					  struct tegra_devfreq_device *dev)
+ {
+ 	unsigned long target_freq;
+ 
++	/*
++	 * The avg_count / avg_freq is getting snapshoted on device's
++	 * interrupt, but there are cases where actual value need to
++	 * be utilized on target's update, like CPUFreq boosting and
++	 * overriding the min freq via /sys/class/devfreq/devfreq0/min_freq
++	 * because we're optimizing the upper watermark based on the
++	 * actual EMC frequency. This means that interrupt may be
++	 * inactive for a long time and thus making snapshoted value
++	 * outdated.
++	 */
++	tegra_devfreq_sync_avg_count(tegra, dev);
++
+ 	target_freq = min(dev->avg_freq + dev->boost_freq, KHZ_MAX);
+ 	target_freq = tegra_actmon_account_cpu_freq(tegra, dev, target_freq);
  
 -- 
 2.22.0
