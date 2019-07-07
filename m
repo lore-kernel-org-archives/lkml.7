@@ -2,67 +2,85 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4115AC48BDC
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E4FC48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B0C20830
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 777C120659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:38:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bswBitiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfGGNfi (ORCPT
+        id S1727025AbfGGNiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 09:35:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34018 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725838AbfGGNfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 09:35:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 15734AC2D;
-        Sun,  7 Jul 2019 13:35:37 +0000 (UTC)
-Subject: Re: [PATCH 0/6] Add Banana Pi BPI-W2 basic support
-To:     Aleix Roca Nonell <kernelrocks@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-realtek-soc@lists.infradead.org
-References: <20190707132223.GA13340@arks.localdomain>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Linux GmbH
-Message-ID: <c819915b-dd4b-0eb3-9e01-9c0cdcf861b0@suse.de>
-Date:   Sun, 7 Jul 2019 15:35:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190707132223.GA13340@arks.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sun, 7 Jul 2019 09:38:25 -0400
+Received: from m12-11.163.com ([220.181.12.11]:33682 "EHLO m12-11.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbfGGNiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 09:38:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=NrRMf+4UgJGNCNOQlU
+        9AVOTl9cgAjMKG/pNqJg2scAM=; b=bswBitiNb2Xh42typddzv1P4VsaUq5X99b
+        EQXE8HHEfHgyI9NOGUj7H1Y3RKPDGzMcUlGdZS+XbCL12c2VpkwMdV+BvSJwjPxX
+        m5MX503do+LDsLKB9cLgw14hItz4eGEBK+NUi5Kol6BVBcym8AQD7rzjhe5Nwm40
+        J75kEHdAc=
+Received: from localhost.localdomain (unknown [119.123.132.78])
+        by smtp7 (Coremail) with SMTP id C8CowAA3n9+79SFdwUpnDA--.20022S3;
+        Sun, 07 Jul 2019 21:38:05 +0800 (CST)
+From:   Yang Wei <albin_yang@163.com>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, tglx@linutronix.de, albin_yang@163.com
+Subject: [PATCH net] nfc: fix potential illegal memory access
+Date:   Sun,  7 Jul 2019 21:37:40 +0800
+Message-Id: <1562506660-15853-1-git-send-email-albin_yang@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: C8CowAA3n9+79SFdwUpnDA--.20022S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKw15CFyUKFWkAFWUXr1DJrb_yoWfJrb_Zr
+        ySv3W8K398W3s7Cw4Skrs8JFyxGw4IgF1kurWIga1xZa43JFnxGrWvqr93ur4UW3y2kF1k
+        Gr4DArZ5Ar1xGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU89jjDUUUUU==
+X-Originating-IP: [119.123.132.78]
+X-CM-SenderInfo: pdoex0xb1d0wi6rwjhhfrp/1tbiqx3qolUMRXXyeQAAsc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 07.07.19 um 15:22 schrieb Aleix Roca Nonell:
-> This patch series adds minimum support to boot a Banana Pi BPI-W2.
+The frags_q is used before __skb_queue_head_init when conn_info is
+NULL. It may result in illegal memory access.
 
-Thanks for looking into this.
+Signed-off-by: Yang Wei <albin_yang@163.com>
+---
+ net/nfc/nci/data.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Please CC linux-realtek-soc@lists.infradead.org next time.
-
-Regards,
-Andreas
-
+diff --git a/net/nfc/nci/data.c b/net/nfc/nci/data.c
+index 0a0c265..b5f16cb 100644
+--- a/net/nfc/nci/data.c
++++ b/net/nfc/nci/data.c
+@@ -104,14 +104,14 @@ static int nci_queue_tx_data_frags(struct nci_dev *ndev,
+ 
+ 	pr_debug("conn_id 0x%x, total_len %d\n", conn_id, total_len);
+ 
++	__skb_queue_head_init(&frags_q);
++
+ 	conn_info = nci_get_conn_info_by_conn_id(ndev, conn_id);
+ 	if (!conn_info) {
+ 		rc = -EPROTO;
+ 		goto free_exit;
+ 	}
+ 
+-	__skb_queue_head_init(&frags_q);
+-
+ 	while (total_len) {
+ 		frag_len =
+ 			min_t(int, total_len, conn_info->max_pkt_payload_len);
 -- 
-SUSE Linux GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+2.7.4
+
+
