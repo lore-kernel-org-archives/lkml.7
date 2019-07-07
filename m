@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04C3C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A7FC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B797720651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD7E20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbfGGTiO (ORCPT
+        id S1728154AbfGGTl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56778 "EHLO
+        Sun, 7 Jul 2019 15:41:56 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57682 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727435AbfGGTiA (ORCPT
+        by vger.kernel.org with ESMTP id S1727622AbfGGTiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:00 -0400
+        Sun, 7 Jul 2019 15:38:13 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz0-0006d0-P1; Sun, 07 Jul 2019 20:37:58 +0100
+        id 1hkCz8-0006jV-IQ; Sun, 07 Jul 2019 20:38:06 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCyz-0005Wv-Kc; Sun, 07 Jul 2019 20:37:57 +0100
+        id 1hkCz6-0005dT-Kf; Sun, 07 Jul 2019 20:38:04 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Yangtao Li" <tiny.windzz@gmail.com>,
-        "Stephen Boyd" <sboyd@kernel.org>
+        "Axel Lin" <axel.lin@ingics.com>,
+        "Charles Keepax" <ckeepax@opensource.cirrus.com>,
+        "Mark Brown" <broonie@kernel.org>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.704973466@decadent.org.uk>
+Message-ID: <lsq.1562518457.992415495@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 008/129] clk: imx6sx: fix refcount leak in
- imx6sx_clocks_init()
+Subject: [PATCH 3.16 089/129] regulator: wm831x-dcdc: Fix list of
+ wm831x_dcdc_ilim from mA to uA
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,31 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-commit 1731e14fb30212dd8c1e9f8fc1af061e56498c55 upstream.
+commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 upstream.
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
+with min_uA and max_uA.
+While at it also make the array const and change to use unsigned int.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: d55135689019 ("ARM: imx: add clock driver for imx6sx")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-[bwh: Backported to 3.16: adjust filename]
+Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/mach-imx/clk-imx6sx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/wm831x-dcdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/mach-imx/clk-imx6sx.c
-+++ b/arch/arm/mach-imx/clk-imx6sx.c
-@@ -143,6 +143,7 @@ static void __init imx6sx_clocks_init(st
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6sx-anatop");
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
-+	of_node_put(np);
+--- a/drivers/regulator/wm831x-dcdc.c
++++ b/drivers/regulator/wm831x-dcdc.c
+@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(
+ }
  
- 	/*                                              type               name             parent_name   base         div_mask */
- 	clks[IMX6SX_CLK_PLL1_SYS]       = imx_clk_pllv3(IMX_PLLV3_SYS,     "pll1_sys",      "osc",        base,        0x7f);
+ /* Current limit options */
+-static u16 wm831x_dcdc_ilim[] = {
+-	125, 250, 375, 500, 625, 750, 875, 1000
++static const unsigned int wm831x_dcdc_ilim[] = {
++	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
+ };
+ 
+ static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
 
