@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6465C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B83AC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC3720663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E953420651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfGGToZ (ORCPT
+        id S1728472AbfGGToc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:44:25 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57330 "EHLO
+        Sun, 7 Jul 2019 15:44:32 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57320 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727555AbfGGTiJ (ORCPT
+        by vger.kernel.org with ESMTP id S1727551AbfGGTiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:09 -0400
+        Sun, 7 Jul 2019 15:38:08 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0006gs-BW; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz6-0006hP-5i; Sun, 07 Jul 2019 20:38:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0005an-UT; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz4-0005bS-Ir; Sun, 07 Jul 2019 20:38:02 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, "Jan Kara" <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.585148062@decadent.org.uk>
+Message-ID: <lsq.1562518457.960525638@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 056/129] jbd2: clear dirty flag when revoking a
- buffer from an older transaction
+Subject: [PATCH 3.16 064/129] iscsi_ibft: Fix missing break in switch
+ statement
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,77 +56,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "zhangyi (F)" <yi.zhang@huawei.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 904cdbd41d749a476863a0ca41f6f396774f26e4 upstream.
+commit df997abeebadaa4824271009e2d2b526a70a11cb upstream.
 
-Now, we capture a data corruption problem on ext4 while we're truncating
-an extent index block. Imaging that if we are revoking a buffer which
-has been journaled by the committing transaction, the buffer's jbddirty
-flag will not be cleared in jbd2_journal_forget(), so the commit code
-will set the buffer dirty flag again after refile the buffer.
+Add missing break statement in order to prevent the code from falling
+through to case ISCSI_BOOT_TGT_NAME, which is unnecessary.
 
-fsx                               kjournald2
-                                  jbd2_journal_commit_transaction
-jbd2_journal_revoke                commit phase 1~5...
- jbd2_journal_forget
-   belongs to older transaction    commit phase 6
-   jbddirty not clear               __jbd2_journal_refile_buffer
-                                     __jbd2_journal_unfile_buffer
-                                      test_clear_buffer_jbddirty
-                                       mark_buffer_dirty
+This bug was found thanks to the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-Finally, if the freed extent index block was allocated again as data
-block by some other files, it may corrupt the file data after writing
-cached pages later, such as during unmount time. (In general,
-clean_bdev_aliases() related helpers should be invoked after
-re-allocation to prevent the above corruption, but unfortunately we
-missed it when zeroout the head of extra extent blocks in
-ext4_ext_handle_unwritten_extents()).
-
-This patch mark buffer as freed and set j_next_transaction to the new
-transaction when it already belongs to the committing transaction in
-jbd2_journal_forget(), so that commit code knows it should clear dirty
-bits when it is done with the buffer.
-
-This problem can be reproduced by xfstests generic/455 easily with
-seeds (3246 3247 3248 3249).
-
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Fixes: b33a84a38477 ("ibft: convert iscsi_ibft module to iscsi boot lib")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/jbd2/transaction.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/firmware/iscsi_ibft.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1479,14 +1479,21 @@ int jbd2_journal_forget (handle_t *handl
- 		/* However, if the buffer is still owned by a prior
- 		 * (committing) transaction, we can't drop it yet... */
- 		JBUFFER_TRACE(jh, "belongs to older transaction");
--		/* ... but we CAN drop it from the new transaction if we
--		 * have also modified it since the original commit. */
-+		/* ... but we CAN drop it from the new transaction through
-+		 * marking the buffer as freed and set j_next_transaction to
-+		 * the new transaction, so that not only the commit code
-+		 * knows it should clear dirty bits when it is done with the
-+		 * buffer, but also the buffer can be checkpointed only
-+		 * after the new transaction commits. */
- 
--		if (jh->b_next_transaction) {
--			J_ASSERT(jh->b_next_transaction == transaction);
-+		set_buffer_freed(bh);
-+
-+		if (!jh->b_next_transaction) {
- 			spin_lock(&journal->j_list_lock);
--			jh->b_next_transaction = NULL;
-+			jh->b_next_transaction = transaction;
- 			spin_unlock(&journal->j_list_lock);
-+		} else {
-+			J_ASSERT(jh->b_next_transaction == transaction);
- 
- 			/*
- 			 * only drop a reference if this transaction modified
+--- a/drivers/firmware/iscsi_ibft.c
++++ b/drivers/firmware/iscsi_ibft.c
+@@ -503,6 +503,7 @@ static umode_t __init ibft_check_tgt_for
+ 	case ISCSI_BOOT_TGT_NIC_ASSOC:
+ 	case ISCSI_BOOT_TGT_CHAP_TYPE:
+ 		rc = S_IRUGO;
++		break;
+ 	case ISCSI_BOOT_TGT_NAME:
+ 		if (tgt->tgt_name_len)
+ 			rc = S_IRUGO;
 
