@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE06C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3008C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5453206A3
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AB6206A3
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2eiVdE2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROJDc2rq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfGGNXb (ORCPT
+        id S1727260AbfGGNXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 09:23:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46332 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfGGNXa (ORCPT
+        Sun, 7 Jul 2019 09:23:45 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51417 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfGGNXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 09:23:30 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z1so9602160wru.13;
-        Sun, 07 Jul 2019 06:23:29 -0700 (PDT)
+        Sun, 7 Jul 2019 09:23:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so13248330wma.1;
+        Sun, 07 Jul 2019 06:23:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=/gM1Cn1FoiamDNCiMz/MtN94v9T5GO29x/2+fXZ9JqI=;
-        b=E2eiVdE2E96RFcBV9l+RuYgS5g+FZf9Wsvzf5K+BhmwGfvPQHslK6V69u0+ulfqA/B
-         SUumPXD96KwTUlmivng9yiaRtbvkkyjVy3lHexkqnRuunQK1EtXcgSqHQvvbQUSBjxjN
-         XGJCQ+Jhr5Xs/wsEWsBjQ979x1yCysw9zdY6lp0Wfte+B0pHijSVr+gNsVG7mG8RzLxC
-         bmeBZ8O04lwotsKSHZUfR4iOqayfv1joHAS8opcdA77PNBR7pQIN5JXRhWDMNGjQudw9
-         OlomOfmcBy1hiL02rsyJ0hx9ZtcjetyGuQpPuARqugzYQA4WGP8UqN3dV6jQs+pU4qzw
-         iaqw==
+        bh=K0RTcoO3eeXEQ/VOA/kvp7SGagErS4KYjRrruQqiKoQ=;
+        b=ROJDc2rqI7UvbNRweUh+r2bBgqFCTo9JCUFGVnleU7Q1mCJU0J7+3xseQrxNmt45Yg
+         WjvdlCjNcunxGMwkI6msx/DlOmxFwzji4KijNRNXrTfGc5Qr6UlDXHhRaGnXNsmwtJjl
+         YNV4aPs1x31SxEsH8TDFzRCRVJUgeMi1o2DXjFi4113Ie3IPoHIHWNNjH2vyKRj1wApi
+         M8YTEd4svLWP53fLso5DcNLh0sgvcqCBRlVfEMo/y9NcXuFoUxFjkGHoalrTYn+Ktxge
+         tqDgCaXiI7zjprSCLBxBE6VyR5oPFGW6pvD5PQ6/pOQoJHW+rPCQ0KzMzURjYbCSqf33
+         8SJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=/gM1Cn1FoiamDNCiMz/MtN94v9T5GO29x/2+fXZ9JqI=;
-        b=tj0/HzrLmApLmiLJrTWGwzYOB53wAeIZ5oU/R+88/7twtfhSIBR/NRcYRgifl74QEI
-         yATvEW+La3jrVUjibv5QMSmUJL9x0ajQyCt4CA1yc+vuLk912smG6C5601tnGMUqTkS4
-         xKGXKCDQZZDq85u0x5LORNhicb/M3Uv3kP9f7vCAng8TmvRGtpK9YSy8V8wV4lPx8bNq
-         uxgRoDGXaF42juG5LOhE0yi4KxlaS+wLe+p2VE0PVkNB09H2KtL2D5KdgIv2bLwDk8AK
-         LB/S5iYgv2x2yMh4zHJpzVtfuWoZha3lwGqlnqWKGbJQ2e4u4WjE+2SxLKVM94ZqIcAR
-         MYeA==
-X-Gm-Message-State: APjAAAXZIdeITIuKxQupY4+xCrsTW5L/eBYSMhyAJM8J46Pl/jawyg33
-        QKJdlbqNHDmih37NmYDW7r8=
-X-Google-Smtp-Source: APXvYqwf797DK+OmySVwPFquD4vMHQf7L6s/P5WImTsm6ZajfhogqaJ+Ut33Pst7Etxe780UODx3Qg==
-X-Received: by 2002:adf:b64b:: with SMTP id i11mr13687369wre.205.1562505808556;
-        Sun, 07 Jul 2019 06:23:28 -0700 (PDT)
+        bh=K0RTcoO3eeXEQ/VOA/kvp7SGagErS4KYjRrruQqiKoQ=;
+        b=lxXryhKnXn4ARol8cfFI87wJWgr70WESoYTA7uXDOUCVif7bQS/VdYsHUbyI15rHv0
+         saPVLLbdGkuoH5Vwyj/zRHLeJ7fN1USFUpJqXG4hta7wNxZv3DZaZA3LoghPGHOXTsok
+         oDjiLE8v3IBCfEwUP7s98k39qqgXL3EzaIRb/BLkY5jIrX8FQ1sT1ASMxO1M0d07Wb4R
+         BhsneA0nd4s+h/51DXCYiQ4L/2gRWl+MMlraLli9Mz6hEHYKewXAujg8IPLJYxH0EDsY
+         pq1o6DYS2O7fV+Z2uXUR6RvCcUB28qT2qbwFDdImdELdmFNbRWK3BOzNg9X+MjWSonYE
+         t0FQ==
+X-Gm-Message-State: APjAAAWtxAXs+3T0NtnIP8hx8QZV5mGqb3444zEFgko4/WOEvWTgLKow
+        A5bXfS3I57FpqRbex1N367ZB6fV+nyo=
+X-Google-Smtp-Source: APXvYqx2x2SBLnwpDYcIhsQfbAcvKWlOd53k5NUzpD1x6Bg50bDEMiHB/Fi49gUVjnnroUk3BQURNg==
+X-Received: by 2002:a7b:c4c1:: with SMTP id g1mr12835947wmk.14.1562505822861;
+        Sun, 07 Jul 2019 06:23:42 -0700 (PDT)
 Received: from arks.localdomain (179.red-83-58-138.dynamicip.rima-tde.net. [83.58.138.179])
-        by smtp.gmail.com with ESMTPSA id v12sm4294147wrr.87.2019.07.07.06.23.27
+        by smtp.gmail.com with ESMTPSA id h8sm13515959wmf.12.2019.07.07.06.23.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 07 Jul 2019 06:23:28 -0700 (PDT)
-Date:   Sun, 7 Jul 2019 15:23:25 +0200
+        Sun, 07 Jul 2019 06:23:42 -0700 (PDT)
+Date:   Sun, 7 Jul 2019 15:23:39 +0200
 From:   Aleix Roca Nonell <kernelrocks@gmail.com>
 To:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,8 +68,8 @@ To:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
 Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] arm64: dts: realtek: Add realtek intc to RTD129x
-Message-ID: <20190707132325.GE13340@arks.localdomain>
+Subject: [PATCH 5/6] dt-bindings: arm: Document RTD1296
+Message-ID: <20190707132339.GF13340@arks.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -79,37 +79,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add realtek's interrupt controller node and interrupt lines
-to UART0
+Add bindings for Relatek RTD1296 SoC. And the Bannana Pi BPI-W2 board.
 
 Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
 ---
- arch/arm64/boot/dts/realtek/rtd129x.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/devicetree/bindings/arm/realtek.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-index 9009db909fab..6f61b9858aa0 100644
---- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
-@@ -29,8 +29,18 @@
- 		/* Exclude up to 2 GiB of RAM */
- 		ranges = <0x80000000 0x80000000 0x80000000>;
+diff --git a/Documentation/devicetree/bindings/arm/realtek.txt b/Documentation/devicetree/bindings/arm/realtek.txt
+index 95839e19ae92..78da1004d38c 100644
+--- a/Documentation/devicetree/bindings/arm/realtek.txt
++++ b/Documentation/devicetree/bindings/arm/realtek.txt
+@@ -20,3 +20,16 @@ Root node property compatible must contain, depending on board:
+ Example:
  
-+		mux1_intc: intc@98007000 {
-+			compatible = "realtek,rtd129x-intc-iso";
-+			#interrupt-cells = <1>;
-+			interrupt-controller;
-+			reg = <0x98007000 0x4 0x98007040 0x4 0x98007004 0x4>;
-+			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		};
+     compatible = "zidoo,x9s", "realtek,rtd1295";
 +
- 		uart0: serial@98007800 {
- 			compatible = "snps,dw-apb-uart";
-+			interrupt-parent = <&mux1_intc>;
-+			interrupts = <2>;
- 			reg = <0x98007800 0x400>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
++
++RTD1296 SoC
++===========
++
++Required root node properties:
++
++ - compatible :  must contain "realtek,rtd1296"
++
++
++Root node property compatible must contain, depending on board:
++
++ - Bannana Pi BPI-W2: "bananapi,bpi-w2"
 -- 
 2.21.0
 
