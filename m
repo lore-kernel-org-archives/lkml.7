@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091E1C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D104C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF9F20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE6520659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfGGTjR (ORCPT
+        id S1727958AbfGGTjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:39:17 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57822 "EHLO
+        Sun, 7 Jul 2019 15:39:15 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57778 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727640AbfGGTiO (ORCPT
+        by vger.kernel.org with ESMTP id S1727634AbfGGTiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:14 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzC-0006j1-HH; Sun, 07 Jul 2019 20:38:10 +0100
+        id 1hkCzC-0006je-Fa; Sun, 07 Jul 2019 20:38:10 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz7-0005eT-PT; Sun, 07 Jul 2019 20:38:05 +0100
+        id 1hkCz8-0005fN-HD; Sun, 07 Jul 2019 20:38:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        "Andrey Ryabinin" <aryabinin@virtuozzo.com>,
-        "Michal Hocko" <mhocko@suse.com>, "Joe Perches" <joe@perches.com>,
-        "Roman Penyaev" <rpenyaev@suse.de>
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.673598026@decadent.org.uk>
+Message-ID: <lsq.1562518457.568896783@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 101/129] mm/vmalloc: fix size check for
- remap_vmalloc_range_partial()
+Subject: [PATCH 3.16 111/129] vxlan: test dev->flags & IFF_UP before
+ calling gro_cells_receive()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,83 +56,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Roman Penyaev <rpenyaev@suse.de>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
+commit 59cbf56fcd98ba2a715b6e97c4e43f773f956393 upstream.
 
-When VM_NO_GUARD is not set area->size includes adjacent guard page,
-thus for correct size checking get_vm_area_size() should be used, but
-not area->size.
+Same reasons than the ones explained in commit 4179cb5a4c92
+("vxlan: test dev->flags & IFF_UP before calling netif_rx()")
 
-This fixes possible kernel oops when userspace tries to mmap an area on
-1 page bigger than was allocated by vmalloc_user() call: the size check
-inside remap_vmalloc_range_partial() accounts non-existing guard page
-also, so check successfully passes but vmalloc_to_page() returns NULL
-(guard page does not physically exist).
+netif_rx() or gro_cells_receive() must be called under a strict contract.
 
-The following code pattern example should trigger an oops:
+At device dismantle phase, core networking clears IFF_UP
+and flush_all_backlogs() is called after rcu grace period
+to make sure no incoming packet might be in a cpu backlog
+and still referencing the device.
 
-  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
-  {
-        void *mem;
+A similar protocol is used for gro_cells infrastructure, as
+gro_cells_destroy() will be called only after a full rcu
+grace period is observed after IFF_UP has been cleared.
 
-        mem = vmalloc_user(4096);
-        BUG_ON(!mem);
-        /* Do not care about mem leak */
+Most drivers call netif_rx() from their interrupt handler,
+and since the interrupts are disabled at device dismantle,
+netif_rx() does not have to check dev->flags & IFF_UP
 
-        return remap_vmalloc_range(vma, mem, 0);
-  }
+Virtual drivers do not have this guarantee, and must
+therefore make the check themselves.
 
-And userspace simply mmaps size + PAGE_SIZE:
+Otherwise we risk use-after-free and/or crashes.
 
-  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
-
-Possible candidates for oops which do not have any explicit size
-checks:
-
-   *** drivers/media/usb/stkwebcam/stk-webcam.c:
-   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
-
-Or the following one:
-
-   *** drivers/video/fbdev/core/fbmem.c
-   static int
-   fb_mmap(struct file *file, struct vm_area_struct * vma)
-        ...
-        res = fb->fb_mmap(info, vma);
-
-Where fb_mmap callback calls remap_vmalloc_range() directly without any
-explicit checks:
-
-   *** drivers/video/fbdev/vfb.c
-   static int vfb_mmap(struct fb_info *info,
-             struct vm_area_struct *vma)
-   {
-       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
-   }
-
-Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: d342894c5d2f ("vxlan: virtual extensible lan")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- mm/vmalloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2141,7 +2141,7 @@ int remap_vmalloc_range_partial(struct v
- 	if (!(area->flags & VM_USERMAP))
- 		return -EINVAL;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1280,6 +1280,14 @@ static void vxlan_rcv(struct vxlan_sock
+ 		}
+ 	}
  
--	if (kaddr + size > area->addr + area->size)
-+	if (kaddr + size > area->addr + get_vm_area_size(area))
- 		return -EINVAL;
++	rcu_read_lock();
++
++	if (unlikely(!(vxlan->dev->flags & IFF_UP))) {
++		rcu_read_unlock();
++		atomic_long_inc(&vxlan->dev->rx_dropped);
++		goto drop;
++	}
++
+ 	stats = this_cpu_ptr(vxlan->dev->tstats);
+ 	u64_stats_update_begin(&stats->syncp);
+ 	stats->rx_packets++;
+@@ -1288,6 +1296,8 @@ static void vxlan_rcv(struct vxlan_sock
  
- 	do {
+ 	netif_rx(skb);
+ 
++	rcu_read_unlock();
++
+ 	return;
+ drop:
+ 	/* Consume bad packet */
 
