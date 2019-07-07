@@ -2,324 +2,261 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DD8C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 00:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0AEC5B578
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 00:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA10221530
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 00:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="4AnVVUy6"
+	by mail.kernel.org (Postfix) with ESMTP id 73E8720830
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 00:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbfGGAQR (ORCPT
+        id S1727128AbfGGATK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 20:16:17 -0400
-Received: from mail-eopbgr680084.outbound.protection.outlook.com ([40.107.68.84]:8103
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726859AbfGGAPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 20:15:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1lFFDBcQztCPOtm2f0DI1asaG6sJTxzW8WDwV+OwG5g=;
- b=4AnVVUy6QP5+NXU8mEgYiCY7itnhbQB+5tApt1l3i41lnLxD+w59DNpIs8sHzIbs/FykiRXl1Kxziw5KQ+EK/lSzKeI9XBpsIogiDxIABhdNqONHrAz2QvX14xlU8XbTvTZsVpzi89CDC1703LyDfpiyAL+0V3hgVh/KLB4xrDw=
-Received: from MWHPR0201CA0031.namprd02.prod.outlook.com
- (2603:10b6:301:74::44) by BN6PR02MB2369.namprd02.prod.outlook.com
- (2603:10b6:404:2d::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2052.18; Sun, 7 Jul
- 2019 00:15:49 +0000
-Received: from SN1NAM02FT047.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by MWHPR0201CA0031.outlook.office365.com
- (2603:10b6:301:74::44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2052.18 via Frontend
- Transport; Sun, 7 Jul 2019 00:15:48 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.80.198)
- smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.80.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.80.198; helo=xir-pvapexch01.xlnx.xilinx.com;
-Received: from xir-pvapexch01.xlnx.xilinx.com (149.199.80.198) by
- SN1NAM02FT047.mail.protection.outlook.com (10.152.72.201) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.2032.15 via Frontend Transport; Sun, 7 Jul 2019 00:15:48 +0000
-Received: from xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) by
- xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1531.3; Sun, 7 Jul 2019 01:15:45 +0100
-Received: from smtp.xilinx.com (172.21.105.197) by
- xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server id
- 15.1.1531.3 via Frontend Transport; Sun, 7 Jul 2019 01:15:45 +0100
-Envelope-to: arnd@arndb.de,
- gregkh@linuxfoundation.org,
- michal.simek@xilinx.com,
- linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- dragan.cvetic@xilinx.com,
- derek.kiernan@xilinx.com
-Received: from [149.199.110.15] (port=58228 helo=xirdraganc40.xilinx.com)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <dragan.cvetic@xilinx.com>)
-        id 1hjuqH-0004ON-4e; Sun, 07 Jul 2019 01:15:45 +0100
-From:   Dragan Cvetic <dragan.cvetic@xilinx.com>
-To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>
-Subject: [PATCH V8 4/8] misc: xilinx_sdfec: Add ability to get/set config
-Date:   Sun, 7 Jul 2019 01:15:38 +0100
-Message-ID: <1562458542-457448-5-git-send-email-dragan.cvetic@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562458542-457448-1-git-send-email-dragan.cvetic@xilinx.com>
-References: <1562458542-457448-1-git-send-email-dragan.cvetic@xilinx.com>
+        Sat, 6 Jul 2019 20:19:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40112 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726757AbfGGATK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 20:19:10 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x670HSEa095444
+        for <linux-kernel@vger.kernel.org>; Sat, 6 Jul 2019 20:19:08 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tjqh3bwjm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jul 2019 20:19:08 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Sun, 7 Jul 2019 01:19:06 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 7 Jul 2019 01:19:03 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x670J2XS23331042
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 7 Jul 2019 00:19:02 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F353DAE051;
+        Sun,  7 Jul 2019 00:19:01 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E826AE053;
+        Sun,  7 Jul 2019 00:18:59 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.232.154])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun,  7 Jul 2019 00:18:58 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
+Date:   Sat,  6 Jul 2019 20:18:45 -0400
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39850400004)(396003)(136003)(376002)(2980300002)(189003)(199004)(36756003)(7636002)(2906002)(8936002)(44832011)(107886003)(14444005)(106002)(110136005)(246002)(28376004)(54906003)(60926002)(356004)(476003)(305945005)(50466002)(2616005)(446003)(26826003)(956004)(48376002)(36906005)(486006)(47776003)(11346002)(426003)(76176011)(4326008)(7696005)(71366001)(51416003)(478600001)(316002)(70206006)(126002)(16586007)(70586007)(8676002)(50226002)(76130400001)(6666004)(186003)(26005)(5660300002)(2201001)(9786002)(336012)(102446001)(461764006);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2369;H:xir-pvapexch01.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 119408f7-c534-4e88-6109-08d702704368
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN6PR02MB2369;
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2369:
-X-Microsoft-Antispam-PRVS: <BN6PR02MB2369155EB25525DC3AA10C70CBF70@BN6PR02MB2369.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0091C8F1EB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: cNFvW9YvP7Ze4Y6TSFhklrp4ZTjQS/K3uhC74adS8x72Zf9QPvpQ+txX0c6RW/EoJLT0KITTMi4zd13TnkMOxM6aHIkenuZ8nSbqhN1roiRU2n2JyJJgJ2Ufgxzbx5yojr3KBD816oRFbBC1D66/QHg/HE0u49TtXgkfEAFmlTnDnV2ASsik+6VUKCfKeLoirJuGjyDe7mG//QXhtGfdEbda/VhyXTRRx7pegtKTm+Sf9zLc94kJZd2diVnn6yldjcUCBikGFRl/Br6BbeSiUWVxU8J/Xg3ycWv7q1VFW5KyNahD798bk1XfZ4i2QhLW3wdp9Z9VA/2SLSwUqvi1lkwNuDz2LPPWXkS3IeT0vxY+GTgAYyX325HRRnG9yNkj4+ymdp/OA3xlQr1qoq0ewHHlcAhiRR3dkD6xmeL08To=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2019 00:15:48.4289
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 119408f7-c534-4e88-6109-08d702704368
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.80.198];Helo=[xir-pvapexch01.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2369
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070700-0028-0000-0000-000003817FD5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070700-0029-0000-0000-0000244184A4
+Message-Id: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-06_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907070003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add capability to get SD-FEC config data using ioctl
-XSDFEC_GET_CONFIG.
+The nr_allocated_banks and allocated banks are initialized as part of
+tpm_chip_register. Currently, this is done as part of auto startup
+function. However, some drivers, like the ibm vtpm driver, do not run
+auto startup during initialization. This results in uninitialized memory
+issue and causes a kernel panic during boot.
 
-- Add capability to set SD-FEC data order using ioctl
-SDFEC_SET_ORDER.
+This patch moves the pcr allocation outside the auto startup function
+into tpm_chip_register. This ensures that allocated banks are initialized
+in any case.
 
-- Add capability to set SD-FEC bypass option using ioctl
-XSDFEC_SET_BYPASS.
-
-- Add capability to set SD-FEC active state using ioctl
-XSDFEC_IS_ACTIVE.
-
-Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
-Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
+PCR read")
+Reported-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Tested-by: Michal Suchánek <msuchanek@suse.de>
 ---
- drivers/misc/xilinx_sdfec.c      | 88 ++++++++++++++++++++++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h | 57 ++++++++++++++++++++++++++
- 2 files changed, 145 insertions(+)
+Changelog:
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 9be4de0..579f236 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -273,6 +273,17 @@ static void update_config_from_hw(struct xsdfec_dev *xsdfec)
- 		xsdfec->state = XSDFEC_STOPPED;
+v2:
+* Includes Jarkko's feedbacks
+  * fixes the function name to tpm_get_pcr_allocation()
+  * adds new function tpm1_get_pcr_allocation()
+  * updates patch summary line
+  * fixes alignment
+  * adds Reported-by: Michal Suchanek <msuchanek@suse.de>
+* Includes Stefan's feedbacks
+  * Fixes overwriting of return code
+  * Fixes misplacing of tpm_chip_stop()
+* Adds Reviewed-by, Tested-by
+
+ drivers/char/tpm/tpm-chip.c | 22 ++++++++++++++++++++++
+ drivers/char/tpm/tpm.h      |  2 ++
+ drivers/char/tpm/tpm1-cmd.c | 36 ++++++++++++++++++++++++------------
+ drivers/char/tpm/tpm2-cmd.c |  6 +-----
+ 4 files changed, 49 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 8804c9e916fd..6589291df355 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -550,6 +550,22 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
+ 	return hwrng_register(&chip->hwrng);
  }
  
-+static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
++/*
++ * tpm_get_pcr_allocation() - initialize the chip allocated banks for PCRs
++ * @chip: TPM chip to use.
++ */
++static int tpm_get_pcr_allocation(struct tpm_chip *chip)
 +{
-+	int err;
++	int rc;
 +
-+	err = copy_to_user(arg, &xsdfec->config, sizeof(xsdfec->config));
-+	if (err)
-+		err = -EFAULT;
-+
-+	return err;
-+}
-+
- static int xsdfec_set_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
- {
- 	struct xsdfec_turbo turbo;
-@@ -591,6 +602,71 @@ static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
- 	return ret;
- }
- 
-+static int xsdfec_set_order(struct xsdfec_dev *xsdfec, void __user *arg)
-+{
-+	bool order_invalid;
-+	enum xsdfec_order order;
-+	int err;
-+
-+	err = get_user(order, (enum xsdfec_order *)arg);
-+	if (err)
-+		return -EFAULT;
-+
-+	order_invalid = (order != XSDFEC_MAINTAIN_ORDER) &&
-+			(order != XSDFEC_OUT_OF_ORDER);
-+	if (order_invalid)
-+		return -EINVAL;
-+
-+	/* Verify Device has not started */
-+	if (xsdfec->state == XSDFEC_STARTED)
-+		return -EIO;
-+
-+	xsdfec_regwrite(xsdfec, XSDFEC_ORDER_ADDR, order);
-+
-+	xsdfec->config.order = order;
-+
-+	return 0;
-+}
-+
-+static int xsdfec_set_bypass(struct xsdfec_dev *xsdfec, bool __user *arg)
-+{
-+	bool bypass;
-+	int err;
-+
-+	err = get_user(bypass, arg);
-+	if (err)
-+		return -EFAULT;
-+
-+	/* Verify Device has not started */
-+	if (xsdfec->state == XSDFEC_STARTED)
-+		return -EIO;
-+
-+	if (bypass)
-+		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 1);
++	if (chip->flags & TPM_CHIP_FLAG_TPM2)
++		rc = tpm2_get_pcr_allocation(chip);
 +	else
-+		xsdfec_regwrite(xsdfec, XSDFEC_BYPASS_ADDR, 0);
++		rc = tpm1_get_pcr_allocation(chip);
 +
-+	xsdfec->config.bypass = bypass;
-+
-+	return 0;
++	return rc;
 +}
 +
-+static int xsdfec_is_active(struct xsdfec_dev *xsdfec, bool __user *arg)
-+{
-+	u32 reg_value;
-+	bool is_active;
-+	int err;
+ /*
+  * tpm_chip_register() - create a character device for the TPM chip
+  * @chip: TPM chip to use.
+@@ -569,6 +585,12 @@ int tpm_chip_register(struct tpm_chip *chip)
+ 	if (rc)
+ 		return rc;
+ 	rc = tpm_auto_startup(chip);
++	if (rc) {
++		tpm_chip_stop(chip);
++		return rc;
++	}
 +
-+	reg_value = xsdfec_regread(xsdfec, XSDFEC_ACTIVE_ADDR);
-+	/* using a double ! operator instead of casting */
-+	is_active = !!(reg_value & XSDFEC_IS_ACTIVITY_SET);
-+	err = put_user(is_active, arg);
-+	if (err)
-+		return -EFAULT;
-+
-+	return err;
-+}
-+
- static u32
- xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
- {
-@@ -681,6 +757,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
++	rc = tpm_get_pcr_allocation(chip);
+ 	tpm_chip_stop(chip);
+ 	if (rc)
+ 		return rc;
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index 2cce072f25b5..d571df3694c3 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -399,6 +399,7 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf);
+ ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
+ 		    const char *desc, size_t min_cap_length);
+ int tpm1_get_random(struct tpm_chip *chip, u8 *out, size_t max);
++int tpm1_get_pcr_allocation(struct tpm_chip *chip);
+ unsigned long tpm_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
+ int tpm_pm_suspend(struct device *dev);
+ int tpm_pm_resume(struct device *dev);
+@@ -454,6 +455,7 @@ int tpm2_unseal_trusted(struct tpm_chip *chip,
+ ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,
+ 			u32 *value, const char *desc);
+ 
++ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip);
+ int tpm2_auto_startup(struct tpm_chip *chip);
+ void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
+ unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
+diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+index 85dcf2654d11..260a3917f0fe 100644
+--- a/drivers/char/tpm/tpm1-cmd.c
++++ b/drivers/char/tpm/tpm1-cmd.c
+@@ -696,18 +696,6 @@ int tpm1_auto_startup(struct tpm_chip *chip)
+ 		goto out;
  	}
  
- 	switch (cmd) {
-+	case XSDFEC_GET_CONFIG:
-+		rval = xsdfec_get_config(xsdfec, arg);
-+		break;
- 	case XSDFEC_SET_TURBO:
- 		rval = xsdfec_set_turbo(xsdfec, arg);
- 		break;
-@@ -690,6 +769,15 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	case XSDFEC_ADD_LDPC_CODE_PARAMS:
- 		rval = xsdfec_add_ldpc(xsdfec, arg);
- 		break;
-+	case XSDFEC_SET_ORDER:
-+		rval = xsdfec_set_order(xsdfec, arg);
-+		break;
-+	case XSDFEC_SET_BYPASS:
-+		rval = xsdfec_set_bypass(xsdfec, arg);
-+		break;
-+	case XSDFEC_IS_ACTIVE:
-+		rval = xsdfec_is_active(xsdfec, (bool __user *)arg);
-+		break;
- 	default:
- 		/* Should not get here */
- 		break;
-diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-index ce532a5..b8897ce 100644
---- a/include/uapi/misc/xilinx_sdfec.h
-+++ b/include/uapi/misc/xilinx_sdfec.h
-@@ -288,6 +288,19 @@ struct xsdfec_ldpc_param_table_sizes {
- #define XSDFEC_ADD_LDPC_CODE_PARAMS                                            \
- 	_IOW(XSDFEC_MAGIC, 5, struct xsdfec_ldpc_params)
- /**
-+ * DOC: XSDFEC_GET_CONFIG
-+ * @Parameters
-+ *
-+ * @struct xsdfec_config *
-+ *	Pointer to the &struct xsdfec_config that contains the current
-+ *	configuration settings of the SD-FEC Block
-+ *
-+ * @Description
-+ *
-+ * ioctl that returns SD-FEC core configuration
-+ */
-+#define XSDFEC_GET_CONFIG _IOR(XSDFEC_MAGIC, 6, struct xsdfec_config)
+-	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
+-					GFP_KERNEL);
+-	if (!chip->allocated_banks) {
+-		rc = -ENOMEM;
+-		goto out;
+-	}
+-
+-	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
+-	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
+-	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
+-	chip->nr_allocated_banks = 1;
+-
+ 	return rc;
+ out:
+ 	if (rc > 0)
+@@ -776,3 +764,27 @@ int tpm1_pm_suspend(struct tpm_chip *chip, u32 tpm_suspend_pcr)
+ 	return rc;
+ }
+ 
 +/**
-  * DOC: XSDFEC_GET_TURBO
-  * @Parameters
-  *
-@@ -300,4 +313,48 @@ struct xsdfec_ldpc_param_table_sizes {
-  * ioctl that returns SD-FEC turbo param values
-  */
- #define XSDFEC_GET_TURBO _IOR(XSDFEC_MAGIC, 7, struct xsdfec_turbo)
-+/**
-+ * DOC: XSDFEC_SET_ORDER
-+ * @Parameters
++ * tpm1_get_pcr_allocation() - initialize the allocated bank
++ * @chip: TPM chip to use.
 + *
-+ * @struct unsigned long *
-+ *	Pointer to the unsigned long that contains a value from the
-+ *	@enum xsdfec_order
++ * The function initializes the SHA1 allocated bank to extend PCR
 + *
-+ * @Description
-+ *
-+ * ioctl that sets order, if order of blocks can change from input to output
-+ *
-+ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ * Return:
++ * * 0 on success,
++ * * < 0 on error.
 + */
-+#define XSDFEC_SET_ORDER _IOW(XSDFEC_MAGIC, 8, unsigned long)
-+/**
-+ * DOC: XSDFEC_SET_BYPASS
-+ * @Parameters
-+ *
-+ * @struct bool *
-+ *	Pointer to bool that sets the bypass value, where false results in
-+ *	normal operation and false results in the SD-FEC performing the
-+ *	configured operations (same number of cycles) but output data matches
-+ *	the input data
-+ *
-+ * @Description
-+ *
-+ * ioctl that sets bypass.
-+ *
-+ * This can only be used when the driver is in the XSDFEC_STOPPED state
-+ */
-+#define XSDFEC_SET_BYPASS _IOW(XSDFEC_MAGIC, 9, bool)
-+/**
-+ * DOC: XSDFEC_IS_ACTIVE
-+ * @Parameters
-+ *
-+ * @struct bool *
-+ *	Pointer to bool that returns true if the SD-FEC is processing data
-+ *
-+ * @Description
-+ *
-+ * ioctl that determines if SD-FEC is processing data
-+ */
-+#define XSDFEC_IS_ACTIVE _IOR(XSDFEC_MAGIC, 10, bool)
- #endif /* __XILINX_SDFEC_H__ */
++int tpm1_get_pcr_allocation(struct tpm_chip *chip)
++{
++	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
++					GFP_KERNEL);
++	if (!chip->allocated_banks)
++		return -ENOMEM;
++
++	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
++	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
++	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
++	chip->nr_allocated_banks = 1;
++
++	return 0;
++}
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index e74c5b7b64bf..b4384d0e3741 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -841,7 +841,7 @@ struct tpm2_pcr_selection {
+ 	u8  pcr_select[3];
+ } __packed;
+ 
+-static ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
++ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
+ {
+ 	struct tpm2_pcr_selection pcr_selection;
+ 	struct tpm_buf buf;
+@@ -1041,10 +1041,6 @@ int tpm2_auto_startup(struct tpm_chip *chip)
+ 			goto out;
+ 	}
+ 
+-	rc = tpm2_get_pcr_allocation(chip);
+-	if (rc)
+-		goto out;
+-
+ 	rc = tpm2_get_cc_attrs_tbl(chip);
+ 
+ out:
 -- 
-2.7.4
+2.20.1
 
