@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B455DC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E59C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9665E2082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B755C20659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfGGTio (ORCPT
+        id S1727820AbfGGTis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:44 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57196 "EHLO
+        Sun, 7 Jul 2019 15:38:48 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57200 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727538AbfGGTiH (ORCPT
+        by vger.kernel.org with ESMTP id S1727541AbfGGTiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:07 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0006gg-0o; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz5-0006gb-2o; Sun, 07 Jul 2019 20:38:03 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0005aU-MA; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz3-0005aE-EH; Sun, 07 Jul 2019 20:38:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Colin Ian King" <colin.king@canonical.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+        "Chiranjeevi Rapolu" <chiranjeevi.rapolu@intel.com>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        "Sakari Ailus" <sakari.ailus@linux.intel.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.131121313@decadent.org.uk>
+Message-ID: <lsq.1562518457.774638704@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 052/129] rtc: 88pm80x: fix unintended sign extension
+Subject: [PATCH 3.16 049/129] media: uvcvideo: Avoid NULL pointer
+ dereference at the end of streaming
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,87 +58,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-commit fb0b322537a831b5b0cb948c56f8f958ce493d3a upstream.
+commit 9dd0627d8d62a7ddb001a75f63942d92b5336561 upstream.
 
-Shifting a u8 by 24 will cause the value to be promoted to an integer. If
-the top bit of the u8 is set then the following conversion to an unsigned
-long will sign extend the value causing the upper 32 bits to be set in
-the result.
+The UVC video driver converts the timestamp from hardware specific unit
+to one known by the kernel at the time when the buffer is dequeued. This
+is fine in general, but the streamoff operation consists of the
+following steps (among other things):
 
-Fix this by casting the u8 value to an unsigned long before the shift.
+1. uvc_video_clock_cleanup --- the hardware clock sample array is
+   released and the pointer to the array is set to NULL,
 
-Detected by CoverityScan, CID#714646-714649 ("Unintended sign extension")
+2. buffers in active state are returned to the user and
 
-Fixes: 2985c29c1964 ("rtc: Add rtc support to 88PM80X PMIC")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+3. buf_finish callback is called on buffers that are prepared.
+   buf_finish includes calling uvc_video_clock_update that accesses the
+   hardware clock sample array.
+
+The above is serialised by a queue specific mutex. Address the problem
+by skipping the clock conversion if the hardware clock sample array is
+already released.
+
+Fixes: 9c0863b1cc48 ("[media] vb2: call buf_finish from __queue_cancel")
+
+Reported-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+Tested-by: Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/rtc/rtc-88pm80x.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/media/usb/uvc/uvc_video.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/rtc/rtc-88pm80x.c
-+++ b/drivers/rtc/rtc-88pm80x.c
-@@ -116,12 +116,14 @@ static int pm80x_rtc_read_time(struct de
- 	unsigned char buf[4];
- 	unsigned long ticks, base, data;
- 	regmap_raw_read(info->map, PM800_RTC_EXPIRE2_1, buf, 4);
--	base = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	base = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	dev_dbg(info->dev, "%x-%x-%x-%x\n", buf[0], buf[1], buf[2], buf[3]);
+--- a/drivers/media/usb/uvc/uvc_video.c
++++ b/drivers/media/usb/uvc/uvc_video.c
+@@ -627,6 +627,14 @@ void uvc_video_clock_update(struct uvc_s
+ 	u32 rem;
+ 	u64 y;
  
- 	/* load 32-bit read-only counter */
- 	regmap_raw_read(info->map, PM800_RTC_COUNTER1, buf, 4);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -144,7 +146,8 @@ static int pm80x_rtc_set_time(struct dev
++	/*
++	 * We will get called from __vb2_queue_cancel() if there are buffers
++	 * done but not dequeued by the user, but the sample array has already
++	 * been released at that time. Just bail out in that case.
++	 */
++	if (!clock->samples)
++		return;
++
+ 	spin_lock_irqsave(&clock->lock, flags);
  
- 	/* load 32-bit read-only counter */
- 	regmap_raw_read(info->map, PM800_RTC_COUNTER1, buf, 4);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	base = ticks - data;
- 	dev_dbg(info->dev, "set base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -165,11 +168,13 @@ static int pm80x_rtc_read_alarm(struct d
- 	int ret;
- 
- 	regmap_raw_read(info->map, PM800_RTC_EXPIRE2_1, buf, 4);
--	base = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	base = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	dev_dbg(info->dev, "%x-%x-%x-%x\n", buf[0], buf[1], buf[2], buf[3]);
- 
- 	regmap_raw_read(info->map, PM800_RTC_EXPIRE1_1, buf, 4);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -192,12 +197,14 @@ static int pm80x_rtc_set_alarm(struct de
- 	regmap_update_bits(info->map, PM800_RTC_CONTROL, PM800_ALARM1_EN, 0);
- 
- 	regmap_raw_read(info->map, PM800_RTC_EXPIRE2_1, buf, 4);
--	base = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	base = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	dev_dbg(info->dev, "%x-%x-%x-%x\n", buf[0], buf[1], buf[2], buf[3]);
- 
- 	/* load 32-bit read-only counter */
- 	regmap_raw_read(info->map, PM800_RTC_COUNTER1, buf, 4);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
+ 	if (clock->count < clock->size)
 
