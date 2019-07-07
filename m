@@ -2,79 +2,90 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B0CC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52062C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E3620651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8CA20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfGGTox (ORCPT
+        id S1728262AbfGGTor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:44:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38066 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbfGGTot (ORCPT
+        Sun, 7 Jul 2019 15:44:47 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57208 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727542AbfGGTiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:44:49 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hkD4r-0001gh-QG; Sun, 07 Jul 2019 21:44:02 +0200
-Date:   Sun, 7 Jul 2019 21:44:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Pingfan Liu <kernelfans@gmail.com>
-cc:     x86@kernel.org, Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>,
-        Barret Rhoden <brho@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/numa: instance all parsed numa node
-In-Reply-To: <1562300143-11671-2-git-send-email-kernelfans@gmail.com>
-Message-ID: <alpine.DEB.2.21.1907072133310.3648@nanos.tec.linutronix.de>
-References: <1562300143-11671-1-git-send-email-kernelfans@gmail.com> <1562300143-11671-2-git-send-email-kernelfans@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 7 Jul 2019 15:38:07 -0400
+Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hkCz4-0006gO-Ns; Sun, 07 Jul 2019 20:38:02 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hkCz3-0005a4-9P; Sun, 07 Jul 2019 20:38:01 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        "Colin Ian King" <colin.king@canonical.com>
+Date:   Sun, 07 Jul 2019 17:54:17 +0100
+Message-ID: <lsq.1562518457.12267426@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 047/129] rtc: ds1672: fix unintended sign extension
+In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
+X-SA-Exim-Connect-IP: 94.197.121.43
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Jul 2019, Pingfan Liu wrote:
+3.16.70-rc1 review patch.  If anyone has any objections, please let me know.
 
-> I hit a bug on an AMD machine, with kexec -l nr_cpus=4 option. nr_cpus option
-> is used to speed up kdump process, so it is not a rare case.
+------------------
 
-But fundamentally wrong, really.
+From: Colin Ian King <colin.king@canonical.com>
 
-The rest of the CPUs are in a half baken state and any broadcast event,
-e.g. MCE or a stray IPI, will result in a undiagnosable crash.
+commit f0c04c276739ed8acbb41b4868e942a55b128dca upstream.
 
-Thanks,
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
 
-	tglx
+Fix this by casting the u8 value to an unsigned long before the shift.
 
+Detected by CoverityScan, CID#138801 ("Unintended sign extension")
+
+Fixes: edf1aaa31fc5 ("[PATCH] RTC subsystem: DS1672 driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/rtc/rtc-ds1672.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/rtc/rtc-ds1672.c
++++ b/drivers/rtc/rtc-ds1672.c
+@@ -60,7 +60,8 @@ static int ds1672_get_datetime(struct i2
+ 		"%s: raw read data - counters=%02x,%02x,%02x,%02x\n",
+ 		__func__, buf[0], buf[1], buf[2], buf[3]);
+ 
+-	time = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	time = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++	       (buf[1] << 8) | buf[0];
+ 
+ 	rtc_time_to_tm(time, tm);
+ 
 
