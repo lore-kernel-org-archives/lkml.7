@@ -2,92 +2,83 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7714DC48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C92C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB2520830
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 16:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D76D2082F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 16:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfGGQgY (ORCPT
+        id S1727361AbfGGQpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 12:36:24 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:54495 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725901AbfGGQgY (ORCPT
+        Sun, 7 Jul 2019 12:45:40 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:59302 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727335AbfGGQpk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 12:36:24 -0400
-Received: from callcc.thunk.org (75-104-86-74.mobility.exede.net [75.104.86.74] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x67GYGms007613
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 7 Jul 2019 12:34:23 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 26D6A42002E; Sun,  7 Jul 2019 12:34:15 -0400 (EDT)
-Date:   Sun, 7 Jul 2019 12:34:15 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
-        jack@suse.cz, adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        yuval.shaia@oracle.com, kilobyte@angband.pl, jstaron@google.com,
-        rdunlap@infradead.org, snitzer@redhat.com
-Subject: Re: [PATCH v15 6/7] ext4: disable map_sync for async flush
-Message-ID: <20190707163415.GA19775@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Pankaj Gupta <pagupta@redhat.com>, dm-devel@redhat.com,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org, jack@suse.cz,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        yuval.shaia@oracle.com, kilobyte@angband.pl, jstaron@google.com,
-        rdunlap@infradead.org, snitzer@redhat.com
-References: <20190705140328.20190-1-pagupta@redhat.com>
- <20190705140328.20190-7-pagupta@redhat.com>
+        Sun, 7 Jul 2019 12:45:40 -0400
+X-IronPort-AV: E=Sophos;i="5.63,463,1557180000"; 
+   d="scan'208";a="390776152"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 18:45:38 +0200
+Date:   Sun, 7 Jul 2019 18:45:38 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
+cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, kbuild-all@01.org
+Subject: [PATCH] NFS: fix ifnullfree.cocci warnings
+Message-ID: <alpine.DEB.2.21.1907071844310.2521@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190705140328.20190-7-pagupta@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 07:33:27PM +0530, Pankaj Gupta wrote:
-> Dont support 'MAP_SYNC' with non-DAX files and DAX files
-> with asynchronous dax_device. Virtio pmem provides
-> asynchronous host page cache flush mechanism. We don't
-> support 'MAP_SYNC' with virtio pmem and ext4.
-> 
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> Reviewed-by: Jan Kara <jack@suse.cz>
+From: kbuild test robot <lkp@intel.com>
 
-Acked-by: Theodore Ts'o <tytso@mit.edu>
+fs/nfs/sysfs.c:125:2-7: WARNING: NULL check before some freeing functions is not needed.
+
+ NULL check before some freeing functions is not needed.
+
+ Based on checkpatch warning
+ "kfree(NULL) is safe this check is probably not required"
+ and kfreeaddr.cocci by Julia Lawall.
+
+Generated by: scripts/coccinelle/free/ifnullfree.cocci
+
+Fixes: bf11fbdb20b3 ("NFS: Add sysfs support for per-container identifier")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+---
+
+tree:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+head:   c433a7975cfc839906aaa891f68d86ca228f7e43
+commit: bf11fbdb20b385157b046ea7781f04d0c62554a3 [30/57] NFS: Add sysfs support for per-container identifier
+:::::: branch date: 22 hours ago
+:::::: commit date: 22 hours ago
+
+Please take the patch only if it's a positive warning. Thanks!
+
+ sysfs.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -121,8 +121,7 @@ static void nfs_netns_client_release(str
+ 			struct nfs_netns_client,
+ 			kobject);
+
+-	if (c->identifier)
+-		kfree(c->identifier);
++	kfree(c->identifier);
+ 	kfree(c);
+ }
 
