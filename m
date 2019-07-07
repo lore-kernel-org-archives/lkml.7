@@ -2,94 +2,181 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C117C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FC2C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8212083B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBjqvvTX"
+	by mail.kernel.org (Postfix) with ESMTP id 69CCE20663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfGGK1Q (ORCPT
+        id S1727059AbfGGKnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 06:27:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38682 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbfGGK1P (ORCPT
+        Sun, 7 Jul 2019 06:43:17 -0400
+Received: from 195-159-176-226.customer.powertech.no ([195.159.176.226]:60638
+        "EHLO blaine.gmane.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfGGKnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 06:27:15 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z75so6197859pgz.5;
-        Sun, 07 Jul 2019 03:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8zUSV3oUAOKo1p9yciN3aXy3pVPdOrPwzw0QPi5xIzo=;
-        b=VBjqvvTXk8FATRmQEiOuWon5GfWlkAvU4GGZ6FUmW7+3gmXcpcm4/fFEGzxd2XhrtB
-         PHtGO0BF15qudbOJN1Mb2S1EJXqlorX0y4YkkVQOtl+YRryzXGN/AjqF79esn/tuNQd+
-         ifppzkOODJ5w7jSvmT2lYljvh+zH7Re24g7l3J1/t0Z86tiKN0LOopmOQAf74LcDlod4
-         en+RY5ZRD75cN+LkdTg1L5u6r9vgS9J8VHxz11zeiwh8ffZpiGe2eZTarrX6OzfTK1TS
-         u5qJHUe1a1kMyxm5DV9PSMrA4nHyW32fBjW+23vrFzWpH6RZ1gZQTX7oSbYd9n4DgFYj
-         2Fdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8zUSV3oUAOKo1p9yciN3aXy3pVPdOrPwzw0QPi5xIzo=;
-        b=I46owV0g0pSPhUgqvdWU1cyhyynDclEre1V+x7sn5JRy7deGLJSWOzePcz/yGEiBQb
-         adHlgW1znvC5ZHt050X6UQMaLnL+B2RmQI4PtXXUXMBrNr/M9rQKC9i8gnqV1j/S9u85
-         7z/gdkNVNK8SjksIzwwUjf+/E2tVBueBkPROnOaJBdQ+uZku2TRnWvA6aIhcN1X4uBx3
-         HSuCuUc10mh64W12/UE3dRbgo+QHLPdc+t9NKsfEV+/6gfCHQjy8GXEsDHVcWQe/rtUg
-         EkUS9QlnVzfcSUlaPKmQ17mEKO0iOwakaKbDPRpmALCNJr+c3l67S6HU4/bYf9+MC1eb
-         A+Pw==
-X-Gm-Message-State: APjAAAUiFlLo6btvuo3W8/92I+99xE+iWTF05yJ6y+uoHbFZ/atzni/9
-        k8LrF5h7q/Ru8p7OQiWN9cc=
-X-Google-Smtp-Source: APXvYqyMx2+32HyNXxBJxnXN90ZX/eNGMf1iEDAGfhyfSUHZUz4eRncpRFe5vwFlPtEZBqtHdLc5ng==
-X-Received: by 2002:a17:90a:bf0e:: with SMTP id c14mr16074811pjs.55.1562495234516;
-        Sun, 07 Jul 2019 03:27:14 -0700 (PDT)
-Received: from carrot.localdomain (i60-35-92-254.s42.a014.ap.plala.or.jp. [60.35.92.254])
-        by smtp.gmail.com with ESMTPSA id x128sm35195975pfd.17.2019.07.07.03.27.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Jul 2019 03:27:12 -0700 (PDT)
-From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Ryusuke Konishi <konishi.ryusuke@lab.ntt.co.jp>,
-        linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Subject: [PATCH] MAINTAINERS: nilfs2: update email address
-Date:   Sun,  7 Jul 2019 19:25:53 +0900
-Message-Id: <1562495153-8166-1-git-send-email-konishi.ryusuke@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 7 Jul 2019 06:43:17 -0400
+Received: from list by blaine.gmane.org with local (Exim 4.89)
+        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
+        id 1hk4dX-000tXw-9b
+        for linux-kernel@vger.kernel.org; Sun, 07 Jul 2019 12:43:15 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-kernel@vger.kernel.org
+From:   "Andrey Jr. Melnikov" <temnota.am@gmail.com>
+Subject: Re: [PATCH 1/1] scsi: aacraid: resurrect correct arc ctrl checks for Series-6
+Date:   Sun, 7 Jul 2019 13:09:39 +0300
+Message-ID: <10t8vf-fq.ln1@banana.localnet>
+References: <20190627161408.10295-1-khorenko@virtuozzo.com> <20190627161408.10295-2-khorenko@virtuozzo.com>
+User-Agent: tin/2.2.1-20140504 ("Tober an Righ") (UNIX) (Linux/4.3.3-bananian (armv7l))
+Cc:     linux-scsi@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change my email since lab.ntt.co.jp email domain has been deprecated
-due to company policy.
+In gmane.linux.scsi Konstantin Khorenko <khorenko@virtuozzo.com> wrote:
+> This partially reverts ms commit
+> 395e5df79a95 ("scsi: aacraid: Remove reference to Series-9")
 
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> The patch above not only drops Series-9 cards checks but also
+> changes logic for Series-6 controllers which leads to controller
+> hangs/resets under high io load.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 01a52fc..b8eadb3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11116,7 +11116,7 @@ F:	include/uapi/linux/nfs*
- F:	include/uapi/linux/sunrpc/
- 
- NILFS2 FILESYSTEM
--M:	Ryusuke Konishi <konishi.ryusuke@lab.ntt.co.jp>
-+M:	Ryusuke Konishi <konishi.ryusuke@gmail.com>
- L:	linux-nilfs@vger.kernel.org
- W:	https://nilfs.sourceforge.io/
- W:	https://nilfs.osdn.jp/
--- 
-1.8.3.1
+> So revert to original arc ctrl checks for Series-6 controllers.
+
+> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1777586
+> https://bugzilla.redhat.com/show_bug.cgi?id=1724077
+> https://jira.sw.ru/browse/PSBM-95736
+
+> Fixes: 395e5df79a95 ("scsi: aacraid: Remove reference to Series-9")
+> Cc: stable@vger.kernel.org
+
+> Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+> ---
+>  drivers/scsi/aacraid/aacraid.h  | 11 -----------
+>  drivers/scsi/aacraid/comminit.c | 14 ++++++++++----
+>  drivers/scsi/aacraid/commsup.c  |  4 +++-
+>  drivers/scsi/aacraid/linit.c    |  7 +++++--
+>  4 files changed, 18 insertions(+), 18 deletions(-)
+
+> diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
+> index 3fa03230f6ba..b674fb645523 100644
+> --- a/drivers/scsi/aacraid/aacraid.h
+> +++ b/drivers/scsi/aacraid/aacraid.h
+> @@ -2729,17 +2729,6 @@ int _aac_rx_init(struct aac_dev *dev);
+>  int aac_rx_select_comm(struct aac_dev *dev, int comm);
+>  int aac_rx_deliver_producer(struct fib * fib);
+>  
+> -static inline int aac_is_src(struct aac_dev *dev)
+> -{
+> -       u16 device = dev->pdev->device;
+> -
+> -       if (device == PMC_DEVICE_S6 ||
+> -               device == PMC_DEVICE_S7 ||
+> -               device == PMC_DEVICE_S8)
+> -               return 1;
+> -       return 0;
+> -}
+> -
+
+Why remove helper?
+
+>  static inline int aac_supports_2T(struct aac_dev *dev)
+>  {
+>         return (dev->adapter_info.options & AAC_OPT_NEW_COMM_64);
+> diff --git a/drivers/scsi/aacraid/comminit.c b/drivers/scsi/aacraid/comminit.c
+> index d4fcfa1e54e0..b8046b6c1239 100644
+> --- a/drivers/scsi/aacraid/comminit.c
+> +++ b/drivers/scsi/aacraid/comminit.c
+> @@ -41,7 +41,9 @@ static inline int aac_is_msix_mode(struct aac_dev *dev)
+>  {
+>         u32 status = 0;
+>  
+> -       if (aac_is_src(dev))
+> +       if (dev->pdev->device == PMC_DEVICE_S6 ||
+> +           dev->pdev->device == PMC_DEVICE_S7 ||
+> +           dev->pdev->device == PMC_DEVICE_S8)
+>                 status = src_readl(dev, MUnit.OMR);
+>         return (status & AAC_INT_MODE_MSIX);
+>  }
+> @@ -349,7 +351,8 @@ int aac_send_shutdown(struct aac_dev * dev)
+>         /* FIB should be freed only after getting the response from the F/W */
+>         if (status != -ERESTARTSYS)
+>                 aac_fib_free(fibctx);
+Fix this
+> -       if (aac_is_src(dev) &&
+> +       if ((dev->pdev->device == PMC_DEVICE_S7 ||
+> +            dev->pdev->device == PMC_DEVICE_S8) &&
+>              dev->msi_enabled)
+>                 aac_set_intx_mode(dev);
+>         return status;
+> @@ -605,7 +608,8 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
+>                 dev->max_fib_size = status[1] & 0xFFE0;
+>                 host->sg_tablesize = status[2] >> 16;
+>                 dev->sg_tablesize = status[2] & 0xFFFF;
+this one
+> -               if (aac_is_src(dev)) {
+> +               if (dev->pdev->device == PMC_DEVICE_S7 ||
+> +                   dev->pdev->device == PMC_DEVICE_S8) {
+>                         if (host->can_queue > (status[3] >> 16) -
+>                                         AAC_NUM_MGT_FIB)
+>                                 host->can_queue = (status[3] >> 16) -
+> @@ -624,7 +628,9 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
+>                         pr_warn("numacb=%d ignored\n", numacb);
+>         }
+>  
+> -       if (aac_is_src(dev))
+> +       if (dev->pdev->device == PMC_DEVICE_S6 ||
+> +           dev->pdev->device == PMC_DEVICE_S7 ||
+> +           dev->pdev->device == PMC_DEVICE_S8)
+>                 aac_define_int_mode(dev);
+>         /*
+>          *      Ok now init the communication subsystem
+> diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
+> index 2142a649e865..705e003caa95 100644
+> --- a/drivers/scsi/aacraid/commsup.c
+> +++ b/drivers/scsi/aacraid/commsup.c
+> @@ -2574,7 +2574,9 @@ void aac_free_irq(struct aac_dev *dev)
+>  {
+>         int i;
+>  
+> -       if (aac_is_src(dev)) {
+> +       if (dev->pdev->device == PMC_DEVICE_S6 ||
+> +           dev->pdev->device == PMC_DEVICE_S7 ||
+> +           dev->pdev->device == PMC_DEVICE_S8) {
+>                 if (dev->max_msix > 1) {
+>                         for (i = 0; i < dev->max_msix; i++)
+>                                 free_irq(pci_irq_vector(dev->pdev, i),
+> diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+> index 644f7f5c61a2..3b7968b17169 100644
+> --- a/drivers/scsi/aacraid/linit.c
+> +++ b/drivers/scsi/aacraid/linit.c
+> @@ -1560,7 +1560,9 @@ static void __aac_shutdown(struct aac_dev * aac)
+>  
+>         aac_adapter_disable_int(aac);
+>  
+> -       if (aac_is_src(aac)) {
+> +       if (aac->pdev->device == PMC_DEVICE_S6 ||
+> +           aac->pdev->device == PMC_DEVICE_S7 ||
+> +           aac->pdev->device == PMC_DEVICE_S8) {
+>                 if (aac->max_msix > 1) {
+>                         for (i = 0; i < aac->max_msix; i++) {
+>                                 free_irq(pci_irq_vector(aac->pdev, i),
+> @@ -1835,7 +1837,8 @@ static int aac_acquire_resources(struct aac_dev *dev)
+>         aac_adapter_enable_int(dev);
+>  
+>  
+and this.
+> -       if (aac_is_src(dev))
+> +       if (dev->pdev->device == PMC_DEVICE_S7 ||
+> +           dev->pdev->device == PMC_DEVICE_S8)
+>                 aac_define_int_mode(dev);
+>  
+>         if (dev->msi_enabled)
+
 
