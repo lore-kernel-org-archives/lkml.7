@@ -2,147 +2,101 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06CCC48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 12:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA01C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 12:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B370920850
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 12:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A561620830
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 12:17:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGXb9TYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfGGMLd (ORCPT
+        id S1727027AbfGGMRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 08:11:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2235 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725867AbfGGMLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 08:11:33 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9A1FE5D50037484CFA55;
-        Sun,  7 Jul 2019 20:11:30 +0800 (CST)
-Received: from localhost (10.45.56.64) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sun, 7 Jul 2019
- 20:11:26 +0800
-Date:   Sun, 7 Jul 2019 13:11:23 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-CC:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v2 05/10] iio: using dev_get_drvdata directly
-Message-ID: <20190707131031.00000f0a@huawei.com>
-In-Reply-To: <20190704023613.4643-1-huangfq.daxian@gmail.com>
-References: <20190704023613.4643-1-huangfq.daxian@gmail.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.45.56.64]
-X-CFilter-Loop: Reflected
+        Sun, 7 Jul 2019 08:17:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34593 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfGGMRb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 08:17:31 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p17so13245066ljg.1;
+        Sun, 07 Jul 2019 05:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SAMwT6DUHJKtrCvN/jv0WTWZlT3Adyo0fAKhCuWcf/M=;
+        b=UGXb9TYxQ1dBTwuX3uGHVTmta0ifDlJxXCd4M9XkNcUsWKPrmDg/CZbHn+FrBTHdbS
+         QfermUCUSCzF7h87ARN2ABT3YKJHtW/wUqxrzM7hrTHsooQpQ7mUvqjM46s0sDh9oeMa
+         z0f74B/exNKvRNUCS57FdYfRE724+VU0UpwJPETsWqYFhzoZjeNFTqvfcXjwRGUVUJhE
+         5jtqNWWueunkokujlQNtNbDsXzkiGaWK3PKinIQMOwq91oCb+wa+KA/TNtAO91HiLCc/
+         jnrWcNF1ibLWXns72CIeXDaYvXWr/IBR++C7HKFjVDFNWrBKatuA/NWE7j2lkZWw+zxw
+         RuTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SAMwT6DUHJKtrCvN/jv0WTWZlT3Adyo0fAKhCuWcf/M=;
+        b=ezDV6l01Q0YHKKnTDoEsRcavknyxi8ZhJOdHTXiuITNOslSU6DzrxFzBGNwNGJMfeC
+         ffWkm/1q8eu0T0VrWleZ0ijF7aN8AIDndcsUA7NCpeZqcCt9Z533qi7oWn/VvX/QDa0P
+         k2vcuoU47I6pGSbri1iL3jv8qecN6cmuJugpJW7wDNUbrtIODFHWFoOJ48LGU63FO6Ml
+         BdxY0Vz3q1yL9lxKiF/OL1JpvOZwN5+ygHAm/Jfjw30cjcwU3Z97RnRFADBiQMeW7M5B
+         oA3NPrMvRfJEM0qTL6TalcC6sXHvDvJN+H/YjViSxMav1QfhNC6Hpqrt9Qch+NyUmiMY
+         Ki4g==
+X-Gm-Message-State: APjAAAVMv+0okSbeeZxyt03CP9ZAYn+K+3gYEtHyDNfPpAGVAG4ERV3j
+        vjXIwE8ZR85XUdoWRyG+G/6NS/BC
+X-Google-Smtp-Source: APXvYqzNMEnTfyeHiRkT/y6hMxdp+rpP0WXLeaAkmVVzTOIjXt8uOj2OZlcpOAEi7CsgYl/Jk1hz4A==
+X-Received: by 2002:a2e:b0f0:: with SMTP id h16mr7289700ljl.21.1562501849425;
+        Sun, 07 Jul 2019 05:17:29 -0700 (PDT)
+Received: from localhost (122-109-207-82.ip.ukrtel.net. [82.207.109.122])
+        by smtp.gmail.com with ESMTPSA id n1sm2225136lfk.19.2019.07.07.05.17.28
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 07 Jul 2019 05:17:28 -0700 (PDT)
+From:   Ruslan Bilovol <ruslan.bilovol@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        mathias.nyman@intel.com
+Subject: [PATCH] usb: host: xhci-hub: fix extra endianness conversion
+Date:   Sun,  7 Jul 2019 15:17:19 +0300
+Message-Id: <1562501839-26522-1-git-send-email-ruslan.bilovol@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019 10:36:13 +0800
-Fuqian Huang <huangfq.daxian@gmail.com> wrote:
+Don't do extra cpu_to_le32 conversion for
+put_unaligned_le32 because it is already implemented
+in this function.
 
-> Several drivers cast a struct device pointer to a struct
-> platform_device pointer only to then call platform_get_drvdata().
-> To improve readability, these constructs can be simplified
-> by using dev_get_drvdata() directly.
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-Hi.
+Fixes sparse error:
+xhci-hub.c:1152:44: warning: incorrect type in argument 1 (different base types)
+xhci-hub.c:1152:44:    expected unsigned int [usertype] val
+xhci-hub.c:1152:44:    got restricted __le32 [usertype]
 
-I applied a version from Kefeng Wang a while back.  It'll be queued
-up for the merge window that is about to open.
+Fixes: 395f540 "xhci: support new USB 3.1 hub request to get extended port status"
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+---
+ drivers/usb/host/xhci-hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-
-Jonathan
-
-> ---
-> Changes in v2:
->   - Make the commit message more clearly.
-> 
->  drivers/iio/adc/at91-sama5d2_adc.c | 12 ++++--------
->  drivers/iio/adc/at91_adc.c         |  4 ++--
->  2 files changed, 6 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> index d384cf0250ff..a2837a0e7cba 100644
-> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> @@ -1578,8 +1578,7 @@ static void at91_adc_hw_init(struct at91_adc_state *st)
->  static ssize_t at91_adc_get_fifo_state(struct device *dev,
->  				       struct device_attribute *attr, char *buf)
->  {
-> -	struct iio_dev *indio_dev =
-> -			platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  
->  	return scnprintf(buf, PAGE_SIZE, "%d\n", !!st->dma_st.dma_chan);
-> @@ -1588,8 +1587,7 @@ static ssize_t at91_adc_get_fifo_state(struct device *dev,
->  static ssize_t at91_adc_get_watermark(struct device *dev,
->  				      struct device_attribute *attr, char *buf)
->  {
-> -	struct iio_dev *indio_dev =
-> -			platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  
->  	return scnprintf(buf, PAGE_SIZE, "%d\n", st->dma_st.watermark);
-> @@ -1841,8 +1839,7 @@ static int at91_adc_remove(struct platform_device *pdev)
->  
->  static __maybe_unused int at91_adc_suspend(struct device *dev)
->  {
-> -	struct iio_dev *indio_dev =
-> -			platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  
->  	/*
-> @@ -1862,8 +1859,7 @@ static __maybe_unused int at91_adc_suspend(struct device *dev)
->  
->  static __maybe_unused int at91_adc_resume(struct device *dev)
->  {
-> -	struct iio_dev *indio_dev =
-> -			platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  	int ret;
->  
-> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-> index d23709ed9049..32f1c4a33b20 100644
-> --- a/drivers/iio/adc/at91_adc.c
-> +++ b/drivers/iio/adc/at91_adc.c
-> @@ -1359,7 +1359,7 @@ static int at91_adc_remove(struct platform_device *pdev)
->  #ifdef CONFIG_PM_SLEEP
->  static int at91_adc_suspend(struct device *dev)
->  {
-> -	struct iio_dev *idev = platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *idev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(idev);
->  
->  	pinctrl_pm_select_sleep_state(dev);
-> @@ -1370,7 +1370,7 @@ static int at91_adc_suspend(struct device *dev)
->  
->  static int at91_adc_resume(struct device *dev)
->  {
-> -	struct iio_dev *idev = platform_get_drvdata(to_platform_device(dev));
-> +	struct iio_dev *idev = dev_get_drvdata(dev);
->  	struct at91_adc_state *st = iio_priv(idev);
->  
->  	clk_prepare_enable(st->clk);
-
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 3abe70f..b7d23c4 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1149,7 +1149,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			}
+ 			port_li = readl(ports[wIndex]->addr + PORTLI);
+ 			status = xhci_get_ext_port_status(temp, port_li);
+-			put_unaligned_le32(cpu_to_le32(status), &buf[4]);
++			put_unaligned_le32(status, &buf[4]);
+ 		}
+ 		break;
+ 	case SetPortFeature:
+-- 
+1.9.1
 
