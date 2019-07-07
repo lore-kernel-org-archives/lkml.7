@@ -2,32 +2,32 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8FCC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC04C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00C820659
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1CA20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfGGTii (ORCPT
+        id S1727798AbfGGTil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57106 "EHLO
+        Sun, 7 Jul 2019 15:38:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57102 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727522AbfGGTiG (ORCPT
+        by vger.kernel.org with ESMTP id S1727521AbfGGTiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:06 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0006gC-Bj; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz4-0006g8-C6; Sun, 07 Jul 2019 20:38:02 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0005Zy-5w; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz3-0005Zu-32; Sun, 07 Jul 2019 20:38:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Bart Van Assche" <bvanassche@acm.org>
+        "Jann Horn" <jannh@google.com>, "Al Viro" <viro@zeniv.linux.org.uk>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.23016328@decadent.org.uk>
+Message-ID: <lsq.1562518457.961437661@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 046/129] scsi: target/iscsi: Avoid iscsit_release_commands_from_conn()
- deadlock
+Subject: [PATCH 3.16 045/129] splice: don't merge into linked buffers
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,56 +54,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Jann Horn <jannh@google.com>
 
-commit 32e36bfbcf31452a854263e7c7f32fbefc4b44d8 upstream.
+commit a0ce2f0aa6ad97c3d4927bf2ca54bcebdf062d55 upstream.
 
-When using SCSI passthrough in combination with the iSCSI target driver
-then cmd->t_state_lock may be obtained from interrupt context. Hence, all
-code that obtains cmd->t_state_lock from thread context must disable
-interrupts first. This patch avoids that lockdep reports the following:
+Before this patch, it was possible for two pipes to affect each other after
+data had been transferred between them with tee():
 
-WARNING: inconsistent lock state
-4.18.0-dbg+ #1 Not tainted
---------------------------------
-inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
-iscsi_ttx/1800 [HC1[1]:SC0[2]:HE0:SE0] takes:
-000000006e7b0ceb (&(&cmd->t_state_lock)->rlock){?...}, at: target_complete_cmd+0x47/0x2c0 [target_core_mod]
-{HARDIRQ-ON-W} state was registered at:
- lock_acquire+0xd2/0x260
- _raw_spin_lock+0x32/0x50
- iscsit_close_connection+0x97e/0x1020 [iscsi_target_mod]
- iscsit_take_action_for_connection_exit+0x108/0x200 [iscsi_target_mod]
- iscsi_target_rx_thread+0x180/0x190 [iscsi_target_mod]
- kthread+0x1cf/0x1f0
- ret_from_fork+0x24/0x30
-irq event stamp: 1281
-hardirqs last  enabled at (1279): [<ffffffff970ade79>] __local_bh_enable_ip+0xa9/0x160
-hardirqs last disabled at (1281): [<ffffffff97a008a5>] interrupt_entry+0xb5/0xd0
-softirqs last  enabled at (1278): [<ffffffff977cd9a1>] lock_sock_nested+0x51/0xc0
-softirqs last disabled at (1280): [<ffffffffc07a6e04>] ip6_finish_output2+0x124/0xe40 [ipv6]
+============
+$ cat tee_test.c
 
-other info that might help us debug this:
-Possible unsafe locking scenario:
+int main(void) {
+  int pipe_a[2];
+  if (pipe(pipe_a)) err(1, "pipe");
+  int pipe_b[2];
+  if (pipe(pipe_b)) err(1, "pipe");
+  if (write(pipe_a[1], "abcd", 4) != 4) err(1, "write");
+  if (tee(pipe_a[0], pipe_b[1], 2, 0) != 2) err(1, "tee");
+  if (write(pipe_b[1], "xx", 2) != 2) err(1, "write");
 
-      CPU0
-      ----
- lock(&(&cmd->t_state_lock)->rlock);
- <Interrupt>
-   lock(&(&cmd->t_state_lock)->rlock);
+  char buf[5];
+  if (read(pipe_a[0], buf, 4) != 4) err(1, "read");
+  buf[4] = 0;
+  printf("got back: '%s'\n", buf);
+}
+$ gcc -o tee_test tee_test.c
+$ ./tee_test
+got back: 'abxx'
+$
+============
 
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4201,9 +4201,9 @@ static void iscsit_release_commands_from
- 		struct se_cmd *se_cmd = &cmd->se_cmd;
+As suggested by Al Viro, fix it by creating a separate type for
+non-mergeable pipe buffers, then changing the types of buffers in
+splice_pipe_to_pipe() and link_pipe().
+
+Fixes: 7c77f0b3f920 ("splice: implement pipe to pipe splicing")
+Fixes: 70524490ee2e ("[PATCH] splice: add support for sys_tee()")
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+[bwh: Backported to 3.16: Use generic_pipe_buf_steal(), as for other pipe
+ types, since anon_pipe_buf_steal() does not exist here]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ fs/pipe.c                 | 14 ++++++++++++++
+ fs/splice.c               |  4 ++++
+ include/linux/pipe_fs_i.h |  1 +
+ 3 files changed, 19 insertions(+)
+
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -219,6 +219,14 @@ static const struct pipe_buf_operations
+ 	.get = generic_pipe_buf_get,
+ };
  
- 		if (se_cmd->se_tfo != NULL) {
--			spin_lock(&se_cmd->t_state_lock);
-+			spin_lock_irq(&se_cmd->t_state_lock);
- 			se_cmd->transport_state |= CMD_T_FABRIC_STOP;
--			spin_unlock(&se_cmd->t_state_lock);
-+			spin_unlock_irq(&se_cmd->t_state_lock);
- 		}
- 	}
- 	spin_unlock_bh(&conn->cmd_lock);
++static const struct pipe_buf_operations anon_pipe_buf_nomerge_ops = {
++	.can_merge = 0,
++	.confirm = generic_pipe_buf_confirm,
++	.release = anon_pipe_buf_release,
++	.steal = generic_pipe_buf_steal,
++	.get = generic_pipe_buf_get,
++};
++
+ static const struct pipe_buf_operations packet_pipe_buf_ops = {
+ 	.can_merge = 0,
+ 	.confirm = generic_pipe_buf_confirm,
+@@ -227,6 +235,12 @@ static const struct pipe_buf_operations
+ 	.get = generic_pipe_buf_get,
+ };
+ 
++void pipe_buf_mark_unmergeable(struct pipe_buffer *buf)
++{
++	if (buf->ops == &anon_pipe_buf_ops)
++		buf->ops = &anon_pipe_buf_nomerge_ops;
++}
++
+ static ssize_t
+ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1901,6 +1901,8 @@ retry:
+ 			 */
+ 			obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
+ 
++			pipe_buf_mark_unmergeable(obuf);
++
+ 			obuf->len = len;
+ 			opipe->nrbufs++;
+ 			ibuf->offset += obuf->len;
+@@ -1975,6 +1977,8 @@ static int link_pipe(struct pipe_inode_i
+ 		 */
+ 		obuf->flags &= ~PIPE_BUF_FLAG_GIFT;
+ 
++		pipe_buf_mark_unmergeable(obuf);
++
+ 		if (obuf->len > len)
+ 			obuf->len = len;
+ 
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -140,6 +140,7 @@ void generic_pipe_buf_get(struct pipe_in
+ int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
+ int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
+ void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
++void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
+ 
+ extern const struct pipe_buf_operations nosteal_pipe_buf_ops;
+ 
 
