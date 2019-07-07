@@ -2,101 +2,167 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,GAPPY_SUBJECT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35A1C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 16:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988B0C48BE3
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 16:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E412082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 16:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718222146E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 16:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eCFtECBY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWOzKVht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfGGQMy (ORCPT
+        id S1727276AbfGGQPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 12:12:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38312 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfGGQMx (ORCPT
+        Sun, 7 Jul 2019 12:15:21 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44376 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfGGQPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 12:12:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jvyCMugQL7/NuCl9ddtc+AaWc6qGniwih5Ctu0V8hBI=; b=eCFtECBYHWlRWoPtA9P77SABb
-        /7U7M8KF58zEr277TT9PpO3nNbaGj1/FzhD6I1xVkeguQRJysSXhQPMLXfv4lDd/HPg8s+BFVSh1F
-        dCdJxbzeBabpVNmubtmcpnEf1ND9fv8YkxMwlV3lGo5jBfVRJB3sJK4w+VxIyxMFUoA0r+oF+0lpd
-        8pfqm0IXCcXYY27VTkmlCGQ3EuObJ65jtVKc7ZifLc8mQPDtBa9zS7YZys3BJKm2PHAsYFrx3EBRt
-        nRE7OKZj3eEaroj7mQmEFEVodp31Eh3IcRw13mUHeJNUK4YLk4jJdk9DdaXdg7Y2VzF40xMtXdmAA
-        81nqB2B2w==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hk9mU-0001Lj-8I; Sun, 07 Jul 2019 16:12:50 +0000
-To:     LKML <linux-kernel@vger.kernel.org>, linux-rtc@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] rtc: bd70528: add dependency to fix build errors
-Message-ID: <420b921d-10ca-1d9a-ac46-5969a7f0e0b9@infradead.org>
-Date:   Sun, 7 Jul 2019 09:12:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 7 Jul 2019 12:15:21 -0400
+Received: by mail-io1-f67.google.com with SMTP id s7so29430933iob.11;
+        Sun, 07 Jul 2019 09:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HPjV5oIkkTKWgs8bzuMudxn+m/34k9ESgX/d9EjKBY4=;
+        b=TWOzKVhtLNsWGzSmCaNZ6b/RZ3+Q0QunAQWRvFiNWs1RisWJjT0tbEfSaH4szCiWfq
+         82uSZ4Xvjt6zWF5p026f32NIV/sy/6hd5AsJxTSsxrgwzMPdbEP44HkqaP+B9Q8QLvGY
+         ECPuLqNdhl4Y6DYcbNZMIdDn10XiRwz+pYUe3zKKKxaTqkouVwh3CpK/NeQ4lfy4Qzci
+         /LwMAd/E0YTYFdoEsh6AH3BYOxqZKfKOUnfH6U1WpPC+HbFE6z/yYoBAGaPxrM2iA4PE
+         RA7UnwRtCLj3ZAlGqYs/vpvDG83e6mXKuSofbiuIMkue5dKOkbDzFhtM4/9W0v3YYfRI
+         BqWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HPjV5oIkkTKWgs8bzuMudxn+m/34k9ESgX/d9EjKBY4=;
+        b=RR/Ch5zgVIJ1nhgt+7lPw6Moot8YI6A8h/O/Qi+EfWxj1882fp9VLpBKF7wtrtBgF1
+         8THv548aUNDohDDzOlhBkchoi4EneRTz2jokfC9CcBqSxgebNOz/i+ipds03/254Nqbe
+         8524Oh9eyrHY5lJ84ytDpjohUZ72zXRoPSA6mBA5mCXu+pxLH8J/stlXP6Le1gqpZWHW
+         19GGfoFFUY3fHE95wek2wYQeCJOyr1TJDvts6SidG0FTVYJEJyxcg8Y1RBO1WLDTZSkF
+         TjqFuw1f89Skbd7yqBo6xotU6rYv8MQ/yJdMxr4Y2D1zERAD/YNln2Woi6Wbb1FY97jC
+         WZfg==
+X-Gm-Message-State: APjAAAUNm/rVEcnOfGC1fRd6OzpjfWBfzatpkPMg1092LJuxcl/zJE1g
+        7W/PM5mzBCrEwoqYTei7S4M81SgCY87NwSr/KIg=
+X-Google-Smtp-Source: APXvYqyUye9cz+0n15zQ4gOArOoK5kXFrcrLZZSEtAMpudDveLjSJuBRU+UsJPJBC8N4qob10YrUs4SNp8kqivMgQUg=
+X-Received: by 2002:a6b:e20a:: with SMTP id z10mr7315185ioc.76.1562516120337;
+ Sun, 07 Jul 2019 09:15:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
+ <1562410493-8661-12-git-send-email-s.mesoraca16@gmail.com> <CAG48ez0uFX4AniOk1W0Vs6j=7Q5QfSFQTrBBzC2qL2bpWn_yCg@mail.gmail.com>
+In-Reply-To: <CAG48ez0uFX4AniOk1W0Vs6j=7Q5QfSFQTrBBzC2qL2bpWn_yCg@mail.gmail.com>
+From:   Salvatore Mesoraca <s.mesoraca16@gmail.com>
+Date:   Sun, 7 Jul 2019 18:15:09 +0200
+Message-ID: <CAJHCu1K-x1tCehO1CxTf9ZzVKLh44dE9hwWWSCxnW1A4SHX=kQ@mail.gmail.com>
+Subject: Re: [PATCH v5 11/12] S.A.R.A.: /proc/*/mem write limitation
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Brad Spengler <spender@grsecurity.net>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        PaX Team <pageexec@freemail.hu>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        James Morris <jmorris@namei.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Jann Horn <jannh@google.com> wrote:
+>
+> On Sat, Jul 6, 2019 at 12:55 PM Salvatore Mesoraca
+> <s.mesoraca16@gmail.com> wrote:
+> > Prevent a task from opening, in "write" mode, any /proc/*/mem
+> > file that operates on the task's mm.
+> > A process could use it to overwrite read-only memory, bypassing
+> > S.A.R.A. restrictions.
+> [...]
+> > +static void sara_task_to_inode(struct task_struct *t, struct inode *i)
+> > +{
+> > +       get_sara_inode_task(i) = t;
+>
+> This looks bogus. Nothing is actually holding a reference to `t` here, right?
 
-Fix build errors when MFD_ROHM_BD70528=m, BD70528_WATCHDOG=m,
-and RTC_DRV_BD70528=y.  Fixes these build errors:
+I think you are right, I should probably store the PID here.
 
-ld: drivers/rtc/rtc-bd70528.o: in function `bd70528_alm_enable':
-rtc-bd70528.c:(.text+0x3a2): undefined reference to `bd70528_wdt_lock'
-ld: rtc-bd70528.c:(.text+0x3f8): undefined reference to `bd70528_wdt_unlock'
-ld: drivers/rtc/rtc-bd70528.o: in function `bd70528_set_rtc_based_timers':
-rtc-bd70528.c:(.text+0x41c): undefined reference to `bd70528_wdt_set'
-ld: drivers/rtc/rtc-bd70528.o: in function `bd70528_set_time':
-rtc-bd70528.c:(.text+0x500): undefined reference to `bd70528_wdt_lock'
-ld: rtc-bd70528.c:(.text+0x587): undefined reference to `bd70528_wdt_unlock'
+> > +}
+> > +
+> >  static struct security_hook_list data_hooks[] __lsm_ro_after_init = {
+> >         LSM_HOOK_INIT(cred_prepare, sara_cred_prepare),
+> >         LSM_HOOK_INIT(cred_transfer, sara_cred_transfer),
+> >         LSM_HOOK_INIT(shm_alloc_security, sara_shm_alloc_security),
+> > +       LSM_HOOK_INIT(task_to_inode, sara_task_to_inode),
+> >  };
+> [...]
+> > +static int sara_file_open(struct file *file)
+> > +{
+> > +       struct task_struct *t;
+> > +       struct mm_struct *mm;
+> > +       u16 sara_wxp_flags = get_current_sara_wxp_flags();
+> > +
+> > +       /*
+> > +        * Prevent write access to /proc/.../mem
+> > +        * if it operates on the mm_struct of the
+> > +        * current process: it could be used to
+> > +        * bypass W^X.
+> > +        */
+> > +
+> > +       if (!sara_enabled ||
+> > +           !wxprot_enabled ||
+> > +           !(sara_wxp_flags & SARA_WXP_WXORX) ||
+> > +           !(file->f_mode & FMODE_WRITE))
+> > +               return 0;
+> > +
+> > +       t = get_sara_inode_task(file_inode(file));
+> > +       if (unlikely(t != NULL &&
+> > +                    strcmp(file->f_path.dentry->d_name.name,
+> > +                           "mem") == 0)) {
+>
+> This should probably at least have a READ_ONCE() somewhere in case the
+> file concurrently gets renamed?
 
-Also add a blank line to separate the Kconfig entry from the one
-above it.
+My understanding here is that /proc/$pid/mem files cannot be renamed.
+t != NULL implies we are in procfs.
+Under these assumptions I think that that code is fine.
+Am I wrong?
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: linux-rtc@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
-Found in mmotm but applies to linux-next.
+> > +               get_task_struct(t);
+> > +               mm = get_task_mm(t);
+> > +               put_task_struct(t);
+>
+> Getting and dropping a reference to the task_struct here is completely
+> useless. Either you have a reference, in which case you don't need to
+> take another one, or you don't have a reference, in which case you
+> also can't take one.
 
- drivers/rtc/Kconfig |    2 ++
- 1 file changed, 2 insertions(+)
+Absolutely agree.
 
---- mmotm-2019-0706-2200.orig/drivers/rtc/Kconfig
-+++ mmotm-2019-0706-2200/drivers/rtc/Kconfig
-@@ -498,8 +498,10 @@ config RTC_DRV_M41T80_WDT
- 	help
- 	  If you say Y here you will get support for the
- 	  watchdog timer in the ST M41T60 and M41T80 RTC chips series.
-+
- config RTC_DRV_BD70528
- 	tristate "ROHM BD70528 PMIC RTC"
-+	depends on MFD_ROHM_BD70528
- 	help
- 	  If you say Y here you will get support for the RTC
- 	  on ROHM BD70528 Power Management IC.
+> > +               if (unlikely(mm == current->mm))
+> > +                       sara_warn_or_goto(error,
+> > +                                         "write access to /proc/*/mem");
+>
+> Why is the current process so special that it must be protected more
+> than other processes? Is the idea here to rely on other protections to
+> protect all other tasks? This should probably come with a comment that
+> explains this choice.
 
+Yes, I should have spent some more words here.
+Access to /proc/$pid/mem from other processes is already regulated by
+security_ptrace_access_check (i.e. Yama).
+Unfortunately, that hook is ignored when "mm == current->mm".
+It seems that there is some user-space software that relies on /proc/self/mem
+being writable (cfr. commit f511c0b17b08).
 
+Thank you for your suggestions.
