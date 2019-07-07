@@ -2,84 +2,81 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8897C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9FAC48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE91620673
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sleyPRku"
+	by mail.kernel.org (Postfix) with ESMTP id 9E4AD20684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfGGVaw (ORCPT
+        id S1727794AbfGGVkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 17:30:52 -0400
-Received: from mail-io1-f43.google.com ([209.85.166.43]:34412 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbfGGVav (ORCPT
+        Sun, 7 Jul 2019 17:40:45 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:46244 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727749AbfGGVkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 17:30:51 -0400
-Received: by mail-io1-f43.google.com with SMTP id k8so30669052iot.1;
-        Sun, 07 Jul 2019 14:30:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rDuKQA9H70ob7BkrooBEjjPJRzJyeCPcykhriQrD2wo=;
-        b=sleyPRkuDmUrn9eNZbAmmT0r9XMh9W4PAP9qILmo9i8WMiNX0ccLsTitGcIkfapp/q
-         syZN1d1twAnIZqrO6AmVdtL9JLhxZy8JLmPc8LNVuTxORaU9OVwiBCwiy3mCTxhhJZ2p
-         Whqyb4kxGBdQJ2/sqs7Mfru8CLoPIs11t0u+eqnkS9WBnYypMFDdg7NHFXOXj4GnHMsk
-         kHr0VAk4TqY9WI7ztYOdGDtf5Y5KRikq4oyFlcP/DuaDcF82qaP/j6oi/JZVbc+tWUcL
-         +CYTK0LoxGrbVEgtamh/1ktnelvWRUEn1g8Ukp5xEaHVF2SNpgCaKaYxW1b9T3DWUgca
-         Cb5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rDuKQA9H70ob7BkrooBEjjPJRzJyeCPcykhriQrD2wo=;
-        b=cgO8L4MAJzvcG38Enn50xOn5qI/K866kvrhRpJ89xXWC3Eqve9i0FtyaIy1jGip9A+
-         8v6x2mA1Fww1XwzWEC0TC2uMsqOhZAFgZFvNvW647MtOzqhwIjK6BqoDdGwV2RSMlFIg
-         zKzg6Hcz/avbfObXu/AzVN5mBBsZJB+NpRk7zhijXNQbWGdPfsO5g9Li0PDz0WvLapTv
-         NX1BoaMgJNa2lRXHhsYVZY1FMUT0HEjzbWZCVncXZaRzQlbRJPw48Da3S3tu0GP9qVND
-         UkYWGSBkF6PQwbb2diqT2/RxjdL3ZglZEQlC6pibVt6NaSaXexX9aNaqXsuesaNH5N3k
-         Z0Jg==
-X-Gm-Message-State: APjAAAXxY4T1l041qnmc6l9O4tSZYTCzr0Xr4xGPoec1z12KzltJ4jgE
-        QwpIVM27kfCD86fxj3wJ5UTXgyFYVHVwwkTyWA==
-X-Google-Smtp-Source: APXvYqwXQg51UFBFOq2J20Kdu9asEa1+9YuGv4Owio2WdAM4/Myn/hsJ0J1Bz9RR/RuFhhkF09vUfbxu7oC1/ejMzGo=
-X-Received: by 2002:a02:862b:: with SMTP id e40mr18213515jai.7.1562535050403;
- Sun, 07 Jul 2019 14:30:50 -0700 (PDT)
+        Sun, 7 Jul 2019 17:40:45 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkEtm-0003su-Qy; Sun, 07 Jul 2019 21:40:42 +0000
+Date:   Sun, 7 Jul 2019 22:40:42 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/6] make struct mountpoint bear the dentry reference to
+ mountpoint, not struct mount
+Message-ID: <20190707214042.GS17978@ZenIV.linux.org.uk>
+References: <20190706001612.GM17978@ZenIV.linux.org.uk>
+ <20190706002236.26113-1-viro@ZenIV.linux.org.uk>
+ <20190706002236.26113-4-viro@ZenIV.linux.org.uk>
+ <CAHk-=wgB5NN=N9Z4Y26CTSr1EchMfXbuFvVU4rcKaNca9qVkiA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190708072858.566aa564@canb.auug.org.au>
-In-Reply-To: <20190708072858.566aa564@canb.auug.org.au>
-From:   Trond Myklebust <trondmy@gmail.com>
-Date:   Sun, 7 Jul 2019 17:30:39 -0400
-Message-ID: <CAABAsM7jKzWPNoe63LU33tVfn7a88ZP9yzp4Bb1BN2TDWMxgjQ@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commits in the nfs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgB5NN=N9Z4Y26CTSr1EchMfXbuFvVU4rcKaNca9qVkiA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Jul 2019 at 17:29, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commits
->
->   fe9ad197bd8a ("xprtrdma: Remove the RPCRDMA_REQ_F_PENDING flag")
->   08d720bcd822 ("xprtrdma: Fix occasional transport deadlock")
->   beb843739ea0 ("xprtrdma: Replace use of xdr_stream_pos in rpcrdma_marshal_req")
->
-> are missing a Signed-off-by from their committer.
->
+On Sun, Jul 07, 2019 at 02:17:38PM -0700, Linus Torvalds wrote:
+> On Fri, Jul 5, 2019 at 5:22 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > +static HLIST_HEAD(unmounted);  /* protected by namespace_sem */
+> > +static LIST_HEAD(ex_mountpoints);
+> 
+> What protects the ex_mountpoints list?
+> 
+> It looks like it's the mount_lock, but why isn't that documented?
+> 
+> It sure isn't namespace_sem from the comment above.
 
-Anna?
+It is namespace_sem.  Of all put_mountpoint() callers only the one
+from mntput_no_expire() (disposing of stuck MNT_LOCKed children)
+is not under namespace_sem; all such are told to use ex_mountpoints
+for disposal.  See
++               if (!list)
++                       list = &ex_mountpoints;
++               dput_to_list(dentry, list);
+in there.  Only one call site gets non-default disposal list -
+                list_for_each_entry_safe(p, tmp, &mnt->mnt_mounts,  mnt_child) {
+-                       umount_mnt(p);
++                       umount_mnt(p, &list);
+                }
+in mntput_no_expire() passes a local list to umount_mnt() (which passes it
+to put_mountpoint()).
+
+And namespace_unlock() empties ex_mountpoints before dropping namespace_sem -
+the contents gets moved to a local list, which is fed to shrink_dentry_list()
+as soon as we drop namespace_sem.
+
+Protection of the disposal list is up to the callers of put_mountpoint();
+for ex_mountpoints it's namespace_sem, for the one in mntput_no_expire()
+we don't need any exclusion whatsoever - no other thread can access it.
+
+IOW, the comment re namespace_sem applies to ex_mountpoints as well.
