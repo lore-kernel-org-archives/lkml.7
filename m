@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB836C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C362C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B2320663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E487620663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfGGToJ (ORCPT
+        id S1728423AbfGGToI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:44:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57354 "EHLO
+        Sun, 7 Jul 2019 15:44:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57366 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727560AbfGGTiJ (ORCPT
+        by vger.kernel.org with ESMTP id S1727563AbfGGTiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:09 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz6-0006ha-7e; Sun, 07 Jul 2019 20:38:04 +0100
+        id 1hkCz5-0006h7-MD; Sun, 07 Jul 2019 20:38:03 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0005bX-NN; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz4-0005bB-9D; Sun, 07 Jul 2019 20:38:02 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
-        "Jerry Snitselaar" <jsnitsel@redhat.com>,
-        "Stefan Berger" <stefanb@linux.ibm.com>
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms+renesas@verge.net.au>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.732802730@decadent.org.uk>
+Message-ID: <lsq.1562518457.700065770@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 065/129] tpm/tpm_i2c_atmel: Return -E2BIG when the
- transfer is incomplete
+Subject: [PATCH 3.16 061/129] pinctrl: sh-pfc: r8a7791: Fix scifb2_data_c
+ pin group
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,36 +56,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 442601e87a4769a8daba4976ec3afa5222ca211d upstream.
+commit a4b0350047f1b10207e25e72d7cd3f7826e93769 upstream.
 
-Return -E2BIG when the transfer is incomplete. The upper layer does
-not retry, so not doing that is incorrect behaviour.
+The entry for "scifb2_data_c" in the SCIFB2 pin group array contains a
+typo, thus the group cannot be selected.
 
-Fixes: a2871c62e186 ("tpm: Add support for Atmel I2C TPMs")
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-[bwh: Backported to 3.16: adjust context]
+Fixes: 5088451962389924 ("pinctrl: sh-pfc: r8a7791 PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/char/tpm/tpm_i2c_atmel.c
-+++ b/drivers/char/tpm/tpm_i2c_atmel.c
-@@ -65,7 +65,14 @@ static int i2c_atmel_send(struct tpm_chi
- 	dev_dbg(chip->dev,
- 		"%s(buf=%*ph len=%0zx) -> sts=%d\n", __func__,
- 		(int)min_t(size_t, 64, len), buf, len, status);
--	return status;
-+	if (status < 0)
-+		return status;
-+
-+	/* The upper layer does not support incomplete sends. */
-+	if (status != len)
-+		return -E2BIG;
-+
-+	return 0;
- }
- 
- static int i2c_atmel_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+@@ -4433,7 +4433,7 @@ static const char * const scifb2_groups[
+ 	"scifb2_data_b",
+ 	"scifb2_clk_b",
+ 	"scifb2_ctrl_b",
+-	"scifb0_data_c",
++	"scifb2_data_c",
+ 	"scifb2_clk_c",
+ 	"scifb2_data_d",
+ };
 
