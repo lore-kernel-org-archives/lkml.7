@@ -7,53 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB2BC0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F28C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910C120665
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F231A20665
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Tx+4YqYK"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZocZeRO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfGGKIF (ORCPT
+        id S1727339AbfGGKKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 06:08:05 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41333 "EHLO
+        Sun, 7 Jul 2019 06:10:13 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58753 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfGGKIE (ORCPT
+        with ESMTP id S1727141AbfGGKKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 06:08:04 -0400
+        Sun, 7 Jul 2019 06:10:12 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x67A7ws4878589
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x67AA0Wu879360
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 7 Jul 2019 03:07:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x67A7ws4878589
+        Sun, 7 Jul 2019 03:10:01 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x67AA0Wu879360
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562494079;
-        bh=nQc4W8TxTWn6p3U1vcjXmmpb5BtCnp3qTiIy9pV4lgc=;
+        s=2019061801; t=1562494201;
+        bh=h6AxCnF8Cy9JvxbrLLPGcxIHpYIAsA8NGwjX/2T0TCA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Tx+4YqYKw7vNJL+kv6mY7cfMBb7ZBH5zun1oeEA6rf+h9EeE4nxk4S9WB6TOr2S9N
-         ske6Y6IO7EVB0Cm0BOfVUjqJc3JVXzcTZzSjR8ccg6iO7UHnfDCFoNOr872fGoCWAD
-         EMRNwWXYCCQhCmfVzcpB/msxG1XE9cccH5QlQIr6YiPSBs//i3psOuEa9y9xE0YX9c
-         YVSYyXxJH4x4gB41tTIriaWks0oS45IguyG8CpzDMS52H+5P10AkKgT4sfvty5qDMp
-         FZtLCLkOe0F6O5VvjMhnXAK3VjeVa6UyqzivWg3EKQ8Xw0VmXWY9gxNi8zBxqxFkBg
-         GiQ/InC8xPZWg==
+        b=ZocZeRO/C5/UqyHn+1CMBh4ddZ9hqA1l97JNRwkfeyw/m7mgxJ0CzoP1DuUrL1CUL
+         dQxCAduNUMfmQxZb1OERSxf9fRQQa6fOhEuQN3pzRSD5Ly7qUkmgS7gO9WiJyOD81m
+         ErFEMFfTSvk3bVkGiVQm8wYT5NhBeAIddM9fuxpDSQdWK7M/knc5az2Zxuebiwg9fI
+         J6/zsVm/Jo+fqqPsq4GWYZ8s07QWY/E+vtuPbtrhvtoSzWn2K9prbSKuMt2shaE0qB
+         AkyYskedAr5VrTSeZ60Y1RMYLOsaWWcw1yG7pfnJ3sYz/SB+9+snH2VCloDtWEDJyg
+         E9h5QsOSojJAg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x67A7wTE878585;
-        Sun, 7 Jul 2019 03:07:58 -0700
-Date:   Sun, 7 Jul 2019 03:07:58 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x67AA07K879357;
+        Sun, 7 Jul 2019 03:10:00 -0700
+Date:   Sun, 7 Jul 2019 03:10:00 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-7891bc0ab739a31538b5f879a523232b8b07a0d3@git.kernel.org>
-Cc:     hpa@zytor.com, bigeasy@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de
-Reply-To: hpa@zytor.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, bigeasy@linutronix.de
-In-Reply-To: <20190704060743.rvew4yrjd6n33uzx@linutronix.de>
-References: <20190704060743.rvew4yrjd6n33uzx@linutronix.de>
+From:   tip-bot for zhengbin <tipbot@zytor.com>
+Message-ID: <tip-9176ab1b848059a0cd9caf39f0cebaa1b7ec5ec2@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, zhengbin13@huawei.com
+Reply-To: mingo@kernel.org, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, hpa@zytor.com,
+          zhengbin13@huawei.com
+In-Reply-To: <1562460701-113301-1-git-send-email-zhengbin13@huawei.com>
+References: <1562460701-113301-1-git-send-email-zhengbin13@huawei.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/fpu] x86/fpu: Inline fpu__xstate_clear_all_cpu_caps()
-Git-Commit-ID: 7891bc0ab739a31538b5f879a523232b8b07a0d3
+Subject: [tip:timers/core] time: Validate user input in
+ compat_settimeofday()
+Git-Commit-ID: 9176ab1b848059a0cd9caf39f0cebaa1b7ec5ec2
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -67,83 +69,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7891bc0ab739a31538b5f879a523232b8b07a0d3
-Gitweb:     https://git.kernel.org/tip/7891bc0ab739a31538b5f879a523232b8b07a0d3
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Thu, 4 Jul 2019 08:07:43 +0200
+Commit-ID:  9176ab1b848059a0cd9caf39f0cebaa1b7ec5ec2
+Gitweb:     https://git.kernel.org/tip/9176ab1b848059a0cd9caf39f0cebaa1b7ec5ec2
+Author:     zhengbin <zhengbin13@huawei.com>
+AuthorDate: Sun, 7 Jul 2019 08:51:41 +0800
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sun, 7 Jul 2019 12:01:47 +0200
+CommitDate: Sun, 7 Jul 2019 12:05:40 +0200
 
-x86/fpu: Inline fpu__xstate_clear_all_cpu_caps()
+time: Validate user input in compat_settimeofday()
 
-All fpu__xstate_clear_all_cpu_caps() does is to invoke one simple
-function since commit
+The user value is validated after converting the timeval to a timespec, but
+for a wide range of negative tv_usec values the multiplication overflow turns
+them in positive numbers. So the 'validated later' is not catching the
+invalid input.
 
-  73e3a7d2a7c3b ("x86/fpu: Remove the explicit clearing of XSAVE dependent features")
-
-so invoke that function directly and remove the wrapper.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190704060743.rvew4yrjd6n33uzx@linutronix.de
+Link: https://lkml.kernel.org/r/1562460701-113301-1-git-send-email-zhengbin13@huawei.com
 
 ---
- arch/x86/include/asm/fpu/xstate.h |  1 -
- arch/x86/kernel/fpu/init.c        |  2 +-
- arch/x86/kernel/fpu/xstate.c      | 11 +----------
- 3 files changed, 2 insertions(+), 12 deletions(-)
+ kernel/time/time.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index 7e42b285c856..c6136d79f8c0 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -47,7 +47,6 @@ extern u64 xstate_fx_sw_bytes[USER_XSTATE_FX_SW_WORDS];
- extern void __init update_regset_xstate_info(unsigned int size,
- 					     u64 xstate_mask);
- 
--void fpu__xstate_clear_all_cpu_caps(void);
- void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr);
- const void *get_xsave_field_ptr(int xfeature_nr);
- int using_compacted_format(void);
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index 5baae74af4f9..6ce7e0a23268 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -259,7 +259,7 @@ static void __init fpu__init_parse_early_param(void)
- #endif
- 
- 	if (cmdline_find_option_bool(boot_command_line, "noxsave"))
--		fpu__xstate_clear_all_cpu_caps();
-+		setup_clear_cpu_cap(X86_FEATURE_XSAVE);
- 
- 	if (cmdline_find_option_bool(boot_command_line, "noxsaveopt"))
- 		setup_clear_cpu_cap(X86_FEATURE_XSAVEOPT);
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 3c36dd1784db..7b4c52aa929f 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -67,15 +67,6 @@ static unsigned int xstate_comp_offsets[sizeof(xfeatures_mask)*8];
-  */
- unsigned int fpu_user_xstate_size;
- 
--/*
-- * Clear all of the X86_FEATURE_* bits that are unavailable
-- * when the CPU has no XSAVE support.
-- */
--void fpu__xstate_clear_all_cpu_caps(void)
--{
--	setup_clear_cpu_cap(X86_FEATURE_XSAVE);
--}
--
- /*
-  * Return whether the system supports a given xfeature.
-  *
-@@ -709,7 +700,7 @@ static void fpu__init_disable_system_xstate(void)
- {
- 	xfeatures_mask = 0;
- 	cr4_clear_bits(X86_CR4_OSXSAVE);
--	fpu__xstate_clear_all_cpu_caps();
-+	setup_clear_cpu_cap(X86_FEATURE_XSAVE);
- }
- 
- /*
+diff --git a/kernel/time/time.c b/kernel/time/time.c
+index 7f7d6914ddd5..5c54ca632d08 100644
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -251,6 +251,10 @@ COMPAT_SYSCALL_DEFINE2(settimeofday, struct old_timeval32 __user *, tv,
+ 	if (tv) {
+ 		if (compat_get_timeval(&user_tv, tv))
+ 			return -EFAULT;
++
++		if (!timeval_valid(&user_tv))
++			return -EINVAL;
++
+ 		new_ts.tv_sec = user_tv.tv_sec;
+ 		new_ts.tv_nsec = user_tv.tv_usec * NSEC_PER_USEC;
+ 	}
