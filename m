@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50670C48BDB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD93C48BDA
 	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 00:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E58620830
+	by mail.kernel.org (Postfix) with ESMTP id 541A520830
 	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 00:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="HtLmYl8j"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="yrg1ABkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfGGAP5 (ORCPT
+        id S1727244AbfGGAQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jul 2019 20:15:57 -0400
-Received: from mail-eopbgr770078.outbound.protection.outlook.com ([40.107.77.78]:24935
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        Sat, 6 Jul 2019 20:16:00 -0400
+Received: from mail-eopbgr780089.outbound.protection.outlook.com ([40.107.78.89]:35883
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726731AbfGGAPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jul 2019 20:15:55 -0400
+        id S1727151AbfGGAP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jul 2019 20:15:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZD8n3TGriMzcpcrhGB91pLDFlBdBYa6GDHYnVg3OJqA=;
- b=HtLmYl8jXIL287KwznuPnL8A2yfFZBe/h0Kcd2MIOtUuAOSkI1Scw39l1zObxWQidlcSlUIOjuK9EXrSi6K1gj6rqaYyZVqESE1Uh+BbZxpqHlJWhXeocBylvpEW0/+gh/m13BG321SaISI2frZJIbU5PfKZllz9RdbsOL8WC1w=
+ bh=ho1i+9j2MMwAsnQdpF/CNkQkoXPu5Y17mYrGyYOfb2I=;
+ b=yrg1ABkQtg6AHNHrAO9w0FzxJz8di6R8jTLm5zTEiU4OP1Fu3t9v0iF7foDTBBdH3KPxRulvCJOo/GoFEiX1OVwfjQvtUC7Lzw2ScGxlWPbVf5kl0aezGu2zSMGS1KbLti2UXiRDr65egM7fHaQWuXVEXWMPt95tAX9PBV5Jb6E=
 Received: from MWHPR0201CA0004.namprd02.prod.outlook.com
- (2603:10b6:301:74::17) by MW2PR02MB3724.namprd02.prod.outlook.com
- (2603:10b6:907:2::33) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:301:74::17) by MWHPR02MB2383.namprd02.prod.outlook.com
+ (2603:10b6:300:5c::10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2052.19; Sun, 7 Jul
- 2019 00:15:50 +0000
+ 2019 00:15:51 +0000
 Received: from SN1NAM02FT047.eop-nam02.prod.protection.outlook.com
  (2a01:111:f400:7e44::209) by MWHPR0201CA0004.outlook.office365.com
  (2603:10b6:301:74::17) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2052.17 via Frontend
- Transport; Sun, 7 Jul 2019 00:15:50 +0000
+ Transport; Sun, 7 Jul 2019 00:15:51 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.80.198)
  smtp.mailfrom=xilinx.com; arndb.de; dkim=none (message not signed)
  header.d=none;arndb.de; dmarc=bestguesspass action=none
@@ -48,7 +48,7 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
 Received: from xir-pvapexch01.xlnx.xilinx.com (149.199.80.198) by
  SN1NAM02FT047.mail.protection.outlook.com (10.152.72.201) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.2032.15 via Frontend Transport; Sun, 7 Jul 2019 00:15:50 +0000
+ 15.20.2032.15 via Frontend Transport; Sun, 7 Jul 2019 00:15:51 +0000
 Received: from xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) by
  xir-pvapexch01.xlnx.xilinx.com (172.21.17.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -66,16 +66,16 @@ Envelope-to: arnd@arndb.de,
 Received: from [149.199.110.15] (port=58228 helo=xirdraganc40.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <dragan.cvetic@xilinx.com>)
-        id 1hjuqH-0004ON-3t; Sun, 07 Jul 2019 01:15:45 +0100
+        id 1hjuqH-0004ON-5z; Sun, 07 Jul 2019 01:15:45 +0100
 From:   Dragan Cvetic <dragan.cvetic@xilinx.com>
 To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
         <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>
 CC:     <linux-kernel@vger.kernel.org>,
         Dragan Cvetic <dragan.cvetic@xilinx.com>,
         Derek Kiernan <derek.kiernan@xilinx.com>
-Subject: [PATCH V8 3/8] misc: xilinx_sdfec: Add ability to configure LDPC
-Date:   Sun, 7 Jul 2019 01:15:37 +0100
-Message-ID: <1562458542-457448-4-git-send-email-dragan.cvetic@xilinx.com>
+Subject: [PATCH V8 6/8] misc: xilinx_sdfec: Add stats & status ioctls
+Date:   Sun, 7 Jul 2019 01:15:40 +0100
+Message-ID: <1562458542-457448-7-git-send-email-dragan.cvetic@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562458542-457448-1-git-send-email-dragan.cvetic@xilinx.com>
 References: <1562458542-457448-1-git-send-email-dragan.cvetic@xilinx.com>
@@ -83,527 +83,333 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(136003)(39850400004)(2980300002)(189003)(199004)(110136005)(54906003)(106002)(2906002)(50226002)(36756003)(8676002)(9786002)(8936002)(7636002)(76130400001)(305945005)(478600001)(6666004)(16586007)(356004)(316002)(246002)(36906005)(5660300002)(26826003)(107886003)(30864003)(51416003)(4326008)(76176011)(956004)(11346002)(2616005)(126002)(26005)(446003)(476003)(44832011)(186003)(70586007)(426003)(486006)(70206006)(47776003)(14444005)(71366001)(60926002)(50466002)(7696005)(2201001)(336012)(48376002)(28376004)(102446001)(461764006);DIR:OUT;SFP:1101;SCL:1;SRVR:MW2PR02MB3724;H:xir-pvapexch01.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:149.199.80.198;IPV:CAL;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(136003)(39850400004)(2980300002)(199004)(189003)(76176011)(7696005)(51416003)(107886003)(316002)(16586007)(110136005)(36906005)(426003)(106002)(54906003)(305945005)(6666004)(356004)(7636002)(48376002)(50466002)(26005)(9786002)(336012)(186003)(4326008)(70586007)(5660300002)(486006)(478600001)(70206006)(71366001)(8936002)(47776003)(126002)(476003)(36756003)(60926002)(76130400001)(2906002)(26826003)(14444005)(956004)(2616005)(11346002)(446003)(28376004)(8676002)(2201001)(246002)(44832011)(50226002)(102446001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2383;H:xir-pvapexch01.xlnx.xilinx.com;FPR:;SPF:Pass;LANG:en;PTR:unknown-80-198.xilinx.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 383e6126-9919-486f-d969-08d70270445d
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:MW2PR02MB3724;
-X-MS-TrafficTypeDiagnostic: MW2PR02MB3724:
-X-Microsoft-Antispam-PRVS: <MW2PR02MB3724078A92FF3A17E446435ACBF70@MW2PR02MB3724.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: ad47429e-0158-493a-1575-08d702704503
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:MWHPR02MB2383;
+X-MS-TrafficTypeDiagnostic: MWHPR02MB2383:
+X-Microsoft-Antispam-PRVS: <MWHPR02MB2383A5BDD1732519F99CEE22CBF70@MWHPR02MB2383.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
 X-Forefront-PRVS: 0091C8F1EB
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: jyTvPDqeeYRiB0UB6xPQROUbTuOmu1Ph/41rujr2uzJzkBO/L7kQtSCOMW4wD9xjhQbdYzYmPRqTqgVETrQiJO6p/IcjuASOobxKLZfGi7DXvT6MtZ7hY5Y/USv2UOx8UL5u2EvW+W44zrQ3Y9YVojYMSBHmekDf1XBahNh3lWj/6aYLv0PIIvY/5KqkYWuuOeX8X63ljGiTlyyHNQQunL29N7P1IM3b5MgxAej+9j2KnIaNvZIHVmptsjEN1fwPRZ2Lippi2u/BVpSvKToZyLDHRSP6wTTD/JiBrMxP73dgDBEmuhSQaIc3gttv/UvvWDXtofPEnhxja3MklQl0u6DzI1M9DBDCWEgR6MO9h3YA//aoUaWdIk4OmFhjUyZrHW//1HMCxtmAhx4Hh2QeiBnNlMYC2n6KM4eZwnYED/o=
+X-Microsoft-Antispam-Message-Info: X0NN2S1O6zcsDGQbkBT/KQZD9Kr4jMe9am0XJkv2NMD5bioCJG+Ly9L/UJEJUhG82KUv1hFGyzoVrkexncH9K3KjMPoHkQp+6Roa3pM4qe5i/O+/SpD/CTS5SK3EDHExFs4dWBtF17XZ8TrHO5rWE7OEb9vNuHicA4QXJZD/CkdNibhKbfptPQV3TJhqpLynPyzKTLA2sFZqWjoXMftenDShHigWvWizNcS+Cza2s6WtJwjMe7RVhqRIXHacJyCDIw3nnOYoHAIxCeUY+/0LgnuXJAGx/IrAegi7W74Kz+Zx0dgo9a26QjRpcjqdBPfF1Al0b3YzHBly2i4vHIAybfKCHNG79vsQli2qouG5LtgPGEdsl5B6QpKPPZGysMHxWyaWiHmruRL9kE21WAu2Fcr5LWBhySygDA1vzx5y4w4=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2019 00:15:50.0373
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2019 00:15:51.1205
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 383e6126-9919-486f-d969-08d70270445d
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad47429e-0158-493a-1575-08d702704503
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.80.198];Helo=[xir-pvapexch01.xlnx.xilinx.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR02MB3724
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2383
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the capability to configure LDPC mode via the ioctl
-XSDFEC_ADD_LDPC_CODE_PARAMS.
+SD-FEC statistic data are:
+- count of data interface errors (isr_err_count)
+- count of Correctable ECC errors (cecc_count)
+- count of Uncorrectable ECC errors (uecc_count)
 
+Add support:
+1. clear stats ioctl callback which clears collected
+statistic data,
+2. get stats ioctl callback which reads a collected
+statistic data,
+3. set default configuration ioctl callback,
+4. start ioctl callback enables SD-FEC HW,
+5. stop ioctl callback disables SD-FEC HW.
+
+In a failed state driver enables the following ioctls:
+- get status
+- get statistics
+- clear stats
+- set default SD-FEC device configuration
+
+Tested-by: Santhosh Dyavanapally <SDYAVANA@xilinx.com>
+Tested by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Tested-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Tested-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Derek Kiernan <derek.kiernan@xilinx.com>
 Signed-off-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
 ---
- drivers/misc/xilinx_sdfec.c      | 324 +++++++++++++++++++++++++++++++++++++++
- include/uapi/misc/xilinx_sdfec.h |  98 ++++++++++++
- 2 files changed, 422 insertions(+)
+ drivers/misc/xilinx_sdfec.c      | 125 +++++++++++++++++++++++++++++++++++++++
+ include/uapi/misc/xilinx_sdfec.h |  75 +++++++++++++++++++++++
+ 2 files changed, 200 insertions(+)
 
 diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index d3dba7e..9be4de0 100644
+index 61775c5..45f127a 100644
 --- a/drivers/misc/xilinx_sdfec.c
 +++ b/drivers/misc/xilinx_sdfec.c
-@@ -20,6 +20,7 @@
- #include <linux/slab.h>
- #include <linux/clk.h>
- #include <linux/compat.h>
-+#include <linux/highmem.h>
+@@ -206,6 +206,7 @@ struct xsdfec_clks {
+  * @irq: IRQ number
+  * @state_updated: indicates State updated by interrupt handler
+  * @stats_updated: indicates Stats updated by interrupt handler
++ * @intr_enabled: indicates IRQ enabled
+  *
+  * This structure contains necessary state for SDFEC driver to operate
+  */
+@@ -228,6 +229,7 @@ struct xsdfec_dev {
+ 	int irq;
+ 	bool state_updated;
+ 	bool stats_updated;
++	bool intr_enabled;
+ };
  
- #include <uapi/misc/xilinx_sdfec.h>
- 
-@@ -113,6 +114,57 @@ static struct mutex dev_idr_lock;
- #define XSDFEC_TURBO_SCALE_BIT_POS (8)
- #define XSDFEC_TURBO_SCALE_MAX (15)
- 
-+/* REG0 Register */
-+#define XSDFEC_LDPC_CODE_REG0_ADDR_BASE (0x2000)
-+#define XSDFEC_LDPC_CODE_REG0_ADDR_HIGH (0x27F0)
-+#define XSDFEC_REG0_N_MIN (4)
-+#define XSDFEC_REG0_N_MAX (32768)
-+#define XSDFEC_REG0_N_MUL_P (256)
-+#define XSDFEC_REG0_N_LSB (0)
-+#define XSDFEC_REG0_K_MIN (2)
-+#define XSDFEC_REG0_K_MAX (32766)
-+#define XSDFEC_REG0_K_MUL_P (256)
-+#define XSDFEC_REG0_K_LSB (16)
-+
-+/* REG1 Register */
-+#define XSDFEC_LDPC_CODE_REG1_ADDR_BASE (0x2004)
-+#define XSDFEC_LDPC_CODE_REG1_ADDR_HIGH (0x27f4)
-+#define XSDFEC_REG1_PSIZE_MIN (2)
-+#define XSDFEC_REG1_PSIZE_MAX (512)
-+#define XSDFEC_REG1_NO_PACKING_MASK (0x400)
-+#define XSDFEC_REG1_NO_PACKING_LSB (10)
-+#define XSDFEC_REG1_NM_MASK (0xFF800)
-+#define XSDFEC_REG1_NM_LSB (11)
-+#define XSDFEC_REG1_BYPASS_MASK (0x100000)
-+
-+/* REG2 Register */
-+#define XSDFEC_LDPC_CODE_REG2_ADDR_BASE (0x2008)
-+#define XSDFEC_LDPC_CODE_REG2_ADDR_HIGH (0x27f8)
-+#define XSDFEC_REG2_NLAYERS_MIN (1)
-+#define XSDFEC_REG2_NLAYERS_MAX (256)
-+#define XSDFEC_REG2_NNMQC_MASK (0xFFE00)
-+#define XSDFEC_REG2_NMQC_LSB (9)
-+#define XSDFEC_REG2_NORM_TYPE_MASK (0x100000)
-+#define XSDFEC_REG2_NORM_TYPE_LSB (20)
-+#define XSDFEC_REG2_SPECIAL_QC_MASK (0x200000)
-+#define XSDFEC_REG2_SPEICAL_QC_LSB (21)
-+#define XSDFEC_REG2_NO_FINAL_PARITY_MASK (0x400000)
-+#define XSDFEC_REG2_NO_FINAL_PARITY_LSB (22)
-+#define XSDFEC_REG2_MAX_SCHEDULE_MASK (0x1800000)
-+#define XSDFEC_REG2_MAX_SCHEDULE_LSB (23)
-+
-+/* REG3 Register */
-+#define XSDFEC_LDPC_CODE_REG3_ADDR_BASE (0x200C)
-+#define XSDFEC_LDPC_CODE_REG3_ADDR_HIGH (0x27FC)
-+#define XSDFEC_REG3_LA_OFF_LSB (8)
-+#define XSDFEC_REG3_QC_OFF_LSB (16)
-+
-+#define XSDFEC_LDPC_REG_JUMP (0x10)
-+#define XSDFEC_REG_WIDTH_JUMP (4)
-+
-+/* The maximum number of pinned pages */
-+#define MAX_NUM_PAGES ((XSDFEC_QC_TABLE_DEPTH / PAGE_SIZE) + 1)
-+
- /**
-  * struct xsdfec_clks - For managing SD-FEC clocks
-  * @core_clk: Main processing clock for core
-@@ -270,6 +322,275 @@ static int xsdfec_get_turbo(struct xsdfec_dev *xsdfec, void __user *arg)
- 	return err;
+ static inline void xsdfec_regwrite(struct xsdfec_dev *xsdfec, u32 addr,
+@@ -289,6 +291,25 @@ static void update_config_from_hw(struct xsdfec_dev *xsdfec)
+ 		xsdfec->state = XSDFEC_STOPPED;
  }
  
-+static int xsdfec_reg0_write(struct xsdfec_dev *xsdfec, u32 n, u32 k, u32 psize,
-+			     u32 offset)
++static int xsdfec_get_status(struct xsdfec_dev *xsdfec, void __user *arg)
 +{
-+	u32 wdata;
++	struct xsdfec_status status;
++	int err;
 +
-+	if (n < XSDFEC_REG0_N_MIN || n > XSDFEC_REG0_N_MAX ||
-+	    (n > XSDFEC_REG0_N_MUL_P * psize) || n <= k || ((n % psize) != 0)) {
-+		dev_dbg(xsdfec->dev, "N value is not in range");
-+		return -EINVAL;
-+	}
-+	n <<= XSDFEC_REG0_N_LSB;
++	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
++	status.state = xsdfec->state;
++	xsdfec->state_updated = false;
++	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
++	status.activity = (xsdfec_regread(xsdfec, XSDFEC_ACTIVE_ADDR) &
++			   XSDFEC_IS_ACTIVITY_SET);
 +
-+	if (k < XSDFEC_REG0_K_MIN || k > XSDFEC_REG0_K_MAX ||
-+	    (k > XSDFEC_REG0_K_MUL_P * psize) || ((k % psize) != 0)) {
-+		dev_dbg(xsdfec->dev, "K value is not in range");
-+		return -EINVAL;
-+	}
-+	k = k << XSDFEC_REG0_K_LSB;
-+	wdata = k | n;
++	err = copy_to_user(arg, &status, sizeof(status));
++	if (err)
++		err = -EFAULT;
 +
-+	if (XSDFEC_LDPC_CODE_REG0_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
-+	    XSDFEC_LDPC_CODE_REG0_ADDR_HIGH) {
-+		dev_dbg(xsdfec->dev, "Writing outside of LDPC reg0 space 0x%x",
-+			XSDFEC_LDPC_CODE_REG0_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP));
-+		return -EINVAL;
-+	}
-+	xsdfec_regwrite(xsdfec,
-+			XSDFEC_LDPC_CODE_REG0_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP),
-+			wdata);
-+	return 0;
++	return err;
 +}
 +
-+static int xsdfec_reg1_write(struct xsdfec_dev *xsdfec, u32 psize,
-+			     u32 no_packing, u32 nm, u32 offset)
-+{
-+	u32 wdata;
-+
-+	if (psize < XSDFEC_REG1_PSIZE_MIN || psize > XSDFEC_REG1_PSIZE_MAX) {
-+		dev_dbg(xsdfec->dev, "Psize is not in range");
-+		return -EINVAL;
-+	}
-+
-+	if (no_packing != 0 && no_packing != 1)
-+		dev_dbg(xsdfec->dev, "No-packing bit register invalid");
-+	no_packing = ((no_packing << XSDFEC_REG1_NO_PACKING_LSB) &
-+		      XSDFEC_REG1_NO_PACKING_MASK);
-+
-+	if (nm & ~(XSDFEC_REG1_NM_MASK >> XSDFEC_REG1_NM_LSB))
-+		dev_dbg(xsdfec->dev, "NM is beyond 10 bits");
-+	nm = (nm << XSDFEC_REG1_NM_LSB) & XSDFEC_REG1_NM_MASK;
-+
-+	wdata = nm | no_packing | psize;
-+	if (XSDFEC_LDPC_CODE_REG1_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
-+	    XSDFEC_LDPC_CODE_REG1_ADDR_HIGH) {
-+		dev_dbg(xsdfec->dev, "Writing outside of LDPC reg1 space 0x%x",
-+			XSDFEC_LDPC_CODE_REG1_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP));
-+		return -EINVAL;
-+	}
-+	xsdfec_regwrite(xsdfec,
-+			XSDFEC_LDPC_CODE_REG1_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP),
-+			wdata);
-+	return 0;
-+}
-+
-+static int xsdfec_reg2_write(struct xsdfec_dev *xsdfec, u32 nlayers, u32 nmqc,
-+			     u32 norm_type, u32 special_qc, u32 no_final_parity,
-+			     u32 max_schedule, u32 offset)
-+{
-+	u32 wdata;
-+
-+	if (nlayers < XSDFEC_REG2_NLAYERS_MIN ||
-+	    nlayers > XSDFEC_REG2_NLAYERS_MAX) {
-+		dev_dbg(xsdfec->dev, "Nlayers is not in range");
-+		return -EINVAL;
-+	}
-+
-+	if (nmqc & ~(XSDFEC_REG2_NNMQC_MASK >> XSDFEC_REG2_NMQC_LSB))
-+		dev_dbg(xsdfec->dev, "NMQC exceeds 11 bits");
-+	nmqc = (nmqc << XSDFEC_REG2_NMQC_LSB) & XSDFEC_REG2_NNMQC_MASK;
-+
-+	if (norm_type > 1)
-+		dev_dbg(xsdfec->dev, "Norm type is invalid");
-+	norm_type = ((norm_type << XSDFEC_REG2_NORM_TYPE_LSB) &
-+		     XSDFEC_REG2_NORM_TYPE_MASK);
-+	if (special_qc > 1)
-+		dev_dbg(xsdfec->dev, "Special QC in invalid");
-+	special_qc = ((special_qc << XSDFEC_REG2_SPEICAL_QC_LSB) &
-+		      XSDFEC_REG2_SPECIAL_QC_MASK);
-+
-+	if (no_final_parity > 1)
-+		dev_dbg(xsdfec->dev, "No final parity check invalid");
-+	no_final_parity =
-+		((no_final_parity << XSDFEC_REG2_NO_FINAL_PARITY_LSB) &
-+		 XSDFEC_REG2_NO_FINAL_PARITY_MASK);
-+	if (max_schedule &
-+	    ~(XSDFEC_REG2_MAX_SCHEDULE_MASK >> XSDFEC_REG2_MAX_SCHEDULE_LSB))
-+		dev_dbg(xsdfec->dev, "Max Schdule exceeds 2 bits");
-+	max_schedule = ((max_schedule << XSDFEC_REG2_MAX_SCHEDULE_LSB) &
-+			XSDFEC_REG2_MAX_SCHEDULE_MASK);
-+
-+	wdata = (max_schedule | no_final_parity | special_qc | norm_type |
-+		 nmqc | nlayers);
-+
-+	if (XSDFEC_LDPC_CODE_REG2_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
-+	    XSDFEC_LDPC_CODE_REG2_ADDR_HIGH) {
-+		dev_dbg(xsdfec->dev, "Writing outside of LDPC reg2 space 0x%x",
-+			XSDFEC_LDPC_CODE_REG2_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP));
-+		return -EINVAL;
-+	}
-+	xsdfec_regwrite(xsdfec,
-+			XSDFEC_LDPC_CODE_REG2_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP),
-+			wdata);
-+	return 0;
-+}
-+
-+static int xsdfec_reg3_write(struct xsdfec_dev *xsdfec, u8 sc_off, u8 la_off,
-+			     u16 qc_off, u32 offset)
-+{
-+	u32 wdata;
-+
-+	wdata = ((qc_off << XSDFEC_REG3_QC_OFF_LSB) |
-+		 (la_off << XSDFEC_REG3_LA_OFF_LSB) | sc_off);
-+	if (XSDFEC_LDPC_CODE_REG3_ADDR_BASE + (offset * XSDFEC_LDPC_REG_JUMP) >
-+	    XSDFEC_LDPC_CODE_REG3_ADDR_HIGH) {
-+		dev_dbg(xsdfec->dev, "Writing outside of LDPC reg3 space 0x%x",
-+			XSDFEC_LDPC_CODE_REG3_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP));
-+		return -EINVAL;
-+	}
-+	xsdfec_regwrite(xsdfec,
-+			XSDFEC_LDPC_CODE_REG3_ADDR_BASE +
-+				(offset * XSDFEC_LDPC_REG_JUMP),
-+			wdata);
-+	return 0;
-+}
-+
-+static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
-+			      u32 *src_ptr, u32 len, const u32 base_addr,
-+			      const u32 depth)
-+{
-+	u32 reg = 0;
-+	u32 res;
-+	u32 n, i;
-+	u32 *addr = NULL;
-+	struct page *page[MAX_NUM_PAGES];
-+
-+	/*
-+	 * Writes that go beyond the length of
-+	 * Shared Scale(SC) table should fail
-+	 */
-+	if ((XSDFEC_REG_WIDTH_JUMP * (offset + len)) > depth) {
-+		dev_dbg(xsdfec->dev, "Write exceeds SC table length");
-+		return -EINVAL;
-+	}
-+
-+	n = (len * XSDFEC_REG_WIDTH_JUMP) / PAGE_SIZE;
-+	if ((len * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE)
-+		n += 1;
-+
-+	res = get_user_pages_fast((unsigned long)src_ptr, n, 0, page);
-+	if (res < n) {
-+		for (i = 0; i < res; i++)
-+			put_page(page[i]);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < n; i++) {
-+		addr = kmap(page[i]);
-+		do {
-+			xsdfec_regwrite(xsdfec,
-+					base_addr + ((offset + reg) *
-+						     XSDFEC_REG_WIDTH_JUMP),
-+					addr[reg]);
-+			reg++;
-+		} while ((reg < len) &&
-+			 ((reg * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE));
-+		put_page(page[i]);
-+	}
-+	return reg;
-+}
-+
-+static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
-+{
-+	struct xsdfec_ldpc_params *ldpc;
-+	int ret, n;
-+
-+	ldpc = kzalloc(sizeof(*ldpc), GFP_KERNEL);
-+	if (!ldpc)
-+		return -ENOMEM;
-+
-+	ret = copy_from_user(ldpc, arg, sizeof(*ldpc));
-+	if (ret)
-+		goto err_out;
-+
-+	if (xsdfec->config.code == XSDFEC_TURBO_CODE) {
-+		ret = -EIO;
-+		goto err_out;
-+	}
-+
-+	/* Verify Device has not started */
-+	if (xsdfec->state == XSDFEC_STARTED) {
-+		ret = -EIO;
-+		goto err_out;
-+	}
-+
-+	if (xsdfec->config.code_wr_protect) {
-+		ret = -EIO;
-+		goto err_out;
-+	}
-+
-+	/* Write Reg 0 */
-+	ret = xsdfec_reg0_write(xsdfec, ldpc->n, ldpc->k, ldpc->psize,
-+				ldpc->code_id);
-+	if (ret)
-+		goto err_out;
-+
-+	/* Write Reg 1 */
-+	ret = xsdfec_reg1_write(xsdfec, ldpc->psize, ldpc->no_packing, ldpc->nm,
-+				ldpc->code_id);
-+	if (ret)
-+		goto err_out;
-+
-+	/* Write Reg 2 */
-+	ret = xsdfec_reg2_write(xsdfec, ldpc->nlayers, ldpc->nmqc,
-+				ldpc->norm_type, ldpc->special_qc,
-+				ldpc->no_final_parity, ldpc->max_schedule,
-+				ldpc->code_id);
-+	if (ret)
-+		goto err_out;
-+
-+	/* Write Reg 3 */
-+	ret = xsdfec_reg3_write(xsdfec, ldpc->sc_off, ldpc->la_off,
-+				ldpc->qc_off, ldpc->code_id);
-+	if (ret)
-+		goto err_out;
-+
-+	/* Write Shared Codes */
-+	n = ldpc->nlayers / 4;
-+	if (ldpc->nlayers % 4)
-+		n++;
-+
-+	ret = xsdfec_table_write(xsdfec, ldpc->sc_off, ldpc->sc_table, n,
-+				 XSDFEC_LDPC_SC_TABLE_ADDR_BASE,
-+				 XSDFEC_SC_TABLE_DEPTH);
-+	if (ret < 0)
-+		goto err_out;
-+
-+	ret = xsdfec_table_write(xsdfec, 4 * ldpc->la_off, ldpc->la_table,
-+				 ldpc->nlayers, XSDFEC_LDPC_LA_TABLE_ADDR_BASE,
-+				 XSDFEC_LA_TABLE_DEPTH);
-+	if (ret < 0)
-+		goto err_out;
-+
-+	ret = xsdfec_table_write(xsdfec, 4 * ldpc->qc_off, ldpc->qc_table,
-+				 ldpc->nqc, XSDFEC_LDPC_QC_TABLE_ADDR_BASE,
-+				 XSDFEC_QC_TABLE_DEPTH);
-+	if (ret > 0)
-+		ret = 0;
-+err_out:
-+	kfree(ldpc);
-+	return ret;
-+}
-+
- static u32
- xsdfec_translate_axis_width_cfg_val(enum xsdfec_axis_width axis_width_cfg)
+ static int xsdfec_get_config(struct xsdfec_dev *xsdfec, void __user *arg)
  {
-@@ -366,6 +687,9 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
- 	case XSDFEC_GET_TURBO:
- 		rval = xsdfec_get_turbo(xsdfec, arg);
- 		break;
-+	case XSDFEC_ADD_LDPC_CODE_PARAMS:
-+		rval = xsdfec_add_ldpc(xsdfec, arg);
+ 	int err;
+@@ -840,6 +861,82 @@ static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
+ 	return 0;
+ }
+ 
++static int xsdfec_start(struct xsdfec_dev *xsdfec)
++{
++	u32 regread;
++
++	regread = xsdfec_regread(xsdfec, XSDFEC_FEC_CODE_ADDR);
++	regread &= 0x1;
++	if (regread != xsdfec->config.code) {
++		dev_dbg(xsdfec->dev,
++			"%s SDFEC HW code does not match driver code, reg %d, code %d",
++			__func__, regread, xsdfec->config.code);
++		return -EINVAL;
++	}
++
++	/* Set AXIS enable */
++	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_ENABLE_ADDR,
++			XSDFEC_AXIS_ENABLE_MASK);
++	/* Done */
++	xsdfec->state = XSDFEC_STARTED;
++	return 0;
++}
++
++static int xsdfec_stop(struct xsdfec_dev *xsdfec)
++{
++	u32 regread;
++
++	if (xsdfec->state != XSDFEC_STARTED)
++		dev_dbg(xsdfec->dev, "Device not started correctly");
++	/* Disable AXIS_ENABLE Input interfaces only */
++	regread = xsdfec_regread(xsdfec, XSDFEC_AXIS_ENABLE_ADDR);
++	regread &= (~XSDFEC_AXIS_IN_ENABLE_MASK);
++	xsdfec_regwrite(xsdfec, XSDFEC_AXIS_ENABLE_ADDR, regread);
++	/* Stop */
++	xsdfec->state = XSDFEC_STOPPED;
++	return 0;
++}
++
++static int xsdfec_clear_stats(struct xsdfec_dev *xsdfec)
++{
++	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
++	xsdfec->isr_err_count = 0;
++	xsdfec->uecc_count = 0;
++	xsdfec->cecc_count = 0;
++	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
++
++	return 0;
++}
++
++static int xsdfec_get_stats(struct xsdfec_dev *xsdfec, void __user *arg)
++{
++	int err;
++	struct xsdfec_stats user_stats;
++
++	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
++	user_stats.isr_err_count = xsdfec->isr_err_count;
++	user_stats.cecc_count = xsdfec->cecc_count;
++	user_stats.uecc_count = xsdfec->uecc_count;
++	xsdfec->stats_updated = false;
++	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
++
++	err = copy_to_user(arg, &user_stats, sizeof(user_stats));
++	if (err)
++		err = -EFAULT;
++
++	return err;
++}
++
++static int xsdfec_set_default_config(struct xsdfec_dev *xsdfec)
++{
++	/* Ensure registers are aligned with core configuration */
++	xsdfec_regwrite(xsdfec, XSDFEC_FEC_CODE_ADDR, xsdfec->config.code);
++	xsdfec_cfg_axi_streams(xsdfec);
++	update_config_from_hw(xsdfec);
++
++	return 0;
++}
++
+ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 			     unsigned long data)
+ {
+@@ -849,6 +946,16 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 
+ 	xsdfec = container_of(fptr->private_data, struct xsdfec_dev, miscdev);
+ 
++	/* In failed state allow only reset and get status IOCTLs */
++	if (xsdfec->state == XSDFEC_NEEDS_RESET &&
++	    (cmd != XSDFEC_SET_DEFAULT_CONFIG && cmd != XSDFEC_GET_STATUS &&
++	     cmd != XSDFEC_GET_STATS && cmd != XSDFEC_CLEAR_STATS)) {
++		return -EPERM;
++	}
++
++	if (_IOC_TYPE(cmd) != XSDFEC_MAGIC)
++		return -ENOTTY;
++
+ 	/* check if ioctl argument is present and valid */
+ 	if (_IOC_DIR(cmd) != _IOC_NONE) {
+ 		arg = (void __user *)data;
+@@ -857,9 +964,27 @@ static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+ 	}
+ 
+ 	switch (cmd) {
++	case XSDFEC_START_DEV:
++		rval = xsdfec_start(xsdfec);
 +		break;
- 	default:
- 		/* Should not get here */
++	case XSDFEC_STOP_DEV:
++		rval = xsdfec_stop(xsdfec);
++		break;
++	case XSDFEC_CLEAR_STATS:
++		rval = xsdfec_clear_stats(xsdfec);
++		break;
++	case XSDFEC_GET_STATS:
++		rval = xsdfec_get_stats(xsdfec, arg);
++		break;
++	case XSDFEC_GET_STATUS:
++		rval = xsdfec_get_status(xsdfec, arg);
++		break;
+ 	case XSDFEC_GET_CONFIG:
+ 		rval = xsdfec_get_config(xsdfec, arg);
+ 		break;
++	case XSDFEC_SET_DEFAULT_CONFIG:
++		rval = xsdfec_set_default_config(xsdfec);
++		break;
+ 	case XSDFEC_SET_IRQ:
+ 		rval = xsdfec_set_irq(xsdfec, arg);
  		break;
 diff --git a/include/uapi/misc/xilinx_sdfec.h b/include/uapi/misc/xilinx_sdfec.h
-index 34f32c3..ce532a5 100644
+index 85ee288..ee1a42ae 100644
 --- a/include/uapi/misc/xilinx_sdfec.h
 +++ b/include/uapi/misc/xilinx_sdfec.h
-@@ -13,6 +13,22 @@
- 
- #include <linux/types.h>
- 
-+/* Shared LDPC Tables */
-+#define XSDFEC_LDPC_SC_TABLE_ADDR_BASE (0x10000)
-+#define XSDFEC_LDPC_SC_TABLE_ADDR_HIGH (0x10400)
-+#define XSDFEC_LDPC_LA_TABLE_ADDR_BASE (0x18000)
-+#define XSDFEC_LDPC_LA_TABLE_ADDR_HIGH (0x19000)
-+#define XSDFEC_LDPC_QC_TABLE_ADDR_BASE (0x20000)
-+#define XSDFEC_LDPC_QC_TABLE_ADDR_HIGH (0x28000)
-+
-+/* LDPC tables depth */
-+#define XSDFEC_SC_TABLE_DEPTH                                                  \
-+	(XSDFEC_LDPC_SC_TABLE_ADDR_HIGH - XSDFEC_LDPC_SC_TABLE_ADDR_BASE)
-+#define XSDFEC_LA_TABLE_DEPTH                                                  \
-+	(XSDFEC_LDPC_LA_TABLE_ADDR_HIGH - XSDFEC_LDPC_LA_TABLE_ADDR_BASE)
-+#define XSDFEC_QC_TABLE_DEPTH                                                  \
-+	(XSDFEC_LDPC_QC_TABLE_ADDR_HIGH - XSDFEC_LDPC_QC_TABLE_ADDR_BASE)
-+
- /**
-  * enum xsdfec_code - Code Type.
-  * @XSDFEC_TURBO_CODE: Driver is configured for Turbo mode.
-@@ -127,6 +143,53 @@ struct xsdfec_turbo {
+@@ -234,6 +234,21 @@ struct xsdfec_config {
  };
  
  /**
-+ * struct xsdfec_ldpc_params - User data for LDPC codes.
-+ * @n: Number of code word bits
-+ * @k: Number of information bits
-+ * @psize: Size of sub-matrix
-+ * @nlayers: Number of layers in code
-+ * @nqc: Quasi Cyclic Number
-+ * @nmqc: Number of M-sized QC operations in parity check matrix
-+ * @nm: Number of M-size vectors in N
-+ * @norm_type: Normalization required or not
-+ * @no_packing: Determines if multiple QC ops should be performed
-+ * @special_qc: Sub-Matrix property for Circulant weight > 0
-+ * @no_final_parity: Decide if final parity check needs to be performed
-+ * @max_schedule: Experimental code word scheduling limit
-+ * @sc_off: SC offset
-+ * @la_off: LA offset
-+ * @qc_off: QC offset
-+ * @sc_table: Pointer to SC Table which must be page aligned
-+ * @la_table: Pointer to LA Table which must be page aligned
-+ * @qc_table: Pointer to QC Table which must be page aligned
-+ * @code_id: LDPC Code
-+ *
-+ * This structure describes the LDPC code that is passed to the driver by the
-+ * application.
++ * struct xsdfec_stats - Stats retrived by ioctl XSDFEC_GET_STATS. Used
++ *			 to buffer atomic_t variables from struct
++ *			 xsdfec_dev. Counts are accumulated until
++ *			 the user clears them.
++ * @isr_err_count: Count of ISR errors
++ * @cecc_count: Count of Correctable ECC errors (SBE)
++ * @uecc_count: Count of Uncorrectable ECC errors (MBE)
 + */
-+struct xsdfec_ldpc_params {
-+	__u32 n;
-+	__u32 k;
-+	__u32 psize;
-+	__u32 nlayers;
-+	__u32 nqc;
-+	__u32 nmqc;
-+	__u32 nm;
-+	__u32 norm_type;
-+	__u32 no_packing;
-+	__u32 special_qc;
-+	__u32 no_final_parity;
-+	__u32 max_schedule;
-+	__u32 sc_off;
-+	__u32 la_off;
-+	__u32 qc_off;
-+	__u32 *sc_table;
-+	__u32 *la_table;
-+	__u32 *qc_table;
-+	__u16 code_id;
++struct xsdfec_stats {
++	__u32 isr_err_count;
++	__u32 cecc_count;
++	__u32 uecc_count;
 +};
 +
 +/**
-  * struct xsdfec_status - Status of SD-FEC core.
-  * @state: State of the SD-FEC core
-  * @activity: Describes if the SD-FEC instance is Active
-@@ -170,6 +233,20 @@ struct xsdfec_config {
- 	__s8 code_wr_protect;
- };
- 
-+/**
-+ * struct xsdfec_ldpc_param_table_sizes - Used to store sizes of SD-FEC table
-+ *					  entries for an individual LPDC code
-+ *					  parameter.
-+ * @sc_size: Size of SC table used
-+ * @la_size: Size of LA table used
-+ * @qc_size: Size of QC table used
-+ */
-+struct xsdfec_ldpc_param_table_sizes {
-+	__u32 sc_size;
-+	__u32 la_size;
-+	__u32 qc_size;
-+};
-+
- /*
-  * XSDFEC IOCTL List
+  * struct xsdfec_ldpc_param_table_sizes - Used to store sizes of SD-FEC table
+  *					  entries for an individual LPDC code
+  *					  parameter.
+@@ -252,6 +267,32 @@ struct xsdfec_ldpc_param_table_sizes {
   */
-@@ -190,6 +267,27 @@ struct xsdfec_config {
-  */
- #define XSDFEC_SET_TURBO _IOW(XSDFEC_MAGIC, 4, struct xsdfec_turbo)
+ #define XSDFEC_MAGIC 'f'
  /**
-+ * DOC: XSDFEC_ADD_LDPC_CODE_PARAMS
-+ * @Parameters
-+ *
-+ * @struct xsdfec_ldpc_params *
-+ *	Pointer to the &struct xsdfec_ldpc_params that contains the LDPC code
-+ *	parameters to be added to the SD-FEC Block
++ * DOC: XSDFEC_START_DEV
 + *
 + * @Description
-+ * ioctl to add an LDPC code to the SD-FEC LDPC codes
 + *
-+ * This can only be used when:
++ * ioctl to start SD-FEC core
 + *
-+ * - Driver is in the XSDFEC_STOPPED state
-+ *
-+ * - SD-FEC core is configured as LPDC
-+ *
-+ * - SD-FEC Code Write Protection is disabled
++ * This fails if the XSDFEC_SET_ORDER ioctl has not been previously called
 + */
-+#define XSDFEC_ADD_LDPC_CODE_PARAMS                                            \
-+	_IOW(XSDFEC_MAGIC, 5, struct xsdfec_ldpc_params)
++#define XSDFEC_START_DEV _IO(XSDFEC_MAGIC, 0)
 +/**
-  * DOC: XSDFEC_GET_TURBO
++ * DOC: XSDFEC_STOP_DEV
++ *
++ * @Description
++ *
++ * ioctl to stop the SD-FEC core
++ */
++#define XSDFEC_STOP_DEV _IO(XSDFEC_MAGIC, 1)
++/**
++ * DOC: XSDFEC_GET_STATUS
++ *
++ * @Description
++ *
++ * ioctl that returns status of SD-FEC core
++ */
++#define XSDFEC_GET_STATUS _IOR(XSDFEC_MAGIC, 2, struct xsdfec_status)
++/**
+  * DOC: XSDFEC_SET_IRQ
   * @Parameters
   *
+@@ -370,4 +411,38 @@ struct xsdfec_ldpc_param_table_sizes {
+  * ioctl that determines if SD-FEC is processing data
+  */
+ #define XSDFEC_IS_ACTIVE _IOR(XSDFEC_MAGIC, 10, bool)
++/**
++ * DOC: XSDFEC_CLEAR_STATS
++ *
++ * @Description
++ *
++ * ioctl that clears error stats collected during interrupts
++ */
++#define XSDFEC_CLEAR_STATS _IO(XSDFEC_MAGIC, 11)
++/**
++ * DOC: XSDFEC_GET_STATS
++ * @Parameters
++ *
++ * @struct xsdfec_stats *
++ *	Pointer to the &struct xsdfec_stats that will contain the updated stats
++ *	values
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC core stats
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_GET_STATS _IOR(XSDFEC_MAGIC, 12, struct xsdfec_stats)
++/**
++ * DOC: XSDFEC_SET_DEFAULT_CONFIG
++ *
++ * @Description
++ *
++ * ioctl that returns SD-FEC core to default config, use after a reset
++ *
++ * This can only be used when the driver is in the XSDFEC_STOPPED state
++ */
++#define XSDFEC_SET_DEFAULT_CONFIG _IO(XSDFEC_MAGIC, 13)
++
+ #endif /* __XILINX_SDFEC_H__ */
 -- 
 2.7.4
 
