@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05443C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3A6C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11F820838
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C03620659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfGGTiu (ORCPT
+        id S1727881AbfGGTi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:50 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57286 "EHLO
+        Sun, 7 Jul 2019 15:38:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57386 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727549AbfGGTiI (ORCPT
+        by vger.kernel.org with ESMTP id S1727566AbfGGTiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:08 -0400
+        Sun, 7 Jul 2019 15:38:10 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0006hG-UV; Sun, 07 Jul 2019 20:38:04 +0100
+        id 1hkCz7-0006iG-41; Sun, 07 Jul 2019 20:38:05 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0005bK-GN; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz5-0005cK-Cl; Sun, 07 Jul 2019 20:38:03 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, "Jan Kara" <jack@suse.cz>
+        "Alex Deucher" <alexander.deucher@amd.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.229289167@decadent.org.uk>
+Message-ID: <lsq.1562518457.853184860@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 063/129] ext4: fix crash during online resizing
+Subject: [PATCH 3.16 075/129] drm/radeon/evergreen_cs: fix missing break
+ in switch statement
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -54,45 +56,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit f96c3ac8dfc24b4e38fc4c2eba5fea2107b929d1 upstream.
+commit cc5034a5d293dd620484d1d836aa16c6764a1c8c upstream.
 
-When computing maximum size of filesystem possible with given number of
-group descriptor blocks, we forget to include s_first_data_block into
-the number of blocks. Thus for filesystems with non-zero
-s_first_data_block it can happen that computed maximum filesystem size
-is actually lower than current filesystem size which confuses the code
-and eventually leads to a BUG_ON in ext4_alloc_group_tables() hitting on
-flex_gd->count == 0. The problem can be reproduced like:
+Add missing break statement in order to prevent the code from falling
+through to case CB_TARGET_MASK.
 
-truncate -s 100g /tmp/image
-mkfs.ext4 -b 1024 -E resize=262144 /tmp/image 32768
-mount -t ext4 -o loop /tmp/image /mnt
-resize2fs /dev/loop0 262145
-resize2fs /dev/loop0 300000
+This bug was found thanks to the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-Fix the problem by properly including s_first_data_block into the
-computed number of filesystem blocks.
-
-Fixes: 1c6bd7173d66 "ext4: convert file system to meta_bg if needed..."
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: dd220a00e8bd ("drm/radeon/kms: add support for streamout v7")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ext4/resize.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/evergreen_cs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ext4/resize.c
-+++ b/fs/ext4/resize.c
-@@ -1931,7 +1931,8 @@ retry:
- 				le16_to_cpu(es->s_reserved_gdt_blocks);
- 			n_group = n_desc_blocks * EXT4_DESC_PER_BLOCK(sb);
- 			n_blocks_count = (ext4_fsblk_t)n_group *
--				EXT4_BLOCKS_PER_GROUP(sb);
-+				EXT4_BLOCKS_PER_GROUP(sb) +
-+				le32_to_cpu(es->s_first_data_block);
- 			n_group--; /* set to last group number */
+--- a/drivers/gpu/drm/radeon/evergreen_cs.c
++++ b/drivers/gpu/drm/radeon/evergreen_cs.c
+@@ -1318,6 +1318,7 @@ static int evergreen_cs_check_reg(struct
+ 			return -EINVAL;
  		}
- 
+ 		ib[idx] += (u32)((reloc->gpu_offset >> 8) & 0xffffffff);
++		break;
+ 	case CB_TARGET_MASK:
+ 		track->cb_target_mask = radeon_get_ib_value(p, idx);
+ 		track->cb_dirty = true;
 
