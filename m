@@ -2,86 +2,153 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC6DC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5684C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278CD20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10E120828
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:50:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjO120H1"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="eOkYYoEn";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="bO66F2uY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfGGSq3 (ORCPT
+        id S1727373AbfGGSuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 14:46:29 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38944 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfGGSq3 (ORCPT
+        Sun, 7 Jul 2019 14:50:08 -0400
+Received: from mail186-26.suw21.mandrillapp.com ([198.2.186.26]:38244 "EHLO
+        mail186-26.suw21.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726044AbfGGSuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 14:46:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so14205077wma.4
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 11:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L6timX0gQJEBIxMah3pF3mfpam6FwMoFqJWEfMCkqVc=;
-        b=DjO120H1Z7WiybUUq/FmlobfZa+0Tjq2/BBSi8wrF94PSYVlvDjUg6zU1JBbgBRW/V
-         jR6mC9zd5YO7XyYs6j78VgXOGQ9o77M0zBe9oQIG8PVruN0uMFQB8rAb7HMVfgtPRb/W
-         x8dYcmSMvvoNrSRQ+l25JyEe8MvOl9dk8KZbCmY9uKT0SkDAF3+FzUtbeydT2IAKpWlt
-         ThVrveUStdnioYPWHxgo+I6X+9+vWU9Fue1nE4oIky9eAhFkjw2dTu7q2dTr/hI1n64b
-         qEp2+n0+S5NEeIW641OuRxaWmywIBug3B27Qn/mhQXwV0uKISvtJLXOBSFfI8XFo5avU
-         Cb7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L6timX0gQJEBIxMah3pF3mfpam6FwMoFqJWEfMCkqVc=;
-        b=sAlSp0ZcvBQ374pp9sc/1ilD2EEnztSyNT7B00hah8PGgShj8n9xRIixCoZ12haBgZ
-         Cc1kfGnxnyOpIcsOyzCLUO6zvEgDya2Ea7Rov6FI0XYDbJUUiKwedfgigA0MNCQ9rgvA
-         lOEm9PLGrohDNlDWaTD9xd+qeWATc7ZptGQ0u+ejbxBYhZ3htYrxsNTPPSwUQP7vdFoC
-         XpG+1fGqNvUtWT5RmcRHIaAep2WI4P3KNJM1BZg78HYbMmuXdiOB1dzeaN4sYB0jgfw3
-         ASj3b3Q2AeZK8Hv0Ev3Ay9vYmX1z3+vdCFi5pUg2+trAJkp6G17FwDnht2r+QdIhEQ16
-         F46Q==
-X-Gm-Message-State: APjAAAWBqo7frV/biQs0XPNWTbRuUDSKUHPI4CuLdGkWVR8Gju+p6PO6
-        EexofvEu9KprkdxVsL4Udmni5kCFPUw0z2vm7hg=
-X-Google-Smtp-Source: APXvYqxDsivsH4zthvW9FrIbBJrXLQ+6bpjhTvoaebrztfH+5uj3+I0VL3iV7hqmTctsYaJSnmcoo9Ll1g+TsbU8zy4=
-X-Received: by 2002:a1c:9e4d:: with SMTP id h74mr13651549wme.9.1562525187486;
- Sun, 07 Jul 2019 11:46:27 -0700 (PDT)
+        Sun, 7 Jul 2019 14:50:07 -0400
+X-Greylist: delayed 1800 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Jul 2019 14:50:07 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=IEkfr4YRUhLQp/HsBY74d4iNJyE2lakZV4Jo08VmuaA=;
+ b=eOkYYoEnGUWqIB0dbm6nCcKDIIjoxM4d+HhRgGETEvjlGfW7UgggueEiV4ZKgBm8ASPzz58BSXeN
+   IlmkkOBadR4II4eSBitdArJdpwPS/iD390IQP8SzJQQpZSq5HN0pZhZLS1Ya/MLN88HkPISXXNaV
+   qKalsjTLIFxcUuHIVbU=
+Received: from pmta02.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail186-26.suw21.mandrillapp.com id h48vdu174bkc for <linux-kernel@vger.kernel.org>; Sun, 7 Jul 2019 18:20:06 +0000 (envelope-from <bounce-md_31050260.5d2237d6.v1-f5fde34343224dcd9d9edba9fbdda79c@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1562523606; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=IEkfr4YRUhLQp/HsBY74d4iNJyE2lakZV4Jo08VmuaA=; 
+ b=bO66F2uYOXuv1h/WHJ+zyPIP0BmHtwh52THKQzlyoBeVJYgYEiyH2vKJe1xixzJMj+HUSH
+ i1ANXEJCPJgzylWHcGjxBZfFSG+5eR/vzKlLngs/6dGthQ8yIbvjM62NW4MqG15eTGOZSmTY
+ fBbQP5AV4cCTWK4SH/rwXwZu/9V9Q=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [Cocci] [PATCH 1/2] coccinelle: api/stream_open: treat all wait_.*() calls as blocking
+Received: from [87.98.221.171] by mandrillapp.com id f5fde34343224dcd9d9edba9fbdda79c; Sun, 07 Jul 2019 18:20:06 +0000
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     <cocci@systeme.lip6.fr>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Message-Id: <20190707182002.GB25031@deco.navytux.spb.ru>
+References: <20190623072838.31234-1-kirr@nexedi.com> <CAK7LNAT2tt+pCX54=L9qN9pzZ+rCOQ5-9p-o1jMLa3GD9jhG8A@mail.gmail.com>
+In-Reply-To: <CAK7LNAT2tt+pCX54=L9qN9pzZ+rCOQ5-9p-o1jMLa3GD9jhG8A@mail.gmail.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.f5fde34343224dcd9d9edba9fbdda79c
+X-Mandrill-User: md_31050260
+Date:   Sun, 07 Jul 2019 18:20:06 +0000
 MIME-Version: 1.0
-References: <1559114302-10507-1-git-send-email-dingxiang@cmss.chinamobile.com>
-In-Reply-To: <1559114302-10507-1-git-send-email-dingxiang@cmss.chinamobile.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Sun, 7 Jul 2019 20:46:16 +0200
-Message-ID: <CAFLxGvwi4WzHT7FAZaucjSMy=L+Y2GY8oL3uFyBto+hK+BBTLA@mail.gmail.com>
-Subject: Re: [PATCH] mtd: afs: remove unneeded NULL check
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 29, 2019 at 9:19 AM Ding Xiang
-<dingxiang@cmss.chinamobile.com> wrote:
->
-> NULL check before kfree is unneeded, so remove it.
->
-> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+On Sat, Jul 06, 2019 at 10:17:18PM +0900, Masahiro Yamada wrote:
+> On Sun, Jun 23, 2019 at 4:29 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+> >
+> > Previously steam_open.cocci was treating only wait_event_.* - e.g.
+> > wait_event_interruptible - as a blocking operation. However e.g.
+> > wait_for_completion_interruptible is also blocking, and so from this
+> > point of view it would be more logical to treat all wait_.* as a
+> > blocking point.
+> >
+> > The logic of this change actually came up for real when
+> > drivers/pci/switch/switchtec.c changed from using
+> > wait_event_interruptible to wait_for_completion_interruptible:
+> >
+> >         https://lore.kernel.org/linux-pci/20190413170056.GA11293@deco.navytux.spb.ru/
+> >         https://lore.kernel.org/linux-pci/20190415145456.GA15280@deco.navytux.spb.ru/
+> >         https://lore.kernel.org/linux-pci/20190415154102.GB17661@deco.navytux.spb.ru/
+> >
+> > For a driver that uses nonseekable_open with read/write having stream
+> > semantic and read also calling e.g. wait_for_completion_interruptible,
+> > running stream_open.cocci before this patch would produce:
+> >
+> >         WARNING: <driver>_fops: .read() and .write() have stream semantic; safe to change nonseekable_open -> stream_open.
+> >
+> > while after this patch it will report:
+> >
+> >         ERROR: <driver>_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> >
+> > Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+> > Cc: Logan Gunthorpe <logang@deltatee.com>
+> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Cc: Bjorn Helgaas <helgaas@kernel.org>
+> > Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+> > ---
+> 
+> Applied to linux-kbuild. Thanks.
 
-Applied.
+Thanks.
 
--- 
-Thanks,
-//richard
+
+> >  scripts/coccinelle/api/stream_open.cocci | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/scripts/coccinelle/api/stream_open.cocci b/scripts/coccinelle/api/stream_open.cocci
+> > index 350145da7669..12ce18fa6b74 100644
+> > --- a/scripts/coccinelle/api/stream_open.cocci
+> > +++ b/scripts/coccinelle/api/stream_open.cocci
+> > @@ -35,11 +35,11 @@ type loff_t;
+> >  // a function that blocks
+> >  @ blocks @
+> >  identifier block_f;
+> > -identifier wait_event =~ "^wait_event_.*";
+> > +identifier wait =~ "^wait_.*";
+> >  @@
+> >    block_f(...) {
+> >      ... when exists
+> > -    wait_event(...)
+> > +    wait(...)
+> >      ... when exists
+> >    }
+> >
+> > @@ -49,12 +49,12 @@ identifier wait_event =~ "^wait_event_.*";
+> >  // XXX currently reader_blocks supports only direct and 1-level indirect cases.
+> >  @ reader_blocks_direct @
+> >  identifier stream_reader.readstream;
+> > -identifier wait_event =~ "^wait_event_.*";
+> > +identifier wait =~ "^wait_.*";
+> >  @@
+> >    readstream(...)
+> >    {
+> >      ... when exists
+> > -    wait_event(...)
+> > +    wait(...)
+> >      ... when exists
+> >    }
+> >
+> > --
+> > 2.20.1
+> > _______________________________________________
+> > Cocci mailing list
+> > Cocci@systeme.lip6.fr
+> > https://systeme.lip6.fr/mailman/listinfo/cocci
+> 
+> 
+> 
+> -- 
+> Best Regards
+> Masahiro Yamada
