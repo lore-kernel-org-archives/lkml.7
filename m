@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16477C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963CDC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E999F20659
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6C02082F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfGGTla (ORCPT
+        id S1727975AbfGGTl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:41:30 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57840 "EHLO
+        Sun, 7 Jul 2019 15:41:28 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57858 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727642AbfGGTiP (ORCPT
+        by vger.kernel.org with ESMTP id S1727646AbfGGTiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:15 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzD-0006ji-0j; Sun, 07 Jul 2019 20:38:11 +0100
+        id 1hkCzD-0006kW-B1; Sun, 07 Jul 2019 20:38:11 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz8-0005ev-75; Sun, 07 Jul 2019 20:38:06 +0100
+        id 1hkCz9-0005g2-5Z; Sun, 07 Jul 2019 20:38:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Viresh Kumar" <viresh.kumar@linaro.org>,
-        "Nathan Chancellor" <natechancellor@gmail.com>,
-        "Robert Jarzmik" <robert.jarzmik@free.fr>
+        "Eric Dumazet" <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "syzbot" <syzkaller@googlegroups.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.909156221@decadent.org.uk>
+Message-ID: <lsq.1562518457.980227516@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 107/129] cpufreq: pxa2xx: remove incorrect __init
- annotation
+Subject: [PATCH 3.16 119/129] l2tp: fix infoleak in l2tp_ip6_recvmsg()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,50 +56,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 9505b98ccddc454008ca7efff90044e3e857c827 upstream.
+commit 163d1c3d6f17556ed3c340d3789ea93be95d6c28 upstream.
 
-pxa_cpufreq_init_voltages() is marked __init but usually inlined into
-the non-__init pxa_cpufreq_init() function. When building with clang,
-it can stay as a standalone function in a discarded section, and produce
-this warning:
+Back in 2013 Hannes took care of most of such leaks in commit
+bceaa90240b6 ("inet: prevent leakage of uninitialized memory to user in recv syscalls")
 
-WARNING: vmlinux.o(.text+0x616a00): Section mismatch in reference from the function pxa_cpufreq_init() to the function .init.text:pxa_cpufreq_init_voltages()
-The function pxa_cpufreq_init() references
-the function __init pxa_cpufreq_init_voltages().
-This is often because pxa_cpufreq_init lacks a __init
-annotation or the annotation of pxa_cpufreq_init_voltages is wrong.
+But the bug in l2tp_ip6_recvmsg() has not been fixed.
 
-Fixes: 50e77fcd790e ("ARM: pxa: remove __init from cpufreq_driver->init()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+syzbot report :
+
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+CPU: 1 PID: 10996 Comm: syz-executor362 Not tainted 5.0.0+ #11
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+ kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:600
+ kmsan_internal_check_memory+0x9f4/0xb10 mm/kmsan/kmsan.c:694
+ kmsan_copy_to_user+0xab/0xc0 mm/kmsan/kmsan_hooks.c:601
+ _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+ copy_to_user include/linux/uaccess.h:174 [inline]
+ move_addr_to_user+0x311/0x570 net/socket.c:227
+ ___sys_recvmsg+0xb65/0x1310 net/socket.c:2283
+ do_recvmmsg+0x646/0x10c0 net/socket.c:2390
+ __sys_recvmmsg net/socket.c:2469 [inline]
+ __do_sys_recvmmsg net/socket.c:2492 [inline]
+ __se_sys_recvmmsg+0x1d1/0x350 net/socket.c:2485
+ __x64_sys_recvmmsg+0x62/0x80 net/socket.c:2485
+ do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x445819
+Code: e8 6c b6 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f64453eddb8 EFLAGS: 00000246 ORIG_RAX: 000000000000012b
+RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000445819
+RDX: 0000000000000005 RSI: 0000000020002f80 RDI: 0000000000000003
+RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
+R13: 00007ffeba8f87af R14: 00007f64453ee9c0 R15: 20c49ba5e353f7cf
+
+Local variable description: ----addr@___sys_recvmsg
+Variable was created at:
+ ___sys_recvmsg+0xf6/0x1310 net/socket.c:2244
+ do_recvmmsg+0x646/0x10c0 net/socket.c:2390
+
+Bytes 0-31 of 32 are uninitialized
+Memory access of size 32 starts at ffff8880ae62fbb0
+Data copied to user address 0000000020000000
+
+Fixes: a32e0eec7042 ("l2tp: introduce L2TPv3 IP encapsulation support for IPv6")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/cpufreq/pxa2xx-cpufreq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/l2tp/l2tp_ip6.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/cpufreq/pxa2xx-cpufreq.c
-+++ b/drivers/cpufreq/pxa2xx-cpufreq.c
-@@ -191,7 +191,7 @@ static int pxa_cpufreq_change_voltage(px
- 	return ret;
- }
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -664,9 +664,6 @@ static int l2tp_ip6_recvmsg(struct kiocb
+ 	if (flags & MSG_OOB)
+ 		goto out;
  
--static void __init pxa_cpufreq_init_voltages(void)
-+static void pxa_cpufreq_init_voltages(void)
- {
- 	vcc_core = regulator_get(NULL, "vcc_core");
- 	if (IS_ERR(vcc_core)) {
-@@ -207,7 +207,7 @@ static int pxa_cpufreq_change_voltage(px
- 	return 0;
- }
+-	if (addr_len)
+-		*addr_len = sizeof(*lsa);
+-
+ 	if (flags & MSG_ERRQUEUE)
+ 		return ipv6_recv_error(sk, msg, len, addr_len);
  
--static void __init pxa_cpufreq_init_voltages(void) { }
-+static void pxa_cpufreq_init_voltages(void) { }
- #endif
+@@ -696,6 +693,7 @@ static int l2tp_ip6_recvmsg(struct kiocb
+ 		lsa->l2tp_conn_id = 0;
+ 		if (ipv6_addr_type(&lsa->l2tp_addr) & IPV6_ADDR_LINKLOCAL)
+ 			lsa->l2tp_scope_id = IP6CB(skb)->iif;
++		*addr_len = sizeof(*lsa);
+ 	}
  
- static void find_freq_tables(struct cpufreq_frequency_table **freq_table,
+ 	if (np->rxopt.all)
 
