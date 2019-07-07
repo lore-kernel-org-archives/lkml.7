@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52062C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE665C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8CA20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E7B20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfGGTor (ORCPT
+        id S1727539AbfGGTiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:44:47 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57208 "EHLO
+        Sun, 7 Jul 2019 15:38:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56764 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727542AbfGGTiH (ORCPT
+        by vger.kernel.org with ESMTP id S1726105AbfGGTiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:07 -0400
+        Sun, 7 Jul 2019 15:38:00 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0006gO-Ns; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz0-0006cz-JW; Sun, 07 Jul 2019 20:37:58 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0005a4-9P; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCyz-0005Wq-I3; Sun, 07 Jul 2019 20:37:57 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        "Colin Ian King" <colin.king@canonical.com>
+        "Yangtao Li" <tiny.windzz@gmail.com>,
+        "Stephen Boyd" <sboyd@kernel.org>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.12267426@decadent.org.uk>
+Message-ID: <lsq.1562518457.296300115@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 047/129] rtc: ds1672: fix unintended sign extension
+Subject: [PATCH 3.16 007/129] clk: imx6q: fix refcount leak in
+ imx6q_clocks_init()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,37 +56,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-commit f0c04c276739ed8acbb41b4868e942a55b128dca upstream.
+commit c9ec1d8fef31b5fc9e90e99f9bd685db5caa7c5e upstream.
 
-Shifting a u8 by 24 will cause the value to be promoted to an integer. If
-the top bit of the u8 is set then the following conversion to an unsigned
-long will sign extend the value causing the upper 32 bits to be set in
-the result.
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-Fix this by casting the u8 value to an unsigned long before the shift.
-
-Detected by CoverityScan, CID#138801 ("Unintended sign extension")
-
-Fixes: edf1aaa31fc5 ("[PATCH] RTC subsystem: DS1672 driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: 2acd1b6f889c ("ARM: i.MX6: implement clocks using common clock framework")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/rtc/rtc-ds1672.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/mach-imx/clk-imx6q.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/rtc/rtc-ds1672.c
-+++ b/drivers/rtc/rtc-ds1672.c
-@@ -60,7 +60,8 @@ static int ds1672_get_datetime(struct i2
- 		"%s: raw read data - counters=%02x,%02x,%02x,%02x\n",
- 		__func__, buf[0], buf[1], buf[2], buf[3]);
+--- a/arch/arm/mach-imx/clk-imx6q.c
++++ b/arch/arm/mach-imx/clk-imx6q.c
+@@ -157,6 +157,7 @@ static void __init imx6q_clocks_init(str
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6q-anatop");
+ 	base = of_iomap(np, 0);
+ 	WARN_ON(!base);
++	of_node_put(np);
  
--	time = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	time = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+	       (buf[1] << 8) | buf[0];
- 
- 	rtc_time_to_tm(time, tm);
- 
+ 	/* Audio/video PLL post dividers do not work on i.MX6q revision 1.0 */
+ 	if (cpu_is_imx6q() && imx_get_soc_revision() == IMX_CHIP_REVISION_1_0) {
 
