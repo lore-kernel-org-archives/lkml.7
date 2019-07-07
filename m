@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D684C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C584C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BEC20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56BD20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfGGTpI (ORCPT
+        id S1728571AbfGGTpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:45:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57166 "EHLO
+        Sun, 7 Jul 2019 15:45:11 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57126 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727531AbfGGTiG (ORCPT
+        by vger.kernel.org with ESMTP id S1727529AbfGGTiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:06 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0006gF-9w; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz4-0006g3-9v; Sun, 07 Jul 2019 20:38:02 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0005Zp-1P; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz2-0005Zk-Vp; Sun, 07 Jul 2019 20:38:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Biggers" <ebiggers@kernel.org>,
-        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Eric Biggers" <ebiggers@google.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.499548159@decadent.org.uk>
+Message-ID: <lsq.1562518457.77341541@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 044/129] crypto: arm64/aes-ccm - fix logical bug in
- AAD MAC handling
+Subject: [PATCH 3.16 043/129] crypto: testmgr - skip crc32c context test
+ for ahash algorithms
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +56,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit eaf46edf6ea89675bd36245369c8de5063a0272c upstream.
+commit eb5e6730db98fcc4b51148b4a819fa4bf864ae54 upstream.
 
-The NEON MAC calculation routine fails to handle the case correctly
-where there is some data in the buffer, and the input fills it up
-exactly. In this case, we enter the loop at the end with w8 == 0,
-while a negative value is assumed, and so the loop carries on until
-the increment of the 32-bit counter wraps around, which is quite
-obviously wrong.
+Instantiating "cryptd(crc32c)" causes a crypto self-test failure because
+the crypto_alloc_shash() in alg_test_crc32c() fails.  This is because
+cryptd(crc32c) is an ahash algorithm, not a shash algorithm; so it can
+only be accessed through the ahash API, unlike shash algorithms which
+can be accessed through both the ahash and shash APIs.
 
-So omit the loop altogether in this case, and exit right away.
+As the test is testing the shash descriptor format which is only
+applicable to shash algorithms, skip it for ahash algorithms.
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: a3fd82105b9d1 ("arm64/crypto: AES in CCM mode using ARMv8 Crypto ...")
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+(Note that it's still important to fix crypto self-test failures even
+ for weird algorithm instantiations like cryptd(crc32c) that no one
+ would really use; in fips_enabled mode unprivileged users can use them
+ to panic the kernel, and also they prevent treating a crypto self-test
+ failure as a bug when fuzzing the kernel.)
+
+Fixes: 8e3ee85e68c5 ("crypto: crc32c - Test descriptor context format")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm64/crypto/aes-ce-ccm-core.S | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ crypto/testmgr.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/crypto/aes-ce-ccm-core.S
-+++ b/arch/arm64/crypto/aes-ce-ccm-core.S
-@@ -74,12 +74,13 @@ ENTRY(ce_aes_ccm_auth_data)
- 	beq	10f
- 	ext	v0.16b, v0.16b, v0.16b, #1	/* rotate out the mac bytes */
- 	b	7b
--8:	mov	w7, w8
-+8:	cbz	w8, 91f
-+	mov	w7, w8
- 	add	w8, w8, #16
- 9:	ext	v1.16b, v1.16b, v1.16b, #1
- 	adds	w7, w7, #1
- 	bne	9b
--	eor	v0.16b, v0.16b, v1.16b
-+91:	eor	v0.16b, v0.16b, v1.16b
- 	st1	{v0.16b}, [x0]
- 10:	str	w8, [x3]
- 	ret
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -1655,14 +1655,21 @@ static int alg_test_crc32c(const struct
+ 
+ 	err = alg_test_hash(desc, driver, type, mask);
+ 	if (err)
+-		goto out;
++		return err;
+ 
+ 	tfm = crypto_alloc_shash(driver, type, mask);
+ 	if (IS_ERR(tfm)) {
++		if (PTR_ERR(tfm) == -ENOENT) {
++			/*
++			 * This crc32c implementation is only available through
++			 * ahash API, not the shash API, so the remaining part
++			 * of the test is not applicable to it.
++			 */
++			return 0;
++		}
+ 		printk(KERN_ERR "alg: crc32c: Failed to load transform for %s: "
+ 		       "%ld\n", driver, PTR_ERR(tfm));
+-		err = PTR_ERR(tfm);
+-		goto out;
++		return PTR_ERR(tfm);
+ 	}
+ 
+ 	do {
+@@ -1691,7 +1698,6 @@ static int alg_test_crc32c(const struct
+ 
+ 	crypto_free_shash(tfm);
+ 
+-out:
+ 	return err;
+ }
+ 
 
