@@ -2,112 +2,217 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25587C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 20:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20CAC48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB5020830
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 20:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9812320684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="vVAhNuVC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KX5XrZZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfGGUgH (ORCPT
+        id S1727565AbfGGVAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 16:36:07 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55977 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbfGGUgH (ORCPT
+        Sun, 7 Jul 2019 17:00:15 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46732 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfGGVAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 16:36:07 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 268038364E;
-        Mon,  8 Jul 2019 08:36:05 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1562531765;
-        bh=ip95pvT/MENdDX9ljvlE3O/xZmTn56E0COWj53gsn+U=;
-        h=From:To:Cc:Subject:Date;
-        b=vVAhNuVCRdWDOZTWZcT6OCfk4jWNCpkS4GAx1eXBhZkLwWCX5dleIRbQCxoZa2hC1
-         9aapr1ARjFDsDXa3FPJHowJ0eOpaYqECy9VX7NkUPurjR4IUYoTYb05iu72WYzdCyP
-         vtHlhE7vrvZCLH7gfsgqtW8s4BJXFNu3grq20PeUO9gEWY1gmmzxqw1ECToo5ZxDD+
-         VcJAe0aeBBqIb+kMZGkJUuYnJkxxaG/mPRwzBxr9Usp2cvaTQFKuiRBqVLBMNRSNv9
-         4B5OQuQb8Om3VAtXg84b7eso1simIQX0AJ7d1FO5LK1ZmHDzFb+dhdjxoZUrbTDkW3
-         zUXUYtets/FRg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d2257af0000>; Mon, 08 Jul 2019 08:36:03 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 5370813EECF;
-        Mon,  8 Jul 2019 08:36:02 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 9932C1E0BBE; Mon,  8 Jul 2019 08:36:00 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        ricardo.ribalda@gmail.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3] gpiolib: Preserve desc->flags when setting state
-Date:   Mon,  8 Jul 2019 08:35:58 +1200
-Message-Id: <20190707203558.10993-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.22.0
+        Sun, 7 Jul 2019 17:00:15 -0400
+Received: by mail-ed1-f67.google.com with SMTP id d4so12687955edr.13;
+        Sun, 07 Jul 2019 14:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fkR+/TIBGJ7pdEK4yHNC0wg1OJDkQWPgTQd8sWHKmTs=;
+        b=KX5XrZZHK1/agaweQcF8s3PcLaRoZTwykn2zWjrFAR46HWcXh9sazhak0tayOWcOjg
+         T3qAEtU/nV1KpIqYOij80PZug6GuTaEatOlmDw44F0qdL9CeJZ+TQLjzCxtEjFcfx6QB
+         yYlWZGcARJNpRwsaOBUyQTxGar9A5Ng49WJHj882NrQdbI81iKCnVUy6uPkmYv+MioOo
+         K2TknjbFxp35GdI9rhPRPxZGh3a1OIBvlXOYxiRvqLxcNElJpLZax8EO0a6mAsl6Hrzf
+         V1SizKPwxPLPLxhp1P/Yu5CaBfngdsssM4m+6MhSef2y4cjZA+FseV6d6P9cgvJGh38L
+         pDUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fkR+/TIBGJ7pdEK4yHNC0wg1OJDkQWPgTQd8sWHKmTs=;
+        b=MGfa8oPdmLCD+Gsnhc693pOgbNMbCN38txyW1mFYR7p1ZdDKd3+NDTAGAGzAjCUk1l
+         5tmzj1qD2U+qdP0q6IZGuxgTvXkVIQ/nfu83qFuW/zcC1sPCwapDtbZlI2Dd2ua9JQHi
+         ZLF3Ojx8T5o/QHfKVf0M4D1nLn3H467b1KL6MXW9dcG+DRT+18i9B68eXxGkNhPDV1IB
+         AZ0veULhwdDFBp6t9fBI0pGt3l/VxB+gZqM5HTxSp37eyEBkcF2N9MAK+ljWQ/kjliVM
+         nlv/4nQvWLj9Rdf+KvB+osB6AxT0hoBZrawJYz3+9OSKgDeT3oSwyblZ3aCXNQmOts+r
+         0MwQ==
+X-Gm-Message-State: APjAAAU6bXb1lDbIQYx22tMI/DJS2P3whlLJT65D5ot4LklZX3n0TAtM
+        p3Vl8shtINUnTC2VVpA2+DKmnHK7qh9imQfTp08=
+X-Google-Smtp-Source: APXvYqz2zyWUgNt44NYISgVAThwiY8R8BY2btflpeuq/DMR1ga25hzBVzdiN9I+a6Ep2cjA+A0F8clWOohsYJa3oZAk=
+X-Received: by 2002:aa7:c559:: with SMTP id s25mr16386016edr.117.1562533212254;
+ Sun, 07 Jul 2019 14:00:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <1561131532-14860-1-git-send-email-claudiu.manoil@nxp.com>
+ <1561131532-14860-5-git-send-email-claudiu.manoil@nxp.com>
+ <20190621164940.GL31306@lunn.ch> <VI1PR04MB4880D8F90BBCD30BF8A69C9696E00@VI1PR04MB4880.eurprd04.prod.outlook.com>
+ <20190624115558.GA5690@piout.net> <20190624142625.GR31306@lunn.ch>
+ <20190624152344.3bv46jjhhygo6zwl@lx-anielsen.microsemi.net>
+ <20190624162431.GX31306@lunn.ch> <20190624182614.GC5690@piout.net>
+ <CA+h21hqGtA5ou7a3wjSuHxa_4fXk4GZohTAxnUdfLZjV3nq5Eg@mail.gmail.com>
+ <20190705044945.GA30115@lunn.ch> <CA+h21hqU1H1PefBWKjnsmkMsLhx0p0HJTsp-UYrSgmVnsfqULA@mail.gmail.com>
+ <c60df66a-b3c9-1445-36c6-cad7c6b75550@gmail.com>
+In-Reply-To: <c60df66a-b3c9-1445-36c6-cad7c6b75550@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 8 Jul 2019 00:00:01 +0300
+Message-ID: <CA+h21hqGEf4hoeBQ-cSGsiOWUD7bVX4=NWcJjwdYHOVonangAw@mail.gmail.com>
+Subject: Re: [PATCH net-next 4/6] arm64: dts: fsl: ls1028a: Add Felix switch
+ port DT node
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        Allan Nielsen <Allan.Nielsen@microsemi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-desc->flags may already have values set by of_gpiochip_add() so make
-sure that this isn't undone when setting the initial direction.
+On Fri, 5 Jul 2019 at 19:03, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 7/5/2019 2:08 AM, Vladimir Oltean wrote:
+> > Hi Andrew,
+> >
+> > On Fri, 5 Jul 2019 at 07:49, Andrew Lunn <andrew@lunn.ch> wrote:
+> >>
+> >> Hi Vladimir
+> >>
+> >>> - DSA is typically used for discrete switches, switchdev is typically
+> >>> used for embedded ones.
+> >>
+> >> Typically DSA is for discrete switches, but not exclusively. The
+> >> b53/SF2 is embedded in a number of Broadcom SoCs. So this is no
+> >> different to Ocelot, except ARM vs MIPS. Also, i would disagree that
+> >> switchdev is used for embedded ones. Mellonex devices are discrete, on
+> >> a PCIe bus. I believe Netronome devices are also discrete PCIe
+> >> devices. In fact, i think ocelot is the only embedded switchdev
+> >> switch.
+> >>
+> >> So embedded vs discrete plays no role here at all.
+> >>
+> >
+> > drivers/staging/fsl-dpaa2/ethsw/ is another example of switchdev
+> > driver for an embedded switch.
+> > I would give it to you that the sample size is probably too small to
+> > say 'typically', but my point was that in order to support cascaded
+> > switches it makes more sense for those to be discrete.
+> >
+> >>> - The D in DSA is for cascaded switches. Apart from the absence of
+> >>> such a "Ocelot SoC" driver (which maybe can be written, I don't know),
+> >>> I think the switching core itself has some fundamental limitations
+> >>> that make a DSA implementation questionable:
+> >>
+> >> There is no requirement to implement D in DSA. In fact, only Marvell
+> >> does. None of the other switches do. And you will also find that most
+> >> boards with a Marvell switch use a single device. D in DSA is totally
+> >> optional. In fact, DSA is built from the ground up that nearly
+> >> everything is optional. Take a look at mv88e6060, as an example. It
+> >> implements nearly nothing. It cannot even offload a bridge to the
+> >> switch.
+> >>
+> >
+> > Let me see if I get your point.
+> > The D is optional, and the S is optional. So what's left? :)
+> > Also, there's a big difference between "the hardware can't do it" and
+> > "the driver doesn't implement it". If I follow your argument, would
+> > you write a DSA driver for a device that doesn't do L2 switching?
+> > Along that same line, what benefit does the DSA model bring to a
+> > switch that can't do cascading, compared to switchdev? I'm asking this
+> > as a user, not as a developer.
+>
+> As an user, I don't think there are compelling arguments to either
+> switchdev or DSA because the end result is the same: network devices
+> that can offload "stuff". As a developer though, there is much less code
+> to write with DSA than with switchdev to get your HW live.
+>
+> >
+> >>> So my conclusion is that DSA for Felix/Ocelot doesn't make a lot of
+> >>> sense if the whole purpose is to hide the CPU-facing netdev.
+> >>
+> >> You actually convinced me the exact opposite. You described the
+> >> headers which are needed to implement DSA. The switch sounds like it
+> >> can do what DSA requires. So DSA is the correct model.
+> >>
+> >>      Andrew
+> >
+> > Somebody actually asked, with the intention of building a board, if
+> > it's possible to cascade the LS1028A embedded switch (Felix) with
+> > discrete SJA1105 devices - Felix being at the top of the switch tree.
+> > Does the DSA model support heterogeneous setups (parsing stacked
+> > headers)? I can't tell if that's how EDSA tags work. With switchdev
+> > for Felix there wouldn't be any problem - it just wouldn't be part of
+> > the DSA tree and its own driver would remove its tags before DSA would
+> > look at the rest.
+>
+> DSA not does not make any particular assumptions about how the stacking
+> is done actually because each slave network device is expected to
+> provided standard Ethernet frames to the network stack. How you get to
+> that point is entirely specific to what the hardware can do.
+>
+> You do what Andrew described about one of my setup (bcm_sf2 w/ tagging
+> enabled and b53 w/o tagging, see more below why [1]]) and both being
+> discrete switch trees, with the master netdev of the b53 being a slave
+> netdev provided by bcm_sf2. If your tagging protocol supports it you can
+> make them part of the same DSA switch tree and just have them have
+> different switch identifiers, that is what Marvell switches do and it
+> works just great. In your case, I suppose you could even use double VLAN
+> tagging to get such cascading to work, that would limit you to a two
+> level of cascading, unless you invent something custom.
+>
+> [1]: The original Broadcom tag format introduced with BCM5325/5365 did
+> support cascading in the same way that Marvell did where a switch
+> identifier can be added in addition to a port number within the tag. The
+> newest Broadcom tag that was introduced with 5395 and newer dropped
+> support for the switch identifier and the switch will "terminate" the
+> first (from start of Ethernet frame) tag that it receives. This is the
+> reason why we need to disable tagging on the outermost B53 device that
+> we are connected to. This means those network devices are mainly
+> configuration endpoints and not passing data (DSA_TAG_PROTO_NONE),
+> though we could use DSA_TAG_PROTO_8021Q and resolve that now.
+> --
+> Florian
 
-Fixes: 3edfb7bd76bd1cba ("gpiolib: Show correct direction from the beginn=
-ing")
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+Thanks to both of you for sharing this trick, I don't think it's
+written "in the books".
+Given that you can choose the boundaries of a DSA tree at will
+depending on what suits the setup best (and e.g. turn a DSA link pair
+into a master and a CPU port pair which gains back introspection into
+that port's ethtool counters etc), I guess DSA doesn't really offer
+anything that raw switchdev drivers can't do (by reimplementing part
+of it), just that it's is more idiomatic for Ethernet-connected
+switches?
+If so, it's a bit strange that switchdev and DSA are not in fact
+unified, because as it is it creates false dichotomies. What about the
+other way around? What are the features that raw switchdev drivers
+(nfp, rocker, mlxsw) need that DSA can't offer them without breaking
+the general model? (apart from access to the raw ndo_start_xmit and a
+NAPI context for rcv)
+As for DSA being easier on the driver writer, I totally get that, but
+I think it isn't that much of an argument when the switchdev driver is
+already said and done, as in this case :)
 
-Notes:
-    Changes in v2:
-    - add braces to avoid ambiguious else warning
-    Changes in v3:
-    - clear the direction output in the negative case
-
- drivers/gpio/gpiolib.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e013d417a936..dbd1180316a0 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1392,12 +1392,17 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
-chip, void *data,
- 	for (i =3D 0; i < chip->ngpio; i++) {
- 		struct gpio_desc *desc =3D &gdev->descs[i];
-=20
--		if (chip->get_direction && gpiochip_line_is_valid(chip, i))
--			desc->flags =3D !chip->get_direction(chip, i) ?
--					(1 << FLAG_IS_OUT) : 0;
--		else
--			desc->flags =3D !chip->direction_input ?
--					(1 << FLAG_IS_OUT) : 0;
-+		if (chip->get_direction && gpiochip_line_is_valid(chip, i)) {
-+			if (!chip->get_direction(chip, i))
-+				set_bit(FLAG_IS_OUT, &desc->flags);
-+			else
-+				clear_bit(FLAG_IS_OUT, &desc->flags);
-+		} else {
-+			if (!chip->direction_input)
-+				set_bit(FLAG_IS_OUT, &desc->flags);
-+			else
-+				clear_bit(FLAG_IS_OUT, &desc->flags);
-+		}
- 	}
-=20
- 	acpi_gpiochip_add(chip);
---=20
-2.22.0
-
+Regards,
+-Vladimir
