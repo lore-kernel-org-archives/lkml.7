@@ -2,89 +2,79 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CFC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B0CC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2CAA20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E3620651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbfGGTou (ORCPT
+        id S1728535AbfGGTox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:44:50 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57148 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727530AbfGGTiH (ORCPT
+        Sun, 7 Jul 2019 15:44:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38066 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728504AbfGGTot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:07 -0400
-Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0006gU-Nr; Sun, 07 Jul 2019 20:38:02 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0005a9-Bm; Sun, 07 Jul 2019 20:38:01 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Sun, 7 Jul 2019 15:44:49 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hkD4r-0001gh-QG; Sun, 07 Jul 2019 21:44:02 +0200
+Date:   Sun, 7 Jul 2019 21:44:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Pingfan Liu <kernelfans@gmail.com>
+cc:     x86@kernel.org, Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>,
+        Barret Rhoden <brho@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/numa: instance all parsed numa node
+In-Reply-To: <1562300143-11671-2-git-send-email-kernelfans@gmail.com>
+Message-ID: <alpine.DEB.2.21.1907072133310.3648@nanos.tec.linutronix.de>
+References: <1562300143-11671-1-git-send-email-kernelfans@gmail.com> <1562300143-11671-2-git-send-email-kernelfans@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Ivan Mironov" <mironov.ivan@gmail.com>
-Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.254723399@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 048/129] USB: serial: cp210x: add ID for Ingenico 3070
-In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
-X-SA-Exim-Connect-IP: 94.197.121.43
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.70-rc1 review patch.  If anyone has any objections, please let me know.
+On Fri, 5 Jul 2019, Pingfan Liu wrote:
 
-------------------
+> I hit a bug on an AMD machine, with kexec -l nr_cpus=4 option. nr_cpus option
+> is used to speed up kdump process, so it is not a rare case.
 
-From: Ivan Mironov <mironov.ivan@gmail.com>
+But fundamentally wrong, really.
 
-commit dd9d3d86b08d6a106830364879c42c78db85389c upstream.
+The rest of the CPUs are in a half baken state and any broadcast event,
+e.g. MCE or a stray IPI, will result in a undiagnosable crash.
 
-Here is how this device appears in kernel log:
+Thanks,
 
-	usb 3-1: new full-speed USB device number 18 using xhci_hcd
-	usb 3-1: New USB device found, idVendor=0b00, idProduct=3070
-	usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-	usb 3-1: Product: Ingenico 3070
-	usb 3-1: Manufacturer: Silicon Labs
-	usb 3-1: SerialNumber: 0001
+	tglx
 
-Apparently this is a POS terminal with embedded USB-to-Serial converter.
-
-Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/usb/serial/cp210x.c | 1 +
- 1 file changed, 1 insertion(+)
-
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -57,6 +57,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(0x08e6, 0x5501) }, /* Gemalto Prox-PU/CU contactless smartcard reader */
- 	{ USB_DEVICE(0x08FD, 0x000A) }, /* Digianswer A/S , ZigBee/802.15.4 MAC Device */
- 	{ USB_DEVICE(0x0908, 0x01FF) }, /* Siemens RUGGEDCOM USB Serial Console */
-+	{ USB_DEVICE(0x0B00, 0x3070) }, /* Ingenico 3070 */
- 	{ USB_DEVICE(0x0BED, 0x1100) }, /* MEI (TM) Cashflow-SC Bill/Voucher Acceptor */
- 	{ USB_DEVICE(0x0BED, 0x1101) }, /* MEI series 2000 Combo Acceptor */
- 	{ USB_DEVICE(0x0FCF, 0x1003) }, /* Dynastream ANT development board */
 
