@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F30C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CFC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5F420651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CAA20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfGGTos (ORCPT
+        id S1728525AbfGGTou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:44:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57234 "EHLO
+        Sun, 7 Jul 2019 15:44:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57148 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727544AbfGGTiH (ORCPT
+        by vger.kernel.org with ESMTP id S1727530AbfGGTiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:07 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0006gr-7D; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz4-0006gU-Nr; Sun, 07 Jul 2019 20:38:02 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0005ad-Qc; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz3-0005a9-Bm; Sun, 07 Jul 2019 20:38:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Daniel Axtens" <dja@axtens.net>, "Jens Axboe" <axboe@kernel.dk>,
-        "Kent Overstreet" <koverstreet@google.com>,
-        "Coly Li" <colyli@suse.de>
+        "Johan Hovold" <johan@kernel.org>,
+        "Ivan Mironov" <mironov.ivan@gmail.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.963232624@decadent.org.uk>
+Message-ID: <lsq.1562518457.254723399@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 054/129] bcache: never writeback a discard operation
+Subject: [PATCH 3.16 048/129] USB: serial: cp210x: add ID for Ingenico 3070
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,131 +55,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniel Axtens <dja@axtens.net>
+From: Ivan Mironov <mironov.ivan@gmail.com>
 
-commit 9951379b0ca88c95876ad9778b9099e19a95d566 upstream.
+commit dd9d3d86b08d6a106830364879c42c78db85389c upstream.
 
-Some users see panics like the following when performing fstrim on a
-bcached volume:
+Here is how this device appears in kernel log:
 
-[  529.803060] BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-[  530.183928] #PF error: [normal kernel read fault]
-[  530.412392] PGD 8000001f42163067 P4D 8000001f42163067 PUD 1f42168067 PMD 0
-[  530.750887] Oops: 0000 [#1] SMP PTI
-[  530.920869] CPU: 10 PID: 4167 Comm: fstrim Kdump: loaded Not tainted 5.0.0-rc1+ #3
-[  531.290204] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 12/27/2015
-[  531.693137] RIP: 0010:blk_queue_split+0x148/0x620
-[  531.922205] Code: 60 38 89 55 a0 45 31 db 45 31 f6 45 31 c9 31 ff 89 4d 98 85 db 0f 84 7f 04 00 00 44 8b 6d 98 4c 89 ee 48 c1 e6 04 49 03 70 78 <8b> 46 08 44 8b 56 0c 48
-8b 16 44 29 e0 39 d8 48 89 55 a8 0f 47 c3
-[  532.838634] RSP: 0018:ffffb9b708df39b0 EFLAGS: 00010246
-[  533.093571] RAX: 00000000ffffffff RBX: 0000000000046000 RCX: 0000000000000000
-[  533.441865] RDX: 0000000000000200 RSI: 0000000000000000 RDI: 0000000000000000
-[  533.789922] RBP: ffffb9b708df3a48 R08: ffff940d3b3fdd20 R09: 0000000000000000
-[  534.137512] R10: ffffb9b708df3958 R11: 0000000000000000 R12: 0000000000000000
-[  534.485329] R13: 0000000000000000 R14: 0000000000000000 R15: ffff940d39212020
-[  534.833319] FS:  00007efec26e3840(0000) GS:ffff940d1f480000(0000) knlGS:0000000000000000
-[  535.224098] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  535.504318] CR2: 0000000000000008 CR3: 0000001f4e256004 CR4: 00000000001606e0
-[  535.851759] Call Trace:
-[  535.970308]  ? mempool_alloc_slab+0x15/0x20
-[  536.174152]  ? bch_data_insert+0x42/0xd0 [bcache]
-[  536.403399]  blk_mq_make_request+0x97/0x4f0
-[  536.607036]  generic_make_request+0x1e2/0x410
-[  536.819164]  submit_bio+0x73/0x150
-[  536.980168]  ? submit_bio+0x73/0x150
-[  537.149731]  ? bio_associate_blkg_from_css+0x3b/0x60
-[  537.391595]  ? _cond_resched+0x1a/0x50
-[  537.573774]  submit_bio_wait+0x59/0x90
-[  537.756105]  blkdev_issue_discard+0x80/0xd0
-[  537.959590]  ext4_trim_fs+0x4a9/0x9e0
-[  538.137636]  ? ext4_trim_fs+0x4a9/0x9e0
-[  538.324087]  ext4_ioctl+0xea4/0x1530
-[  538.497712]  ? _copy_to_user+0x2a/0x40
-[  538.679632]  do_vfs_ioctl+0xa6/0x600
-[  538.853127]  ? __do_sys_newfstat+0x44/0x70
-[  539.051951]  ksys_ioctl+0x6d/0x80
-[  539.212785]  __x64_sys_ioctl+0x1a/0x20
-[  539.394918]  do_syscall_64+0x5a/0x110
-[  539.568674]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+	usb 3-1: new full-speed USB device number 18 using xhci_hcd
+	usb 3-1: New USB device found, idVendor=0b00, idProduct=3070
+	usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+	usb 3-1: Product: Ingenico 3070
+	usb 3-1: Manufacturer: Silicon Labs
+	usb 3-1: SerialNumber: 0001
 
-We have observed it where both:
-1) LVM/devmapper is involved (bcache backing device is LVM volume) and
-2) writeback cache is involved (bcache cache_mode is writeback)
+Apparently this is a POS terminal with embedded USB-to-Serial converter.
 
-On one machine, we can reliably reproduce it with:
-
- # echo writeback > /sys/block/bcache0/bcache/cache_mode
-   (not sure whether above line is required)
- # mount /dev/bcache0 /test
- # for i in {0..10}; do
-	file="$(mktemp /test/zero.XXX)"
-	dd if=/dev/zero of="$file" bs=1M count=256
-	sync
-	rm $file
-    done
-  # fstrim -v /test
-
-Observing this with tracepoints on, we see the following writes:
-
-fstrim-18019 [022] .... 91107.302026: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4260112 + 196352 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302050: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4456464 + 262144 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302075: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 4718608 + 81920 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302094: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5324816 + 180224 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302121: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5505040 + 262144 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.302145: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 5767184 + 81920 hit 0 bypass 1
-fstrim-18019 [022] .... 91107.308777: bcache_write: 73f95583-561c-408f-a93a-4cbd2498f5c8 inode 0  DS 6373392 + 180224 hit 1 bypass 0
-<crash>
-
-Note the final one has different hit/bypass flags.
-
-This is because in should_writeback(), we were hitting a case where
-the partial stripe condition was returning true and so
-should_writeback() was returning true early.
-
-If that hadn't been the case, it would have hit the would_skip test, and
-as would_skip == s->iop.bypass == true, should_writeback() would have
-returned false.
-
-Looking at the git history from 'commit 72c270612bd3 ("bcache: Write out
-full stripes")', it looks like the idea was to optimise for raid5/6:
-
-       * If a stripe is already dirty, force writes to that stripe to
-	 writeback mode - to help build up full stripes of dirty data
-
-To fix this issue, make sure that should_writeback() on a discard op
-never returns true.
-
-More details of debugging:
-https://www.spinics.net/lists/linux-bcache/msg06996.html
-
-Previous reports:
- - https://bugzilla.kernel.org/show_bug.cgi?id=201051
- - https://bugzilla.kernel.org/show_bug.cgi?id=196103
- - https://www.spinics.net/lists/linux-bcache/msg06885.html
-
-(Coly Li: minor modification to follow maximum 75 chars per line rule)
-
-Cc: Kent Overstreet <koverstreet@google.com>
-Fixes: 72c270612bd3 ("bcache: Write out full stripes")
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-[bwh: Backported to 3.16: check REQ_DISCARD flag instead of calling bio_op()]
+Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/md/bcache/writeback.h | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/serial/cp210x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/md/bcache/writeback.h
-+++ b/drivers/md/bcache/writeback.h
-@@ -68,6 +68,9 @@ static inline bool should_writeback(stru
- 	    in_use > CUTOFF_WRITEBACK_SYNC)
- 		return false;
- 
-+	if (bio->bi_rw & REQ_DISCARD)
-+		return false;
-+
- 	if (dc->partial_stripes_expensive &&
- 	    bcache_dev_stripe_dirty(dc, bio->bi_iter.bi_sector,
- 				    bio_sectors(bio)))
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -57,6 +57,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(0x08e6, 0x5501) }, /* Gemalto Prox-PU/CU contactless smartcard reader */
+ 	{ USB_DEVICE(0x08FD, 0x000A) }, /* Digianswer A/S , ZigBee/802.15.4 MAC Device */
+ 	{ USB_DEVICE(0x0908, 0x01FF) }, /* Siemens RUGGEDCOM USB Serial Console */
++	{ USB_DEVICE(0x0B00, 0x3070) }, /* Ingenico 3070 */
+ 	{ USB_DEVICE(0x0BED, 0x1100) }, /* MEI (TM) Cashflow-SC Bill/Voucher Acceptor */
+ 	{ USB_DEVICE(0x0BED, 0x1101) }, /* MEI series 2000 Combo Acceptor */
+ 	{ USB_DEVICE(0x0FCF, 0x1003) }, /* Dynastream ANT development board */
 
