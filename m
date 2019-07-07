@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD1AC48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79794C48BDC
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFC3206A3
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53310206A3
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 13:23:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4g+ILO3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuvJAzVe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfGGNXF (ORCPT
+        id S1727220AbfGGNXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 09:23:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44766 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfGGNXE (ORCPT
+        Sun, 7 Jul 2019 09:23:19 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53035 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbfGGNXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 09:23:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p17so3075642wrf.11;
-        Sun, 07 Jul 2019 06:23:01 -0700 (PDT)
+        Sun, 7 Jul 2019 09:23:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s3so13228956wms.2;
+        Sun, 07 Jul 2019 06:23:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=LyYBGxHT/004Saj+ocWmEaZSx8BFQAFIp/D2dJigCMs=;
-        b=S4g+ILO3vrb41nkdmpbVyAsZwBAepFd5CaMZ+oHkyGeeFkNsUXw15F1VMh7SiOTsPt
-         rtPDj7CYLRs5DWG3bthqoma6fG5zDSqq5OwbBvw4e/T3PoeuxcpEUKwMZJnsLLTR+BGt
-         CA9Kc13sPgOCIJUlrZjRsvWplvzwvMUD4u7gJO+R/ZYcTqe3KH1UmT03prdfrE7le2Z+
-         o+XYqnJVqr42mcnQJynRGm88kR3Q3qA+N47UCLxm/ROhcyUeMA4XuhYnQGiGoDHGGDq6
-         5468/8Hqwo8hrzq07JEGaYirAM4zmYk3JujrneVY4UGXpGAAZ9S5mlaaC1Pwvh9gkl1e
-         aXWA==
+         :user-agent;
+        bh=bpMKBCyFHgrQiKy7buB0LlekziIPeofsVDIfjc0AyOM=;
+        b=TuvJAzVeDXICNheVzilpNB/Cs3NjzSCvyonFwKOTUrMr+8gYWEw8LkT9BFdAe1/KJa
+         RQkDrhcJp8Sa/bGFsb/LmBOqWuB5ku2J+gNg5oQS7sRpoQzvRGrPxTHcKQAvxT+UTMQw
+         4y4ZGcVflPIYljz19CoHHcjz0KJOXLc6aMiwD4KkviW/jKYSjbjI/YatERjpWncD5N/v
+         Fj7ftbeFtelSd6ou44N8DJnBCHFEsMrPPK+vlagcjnLoKEkrDur5+t3Saty1deT88JGb
+         yZqbRWtwrUMRYSoBjl42GHO3xwGxBO68XeHUzV2t0ES43DZcw191TGOUCyq/cAVULQpz
+         0mkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=LyYBGxHT/004Saj+ocWmEaZSx8BFQAFIp/D2dJigCMs=;
-        b=czql19GPcRxfRF1UC3WWHwJvTK9dAbpd9Ds47t9p9XVDCVg6VKnnsSTyUsHuJ2IQhE
-         B+j2POaC2rxxQTY33fimhgW3EX0WzCDjqfuF4X8WiD7vo7fuSuXNOHvARepdIgEQehoY
-         GNHOZPtsqjTmWsnuwREfZ3FKs5SNpfGH0LPVCR7wh2R6pA2bLNZxvOGjS12iH43X/s/r
-         ZtCtginBAuyuXyeuuXYCXOZ3tNBNGjnknO5dHzEHQ1titm+TptrLgVqJjr8LKW3U1iun
-         rmOCtA7C9PBu16G62KBqvow5I386oz1oD9JxE/N4b9JP0RYX6ndXDefE6Ev0Yt4APbJu
-         FwCQ==
-X-Gm-Message-State: APjAAAWomRY50fGZtIq2stL6xkiEOGZUfLRxrzK4qTRJp4qspMnzlShF
-        iXvpWbncqo9dY3f2TgQKPf5H4zz8xzA=
-X-Google-Smtp-Source: APXvYqx9Zj8jXvvLZLBwd2T+QW2bgwFqamzJnEhZf5zfb1Y8O81ATciuWDlaUFw3WGah9U53AWIkIg==
-X-Received: by 2002:adf:d4cc:: with SMTP id w12mr14191207wrk.121.1562505780290;
-        Sun, 07 Jul 2019 06:23:00 -0700 (PDT)
+         :content-disposition:user-agent;
+        bh=bpMKBCyFHgrQiKy7buB0LlekziIPeofsVDIfjc0AyOM=;
+        b=cZLAPJAq/xmK/JrcjRNfqk/du3pypLrIP8qgpTCgPdTEAhmMd+mTHJc4hnyhs414mF
+         BD2azeIx8HB9tHkN79zAWC+/UsDL3xPzqO1snr5CrsWmL6C6BFwaZ+iJ/m66V7JUenGr
+         ewvGLqSQdmBcc7B96oHkMmB1/Y+cUixQo9JlBX56YPHKJKhHvFFraJyd0xb5sW56nEsZ
+         A60K1bb4K8Bu+iMYxZNyhHkblq2psX2bmDfABf6ppeEKNCpr0ALBzMpjl9U19tmgzP/2
+         0XnBigqwbSH1C/VgPq/1C9QoSHeNHucqJiI5F/BEbXOgVEUNRNbPSSHTZf1FGLSsjN/n
+         Eckg==
+X-Gm-Message-State: APjAAAWhOR+X30knTJcDsIMgzOxxMeIPYHs7jjhv8eUiKOE0whJyANMu
+        7lLgB33T/j8wZJmn8VUhP64=
+X-Google-Smtp-Source: APXvYqw7tff4i83OSNi7Zx1TEI+45avVCAugUXjVfMhkCi2pLfvW3AeorDogqslxlq3WBg+tzU4c5Q==
+X-Received: by 2002:a1c:99ca:: with SMTP id b193mr12068007wme.31.1562505796292;
+        Sun, 07 Jul 2019 06:23:16 -0700 (PDT)
 Received: from arks.localdomain (179.red-83-58-138.dynamicip.rima-tde.net. [83.58.138.179])
-        by smtp.gmail.com with ESMTPSA id a12sm13653386wrr.70.2019.07.07.06.22.58
+        by smtp.gmail.com with ESMTPSA id f2sm11022353wrq.48.2019.07.07.06.23.14
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 07 Jul 2019 06:22:59 -0700 (PDT)
-Date:   Sun, 7 Jul 2019 15:22:56 +0200
+        Sun, 07 Jul 2019 06:23:15 -0700 (PDT)
+Date:   Sun, 7 Jul 2019 15:23:13 +0200
 From:   Aleix Roca Nonell <kernelrocks@gmail.com>
 To:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,427 +68,61 @@ To:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
 Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] irqchip: Add Realtek RTD129x intc driver
-Message-ID: <20190707132256.GC13340@arks.localdomain>
+Subject: [PATCH 3/6] arm64: dts: realtek: Move rtd1295 memreserve areas from
+ the generic rtd129x to its specific dtsi
+Message-ID: <20190707132313.GD13340@arks.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver adds support for the RTD1296 and RTD1295 interrupt
-controller (intc). It is based on both the BPI-SINOVOIP project and
-Andreas Färber's previous attempt to submit a similar driver.
+There are two memreserve areas in the rtd1295x description that are not
+present in the RTD1296 SoC. This patch moves such areas to the rtd1295
+device tree description.
 
-There is currently no publicly available datasheet on this SoC and the
-exact behaviour of the registers controlling the intc remain uncertain.
+From the commit introducing such memreserves[1]:
+ - 0x00030000 is undefined
+ - 0x01b00000 is audio related
 
-This driver controls two intcs: "iso" and "misc". Each intc has its own
-Interrupt Enable Register (IER) and Interrupt Status Resgister (ISR).
-However, not all "misc" intc irqs have the same offsets for both ISR and
-IER. For this reason an ISR to IER offsets table is defined.
-
-The driver catches the IER value to reduce accesses to the table inside the
-interrupt handler. Actually, the driver stores the ISR offsets of currently
-enabled interrupts in a variable.
+[1] - commit 72a7786c0a0d65 ("ARM64: dts: Add Realtek RTD1295 and Zidoo X9S")
 
 Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
 ---
- drivers/irqchip/Makefile      |   1 +
- drivers/irqchip/irq-rtd129x.c | 371 ++++++++++++++++++++++++++++++++++
- 2 files changed, 372 insertions(+)
- create mode 100644 drivers/irqchip/irq-rtd129x.c
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi | 3 +++
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi | 2 --
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 606a003a0000..0689c3956250 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -100,3 +100,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
- obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
-+obj-$(CONFIG_ARCH_REALTEK)		+= irq-rtd129x.o
-diff --git a/drivers/irqchip/irq-rtd129x.c b/drivers/irqchip/irq-rtd129x.c
-new file mode 100644
-index 000000000000..76358ca50f10
---- /dev/null
-+++ b/drivers/irqchip/irq-rtd129x.c
-@@ -0,0 +1,371 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+index 41d7858da826..586cb1ee8cb8 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+@@ -6,6 +6,9 @@
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
++/memreserve/	0x0000000000030000 0x00000000000d0000;
++/memreserve/	0x0000000001b00000 0x00000000004be000;
 +
-+#include <linux/irqchip.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/io.h>
-+#include <linux/spinlock.h>
-+#include <linux/irqchip.h>
-+#include <linux/bits.h>
-+#include <linux/irqchip/chained_irq.h>
-+
-+#define RTD129X_INTC_NR_IRQS 32
-+#define DEV_NAME "RTD1296_INTC"
-+
-+/*
-+ * This interrupt controller (hereinafter intc) driver controls two intcs: "iso"
-+ * and "misc". Each intc has its own Interrupt Enable Register (IER) and
-+ * Interrupt Status Resgister (ISR). However, not all "misc" intc irqs have the
-+ * same offsets for both ISR and IER. For this reason an ISR to IER offsets
-+ * table is defined. Also, to reduce accesses to this table in the interrupt
-+ * handler, the driver stores the ISR offsets of currently enabled interrupts in
-+ * a variable.
-+ */
-+
-+enum misc_int_en {
-+	MISC_INT_FAIL		= 0xFF,
-+	MISC_INT_RVD		= 0xFE,
-+	MISC_INT_EN_FAN		= 29,
-+	MISC_INT_EN_I2C3	= 28,
-+	MISC_INT_EN_GSPI	= 27,
-+	MISC_INT_EN_I2C2	= 26,
-+	MISC_INT_EN_SC0		= 24,
-+	MISC_INT_EN_LSADC1	= 22,
-+	MISC_INT_EN_LSADC0	= 21,
-+	MISC_INT_EN_GPIODA	= 20,
-+	MISC_INT_EN_GPIOA	= 19,
-+	MISC_INT_EN_I2C4	= 15,
-+	MISC_INT_EN_I2C5	= 14,
-+	MISC_INT_EN_RTC_DATA	= 12,
-+	MISC_INT_EN_RTC_HOUR	= 11,
-+	MISC_INT_EN_RTC_MIN	= 10,
-+	MISC_INT_EN_UR2		= 7,
-+	MISC_INT_EN_UR2_TO	= 6,
-+	MISC_INT_EN_UR1_TO	= 5,
-+	MISC_INT_EN_UR1		= 3,
-+};
-+
-+enum iso_int_en {
-+	ISO_INT_FAIL		= 0xFF,
-+	ISO_INT_RVD		= 0xFE,
-+	ISO_INT_EN_I2C1_REQ	= 31,
-+	ISO_INT_EN_GPHY_AV	= 30,
-+	ISO_INT_EN_GPHY_DV	= 29,
-+	ISO_INT_EN_GPIODA	= 20,
-+	ISO_INT_EN_GPIOA	= 19,
-+	ISO_INT_EN_RTC_ALARM	= 13,
-+	ISO_INT_EN_RTC_HSEC	= 12,
-+	ISO_INT_EN_I2C1		= 11,
-+	ISO_INT_EN_I2C0		= 8,
-+	ISO_INT_EN_IRDA		= 5,
-+	ISO_INT_EN_UR0		= 2,
-+};
-+
-+unsigned char rtd129x_intc_enable_map_misc[RTD129X_INTC_NR_IRQS] = {
-+	MISC_INT_FAIL,		/* Bit0 */
-+	MISC_INT_FAIL,		/* Bit1 */
-+	MISC_INT_RVD,		/* Bit2 */
-+	MISC_INT_EN_UR1,	/* Bit3 */
-+	MISC_INT_FAIL,		/* Bit4 */
-+	MISC_INT_EN_UR1_TO,	/* Bit5 */
-+	MISC_INT_RVD,		/* Bit6 */
-+	MISC_INT_RVD,		/* Bit7 */
-+	MISC_INT_EN_UR2,	/* Bit8 */
-+	MISC_INT_RVD,		/* Bit9 */
-+	MISC_INT_EN_RTC_MIN,	/* Bit10 */
-+	MISC_INT_EN_RTC_HOUR,	/* Bit11 */
-+	MISC_INT_EN_RTC_DATA,	/* Bit12 */
-+	MISC_INT_EN_UR2_TO,	/* Bit13 */
-+	MISC_INT_EN_I2C5,	/* Bit14 */
-+	MISC_INT_EN_I2C4,	/* Bit15 */
-+	MISC_INT_FAIL,		/* Bit16 */
-+	MISC_INT_FAIL,		/* Bit17 */
-+	MISC_INT_FAIL,		/* Bit18 */
-+	MISC_INT_EN_GPIOA,	/* Bit19 */
-+	MISC_INT_EN_GPIODA,	/* Bit20 */
-+	MISC_INT_EN_LSADC0,	/* Bit21 */
-+	MISC_INT_EN_LSADC1,	/* Bit22 */
-+	MISC_INT_EN_I2C3,	/* Bit23 */
-+	MISC_INT_EN_SC0,	/* Bit24 */
-+	MISC_INT_FAIL,		/* Bit25 */
-+	MISC_INT_EN_I2C2,	/* Bit26 */
-+	MISC_INT_EN_GSPI,	/* Bit27 */
-+	MISC_INT_FAIL,		/* Bit28 */
-+	MISC_INT_EN_FAN,	/* Bit29 */
-+	MISC_INT_FAIL,		/* Bit30 */
-+	MISC_INT_FAIL		/* Bit31 */
-+};
-+
-+unsigned char rtd129x_intc_enable_map_iso[RTD129X_INTC_NR_IRQS] = {
-+	ISO_INT_FAIL,		/* Bit0 */
-+	ISO_INT_RVD,		/* Bit1 */
-+	ISO_INT_EN_UR0,		/* Bit2 */
-+	ISO_INT_FAIL,		/* Bit3 */
-+	ISO_INT_FAIL,		/* Bit4 */
-+	ISO_INT_EN_IRDA,	/* Bit5 */
-+	ISO_INT_FAIL,		/* Bit6 */
-+	ISO_INT_RVD,		/* Bit7 */
-+	ISO_INT_EN_I2C0,	/* Bit8 */
-+	ISO_INT_RVD,		/* Bit9 */
-+	ISO_INT_FAIL,		/* Bit10 */
-+	ISO_INT_EN_I2C1,	/* Bit11 */
-+	ISO_INT_EN_RTC_HSEC,	/* Bit12 */
-+	ISO_INT_EN_RTC_ALARM,	/* Bit13 */
-+	ISO_INT_FAIL,		/* Bit14 */
-+	ISO_INT_FAIL,		/* Bit15 */
-+	ISO_INT_FAIL,		/* Bit16 */
-+	ISO_INT_FAIL,		/* Bit17 */
-+	ISO_INT_FAIL,		/* Bit18 */
-+	ISO_INT_EN_GPIOA,	/* Bit19 */
-+	ISO_INT_EN_GPIODA,	/* Bit20 */
-+	ISO_INT_RVD,		/* Bit21 */
-+	ISO_INT_RVD,		/* Bit22 */
-+	ISO_INT_RVD,		/* Bit23 */
-+	ISO_INT_RVD,		/* Bit24 */
-+	ISO_INT_FAIL,		/* Bit25 */
-+	ISO_INT_FAIL,		/* Bit26 */
-+	ISO_INT_FAIL,		/* Bit27 */
-+	ISO_INT_FAIL,		/* Bit28 */
-+	ISO_INT_EN_GPHY_DV,	/* Bit29 */
-+	ISO_INT_EN_GPHY_AV,	/* Bit30 */
-+	ISO_INT_EN_I2C1_REQ	/* Bit31 */
-+};
-+
-+struct rtd129x_intc_data {
-+	void __iomem		*unmask;
-+	void __iomem		*isr;
-+	void __iomem		*ier;
-+	u32			ier_cached;
-+	u32			isr_en;
-+	raw_spinlock_t		lock;
-+	unsigned int		parent_irq;
-+	const unsigned char	*en_map;
-+};
-+
-+static struct irq_domain *rtd129x_intc_domain;
-+
-+static void rtd129x_intc_irq_handle(struct irq_desc *desc)
-+{
-+	struct rtd129x_intc_data *priv = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned int local_irq;
-+	u32 status;
-+	int i;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	raw_spin_lock(&priv->lock);
-+	status = readl_relaxed(priv->isr);
-+	status &= priv->isr_en;
-+	raw_spin_unlock(&priv->lock);
-+
-+	while (status) {
-+		i = __ffs(status);
-+		status &= ~BIT(i);
-+
-+		local_irq = irq_find_mapping(rtd129x_intc_domain, i);
-+		if (likely(local_irq)) {
-+			if (!generic_handle_irq(local_irq))
-+				writel_relaxed(BIT(i), priv->isr);
-+		} else {
-+			handle_bad_irq(desc);
-+		}
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void rtd129x_intc_mask(struct irq_data *data)
-+{
-+	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
-+
-+	writel_relaxed(BIT(data->hwirq), priv->isr);
-+}
-+
-+static void rtd129x_intc_unmask(struct irq_data *data)
-+{
-+	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
-+
-+	writel_relaxed(BIT(data->hwirq), priv->unmask);
-+}
-+
-+static void rtd129x_intc_enable(struct irq_data *data)
-+{
-+	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
-+	unsigned long flags;
-+	u8 en_offset;
-+
-+	en_offset = priv->en_map[data->hwirq];
-+
-+	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
-+		raw_spin_lock_irqsave(&priv->lock, flags);
-+
-+		priv->isr_en |= BIT(data->hwirq);
-+		priv->ier_cached |= BIT(en_offset);
-+		writel_relaxed(priv->ier_cached, priv->ier);
-+
-+		raw_spin_unlock_irqrestore(&priv->lock, flags);
-+	} else if (en_offset == MISC_INT_FAIL) {
-+		pr_err("[%s] Enable irq(%lu) failed\n", DEV_NAME, data->hwirq);
-+	}
-+}
-+
-+static void rtd129x_intc_disable(struct irq_data *data)
-+{
-+	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
-+	unsigned long flags;
-+	u8 en_offset;
-+
-+	en_offset = priv->en_map[data->hwirq];
-+
-+	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
-+		raw_spin_lock_irqsave(&priv->lock, flags);
-+
-+		priv->isr_en &= ~BIT(data->hwirq);
-+		priv->ier_cached &= ~BIT(en_offset);
-+		writel_relaxed(priv->ier_cached, priv->ier);
-+
-+		raw_spin_unlock_irqrestore(&priv->lock, flags);
-+	} else if (en_offset == MISC_INT_FAIL) {
-+		pr_err("[%s] Disable irq(%lu) failed\n", DEV_NAME, data->hwirq);
-+	}
-+}
-+
-+static struct irq_chip rtd129x_intc_chip = {
-+	.name		= DEV_NAME,
-+	.irq_mask	= rtd129x_intc_mask,
-+	.irq_unmask	= rtd129x_intc_unmask,
-+	.irq_enable	= rtd129x_intc_enable,
-+	.irq_disable	= rtd129x_intc_disable,
-+};
-+
-+static int rtd129x_intc_map(struct irq_domain *d, unsigned int virq,
-+			    irq_hw_number_t hw_irq)
-+{
-+	struct rtd129x_intc_data *priv = d->host_data;
-+
-+	irq_set_chip_and_handler(virq, &rtd129x_intc_chip, handle_level_irq);
-+	irq_set_chip_data(virq, priv);
-+	irq_set_probe(virq);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops rtd129x_intc_domain_ops = {
-+	.xlate			= irq_domain_xlate_onecell,
-+	.map			= rtd129x_intc_map,
-+};
-+
-+static const struct of_device_id rtd129x_intc_matches[] = {
-+	{ .compatible = "realtek,rtd129x-intc-misc",
-+		.data = rtd129x_intc_enable_map_misc
-+	},
-+	{ .compatible = "realtek,rtd129x-intc-iso",
-+		.data = rtd129x_intc_enable_map_iso
-+	},
-+	{ }
-+};
-+
-+static int rtd129x_intc_of_init(struct device_node *node,
-+				struct device_node *parent)
-+{
-+	struct rtd129x_intc_data *priv;
-+	const struct of_device_id *match;
-+	u32 isr_tmp, ier_tmp, ier_bit;
-+	int ret, i;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	raw_spin_lock_init(&priv->lock);
-+
-+	priv->isr = of_iomap(node, 0);
-+	if (!priv->isr) {
-+		pr_err("unable to obtain status reg iomap address\n");
-+		ret = -ENOMEM;
-+		goto free_priv;
-+	}
-+
-+	priv->ier = of_iomap(node, 1);
-+	if (!priv->ier) {
-+		pr_err("unable to obtain enable reg iomap address\n");
-+		ret = -ENOMEM;
-+		goto iounmap_status;
-+	}
-+
-+	priv->unmask = of_iomap(node, 2);
-+	if (!priv->unmask) {
-+		pr_err("unable to obtain unmask reg iomap address\n");
-+		ret = -ENOMEM;
-+		goto iounmap_enable;
-+	}
-+
-+	priv->parent_irq = irq_of_parse_and_map(node, 0);
-+	if (!priv->parent_irq) {
-+		pr_err("failed to map parent interrupt %d\n", priv->parent_irq);
-+		ret = -EINVAL;
-+		goto iounmap_all;
-+	}
-+
-+	match = of_match_node(rtd129x_intc_matches, node);
-+	if (!match) {
-+		pr_err("failed to find matching node\n");
-+		ret = -ENODEV;
-+		goto iounmap_all;
-+	}
-+	priv->en_map = match->data;
-+
-+	// initialize enabled irq's map to its matching status bit in isr by
-+	// inverse walking the enable to status offsets map. Only needed for
-+	// misc
-+	priv->ier_cached = readl_relaxed(priv->ier);
-+	if (priv->en_map == rtd129x_intc_enable_map_misc) {
-+		ier_tmp = priv->ier_cached;
-+		isr_tmp = 0;
-+		while (ier_tmp) {
-+			ier_bit = __ffs(ier_tmp);
-+			ier_tmp &= ~BIT(ier_bit);
-+			for (i = 0; i < RTD129X_INTC_NR_IRQS; i++)
-+				if (priv->en_map[i] == ier_bit)
-+					isr_tmp |= BIT(i);
-+		}
-+		priv->isr_en = isr_tmp;
-+	} else {
-+		priv->isr_en = priv->ier_cached;
-+	}
-+
-+	rtd129x_intc_domain = irq_domain_add_linear(node, RTD129X_INTC_NR_IRQS,
-+						    &rtd129x_intc_domain_ops,
-+						    priv);
-+	if (!rtd129x_intc_domain) {
-+		pr_err("failed to create irq domain\n");
-+		ret = -ENOMEM;
-+		goto iounmap_all;
-+	}
-+
-+	irq_set_chained_handler_and_data(priv->parent_irq,
-+					 rtd129x_intc_irq_handle, priv);
-+
-+	return 0;
-+
-+iounmap_all:
-+	iounmap(priv->unmask);
-+iounmap_enable:
-+	iounmap(priv->ier);
-+iounmap_status:
-+	iounmap(priv->isr);
-+free_priv:
-+	kfree(priv);
-+err:
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(rtd129x_intc_misc, "realtek,rtd129x-intc-misc",
-+		rtd129x_intc_of_init);
-+IRQCHIP_DECLARE(rtd129x_intc_iso, "realtek,rtd129x-intc-iso",
-+		rtd129x_intc_of_init);
+ #include "rtd129x.dtsi"
+ 
+ / {
+diff --git a/arch/arm64/boot/dts/realtek/rtd129x.dtsi b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+index b9cb92466fc7..9009db909fab 100644
+--- a/arch/arm64/boot/dts/realtek/rtd129x.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd129x.dtsi
+@@ -8,8 +8,6 @@
+ 
+ /memreserve/	0x0000000000000000 0x0000000000030000;
+ /memreserve/	0x000000000001f000 0x0000000000001000;
+-/memreserve/	0x0000000000030000 0x00000000000d0000;
+-/memreserve/	0x0000000001b00000 0x00000000004be000;
+ /memreserve/	0x0000000001ffe000 0x0000000000004000;
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
 -- 
 2.21.0
 
