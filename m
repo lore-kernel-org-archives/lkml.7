@@ -2,102 +2,103 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517C8C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B8DC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230E320828
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FFD20656
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562522487;
-	bh=lsP5Zoo/8iHxNocirmfN8LDYdicr15IJWCPxxQZCuac=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GUQJVqDVvHXf18vwrpILdx44MWJY/u9x58X1MVN9yFEwsIkU07dhYxTnE5bpddbuZ
-	 L5Cbp0AfayKHpMTCO69BmKeMRrK8apjNJmGAnRbfMjJlOrIHGTEmL5470c/e+7TR4a
-	 VQ6grbBT53+Q/1NPyMI7NkPliPwxVbLDqTZGqZHA=
+	s=default; t=1562523484;
+	bh=HjSAhflXRX6JZgaHJCzpgk15as9iX7HtiQHPV/B7bo8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ylXXTK34K/EXftxofbjEA39peCeomHlvb3RAKANqU+JIGT3Gi0oxZmfdkJspYghwK
+	 22ro8mu24ZeRS6fOVQj3Se6Ph5BURAnDgAf7C0jCTaLyBWMA1Fqo0xItgdLdGVjMET
+	 OkI58dao00MQ/R3kzHe5xTTBACz6WITarTYnuOGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfGGSB0 (ORCPT
+        id S1727025AbfGGSR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 14:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbfGGSBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 14:01:25 -0400
-Received: from localhost.localdomain (unknown [194.230.155.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7577420828;
-        Sun,  7 Jul 2019 18:01:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562522484;
-        bh=lsP5Zoo/8iHxNocirmfN8LDYdicr15IJWCPxxQZCuac=;
-        h=From:To:Cc:Subject:Date:From;
-        b=aYZLB716cdJ9vvETO37jpgoOXnP21glMfS+sxwi9lTzhiavo91Hj69VdPMkWPUvbu
-         0nhyQd6WSDuaDUY4WhIx6aQ0Y77KfoulEfUCWYkoD7wzlQpS/c5TdEs5Cl6upKY4Yf
-         VoEp0gWJmw+3P+9a/9P4/9n9gZYZuiHhQDk2/7kM=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: dts: exynos: Late pull for v5.3
-Date:   Sun,  7 Jul 2019 20:01:15 +0200
-Message-Id: <20190707180115.5562-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 7 Jul 2019 14:17:29 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33094 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfGGSR3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 14:17:29 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x3so3431927lfc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 11:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g+9xPEL4RcxWbS8pngACDkwDo5/o0bCMWSPJIM1PpL0=;
+        b=Mji9nC1YQ4CkdxJ68Sku65DwPBgz614OGcbe4AQER95eB2Z7+MbkdAY6AdoyOqPJn2
+         lTKTEmiq7RFz1r76n20LVot49Cr4THf3WwVULOqWZBiL/Epg3kjU8UHR98Fdtf6AOPXQ
+         3k5CdpKaifYv9EtHB+G4RWjzor3GISTPwyS3Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g+9xPEL4RcxWbS8pngACDkwDo5/o0bCMWSPJIM1PpL0=;
+        b=fwhggheqFCXxAUEh1hL4NyHl6i4tFpQP+7hRkUly4utTsov8oNjr22/0ZjFMUZLTf3
+         Wq1qiWRfauBZIY/6zTqU5sy3OuM7UD0BpuGo1DyLQApiuB9+tDAeve85kI6vR+E/aqDS
+         uC1Zpg3n+q7pr6tnfXti43yFMfBOpKy+UUUehzgT7c5pQ9rC6sRO7JPoWR4yTa8bq0V0
+         MVky2SpYjAAIFSP04iUgsY+dACqsyHXubIX+SEYHWD4HK9Io0rcoXVqFAIwsp3EW45Ck
+         UDJizoRy8Yz5QFSsdIXcFcXKjpYc2OakNeTFaWmoUW8imLDnfWifAYOdMB3Jwqs0gHvh
+         /2vQ==
+X-Gm-Message-State: APjAAAUhQY2YkzqbcSKJ0mO6bkwtAF258WLQIykqJLWpovcVx993oVeS
+        bSws2sBeBNpIIE5NDC3RTh40GvkOcC0=
+X-Google-Smtp-Source: APXvYqwFGnfemKTqIw0O/0zPLt6CugHJ6r4lit9zyXUvElGlt6R30sJKEJ1PaJpp/fzWf1Xo6vatEw==
+X-Received: by 2002:ac2:5b09:: with SMTP id v9mr6589822lfn.22.1562523446874;
+        Sun, 07 Jul 2019 11:17:26 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id u13sm2330157lfi.4.2019.07.07.11.17.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Jul 2019 11:17:25 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id 16so13632802ljv.10
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 11:17:25 -0700 (PDT)
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr8008295ljm.180.1562523445204;
+ Sun, 07 Jul 2019 11:17:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190704195555.580363209@infradead.org> <20190704200050.534802824@infradead.org>
+ <CALCETrXvTvFBaQB-kEe4cRTCXUyTbWLbcveWsH-kX4j915c_=w@mail.gmail.com> <CALCETrUzP4Wb=WNhGvc7k4oX7QQz1JXZ3-O8PQhs39kmZid0nw@mail.gmail.com>
+In-Reply-To: <CALCETrUzP4Wb=WNhGvc7k4oX7QQz1JXZ3-O8PQhs39kmZid0nw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 7 Jul 2019 11:17:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh+J7ts6OrzzscMj5FONd3TRAwAKPZ=BQmEb2E8_-RXTA@mail.gmail.com>
+Message-ID: <CAHk-=wh+J7ts6OrzzscMj5FONd3TRAwAKPZ=BQmEb2E8_-RXTA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] x86/mm, tracing: Fix CR2 corruption
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Jul 7, 2019 at 8:11 AM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> FWIW, I'm leaning toward suggesting that we apply the trivial tracing
+> fix and backport *that*.  Then, in -tip, we could revert it and apply
+> this patch instead.
 
-Late third pull of DTS changes, on top of previous pull request.
-This contains important fix for stuff merged recently, one cleanup
-and two minor fixups for regulators.
+You don't have to have the same fix in stable as in -tip.
 
-Best regards,
-Krzysztof
+It's fine to send something to stable that says "Fixed differently by
+commit XYZ upstream". The main thing is to make sure that stable
+doesn't have fixes that then get lost upstream (which we used to have
+long long ago).
 
-
-The following changes since commit 13efd80acaa4cdb61fde52732178ff9eb4141104:
-
-  ARM: dts: exynos: Add GPU/Mali 400 node to Exynos4 (2019-06-24 20:03:42 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-5.3-3
-
-for you to fetch changes up to 841ed60264b3d37d5bf3e32cff168920e4923f88:
-
-  ARM: dts: exynos: Adjust buck[78] regulators to supported values on Arndale Octa (2019-07-01 20:28:37 +0200)
-
-----------------------------------------------------------------
-Samsung DTS ARM changes for v5.3, third round
-
-1. Fix imprecise abort on Exynos4210 caused by newly added Mali nodes,
-2. Reorganize Mali nodes under /soc,
-3. Adjust buck regulators voltages on Arndale Octa and Odroid XU3/XU4
-   family to sane values.
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (2):
-      ARM: dts: exynos: Adjust buck[78] regulators to supported values on Odroid XU3 family
-      ARM: dts: exynos: Adjust buck[78] regulators to supported values on Arndale Octa
-
-Marek Szyprowski (2):
-      ARM: dts: exynos: Fix imprecise abort on Mali GPU probe on Exynos4210
-      ARM: dts: exynos: Move Mali400 GPU node to "/soc"
-
- arch/arm/boot/dts/exynos3250.dtsi             | 66 +++++++++++++--------------
- arch/arm/boot/dts/exynos4.dtsi                | 50 ++++++--------------
- arch/arm/boot/dts/exynos4210.dtsi             | 20 ++++++++
- arch/arm/boot/dts/exynos4412.dtsi             | 22 +++++++++
- arch/arm/boot/dts/exynos5420-arndale-octa.dts |  6 +--
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 10 ++--
- 6 files changed, 97 insertions(+), 77 deletions(-)
+                  Linus
