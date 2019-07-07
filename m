@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34BCC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FC9C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71C020830
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C882082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfGGTpF (ORCPT
+        id S1728579AbfGGTpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:45:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57186 "EHLO
+        Sun, 7 Jul 2019 15:45:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57042 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727532AbfGGTiG (ORCPT
+        by vger.kernel.org with ESMTP id S1727511AbfGGTiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:06 -0400
+        Sun, 7 Jul 2019 15:38:05 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0006gW-Tc; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz3-0006fO-La; Sun, 07 Jul 2019 20:38:01 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0005aK-FY; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz1-0005Yz-Rf; Sun, 07 Jul 2019 20:37:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Biggers" <ebiggers@google.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>
+        "Buland Singh" <bsingh@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.813548642@decadent.org.uk>
+Message-ID: <lsq.1562518457.292216017@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 050/129] crypto: ahash - fix another early
- termination in hash walk
+Subject: [PATCH 3.16 034/129] hpet: Fix missing '=' character in the
+ __setup() code of hpet_mmap_enable
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,60 +56,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Buland Singh <bsingh@redhat.com>
 
-commit 77568e535af7c4f97eaef1e555bf0af83772456c upstream.
+commit 24d48a61f2666630da130cc2ec2e526eacf229e3 upstream.
 
-Hash algorithms with an alignmask set, e.g. "xcbc(aes-aesni)" and
-"michael_mic", fail the improved hash tests because they sometimes
-produce the wrong digest.  The bug is that in the case where a
-scatterlist element crosses pages, not all the data is actually hashed
-because the scatterlist walk terminates too early.  This happens because
-the 'nbytes' variable in crypto_hash_walk_done() is assigned the number
-of bytes remaining in the page, then later interpreted as the number of
-bytes remaining in the scatterlist element.  Fix it.
+Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
+user processes")' introduced a new kernel command line parameter hpet_mmap,
+that is required to expose the memory map of the HPET registers to
+user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
+broken and never takes effect due to missing '=' character in the __setup()
+code of hpet_mmap_enable.
 
-Fixes: 900a081f6912 ("crypto: ahash - Fix early termination in hash walk")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Before this patch:
+
+dmesg output with the kernel command line parameter hpet_mmap=1
+
+[    0.204152] HPET mmap disabled
+
+dmesg output with the kernel command line parameter hpet_mmap=0
+
+[    0.204192] HPET mmap disabled
+
+After this patch:
+
+dmesg output with the kernel command line parameter hpet_mmap=1
+
+[    0.203945] HPET mmap enabled
+
+dmesg output with the kernel command line parameter hpet_mmap=0
+
+[    0.204652] HPET mmap disabled
+
+Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
+Signed-off-by: Buland Singh <bsingh@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- crypto/ahash.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/char/hpet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/crypto/ahash.c
-+++ b/crypto/ahash.c
-@@ -84,17 +84,17 @@ static int hash_walk_new_entry(struct cr
- int crypto_hash_walk_done(struct crypto_hash_walk *walk, int err)
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -377,7 +377,7 @@ static __init int hpet_mmap_enable(char
+ 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
+ 	return 1;
+ }
+-__setup("hpet_mmap", hpet_mmap_enable);
++__setup("hpet_mmap=", hpet_mmap_enable);
+ 
+ static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
  {
- 	unsigned int alignmask = walk->alignmask;
--	unsigned int nbytes = walk->entrylen;
- 
- 	walk->data -= walk->offset;
- 
--	if (nbytes && walk->offset & alignmask && !err) {
--		walk->offset = ALIGN(walk->offset, alignmask + 1);
--		nbytes = min(nbytes,
--			     ((unsigned int)(PAGE_SIZE)) - walk->offset);
--		walk->entrylen -= nbytes;
-+	if (walk->entrylen && (walk->offset & alignmask) && !err) {
-+		unsigned int nbytes;
- 
-+		walk->offset = ALIGN(walk->offset, alignmask + 1);
-+		nbytes = min(walk->entrylen,
-+			     (unsigned int)(PAGE_SIZE - walk->offset));
- 		if (nbytes) {
-+			walk->entrylen -= nbytes;
- 			walk->data += walk->offset;
- 			return nbytes;
- 		}
-@@ -114,7 +114,7 @@ int crypto_hash_walk_done(struct crypto_
- 	if (err)
- 		return err;
- 
--	if (nbytes) {
-+	if (walk->entrylen) {
- 		walk->offset = 0;
- 		walk->pg++;
- 		return hash_walk_next(walk);
 
