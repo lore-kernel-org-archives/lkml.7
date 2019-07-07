@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A5BC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091E1C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C8C20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF9F20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfGGTjZ (ORCPT
+        id S1727968AbfGGTjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:39:25 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58026 "EHLO
+        Sun, 7 Jul 2019 15:39:17 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57822 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727668AbfGGTiR (ORCPT
+        by vger.kernel.org with ESMTP id S1727640AbfGGTiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:17 -0400
+        Sun, 7 Jul 2019 15:38:14 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzE-0006kg-0j; Sun, 07 Jul 2019 20:38:12 +0100
+        id 1hkCzC-0006j1-HH; Sun, 07 Jul 2019 20:38:10 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz9-0005gl-SV; Sun, 07 Jul 2019 20:38:07 +0100
+        id 1hkCz7-0005eT-PT; Sun, 07 Jul 2019 20:38:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "huangwen" <huangwen@venustech.com.cn>
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        "Andrey Ryabinin" <aryabinin@virtuozzo.com>,
+        "Michal Hocko" <mhocko@suse.com>, "Joe Perches" <joe@perches.com>,
+        "Roman Penyaev" <rpenyaev@suse.de>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.996126085@decadent.org.uk>
+Message-ID: <lsq.1562518457.673598026@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 128/129] mwifiex: Fix heap overflow in
- mwifiex_uap_parse_tail_ies()
+Subject: [PATCH 3.16 101/129] mm/vmalloc: fix size check for
+ remap_vmalloc_range_partial()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,100 +59,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit 69ae4f6aac1578575126319d3f55550e7e440449 upstream.
+commit 401592d2e095947344e10ec0623adbcd58934dd4 upstream.
 
-A few places in mwifiex_uap_parse_tail_ies() perform memcpy()
-unconditionally, which may lead to either buffer overflow or read over
-boundary.
+When VM_NO_GUARD is not set area->size includes adjacent guard page,
+thus for correct size checking get_vm_area_size() should be used, but
+not area->size.
 
-This patch addresses the issues by checking the read size and the
-destination size at each place more properly.  Along with the fixes,
-the patch cleans up the code slightly by introducing a temporary
-variable for the token size, and unifies the error path with the
-standard goto statement.
+This fixes possible kernel oops when userspace tries to mmap an area on
+1 page bigger than was allocated by vmalloc_user() call: the size check
+inside remap_vmalloc_range_partial() accounts non-existing guard page
+also, so check successfully passes but vmalloc_to_page() returns NULL
+(guard page does not physically exist).
 
-Reported-by: huangwen <huangwen@venustech.com.cn>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16:
- - The tail IEs are parsed in mwifiex_set_mgmt_ies, which looks for two
-   specific IEs rather than looping
- - Check IE length against tail length after calling
-   cfg80211_find_vendor_ie(), but not after cfg80211_find_ie() since that
-   already does it
- - On error, return without calling mwifiex_set_mgmt_beacon_data_ies()
- - Drop inapplicable change to WMM IE handling
- - Adjust filename]
+The following code pattern example should trigger an oops:
+
+  static int oops_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+        void *mem;
+
+        mem = vmalloc_user(4096);
+        BUG_ON(!mem);
+        /* Do not care about mem leak */
+
+        return remap_vmalloc_range(vma, mem, 0);
+  }
+
+And userspace simply mmaps size + PAGE_SIZE:
+
+  mmap(NULL, 8192, PROT_WRITE|PROT_READ, MAP_PRIVATE, fd, 0);
+
+Possible candidates for oops which do not have any explicit size
+checks:
+
+   *** drivers/media/usb/stkwebcam/stk-webcam.c:
+   v4l_stk_mmap[789]   ret = remap_vmalloc_range(vma, sbuf->buffer, 0);
+
+Or the following one:
+
+   *** drivers/video/fbdev/core/fbmem.c
+   static int
+   fb_mmap(struct file *file, struct vm_area_struct * vma)
+        ...
+        res = fb->fb_mmap(info, vma);
+
+Where fb_mmap callback calls remap_vmalloc_range() directly without any
+explicit checks:
+
+   *** drivers/video/fbdev/vfb.c
+   static int vfb_mmap(struct fb_info *info,
+             struct vm_area_struct *vma)
+   {
+       return remap_vmalloc_range(vma, (void *)info->fix.smem_start, vma->vm_pgoff);
+   }
+
+Link: http://lkml.kernel.org/r/20190103145954.16942-2-rpenyaev@suse.de
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/mwifiex/ie.c | 47 +++++++++++++++--------
- 1 file changed, 31 insertions(+), 16 deletions(-)
+ mm/vmalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/mwifiex/ie.c
-+++ b/drivers/net/wireless/mwifiex/ie.c
-@@ -328,6 +328,8 @@ int mwifiex_set_mgmt_ies(struct mwifiex_
- 	struct ieee_types_header *rsn_ie, *wpa_ie = NULL;
- 	u16 rsn_idx = MWIFIEX_AUTO_IDX_MASK, ie_len = 0;
- 	const u8 *vendor_ie;
-+	unsigned int token_len;
-+	int err = 0;
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2141,7 +2141,7 @@ int remap_vmalloc_range_partial(struct v
+ 	if (!(area->flags & VM_USERMAP))
+ 		return -EINVAL;
  
- 	if (info->tail && info->tail_len) {
- 		gen_ie = kzalloc(sizeof(struct mwifiex_ie), GFP_KERNEL);
-@@ -341,8 +343,13 @@ int mwifiex_set_mgmt_ies(struct mwifiex_
- 		rsn_ie = (void *)cfg80211_find_ie(WLAN_EID_RSN,
- 						  info->tail, info->tail_len);
- 		if (rsn_ie) {
--			memcpy(gen_ie->ie_buffer, rsn_ie, rsn_ie->len + 2);
--			ie_len = rsn_ie->len + 2;
-+			token_len = rsn_ie->len + 2;
-+			if (ie_len + token_len > IEEE_MAX_IE_SIZE) {
-+				err = -EINVAL;
-+				goto out;
-+			}
-+			memcpy(gen_ie->ie_buffer + ie_len, rsn_ie, token_len);
-+			ie_len += token_len;
- 			gen_ie->ie_length = cpu_to_le16(ie_len);
- 		}
+-	if (kaddr + size > area->addr + area->size)
++	if (kaddr + size > area->addr + get_vm_area_size(area))
+ 		return -EINVAL;
  
-@@ -352,9 +359,15 @@ int mwifiex_set_mgmt_ies(struct mwifiex_
- 						    info->tail_len);
- 		if (vendor_ie) {
- 			wpa_ie = (struct ieee_types_header *)vendor_ie;
--			memcpy(gen_ie->ie_buffer + ie_len,
--			       wpa_ie, wpa_ie->len + 2);
--			ie_len += wpa_ie->len + 2;
-+			token_len = wpa_ie->len + 2;
-+			if (token_len >
-+			    info->tail + info->tail_len - (u8 *)wpa_ie ||
-+			    ie_len + token_len > IEEE_MAX_IE_SIZE) {
-+				err = -EINVAL;
-+				goto out;
-+			}
-+			memcpy(gen_ie->ie_buffer + ie_len, wpa_ie, token_len);
-+			ie_len += token_len;
- 			gen_ie->ie_length = cpu_to_le16(ie_len);
- 		}
- 
-@@ -362,13 +375,16 @@ int mwifiex_set_mgmt_ies(struct mwifiex_
- 			if (mwifiex_update_uap_custom_ie(priv, gen_ie, &rsn_idx,
- 							 NULL, NULL,
- 							 NULL, NULL)) {
--				kfree(gen_ie);
--				return -1;
-+				err = -EINVAL;
-+				goto out;
- 			}
- 			priv->rsn_idx = rsn_idx;
- 		}
- 
-+	out:
- 		kfree(gen_ie);
-+		if (err)
-+			return err;
- 	}
- 
- 	return mwifiex_set_mgmt_beacon_data_ies(priv, info);
+ 	do {
 
