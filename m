@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C584C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C168C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56BD20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE0E20830
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbfGGTpL (ORCPT
+        id S1728544AbfGGTpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:45:11 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57126 "EHLO
+        Sun, 7 Jul 2019 15:45:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57176 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727529AbfGGTiG (ORCPT
+        by vger.kernel.org with ESMTP id S1727429AbfGGTiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:06 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0006g3-9v; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz4-0006gY-TI; Sun, 07 Jul 2019 20:38:03 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz2-0005Zk-Vp; Sun, 07 Jul 2019 20:38:00 +0100
+        id 1hkCz3-0005aN-I0; Sun, 07 Jul 2019 20:38:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Eric Biggers" <ebiggers@google.com>
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        "Colin Ian King" <colin.king@canonical.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.77341541@decadent.org.uk>
+Message-ID: <lsq.1562518457.445556003@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 043/129] crypto: testmgr - skip crc32c context test
- for ahash algorithms
+Subject: [PATCH 3.16 051/129] rtc: 88pm860x: fix unintended sign extension
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,66 +55,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit eb5e6730db98fcc4b51148b4a819fa4bf864ae54 upstream.
+commit dc9e47160626cdb58d5c39a4f43dcfdb27a5c004 upstream.
 
-Instantiating "cryptd(crc32c)" causes a crypto self-test failure because
-the crypto_alloc_shash() in alg_test_crc32c() fails.  This is because
-cryptd(crc32c) is an ahash algorithm, not a shash algorithm; so it can
-only be accessed through the ahash API, unlike shash algorithms which
-can be accessed through both the ahash and shash APIs.
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
 
-As the test is testing the shash descriptor format which is only
-applicable to shash algorithms, skip it for ahash algorithms.
+Fix this by casting the u8 value to an unsigned long before the shift.
 
-(Note that it's still important to fix crypto self-test failures even
- for weird algorithm instantiations like cryptd(crc32c) that no one
- would really use; in fips_enabled mode unprivileged users can use them
- to panic the kernel, and also they prevent treating a crypto self-test
- failure as a bug when fuzzing the kernel.)
+Detected by CoverityScan, CID#144925-144928 ("Unintended sign extension")
 
-Fixes: 8e3ee85e68c5 ("crypto: crc32c - Test descriptor context format")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 008b30408c40 ("mfd: Add rtc support to 88pm860x")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- crypto/testmgr.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/rtc/rtc-88pm860x.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -1655,14 +1655,21 @@ static int alg_test_crc32c(const struct
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -115,11 +115,13 @@ static int pm860x_rtc_read_time(struct d
+ 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
+ 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
+ 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+-	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
++	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
++		(buf[5] << 8) | buf[7];
  
- 	err = alg_test_hash(desc, driver, type, mask);
- 	if (err)
--		goto out;
-+		return err;
+ 	/* load 32-bit read-only counter */
+ 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
+-	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++		(buf[1] << 8) | buf[0];
+ 	ticks = base + data;
+ 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+ 		base, data, ticks);
+@@ -145,7 +147,8 @@ static int pm860x_rtc_set_time(struct de
  
- 	tfm = crypto_alloc_shash(driver, type, mask);
- 	if (IS_ERR(tfm)) {
-+		if (PTR_ERR(tfm) == -ENOENT) {
-+			/*
-+			 * This crc32c implementation is only available through
-+			 * ahash API, not the shash API, so the remaining part
-+			 * of the test is not applicable to it.
-+			 */
-+			return 0;
-+		}
- 		printk(KERN_ERR "alg: crc32c: Failed to load transform for %s: "
- 		       "%ld\n", driver, PTR_ERR(tfm));
--		err = PTR_ERR(tfm);
--		goto out;
-+		return PTR_ERR(tfm);
- 	}
+ 	/* load 32-bit read-only counter */
+ 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
+-	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++		(buf[1] << 8) | buf[0];
+ 	base = ticks - data;
+ 	dev_dbg(info->dev, "set base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+ 		base, data, ticks);
+@@ -170,10 +173,12 @@ static int pm860x_rtc_read_alarm(struct
+ 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
+ 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
+ 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+-	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
++	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
++		(buf[5] << 8) | buf[7];
  
- 	do {
-@@ -1691,7 +1698,6 @@ static int alg_test_crc32c(const struct
+ 	pm860x_bulk_read(info->i2c, PM8607_RTC_EXPIRE1, 4, buf);
+-	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++		(buf[1] << 8) | buf[0];
+ 	ticks = base + data;
+ 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+ 		base, data, ticks);
+@@ -198,11 +203,13 @@ static int pm860x_rtc_set_alarm(struct d
+ 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
+ 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
+ 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+-	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
++	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
++		(buf[5] << 8) | buf[7];
  
- 	crypto_free_shash(tfm);
- 
--out:
- 	return err;
- }
- 
+ 	/* load 32-bit read-only counter */
+ 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
+-	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++		(buf[1] << 8) | buf[0];
+ 	ticks = base + data;
+ 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+ 		base, data, ticks);
 
