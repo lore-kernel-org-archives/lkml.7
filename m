@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FC9C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42556C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C882082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160B420663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbfGGTpX (ORCPT
+        id S1728357AbfGGTpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:45:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57042 "EHLO
+        Sun, 7 Jul 2019 15:45:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57078 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727511AbfGGTiF (ORCPT
+        by vger.kernel.org with ESMTP id S1727516AbfGGTiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:05 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0006fO-La; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz3-0006fL-D8; Sun, 07 Jul 2019 20:38:01 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz1-0005Yz-Rf; Sun, 07 Jul 2019 20:37:59 +0100
+        id 1hkCz1-0005Yv-PN; Sun, 07 Jul 2019 20:37:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Buland Singh" <bsingh@redhat.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms+renesas@verge.net.au>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.292216017@decadent.org.uk>
+Message-ID: <lsq.1562518457.873269503@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 034/129] hpet: Fix missing '=' character in the
- __setup() code of hpet_mmap_enable
+Subject: [PATCH 3.16 033/129] pinctrl: sh-pfc: r8a7778: Fix HSPI pin
+ numbers and names
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,54 +56,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Buland Singh <bsingh@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 24d48a61f2666630da130cc2ec2e526eacf229e3 upstream.
+commit 8e32e881947be98abaa917157fefc4a3319e90af upstream.
 
-Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
-user processes")' introduced a new kernel command line parameter hpet_mmap,
-that is required to expose the memory map of the HPET registers to
-user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
-broken and never takes effect due to missing '=' character in the __setup()
-code of hpet_mmap_enable.
+When declaring the HSPI RX1_B and TX1_B pins, two mistakes were made:
+  - the rows and columns in the BGA pin matrix, from which the pin
+    numbers are derived, were exchanged,
+  - it was not taken into account that pin row labelling skips
+    characters I, O, Q, and S.
 
-Before this patch:
+Fix the order, and the corresponding pin names.
 
-dmesg output with the kernel command line parameter hpet_mmap=1
+Notes:
+  - The actual values of the pin numbers don't really matter (they just
+    have to be unique), so the wrong order didn't have any impact,
+  - Changing the names of the pins is user-visible, but there are no
+    users in (upstream) DTS files.
 
-[    0.204152] HPET mmap disabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204192] HPET mmap disabled
-
-After this patch:
-
-dmesg output with the kernel command line parameter hpet_mmap=1
-
-[    0.203945] HPET mmap enabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204652] HPET mmap disabled
-
-Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
-Signed-off-by: Buland Singh <bsingh@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 4f82e3ee724f1712 ("sh-pfc: Support pins not associated with a GPIO port")
+Fixes: 09cc76a95802e87d ("sh-pfc: r8a7778: add HSPI pin groups")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -377,7 +377,7 @@ static __init int hpet_mmap_enable(char
- 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
- 	return 1;
- }
--__setup("hpet_mmap", hpet_mmap_enable);
-+__setup("hpet_mmap=", hpet_mmap_enable);
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+@@ -1265,8 +1265,8 @@ static const struct sh_pfc_pin pinmux_pi
  
- static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
- {
+ 	/* Pins not associated with a GPIO port */
+ 	SH_PFC_PIN_NAMED(3, 20, C20),
+-	SH_PFC_PIN_NAMED(20, 1, T1),
+-	SH_PFC_PIN_NAMED(25, 2, Y2),
++	SH_PFC_PIN_NAMED(1, 20, A20),
++	SH_PFC_PIN_NAMED(2, 25, B25),
+ };
+ 
+ /* - macro */
+@@ -1401,7 +1401,7 @@ HSPI_PFC_DAT(hspi1_a,	HSPI_CLK1_A,		HSPI
+ 			HSPI_RX1_A,		HSPI_TX1_A);
+ 
+ HSPI_PFC_PIN(hspi1_b,	RCAR_GP_PIN(0, 27),	RCAR_GP_PIN(0, 26),
+-			PIN_NUMBER(20, 1),	PIN_NUMBER(25, 2));
++			PIN_NUMBER(1, 20),	PIN_NUMBER(2, 25));
+ HSPI_PFC_DAT(hspi1_b,	HSPI_CLK1_B,		HSPI_CS1_B,
+ 			HSPI_RX1_B,		HSPI_TX1_B);
+ 
 
