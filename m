@@ -2,107 +2,195 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F28C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE56C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F231A20665
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6394C2070D
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:14:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZocZeRO/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUVurbNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfGGKKN (ORCPT
+        id S1727353AbfGGKO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 06:10:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58753 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfGGKKM (ORCPT
+        Sun, 7 Jul 2019 06:14:57 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34386 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfGGKO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 06:10:12 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x67AA0Wu879360
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 7 Jul 2019 03:10:01 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x67AA0Wu879360
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562494201;
-        bh=h6AxCnF8Cy9JvxbrLLPGcxIHpYIAsA8NGwjX/2T0TCA=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=ZocZeRO/C5/UqyHn+1CMBh4ddZ9hqA1l97JNRwkfeyw/m7mgxJ0CzoP1DuUrL1CUL
-         dQxCAduNUMfmQxZb1OERSxf9fRQQa6fOhEuQN3pzRSD5Ly7qUkmgS7gO9WiJyOD81m
-         ErFEMFfTSvk3bVkGiVQm8wYT5NhBeAIddM9fuxpDSQdWK7M/knc5az2Zxuebiwg9fI
-         J6/zsVm/Jo+fqqPsq4GWYZ8s07QWY/E+vtuPbtrhvtoSzWn2K9prbSKuMt2shaE0qB
-         AkyYskedAr5VrTSeZ60Y1RMYLOsaWWcw1yG7pfnJ3sYz/SB+9+snH2VCloDtWEDJyg
-         E9h5QsOSojJAg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x67AA07K879357;
-        Sun, 7 Jul 2019 03:10:00 -0700
-Date:   Sun, 7 Jul 2019 03:10:00 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for zhengbin <tipbot@zytor.com>
-Message-ID: <tip-9176ab1b848059a0cd9caf39f0cebaa1b7ec5ec2@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, zhengbin13@huawei.com
-Reply-To: mingo@kernel.org, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, hpa@zytor.com,
-          zhengbin13@huawei.com
-In-Reply-To: <1562460701-113301-1-git-send-email-zhengbin13@huawei.com>
-References: <1562460701-113301-1-git-send-email-zhengbin13@huawei.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:timers/core] time: Validate user input in
- compat_settimeofday()
-Git-Commit-ID: 9176ab1b848059a0cd9caf39f0cebaa1b7ec5ec2
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sun, 7 Jul 2019 06:14:56 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p10so6196197pgn.1;
+        Sun, 07 Jul 2019 03:14:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=9b1EGXOx4NeF4JTA7eM5HskbqythmMpkxkl1a4JGzA0=;
+        b=UUVurbNoPqHqrmeUuvp4JhwWnf7tIMiogR4wNFWQy2Yg9s0VDKYMOBYp0alcm7xqmy
+         prWWl/SDvlnKeuMa3qIGX7xJhsnZD5ZGIl+UlAOi160yk/UEHKohpIEmKZ3npBPCrX+O
+         ChPr9CSJ3Wbe89Qg2S2hpHTW7IF1PzJiilIeJaqgAQDCB2LJulNX7jAVvnMa6t/1LiAI
+         iM1IFlpvK+lxOvAKnW1POkq5CLL5gNZGa3UPh59xMtXfATagAZIu0Nlw5nTGCUAoSV4B
+         9hrJ2bI5CAbD7NOn8VQJEvw6TgykLcOf8/OryLjdATYGQCEEPLduB8OwesvLFxmnoFOV
+         3Jjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=9b1EGXOx4NeF4JTA7eM5HskbqythmMpkxkl1a4JGzA0=;
+        b=L95hDnkTKWoiv0u9sl0/FlGqTdpZk8OrGl36bobVikrPvk2xkm4+wIVHW028bFcYSC
+         BU9cgYnDIl9hRLj4vPj5aGO+k0Y5DyKnBss8R4ET/sTE6ywjy1pe7+ZuAIb619Lqow8l
+         BbK0AnNX/E+OSpjUslm1nLXYEG74U6ZKzvshVwITWAhCNio4JdO5AlsYww5lrhvTRBWV
+         ud/wdsXRt0htdkNHlkLnd+zbrAQA+p1pGrLq9gNUUmnnP43vAmk8M1aR1LHBkP5k7MY3
+         4DSXXmyO+ThWFPx2VPPdXKdVeYTqhhqgG++NjpNboP/QuEid0LS73Qvp0WZYfeaDgnPN
+         zGfg==
+X-Gm-Message-State: APjAAAX4udIoO8vsz9bqIO70XY7pMnGyEF3+s7tJ/HoO5BFnHNNSaXYn
+        Fw/Sb5zxxZj4p8fRPGGSouKid/jd
+X-Google-Smtp-Source: APXvYqw7+g7XXTJSX6Asjijq/vU5Vo5FyhGnvQSw6y6Wxkp4QA/7+N00beHz2HuLJBcfPMN/BdiKhw==
+X-Received: by 2002:a17:90a:290b:: with SMTP id g11mr16776527pjd.122.1562494495653;
+        Sun, 07 Jul 2019 03:14:55 -0700 (PDT)
+Received: from localhost ([203.111.179.197])
+        by smtp.gmail.com with ESMTPSA id u137sm14324745pgc.91.2019.07.07.03.14.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 07 Jul 2019 03:14:54 -0700 (PDT)
+Date:   Sun, 07 Jul 2019 20:13:16 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3 1/3] cpuidle-powernv : forced wakeup for stop states
+To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, rjw@rjwysocki.net
+References: <20190704091827.19555-1-huntbag@linux.vnet.ibm.com>
+        <20190704091827.19555-2-huntbag@linux.vnet.ibm.com>
+In-Reply-To: <20190704091827.19555-2-huntbag@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1562493994.wseoth6w1s.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9176ab1b848059a0cd9caf39f0cebaa1b7ec5ec2
-Gitweb:     https://git.kernel.org/tip/9176ab1b848059a0cd9caf39f0cebaa1b7ec5ec2
-Author:     zhengbin <zhengbin13@huawei.com>
-AuthorDate: Sun, 7 Jul 2019 08:51:41 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Sun, 7 Jul 2019 12:05:40 +0200
+Abhishek Goel's on July 4, 2019 7:18 pm:
+> Currently, the cpuidle governors determine what idle state a idling CPU
+> should enter into based on heuristics that depend on the idle history on
+> that CPU. Given that no predictive heuristic is perfect, there are cases
+> where the governor predicts a shallow idle state, hoping that the CPU wil=
+l
+> be busy soon. However, if no new workload is scheduled on that CPU in the
+> near future, the CPU may end up in the shallow state.
+>=20
+> This is problematic, when the predicted state in the aforementioned
+> scenario is a shallow stop state on a tickless system. As we might get
+> stuck into shallow states for hours, in absence of ticks or interrupts.
+>=20
+> To address this, We forcefully wakeup the cpu by setting the
+> decrementer. The decrementer is set to a value that corresponds with the
+> residency of the next available state. Thus firing up a timer that will
+> forcefully wakeup the cpu. Few such iterations will essentially train the
+> governor to select a deeper state for that cpu, as the timer here
+> corresponds to the next available cpuidle state residency. Thus, cpu will
+> eventually end up in the deepest possible state.
+>=20
+> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+> ---
+>=20
+> Auto-promotion
+>  v1 : started as auto promotion logic for cpuidle states in generic
+> driver
+>  v2 : Removed timeout_needed and rebased the code to upstream kernel
+> Forced-wakeup
+>  v1 : New patch with name of forced wakeup started
+>  v2 : Extending the forced wakeup logic for all states. Setting the
+> decrementer instead of queuing up a hrtimer to implement the logic.
+>  v3 : Cleanly handle setting/resetting of decrementer so as to not break
+> irq work=20
+>=20
+>  arch/powerpc/include/asm/time.h   |  2 ++
+>  arch/powerpc/kernel/time.c        | 40 +++++++++++++++++++++++++++++++
+>  drivers/cpuidle/cpuidle-powernv.c | 32 +++++++++++++++++++++++++
+>  3 files changed, 74 insertions(+)
+>=20
+> diff --git a/arch/powerpc/include/asm/time.h b/arch/powerpc/include/asm/t=
+ime.h
+> index 54f4ec1f9..a3bd4f3c0 100644
+> --- a/arch/powerpc/include/asm/time.h
+> +++ b/arch/powerpc/include/asm/time.h
+> @@ -188,6 +188,8 @@ static inline unsigned long tb_ticks_since(unsigned l=
+ong tstamp)
+>  extern u64 mulhdu(u64, u64);
+>  #endif
+> =20
+> +extern int set_dec_before_idle(u64 timeout);
+> +extern void reset_dec_after_idle(void);
+>  extern void div128_by_32(u64 dividend_high, u64 dividend_low,
+>  			 unsigned divisor, struct div_result *dr);
+> =20
+> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+> index 694522308..814de3469 100644
+> --- a/arch/powerpc/kernel/time.c
+> +++ b/arch/powerpc/kernel/time.c
+> @@ -576,6 +576,46 @@ void arch_irq_work_raise(void)
+> =20
+>  #endif /* CONFIG_IRQ_WORK */
+> =20
+> +/*
+> + * Returns 1 if we have reprogrammed the decrementer for idle.
+> + * Returns 0 if the decrementer is unchanged.
+> + */
+> +int set_dec_before_idle(u64 timeout)
+> +{
+> +	u64 *next_tb =3D this_cpu_ptr(&decrementers_next_tb);
+> +	u64 now =3D get_tb_or_rtc();
+> +
+> +	/*
+> +	 * Ensure that the timeout is at least one microsecond
+> +	 * before the current decrement value. Else, we will
+> +	 * unnecesarily wakeup again within a microsecond.
+> +	 */
+> +	if (now + timeout + 512 > *next_tb)
 
-time: Validate user input in compat_settimeofday()
+I would pass this 512 in as a parameter and put the comment in the
+idle code. Timer code does not know/care.
 
-The user value is validated after converting the timeval to a timespec, but
-for a wide range of negative tv_usec values the multiplication overflow turns
-them in positive numbers. So the 'validated later' is not catching the
-invalid input.
+Maybe return bool and call it try_set_dec_before_idle.
 
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1562460701-113301-1-git-send-email-zhengbin13@huawei.com
+> +		return 0;
+> +
+> +	set_dec(timeout);
 
----
- kernel/time/time.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This needs to have
 
-diff --git a/kernel/time/time.c b/kernel/time/time.c
-index 7f7d6914ddd5..5c54ca632d08 100644
---- a/kernel/time/time.c
-+++ b/kernel/time/time.c
-@@ -251,6 +251,10 @@ COMPAT_SYSCALL_DEFINE2(settimeofday, struct old_timeval32 __user *, tv,
- 	if (tv) {
- 		if (compat_get_timeval(&user_tv, tv))
- 			return -EFAULT;
-+
-+		if (!timeval_valid(&user_tv))
-+			return -EINVAL;
-+
- 		new_ts.tv_sec = user_tv.tv_sec;
- 		new_ts.tv_nsec = user_tv.tv_usec * NSEC_PER_USEC;
- 	}
+  if (test_irq_work_pending())
+      set_dec(1);
+
+here AFAIKS
+
+> +
+> +	return 1;
+> +}
+> +
+> +void reset_dec_after_idle(void)
+> +{
+> +	u64 now;
+> +	u64 *next_tb;
+> +
+> +	if (test_irq_work_pending())
+> +		return;
+> +
+> +	now =3D get_tb_or_rtc();
+> +	next_tb =3D this_cpu_ptr(&decrementers_next_tb);
+> +	if (now >=3D *next_tb)
+> +		return;
+
+Are you sure it's okay to escape early in this case?
+
+Thanks,
+Nick
+=
