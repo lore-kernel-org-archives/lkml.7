@@ -2,32 +2,32 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08332C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E98DC48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CC920659
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8015620659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfGGTjH (ORCPT
+        id S1727938AbfGGTjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:39:07 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57608 "EHLO
+        Sun, 7 Jul 2019 15:39:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57648 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727611AbfGGTiM (ORCPT
+        by vger.kernel.org with ESMTP id S1727617AbfGGTiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:12 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz9-0006kW-F0; Sun, 07 Jul 2019 20:38:07 +0100
+        id 1hkCz9-0006kK-DQ; Sun, 07 Jul 2019 20:38:07 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz7-0005eH-Gs; Sun, 07 Jul 2019 20:38:05 +0100
+        id 1hkCz6-0005di-SH; Sun, 07 Jul 2019 20:38:04 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "NeilBrown" <neilb@suse.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
+        "Frederic Weisbecker" <fweisbec@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Mathias Krause" <minipli@googlemail.com>,
+        "Michael Sartain" <mikesart@fastmail.com>,
+        "Tony Jones" <tonyj@suse.de>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.225073674@decadent.org.uk>
+Message-ID: <lsq.1562518457.890209196@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 099/129] nfsd: fix memory corruption caused by readdir
+Subject: [PATCH 3.16 092/129] tools lib traceevent: Fix buffer overflow in
+ arg_eval
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,95 +60,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: NeilBrown <neilb@suse.com>
+From: Tony Jones <tonyj@suse.de>
 
-commit b602345da6cbb135ba68cf042df8ec9a73da7981 upstream.
+commit 7c5b019e3a638a5a290b0ec020f6ca83d2ec2aaa upstream.
 
-If the result of an NFSv3 readdir{,plus} request results in the
-"offset" on one entry having to be split across 2 pages, and is sized
-so that the next directory entry doesn't fit in the requested size,
-then memory corruption can happen.
+Fix buffer overflow observed when running perf test.
 
-When encode_entry() is called after encoding the last entry that fits,
-it notices that ->offset and ->offset1 are set, and so stores the
-offset value in the two pages as required.  It clears ->offset1 but
-*does not* clear ->offset.
+The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
+resulting in -9223372036854775808 which overflows the 20 character
+buffer.
 
-Normally this omission doesn't matter as encode_entry_baggage() will
-be called, and will set ->offset to a suitable value (not on a page
-boundary).
-But in the case where cd->buflen < elen and nfserr_toosmall is
-returned, ->offset is not reset.
+If is possible this bug has been reported before but I still don't see
+any fix checked in:
 
-This means that nfsd3proc_readdirplus will see ->offset with a value 4
-bytes before the end of a page, and ->offset1 set to NULL.
-It will try to write 8bytes to ->offset.
-If we are lucky, the next page will be read-only, and the system will
-  BUG: unable to handle kernel paging request at...
+See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
 
-If we are unlucky, some innocent page will have the first 4 bytes
-corrupted.
-
-nfsd3proc_readdir() doesn't even check for ->offset1, it just blindly
-writes 8 bytes to the offset wherever it is.
-
-Fix this by clearing ->offset after it is used, and copying the
-->offset handling code from nfsd3_proc_readdirplus into
-nfsd3_proc_readdir.
-
-(Note that the commit hash in the Fixes tag is from the 'history'
- tree - this bug predates git).
-
-Fixes: 0b1d57cf7654 ("[PATCH] kNFSd: Fix nfs3 dentry encoding")
-Fixes-URL: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=0b1d57cf7654
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Reported-by: Michael Sartain <mikesart@fastmail.com>
+Reported-by: Mathias Krause <minipli@googlemail.com>
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/nfsd/nfs3proc.c | 16 ++++++++++++++--
- fs/nfsd/nfs3xdr.c  |  1 +
- 2 files changed, 15 insertions(+), 2 deletions(-)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -440,8 +440,19 @@ nfsd3_proc_readdir(struct svc_rqst *rqst
- 					&resp->common, nfs3svc_encode_entry);
- 	memcpy(resp->verf, argp->verf, 8);
- 	resp->count = resp->buffer - argp->buffer;
--	if (resp->offset)
--		xdr_encode_hyper(resp->offset, argp->cookie);
-+	if (resp->offset) {
-+		loff_t offset = argp->cookie;
-+
-+		if (unlikely(resp->offset1)) {
-+			/* we ended up with offset on a page boundary */
-+			*resp->offset = htonl(offset >> 32);
-+			*resp->offset1 = htonl(offset & 0xffffffff);
-+			resp->offset1 = NULL;
-+		} else {
-+			xdr_encode_hyper(resp->offset, offset);
-+		}
-+		resp->offset = NULL;
-+	}
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2283,7 +2283,7 @@ static int arg_num_eval(struct print_arg
+ static char *arg_eval (struct print_arg *arg)
+ {
+ 	long long val;
+-	static char buf[20];
++	static char buf[24];
  
- 	RETURN_STATUS(nfserr);
- }
-@@ -501,6 +512,7 @@ nfsd3_proc_readdirplus(struct svc_rqst *
- 		} else {
- 			xdr_encode_hyper(resp->offset, offset);
- 		}
-+		resp->offset = NULL;
- 	}
- 
- 	RETURN_STATUS(nfserr);
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -909,6 +909,7 @@ encode_entry(struct readdir_cd *ccd, con
- 		} else {
- 			xdr_encode_hyper(cd->offset, offset64);
- 		}
-+		cd->offset = NULL;
- 	}
- 
- 	/*
+ 	switch (arg->type) {
+ 	case PRINT_ATOM:
 
