@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE665C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D684C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E7B20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03BEC20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfGGTiG (ORCPT
+        id S1728562AbfGGTpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:06 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56764 "EHLO
+        Sun, 7 Jul 2019 15:45:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57166 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726105AbfGGTiA (ORCPT
+        by vger.kernel.org with ESMTP id S1727531AbfGGTiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:00 -0400
+        Sun, 7 Jul 2019 15:38:06 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz0-0006cz-JW; Sun, 07 Jul 2019 20:37:58 +0100
+        id 1hkCz4-0006gF-9w; Sun, 07 Jul 2019 20:38:02 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCyz-0005Wq-I3; Sun, 07 Jul 2019 20:37:57 +0100
+        id 1hkCz3-0005Zp-1P; Sun, 07 Jul 2019 20:38:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Yangtao Li" <tiny.windzz@gmail.com>,
-        "Stephen Boyd" <sboyd@kernel.org>
+        "Eric Biggers" <ebiggers@kernel.org>,
+        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.296300115@decadent.org.uk>
+Message-ID: <lsq.1562518457.499548159@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 007/129] clk: imx6q: fix refcount leak in
- imx6q_clocks_init()
+Subject: [PATCH 3.16 044/129] crypto: arm64/aes-ccm - fix logical bug in
+ AAD MAC handling
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,31 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit c9ec1d8fef31b5fc9e90e99f9bd685db5caa7c5e upstream.
+commit eaf46edf6ea89675bd36245369c8de5063a0272c upstream.
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+The NEON MAC calculation routine fails to handle the case correctly
+where there is some data in the buffer, and the input fills it up
+exactly. In this case, we enter the loop at the end with w8 == 0,
+while a negative value is assumed, and so the loop carries on until
+the increment of the 32-bit counter wraps around, which is quite
+obviously wrong.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 2acd1b6f889c ("ARM: i.MX6: implement clocks using common clock framework")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-[bwh: Backported to 3.16: adjust filename]
+So omit the loop altogether in this case, and exit right away.
+
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: a3fd82105b9d1 ("arm64/crypto: AES in CCM mode using ARMv8 Crypto ...")
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/mach-imx/clk-imx6q.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/crypto/aes-ce-ccm-core.S | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/arm/mach-imx/clk-imx6q.c
-+++ b/arch/arm/mach-imx/clk-imx6q.c
-@@ -157,6 +157,7 @@ static void __init imx6q_clocks_init(str
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6q-anatop");
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
-+	of_node_put(np);
- 
- 	/* Audio/video PLL post dividers do not work on i.MX6q revision 1.0 */
- 	if (cpu_is_imx6q() && imx_get_soc_revision() == IMX_CHIP_REVISION_1_0) {
+--- a/arch/arm64/crypto/aes-ce-ccm-core.S
++++ b/arch/arm64/crypto/aes-ce-ccm-core.S
+@@ -74,12 +74,13 @@ ENTRY(ce_aes_ccm_auth_data)
+ 	beq	10f
+ 	ext	v0.16b, v0.16b, v0.16b, #1	/* rotate out the mac bytes */
+ 	b	7b
+-8:	mov	w7, w8
++8:	cbz	w8, 91f
++	mov	w7, w8
+ 	add	w8, w8, #16
+ 9:	ext	v1.16b, v1.16b, v1.16b, #1
+ 	adds	w7, w7, #1
+ 	bne	9b
+-	eor	v0.16b, v0.16b, v1.16b
++91:	eor	v0.16b, v0.16b, v1.16b
+ 	st1	{v0.16b}, [x0]
+ 10:	str	w8, [x3]
+ 	ret
 
