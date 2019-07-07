@@ -2,111 +2,68 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E898C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D278C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F91206A2
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:16:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LgzZ2myH"
+	by mail.kernel.org (Postfix) with ESMTP id 7219C206A2
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 21:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfGGVQv (ORCPT
+        id S1727706AbfGGVRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 17:16:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60978 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727635AbfGGVQv (ORCPT
+        Sun, 7 Jul 2019 17:17:00 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:42644 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727595AbfGGVQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 17:16:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yBJq5Ze/fLFnGGY0OtJXfuo/anPBio5I7UZyN74kJ+w=; b=LgzZ2myH3634MDhRCVqM32lba
-        y4QSZywjbABEU7/ebwgwbqwqbFGsjuJS2GJGjG2Ok3fe2Iy4Up/ScbB6tX6hUJcuWYZt/pQQWJQkm
-        NF5ypvBiqMh0w7BMjsHhe+P24LxHlUJro+VFPkP1kSo0GLcZ3nB/Bu8tqr8eqlCbhLoKfvIcU/xMQ
-        fFqqLtl1NaieMQP3U95tGv9iI4sSMjV+rmSy45RjUeYQFthXaP7Qc7DUJ1e9CLIonRfrV/PpUmY3t
-        IeSuAH3x+T+Bae4iT83ZLG3T2vNB3dYwqEGWL2vz2uCYSQvaYehUzwlb1oiGQtkelKvRT0P2PKmul
-        jzARukAxg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:59266)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hkEWb-0007lG-I8; Sun, 07 Jul 2019 22:16:45 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hkEWU-0001Oh-Nd; Sun, 07 Jul 2019 22:16:38 +0100
-Date:   Sun, 7 Jul 2019 22:16:38 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-rtc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rtc: stm32: One function call less in
- stm32_rtc_set_alarm()
-Message-ID: <20190707211638.sehikkear25dffah@shell.armlinux.org.uk>
-References: <f04277da-8a98-473e-2566-ac7846f9f8e1@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f04277da-8a98-473e-2566-ac7846f9f8e1@web.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sun, 7 Jul 2019 17:16:59 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 91D1215280193;
+        Sun,  7 Jul 2019 14:16:58 -0700 (PDT)
+Date:   Sun, 07 Jul 2019 14:16:58 -0700 (PDT)
+Message-Id: <20190707.141658.287409083361510441.davem@davemloft.net>
+To:     paweldembicki@gmail.com
+Cc:     linus.walleij@linaro.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] net: dsa: Add Vitesse VSC73xx parallel mode
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190704222907.2888-1-paweldembicki@gmail.com>
+References: <20190704222907.2888-1-paweldembicki@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 07 Jul 2019 14:16:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 10:17:11PM +0200, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 5 Jul 2019 22:10:10 +0200
+From: Pawel Dembicki <paweldembicki@gmail.com>
+Date: Fri,  5 Jul 2019 00:29:03 +0200
+
+> Main goal of this patch series is to add support for CPU attached parallel
+> bus in Vitesse VSC73xx switches. Existing driver supports only SPI mode.
 > 
-> Avoid an extra function call by using a ternary operator instead of
-> a conditional statement.
-
-... and a totally pointless use of the ternary operator.
-
-> @@ -519,11 +519,7 @@ static int stm32_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
->  	/* Write to Alarm register */
->  	writel_relaxed(alrmar, rtc->base + regs->alrmar);
+> Second change is needed for devices in unmanaged state.
 > 
-> -	if (alrm->enabled)
-> -		stm32_rtc_alarm_irq_enable(dev, 1);
-> -	else
-> -		stm32_rtc_alarm_irq_enable(dev, 0);
-> -
-> +	stm32_rtc_alarm_irq_enable(dev, alrm->enabled ? 1 : 0);
+> V3:
+> - fix commit messages and descriptions about memory-mapped I/O mode
+> 
+> V2:
+> - drop changes in compatible strings
+> - make changes less invasive
+> - drop mutex in platform part and move mutex from core to spi part
+> - fix indentation 
+> - fix devm_ioremap_resource result check
+> - add cover letter 
 
-If we look at stm32_rtc_alarm_irq_enable():
-
-static int stm32_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-{
-...
-	if (enabled)
-		do A;
-	else
-		do B;
-...
-}
-
-alrm->enabled is an unsigned char.  So, the above can be simplified to:
-
-	stm32_rtc_alarm_irq_enable(dev, alrm->enabled);
-
-without any need what so ever to use the ternary operator.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Series applied to net-next, thank you.
