@@ -2,181 +2,119 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FC2C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4A1C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 11:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CCE20663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6544208E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 11:58:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GFC9qHny"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGGKnR (ORCPT
+        id S1726776AbfGGL6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 06:43:17 -0400
-Received: from 195-159-176-226.customer.powertech.no ([195.159.176.226]:60638
-        "EHLO blaine.gmane.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfGGKnR (ORCPT
+        Sun, 7 Jul 2019 07:58:21 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:4688 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfGGL6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 06:43:17 -0400
-Received: from list by blaine.gmane.org with local (Exim 4.89)
-        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
-        id 1hk4dX-000tXw-9b
-        for linux-kernel@vger.kernel.org; Sun, 07 Jul 2019 12:43:15 +0200
-X-Injected-Via-Gmane: http://gmane.org/
-To:     linux-kernel@vger.kernel.org
-From:   "Andrey Jr. Melnikov" <temnota.am@gmail.com>
-Subject: Re: [PATCH 1/1] scsi: aacraid: resurrect correct arc ctrl checks for Series-6
-Date:   Sun, 7 Jul 2019 13:09:39 +0300
-Message-ID: <10t8vf-fq.ln1@banana.localnet>
-References: <20190627161408.10295-1-khorenko@virtuozzo.com> <20190627161408.10295-2-khorenko@virtuozzo.com>
-User-Agent: tin/2.2.1-20140504 ("Tober an Righ") (UNIX) (Linux/4.3.3-bananian (armv7l))
-Cc:     linux-scsi@vger.kernel.org
+        Sun, 7 Jul 2019 07:58:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1562500698; x=1594036698;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=AzRAD81nU2MwlCqn0AU1evNVTd1zGcE1O6MmxMHhUbc=;
+  b=GFC9qHnyD7oytVt8NNIq0OZ9KzASQKyzbCEPBow8lcxylNWJIZRR3+Lg
+   ydYRouHrvTGm6Lbw9CMjyJGhB0y/SmepzuPpEti5Gl+ddNO1vMfp27bB3
+   q8ecW/Bv7QOpOJP2mghfnk4pDZ9VH5kyjyjfJSbIkSEaCGb/JKFqyWQSY
+   c=;
+X-IronPort-AV: E=Sophos;i="5.62,462,1554768000"; 
+   d="scan'208";a="773526810"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 07 Jul 2019 11:58:15 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id D2DE8A230C;
+        Sun,  7 Jul 2019 11:58:15 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 7 Jul 2019 11:58:15 +0000
+Received: from ub6d44c9ce3e25c.ant.amazon.com (10.43.161.16) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Sun, 7 Jul 2019 11:58:06 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <Jonathan.Cameron@huawei.com>, <nicolas.ferre@microchip.com>,
+        <paulmck@linux.ibm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <hhhawa@amazon.com>
+Subject: [PATCH v2 0/4] Add support for Amazon's Annapurna Labs EDAC for L1/L2
+Date:   Sun, 7 Jul 2019 14:57:34 +0300
+Message-ID: <1562500658-14717-1-git-send-email-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.16]
+X-ClientProxiedBy: EX13D12UWC004.ant.amazon.com (10.43.162.182) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In gmane.linux.scsi Konstantin Khorenko <khorenko@virtuozzo.com> wrote:
-> This partially reverts ms commit
-> 395e5df79a95 ("scsi: aacraid: Remove reference to Series-9")
+This series adds L1 and L2 caches support for error detection and
+correction for Amazon's Annapurna Labs SoCs.
+Alpine SoCs support L1 and L2 single bit correction and two bits detection
+capability based on ARM implementation.
 
-> The patch above not only drops Series-9 cards checks but also
-> changes logic for Series-6 controllers which leads to controller
-> hangs/resets under high io load.
+Changes since v1:
+-----------------
+- Split into two drivers
+- Get cpu-mask according to l2-cache handler from devicetree
+- Remove parameter casting
+- Use GENMASK() in bit mask
+- Use FIELD_GET()
+- Update define description PLRU_RAM -> PF_RAM
+- Use sys_reg() and read_sysreg_s()
+- Remove all write/read wrappers
+- Check fatal field to set if the error correctable or not
+- Remove un-relevant information from error prints.
+- Update smp_call_function_single() call function to wait
+- remove usage of get_online_cpus/put_online_cpus
+- Use on_each_cpu() and smp_call_function_any() instead of loop with for_each_cpu.
+- use buffer for error prints and pass to edac API
+- Remove edac_op_state set
+- Add for loop to report on repeated errors of the same type
+- Fix error name of the TLB to be L2_TLB as written in ARM TRM
+- Minor change in Kconfig
+- Minor changes in commit message
 
-> So revert to original arc ctrl checks for Series-6 controllers.
+Hanna Hawa (4):
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
+  edac: Add support for Amazon's Annapurna Labs L1 EDAC
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L2 EDAC
+  edac: Add support for Amazon's Annapurna Labs L2 EDAC
 
-> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1777586
-> https://bugzilla.redhat.com/show_bug.cgi?id=1724077
-> https://jira.sw.ru/browse/PSBM-95736
+ .../devicetree/bindings/edac/amazon,al-l1-edac.txt |  14 ++
+ .../devicetree/bindings/edac/amazon,al-l2-edac.txt |  20 +++
+ MAINTAINERS                                        |  12 ++
+ drivers/edac/Kconfig                               |  16 ++
+ drivers/edac/Makefile                              |   2 +
+ drivers/edac/al_l1_edac.c                          | 154 +++++++++++++++++
+ drivers/edac/al_l2_edac.c                          | 185 +++++++++++++++++++++
+ 7 files changed, 403 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
+ create mode 100644 drivers/edac/al_l1_edac.c
+ create mode 100644 drivers/edac/al_l2_edac.c
 
-> Fixes: 395e5df79a95 ("scsi: aacraid: Remove reference to Series-9")
-> Cc: stable@vger.kernel.org
-
-> Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
-> ---
->  drivers/scsi/aacraid/aacraid.h  | 11 -----------
->  drivers/scsi/aacraid/comminit.c | 14 ++++++++++----
->  drivers/scsi/aacraid/commsup.c  |  4 +++-
->  drivers/scsi/aacraid/linit.c    |  7 +++++--
->  4 files changed, 18 insertions(+), 18 deletions(-)
-
-> diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
-> index 3fa03230f6ba..b674fb645523 100644
-> --- a/drivers/scsi/aacraid/aacraid.h
-> +++ b/drivers/scsi/aacraid/aacraid.h
-> @@ -2729,17 +2729,6 @@ int _aac_rx_init(struct aac_dev *dev);
->  int aac_rx_select_comm(struct aac_dev *dev, int comm);
->  int aac_rx_deliver_producer(struct fib * fib);
->  
-> -static inline int aac_is_src(struct aac_dev *dev)
-> -{
-> -       u16 device = dev->pdev->device;
-> -
-> -       if (device == PMC_DEVICE_S6 ||
-> -               device == PMC_DEVICE_S7 ||
-> -               device == PMC_DEVICE_S8)
-> -               return 1;
-> -       return 0;
-> -}
-> -
-
-Why remove helper?
-
->  static inline int aac_supports_2T(struct aac_dev *dev)
->  {
->         return (dev->adapter_info.options & AAC_OPT_NEW_COMM_64);
-> diff --git a/drivers/scsi/aacraid/comminit.c b/drivers/scsi/aacraid/comminit.c
-> index d4fcfa1e54e0..b8046b6c1239 100644
-> --- a/drivers/scsi/aacraid/comminit.c
-> +++ b/drivers/scsi/aacraid/comminit.c
-> @@ -41,7 +41,9 @@ static inline int aac_is_msix_mode(struct aac_dev *dev)
->  {
->         u32 status = 0;
->  
-> -       if (aac_is_src(dev))
-> +       if (dev->pdev->device == PMC_DEVICE_S6 ||
-> +           dev->pdev->device == PMC_DEVICE_S7 ||
-> +           dev->pdev->device == PMC_DEVICE_S8)
->                 status = src_readl(dev, MUnit.OMR);
->         return (status & AAC_INT_MODE_MSIX);
->  }
-> @@ -349,7 +351,8 @@ int aac_send_shutdown(struct aac_dev * dev)
->         /* FIB should be freed only after getting the response from the F/W */
->         if (status != -ERESTARTSYS)
->                 aac_fib_free(fibctx);
-Fix this
-> -       if (aac_is_src(dev) &&
-> +       if ((dev->pdev->device == PMC_DEVICE_S7 ||
-> +            dev->pdev->device == PMC_DEVICE_S8) &&
->              dev->msi_enabled)
->                 aac_set_intx_mode(dev);
->         return status;
-> @@ -605,7 +608,8 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
->                 dev->max_fib_size = status[1] & 0xFFE0;
->                 host->sg_tablesize = status[2] >> 16;
->                 dev->sg_tablesize = status[2] & 0xFFFF;
-this one
-> -               if (aac_is_src(dev)) {
-> +               if (dev->pdev->device == PMC_DEVICE_S7 ||
-> +                   dev->pdev->device == PMC_DEVICE_S8) {
->                         if (host->can_queue > (status[3] >> 16) -
->                                         AAC_NUM_MGT_FIB)
->                                 host->can_queue = (status[3] >> 16) -
-> @@ -624,7 +628,9 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
->                         pr_warn("numacb=%d ignored\n", numacb);
->         }
->  
-> -       if (aac_is_src(dev))
-> +       if (dev->pdev->device == PMC_DEVICE_S6 ||
-> +           dev->pdev->device == PMC_DEVICE_S7 ||
-> +           dev->pdev->device == PMC_DEVICE_S8)
->                 aac_define_int_mode(dev);
->         /*
->          *      Ok now init the communication subsystem
-> diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-> index 2142a649e865..705e003caa95 100644
-> --- a/drivers/scsi/aacraid/commsup.c
-> +++ b/drivers/scsi/aacraid/commsup.c
-> @@ -2574,7 +2574,9 @@ void aac_free_irq(struct aac_dev *dev)
->  {
->         int i;
->  
-> -       if (aac_is_src(dev)) {
-> +       if (dev->pdev->device == PMC_DEVICE_S6 ||
-> +           dev->pdev->device == PMC_DEVICE_S7 ||
-> +           dev->pdev->device == PMC_DEVICE_S8) {
->                 if (dev->max_msix > 1) {
->                         for (i = 0; i < dev->max_msix; i++)
->                                 free_irq(pci_irq_vector(dev->pdev, i),
-> diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
-> index 644f7f5c61a2..3b7968b17169 100644
-> --- a/drivers/scsi/aacraid/linit.c
-> +++ b/drivers/scsi/aacraid/linit.c
-> @@ -1560,7 +1560,9 @@ static void __aac_shutdown(struct aac_dev * aac)
->  
->         aac_adapter_disable_int(aac);
->  
-> -       if (aac_is_src(aac)) {
-> +       if (aac->pdev->device == PMC_DEVICE_S6 ||
-> +           aac->pdev->device == PMC_DEVICE_S7 ||
-> +           aac->pdev->device == PMC_DEVICE_S8) {
->                 if (aac->max_msix > 1) {
->                         for (i = 0; i < aac->max_msix; i++) {
->                                 free_irq(pci_irq_vector(aac->pdev, i),
-> @@ -1835,7 +1837,8 @@ static int aac_acquire_resources(struct aac_dev *dev)
->         aac_adapter_enable_int(dev);
->  
->  
-and this.
-> -       if (aac_is_src(dev))
-> +       if (dev->pdev->device == PMC_DEVICE_S7 ||
-> +           dev->pdev->device == PMC_DEVICE_S8)
->                 aac_define_int_mode(dev);
->  
->         if (dev->msi_enabled)
-
+-- 
+2.7.4
 
