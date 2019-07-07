@@ -2,158 +2,170 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B331C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 06:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA521C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 06:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278242083B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 06:45:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="HyU6xCWl"
+	by mail.kernel.org (Postfix) with ESMTP id 7823620838
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 06:57:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562482638;
+	bh=r7wS1s26gDorZ2zRP3iWvFHmMQZjxQ6zYwb+uHakmY8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cdl6WpNuqmIZ/xPDnkcO8bFzNh9mb9IZBgwROQixVueUunS8mZoHHfgGyNoF26NKJ
+	 JGf3t7RlabrjK3dHDKpUkPb/Uljz6Pwm5bxlnvuQe01AQheNVzNr7CTSnVGIZSVlui
+	 UTKCMS5G7N6bmF2KTbAgWGmng5hqWfSb6Ky8X7B4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfGGGpz (ORCPT
+        id S1726705AbfGGG5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 02:45:55 -0400
-Received: from mail-eopbgr40076.outbound.protection.outlook.com ([40.107.4.76]:54757
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726133AbfGGGpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 02:45:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W90KICyB3rwD4ZsKpdefCAtWljpF/ewH+MPOnFtNB+k=;
- b=HyU6xCWl97qf6ngBvXZOkBY1A+QfR0mpOHJBqgDpO8w4JMjFEjPhvwS/kJCT9+/3BX0wRndiA0t9aY39gMGc7QdGU/wOlmzyoGk1hFdqdj1a3vcH1KDUld8MP/SwTinmBeg8vLJdwPPY8FyeKdwHVZsc8b6I7c+uEVvtQ0qvwGk=
-Received: from DBBPR05MB6283.eurprd05.prod.outlook.com (20.179.40.84) by
- DBBPR05MB6490.eurprd05.prod.outlook.com (20.179.43.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Sun, 7 Jul 2019 06:45:48 +0000
-Received: from DBBPR05MB6283.eurprd05.prod.outlook.com
- ([fe80::2833:939d:2b5c:4a2d]) by DBBPR05MB6283.eurprd05.prod.outlook.com
- ([fe80::2833:939d:2b5c:4a2d%6]) with mapi id 15.20.2052.019; Sun, 7 Jul 2019
- 06:45:48 +0000
-From:   Tariq Toukan <tariqt@mellanox.com>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 15/27] net: use zeroing allocator rather than allocator
- followed by memset zero
-Thread-Topic: [PATCH v3 15/27] net: use zeroing allocator rather than
- allocator followed by memset zero
-Thread-Index: AQHVMKwDHcmxh450fEGB9jiwsXIZ3Ka+vdyA
-Date:   Sun, 7 Jul 2019 06:45:47 +0000
-Message-ID: <35de71f0-5307-d831-8d1c-f7948523b97d@mellanox.com>
-References: <20190702075842.24212-1-huangfq.daxian@gmail.com>
-In-Reply-To: <20190702075842.24212-1-huangfq.daxian@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0217.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1e::13) To DBBPR05MB6283.eurprd05.prod.outlook.com
- (2603:10a6:10:c1::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tariqt@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 87b241f7-1f4c-42af-36e0-08d702a6be5a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DBBPR05MB6490;
-x-ms-traffictypediagnostic: DBBPR05MB6490:
-x-microsoft-antispam-prvs: <DBBPR05MB6490DAFCDF798977802B7002AEF70@DBBPR05MB6490.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:76;
-x-forefront-prvs: 0091C8F1EB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(136003)(346002)(366004)(376002)(189003)(199004)(4326008)(229853002)(2906002)(5660300002)(25786009)(64756008)(66476007)(14454004)(66446008)(66556008)(256004)(73956011)(6916009)(476003)(486006)(446003)(11346002)(66946007)(2616005)(316002)(68736007)(14444005)(3846002)(6116002)(8936002)(66066001)(36756003)(478600001)(99286004)(31686004)(6436002)(6246003)(86362001)(52116002)(76176011)(305945005)(6486002)(31696002)(71190400001)(71200400001)(6512007)(186003)(26005)(8676002)(53546011)(6506007)(386003)(7736002)(53936002)(81156014)(102836004)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR05MB6490;H:DBBPR05MB6283.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: T8HmgeMRbs6NEFPs2v8K0LjCjjopRvh863yaMNUlXTpuaPfO/EZGfm9qHrHklwlr2XMzqUSQqJ/Egq6M+6no46vZUeuRtWR2YkF/FQXSTU2IY7UWfH+AH7UUXwY+AnqoTexxUsoZEUA07Czrx8IkSL1EyqDKGtjNNNZ8ZE0CYW2Sfllns+1da1aVDrE3LdPPnbqCm2/TufEToN6/Z9IBO17sBx1IB9JtBkP7v/5lA8xNH8d5OdHQMnBvefAqOPrc4JFpgqGHR38nbkFjO7c714EOK261b0YWSfXf7EZg0tn8el8R9TmP8NmSSw5cwi5Qea5N0h7CUyPSrvHrMGo2BHCN0lHJu9F/tbIFqBVXM6RPv2eJ9BogOI7FwBXV2KznEh0LdOrB4zoXfwiYxhwT8l95pk2nUq3kLy+C/dhWtnU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <12EB7193AB211D468D76CF23CB936D26@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sun, 7 Jul 2019 02:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfGGG5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 02:57:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDEAB20838;
+        Sun,  7 Jul 2019 06:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562482635;
+        bh=r7wS1s26gDorZ2zRP3iWvFHmMQZjxQ6zYwb+uHakmY8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z1XIFKciUQdMJslAi+gRfdgvWSZ1OPRS6LAPzzXvVCtaYqm0kdhUjA9BUlYeHbto4
+         Y0lm+fu6X6K/Nw2DbT/ERc/bFYZHRpdPT3IOl8M+nHTBx74bfqiP7W+7O5w0cbBRtP
+         1CFClDc/gn6edwbXon8KJNsp0BXw2MLFZ1ecyZLQ=
+Date:   Sun, 7 Jul 2019 08:57:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Okash Khawaja <okash.khawaja@gmail.com>
+Cc:     speakup@linux-speakup.org, devel@driverdev.osuosl.org,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        William Hubbs <w.d.hubbs@gmail.com>,
+        Christopher Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>, linux-kernel@vger.kernel.org,
+        Simon Dickson <simonhdickson@gmail.com>
+Subject: Re: Staging status of speakup
+Message-ID: <20190707065710.GA5560@kroah.com>
+References: <20190315130035.6a8f16e9@narunkot>
+ <20190316031831.GA2499@kroah.com>
+ <20190706200857.22918345@narunkot>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87b241f7-1f4c-42af-36e0-08d702a6be5a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2019 06:45:47.9323
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tariqt@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR05MB6490
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190706200857.22918345@narunkot>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDcvMi8yMDE5IDEwOjU4IEFNLCBGdXFpYW4gSHVhbmcgd3JvdGU6DQo+IFJlcGxhY2Ug
-YWxsb2NhdG9yIGZvbGxvd2VkIGJ5IG1lbXNldCB3aXRoIDAgd2l0aCB6ZXJvaW5nIGFsbG9jYXRv
-ci4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEZ1cWlhbiBIdWFuZyA8aHVhbmdmcS5kYXhpYW5AZ21h
-aWwuY29tPg0KPiAtLS0NCj4gQ2hhbmdlcyBpbiB2MzoNCj4gICAgLSBSZXNlbmQNCj4gDQo+ICAg
-ZHJpdmVycy9uZXQvZXFsLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
-IDMgKy0tDQo+ICAgZHJpdmVycy9uZXQvZXRoZXJuZXQvY2F2aXVtL2xpcXVpZGlvL2NuMjN4eF9w
-Zl9kZXZpY2UuYyB8IDQgKy0tLQ0KPiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0L2Nhdml1bS9saXF1
-aWRpby9jbjIzeHhfdmZfZGV2aWNlLmMgfCA0ICstLS0NCj4gICBkcml2ZXJzL25ldC9ldGhlcm5l
-dC9tZWxsYW5veC9tbHg0L2VuX3J4LmMgICAgICAgICAgICAgIHwgMyArLS0NCj4gICA0IGZpbGVz
-IGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9uZXQvZXFsLmMgYi9kcml2ZXJzL25ldC9lcWwuYw0KPiBpbmRleCA3NDI2
-M2Y4ZWZlMWEuLjJmMTAxYTYwMzZlNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXFsLmMN
-Cj4gKysrIGIvZHJpdmVycy9uZXQvZXFsLmMNCj4gQEAgLTQxOSwxNCArNDE5LDEzIEBAIHN0YXRp
-YyBpbnQgZXFsX2Vuc2xhdmUoc3RydWN0IG5ldF9kZXZpY2UgKm1hc3Rlcl9kZXYsIHNsYXZpbmdf
-cmVxdWVzdF90IF9fdXNlciAqDQo+ICAgCWlmICgobWFzdGVyX2Rldi0+ZmxhZ3MgJiBJRkZfVVAp
-ID09IElGRl9VUCkgew0KPiAgIAkJLyogc2xhdmUgaXMgbm90IGEgbWFzdGVyICYgbm90IGFscmVh
-ZHkgYSBzbGF2ZTogKi8NCj4gICAJCWlmICghZXFsX2lzX21hc3RlcihzbGF2ZV9kZXYpICYmICFl
-cWxfaXNfc2xhdmUoc2xhdmVfZGV2KSkgew0KPiAtCQkJc2xhdmVfdCAqcyA9IGttYWxsb2Moc2l6
-ZW9mKCpzKSwgR0ZQX0tFUk5FTCk7DQo+ICsJCQlzbGF2ZV90ICpzID0ga3phbGxvYyhzaXplb2Yo
-KnMpLCBHRlBfS0VSTkVMKTsNCj4gICAJCQllcXVhbGl6ZXJfdCAqZXFsID0gbmV0ZGV2X3ByaXYo
-bWFzdGVyX2Rldik7DQo+ICAgCQkJaW50IHJldDsNCj4gICANCj4gICAJCQlpZiAoIXMpDQo+ICAg
-CQkJCXJldHVybiAtRU5PTUVNOw0KPiAgIA0KPiAtCQkJbWVtc2V0KHMsIDAsIHNpemVvZigqcykp
-Ow0KPiAgIAkJCXMtPmRldiA9IHNsYXZlX2RldjsNCj4gICAJCQlzLT5wcmlvcml0eSA9IHNycS5w
-cmlvcml0eTsNCj4gICAJCQlzLT5wcmlvcml0eV9icHMgPSBzcnEucHJpb3JpdHk7DQo+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYXZpdW0vbGlxdWlkaW8vY24yM3h4X3BmX2Rl
-dmljZS5jIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvY2F2aXVtL2xpcXVpZGlvL2NuMjN4eF9wZl9k
-ZXZpY2UuYw0KPiBpbmRleCA0M2QxMWMzOGIzOGEuLmNmMzgzNWRhMzJjOCAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvY2F2aXVtL2xpcXVpZGlvL2NuMjN4eF9wZl9kZXZpY2Uu
-Yw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYXZpdW0vbGlxdWlkaW8vY24yM3h4X3Bm
-X2RldmljZS5jDQo+IEBAIC03MTksMTIgKzcxOSwxMCBAQCBzdGF0aWMgaW50IGNuMjN4eF9zZXR1
-cF9wZl9tYm94KHN0cnVjdCBvY3Rlb25fZGV2aWNlICpvY3QpDQo+ICAgCWZvciAoaSA9IDA7IGkg
-PCBvY3QtPnNyaW92X2luZm8ubWF4X3ZmczsgaSsrKSB7DQo+ICAgCQlxX25vID0gaSAqIG9jdC0+
-c3Jpb3ZfaW5mby5yaW5nc19wZXJfdmY7DQo+ICAgDQo+IC0JCW1ib3ggPSB2bWFsbG9jKHNpemVv
-ZigqbWJveCkpOw0KPiArCQltYm94ID0gdnphbGxvYyhzaXplb2YoKm1ib3gpKTsNCj4gICAJCWlm
-ICghbWJveCkNCj4gICAJCQlnb3RvIGZyZWVfbWJveDsNCj4gICANCj4gLQkJbWVtc2V0KG1ib3gs
-IDAsIHNpemVvZihzdHJ1Y3Qgb2N0ZW9uX21ib3gpKTsNCj4gLQ0KPiAgIAkJc3Bpbl9sb2NrX2lu
-aXQoJm1ib3gtPmxvY2spOw0KPiAgIA0KPiAgIAkJbWJveC0+b2N0X2RldiA9IG9jdDsNCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Nhdml1bS9saXF1aWRpby9jbjIzeHhfdmZf
-ZGV2aWNlLmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYXZpdW0vbGlxdWlkaW8vY24yM3h4X3Zm
-X2RldmljZS5jDQo+IGluZGV4IGZkYTQ5NDA0OTY4Yy4uYjNiZDI3NjdkM2RkIDEwMDY0NA0KPiAt
-LS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYXZpdW0vbGlxdWlkaW8vY24yM3h4X3ZmX2Rldmlj
-ZS5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Nhdml1bS9saXF1aWRpby9jbjIzeHhf
-dmZfZGV2aWNlLmMNCj4gQEAgLTI3OSwxMiArMjc5LDEwIEBAIHN0YXRpYyBpbnQgY24yM3h4X3Nl
-dHVwX3ZmX21ib3goc3RydWN0IG9jdGVvbl9kZXZpY2UgKm9jdCkNCj4gICB7DQo+ICAgCXN0cnVj
-dCBvY3Rlb25fbWJveCAqbWJveCA9IE5VTEw7DQo+ICAgDQo+IC0JbWJveCA9IHZtYWxsb2Moc2l6
-ZW9mKCptYm94KSk7DQo+ICsJbWJveCA9IHZ6YWxsb2Moc2l6ZW9mKCptYm94KSk7DQo+ICAgCWlm
-ICghbWJveCkNCj4gICAJCXJldHVybiAxOw0KPiAgIA0KPiAtCW1lbXNldChtYm94LCAwLCBzaXpl
-b2Yoc3RydWN0IG9jdGVvbl9tYm94KSk7DQo+IC0NCj4gICAJc3Bpbl9sb2NrX2luaXQoJm1ib3gt
-PmxvY2spOw0KPiAgIA0KPiAgIAltYm94LT5vY3RfZGV2ID0gb2N0Ow0KPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NC9lbl9yeC5jIGIvZHJpdmVycy9uZXQv
-ZXRoZXJuZXQvbWVsbGFub3gvbWx4NC9lbl9yeC5jDQo+IGluZGV4IDZjMDEzMTRlODdiMC4uZjFk
-ZmY1YzQ3Njc2IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9t
-bHg0L2VuX3J4LmMNCj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NC9l
-bl9yeC5jDQo+IEBAIC0xMDYyLDcgKzEwNjIsNyBAQCBzdGF0aWMgaW50IG1seDRfZW5fY29uZmln
-X3Jzc19xcChzdHJ1Y3QgbWx4NF9lbl9wcml2ICpwcml2LCBpbnQgcXBuLA0KPiAgIAlzdHJ1Y3Qg
-bWx4NF9xcF9jb250ZXh0ICpjb250ZXh0Ow0KPiAgIAlpbnQgZXJyID0gMDsNCj4gICANCj4gLQlj
-b250ZXh0ID0ga21hbGxvYyhzaXplb2YoKmNvbnRleHQpLCBHRlBfS0VSTkVMKTsNCj4gKwljb250
-ZXh0ID0ga3phbGxvYyhzaXplb2YoKmNvbnRleHQpLCBHRlBfS0VSTkVMKTsNCj4gICAJaWYgKCFj
-b250ZXh0KQ0KPiAgIAkJcmV0dXJuIC1FTk9NRU07DQo+ICAgDQo+IEBAIC0xMDczLDcgKzEwNzMs
-NiBAQCBzdGF0aWMgaW50IG1seDRfZW5fY29uZmlnX3Jzc19xcChzdHJ1Y3QgbWx4NF9lbl9wcml2
-ICpwcml2LCBpbnQgcXBuLA0KPiAgIAl9DQo+ICAgCXFwLT5ldmVudCA9IG1seDRfZW5fc3FwX2V2
-ZW50Ow0KPiAgIA0KPiAtCW1lbXNldChjb250ZXh0LCAwLCBzaXplb2YoKmNvbnRleHQpKTsNCj4g
-ICAJbWx4NF9lbl9maWxsX3FwX2NvbnRleHQocHJpdiwgcmluZy0+YWN0dWFsX3NpemUsIHJpbmct
-PnN0cmlkZSwgMCwgMCwNCj4gICAJCQkJcXBuLCByaW5nLT5jcW4sIC0xLCBjb250ZXh0KTsNCj4g
-ICAJY29udGV4dC0+ZGJfcmVjX2FkZHIgPSBjcHVfdG9fYmU2NChyaW5nLT53cXJlcy5kYi5kbWEp
-Ow0KPiANCg0KUmV2aWV3ZWQtYnk6IFRhcmlxIFRvdWthbiA8dGFyaXF0QG1lbGxhbm94LmNvbT4N
-Cg==
+On Sat, Jul 06, 2019 at 08:08:57PM +0100, Okash Khawaja wrote:
+> On Fri, 15 Mar 2019 20:18:31 -0700
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Fri, Mar 15, 2019 at 01:01:27PM +0000, Okash Khawaja wrote:
+> > > Hi,
+> > > 
+> > > We have made progress on the items in TODO file of speakup driver in
+> > > staging directory and wanted to get some clarity on the remaining
+> > > items. Below is a summary of status of each item along with the
+> > > quotes from TODO file.
+> > > 
+> > > 1. "The first issue has to do with the way speakup communicates
+> > > with serial ports.  Currently, we communicate directly with the
+> > > hardware ports. This however conflicts with the standard serial
+> > > port drivers, which poses various problems. This is also not
+> > > working for modern hardware such as PCI-based serial ports.  Also,
+> > > there is not a way we can communicate with USB devices.  The
+> > > current serial port handling code is in serialio.c in this
+> > > directory."
+> > > 
+> > > Drivers for all external synths now use TTY to communcate with the
+> > > devices. Only ones still using direct communication with hardware
+> > > ports are internal synths: acntpc, decpc, dtlk and keypc. These are
+> > > typically ISA cards and generally hardware which is difficult to
+> > > make work. We can leave these in staging.  
+> > 
+> > Ok, that's fine.
+> > 
+> > > 2. "Some places are currently using in_atomic() because speakup
+> > > functions are called in various contexts, and a couple of things
+> > > can't happen in these cases. Pushing work to some worker thread
+> > > would probably help, as was already done for the serial port
+> > > driving part."
+> > > 
+> > > There aren't any uses of in_atomic anymore. Commit d7500135802c
+> > > "Staging: speakup: Move pasting into a work item" was the last one
+> > > that removed such uses.  
+> > 
+> > Great, let's remove that todo item then.
+> > 
+> > > 3. "There is a duplication of the selection functions in
+> > > selections.c. These functions should get exported from
+> > > drivers/char/selection.c (clear_selection notably) and used from
+> > > there instead."
+> > > 
+> > > This is yet to be done. I guess drivers/char/selection.c is now
+> > > under drivers/tty/vt/selection.c.  
+> > 
+> > Yes, someone should update the todo item :)
+> > 
+> > > 4. "The kobjects may have to move to a more proper place in /sys.The
+> > > discussion on lkml resulted to putting speech synthesizers in the
+> > > "speech" class, and the speakup screen reader itself
+> > > into /sys/class/vtconsole/vtcon0/speakup, the nasty path being
+> > > handled by userland tools."
+> > > 
+> > > Although this makes logical sense, the change will mean changing
+> > > interface with userspace and hence the user space tools. I tried to
+> > > search the lkml discussion but couldn't find it. It will be good to
+> > > know your thoughts on this.  
+> > 
+> > I don't remember, sorry.  I can review the kobject/sysfs usage if you
+> > think it is "good enough" now and see if I find anything
+> > objectionable.
+> > 
+> > > Finally there is an issue where text in output buffer sometimes gets
+> > > garbled on SMP systems, but we can continue working on it after the
+> > > driver is moved out of staging, if that's okay. Basically we need a
+> > > reproducer of this issue.
+> > > 
+> > > In addition to above, there are likely code style issues which will
+> > > need to be fixed.
+> > > 
+> > > We are very keen to get speakup out of staging both, for settling
+> > > the driver but also for getting included in distros which build
+> > > only the mainline drivers.  
+> > 
+> > That's great, I am glad to see this happen.  How about work on the
+> > selection thing and then I can review the kobject stuff in a few
+> > weeks, and then we can start moving things for 5.2?
+> 
+> Hi Greg,
+> 
+> Apologies for the delay. I de-duplicated selection code in speakup to
+> use code that's already in kernel (commit ids 496124e5e16e and
+> 41f13084506a). Following items are what remain now:
+> 
+> 1. moving kobjects location
+> 2. fixing garbled text
+> 
+> I couldn't replicate garbled text but Simon (also in CC list) is
+> looking into it.
+> 
+> Can you please advise on the way forward?
+
+I don't think the "garbled text" is an issue to get this out of staging
+if others do not see this.  It can be fixed like any other bug at a
+later point if it is figured out.
+
+The kobject stuff does need to be looked at.  Let me carve out some time
+next week to do that and I will let you know what I see/recommend.
+
+thanks,
+
+greg k-h
