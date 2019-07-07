@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83F8C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6531FC48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CA020651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A3120651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfGGTnx (ORCPT
+        id S1727834AbfGGTn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:43:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57402 "EHLO
+        Sun, 7 Jul 2019 15:43:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57404 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727572AbfGGTiK (ORCPT
+        by vger.kernel.org with ESMTP id S1727571AbfGGTiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:10 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz7-0006ik-Gg; Sun, 07 Jul 2019 20:38:05 +0100
+        id 1hkCz7-0006iQ-El; Sun, 07 Jul 2019 20:38:05 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0005cj-SO; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz5-0005cP-Fa; Sun, 07 Jul 2019 20:38:03 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Christophe Leroy" <christophe.leroy@c-s.fr>,
-        "Michael Ellerman" <mpe@ellerman.id.au>
+        "Timur Tabi" <timur@kernel.org>,
+        "Nicolin Chen" <nicoleotsuka@gmail.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Fabio Estevam" <festevam@gmail.com>,
+        "Xiubo Li" <Xiubo.Lee@gmail.com>, "Takashi Iwai" <tiwai@suse.de>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.49548321@decadent.org.uk>
+Message-ID: <lsq.1562518457.156746767@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 080/129] powerpc/83xx: Also save/restore SPRG4-7
- during suspend
+Subject: [PATCH 3.16 076/129] ASoC: fsl: Fix of-node refcount unbalance in
+ fsl_ssi_probe_from_dt()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,76 +59,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 36da5ff0bea2dc67298150ead8d8471575c54c7d upstream.
+commit 2757970f6d0d0a112247600b23d38c0c728ceeb3 upstream.
 
-The 83xx has 8 SPRG registers and uses at least SPRG4
-for DTLB handling LRU.
+The node obtained from of_find_node_by_path() has to be unreferenced
+after the use, but we forgot it for the root node.
 
-Fixes: 2319f1239592 ("powerpc/mm: e300c2/c3/c4 TLB errata workaround")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: f0fba2ad1b6b ("ASoC: multi-component - ASoC Multi-Component Support")
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+[bwh: Backported to 3.16:
+ - Move declaration of root to the top of the function as there is no
+   suitable block scope
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/platforms/83xx/suspend-asm.S | 34 ++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 7 deletions(-)
-
---- a/arch/powerpc/platforms/83xx/suspend-asm.S
-+++ b/arch/powerpc/platforms/83xx/suspend-asm.S
-@@ -26,13 +26,13 @@
- #define SS_MSR		0x74
- #define SS_SDR1		0x78
- #define SS_LR		0x7c
--#define SS_SPRG		0x80 /* 4 SPRGs */
--#define SS_DBAT		0x90 /* 8 DBATs */
--#define SS_IBAT		0xd0 /* 8 IBATs */
--#define SS_TB		0x110
--#define SS_CR		0x118
--#define SS_GPREG	0x11c /* r12-r31 */
--#define STATE_SAVE_SIZE 0x16c
-+#define SS_SPRG		0x80 /* 8 SPRGs */
-+#define SS_DBAT		0xa0 /* 8 DBATs */
-+#define SS_IBAT		0xe0 /* 8 IBATs */
-+#define SS_TB		0x120
-+#define SS_CR		0x128
-+#define SS_GPREG	0x12c /* r12-r31 */
-+#define STATE_SAVE_SIZE 0x17c
- 
- 	.section .data
- 	.align	5
-@@ -103,6 +103,16 @@ _GLOBAL(mpc83xx_enter_deep_sleep)
- 	stw	r7, SS_SPRG+12(r3)
- 	stw	r8, SS_SDR1(r3)
- 
-+	mfspr	r4, SPRN_SPRG4
-+	mfspr	r5, SPRN_SPRG5
-+	mfspr	r6, SPRN_SPRG6
-+	mfspr	r7, SPRN_SPRG7
-+
-+	stw	r4, SS_SPRG+16(r3)
-+	stw	r5, SS_SPRG+20(r3)
-+	stw	r6, SS_SPRG+24(r3)
-+	stw	r7, SS_SPRG+28(r3)
-+
- 	mfspr	r4, SPRN_DBAT0U
- 	mfspr	r5, SPRN_DBAT0L
- 	mfspr	r6, SPRN_DBAT1U
-@@ -493,6 +503,16 @@ mpc83xx_deep_resume:
- 	mtspr	SPRN_IBAT7U, r6
- 	mtspr	SPRN_IBAT7L, r7
- 
-+	lwz	r4, SS_SPRG+16(r3)
-+	lwz	r5, SS_SPRG+20(r3)
-+	lwz	r6, SS_SPRG+24(r3)
-+	lwz	r7, SS_SPRG+28(r3)
-+
-+	mtspr	SPRN_SPRG4, r4
-+	mtspr	SPRN_SPRG5, r5
-+	mtspr	SPRN_SPRG6, r6
-+	mtspr	SPRN_SPRG7, r7
-+
- 	lwz	r4, SS_SPRG+0(r3)
- 	lwz	r5, SS_SPRG+4(r3)
- 	lwz	r6, SS_SPRG+8(r3)
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -1229,6 +1229,7 @@ static int fsl_ssi_probe(struct platform
+ 	struct fsl_ssi_private *ssi_private;
+ 	int ret = 0;
+ 	struct device_node *np = pdev->dev.of_node;
++	struct device_node *root;
+ 	const struct of_device_id *of_id;
+ 	const char *p, *sprop;
+ 	const uint32_t *iprop;
+@@ -1373,7 +1374,9 @@ static int fsl_ssi_probe(struct platform
+ 	 * device tree.  We also pass the address of the CPU DAI driver
+ 	 * structure.
+ 	 */
+-	sprop = of_get_property(of_find_node_by_path("/"), "compatible", NULL);
++	root = of_find_node_by_path("/");
++	sprop = of_get_property(root, "compatible", NULL);
++	of_node_put(root);
+ 	/* Sometimes the compatible name has a "fsl," prefix, so we strip it. */
+ 	p = strrchr(sprop, ',');
+ 	if (p)
 
