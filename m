@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D79FC48BE1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511F7C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6661C20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EF220659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfGGTki (ORCPT
+        id S1728047AbfGGTkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:40:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58066 "EHLO
+        Sun, 7 Jul 2019 15:40:42 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58050 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727674AbfGGTiR (ORCPT
+        by vger.kernel.org with ESMTP id S1727672AbfGGTiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:17 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzG-0006jD-7s; Sun, 07 Jul 2019 20:38:14 +0100
+        id 1hkCzG-0006kJ-8D; Sun, 07 Jul 2019 20:38:14 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz8-0005fh-SD; Sun, 07 Jul 2019 20:38:06 +0100
+        id 1hkCz8-0005f3-A1; Sun, 07 Jul 2019 20:38:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Guoqing Jiang" <gqjiang@suse.com>,
-        "Song Liu" <songliubraving@fb.com>,
-        "Aditya Pakki" <pakki001@umn.edu>
+        "Oleg Nesterov" <oleg@redhat.com>,
+        "Siarhei Volkau" <lis8215@gmail.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Stanislaw Gruszka" <sgruszka@redhat.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.248076757@decadent.org.uk>
+Message-ID: <lsq.1562518457.989988578@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 115/129] md: Fix failed allocation of md_register_thread
+Subject: [PATCH 3.16 108/129] lib/div64.c: off by one in shift
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,46 +57,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-commit e406f12dde1a8375d77ea02d91f313fb1a9c6aec upstream.
+commit cdc94a37493135e355dfc0b0e086d84e3eadb50d upstream.
 
-mddev->sync_thread can be set to NULL on kzalloc failure downstream.
-The patch checks for such a scenario and frees allocated resources.
+fls counts bits starting from 1 to 32 (returns 0 for zero argument).  If
+we add 1 we shift right one bit more and loose precision from divisor,
+what cause function incorect results with some numbers.
 
-Committer node:
+Corrected code was tested in user-space, see bugzilla:
+   https://bugzilla.kernel.org/show_bug.cgi?id=202391
 
-Added similar fix to raid5.c, as suggested by Guoqing.
-
-Acked-by: Guoqing Jiang <gqjiang@suse.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Link: http://lkml.kernel.org/r/1548686944-11891-1-git-send-email-sgruszka@redhat.com
+Fixes: 658716d19f8f ("div64_u64(): improve precision on 32bit platforms")
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Reported-by: Siarhei Volkau <lis8215@gmail.com>
+Tested-by: Siarhei Volkau <lis8215@gmail.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/md/raid10.c | 2 ++
- drivers/md/raid5.c  | 2 ++
- 2 files changed, 4 insertions(+)
+ lib/div64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3820,6 +3820,8 @@ static int run(struct mddev *mddev)
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto out_free_conf;
- 	}
+--- a/lib/div64.c
++++ b/lib/div64.c
+@@ -100,7 +100,7 @@ u64 div64_u64_rem(u64 dividend, u64 divi
+ 		quot = div_u64_rem(dividend, divisor, &rem32);
+ 		*remainder = rem32;
+ 	} else {
+-		int n = 1 + fls(high);
++		int n = fls(high);
+ 		quot = div_u64(dividend >> n, divisor >> n);
  
- 	return 0;
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6180,6 +6180,8 @@ static int run(struct mddev *mddev)
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto abort;
- 	}
+ 		if (quot != 0)
+@@ -138,7 +138,7 @@ u64 div64_u64(u64 dividend, u64 divisor)
+ 	if (high == 0) {
+ 		quot = div_u64(dividend, divisor);
+ 	} else {
+-		int n = 1 + fls(high);
++		int n = fls(high);
+ 		quot = div_u64(dividend >> n, divisor >> n);
  
- 
+ 		if (quot != 0)
 
