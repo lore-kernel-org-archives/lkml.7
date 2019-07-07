@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F349C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B710C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C51220830
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6213D2082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfGGTky (ORCPT
+        id S1727944AbfGGTlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:40:54 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58022 "EHLO
+        Sun, 7 Jul 2019 15:41:03 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57886 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727667AbfGGTiR (ORCPT
+        by vger.kernel.org with ESMTP id S1727655AbfGGTiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:17 -0400
+        Sun, 7 Jul 2019 15:38:15 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzG-0006je-45; Sun, 07 Jul 2019 20:38:14 +0100
+        id 1hkCzD-0006kM-Cc; Sun, 07 Jul 2019 20:38:11 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz9-0005gX-Kp; Sun, 07 Jul 2019 20:38:07 +0100
+        id 1hkCz9-0005g7-8Y; Sun, 07 Jul 2019 20:38:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Alistair Strachan" <astrachan@google.com>,
-        "syzbot" <syzkaller@googlegroups.com>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>
+        "David S. Miller" <davem@davemloft.net>,
+        "Xin Long" <lucien.xin@gmail.com>, "Xiumei Mu" <xmu@redhat.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.148922416@decadent.org.uk>
+Message-ID: <lsq.1562518457.656970295@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 125/129] media: uvcvideo: Fix 'type' check leading to
- overflow
+Subject: [PATCH 3.16 120/129] pptp: dst_release sk_dst_cache in
+ pptp_sock_destruct
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,60 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alistair Strachan <astrachan@google.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 47bb117911b051bbc90764a8bff96543cbd2005f upstream.
+commit 9417d81f4f8adfe20a12dd1fadf73a618cbd945d upstream.
 
-When initially testing the Camera Terminal Descriptor wTerminalType
-field (buffer[4]), no mask is used. Later in the function, the MSB is
-overloaded to store the descriptor subtype, and so a mask of 0x7fff
-is used to check the type.
+sk_setup_caps() is called to set sk->sk_dst_cache in pptp_connect,
+so we have to dst_release(sk->sk_dst_cache) in pptp_sock_destruct,
+otherwise, the dst refcnt will leak.
 
-If a descriptor is specially crafted to set this overloaded bit in the
-original wTerminalType field, the initial type check will fail (falling
-through, without adjusting the buffer size), but the later type checks
-will pass, assuming the buffer has been made suitably large, causing an
-overflow.
+It can be reproduced by this syz log:
 
-Avoid this problem by checking for the MSB in the wTerminalType field.
-If the bit is set, assume the descriptor is bad, and abort parsing it.
+  r1 = socket$pptp(0x18, 0x1, 0x2)
+  bind$pptp(r1, &(0x7f0000000100)={0x18, 0x2, {0x0, @local}}, 0x1e)
+  connect$pptp(r1, &(0x7f0000000000)={0x18, 0x2, {0x3, @remote}}, 0x1e)
 
-Originally reported here:
-https://groups.google.com/forum/#!topic/syzkaller/Ot1fOE6v1d8
-A similar (non-compiling) patch was provided at that time.
+Consecutive dmesg warnings will occur:
 
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  unregister_netdevice: waiting for lo to become free. Usage count = 1
+
+v1->v2:
+  - use rcu_dereference_protected() instead of rcu_dereference_check(),
+    as suggested by Eric.
+
+Fixes: 00959ade36ac ("PPTP: PPP over IPv4 (Point-to-Point Tunneling Protocol)")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/uvc/uvc_driver.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/net/ppp/pptp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -977,11 +977,19 @@ static int uvc_parse_standard_control(st
- 			return -EINVAL;
- 		}
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -579,6 +579,7 @@ static void pptp_sock_destruct(struct so
+ 		pppox_unbind_sock(sk);
+ 	}
+ 	skb_queue_purge(&sk->sk_receive_queue);
++	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
+ }
  
--		/* Make sure the terminal type MSB is not null, otherwise it
--		 * could be confused with a unit.
-+		/*
-+		 * Reject invalid terminal types that would cause issues:
-+		 *
-+		 * - The high byte must be non-zero, otherwise it would be
-+		 *   confused with a unit.
-+		 *
-+		 * - Bit 15 must be 0, as we use it internally as a terminal
-+		 *   direction flag.
-+		 *
-+		 * Other unknown types are accepted.
- 		 */
- 		type = get_unaligned_le16(&buffer[4]);
--		if ((type & 0xff00) == 0) {
-+		if ((type & 0x7f00) == 0 || (type & 0x8000) != 0) {
- 			uvc_trace(UVC_TRACE_DESCR, "device %d videocontrol "
- 				"interface %d INPUT_TERMINAL %d has invalid "
- 				"type 0x%04x, skipping\n", udev->devnum,
+ static int pptp_create(struct net *net, struct socket *sock)
 
