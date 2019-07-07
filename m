@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6531FC48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D023BC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A3120651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FA420663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfGGTn5 (ORCPT
+        id S1728385AbfGGTn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:43:57 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57404 "EHLO
+        Sun, 7 Jul 2019 15:43:56 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57408 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727571AbfGGTiK (ORCPT
+        by vger.kernel.org with ESMTP id S1727575AbfGGTiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:10 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz7-0006iQ-El; Sun, 07 Jul 2019 20:38:05 +0100
+        id 1hkCz7-0006ig-El; Sun, 07 Jul 2019 20:38:05 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0005cP-Fa; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz5-0005cf-Om; Sun, 07 Jul 2019 20:38:03 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Timur Tabi" <timur@kernel.org>,
-        "Nicolin Chen" <nicoleotsuka@gmail.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Fabio Estevam" <festevam@gmail.com>,
-        "Xiubo Li" <Xiubo.Lee@gmail.com>, "Takashi Iwai" <tiwai@suse.de>
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "Doug Berger" <opendmb@gmail.com>,
+        "Marc Zyngier" <marc.zyngier@arm.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.156746767@decadent.org.uk>
+Message-ID: <lsq.1562518457.981020944@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 076/129] ASoC: fsl: Fix of-node refcount unbalance in
- fsl_ssi_probe_from_dt()
+Subject: [PATCH 3.16 079/129] irqchip/brcmstb-l2: Use _irqsave locking
+ variants in non-interrupt code
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,46 +57,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Doug Berger <opendmb@gmail.com>
 
-commit 2757970f6d0d0a112247600b23d38c0c728ceeb3 upstream.
+commit 33517881ede742107f416533b8c3e4abc56763da upstream.
 
-The node obtained from of_find_node_by_path() has to be unreferenced
-after the use, but we forgot it for the root node.
+Using the irq_gc_lock/irq_gc_unlock functions in the suspend and
+resume functions creates the opportunity for a deadlock during
+suspend, resume, and shutdown. Using the irq_gc_lock_irqsave/
+irq_gc_unlock_irqrestore variants prevents this possible deadlock.
 
-Fixes: f0fba2ad1b6b ("ASoC: multi-component - ASoC Multi-Component Support")
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-[bwh: Backported to 3.16:
- - Move declaration of root to the top of the function as there is no
-   suitable block scope
- - Adjust context]
+Fixes: 7f646e92766e2 ("irqchip: brcmstb-l2: Add Broadcom Set Top Box Level-2 interrupt controller")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+[maz: tidied up $SUBJECT]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -1229,6 +1229,7 @@ static int fsl_ssi_probe(struct platform
- 	struct fsl_ssi_private *ssi_private;
- 	int ret = 0;
- 	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *root;
- 	const struct of_device_id *of_id;
- 	const char *p, *sprop;
- 	const uint32_t *iprop;
-@@ -1373,7 +1374,9 @@ static int fsl_ssi_probe(struct platform
- 	 * device tree.  We also pass the address of the CPU DAI driver
- 	 * structure.
- 	 */
--	sprop = of_get_property(of_find_node_by_path("/"), "compatible", NULL);
-+	root = of_find_node_by_path("/");
-+	sprop = of_get_property(root, "compatible", NULL);
-+	of_node_put(root);
- 	/* Sometimes the compatible name has a "fsl," prefix, so we strip it. */
- 	p = strrchr(sprop, ',');
- 	if (p)
+ drivers/irqchip/irq-brcmstb-l2.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+--- a/drivers/irqchip/irq-brcmstb-l2.c
++++ b/drivers/irqchip/irq-brcmstb-l2.c
+@@ -82,8 +82,9 @@ static void brcmstb_l2_intc_suspend(stru
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct brcmstb_l2_intc_data *b = gc->private;
++	unsigned long flags;
+ 
+-	irq_gc_lock(gc);
++	irq_gc_lock_irqsave(gc, flags);
+ 	/* Save the current mask */
+ 	b->saved_mask = __raw_readl(b->base + CPU_MASK_STATUS);
+ 
+@@ -92,22 +93,23 @@ static void brcmstb_l2_intc_suspend(stru
+ 		__raw_writel(~gc->wake_active, b->base + CPU_MASK_SET);
+ 		__raw_writel(gc->wake_active, b->base + CPU_MASK_CLEAR);
+ 	}
+-	irq_gc_unlock(gc);
++	irq_gc_unlock_irqrestore(gc, flags);
+ }
+ 
+ static void brcmstb_l2_intc_resume(struct irq_data *d)
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct brcmstb_l2_intc_data *b = gc->private;
++	unsigned long flags;
+ 
+-	irq_gc_lock(gc);
++	irq_gc_lock_irqsave(gc, flags);
+ 	/* Clear unmasked non-wakeup interrupts */
+ 	__raw_writel(~b->saved_mask & ~gc->wake_active, b->base + CPU_CLEAR);
+ 
+ 	/* Restore the saved mask */
+ 	__raw_writel(b->saved_mask, b->base + CPU_MASK_SET);
+ 	__raw_writel(~b->saved_mask, b->base + CPU_MASK_CLEAR);
+-	irq_gc_unlock(gc);
++	irq_gc_unlock_irqrestore(gc, flags);
+ }
+ 
+ int __init brcmstb_l2_intc_of_init(struct device_node *np,
 
