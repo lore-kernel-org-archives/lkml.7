@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D21C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 22:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10018C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 22:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95382070D
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 22:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BFA2063F
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 22:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RotnzN4o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUBGN7nN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfGGWzA (ORCPT
+        id S1727974AbfGGWzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 18:55:00 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37115 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbfGGWy4 (ORCPT
+        Sun, 7 Jul 2019 18:55:06 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44413 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727611AbfGGWzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 18:54:56 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d15so11903718qkl.4;
-        Sun, 07 Jul 2019 15:54:56 -0700 (PDT)
+        Sun, 7 Jul 2019 18:55:01 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d79so7613754qke.11;
+        Sun, 07 Jul 2019 15:55:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PCQNSQK+2muyk726fUJhk7VrSnWFFmbUV5XprGSciK8=;
-        b=RotnzN4o9M3ZTYm5BB4/9vLl6VZTbhw1SpGx4a/PPqYXoIsYGBwoq0IAYOAmbkCsLw
-         8N6SV3MDsITPixVNgGVXPQg0RWhAuT9q8aOcCHu3bQZBCcBVNvJCDKennRMcGDiDbmbk
-         QVF0fhIelztTLawRBZwgKfc8c7wx+EDHXxOKPooB+h29kmAWwQPyb07cCvHxmpHh7svm
-         cmgLiNpG18nZD2mhNfi0b5XLIFmLZnFdP1deIQTzSz8O4piT3exNDdXDwTyFigm3XGKi
-         AV4c6/gnlYaHL9SgJd4Ihs6eOWlPkCokhWl76GR0GsSW0XJFlAYIPtdjSVwkVEIDyIXT
-         I3Sg==
+        bh=Y0shjWZR4s9zJHqVWwZPltTGcrU0R1di6AYm7h2L5QM=;
+        b=IUBGN7nNDIDXucEn9aZ+U8zeRM2oDKrBfFkudQ48ykLwXfvudOIpMiyJz93zd6nYsb
+         cUqWcuRtEOt7NolPwRVf8AdxBvmfi+B0Stg/wnAXUrMqtWw3YIx7iWfZzaeh5VjIWQwE
+         zd0AkW9yDGElNDo3+hQ3PchDq3w1PCW36T95CR7sD0Do9K0qoSa1CEE8tbkWERNbxIW2
+         xVQipT2Xxxhw3R+43YiaoKIZRb1Bt1TOe6oDb04XHmBsuJG5R7y9Fqbsgbahud4bJ5nf
+         g406m4zNd8JANFs8NhOqrrsx3MRl6ClQsfipfwMre/XUf1O/+AGkT5XXtmgGUWc88OH0
+         YSiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PCQNSQK+2muyk726fUJhk7VrSnWFFmbUV5XprGSciK8=;
-        b=DiViR6E7s0girZn7wnrwn5qyfkjgXS0+T5TdLNM6iKZVgpy6HCmEuNH1M8vP93KKCA
-         YnyQjlqZf2g7GFbwKLRgAvExvbd7DUBUVw9T5lO3P1Ux/R9xgUsq2I9zWqsmRcrVNBYr
-         eM/agh04SzJTjM9+ODsHlHpHMEc5KpBQNYA2fG3OIVO/1irXL0n3XZJ9V1XhLS0aqF9o
-         4kStdbZeNswO5uYIQFhf8FnjizWm8vleuL2aOJo1fJ7qi8Xl2N6ycVK0iQnxjoqrE7hW
-         LhQ5t86NpEj6ipAail230Vy/yiCXC6kbgB77jyrw6kLRT05cBq2X54lHSSN+wF1nQURv
-         rxzA==
-X-Gm-Message-State: APjAAAVOkj1chBYqOIr2I5SqiffxjUailhDpjcrcmM+TxVb3oZl0MX6d
-        Q4V89ygBOj05gU7vxF7odq8=
-X-Google-Smtp-Source: APXvYqzvbJjrVtN0UHCxgj0/JsjQ6D7plewOryrcTy0IuNVCrfUr6pt5h6UaeNO8M0t1pST51XEgiw==
-X-Received: by 2002:a05:620a:16da:: with SMTP id a26mr12004296qkn.376.1562540095667;
-        Sun, 07 Jul 2019 15:54:55 -0700 (PDT)
+        bh=Y0shjWZR4s9zJHqVWwZPltTGcrU0R1di6AYm7h2L5QM=;
+        b=gt1PjhUJBO2Mtbk8Bz1MEecOhTtHDrYRHm/badIuB4VK92RliJn5dYMv+Ga6SwjnQg
+         AxnzhAivrtf1BciSqFds1J0SWvtMxPZ/kzexPCDAGPDsovKlZZIY4ObHmxL51evO/8jG
+         pUpzDbLA75Kt5e2Xn83KPRf2rTBWAz0IMsUAO9O8yoNLZMxX+1F5Nd2EUFAjt4UZj9iD
+         uKy3rV2Hf7VpiVCIdtbzxlvVrxhu/eOMYeJuY2ac9e8zzDJxqRbcBfe3wyrbxSRPOXdm
+         kIBnUr0ESh6y9qGxjlHMu5uTefeIZeqmHeKojNKP79TWdMyInG6ML4qsKglgHQPAJPfK
+         xVTg==
+X-Gm-Message-State: APjAAAW3//CMBbDhXo975HX8aaM4H7gqnigpXBecH7A67JNwAX7HYv3z
+        D8S9eqJDjwGcMz7PGY/2mzKnI3YZ
+X-Google-Smtp-Source: APXvYqzBbkQslMYsznzArSXy9OMXsab9p3u5VC3savYrjLxtBlt2zEqYEl75dzAWLs/ECffI9fW1zg==
+X-Received: by 2002:a37:a5cb:: with SMTP id o194mr12095921qke.371.1562540100879;
+        Sun, 07 Jul 2019 15:55:00 -0700 (PDT)
 Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id t2sm8217556qth.33.2019.07.07.15.54.53
+        by smtp.gmail.com with ESMTPSA id t2sm8217556qth.33.2019.07.07.15.54.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Jul 2019 15:54:55 -0700 (PDT)
+        Sun, 07 Jul 2019 15:55:00 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 03/13] memory: tegra20-emc: Adapt for clock driver changes
-Date:   Mon,  8 Jul 2019 01:54:14 +0300
-Message-Id: <20190707225424.9562-4-digetx@gmail.com>
+Subject: [PATCH v7 05/13] memory: tegra20-emc: Pre-configure debug register
+Date:   Mon,  8 Jul 2019 01:54:16 +0300
+Message-Id: <20190707225424.9562-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190707225424.9562-1-digetx@gmail.com>
 References: <20190707225424.9562-1-digetx@gmail.com>
@@ -81,103 +81,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now Terga20 and Tegra30 EMC drivers should provide clock-rounding
-functionality using the new Tegra-CLK driver API.
+The driver expects certain debug features to be disabled in order to
+work properly. Let's disable them explicitly for consistency and to not
+rely on a boot state.
 
 Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 50 ++++++++++++++++++++++++++++--
- 1 file changed, 48 insertions(+), 2 deletions(-)
+ drivers/memory/tegra/tegra20-emc.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index da8fa592b071..b519f02b0ee9 100644
+index 1ce351dd5461..85c24f285fd4 100644
 --- a/drivers/memory/tegra/tegra20-emc.c
 +++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -6,6 +6,7 @@
-  */
+@@ -22,6 +22,7 @@
  
- #include <linux/clk.h>
-+#include <linux/clk/tegra.h>
- #include <linux/completion.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-@@ -421,6 +422,44 @@ static int emc_setup_hw(struct tegra_emc *emc)
- 	return 0;
- }
+ #define EMC_INTSTATUS				0x000
+ #define EMC_INTMASK				0x004
++#define EMC_DBG					0x008
+ #define EMC_TIMING_CONTROL			0x028
+ #define EMC_RC					0x02c
+ #define EMC_RFC					0x030
+@@ -80,6 +81,12 @@
+ #define EMC_REFRESH_OVERFLOW_INT		BIT(3)
+ #define EMC_CLKCHANGE_COMPLETE_INT		BIT(4)
  
-+static long emc_round_rate(unsigned long rate,
-+			   unsigned long min_rate,
-+			   unsigned long max_rate,
-+			   void *arg)
-+{
-+	struct emc_timing *timing = NULL;
-+	struct tegra_emc *emc = arg;
-+	unsigned int i;
++#define EMC_DBG_READ_MUX_ASSEMBLY		BIT(0)
++#define EMC_DBG_WRITE_MUX_ACTIVE		BIT(1)
++#define EMC_DBG_FORCE_UPDATE			BIT(2)
++#define EMC_DBG_READ_DQM_CTRL			BIT(9)
++#define EMC_DBG_CFG_PRIORITY			BIT(24)
 +
-+	min_rate = min(min_rate, emc->timings[emc->num_timings - 1].rate);
-+
-+	for (i = 0; i < emc->num_timings; i++) {
-+		if (emc->timings[i].rate < rate && i != emc->num_timings - 1)
-+			continue;
-+
-+		if (emc->timings[i].rate > max_rate) {
-+			i = max(i, 1u) - 1;
-+
-+			if (emc->timings[i].rate < min_rate)
-+				break;
-+		}
-+
-+		if (emc->timings[i].rate < min_rate)
-+			continue;
-+
-+		timing = &emc->timings[i];
-+		break;
-+	}
-+
-+	if (!timing) {
-+		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
-+			rate, min_rate, max_rate);
-+		return -EINVAL;
-+	}
-+
-+	return timing->rate;
-+}
-+
- static int tegra_emc_probe(struct platform_device *pdev)
+ static const u16 emc_timing_registers[] = {
+ 	EMC_RC,
+ 	EMC_RFC,
+@@ -396,7 +403,7 @@ tegra_emc_find_node_by_ram_code(struct device *dev)
+ static int emc_setup_hw(struct tegra_emc *emc)
  {
- 	struct device_node *np;
-@@ -477,21 +516,28 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 		return err;
- 	}
+ 	u32 intmask = EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT;
+-	u32 emc_cfg;
++	u32 emc_cfg, emc_dbg;
  
-+	tegra20_clk_set_emc_round_callback(emc_round_rate, emc);
+ 	emc_cfg = readl_relaxed(emc->regs + EMC_CFG_2);
+ 
+@@ -419,6 +426,14 @@ static int emc_setup_hw(struct tegra_emc *emc)
+ 	writel_relaxed(intmask, emc->regs + EMC_INTMASK);
+ 	writel_relaxed(intmask, emc->regs + EMC_INTSTATUS);
+ 
++	/* ensure that unwanted debug features are disabled */
++	emc_dbg = readl_relaxed(emc->regs + EMC_DBG);
++	emc_dbg |= EMC_DBG_CFG_PRIORITY;
++	emc_dbg &= ~EMC_DBG_READ_MUX_ASSEMBLY;
++	emc_dbg &= ~EMC_DBG_WRITE_MUX_ACTIVE;
++	emc_dbg &= ~EMC_DBG_FORCE_UPDATE;
++	writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
 +
- 	emc->clk = devm_clk_get(&pdev->dev, "emc");
- 	if (IS_ERR(emc->clk)) {
- 		err = PTR_ERR(emc->clk);
- 		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
--		return err;
-+		goto unset_cb;
- 	}
- 
- 	err = clk_notifier_register(emc->clk, &emc->clk_nb);
- 	if (err) {
- 		dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
- 			err);
--		return err;
-+		goto unset_cb;
- 	}
- 
  	return 0;
-+
-+unset_cb:
-+	tegra20_clk_set_emc_round_callback(NULL, NULL);
-+
-+	return err;
  }
  
- static const struct of_device_id tegra_emc_of_match[] = {
 -- 
 2.22.0
 
