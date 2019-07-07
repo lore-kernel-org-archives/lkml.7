@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB214C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52849C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C526B20659
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3406A20663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfGGTnD (ORCPT
+        id S1728278AbfGGTnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:43:03 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57558 "EHLO
+        Sun, 7 Jul 2019 15:43:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57554 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727603AbfGGTiL (ORCPT
+        by vger.kernel.org with ESMTP id S1727602AbfGGTiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:11 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz8-0006jU-Va; Sun, 07 Jul 2019 20:38:07 +0100
+        id 1hkCz9-0006kJ-2y; Sun, 07 Jul 2019 20:38:07 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz6-0005dN-I6; Sun, 07 Jul 2019 20:38:04 +0100
+        id 1hkCz7-0005dw-5r; Sun, 07 Jul 2019 20:38:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Lubomir Rintel" <lkundrak@v3.sk>
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Christophe Leroy" <christophe.leroy@c-s.fr>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.503602606@decadent.org.uk>
+Message-ID: <lsq.1562518457.995998582@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 088/129] serial: 8250_of: assume reg-shift of 2 for
- mrvl,mmp-uart
+Subject: [PATCH 3.16 095/129] powerpc/32: Clear on-stack exception marker
+ upon exception return
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,36 +56,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit f4817843e39ce78aace0195a57d4e8500a65a898 upstream.
+commit 9580b71b5a7863c24a9bd18bcd2ad759b86b1eff upstream.
 
-There are two other drivers that bind to mrvl,mmp-uart and both of them
-assume register shift of 2 bits. There are device trees that lack the
-property and rely on that assumption.
+Clear the on-stack STACK_FRAME_REGS_MARKER on exception exit in order
+to avoid confusing stacktrace like the one below.
 
-If this driver wins the race to bind to those devices, it should behave
-the same as the older deprecated driver.
+  Call Trace:
+  [c0e9dca0] [c01c42a0] print_address_description+0x64/0x2bc (unreliable)
+  [c0e9dcd0] [c01c4684] kasan_report+0xfc/0x180
+  [c0e9dd10] [c0895130] memchr+0x24/0x74
+  [c0e9dd30] [c00a9e38] msg_print_text+0x124/0x574
+  [c0e9dde0] [c00ab710] console_unlock+0x114/0x4f8
+  [c0e9de40] [c00adc60] vprintk_emit+0x188/0x1c4
+  --- interrupt: c0e9df00 at 0x400f330
+      LR = init_stack+0x1f00/0x2000
+  [c0e9de80] [c00ae3c4] printk+0xa8/0xcc (unreliable)
+  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
+  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
+  [c0e9dff0] [00003484] 0x3484
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust filename]
+With this patch the trace becomes:
+
+  Call Trace:
+  [c0e9dca0] [c01c42c0] print_address_description+0x64/0x2bc (unreliable)
+  [c0e9dcd0] [c01c46a4] kasan_report+0xfc/0x180
+  [c0e9dd10] [c0895150] memchr+0x24/0x74
+  [c0e9dd30] [c00a9e58] msg_print_text+0x124/0x574
+  [c0e9dde0] [c00ab730] console_unlock+0x114/0x4f8
+  [c0e9de40] [c00adc80] vprintk_emit+0x188/0x1c4
+  [c0e9de80] [c00ae3e4] printk+0xa8/0xcc
+  [c0e9df20] [c0c27e44] early_irq_init+0x38/0x108
+  [c0e9df50] [c0c15434] start_kernel+0x310/0x488
+  [c0e9dff0] [00003484] 0x3484
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/of_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/kernel/entry_32.S | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/tty/serial/of_serial.c
-+++ b/drivers/tty/serial/of_serial.c
-@@ -93,6 +93,10 @@ static int of_platform_serial_setup(stru
- 	if (of_property_read_u32(np, "reg-offset", &prop) == 0)
- 		port->mapbase += prop;
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -757,6 +757,9 @@ fast_exception_return:
+ 	mtcr	r10
+ 	lwz	r10,_LINK(r11)
+ 	mtlr	r10
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r11)
+ 	REST_GPR(10, r11)
+ 	mtspr	SPRN_SRR1,r9
+ 	mtspr	SPRN_SRR0,r12
+@@ -987,6 +990,9 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRE
+ 	mtcrf	0xFF,r10
+ 	mtlr	r11
  
-+	/* Compatibility with the deprecated pxa driver and 8250_pxa drivers. */
-+	if (of_device_is_compatible(np, "mrvl,mmp-uart"))
-+		port->regshift = 2;
-+
- 	/* Check for registers offset within the devices address range */
- 	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
- 		port->regshift = prop;
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r1)
+ 	/*
+ 	 * Once we put values in SRR0 and SRR1, we are in a state
+ 	 * where exceptions are not recoverable, since taking an
+@@ -1024,6 +1030,9 @@ exc_exit_restart_end:
+ 	mtlr	r11
+ 	lwz	r10,_CCR(r1)
+ 	mtcrf	0xff,r10
++	/* Clear the exception_marker on the stack to avoid confusing stacktrace */
++	li	r10, 0
++	stw	r10, 8(r1)
+ 	REST_2GPRS(9, r1)
+ 	.globl exc_exit_restart
+ exc_exit_restart:
 
