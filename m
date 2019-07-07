@@ -2,100 +2,85 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB8CC48BE1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF43C48BE1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27852075C
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:33:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gb9drmik"
+	by mail.kernel.org (Postfix) with ESMTP id 9ADA720684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfGGTde (ORCPT
+        id S1727600AbfGGTiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:33:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57728 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfGGTde (ORCPT
+        Sun, 7 Jul 2019 15:38:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56776 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727434AbfGGTiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:33:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jU5cEjUtcVYO3EaFU5lWyybUeSozoad8uL7Kr7BLfLM=; b=gb9drmike6oRAXpcP1cYg9E/h
-        L/qk0ptX30TDgNFuHLR4AGhKrfBn3QTrfMYf7J8/R6SfcsgC8EBDhVRkAYVokbnjdPYqW+Am4Bsiw
-        mbEwPjYMf8iqI37MI5DgNjkfhtG55g6EeWM2IWE24ntmKDiDxBhbLf6EjUVJO2VNNtq7v76E9ekBX
-        so5Bz++sxMLYMAzj28hL5zn6FC6xwAqTak5e7uNp0vfS/ofPIooa884l7zevYmDTBlhUgBProdfSU
-        a+qbyHJRObWin6sU9Omyyj6IL1TMp51Suyr0r2CpLAN77BskyyQQSfj5O0QoG+lB6MAVyWZb/RkrG
-        I3AGMBoug==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkCuh-0003co-Vv; Sun, 07 Jul 2019 19:33:32 +0000
-Subject: Re: [PATCH] tpm: Document UEFI event log quirks
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     tweek@google.com, matthewgarrett@google.com,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
- <6acf78df-b168-14d3-fea4-9a9d2945e77f@infradead.org>
- <a8ee93721a674434e22d31fd1d10bf9472c1c739.camel@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ec274596-6bc8-07a0-d09b-1d191646c5cd@infradead.org>
-Date:   Sun, 7 Jul 2019 12:33:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 7 Jul 2019 15:38:00 -0400
+Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hkCz0-0006d1-P0; Sun, 07 Jul 2019 20:37:58 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hkCyz-0005X0-N0; Sun, 07 Jul 2019 20:37:57 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-In-Reply-To: <a8ee93721a674434e22d31fd1d10bf9472c1c739.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        "Yangtao Li" <tiny.windzz@gmail.com>
+Date:   Sun, 07 Jul 2019 17:54:17 +0100
+Message-ID: <lsq.1562518457.641836724@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 009/129] clk: vf610: fix refcount leak in
+ vf610_clocks_init()
+In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
+X-SA-Exim-Connect-IP: 94.197.121.43
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/19 3:15 AM, Jarkko Sakkinen wrote:
-> On Wed, 2019-07-03 at 09:45 -0700, Randy Dunlap wrote:
->>> +This introduces another problem: nothing guarantees that it is not
->>> +called before the stub gets to run. Thus, it needs to copy the final
->>> +events table preboot size to the custom configuration table so that
->>> +kernel offset it later on.
+3.16.70-rc1 review patch.  If anyone has any objections, please let me know.
 
-     (so that)
-     the kernel can use that final table preboot size as an events table
-     offset later on.
+------------------
 
->>
->> ?  kernel can offset it later on.
-> 
-> EFI stub calculates the total size of the events in the final events
-> table at the time.
-> 
-> Later on, TPM driver uses this offset to copy only the events that
-> were actually generated after ExitBootServices():
-> 
-> /*
->  * Copy any of the final events log that didn't also end up in the
->  * main log. Events can be logged in both if events are generated
->  * between GetEventLog() and ExitBootServices().
->  */
-> memcpy((void *)log->bios_event_log + log_size,
->        final_tbl->events + log_tbl->final_events_preboot_size,
->        efi_tpm_final_log_size);
-> 
-> What would be a better way to describe this?
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-Yeah, I think I see what it's doing, how it's using that.
-See above.
+commit 567177024e0313e4f0dcba7ba10c0732e50e655d upstream.
 
-OK?
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
--- 
-~Randy
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: 1f2c5fd5f048 ("ARM: imx: add VF610 clock support")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+[bwh: Backported to 3.16: adjust filename]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ arch/arm/mach-imx/clk-vf610.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/arm/mach-imx/clk-vf610.c
++++ b/arch/arm/mach-imx/clk-vf610.c
+@@ -117,6 +117,7 @@ static void __init vf610_clocks_init(str
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,vf610-anatop");
+ 	anatop_base = of_iomap(np, 0);
+ 	BUG_ON(!anatop_base);
++	of_node_put(np);
+ 
+ 	np = ccm_node;
+ 	ccm_base = of_iomap(np, 0);
+
