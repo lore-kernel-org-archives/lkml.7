@@ -2,101 +2,111 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA01C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 12:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA38C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 12:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A561620830
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 12:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F316E206A3
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 12:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGXb9TYx"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="BiKpB7J5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfGGMRc (ORCPT
+        id S1726895AbfGGMjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 08:17:32 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34593 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfGGMRb (ORCPT
+        Sun, 7 Jul 2019 08:39:11 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:23956 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfGGMjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 08:17:31 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p17so13245066ljg.1;
-        Sun, 07 Jul 2019 05:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=SAMwT6DUHJKtrCvN/jv0WTWZlT3Adyo0fAKhCuWcf/M=;
-        b=UGXb9TYxQ1dBTwuX3uGHVTmta0ifDlJxXCd4M9XkNcUsWKPrmDg/CZbHn+FrBTHdbS
-         QfermUCUSCzF7h87ARN2ABT3YKJHtW/wUqxrzM7hrTHsooQpQ7mUvqjM46s0sDh9oeMa
-         z0f74B/exNKvRNUCS57FdYfRE724+VU0UpwJPETsWqYFhzoZjeNFTqvfcXjwRGUVUJhE
-         5jtqNWWueunkokujlQNtNbDsXzkiGaWK3PKinIQMOwq91oCb+wa+KA/TNtAO91HiLCc/
-         jnrWcNF1ibLWXns72CIeXDaYvXWr/IBR++C7HKFjVDFNWrBKatuA/NWE7j2lkZWw+zxw
-         RuTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SAMwT6DUHJKtrCvN/jv0WTWZlT3Adyo0fAKhCuWcf/M=;
-        b=ezDV6l01Q0YHKKnTDoEsRcavknyxi8ZhJOdHTXiuITNOslSU6DzrxFzBGNwNGJMfeC
-         ffWkm/1q8eu0T0VrWleZ0ijF7aN8AIDndcsUA7NCpeZqcCt9Z533qi7oWn/VvX/QDa0P
-         k2vcuoU47I6pGSbri1iL3jv8qecN6cmuJugpJW7wDNUbrtIODFHWFoOJ48LGU63FO6Ml
-         BdxY0Vz3q1yL9lxKiF/OL1JpvOZwN5+ygHAm/Jfjw30cjcwU3Z97RnRFADBiQMeW7M5B
-         oA3NPrMvRfJEM0qTL6TalcC6sXHvDvJN+H/YjViSxMav1QfhNC6Hpqrt9Qch+NyUmiMY
-         Ki4g==
-X-Gm-Message-State: APjAAAVMv+0okSbeeZxyt03CP9ZAYn+K+3gYEtHyDNfPpAGVAG4ERV3j
-        vjXIwE8ZR85XUdoWRyG+G/6NS/BC
-X-Google-Smtp-Source: APXvYqzNMEnTfyeHiRkT/y6hMxdp+rpP0WXLeaAkmVVzTOIjXt8uOj2OZlcpOAEi7CsgYl/Jk1hz4A==
-X-Received: by 2002:a2e:b0f0:: with SMTP id h16mr7289700ljl.21.1562501849425;
-        Sun, 07 Jul 2019 05:17:29 -0700 (PDT)
-Received: from localhost (122-109-207-82.ip.ukrtel.net. [82.207.109.122])
-        by smtp.gmail.com with ESMTPSA id n1sm2225136lfk.19.2019.07.07.05.17.28
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 07 Jul 2019 05:17:28 -0700 (PDT)
-From:   Ruslan Bilovol <ruslan.bilovol@gmail.com>
-To:     linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        mathias.nyman@intel.com
-Subject: [PATCH] usb: host: xhci-hub: fix extra endianness conversion
-Date:   Sun,  7 Jul 2019 15:17:19 +0300
-Message-Id: <1562501839-26522-1-git-send-email-ruslan.bilovol@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Sun, 7 Jul 2019 08:39:11 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x67CcrMb006529;
+        Sun, 7 Jul 2019 21:38:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x67CcrMb006529
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562503134;
+        bh=nrjqtdWdKb0YLVBdENA2teXagV7cGddSi8G95bRLscQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BiKpB7J5guJX5/CaJ/CbFoeiUw3+khQRO4J3pOIoiTgpF5vFS6w0QUBrohHHdEiZw
+         xMynpNvLy89WJqBQxCMATaulMcBu+6OfJPk42IbjjFMv8gkmboT1cqR2vgfKupqtFh
+         n8JYKAf+9D2l0+Xqeq06N87CfLCmbbZ3E12GVUTfTcybzpdQy0RriWR68NbYvulvpH
+         QcuKN4SHY95sVr7jUVKz1qbBdFigC9B68ZvkEhCw5hnuRkoE2zTLlp6LHGtIexF5jq
+         PE5xhE90rB/PC6rQVndhnMpxuGiyVP65yjNYh2Fyyx3FeluoOu6EK3XbrLpDT/l3+j
+         f2NpIMOl9JJVA==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id o19so3865350uap.13;
+        Sun, 07 Jul 2019 05:38:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAXg7BnNo6RCtG8RsQGWsHYDl0KxQQlxbysFxeixv/Co7Xf9Uxrx
+        uUBptMmiurwXT5rK25o+r+d4Jv7XmV6zUGMxm0s=
+X-Google-Smtp-Source: APXvYqy+su+SSqSwTlKPdJzW478US2CzEGH5+iDXkwg6uKSJwTmNd+jUZi0lJI3seXTNN+i5ii+Piloj6ymqN1HNcnQ=
+X-Received: by 2002:a9f:25e9:: with SMTP id 96mr7134067uaf.95.1562503133020;
+ Sun, 07 Jul 2019 05:38:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <alpine.DEB.2.21.1907061538580.2523@hadrien> <de953581-7ae6-952c-3922-3d5b25f48e17@web.de>
+In-Reply-To: <de953581-7ae6-952c-3922-3d5b25f48e17@web.de>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 7 Jul 2019 21:38:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT0kxA53k894sfRXOjcbyjj_mmY60JbKy5Lhi2qHJcC9g@mail.gmail.com>
+Message-ID: <CAK7LNAT0kxA53k894sfRXOjcbyjj_mmY60JbKy5Lhi2qHJcC9g@mail.gmail.com>
+Subject: Re: Coccinelle: api: add devm_platform_ioremap_resource script
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        kernel-janitors@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Enrico Weigelt <lkml@metux.net>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't do extra cpu_to_le32 conversion for
-put_unaligned_le32 because it is already implemented
-in this function.
+On Sun, Jul 7, 2019 at 6:56 PM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
+>
+> >> I will apply with Julia's Signed-off-by instead of Acked-by.
+>
+> >> I will also add SPDX tag.
+>
+> >>
+>
+> >> Is this OK?
+>
+>
+> >
+> > Yes, thanks.
+>
+>
+> Will the clarification for following implementation details get any more
+> software development attention?
+> https://systeme.lip6.fr/pipermail/cocci/2019-June/005975.html
+> https://lore.kernel.org/lkml/7b4fe770-dadd-80ba-2ba4-0f2bc90984ef@web.de/
+>
+> * The flag =E2=80=9CIORESOURCE_MEM=E2=80=9D
+>
+> * Exclusion of variable assignments by SmPL when constraints
 
-Fixes sparse error:
-xhci-hub.c:1152:44: warning: incorrect type in argument 1 (different base types)
-xhci-hub.c:1152:44:    expected unsigned int [usertype] val
-xhci-hub.c:1152:44:    got restricted __le32 [usertype]
 
-Fixes: 395f540 "xhci: support new USB 3.1 hub request to get extended port status"
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
----
- drivers/usb/host/xhci-hub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+OK, for this refactoring to happen,
+the second argument should be IORESOURCE_MEM
+instead of generic 'arg2'.
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index 3abe70f..b7d23c4 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1149,7 +1149,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			}
- 			port_li = readl(ports[wIndex]->addr + PORTLI);
- 			status = xhci_get_ext_port_status(temp, port_li);
--			put_unaligned_le32(cpu_to_le32(status), &buf[4]);
-+			put_unaligned_le32(status, &buf[4]);
- 		}
- 		break;
- 	case SetPortFeature:
--- 
-1.9.1
+Himanshu,
+Will you send v2?
 
+
+
+--=20
+Best Regards
+Masahiro Yamada
