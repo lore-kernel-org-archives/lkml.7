@@ -2,108 +2,148 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85992C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D959C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6210A20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BAD205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:12:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l1PKt9yU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbfGHJJy (ORCPT
+        id S1729691AbfGHJMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 05:09:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3602 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726284AbfGHJJx (ORCPT
+        Mon, 8 Jul 2019 05:12:22 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34850 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728166AbfGHJMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 05:09:53 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6897U3M085167
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 05:09:52 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tkyrjy30d-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 05:09:52 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Mon, 8 Jul 2019 10:09:43 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Jul 2019 10:09:41 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6899SVF29622532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jul 2019 09:09:28 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F17D42042;
-        Mon,  8 Jul 2019 09:09:40 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3487B42045;
-        Mon,  8 Jul 2019 09:09:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.94])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Jul 2019 09:09:39 +0000 (GMT)
-Subject: Re: [RFC 0/2] Optimize the idle CPU search
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, subhra.mazumdar@oracle.com
-References: <20190708045432.18774-1-parth@linux.ibm.com>
- <20190708080836.GW3402@hirez.programming.kicks-ass.net>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Mon, 8 Jul 2019 14:39:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
-MIME-Version: 1.0
-In-Reply-To: <20190708080836.GW3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070809-0028-0000-0000-00000381E4DF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070809-0029-0000-0000-00002441EC52
-Message-Id: <c57434ff-b939-cd93-de93-11435345b2ac@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=882 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907080120
+        Mon, 8 Jul 2019 05:12:21 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6899Y67139750;
+        Mon, 8 Jul 2019 09:11:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=g2DHAK+GUXOKjeTx2IBEpkNnbp12a0u2MlWfdpHPiPY=;
+ b=l1PKt9yUYfMPL3AKijizmeJGVZg0Syn/AxySYeAn1ZR5QclRyXNcS05GRlkCeI1jyjLp
+ OTtHb4A41dubjula1fmPhkViLmzm1MTjHN2byT3HzLXUr46YFMvvsQ48Ij5BZM8YFnEj
+ 0mvLYfMXwnu+yGgbGy5hSXytCmYwgHRnD7mLTOsI52Qr7ZQQfUoJELFq+5W5UDwlQcre
+ vcREKQ6mtu5E3ExkHim9MjnTmVOnaIZspmiXF5HEwsQ03sSe723LSxnmayFOBUmAuD63
+ kiroVbAIRdqLM5hnfEndRYtcb2TpzNAWPMvyv/fTLZ7e9OOMprnU4E/zTBl63xDXz0sY mw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2tjk2td9cf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 09:11:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6897tLM189818;
+        Mon, 8 Jul 2019 09:11:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2tjhpccsmf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 09:11:39 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x689BbYs000301;
+        Mon, 8 Jul 2019 09:11:37 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jul 2019 02:11:37 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v6 3/4] xen: Map "xen_nopv" parameter to "nopv" and mark it obsolete
+Date:   Sun,  7 Jul 2019 17:15:07 +0800
+Message-Id: <1562490908-17882-4-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1562490908-17882-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1562490908-17882-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9311 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907080120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9311 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907080121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Clean up unnecessory code after that operation.
 
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  2 ++
+ arch/x86/xen/enlighten_hvm.c                    | 12 ++++++------
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-On 7/8/19 1:38 PM, Peter Zijlstra wrote:
-> On Mon, Jul 08, 2019 at 10:24:30AM +0530, Parth Shah wrote:
->> When searching for an idle_sibling, scheduler first iterates to search for
->> an idle core and then for an idle CPU. By maintaining the idle CPU mask
->> while iterating through idle cores, we can mark non-idle CPUs for which
->> idle CPU search would not have to iterate through again. This is especially
->> true in a moderately load system
->>
->> Optimize idle CPUs search by marking already found non idle CPUs during
->> idle core search. This reduces iteration count when searching for idle
->> CPUs, resulting in lower iteration count.
-> 
-> Have you seen these patches:
-> 
->   https://lkml.kernel.org/r/20180530142236.667774973@infradead.org
-> 
-> I've meant to get back to that, but never quite had the time :/
-> 
-
-Ok, I was not aware of this patch-set.
-It seems interesting and I will evaluate it.
-
-
-Thanks
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 21e08af..8ab34a1 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5254,6 +5254,8 @@
+ 	xen_nopv	[X86]
+ 			Disables the PV optimizations forcing the HVM guest to
+ 			run as generic HVM guest with no PV drivers.
++			This option is obsoleted by the "nopv" option, which
++			has equivalent effect for XEN platform.
+ 
+ 	xen_scrub_pages=	[XEN]
+ 			Boolean option to control scrubbing pages before giving them back
+diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+index ac4943c..1756cf7 100644
+--- a/arch/x86/xen/enlighten_hvm.c
++++ b/arch/x86/xen/enlighten_hvm.c
+@@ -210,18 +210,18 @@ static void __init xen_hvm_guest_init(void)
+ #endif
+ }
+ 
+-static bool xen_nopv;
+ static __init int xen_parse_nopv(char *arg)
+ {
+-       xen_nopv = true;
+-       return 0;
++	pr_notice("\"xen_nopv\" is deprecated, please use \"nopv\" instead\n");
++
++	if (xen_cpuid_base())
++		nopv = true;
++	return 0;
+ }
+ early_param("xen_nopv", xen_parse_nopv);
+ 
+ bool __init xen_hvm_need_lapic(void)
+ {
+-	if (xen_nopv)
+-		return false;
+ 	if (xen_pv_domain())
+ 		return false;
+ 	if (!xen_hvm_domain())
+@@ -233,7 +233,7 @@ bool __init xen_hvm_need_lapic(void)
+ 
+ static uint32_t __init xen_platform_hvm(void)
+ {
+-	if (xen_pv_domain() || xen_nopv)
++	if (xen_pv_domain())
+ 		return 0;
+ 
+ 	return xen_cpuid_base();
+-- 
+1.8.3.1
 
