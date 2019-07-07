@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90348C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685B3C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7272720651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B1420651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfGGTmK (ORCPT
+        id S1728200AbfGGTmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:42:10 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57722 "EHLO
+        Sun, 7 Jul 2019 15:42:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57708 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727628AbfGGTiN (ORCPT
+        by vger.kernel.org with ESMTP id S1727625AbfGGTiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:13 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz9-0006kM-FW; Sun, 07 Jul 2019 20:38:07 +0100
+        id 1hkCz9-0006kU-UU; Sun, 07 Jul 2019 20:38:08 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz7-0005e2-AN; Sun, 07 Jul 2019 20:38:05 +0100
+        id 1hkCz7-0005eD-Dv; Sun, 07 Jul 2019 20:38:05 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hulk Robot" <hulkci@huawei.com>,
-        "YueHaibing" <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "Steve French" <stfrench@microsoft.com>,
+        "Pavel Shilovsky" <pshilov@microsoft.com>,
+        "Pavel Shilovsky" <piastryyy@gmail.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.642678239@decadent.org.uk>
+Message-ID: <lsq.1562518457.9438667@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 096/129] net-sysfs: Fix mem leak in netdev_register_kobject
+Subject: [PATCH 3.16 098/129] CIFS: Do not reset lease state to NONE on
+ lease break
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,55 +57,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Pavel Shilovsky <piastryyy@gmail.com>
 
-commit 895a5e96dbd6386c8e78e5b78e067dcc67b7f0ab upstream.
+commit 7b9b9edb49ad377b1e06abf14354c227e9ac4b06 upstream.
 
-syzkaller report this:
-BUG: memory leak
-unreferenced object 0xffff88837a71a500 (size 256):
-  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
-  hex dump (first 32 bytes):
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
-  backtrace:
-    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
-    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
-    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
-    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
-    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
-    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
-    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
-    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
-    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
-    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
-    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000115be9bb>] 0xffffffffffffffff
+Currently on lease break the client sets a caching level twice:
+when oplock is detected and when oplock is processed. While the
+1st attempt sets the level to the value provided by the server,
+the 2nd one resets the level to None unconditionally.
+This happens because the oplock/lease processing code was changed
+to avoid races between page cache flushes and oplock breaks.
+The commit c11f1df5003d534 ("cifs: Wait for writebacks to complete
+before attempting write.") fixed the races for oplocks but didn't
+apply the same changes for leases resulting in overwriting the
+server granted value to None. Fix this by properly processing
+lease breaks.
 
-It should call kset_unregister to free 'dev->queues_kset'
-in error path of register_queue_kobjects, otherwise will cause a mem leak.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: net_device pointer is called "net", confusingly]
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+[bwh: Backported to 3.16: drop change in smb311_operations]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/core/net-sysfs.c | 3 +++
- 1 file changed, 3 insertions(+)
-
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1219,6 +1219,9 @@ static int register_queue_kobjects(struc
- error:
- 	netdev_queue_update_kobjects(net, txq, 0);
- 	net_rx_queue_update_kobjects(net, rxq, 0);
-+#ifdef CONFIG_SYSFS
-+	kset_unregister(net->queues_kset);
-+#endif
- 	return error;
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -420,7 +420,6 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 	__u8 lease_state;
+ 	struct list_head *tmp;
+ 	struct cifsFileInfo *cfile;
+-	struct TCP_Server_Info *server = tcon->ses->server;
+ 	struct cifs_pending_open *open;
+ 	struct cifsInodeInfo *cinode;
+ 	int ack_req = le32_to_cpu(rsp->Flags &
+@@ -440,13 +439,25 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 		cifs_dbg(FYI, "lease key match, lease break 0x%d\n",
+ 			 le32_to_cpu(rsp->NewLeaseState));
+ 
+-		server->ops->set_oplock_level(cinode, lease_state, 0, NULL);
+-
+ 		if (ack_req)
+ 			cfile->oplock_break_cancelled = false;
+ 		else
+ 			cfile->oplock_break_cancelled = true;
+ 
++		set_bit(CIFS_INODE_PENDING_OPLOCK_BREAK, &cinode->flags);
++
++		/*
++		 * Set or clear flags depending on the lease state being READ.
++		 * HANDLE caching flag should be added when the client starts
++		 * to defer closing remote file handles with HANDLE leases.
++		 */
++		if (lease_state & SMB2_LEASE_READ_CACHING_HE)
++			set_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
++				&cinode->flags);
++		else
++			clear_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
++				  &cinode->flags);
++
+ 		queue_work(cifsoplockd_wq, &cfile->oplock_break);
+ 		kfree(lw);
+ 		return true;
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -962,6 +962,15 @@ smb2_downgrade_oplock(struct TCP_Server_
  }
  
+ static void
++smb21_downgrade_oplock(struct TCP_Server_Info *server,
++		       struct cifsInodeInfo *cinode, bool set_level2)
++{
++	server->ops->set_oplock_level(cinode,
++				      set_level2 ? SMB2_LEASE_READ_CACHING_HE :
++				      0, 0, NULL);
++}
++
++static void
+ smb2_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
+ 		      unsigned int epoch, bool *purge_cache)
+ {
+@@ -1253,7 +1262,7 @@ struct smb_version_operations smb21_oper
+ 	.print_stats = smb2_print_stats,
+ 	.is_oplock_break = smb2_is_valid_oplock_break,
+ 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
+-	.downgrade_oplock = smb2_downgrade_oplock,
++	.downgrade_oplock = smb21_downgrade_oplock,
+ 	.need_neg = smb2_need_neg,
+ 	.negotiate = smb2_negotiate,
+ 	.negotiate_wsize = smb2_negotiate_wsize,
+@@ -1331,7 +1340,7 @@ struct smb_version_operations smb30_oper
+ 	.dump_share_caps = smb2_dump_share_caps,
+ 	.is_oplock_break = smb2_is_valid_oplock_break,
+ 	.handle_cancelled_mid = smb2_handle_cancelled_mid,
+-	.downgrade_oplock = smb2_downgrade_oplock,
++	.downgrade_oplock = smb21_downgrade_oplock,
+ 	.need_neg = smb2_need_neg,
+ 	.negotiate = smb2_negotiate,
+ 	.negotiate_wsize = smb2_negotiate_wsize,
 
