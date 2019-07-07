@@ -2,114 +2,340 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42892C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 14:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05B7C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 15:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD522082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 14:51:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WeNFDzV6"
+	by mail.kernel.org (Postfix) with ESMTP id A30D6206A3
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 15:03:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfGGOo0 (ORCPT
+        id S1727220AbfGGPDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 10:44:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35798 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfGGOo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 10:44:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u14so5135857pfn.2
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 07:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=llINxd7chWMQYSAAyJoEbONP27hNSFFLJxUayxqRxU8=;
-        b=WeNFDzV60cDo1nguHaheWGmnBM8pQnuimPwSW6wzwIDUeAvyLHkF0EMM1lo4ItrWMZ
-         4qHfyHfCdotZ2qyxAVZDNjQYaPnwwiHT94B3k715RvttE3sJE4iUA6aUpiPYQFCosXyM
-         8JWlgxbvBJLWgybUuFba14Nu7r6bxjHFRPqMA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=llINxd7chWMQYSAAyJoEbONP27hNSFFLJxUayxqRxU8=;
-        b=Nj/2odBIri7QaKrglrByGcn/ufHmE3PY40JwPTrdrs3uFhB5zN07ZjILyjDR8mfeCt
-         vxrr7vBr5kSRRu/Jw71mcvYi6WMB3ZuS8Mar3/6w8CYw+nKD7ZTE33eMwbiOed2oFAwb
-         lxyjSkQ4YJnYMFA2b/kyUOpBSe8AnYeOvzVaaDxKIX9I3ki+DzjmFG+GwvO1cnBO+48I
-         I+CoyZO5YGYphdItX81MHPLBQr0Ohwpao4jvZl9sY+wTi22FUNR6YDy9TWbWeF77kmqX
-         RKgVNC5+5FsLvA7PwZB3sFnfvt/zuQalF1zWT1lsv5v3ah0m06vrKiu+6qCgNGAfYmp4
-         gAlw==
-X-Gm-Message-State: APjAAAXxLtuxF7NLUzBsvJsK4UGrU1R3lAhq0b14wdhD0IJ8Cb19fkda
-        YAxyC7UEnYWSG/SfMh/pjBuKK34uWIU=
-X-Google-Smtp-Source: APXvYqxu7HRbHsOuM3+rCbDIFEiAwYtA3JiDauASBsUxhU1jkKRE20/qOxlOEycD4ziUrTwKFwGRFA==
-X-Received: by 2002:a63:7b4d:: with SMTP id k13mr6565283pgn.182.1562510665202;
-        Sun, 07 Jul 2019 07:44:25 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 14sm12757014pgp.37.2019.07.07.07.44.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 07 Jul 2019 07:44:24 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        acme@kernel.org, jolsa@redhat.com, Jiri Olsa <jolsa@kernel.org>
-Subject: [RFC] Fix python feature detection
-Date:   Sun,  7 Jul 2019 10:44:17 -0400
-Message-Id: <20190707144417.237913-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Sun, 7 Jul 2019 11:03:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40584 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbfGGPDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 11:03:08 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0E035308792F;
+        Sun,  7 Jul 2019 15:02:59 +0000 (UTC)
+Received: from [10.36.116.46] (ovpn-116-46.ams2.redhat.com [10.36.116.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4AE519C79;
+        Sun,  7 Jul 2019 15:02:49 +0000 (UTC)
+Subject: Re: [PATCH v7 1/6] vfio/type1: Introduce iova list and add iommu
+ aperture validity check
+To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        alex.williamson@redhat.com, pmorel@linux.vnet.ibm.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linuxarm@huawei.com,
+        john.garry@huawei.com, xuwei5@hisilicon.com, kevin.tian@intel.com
+References: <20190626151248.11776-1-shameerali.kolothum.thodi@huawei.com>
+ <20190626151248.11776-2-shameerali.kolothum.thodi@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <9ae8755a-9a2a-da76-e0c1-0f36f75ec2b3@redhat.com>
+Date:   Sun, 7 Jul 2019 17:02:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190626151248.11776-2-shameerali.kolothum.thodi@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Sun, 07 Jul 2019 15:03:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am having a hard time building BPF samples by doing a make in
-samples/bpf. While I am debugging that, I ran into the Python issue.
-Even though the system has libpython2.7-dev:
+Hi Shameer,
 
-If I just do a 'make' inside tools/build/feature/ I get:
-Python.h: No such file or directory
+On 6/26/19 5:12 PM, Shameer Kolothum wrote:
+> This introduces an iova list that is valid for dma mappings. Make
+> sure the new iommu aperture window doesn't conflict with the current
+> one or with any existing dma mappings during attach.
+> 
+> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 181 +++++++++++++++++++++++++++++++-
+>  1 file changed, 177 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index add34adfadc7..970d1ec06aed 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -1,4 +1,3 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+>  /*
+>   * VFIO: IOMMU DMA mapping support for Type1 IOMMU
+>   *
+> @@ -62,6 +61,7 @@ MODULE_PARM_DESC(dma_entry_limit,
+>  
+>  struct vfio_iommu {
+>  	struct list_head	domain_list;
+> +	struct list_head	iova_list;
+>  	struct vfio_domain	*external_domain; /* domain for external user */
+>  	struct mutex		lock;
+>  	struct rb_root		dma_list;
+> @@ -97,6 +97,12 @@ struct vfio_group {
+>  	bool			mdev_group;	/* An mdev group */
+>  };
+>  
+> +struct vfio_iova {
+> +	struct list_head	list;
+> +	dma_addr_t		start;
+> +	dma_addr_t		end;
+> +};
+> +
+>  /*
+>   * Guest RAM pinning working set or DMA target
+>   */
+> @@ -1401,6 +1407,146 @@ static int vfio_mdev_iommu_device(struct device *dev, void *data)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * This is a helper function to insert an address range to iova list.
+> + * The list starts with a single entry corresponding to the IOMMU
+The list is initially created with a single entry ../..
+> + * domain geometry to which the device group is attached. The list
+> + * aperture gets modified when a new domain is added to the container
+> + * if the new aperture doesn't conflict with the current one or with
+> + * any existing dma mappings. The list is also modified to exclude
+> + * any reserved regions associated with the device group.
+> + */
+> +static int vfio_iommu_iova_insert(struct list_head *head,
+> +				  dma_addr_t start, dma_addr_t end)
+> +{
+> +	struct vfio_iova *region;
+> +
+> +	region = kmalloc(sizeof(*region), GFP_KERNEL);
+> +	if (!region)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&region->list);
+> +	region->start = start;
+> +	region->end = end;
+> +
+> +	list_add_tail(&region->list, head);
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Check the new iommu aperture conflicts with existing aper or with any
+> + * existing dma mappings.
+> + */
+> +static bool vfio_iommu_aper_conflict(struct vfio_iommu *iommu,
+> +				     dma_addr_t start, dma_addr_t end)
+> +{
+> +	struct vfio_iova *first, *last;
+> +	struct list_head *iova = &iommu->iova_list;
+> +
+> +	if (list_empty(iova))
+> +		return false;
+> +
+> +	/* Disjoint sets, return conflict */
+> +	first = list_first_entry(iova, struct vfio_iova, list);
+> +	last = list_last_entry(iova, struct vfio_iova, list);
+> +	if (start > last->end || end < first->start)
+> +		return true;
+> +
+> +	/* Check for any existing dma mappings outside the new start */
+s/outside/below
+> +	if (start > first->start) {
+> +		if (vfio_find_dma(iommu, first->start, start - first->start))
+> +			return true;
+> +	}
+> +
+> +	/* Check for any existing dma mappings outside the new end */
+s/outside/beyond
+> +	if (end < last->end) {
+> +		if (vfio_find_dma(iommu, end + 1, last->end - end))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * Resize iommu iova aperture window. This is called only if the new
+> + * aperture has no conflict with existing aperture and dma mappings.
+> + */
+> +static int vfio_iommu_aper_resize(struct list_head *iova,
+> +				  dma_addr_t start, dma_addr_t end)
+> +{
+> +	struct vfio_iova *node, *next;
+> +
+> +	if (list_empty(iova))
+> +		return vfio_iommu_iova_insert(iova, start, end);
+> +
+> +	/* Adjust iova list start */
+> +	list_for_each_entry_safe(node, next, iova, list) {
+> +		if (start < node->start)
+> +			break;
+> +		if (start >= node->start && start < node->end) {
+> +			node->start = start;
+> +			break;
+> +		}
+> +		/* Delete nodes before new start */
+> +		list_del(&node->list);
+> +		kfree(node);
+> +	}
+> +
+> +	/* Adjust iova list end */
+> +	list_for_each_entry_safe(node, next, iova, list) {
+> +		if (end > node->end)
+> +			continue;
+> +		if (end > node->start && end <= node->end) {
+> +			node->end = end;
+> +			continue;
+> +		}
+> +		/* Delete nodes after new end */
+> +		list_del(&node->list);
+> +		kfree(node);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void vfio_iommu_iova_free(struct list_head *iova)
+> +{
+> +	struct vfio_iova *n, *next;
+> +
+> +	list_for_each_entry_safe(n, next, iova, list) {
+> +		list_del(&n->list);
+> +		kfree(n);
+> +	}
+> +}
+> +
+> +static int vfio_iommu_iova_get_copy(struct vfio_iommu *iommu,
+> +				    struct list_head *iova_copy)
+> +{
+> +	struct list_head *iova = &iommu->iova_list;
+> +	struct vfio_iova *n;
+> +	int ret;
+> +
+> +	list_for_each_entry(n, iova, list) {
+> +		ret = vfio_iommu_iova_insert(iova_copy, n->start, n->end);
+> +		if (ret)
+> +			goto out_free;
+> +	}
+> +
+> +	return 0;
+> +
+> +out_free:
+> +	vfio_iommu_iova_free(iova_copy);
+> +	return ret;
+> +}
+> +
+> +static void vfio_iommu_iova_insert_copy(struct vfio_iommu *iommu,
+> +					struct list_head *iova_copy)
+> +{
+> +	struct list_head *iova = &iommu->iova_list;
+> +
+> +	vfio_iommu_iova_free(iova);
+> +
+> +	list_splice_tail(iova_copy, iova);
+> +}
+>  static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  					 struct iommu_group *iommu_group)
+>  {
+> @@ -1411,6 +1557,8 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	int ret;
+>  	bool resv_msi, msi_remap;
+>  	phys_addr_t resv_msi_base;
+> +	struct iommu_domain_geometry geo;
+> +	LIST_HEAD(iova_copy);
+>  
+>  	mutex_lock(&iommu->lock);
+>  
+> @@ -1487,6 +1635,25 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	if (ret)
+>  		goto out_domain;
+>  
+> +	/* Get aperture info */
+> +	iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY, &geo);
+> +
+> +	if (vfio_iommu_aper_conflict(iommu, geo.aperture_start,
+> +				     geo.aperture_end)) {
+> +		ret = -EINVAL;
+> +		goto out_detach;
+> +	}
+> +
+> +	/* Get a copy of the current iova list and work on it */
+At this stage of the reading it is not obvious why you need a copy of
+the list. rationale can be found when reading further or in the series
+history ("Use of iova list copy so that original is not altered in case
+of failure").
 
-This led me to this patch which fixes Python feature detection for me.
-I am not sure if it is the right fix for Python since it is hardcoded
-for Python version 2, but I thought it could be useful.
+Adding a comment in the code would be useful I think.
 
-My system is a Debian buster release.
+Thanks
 
-Cc: acme@kernel.org
-Cc: jolsa@redhat.com
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- tools/build/feature/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Eric
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 4b8244ee65ce..cde44cb38a5e 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -83,7 +83,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
- ###############################
- 
- $(OUTPUT)test-all.bin:
--	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -laudit -I/usr/include/slang -lslang $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null) $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma
-+	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -laudit -I/usr/include/slang -lslang $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null) $(shell $(PKG_CONFIG) --libs --cflags python2 2>/dev/null) $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma
- 
- $(OUTPUT)test-hello.bin:
- 	$(BUILD)
-@@ -205,7 +205,7 @@ $(OUTPUT)test-libperl.bin:
- 	$(BUILD) $(FLAGS_PERL_EMBED)
- 
- $(OUTPUT)test-libpython.bin:
--	$(BUILD) $(FLAGS_PYTHON_EMBED)
-+	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags python2 2>/dev/null) $(FLAGS_PYTHON_EMBED)
- 
- $(OUTPUT)test-libpython-version.bin:
- 	$(BUILD)
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+> +	ret = vfio_iommu_iova_get_copy(iommu, &iova_copy);
+> +	if (ret)
+> +		goto out_detach;
+> +
+> +	ret = vfio_iommu_aper_resize(&iova_copy, geo.aperture_start,
+> +				     geo.aperture_end);
+> +	if (ret)
+> +		goto out_detach;
+> +
+>  	resv_msi = vfio_iommu_has_sw_msi(iommu_group, &resv_msi_base);
+>  
+>  	INIT_LIST_HEAD(&domain->group_list);
+> @@ -1520,8 +1687,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  				list_add(&group->next, &d->group_list);
+>  				iommu_domain_free(domain->domain);
+>  				kfree(domain);
+> -				mutex_unlock(&iommu->lock);
+> -				return 0;
+> +				goto done;
+>  			}
+>  
+>  			ret = vfio_iommu_attach_group(domain, group);
+> @@ -1544,7 +1710,9 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	}
+>  
+>  	list_add(&domain->next, &iommu->domain_list);
+> -
+> +done:
+> +	/* Delete the old one and insert new iova list */
+> +	vfio_iommu_iova_insert_copy(iommu, &iova_copy);
+>  	mutex_unlock(&iommu->lock);
+>  
+>  	return 0;
+> @@ -1553,6 +1721,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	vfio_iommu_detach_group(domain, group);
+>  out_domain:
+>  	iommu_domain_free(domain->domain);
+> +	vfio_iommu_iova_free(&iova_copy);
+>  out_free:
+>  	kfree(domain);
+>  	kfree(group);
+> @@ -1692,6 +1861,7 @@ static void *vfio_iommu_type1_open(unsigned long arg)
+>  	}
+>  
+>  	INIT_LIST_HEAD(&iommu->domain_list);
+> +	INIT_LIST_HEAD(&iommu->iova_list);
+>  	iommu->dma_list = RB_ROOT;
+>  	iommu->dma_avail = dma_entry_limit;
+>  	mutex_init(&iommu->lock);
+> @@ -1735,6 +1905,9 @@ static void vfio_iommu_type1_release(void *iommu_data)
+>  		list_del(&domain->next);
+>  		kfree(domain);
+>  	}
+> +
+> +	vfio_iommu_iova_free(&iommu->iova_list);
+> +
+>  	kfree(iommu);
+>  }
+>  
+> 
