@@ -2,110 +2,144 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1A5C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 06:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09E5C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 06:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E981A20838
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 06:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B7F208E4
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 06:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFvA1Q8G"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="H7dXqGji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfGGGOO (ORCPT
+        id S1726330AbfGGGmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 02:14:14 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35153 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfGGGON (ORCPT
+        Sun, 7 Jul 2019 02:42:05 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:43909 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfGGGmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 02:14:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u14so4841195pfn.2;
-        Sat, 06 Jul 2019 23:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j5vrgS9+95IhHBa7HDa1UVKPrb7RPwdim9qXDwM8OLk=;
-        b=uFvA1Q8GlVBUOsDAWk6HCh4LoYV9bv+YgCqeGPSnKhBS4tuZTiWv0ZxAe8z6xuB3HP
-         Yj5vEBULGa2Sxqu1wbsvMw3ddXjJazTgM+1J/9Qh/NB4VcnrIzAzXJDLsxepo79Ue6Sx
-         dHapa7PzqIDVOcAYBddVKFAnyDPFVCnQoJL2zOrzkcJ0ZvrKyTD8FhYqLM37caZTvPbg
-         5+wr0NnhIEuUSoKChXtzIwz7m4Jkw4tPp/XQF0m6Q6Y2vRw3/AFCyBObYpMySGnWN+IE
-         wv2TkpNVBm4Y5kRLSHEk8phdnLtY7eWskiT+XHV4X0F9Y0aO0TUR693ciVMSGMQ+YA63
-         mLMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j5vrgS9+95IhHBa7HDa1UVKPrb7RPwdim9qXDwM8OLk=;
-        b=Tfibd7BleG0qSdA9RCC3/W3H/dcbKVMkXkp00MA/GGWhboq3MLt6ssU3S5B6Pymk4T
-         ojP7yS1z2DH4yXBSYCCuC+gQ4Nm/EIZnEdqbYVTTXkM1OMZVsUb3aaD3kDwqMGzggsKZ
-         tGqpGSCvBWGBp7v7vAUb2RVdFra0uNr4kuI7H/fJtQjwp57gGCF9lxyV8/4kcDsSgXOw
-         72sPTKetMphVQsRTNWvhTKik4kMAN0uVLrCuZmiHd4HdG7m4gTj344YUh6nsJfAwyaxF
-         Zjri7m6DEoSvll6bdk1e2ypbUPV/P0llQM0XPe/5tIYaWl2PvUPTh6YFlbj7/DqH+1oY
-         WZ6g==
-X-Gm-Message-State: APjAAAV+x75cjsJn5RKi/I8kdpBHRhBR455+MtbG2h1sBgKLMd1fOrJK
-        GRRl1Jdou7awi6FhOJ4fJFc=
-X-Google-Smtp-Source: APXvYqzhPYRNfc9z52H4efrEwBhYtYi1tx8htuDqHKn9ySzV0TCozqMZ/IIufYVsLzlJAgU5uPxBIA==
-X-Received: by 2002:a17:90a:5288:: with SMTP id w8mr15622238pjh.61.1562480052801;
-        Sat, 06 Jul 2019 23:14:12 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o16sm31212952pgi.36.2019.07.06.23.14.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 06 Jul 2019 23:14:12 -0700 (PDT)
-Date:   Sat, 6 Jul 2019 23:14:10 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH 1/2] input: keyboard: gpio-keys-polled: use input name
- from pdata if available
-Message-ID: <20190707061410.GA174189@dtor-ws>
-References: <1561648031-15887-1-git-send-email-info@metux.net>
+        Sun, 7 Jul 2019 02:42:05 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x676fv60005211;
+        Sun, 7 Jul 2019 15:41:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x676fv60005211
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562481718;
+        bh=LddZA2kZHpmw/iDNZuSU0U5CnFfMo3Z/xtH9eTXkW14=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H7dXqGjiqDI1P7iiUi7enEIEQQAiXFBp1yh27YuU+vgcvEz/VRdYIySA/t7dijNCb
+         OIQOS0FWCzIO8RWwXZmWBDZbG80aUFGT/uNgRROCOOqJ2+4v4IAS9iWgDrpoSYEAPO
+         q2OFUnrHQxM18EWPLSpY2iwXZg55RaeUwfphXJOxbTL3oXWUFQmtPszFUiaLiRmUwl
+         2irpIy4wLZtyqL30FYprTmetKus+9JCTYd6Cii7nANOzc8KAaPeVx8DAV2FN7RRxGp
+         xBse/VhPEwtj8ZMm9JECttShg/SxnoUsisesA4gw0h9YU854Cczvq8emWEjBrXoXAp
+         tSdtqSG//Nmjw==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id h28so6247836vsl.12;
+        Sat, 06 Jul 2019 23:41:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAX221d+WmFSnJraJHuOg5Xoq6LwuLRSJtKzKC2ssbwzkXhSdn4O
+        Fi7V8Sb9+B6LvhCs22at8VrXBqfu8aKIjq2R0+8=
+X-Google-Smtp-Source: APXvYqzN25MgIM65h4khdflzeTEEhr9dnGQ7RpWbobGa8POkBLBZBkYXWQ6tloxVEDn8JcvrG6nlY63VCtgfZbWdYVQ=
+X-Received: by 2002:a67:fc45:: with SMTP id p5mr6637293vsq.179.1562481716656;
+ Sat, 06 Jul 2019 23:41:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561648031-15887-1-git-send-email-info@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190605053006.14332-1-yamada.masahiro@socionext.com>
+ <20190706203745.af0bf9bd5dd46e94fa5e1ff9@linux-foundation.org>
+ <CAK7LNARCjucs=0BD=00SD8Ljh+a0GtCUNHF4En=eSM1+VG0-4g@mail.gmail.com> <CAKFNMonV+Bsyc6HGP3qSXjrKnQMjhUmQjajt1Dwp0ng7qJaVYA@mail.gmail.com>
+In-Reply-To: <CAKFNMonV+Bsyc6HGP3qSXjrKnQMjhUmQjajt1Dwp0ng7qJaVYA@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 7 Jul 2019 15:41:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATj1=eRJU_-0cz6rSD01CROvqUb+JVWjNpsKvKarvwA5w@mail.gmail.com>
+Message-ID: <CAK7LNATj1=eRJU_-0cz6rSD01CROvqUb+JVWjNpsKvKarvwA5w@mail.gmail.com>
+Subject: Re: [PATCH] nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu()
+ in uapi header
+To:     Ryusuke Konishi <konishi.ryusuke@lab.ntt.co.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-nilfs <linux-nilfs@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enrico,
+Konishi-san,
 
-On Thu, Jun 27, 2019 at 05:07:10PM +0200, Enrico Weigelt, metux IT consult wrote:
-> Instead of hardcoding the input name to the driver name
-> ('gpio-keys-polled'), allow the passing a name via platform data
-> ('name' field was already present), but default to old behaviour
-> in case of NULL.
-> 
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: linux-input@vger.kernel.org
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
->  drivers/input/keyboard/gpio_keys_polled.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-> index 1eafe6b..c168493 100644
-> --- a/drivers/input/keyboard/gpio_keys_polled.c
-> +++ b/drivers/input/keyboard/gpio_keys_polled.c
-> @@ -269,7 +269,7 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
->  
->  	input = poll_dev->input;
->  
-> -	input->name = pdev->name;
-> +	input->name = (pdata->name ? pdata->name : pdev->name);
->  	input->phys = DRV_NAME"/input0";
->  
->  	input->id.bustype = BUS_HOST;
 
-I also added fetching name from "label" device property ad applied,
-thank you.
+On Sun, Jul 7, 2019 at 3:11 PM Ryusuke Konishi
+<konishi.ryusuke@lab.ntt.co.jp> wrote:
+>
+> Yamada-san,
+>
+> I'm sorry for not being able to follow.
+>
+> Could you tell me how did you find the build error?
+> Still I cannot reproduce the error in my environment.
 
--- 
-Dmitry
+
+"You can compile UAPI headers in kernel-space" does not necessarily mean
+"you can compile them in user-space".
+
+To make sure UAPI headers can be included from libc etc.
+you must compile them after 'make headers_install',
+but people often miss to test that.
+
+To automate this testing, I will merge the following for 5.3-rc1:
+https://patchwork.kernel.org/patch/11024715/
+
+Once it lands in upstream, all the new breakage
+will be caught by 0-day bot.
+
+Currently, nilfs2_ondisk.h is excluded from the test coverage
+since it is broken.
+
+Thanks.
+Masahiro Yamada
+
+
+
+> Or, if it's right that we should not use
+> cpu_to_le{16,32,64}/le{16,32,64}_to_cpu() in UAPI  header files,
+> I will acknowledge the change and modify nilfs utilities to comply
+> with the guideline.
+>
+> Thanks,
+> Ryusuke Konishi
+>
+> 2019=E5=B9=B47=E6=9C=887=E6=97=A5(=E6=97=A5) 13:31 Masahiro Yamada <yamad=
+a.masahiro@socionext.com>:
+> >
+> > Hi Andrew,
+> >
+> > On Sun, Jul 7, 2019 at 12:38 PM Andrew Morton <akpm@linux-foundation.or=
+g> wrote:
+> >
+> > >
+> > > Seems fairly serious.  I'm thinking this needs a cc:stable?
+> >
+> >
+> > Ah, yes.
+> >
+> >
+> > Cc: linux-stable <stable@vger.kernel.org> # 4.9
+> > Fixes: e63e88bc53ba ("nilfs2: move ioctl interface and disk layout to
+> > uapi separately")
+> >
+> >
+> > Thanks.
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
