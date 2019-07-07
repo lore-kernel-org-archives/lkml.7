@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F0CC48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB73C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0712F20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC7520651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfGGTi3 (ORCPT
+        id S1727769AbfGGTid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:29 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57038 "EHLO
+        Sun, 7 Jul 2019 15:38:33 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57030 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727510AbfGGTiF (ORCPT
+        by vger.kernel.org with ESMTP id S1727509AbfGGTiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:05 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz3-0006fb-Lg; Sun, 07 Jul 2019 20:38:01 +0100
+        id 1hkCz3-0006fV-Lh; Sun, 07 Jul 2019 20:38:01 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz2-0005Z7-DS; Sun, 07 Jul 2019 20:38:00 +0100
+        id 1hkCz2-0005Z3-A0; Sun, 07 Jul 2019 20:38:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "He, Bo" <bo.he@intel.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Zhang, Jun" <jun.zhang@intel.com>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.915510336@decadent.org.uk>
+Message-ID: <lsq.1562518457.682156065@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 036/129] rcu: Do RCU GP kthread self-wakeup from
- softirq and interrupt
+Subject: [PATCH 3.16 035/129] applicom: Fix potential Spectre v1
+ vulnerabilities
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,84 +56,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Zhang, Jun" <jun.zhang@intel.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 1d1f898df6586c5ea9aeaf349f13089c6fa37903 upstream.
+commit d7ac3c6ef5d8ce14b6381d52eb7adafdd6c8bb3c upstream.
 
-The rcu_gp_kthread_wake() function is invoked when it might be necessary
-to wake the RCU grace-period kthread.  Because self-wakeups are normally
-a useless waste of CPU cycles, if rcu_gp_kthread_wake() is invoked from
-this kthread, it naturally refuses to do the wakeup.
+IndexCard is indirectly controlled by user-space, hence leading to
+a potential exploitation of the Spectre variant 1 vulnerability.
 
-Unfortunately, natural though it might be, this heuristic fails when
-rcu_gp_kthread_wake() is invoked from an interrupt or softirq handler
-that interrupted the grace-period kthread just after the final check of
-the wait-event condition but just before the schedule() call.  In this
-case, a wakeup is required, even though the call to rcu_gp_kthread_wake()
-is within the RCU grace-period kthread's context.  Failing to provide
-this wakeup can result in grace periods failing to start, which in turn
-results in out-of-memory conditions.
+This issue was detected with the help of Smatch:
 
-This race window is quite narrow, but it actually did happen during real
-testing.  It would of course need to be fixed even if it was strictly
-theoretical in nature.
+drivers/char/applicom.c:418 ac_write() warn: potential spectre issue 'apbs' [r]
+drivers/char/applicom.c:728 ac_ioctl() warn: potential spectre issue 'apbs' [r] (local cap)
 
-This patch does not Cc stable because it does not apply cleanly to
-earlier kernel versions.
+Fix this by sanitizing IndexCard before using it to index apbs.
 
-Fixes: 48a7639ce80c ("rcu: Make callers awaken grace-period kthread")
-Reported-by: "He, Bo" <bo.he@intel.com>
-Co-developed-by: "Zhang, Jun" <jun.zhang@intel.com>
-Co-developed-by: "He, Bo" <bo.he@intel.com>
-Co-developed-by: "xiao, jin" <jin.xiao@intel.com>
-Co-developed-by: Bai, Jie A <jie.a.bai@intel.com>
-Signed-off: "Zhang, Jun" <jun.zhang@intel.com>
-Signed-off: "He, Bo" <bo.he@intel.com>
-Signed-off: "xiao, jin" <jin.xiao@intel.com>
-Signed-off: Bai, Jie A <jie.a.bai@intel.com>
-Signed-off-by: "Zhang, Jun" <jun.zhang@intel.com>
-[ paulmck: Switch from !in_softirq() to "!in_interrupt() &&
-  !in_serving_softirq() to avoid redundant wakeups and to also handle the
-  interrupt-handler scenario as well as the softirq-handler scenario that
-  actually occurred in testing. ]
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Link: https://lkml.kernel.org/r/CD6925E8781EFD4D8E11882D20FC406D52A11F61@SHSMSX104.ccr.corp.intel.com
-[bwh: Backported to 3.16: adjust context]
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/rcu/tree.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/char/applicom.c | 35 ++++++++++++++++++++++++-----------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1384,15 +1384,23 @@ static int rcu_future_gp_cleanup(struct
+--- a/drivers/char/applicom.c
++++ b/drivers/char/applicom.c
+@@ -32,6 +32,7 @@
+ #include <linux/wait.h>
+ #include <linux/init.h>
+ #include <linux/fs.h>
++#include <linux/nospec.h>
+ 
+ #include <asm/io.h>
+ #include <asm/uaccess.h>
+@@ -386,7 +387,11 @@ static ssize_t ac_write(struct file *fil
+ 	TicCard = st_loc.tic_des_from_pc;	/* tic number to send            */
+ 	IndexCard = NumCard - 1;
+ 
+-	if((NumCard < 1) || (NumCard > MAX_BOARD) || !apbs[IndexCard].RamIO)
++	if (IndexCard >= MAX_BOARD)
++		return -EINVAL;
++	IndexCard = array_index_nospec(IndexCard, MAX_BOARD);
++
++	if (!apbs[IndexCard].RamIO)
+ 		return -EINVAL;
+ 
+ #ifdef DEBUG
+@@ -697,6 +702,7 @@ static long ac_ioctl(struct file *file,
+ 	unsigned char IndexCard;
+ 	void __iomem *pmem;
+ 	int ret = 0;
++	static int warncount = 10;
+ 	volatile unsigned char byte_reset_it;
+ 	struct st_ram_io *adgl;
+ 	void __user *argp = (void __user *)arg;
+@@ -711,16 +717,12 @@ static long ac_ioctl(struct file *file,
+ 	mutex_lock(&ac_mutex);	
+ 	IndexCard = adgl->num_card-1;
+ 	 
+-	if(cmd != 6 && ((IndexCard >= MAX_BOARD) || !apbs[IndexCard].RamIO)) {
+-		static int warncount = 10;
+-		if (warncount) {
+-			printk( KERN_WARNING "APPLICOM driver IOCTL, bad board number %d\n",(int)IndexCard+1);
+-			warncount--;
+-		}
+-		kfree(adgl);
+-		mutex_unlock(&ac_mutex);
+-		return -EINVAL;
+-	}
++	if (cmd != 6 && IndexCard >= MAX_BOARD)
++		goto err;
++	IndexCard = array_index_nospec(IndexCard, MAX_BOARD);
++
++	if (cmd != 6 && !apbs[IndexCard].RamIO)
++		goto err;
+ 
+ 	switch (cmd) {
+ 		
+@@ -838,5 +840,16 @@ static long ac_ioctl(struct file *file,
+ 	kfree(adgl);
+ 	mutex_unlock(&ac_mutex);
+ 	return 0;
++
++err:
++	if (warncount) {
++		pr_warn("APPLICOM driver IOCTL, bad board number %d\n",
++			(int)IndexCard + 1);
++		warncount--;
++	}
++	kfree(adgl);
++	mutex_unlock(&ac_mutex);
++	return -EINVAL;
++
  }
  
- /*
-- * Awaken the grace-period kthread for the specified flavor of RCU.
-- * Don't do a self-awaken, and don't bother awakening when there is
-- * nothing for the grace-period kthread to do (as in several CPUs
-- * raced to awaken, and we lost), and finally don't try to awaken
-- * a kthread that has not yet been created.
-+ * Awaken the grace-period kthread.  Don't do a self-awaken (unless in
-+ * an interrupt or softirq handler), and don't bother awakening when there
-+ * is nothing for the grace-period kthread to do (as in several CPUs raced
-+ * to awaken, and we lost), and finally don't try to awaken a kthread that
-+ * has not yet been created.  If all those checks are passed, track some
-+ * debug information and awaken.
-+ *
-+ * So why do the self-wakeup when in an interrupt or softirq handler
-+ * in the grace-period kthread's context?  Because the kthread might have
-+ * been interrupted just as it was going to sleep, and just after the final
-+ * pre-sleep check of the awaken condition.  In this case, a wakeup really
-+ * is required, and is therefore supplied.
-  */
- static void rcu_gp_kthread_wake(struct rcu_state *rsp)
- {
--	if (current == rsp->gp_kthread ||
-+	if ((current == rsp->gp_kthread &&
-+	     !in_interrupt() && !in_serving_softirq()) ||
- 	    !ACCESS_ONCE(rsp->gp_flags) ||
- 	    !rsp->gp_kthread)
- 		return;
 
