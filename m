@@ -7,44 +7,38 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95364C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 07:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A03C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 07:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47DC920850
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 07:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1015420850
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 07:56:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="IJVmwvEH"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="lUZnuFAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfGGHKA (ORCPT
+        id S1727217AbfGGH4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 03:10:00 -0400
-Received: from mout.web.de ([212.227.15.3]:35787 "EHLO mout.web.de"
+        Sun, 7 Jul 2019 03:56:21 -0400
+Received: from mout.web.de ([212.227.15.3]:59177 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfGGHKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 03:10:00 -0400
+        id S1725822AbfGGH4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 03:56:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1562483379;
-        bh=XSMFNbxwcUUjaqnLXLNLuupd+m4AR1AsDTADaM1wKE4=;
+        s=dbaedf251592; t=1562486174;
+        bh=RZuegKnQZBE0fRTCBplZrfIRKxZU10eJaftbP6wky/A=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=IJVmwvEHKxxNi40r0ztcDwxJ0B+6IE0KEpqOdac2DM5CRsL8fsSu39BKT5Iqn+syB
-         CCe1XXdldxC17Z6peY7eXlZsKby81u+nLPufmFvZabfTh0+fNmhYHfl8OKW/cWCPTd
-         CkIeayATMmQ46hxZeFxI6Su1cetwh+cPV89C6xLA=
+        b=lUZnuFAf8hFeJAY3ZyqkhJzybuE8E+QcWqweNzIH/RBtxKmQ76JT+i+C3o7u6th54
+         yRqay5CoXC4xhTjO2VzIFXQd55UvrWg/Cy2N9dK0TK7CbUhSfrYwP/XEq1+jqUcTlh
+         v9V6wYpFP3THAlrARhyQxis1b7G9wsuydEmlHBqA=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.61.32]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lcxw8-1iAJYx2o3k-00iEPd; Sun, 07
- Jul 2019 09:09:39 +0200
-Subject: Re: ipc/sem: Three function calls less in do_semtimedop()
-To:     Colin Ian King <colin.king@canonical.com>,
-        kernel-janitors@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Mathieu Malaterre <malat@debian.org>,
+Received: from [192.168.1.2] ([78.48.61.32]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MZliY-1i5YWJ3J4Y-00LU0L; Sun, 07
+ Jul 2019 09:56:13 +0200
+Subject: Re: [PATCH] mfd: asic3: One function call less in asic3_irq_probe()
+To:     Al Viro <viro@zeniv.linux.org.uk>, kernel-janitors@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>,
         LKML <linux-kernel@vger.kernel.org>
-References: <ba328a83-63ac-c3a3-cbc0-81059012c555@web.de>
- <3c5d5941-63bf-5576-e6eb-17ca02a6a8a3@canonical.com>
+References: <01f6a8cd-0205-8d34-2aa3-e4b691e7eb95@web.de>
+ <20190707005251.GQ17978@ZenIV.linux.org.uk>
 From:   Markus Elfring <Markus.Elfring@web.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
@@ -90,65 +84,106 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <4013bfa0-4369-3e29-b205-7d7059e68e5a@web.de>
-Date:   Sun, 7 Jul 2019 09:09:31 +0200
+Message-ID: <4b06e2fb-a0ba-56e5-b46b-98e986e6f2fd@web.de>
+Date:   Sun, 7 Jul 2019 09:56:11 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <3c5d5941-63bf-5576-e6eb-17ca02a6a8a3@canonical.com>
+In-Reply-To: <20190707005251.GQ17978@ZenIV.linux.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IY6r6+1D9+RFtRjQ3GrK4S/RkU5TrT7TjRj+ke01NXmoaAbDAxs
- B19vZCVwZ0ZXUIqcFmc6Uu8c/ye8wLL2B4310hQGzhcb2jP+IiojH5ISNIrVrJCE7ogX9Ug
- MpLgHb2uRP7yA6otmgXy1i6u9vMyZZskCM0yb4XgqkpseiJMEFMUmhwMDM3C+gRy9oR+8dY
- /fvaGWdUGtyMIaJXBlSQQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rV2CTJktOuA=:z5S8ixstnYDD5x/szesXfk
- Wk+ScDxnuXjqzuzJw3x7uvMLXTycCG99USUNr4ZVE3fHhIIqK/28xazoPIw3kklulfWcuTYGp
- Tufr5YTSLUfoZm7MBLkY56jLgEoIgNIb92Wrb6yS1dyitodOvu4+zJUXZ/TXTrlCFf/BxOZQi
- amat6gvC83OdnqXun+pLRIvxDqxUQqSf3mUoYA/uQFbppG/rYjVuGxG7tr76PdqG/PlBxXswS
- bGMM0LewDGebiY1HySJ5ywB/TWWw9psVtnxQmuZJpwhWbtO4RypY50zsVqfGlOju3MvnTWPbM
- UIOtOjcYXGHrPusdPthvsU/ly+v5VvtbYN0JWMgp9PSzo1WXUQvNaVSqmW5MLCD7FFLUF5g25
- IO8ZrcO0r2sfCgzWKQqkyMys8qNjMbkyNxSUjHBE6+NtxletqBDl+7I7cjULZCGyRFEocg3sI
- ItWU25ImiEJZM4qnxTraUb3Lh6Z1TbGtIn6rg9TYnn3iOf5qp2yviKEyJ+I7t2jrN3NurOjAr
- UxEJ0mUf1RWw1Co4VxTts5HLJ+0CLLH24EQ65VAkPqtvvfHQzo3D3VIjLnRGcAam9OjTi2+Dh
- g5zRy/Zy0M7XUg5alIaxQ4lavKUKXgE5hlQIy+1nBSc2VBGso4KGloMxUS1bG2Xj8X3T3iy/u
- NcvAePHHFRJT1Wx9yWyG+RkjXGvcbNqpkNU0/cBdgIAjfsZKXR4QuzyYesnk5YkpJnRJpGuo+
- MiCdLurHpZRzwhGhNE1NGjm/zCj8fXiCvwSRw/BqLgPV56VG02g8t3ZTW57kaEeh6rXic8F/6
- NIxCEow69z3pCgZ3bNYiFQ+yfUbavvMg75AOJT9xSFbISUlDc0Wrv00qBJ0kRjFrdgEInfHWq
- Muca5gEPznP3ub8+xffJNgKB1KRfm3EwxUhZgcmRFuiY08fiz0vEZ0CbxqiDPVRB8a3bDpSbD
- KgQxAWqH/jmw93oUfpEJe8kftn6+cO5dCctiMcnCgojsknCIWyeWeAGpyZnxbe/oJbpVTBtZl
- AorM6wwt8SqoQwEmDliwdtN9Lmh/ojXd+tB3R86RoKOfmiNajAX/8ucRYbjzNpEukSMJPJ/WO
- 4B/g5AHubwol59WlvFZJErBKMEUwp7PQN48
+X-Provags-ID: V03:K1:k7mpQjf5K+BT5ovyDPDaVPMQEr3jIaPICBqQc5fK5UoEPEm8Joz
+ YvyIac+o+OTi6oyAvLmR2x/7dhRSzUlVhqP02x2PPJ6FytescEQWXWcCOqC4FG01Eap88PY
+ ih4MTz2Ru43N7VnOgjaBDSybhiCJV8ZhS0JJKtHjNZhrrVWU00/LCmWt8Hq6UHNRcsMsxfo
+ iVrTRhseeEtI4MODdzaXw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kt8Xuw84ONE=:8nKHQDex1imEGHmpxyZ6P1
+ AiPZmFD3/420gQJ8KjdKgJQceE8od7uKOWYU8D01JJEeB7/R5IzsX5g2NG7m7Y9AlNxHrBWh5
+ XVdO2/ARkj5TGjTbE2d3ik0REqo5oR9lVXE+jcBN53P75ssOsC5QhA/3CYxbyzobQ1tiSZfQ2
+ DX3lfmzkI3qehhSq6SMcGZmDyY5gwZtFV3HfxObJgbqhTLijVGd1JJPelljnVj943cyXxvRHk
+ +nffHXhj9TTkmsk0in9kHTY2OtclhOSGEyLZ4jHiZnhnoOdJuocgnLuIfwIna8zhBbgp3r1zL
+ yOfB4tWS8EB+vL1Tvw1ANTmI/BIlA8W6XPsJHq0Q1da7A/0JpC1xYVfGr2tStOgwJjjMViQ61
+ L+zlNFq9tVplmjea0BpOt7qVlpe0FaeftWJolDBcDkZurT4S2YD/6yIZXXIGndWvghpzFfDnc
+ wSaHO5Ru/n/tq0B/PBkOOzTteBWm1iQ+CXzWJTy3WHFWXuHS0hak/MV1aS9CoW85UBGltqXoQ
+ 0w43JoK4xxN6XnVnu0MbdZ2Q/Y8z7HmWwO1jMulihD7TAMvoRF306hyal2WlJVCz377qAsZVz
+ xC3QEJwu93flFE7TfYEN2pEUAUgCP2ej6pBC+dopfhVYYL8lOxkA6fxwOM4lotJNnFbSE2hLV
+ OUGa+wAwu6+58zLQrvOGlgi/ulakf6ak54l4r9uxNWrhofzFYIiJt6WnXKKirepB0B6lPypja
+ H9F4rXiZVSRAYw/VfymdoLJNNAwVxa/y3fpsxVmLkm7vHWd5QJV9vQhrZCRZ9jNyDPMbRiAmj
+ edfXYr5YcA7T4UYylXK0s3dsnNvzth5s2fciWuibkWATSvWVHSqT06vZWtHS8I00tkyxjNHsV
+ sfRRkxHJJ0QmaKH+zorXWQC7VLy0YICHPTNipG1irD/oqFkZ9GxY85YNjedo1pCUgJF+6TVWo
+ wjWPdZY1Up97RghPXxv4xfPhU4lzykwHB5UOcCyY1ez03mt9MjUcMrJz3OOslxXRzE7w3aYIY
+ 18pDizdcoHjHDcf1Zqj9zfDJgFi5VgqmtJBxK3yJ56ezEyqCmH9vkBTe88hc1R+3vMAbNatDR
+ /h71IvKQHZ9LKCyznhicTPcP+kQsFwzbc6r
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> +		list_add_tail(&queue.list,
->> +			      alter
->> +			      ? (sma->complex_count
->> +				? &sma->pending_alter
->> +				: &curr->pending_alter)
->> +			      : &curr->pending_const);
+>> Avoid an extra function call by using a ternary operator instead of
+>> a conditional statement.
 >
-> Just no. This is making the code harder to comprehend
+> Which is a good thing, because...?
 
-This can be according to your current view.
-
-
-> with no advantage.
-
-I propose to take additional aspects into account for the interpretation
-of such source code.
-The shown design direction can provide benefits which might get
-a lower value for the software development attention so far.
+I suggest to reduce a bit of duplicate source code also at this place.
 
 
->> +		list_add_tail(&queue.list,
->> +			      alter ? &sma->pending_alter : &sma->pending_const);
+>> This issue was detected by using the Coccinelle software.
+>
+> Oh, I see - that answers all questions.
 
-Can this code variant look more succinct?
+Obviously not so far.
+
+
+> "Software has detected an issue", so of course an issue it is.
+
+The mentioned development tool can help to point refactoring
+possibilities out.
+
+
+>> -		if (irq < asic->irq_base + ASIC3_NUM_GPIOS)
+>> -			irq_set_chip(irq, &asic3_gpio_irq_chip);
+>> -		else
+>> -			irq_set_chip(irq, &asic3_irq_chip);
+>> -
+>> +		irq_set_chip(irq,
+>> +			     (irq < asic->irq_base + ASIC3_NUM_GPIOS)
+>> +			     ? &asic3_gpio_irq_chip
+>> +			     : &asic3_irq_chip);
+>
+> ... except that the result is not objectively better by any real criteri=
+a.
+
+We can have different opinions about the criteria which are relevant here.
+
+
+> It's not more readable,
+
+This is a possible view.
+
+
+> it conveys _less_ information to reader
+
+I guess that the interpretation of this feedback can become more interesti=
+ng.
+
+
+> (the fact that calls differ only by the last argument
+> had been visually obvious already,
+
+Can the repeated code specification make the recognition of this
+implementation detail a bit harder actually?
+
+
+> had been visually obvious already, and logics used to be easier
+> to see), it (obviously) does not generate better (or different) code.
+
+The functionality should be equivalent for the shown software refactoring.
+
+
+> What the hell is the point?
+
+I dare to point another change possibility out.
+I am unsure if this adjustment will be picked up finally.
 
 Regards,
 Markus
