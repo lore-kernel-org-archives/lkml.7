@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B710C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF36C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6213D2082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11EA020684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfGGTlD (ORCPT
+        id S1728073AbfGGTlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:41:03 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57886 "EHLO
+        Sun, 7 Jul 2019 15:41:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57880 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727655AbfGGTiP (ORCPT
+        by vger.kernel.org with ESMTP id S1727653AbfGGTiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:15 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzD-0006kM-Cc; Sun, 07 Jul 2019 20:38:11 +0100
+        id 1hkCzD-0006ke-V2; Sun, 07 Jul 2019 20:38:12 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz9-0005g7-8Y; Sun, 07 Jul 2019 20:38:07 +0100
+        id 1hkCz9-0005gg-PS; Sun, 07 Jul 2019 20:38:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Xin Long" <lucien.xin@gmail.com>, "Xiumei Mu" <xmu@redhat.com>
+        "Takashi Iwai" <tiwai@suse.de>, "Kalle Valo" <kvalo@codeaurora.org>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.656970295@decadent.org.uk>
+Message-ID: <lsq.1562518457.51054372@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 120/129] pptp: dst_release sk_dst_cache in
- pptp_sock_destruct
+Subject: [PATCH 3.16 127/129] mwifiex: Abort at too short BSS descriptor
+ element
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,45 +55,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 9417d81f4f8adfe20a12dd1fadf73a618cbd945d upstream.
+commit 685c9b7750bfacd6fc1db50d86579980593b7869 upstream.
 
-sk_setup_caps() is called to set sk->sk_dst_cache in pptp_connect,
-so we have to dst_release(sk->sk_dst_cache) in pptp_sock_destruct,
-otherwise, the dst refcnt will leak.
+Currently mwifiex_update_bss_desc_with_ie() implicitly assumes that
+the source descriptor entries contain the enough size for each type
+and performs copying without checking the source size.  This may lead
+to read over boundary.
 
-It can be reproduced by this syz log:
+Fix this by putting the source size check in appropriate places.
 
-  r1 = socket$pptp(0x18, 0x1, 0x2)
-  bind$pptp(r1, &(0x7f0000000100)={0x18, 0x2, {0x0, @local}}, 0x1e)
-  connect$pptp(r1, &(0x7f0000000000)={0x18, 0x2, {0x3, @remote}}, 0x1e)
-
-Consecutive dmesg warnings will occur:
-
-  unregister_netdevice: waiting for lo to become free. Usage count = 1
-
-v1->v2:
-  - use rcu_dereference_protected() instead of rcu_dereference_check(),
-    as suggested by Eric.
-
-Fixes: 00959ade36ac ("PPTP: PPP over IPv4 (Point-to-Point Tunneling Protocol)")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ppp/pptp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/mwifiex/scan.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/drivers/net/ppp/pptp.c
-+++ b/drivers/net/ppp/pptp.c
-@@ -579,6 +579,7 @@ static void pptp_sock_destruct(struct so
- 		pppox_unbind_sock(sk);
- 	}
- 	skb_queue_purge(&sk->sk_receive_queue);
-+	dst_release(rcu_dereference_protected(sk->sk_dst_cache, 1));
- }
+--- a/drivers/net/wireless/mwifiex/scan.c
++++ b/drivers/net/wireless/mwifiex/scan.c
+@@ -1193,6 +1193,8 @@ int mwifiex_update_bss_desc_with_ie(stru
+ 			break;
  
- static int pptp_create(struct net *net, struct socket *sock)
+ 		case WLAN_EID_FH_PARAMS:
++			if (element_len + 2 < sizeof(*fh_param_set))
++				return -EINVAL;
+ 			fh_param_set =
+ 				(struct ieee_types_fh_param_set *) current_ptr;
+ 			memcpy(&bss_entry->phy_param_set.fh_param_set,
+@@ -1201,6 +1203,8 @@ int mwifiex_update_bss_desc_with_ie(stru
+ 			break;
+ 
+ 		case WLAN_EID_DS_PARAMS:
++			if (element_len + 2 < sizeof(*ds_param_set))
++				return -EINVAL;
+ 			ds_param_set =
+ 				(struct ieee_types_ds_param_set *) current_ptr;
+ 
+@@ -1212,6 +1216,8 @@ int mwifiex_update_bss_desc_with_ie(stru
+ 			break;
+ 
+ 		case WLAN_EID_CF_PARAMS:
++			if (element_len + 2 < sizeof(*cf_param_set))
++				return -EINVAL;
+ 			cf_param_set =
+ 				(struct ieee_types_cf_param_set *) current_ptr;
+ 			memcpy(&bss_entry->ss_param_set.cf_param_set,
+@@ -1220,6 +1226,8 @@ int mwifiex_update_bss_desc_with_ie(stru
+ 			break;
+ 
+ 		case WLAN_EID_IBSS_PARAMS:
++			if (element_len + 2 < sizeof(*ibss_param_set))
++				return -EINVAL;
+ 			ibss_param_set =
+ 				(struct ieee_types_ibss_param_set *)
+ 				current_ptr;
+@@ -1229,10 +1237,14 @@ int mwifiex_update_bss_desc_with_ie(stru
+ 			break;
+ 
+ 		case WLAN_EID_ERP_INFO:
++			if (!element_len)
++				return -EINVAL;
+ 			bss_entry->erp_flags = *(current_ptr + 2);
+ 			break;
+ 
+ 		case WLAN_EID_PWR_CONSTRAINT:
++			if (!element_len)
++				return -EINVAL;
+ 			bss_entry->local_constraint = *(current_ptr + 2);
+ 			bss_entry->sensed_11h = true;
+ 			break;
+@@ -1272,6 +1284,9 @@ int mwifiex_update_bss_desc_with_ie(stru
+ 			break;
+ 
+ 		case WLAN_EID_VENDOR_SPECIFIC:
++			if (element_len + 2 < sizeof(vendor_ie->vend_hdr))
++				return -EINVAL;
++
+ 			vendor_ie = (struct ieee_types_vendor_specific *)
+ 					current_ptr;
+ 
 
