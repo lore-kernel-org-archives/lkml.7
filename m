@@ -2,195 +2,94 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE56C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C117C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6394C2070D
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8212083B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 10:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUVurbNo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBjqvvTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfGGKO5 (ORCPT
+        id S1727368AbfGGK1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 06:14:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34386 "EHLO
+        Sun, 7 Jul 2019 06:27:16 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38682 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfGGKO4 (ORCPT
+        with ESMTP id S1727152AbfGGK1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 06:14:56 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p10so6196197pgn.1;
-        Sun, 07 Jul 2019 03:14:56 -0700 (PDT)
+        Sun, 7 Jul 2019 06:27:15 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z75so6197859pgz.5;
+        Sun, 07 Jul 2019 03:27:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=9b1EGXOx4NeF4JTA7eM5HskbqythmMpkxkl1a4JGzA0=;
-        b=UUVurbNoPqHqrmeUuvp4JhwWnf7tIMiogR4wNFWQy2Yg9s0VDKYMOBYp0alcm7xqmy
-         prWWl/SDvlnKeuMa3qIGX7xJhsnZD5ZGIl+UlAOi160yk/UEHKohpIEmKZ3npBPCrX+O
-         ChPr9CSJ3Wbe89Qg2S2hpHTW7IF1PzJiilIeJaqgAQDCB2LJulNX7jAVvnMa6t/1LiAI
-         iM1IFlpvK+lxOvAKnW1POkq5CLL5gNZGa3UPh59xMtXfATagAZIu0Nlw5nTGCUAoSV4B
-         9hrJ2bI5CAbD7NOn8VQJEvw6TgykLcOf8/OryLjdATYGQCEEPLduB8OwesvLFxmnoFOV
-         3Jjg==
+        h=from:to:cc:subject:date:message-id;
+        bh=8zUSV3oUAOKo1p9yciN3aXy3pVPdOrPwzw0QPi5xIzo=;
+        b=VBjqvvTXk8FATRmQEiOuWon5GfWlkAvU4GGZ6FUmW7+3gmXcpcm4/fFEGzxd2XhrtB
+         PHtGO0BF15qudbOJN1Mb2S1EJXqlorX0y4YkkVQOtl+YRryzXGN/AjqF79esn/tuNQd+
+         ifppzkOODJ5w7jSvmT2lYljvh+zH7Re24g7l3J1/t0Z86tiKN0LOopmOQAf74LcDlod4
+         en+RY5ZRD75cN+LkdTg1L5u6r9vgS9J8VHxz11zeiwh8ffZpiGe2eZTarrX6OzfTK1TS
+         u5qJHUe1a1kMyxm5DV9PSMrA4nHyW32fBjW+23vrFzWpH6RZ1gZQTX7oSbYd9n4DgFYj
+         2Fdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=9b1EGXOx4NeF4JTA7eM5HskbqythmMpkxkl1a4JGzA0=;
-        b=L95hDnkTKWoiv0u9sl0/FlGqTdpZk8OrGl36bobVikrPvk2xkm4+wIVHW028bFcYSC
-         BU9cgYnDIl9hRLj4vPj5aGO+k0Y5DyKnBss8R4ET/sTE6ywjy1pe7+ZuAIb619Lqow8l
-         BbK0AnNX/E+OSpjUslm1nLXYEG74U6ZKzvshVwITWAhCNio4JdO5AlsYww5lrhvTRBWV
-         ud/wdsXRt0htdkNHlkLnd+zbrAQA+p1pGrLq9gNUUmnnP43vAmk8M1aR1LHBkP5k7MY3
-         4DSXXmyO+ThWFPx2VPPdXKdVeYTqhhqgG++NjpNboP/QuEid0LS73Qvp0WZYfeaDgnPN
-         zGfg==
-X-Gm-Message-State: APjAAAX4udIoO8vsz9bqIO70XY7pMnGyEF3+s7tJ/HoO5BFnHNNSaXYn
-        Fw/Sb5zxxZj4p8fRPGGSouKid/jd
-X-Google-Smtp-Source: APXvYqw7+g7XXTJSX6Asjijq/vU5Vo5FyhGnvQSw6y6Wxkp4QA/7+N00beHz2HuLJBcfPMN/BdiKhw==
-X-Received: by 2002:a17:90a:290b:: with SMTP id g11mr16776527pjd.122.1562494495653;
-        Sun, 07 Jul 2019 03:14:55 -0700 (PDT)
-Received: from localhost ([203.111.179.197])
-        by smtp.gmail.com with ESMTPSA id u137sm14324745pgc.91.2019.07.07.03.14.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 07 Jul 2019 03:14:54 -0700 (PDT)
-Date:   Sun, 07 Jul 2019 20:13:16 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3 1/3] cpuidle-powernv : forced wakeup for stop states
-To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, rjw@rjwysocki.net
-References: <20190704091827.19555-1-huntbag@linux.vnet.ibm.com>
-        <20190704091827.19555-2-huntbag@linux.vnet.ibm.com>
-In-Reply-To: <20190704091827.19555-2-huntbag@linux.vnet.ibm.com>
-MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1562493994.wseoth6w1s.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8zUSV3oUAOKo1p9yciN3aXy3pVPdOrPwzw0QPi5xIzo=;
+        b=I46owV0g0pSPhUgqvdWU1cyhyynDclEre1V+x7sn5JRy7deGLJSWOzePcz/yGEiBQb
+         adHlgW1znvC5ZHt050X6UQMaLnL+B2RmQI4PtXXUXMBrNr/M9rQKC9i8gnqV1j/S9u85
+         7z/gdkNVNK8SjksIzwwUjf+/E2tVBueBkPROnOaJBdQ+uZku2TRnWvA6aIhcN1X4uBx3
+         HSuCuUc10mh64W12/UE3dRbgo+QHLPdc+t9NKsfEV+/6gfCHQjy8GXEsDHVcWQe/rtUg
+         EkUS9QlnVzfcSUlaPKmQ17mEKO0iOwakaKbDPRpmALCNJr+c3l67S6HU4/bYf9+MC1eb
+         A+Pw==
+X-Gm-Message-State: APjAAAUiFlLo6btvuo3W8/92I+99xE+iWTF05yJ6y+uoHbFZ/atzni/9
+        k8LrF5h7q/Ru8p7OQiWN9cc=
+X-Google-Smtp-Source: APXvYqyMx2+32HyNXxBJxnXN90ZX/eNGMf1iEDAGfhyfSUHZUz4eRncpRFe5vwFlPtEZBqtHdLc5ng==
+X-Received: by 2002:a17:90a:bf0e:: with SMTP id c14mr16074811pjs.55.1562495234516;
+        Sun, 07 Jul 2019 03:27:14 -0700 (PDT)
+Received: from carrot.localdomain (i60-35-92-254.s42.a014.ap.plala.or.jp. [60.35.92.254])
+        by smtp.gmail.com with ESMTPSA id x128sm35195975pfd.17.2019.07.07.03.27.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Jul 2019 03:27:12 -0700 (PDT)
+From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Ryusuke Konishi <konishi.ryusuke@lab.ntt.co.jp>,
+        linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Subject: [PATCH] MAINTAINERS: nilfs2: update email address
+Date:   Sun,  7 Jul 2019 19:25:53 +0900
+Message-Id: <1562495153-8166-1-git-send-email-konishi.ryusuke@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Abhishek Goel's on July 4, 2019 7:18 pm:
-> Currently, the cpuidle governors determine what idle state a idling CPU
-> should enter into based on heuristics that depend on the idle history on
-> that CPU. Given that no predictive heuristic is perfect, there are cases
-> where the governor predicts a shallow idle state, hoping that the CPU wil=
-l
-> be busy soon. However, if no new workload is scheduled on that CPU in the
-> near future, the CPU may end up in the shallow state.
->=20
-> This is problematic, when the predicted state in the aforementioned
-> scenario is a shallow stop state on a tickless system. As we might get
-> stuck into shallow states for hours, in absence of ticks or interrupts.
->=20
-> To address this, We forcefully wakeup the cpu by setting the
-> decrementer. The decrementer is set to a value that corresponds with the
-> residency of the next available state. Thus firing up a timer that will
-> forcefully wakeup the cpu. Few such iterations will essentially train the
-> governor to select a deeper state for that cpu, as the timer here
-> corresponds to the next available cpuidle state residency. Thus, cpu will
-> eventually end up in the deepest possible state.
->=20
-> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-> ---
->=20
-> Auto-promotion
->  v1 : started as auto promotion logic for cpuidle states in generic
-> driver
->  v2 : Removed timeout_needed and rebased the code to upstream kernel
-> Forced-wakeup
->  v1 : New patch with name of forced wakeup started
->  v2 : Extending the forced wakeup logic for all states. Setting the
-> decrementer instead of queuing up a hrtimer to implement the logic.
->  v3 : Cleanly handle setting/resetting of decrementer so as to not break
-> irq work=20
->=20
->  arch/powerpc/include/asm/time.h   |  2 ++
->  arch/powerpc/kernel/time.c        | 40 +++++++++++++++++++++++++++++++
->  drivers/cpuidle/cpuidle-powernv.c | 32 +++++++++++++++++++++++++
->  3 files changed, 74 insertions(+)
->=20
-> diff --git a/arch/powerpc/include/asm/time.h b/arch/powerpc/include/asm/t=
-ime.h
-> index 54f4ec1f9..a3bd4f3c0 100644
-> --- a/arch/powerpc/include/asm/time.h
-> +++ b/arch/powerpc/include/asm/time.h
-> @@ -188,6 +188,8 @@ static inline unsigned long tb_ticks_since(unsigned l=
-ong tstamp)
->  extern u64 mulhdu(u64, u64);
->  #endif
-> =20
-> +extern int set_dec_before_idle(u64 timeout);
-> +extern void reset_dec_after_idle(void);
->  extern void div128_by_32(u64 dividend_high, u64 dividend_low,
->  			 unsigned divisor, struct div_result *dr);
-> =20
-> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-> index 694522308..814de3469 100644
-> --- a/arch/powerpc/kernel/time.c
-> +++ b/arch/powerpc/kernel/time.c
-> @@ -576,6 +576,46 @@ void arch_irq_work_raise(void)
-> =20
->  #endif /* CONFIG_IRQ_WORK */
-> =20
-> +/*
-> + * Returns 1 if we have reprogrammed the decrementer for idle.
-> + * Returns 0 if the decrementer is unchanged.
-> + */
-> +int set_dec_before_idle(u64 timeout)
-> +{
-> +	u64 *next_tb =3D this_cpu_ptr(&decrementers_next_tb);
-> +	u64 now =3D get_tb_or_rtc();
-> +
-> +	/*
-> +	 * Ensure that the timeout is at least one microsecond
-> +	 * before the current decrement value. Else, we will
-> +	 * unnecesarily wakeup again within a microsecond.
-> +	 */
-> +	if (now + timeout + 512 > *next_tb)
+Change my email since lab.ntt.co.jp email domain has been deprecated
+due to company policy.
 
-I would pass this 512 in as a parameter and put the comment in the
-idle code. Timer code does not know/care.
+Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Maybe return bool and call it try_set_dec_before_idle.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 01a52fc..b8eadb3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11116,7 +11116,7 @@ F:	include/uapi/linux/nfs*
+ F:	include/uapi/linux/sunrpc/
+ 
+ NILFS2 FILESYSTEM
+-M:	Ryusuke Konishi <konishi.ryusuke@lab.ntt.co.jp>
++M:	Ryusuke Konishi <konishi.ryusuke@gmail.com>
+ L:	linux-nilfs@vger.kernel.org
+ W:	https://nilfs.sourceforge.io/
+ W:	https://nilfs.osdn.jp/
+-- 
+1.8.3.1
 
-> +		return 0;
-> +
-> +	set_dec(timeout);
-
-This needs to have
-
-  if (test_irq_work_pending())
-      set_dec(1);
-
-here AFAIKS
-
-> +
-> +	return 1;
-> +}
-> +
-> +void reset_dec_after_idle(void)
-> +{
-> +	u64 now;
-> +	u64 *next_tb;
-> +
-> +	if (test_irq_work_pending())
-> +		return;
-> +
-> +	now =3D get_tb_or_rtc();
-> +	next_tb =3D this_cpu_ptr(&decrementers_next_tb);
-> +	if (now >=3D *next_tb)
-> +		return;
-
-Are you sure it's okay to escape early in this case?
-
-Thanks,
-Nick
-=
