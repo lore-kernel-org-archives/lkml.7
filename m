@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C362C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D36CC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E487620663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C93020663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfGGToI (ORCPT
+        id S1728412AbfGGToH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:44:08 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57366 "EHLO
+        Sun, 7 Jul 2019 15:44:07 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57360 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727563AbfGGTiJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726105AbfGGTiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:09 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0006h7-MD; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz6-0006hq-PF; Sun, 07 Jul 2019 20:38:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0005bB-9D; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz4-0005br-W5; Sun, 07 Jul 2019 20:38:02 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Simon Horman" <horms+renesas@verge.net.au>
+        "Jacek Anaszewski" <jacek.anaszewski@gmail.com>,
+        "Michal Kazior" <michal@plume.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.700065770@decadent.org.uk>
+Message-ID: <lsq.1562518457.276777089@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 061/129] pinctrl: sh-pfc: r8a7791: Fix scifb2_data_c
- pin group
+Subject: [PATCH 3.16 069/129] leds: lp55xx: fix null deref on firmware
+ load failure
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,30 +56,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Michal Kazior <michal@plume.com>
 
-commit a4b0350047f1b10207e25e72d7cd3f7826e93769 upstream.
+commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c upstream.
 
-The entry for "scifb2_data_c" in the SCIFB2 pin group array contains a
-typo, thus the group cannot be selected.
+I've stumbled upon a kernel crash and the logs
+pointed me towards the lp5562 driver:
 
-Fixes: 5088451962389924 ("pinctrl: sh-pfc: r8a7791 PFC support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
+> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
+> ...
+> <3>[306073.924886] lp5562 0-0030: firmware request failed
+> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
+> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
+> ...
+
+After taking a look I noticed firmware_release()
+could be called with either NULL or a dangling
+pointer.
+
+Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
+Signed-off-by: Michal Kazior <michal@plume.com>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/leds/leds-lp55xx-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-@@ -4433,7 +4433,7 @@ static const char * const scifb2_groups[
- 	"scifb2_data_b",
- 	"scifb2_clk_b",
- 	"scifb2_ctrl_b",
--	"scifb0_data_c",
-+	"scifb2_data_c",
- 	"scifb2_clk_c",
- 	"scifb2_data_d",
- };
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -214,7 +214,7 @@ static void lp55xx_firmware_loaded(const
+ 
+ 	if (!fw) {
+ 		dev_err(dev, "firmware request failed\n");
+-		goto out;
++		return;
+ 	}
+ 
+ 	/* handling firmware data is chip dependent */
+@@ -227,9 +227,9 @@ static void lp55xx_firmware_loaded(const
+ 
+ 	mutex_unlock(&chip->lock);
+ 
+-out:
+ 	/* firmware should be released for other channel use */
+ 	release_firmware(chip->fw);
++	chip->fw = NULL;
+ }
+ 
+ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
 
