@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D36CC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C2BC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C93020663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A09E20684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbfGGToH (ORCPT
+        id S1728399AbfGGToG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:44:07 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57360 "EHLO
+        Sun, 7 Jul 2019 15:44:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57346 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726105AbfGGTiJ (ORCPT
+        by vger.kernel.org with ESMTP id S1727559AbfGGTiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:09 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz6-0006hq-PF; Sun, 07 Jul 2019 20:38:04 +0100
+        id 1hkCz6-0006hb-8i; Sun, 07 Jul 2019 20:38:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0005br-W5; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz4-0005bc-QZ; Sun, 07 Jul 2019 20:38:02 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jacek Anaszewski" <jacek.anaszewski@gmail.com>,
-        "Michal Kazior" <michal@plume.com>
+        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
+        "Jia Zhang" <zhang.jia@linux.alibaba.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.276777089@decadent.org.uk>
+Message-ID: <lsq.1562518457.519842194@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 069/129] leds: lp55xx: fix null deref on firmware
- load failure
+Subject: [PATCH 3.16 066/129] tpm: Fix off-by-one when reading
+ binary_bios_measurements
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,54 +56,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michal Kazior <michal@plume.com>
+From: Jia Zhang <zhang.jia@linux.alibaba.com>
 
-commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c upstream.
+commit 64494d39ff630a63b5308042b20132b491e3706b upstream.
 
-I've stumbled upon a kernel crash and the logs
-pointed me towards the lp5562 driver:
+It is unable to read the entry when it is the only one in
+binary_bios_measurements:
 
-> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
-> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
-> ...
-> <3>[306073.924886] lp5562 0-0030: firmware request failed
-> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
-> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
-> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
-> ...
+00000000  00 00 00 00 08 00 00 00  c4 2f ed ad 26 82 00 cb
+00000010  1d 15 f9 78 41 c3 44 e7  9d ae 33 20 00 00 00 00
+00000020
 
-After taking a look I noticed firmware_release()
-could be called with either NULL or a dangling
-pointer.
+This is obviously a firmware problem on my linux machine:
 
-Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
-Signed-off-by: Michal Kazior <michal@plume.com>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+	Manufacturer: Inspur
+	Product Name: SA5212M4
+	Version: 01
+
+However, binary_bios_measurements should return it any way,
+rather than nothing, after all its content is completely
+valid.
+
+Fixes: 55a82ab3181b ("tpm: add bios measurement log")
+Signed-off-by: Jia Zhang <zhang.jia@linux.alibaba.com>
+Reviewd-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+[bwh: Backported to 3.16:
+ - Fix an additional comparison in tpm1_bios_measurements_start()
+ - Adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/leds/leds-lp55xx-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -214,7 +214,7 @@ static void lp55xx_firmware_loaded(const
+--- a/drivers/char/tpm/tpm_eventlog.c
++++ b/drivers/char/tpm/tpm_eventlog.c
+@@ -81,7 +81,7 @@ static void *tpm_bios_measurements_start
+ 	for (i = 0; i < *pos; i++) {
+ 		event = addr;
  
- 	if (!fw) {
- 		dev_err(dev, "firmware request failed\n");
--		goto out;
-+		return;
+-		if ((addr + sizeof(struct tcpa_event)) < limit) {
++		if ((addr + sizeof(struct tcpa_event)) <= limit) {
+ 			if (event->event_type == 0 && event->event_size == 0)
+ 				return NULL;
+ 			addr += sizeof(struct tcpa_event) + event->event_size;
+@@ -89,13 +89,13 @@ static void *tpm_bios_measurements_start
  	}
  
- 	/* handling firmware data is chip dependent */
-@@ -227,9 +227,9 @@ static void lp55xx_firmware_loaded(const
+ 	/* now check if current entry is valid */
+-	if ((addr + sizeof(struct tcpa_event)) >= limit)
++	if ((addr + sizeof(struct tcpa_event)) > limit)
+ 		return NULL;
  
- 	mutex_unlock(&chip->lock);
+ 	event = addr;
  
--out:
- 	/* firmware should be released for other channel use */
- 	release_firmware(chip->fw);
-+	chip->fw = NULL;
- }
+ 	if ((event->event_type == 0 && event->event_size == 0) ||
+-	    ((addr + sizeof(struct tcpa_event) + event->event_size) >= limit))
++	    ((addr + sizeof(struct tcpa_event) + event->event_size) > limit))
+ 		return NULL;
  
- static int lp55xx_request_firmware(struct lp55xx_chip *chip)
+ 	return addr;
+@@ -111,7 +111,7 @@ static void *tpm_bios_measurements_next(
+ 	v += sizeof(struct tcpa_event) + event->event_size;
+ 
+ 	/* now check if current entry is valid */
+-	if ((v + sizeof(struct tcpa_event)) >= limit)
++	if ((v + sizeof(struct tcpa_event)) > limit)
+ 		return NULL;
+ 
+ 	event = v;
+@@ -120,7 +120,7 @@ static void *tpm_bios_measurements_next(
+ 		return NULL;
+ 
+ 	if ((event->event_type == 0 && event->event_size == 0) ||
+-	    ((v + sizeof(struct tcpa_event) + event->event_size) >= limit))
++	    ((v + sizeof(struct tcpa_event) + event->event_size) > limit))
+ 		return NULL;
+ 
+ 	(*pos)++;
 
