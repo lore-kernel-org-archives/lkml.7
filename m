@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7988AC48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D6FC48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5918720663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD93320684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbfGGTrA (ORCPT
+        id S1728762AbfGGTrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:47:00 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56848 "EHLO
+        Sun, 7 Jul 2019 15:47:04 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56846 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727457AbfGGTiB (ORCPT
+        by vger.kernel.org with ESMTP id S1727456AbfGGTiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:01 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz1-0006dM-AU; Sun, 07 Jul 2019 20:37:59 +0100
+        id 1hkCz1-0006dK-AU; Sun, 07 Jul 2019 20:37:59 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz0-0005XU-94; Sun, 07 Jul 2019 20:37:58 +0100
+        id 1hkCz0-0005XK-3h; Sun, 07 Jul 2019 20:37:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jeremy Fertic" <jeremyfertic@gmail.com>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
+        "Yangtao Li" <tiny.windzz@gmail.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        "Gregory CLEMENT" <gregory.clement@bootlin.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.922294205@decadent.org.uk>
+Message-ID: <lsq.1562518457.953009545@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 015/129] staging: iio: adt7316: fix handling of dac
- high resolution option
+Subject: [PATCH 3.16 013/129] clk: dove: fix refcount leak in dove_clk_init()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,61 +56,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jeremy Fertic <jeremyfertic@gmail.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-commit 76b7fe8d6c4daf4db672eb953c892c6f6572a282 upstream.
+commit 8d726c5128298386b907963033be93407b0c4275 upstream.
 
-The adt7316/7 and adt7516/7 have the option to output voltage proportional
-to temperature on dac a and/or dac b. The default dac resolution in this
-mode is 8 bits with the dac high resolution option enabling 10 bits. None
-of these settings affect dacs c and d. Remove the "1 (12 bits)" output from
-the show function since that is not an option for this mode. Return
-"1 (10 bits)" if the device is one of the above mentioned chips and the dac
-high resolution mode is enabled.
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-In the store function, the driver currently allows the user to write to the
-ADT7316_DA_HIGH_RESOLUTION bit regardless of the device in use. Add a check
-to return an error in the case of an adt7318 or adt7519. Remove the else
-statement that clears the ADT7316_DA_HIGH_RESOLUTION bit. Instead, clear it
-before conditionally enabling it, depending on user input. This matches the
-typical pattern in the driver when an attribute is a boolean.
-
-Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
-Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: 8f7fc5450b64 ("clk: mvebu: dove: maintain clock init order")
+Fixes: 63b8d92c793f ("clk: add Dove PLL divider support for GPU, VMeta and AXI clocks")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+[bwh: Backported to 3.16: There is no ddnp variable here]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/iio/addac/adt7316.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -635,9 +635,7 @@ static ssize_t adt7316_show_da_high_reso
- 	struct adt7316_chip_info *chip = iio_priv(dev_info);
+--- a/drivers/clk/mvebu/dove.c
++++ b/drivers/clk/mvebu/dove.c
+@@ -187,7 +187,9 @@ static void __init dove_clk_init(struct
  
- 	if (chip->config3 & ADT7316_DA_HIGH_RESOLUTION) {
--		if (chip->id == ID_ADT7316 || chip->id == ID_ADT7516)
--			return sprintf(buf, "1 (12 bits)\n");
--		else if (chip->id == ID_ADT7317 || chip->id == ID_ADT7517)
-+		if (chip->id != ID_ADT7318 && chip->id != ID_ADT7519)
- 			return sprintf(buf, "1 (10 bits)\n");
- 	}
+ 	mvebu_coreclk_setup(np, &dove_coreclks);
  
-@@ -654,10 +652,12 @@ static ssize_t adt7316_store_da_high_res
- 	u8 config3;
- 	int ret;
- 
-+	if (chip->id == ID_ADT7318 || chip->id == ID_ADT7519)
-+		return -EPERM;
-+
-+	config3 = chip->config3 & (~ADT7316_DA_HIGH_RESOLUTION);
- 	if (buf[0] == '1')
--		config3 = chip->config3 | ADT7316_DA_HIGH_RESOLUTION;
--	else
--		config3 = chip->config3 & (~ADT7316_DA_HIGH_RESOLUTION);
-+		config3 |= ADT7316_DA_HIGH_RESOLUTION;
- 
- 	ret = chip->bus.write(chip->bus.client, ADT7316_CONFIG3, config3);
- 	if (ret)
+-	if (cgnp)
++	if (cgnp) {
+ 		mvebu_clk_gating_setup(cgnp, dove_gating_desc);
++		of_node_put(cgnp);
++	}
+ }
+ CLK_OF_DECLARE(dove_clk, "marvell,dove-core-clock", dove_clk_init);
 
