@@ -2,82 +2,117 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85664C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 04:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEE3C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 04:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A9A2083B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 04:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C822083B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 04:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="K5uQwG/g"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DEVuW4gy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfGGEdS (ORCPT
+        id S1726479AbfGGEdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 00:33:18 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:41220 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfGGEdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 00:33:18 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x674X71S031442;
-        Sun, 7 Jul 2019 13:33:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x674X71S031442
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562473988;
-        bh=9y9VZo1OOhLrBRWbqZR2U3aVpRoNwiIjm2wb+Db2h6I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=K5uQwG/gV5WfxYKMAynH7MtvcqPSU1qOD97NfUWLVva6O3novZQVOq4HEHJA5FE5H
-         2VSrx2Qvb0sDMkonq+s3j0EJGKL0Q3YJkUMU5m+fP84rv78ApVDgcRNJeJKjunZlGH
-         XD3vgCOLIoP47jOWepQPdRKoWsF+LAaK5XenerIk3FNWF+zk7DQTYlh/q9GNdcOztv
-         XCnvChd2qQruQ/2OToM3H5vt7i30UXJM7IVTfQGbm1JYrdeJMq8uUw5Iou9UF/yFvh
-         YrV1QhXdeUXzNicVEMJkyrIHQCtDTW19ZPwlZ7x4xjD94Sf9MxChVvrrR7iuOY8xae
-         vJQ6bw/rrQlGQ==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id m23so6157338vso.1;
-        Sat, 06 Jul 2019 21:33:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAXNUv1Z+5DgIgqgepJ/prD1z5IwpUG3w+oB0eAjHvPGcyP6l6N/
-        SJXhC8LuedOn6WibMdjVD81f2knesmxi0e72YJ0=
-X-Google-Smtp-Source: APXvYqxra+LfZS9nfi0sDyRHRub/gVnA3uNXL37EWEQHctWP8UsXqrmvixYooJnHmIivO0HvP9SQEIXpKCYZsn4wwfo=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr6711974vsn.54.1562473987256;
- Sat, 06 Jul 2019 21:33:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190628051300.30678-1-yamada.masahiro@socionext.com> <CAK7LNAQ8M_z-z8tp-OiU=n13iggqEyY084S5HNS3p8LwM3qc1g@mail.gmail.com>
-In-Reply-To: <CAK7LNAQ8M_z-z8tp-OiU=n13iggqEyY084S5HNS3p8LwM3qc1g@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 7 Jul 2019 13:32:31 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQJV+W9+1GVBVLiF4Bk-Womf=Gxqi8b2n173Y0xaaNkvA@mail.gmail.com>
-Message-ID: <CAK7LNAQJV+W9+1GVBVLiF4Bk-Womf=Gxqi8b2n173Y0xaaNkvA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: use -E instead of -c for __cc-option
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 7 Jul 2019 00:33:38 -0400
+Received: from m12-13.163.com ([220.181.12.13]:46785 "EHLO m12-13.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbfGGEdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 00:33:38 -0400
+X-Greylist: delayed 906 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Jul 2019 00:33:34 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=obkgI72FnkfilFr+aG
+        Iy9W7IsYqdSbTqaaEZ3FLrriA=; b=DEVuW4gyKlk83j4/+KPUpMZpfvcwWzq2jL
+        1jKT8EcZagpc1Rh7oklwAYNQAYfJppkDaiDbK3pK7ZtJV9VO0nv23OoPCsg0mLCP
+        3jJMl0mcxEuny1vsXSA396kC1pv+XznLfDKawI+FzhplcQQQA2Flo9xeUBBkD8Vq
+        URMtsD/hU=
+Received: from localhost.localdomain (unknown [125.82.14.162])
+        by smtp9 (Coremail) with SMTP id DcCowACnI71WciFdP77+AA--.37123S2;
+        Sun, 07 Jul 2019 12:17:27 +0800 (CST)
+From:   xianfengting221@163.com
+To:     wensong@linux-vs.org, horms@verge.net.au, ja@ssi.bg,
+        pablo@netfilter.org, kadlec@blackhole.kfki.hu, fw@strlen.de,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hu Haowen <xianfengting221@163.com>
+Subject: [PATCH] ipvs: Delete some unused space characters in Kconfig
+Date:   Sun,  7 Jul 2019 12:16:49 +0800
+Message-Id: <1562473009-29726-1-git-send-email-xianfengting221@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: DcCowACnI71WciFdP77+AA--.37123S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar18JF1Utryfur1ktr43Wrg_yoW8tFyDpr
+        9I9r13KF47Ar1Ykr97uFy8Cryxua93Jw45Gr1kZ3s7Aas8JFn2y3Z5trsrKa4UArZ5ZrW3
+        ZFW5Xw1j93Z0yaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJfH8UUUUU=
+X-Originating-IP: [125.82.14.162]
+X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiMhzqAFWBjw5NGAAAsE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 6, 2019 at 11:37 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Fri, Jun 28, 2019 at 2:13 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Use -E instead of -c like scripts/Kconfig.include
-> > This makes the compiler flag evaluation slightly faster.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
->
-> Applied to linux-kbuild.
+From: Hu Haowen <xianfengting221@163.com>
 
-Dropped because 0-day bot reported build error.
+The space characters at the end of lines are always unused and
+not easy to find. This patch deleted some of them I have found
+in Kconfig.
 
+Signed-off-by: Hu Haowen <xianfengting221@163.com>
+---
 
+This is my first patch to the Linux kernel, so please forgive
+me if anything went wrong.
+
+ net/netfilter/ipvs/Kconfig | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
+index f6f1a0d..54afad5 100644
+--- a/net/netfilter/ipvs/Kconfig
++++ b/net/netfilter/ipvs/Kconfig
+@@ -120,7 +120,7 @@ config	IP_VS_RR
+ 
+ 	  If you want to compile it in kernel, say Y. To compile it as a
+ 	  module, choose M here. If unsure, say N.
+- 
++
+ config	IP_VS_WRR
+ 	tristate "weighted round-robin scheduling"
+ 	---help---
+@@ -138,7 +138,7 @@ config	IP_VS_LC
+         tristate "least-connection scheduling"
+ 	---help---
+ 	  The least-connection scheduling algorithm directs network
+-	  connections to the server with the least number of active 
++	  connections to the server with the least number of active
+ 	  connections.
+ 
+ 	  If you want to compile it in kernel, say Y. To compile it as a
+@@ -193,7 +193,7 @@ config  IP_VS_LBLCR
+ 	tristate "locality-based least-connection with replication scheduling"
+ 	---help---
+ 	  The locality-based least-connection with replication scheduling
+-	  algorithm is also for destination IP load balancing. It is 
++	  algorithm is also for destination IP load balancing. It is
+ 	  usually used in cache cluster. It differs from the LBLC scheduling
+ 	  as follows: the load balancer maintains mappings from a target
+ 	  to a set of server nodes that can serve the target. Requests for
+@@ -250,8 +250,8 @@ config	IP_VS_SED
+ 	tristate "shortest expected delay scheduling"
+ 	---help---
+ 	  The shortest expected delay scheduling algorithm assigns network
+-	  connections to the server with the shortest expected delay. The 
+-	  expected delay that the job will experience is (Ci + 1) / Ui if 
++	  connections to the server with the shortest expected delay. The
++	  expected delay that the job will experience is (Ci + 1) / Ui if
+ 	  sent to the ith server, in which Ci is the number of connections
+ 	  on the ith server and Ui is the fixed service rate (weight)
+ 	  of the ith server.
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
+
