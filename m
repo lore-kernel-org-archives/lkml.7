@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC428C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD75C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA922082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217F420684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfGGTpg (ORCPT
+        id S1728602AbfGGTpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:45:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57074 "EHLO
+        Sun, 7 Jul 2019 15:45:38 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57096 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727515AbfGGTiF (ORCPT
+        by vger.kernel.org with ESMTP id S1727519AbfGGTiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:05 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0006g2-8Q; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz3-0006fv-VC; Sun, 07 Jul 2019 20:38:02 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz2-0005Ze-Tp; Sun, 07 Jul 2019 20:38:00 +0100
+        id 1hkCz2-0005ZT-Os; Sun, 07 Jul 2019 20:38:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "YueHaibing" <yuehaibing@huawei.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.326878483@decadent.org.uk>
+Message-ID: <lsq.1562518457.517469659@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 042/129] devres: always use dev_name() in
- devm_ioremap_resource()
+Subject: [PATCH 3.16 040/129] tty: ipwireless: Fix potential NULL pointer
+ dereference
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,98 +56,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 8d84b18f5678d3adfdb9375dfb0d968da2dc753d upstream.
+commit 7dd50e205b3348dc7784efbdf85723551de64a25 upstream.
 
-devm_ioremap_resource() prefers calling devm_request_mem_region() with a
-resource name instead of a device name -- this looks pretty iff a resource
-name isn't specified via a device tree with a "reg-names" property (in this
-case, a resource name is set to a device node's full name), but if it is,
-it doesn't really scale since these names are only unique to a given device
-node, not globally; so, looking at the output of 'cat /proc/iomem', you do
-not have an idea which memory region belongs to which device (see "dirmap",
-"regs", and "wbuf" lines below):
+There is a potential NULL pointer dereference in case
+alloc_ctrl_packet() fails and returns NULL.
 
-08000000-0bffffff : dirmap
-48000000-bfffffff : System RAM
-  48000000-48007fff : reserved
-  48080000-48b0ffff : Kernel code
-  48b10000-48b8ffff : reserved
-  48b90000-48c7afff : Kernel data
-  bc6a4000-bcbfffff : reserved
-  bcc0f000-bebfffff : reserved
-  bec0e000-bec0efff : reserved
-  bec11000-bec11fff : reserved
-  bec12000-bec14fff : reserved
-  bec15000-bfffffff : reserved
-e6050000-e605004f : gpio@e6050000
-e6051000-e605104f : gpio@e6051000
-e6052000-e605204f : gpio@e6052000
-e6053000-e605304f : gpio@e6053000
-e6054000-e605404f : gpio@e6054000
-e6055000-e605504f : gpio@e6055000
-e6060000-e606050b : pin-controller@e6060000
-e6e60000-e6e6003f : e6e60000.serial
-e7400000-e7400fff : ethernet@e7400000
-ee200000-ee2001ff : regs
-ee208000-ee2080ff : wbuf
-
-I think that devm_request_mem_region() should be called with dev_name()
-despite the region names won't look as pretty as before (however, we gain
-more consistency with e.g. the serial driver:
-
-08000000-0bffffff : ee200000.rpc
-48000000-bfffffff : System RAM
-  48000000-48007fff : reserved
-  48080000-48b0ffff : Kernel code
-  48b10000-48b8ffff : reserved
-  48b90000-48c7afff : Kernel data
-  bc6a4000-bcbfffff : reserved
-  bcc0f000-bebfffff : reserved
-  bec0e000-bec0efff : reserved
-  bec11000-bec11fff : reserved
-  bec12000-bec14fff : reserved
-  bec15000-bfffffff : reserved
-e6050000-e605004f : e6050000.gpio
-e6051000-e605104f : e6051000.gpio
-e6052000-e605204f : e6052000.gpio
-e6053000-e605304f : e6053000.gpio
-e6054000-e605404f : e6054000.gpio
-e6055000-e605504f : e6055000.gpio
-e6060000-e606050b : e6060000.pin-controller
-e6e60000-e6e6003f : e6e60000.serial
-e7400000-e7400fff : e7400000.ethernet
-ee200000-ee2001ff : ee200000.rpc
-ee208000-ee2080ff : ee200000.rpc
-
-Fixes: 72f8c0bfa0de ("lib: devres: add convenience function to remap a resource")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Fixes: 099dc4fb6265 ("ipwireless: driver for PC Card 3G/UMTS modem")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- lib/devres.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/tty/ipwireless/hardware.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -109,7 +109,6 @@ EXPORT_SYMBOL(devm_iounmap);
- void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
- {
- 	resource_size_t size;
--	const char *name;
- 	void __iomem *dest_ptr;
+--- a/drivers/tty/ipwireless/hardware.c
++++ b/drivers/tty/ipwireless/hardware.c
+@@ -1515,6 +1515,8 @@ static void ipw_send_setup_packet(struct
+ 			sizeof(struct ipw_setup_get_version_query_packet),
+ 			ADDR_SETUP_PROT, TL_PROTOCOLID_SETUP,
+ 			TL_SETUP_SIGNO_GET_VERSION_QRY);
++	if (!ver_packet)
++		return;
+ 	ver_packet->header.length = sizeof(struct tl_setup_get_version_qry);
  
- 	BUG_ON(!dev);
-@@ -120,9 +119,8 @@ void __iomem *devm_ioremap_resource(stru
- 	}
- 
- 	size = resource_size(res);
--	name = res->name ?: dev_name(dev);
- 
--	if (!devm_request_mem_region(dev, res->start, size, name)) {
-+	if (!devm_request_mem_region(dev, res->start, size, dev_name(dev))) {
- 		dev_err(dev, "can't request region for resource %pR\n", res);
- 		return IOMEM_ERR_PTR(-EBUSY);
- 	}
+ 	/*
 
