@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D023BC48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB836C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FA420663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B2320663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbfGGTn4 (ORCPT
+        id S1728086AbfGGToJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:43:56 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57408 "EHLO
+        Sun, 7 Jul 2019 15:44:09 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57354 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727575AbfGGTiK (ORCPT
+        by vger.kernel.org with ESMTP id S1727560AbfGGTiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:10 -0400
+        Sun, 7 Jul 2019 15:38:09 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz7-0006ig-El; Sun, 07 Jul 2019 20:38:05 +0100
+        id 1hkCz6-0006ha-7e; Sun, 07 Jul 2019 20:38:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0005cf-Om; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz4-0005bX-NN; Sun, 07 Jul 2019 20:38:02 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        "Doug Berger" <opendmb@gmail.com>,
-        "Marc Zyngier" <marc.zyngier@arm.com>
+        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
+        "Jerry Snitselaar" <jsnitsel@redhat.com>,
+        "Stefan Berger" <stefanb@linux.ibm.com>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.981020944@decadent.org.uk>
+Message-ID: <lsq.1562518457.732802730@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 079/129] irqchip/brcmstb-l2: Use _irqsave locking
- variants in non-interrupt code
+Subject: [PATCH 3.16 065/129] tpm/tpm_i2c_atmel: Return -E2BIG when the
+ transfer is incomplete
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,64 +57,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Doug Berger <opendmb@gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-commit 33517881ede742107f416533b8c3e4abc56763da upstream.
+commit 442601e87a4769a8daba4976ec3afa5222ca211d upstream.
 
-Using the irq_gc_lock/irq_gc_unlock functions in the suspend and
-resume functions creates the opportunity for a deadlock during
-suspend, resume, and shutdown. Using the irq_gc_lock_irqsave/
-irq_gc_unlock_irqrestore variants prevents this possible deadlock.
+Return -E2BIG when the transfer is incomplete. The upper layer does
+not retry, so not doing that is incorrect behaviour.
 
-Fixes: 7f646e92766e2 ("irqchip: brcmstb-l2: Add Broadcom Set Top Box Level-2 interrupt controller")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-[maz: tidied up $SUBJECT]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: a2871c62e186 ("tpm: Add support for Atmel I2C TPMs")
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/irqchip/irq-brcmstb-l2.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -82,8 +82,9 @@ static void brcmstb_l2_intc_suspend(stru
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 	struct brcmstb_l2_intc_data *b = gc->private;
-+	unsigned long flags;
- 
--	irq_gc_lock(gc);
-+	irq_gc_lock_irqsave(gc, flags);
- 	/* Save the current mask */
- 	b->saved_mask = __raw_readl(b->base + CPU_MASK_STATUS);
- 
-@@ -92,22 +93,23 @@ static void brcmstb_l2_intc_suspend(stru
- 		__raw_writel(~gc->wake_active, b->base + CPU_MASK_SET);
- 		__raw_writel(gc->wake_active, b->base + CPU_MASK_CLEAR);
- 	}
--	irq_gc_unlock(gc);
-+	irq_gc_unlock_irqrestore(gc, flags);
+--- a/drivers/char/tpm/tpm_i2c_atmel.c
++++ b/drivers/char/tpm/tpm_i2c_atmel.c
+@@ -65,7 +65,14 @@ static int i2c_atmel_send(struct tpm_chi
+ 	dev_dbg(chip->dev,
+ 		"%s(buf=%*ph len=%0zx) -> sts=%d\n", __func__,
+ 		(int)min_t(size_t, 64, len), buf, len, status);
+-	return status;
++	if (status < 0)
++		return status;
++
++	/* The upper layer does not support incomplete sends. */
++	if (status != len)
++		return -E2BIG;
++
++	return 0;
  }
  
- static void brcmstb_l2_intc_resume(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 	struct brcmstb_l2_intc_data *b = gc->private;
-+	unsigned long flags;
- 
--	irq_gc_lock(gc);
-+	irq_gc_lock_irqsave(gc, flags);
- 	/* Clear unmasked non-wakeup interrupts */
- 	__raw_writel(~b->saved_mask & ~gc->wake_active, b->base + CPU_CLEAR);
- 
- 	/* Restore the saved mask */
- 	__raw_writel(b->saved_mask, b->base + CPU_MASK_SET);
- 	__raw_writel(~b->saved_mask, b->base + CPU_MASK_CLEAR);
--	irq_gc_unlock(gc);
-+	irq_gc_unlock_irqrestore(gc, flags);
- }
- 
- int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ static int i2c_atmel_recv(struct tpm_chip *chip, u8 *buf, size_t count)
 
