@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E69C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D79FC48BE1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAF820651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6661C20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfGGTk1 (ORCPT
+        id S1728041AbfGGTki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:40:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58030 "EHLO
+        Sun, 7 Jul 2019 15:40:38 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58066 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727669AbfGGTiR (ORCPT
+        by vger.kernel.org with ESMTP id S1727674AbfGGTiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 15:38:17 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCzD-0006kU-My; Sun, 07 Jul 2019 20:38:11 +0100
+        id 1hkCzG-0006jD-7s; Sun, 07 Jul 2019 20:38:14 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz9-0005gb-Ml; Sun, 07 Jul 2019 20:38:07 +0100
+        id 1hkCz8-0005fh-SD; Sun, 07 Jul 2019 20:38:06 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        "huangwen" <huangwen@venustech.com.cn>,
-        "Kalle Valo" <kvalo@codeaurora.org>
+        "Guoqing Jiang" <gqjiang@suse.com>,
+        "Song Liu" <songliubraving@fb.com>,
+        "Aditya Pakki" <pakki001@umn.edu>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.121759028@decadent.org.uk>
+Message-ID: <lsq.1562518457.248076757@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 126/129] mwifiex: Fix possible buffer overflows at
- parsing bss descriptor
+Subject: [PATCH 3.16 115/129] md: Fix failed allocation of md_register_thread
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,46 +56,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Aditya Pakki <pakki001@umn.edu>
 
-commit 13ec7f10b87f5fc04c4ccbd491c94c7980236a74 upstream.
+commit e406f12dde1a8375d77ea02d91f313fb1a9c6aec upstream.
 
-mwifiex_update_bss_desc_with_ie() calls memcpy() unconditionally in
-a couple places without checking the destination size.  Since the
-source is given from user-space, this may trigger a heap buffer
-overflow.
+mddev->sync_thread can be set to NULL on kzalloc failure downstream.
+The patch checks for such a scenario and frees allocated resources.
 
-Fix it by putting the length check before performing memcpy().
+Committer node:
 
-This fix addresses CVE-2019-3846.
+Added similar fix to raid5.c, as suggested by Guoqing.
 
-Reported-by: huangwen <huangwen@venustech.com.cn>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename]
+Acked-by: Guoqing Jiang <gqjiang@suse.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/mwifiex/scan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/md/raid10.c | 2 ++
+ drivers/md/raid5.c  | 2 ++
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/net/wireless/mwifiex/scan.c
-+++ b/drivers/net/wireless/mwifiex/scan.c
-@@ -1171,6 +1171,8 @@ int mwifiex_update_bss_desc_with_ie(stru
- 		}
- 		switch (element_id) {
- 		case WLAN_EID_SSID:
-+			if (element_len > IEEE80211_MAX_SSID_LEN)
-+				return -EINVAL;
- 			bss_entry->ssid.ssid_len = element_len;
- 			memcpy(bss_entry->ssid.ssid, (current_ptr + 2),
- 			       element_len);
-@@ -1180,6 +1182,8 @@ int mwifiex_update_bss_desc_with_ie(stru
- 			break;
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -3820,6 +3820,8 @@ static int run(struct mddev *mddev)
+ 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
+ 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
+ 							"reshape");
++		if (!mddev->sync_thread)
++			goto out_free_conf;
+ 	}
  
- 		case WLAN_EID_SUPP_RATES:
-+			if (element_len > MWIFIEX_SUPPORTED_RATES)
-+				return -EINVAL;
- 			memcpy(bss_entry->data_rates, current_ptr + 2,
- 			       element_len);
- 			memcpy(bss_entry->supported_rates, current_ptr + 2,
+ 	return 0;
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -6180,6 +6180,8 @@ static int run(struct mddev *mddev)
+ 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
+ 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
+ 							"reshape");
++		if (!mddev->sync_thread)
++			goto abort;
+ 	}
+ 
+ 
 
