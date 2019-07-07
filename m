@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4F5C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1269C48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07AB520684
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9242420684
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfGGTjB (ORCPT
+        id S1727911AbfGGTjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:39:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57482 "EHLO
+        Sun, 7 Jul 2019 15:39:04 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57498 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727586AbfGGTiK (ORCPT
+        by vger.kernel.org with ESMTP id S1727588AbfGGTiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:10 -0400
+        Sun, 7 Jul 2019 15:38:11 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz8-0006j1-Ap; Sun, 07 Jul 2019 20:38:06 +0100
+        id 1hkCz8-0006iz-AP; Sun, 07 Jul 2019 20:38:06 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz6-0005cv-1I; Sun, 07 Jul 2019 20:38:04 +0100
+        id 1hkCz6-0005cz-3r; Sun, 07 Jul 2019 20:38:04 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        "Chanwoo Choi" <cw00.choi@samsung.com>,
-        "Marek Szyprowski" <m.szyprowski@samsung.com>
+        "Aaro Koskinen" <aaro.koskinen@iki.fi>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.508733719@decadent.org.uk>
+Message-ID: <lsq.1562518457.999453514@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 082/129] clocksource/drivers/exynos_mct: Fix error
- path in timer resources initialization
+Subject: [PATCH 3.16 083/129] mmc: omap: fix the maximum timeout setting
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,47 +55,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-commit b9307420196009cdf18bad55e762ac49fb9a80f4 upstream.
+commit a6327b5e57fdc679c842588c3be046c0b39cc127 upstream.
 
-While freeing interrupt handlers in error path, don't assume that all
-requested interrupts are per-processor interrupts and properly release
-standard interrupts too.
+When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
 
-Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-Fixes: 56a94f13919c ("clocksource: exynos_mct: Avoid blocking calls in the cpu hotplug notifier")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-[bwh: Backported to 3.16: adjust context]
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	[ad inf.]
+
+Emulator warnings appear to be valid. The TI document SPRU680 [1]
+("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
+(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
+cycles and "0xff and 0xfe cannot be used".
+
+Fix by using 0xfd as the maximum timeout.
+
+Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
+real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
+(OMAP2420) that MMC works as before.
+
+[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
+
+Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/clocksource/exynos_mct.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/mmc/host/omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -558,7 +558,19 @@ static void __init exynos4_timer_resourc
- 	return;
- 
- out_irq:
--	free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
-+	if (mct_int_type == MCT_INT_PPI) {
-+		free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
-+	} else {
-+		for_each_possible_cpu(cpu) {
-+			struct mct_clock_event_device *pcpu_mevt =
-+				per_cpu_ptr(&percpu_mct_tick, cpu);
-+
-+			if (pcpu_mevt->evt.irq != -1) {
-+				free_irq(pcpu_mevt->evt.irq, pcpu_mevt);
-+				pcpu_mevt->evt.irq = -1;
-+			}
-+		}
-+	}
+--- a/drivers/mmc/host/omap.c
++++ b/drivers/mmc/host/omap.c
+@@ -921,7 +921,7 @@ static inline void set_cmd_timeout(struc
+ 	reg &= ~(1 << 5);
+ 	OMAP_MMC_WRITE(host, SDIO, reg);
+ 	/* Set maximum timeout */
+-	OMAP_MMC_WRITE(host, CTO, 0xff);
++	OMAP_MMC_WRITE(host, CTO, 0xfd);
  }
  
- void __init mct_init(void __iomem *base, int irq_g0, int irq_l0, int irq_l1)
+ static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
 
