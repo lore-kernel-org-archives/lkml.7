@@ -2,69 +2,177 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6966C48BE1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 17:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3872C48BE1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 17:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6C120830
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 17:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562520146;
-	bh=2s2gE1E50GfJ/EeGP73+waB27rAFwSqJTvo/pyPbyTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L42gtOun6xbKkTG305b8/ScAbdELAcdfbE/6iEROaEL5oi8vIR1GurPaZW1YSxW2W
-	 fItwAdTYRK+Q8BkHIot/1ahE9T1IRKSvQKGZqfnUpijBahqK6CcPjHElXbay0KcXRg
-	 w477HDodn+9ti5J9vRTH7JvBZqSeSni965UR/Kig=
+	by mail.kernel.org (Postfix) with ESMTP id A15AB2082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 17:46:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JKG9FSVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfGGRWZ (ORCPT
+        id S1727283AbfGGRq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 13:22:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfGGRWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 13:22:25 -0400
-Received: from localhost (unknown [49.207.58.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123B62082F;
-        Sun,  7 Jul 2019 17:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562520144;
-        bh=2s2gE1E50GfJ/EeGP73+waB27rAFwSqJTvo/pyPbyTs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p8xhwKgCQQTlYyEcvQ9jYHJsRv0Z+cre4Dl/vakph1j//935NcoNxWlgYm9an0aBI
-         tm8lVCX129aYQ1F7gtpxXixVR8/7M1hOdTo8Rd8T68DdyqUjfLMmNJoRRRYfkIRwdr
-         hatgmaikvSFZLBe+cNlfc+FPBrhwAvaXzdjvaH4g=
-Date:   Sun, 7 Jul 2019 22:47:01 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Raag Jadav <raagjadav@gmail.com>
-Cc:     dmaengine@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: at_xdmac: check for non-empty xfers_list
- before invoking callback
-Message-ID: <20190707171701.GI2911@vkoul-mobl>
-References: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
+        Sun, 7 Jul 2019 13:46:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45028 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfGGRq3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 13:46:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tsh1M3+YIkp/+slPl4drTdVgeXhFHnK+iRmBroB6M24=; b=JKG9FSVxwMXPED30sVVWKeoZN
+        3T3+i/GVWvNpb6NrfWRfYiLy12PElmUZochO7zJlc9zxNE5ZsYdq29SARsHPCSb6Gdbd5+3jHev1M
+        wUSQuBk/pPlNycIMehkFBKaRpwRc7zF8lJjJFfj/3aofrUDKStZnKWB4wEudVxfJu3y8qOjFNqwOg
+        b6P4gbRUMp+DHYo9xbB+1Kh7UEDMZXCiy2OQjrKnp4nEvkORjhUqh6g0oHH0SSCDgswY3vJwmMifU
+        IZe5fBUhG77ddg7ZWfOnET9G85hFI4ShWmRn1M4ToEVXD96TjzLw9a8FN1EGv6btJVn918LjbUQKV
+        3EPTU6L+A==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkBF1-0003m8-SC; Sun, 07 Jul 2019 17:46:23 +0000
+Subject: Re: [PATCH v2] PCI: hv: fix pci-hyperv build when SYSFS not enabled
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Yuehaibing <yuehaibing@huawei.com>,
+        Stephen Hemminger <stephen@networkplumber.org>
+References: <535f212f-e111-399d-4ad0-82d2ae505e48@infradead.org>
+ <DM6PR21MB13373F2B76558930CC368E17CAFB0@DM6PR21MB1337.namprd21.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c1261e6d-84c3-4874-5c32-a3988c5a85d6@infradead.org>
+Date:   Sun, 7 Jul 2019 10:46:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <DM6PR21MB13373F2B76558930CC368E17CAFB0@DM6PR21MB1337.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-06-19, 13:50, Raag Jadav wrote:
-> tx descriptor retrieved from an empty xfers_list may not have valid
-> pointers to the callback functions.
-> Avoid calling dmaengine_desc_get_callback_invoke if xfers_list is empty.
+On 7/3/19 11:06 AM, Haiyang Zhang wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>> Sent: Wednesday, July 3, 2019 12:59 PM
+>> To: LKML <linux-kernel@vger.kernel.org>; linux-pci <linux-
+>> pci@vger.kernel.org>
+>> Cc: Matthew Wilcox <willy@infradead.org>; Jake Oshins
+>> <jakeo@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Haiyang
+>> Zhang <haiyangz@microsoft.com>; Stephen Hemminger
+>> <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>; Bjorn
+>> Helgaas <bhelgaas@google.com>; linux-hyperv@vger.kernel.org; Dexuan
+>> Cui <decui@microsoft.com>; Yuehaibing <yuehaibing@huawei.com>
+>> Subject: [PATCH v2] PCI: hv: fix pci-hyperv build when SYSFS not enabled
+>>
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> Fix build of drivers/pci/controller/pci-hyperv.o when
+>> CONFIG_SYSFS is not set/enabled by adding stubs for
+>> pci_create_slot() and pci_destroy_slot().
+>>
+>> Fixes these build errors:
+>>
+>> ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+>> ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+>>
+>> Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot
+>> information")
+>>
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Jake Oshins <jakeo@microsoft.com>
+>> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>> Cc: Sasha Levin <sashal@kernel.org>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: linux-pci@vger.kernel.org
+>> Cc: linux-hyperv@vger.kernel.org
+>> Cc: Dexuan Cui <decui@microsoft.com>
+>> Cc: Yuehaibing <yuehaibing@huawei.com>
+>> ---
+>> v2:
+>> - provide non-CONFIG_SYSFS stubs for pci_create_slot() and
+>>   pci_destroy_slot() [suggested by Matthew Wilcox <willy@infradead.org>]
+>> - use the correct Fixes: tag [Dexuan Cui <decui@microsoft.com>]
+>>
+>>  include/linux/pci.h |   12 ++++++++++--
+>>  1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> --- lnx-52-rc7.orig/include/linux/pci.h
+>> +++ lnx-52-rc7/include/linux/pci.h
+>> @@ -25,6 +25,7 @@
+>>  #include <linux/ioport.h>
+>>  #include <linux/list.h>
+>>  #include <linux/compiler.h>
+>> +#include <linux/err.h>
+>>  #include <linux/errno.h>
+>>  #include <linux/kobject.h>
+>>  #include <linux/atomic.h>
+>> @@ -947,14 +948,21 @@ int pci_scan_root_bus_bridge(struct pci_
+>>  struct pci_bus *pci_add_new_bus(struct pci_bus *parent, struct pci_dev
+>> *dev,
+>>  				int busnr);
+>>  void pcie_update_link_speed(struct pci_bus *bus, u16 link_status);
+>> +#ifdef CONFIG_SYSFS
+>> +void pci_dev_assign_slot(struct pci_dev *dev);
+>>  struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+>>  				 const char *name,
+>>  				 struct hotplug_slot *hotplug);
+>>  void pci_destroy_slot(struct pci_slot *slot);
+>> -#ifdef CONFIG_SYSFS
+>> -void pci_dev_assign_slot(struct pci_dev *dev);
+>>  #else
+>>  static inline void pci_dev_assign_slot(struct pci_dev *dev) { }
+>> +static inline struct pci_slot *pci_create_slot(struct pci_bus *parent,
+>> +					       int slot_nr,
+>> +					       const char *name,
+>> +					       struct hotplug_slot *hotplug) {
+>> +	return ERR_PTR(-EINVAL);
+>> +}
+>> +static inline void pci_destroy_slot(struct pci_slot *slot) { }
+>>  #endif
+>>  int pci_scan_slot(struct pci_bus *bus, int devfn);
+>>  struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn);
+>>
+> 
+> The serial number in slot info is used to match VF NIC with Synthetic NIC.
+> Without selecting SYSFS, the SRIOV feature will fail on VM on Hyper-V and
+> Azure. The first version of this patch should be used.
+> 
+> @Stephen Hemminger how do you think?
+> 
+> Thanks,
+> - Haiyang
 
-Applied, thanks
 
+Hi Stephen,
+
+Please comment on this patch or v1.
+v1:  https://lore.kernel.org/lkml/69c25bc3-da00-2758-92ee-13c82b51fc45@infradead.org/
+
+
+thanks.
 -- 
-~Vinod
+~Randy
