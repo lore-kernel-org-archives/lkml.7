@@ -2,60 +2,61 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F359C0650E
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 23:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79E6C0650E
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 23:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06C32064B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 23:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7513F2064B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 23:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7BbNw56"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqTw3JDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfGGXjA (ORCPT
+        id S1727618AbfGGXjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 19:39:00 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37427 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfGGXi7 (ORCPT
+        Sun, 7 Jul 2019 19:39:02 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45749 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727578AbfGGXjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 19:38:59 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c9so7860334lfh.4;
-        Sun, 07 Jul 2019 16:38:58 -0700 (PDT)
+        Sun, 7 Jul 2019 19:39:01 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m23so14000358lje.12;
+        Sun, 07 Jul 2019 16:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g9nfwmFB7j0mJGrmDo+8GlD40u5rc6G1Lxi6W8DyoJY=;
-        b=A7BbNw56S9eDxSzIzXxI1Xat7yN7WYKZd0IpMSea7taX51wdd6QCewc86oGSXXCT1J
-         A/+fHwPW2uO+6xRiQ3Gpv3JdWDUJca+XaSGeTq6GENjtAwqfMpKOe/H3FntYkhnr47Ww
-         FlnNfNEQcQEknzzWyB1R0l4O1dOP6UZ3IKSP68A0jJmoN7Pk/Iv8Q1xdobkwrZrmTUWE
-         PqxQ4siS+HcqEgUXUfZOruHlSS4gx8trozi0LvAIVVyYktgR+tC5TpUoCRsYsVBEiKNR
-         fBGuMENCsusAawqtqRPDQv+hjirKWP+GrEAHGlYPYsZHK1FAi4yC3XpNyW+GlhInV9Ne
-         C/PQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=R4puCheAbFkEIrSTvCDaV3kdeBokNA6IJcJ6luNaM2A=;
+        b=SqTw3JDmfXvlMW3J6Mrx/7YeBADATjgfqTYZdL1SRSuJw0d4MJ9jGNg2axoITm19ko
+         7dUZGe/LhXrXg7ivzPyzDc4MPLhni7AEp5/CbUCOnP28cg/sJebKatHs0qiAHhfhuKhE
+         xd10QJV2V3E/A3B8a09InX7O8JGA/cPBXQ6/V0LoNNpsbzt8KWdT6Ck1mK8dvHYbsB5k
+         iI25YaNgexYRT/VOIVpaZQpjpH18R7aOxaKJDyYMihnfH0YgL7BBOg752ekcDagptOSa
+         SBS7uXmfKqWX0AsYuTzFfkIAXjpp0jnVNau/EHmKEjHeOArUAtCO1Pr++OfAsBIugHRa
+         mzjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g9nfwmFB7j0mJGrmDo+8GlD40u5rc6G1Lxi6W8DyoJY=;
-        b=GRtNpW6Evv3tub4OuYfyumDoFpUxAqJ6VJs+nloE7C7YHJkjCH7EHgQjCtU6YC/qf/
-         mpzmVZB/55dhfTuFlh6tMa/ToP1PlhCM9hhnfWdT6GYOw86WtSmyOvk+TQuQPt/eofug
-         psM/YO2k7KjnwqYjAzujwK9lglNKfXM0d4oHDc3a7sOaryJD+ngytLTh8+C5Tq8rTFYn
-         Tkn2/H0p1AmVqXYiW0Wk84OMp+a4+DqFJUyI65xNJw/+Sfx77Nf4k+Eh2aM/vQ2HrtQ3
-         DNosA5lWgxVVeSubWYTZN5/9y0ADagmTrNwPn+r9MYInLoWSXmNCvUt8NdtU/OSe3+8L
-         VinA==
-X-Gm-Message-State: APjAAAVv/F0EVsGHijOkSkcaN5NHyaJjQyT9u8FajncmDscEgsW8AnrY
-        iDG6bG123A/XwMdxa6U6p3k=
-X-Google-Smtp-Source: APXvYqwMMo5lmtV6pxPnZVt2woZLBwxsQSfmwtPeIXUrBb/DvSkAIebHKVfMeN0rPlDFWGEF45ezsg==
-X-Received: by 2002:a19:be03:: with SMTP id o3mr7010779lff.88.1562542737384;
-        Sun, 07 Jul 2019 16:38:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=R4puCheAbFkEIrSTvCDaV3kdeBokNA6IJcJ6luNaM2A=;
+        b=o/oGalV5tDm8UdBe6j8ssHAVvnCRGwRg9WEp/SO1e0+zuS6Z71zbpN2SabdbdnvmzW
+         e+TTuJ8llh1fgKyGYZYVNCmZf14TGjGPmR+kJMJ2Y1mcZC9loyeBpGWfAH7tDdq0IllF
+         aZ+S9Cjz/r/HRXkfIY1KMYdokCKvkZ6rdsCZYbebn+fZPbwnemKN17xPM4nXaco59PRf
+         OlzznBUNfZgdAhj3VuYp2+6FEkAZfooP0YcIzu/M0uttPrBChAm2KN11Wz2/7m60vFfJ
+         OLDTAQrASPRTXJajpvUdTGRxkMtaIDrHZd0puwdLgYjxg9sqAWKaHYSKZBU1UgAMLUQ3
+         KErA==
+X-Gm-Message-State: APjAAAUKSGBkcAUibEL67/c2nFDKhC8XTdXvMXNzo4WE5FQ88SNuzRjO
+        OjEjPO5C797C9jdmkBLsu1DZCwP+
+X-Google-Smtp-Source: APXvYqzymWtAArIFaYtLO3m5j3uCA2Ffc+LtomKs+ldTlKwFRUfk98oV1BB6SrYdDwPFbOYFYknrWA==
+X-Received: by 2002:a2e:3c1a:: with SMTP id j26mr8515380lja.230.1562542739371;
+        Sun, 07 Jul 2019 16:38:59 -0700 (PDT)
 Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id y5sm3246520ljj.5.2019.07.07.16.38.56
+        by smtp.gmail.com with ESMTPSA id y5sm3246520ljj.5.2019.07.07.16.38.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Jul 2019 16:38:56 -0700 (PDT)
+        Sun, 07 Jul 2019 16:38:58 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -64,10 +65,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/6] Consolidate and improve NVIDIA Tegra CPUIDLE driver(s)
-Date:   Mon,  8 Jul 2019 02:38:03 +0300
-Message-Id: <20190707233809.14400-1-digetx@gmail.com>
+Subject: [PATCH v1 2/6] ARM: tegra: Expose functions required for cpuidle driver
+Date:   Mon,  8 Jul 2019 02:38:05 +0300
+Message-Id: <20190707233809.14400-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190707233809.14400-1-digetx@gmail.com>
+References: <20190707233809.14400-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,65 +78,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The upcoming unified CPUIDLE driver will be added to the drivers/cpuidle/
+directory and it will require all these Tegra PM-core functions.
 
-I was spending quite some time recently trying to hunt down CPU-suspend
-bug on Tegra30 SoC and in the end it was nailed. During that time I
-realized that the CPU Idle drivers could get some polish and gain new
-features, thus that's what this series does:
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ arch/arm/mach-tegra/Makefile  |  2 +-
+ arch/arm/mach-tegra/platsmp.c |  2 --
+ arch/arm/mach-tegra/pm.c      | 16 +++++++---------
+ arch/arm/mach-tegra/pm.h      |  3 ---
+ arch/arm/mach-tegra/sleep.h   |  1 -
+ include/linux/clk/tegra.h     | 13 +++++++++++++
+ include/soc/tegra/pm.h        | 28 ++++++++++++++++++++++++++++
+ 7 files changed, 49 insertions(+), 16 deletions(-)
 
-  1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
-     into common drivers/cpuidle/ directory.
-
-  2. Enables CPU cluster power-down idling state on Tegra30.
-
-  3. Removes CPUIDLE_FLAG_TIMER_STOP from all of the states since that
-     flag is not relevant anymore.
-
-In the end there is a quite nice clean up of the Terga CPUIDLE driver(s)
-and of the Tegra's arch code in general. Please review, thanks!
-
-Dmitry Osipenko (6):
-  ARM: tegra: Remove cpuidle drivers
-  ARM: tegra: Expose functions required for cpuidle driver
-  cpuidle: Add unified driver for NVIDIA Tegra SoCs
-  cpuidle: tegra: Support CPU cluster power-down on Tegra30
-  cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from Tegra114/124
-    idle-state
-  cpuidle: tegra: Remove CPUIDLE_FLAG_TIMER_STOP from all states
-
- arch/arm/mach-tegra/Makefile           |  15 +-
- arch/arm/mach-tegra/cpuidle-tegra114.c |  89 ----------
- arch/arm/mach-tegra/cpuidle-tegra20.c  | 212 ----------------------
- arch/arm/mach-tegra/cpuidle-tegra30.c  | 132 --------------
- arch/arm/mach-tegra/cpuidle.c          |  50 ------
- arch/arm/mach-tegra/cpuidle.h          |  21 ---
- arch/arm/mach-tegra/irq.c              |  18 --
- arch/arm/mach-tegra/irq.h              |  11 --
- arch/arm/mach-tegra/platsmp.c          |   2 -
- arch/arm/mach-tegra/pm.c               |  27 +--
- arch/arm/mach-tegra/pm.h               |   4 -
- arch/arm/mach-tegra/reset-handler.S    |  11 --
- arch/arm/mach-tegra/reset.h            |   9 +-
- arch/arm/mach-tegra/sleep-tegra20.S    | 190 +-------------------
- arch/arm/mach-tegra/sleep.h            |  13 --
- arch/arm/mach-tegra/tegra.c            |   7 +-
- drivers/cpuidle/Kconfig.arm            |   8 +
- drivers/cpuidle/Makefile               |   1 +
- drivers/cpuidle/cpuidle-tegra.c        | 232 +++++++++++++++++++++++++
- drivers/soc/tegra/Kconfig              |   1 -
- include/linux/clk/tegra.h              |  13 ++
- include/soc/tegra/cpuidle.h            |   2 +-
- include/soc/tegra/pm.h                 |  28 +++
- 23 files changed, 302 insertions(+), 794 deletions(-)
- delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra114.c
- delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra20.c
- delete mode 100644 arch/arm/mach-tegra/cpuidle-tegra30.c
- delete mode 100644 arch/arm/mach-tegra/cpuidle.c
- delete mode 100644 arch/arm/mach-tegra/cpuidle.h
- delete mode 100644 arch/arm/mach-tegra/irq.h
- create mode 100644 drivers/cpuidle/cpuidle-tegra.c
-
+diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
+index 5d93a0b36866..27bd5d9865e3 100644
+--- a/arch/arm/mach-tegra/Makefile
++++ b/arch/arm/mach-tegra/Makefile
+@@ -13,7 +13,7 @@ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= pm-tegra20.o
+ obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= sleep-tegra30.o
+ obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= pm-tegra30.o
+ obj-$(CONFIG_SMP)			+= platsmp.o
+-obj-$(CONFIG_HOTPLUG_CPU)               += hotplug.o
++obj-y					+= hotplug.o
+ 
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= sleep-tegra30.o
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= pm-tegra30.o
+diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
+index e6911a14c096..c8a63719a143 100644
+--- a/arch/arm/mach-tegra/platsmp.c
++++ b/arch/arm/mach-tegra/platsmp.c
+@@ -183,8 +183,6 @@ const struct smp_operations tegra_smp_ops __initconst = {
+ 	.smp_prepare_cpus	= tegra_smp_prepare_cpus,
+ 	.smp_secondary_init	= tegra_secondary_init,
+ 	.smp_boot_secondary	= tegra_boot_secondary,
+-#ifdef CONFIG_HOTPLUG_CPU
+ 	.cpu_kill		= tegra_cpu_kill,
+ 	.cpu_die		= tegra_cpu_die,
+-#endif
+ };
+diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
+index 6aaacb5757e1..f9c9bce9e15d 100644
+--- a/arch/arm/mach-tegra/pm.c
++++ b/arch/arm/mach-tegra/pm.c
+@@ -123,11 +123,9 @@ void tegra_clear_cpu_in_lp2(void)
+ 	spin_unlock(&tegra_lp2_lock);
+ }
+ 
+-bool tegra_set_cpu_in_lp2(void)
++void tegra_set_cpu_in_lp2(void)
+ {
+ 	int phy_cpu_id = cpu_logical_map(smp_processor_id());
+-	bool last_cpu = false;
+-	cpumask_t *cpu_lp2_mask = tegra_cpu_lp2_mask;
+ 	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
+ 
+ 	spin_lock(&tegra_lp2_lock);
+@@ -135,11 +133,7 @@ bool tegra_set_cpu_in_lp2(void)
+ 	BUG_ON((*cpu_in_lp2 & BIT(phy_cpu_id)));
+ 	*cpu_in_lp2 |= BIT(phy_cpu_id);
+ 
+-	if ((phy_cpu_id == 0) && cpumask_equal(cpu_lp2_mask, cpu_online_mask))
+-		last_cpu = true;
+-
+ 	spin_unlock(&tegra_lp2_lock);
+-	return last_cpu;
+ }
+ 
+ static int tegra_sleep_cpu(unsigned long v2p)
+@@ -195,14 +189,16 @@ static void tegra_pm_set(enum tegra_suspend_mode mode)
+ 	tegra_pmc_enter_suspend_mode(mode);
+ }
+ 
+-void tegra_idle_lp2_last(void)
++int tegra_idle_lp2_last(void)
+ {
++	int err;
++
+ 	tegra_pm_set(TEGRA_SUSPEND_LP2);
+ 
+ 	cpu_cluster_pm_enter();
+ 	suspend_cpu_complex();
+ 
+-	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
++	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
+ 
+ 	/*
+ 	 * Resume L2 cache if it wasn't re-enabled early during resume,
+@@ -214,6 +210,8 @@ void tegra_idle_lp2_last(void)
+ 
+ 	restore_cpu_complex();
+ 	cpu_cluster_pm_exit();
++
++	return err;
+ }
+ 
+ enum tegra_suspend_mode tegra_pm_validate_suspend_mode(
+diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
+index 1e51a9b636eb..81525f5f4a44 100644
+--- a/arch/arm/mach-tegra/pm.h
++++ b/arch/arm/mach-tegra/pm.h
+@@ -23,9 +23,6 @@ void tegra20_sleep_core_init(void);
+ void tegra30_lp1_iram_hook(void);
+ void tegra30_sleep_core_init(void);
+ 
+-void tegra_clear_cpu_in_lp2(void);
+-bool tegra_set_cpu_in_lp2(void);
+-void tegra_idle_lp2_last(void);
+ extern void (*tegra_tear_down_cpu)(void);
+ 
+ #ifdef CONFIG_PM_SLEEP
+diff --git a/arch/arm/mach-tegra/sleep.h b/arch/arm/mach-tegra/sleep.h
+index d219872b7546..0d9956e9a8ea 100644
+--- a/arch/arm/mach-tegra/sleep.h
++++ b/arch/arm/mach-tegra/sleep.h
+@@ -124,7 +124,6 @@ void tegra30_hotplug_shutdown(void);
+ #endif
+ 
+ void tegra20_tear_down_cpu(void);
+-int tegra30_sleep_cpu_secondary_finish(unsigned long);
+ void tegra30_tear_down_cpu(void);
+ 
+ #endif
+diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
+index b8aef62cc3f5..cf0f2cb5e109 100644
+--- a/include/linux/clk/tegra.h
++++ b/include/linux/clk/tegra.h
+@@ -108,6 +108,19 @@ static inline void tegra_cpu_clock_resume(void)
+ 
+ 	tegra_cpu_car_ops->resume();
+ }
++#else
++static inline bool tegra_cpu_rail_off_ready(void)
++{
++	return false;
++}
++
++static inline void tegra_cpu_clock_suspend(void)
++{
++}
++
++static inline void tegra_cpu_clock_resume(void)
++{
++}
+ #endif
+ 
+ extern void tegra210_xusb_pll_hw_control_enable(void);
+diff --git a/include/soc/tegra/pm.h b/include/soc/tegra/pm.h
+index 951fcd738d55..fa18c2df5028 100644
+--- a/include/soc/tegra/pm.h
++++ b/include/soc/tegra/pm.h
+@@ -20,6 +20,12 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode);
+ 
+ /* low-level resume entry point */
+ void tegra_resume(void);
++
++int tegra30_sleep_cpu_secondary_finish(unsigned long arg);
++void tegra_clear_cpu_in_lp2(void);
++void tegra_set_cpu_in_lp2(void);
++int tegra_idle_lp2_last(void);
++void tegra_cpu_die(unsigned int cpu);
+ #else
+ static inline enum tegra_suspend_mode
+ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode)
+@@ -30,6 +36,28 @@ tegra_pm_validate_suspend_mode(enum tegra_suspend_mode mode)
+ static inline void tegra_resume(void)
+ {
+ }
++
++static inline int tegra30_sleep_cpu_secondary_finish(unsigned long arg)
++{
++	return -1;
++}
++
++static inline void tegra_clear_cpu_in_lp2(void)
++{
++}
++
++static inline void tegra_set_cpu_in_lp2(void)
++{
++}
++
++static inline int tegra_idle_lp2_last(void)
++{
++	return -1;
++}
++
++static inline void tegra_cpu_die(unsigned int cpu)
++{
++}
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ #endif /* __SOC_TEGRA_PM_H__ */
 -- 
 2.22.0
 
