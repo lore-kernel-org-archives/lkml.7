@@ -2,32 +2,32 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB85C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C5EC48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32C020684
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7D320659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfGGTiW (ORCPT
+        id S1727706AbfGGTkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:22 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56864 "EHLO
+        Sun, 7 Jul 2019 15:40:22 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:58158 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727461AbfGGTiB (ORCPT
+        by vger.kernel.org with ESMTP id S1727690AbfGGTiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:01 -0400
+        Sun, 7 Jul 2019 15:38:19 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz1-0006dJ-AV; Sun, 07 Jul 2019 20:37:59 +0100
+        id 1hkCzG-0006j1-7y; Sun, 07 Jul 2019 20:38:14 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz0-0005XP-6w; Sun, 07 Jul 2019 20:37:58 +0100
+        id 1hkCz9-0005gL-GM; Sun, 07 Jul 2019 20:38:07 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jeremy Fertic" <jeremyfertic@gmail.com>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
+        "Kirill Smelkov" <kirr@nexedi.com>,
+        "Miklos Szeredi" <mszeredi@redhat.com>, stable@vger.kernel.org
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.854394507@decadent.org.uk>
+Message-ID: <lsq.1562518457.894543405@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 014/129] staging: iio: adt7316: fix dac_bits assignment
+Subject: [PATCH 3.16 123/129] fuse: Add FOPEN_STREAM to use stream_open()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,75 +55,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jeremy Fertic <jeremyfertic@gmail.com>
+From: Kirill Smelkov <kirr@nexedi.com>
 
-commit e9de475723de5bf207a5b7b88bdca863393e42c8 upstream.
+commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
 
-The value of dac_bits is used in adt7316_show_DAC() and adt7316_store_DAC(),
-and it should be either 8, 10, or 12 bits depending on the device in use. The
-driver currently only assigns a value to dac_bits in
-adt7316_store_da_high_resolution(). The purpose of the dac high resolution
-option is not to change dac resolution for normal operation. Instead, it
-is specific to an optional feature where one or two of the four dacs can
-be set to output voltage proportional to temperature. If the user chooses
-to set dac a and/or dac b to output voltage proportional to temperature,
-the da_high_resolution attribute can optionally be enabled to use 10 bit
-resolution rather than the default 8 bits. This is only available on the
-10 and 12 bit dac devices. If the user attempts to read or write dacs a
-or b under these settings, the driver's current behaviour is to return an
-error. Dacs c and d continue to operate normally under these conditions.
-With the above in mind, remove the dac_bits assignments from this function
-since the value of dac_bits as used in the driver is not dependent on this
-dac high resolution option.
+Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
+POSIX") files opened even via nonseekable_open gate read and write via lock
+and do not allow them to be run simultaneously. This can create read vs
+write deadlock if a filesystem is trying to implement a socket-like file
+which is intended to be simultaneously used for both read and write from
+filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
+stream-like files so that read and write can run simultaneously without
+deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
+on writes to /proc/xen/xenbus") for a similar deadlock example on
+/proc/xen/xenbus.
 
-Since the dac_bits assignments discussed above are currently the only ones
-in this driver, the default value of dac_bits is 0. This results in incorrect
-calculations when the dacs are read or written in adt7316_show_DAC() and
-adt7316_store_DAC(). To correct this, assign a value to dac_bits in
-adt7316_probe() to ensure correct operation as soon as the device is
-registered and available to userspace.
+To avoid such deadlock it was tempting to adjust fuse_finish_open to use
+stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
+but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
+and in particular GVFS which actually uses offset in its read and write
+handlers
 
-Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
-Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-[bwh: Backported to 3.16: adjust context]
+	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+
+so if we would do such a change it will break a real user.
+
+Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
+opened handler is having stream-like semantics; does not use file position
+and thus the kernel is free to issue simultaneous read and write request on
+opened file handle.
+
+This patch together with stream_open() should be added to stable kernels
+starting from v3.14+. This will allow to patch OSSPD and other FUSE
+filesystems that provide stream-like files to return FOPEN_STREAM |
+FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
+kernel versions. This should work because fuse_finish_open ignores unknown
+open flags returned from a filesystem and so passing FOPEN_STREAM to a
+kernel that is not aware of this flag cannot hurt. In turn the kernel that
+is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
+is sufficient to implement streams without read vs write deadlock.
+
+Cc: stable@vger.kernel.org # v3.14+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/iio/addac/adt7316.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ fs/fuse/file.c            | 4 +++-
+ include/uapi/linux/fuse.h | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -654,15 +654,9 @@ static ssize_t adt7316_store_da_high_res
- 	u8 config3;
- 	int ret;
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index bc8f5de48fd9..69e471b042a6 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -214,7 +214,9 @@ void fuse_finish_open(struct inode *inode, struct file *file)
+ 		file->f_op = &fuse_direct_io_file_operations;
+ 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
+ 		invalidate_inode_pages2(inode->i_mapping);
+-	if (ff->open_flags & FOPEN_NONSEEKABLE)
++	if (ff->open_flags & FOPEN_STREAM)
++		stream_open(inode, file);
++	else if (ff->open_flags & FOPEN_NONSEEKABLE)
+ 		nonseekable_open(inode, file);
+ 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
+ 		struct fuse_inode *fi = get_fuse_inode(inode);
+diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+index 25084a052a1e..cff91b018953 100644
+--- a/include/uapi/linux/fuse.h
++++ b/include/uapi/linux/fuse.h
+@@ -205,10 +205,12 @@ struct fuse_file_lock {
+  * FOPEN_DIRECT_IO: bypass page cache for this open file
+  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
+  * FOPEN_NONSEEKABLE: the file is not seekable
++ * FOPEN_STREAM: the file is stream-like (no file position at all)
+  */
+ #define FOPEN_DIRECT_IO		(1 << 0)
+ #define FOPEN_KEEP_CACHE	(1 << 1)
+ #define FOPEN_NONSEEKABLE	(1 << 2)
++#define FOPEN_STREAM		(1 << 4)
  
--	chip->dac_bits = 8;
--
--	if (buf[0] == '1') {
-+	if (buf[0] == '1')
- 		config3 = chip->config3 | ADT7316_DA_HIGH_RESOLUTION;
--		if (chip->id == ID_ADT7316 || chip->id == ID_ADT7516)
--			chip->dac_bits = 12;
--		else if (chip->id == ID_ADT7317 || chip->id == ID_ADT7517)
--			chip->dac_bits = 10;
--	} else
-+	else
- 		config3 = chip->config3 & (~ADT7316_DA_HIGH_RESOLUTION);
- 
- 	ret = chip->bus.write(chip->bus.client, ADT7316_CONFIG3, config3);
-@@ -2129,6 +2123,13 @@ int adt7316_probe(struct device *dev, st
- 	else
- 		return -ENODEV;
- 
-+	if (chip->id == ID_ADT7316 || chip->id == ID_ADT7516)
-+		chip->dac_bits = 12;
-+	else if (chip->id == ID_ADT7317 || chip->id == ID_ADT7517)
-+		chip->dac_bits = 10;
-+	else
-+		chip->dac_bits = 8;
-+
- 	chip->ldac_pin = adt7316_platform_data[1];
- 	if (!chip->ldac_pin) {
- 		chip->config3 |= ADT7316_DA_EN_VIA_DAC_LDCA;
+ /**
+  * INIT request/reply flags
 
