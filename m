@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F04C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CA7C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B83E20651
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619A220659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 19:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfGGTix (ORCPT
+        id S1727734AbfGGTiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 15:38:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:57254 "EHLO
+        Sun, 7 Jul 2019 15:38:24 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:56956 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727547AbfGGTiI (ORCPT
+        by vger.kernel.org with ESMTP id S1727485AbfGGTiD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 15:38:08 -0400
+        Sun, 7 Jul 2019 15:38:03 -0400
 Received: from 94.197.121.43.threembb.co.uk ([94.197.121.43] helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz5-0006h3-Kg; Sun, 07 Jul 2019 20:38:03 +0100
+        id 1hkCz2-0006dx-DF; Sun, 07 Jul 2019 20:38:00 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hkCz4-0005b1-5X; Sun, 07 Jul 2019 20:38:02 +0100
+        id 1hkCz0-0005Y2-Td; Sun, 07 Jul 2019 20:37:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "yangerkun" <yangerkun@huawei.com>, "Theodore Ts'o" <tytso@mit.edu>
+        "Al Viro" <viro@zeniv.linux.org.uk>, "NeilBrown" <neilb@suse.de>
 Date:   Sun, 07 Jul 2019 17:54:17 +0100
-Message-ID: <lsq.1562518457.291988630@decadent.org.uk>
+Message-ID: <lsq.1562518457.895426084@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 059/129] ext4: add mask of ext4 flags to swap
+Subject: [PATCH 3.16 022/129] security/selinux: pass 'flags' arg to
+ avc_audit() and avc_has_perm_flags()
 In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 X-SA-Exim-Connect-IP: 94.197.121.43
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -54,57 +55,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: yangerkun <yangerkun@huawei.com>
+From: NeilBrown <neilb@suse.de>
 
-commit abdc644e8cbac2e9b19763680e5a7cf9bab2bee7 upstream.
+commit 7b20ea2579238f5e0da4bc93276c1b63c960c9ef upstream.
 
-The reason is that while swapping two inode, we swap the flags too.
-Some flags such as EXT4_JOURNAL_DATA_FL can really confuse the things
-since we're not resetting the address operations structure.  The
-simplest way to keep things sane is to restrict the flags that can be
-swapped.
+This allows MAY_NOT_BLOCK to be passed, in RCU-walk mode, through
+the new avc_has_perm_flags() to avc_audit() and thence the slow_avc_audit.
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+[bwh: Backported to 3.16 as dependency of commit 3a28cff3bd4b
+ "selinux: avoid silent denials in permissive mode under RCU walk"]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ext4/ext4.h  | 3 +++
- fs/ext4/ioctl.c | 6 +++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ security/selinux/avc.c         | 18 +++++++++++++++++-
+ security/selinux/hooks.c       |  2 +-
+ security/selinux/include/avc.h |  9 +++++++--
+ 3 files changed, 25 insertions(+), 4 deletions(-)
 
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -405,6 +405,9 @@ struct flex_groups {
- /* Flags that are appropriate for non-directories/regular files. */
- #define EXT4_OTHER_FLMASK (EXT4_NODUMP_FL | EXT4_NOATIME_FL)
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -768,7 +768,23 @@ int avc_has_perm(u32 ssid, u32 tsid, u16
  
-+/* The only flags that should be swapped */
-+#define EXT4_FL_SHOULD_SWAP (EXT4_HUGE_FILE_FL | EXT4_EXTENTS_FL)
+ 	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, 0, &avd);
+ 
+-	rc2 = avc_audit(ssid, tsid, tclass, requested, &avd, rc, auditdata);
++	rc2 = avc_audit(ssid, tsid, tclass, requested, &avd, rc, auditdata, 0);
++	if (rc2)
++		return rc2;
++	return rc;
++}
 +
- /* Mask out flags that are inappropriate for the given type of inode. */
- static inline __u32 ext4_mask_flags(umode_t mode, __u32 flags)
++int avc_has_perm_flags(u32 ssid, u32 tsid, u16 tclass,
++		       u32 requested, struct common_audit_data *auditdata,
++		       int flags)
++{
++	struct av_decision avd;
++	int rc, rc2;
++
++	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, 0, &avd);
++
++	rc2 = avc_audit(ssid, tsid, tclass, requested, &avd, rc,
++			auditdata, flags);
+ 	if (rc2)
+ 		return rc2;
+ 	return rc;
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -1569,7 +1569,7 @@ static int cred_has_capability(const str
+ 
+ 	rc = avc_has_perm_noaudit(sid, sid, sclass, av, 0, &avd);
+ 	if (audit == SECURITY_CAP_AUDIT) {
+-		int rc2 = avc_audit(sid, sid, sclass, av, &avd, rc, &ad);
++		int rc2 = avc_audit(sid, sid, sclass, av, &avd, rc, &ad, 0);
+ 		if (rc2)
+ 			return rc2;
+ 	}
+--- a/security/selinux/include/avc.h
++++ b/security/selinux/include/avc.h
+@@ -130,7 +130,8 @@ static inline int avc_audit(u32 ssid, u3
+ 			    u16 tclass, u32 requested,
+ 			    struct av_decision *avd,
+ 			    int result,
+-			    struct common_audit_data *a)
++			    struct common_audit_data *a,
++			    int flags)
  {
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -61,6 +61,7 @@ static void swap_inode_data(struct inode
- 	loff_t isize;
- 	struct ext4_inode_info *ei1;
- 	struct ext4_inode_info *ei2;
-+	unsigned long tmp;
+ 	u32 audited, denied;
+ 	audited = avc_audit_required(requested, avd, result, 0, &denied);
+@@ -138,7 +139,7 @@ static inline int avc_audit(u32 ssid, u3
+ 		return 0;
+ 	return slow_avc_audit(ssid, tsid, tclass,
+ 			      requested, audited, denied, result,
+-			      a, 0);
++			      a, flags);
+ }
  
- 	ei1 = EXT4_I(inode1);
- 	ei2 = EXT4_I(inode2);
-@@ -71,7 +72,10 @@ static void swap_inode_data(struct inode
- 	memswap(&inode1->i_mtime, &inode2->i_mtime, sizeof(inode1->i_mtime));
+ #define AVC_STRICT 1 /* Ignore permissive mode. */
+@@ -150,6 +151,10 @@ int avc_has_perm_noaudit(u32 ssid, u32 t
+ int avc_has_perm(u32 ssid, u32 tsid,
+ 		 u16 tclass, u32 requested,
+ 		 struct common_audit_data *auditdata);
++int avc_has_perm_flags(u32 ssid, u32 tsid,
++		       u16 tclass, u32 requested,
++		       struct common_audit_data *auditdata,
++		       int flags);
  
- 	memswap(ei1->i_data, ei2->i_data, sizeof(ei1->i_data));
--	memswap(&ei1->i_flags, &ei2->i_flags, sizeof(ei1->i_flags));
-+	tmp = ei1->i_flags & EXT4_FL_SHOULD_SWAP;
-+	ei1->i_flags = (ei2->i_flags & EXT4_FL_SHOULD_SWAP) |
-+		(ei1->i_flags & ~EXT4_FL_SHOULD_SWAP);
-+	ei2->i_flags = tmp | (ei2->i_flags & ~EXT4_FL_SHOULD_SWAP);
- 	memswap(&ei1->i_disksize, &ei2->i_disksize, sizeof(ei1->i_disksize));
- 	ext4_es_remove_extent(inode1, 0, EXT_MAX_BLOCKS);
- 	ext4_es_remove_extent(inode2, 0, EXT_MAX_BLOCKS);
+ u32 avc_policy_seqno(void);
+ 
 
