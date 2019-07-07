@@ -2,89 +2,112 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,GAPPY_SUBJECT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC78C48BE1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 15:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027B9C48BDE
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 15:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9831E20830
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 15:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C323220830
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 15:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="er0xymwp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HurwfdDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGGPkz (ORCPT
+        id S1727244AbfGGPq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 11:40:55 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34803 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfGGPkz (ORCPT
+        Sun, 7 Jul 2019 11:46:27 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42048 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfGGPq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 11:40:55 -0400
-Received: by mail-io1-f67.google.com with SMTP id k8so29421351iot.1;
-        Sun, 07 Jul 2019 08:40:54 -0700 (PDT)
+        Sun, 7 Jul 2019 11:46:27 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a10so13335599wrp.9;
+        Sun, 07 Jul 2019 08:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qwHbQTuFE2kUikky3tbT6iwWg4yYSI3KMwntAKoTe4o=;
-        b=er0xymwpwDu18o30aSZDPXm6ih4bYYK56Lsn0PBrEBsI2+GkfvJ0DLnQK2RVcNhiay
-         +D/JD05yJ/wS8a98UDAA7JmIXiaidvPOMnU2vGyMoKdb1jtHeCtBC3kmXqU8R3Q228vG
-         68XGAd7WFcd9HF8yqcBoPhLbNT6Ry5i5f0EVkcB7o8FeikeNs/fXuQT4mDrR8/glCN+Y
-         olzFtTyNcreomoJ0mN7e/JWRCYVoCfOG9fLdGpi1ajzyeGmzLMEJxRge1NuGQzdqnECA
-         z47rAAdunWBGIzPrvt8O+hq21Hog6XykpUYRgPx2NN9dX9m4ijMVEhbxacAQadi+J3vO
-         uUqw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=bGbtCUO4BOGVmzuMetixQhEWqFmuXemkUETV1bb996A=;
+        b=HurwfdDW3WShikoqlGrI+gydUdaNqT7nPbx+UlqF+z+96uFR0gEOxu7vwrwEIcA652
+         2vLX1bspJ3g8K3J1VtUAGpR5FCLx9lLvut88FGuKNVLFdX/2lcoTuwUtN+fRSAFZA06C
+         h3kZvDezlWrGwrV5wdCB3lIDTpAJgeXke0hpev1TE61jvqFG5Q8yBYNszPBPzyqCXmkY
+         wILy7HTrAmn8ZexDHsiSOrgg93jeFW6C/CdXiocgdhKz2/Y0n1edjGs0EC7XaJNuoUsF
+         ONWgtki6SDtg6krR9585ICxqV98f6NBs1JiTf3jw1DHeSzMNm1n2D6Ho5zQPOBX0SNgp
+         oUzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qwHbQTuFE2kUikky3tbT6iwWg4yYSI3KMwntAKoTe4o=;
-        b=JFRU1J/fUNhR9L+52JhQEpKkjnhiIVLifXrfvBxd1Qb0FN+48glRLcTl4/0H3fvWM7
-         I01dsV7j8YeqnPoWQtPtghd3UI72XEBtB0upMwrW2wrhSHC6FxYLODXdLpOh4nU8Mg7j
-         YOzteNWiLeytCxNIHzqPC46CJsKhWdquI5C5CwbJbVcoqC/ObxfizkIhf5Qsk9cNz3BG
-         xhLSUxdzvqGpbCoM1kOPykUJ76Gachj8eF3FN9JZgdG9iWKatfKiIk+ftEFHRxwvmmqD
-         FyRFHOd9bjmEqM+EAIutD7MXucl2OvSJ/tZGZ+qRFKDxcfdbWYsPbEVBEMNtCmkrKQ2r
-         GsbA==
-X-Gm-Message-State: APjAAAW85MF13WpGIFkIyLMMoqgUe01rz74gvDeSFzC7aGuPyclQ4H9j
-        xARHg8Z1j7j3MyrQRl0rfPq53UxCpKbsQ8wCjIuRsdSXDB+Tzw==
-X-Google-Smtp-Source: APXvYqzuxGF7GLEefBfbdxPUSlLxOABw/jdkNTyIlCf5RzRx9gAPfKtK85ODjRIpvEtMUdMrKQuPQCx7Np6eky+RxpY=
-X-Received: by 2002:a5d:8347:: with SMTP id q7mr13181248ior.277.1562514054357;
- Sun, 07 Jul 2019 08:40:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=bGbtCUO4BOGVmzuMetixQhEWqFmuXemkUETV1bb996A=;
+        b=EexSvyJElWDOYWadK3JhnrNo4/Kdo+wytPLV4ruLPYSd65hvJRWSmBNGBmKAftIh8W
+         t/WoQYgGoKc7PE2fGYWlWKul3FncyRS7xGFnx+oNcy4bl8rplzRdWOWF7bf8xjMrvvhB
+         ZUv3ay+GyN8R16c7sL3bwrK/4z79fiFuBgFfxWnf2nfis9tfG8UZ5BH20pfFB9yOdMz6
+         NORVT8RwccuIDiapw8r5cQQO5t44A0gvvUp301Wlphud3cmkirGlJwuKgrXqH13JIGWU
+         QwUI0B5jXccJPDq3oLo/mEnwgnbDUbiI7P+WSLjNHayxkiWWBjSXL+yqMztTdMo5WSOy
+         qEMA==
+X-Gm-Message-State: APjAAAXgQtJ4vcVONbqoUnT4yPGSe4glVLFPx4a8whu1NZb63qffSNN9
+        kAeluJaIgEsSrBSex6QTiDk=
+X-Google-Smtp-Source: APXvYqw9VqMOs+dnAC5XrgWMcL+6DE/EqrdzKGc6ZeBG3yR+KiuAuikZUZouVTyX/acHxAB3S/hQsw==
+X-Received: by 2002:a5d:42c5:: with SMTP id t5mr4824387wrr.5.1562514384972;
+        Sun, 07 Jul 2019 08:46:24 -0700 (PDT)
+Received: from arks.localdomain (179.red-83-58-138.dynamicip.rima-tde.net. [83.58.138.179])
+        by smtp.gmail.com with ESMTPSA id f17sm9779586wmf.27.2019.07.07.08.46.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 07 Jul 2019 08:46:24 -0700 (PDT)
+Date:   Sun, 7 Jul 2019 17:46:17 +0200
+From:   Aleix Roca Nonell <kernelrocks@gmail.com>
+To:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] irqchip: Add Realtek RTD129x intc driver
+Message-ID: <20190707154617.GA18436@arks.localdomain>
+References: <20190707132256.GC13340@arks.localdomain>
+ <baeb2dd8-0382-01ad-514b-982c0f123e6e@suse.de>
 MIME-Version: 1.0
-References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com> <alpine.LRH.2.21.1907061814390.24897@namei.org>
-In-Reply-To: <alpine.LRH.2.21.1907061814390.24897@namei.org>
-From:   Salvatore Mesoraca <s.mesoraca16@gmail.com>
-Date:   Sun, 7 Jul 2019 17:40:43 +0200
-Message-ID: <CAJHCu1KPkzREqq0pGJ6Wp4CKHkA0Eeaj2vcGViE+B0192tFWFw@mail.gmail.com>
-Subject: Re: [PATCH v5 00/12] S.A.R.A. a new stacked LSM
-To:     James Morris <jmorris@namei.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-mm@kvack.org, linux-security-module@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Brad Spengler <spender@grsecurity.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        PaX Team <pageexec@freemail.hu>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <baeb2dd8-0382-01ad-514b-982c0f123e6e@suse.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-James Morris <jmorris@namei.org> wrote:
->
-> On Sat, 6 Jul 2019, Salvatore Mesoraca wrote:
->
-> > S.A.R.A. (S.A.R.A. is Another Recursive Acronym) is a stacked Linux
->
-> Please make this just SARA. Nobody wants to read or type S.A.R.A.
+On Sun, Jul 07, 2019 at 03:27:16PM +0200, Andreas Färber wrote:
+> Am 07.07.19 um 15:22 schrieb Aleix Roca Nonell:
+> > This driver adds support for the RTD1296 and RTD1295 interrupt
+> > controller (intc). It is based on both the BPI-SINOVOIP project and
+> > Andreas Färber's previous attempt to submit a similar driver.
+> 
+> Doing that without my Signed-off-by and Copyright is certainly not okay.
+> It is also lacking a clear description of what you changed from my last
+> submission or the post-submission GitHub version adressing review
+> comments, which broke.
 
-Agreed.
-Thank you for your suggestion.
+I'm really sorry about that, because I rewrote the code (almost) from
+scratch (given that I wasn't aware of this previous attempt when I
+started working with it) I was not sure if it was necessary. I will
+address this in the next version of the patch series.
+
+Thank you and sorry for the inconvenience.
+
+> 
+> Regards,
+> Andreas
+> 
+> -- 
+> SUSE Linux GmbH
+> Maxfeldstr. 5, 90409 Nürnberg, Germany
+> GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+> HRB 21284 (AG Nürnberg)
