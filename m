@@ -1,58 +1,98 @@
 Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_NAME_FM_MR_MRS,HK_SCAM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF379C48BDE
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4316BC48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C3820665
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2010520828
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:43:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="bFVa8DZS";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="n6bkfqSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfGGSfW convert rfc822-to-8bit (ORCPT
+        id S1727283AbfGGSnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 14:35:22 -0400
-Received: from 103-28-70-187.static.hvvc.us ([103.28.70.187]:63912 "EHLO
-        cnn.com.5d1a48850c07c" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726044AbfGGSfW (ORCPT
+        Sun, 7 Jul 2019 14:43:15 -0400
+Received: from mail180-22.suw31.mandrillapp.com ([198.2.180.22]:44907 "EHLO
+        mail180-22.suw31.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726605AbfGGSnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 14:35:22 -0400
-X-Greylist: delayed 1021 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Jul 2019 14:35:22 EDT
-Received: from aim.com ([127.0.0.1]) by cnn.com.5d1a48850c07c with Microsoft SMTPSVC(8.5.9600.16384);
-         Sun, 7 Jul 2019 20:18:19 +0200
-Reply-To: k4ngu12@gmail.com
-From:   Mrs Ngui Esq <karen@aim.com>
-To:     linux-kernel@vger.kernel.org
-Subject: Re: Hello 
-Date:   07 Jul 2019 20:18:19 +0200
-Message-ID: <20190707201819.184E3BF2C1FB291A@aim.com>
+        Sun, 7 Jul 2019 14:43:15 -0400
+X-Greylist: delayed 1801 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Jul 2019 14:43:14 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=owTjbI7UdD8VgA6b1BMAffbWT0iESkUoHZSCvU4Uh8I=;
+ b=bFVa8DZSq7eUa+ec2dXzdRxVhLourcYkZxoJ79tXH3iisWmQ/aw9rM0d5oBBFeSHnN+l5VudB3bK
+   oL+PVFRBbZg7IPdlrbpWeIKWHrOBf365b0/sVcSe2DM8blwuNO09Vr3hHF0tOHkWu7X+7tS7YhWX
+   VY7deDj1JODPdP4O7FA=
+Received: from pmta03.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail180-22.suw31.mandrillapp.com id h48uk422sc03 for <linux-kernel@vger.kernel.org>; Sun, 7 Jul 2019 18:13:12 +0000 (envelope-from <bounce-md_31050260.5d223638.v1-d0a5418e14164ddb8799c6ed025d723d@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1562523192; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=owTjbI7UdD8VgA6b1BMAffbWT0iESkUoHZSCvU4Uh8I=; 
+ b=n6bkfqSyFpcjpSmZtlvP5MO+oB6QBTZc52QvHYJQQTLu2lRswkTFoOTTQWI0Kd0a8RSMec
+ +ye96X9GnshkMS9xq4ftvBhXmtF1kdeWeHukErR6eeLcR7CO/hDkdYdKMmBI0wx2oF4xwqGG
+ XLbL5gerpOBz878QyG68KYvY2Y7sE=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH 3.16 0/2] Fix FUSE read/write deadlock on stream-like files
+Received: from [87.98.221.171] by mandrillapp.com id d0a5418e14164ddb8799c6ed025d723d; Sun, 07 Jul 2019 18:13:12 +0000
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     <stable@vger.kernel.org>, Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Message-Id: <20190707181305.GA25031@deco.navytux.spb.ru>
+References: <20190609135607.9840-1-kirr@nexedi.com> <ef1625b5c6921289e2f87cdbb0101ff6301b2a7d.camel@decadent.org.uk>
+In-Reply-To: <ef1625b5c6921289e2f87cdbb0101ff6301b2a7d.camel@decadent.org.uk>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.d0a5418e14164ddb8799c6ed025d723d
+X-Mandrill-User: md_31050260
+Date:   Sun, 07 Jul 2019 18:13:12 +0000
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-OriginalArrivalTime: 07 Jul 2019 18:18:19.0748 (UTC) FILETIME=[5ACD0A40:01D534F0]
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello linux-kernel@vger.kernel.org
+On Sun, Jul 07, 2019 at 03:03:45PM +0100, Ben Hutchings wrote:
+> On Sun, 2019-06-09 at 15:41 +0000, Kirill Smelkov wrote:
+> > Hello stable team,
+> > 
+> > Please consider applying the following 2 patches to Linux-3.16 stable
+> > tree. The patches fix regression introduced in 3.14 where both read and
+> > write started to run under lock taken, which resulted in FUSE (and many
+> > other drivers) deadlocks for cases where stream-like files are used with
+> > read and write being run simultaneously.
+> > 
+> > Please see complete problem description in upstream commit 10dce8af3422
+> > ("fs: stream_open - opener for stream-like files so that read and write
+> > can run simultaneously without deadlock").
+> > 
+> > The actual FUSE fix (upstream commit bbd84f33652f "fuse: Add
+> > FOPEN_STREAM to use stream_open()") was merged into 5.2 with `Cc:
+> > stable@vger.kernel.org # v3.14+` mark and is already included into 5.1,
+> > 5.0 and 4.19 stable trees. However for some reason it is not (yet ?)
+> > included into 4.14, 4.9, 4.4, 3.18 and 3.16 trees.
+> > 
+> > The patches fix a real problem into which my FUSE filesystem ran, and
+> > which also likely affects OSSPD (full details are in the patches
+> > description). Please consider including the fixes into 3.16 (as well as
+> > into other stable trees - I'm sending corresponding series separately -
+> > - one per tree).
+> [...]
+> 
+> I've queued these up for 3.16, thanks.
 
-    I hope your week is going fine ? well I would like to beg 
-your attention for a few minutes as I have a very profitable 
-business proposal I would like to share with you.
-   I am Karen Ngui by name got your details based on 
-recommendations from LinkedIn 5 star marketers and its feels good 
-to be part of your professional network..
+Thanks a lot.
 
-  Do reply to my message so I can elaborate more on my proposal.
-
-Thank You For Your Time.
-
-Regards
-Mrs Karen Ngui
-Group Managing Director 
+Kirill
