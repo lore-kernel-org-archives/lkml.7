@@ -2,105 +2,99 @@ Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EB9C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3493EC48BDB
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3BE20828
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE4E20828
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 18:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyLd6w4B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lI5hgz4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfGGSpX (ORCPT
+        id S1727352AbfGGSqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 14:45:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37795 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfGGSpW (ORCPT
+        Sun, 7 Jul 2019 14:46:01 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44681 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfGGSqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 14:45:22 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so5519864wrr.4
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 11:45:21 -0700 (PDT)
+        Sun, 7 Jul 2019 14:46:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p17so3513455wrf.11
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 11:45:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SyoEZcNMbR30dSLw6YPvBoKoR6uCpMhPS8yqLfypSMU=;
-        b=PyLd6w4BNDFzkyrp8BS4diLjeNVJmjAM1OzVBD8hu8DoZ6DixOPh1q5GV5BH49+9cD
-         Gw7calZ1w1+8ub6Ix0hss75VejmzHsp4gVflIoksrUy0nXJjwo9zXry1WzvBKx/HQCn9
-         GCVbIxbgLZ+Ax6x3xjvKYM6FDLtaX+HXST1EzSQYiuqbZDaL9gvH2u5eQq8XvwVsIwoI
-         FZWgcpYjmOtalGhZ7pyXDIqPEcFKHoxx7PFs8NyAirhOX5cd34W0+/W635JhJwUlPs75
-         2I6EjzbUAERHWWg1nOR4tLtcdjPqhblH7k/1Tu0Qmw+Jl9srPdz7ksW6m1fnkd2naet+
-         FgCQ==
+         :cc;
+        bh=FeNJhnw7kPIAjlZ9A1KqDBd0/gUAXLx+l991tdp7HWE=;
+        b=lI5hgz4f3lMVnuuucYRij4MuusAiMy9xvR68qeq2bFyW7nq7qNIFafruAs/5vdQF3o
+         2QHm5aeHd0g0K4gl7OLL0YpA30HKmR/5gxamsCf5CPLKC0mCV0qKYzw5+E64nhbSFYuU
+         XhhSRWFFt7J7mrOkU+C1L+GX04KpIhSKuE2ls1t5EWA0qyZaehrpKCr5JSmBHYhbkIKA
+         PoeYFBKHXxyx9n6e/valVPBDBtTOJUU3kdrZMRLu7a+H0/5qSZwzlLV0dZug2IVdW+iu
+         8vyIdBVcfTnf3HCAvrpmiSM+hm5SodLpJgmXB95CMJOzMMXHPGIbztsb+O9JDUr28GwW
+         9r8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SyoEZcNMbR30dSLw6YPvBoKoR6uCpMhPS8yqLfypSMU=;
-        b=lM6tGTrYGuGjPRCPWjj+LgCrheRyBbNJZjI3VewUJKqdPv5vPjHcukvQd313bGIwBD
-         rQHjOh7n2vCTcahS4OTwKUeTuYQtbD0fiP02rwPWB54Jc4j0QcjvImeDXyVnEwoVcyUQ
-         5ne8yUSIJGJ9ZHd7C5m3eIDdhZl/S9jQm8Aw+W6MXsJw/ZsyzHjO9YDpNG/pkBq5/Ia+
-         rR4kXK9qNRwLcOLCgUaCiKmkiPZyQUy7Fc20Yy1Mzl6MsYtl+ZS8DZvkIaIvu6AiFYya
-         f65gpnPu+EIVK3ZID8rRLE+LijVW+WM8sGY1tky4ytJx2ghA0qCcesoTK9/naUUPzVUe
-         fwrg==
-X-Gm-Message-State: APjAAAW9hxkeH2yF4veb9GwaOS6ncVHIbuXWvzPR2AB82DvDxoDWqN/O
-        FgzkyjA0PrtweF0rKSkSJphldE1xg4Hm8hB7/WQ=
-X-Google-Smtp-Source: APXvYqzTGv24J/JvH7QB35BSNC+3DNS4muQ9GiM7duKJwTzddTzS/wguXzLR8Zqt09/cXTfwYRoi3r7O81pYoZG9S4Q=
-X-Received: by 2002:adf:ea8b:: with SMTP id s11mr14234198wrm.100.1562525120417;
- Sun, 07 Jul 2019 11:45:20 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=FeNJhnw7kPIAjlZ9A1KqDBd0/gUAXLx+l991tdp7HWE=;
+        b=OFnUuKcvZq2x1X5EkzmKxW+8iaNy2b0YZ/m/+pcUgAyjOdr5sSPGpr0vh+c0eWyujp
+         lV8tZ3ZXhpjXb8RVSIUnJkpJcUrvRuFI/74uSLlaCNHtAc8pEWwcFPgwdKZV/EF5/g9v
+         yBg2niS8E51JoOptokE7auszvZoLtJIDebP2LfTymyuIBzad8yGtgqO/ErR59nIiiTul
+         REEgYvHPJGVGb9cDV38PbEu3pq5BSB8jEZ1ty7eJ0FVo70oVTlo89lI2nmKZLE9gk0AZ
+         Xl2k5xz7zP2iUtgBJoueI88MQXK8GY9NXXf3EWgT95imhgEsi54RGn8LlfPu2twHwB0l
+         kx1w==
+X-Gm-Message-State: APjAAAVXyO3D4IpuX7F7p8ndnnIDMaAxUl4/6/e2lF+m1HoLCqs+puCI
+        TkzLjeQNdvpAUK2Mg7O6C9osl0XPlzaEJdRBd6o=
+X-Google-Smtp-Source: APXvYqxU1tDH0OYZdseEWpc1ICvZoYOj/V+pjGS6Zbeb05OCnENFn50fmP8dSHU6TGuixN8wqASNCeTs6wlpwmEZINQ=
+X-Received: by 2002:a5d:53c1:: with SMTP id a1mr14769726wrw.185.1562525159360;
+ Sun, 07 Jul 2019 11:45:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190627070745.9561-1-yamada.masahiro@socionext.com> <363893471.18166.1561621193771.JavaMail.zimbra@nod.at>
-In-Reply-To: <363893471.18166.1561621193771.JavaMail.zimbra@nod.at>
+References: <20190522231948.17559-1-chris.packham@alliedtelesis.co.nz>
+ <355dad1321ed46baa98ca6f47b4d00b5@svr-chch-ex1.atlnz.lc> <CAFLxGvwNNWKzbfKvDjAK6rujbr5qtmVAWCDD5aULO4BVKutRKw@mail.gmail.com>
+ <365a80987504424f8685faaceb23b468@svr-chch-ex1.atlnz.lc>
+In-Reply-To: <365a80987504424f8685faaceb23b468@svr-chch-ex1.atlnz.lc>
 From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Sun, 7 Jul 2019 20:45:08 +0200
-Message-ID: <CAFLxGvz-ukX9BucZ8iGzioJC1iT2Q=jubHBJep6Zup6pogYVJQ@mail.gmail.com>
-Subject: Re: [PATCH] mtd: abi: do not use C++ style comments in uapi header
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
+Date:   Sun, 7 Jul 2019 20:45:47 +0200
+Message-ID: <CAFLxGvxs0aQq7kLFQ0e1=PZ6SrWK=KdgEeKXmNoXy1Fh9TRwng@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] mtd: concat: refactor concat_lock/concat_unlock
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 9:40 AM Richard Weinberger <richard@nod.at> wrote:
+On Tue, Jun 18, 2019 at 12:11 AM Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
 >
-> ----- Urspr=C3=BCngliche Mail -----
-> > Von: "Masahiro Yamada" <yamada.masahiro@socionext.com>
-> > An: "David Woodhouse" <dwmw2@infradead.org>, "Brian Norris" <computersf=
-orpeace@gmail.com>, "Marek Vasut"
-> > <marek.vasut@gmail.com>, "Miquel Raynal" <miquel.raynal@bootlin.com>, "=
-richard" <richard@nod.at>, "Vignesh Raghavendra"
-> > <vigneshr@ti.com>, "linux-mtd" <linux-mtd@lists.infradead.org>
-> > CC: "Masahiro Yamada" <yamada.masahiro@socionext.com>, "linux-kernel" <=
-linux-kernel@vger.kernel.org>
-> > Gesendet: Donnerstag, 27. Juni 2019 09:07:45
-> > Betreff: [PATCH] mtd: abi: do not use C++ style comments in uapi header
->
-> > Linux kernel tolerates C++ style comments these days. Actually, the
-> > SPDX License tags for .c files start with //.
+> On 18/06/19 10:08 AM, Richard Weinberger wrote:
+> > On Fri, Jun 14, 2019 at 5:26 AM Chris Packham
+> > <Chris.Packham@alliedtelesis.co.nz> wrote:
+> >>
+> >> Hi All,
+> >>
+> >> Ping?
 > >
-> > On the other hand, uapi headers are written in more strict C, where
-> > the C++ comment style is forbidden.
+> > Your patch is not lost. We start soon with collecting all material for
+> > the merge window. :-)
 > >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 >
-> Acked-by: Richard Weinberger <richard@nod.at>
+> OK thanks for the confirmation and sorry for the noise.
 
 Applied. :-)
 
---=20
+-- 
 Thanks,
 //richard
