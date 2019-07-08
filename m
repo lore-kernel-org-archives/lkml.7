@@ -2,128 +2,85 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60F4C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746FCC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC5E216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599144;
-	bh=tnRMDA48rboUP2LOwgafjmYOMveaq5ZxCFEFDxyyE1o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U/8h+f6xrf14ElJz/qoBg7Nf0hGxgJuULicdo4GBlawA5WgWikZ3hVww+6God9+pG
-	 5T8cu2dhuFk7BndVM5pAMi80Xfsg75l3pzKIp8iu1l/UbjbYYRRKl9DEg14N7Nb9Ix
-	 oVQDY4WDOJd883eJ2zDZwvsLGmwLWdAV9Sy9zggc=
+	by mail.kernel.org (Postfix) with ESMTP id 4E30E216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733172AbfGHPTD (ORCPT
+        id S1728562AbfGHPTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:19:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733147AbfGHPS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:18:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EEA321537;
-        Mon,  8 Jul 2019 15:18:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599137;
-        bh=tnRMDA48rboUP2LOwgafjmYOMveaq5ZxCFEFDxyyE1o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmAkAafjX08puTBH/mVkflV+PsXR5aYBOYEM2NvwrtgWNUPTutTpRS6dctGTQkLZ3
-         LISGM6u4IsBkQL8hWoZ34hWHX2osfqZl9gc4Jb6x25Dwd2jDKQE/EmkAEmLbquuVub
-         tP1hiXa28+agMCANKqtnG7AUEhEdEkI9wLKQCBUI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Lee <mark-mc.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 018/102] net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
-Date:   Mon,  8 Jul 2019 17:12:11 +0200
-Message-Id: <20190708150527.113999863@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
-References: <20190708150525.973820964@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 8 Jul 2019 11:19:01 -0400
+Received: from app1.whu.edu.cn ([202.114.64.88]:40278 "EHLO whu.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733117AbfGHPSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:18:54 -0400
+Received: from localhost (unknown [111.202.192.5])
+        by email1 (Coremail) with SMTP id AQBjCgAnCTrQXiNdSDViAA--.46705S2;
+        Mon, 08 Jul 2019 23:18:46 +0800 (CST)
+From:   Peng Wang <rocking@whu.edu.cn>
+To:     gregkh@linuxfoundation.org, tj@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Peng Wang <rocking@whu.edu.cn>
+Subject: [PATCH v2] kernfs: fix potential null pointer dereference
+Date:   Mon,  8 Jul 2019 23:16:11 +0800
+Message-Id: <20190708151611.13242-1-rocking@whu.edu.cn>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQBjCgAnCTrQXiNdSDViAA--.46705S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrW3JF1DtrW5Jr1DXr4xJFb_yoW3AFX_Cr
+        18C3s09FW7Wrs7Wr13G3ySqryF9a1qv3W0vF4fta98tFZxta1DArn3Jw1vyrn7Gry8Wr9F
+        yFn0yryqkrWxXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2AFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+        1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
+        cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
+        ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryrMxAI
+        w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
+        4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
+        rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
+        CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUz6wAUUUUU=
+X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e4f56f1a7f3287718d0083b5cb85298dc05a5fd ]
+Get root safely after kn is ensureed to be not null.
 
-Should hw_feature as hardware capability flags to check if hardware LRO
-got support.
-
-Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Peng Wang <rocking@whu.edu.cn>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/kernfs/dir.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 20de37a414fe..03b599109619 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2175,13 +2175,13 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index a387534c9577..ddf537923a0a 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -430,7 +430,6 @@ struct kernfs_node *kernfs_get_active(struct kernfs_node *kn)
+  */
+ void kernfs_put_active(struct kernfs_node *kn)
+ {
+-	struct kernfs_root *root = kernfs_root(kn);
+ 	int v;
  
- 	switch (cmd->cmd) {
- 	case ETHTOOL_GRXRINGS:
--		if (dev->features & NETIF_F_LRO) {
-+		if (dev->hw_features & NETIF_F_LRO) {
- 			cmd->data = MTK_MAX_RX_RING_NUM;
- 			ret = 0;
- 		}
- 		break;
- 	case ETHTOOL_GRXCLSRLCNT:
--		if (dev->features & NETIF_F_LRO) {
-+		if (dev->hw_features & NETIF_F_LRO) {
- 			struct mtk_mac *mac = netdev_priv(dev);
+ 	if (unlikely(!kn))
+@@ -442,7 +441,7 @@ void kernfs_put_active(struct kernfs_node *kn)
+ 	if (likely(v != KN_DEACTIVATED_BIAS))
+ 		return;
  
- 			cmd->rule_cnt = mac->hwlro_ip_cnt;
-@@ -2189,11 +2189,11 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
- 		}
- 		break;
- 	case ETHTOOL_GRXCLSRULE:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_get_fdir_entry(dev, cmd);
- 		break;
- 	case ETHTOOL_GRXCLSRLALL:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_get_fdir_all(dev, cmd,
- 						     rule_locs);
- 		break;
-@@ -2210,11 +2210,11 @@ static int mtk_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
+-	wake_up_all(&root->deactivate_waitq);
++	wake_up_all(&kernfs_root(kn)->deactivate_waitq);
+ }
  
- 	switch (cmd->cmd) {
- 	case ETHTOOL_SRXCLSRLINS:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_add_ipaddr(dev, cmd);
- 		break;
- 	case ETHTOOL_SRXCLSRLDEL:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_del_ipaddr(dev, cmd);
- 		break;
- 	default:
+ /**
 -- 
-2.20.1
-
-
+2.19.1
 
