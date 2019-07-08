@@ -2,122 +2,94 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1A0C606CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D5FC606CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402EA217D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:45:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPh098Ey"
+	by mail.kernel.org (Postfix) with ESMTP id E5205217D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404695AbfGHTpU (ORCPT
+        id S2404700AbfGHTpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:45:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42773 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729234AbfGHTpU (ORCPT
+        Mon, 8 Jul 2019 15:45:50 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:39079 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729234AbfGHTpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:45:20 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay6so8791860plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=9q+N+7T64vemRouEH/uBunKn++gV4uKMzjJSL7CO+qo=;
-        b=ZPh098EyhsXu1QNzCqOusGik4iRd5jlYSEyOl2UhI2QcVUjADxUI3aM2Nn5ztjd4ZW
-         kmrh02f0MQ7ZqJkdnjKWIlrqizUBh5dCsZl8nDLMzkDHpjIjwwKIqIa+5atvEPtSAJo6
-         /NheCxnTymgRpL+6JSospxn1wDnKVQSll1mnOo4KFQDoYGh8wE27ddN0Rzi9m7AESkOP
-         dMh++RuxfajyayIiX59NQUFHv4zcopo9xQGuUd5lYpxMQyVEmsBjgD9fczq6t+Bo8goD
-         39czFF9Or/McJ3EuVljj5OXy7Hc+Z/i6JetH5RenHTfZLL6ldMrW/cKCcI8aXlvfgOYE
-         r11A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=9q+N+7T64vemRouEH/uBunKn++gV4uKMzjJSL7CO+qo=;
-        b=YqB2N4wabg048FVs/qABA+gI6d4o2gMteacCMzgHorJPWXB0KiRyWOqFwGIwpQAa9N
-         vmfbMwNLw9k7xXMcJI3ilKUyx76VmNUQSQrDw3vwqq/6Rfepak828uAwBRqQhOSO09DX
-         P2uMO0uOEPk9OkulWag67Bjgc9qMr1Q48jiYKU3Sqx2YbtYX9LNPr2Pibaw6FwQrsIkN
-         9JNz9i716iyYYDFC2s+goeC+n5HKCwM+vj0l0EnRvnFchRsIF90b1oQYF1Z0g0nU0gxo
-         z0/HqwdXzk6E9x2Wgnys7OTL7sYRXfu5GvhvA0JXvfNROPd/5OUr+asUGXMu7XBKAA3Y
-         b6Fg==
-X-Gm-Message-State: APjAAAVmkqp2cthndVe58M22JTI52x8o7xZlVviiffKIpDHH25+r3stK
-        dce+J0jry6vhqbE9RyUycH4=
-X-Google-Smtp-Source: APXvYqx+ezcgerDNs4ihI7RZENwO3ZvU+r9XrjtnT80QElQi7o+nPGuDqeSvMcMQSVVxpZ9LA23mkQ==
-X-Received: by 2002:a17:902:ac1:: with SMTP id 59mr27396504plp.168.1562615119548;
-        Mon, 08 Jul 2019 12:45:19 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b16sm18992910pfo.54.2019.07.08.12.45.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 12:45:18 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 12:45:17 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Subject: Re: m68k build failures in -next: undefined reference to
- `arch_dma_prep_coherent'
-Message-ID: <20190708194516.GA18304@roeck-us.net>
-References: <20190708170647.GA12313@roeck-us.net>
- <CAMuHMdUnSqKHA7EN1S8U7eBODs4gi-raw4P3FxnR_afhb2Zd5g@mail.gmail.com>
+        Mon, 8 Jul 2019 15:45:50 -0400
+Received: from [192.168.1.110] ([95.117.164.184]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MPooN-1i5nb70MGR-00Mtsx; Mon, 08 Jul 2019 21:45:46 +0200
+Subject: Re: [PATCH 0/3] Update pcengines-apuv2 platform device
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Florian Eckert <fe@dev.tdt.de>
+Cc:     Eckert.Florian@googlemail.com,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <4b43316c-3e05-0ce9-3ada-db22996205b9@metux.net>
+Date:   Mon, 8 Jul 2019 21:45:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdUnSqKHA7EN1S8U7eBODs4gi-raw4P3FxnR_afhb2Zd5g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:SX0Kvt3nfm4cb+ofxX5Erb1XGfX3CX714EhQ9i3q8ACyJqZYvxe
+ F96ZI6Y3dqRsTuXFfw4cpQb7UVyox4c8c+/XszL3fkE5wMLtazOXyLlY86+FF9nGKZiAPDK
+ mvN2DioWM3Yr9pdQVyDuj/L3Mn9/SJ1d9kQ/vPnuUtJg7wCJzJ4ziX1/CZJV3sp8zHboA+9
+ h6JLFbdT1qkP5mMB/CNTQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VIqJ3hSv9bM=:SGGvPSlbO/qebn98kaD65f
+ vBJnq6tmbicJDehzT29nuYXGa/E/Vp//6KQ7gt+LYZVrsw/iohsZ1D1ka3ALU61iJcQ7ndlCl
+ wNCuCA+7L/t1sZcMvig5zBOU7mZu6FK0OtlmUleNbCEdJSmbn67M36/MqkR95a9jgmEmHOtE/
+ pfog87N8/m+quJGkugM/0L5owaTCDf+BQUeKxQO9yurwuu1aDz5EFmrne1jkEBn5fFlzwCtIi
+ t2PEEB6MyEIlEZmgJnCjvqvxheyl49dXdFAbDh7kWs2RwgoMW9B+j1cAwdU/hbPSyRKmMXcS/
+ /S53Jz9UzqVjow2H2fIXgMb8JDfVID+pb7KH6R9XtyUwzp/f6O5Rd/KJdZ9F70f6TnUcW173B
+ jGPOF7rv8BE+bRGn26TPIucKZ+SBgVSRuq1vFVHP0QOW+Xr473NZBKMguQhB6nOKIJ3Rt6m1b
+ GM2dyUbzFCYJcux3DxKn72Vj8y8cMTkt4eLgaLrJ8+ed+286AbofVcYC+SK6ogyVApCGauwK2
+ t9TNW+jS4DTpqqM39aI1J5wz2gyfKUCgAYth8j+eVddXJcWlHqHAsvYXotasb9EkI7LgD+tVD
+ uJa1YSLqLiJGSAwchFoOCTtIEzWZCJfwOsrp3RPoi09TMeuNNky1PGwX64mUrJZOCVsR1SLXZ
+ 4M1VG/53D6MGNO5/qyM32zlUWdVmNo2b8afED+b5MbWu172LlXbfbVDd5i/GLXOYvnDOcP2fK
+ WHAWdqh13F/1j5V+gamIxW18tDre3z7izWWmoFbJ8U+Ef2FLp8058xpzfU1sBrIq6V+aVFq3O
+ Xa6W3yx1Sqds/F/hQeRPNO7KiQwg3LFsJ4dZ+SAujTFrjPTmzqbv5RZEK6YkLkYKm5eDYMt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 09:13:02PM +0200, Geert Uytterhoeven wrote:
-> Hi Günter,
+On 04.07.19 15:39, Andy Shevchenko wrote:
+> On Thu, Jul 4, 2019 at 12:02 PM Florian Eckert <fe@dev.tdt.de> wrote:
+>>
+>> This patchset adds the following changes to this pcengines-apuv2
+>> platform device.
+>>
 > 
-> On Mon, Jul 8, 2019 at 7:06 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > I see the following build error in -next:
-> >
-> > kernel/dma/direct.o: In function `dma_direct_alloc_pages':
-> > direct.c:(.text+0x4d8): undefined reference to `arch_dma_prep_coherent'
-> >
-> > Example: m68k:allnoconfig.
-> >
-> > Bisect log is ambiguous and points to the merge of m68k/for-next into
-> > -next. Yet, I think the problem is with commit 69878ef47562 ("m68k:
-> > Implement arch_dma_prep_coherent()") which is supposed to introduce
-> > the function. The problem is likely that arch_dma_prep_coherent()
-> > is only declared if CONFIG_MMU is enabled, but it is called from code
-> > outside CONFIG_MMU.
+> Before doing anything to this driver, what is the plan for previously
+> upstreamed:
 > 
-> Thanks, one more thing to fix in m68k-allnoconfig (did it really build
-> before?)...
-> 
-> Given you say "example", does it fail in real configs, too?
-> 
+> drivers/leds/leds-apu.c
 
-Yes, it does. All nommu builds fail. allnoconfig and tinyconfig just
-happen to be among those.
+Only supports the three front LEDs, nothing else. (we've got more gpios
+that are not LEDs, eg. the front button, simsw, ...)
 
-Building m68k:allnoconfig ... failed
-Building m68k:tinyconfig ... failed
-Building m68k:m5272c3_defconfig ... failed
-Building m68k:m5307c3_defconfig ... failed
-Building m68k:m5249evb_defconfig ... failed
-Building m68k:m5407c3_defconfig ... failed
-Building m68k:m5475evb_defconfig ... failed
+> arch/x86/platform/geode/alix.c
 
-Error is always the same.
+completely unrelated - very different chipset.
 
-The error started with next-20190702. Prior to that, builds were fine,
-including m68k:allnoconfig and m68k:tinyconfig.
 
-Guenter
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
