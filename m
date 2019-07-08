@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A74C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E065BC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20FC2173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FE02173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599936;
-	bh=m1F4gOf1GzHgIVFNY+Ku69eEaZjxA9gyJ9dRODh94uc=;
+	s=default; t=1562599939;
+	bh=5T9J1DMRJ2scXKLJqck80QJlxNXpMtSCcSswKdlcZm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UUO/0HasFOm8gz6Dj2PxYss8GJdO8K+JMDof0yDuTMIvGFMpL12nFvUZL9WAafZVA
-	 corGamlXpi8XJ8ei9sq4otOSJMGU4RryoUjtNCucYHMyI+CvF1c59xqBRGppaiBny7
-	 HQXej2F9oJCfKVGIXerI3Kw14IJCbJFiQpnkKimU=
+	b=zNBSk3pUsod75TFfBFlcvuFVXWaRH/z9OlBrVt1Gy0v5KgGaIsqfCk3h7SIwOxLm5
+	 /HPGM9JuB1su0rT4uDIoEakJiqvGpLKpbd3hzFNDlsaceam0dbJsCk1plN7st5Rhy8
+	 O6Wp48fHBATCygz0sY7jVzc9WBGi49LHWsg37G0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390098AbfGHPcP (ORCPT
+        id S2390107AbfGHPcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33778 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390076AbfGHPcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:32:12 -0400
+        id S2390088AbfGHPcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:32:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7391E21743;
-        Mon,  8 Jul 2019 15:32:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3449E204EC;
+        Mon,  8 Jul 2019 15:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599931;
-        bh=m1F4gOf1GzHgIVFNY+Ku69eEaZjxA9gyJ9dRODh94uc=;
+        s=default; t=1562599933;
+        bh=5T9J1DMRJ2scXKLJqck80QJlxNXpMtSCcSswKdlcZm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CZlN/pX170O3Rr4u7ks37xf3TlDT5O24RD14vx1Ucj2+mxPJPfzxsEygDaUdQOVlP
-         Sg/+bRhN/bxKs+VcZqw2vVcKLmcokEDq1o8q8ZaZwZyUzhYvfxqdnpFLOEUSk7fzpk
-         jvj/ZlRgcxlkur0FDUqtXqHjGsiKvxH6HPELJC/w=
+        b=FT4p9q0ule7JodqyIS+Iu0hbZIVzWyhuoxWrWKwbQGz75EvXt5fltpDjGWWI+P+hH
+         Dp2gnlJT52EPpJLN4Hy3VOZols8FYTGTNBb8L+03lWuKOi40yiq0Tt4EN2H+LTEVAV
+         O6cfdIbZHeXfBoszYuQqqjTFOER7ELTNYCL2F95k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
         =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
         <amadeuszx.slawinski@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 36/96] ALSA: hdac: fix memory release for SST and SOF drivers
-Date:   Mon,  8 Jul 2019 17:13:08 +0200
-Message-Id: <20190708150528.515587974@linuxfoundation.org>
+Subject: [PATCH 5.1 37/96] SoC: rt274: Fix internal jack assignment in set_jack callback
+Date:   Mon,  8 Jul 2019 17:13:09 +0200
+Message-Id: <20190708150528.570001223@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -63,40 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6d647b736a6b1cbf2f8deab0e6a94c34a6ea9d60 ]
+[ Upstream commit 04268bf2757a125616b6c2140e6250f43b7b737a ]
 
-During the integration of HDaudio support, we changed the way in which
-we get hdev in snd_hdac_ext_bus_device_init() to use one preallocated
-with devm_kzalloc(), however it still left kfree(hdev) in
-snd_hdac_ext_bus_device_exit(). It leads to oopses when trying to
-rmmod and modprobe. Fix it, by just removing kfree call.
+When we call snd_soc_component_set_jack(component, NULL, NULL) we should
+set rt274->jack to passed jack, so when interrupt is triggered it calls
+snd_soc_jack_report(rt274->jack, ...) with proper value.
 
-SOF also uses some of the snd_hdac_ functions for HDAudio support but
-allocated the memory with kzalloc. A matching fix is provided
-separately to align all users of the snd_hdac_ library.
+This fixes problem in machine where in register, we call
+snd_soc_register(component, &headset, NULL), which just calls
+rt274_mic_detect via callback.
+Now when machine driver is removed "headset" will be gone, so we
+need to tell codec driver that it's gone with:
+snd_soc_register(component, NULL, NULL), but we also need to be able
+to handle NULL jack argument here gracefully.
+If we don't set it to NULL, next time the rt274_irq runs it will call
+snd_soc_jack_report with first argument being invalid pointer and there
+will be Oops.
 
-Fixes: 6298542fa33b ("ALSA: hdac: remove memory allocation from snd_hdac_ext_bus_device_init")
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/ext/hdac_ext_bus.c | 1 -
- 1 file changed, 1 deletion(-)
+ sound/soc/codecs/rt274.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/hda/ext/hdac_ext_bus.c b/sound/hda/ext/hdac_ext_bus.c
-index ec7715c6b0c0..c147ebe542da 100644
---- a/sound/hda/ext/hdac_ext_bus.c
-+++ b/sound/hda/ext/hdac_ext_bus.c
-@@ -172,7 +172,6 @@ EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_device_init);
- void snd_hdac_ext_bus_device_exit(struct hdac_device *hdev)
+diff --git a/sound/soc/codecs/rt274.c b/sound/soc/codecs/rt274.c
+index adf59039a3b6..cdd312db3e78 100644
+--- a/sound/soc/codecs/rt274.c
++++ b/sound/soc/codecs/rt274.c
+@@ -405,6 +405,8 @@ static int rt274_mic_detect(struct snd_soc_component *component,
  {
- 	snd_hdac_device_exit(hdev);
--	kfree(hdev);
- }
- EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_device_exit);
+ 	struct rt274_priv *rt274 = snd_soc_component_get_drvdata(component);
  
++	rt274->jack = jack;
++
+ 	if (jack == NULL) {
+ 		/* Disable jack detection */
+ 		regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
+@@ -412,7 +414,6 @@ static int rt274_mic_detect(struct snd_soc_component *component,
+ 
+ 		return 0;
+ 	}
+-	rt274->jack = jack;
+ 
+ 	regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
+ 				RT274_IRQ_EN, RT274_IRQ_EN);
 -- 
 2.20.1
 
