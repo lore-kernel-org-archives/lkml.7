@@ -5,51 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F0C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D9BC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B424820651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F5C20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600430;
-	bh=mKyRewV85cQe9StA8678jQ/lcojrSBiqThd0myR75EY=;
+	s=default; t=1562600448;
+	bh=fgU99gXUjNXlXPCWm3ZZMB9EiPUVK0YGQq/KTE7Zrpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mkh/5/Q5iqC5AO5M7ZR+o5HhOEfSEOepQSmWm0VuZvnez3mO8gDZR1IUIx/jThIwx
-	 V3lMOhyxhZSJdU310Ludlm5jJ0weytQemAkVoxm/KrsidNN0AC52bsjoZ/aw32Xvum
-	 lIDCU0cPcZ49uhBOWJMlYUmM5lkyHsjPxkaB8/1I=
+	b=2l9QLjosbJqvPe7Y4vWgR4V5/Z4AUOelpC97MOWTmzlljhK5x7hBYNp06lute+ABl
+	 98KtQxcBA2o98bzHUoGAI6itv9n8yZhwdyRUg1+RRhcs0IsOGsTCbcqllUYuZFIO2E
+	 +QcNl/inSWSZsqkbTSBbm6uQsh9yUbTld7mfpcFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390974AbfGHPk3 (ORCPT
+        id S2388499AbfGHP1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56144 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389153AbfGHP1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:27:50 -0400
+        id S2388445AbfGHP1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:27:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7717216C4;
-        Mon,  8 Jul 2019 15:27:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAD8621783;
+        Mon,  8 Jul 2019 15:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599669;
-        bh=mKyRewV85cQe9StA8678jQ/lcojrSBiqThd0myR75EY=;
+        s=default; t=1562599622;
+        bh=fgU99gXUjNXlXPCWm3ZZMB9EiPUVK0YGQq/KTE7Zrpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gm5vnuvpgzufLtse0G4nFtAtWX9tIIG8vXemBsfK8hTjuEagwwkMiHHzOGPF3PfHI
-         XkF94GR5b3DgwLEovwIJpaDhSJIhgwWDbnfdFiFiz3r9o1xQI93etpPuMl5c+5jDle
-         sP0s/1tfJJ5EYf1UGeferJ+tke7G76LrBH2dd1h0=
+        b=0zX6dJLWemOJPzYNz26M8kPr+FkRzCMvcMHsnKQtv9Tabp5scf+9wznWCcyo8t/jc
+         lw5He1mSXtwCnn6yVyON5Punxw04o+n72yWG1bloG+Ekjth+d/iqMWB5oEDwff8lwM
+         aLz6GRLuC9moEnp617ddGmVpTdUfjJ7Ogc6OaHMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, swkhack <swkhack@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        rui.zhang@intel.com, Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/90] mm/mlock.c: change count_mm_mlocked_page_nr return type
-Date:   Mon,  8 Jul 2019 17:13:03 +0200
-Message-Id: <20190708150524.419868485@linuxfoundation.org>
+Subject: [PATCH 4.19 21/90] x86/CPU: Add more Icelake model numbers
+Date:   Mon,  8 Jul 2019 17:12:48 +0200
+Message-Id: <20190708150523.709582820@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -62,43 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0874bb49bb21bf24deda853e8bf61b8325e24bcb ]
+[ Upstream commit e35faeb64146f2015f2aec14b358ae508e4066db ]
 
-On a 64-bit machine the value of "vma->vm_end - vma->vm_start" may be
-negative when using 32 bit ints and the "count >> PAGE_SHIFT"'s result
-will be wrong.  So change the local variable and return value to
-unsigned long to fix the problem.
+Add the CPUID model numbers of Icelake (ICL) desktop and server
+processors to the Intel family list.
 
-Link: http://lkml.kernel.org/r/20190513023701.83056-1-swkhack@gmail.com
-Fixes: 0cf2f6f6dc60 ("mm: mlock: check against vma for actual mlock() size")
-Signed-off-by: swkhack <swkhack@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+ [ Qiuxu: Sort the macros by model number. ]
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc: rui.zhang@intel.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190603134122.13853-1-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mlock.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/intel-family.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/mm/mlock.c b/mm/mlock.c
-index 41cc47e28ad6..0ab8250af1f8 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -636,11 +636,11 @@ static int apply_vma_lock_flags(unsigned long start, size_t len,
-  * is also counted.
-  * Return value: previously mlocked page counts
-  */
--static int count_mm_mlocked_page_nr(struct mm_struct *mm,
-+static unsigned long count_mm_mlocked_page_nr(struct mm_struct *mm,
- 		unsigned long start, size_t len)
- {
- 	struct vm_area_struct *vma;
--	int count = 0;
-+	unsigned long count = 0;
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 058b1a1994c4..2e38fb82b91d 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -52,6 +52,9 @@
  
- 	if (mm == NULL)
- 		mm = current->mm;
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+ 
++#define INTEL_FAM6_ICELAKE_X		0x6A
++#define INTEL_FAM6_ICELAKE_XEON_D	0x6C
++#define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+ 
+ /* "Small Core" Processors (Atom) */
 -- 
 2.20.1
 
