@@ -2,53 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497AFC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6271C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137B620665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB08820665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600403;
-	bh=/FKc4kjIe82GxU9Sjc+/PTPdm3BLOpOWYvdj+AgWmkk=;
+	s=default; t=1562600408;
+	bh=GJ2QA1DpHyIugeLV5/Z3csKsem03r9RFdj3YMVeGLvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNSmCPFAIdIqQCN/GBPD9MRDtbNCPddfFz5x3QdJILsEgA7ep2WPU0B3dUM2twEz8
-	 yq48tXbiLZKBUErEMOQ+uSI4ri6o2etBzkY9JwpBiFd5hZ991f0yRhXtkLtTVks5I/
-	 MsgyXhI8IVBSdfIhWb/Sd4Tw95oAS8OIdd1DBnvc=
+	b=bVTu8+skf1mqdwlXe9DvIvtDs25wTwBMX2FlmX21vRLi5qWJtXDaeB8KVFThji8tg
+	 Ygxow+fKHgaaXlSAhAr9g4tM4EhYamtCe4vk/zbgGKha3Sl1ECllkv26XIXPcmexO0
+	 sryaWhU+Fp+D9s8I6e8cT1kuAZslFhnhxz7mpvAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390825AbfGHPkC (ORCPT
+        id S2389274AbfGHP2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57090 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:28:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbfGHP2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:28:33 -0400
+        id S1727411AbfGHP2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:28:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8438A21537;
-        Mon,  8 Jul 2019 15:28:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4740721537;
+        Mon,  8 Jul 2019 15:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599713;
-        bh=/FKc4kjIe82GxU9Sjc+/PTPdm3BLOpOWYvdj+AgWmkk=;
+        s=default; t=1562599697;
+        bh=GJ2QA1DpHyIugeLV5/Z3csKsem03r9RFdj3YMVeGLvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KzTImTs0L2/h3MieRhcnxm7VDQcmGY9mK2GtMmnMordLT4a+rEANyri+gziXzJI8Y
-         12Ior4yOBJ+Y4ZTwU5WnxQO+w3kqLMvAky7KcTuA3COb0FKxobTygh8UhXyhiHDcUQ
-         MvVjlRy0SUCO55rEKO9rVYMdqM4CNAs7vof7H3vE=
+        b=usZW2M6h4FNvMqPg4X6XyEAWQE5AmcVI2MpkIj38OWGE1HJ3ffmwoIvcHz2zqcTPr
+         GuF9PmqyWIFWXDFe7mVXKdSk3WL4O7U4Zl1Vq+AShJ2O2EQ8DV/WU5mj4bjWw/Xkku
+         r9ncEeVATjaAPl0SkH5ZFvWxPZ4ci/SQ0t8GgBLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Joshua Scott <joshua.scott@alliedtelesis.co.nz>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH 4.19 53/90] ARM: dts: armada-xp-98dx3236: Switch to armada-38x-uart serial node
-Date:   Mon,  8 Jul 2019 17:13:20 +0200
-Message-Id: <20190708150525.188209975@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 40/90] drm/i915/dmc: protect against reading random memory
+Date:   Mon,  8 Jul 2019 17:13:07 +0200
+Message-Id: <20190708150524.596597353@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -61,38 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joshua Scott <joshua.scott@alliedtelesis.co.nz>
+commit bc7b488b1d1c71dc4c5182206911127bc6c410d6 upstream.
 
-commit 80031361747aec92163464f2ee08870fec33bcb0 upstream.
+While loading the DMC firmware we were double checking the headers made
+sense, but in no place we checked that we were actually reading memory
+we were supposed to. This could be wrong in case the firmware file is
+truncated or malformed.
 
-Switch to the "marvell,armada-38x-uart" driver variant to empty
-the UART buffer before writing to the UART_LCR register.
+Before this patch:
+	# ls -l /lib/firmware/i915/icl_dmc_ver1_07.bin
+	-rw-r--r-- 1 root root  25716 Feb  1 12:26 icl_dmc_ver1_07.bin
+	# truncate -s 25700 /lib/firmware/i915/icl_dmc_ver1_07.bin
+	# modprobe i915
+	# dmesg| grep -i dmc
+	[drm:intel_csr_ucode_init [i915]] Loading i915/icl_dmc_ver1_07.bin
+	[drm] Finished loading DMC firmware i915/icl_dmc_ver1_07.bin (v1.7)
 
-Signed-off-by: Joshua Scott <joshua.scott@alliedtelesis.co.nz>
-Tested-by: Andrew Lunn <andrew@lunn.ch>
-Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>.
-Cc: stable@vger.kernel.org
-Fixes: 43e28ba87708 ("ARM: dts: Use armada-370-xp as a base for armada-xp-98dx3236")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+i.e. it loads random data. Now it fails like below:
+	[drm:intel_csr_ucode_init [i915]] Loading i915/icl_dmc_ver1_07.bin
+	[drm:csr_load_work_fn [i915]] *ERROR* Truncated DMC firmware, rejecting.
+	i915 0000:00:02.0: Failed to load DMC firmware i915/icl_dmc_ver1_07.bin. Disabling runtime power management.
+	i915 0000:00:02.0: DMC firmware homepage: https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/i915
 
+Before reading any part of the firmware file, validate the input first.
+
+Fixes: eb805623d8b1 ("drm/i915/skl: Add support to load SKL CSR firmware.")
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190605235535.17791-1-lucas.demarchi@intel.com
+(cherry picked from commit bc7b488b1d1c71dc4c5182206911127bc6c410d6)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+[ Lucas: backported to 4.9+ adjusting the context ]
+Cc: stable@vger.kernel.org # v4.9+
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/i915/intel_csr.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -336,3 +336,11 @@
- 	status = "disabled";
- };
+diff --git a/drivers/gpu/drm/i915/intel_csr.c b/drivers/gpu/drm/i915/intel_csr.c
+index cf9b600cca79..ca1a578d790d 100644
+--- a/drivers/gpu/drm/i915/intel_csr.c
++++ b/drivers/gpu/drm/i915/intel_csr.c
+@@ -282,10 +282,17 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
+ 	uint32_t i;
+ 	uint32_t *dmc_payload;
+ 	uint32_t required_version;
++	size_t fsize;
  
-+&uart0 {
-+	compatible = "marvell,armada-38x-uart";
-+};
+ 	if (!fw)
+ 		return NULL;
+ 
++	fsize = sizeof(struct intel_css_header) +
++		sizeof(struct intel_package_header) +
++		sizeof(struct intel_dmc_header);
++	if (fsize > fw->size)
++		goto error_truncated;
 +
-+&uart1 {
-+	compatible = "marvell,armada-38x-uart";
-+};
+ 	/* Extract CSS Header information*/
+ 	css_header = (struct intel_css_header *)fw->data;
+ 	if (sizeof(struct intel_css_header) !=
+@@ -360,6 +367,9 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
+ 		return NULL;
+ 	}
+ 	readcount += dmc_offset;
++	fsize += dmc_offset;
++	if (fsize > fw->size)
++		goto error_truncated;
+ 
+ 	/* Extract dmc_header information. */
+ 	dmc_header = (struct intel_dmc_header *)&fw->data[readcount];
+@@ -391,6 +401,10 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
+ 
+ 	/* fw_size is in dwords, so multiplied by 4 to convert into bytes. */
+ 	nbytes = dmc_header->fw_size * 4;
++	fsize += nbytes;
++	if (fsize > fw->size)
++		goto error_truncated;
 +
+ 	if (nbytes > CSR_MAX_FW_SIZE) {
+ 		DRM_ERROR("DMC firmware too big (%u bytes)\n", nbytes);
+ 		return NULL;
+@@ -404,6 +418,10 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
+ 	}
+ 
+ 	return memcpy(dmc_payload, &fw->data[readcount], nbytes);
++
++error_truncated:
++	DRM_ERROR("Truncated DMC firmware, rejecting.\n");
++	return NULL;
+ }
+ 
+ static void csr_load_work_fn(struct work_struct *work)
+-- 
+2.20.1
+
 
 
