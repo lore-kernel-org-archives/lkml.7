@@ -2,94 +2,72 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1165C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5059EC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E02216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600647;
-	bh=VfFEE+Tk8kO7bJL6BocoNPbPXpjza2ipK8Y0oS+MhqQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2w5r8Zy/WMcgF3atEtFxWCR3QLHIbYC9IVhpxIQQT3duQBxaQml0f6u381juWGs/
-	 V4dwuUfw0i3AH7w59zI009u91JjwH6bO5L1k3RwtT7CcJbWD24y5R6uKtHJelAV0rL
-	 ovsH1IvB+2rTJaQsKuEWWXNPTiOetK1/3NQER5sM=
+	by mail.kernel.org (Postfix) with ESMTP id 30797216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390242AbfGHPoG (ORCPT
+        id S2391217AbfGHPoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:44:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:44:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:51994 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388199AbfGHPXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:23:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 722E7204EC;
-        Mon,  8 Jul 2019 15:23:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599412;
-        bh=VfFEE+Tk8kO7bJL6BocoNPbPXpjza2ipK8Y0oS+MhqQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pW9opiFFBEgtQONg+q4DQY2jU29A7Sg2/dPNm6+qeOpNIbl5QKWo/g+UkreLw5ep2
-         zVAup2+F9JZU2fqxRs80eRidGax0hQkCwrt7mYePl5S/6RKylYoKQYrG1CuTGvm4+J
-         zpf4fe4iw+mZCaLSoy0zKVQgXQgNuUNjZyIFOSkg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 096/102] tty: rocket: fix incorrect forward declaration of rp_init()
-Date:   Mon,  8 Jul 2019 17:13:29 +0200
-Message-Id: <20190708150531.450932458@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
-References: <20190708150525.973820964@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S2391208AbfGHPoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:44:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C320F360;
+        Mon,  8 Jul 2019 08:44:06 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B5A943F59C;
+        Mon,  8 Jul 2019 08:44:05 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+Subject: [PATCH 0/6] firmware: arm_scmi: miscellaneous fixes/updates
+Date:   Mon,  8 Jul 2019 16:43:52 +0100
+Message-Id: <20190708154358.16227-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 423ea3255424b954947d167681b71ded1b8fca53 ]
+Hi,
 
-Make the forward declaration actually match the real function
-definition, something that previous versions of gcc had just ignored.
+Here are few miscellaneous fixes and updates to SCMI. Fixes are mostly
+for the reported issues and updates are based on code inspection during
+development of new features(delayed response and notifications). The
+new features will follow this.
 
-This is another patch to fix new warnings from gcc-9 before I start the
-merge window pulls.  I don't want to miss legitimate new warnings just
-because my system update brought a new compiler with new warnings.
+--
+Regards,
+Sudeep
 
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/tty/rocket.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Nishad Kamdar (1):
+  firmware: arm_scmi: Use the correct style for SPDX License Identifier
 
-diff --git a/drivers/tty/rocket.c b/drivers/tty/rocket.c
-index e8e8973939d3..447d791bde22 100644
---- a/drivers/tty/rocket.c
-+++ b/drivers/tty/rocket.c
-@@ -279,7 +279,7 @@ MODULE_PARM_DESC(pc104_3, "set interface types for ISA(PC104) board #3 (e.g. pc1
- module_param_array(pc104_4, ulong, NULL, 0);
- MODULE_PARM_DESC(pc104_4, "set interface types for ISA(PC104) board #4 (e.g. pc104_4=232,232,485,485,...");
- 
--static int rp_init(void);
-+static int __init rp_init(void);
- static void rp_cleanup_module(void);
- 
- module_init(rp_init);
+Sudeep Holla (5):
+  firmware: arm_scmi: Align few names in sensors protocol with SCMI specification
+  firmware: arm_scmi: Remove extra check for invalid length message responses
+  firmware: arm_scmi: Fix few trivial typos in comments
+  firmware: arm_scmi: Use the term 'message' instead of 'command'
+  firmware: arm_scmi: Check if platform has released shmem before using
+
+ drivers/firmware/arm_scmi/common.h  | 12 ++++++------
+ drivers/firmware/arm_scmi/driver.c  | 24 +++++++++++++-----------
+ drivers/firmware/arm_scmi/sensors.c | 28 +++++++++++++++-------------
+ include/linux/scmi_protocol.h       | 12 ++++++------
+ 4 files changed, 40 insertions(+), 36 deletions(-)
+
 -- 
-2.20.1
-
-
+2.17.1
 
