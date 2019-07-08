@@ -2,130 +2,132 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF60C606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DDBC606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768592064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562582888;
-	bh=PyJBDOysdj+QJIaGktNfndJPXzCRFOtE3ajEAn1JWhI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZRvEwhZQikENkUH348IRlbI6TMTd6m0YlXeIKIxDxTniNebuU3oYaqAdfTgz4HJOu
-	 JwPMbTiqH6dTeVXC7/eKo/+tggUKHnytoUCLTmwRQPaokJvX3FvsEgUwVOVfcauvEM
-	 T8+cnamLzd11MoXfuUD8MWuhTC0Zogr1K3+U3J28=
+	by mail.kernel.org (Postfix) with ESMTP id 4076C2064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:50:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tx0P6Ygy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbfGHKsH (ORCPT
+        id S1730217AbfGHKuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 06:48:07 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34750 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729370AbfGHKsG (ORCPT
+        Mon, 8 Jul 2019 06:50:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38452 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfGHKub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 06:48:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n5so15742963otk.1;
-        Mon, 08 Jul 2019 03:48:06 -0700 (PDT)
+        Mon, 8 Jul 2019 06:50:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g17so6377702wrr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 03:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lej7Q+QP3kcSJDvUANx4MpD1co7bVMerIr3ru5n/a4c=;
+        b=tx0P6Ygyb6DdA7G9POdLYsY1nwSb8R4k49+VwLBqIM1T9U1q/43us/Hdp8RMCdxoM6
+         CxuFx8aefoTs/hCz3yvx7UmSMCQs75fPh2oqTpzSzgEAVtuMo0TiIddSX/MloG/0NaMC
+         /OuHfKw1t3wHozbRyinjBNu/uYqpLFdPDxvZTgi28Oj1nGIxdbftq3SUKZrE3RxOOkST
+         1JZo4hQM22IsH+9TgOURFthDgZYKAc/w1OfQpWX5hwJ4HsE0k/ydx+szAcuMarDgp4qs
+         4If7zr2vnPvh63kFDa+exPDoE6uCHeBsdsee98ujGIC3d2X6vubZP2v1YiFM3agasNf0
+         SaBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZxlZywmK8T9tIPU2IKXMhQPp/KiZ2NrHs16HgI1BxC4=;
-        b=QhVgifHrJJEUGLAWKKbaKPFlqr96hv5MQqUE83ll4opaMzdrWaBoKci4FQS60yaf9E
-         cqieYGAghPOTUa3q1wGso3LNckY7ryDpO/1uXIa8MBun4iNy8mDktKvWzHqmCrvaIRoZ
-         W5bn0QR5RKgaEdYRtJIZtGwjoSvdqUvLyEeVVHk9FIKCkhhON/HYFv0JlXUK6nYwWJ5z
-         wsnfHsSO6NuqAIWXlGxrfDDIjvIUMliOYduYYBlQQEYLJ1pn+5TA/JKTwRgXNLVt+d5X
-         yXJv8J9UoDlOS+Xs3jntV5kw3FZ4VYt7uNCTJshNZLSufjSyoocd6Yp7DYZmmpPseUgu
-         6Q+A==
-X-Gm-Message-State: APjAAAWBDkoGn/Oovbh0kPEU4lLW/eC6MELvc2BCAs5R01h5uFmc+ceo
-        0mgB75tBvW1CqYIYdUmk0/GeI9lc9Z7Bc3xXO/8=
-X-Google-Smtp-Source: APXvYqwwV0/BDF5hnTYnjD6dVM9yPpn6aDXVZFKyRIiAAfmsiHUk1TGMqlQAAUZ3IpCdRe/TDXiFCZLrONwUYQfrKVU=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr13156165oto.118.1562582885715;
- Mon, 08 Jul 2019 03:48:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lej7Q+QP3kcSJDvUANx4MpD1co7bVMerIr3ru5n/a4c=;
+        b=iTiXQqiFGEVhhTPuBlIp9cKILjEncyMtiesaPXXbWSByPPtP4O8yKSa+Qi0xy5+NDn
+         qqq8kdPtZCNhVrLjaEFNTaCUQ9yD02AXSEzCGSCZMQsurB+UhTNsl7lSA/1aqv08wBZO
+         MyiX6cNN4fPlEJ7udLEn4Bns64pE622l981VY2VMwXGgIDC6A9rs4KLxpMsQz60+qVU/
+         Fb2Iz0dNEOr0KYamqUdeLydHAnyLTkFsYFADHXCi/4iDYzo1lENcXxfweCm0RJY38PR5
+         zb/huczoJ1hbZiJSJo8OCk4VMefg2Je++TBLL235BdL2HF7DpEuAufj/jcJvtLOaUI6j
+         8F0Q==
+X-Gm-Message-State: APjAAAXBHou/twZb00DKEmjTja5q5FXW6gpRb3leN1RqeSD+kepw3OHC
+        /As4YmcsinVAnK9J3IZiSlb7zQ==
+X-Google-Smtp-Source: APXvYqyu3f1q1SnNB9p5IHgyIAns7STGef0JfhMHOgez/jYHIaz1D/lShD2tvop5KW5jyBLxrvSP+g==
+X-Received: by 2002:a5d:5446:: with SMTP id w6mr13496134wrv.164.1562583029398;
+        Mon, 08 Jul 2019 03:50:29 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id o11sm16642628wmh.37.2019.07.08.03.50.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 03:50:28 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 11:50:26 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, lee.jones@linaro.org, jingoohan1@gmail.com,
+        dmurphy@ti.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        tomi.valkeinen@ti.com
+Subject: Re: [PATCH v2 3/4] dt-bindings: backlight: Add led-backlight binding
+Message-ID: <20190708105026.jfl4krv2veb7gzow@holly.lan>
+References: <20190708102700.23138-1-jjhiblot@ti.com>
+ <20190708102700.23138-4-jjhiblot@ti.com>
 MIME-Version: 1.0
-References: <20190704192020.GA3771@amd> <CAJZ5v0gn7FWpqW+WmCzj1=K-pjY=SjRNuEsMR3bRTSO8FzFG=Q@mail.gmail.com>
- <20190705185001.GA4068@amd> <CAJZ5v0irbn-Xd47KExw=h7On7KShCm6rThCo0q4-zn=o_x6_HQ@mail.gmail.com>
- <20190706203032.GA26828@amd> <20190708030505.kvrg6sh6bd4xzzwa@vireshk-i7>
- <CAJZ5v0hTXtjkatT4wVftPac-LgL1GSAbwLZ0mMDSpFn=8k9Ssg@mail.gmail.com> <20190708092840.ynibtrntval6krc4@vireshk-i7>
-In-Reply-To: <20190708092840.ynibtrntval6krc4@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 8 Jul 2019 12:47:54 +0200
-Message-ID: <CAJZ5v0gHNNkcYk5bV-oHDyxmrP=c7G_-bPZd5KXwHTo2oTDHnA@mail.gmail.com>
-Subject: Re: cpufreq notifiers break suspend -- Re: suspend broken in
- next-20190704 on Thinkpad X60
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708102700.23138-4-jjhiblot@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 11:28 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 08-07-19, 10:28, Rafael J. Wysocki wrote:
-> > Pavel has tested the latest version of the patch series AFAICS.
-> >
-> > The locking added by the commit in question to
-> > refresh_frequency_limits() requires an update of
-> > cpufreq_update_policy(), or it will deadlock in there because of the
-> > lock acquired by cpufreq_cpu_get() if I haven't missed anything.
->
-> Ah, looks quite straight forward.
->
-> @Pavel: Can you please try this diff ?
->
-> -------------------------8<-------------------------
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 9f68d0f306b8..4d6043ee7834 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1109,16 +1109,12 @@ void refresh_frequency_limits(struct cpufreq_policy *policy)
->  {
->         struct cpufreq_policy new_policy;
->
-> -       down_write(&policy->rwsem);
-> -
->         if (!policy_is_inactive(policy)) {
->                 new_policy = *policy;
->                 pr_debug("updating policy for CPU %u\n", policy->cpu);
->
->                 cpufreq_set_policy(policy, &new_policy);
->         }
-> -
-> -       up_write(&policy->rwsem);
->  }
->  EXPORT_SYMBOL(refresh_frequency_limits);
->
-> @@ -1128,7 +1124,9 @@ static void handle_update(struct work_struct *work)
->                 container_of(work, struct cpufreq_policy, update);
->
->         pr_debug("handle_update for cpu %u called\n", policy->cpu);
-> +       down_write(&policy->rwsem);
->         refresh_frequency_limits(policy);
-> +       up_write(&policy->rwsem);
->  }
->
-> -------------------------8<-------------------------
->
-> Though it makes me wonder why I didn't hit this thing. I was using the
-> cpu_cooling device the other day, which calls cpufreq_update_policy()
-> very frequently on heat-up. And I had a hair dryer blowing over my
-> board to heat it up. Lemme check that again :)
->
-> @Rafael: You want me to send a new diff patch with Fixes tag this time
-> if this works out fine ?
+On Mon, Jul 08, 2019 at 12:26:59PM +0200, Jean-Jacques Hiblot wrote:
+> Add DT binding for led-backlight.
+> 
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> ---
+>  .../bindings/leds/backlight/led-backlight.txt | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+> new file mode 100644
+> index 000000000000..4f545316b288
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+> @@ -0,0 +1,29 @@
+> +led-backlight bindings
+> +
+> +This binding is used to describe a basic backlight device made of LEDs.
+> +It can also be used to describe a backlight device controlled by the output of
+> +a LED driver.
+> +
+> +Required properties:
+> +  - compatible: "led-backlight"
+> +  - leds: a list of LEDs
+> +
+> +Optional properties:
+> +  - brightness-levels: Array of distinct brightness levels. These
+> +                       are in the range from 0 to 255. The actual brightness
+> +                       level programmed in each LED will be adjusted based on
+> +                       its maximum brightness:
+> +                       led brightness = (level * maximum brightness) / 255
 
-I would prefer the original patch to be updated to avoid possible
-bisection woes in the future.
+8-bits is a narrow range and likely to make animated backlight effects
+impossible because the stepping artefacts would be too obvious.
+
+I'd rather see the brightness-levels table expressed in the native
+steps of the LEDs in the leds list.
+
+I know this means that the LEDs must have identical ranges but I think
+it is OK. A backlight design whose LEDs are connected to non-identical
+drivers is either badly broken or sufficiently exotic to need to special
+purpose driver. The driver can therefore fail to probe if the LEDs are
+mismatched.
+
+> +
+> +  - default-brightness-level: The default brightness level (index into the
+> +                              array defined by the "brightness-levels" property).
+
+The brightness-levels property is optional... this text needs to be
+updated.
+
+
+Daniel.
