@@ -2,51 +2,54 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED7FC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F0C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE25E21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B424820651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600418;
-	bh=H0IXspXxI/zpi03RBWqNoqskzumzNpuQhM1IWR1zcxc=;
+	s=default; t=1562600430;
+	bh=mKyRewV85cQe9StA8678jQ/lcojrSBiqThd0myR75EY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f/u2M+xB2h6JH8zq/xrGnhqSl9srCtdHARq676VuqYCIydCq1cZYot2+07xvLKunF
-	 T8OaElVsgR2LD9ZAhfmImYFvHsEL9elo+OfOVSnOXnRHfsGlz0PZy6fR7CI75u166u
-	 ehfRtIBzNTShL7JZP3QGKvKVyA4vTXyvEpCJzUZw=
+	b=Mkh/5/Q5iqC5AO5M7ZR+o5HhOEfSEOepQSmWm0VuZvnez3mO8gDZR1IUIx/jThIwx
+	 V3lMOhyxhZSJdU310Ludlm5jJ0weytQemAkVoxm/KrsidNN0AC52bsjoZ/aw32Xvum
+	 lIDCU0cPcZ49uhBOWJMlYUmM5lkyHsjPxkaB8/1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390845AbfGHPkQ (ORCPT
+        id S2390974AbfGHPk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56542 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:40:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731881AbfGHP2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:28:06 -0400
+        id S2389153AbfGHP1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:27:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D1A520645;
-        Mon,  8 Jul 2019 15:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7717216C4;
+        Mon,  8 Jul 2019 15:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599685;
-        bh=H0IXspXxI/zpi03RBWqNoqskzumzNpuQhM1IWR1zcxc=;
+        s=default; t=1562599669;
+        bh=mKyRewV85cQe9StA8678jQ/lcojrSBiqThd0myR75EY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nivxegxz233IrVNIReUtPO1iP7nXVKeV06Qh/pL6tgru4OHfnnmhO6+nl1ALfHwjA
-         /33Lke+/2t9Qi3xUbJ0jYbftcP5AyCWszse2YNtkD4usDvcrNnHRZcjhvRqEXKTbQV
-         5vSG+SzQDrLQjB3oW9bcgMVX9aoTiTlTJnGUmGak=
+        b=gm5vnuvpgzufLtse0G4nFtAtWX9tIIG8vXemBsfK8hTjuEagwwkMiHHzOGPF3PfHI
+         XkF94GR5b3DgwLEovwIJpaDhSJIhgwWDbnfdFiFiz3r9o1xQI93etpPuMl5c+5jDle
+         sP0s/1tfJJ5EYf1UGeferJ+tke7G76LrBH2dd1h0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 07/90] netfilter: nft_flow_offload: IPCB is only valid for ipv4 family
-Date:   Mon,  8 Jul 2019 17:12:34 +0200
-Message-Id: <20190708150522.821819621@linuxfoundation.org>
+        stable@vger.kernel.org, swkhack <swkhack@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 36/90] mm/mlock.c: change count_mm_mlocked_page_nr return type
+Date:   Mon,  8 Jul 2019 17:13:03 +0200
+Message-Id: <20190708150524.419868485@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -59,56 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+[ Upstream commit 0874bb49bb21bf24deda853e8bf61b8325e24bcb ]
 
-commit 69aeb538587e087bfc81dd1f465eab3558ff3158 upstream.
+On a 64-bit machine the value of "vma->vm_end - vma->vm_start" may be
+negative when using 32 bit ints and the "count >> PAGE_SHIFT"'s result
+will be wrong.  So change the local variable and return value to
+unsigned long to fix the problem.
 
-Guard this with a check vs. ipv4, IPCB isn't valid in ipv6 case.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20190513023701.83056-1-swkhack@gmail.com
+Fixes: 0cf2f6f6dc60 ("mm: mlock: check against vma for actual mlock() size")
+Signed-off-by: swkhack <swkhack@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_flow_offload.c |   17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ mm/mlock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -48,15 +48,20 @@ static int nft_flow_route(const struct n
- 	return 0;
- }
- 
--static bool nft_flow_offload_skip(struct sk_buff *skb)
-+static bool nft_flow_offload_skip(struct sk_buff *skb, int family)
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 41cc47e28ad6..0ab8250af1f8 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -636,11 +636,11 @@ static int apply_vma_lock_flags(unsigned long start, size_t len,
+  * is also counted.
+  * Return value: previously mlocked page counts
+  */
+-static int count_mm_mlocked_page_nr(struct mm_struct *mm,
++static unsigned long count_mm_mlocked_page_nr(struct mm_struct *mm,
+ 		unsigned long start, size_t len)
  {
--	struct ip_options *opt  = &(IPCB(skb)->opt);
--
--	if (unlikely(opt->optlen))
--		return true;
- 	if (skb_sec_path(skb))
- 		return true;
+ 	struct vm_area_struct *vma;
+-	int count = 0;
++	unsigned long count = 0;
  
-+	if (family == NFPROTO_IPV4) {
-+		const struct ip_options *opt;
-+
-+		opt = &(IPCB(skb)->opt);
-+
-+		if (unlikely(opt->optlen))
-+			return true;
-+	}
-+
- 	return false;
- }
- 
-@@ -74,7 +79,7 @@ static void nft_flow_offload_eval(const
- 	struct nf_conn *ct;
- 	int ret;
- 
--	if (nft_flow_offload_skip(pkt->skb))
-+	if (nft_flow_offload_skip(pkt->skb, nft_pf(pkt)))
- 		goto out;
- 
- 	ct = nf_ct_get(pkt->skb, &ctinfo);
+ 	if (mm == NULL)
+ 		mm = current->mm;
+-- 
+2.20.1
+
 
 
