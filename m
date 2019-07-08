@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB403C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACF7C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA19621537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907D921707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599007;
-	bh=jPUtAY0aRIOFzQ+zGaxTILOGg7nWtlDKM2DBfxvPVZ8=;
+	s=default; t=1562599015;
+	bh=GOB/YXIpeKG8WTf2PwyMQg9WJC6fmWNCpDL1MuwziA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uhujwyw++W5mg77GnRsJvxcqhzFYLgjLqLtzE9E6aBhebFiPxOkaeiOCXmx3xE3LV
-	 ofQUGt1Uw+fZncNpQzxPXwWzmA5npYdcG9V+WE06OyqVwUark0y/+DKBFMUppPjwP8
-	 YFJKWS52oVK5+capxJ77EKS/8zc3j0Votrac+lME=
+	b=GmJShHPItRD070hI/Y4JOTM/MW24zpEWfoIn5AsTyeqZ9RP6APQ1FHALxWA5iZKzv
+	 5TUT9SNPSEKvz4YuYdVxcbT73lEvnilaDxcqK6U428VBZUs8bjICNIFHaI4ZA+F0T0
+	 cX6rpCD0sIVzUffzYNNeq/ROWRier2tJKakETpMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732652AbfGHPQq (ORCPT
+        id S1729482AbfGHPQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39844 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:16:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732622AbfGHPQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:16:43 -0400
+        id S1732668AbfGHPQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:16:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E56216E3;
-        Mon,  8 Jul 2019 15:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1514221537;
+        Mon,  8 Jul 2019 15:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599003;
-        bh=jPUtAY0aRIOFzQ+zGaxTILOGg7nWtlDKM2DBfxvPVZ8=;
+        s=default; t=1562599011;
+        bh=GOB/YXIpeKG8WTf2PwyMQg9WJC6fmWNCpDL1MuwziA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTVmyrlJgZqHJXvm/YeAFi88JsgahkOUrsiHt6hsDYdOPuOLBGgvKVTyI+MaKIP4y
-         0GaetC191OvPr/RrMQojhezoh43PkzGrB8KWpB2qg49eDwslxkacHdxDY5lnxIQV21
-         pp75g3Dn/vWdijTlvUggLsmh+XiRwRBJBTVPdbAA=
+        b=MADOcEbl3LjpWZe53jh9X7ZiaI6611shBhwzNHrz8cd4+s3WJOegnZnMfBAu21OLw
+         mXqP+gV2ImjrM3S19iiJIqloEoSpJHZPTPmoohLm3JaS4l1hQ93i+GeJybVZlvKdnx
+         EvKbRRUzSS2lxttV3T4V92e2VIuEI79dbgb+VYyY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 28/73] mac80211: drop robust management frames from unknown TA
-Date:   Mon,  8 Jul 2019 17:12:38 +0200
-Message-Id: <20190708150522.494806945@linuxfoundation.org>
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Richard Weinberger <richard@nod.at>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH 4.4 48/73] um: Compile with modern headers
+Date:   Mon,  8 Jul 2019 17:12:58 +0200
+Message-Id: <20190708150523.917326177@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -58,32 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Jason A. Donenfeld <Jason@zx2c4.com>
 
-commit 588f7d39b3592a36fb7702ae3b8bdd9be4621e2f upstream.
+commit 530ba6c7cb3c22435a4d26de47037bb6f86a5329 upstream.
 
-When receiving a robust management frame, drop it if we don't have
-rx->sta since then we don't have a security association and thus
-couldn't possibly validate the frame.
+Recent libcs have gotten a bit more strict, so we actually need to
+include the right headers and use the right types. This enables UML to
+compile again.
 
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Alessio Balsini <balsini@android.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/mac80211/rx.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/um/os-Linux/file.c   |    1 +
+ arch/um/os-Linux/signal.c |    2 ++
+ arch/x86/um/stub_segv.c   |    1 +
+ 3 files changed, 4 insertions(+)
 
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -3324,6 +3324,8 @@ static bool ieee80211_accept_frame(struc
- 	case NL80211_IFTYPE_STATION:
- 		if (!bssid && !sdata->u.mgd.use_4addr)
- 			return false;
-+		if (ieee80211_is_robust_mgmt_frame(skb) && !rx->sta)
-+			return false;
- 		if (multicast)
- 			return true;
- 		return ether_addr_equal(sdata->vif.addr, hdr->addr1);
+--- a/arch/um/os-Linux/file.c
++++ b/arch/um/os-Linux/file.c
+@@ -12,6 +12,7 @@
+ #include <sys/mount.h>
+ #include <sys/socket.h>
+ #include <sys/stat.h>
++#include <sys/sysmacros.h>
+ #include <sys/un.h>
+ #include <sys/types.h>
+ #include <os.h>
+--- a/arch/um/os-Linux/signal.c
++++ b/arch/um/os-Linux/signal.c
+@@ -14,7 +14,9 @@
+ #include <as-layout.h>
+ #include <kern_util.h>
+ #include <os.h>
++#include <sys/ucontext.h>
+ #include <sysdep/mcontext.h>
++#include <um_malloc.h>
+ 
+ void (*sig_info[NSIG])(int, struct siginfo *, struct uml_pt_regs *) = {
+ 	[SIGTRAP]	= relay_signal,
+--- a/arch/x86/um/stub_segv.c
++++ b/arch/x86/um/stub_segv.c
+@@ -6,6 +6,7 @@
+ #include <sysdep/stub.h>
+ #include <sysdep/faultinfo.h>
+ #include <sysdep/mcontext.h>
++#include <sys/ucontext.h>
+ 
+ void __attribute__ ((__section__ (".__syscall_stub")))
+ stub_segv_handler(int sig, siginfo_t *info, void *p)
 
 
