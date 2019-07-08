@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D82AC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B232CC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7203F21738
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82587216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599876;
-	bh=lkhV9/HANxzijUR4LfjWmtpwDhee0WU1joPW6eeOOtQ=;
+	s=default; t=1562599879;
+	bh=ewRzYOiv+kCzU4AK3LIwiH2r38Of8oLZDguOVOfcIrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bG9cHwoH+x7ZGSHSe32OES+aP3+Mrscauio+AJz2jMeM7iaSWxAMsUZSN3aEiBgIq
-	 5moxrRepsobPBYUebGMUcK6S8+4aii73LsXYT7cPKTWIn1cFOqwpkzpucgX3ZFtyj2
-	 oEkCOzldv7VmV/7JgpFHAU5i+E5tJNkSfXTDTm8I=
+	b=KKxiJCgz+c33MOYCfuzTUhNZslJO2RRxlI9TOQkz9OfYrjaWUyK6RXvkBIyF6P3AO
+	 SCNVQDuk6omaxRwvj0EvByGRvFSlpWkGaQYPfh8MPVB2XIPoerEJDX53SXdwAZYYAk
+	 N+QXocABIMeeyDTZmpmsfIg8bBXMGT2rct0SNEJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389684AbfGHPbP (ORCPT
+        id S1732156AbfGHPbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60566 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732189AbfGHPbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:31:13 -0400
+        id S1726318AbfGHPbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:31:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41F27216C4;
-        Mon,  8 Jul 2019 15:31:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11B2A216C4;
+        Mon,  8 Jul 2019 15:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599872;
-        bh=lkhV9/HANxzijUR4LfjWmtpwDhee0WU1joPW6eeOOtQ=;
+        s=default; t=1562599875;
+        bh=ewRzYOiv+kCzU4AK3LIwiH2r38Of8oLZDguOVOfcIrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fpwbxnanDebj4Z+b2trMDrpyhbg6/ypSbnjIovlJsIvUZlSFtU+mwL1ykB3mfpIsm
-         PH/GZdbb9ifbtZFukTJ5bdzYqj92WwET+UwwgSWI4P+34L87bQ6DN7YSuu2UViGa5Q
-         PYJVu96K8tqDB2/H3GwCLG5EbCg9yA/jKjmKoBMQ=
+        b=mBPgEXGKwO7siCyOv3/MER9PBIkZ35lxZask0GSEJnveFVdYxjVjOXbcx2mLqrP7c
+         jwD1KEU7h/Boapm/XPzXQ9sCInlzyTnA4vaGHoMSlJgf+9nijcJUpY3Jy5MfkKBk2B
+         zd4lHCGHF8f2Dbin7YoXWjXiC7+KsczoGdg3QyKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 18/96] ASoC: hda: fix unbalanced codec dev refcount for HDA_DEV_ASOC
-Date:   Mon,  8 Jul 2019 17:12:50 +0200
-Message-Id: <20190708150527.412917723@linuxfoundation.org>
+        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 19/96] drm/mediatek: fix unbind functions
+Date:   Mon,  8 Jul 2019 17:12:51 +0200
+Message-Id: <20190708150527.472887073@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,44 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6947bb234dcc86e878d502516d0fb9d635aa2ae ]
+[ Upstream commit 8fd7a37b191f93737f6280a9b5de65f98acc12c9 ]
 
-HDA_DEV_ASOC type codec device refcounts are managed differently
-from HDA_DEV_LEGACY devices. The refcount is released explicitly
-in snd_hdac_ext_bus_device_remove() for ASOC type devices.
-So, remove the put_device() call in snd_hda_codec_dev_free()
-for such devices to make the refcount balanced. This will prevent
-the NULL pointer exception when the codec driver is released
-after the card is freed.
+detatch panel in mtk_dsi_destroy_conn_enc(), since .bind will try to
+attach it again.
 
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_codec.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index b20eb7fc83eb..fcdf2cd3783b 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -840,7 +840,14 @@ static int snd_hda_codec_dev_free(struct snd_device *device)
- 	if (codec->core.type == HDA_DEV_LEGACY)
- 		snd_hdac_device_unregister(&codec->core);
- 	codec_display_power(codec, false);
--	put_device(hda_codec_dev(codec));
-+
-+	/*
-+	 * In the case of ASoC HD-audio bus, the device refcount is released in
-+	 * snd_hdac_ext_bus_device_remove() explicitly.
-+	 */
-+	if (codec->core.type == HDA_DEV_LEGACY)
-+		put_device(hda_codec_dev(codec));
-+
- 	return 0;
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index b00eb2d2e086..1ae3be99e0ff 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -844,6 +844,8 @@ static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi)
+ 	/* Skip connector cleanup if creation was delegated to the bridge */
+ 	if (dsi->conn.dev)
+ 		drm_connector_cleanup(&dsi->conn);
++	if (dsi->panel)
++		drm_panel_detach(dsi->panel);
  }
  
+ static void mtk_dsi_ddp_start(struct mtk_ddp_comp *comp)
 -- 
 2.20.1
 
