@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B369FC606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D2BC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875C52087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DB52087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEp5Uj9W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COmFwheY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbfGHMdk (ORCPT
+        id S1730751AbfGHMdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:33:40 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40619 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727373AbfGHMdk (ORCPT
+        Mon, 8 Jul 2019 08:33:47 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39897 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfGHMdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:33:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a93so8217477pla.7;
-        Mon, 08 Jul 2019 05:33:39 -0700 (PDT)
+        Mon, 8 Jul 2019 08:33:47 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so8215898pls.6;
+        Mon, 08 Jul 2019 05:33:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=lkjVj98Felp05trt7jRzFQsD+gNA9UjSMyIU2HU/EqU=;
-        b=KEp5Uj9Wkb0QGty172p5U0KeVxe2SDg/PDpZfFwtY/HVROxcxnMMhHNwRrpxijdc7+
-         HeyCR76HA1WFhMsTtnxHQD0SVVjy2JekKzXuhemh/CIkRD3UIgQSw3P5x1T9WPAur4PN
-         WnmcsVTJcP7GtTzBuiHgrx8Cn7LPk8swF3ereGdcpHW239E2+au+t67nLbXWwx+pZxSI
-         x3FDjh3ta7gynKpk1YY71VgxnBbZuXagWHDQfxNOvZPTSFN+/1Yt+n8dy3Vmdo3M89cn
-         59jpTO5ChLfID61+DwQrlPYNsNYwviN8O0dVGoaO5d+NXKekw2441YufVQiozmfjGC7b
-         cGsg==
+        bh=jAthm+WxbxKT3w7i0wyvJ8rNAQ4gSuwe1Onff42CQls=;
+        b=COmFwheYaqCs3c7QPhN18QiYnYAtIpekULwaQLYy7zw/NDr+RwcMaHcElLMG0+11qc
+         bw3/JczgJacs0zd1jB+chz1vURSYjchaV6sz9uQmaTZ8zak1x3tf+DEkjbA8TMfx3Kgn
+         4H39xsp7gJPC8z+ixSNXr1e2GXw4l+bB4l0sEYWolpQ6+9B7cI5GJlDNt3csKD8BNaVJ
+         rwdKZmDrtoMN3oN9Bsa15LRo/Bo5vOREWMt3E9OR3inNtE/ZPSJdKcFilYHC4UI9ERpv
+         f/z/Ozypxhn3BfQmVpsi3Jiuk1YxycWDhvBByjb6Lw765j8ZyzctfFWhC7haJK9shArV
+         d2Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lkjVj98Felp05trt7jRzFQsD+gNA9UjSMyIU2HU/EqU=;
-        b=oqezzvAvBq9RWkcNFuW6Sy38uVEYcz3QSPMfsqr6kTW4LPq1R07RknIvDGjVHdH4XS
-         Fu+0LhgiPM9l90zL4weo3tpCcQv/kR8fPcMWPFsqjlQv0LqXSgJKSrwv1r381BHhPh+f
-         Ap0CWGt4gaB8KBVAHehq3dwT9kL4Qi1RR7QwvI6Y3gV/auUcJsUvEHres3vnWEl1bngk
-         1TdflqdIQkEaOp6a5YzaWx2VM+eQzebAVTiu45Tsia5NQ7DEZVPiZ7FLlqyR/WMWQ+w5
-         VRDVxnoiNQeav3XARAu72A6jqz102gkmeANvf2dG50Q3xkLEfb3ASq1UIln19SqU3hF2
-         PKqg==
-X-Gm-Message-State: APjAAAVLVezBpuEyPlw3CkNommz9+S6aUOPFtkEOL833aD6kpHbcqeyY
-        KBrbV0DDDw7yPfjX//96WUw=
-X-Google-Smtp-Source: APXvYqxnKi+ASBL+wRU6+87VJNasFODvRDJ8hl2UkMHkb8EgXBxEiU1qHDgD6AKW8ymV59lm/+QcIA==
-X-Received: by 2002:a17:902:7687:: with SMTP id m7mr24837299pll.310.1562589219671;
-        Mon, 08 Jul 2019 05:33:39 -0700 (PDT)
+        bh=jAthm+WxbxKT3w7i0wyvJ8rNAQ4gSuwe1Onff42CQls=;
+        b=HOID3B30IFensHi8AyRVA80zjdXCLfqw36z+88AN/Hx9giJUNlWzTLGrfrX22ybKC4
+         G2rfVhvqCp5XkusEU+v5LMOsdoq7/8vRuldp3zPAefXM0E4/wTECx4nxk/oXgZ1W2I0n
+         rvI0JDjLBXkiKV3FUofus36EfUit5K8AbneyDZzDV7RSgPDXr9ka9l6bFU12fgTpsg4B
+         l3efiiXVadLRMrwVWdOO0PERghH5c/VrWBzUMoT2G52QwcQvQRGGgwFOyL0UxlFWMaO3
+         cXrIVK4lcxpwkgtSAnJgFsSRw0zmhwGC3b6i+YcCxWcrPQKaWza2Qvyb9SfEiVqj3I65
+         u9yg==
+X-Gm-Message-State: APjAAAWZlMNDrqHVQPcSBkqfPY/0FIVQ8TOsnEOx3HSz65N0mRvc17eg
+        uACimkFTluX1D+iRqee5WwE=
+X-Google-Smtp-Source: APXvYqzWEYy5DWmnGPZx/MdBsBT8HflhtCaUZk2qoy59jNEbuI4R8Dn/xfHORQmcDA8wqETHW1+F6A==
+X-Received: by 2002:a17:902:4e25:: with SMTP id f34mr24265563ple.305.1562589226504;
+        Mon, 08 Jul 2019 05:33:46 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id c8sm26537982pjq.2.2019.07.08.05.33.37
+        by smtp.googlemail.com with ESMTPSA id g2sm13103473pfq.88.2019.07.08.05.33.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 05:33:39 -0700 (PDT)
+        Mon, 08 Jul 2019 05:33:46 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 08/14] Input: elan_i2c - Replace devm_add_action() followed by failure action with devm_add_action_or_reset()
-Date:   Mon,  8 Jul 2019 20:33:32 +0800
-Message-Id: <20190708123332.11989-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 09/14] iio: imu: mpu6050: Replace devm_add_action() followed by failure action with devm_add_action_or_reset()
+Date:   Mon,  8 Jul 2019 20:33:41 +0800
+Message-Id: <20190708123341.12035-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,24 +77,25 @@ and reduce the likelyhood of bugs.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/input/mouse/elan_i2c_core.c | 3 +--
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-index 420efaab3860..a8d4f3bd09bf 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -1234,9 +1234,8 @@ static int elan_probe(struct i2c_client *client,
- 		return error;
- 	}
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index 53a59957cc54..e067927317bd 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -1096,10 +1096,9 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ 	if (result)
+ 		return result;
  
--	error = devm_add_action(dev, elan_remove_sysfs_groups, data);
-+	error = devm_add_action_or_reset(dev, elan_remove_sysfs_groups, data);
- 	if (error) {
--		elan_remove_sysfs_groups(data);
- 		dev_err(dev, "Failed to add sysfs cleanup action: %d\n",
- 			error);
- 		return error;
+-	result = devm_add_action(dev, inv_mpu_core_disable_regulator_action,
++	result = devm_add_action_or_reset(dev, inv_mpu_core_disable_regulator_action,
+ 				 st);
+ 	if (result) {
+-		inv_mpu_core_disable_regulator_action(st);
+ 		dev_err(dev, "Failed to setup regulator cleanup action %d\n",
+ 			result);
+ 		return result;
 -- 
 2.11.0
 
