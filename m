@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75892C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E9FC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4575420665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E0420665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600625;
-	bh=Jf1+iatCgaO6rrc3+qO2ZmSaM2eKhCmZ7LKlJBJ7WLs=;
+	s=default; t=1562600631;
+	bh=de8mC/QLuiEZzy4zq3/VOkL0MdnjAWqlozWMPbRT42M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwvSrMLLapXYnnuKv6G+QSids4eU/X2+5iTtY4O/12E1KffB858td0aiHkPnnfD/d
-	 tTTN7U13ru5KcKAeztHlKYTHNZkscTR69uM6x6QymozFazOE/uYf0zyVciwuze4zfZ
-	 JMKGLmKfmlvsxYVkny+AUzV4yooHLdanRu6j/56g=
+	b=Kw1Dbt1CZB2w0WoxmIXszMnSFFHe2QYV27gPNven8pzblAzBuxqYfiRVR0iGg1D/y
+	 OJw79bNx+4/OYxsYoX2Cjtn1ZW9Zde3amZ7cWBxMARMIyDKlLPj0yCViI49AvwA9yQ
+	 cw2ioHS2Dgr/oz7i7A/YLX4M5QBumQXKEIntpju8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403847AbfGHPnn (ORCPT
+        id S2391179AbfGHPnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:43:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51268 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:43:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388268AbfGHPYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:04 -0400
+        id S1729736AbfGHPXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:23:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C770820665;
-        Mon,  8 Jul 2019 15:24:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2ADE214C6;
+        Mon,  8 Jul 2019 15:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599443;
-        bh=Jf1+iatCgaO6rrc3+qO2ZmSaM2eKhCmZ7LKlJBJ7WLs=;
+        s=default; t=1562599431;
+        bh=de8mC/QLuiEZzy4zq3/VOkL0MdnjAWqlozWMPbRT42M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2fbSZVo6iz6RrWPmOVa5KyfdjQxK6BsIGW66qkOgg+Y2kE6BiNVGSHz5Z52/0fP6
-         KrDRFDwstMWaeUFvlFuBY3QU6HMPVBS8u28IyoU/L4VhtEgtkzX8gunApizTesLibi
-         mcoOeiubF+MoMPjbA8nMXRmxRImS0tnBLEBNSEH8=
+        b=0tZL/cLnRwKj+agKayAijzjI0NT159uqOb3p8n3aSBAEWppnMZG+cuSp01RNqxdmh
+         sB3xCraHnUYcVhIX5cp2ul+QktlV/MWBTEYQykp+vkUuJLBV+FVOHWE3x/qhk2GWO9
+         LXqXfn1svduzAWS1ZYHKOY5g9dKYud3cI4ZExxYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manuel Traut <manut@linutronix.de>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/56] scripts/decode_stacktrace.sh: prefix addr2line with $CROSS_COMPILE
-Date:   Mon,  8 Jul 2019 17:13:09 +0200
-Message-Id: <20190708150520.032620312@linuxfoundation.org>
+        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 05/56] drm/mediatek: fix unbind functions
+Date:   Mon,  8 Jul 2019 17:12:57 +0200
+Message-Id: <20190708150517.994331556@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -62,46 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c04e32e911653442fc834be6e92e072aeebe01a1 ]
+[ Upstream commit 8fd7a37b191f93737f6280a9b5de65f98acc12c9 ]
 
-At least for ARM64 kernels compiled with the crosstoolchain from
-Debian/stretch or with the toolchain from kernel.org the line number is
-not decoded correctly by 'decode_stacktrace.sh':
+detatch panel in mtk_dsi_destroy_conn_enc(), since .bind will try to
+attach it again.
 
-  $ echo "[  136.513051]  f1+0x0/0xc [kcrash]" | \
-    CROSS_COMPILE=/opt/gcc-8.1.0-nolibc/aarch64-linux/bin/aarch64-linux- \
-   ./scripts/decode_stacktrace.sh /scratch/linux-arm64/vmlinux \
-                                  /scratch/linux-arm64 \
-                                  /nfs/debian/lib/modules/4.20.0-devel
-  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:68) kcrash
-
-If addr2line from the toolchain is used the decoded line number is correct:
-
-  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:57) kcrash
-
-Link: http://lkml.kernel.org/r/20190527083425.3763-1-manut@linutronix.de
-Signed-off-by: Manuel Traut <manut@linutronix.de>
-Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/decode_stacktrace.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index 98a7d63a723e..c4a9ddb174bc 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -66,7 +66,7 @@ parse_symbol() {
- 	if [[ "${cache[$module,$address]+isset}" == "isset" ]]; then
- 		local code=${cache[$module,$address]}
- 	else
--		local code=$(addr2line -i -e "$objfile" "$address")
-+		local code=$(${CROSS_COMPILE}addr2line -i -e "$objfile" "$address")
- 		cache[$module,$address]=$code
- 	fi
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 7e5e24c2152a..413313f19c36 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -851,6 +851,8 @@ static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi)
+ 	/* Skip connector cleanup if creation was delegated to the bridge */
+ 	if (dsi->conn.dev)
+ 		drm_connector_cleanup(&dsi->conn);
++	if (dsi->panel)
++		drm_panel_detach(dsi->panel);
+ }
  
+ static void mtk_dsi_ddp_start(struct mtk_ddp_comp *comp)
 -- 
 2.20.1
 
