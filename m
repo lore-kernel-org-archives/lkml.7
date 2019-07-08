@@ -2,51 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD87C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDFBC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405BB214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AD5214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598965;
-	bh=z4YLawLAL+RAstkCPjuuCG8qe90luDJo+9TJD4mvhqs=;
+	s=default; t=1562598968;
+	bh=6MxJomApOqVsJnSuvcjEvQhuiP7tM4HHf1ORv/wREg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uy6yv1MwYNS+lvXDol6wg1LP8oEkSCMEDkplTcRGr0l527y+FIxDBmqy3BgCkPf1Z
-	 Itb4nJkOih3io6U0+guHDDQWbh5pJo+6zpj1EJ7A0yGxEyfqojG4AsTmVqyzJPQT9a
-	 UIJXy/KCFmmqET9IGpg9uu1jkCRgbL/bIVn66LF4=
+	b=14/v3SdNcJC6a75GyAANzNrmqfEzGudgn1Jq2yNc22FRJLgGe4dYgUlMy3lz5b77f
+	 cwvlydnW+oThmDtm3+EXd17vfPhlV9pvsXLUF3tm8EzDymNX10IEBEKBsKsl7N3389
+	 4Mq3Vp8U4vLcjIIb8n/vbXSjtzGeJMjBK6gXoHjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfGHPQE (ORCPT
+        id S1726501AbfGHPQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:16:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38762 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732451AbfGHPQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:16:02 -0400
+        id S1732469AbfGHPQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:16:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E88C214C6;
-        Mon,  8 Jul 2019 15:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7419216FD;
+        Mon,  8 Jul 2019 15:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598961;
-        bh=z4YLawLAL+RAstkCPjuuCG8qe90luDJo+9TJD4mvhqs=;
+        s=default; t=1562598964;
+        bh=6MxJomApOqVsJnSuvcjEvQhuiP7tM4HHf1ORv/wREg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZYivm0RiNqde184k6nntFS4ySq3YllIYs9GFv10aLF9Z2cXa0r18pinYV26nNaZB
-         aWTLKZ51GishUOkFUfGHuB0iipWYGfwhJtR15hZpfBMg3+mYRurO1tWdeQmP/k9rVu
-         Mpc4byhTVIvA0QQCq4LE9G87IDWoOERgvQtT8ssI=
+        b=1DPjUmafIjALuTj1TVS2oiptyCMe/fqiFmVEOiRd0ai3uug1N4hwocUtPq9IqfnYU
+         TTsCUcCXdlJ9iEMBys0Cw2JB5PSdGmoM9pVkdpFu5cyi2STlla4+kUbjp8YG3A3HSp
+         BC+vMrQ5RGHhD6QGCpeHOnIvP2zG4BVAEM2pHGLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 4.4 08/73] apparmor: enforce nullbyte at end of tag string
-Date:   Mon,  8 Jul 2019 17:12:18 +0200
-Message-Id: <20190708150518.683545067@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 09/73] parport: Fix mem leak in parport_register_dev_model
+Date:   Mon,  8 Jul 2019 17:12:19 +0200
+Message-Id: <20190708150518.822024697@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -59,38 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+[ Upstream commit 1c7ebeabc9e5ee12e42075a597de40fdb9059530 ]
 
-commit 8404d7a674c49278607d19726e0acc0cae299357 upstream.
+BUG: memory leak
+unreferenced object 0xffff8881df48cda0 (size 16):
+  comm "syz-executor.0", pid 5077, jiffies 4295994670 (age 22.280s)
+  hex dump (first 16 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000d2d0d5fe>] parport_register_dev_model+0x141/0x6e0 [parport]
+    [<00000000782f6dab>] 0xffffffffc15d1196
+    [<00000000d2ca6ae4>] platform_drv_probe+0x7e/0x100
+    [<00000000628c2a94>] really_probe+0x342/0x4d0
+    [<000000006874f5da>] driver_probe_device+0x8c/0x170
+    [<00000000424de37a>] __device_attach_driver+0xda/0x100
+    [<000000002acab09a>] bus_for_each_drv+0xfe/0x170
+    [<000000003d9e5f31>] __device_attach+0x190/0x230
+    [<0000000035d32f80>] bus_probe_device+0x123/0x140
+    [<00000000a05ba627>] device_add+0x7cc/0xce0
+    [<000000003f7560bf>] platform_device_add+0x230/0x3c0
+    [<000000002a0be07d>] 0xffffffffc15d0949
+    [<000000007361d8d2>] port_check+0x3b/0x50 [parport]
+    [<000000004d67200f>] bus_for_each_dev+0x115/0x180
+    [<000000003ccfd11c>] __parport_register_driver+0x1f0/0x210 [parport]
+    [<00000000987f06fc>] 0xffffffffc15d803e
 
-A packed AppArmor policy contains null-terminated tag strings that are read
-by unpack_nameX(). However, unpack_nameX() uses string functions on them
-without ensuring that they are actually null-terminated, potentially
-leading to out-of-bounds accesses.
+After commit 4e5a74f1db8d ("parport: Revert "parport: fix
+memory leak""), free_pardevice do not free par_dev->state,
+we should free it in error path of parport_register_dev_model
+before return.
 
-Make sure that the tag string is null-terminated before passing it to
-strcmp().
-
-Cc: stable@vger.kernel.org
-Fixes: 736ec752d95e ("AppArmor: policy routines for loading and unpacking policy")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 4e5a74f1db8d ("parport: Revert "parport: fix memory leak"")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/policy_unpack.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/parport/share.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/security/apparmor/policy_unpack.c
-+++ b/security/apparmor/policy_unpack.c
-@@ -177,7 +177,7 @@ static bool unpack_nameX(struct aa_ext *
- 		char *tag = NULL;
- 		size_t size = unpack_u16_chunk(e, &tag);
- 		/* if a name is specified it must match. otherwise skip tag */
--		if (name && (!size || strcmp(name, tag)))
-+		if (name && (!size || tag[size-1] != '\0' || strcmp(name, tag)))
- 			goto fail;
- 	} else if (name) {
- 		/* if a name is specified and there is no name tag fail */
+diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+index 754f21fd9768..f26af0214ab3 100644
+--- a/drivers/parport/share.c
++++ b/drivers/parport/share.c
+@@ -892,6 +892,7 @@ parport_register_dev_model(struct parport *port, const char *name,
+ 	par_dev->devmodel = true;
+ 	ret = device_register(&par_dev->dev);
+ 	if (ret) {
++		kfree(par_dev->state);
+ 		put_device(&par_dev->dev);
+ 		goto err_put_port;
+ 	}
+@@ -909,6 +910,7 @@ parport_register_dev_model(struct parport *port, const char *name,
+ 			spin_unlock(&port->physport->pardevice_lock);
+ 			pr_debug("%s: cannot grant exclusive access for device %s\n",
+ 				 port->name, name);
++			kfree(par_dev->state);
+ 			device_unregister(&par_dev->dev);
+ 			goto err_put_port;
+ 		}
+-- 
+2.20.1
+
 
 
