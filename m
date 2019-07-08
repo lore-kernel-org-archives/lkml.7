@@ -1,111 +1,163 @@
 Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	PDS_DBL_URL_LINKBAIT,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A8BC606A0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EFFC48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F252A20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:54:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HdBubdb6"
+	by mail.kernel.org (Postfix) with ESMTP id 37BB420659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfGHEyZ (ORCPT
+        id S1728176AbfGHEyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 00:54:25 -0400
-Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:57409
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727312AbfGHEyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 00:54:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7HT+3hK9QoquQwfLDQ4V6QD6rdTPaulURFr4zoRup6I=;
- b=HdBubdb6K4ZXJqTI1RfJwlwMI/9ekLRbGUygIA0YnBZP1dxvcs9WoSwmjFdIbyGkZmPOzxdGGXORobORXWrWCo/rR5VTJqAUUirZwF3gZkdALK6CclmDnp19l9TiQ8Bl3gNqZ2FZlSV5D0cRF4sC9U4Gf8Y4/vxco5mj9sZd52o=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
- VE1PR04MB6637.eurprd04.prod.outlook.com (20.179.235.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.17; Mon, 8 Jul 2019 04:54:20 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::a4a8:729f:e664:fa8]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::a4a8:729f:e664:fa8%2]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
- 04:54:20 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     dma <dmaengine@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        John Garry <john.garry@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Angelo Dureghello <angelo@sysam.it>
-Subject: RE: linux-next: build failure after merge of the slave-dma tree
-Thread-Topic: linux-next: build failure after merge of the slave-dma tree
-Thread-Index: AQHVMjqAoCw3ift/eE+RdAWMvGtRgabAD+XYgAATwQCAAAjO8A==
-Date:   Mon, 8 Jul 2019 04:54:20 +0000
-Message-ID: <VE1PR04MB66380EEE86E385AF332A580089F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190704173108.0646eef8@canb.auug.org.au>
- <VE1PR04MB6638080C43EC68EFF9F7B38A89F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <58c9b815-9bfc-449c-6017-c6da582dffc5@linaro.org>
- <20190708041728.GK2911@vkoul-mobl>
-In-Reply-To: <20190708041728.GK2911@vkoul-mobl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a9f75f1e-ce21-44f4-bf08-08d703605714
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6637;
-x-ms-traffictypediagnostic: VE1PR04MB6637:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VE1PR04MB66375254498F76933C06DE5489F60@VE1PR04MB6637.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 00922518D8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(366004)(199004)(189003)(3846002)(486006)(316002)(25786009)(54906003)(476003)(33656002)(6116002)(229853002)(5660300002)(446003)(11346002)(4326008)(102836004)(26005)(186003)(6916009)(76176011)(7696005)(53546011)(6506007)(99286004)(71200400001)(66946007)(8936002)(2906002)(68736007)(66066001)(81166006)(66476007)(66556008)(64756008)(66446008)(52536014)(7736002)(86362001)(76116006)(73956011)(71190400001)(45080400002)(74316002)(6436002)(81156014)(256004)(6306002)(4744005)(14454004)(8676002)(305945005)(9686003)(478600001)(966005)(53936002)(6246003)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6637;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qUtsmb73MVrCPjx2Q6tFxE8aEDqxKDAPn4gfAY888E9YnDVershOEquRtzsUTbV7IVYiI8KQYu7WX9fBJnVRPYnR3Z8YkkQG1EVQmlPNQ4BHoffxTr6vhReDszv159mtmXY7QGScwPtsnPxm1z3tAIUU6FC0p0WFHYaOpwj64WRvELeeQ7lHWQNT0jiZExumsZ3dJ21f388d5mKFsMZUmIaaYcqUnx/JSlBzqQPFgThoFfWv6BpKvYvy1Ce15FtDWqKTgOwS3pa+/wafKahd5X6ot1QuOsto6mkMsx6ZVFTDxhnz7tukT4yOXUNL6+zG43/qjzmd3yU09wGq4ZNSXs2Yg7pyX23yRqAGV09W7siCqy06gcSXHW6hMUR3D07e5fCNNZ45AZnefZwjJuD2KX00niScFYrwjGSzIZnRp8w=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9f75f1e-ce21-44f4-bf08-08d703605714
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 04:54:20.8026
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6637
+        Mon, 8 Jul 2019 00:54:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24462 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727312AbfGHEyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 00:54:40 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x684piQf094737
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 00:54:39 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tkv8h4fwy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 00:54:39 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Mon, 8 Jul 2019 05:54:37 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 8 Jul 2019 05:54:35 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x684sYcu20775088
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jul 2019 04:54:34 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E1D54C044;
+        Mon,  8 Jul 2019 04:54:34 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02ED74C04E;
+        Mon,  8 Jul 2019 04:54:33 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.35.94])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jul 2019 04:54:32 +0000 (GMT)
+From:   Parth Shah <parth@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        subhra.mazumdar@oracle.com
+Subject: [RFC 0/2] Optimize the idle CPU search
+Date:   Mon,  8 Jul 2019 10:24:30 +0530
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19070804-0012-0000-0000-000003302CE3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070804-0013-0000-0000-000021698C2C
+Message-Id: <20190708045432.18774-1-parth@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=694 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907080062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS83LzggMTI6MTcgVmlub2QgS291bCA8dmtvdWxAa2VybmVsLm9yZz4gd3JvdGU6DQo+
-IE9uIDA4LTA3LTE5LCAxMTowNiwgemhhbmdmZWkgd3JvdGU6DQo+ID4gSGksIFJvYmluDQo+ID4N
-Cj4gPiBPbiAyMDE5LzcvOCDkuIrljYg5OjIyLCBSb2JpbiBHb25nIHdyb3RlOg0KPiA+ID4gSGkg
-U3RlcGhlbiwNCj4gPiA+IAlUaGF0J3MgY2F1c2VkIGJ5ICdvZl9pcnFfY291bnQnIE5PVCBleHBv
-cnQgdG8gZ2xvYmFsIHN5bWJvbCwgYW5kDQo+ID4gPiBJJ20gY3VyaW91cyB3aHkgaXQgaGFzIGJl
-ZW4gaGVyZSBmb3Igc28gbG9uZyBzaW5jZSBaaGFuZ2ZlaSBmb3VuZCBpdA0KPiA+ID4gaW4gMjAx
-NS4NCj4gPiBJIHJlbWVtYmVyZWQgUm9iIHN1Z2dlc3RlZCB1cyBub3QgdXNpbmcgb2ZfaXJxX2Nv
-dW50IGFuZCB1c2UNCj4gPiBwbGF0Zm9ybV9nZXRfaXJxIGV0Yy4NCj4gPiBodHRwczovL2V1cjAx
-LnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsa21s
-DQo+ID4gLm9yZyUyRmxrbWwlMkYyMDE1JTJGMTElMkYxOCUyRjQ2NiZhbXA7ZGF0YT0wMiU3QzAx
-JTdDeWliaW4uZ28NCj4gbmclNDBueHANCj4gPiAuY29tJTdDYjZkODRhNjk3NmQ3NDU3ZGMzNDQw
-OGQ3MDM1YmFhZjUlN0M2ODZlYTFkM2JjMmI0YzZmYTkyDQo+IGNkOTljNWMzMA0KPiA+DQo+IDE2
-MzUlN0MwJTdDMCU3QzYzNjk4MTU2NDU1NzE0MzUzNyZhbXA7c2RhdGE9akVnRm5CM1lOa1Z0c2ln
-ZmJONg0KPiBYR0pvamxiDQo+ID4gSkF5T2k4a2lHZDVKSEpFY00lM0QmYW1wO3Jlc2VydmVkPTAN
-Cj4gDQo+IFRoZSBleHBsYW5hdGlvbiBsb29rcyBzYW5lIHRvIG1lLCBzbyBpdCBtYWtlcyBzZW5z
-ZSB0byByZXZlcnQgdGhlIGNvbW1pdCBmb3INCj4gbm93LiBSZXZlcnRlZCBub3cNCk9rLCBJIHdp
-bGwgc2VuZCB2NiB3aXRoIHRoZSBmaXguDQo=
+When searching for an idle_sibling, scheduler first iterates to search for
+an idle core and then for an idle CPU. By maintaining the idle CPU mask
+while iterating through idle cores, we can mark non-idle CPUs for which
+idle CPU search would not have to iterate through again. This is especially
+true in a moderately load system
+
+Optimize idle CPUs search by marking already found non idle CPUs during
+idle core search. This reduces iteration count when searching for idle
+CPUs, resulting in lower iteration count.
+
+The results show that the time for `select_idle_cpu` decreases and there is
+no regression on time search for `select_idle_core` and almost no
+regression on schbench as well. With proper tuning schbench shows benefit
+as well when idle_core search fails most times.
+
+When doing this, rename locally used cpumask 'select_idle_mask' to
+something else to use this existing mask for such optimization.
+
+Patch set based on tip/core/core
+
+Results
+===========
+IBM POWER9 system: 2-socket, 44 cores, 176 CPUs
+
+Function latency (with tb tick):
+(lower is better)
++--------------+----------+--------+-------------+--------+
+| select_idle_ | Baseline | stddev |    Patch    | stddev |
++--------------+----------+--------+-------------+--------+
+| core         |     2080 |   1307 | 1975(+5.3%) |   1286 |
+| cpu          |      834 |    393 |    91(+89%) |     64 |
+| sibling      |     0.96 |  0.003 |   0.89(+7%) |   0.02 |
++--------------+----------+--------+-------------+--------+
+
+Schbench:
+- schbench -m 44 -t 1
+(lower is better)
++------+----------+--------+------------+--------+
+| %ile | Baseline | stddev |   Patch    | stddev |
++------+----------+--------+------------+--------+
+|   50 |      9.9 |      2 | 10(-1.01)  |    1.4 |
+|   95 |      465 |    3.9 | 465(0%)    |      2 |
+|   99 |      561 |     24 | 483(-1.0%) |     14 |
+| 99.5 |      631 |     29 | 635(-0.6%) |     32 |
+| 99.9 |      801 |     41 | 763(+4.7%) |    125 |
++------+----------+--------+------------+--------+
+
+- 44 threads spread across cores to make select_idle_core return -1 most
+  times
+- schbench -m 44 -t 1
++-------+----------+--------+-----------+--------+
+| %ile  | Baseline | stddev |   patch   | stddev |
++-------+----------+--------+-----------+--------+
+|    50 |       10 |      9 | 12(-20%)  |      1 |
+|    95 |      468 |      3 | 31(+93%)  |      1 |
+|    99 |      577 |     16 | 477(+17%) |     38 |
+| 99.95 |      647 |     26 | 482(+25%) |      2 |
+| 99.99 |      835 |     61 | 492(+41%) |      2 |
++-------+----------+--------+-----------+--------+
+
+
+Hackbench:
+- 44 threads spread across cores to make select_idle_core return -1 most
+  times
+- perf bench sched messaging -g 1 -l 100000
+(lower is better)
++----------+--------+--------------+--------+
+| Baseline | stddev |    patch     | stddev |
++----------+--------+--------------+--------+
+|   16.107 |   0.62 | 16.02(+0.5%) |   0.32 |
++----------+--------+--------------+--------+
+
+
+Series:
+- Patch 01: Rename select_idle_mask to reuse the name in next patch
+- Patch 02: Optimize the wakeup fast path
+
+
+Parth Shah (2):
+  sched/fair: Rename select_idle_mask to iterator_mask
+  sched/fair: Optimize idle CPU search
+
+ kernel/sched/core.c |  3 +++
+ kernel/sched/fair.c | 15 ++++++++++-----
+ 2 files changed, 13 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
