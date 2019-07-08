@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC64C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3915C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5411F21743
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7905D216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599740;
-	bh=oqeTBDmP+jcF4KXAKud7C7kJr8HLWLVMDQ8MvwIky9Y=;
+	s=default; t=1562599744;
+	bh=FVSYPZvNGuhjFfF7QgxbYfa2NU75ZbeOGPPhO1Js/VM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ycd21P82a1LSe3o6kRbj46WnMDG2oz+bqRnaW7B60JTACeKrf6+Lf4pUX1oU+us1o
-	 qWJyRJmYg23az9u9phy9M6P08arc+qdMEaVO5mXF/I+Z1zge0VT7a4pojVRHIlgwRa
-	 ka7eGA5QZWjCea8mgVHBuQlp5k6UutrvKT3Lmyjw=
+	b=dTVmzSvO13/0gTYWzesCuSP4pdwUwimI0t/1N16LxzSpT1w5q6V1Xd1tqx/ecQRZn
+	 2K7n9fF2F80+gZN2sNjnqU61FYC+dzYp++29pTU6BrCE8OagUVljAcleauxiNFCy/n
+	 82rVNyd7vMWVLCR1CS4aX9Qk9V+nhjzWeSa2h0e8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbfGHP26 (ORCPT
+        id S2389432AbfGHP3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57552 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:29:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389380AbfGHP2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:28:55 -0400
+        id S2389411AbfGHP3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:29:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF6F5204EC;
-        Mon,  8 Jul 2019 15:28:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA5A216F4;
+        Mon,  8 Jul 2019 15:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599734;
-        bh=oqeTBDmP+jcF4KXAKud7C7kJr8HLWLVMDQ8MvwIky9Y=;
+        s=default; t=1562599740;
+        bh=FVSYPZvNGuhjFfF7QgxbYfa2NU75ZbeOGPPhO1Js/VM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A019ZZSvywTWFkxKIjlM498utq3pub3x6aRqLqOHVSMG41RIK4XFHrMl/1HK9pkJa
-         gq30YqPWPlhOpRvzMljuUuOlFsBuwk765fgLnbf5OSmRXqywST9EECLhrSzW54lF4V
-         w+ya1Jp61urBSPqg6AZORjXpI5r9R8Eskg8baYLI=
+        b=bt6cmzpwDqBsCEmDp2DYwhsR4R2r9ZVqvYYHu+mWRNrcpzghTVikQhdJapbZe9Gks
+         oFcFM420+aX7LIonKTXOJOVCzQjD0ZaEVbVEFbb+cqUt4VJBzIlhqC3Z46Cb70YI4z
+         dmAuDhIBfVZM2OO00/C5kepOtYQL/nIlrofh5Q3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 60/90] ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()
-Date:   Mon,  8 Jul 2019 17:13:27 +0200
-Message-Id: <20190708150525.457685976@linuxfoundation.org>
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: [PATCH 4.19 62/90] btrfs: Ensure replaced device doesnt have pending chunk allocation
+Date:   Mon,  8 Jul 2019 17:13:29 +0200
+Message-Id: <20190708150525.533205727@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -62,184 +59,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-commit d5b844a2cf507fc7642c9ae80a9d585db3065c28 upstream.
+commit debd1c065d2037919a7da67baf55cc683fee09f0 upstream.
 
-The commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text
-permissions race") causes a possible deadlock between register_kprobe()
-and ftrace_run_update_code() when ftrace is using stop_machine().
+Recent FITRIM work, namely bbbf7243d62d ("btrfs: combine device update
+operations during transaction commit") combined the way certain
+operations are recoded in a transaction. As a result an ASSERT was added
+in dev_replace_finish to ensure the new code works correctly.
+Unfortunately I got reports that it's possible to trigger the assert,
+meaning that during a device replace it's possible to have an unfinished
+chunk allocation on the source device.
 
-The existing dependency chain (in reverse order) is:
+This is supposed to be prevented by the fact that a transaction is
+committed before finishing the replace oepration and alter acquiring the
+chunk mutex. This is not sufficient since by the time the transaction is
+committed and the chunk mutex acquired it's possible to allocate a chunk
+depending on the workload being executed on the replaced device. This
+bug has been present ever since device replace was introduced but there
+was never code which checks for it.
 
--> #1 (text_mutex){+.+.}:
-       validate_chain.isra.21+0xb32/0xd70
-       __lock_acquire+0x4b8/0x928
-       lock_acquire+0x102/0x230
-       __mutex_lock+0x88/0x908
-       mutex_lock_nested+0x32/0x40
-       register_kprobe+0x254/0x658
-       init_kprobes+0x11a/0x168
-       do_one_initcall+0x70/0x318
-       kernel_init_freeable+0x456/0x508
-       kernel_init+0x22/0x150
-       ret_from_fork+0x30/0x34
-       kernel_thread_starter+0x0/0xc
+The correct way to fix is to ensure that there is no pending device
+modification operation when the chunk mutex is acquire and if there is
+repeat transaction commit. Unfortunately it's not possible to just
+exclude the source device from btrfs_fs_devices::dev_alloc_list since
+this causes ENOSPC to be hit in transaction commit.
 
--> #0 (cpu_hotplug_lock.rw_sem){++++}:
-       check_prev_add+0x90c/0xde0
-       validate_chain.isra.21+0xb32/0xd70
-       __lock_acquire+0x4b8/0x928
-       lock_acquire+0x102/0x230
-       cpus_read_lock+0x62/0xd0
-       stop_machine+0x2e/0x60
-       arch_ftrace_update_code+0x2e/0x40
-       ftrace_run_update_code+0x40/0xa0
-       ftrace_startup+0xb2/0x168
-       register_ftrace_function+0x64/0x88
-       klp_patch_object+0x1a2/0x290
-       klp_enable_patch+0x554/0x980
-       do_one_initcall+0x70/0x318
-       do_init_module+0x6e/0x250
-       load_module+0x1782/0x1990
-       __s390x_sys_finit_module+0xaa/0xf0
-       system_call+0xd8/0x2d0
+Fixing that in another way would need to add special cases to handle the
+last writes and forbid new ones. The looped transaction fix is more
+obvious, and can be easily backported. The runtime of dev-replace is
+long so there's no noticeable delay caused by that.
 
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(text_mutex);
-                               lock(cpu_hotplug_lock.rw_sem);
-                               lock(text_mutex);
-  lock(cpu_hotplug_lock.rw_sem);
-
-It is similar problem that has been solved by the commit 2d1e38f56622b9b
-("kprobes: Cure hotplug lock ordering issues"). Many locks are involved.
-To be on the safe side, text_mutex must become a low level lock taken
-after cpu_hotplug_lock.rw_sem.
-
-This can't be achieved easily with the current ftrace design.
-For example, arm calls set_all_modules_text_rw() already in
-ftrace_arch_code_modify_prepare(), see arch/arm/kernel/ftrace.c.
-This functions is called:
-
-  + outside stop_machine() from ftrace_run_update_code()
-  + without stop_machine() from ftrace_module_enable()
-
-Fortunately, the problematic fix is needed only on x86_64. It is
-the only architecture that calls set_all_modules_text_rw()
-in ftrace path and supports livepatching at the same time.
-
-Therefore it is enough to move text_mutex handling from the generic
-kernel/trace/ftrace.c into arch/x86/kernel/ftrace.c:
-
-   ftrace_arch_code_modify_prepare()
-   ftrace_arch_code_modify_post_process()
-
-This patch basically reverts the ftrace part of the problematic
-commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module
-text permissions race"). And provides x86_64 specific-fix.
-
-Some refactoring of the ftrace code will be needed when livepatching
-is implemented for arm or nds32. These architectures call
-set_all_modules_text_rw() and use stop_machine() at the same time.
-
-Link: http://lkml.kernel.org/r/20190627081334.12793-1-pmladek@suse.com
-
-Fixes: 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text permissions race")
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-[
-  As reviewed by Miroslav Benes <mbenes@suse.cz>, removed return value of
-  ftrace_run_update_code() as it is a void function.
-]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reported-by: David Sterba <dsterba@suse.com>
+Fixes: 391cd9df81ac ("Btrfs: fix unprotected alloc list insertion during the finishing procedure of replace")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/x86/kernel/ftrace.c |    3 +++
- kernel/trace/ftrace.c    |   10 +---------
- 2 files changed, 4 insertions(+), 9 deletions(-)
 
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -22,6 +22,7 @@
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/memory.h>
+---
+ fs/btrfs/dev-replace.c |   26 +++++++++++++++++---------
+ fs/btrfs/volumes.c     |    2 ++
+ fs/btrfs/volumes.h     |    5 +++++
+ 3 files changed, 24 insertions(+), 9 deletions(-)
+
+--- a/fs/btrfs/dev-replace.c
++++ b/fs/btrfs/dev-replace.c
+@@ -599,17 +599,25 @@ static int btrfs_dev_replace_finishing(s
+ 	}
+ 	btrfs_wait_ordered_roots(fs_info, U64_MAX, 0, (u64)-1);
  
- #include <trace/syscall.h>
+-	trans = btrfs_start_transaction(root, 0);
+-	if (IS_ERR(trans)) {
+-		mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
+-		return PTR_ERR(trans);
++	while (1) {
++		trans = btrfs_start_transaction(root, 0);
++		if (IS_ERR(trans)) {
++			mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
++			return PTR_ERR(trans);
++		}
++		ret = btrfs_commit_transaction(trans);
++		WARN_ON(ret);
++		/* keep away write_all_supers() during the finishing procedure */
++		mutex_lock(&fs_info->fs_devices->device_list_mutex);
++		mutex_lock(&fs_info->chunk_mutex);
++		if (src_device->has_pending_chunks) {
++			mutex_unlock(&root->fs_info->chunk_mutex);
++			mutex_unlock(&root->fs_info->fs_devices->device_list_mutex);
++		} else {
++			break;
++		}
+ 	}
+-	ret = btrfs_commit_transaction(trans);
+-	WARN_ON(ret);
  
-@@ -35,6 +36,7 @@
+-	/* keep away write_all_supers() during the finishing procedure */
+-	mutex_lock(&fs_info->fs_devices->device_list_mutex);
+-	mutex_lock(&fs_info->chunk_mutex);
+ 	btrfs_dev_replace_write_lock(dev_replace);
+ 	dev_replace->replace_state =
+ 		scrub_ret ? BTRFS_IOCTL_DEV_REPLACE_STATE_CANCELED
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4873,6 +4873,7 @@ static int __btrfs_alloc_chunk(struct bt
+ 	for (i = 0; i < map->num_stripes; i++) {
+ 		num_bytes = map->stripes[i].dev->bytes_used + stripe_size;
+ 		btrfs_device_set_bytes_used(map->stripes[i].dev, num_bytes);
++		map->stripes[i].dev->has_pending_chunks = true;
+ 	}
  
- int ftrace_arch_code_modify_prepare(void)
- {
-+	mutex_lock(&text_mutex);
- 	set_kernel_text_rw();
- 	set_all_modules_text_rw();
- 	return 0;
-@@ -44,6 +46,7 @@ int ftrace_arch_code_modify_post_process
- {
- 	set_all_modules_text_ro();
- 	set_kernel_text_ro();
-+	mutex_unlock(&text_mutex);
- 	return 0;
- }
+ 	atomic64_sub(stripe_size * map->num_stripes, &info->free_chunk_space);
+@@ -7348,6 +7349,7 @@ void btrfs_update_commit_device_bytes_us
+ 		for (i = 0; i < map->num_stripes; i++) {
+ 			dev = map->stripes[i].dev;
+ 			dev->commit_bytes_used = dev->bytes_used;
++			dev->has_pending_chunks = false;
+ 		}
+ 	}
+ 	mutex_unlock(&fs_info->chunk_mutex);
+--- a/fs/btrfs/volumes.h
++++ b/fs/btrfs/volumes.h
+@@ -54,6 +54,11 @@ struct btrfs_device {
  
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -35,7 +35,6 @@
- #include <linux/hash.h>
- #include <linux/rcupdate.h>
- #include <linux/kprobes.h>
--#include <linux/memory.h>
- 
- #include <trace/events/sched.h>
- 
-@@ -2628,12 +2627,10 @@ static void ftrace_run_update_code(int c
- {
- 	int ret;
- 
--	mutex_lock(&text_mutex);
--
- 	ret = ftrace_arch_code_modify_prepare();
- 	FTRACE_WARN_ON(ret);
- 	if (ret)
--		goto out_unlock;
-+		return;
- 
- 	/*
- 	 * By default we use stop_machine() to modify the code.
-@@ -2645,9 +2642,6 @@ static void ftrace_run_update_code(int c
- 
- 	ret = ftrace_arch_code_modify_post_process();
- 	FTRACE_WARN_ON(ret);
--
--out_unlock:
--	mutex_unlock(&text_mutex);
- }
- 
- static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
-@@ -5771,7 +5765,6 @@ void ftrace_module_enable(struct module
- 	struct ftrace_page *pg;
- 
- 	mutex_lock(&ftrace_lock);
--	mutex_lock(&text_mutex);
- 
- 	if (ftrace_disabled)
- 		goto out_unlock;
-@@ -5833,7 +5826,6 @@ void ftrace_module_enable(struct module
- 		ftrace_arch_code_modify_post_process();
- 
-  out_unlock:
--	mutex_unlock(&text_mutex);
- 	mutex_unlock(&ftrace_lock);
- 
- 	process_cached_mods(mod->name);
+ 	spinlock_t io_lock ____cacheline_aligned;
+ 	int running_pending;
++	/* When true means this device has pending chunk alloc in
++	 * current transaction. Protected by chunk_mutex.
++	 */
++	bool has_pending_chunks;
++
+ 	/* regular prio bios */
+ 	struct btrfs_pending_bios pending_bios;
+ 	/* sync bios */
 
 
