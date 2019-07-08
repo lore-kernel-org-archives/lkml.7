@@ -2,42 +2,42 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FDEC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DCFC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85FB02053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603052053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfGHCHA (ORCPT
+        id S1728624AbfGHCGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 22:07:00 -0400
+        Sun, 7 Jul 2019 22:06:36 -0400
 Received: from mga17.intel.com ([192.55.52.151]:44745 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728654AbfGHCGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 22:06:39 -0400
+        id S1728556AbfGHCGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 22:06:32 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:38 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:32 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,464,1557212400"; 
-   d="scan'208";a="364083581"
+   d="scan'208";a="364083555"
 Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:37 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:30 -0700
 From:   Wei Wang <wei.w.wang@intel.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         pbonzini@redhat.com, ak@linux.intel.com, peterz@infradead.org
 Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
         like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
         arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v7 09/12] perf/x86: save/restore LBR_SELECT on vCPU switching
-Date:   Mon,  8 Jul 2019 09:23:16 +0800
-Message-Id: <1562548999-37095-10-git-send-email-wei.w.wang@intel.com>
+Subject: [PATCH v7 06/12] KVM/x86: expose MSR_IA32_PERF_CAPABILITIES to the guest
+Date:   Mon,  8 Jul 2019 09:23:13 +0800
+Message-Id: <1562548999-37095-7-git-send-email-wei.w.wang@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
 References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
@@ -46,55 +46,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vCPU lbr event relies on the host to save/restore all the lbr
-related MSRs. So add the LBR_SELECT save/restore to the related
-functions for the vCPU case.
+Bits [0, 5] of MSR_IA32_PERF_CAPABILITIES tell about the format of
+the addresses stored in the LBR stack. Expose those bits to the guest
+when the guest lbr feature is enabled.
 
 Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 ---
- arch/x86/events/intel/lbr.c  | 7 +++++++
- arch/x86/events/perf_event.h | 1 +
- 2 files changed, 8 insertions(+)
+ arch/x86/include/asm/perf_event.h |  2 ++
+ arch/x86/kvm/cpuid.c              |  2 +-
+ arch/x86/kvm/vmx/pmu_intel.c      | 16 ++++++++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 118764b..4861a9d 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -383,6 +383,9 @@ static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 2606100..aa77da2 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -95,6 +95,8 @@
+ #define PEBS_DATACFG_LBRS	BIT_ULL(3)
+ #define PEBS_DATACFG_LBR_SHIFT	24
  
- 	wrmsrl(x86_pmu.lbr_tos, tos);
- 	task_ctx->lbr_stack_state = LBR_NONE;
++#define X86_PERF_CAP_MASK_LBR_FMT			0x3f
 +
-+	if (cpuc->vcpu_lbr)
-+		wrmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
- }
- 
- static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
-@@ -409,6 +412,10 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
- 		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
- 			rdmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr_info[i]);
- 	}
+ /*
+  * Intel "Architectural Performance Monitoring" CPUID
+  * detection/enumeration details:
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 4992e7c..4b9e713 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -361,7 +361,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
+ 		0 /* DS-CPL, VMX, SMX, EST */ |
+ 		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
+-		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
++		F(FMA) | F(CX16) | 0 /* xTPR Update*/ | F(PDCM) |
+ 		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
+ 		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
+ 		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 1e19b01..09ae6ff 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -151,6 +151,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ 	case MSR_CORE_PERF_GLOBAL_STATUS:
+ 	case MSR_CORE_PERF_GLOBAL_CTRL:
+ 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
++	case MSR_IA32_PERF_CAPABILITIES:
+ 		ret = pmu->version > 1;
+ 		break;
+ 	default:
+@@ -316,6 +317,19 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+ 		msr_info->data = pmu->global_ovf_ctrl;
+ 		return 0;
++	case MSR_IA32_PERF_CAPABILITIES: {
++		u64 data;
 +
-+	if (cpuc->vcpu_lbr)
-+		rdmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
-+
- 	task_ctx->valid_lbrs = i;
- 	task_ctx->tos = tos;
- 	task_ctx->lbr_stack_state = LBR_VALID;
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 86605d1..e37ff82 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -721,6 +721,7 @@ struct x86_perf_task_context {
- 	u64 lbr_from[MAX_LBR_ENTRIES];
- 	u64 lbr_to[MAX_LBR_ENTRIES];
- 	u64 lbr_info[MAX_LBR_ENTRIES];
-+	u64 lbr_sel;
- 	int tos;
- 	int valid_lbrs;
- 	int lbr_callstack_users;
++		if (!boot_cpu_has(X86_FEATURE_PDCM) ||
++		    (!msr_info->host_initiated &&
++		     !guest_cpuid_has(vcpu, X86_FEATURE_PDCM)))
++			return 1;
++		data = native_read_msr(MSR_IA32_PERF_CAPABILITIES);
++		msr_info->data = 0;
++		if (vcpu->kvm->arch.lbr_in_guest)
++			msr_info->data |= (data & X86_PERF_CAP_MASK_LBR_FMT);
++		return 0;
++	}
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+ 			u64 val = pmc_read_counter(pmc);
+@@ -374,6 +388,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			return 0;
+ 		}
+ 		break;
++	case MSR_IA32_PERF_CAPABILITIES:
++		return 1; /* RO MSR */
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+ 			if (msr_info->host_initiated)
 -- 
 2.7.4
 
