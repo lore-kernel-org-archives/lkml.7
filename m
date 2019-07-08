@@ -2,147 +2,98 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E661BC606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592DEC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C110E20844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE2E20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbfGHNqL (ORCPT
+        id S1731439AbfGHNrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:46:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:48350 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729756AbfGHNqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:46:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D36DE2B;
-        Mon,  8 Jul 2019 06:46:09 -0700 (PDT)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EA783F738;
-        Mon,  8 Jul 2019 06:46:08 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        quentin.perret@arm.com, dietmar.eggemann@arm.com
-References: <20190627171603.14767-1-douglas.raillard@arm.com>
- <20190702155115.GW3436@hirez.programming.kicks-ass.net>
- <5198292b-1874-9ff4-6a9f-826a5ea00466@arm.com>
- <20190708110904.ecrlr4p77n4r6qzk@e110439-lin>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <b35c2281-4d91-2164-65f9-9ef3a28c35d0@arm.com>
-Date:   Mon, 8 Jul 2019 14:46:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jul 2019 09:47:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:46091 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728461AbfGHNrd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:47:33 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MsqIi-1idXVd2xaq-00tCtF; Mon, 08 Jul 2019 15:47:09 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/exynos: add CONFIG_MMU dependency
+Date:   Mon,  8 Jul 2019 15:46:51 +0200
+Message-Id: <20190708134707.538501-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190708110904.ecrlr4p77n4r6qzk@e110439-lin>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB-large
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Axu85VajvoAR0wMxnciqB+GEFg6pSh3s41QC4py5g9oaTINzJOU
+ UZTGHhbajCJ3JGbZmqfhTRCufcbapkbWIlxE2O6YC/PYBuj6T1Xc+KMLQ61WIPq+oD2194n
+ CwfP9Yz4bxTS7rQpc1m0RFG+9Hhz5UTlg9Rdj5gGR44o4kixJuGca+25o7R7dEIlRK13gXG
+ gCAopP2RQqbNVKGh6VcHw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wnjssiFpvxA=:HTMu8pLHDd0+KCxZo8b6Wn
+ e+rAuNkumRK+K4Z/GKOoxrneL/xy7278A61Y67M6KOB+P062stKVyfD7Az5cOJZHGOFBOaOEk
+ Uvyx4CtA4I/aveHXSdF7iTh61rnO0iFDNbMOm1+8KjkHwoghph0jdfvwy2VbPDC0ZP/4BhJGA
+ fqZMHC9n9KfwFup9F1gyw9Wnv3c87zWbYYIKPtGWh9Yb6CazHKg4hSuJJ2cjWlIqLP/ohRJQE
+ 4nsMQNB6aafVD8ZgDE5e5skHAfYuj41tTYzyB14BZiXY1dZ3uszoiZnQKx8Avsfc4UYNVdtvD
+ A2SnOlW/1H+JnT/+zKLp+0PA0JoXKynorPVVTakM203L+fDzngNUGXsV6+rblk2MIpley2aeO
+ 1iz9R/V9ISTWRasK1Z0fxpvOTpA7U6W3SZJYeGmTXx2QGlQvOhs8K+mrO9fUKKpfYS8SfIi3U
+ vf5SmG44kUojDZ0Czvkz0kZ4nLl+o3WBTcolcI7ypGwocJYaXZvhFCZ8rcdz0yAR/POTH9Fjb
+ I4ZyYvwDJZ/y0geIgeJo0BQDd2wuaQbHrrXwggxYJn4+BV4EeBmL4q2vHh7aWq88lAMNkdyWG
+ Q4RB1/9Uxzh9dyJ6IdJHuumfnzjIpMplgs9EGUtvr70w91XN7wzNyJadQYJ9Mdcn7pUowbLO2
+ tNEy0886CoGThl7fHLYWDGAXaKdwRsGZIivVKOprgWBasmaF+dPV8/YMPRzTamDudypA4e6S8
+ Z2OwKIM/3VIqy4OOo2Gjb837APKoRwQAd4CMBA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick,
+Compile-testing this driver on a NOMMU configuration shows a link failure:
 
-On 7/8/19 12:09 PM, Patrick Bellasi wrote:
-> On 03-Jul 17:36, Douglas Raillard wrote:
->> On 7/2/19 4:51 PM, Peter Zijlstra wrote:
->>> On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
-> 
-> [...]
-> 
->>> I'm not immediately seeing how it is transient; that is, PELT has a
->>> wobble in it's steady state, is that accounted for?
->>>
->>
->> The transient-ness of the ramp boost I'm introducing comes from the fact that for a
->> periodic task at steady state, task_ue.enqueued <= task_u when the task is executing.
->                  ^^^^^^^^^^^^^^^
-> 
-> I find your above "at steady state" a bit confusing.
-> 
-> The condition "task_ue.enqueue <= task_u" is true only for the first
-> task's big activation after a series of small activations, e.g. a task
-> switching from 20% to 70%.
+drivers/gpu/drm/exynos/exynos_drm_gem.o: In function `exynos_drm_gem_fault':
+exynos_drm_gem.c:(.text+0x484): undefined reference to `vmf_insert_mixed'
 
-I actually made a typo and meant "task_u <= task_ue.enqueue". The rest of the paragraph
-is aligned with that condition, sorry for the confusion.
+Add a CONFIG_MMU dependency to ensure we only enable this in configurations
+that build correctly.
 
+Many other drm drivers have the same dependency. It would be nice to
+make this work in MMU-less configurations, but evidently nobody has
+ever needed this so far.
 
-> That's the transient stat you refer to, isn't it?
-> 
->> That is because task_ue.enqueued is sampled at dequeue time, precisely at the moment
->> at which task_u is reaching its max for that task.
-> 
-> Right, so in the example above we will have enqueued=20% while task_u
-> is going above to converge towards 70%
-> 
->> Since we only take into account positive boosts, ramp boost will
->> only have an impact in the "increase transients".
-> 
-> Right.
-> 
-> I think Peter was referring to the smallish wobbles we see when the
-> task already converged to 70%. If that's the case I would say they are
-> already fully covered also by the current util_est.
+Fixes: 156bdac99061 ("drm/exynos: trigger build of all modules")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/exynos/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes, that's covered by the "task_u <= task_ue.enqueue" condition, with task_ue.enqueued
-not having any of these "mid freq" content that we call wobble here.
+diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
+index 60ce4a8ad9e1..6f7d3b3b3628 100644
+--- a/drivers/gpu/drm/exynos/Kconfig
++++ b/drivers/gpu/drm/exynos/Kconfig
+@@ -2,6 +2,7 @@
+ config DRM_EXYNOS
+ 	tristate "DRM Support for Samsung SoC EXYNOS Series"
+ 	depends on OF && DRM && (ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS || ARCH_MULTIPLATFORM || COMPILE_TEST)
++	depends on MMU
+ 	select DRM_KMS_HELPER
+ 	select VIDEOMODE_HELPERS
+ 	select SND_SOC_HDMI_CODEC if SND_SOC
+-- 
+2.20.0
 
-Util est enqueued acts as an adaptive filter that kills frequencies higher than 1/task_period,
-task_period being the delta between the two previous "enqueue events". All what's (mostly) remaining
-after that is util variation of larger periods, with a positive shift that increases with
-the task period (mean(enqueued) = mean(util_avg) + f(task_period)).
-
-
-> You are also correct in pointing out that in the steady state
-> ramp_boost will not be triggered in that steady state.
-> 
-> IMU, that's for two main reasons:
->   a) it's very likely that enqueued <= util_avg
->   b) even in case enqueued should turn out to be _slightly_ bigger then
->      util_avg, the corresponding (proportional) ramp_boost would be so
->      tiny to not have any noticeable effect on OPP selection.
-> 
-> Am I correct on point b) above?
-
-Assuming you meant "util_avg slightly bigger than enqueued" (which is when boosting triggers),
-then yes since ramp_boost effect is proportional to "task_ue.enqueue - task_u". It makes it robust
-against that.
-
-> 
-> Could you maybe come up with some experimental numbers related to that
-> case specifically?
-
-With:
-* an rt-app task ramping up from 5% to 75% util in one big step. The whole cycle is 0.6s long
-  (0.3s at 5% followed by 0.3s at 75%). This cycle is repeated 20 times and the average of
-  boosting is taken.
-
-* a hikey 960 (this impact the frequency at which the test runs at the beginning of 75% phase,
-   which impacts the number of missed activations before the util ramped up).
-
-* assuming an OPP exists for each util value (i.e. 1024 OPPs, so the effect
-   of boost on consumption is not impacted by OPP capacities granularity)
-
-Then the boosting feature would increase the average power consumption by 3.1%, out of which 0.12% can
-be considered "spurious boosting" due to the util taking some time to really converge to its
-steady state value. In practice, the impact of small boosts will be even lower since they will less likely
-trigger the selection of a high OPP due to OPP capacity granularity > 1 util unit.
-
-> 
-> Best,
-> Patrick
-> 
-
-Best regards,
-Douglas
