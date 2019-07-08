@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59CBC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E384C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A26D72177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5099A21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B62llil3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PgglRjVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391590AbfGHRJN (ORCPT
+        id S2403830AbfGHRJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:09:13 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:45334 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390994AbfGHRJL (ORCPT
+        Mon, 8 Jul 2019 13:09:12 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:56299 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390600AbfGHRJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:09:11 -0400
-Received: by mail-vk1-f202.google.com with SMTP id x83so6792708vkx.12
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:09:11 -0700 (PDT)
+        Mon, 8 Jul 2019 13:09:05 -0400
+Received: by mail-yw1-f74.google.com with SMTP id n139so7669238ywd.22
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=va2IqGms4zwARolaxGifymkA8dWqhnjJfJEjqFTqRUA=;
-        b=B62llil3Fe4KzeXZEaBbD+00lGLnt61xZThwbT0g6IZl70whfkLgUD6l34hNGVCkHT
-         1XnLhu2ClICsG1ZP+VNktTAQx/P6j3YB6/j+5u70823Y2qvPdZJDEIRXRbOenMh1hpPP
-         GSHE0OkiCT199jGkL1qB9jQVmf/D5xM3xl23+MYa2Z+ObxwJgvIxgeg+Qxu7/SXwDL7B
-         FsNT+911aCa7KFAtwfmkM17dtznwJG3ibBxxM/tlmnyjdcoOIdyybcxyKNrZMUYmA9UV
-         9YH2/5ecSLu43JAiNIRdh+iXemCTUQqtbW+fFY4QzbvLVelQ8VLKJWV1P7oHoBSpKz/0
-         /BhQ==
+        bh=/Bjb3ErsQTLw+YrlSLkjBcr6K+fvu3f9fORDBwR/vbU=;
+        b=PgglRjVjhE72uthaYPgUkIA+L8Ic1IQKCjcb8XRTj87DCO10kaCcE306+6CbVNMvau
+         SM1ka9Ic90hEIZxLQuIrW1jY3Vm6ESsEkj4IYF0TQ3+Fb38HOfRfZ6jc+goC1Vp402VA
+         kMjKtNquIeLszR/h3t7e1dLItihhLNJ7YiN1g5fRoFKUsgOzwMwZ8toOK/16ArpBe9tF
+         grBf339F217k5k/S6+fB3KbnXoO2Q0m6y/mS9TLUd2/nhXEGmHLG7x/xDi7tzYoCXGpA
+         afNpmmQHXf9ZbTj7qJiAD426/t1VpxFKdDNos9FKE3egTSIsrvnwFas4LujNH5/S9+iA
+         q5IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=va2IqGms4zwARolaxGifymkA8dWqhnjJfJEjqFTqRUA=;
-        b=BEoguiMxTg7cZ8N4vlBb1/woS1G7E5jTQ7VZhKFeieALVPIkOaXylVFGXEoM9ce+/o
-         KGiiR/G9QyLThPrFtkxuKnhInjT1cWHq17umNl5wdm9q1dGQ12LiMRKVweX5sUjFcKmN
-         tl35tgv2YdRQPmKHF35LDK9JJxIalJ4MBXqhuYpg4Q79rcCgleHkLFi3e6oBAkIitLNX
-         1BQVF50iezgkss57VxwZb13AvzMMOZCaWWtZdnM2LVR1k0PgX466b0kPZKTO+v5HRig5
-         6SMzpGxf+FZ4kIgma7bWPs8dJxG9vAGVfLz31+vzBiIhcy/zNmzC5lMVIBUpRYOx/TMT
-         nD1g==
-X-Gm-Message-State: APjAAAUq4f95xffQO8Bc1eS5OojcuJgRPG1W9EIPSSRCoiOzz1nw6Y2F
-        8r5dHJ5XwOIo6GUKnKiYYPhcTZBRTw==
-X-Google-Smtp-Source: APXvYqx/AWhWyRiQYsh8A+R32YrMoMJUGisZJ17vs2U294DwY3kO8gA6cjJzosgpsyUF6ubvfQSzhfr+jg==
-X-Received: by 2002:ab0:66d2:: with SMTP id d18mr10407237uaq.101.1562605750505;
- Mon, 08 Jul 2019 10:09:10 -0700 (PDT)
-Date:   Mon,  8 Jul 2019 19:07:07 +0200
+        bh=/Bjb3ErsQTLw+YrlSLkjBcr6K+fvu3f9fORDBwR/vbU=;
+        b=jKsmA5FEfQQUWUAR5LhRDTqH8+8jCkGHKv2p7W687BMg9tdui23ClJ1BEt2AegTD3g
+         U7qpm4c6RkAnlvo470gaKTR+MioRTL+pMqILkG3bn7HbHoBMKfg5sso1o18houiopMDe
+         5i33bgODTEg+qu55ioKWmCXVccdutXkkZ0IHBN5oXdOcvP4vbCWqevRa7rtMM811uF9I
+         NiQhEE+h3A+P1pGRhfLW8b6qqnY04I9rljzWNPJOII6sNaUOsXBSUuDQrlrSG6U9RgCY
+         4DETAx8v1yICjSXzu9PPlxJcTaCSW63zXATtHJJPnk1LuZ1BKkwHvqZ1PYrJNQ8C1cuW
+         FWVg==
+X-Gm-Message-State: APjAAAUlrLaL7OVdYnYURz+Ru6EjN4rG+JQXKbb/+mWsVG3c8S75nK5z
+        oTwwNZQFh45sglKLxHWpGGJDh9jswQ==
+X-Google-Smtp-Source: APXvYqxP+FPSf7rO7/ibi5Fz8cPbpk061VoEiwZkeVQq8DuTHnSF07hV2+HQ/wDAVE8vywm9H1aztfDkIA==
+X-Received: by 2002:a81:a95:: with SMTP id 143mr12306291ywk.279.1562605743974;
+ Mon, 08 Jul 2019 10:09:03 -0700 (PDT)
+Date:   Mon,  8 Jul 2019 19:07:05 +0200
 In-Reply-To: <20190708170706.174189-1-elver@google.com>
-Message-Id: <20190708170706.174189-6-elver@google.com>
+Message-Id: <20190708170706.174189-4-elver@google.com>
 Mime-Version: 1.0
 References: <20190708170706.174189-1-elver@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v5 5/5] mm/kasan: Add object validation in ksize()
+Subject: [PATCH v5 3/5] lib/test_kasan: Add test for double-kzfree detection
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+Cc:     linux-kernel@vger.kernel.org,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Dmitry Vyukov <dvyukov@google.com>,
         Alexander Potapenko <glider@google.com>,
@@ -80,30 +80,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ksize() has been unconditionally unpoisoning the whole shadow memory region
-associated with an allocation. This can lead to various undetected bugs,
-for example, double-kzfree().
+Adds a simple test that checks if double-kzfree is being detected
+correctly.
 
-Specifically, kzfree() uses ksize() to determine the actual allocation
-size, and subsequently zeroes the memory. Since ksize() used to just
-unpoison the whole shadow memory region, no invalid free was detected.
-
-This patch addresses this as follows:
-
-1. Add a check in ksize(), and only then unpoison the memory region.
-
-2. Preserve kasan_unpoison_slab() semantics by explicitly unpoisoning
-   the shadow memory region using the size obtained from __ksize().
-
-Tested:
-1. With SLAB allocator: a) normal boot without warnings; b) verified the
-   added double-kzfree() is detected.
-2. With SLUB allocator: a) normal boot without warnings; b) verified the
-   added double-kzfree() is detected.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199359
 Signed-off-by: Marco Elver <elver@google.com>
-Acked-by: Kees Cook <keescook@chromium.org>
 Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
 Cc: Dmitry Vyukov <dvyukov@google.com>
 Cc: Alexander Potapenko <glider@google.com>
@@ -114,69 +94,48 @@ Cc: David Rientjes <rientjes@google.com>
 Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Kees Cook <keescook@chromium.org>
 Cc: kasan-dev@googlegroups.com
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org
 ---
-v4:
-* Prefer WARN_ON_ONCE() instead of BUG_ON().
----
- include/linux/kasan.h |  7 +++++--
- mm/slab_common.c      | 22 +++++++++++++++++++++-
- 2 files changed, 26 insertions(+), 3 deletions(-)
+ lib/test_kasan.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-index b40ea104dd36..cc8a03cc9674 100644
---- a/include/linux/kasan.h
-+++ b/include/linux/kasan.h
-@@ -76,8 +76,11 @@ void kasan_free_shadow(const struct vm_struct *vm);
- int kasan_add_zero_shadow(void *start, unsigned long size);
- void kasan_remove_zero_shadow(void *start, unsigned long size);
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index e3c593c38eff..dda5da9f5bd4 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -619,6 +619,22 @@ static noinline void __init kasan_strings(void)
+ 	strnlen(ptr, 1);
+ }
  
--size_t ksize(const void *);
--static inline void kasan_unpoison_slab(const void *ptr) { ksize(ptr); }
-+size_t __ksize(const void *);
-+static inline void kasan_unpoison_slab(const void *ptr)
++static noinline void __init kmalloc_double_kzfree(void)
 +{
-+	kasan_unpoison_shadow(ptr, __ksize(ptr));
++	char *ptr;
++	size_t size = 16;
++
++	pr_info("double-free (kzfree)\n");
++	ptr = kmalloc(size, GFP_KERNEL);
++	if (!ptr) {
++		pr_err("Allocation failed\n");
++		return;
++	}
++
++	kzfree(ptr);
++	kzfree(ptr);
 +}
- size_t kasan_metadata_size(struct kmem_cache *cache);
- 
- bool kasan_save_enable_multi_shot(void);
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index b7c6a40e436a..a09bb10aa026 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1613,7 +1613,27 @@ EXPORT_SYMBOL(kzfree);
-  */
- size_t ksize(const void *objp)
++
+ static int __init kmalloc_tests_init(void)
  {
--	size_t size = __ksize(objp);
-+	size_t size;
-+
-+	if (WARN_ON_ONCE(!objp))
-+		return 0;
-+	/*
-+	 * We need to check that the pointed to object is valid, and only then
-+	 * unpoison the shadow memory below. We use __kasan_check_read(), to
-+	 * generate a more useful report at the time ksize() is called (rather
-+	 * than later where behaviour is undefined due to potential
-+	 * use-after-free or double-free).
-+	 *
-+	 * If the pointed to memory is invalid we return 0, to avoid users of
-+	 * ksize() writing to and potentially corrupting the memory region.
-+	 *
-+	 * We want to perform the check before __ksize(), to avoid potentially
-+	 * crashing in __ksize() due to accessing invalid metadata.
-+	 */
-+	if (unlikely(objp == ZERO_SIZE_PTR) || !__kasan_check_read(objp, 1))
-+		return 0;
-+
-+	size = __ksize(objp);
  	/*
- 	 * We assume that ksize callers could use whole allocated area,
- 	 * so we need to unpoison this area.
+@@ -660,6 +676,7 @@ static int __init kmalloc_tests_init(void)
+ 	kasan_memchr();
+ 	kasan_memcmp();
+ 	kasan_strings();
++	kmalloc_double_kzfree();
+ 
+ 	kasan_restore_multi_shot(multishot);
+ 
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
