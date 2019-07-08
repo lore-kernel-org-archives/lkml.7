@@ -2,86 +2,102 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22303C606CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FBDC606CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE2A217D6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8A2216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390886AbfGHTJ6 (ORCPT
+        id S2390910AbfGHTKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:09:58 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54421 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731402AbfGHTJ5 (ORCPT
+        Mon, 8 Jul 2019 15:10:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53504 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfGHTKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:09:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=bo.liu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TWPWMSM_1562612890;
-Received: from US-160370MP2.local(mailfrom:bo.liu@linux.alibaba.com fp:SMTPD_---0TWPWMSM_1562612890)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 09 Jul 2019 03:08:12 +0800
-Date:   Mon, 8 Jul 2019 12:08:09 -0700
-From:   Liu Bo <bo.liu@linux.alibaba.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] blk-throttle: fix zero wait time for iops throttled group
-Message-ID: <20190708190809.l4fdhigexzdujvuv@US-160370MP2.local>
-Reply-To: bo.liu@linux.alibaba.com
-References: <156259979778.2486.6296077059654653057.stgit@buzz>
+        Mon, 8 Jul 2019 15:10:36 -0400
+Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <cascardo@canonical.com>)
+        id 1hkZ21-0003Ex-F9; Mon, 08 Jul 2019 19:10:33 +0000
+Date:   Mon, 8 Jul 2019 16:10:29 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuahkhan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] selftests/ftrace: Select an existing function in
+ kprobe_eventname test
+Message-ID: <20190708191026.GA8307@calabresa>
+References: <20190322150923.1b58eca5@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156259979778.2486.6296077059654653057.stgit@buzz>
-User-Agent: NeoMutt/20180323
+In-Reply-To: <20190322150923.1b58eca5@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 06:29:57PM +0300, Konstantin Khlebnikov wrote:
-> After commit 991f61fe7e1d ("Blk-throttle: reduce tail io latency when iops
-> limit is enforced") wait time could be zero even if group is throttled and
-> cannot issue requests right now. As a result throtl_select_dispatch() turns
-> into busy-loop under irq-safe queue spinlock.
+On Fri, Mar 22, 2019 at 03:09:23PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > 
-> Fix is simple: always round up target time to the next throttle slice.
+> Running the ftrace selftests on the latest kernel caused the
+> kprobe_eventname test to fail. It was due to the test that searches for
+> a function with at "dot" in the name and adding a probe to that.
+> Unfortunately, for this test, it picked:
 > 
-> Fixes: 991f61fe7e1d ("Blk-throttle: reduce tail io latency when iops limit is enforced")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Cc: stable@vger.kernel.org # v4.19+
+>  optimize_nops.isra.2.cold.4
+> 
+> Which happens to be marked as "__init", which means it no longer exists
+> in the kernel! (kallsyms keeps those function names around for tracing
+> purposes)
+> 
+> As only functions that still exist are in the
+> available_filter_functions file, as they are removed when the functions
+> are freed at boot or module exit, have the test search for a function
+> with ".isra." in the name as well as being in the
+> available_filter_functions (if the file exists).
+> 
+
+This fixes a similar problem for me.
+
+Tested-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > ---
->  block/blk-throttle.c |    9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-> index 9ea7c0ecad10..8ab6c8153223 100644
-> --- a/block/blk-throttle.c
-> +++ b/block/blk-throttle.c
-> @@ -881,13 +881,10 @@ static bool tg_with_in_iops_limit(struct throtl_grp *tg, struct bio *bio,
->  	unsigned long jiffy_elapsed, jiffy_wait, jiffy_elapsed_rnd;
->  	u64 tmp;
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+> index 3fb70e01b1fe..3ff236719b6e 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_eventname.tc
+> @@ -24,7 +24,21 @@ test -d events/kprobes2/event2 || exit_failure
 >  
-> -	jiffy_elapsed = jiffy_elapsed_rnd = jiffies - tg->slice_start[rw];
-> -
-> -	/* Slice has just started. Consider one slice interval */
-> -	if (!jiffy_elapsed)
-> -		jiffy_elapsed_rnd = tg->td->throtl_slice;
-> +	jiffy_elapsed = jiffies - tg->slice_start[rw];
+>  :;: "Add an event on dot function without name" ;:
 >  
-> -	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg->td->throtl_slice);
-> +	/* Round up to the next throttle slice, wait time must be nonzero */
-> +	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, tg->td->throtl_slice);
->  
->  	/*
->  	 * jiffy_elapsed_rnd should not be a big value as minimum iops can be
-
-Did you use a tiny iops limit to run into this?
-
-thanks,
--liubo
+> -FUNC=`grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "`
+> +find_dot_func() {
+> +	if [ ! -f available_filter_functions ]; then
+> +		grep -m 10 " [tT] .*\.isra\..*$" /proc/kallsyms | tail -n 1 | cut -f 3 -d " "
+> +		return;
+> +	fi
+> +
+> +	grep " [tT] .*\.isra\..*" /proc/kallsyms | cut -f 3 -d " " | while read f; do
+> +		if grep -s $f available_filter_functions; then
+> +			echo $f
+> +			break
+> +		fi
+> +	done
+> +}
+> +
+> +FUNC=`find_dot_func | tail -n 1`
+>  [ "x" != "x$FUNC" ] || exit_unresolved
+>  echo "p $FUNC" > kprobe_events
+>  EVENT=`grep $FUNC kprobe_events | cut -f 1 -d " " | cut -f 2 -d:`
