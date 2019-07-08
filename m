@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25074C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FC4C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D382177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEBF2177B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599862;
-	bh=yJiA2PR8YPF1yGgR2WwLUjBahWd24u1D+ZqG8+xhrnY=;
+	s=default; t=1562599864;
+	bh=123LvG5HBWrU6fX8TV7jwY6aig2FA9GCYpsfdvH6b/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3QN98qw95rtsm0YlWCCeWhMCp9AZNPHVxdjJPS6b14XUqB9bEFtbAO+GPEpHIGPW
-	 XzrEZLujgCE8P7b/rFjvIfFZ7dNUOCGLUfDtloxbxVL6rfCly3sBAHXUuvHdVcZVZr
-	 XVcoR7kvD/SSo/qAqfSiVfDHCaDz7a3/JIx6oEDg=
+	b=wq7ltr96plb7VCEz+cfEtj5q9nA68k8FFe9l5EzLszzzJgKzPI/+UsiwvdBd6J5ri
+	 w3soT+Jvf4jrO5Uqt/+qT01llMijKhB4a2TJGmSrFWJl2LdmLWtP/CtRtzqqep1afK
+	 DkKz2Q/KlKur/SkMTu1+O0GM30nH44xx0erzAwCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389564AbfGHPbA (ORCPT
+        id S2389606AbfGHPbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:31:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60182 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389568AbfGHPa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:59 -0400
+        id S2389568AbfGHPbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:31:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E0F3216C4;
-        Mon,  8 Jul 2019 15:30:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10F3D21537;
+        Mon,  8 Jul 2019 15:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599858;
-        bh=yJiA2PR8YPF1yGgR2WwLUjBahWd24u1D+ZqG8+xhrnY=;
+        s=default; t=1562599861;
+        bh=123LvG5HBWrU6fX8TV7jwY6aig2FA9GCYpsfdvH6b/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yu5SWi7Ls+d9O213HQT/kPC61+fGxxNxzA80aP7CCWmSaYL2QASfrpmBsAZSFubCA
-         DDzEVn24YgwlRLZxWfhG5v5gTv8K5FDmhqSKOl9xP3MORVzkmyeQaoeNcOgiPU0uDJ
-         NS9x7+6ubGRxFUDdb0kM4cDbVJo4+ilsB7euUhlw=
+        b=sWrM2T/LYXzQdPZhzpU2NsTOazgmQPeql/rWm4OwOpSH/c9CR45zcQUfuJclbLMdM
+         LgsI7+NlUNZ7XFDnpPnLbH7xkmAJAzPxxJ4TCtAlj9IRPrRCOX8WbOV8Hoos2GS2CS
+         S0o77fR8Ugb+Plo4rrhtA7ylRo1lD8j9XoD9xraM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
+        stable@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 13/96] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-Date:   Mon,  8 Jul 2019 17:12:45 +0200
-Message-Id: <20190708150527.092837237@linuxfoundation.org>
+Subject: [PATCH 5.1 14/96] ASoC: core: lock client_mutex while removing link components
+Date:   Mon,  8 Jul 2019 17:12:46 +0200
+Message-Id: <20190708150527.154167492@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -64,84 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 ]
+[ Upstream commit 34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb ]
 
-If spi_register_master fails in spi_bitbang_start
-because device_add failure, We should return the
-error code other than 0, otherwise calling
-spi_bitbang_stop may trigger NULL pointer dereference
-like this:
+Removing link components results in topology unloading. So,
+acquire the client_mutex before removing components in
+soc_remove_link_components. This will prevent the lockdep warning
+seen when dai links are removed during topology removal.
 
-BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
-Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
-
-CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- dump_stack+0xa9/0x10e
- ? __list_del_entry_valid+0x45/0xd0
- ? __list_del_entry_valid+0x45/0xd0
- __kasan_report+0x171/0x18d
- ? __list_del_entry_valid+0x45/0xd0
- kasan_report+0xe/0x20
- __list_del_entry_valid+0x45/0xd0
- spi_unregister_controller+0x99/0x1b0
- spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
- ? 0xffffffffc1128000
- ? klist_next+0x131/0x1e0
- ? driver_detach+0x40/0x40 [parport]
- port_check+0x3b/0x50 [parport]
- bus_for_each_dev+0x115/0x180
- ? subsys_dev_iter_exit+0x20/0x20
- __parport_register_driver+0x1f0/0x210 [parport]
- ? 0xffffffffc1150000
- do_one_initcall+0xb9/0x3b5
- ? perf_trace_initcall_level+0x270/0x270
- ? kasan_unpoison_shadow+0x30/0x40
- ? kasan_unpoison_shadow+0x30/0x40
- do_init_module+0xe0/0x330
- load_module+0x38eb/0x4270
- ? module_frob_arch_sections+0x20/0x20
- ? kernel_read_file+0x188/0x3f0
- ? find_held_lock+0x6d/0xd0
- ? fput_many+0x1a/0xe0
- ? __do_sys_finit_module+0x162/0x190
- __do_sys_finit_module+0x162/0x190
- ? __ia32_sys_init_module+0x40/0x40
- ? __mutex_unlock_slowpath+0xb4/0x3f0
- ? wait_for_completion+0x240/0x240
- ? vfs_write+0x160/0x2a0
- ? lockdep_hardirqs_off+0xb5/0x100
- ? mark_held_locks+0x1a/0x90
- ? do_syscall_64+0x14/0x2a0
- do_syscall_64+0x72/0x2a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bitbang.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
-index dd9a8c54a693..be95be4fe985 100644
---- a/drivers/spi/spi-bitbang.c
-+++ b/drivers/spi/spi-bitbang.c
-@@ -403,7 +403,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
- 	if (ret)
- 		spi_master_put(master);
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index a7b4fab92f26..a4668a788ed5 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1008,12 +1008,14 @@ static void soc_remove_link_components(struct snd_soc_card *card,
+ 	struct snd_soc_component *component;
+ 	struct snd_soc_rtdcom_list *rtdcom;
  
--	return 0;
-+	return ret;
++	mutex_lock(&client_mutex);
+ 	for_each_rtdcom(rtd, rtdcom) {
+ 		component = rtdcom->component;
+ 
+ 		if (component->driver->remove_order == order)
+ 			soc_remove_component(component);
+ 	}
++	mutex_unlock(&client_mutex);
  }
- EXPORT_SYMBOL_GPL(spi_bitbang_start);
  
+ static void soc_remove_dai_links(struct snd_soc_card *card)
 -- 
 2.20.1
 
