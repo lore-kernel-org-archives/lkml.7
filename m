@@ -2,150 +2,252 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850DFC48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25037C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53970205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:09:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ylBClEPX"
+	by mail.kernel.org (Postfix) with ESMTP id DE78F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562576969;
+	bh=IN4HXUbNcWijv3CYmJAxE+HEYf0OBZ3ijyM9jf/sO7Y=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Jb0nRz0I0b2H2T1rQqjXKEQYCvqiUrD6npazsyGTt/D3Tl977qPZKlz6cgV51wAjz
+	 qB4HiBgm3HilcIpEXynTPiv3FhQG4A+uY1sycaeDe61QQzW/H9A7IDIli++nsr2UYh
+	 Hm1OJl9hbq6XqQ3wbNs9gOdpH0N9rb2y5t9HOu8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfGHJJS (ORCPT
+        id S1729669AbfGHJJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 05:09:18 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56276 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfGHJJR (ORCPT
+        Mon, 8 Jul 2019 05:09:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35671 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfGHJJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 05:09:17 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6893uBa041139;
-        Mon, 8 Jul 2019 09:09:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=xBnTc52DNh0B6xUFwny0830lUIEUiPz7+JY1AzE6U20=;
- b=ylBClEPX8DzAbh+aMS2YEL7+DpfZblzXh3OoCm7PGCkZVFHU0xPKGQCYA1BWX0486QL+
- 8VyfSI6aOxLlDaWCcUAVeWaQLUA5ZuAVRb13LfQrdUjyZVG5zNl/pSYZusSv4g6znx8M
- LYIXaBpO3FjyxLoMORspjaFmkG/QzV7H2WvbawGV6pdu6Ynj0Zn8FKGJ26EUp8pEGAja
- Gdhmg6fqxXfTCoB40WEBpAjMt5QtMgyi3u7DcErqLjt42kxDTVyyWr+R73/LrXgLSXxv
- 2WmQnsLJ7ueCXBAGhaVl89UCKElUEpSgAgMS2GIu13P/LTTe8mffseF4meXK3AScF+TS 5A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2tjkkpd7sj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jul 2019 09:09:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6898FMm070344;
-        Mon, 8 Jul 2019 09:09:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tjgrtddd0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jul 2019 09:09:01 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6898w01003582;
-        Mon, 8 Jul 2019 09:08:59 GMT
-Received: from [10.182.69.170] (/10.182.69.170)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jul 2019 02:08:58 -0700
-Subject: Re: [PATCH] r8169: add enable_aspm parameter
-To:     AceLan Kao <acelan.kao@canonical.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190708063751.16234-1-acelan.kao@canonical.com>
-From:   Yanjun Zhu <yanjun.zhu@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <c480edb5-b47a-6af7-7c07-c2f39a96c9cc@oracle.com>
-Date:   Mon, 8 Jul 2019 17:10:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jul 2019 05:09:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so7541526wrm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 02:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=tKAJbh75lFXDsmlEactm1A3egstkfVUzjG6Bu8j0qEs=;
+        b=HzkhDVrLZAOmZfAW6kJk8eAsqILthXM4A3njVXq4sPVbbmVRKI5RXtRvgl3h8ApZkR
+         cQkBzenkjMVAPPum9GTIH5dS38eh5zRFBg6Q3L2+y0UXUYgrlv/4ViHSnGIs7/rzA4ds
+         2BI079HmtDXI6wf8yMCJVHJWmyGLokpr7M6bSBKYSJTTa7WgUTGsPVHn2s+yIfufWfyW
+         2LYfuyp79/fQCu/rx/yd4sYoiS6mb3qQcQkJFY1TNjKFelwaiYzQTu/89YyBGIg8iqJS
+         YeDTw31OLH7Uc29nNJd77Xee/uIGfaLYblSNQJMTnZrGiywt+sxXbXhtWHL1dF68f8EH
+         inSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=tKAJbh75lFXDsmlEactm1A3egstkfVUzjG6Bu8j0qEs=;
+        b=injkROtBa6Qf82KMTj1S0WStB9UjhqoaQ4NAnmcTU1/bcEoL48mWEQqAiviNUvGZ0h
+         VhnsEiXriTQk96SFWwSbsc5ACDaxCHAXRb7Sigd1HEjO5PAISezSMce7jFaQUbgSjPLY
+         G1qNzOda7vSBGjR19lLrt+5OJgi4MqShlrAhZx25RUa4JSjfj+xTfRqtpFROuPV2PkRV
+         PgtGL9n2CL9KKdmtPkYbwZO+tMrbtnG1hvp7YfItHMD9ysS06Y50aswegbwBJ1LFylMS
+         7aSJwkstHOnA9bNgYcWTlJ0rAgfvIIBHjamrrRcFlPxY4cUNYZDMiyA85o56CTCrND3P
+         NabQ==
+X-Gm-Message-State: APjAAAWJf/TEaiEMYZJt/iKoMq6wQQnZklPSKp5cL2dqDYvkNz4jWRRK
+        /KD5Td1Hwp3eyL23UfK2aZRAJzs8
+X-Google-Smtp-Source: APXvYqzzK+ADM2fl5qFsjFRxo3oax/lSg1aulpUbJLS+lPR39rb93aiucXoZCDjUXXdtB6x8vLPGNQ==
+X-Received: by 2002:a5d:4489:: with SMTP id j9mr18077883wrq.15.1562576963176;
+        Mon, 08 Jul 2019 02:09:23 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id z7sm5718477wrh.67.2019.07.08.02.09.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 02:09:22 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 11:09:20 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@us.ibm.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] RCU changes for v5.3
+Message-ID: <20190708090920.GA16500@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190708063751.16234-1-acelan.kao@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9311 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907080120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9311 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907080119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
-On 2019/7/8 14:37, AceLan Kao wrote:
-> We have many commits in the driver which enable and then disable ASPM
-> function over and over again.
->     commit b75bb8a5b755 ("r8169: disable ASPM again")
->     commit 0866cd15029b ("r8169: enable ASPM on RTL8106E")
->     commit 94235460f9ea ("r8169: Align ASPM/CLKREQ setting function with vendor driver")
->     commit aa1e7d2c31ef ("r8169: enable ASPM on RTL8168E-VL")
->     commit f37658da21aa ("r8169: align ASPM entry latency setting with vendor driver")
->     commit a99790bf5c7f ("r8169: Reinstate ASPM Support")
->     commit 671646c151d4 ("r8169: Don't disable ASPM in the driver")
->     commit 4521e1a94279 ("Revert "r8169: enable internal ASPM and clock request settings".")
->     commit d64ec841517a ("r8169: enable internal ASPM and clock request settings")
->
-> This function is very important for production, and if we can't come out
-> a solution to make both happy, I'd suggest we add a parameter in the
-> driver to toggle it.
+Please pull the latest core-rcu-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-rcu-for-linus
+
+   # HEAD: 83086d654dd08c0f57381522e6819f421677706e Merge branch 'for-mingo' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu into core/rcu
+
+The changes in this cycle are:
+
+ - RCU flavor consolidation cleanups and optmizations
+ - Documentation updates
+ - Miscellaneous fixes
+ - SRCU updates
+ - RCU-sync flavor consolidation
+ - Torture-test updates
+ - Linux-kernel memory-consistency-model updates, most notably the addition of plain C-language accesses
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Alan Stern (7):
+      tools/memory-model: Prepare for data-race detection
+      tools/memory-model: Add definitions of plain and marked accesses
+      tools/memory-model: Add data-race detection
+      Documentation: atomic_t.txt: Explain ordering provided by smp_mb__{before,after}_atomic()
+      tools/memory-model: Expand definition of barrier
+      tools/memory-model: Change definition of rcu-fence
+      tools/memory-model: Improve data-race detection
+
+Andrea Parri (3):
+      rcu: Don't return a value from rcu_assign_pointer()
+      tools/memory-model: Fix comment in MP+poonceonces.litmus
+      tools/memory-model: Do not use "herd" to refer to "herd7"
+
+Jiang Biao (2):
+      rcu: Remove unused rdp local from synchronize_rcu_expedited()
+      rcu: Make __call_srcu static
+
+Joel Fernandes (Google) (7):
+      lockdep: Add assertion to check if in an interrupt
+      rcu: Add checks for dynticks counters in rcu_is_cpu_rrupt_from_idle()
+      doc/rcuref: Document real world examples in kernel
+      srcu: Remove unused vmlinux srcu linker entries
+      module: Make srcu_struct ptr array as read-only
+      rcutorture: Select from only online CPUs
+      rcutorture: Add cpu0 to the set of CPUs to add jitter
+
+Neeraj Upadhyay (2):
+      rcu: Dump specified number of blocked tasks
+      rcu: Correctly unlock root node in rcu_check_gp_start_stall()
+
+Oleg Nesterov (4):
+      rcu/sync: Kill rcu_sync_type/gp_type
+      uprobes: Use DEFINE_STATIC_PERCPU_RWSEM() to initialize dup_mmap_sem
+      locking/percpu-rwsem: Add DEFINE_PERCPU_RWSEM(), use it to initialize cgroup_threadgroup_rwsem
+      rcu/sync: Simplify the state machine
+
+Paul E. McKenney (32):
+      rcu: Check for wakeup-safe conditions in rcu_read_unlock_special()
+      rcu: Only do rcu_read_unlock_special() wakeups if expedited
+      rcu: Allow rcu_read_unlock_special() to raise_softirq() if in_irq()
+      rcu: Use irq_work to get scheduler's attention in clean context
+      rcu: Inline invoke_rcu_callbacks() into its sole remaining caller
+      rcu: Avoid self-IPI in sync_rcu_exp_select_node_cpus()
+      rcu: Avoid self-IPI in sync_sched_exp_online_cleanup()
+      rcu: Rename rcu_data's ->deferred_qs to ->exp_deferred_qs
+      rcu: Make kfree_rcu() ignore NULL pointers
+      rcu: Set a maximum limit for back-to-back callback invocation
+      doc: Remove ".vnet" from paulmck email addresses
+      srcu: Allocate per-CPU data for DEFINE_SRCU() in modules
+      rcutorture: Add cond_resched() to forward-progress free-up loop
+      rcutorture: Fix stutter_wait() return value and freelist checks
+      torture: Allow inter-stutter interval to be specified
+      torture: Make kvm-find-errors.sh and kvm-recheck.sh provide exit status
+      rcutorture: Provide rudimentary Makefile
+      rcutorture: Exempt tasks RCU from timely draining of grace periods
+      rcutorture: Exempt TREE01 from forward-progress testing
+      rcutorture: Give the scheduler a chance on PREEMPT && NO_HZ_FULL kernels
+      rcutorture: Halt forward-progress checks at end of run
+      rcutorture: Add trivial RCU implementation
+      torture: Capture qemu output
+      torture: Add function graph-tracing cheat sheet
+      torture: Run kernel build in source directory
+      torture: Make --cpus override idleness calculations
+      torture: Add --trust-make to suppress "make clean"
+      rcutorture: Dump trace buffer for callback pipe drain failures
+      torture: Suppress propagating trace_printk() warning
+      rcutorture: Upper case solves the case of the vanishing NULL pointer
+      rcu: Upgrade sync_exp_work_done() to smp_mb()
+      rcu: Fix irritating whitespace error in rcu_assign_pointer()
+
+Sebastian Andrzej Siewior (2):
+      rcu: Enable elimination of Tree-RCU softirq processing
+      rcutorture: Tweak kvm options
+
+Waiman Long (1):
+      rcu: Force inlining of rcu_read_lock()
+
+Zhenzhong Duan (1):
+      doc: Fixup definition of rcupdate.rcu_task_stall_timeout
 
 
-Perhaps sysctl is better?
+ Documentation/RCU/rcuref.txt                       |  21 +-
+ Documentation/RCU/stallwarn.txt                    |   2 +-
+ Documentation/RCU/whatisRCU.txt                    |   8 +-
+ Documentation/admin-guide/kernel-parameters.txt    |   6 +
+ Documentation/atomic_t.txt                         |  17 +-
+ Documentation/core-api/circular-buffers.rst        |   2 +-
+ Documentation/memory-barriers.txt                  |   2 +-
+ .../translations/ko_KR/memory-barriers.txt         |   2 +-
+ include/linux/lockdep.h                            |   7 +
+ include/linux/module.h                             |   5 +
+ include/linux/percpu-rwsem.h                       |  10 +-
+ include/linux/rcu_sync.h                           |  40 ++--
+ include/linux/rcupdate.h                           |  21 +-
+ include/linux/sched.h                              |   2 +-
+ include/linux/srcutree.h                           |  14 +-
+ include/linux/torture.h                            |   2 +-
+ kernel/cgroup/cgroup.c                             |   3 +-
+ kernel/events/uprobes.c                            |   4 +-
+ kernel/locking/locktorture.c                       |   2 +-
+ kernel/locking/percpu-rwsem.c                      |   2 +-
+ kernel/module.c                                    |   5 +
+ kernel/rcu/rcu.h                                   |   5 +
+ kernel/rcu/rcutorture.c                            |  96 +++++++--
+ kernel/rcu/srcutree.c                              |  69 ++++++-
+ kernel/rcu/sync.c                                  | 214 ++++++++++-----------
+ kernel/rcu/tree.c                                  | 164 +++++++++++++---
+ kernel/rcu/tree.h                                  |   6 +-
+ kernel/rcu/tree_exp.h                              |  53 +++--
+ kernel/rcu/tree_plugin.h                           | 195 ++++++-------------
+ kernel/rcu/tree_stall.h                            |   4 +-
+ kernel/rcu/update.c                                |  13 ++
+ kernel/torture.c                                   |  23 ++-
+ tools/include/linux/rcu.h                          |   4 +-
+ tools/memory-model/linux-kernel.bell               |   6 +
+ tools/memory-model/linux-kernel.cat                | 102 +++++++---
+ tools/memory-model/linux-kernel.def                |   1 +
+ .../litmus-tests/MP+poonceonces.litmus             |   2 +-
+ tools/memory-model/litmus-tests/README             |   2 +-
+ tools/memory-model/lock.cat                        |   2 +-
+ tools/memory-model/scripts/README                  |   4 +-
+ tools/memory-model/scripts/checkalllitmus.sh       |   2 +-
+ tools/memory-model/scripts/checklitmus.sh          |   2 +-
+ tools/memory-model/scripts/parseargs.sh            |   2 +-
+ tools/memory-model/scripts/runlitmushist.sh        |   2 +-
+ tools/testing/radix-tree/linux/rcupdate.h          |   2 +-
+ tools/testing/selftests/rcutorture/Makefile        |   3 +
+ .../testing/selftests/rcutorture/bin/configinit.sh |  39 ++--
+ tools/testing/selftests/rcutorture/bin/cpus2use.sh |   5 +
+ .../testing/selftests/rcutorture/bin/functions.sh  |  13 +-
+ tools/testing/selftests/rcutorture/bin/jitter.sh   |  13 +-
+ .../testing/selftests/rcutorture/bin/kvm-build.sh  |   9 +-
+ .../selftests/rcutorture/bin/kvm-find-errors.sh    |   3 +
+ .../selftests/rcutorture/bin/kvm-recheck.sh        |  13 +-
+ .../selftests/rcutorture/bin/kvm-test-1-run.sh     |  23 +--
+ tools/testing/selftests/rcutorture/bin/kvm.sh      |  14 +-
+ .../selftests/rcutorture/bin/parse-build.sh        |   2 +-
+ .../selftests/rcutorture/bin/parse-console.sh      |   1 +
+ .../selftests/rcutorture/configs/rcu/CFcommon      |   3 +
+ .../selftests/rcutorture/configs/rcu/TREE01.boot   |   1 +
+ .../selftests/rcutorture/configs/rcu/TRIVIAL       |  14 ++
+ .../selftests/rcutorture/configs/rcu/TRIVIAL.boot  |   3 +
+ 61 files changed, 845 insertions(+), 466 deletions(-)
+ create mode 100644 tools/testing/selftests/rcutorture/Makefile
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRIVIAL
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRIVIAL.boot
 
-
->
-> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-> ---
->   drivers/net/ethernet/realtek/r8169.c | 13 +++++++++----
->   1 file changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
-> index d06a61f00e78..f557cb36e2c6 100644
-> --- a/drivers/net/ethernet/realtek/r8169.c
-> +++ b/drivers/net/ethernet/realtek/r8169.c
-> @@ -702,10 +702,13 @@ struct rtl8169_private {
->   
->   typedef void (*rtl_generic_fct)(struct rtl8169_private *tp);
->   
-> +static int enable_aspm;
->   MODULE_AUTHOR("Realtek and the Linux r8169 crew <netdev@vger.kernel.org>");
->   MODULE_DESCRIPTION("RealTek RTL-8169 Gigabit Ethernet driver");
->   module_param_named(debug, debug.msg_enable, int, 0);
->   MODULE_PARM_DESC(debug, "Debug verbosity level (0=none, ..., 16=all)");
-> +module_param(enable_aspm, int, 0);
-> +MODULE_PARM_DESC(enable_aspm, "Enable ASPM support (0 = disable, 1 = enable");
->   MODULE_SOFTDEP("pre: realtek");
->   MODULE_LICENSE("GPL");
->   MODULE_FIRMWARE(FIRMWARE_8168D_1);
-> @@ -7163,10 +7166,12 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->   	if (rc)
->   		return rc;
->   
-> -	/* Disable ASPM completely as that cause random device stop working
-> -	 * problems as well as full system hangs for some PCIe devices users.
-> -	 */
-> -	pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-> +	if (!enable_aspm) {
-> +		/* Disable ASPM completely as that cause random device stop working
-> +		 * problems as well as full system hangs for some PCIe devices users.
-> +		 */
-> +		pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-> +	}
->   
->   	/* enable device (incl. PCI PM wakeup and hotplug setup) */
->   	rc = pcim_enable_device(pdev);
