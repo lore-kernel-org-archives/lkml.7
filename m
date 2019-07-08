@@ -2,197 +2,151 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED32C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D4AC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C1520665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5267420665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EYrfpuje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730408AbfGHLPv (ORCPT
+        id S1730420AbfGHLRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:15:51 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36048 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727671AbfGHLPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:15:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 04:15:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
-   d="asc'?scan'208";a="170258470"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga006.jf.intel.com with ESMTP; 08 Jul 2019 04:15:46 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Pawel Laszczak <pawell@cadence.com>,
-        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "hdegoede\@redhat.com" <hdegoede@redhat.com>,
-        "heikki.krogerus\@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "robh+dt\@kernel.org" <robh+dt@kernel.org>,
-        "rogerq\@ti.com" <rogerq@ti.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel\@ti.com" <jbergsagel@ti.com>,
-        "nsekhar\@ti.com" <nsekhar@ti.com>, "nm\@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        "peter.chen\@nxp.com" <peter.chen@nxp.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-In-Reply-To: <BYAPR07MB4709E5BA041BBDDB70E69F62DDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <87r274lmqk.fsf@linux.intel.com> <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com> <87a7dpm442.fsf@linux.intel.com> <BYAPR07MB4709E5BA041BBDDB70E69F62DDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
-Date:   Mon, 08 Jul 2019 14:15:42 +0300
-Message-ID: <874l3wn5ep.fsf@linux.intel.com>
+        Mon, 8 Jul 2019 07:17:17 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39644 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730258AbfGHLRR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 07:17:17 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68BEbUZ144983;
+        Mon, 8 Jul 2019 11:16:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=wyEdXnjJ8jw6sAdU9BtEeTeNAhQPGnvYdqq4Yf+RfmY=;
+ b=EYrfpujejJTqx0+2HHciLdDO2gGPwyoRRmV3E7Nh2ivAl011KySpBHyaPVtBRkkzTTbW
+ uhdORuYHtWrZ1c0PKLoyLwQsz6A0rqrIewH6meH2Z523hDUPBQyQCl+30IBQRjqLju90
+ P3q31NT3cg0pgKnxrG3qRwaHA2MJ5xuwV+nHRy4/Xb6ix094srK+x1d/R8O3KLk/jeaz
+ sY6bQkSlOplZ90iUa0nmelpzKRDgBI9L0pE3dE0i7xB7V7J4za2pBG4fJQk4mU2xh7Lf
+ fES+O8cbpF7edN5wfSFrNFDnY+XlJlUCuyTv0AAZXotZaV3kEimOK+ivCQqQGI4DomXG hA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tjkkpdsw8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 11:16:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68BD0nE176139;
+        Mon, 8 Jul 2019 11:16:54 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2tjjyk57pc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 11:16:53 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x68BGqmU015176;
+        Mon, 8 Jul 2019 11:16:52 GMT
+Received: from dm-oel.no.oracle.com (/10.172.157.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jul 2019 04:16:51 -0700
+From:   Dag Moxnes <dag.moxnes@oracle.com>
+To:     dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
+        parav@mellanox.com
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] RDMA/core: Fix race when resolving IP address
+Date:   Mon,  8 Jul 2019 13:16:24 +0200
+Message-Id: <1562584584-13132-1-git-send-email-dag.moxnes@oracle.com>
+X-Mailer: git-send-email 1.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9311 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907080145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9311 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907080145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Use neighbour lock when copying MAC address from neighbour data struct
+in dst_fetch_ha.
+
+When not using the lock, it is possible for the function to race with
+neigh_update, causing it to copy an invalid MAC address.
+
+It is possible to provoke this error by calling rdma_resolve_addr in a
+tight loop, while deleting the corresponding ARP entry in another tight
+loop.
+
+This will cause the race shown it the following sample trace:
+
+rdma_resolve_addr()
+  rdma_resolve_ip()
+    addr_resolve()
+      addr_resolve_neigh()
+        fetch_ha()
+          dst_fetch_ha()
+            n->nud_state == NUD_VALID
+
+and
+
+net_ioctl()
+  arp_ioctl()
+    arp_rec_delete()
+      arp_invalidate()
+        neigh_update()
+          __neigh_update()
+            neigh->nud_state = new;
+
+Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+---
+v1 -> v2:
+   * Modified implementation to improve readability
+
+v2 -> v3:
+   * Added sample trace as suggested by Parav Pandit
+   * Added Reviewed-by
 
 
-Hi,
+---
+ drivers/infiniband/core/addr.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Pawel Laszczak <pawell@cadence.com> writes:
-> Please look at the changes in drivers/usb/common/common.c file.=20
-> I'm going to add it as next patch to next version.
->=20=20
->
->>Pawel Laszczak <pawell@cadence.com> writes:
->>>>> +void cdns3_role_stop(struct cdns3 *cdns)
->>
->>>>> +static const char *const cdns3_mode[] =3D {
->>>>> +	[USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>>>> +	[USB_DR_MODE_OTG]		=3D "otg",
->>>>> +	[USB_DR_MODE_HOST]		=3D "host",
->>>>> +	[USB_DR_MODE_PERIPHERAL]	=3D "device",
->>>>> +};
->>>>
->>>>don't we have a generic version of this under usb/common ?
->>>>
->>> Yes, there is a similar array, but it is defined also as static
->>> and there is no function for converting value to string.
->>> There is only function for converting string to value.
->>
->>right. You can add the missing interface generically instead of
->>duplicating the enumeration.
->>
->>> There is also:
->>> [USB_DR_MODE_UNKNOWN]		=3D "",
->>> Instead of:
->>> [USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>>
->>> So, for USB_DR_MODE_UNKNOWN user will not see anything information.
->>
->>But that's what "unknown" means :-) We don't know the information.
->>
->
-> ////// start
-> commit 607754c60fabc43408f4f2de82d3560c72870787 (HEAD)
-> Author: Pawel Laszczak <pawell@cadence.com>
-> Date:   Mon Jul 8 12:53:47 2019 +0200
->
->     usb:common  Added usb_get_dr_mode_from_string and usb_dr_mode_to_stri=
-ng.
+diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+index 2f7d141598..51323ffbc5 100644
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -333,11 +333,14 @@ static int dst_fetch_ha(const struct dst_entry *dst,
+ 	if (!n)
+ 		return -ENODATA;
+ 
+-	if (!(n->nud_state & NUD_VALID)) {
++	read_lock_bh(&n->lock);
++	if (n->nud_state & NUD_VALID) {
++		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
++		read_unlock_bh(&n->lock);
++	} else {
++		read_unlock_bh(&n->lock);
+ 		neigh_event_send(n, NULL);
+ 		ret = -ENODATA;
+-	} else {
+-		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
+ 	}
+ 
+ 	neigh_release(n);
+-- 
+2.20.1
 
-This would read better as:
-
-      usb: common: Add usb_get_dr_mode_from_string and usb_dr_mode_to_strin=
-g.
-
->
->     Patch introduces new function usb_dr_mode_to_string for converting du=
-al role
->     mod to string and removes static from usb_dr_mode_to_string definitio=
-n.
->
->     Both changes have made to avoid duplication of code by cdns3 driver.
->
-> diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-> index 18f5dcf58b0d..ab59954deff8 100644
-> --- a/drivers/usb/common/common.c
-> +++ b/drivers/usb/common/common.c
-> @@ -118,13 +118,20 @@ static const char *const usb_dr_modes[] =3D {
->         [USB_DR_MODE_OTG]               =3D "otg",
->  };
->
-> -static enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
-> +/**
-> + * usb_get_dr_mode_from_string - Convert string to dual role mode.
-> + * @str: Pointer to the given string
-> + *
-> + * The function gets string and returns the correspondig enum usb_dr_mod=
-e.
-> + */
-> +enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
->  {
->         int ret;
->
->         ret =3D match_string(usb_dr_modes, ARRAY_SIZE(usb_dr_modes), str);
->         return (ret < 0) ? USB_DR_MODE_UNKNOWN : ret;
->  }
-> +EXPORT_SYMBOL_GPL(usb_get_dr_mode_from_string);
->
->  enum usb_dr_mode usb_get_dr_mode(struct device *dev)
->  {
-> @@ -139,6 +146,21 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(usb_get_dr_mode);
->
-> +/**
-> + * usb_dr_mode_to_string - Convert dual role mode to stringi.
-
-s/stringi/string
-
-> + * @dr_mode: Pointer to the given dual role mode
-> + *
-> + * The function gets enum usb_dr_mode, and returns the correspondig stri=
-ng.
-> + */
-> +const *char usb_dr_mode_to_string(const enum usb_dr_mode dr_mode)
-> +{
-> +       if (dr_mode > USB_DR_MODE_UNKNOWN || dr_mode <=3D USB_DR_MODE_PER=
-IPHERAL)
-> +               return usb_dr_modes[dr_mode];
-> +
-> +       return usb_dr_modes[USB_DR_MODE_UNKNOWN];
-> +}
-> +EXPORT_SYMBOL_GPL(usb_dr_mode_to_string);
-
-missing prototype in a header file.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0jJd4ACgkQzL64meEa
-mQb97A/9Hr4c2WZCaadxHiinggvMFi2lLiT1SA8SJHF0rmBdR2bcFHuzEI+TfiAG
-Mj+gtOn30UcnuFrbUcx/3fuca98a/5qsAxBaZK2EIEjx/+9nLt4myJhtYxVy+2eE
-MDtAED95JbLTTUiG79QsnuzJMx0FvxwOXiurZM3wsQ6+lQgBl4Y3Blhaj0IL9H6L
-AojjsFeRzeb2hjZnAESGWPDb3I0CW71Niei3IPh4zpijtNNNllcA2TZRSDIr9PZI
-8LhUtsuCPn1kopHVyf91wO3+uAIGpw4NjxIl76shwT+cmAFnfU9KiWGiz7JPe0Z0
-wxwEcYFwTisfe2/8uIg3iuExi2bg6NMAI8w/VG/sbx6RiYg9nSRpIf2vZwwNWMHo
-Ezr1U/jfsnJ/o5NNbHRg04r/cdSmQrLfD72IjAwZfI5z+QJlXOX0FmtuQbOqu3ba
-NM1a65Viae2/DQRwO9wd9WNGOFg6PgP0B7ZFXAd0XdC+tOuw/pSwN9tQJwrDliLJ
-rKf5qwxc3C7KLSttcf7wxpir5CxOd5LFereBR7KZdTbWXkq/aHP0LSOBc2fLO31N
-0ZgoyPPXApzm8jayvYYZ9qSph3I+7Iu5XvenMi90HrFuZCuTRxAVPWaM3nkKEbRf
-QqvLPB/9qqiaIB0lXMb0fC8uzXDg4+UoP6lRqLRxVPvrVVyHiJc=
-=xS1w
------END PGP SIGNATURE-----
---=-=-=--
