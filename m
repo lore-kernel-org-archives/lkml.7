@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70C4C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D70C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75314204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5671E21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599728;
-	bh=ylqPuutFgMprDE1dCFgn4SIfV7iG8LZauyBpCDxVHy4=;
+	s=default; t=1562599733;
+	bh=w/C1KY7DwgILP0qzGNFTrFsId6j3M+yqpLgt9370w2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sJiFPJbdu3FGJkd1MXROBeOcWcW0tfoOT3vZoTwhd6g4xUpmNTvm723TVsgciObXr
-	 rDW3D/kUh/V39qMo2y5FuSYjFSf068qwrxVGeJj4+AGT4cUD/IBWSCefg4bvAlrpwZ
-	 7302Iuox+/CKaxQS1X6eKmaltZVJzGKaSu3++pSI=
+	b=P+Lwb39sWxEuYaZSWJ3PDPv1NKExBclp+xI482zxhS0OttPWIWbl506AoY85Wi4eQ
+	 5bjFld7FbM5Rg3LFbmjSGn/j43DIS+fmkA7XgxXNFXgnui1Qe/5rWvQ0RHaMXpppj8
+	 Hi5B08uNMTKWpMCqO+xDF4ljr2eaKQHnfLOcQqa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389363AbfGHP2r (ORCPT
+        id S2389382AbfGHP2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:28:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57334 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:28:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389335AbfGHP2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:28:44 -0400
+        id S2389335AbfGHP2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:28:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F821204EC;
-        Mon,  8 Jul 2019 15:28:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78AAB20645;
+        Mon,  8 Jul 2019 15:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599723;
-        bh=ylqPuutFgMprDE1dCFgn4SIfV7iG8LZauyBpCDxVHy4=;
+        s=default; t=1562599729;
+        bh=w/C1KY7DwgILP0qzGNFTrFsId6j3M+yqpLgt9370w2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PyIFkBYGFZ6BQhzrNvKx8Bbyn9oxmKqbOlu5rC+W6dRF2CNpxsiolh1SpQPIO8cHW
-         GpkX20HnGEZ+p7hhYZyWncOlJnAjcl3i5olBysO0ruwZqkiTIh5SrdaUIOTOt7oMzS
-         VKcYxgAnzvYdQSmDTKeMaTrATNQYnQbjiYJEigRg=
+        b=ZkMVx0155s+tHclfsd0gJpbk0lNCg3S99x1bOi05m2idPAxb8z6S1GAPxxFap5zdr
+         VTd6YBL4hl7dElszpQXcOdI1BSfvcqamjEq88+zs8+VHl3C14Y9eu7IMJ+LK7XwAoA
+         abvebo9dB2y+ELskJZ+jHgoZrC52MWFNYt73NPa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.19 57/90] drm/etnaviv: add missing failure path to destroy suballoc
-Date:   Mon,  8 Jul 2019 17:13:24 +0200
-Message-Id: <20190708150525.342053201@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 41/90] ptrace: Fix ->ptracer_cred handling for PTRACE_TRACEME
+Date:   Mon,  8 Jul 2019 17:13:08 +0200
+Message-Id: <20190708150524.643805739@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -59,52 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Jann Horn <jannh@google.com>
 
-commit be132e1375c1fffe48801296279079f8a59a9ed3 upstream.
+commit 6994eefb0053799d2e07cd140df6c2ea106c41ee upstream.
 
-When something goes wrong in the GPU init after the cmdbuf suballocator
-has been constructed, we fail to destroy it properly. This causes havok
-later when the GPU is unbound due to a module unload or similar.
+Fix two issues:
 
-Fixes: e66774dd6f6a (drm/etnaviv: add cmdbuf suballocator)
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
+When called for PTRACE_TRACEME, ptrace_link() would obtain an RCU
+reference to the parent's objective credentials, then give that pointer
+to get_cred().  However, the object lifetime rules for things like
+struct cred do not permit unconditionally turning an RCU reference into
+a stable reference.
+
+PTRACE_TRACEME records the parent's credentials as if the parent was
+acting as the subject, but that's not the case.  If a malicious
+unprivileged child uses PTRACE_TRACEME and the parent is privileged, and
+at a later point, the parent process becomes attacker-controlled
+(because it drops privileges and calls execve()), the attacker ends up
+with control over two processes with a privileged ptrace relationship,
+which can be abused to ptrace a suid binary and obtain root privileges.
+
+Fix both of these by always recording the credentials of the process
+that is requesting the creation of the ptrace relationship:
+current_cred() can't change under us, and current is the proper subject
+for access control.
+
+This change is theoretically userspace-visible, but I am not aware of
+any code that it will actually break.
+
+Fixes: 64b875f7ac8a ("ptrace: Capture the ptracer's creds not PT_PTRACE_CAP")
+Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kernel/ptrace.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -760,7 +760,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu
- 	if (IS_ERR(gpu->cmdbuf_suballoc)) {
- 		dev_err(gpu->dev, "Failed to create cmdbuf suballocator\n");
- 		ret = PTR_ERR(gpu->cmdbuf_suballoc);
--		goto fail;
-+		goto destroy_iommu;
- 	}
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -78,9 +78,7 @@ void __ptrace_link(struct task_struct *c
+  */
+ static void ptrace_link(struct task_struct *child, struct task_struct *new_parent)
+ {
+-	rcu_read_lock();
+-	__ptrace_link(child, new_parent, __task_cred(new_parent));
+-	rcu_read_unlock();
++	__ptrace_link(child, new_parent, current_cred());
+ }
  
- 	/* Create buffer: */
-@@ -768,7 +768,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu
- 				  PAGE_SIZE);
- 	if (ret) {
- 		dev_err(gpu->dev, "could not create command buffer\n");
--		goto destroy_iommu;
-+		goto destroy_suballoc;
- 	}
- 
- 	if (gpu->mmu->version == ETNAVIV_IOMMU_V1 &&
-@@ -800,6 +800,9 @@ int etnaviv_gpu_init(struct etnaviv_gpu
- free_buffer:
- 	etnaviv_cmdbuf_free(&gpu->buffer);
- 	gpu->buffer.suballoc = NULL;
-+destroy_suballoc:
-+	etnaviv_cmdbuf_suballoc_destroy(gpu->cmdbuf_suballoc);
-+	gpu->cmdbuf_suballoc = NULL;
- destroy_iommu:
- 	etnaviv_iommu_destroy(gpu->mmu);
- 	gpu->mmu = NULL;
+ /**
 
 
