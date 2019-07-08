@@ -2,132 +2,129 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC356C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6DBC606AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811B52064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F9182086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wtAdV/r5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adtI0jSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbfGHL1G (ORCPT
+        id S1730492AbfGHLak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:27:06 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34080 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730470AbfGHL1F (ORCPT
+        Mon, 8 Jul 2019 07:30:40 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:40237 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730463AbfGHLaj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:27:05 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b29so10705488lfq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:27:04 -0700 (PDT)
+        Mon, 8 Jul 2019 07:30:39 -0400
+Received: by mail-vk1-f196.google.com with SMTP id s16so2382785vke.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:30:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Hf3qpWa9o4L5jAB6/mRGuaap2/x9yf4r/vYifeii2fo=;
-        b=wtAdV/r5ADnTNlCcb2H65bjv2Tsa00Kxo9Pak35xFfZqO4HQdn/Y83/YS7JLdXRSQL
-         KK7cd+RjG3owZ9Hkw1yPnC58MOuzGpkMKESDqmM6zVUMLrIei4nJlD75/c1vr8HTryRM
-         575lU4GslsVNElcIKu7WJ2+ZHLUg6qYpiL0IDok7DIBzLKPlz9GECIKcb5cJvTQhXaSU
-         b4aKu3jTmOW60Hvcck7u+o2jVjQ82hniSEE5EftujuFjdWGl6dzvrvEPWMGgfHtXxqL+
-         w4tCbLekz5jpXPA9bmsXrWRYKHi+lfrSkyNafswSxlz0JozmT2QkBp8Sr5dIx6TMcdN2
-         8aUw==
+        bh=S5pzFQLY6wAoyJcQlkFDkL7kYuo2S97DwVQaLferHSE=;
+        b=adtI0jSSRetz0cNJDNRwN3rBX2RHyttxZZI5I9aqf8ysnKkFUV9FnFS27VnYtOfn3k
+         5o4kjJ+1I7J7CxPMgViFjIvNnjEIkWU7xA2E97bin/QdmblNigUoUrRme8BaG4m5ZYl3
+         Ho71Syo2ZZgqEIOykddM5miHuCI+U0mcIRM0pOauDbdBdKhtxOOzFo+IDcQKS5ChyCwF
+         lqyLUI8/4kb5ET4/G0VdZ36KN5HB+0TK1V/bNWkwueoANCSB+/pvjYbPtEpBKJE8paHt
+         i8RsNVyHl/fjxqKMiTAzbnPmwTYsyV6UdPcAu3OZxS7m89KY8v9tbCDhTpHueUw4QKBR
+         C12g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Hf3qpWa9o4L5jAB6/mRGuaap2/x9yf4r/vYifeii2fo=;
-        b=dkDFkI+kKnQvWRNgBL/oijkGO/BvAHODtT1UQ8Q2GSwSxw+dhCRkOHiDrx9tCwsg4S
-         kkmxfa17aUrn7IYK19PMlAOIYZ8raaLc5tGGtOk/yK0jUZXQqqFw68j4SQtI3QOJbMJi
-         VOfa/VVIwaKswhupDQDHCzFrT+h+7VHuxbQzzapK4SJF+MZLvPLhH/csq6zEhK7xOQo6
-         XcomqCd8ijbtZFzFYIe4ccp0zj9hcNwcF3UQ7GM38zLbfMvvhYtNZrw7EbiNQ+ezf7vi
-         D9MqTC3hoGUMVFe4RWicAYzKSMdhcqIpzokWfnU9jXLy4pO6BFx9jHBUnhKAy78nUkY2
-         xflQ==
-X-Gm-Message-State: APjAAAVsj6PgZnhIGKr5oitA+szs8N7Wa40+F2cLTrLXdLwUjwHD53bo
-        Xnqg4LUtBC3NtNBKoQimrhPgTLNkZvYw41worqfTGw==
-X-Google-Smtp-Source: APXvYqwC081d4fR8OLPtrXbCh+vYtmMk0Wru8dJUQmZZITm97zVIs/RPXdBvfUuHjytU0dkT/inqO7H2OXdKXuA7ADM=
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr8605091lfp.61.1562585223749;
- Mon, 08 Jul 2019 04:27:03 -0700 (PDT)
+        bh=S5pzFQLY6wAoyJcQlkFDkL7kYuo2S97DwVQaLferHSE=;
+        b=XQWlCcCULLGF9fTxu2f08b8D0QOBZLMX/BXVGNlgPWHM9Me7ZvI8T3lhWjgJiSVTiB
+         qiTXNagCN0q+SZS++9XRY6GDsLJOMyXKEzf8WtDys9Q/e2MV7h4ijwGm7MI24QU/eMMF
+         lidhj/QCD+IXCj8OetFrE5cGipOZbSnOHXbOQz4qDdApdk8BIiZ+CJcjXHNq8IltCLfD
+         JaNOH1lijNQmJPQDqgdGYcONJofCmxiiRXoQylVAMXHUKqKO/NlPeLTo0W+xBGEfGY5x
+         Fc8xdOAvwCxm9aCnz19glwzWkqBdptbaNN6V8eNN66KnIrtExXuFGUupVevFL+W9p1z8
+         qelA==
+X-Gm-Message-State: APjAAAV605hG/ER7nwgD0CbfCo0DqxJMebNXH0Bx3sNRiiQvfk1JwONf
+        H5wKjQDE05heN9YEfmm1hOV4SmFU3XmxdpnJlbc=
+X-Google-Smtp-Source: APXvYqzZj0O/XoyIApAsOwMBymdNTN9PHBX1xVuSebLD+VpmLa8vLdEL5x+09EymCWCqwKnpWYmt9HaaiwIag95c4s4=
+X-Received: by 2002:a1f:ee0a:: with SMTP id m10mr4869923vkh.73.1562585438687;
+ Mon, 08 Jul 2019 04:30:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <5d215f83.1c69fb81.3739c.06f8SMTPIN_ADDED_BROKEN@mx.google.com>
-In-Reply-To: <5d215f83.1c69fb81.3739c.06f8SMTPIN_ADDED_BROKEN@mx.google.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Mon, 8 Jul 2019 16:56:52 +0530
-Message-ID: <CAFA6WYPQWvVhjPjs9gueSvSn=EYcDBh7XGU+7te09-rmiWEvGw@mail.gmail.com>
-Subject: Re: uuid define issue build on macos
-To:     feng chen <puck.chen@foxmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190708104355.32569-1-oded.gabbay@gmail.com> <20190708112136.GA13795@kroah.com>
+In-Reply-To: <20190708112136.GA13795@kroah.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 8 Jul 2019 14:30:13 +0300
+Message-ID: <CAFCwf11XN_stq3HHVGqD4_LKG8W3uFiYarfbwP50hw58Hi10Sw@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: use correct variable to show fd open counter
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Omer Shpigelman <oshpigelman@habana.ai>,
+        Tomer Tayar <ttayar@habana.ai>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Jul 2019 at 08:27, feng chen <puck.chen@foxmail.com> wrote:
+On Mon, Jul 8, 2019 at 2:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> *** Default configuration is based on 'defconfig'
-> #
-> # No change to .config
-> #
-> arch/arm64/Makefile:40: LSE atomics not supported by binutils
-> arch/arm64/Makefile:48: Detected assembler with broken .inst;
-> disassembly will be unreliable
->    UPD     include/config/kernel.release
->    UPD     include/generated/utsrelease.h
->    HOSTCC  scripts/mod/file2alias.o
-> scripts/mod/file2alias.c:42:3: error: typedef redefinition with
-> different types ('struct uuid_t' vs '__darwin_uuid_t' (aka 'unsigned
-> char [16]'))
-> } uuid_t;
->    ^
+> On Mon, Jul 08, 2019 at 01:43:55PM +0300, Oded Gabbay wrote:
+> > The current code checks if the user context pointer is NULL or not to
+> > display the number of open file descriptors of a device. However, that
+> > variable (user_ctx) will eventually go away as the driver will support
+> > multiple processes. Instead, the driver can use the atomic counter of
+> > the open file descriptors which the driver already maintains.
+> >
+> > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+> > ---
+> >  drivers/misc/habanalabs/sysfs.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/misc/habanalabs/sysfs.c b/drivers/misc/habanalabs/sysfs.c
+> > index 25eb46d29d88..881be19b5fad 100644
+> > --- a/drivers/misc/habanalabs/sysfs.c
+> > +++ b/drivers/misc/habanalabs/sysfs.c
+> > @@ -356,7 +356,7 @@ static ssize_t write_open_cnt_show(struct device *dev,
+> >  {
+> >       struct hl_device *hdev = dev_get_drvdata(dev);
+> >
+> > -     return sprintf(buf, "%d\n", hdev->user_ctx ? 1 : 0);
+> > +     return sprintf(buf, "%d\n", atomic_read(&hdev->fd_open_cnt));
+> >  }
+>
+> Odds are, this means nothing, as it doesn't get touched if the file
+> descriptor is duped or sent to another process.
+>
+> Why do you care about the number of open files?  Whenever someone tries
+> to do this type of logic, it is almost always wrong, just let userspace
+> do what it wants to do, and if wants to open something twice, then it
+> gets to keep the pieces when things break.
+>
+> thanks,
+>
+> greg k-h
 
-It looks like somehow Darwin OS specific header is included here for
-UUID definition. Please try to build with following change to include
-only standardized headers:
+I care about the number of open file descriptors because I can't let
+multiple processes run simultaneously on my device, as we still don't
+have the code to do proper isolation between the processes, in regard
+of memory accesses on our device memory and by using our DMA engine.
+Basically, it's a security hole. If you want, I can explain more in
+length on this issue.
 
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -10,6 +10,7 @@
-  * of the GNU General Public License, incorporated herein by reference.
-  */
+We have the H/W infrastructure for that, using MMU and multiple
+address space IDs (ASID), but we didn't write the code yet in the
+driver, as that is a BIG feature but it wasn't requested by anyone
+yet.
 
-+#define _XOPEN_SOURCE
- #include "modpost.h"
- #include "devicetable-offsets.h"
+So the current solution is to block the ability to open multiple file
+descriptors.
 
--Sumit
+Regarding this specific sysfs property, I don't really care about it.
+I simply saw that it is shown in other drivers and I thought it may be
+nice for a system admin utility to show it.
 
->
-/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/sys/_types/_uuid_t.h:31:25:
-> note: previous definition is here
-> typedef __darwin_uuid_t uuid_t;
->                          ^
-> scripts/mod/file2alias.c:1300:42: error: array initializer must be an
-> initializer list or string literal
->          DEF_FIELD(symval, tee_client_device_id, uuid);
->                                                  ^
-> 2 errors generated.
-> make[2]: *** [scripts/mod/file2alias.o] Error 1
-> make[1]: *** [prepare0] Error 2
-> make: *** [sub-make] Error 2
->
-> and:
->
-> _types.h:77:typedef unsigned char   __darwin_uuid_t[16];
->
->   28 #ifndef _UUID_T
->   29 #define _UUID_T
->   30 #include <sys/_types.h> /* __darwin_uuid_t */
->   31 typedef __darwin_uuid_t uuid_t;
->
->
->   32 #endif /* _UUID_T */
->
->
->
+Thanks,
+Oded
