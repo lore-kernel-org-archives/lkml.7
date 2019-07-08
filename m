@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711D8C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66D3C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC29216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF50216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599091;
-	bh=g5XSuJXDPPx1t/SoGy5oUODDhay0cexUUbaJaPStrbc=;
+	s=default; t=1562599094;
+	bh=Bw4rCkcWV7YQElstxkPBsPUJaLfwFXLBLmUmxql+ido=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fQpbLvTkQdldJ/XpAnimWzs2209CrrUdsFIk7RkSIiifbNFzEesfO9MZgfA7csVs4
-	 W2og/JoaGtOegYcv6EUT2jo+b7Wklx7nZWaiWlHSRS6s5YdZyyPzTbrl57REVvV8vV
-	 lb8eU9nloCiFIaGTf2DsAiL6uXhPoYxJScZaufgg=
+	b=wqgXIBe0TJmysomzr0BjhjqoXlZWGjr+ee7S1E2CFHzDIiFAxQ5/6kaGpPxJgxiZA
+	 lpoqDxcuV3MkgIaSsnVd1Fw6gRGeanhnwVNtgG4+nwCyViNnqeCTO0Gj593Q73h6Gs
+	 eWBmAb6G72PjRp0uV05B0snXnzmIxbDboYMQPAQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732977AbfGHPSK (ORCPT
+        id S1732987AbfGHPSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41514 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732890AbfGHPR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:17:56 -0400
+        id S1732970AbfGHPSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:18:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD365216E3;
-        Mon,  8 Jul 2019 15:17:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F97221537;
+        Mon,  8 Jul 2019 15:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599076;
-        bh=g5XSuJXDPPx1t/SoGy5oUODDhay0cexUUbaJaPStrbc=;
+        s=default; t=1562599088;
+        bh=Bw4rCkcWV7YQElstxkPBsPUJaLfwFXLBLmUmxql+ido=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mpy7z2ixCdMRwFJL7g8umHVHJZIbFpcQtXEIe1kfLEmlAe10Q1QmfDjjDM6Ze9muE
-         xUMWxm05ikx8UKzBoM91MSWzoqj6tllozO/OGpegDB3sW9qNbH8vxKlXEkCmz1+RlT
-         4hKWGXtq0OCcPgKBw/kYX9WdL3yFiMSVvUUWkCCo=
+        b=lUPT6LAGI0DRF11TRJzc1/Djs5ogR8lRiXOtBiQBPxU2peciIoyw8gowr4uJXSSfA
+         O8CT6Zw9QrkjelaySqV/nF9pjRoA3BUz6TrmYZPzj9ellgWDGGQjKqctK9P2NnFAS9
+         YVHmx5Syugwfawi06V7FNV+wGZVTM8AIy8wuIlE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 69/73] tty: rocket: fix incorrect forward declaration of rp_init()
-Date:   Mon,  8 Jul 2019 17:13:19 +0200
-Message-Id: <20190708150524.901695706@linuxfoundation.org>
+Subject: [PATCH 4.4 31/73] 9p/rdma: do not disconnect on down_interruptible EAGAIN
+Date:   Mon,  8 Jul 2019 17:12:41 +0200
+Message-Id: <20190708150522.837472615@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -60,34 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 423ea3255424b954947d167681b71ded1b8fca53 ]
+[ Upstream commit 8b894adb2b7e1d1e64b8954569c761eaf3d51ab5 ]
 
-Make the forward declaration actually match the real function
-definition, something that previous versions of gcc had just ignored.
+9p/rdma would sometimes drop the connection and display errors in
+recv_done when the user does ^C.
+The errors were caused by recv buffers that were posted at the time
+of disconnect, and we just do not want to disconnect when
+down_interruptible is... interrupted.
 
-This is another patch to fix new warnings from gcc-9 before I start the
-merge window pulls.  I don't want to miss legitimate new warnings just
-because my system update brought a new compiler with new warnings.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: http://lkml.kernel.org/r/1535625307-18019-1-git-send-email-asmadeus@codewreck.org
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/rocket.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/9p/trans_rdma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/rocket.c b/drivers/tty/rocket.c
-index 2b8f2e0a4224..ec6d20f25e8b 100644
---- a/drivers/tty/rocket.c
-+++ b/drivers/tty/rocket.c
-@@ -279,7 +279,7 @@ MODULE_PARM_DESC(pc104_3, "set interface types for ISA(PC104) board #3 (e.g. pc1
- module_param_array(pc104_4, ulong, NULL, 0);
- MODULE_PARM_DESC(pc104_4, "set interface types for ISA(PC104) board #4 (e.g. pc104_4=232,232,485,485,...");
+diff --git a/net/9p/trans_rdma.c b/net/9p/trans_rdma.c
+index f42550dd3560..f3a9254b6df9 100644
+--- a/net/9p/trans_rdma.c
++++ b/net/9p/trans_rdma.c
+@@ -476,7 +476,7 @@ static int rdma_request(struct p9_client *client, struct p9_req_t *req)
  
--static int rp_init(void);
-+static int __init rp_init(void);
- static void rp_cleanup_module(void);
- 
- module_init(rp_init);
+ 	err = post_recv(client, rpl_context);
+ 	if (err) {
+-		p9_debug(P9_DEBUG_FCALL, "POST RECV failed\n");
++		p9_debug(P9_DEBUG_ERROR, "POST RECV failed: %d\n", err);
+ 		goto recv_error;
+ 	}
+ 	/* remove posted receive buffer from request structure */
+@@ -544,7 +544,7 @@ static int rdma_request(struct p9_client *client, struct p9_req_t *req)
+  recv_error:
+ 	kfree(rpl_context);
+ 	spin_lock_irqsave(&rdma->req_lock, flags);
+-	if (rdma->state < P9_RDMA_CLOSING) {
++	if (err != -EINTR && rdma->state < P9_RDMA_CLOSING) {
+ 		rdma->state = P9_RDMA_CLOSING;
+ 		spin_unlock_irqrestore(&rdma->req_lock, flags);
+ 		rdma_disconnect(rdma->cm_id);
 -- 
 2.20.1
 
