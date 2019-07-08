@@ -2,52 +2,51 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5B6C606BD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D658C606C1
 	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4ED221743
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7530B217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600097;
-	bh=3EPltH+TyhoVKGWzWdhMhsROLu5l28k94QXdN0XPeBU=;
+	s=default; t=1562600098;
+	bh=DUoaMkVaR9WxNEeEBK1fXZQik05Ei44ca2pzesMf5k4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1B5ubwpi3ZExonX5vPx7H+4blE7gBxhFa7B1jWUkBfpyGNXZk9dHqGuDnSOy8tEfw
-	 tlpnmWo6t0XPegh116ewTNr02lQ/RxeL/wP/R9D9yF/oRVhQwRIV2XA6CdBtF+YUjf
-	 90rnnJiqtmD9IwglxFNXdEBvAA0rBiVMsWTG8XqI=
+	b=HQAdQ16/ntFChTR/jEkVzdlZh0OWOKSoelv6yELS4KM+GfxvKU2lrFOrs645muWRK
+	 VfyE4b/vr1Z8th/MsoBwwi5vemUkBvI/qST1CR6GNzIx8oPql6AGnYgDjhe34rYlku
+	 OGBQnGKFoTdILkkAl6dZf5aM7yv3/tRJpf3vmryQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390588AbfGHPel (ORCPT
+        id S2390613AbfGHPeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:34:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36884 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390559AbfGHPee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:34 -0400
+        id S2390575AbfGHPeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E499204EC;
-        Mon,  8 Jul 2019 15:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154BD21738;
+        Mon,  8 Jul 2019 15:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600072;
-        bh=3EPltH+TyhoVKGWzWdhMhsROLu5l28k94QXdN0XPeBU=;
+        s=default; t=1562600083;
+        bh=DUoaMkVaR9WxNEeEBK1fXZQik05Ei44ca2pzesMf5k4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pXCFZoTlok0V7OaPCpY7WW5LbsWbOqSwo5d9N1qPyQKyTjfekI6eapuGXrCbtFsAp
-         Frk/W8atq/cikWAwIztnFeWPTQQypAF9cFOL0dNzCZ9iGi5EbWCRRh90Dr1Lqg3E+V
-         KVHzaFz5pkXFVBDPgHS1754OKvzW2zDt5NIIbi+M=
+        b=DXsDcHEoJNJfSOpBKcC+RFytdwB3Q3AQk0dHzkAvI9PhNc6qJn/HTMXNFYHo5by5V
+         U0ETu8XfMHROdKpDuWpfjML1aWweXJ7ieJGmDwQO2VBxJLhW2bUySlppVJEBx9ycLd
+         zy4sUwVM42f6ghz9PiGxNaVWSGQQlXN1Tj7R05tc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 84/96] s390/mm: fix pxd_bad with folded page tables
-Date:   Mon,  8 Jul 2019 17:13:56 +0200
-Message-Id: <20190708150530.986967549@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 5.1 88/96] svcrdma: Ignore source port when computing DRC hash
+Date:   Mon,  8 Jul 2019 17:14:00 +0200
+Message-Id: <20190708150531.195325400@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -60,111 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c9f621524e70774688db3cec60d85fa4c7de52e3 ]
+From: Chuck Lever <chuck.lever@oracle.com>
 
-With git commit d1874a0c2805fcfa9162c972d6b7541e57adb542
-"s390/mm: make the pxd_offset functions more robust" and a 2-level page
-table it can now happen that pgd_bad() gets asked to verify a large
-segment table entry. If the entry is marked as dirty pgd_bad() will
-incorrectly return true.
+commit 1e091c3bbf51d34d5d96337a59ce5ab2ac3ba2cc upstream.
 
-Change the pgd_bad(), p4d_bad(), pud_bad() and pmd_bad() functions to
-first verify the table type, return false if the table level is lower
-than what the function is suppossed to check, return true if the table
-level is too high, and otherwise check the relevant region and segment
-table bits. pmd_bad() has to check against ~SEGMENT_ENTRY_BITS for
-normal page table pointers or ~SEGMENT_ENTRY_BITS_LARGE for large
-segment table entries. Same for pud_bad() which has to check against
-~_REGION_ENTRY_BITS or ~_REGION_ENTRY_BITS_LARGE.
+The DRC appears to be effectively empty after an RPC/RDMA transport
+reconnect. The problem is that each connection uses a different
+source port, which defeats the DRC hash.
 
-Fixes: d1874a0c2805 ("s390/mm: make the pxd_offset functions more robust")
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Clients always have to disconnect before they send retransmissions
+to reset the connection's credit accounting, thus every retransmit
+on NFS/RDMA will miss the DRC.
+
+An NFS/RDMA client's IP source port is meaningless for RDMA
+transports. The transport layer typically sets the source port value
+on the connection to a random ephemeral port. The server already
+ignores it for the "secure port" check. See commit 16e4d93f6de7
+("NFSD: Ignore client's source port on RDMA transports").
+
+The Linux NFS server's DRC resolves XID collisions from the same
+source IP address by using the checksum of the first 200 bytes of
+the RPC call header.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/include/asm/pgtable.h | 33 +++++++++++++++++++--------------
- 1 file changed, 19 insertions(+), 14 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 394bec31cb97..9f0195d5fa16 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -238,7 +238,7 @@ static inline int is_module_addr(void *addr)
- #define _REGION_ENTRY_NOEXEC	0x100	/* region no-execute bit	    */
- #define _REGION_ENTRY_OFFSET	0xc0	/* region table offset		    */
- #define _REGION_ENTRY_INVALID	0x20	/* invalid region table entry	    */
--#define _REGION_ENTRY_TYPE_MASK	0x0c	/* region/segment table type mask   */
-+#define _REGION_ENTRY_TYPE_MASK	0x0c	/* region table type mask	    */
- #define _REGION_ENTRY_TYPE_R1	0x0c	/* region first table type	    */
- #define _REGION_ENTRY_TYPE_R2	0x08	/* region second table type	    */
- #define _REGION_ENTRY_TYPE_R3	0x04	/* region third table type	    */
-@@ -277,6 +277,7 @@ static inline int is_module_addr(void *addr)
- #define _SEGMENT_ENTRY_PROTECT	0x200	/* segment protection bit	    */
- #define _SEGMENT_ENTRY_NOEXEC	0x100	/* segment no-execute bit	    */
- #define _SEGMENT_ENTRY_INVALID	0x20	/* invalid segment table entry	    */
-+#define _SEGMENT_ENTRY_TYPE_MASK 0x0c	/* segment table type mask	    */
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -211,9 +211,14 @@ static void handle_connect_req(struct rd
+ 	/* Save client advertised inbound read limit for use later in accept. */
+ 	newxprt->sc_ord = param->initiator_depth;
  
- #define _SEGMENT_ENTRY		(0)
- #define _SEGMENT_ENTRY_EMPTY	(_SEGMENT_ENTRY_INVALID)
-@@ -614,15 +615,9 @@ static inline int pgd_none(pgd_t pgd)
- 
- static inline int pgd_bad(pgd_t pgd)
- {
--	/*
--	 * With dynamic page table levels the pgd can be a region table
--	 * entry or a segment table entry. Check for the bit that are
--	 * invalid for either table entry.
--	 */
--	unsigned long mask =
--		~_SEGMENT_ENTRY_ORIGIN & ~_REGION_ENTRY_INVALID &
--		~_REGION_ENTRY_TYPE_MASK & ~_REGION_ENTRY_LENGTH;
--	return (pgd_val(pgd) & mask) != 0;
-+	if ((pgd_val(pgd) & _REGION_ENTRY_TYPE_MASK) < _REGION_ENTRY_TYPE_R1)
-+		return 0;
-+	return (pgd_val(pgd) & ~_REGION_ENTRY_BITS) != 0;
- }
- 
- static inline unsigned long pgd_pfn(pgd_t pgd)
-@@ -703,6 +698,8 @@ static inline int pmd_large(pmd_t pmd)
- 
- static inline int pmd_bad(pmd_t pmd)
- {
-+	if ((pmd_val(pmd) & _SEGMENT_ENTRY_TYPE_MASK) > 0)
-+		return 1;
- 	if (pmd_large(pmd))
- 		return (pmd_val(pmd) & ~_SEGMENT_ENTRY_BITS_LARGE) != 0;
- 	return (pmd_val(pmd) & ~_SEGMENT_ENTRY_BITS) != 0;
-@@ -710,8 +707,12 @@ static inline int pmd_bad(pmd_t pmd)
- 
- static inline int pud_bad(pud_t pud)
- {
--	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) < _REGION_ENTRY_TYPE_R3)
--		return pmd_bad(__pmd(pud_val(pud)));
-+	unsigned long type = pud_val(pud) & _REGION_ENTRY_TYPE_MASK;
+-	/* Set the local and remote addresses in the transport */
+ 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+ 	svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
++	/* The remote port is arbitrary and not under the control of the
++	 * client ULP. Set it to a fixed value so that the DRC continues
++	 * to be effective after a reconnect.
++	 */
++	rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
 +
-+	if (type > _REGION_ENTRY_TYPE_R3)
-+		return 1;
-+	if (type < _REGION_ENTRY_TYPE_R3)
-+		return 0;
- 	if (pud_large(pud))
- 		return (pud_val(pud) & ~_REGION_ENTRY_BITS_LARGE) != 0;
- 	return (pud_val(pud) & ~_REGION_ENTRY_BITS) != 0;
-@@ -719,8 +720,12 @@ static inline int pud_bad(pud_t pud)
+ 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
+ 	svc_xprt_set_local(&newxprt->sc_xprt, sa, svc_addr_len(sa));
  
- static inline int p4d_bad(p4d_t p4d)
- {
--	if ((p4d_val(p4d) & _REGION_ENTRY_TYPE_MASK) < _REGION_ENTRY_TYPE_R2)
--		return pud_bad(__pud(p4d_val(p4d)));
-+	unsigned long type = p4d_val(p4d) & _REGION_ENTRY_TYPE_MASK;
-+
-+	if (type > _REGION_ENTRY_TYPE_R2)
-+		return 1;
-+	if (type < _REGION_ENTRY_TYPE_R2)
-+		return 0;
- 	return (p4d_val(p4d) & ~_REGION_ENTRY_BITS) != 0;
- }
- 
--- 
-2.20.1
-
 
 
