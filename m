@@ -2,225 +2,112 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30691C606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AE7C606AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135DC20656
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CC7920665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:27:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jX7CUX1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbfGHKY0 convert rfc822-to-8bit (ORCPT
+        id S1730073AbfGHK1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 06:24:26 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39134 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbfGHKYZ (ORCPT
+        Mon, 8 Jul 2019 06:27:17 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58912 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbfGHK1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 06:24:25 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m202so12185109oig.6;
-        Mon, 08 Jul 2019 03:24:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZH94yRQagyEtEFCXe5BGPELbKznvxiS9C2fS8RtGieU=;
-        b=ALsZFk1Msu3eJ1CUslIyqTPO/0RTDWPbyne7OJdObOwOoLXefN6Vj7xL4yBO8L+7IZ
-         8QSfpzSlpP+/4bojcMcVu3+ktmQjzK2ECJB2LjePSE0poWPpTnetskEVg3kGdPxwf+s6
-         tVHyCEgef64W/pv+Mjg30+fznkGGWFr34aokOB8A3Q1Y4PEqdIO5aLuKXujxMat2luzt
-         jkfV2rBIo3aQDy/KMlB7d5rLHtSU53RAXH33K/dN4yhO0vh5jRFYQOvJpLjRNvwaQU0e
-         FWIR57YfIVR3CZAXu6/TtkeUasx0k71D3HgP0vbTcqYf41tdsT14ezCU9dhEzxLoBgQl
-         ysaw==
-X-Gm-Message-State: APjAAAUQLIt0bsPrJKfmIiTVvZKsRaldHDfeG6q7Ftmt7/IXCXMyCpWt
-        SPXmzmLov/apo7v1/uBEOv+NWDAx56cmKznMa7E=
-X-Google-Smtp-Source: APXvYqwSYKqvIlZpX/kEBMpX3NmwEXdcEPgN/3e1aYMYlW0L0auvkQf9qdI+BIfG8hC8I/lwj/25JbA37h2UxuYXNIw=
-X-Received: by 2002:aca:3bc6:: with SMTP id i189mr8740984oia.153.1562581464846;
- Mon, 08 Jul 2019 03:24:24 -0700 (PDT)
+        Mon, 8 Jul 2019 06:27:17 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x68AR7Mh046374;
+        Mon, 8 Jul 2019 05:27:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562581627;
+        bh=HwCXjka0RmqRpxs+JE1gaFV+rhErQ4TXr2QzAWjVo4c=;
+        h=From:To:CC:Subject:Date;
+        b=jX7CUX1tXXxMIRIotb4+unqebNpm42gFjFydr1TLL9mTSgL31TN7iw8W1O5zySCM+
+         epIJHiMbmt3SLWT5a5Aur4XYvMwF6LsqcaENw6uf2NBwykB4nmjZi5LTGRgvJiU3rX
+         5v4uFvwEB+UUuZWEqqX6DLOstZh+jhu77vnG1EI0=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x68AR7wg067624
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Jul 2019 05:27:07 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Jul
+ 2019 05:27:07 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 8 Jul 2019 05:27:07 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x68AR6iR027045;
+        Mon, 8 Jul 2019 05:27:06 -0500
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>
+CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
+Subject: [PATCH v2 0/4] Add a generic driver for LED-based backlight
+Date:   Mon, 8 Jul 2019 12:26:56 +0200
+Message-ID: <20190708102700.23138-1-jjhiblot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190705160536.12047-1-geert+renesas@glider.be> <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jul 2019 12:24:13 +0200
-Message-ID: <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+This series aims to add a led-backlight driver, similar to pwm-backlight,
+but using a LED class device underneath.
 
-On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
-> > GPIO controllers are exported to userspace using /dev/gpiochip*
-> > character devices.  Access control to these devices is provided by
-> > standard UNIX file system permissions, on an all-or-nothing basis:
-> > either a GPIO controller is accessible for a user, or it is not.
-> > Currently no mechanism exists to control access to individual GPIOs.
-> >
-> > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
-> > and expose them as a new gpiochip.  This is useful for implementing
-> > access control, and assigning a set of GPIOs to a specific user.
-> > Furthermore, it would simplify and harden exporting GPIOs to a virtual
-> > machine, as the VM can just grab the full virtual GPIO controller, and
-> > no longer needs to care about which GPIOs to grab and which not,
-> > reducing the attack surface.
-> >
-> > Virtual GPIO controllers are instantiated by writing to the "new_device"
-> > attribute file in sysfs:
-> >
-> >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
-> >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
-> >
-> > Likewise, virtual GPIO controllers can be destroyed after use:
-> >
-> >     $ echo gpio-virt-agg.<N> \
-> >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+A few years ago (2015), Tomi Valkeinen posted a series implementing a
+backlight driver on top of a LED device:
+https://patchwork.kernel.org/patch/7293991/
+https://patchwork.kernel.org/patch/7294001/
+https://patchwork.kernel.org/patch/7293981/
 
-> I like the general idea and the interface looks mostly fine. Since
-> this is new ABI I think it needs to be documented as well.
+The discussion stopped because Tomi lacked the time to work on it.
 
-Sure.
+The series affects the LED core and add a new backlight driver.
 
-> I'm having trouble building this module:
->
->   CALL    scripts/atomic/check-atomics.sh
->   CALL    scripts/checksyscalls.sh
->   CHK     include/generated/compile.h
->   Kernel: arch/arm/boot/Image is ready
->   Building modules, stage 2.
->   MODPOST 235 modules
-> ERROR: "gpiod_request" [drivers/gpio/gpio-virt-agg.ko] undefined!
-> ERROR: "gpiochip_get_desc" [drivers/gpio/gpio-virt-agg.ko] undefined!
-> ERROR: "gpiod_free" [drivers/gpio/gpio-virt-agg.ko] undefined!
-> scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-> make[1]: *** [__modpost] Error 1
-> Makefile:1287: recipe for target 'modules' failed
-> make: *** [modules] Error 2
-> make: *** Waiting for unfinished jobs....
->
-> I'm not sure what the problem is.
+changes in v2:
+- bkl: the backlight can use more than one LED. As a consequence don't make
+  the backlight device a child of a LED controller.
+- bkl: make brightness-levels and default-brightness-level optional
+- bkl: removed the option to use a GPIO enable.
+- bkl: removed the option to use a regulator. It should be handled by the
+  LED core
+- led: removed the mechanism to bind a child device for each LED
+- led: improve the way of_get_led() works and add a managed version of it
 
-Oops. As this is an RFC, I didn't bother trying to build this driver as
-a module, only builtin.  Apparently the 3 symbols above are not yet
-exported using EXPORT_SYMBOL_GPL().
+Jean-Jacques Hiblot (2):
+  leds: Add managed API to get a LED from a device driver
+  dt-bindings: backlight: Add led-backlight binding
 
-> > --- /dev/null
-> > +++ b/drivers/gpio/gpio-virt-agg.c
-> > @@ -0,0 +1,390 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +//
-> > +// GPIO Virtual Aggregator
-> > +//
-> > +// Copyright (C) 2019 Glider bvba
-> > +
-> > +#include <linux/gpio/driver.h>
-> > +#include <linux/idr.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#include "gpiolib.h"
-> > +
-> > +#define DRV_NAME       "gpio-virt-agg"
-> > +#define MAX_GPIOS      32
->
-> Do we really need this limit? I see it simplifies the code, but maybe
-> we can allocate the relevant arrays dynamically and not limit users?
+Tomi Valkeinen (2):
+  leds: Add of_led_get() and led_put()
+  backlight: add led-backlight driver
 
-Sure. That limit can be lifted.
-
-> > +static int gpio_virt_agg_set_config(struct gpio_chip *chip,
-> > +                                   unsigned int offset, unsigned long config)
-> > +{
-> > +       struct gpio_virt_agg_priv *priv = gpiochip_get_data(chip);
-> > +
-> > +       chip = priv->desc[offset]->gdev->chip;
-> > +       if (chip->set_config)
-> > +               return chip->set_config(chip, offset, config);
-> > +
-> > +       // FIXME gpiod_set_transitory() expects success if not implemented
-
-BTW, do you have a comment about this FIXME?
-
-> > +       return -ENOTSUPP;
-> > +}
-
-> > +static int gpio_virt_agg_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +       const char *param = dev_get_platdata(dev);
-> > +       struct gpio_virt_agg_priv *priv;
-> > +       const char *label = NULL;
-> > +       struct gpio_chip *chip;
-> > +       struct gpio_desc *desc;
-> > +       unsigned int offset;
-> > +       int error, i;
->
-> This 'i' here is reported as possibly not initialized:
->
-> drivers/gpio/gpio-virt-agg.c: In function ‘gpio_virt_agg_probe’:
-> drivers/gpio/gpio-virt-agg.c:230:13: warning: ‘i’ may be used
-> uninitialized in this function [-Wmaybe-uninitialized]
->   int error, i;
->              ^
-
-Oops, should be preinitialized to zero. WIll fix.
-
-> > +static int gpio_virt_agg_remove(struct platform_device *pdev)
-> > +{
-> > +       struct gpio_virt_agg_priv *priv = platform_get_drvdata(pdev);
-> > +       unsigned int i;
-> > +
-> > +       gpiochip_remove(&priv->chip);
-> > +
-> > +       for (i = 0; i < priv->chip.ngpio; i++)
-> > +               gpiod_free(priv->desc[i]);
-
-Perhaps I should use gpiod_put() instead, which is exported to modules?
-
-> > +
-> > +       return 0;
-> > +}
->
-> You shouldn't need this function at all. It's up to users to free descriptors.
-
-This frees the upstream descriptors, not the descriptors used by users
-of the virtual gpiochip. Shouldn't they be freed, as they are no longer
-in use?
-
-Note that .probe() doesn't use devm_gpiochip_add_data(), as the upstream
-descriptors need to be freed after the call to gpiochip_remove().
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../bindings/leds/backlight/led-backlight.txt |  29 +++
+ drivers/leds/led-class.c                      |  92 +++++++
+ drivers/video/backlight/Kconfig               |   7 +
+ drivers/video/backlight/Makefile              |   1 +
+ drivers/video/backlight/led_bl.c              | 235 ++++++++++++++++++
+ include/linux/leds.h                          |   6 +
+ 6 files changed, 370 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+ create mode 100644 drivers/video/backlight/led_bl.c
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
