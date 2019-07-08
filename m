@@ -2,67 +2,100 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05B1C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15CCC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE5920861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E1D20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:01:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qYpXTTdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfGHGBR (ORCPT
+        id S1729030AbfGHGBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 02:01:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38433 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbfGHGBR (ORCPT
+        Mon, 8 Jul 2019 02:01:41 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46823 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbfGHGBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 02:01:17 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hkMiB-0001U9-25; Mon, 08 Jul 2019 08:01:15 +0200
-Date:   Mon, 8 Jul 2019 08:01:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Tim Schumacher <timschumi@gmx.de>
-cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: iforce - Remove empty multiline comments
-In-Reply-To: <20190708025010.9318-1-timschumi@gmx.de>
-Message-ID: <alpine.DEB.2.21.1907080800160.3648@nanos.tec.linutronix.de>
-References: <20190708025010.9318-1-timschumi@gmx.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 8 Jul 2019 02:01:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c73so2375088pfb.13
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 23:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=peXRtMB4l6/FU5tZ5pa+2prKmpjjO6KyHe/s1NBwntA=;
+        b=qYpXTTdC+57Hi5zh0A4h3c0ri+hVuuOJYcg0Ag+6G3hwW370kXqV6DpyH1I4wcRSVU
+         ff05mKcnVZv75ZdywlAJJGuRaSYf+i2D2qhMFZrl86LKvVQ1kUCljAPXI+S3JR+FJUkT
+         gBQpUc2bYkVDTvxUs0R3c/33xUIGEdqsapp6DkI6gBX1z/XX2jC1qZcTWevZ2SWOSs8o
+         oDgV1wTfUwhk6v4rHcpdVDlGy7YT0bgG43vOyavNj9/m9s1f18B+8wYKMbdvr1x3sRg4
+         cgecUwFe/B0k3IyD8lOInpIn7iiqDnw/qhQpZSYXqG1hMvKFvtIecDN79OaTvEWc/WqP
+         myrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=peXRtMB4l6/FU5tZ5pa+2prKmpjjO6KyHe/s1NBwntA=;
+        b=QZ2e+S6Kjk/HgLlqPvQFsM/oTK5c9V8AcB1tljUubP6P1fmSo5D+3EzAleNwnz52wy
+         LXaiFrzZOCi8gEOKDUf5NopsqsMmOVoGL/EGUKy1BqojB/0UlmCOgs7AJFKdkgq5iz/8
+         bkxiGIEobAQJooUtDmRoPtptujaE12vpz2Z2iVwB6Pz5AmSh07e08U9hHJ1YXdrgqPQi
+         wyyxqjqwCwelFFBJzuG3J0JAJI/NGOFXqnA1oKhfBkAKKLji3669njJY/W6NbGpHDRI0
+         ZlXn3s0FiDYVVLFgEsioReZNi23/Hihn17KPgHyYx1is2itw4SgAC9HoM+isCU6oor4s
+         lK5A==
+X-Gm-Message-State: APjAAAWX0VMfV4RL11EkZ+67VhhoFLkB6jl1aCjoVpIycaC4NdToWdQz
+        pZ5fpvvq+h+Mh1kgew5YAirYKQ==
+X-Google-Smtp-Source: APXvYqxvVIaEeh282d+Px+8Oq6IL6RS+zn2W2vd8R+iyk699sGYBj9Cr6pFpfRenH5l+igaTy8z2ow==
+X-Received: by 2002:a17:90a:5207:: with SMTP id v7mr22102909pjh.127.1562565700727;
+        Sun, 07 Jul 2019 23:01:40 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id 125sm19424002pfg.23.2019.07.07.23.01.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Jul 2019 23:01:40 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 11:31:38 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, niklas.cassel@linaro.org,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] opp: Attach genpds to devices from within OPP core
+Message-ID: <20190708060138.7mmdbusfnimzg7er@vireshk-i7>
+References: <1bc9053f5c41a10832b58a2a81decbad7f1aded9.1557742920.git.viresh.kumar@linaro.org>
+ <aee8dc78-e292-a671-3dc5-ca962c0eec6b@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aee8dc78-e292-a671-3dc5-ca962c0eec6b@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019, Tim Schumacher wrote:
-
-> Those are remnants of the SPDX identifier migration, which haven't been
-> removed properly.
+On 04-07-19, 11:55, Rajendra Nayak wrote:
 > 
-> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-> ---
-> This is probably the highest level of cosmetic-only that a patch
-> can achieve, sorry for the noise.
+> On 5/13/2019 3:54 PM, Viresh Kumar wrote:
+> > The OPP core requires the virtual device pointers to set performance
+> > state on behalf of the device, for the multiple power domain case. The
+> > genpd API (dev_pm_domain_attach_by_name()) has evolved now to support
+> > even the single power domain case and that lets us add common code for
+> > handling both the cases more efficiently.
+> > 
+> > The virtual device structure returned by dev_pm_domain_attach_by_name()
+> > isn't normally used by the cpufreq drivers as they don't manage power
+> > on/off of the domains and so is only useful for the OPP core.
 > 
-> CCing Thomas Gleixner, since the tool (is it a tool?) that makes
-> those SPDX changes would have room for improvement in that regard.
-> It seems to expect that all of the license information is contained
-> within the same comment block, which wasn't the case for the iforce
-> driver.
+> This might be true for CPUs but not necessarily so for IO devices which might
+> want to set up device links so the devices runtime pm calls can trigger the
+> on/off of the power domain. Is there a way to handle that case now?
 
-Right. I noticed too late, that these empty comments were left. Tool was
-fixed for later patches.
+https://lore.kernel.org/lkml/027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org
 
-Thanks for cleaning that up.
-
-       tglx
+-- 
+viresh
