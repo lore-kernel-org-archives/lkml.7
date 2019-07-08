@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B0BC606C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBC0C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909B12189F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A53C218A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kX90Ll+0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kV0yLxy2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389911AbfGHRtb (ORCPT
+        id S2390246AbfGHRtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:49:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42283 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387859AbfGHRt2 (ORCPT
+        Mon, 8 Jul 2019 13:49:33 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39059 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387759AbfGHRta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:49:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so7947653pff.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:49:28 -0700 (PDT)
+        Mon, 8 Jul 2019 13:49:30 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so7571792pgi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:49:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0L49s/tWIr71dLFXxs4rfeHHocb58NImeCdr+Rzo5s4=;
-        b=kX90Ll+0cRk6+cX3z7g100Lvynrw4C5hMo5BnzRzRtlwGM1SCgzPgr8cWLjxOwF/BH
-         B3ujW2/jzYFPNZVRkZ9z+ArIVfQTIDSQ5sOGukWTuGC+K8GbG9wRsTQHtuuUpJTWWNBc
-         l/tmk51wikJRccwc1UT3lvcAgVY397QRbxcpk=
+        bh=LHzYtWmSFmeH9NbFwqWKy4UztiT2kxra8C1X8yUmUfM=;
+        b=kV0yLxy2kpMjOwguVfayi7phtFRYimSGCn/j1wuyKjll3J3KBdoeR84Ly2P7THz2O6
+         1/X14UpK0enZCuSRXpOX9dzeN2DoreXYkCymkk0qGXCxmW+9ryMXHuu+eJ6Spe4Nu+kY
+         c02Lz1ShzpKhcdhhBTYM7FKjKh8qL2F0m1R9Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0L49s/tWIr71dLFXxs4rfeHHocb58NImeCdr+Rzo5s4=;
-        b=Nd8HNrVLFS0CxmM1NaFUNS5GiJqcEJYXALrQ53/GjuUy+cS1y2NmYYI+XSHDLQCD51
-         iwsp9MgKq6u7PAvo5PL+OUVgXFqPDdybxqY45Xsu2sVElyKbLmtzFguok9KT9Km4pkHR
-         7i7tCtYeSRPzqOojFvVX8a1y9FZsNAXXETp6LMzzz8K+TqDQpWfU4uRNg3tloUPkREg1
-         Z91sf/THkf3eyJZfQVF5m73pqnExS0oV17ym3lTZvKD+FUaqCouBHqJ1CaHL5WxKbOlB
-         j+Cv5cXevzFZT4Ltkls/6lBvd3haxZchh1OsKF5mrkx9vqUNNRcYSWLppx1wVh71Zgrc
-         gyMQ==
-X-Gm-Message-State: APjAAAW4D9QiyVmr7M9D/YJX0yeLiCla7C0XHH10oam92oMUygCgiVvo
-        pTLC0qJBKXPS+Eh2yDxIeRWBnA==
-X-Google-Smtp-Source: APXvYqz/KlBgj7sxPbh2laDw0LEqUS36n2xByyCuU9PYhQLrDTew/w1U79e8dcnArD+lta4tuhReaA==
-X-Received: by 2002:a17:90a:2430:: with SMTP id h45mr28211684pje.14.1562608168271;
-        Mon, 08 Jul 2019 10:49:28 -0700 (PDT)
+        bh=LHzYtWmSFmeH9NbFwqWKy4UztiT2kxra8C1X8yUmUfM=;
+        b=kYVhmwF+KcwXFmvIx5Otx6ak9YMnZ7mCas03dw6uyNjbGH/qKXd2T5sm17/xhRswEo
+         X1Ou1sgerFF/uxDtiIWWliaGNcVeCS8VTVTfG/PY1TNKQE37/YB3hEs+cdzhFy2Uc8U+
+         zMjQijVsIEjHl1VqML+tg/MxRDrShfhshcpjpx5Yc/JWw8vY/RmvAP9YN22UhvOB6Ilj
+         hQfXT6c4Rl6hDri4t5nl+evTWlczpAJgkhKERRL9CO9JGl05VfEdWNU+TWL8AHD3VWVo
+         ZSgf6S+bVqOEprcd+VxFrIY8QZr3BbOyaUgbJz0E8BJCRt7kQHH8YIx9YQ8xlNcGEfzg
+         Q9YQ==
+X-Gm-Message-State: APjAAAW1boQBQsnPVWNpqxSPM6sQdNVCZE9Nm5kBH97LBUE3YSqliOIV
+        hgAIjNIO9hChNv6yq3PqWVvGBdkTdPg=
+X-Google-Smtp-Source: APXvYqxcOh2L5ETIH15om1Lngn2WXi3piqkN48igLZFnoxb4cW4xxjqv4e9K/9qm1u+nuEor01c/ng==
+X-Received: by 2002:a17:90a:b115:: with SMTP id z21mr27246758pjq.64.1562608170298;
+        Mon, 08 Jul 2019 10:49:30 -0700 (PDT)
 Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id j1sm20151686pfe.101.2019.07.08.10.49.27
+        by smtp.gmail.com with ESMTPSA id j1sm20151686pfe.101.2019.07.08.10.49.29
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 10:49:27 -0700 (PDT)
+        Mon, 08 Jul 2019 10:49:29 -0700 (PDT)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
@@ -60,12 +60,12 @@ Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>, Nadav Amit <namit@vmware.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 02/11] x86: Add macro to get symbol address for PIE support
-Date:   Mon,  8 Jul 2019 10:48:55 -0700
-Message-Id: <20190708174913.123308-3-thgarnie@chromium.org>
+Subject: [PATCH v8 03/11] x86: relocate_kernel - Adapt assembly for PIE support
+Date:   Mon,  8 Jul 2019 10:48:56 -0700
+Message-Id: <20190708174913.123308-4-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 In-Reply-To: <20190708174913.123308-1-thgarnie@chromium.org>
 References: <20190708174913.123308-1-thgarnie@chromium.org>
@@ -76,27 +76,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new _ASM_MOVABS macro to fetch a symbol address. It will be used
-to replace "_ASM_MOV $<symbol>, %dst" code construct that are not
-compatible with PIE.
+Change the assembly code to use only absolute references of symbols for the
+kernel to be PIE compatible.
+
+Position Independent Executable (PIE) support will allow to extend the
+KASLR randomization range below 0xffffffff80000000.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/asm.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/relocate_kernel_64.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 3ff577c0b102..3a686057e882 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -30,6 +30,7 @@
- #define _ASM_ALIGN	__ASM_SEL(.balign 4, .balign 8)
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index c51ccff5cd01..c72889b09840 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -206,7 +206,7 @@ identity_mapped:
+ 	movq	%rax, %cr3
+ 	lea	PAGE_SIZE(%r8), %rsp
+ 	call	swap_pages
+-	movq	$virtual_mapped, %rax
++	movabsq	$virtual_mapped, %rax
+ 	pushq	%rax
+ 	ret
  
- #define _ASM_MOV	__ASM_SIZE(mov)
-+#define _ASM_MOVABS	__ASM_SEL(movl, movabsq)
- #define _ASM_INC	__ASM_SIZE(inc)
- #define _ASM_DEC	__ASM_SIZE(dec)
- #define _ASM_ADD	__ASM_SIZE(add)
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
