@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F70DC606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B84C606D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4A0216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590FD216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbfGHWfX (ORCPT
+        id S1728093AbfGHWf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:35:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5909 "EHLO
+        Mon, 8 Jul 2019 18:35:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:34993 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727698AbfGHWex (ORCPT
+        with ESMTP id S1727572AbfGHWex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 18:34:53 -0400
-X-UUID: bd0102865d824360b42efe6229b10692-20190709
-X-UUID: bd0102865d824360b42efe6229b10692-20190709
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+X-UUID: 289384cf74ad4038993ded351d27ba4a-20190709
+X-UUID: 289384cf74ad4038993ded351d27ba4a-20190709
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 832801799; Tue, 09 Jul 2019 06:34:47 +0800
+        with ESMTP id 255375155; Tue, 09 Jul 2019 06:34:42 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 9 Jul 2019 06:34:45 +0800
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 9 Jul 2019 06:34:40 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 9 Jul 2019 06:34:45 +0800
+ Transport; Tue, 9 Jul 2019 06:34:40 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -44,15 +44,14 @@ CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v4, 29/33] drm/mediatek: add connection from OVL_2L0 to RDMA0
-Date:   Tue, 9 Jul 2019 06:34:09 +0800
-Message-ID: <1562625253-29254-30-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 23/33] drm/mediatek: add ovl0/ovl_2l0 usecase
+Date:   Tue, 9 Jul 2019 06:34:03 +0800
+Message-ID: <1562625253-29254-24-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: C8F379F038CBBD6058496B899DDC6C9E5288BC97807E88F393BE6E7475FC83A82000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,52 +60,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-this patch add add connection from OVL_2L0 to RDMA0
+This patch add ovl0/ovl_2l0 usecase
+in ovl->ovl_2l0 direct link usecase:
+1. the crtc support layer number will 4+2
+2. ovl_2l0 background color input select ovl0 when crtc init
+and disable it when crtc finish
+3. config ovl_2l0 layer, if crtc config layer number is
+bigger than ovl0 support layers(max is 4)
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index fbea47f..0a63dd0 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -41,6 +41,12 @@
- #define DISP_REG_CONFIG_DSI_SEL			0x050
- #define DISP_REG_CONFIG_DPI_SEL			0x064
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 5eac376..9ee9ce2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -282,6 +282,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
  
-+#define MT8183_DISP_OVL0_2L_MOUT_EN		0xf04
-+#define MT8183_DISP_PATH0_SEL_IN		0xf24
+ 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+ 		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
++		enum mtk_ddp_comp_id prev;
 +
-+#define OVL0_2L_MOUT_EN_DISP_PATH0			BIT(0)
-+#define DISP_PATH0_SEL_IN_OVL0_2L			0x1
++		if (i > 0)
++			prev = mtk_crtc->ddp_comp[i - 1]->id;
++		else
++			prev = DDP_COMPONENT_ID_MAX;
 +
- #define MT2701_DISP_MUTEX0_MOD0			0x2c
- #define MT2701_DISP_MUTEX0_SOF0			0x30
++		if (prev == DDP_COMPONENT_OVL0)
++			mtk_ddp_comp_bgclr_in_on(comp);
  
-@@ -315,6 +321,10 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
- 	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_OVL_2L0) {
- 		*addr = data->ovl0_mout_en;
- 		value = OVL0_MOUT_EN_OVL0_2L;
-+	} else if (cur == DDP_COMPONENT_OVL_2L0 &&
-+		   next == DDP_COMPONENT_RDMA0) {
-+		*addr = MT8183_DISP_OVL0_2L_MOUT_EN;
-+		value = OVL0_2L_MOUT_EN_DISP_PATH0;
- 	} else {
- 		value = 0;
+ 		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
+ 		mtk_ddp_comp_start(comp);
+@@ -291,9 +300,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+ 	for (i = 0; i < mtk_crtc->layer_nr; i++) {
+ 		struct drm_plane *plane = &mtk_crtc->planes[i];
+ 		struct mtk_plane_state *plane_state;
++		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
++		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
++		unsigned int local_layer;
+ 
+ 		plane_state = to_mtk_plane_state(plane->state);
+-		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
++
++		if (i >= comp_layer_nr) {
++			comp = mtk_crtc->ddp_comp[1];
++			local_layer = i - comp_layer_nr;
++		} else
++			local_layer = i;
++		mtk_ddp_comp_layer_config(comp , local_layer,
+ 					  plane_state);
  	}
-@@ -374,6 +384,10 @@ static unsigned int mtk_ddp_sel_in(const struct mtk_mmsys_reg_data *data,
- 	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
- 		*addr = DISP_REG_CONFIG_DSI_SEL;
- 		value = DSI_SEL_IN_BLS;
-+	} else if (cur == DDP_COMPONENT_OVL_2L0 &&
-+		   next == DDP_COMPONENT_RDMA0) {
-+		*addr = MT8183_DISP_PATH0_SEL_IN;
-+		value = DISP_PATH0_SEL_IN_OVL0_2L;
- 	} else {
- 		value = 0;
+ 
+@@ -319,6 +337,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ 					   mtk_crtc->ddp_comp[i]->id);
+ 	mtk_disp_mutex_disable(mtk_crtc->mutex);
+ 	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
++		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
+ 		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
+ 					      mtk_crtc->mmsys_reg_data,
+ 					      mtk_crtc->ddp_comp[i]->id,
+@@ -339,6 +358,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+ 	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+ 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+ 	unsigned int i;
++	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
++	unsigned int local_layer;
+ 
+ 	/*
+ 	 * TODO: instead of updating the registers here, we should prepare
+@@ -361,7 +382,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+ 			plane_state = to_mtk_plane_state(plane->state);
+ 
+ 			if (plane_state->pending.config) {
+-				mtk_ddp_comp_layer_config(comp, i, plane_state);
++				if (i >= comp_layer_nr) {
++					comp = mtk_crtc->ddp_comp[1];
++					local_layer = i - comp_layer_nr;
++				} else
++					local_layer = i;
++
++				mtk_ddp_comp_layer_config(comp, local_layer,
++							  plane_state);
+ 				plane_state->pending.config = false;
+ 			}
+ 		}
+@@ -592,6 +620,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
  	}
+ 
+ 	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
++	if (mtk_crtc->ddp_comp_nr > 1) {
++		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
++
++		if (comp->funcs->bgclr_in_on)
++			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
++	}
+ 	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
+ 					sizeof(struct drm_plane),
+ 					GFP_KERNEL);
 -- 
 1.8.1.1.dirty
 
