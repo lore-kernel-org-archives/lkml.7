@@ -2,135 +2,140 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D203AC606CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C9DC606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A240F2177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0C7216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:12:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DFrcOxtZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404871AbfGHUJ5 (ORCPT
+        id S2404900AbfGHUMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:09:57 -0400
-Received: from ms.lwn.net ([45.79.88.28]:53304 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbfGHUJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:09:56 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8CC8C2B8;
-        Mon,  8 Jul 2019 20:09:55 +0000 (UTC)
-Date:   Mon, 8 Jul 2019 14:09:54 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        skhan@linuxfoundation.org, mchehab@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] Documentation: coresight: covert txt to rst
-Message-ID: <20190708140954.35a38021@lwn.net>
-In-Reply-To: <20190705204512.15444-1-tranmanphong@gmail.com>
-References: <20190705204512.15444-1-tranmanphong@gmail.com>
-Organization: LWN.net
+        Mon, 8 Jul 2019 16:12:18 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42812 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730045AbfGHUMS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 16:12:18 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68K9QSY002867;
+        Mon, 8 Jul 2019 20:11:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=0acHncQWLgXnQHNrif/wO/N98O8sHefa/57hdRhle6Q=;
+ b=DFrcOxtZ9GNbi191LnRrT7HrOyEUzZ3nzo3GgX3SaV2OqWQ9LLYVxYwPfUegliYpMeNz
+ rt9BxXxNIq5xoBHnLeVZVgfYgoiqR+BAep/5nrQWdUUSkh2hBj7KSp4Nc6omZosmdmVt
+ Zt2K0L2y315q5xQixTx3bChTGtHftYll/3K2JUD7f+rlocqg5jwPG3OpN7GzysiQDAem
+ xWXxmYxmMm8hj+czPKA+dO32yHkHKkI9PLX6/KmAubfrjtzZ45DtL45aWz6nVXGwPngy
+ WbOspL1vRg+R3wXEflxsvwUk0EpyumR0M1My1UDHHPCBO0GN0hN/VyRxSvd3NGbPtBb1 hg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tjkkpggmy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 20:11:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68K8EK2063661;
+        Mon, 8 Jul 2019 20:11:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2tjjykdbk3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 20:11:38 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x68KBX5r010633;
+        Mon, 8 Jul 2019 20:11:33 GMT
+Received: from [192.168.1.14] (/109.189.94.158)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jul 2019 13:11:33 -0700
+Subject: Re: [PATCH v3] RDMA/core: Fix race when resolving IP address
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Mark Bloch <markb@mellanox.com>
+Cc:     "dledford@redhat.com" <dledford@redhat.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1562584584-13132-1-git-send-email-dag.moxnes@oracle.com>
+ <20190708175025.GA6976@ziepe.ca>
+ <4b9ae7b8-310c-e0b6-7a8e-33e6d5bef83d@oracle.com>
+ <63b9d2cb-f69c-d77c-7803-f08e2a6f755d@mellanox.com>
+ <20190708193814.GF23996@ziepe.ca>
+From:   Dag Moxnes <dag.moxnes@oracle.com>
+Message-ID: <424b75d7-90ea-8d07-42b9-de9d507b0f85@oracle.com>
+Date:   Mon, 8 Jul 2019 22:11:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190708193814.GF23996@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907080251
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907080251
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  6 Jul 2019 03:45:12 +0700
-Phong Tran <tranmanphong@gmail.com> wrote:
 
-> change the format file and adpate the text style
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
->  .../trace/{coresight.txt => coresight.rst}         | 296 ++++++++++++---------
->  Documentation/trace/index.rst                      |   1 +
->  2 files changed, 167 insertions(+), 130 deletions(-)
->  rename Documentation/trace/{coresight.txt => coresight.rst} (59%)
-> 
-> diff --git a/Documentation/trace/coresight.txt b/Documentation/trace/coresight.rst
-> similarity index 59%
-> rename from Documentation/trace/coresight.txt
-> rename to Documentation/trace/coresight.rst
-> index efbc832146e7..bea24e70cfba 100644
-> --- a/Documentation/trace/coresight.txt
-> +++ b/Documentation/trace/coresight.rst
-> @@ -1,5 +1,6 @@
-> -		Coresight - HW Assisted Tracing on ARM
-> -		======================================
-> +======================================
-> +Coresight - HW Assisted Tracing on ARM
-> +======================================
->  
->     Author:   Mathieu Poirier <mathieu.poirier@linaro.org>
->     Date:     September 11th, 2014
-> @@ -26,7 +27,7 @@ implementation, either storing the compressed stream in a memory buffer or
->  creating an interface to the outside world where data can be transferred to a
->  host without fear of filling up the onboard coresight memory buffer.
->  
-> -At typical coresight system would look like this:
-> +At typical coresight system would look like this::
->  
->    *****************************************************************
->   **************************** AMBA AXI  ****************************===||
-> @@ -95,6 +96,7 @@ Acronyms and Classification
->  
->  Acronyms:
->  
-> +======== =============================================================
->  PTM:     Program Trace Macrocell
->  ETM:     Embedded Trace Macrocell
->  STM:     System trace Macrocell
-> @@ -104,6 +106,7 @@ TPIU:    Trace Port Interface Unit
->  TMC-ETR: Trace Memory Controller, configured as Embedded Trace Router
->  TMC-ETF: Trace Memory Controller, configured as Embedded Trace FIFO
->  CTI:     Cross Trigger Interface
-> +======== =============================================================
 
-A minor nit, but since you're making a table out of this, you don't need
-the colons in the first column.
+Den 08.07.2019 21:38, skrev Jason Gunthorpe:
+> On Mon, Jul 08, 2019 at 07:22:45PM +0000, Mark Bloch wrote:
+>>
+>> On 7/8/19 11:47 AM, Dag Moxnes wrote:
+>>> Thanks Jason,
+>>>
+>>> Regards,
+>>> Dag
+>>>
+>>> Den 08.07.2019 19:50, skrev Jason Gunthorpe:
+>>>> On Mon, Jul 08, 2019 at 01:16:24PM +0200, Dag Moxnes wrote:
+>>>>> Use neighbour lock when copying MAC address from neighbour data struct
+>>>>> in dst_fetch_ha.
+>>>>>
+>>>>> When not using the lock, it is possible for the function to race with
+>>>>> neigh_update, causing it to copy an invalid MAC address.
+>>>>>
+>>>>> It is possible to provoke this error by calling rdma_resolve_addr in a
+>>>>> tight loop, while deleting the corresponding ARP entry in another tight
+>>>>> loop.
+>>>>>
+>>>>> This will cause the race shown it the following sample trace:
+>>>>>
+>>>>> rdma_resolve_addr()
+>>>>>     rdma_resolve_ip()
+>>>>>       addr_resolve()
+>>>>>         addr_resolve_neigh()
+>>>>>           fetch_ha()
+>>>>>             dst_fetch_ha()
+>>>>>               n->nud_state == NUD_VALID
+>>>> It isn't nud_state that is the problem here, it is the parallel
+>>>> memcpy's onto ha. I fixed the commit message
+>>>>
+>>>> This could also have been solved by using the ha_lock, but I don't
+>>>> think we have a reason to particularly over-optimize this.
+>> Sorry I'm late to the party, but why not just use: neigh_ha_snapshot()?
+> Yes, that is much better, please respin this
+OK, will do!
+Can I still post it as a v4? Or should I do it differently as you 
+already applied it?
 
->  Classification:
->  
-> @@ -118,7 +121,7 @@ Misc:
->  
->  
->  Device Tree Bindings
-> -----------------------
-> +--------------------
->  
->  See Documentation/devicetree/bindings/arm/coresight.txt for details.
->  
-> @@ -133,57 +136,63 @@ The coresight framework provides a central point to represent, configure and
->  manage coresight devices on a platform.  Any coresight compliant device can
->  register with the framework for as long as they use the right APIs:
->  
-> -struct coresight_device *coresight_register(struct coresight_desc *desc);
-> -void coresight_unregister(struct coresight_device *csdev);
-> +.. c:function:: struct coresight_device *coresight_register(struct coresight_desc *desc);
-> +.. c:function:: void coresight_unregister(struct coresight_device *csdev);
->  
-> -The registering function is taking a "struct coresight_device *csdev" and
-> +The registering function is taking a :code:`struct coresight_device *csdev` and
+Regards,
+-Dag
+>
+> Thanks,
+> Jason
 
-As a general rule, we would rather see less markup in the text files than
-you are applying here.  Just present the prototypes in a literal block
-here.  (Even better would be a nice kerneldoc comment in the source that
-could be pulled in, but that's more work).  I wouldn't use :code: anywhere,
-really. 
-
-As well as addressing Mathieu's comments, could you pass through and cut
-the markup down to the bare minimum?
-
-Thanks,
-
-jon
