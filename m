@@ -2,207 +2,102 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A05FC606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D832C606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD59218B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE70321852
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R9cVX7Mi"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nzo2HGF3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ad8kI3O0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388352AbfGHSIz (ORCPT
+        id S2388316AbfGHSKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 14:08:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46562 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730714AbfGHSIy (ORCPT
+        Mon, 8 Jul 2019 14:10:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53710 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728921AbfGHSKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 14:08:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x68I8pNT049069;
-        Mon, 8 Jul 2019 13:08:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562609331;
-        bh=gDlRL2KY4kegZgACOvx1ncFnsIR8rOGXLXLEq91Ouik=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=R9cVX7MiyWenX278Ns1pTM+0OQTqa4G2BHm6J2gEAQy5oTIYfUgF32RAeGtVdmz+A
-         v6W7AlahQU/NixSUiwl/DKSK8ILxJ/4SOLqDGc9q+QbGHUnaArwB2QoknWWPwavKRn
-         UdGrIjKTvaqACHFuM/+FqxqHbLqlGkPNKDkp4rxY=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x68I8pSQ024728
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jul 2019 13:08:51 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Jul
- 2019 13:08:50 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 8 Jul 2019 13:08:50 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x68I8oBO051420;
-        Mon, 8 Jul 2019 13:08:50 -0500
-Subject: Re: [PATCH v2 1/2] leds: tlc591xx: simplify driver by using the
- managed led API
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tomi.valkeinen@ti.com>
-References: <20190708100620.22388-1-jjhiblot@ti.com>
- <20190708100620.22388-2-jjhiblot@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <127551c1-d642-0603-f2f2-6fd4cc43bb93@ti.com>
-Date:   Mon, 8 Jul 2019 13:08:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190708100620.22388-2-jjhiblot@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 8 Jul 2019 14:10:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0499B602F0; Mon,  8 Jul 2019 18:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562609425;
+        bh=RYakAtzfd68XjS32CGKsM0PJUck7IxLNDzXB/YezXpk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nzo2HGF31VxQFTF3dOkr3lAawdIBm572BTtiysNdUUrDlfsnj7MgSOZSCr2qYJZyu
+         WTzxV9tpJKAmoWRFcBRJAMo/6k27R/u4ZCGaByfef0HdwP4bFuJtzIkIOYdQoEvdO0
+         YOOzk22d7pEeBHVs3/rQVTY1jDYrPhzSPGSsz9tM=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D16A0602F0;
+        Mon,  8 Jul 2019 18:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562609424;
+        bh=RYakAtzfd68XjS32CGKsM0PJUck7IxLNDzXB/YezXpk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ad8kI3O0+s4YwlFbID8kBOAt4b+HDkQfXy2QX0s0abp4uoLt2JeVkl/JMoUFDReJx
+         QcUmPJrxrh2tq5JHtIuKztBpxSxPNlycZqPUsd7JE2ThrlOES8O+KGPYSfOAjdK2/g
+         eM6KtmEGxjI1Fjn3YPRMS2eXN4+9Rr+RgTxFDfmk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D16A0602F0
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
+        dianders@chromimum.org, hoegsberg@google.com,
+        baolu.lu@linux.intel.com, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/3] iommu/arm-smmu: Split pagetable support
+Date:   Mon,  8 Jul 2019 12:10:15 -0600
+Message-Id: <1562609418-25446-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JJ
+This series implements split pagetable support for arm-smmu-v2 devices. You have
+seen this code before as part of [1] but I split it from the other features
+to make it easier to review / merge.
 
-On 7/8/19 5:06 AM, Jean-Jacques Hiblot wrote:
-> Use the managed API of the LED class (devm_led_classdev_register()
-> instead of led_classdev_register()).
-> This allows us to remove the code used to track-and-destroy the LED devices
+This series adds a new format type to io-pgtable-arm to enable TTBR0 and
+TTBR1. Because of the way that the registers are mixed up it makes the most
+sense to enable them together instead of trying to create two different
+pagetables and merge them together later in the arm-smmu drive.
 
-What changed from v1?
+This will be used later by the drm/msm driver to enable split pagetables
+as part of the effort to implement per-context pagetables [2].
 
-I don't see any changes especially the bounds on the reg property.
+Thanks,
+Jordan
 
-Dan
+[1] https://patchwork.freedesktop.org/series/57441/
+[2] https://patchwork.freedesktop.org/patch/307616/?series=57441&rev=3
 
+Jordan Crouse (3):
+  iommu: Add DOMAIN_ATTR_SPLIT_TABLES
+  iommu/io-pgtable-arm: Add support for AARCH64 split pagetables
+  iommu/arm-smmu: Add support for DOMAIN_ATTR_SPLIT_TABLES
 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> ---
->   drivers/leds/leds-tlc591xx.c | 79 +++++++++---------------------------
->   1 file changed, 20 insertions(+), 59 deletions(-)
->
-> diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
-> index 59ff088c7d75..3d5a4b92f016 100644
-> --- a/drivers/leds/leds-tlc591xx.c
-> +++ b/drivers/leds/leds-tlc591xx.c
-> @@ -128,51 +128,6 @@ tlc591xx_brightness_set(struct led_classdev *led_cdev,
->   	return err;
->   }
->   
-> -static void
-> -tlc591xx_destroy_devices(struct tlc591xx_priv *priv, unsigned int j)
-> -{
-> -	int i = j;
-> -
-> -	while (--i >= 0) {
-> -		if (priv->leds[i].active)
-> -			led_classdev_unregister(&priv->leds[i].ldev);
-> -	}
-> -}
-> -
-> -static int
-> -tlc591xx_configure(struct device *dev,
-> -		   struct tlc591xx_priv *priv,
-> -		   const struct tlc591xx *tlc591xx)
-> -{
-> -	unsigned int i;
-> -	int err = 0;
-> -
-> -	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
-> -	for (i = 0; i < TLC591XX_MAX_LEDS; i++) {
-> -		struct tlc591xx_led *led = &priv->leds[i];
-> -
-> -		if (!led->active)
-> -			continue;
-> -
-> -		led->priv = priv;
-> -		led->led_no = i;
-> -		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
-> -		led->ldev.max_brightness = LED_FULL;
-> -		err = led_classdev_register(dev, &led->ldev);
-> -		if (err < 0) {
-> -			dev_err(dev, "couldn't register LED %s\n",
-> -				led->ldev.name);
-> -			goto exit;
-> -		}
-> -	}
-> -
-> -	return 0;
-> -
-> -exit:
-> -	tlc591xx_destroy_devices(priv, i);
-> -	return err;
-> -}
-> -
->   static const struct regmap_config tlc591xx_regmap = {
->   	.reg_bits = 8,
->   	.val_bits = 8,
-> @@ -225,7 +180,11 @@ tlc591xx_probe(struct i2c_client *client,
->   
->   	i2c_set_clientdata(client, priv);
->   
-> +	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
-> +
->   	for_each_child_of_node(np, child) {
-> +		struct tlc591xx_led *led;
-> +
->   		err = of_property_read_u32(child, "reg", &reg);
->   		if (err) {
->   			of_node_put(child);
-> @@ -236,22 +195,25 @@ tlc591xx_probe(struct i2c_client *client,
->   			of_node_put(child);
->   			return -EINVAL;
->   		}
-> -		priv->leds[reg].active = true;
-> -		priv->leds[reg].ldev.name =
-> +		led = &priv->leds[reg];
-> +
-> +		led->active = true;
-> +		led->ldev.name =
->   			of_get_property(child, "label", NULL) ? : child->name;
-> -		priv->leds[reg].ldev.default_trigger =
-> +		led->ldev.default_trigger =
->   			of_get_property(child, "linux,default-trigger", NULL);
-> -	}
-> -	return tlc591xx_configure(dev, priv, tlc591xx);
-> -}
-> -
-> -static int
-> -tlc591xx_remove(struct i2c_client *client)
-> -{
-> -	struct tlc591xx_priv *priv = i2c_get_clientdata(client);
-> -
-> -	tlc591xx_destroy_devices(priv, TLC591XX_MAX_LEDS);
->   
-> +		led->priv = priv;
-> +		led->led_no = reg;
-> +		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
-> +		led->ldev.max_brightness = LED_FULL;
-> +		err = devm_led_classdev_register(dev, &led->ldev);
-> +		if (err < 0) {
-> +			dev_err(dev, "couldn't register LED %s\n",
-> +				led->ldev.name);
-> +			return err;
-> +		}
-> +	}
->   	return 0;
->   }
->   
-> @@ -268,7 +230,6 @@ static struct i2c_driver tlc591xx_driver = {
->   		.of_match_table = of_match_ptr(of_tlc591xx_leds_match),
->   	},
->   	.probe = tlc591xx_probe,
-> -	.remove = tlc591xx_remove,
->   	.id_table = tlc591xx_id,
->   };
->   
+ drivers/iommu/arm-smmu.c       |  16 ++-
+ drivers/iommu/io-pgtable-arm.c | 261 +++++++++++++++++++++++++++++++++++++----
+ drivers/iommu/io-pgtable.c     |   1 +
+ include/linux/io-pgtable.h     |   2 +
+ include/linux/iommu.h          |   1 +
+ 5 files changed, 256 insertions(+), 25 deletions(-)
+
+-- 
+2.7.4
+
