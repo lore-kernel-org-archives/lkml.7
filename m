@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D79EC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322B7C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8D8214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0665421707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599329;
-	bh=MrBvBHU4mwEA3WSIv/aF/ziLSZLflftoJo/8fMLDxEY=;
+	s=default; t=1562599332;
+	bh=02UpBIi2kD3YHwnEWKXWDsNyLGN32xYTYA2qygZZHlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UnbL+N7fQQz+e3exvnq6qKIcfnTRl2jV+z6L+wsW/v3ly/6s/lSBg410xccMpEhlv
-	 RZKA01h5WhwFfgrLm/MMGT2/Bfh/da663joGCCT69RBQYUEkQbBSDyoVF9znxFLDI+
-	 X7V0dWHMCL3mSdybNz8mAUg4QdSinRStn1lA+NPA=
+	b=NRuEHHKSOJers2PG5WUHEW10apS/2LkrRkap3ZVxr41XZ4LRYbGxoMl1gSazzf74u
+	 zDoXu+4P98CEBG3DVWAyN9AZyvfvdvXN9WedfntFJwMf1EuOHoUIuzp+ZlQpTmFdZp
+	 +nU/tUOzSJHDxWPwwtyWMb5yl8bA3k3YHgRf2I18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387890AbfGHPWI (ORCPT
+        id S2387897AbfGHPWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48300 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730971AbfGHPWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:05 -0400
+        id S2387563AbfGHPWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEE2921743;
-        Mon,  8 Jul 2019 15:22:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C82FF214C6;
+        Mon,  8 Jul 2019 15:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599324;
-        bh=MrBvBHU4mwEA3WSIv/aF/ziLSZLflftoJo/8fMLDxEY=;
+        s=default; t=1562599327;
+        bh=02UpBIi2kD3YHwnEWKXWDsNyLGN32xYTYA2qygZZHlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bD9mIY6DY1K8kGMJgbVKVMN8c3q8ZRpQyh+3cK53WnsKqAF+8lqArSJvnjjQLY9zY
-         dCvPBb2mfh+Da3PqBUCIBpEDgVCjR/ibKMxwymTLmDBW6itH4AXpI3d2dDwhqnpaIj
-         g00ikhG5c6zHWVINWUgYPe7kZMhfXsn02aQOKtdA=
+        b=TYt17OlXSlhbNGjHiChgTjUmQ42u/x5h6DqpOwj1frEPJwAvZbJnTungf0X5PMKH9
+         7erGODjRIg9yuZL7BIWVHn4lWDZKcSVejD6qtJlh1hSptcUQ3WlDb1Q5hgskTrHB+4
+         jdAjTZdc0MC6dX/A5HtXOzYq+YL4TfaeaKWmF43I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org,
+        Dmitrii Kolesnichenko <dmitrii@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 078/102] mfd: omap-usb-tll: Fix register offsets
-Date:   Mon,  8 Jul 2019 17:13:11 +0200
-Message-Id: <20190708150530.489167862@linuxfoundation.org>
+Subject: [PATCH 4.9 079/102] ARC: fix allnoconfig build warning
+Date:   Mon,  8 Jul 2019 17:13:12 +0200
+Message-Id: <20190708150530.547997255@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,45 +61,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 993dc737c0996c163325961fb62a0ed9fd0308b4 ]
+[ Upstream commit 5464d03d92601ac2977ef605b0cbb33276567daf ]
 
-gcc-8 notices that the register number calculation is wrong
-when the offset is an 'u8' but the number is larger than 256:
-
-drivers/mfd/omap-usb-tll.c: In function 'omap_tll_init':
-drivers/mfd/omap-usb-tll.c:90:46: error: overflow in conversion from 'int' to 'u8 {aka unsigned char}' chages value from 'i * 256 + 2070' to '22' [-Werror=overflow]
-
-This addresses it by always using a 32-bit offset number for
-the register. This is apparently an old problem that previous
-compilers did not find.
-
-Fixes: 16fa3dc75c22 ("mfd: omap-usb-tll: HOST TLL platform driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reported-by: Dmitrii Kolesnichenko <dmitrii@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/omap-usb-tll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
-index 9d167c9af2c6..e153276ed954 100644
---- a/drivers/mfd/omap-usb-tll.c
-+++ b/drivers/mfd/omap-usb-tll.c
-@@ -131,12 +131,12 @@ static inline u32 usbtll_read(void __iomem *base, u32 reg)
- 	return readl_relaxed(base + reg);
- }
- 
--static inline void usbtll_writeb(void __iomem *base, u8 reg, u8 val)
-+static inline void usbtll_writeb(void __iomem *base, u32 reg, u8 val)
- {
- 	writeb_relaxed(val, base + reg);
- }
- 
--static inline u8 usbtll_readb(void __iomem *base, u8 reg)
-+static inline u8 usbtll_readb(void __iomem *base, u32 reg)
- {
- 	return readb_relaxed(base + reg);
- }
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index c7a081c583b9..2de75779a247 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -23,7 +23,7 @@ config ARC
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select HAVE_ARCH_KGDB
+ 	select HAVE_ARCH_TRACEHOOK
+-	select HAVE_FUTEX_CMPXCHG
++	select HAVE_FUTEX_CMPXCHG if FUTEX
+ 	select HAVE_IOREMAP_PROT
+ 	select HAVE_KPROBES
+ 	select HAVE_KRETPROBES
 -- 
 2.20.1
 
