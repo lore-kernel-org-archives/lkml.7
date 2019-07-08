@@ -2,89 +2,124 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88980C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EFDC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D9021537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600271;
-	bh=B3BWwCuukbc3fMSFs7l/VP/ypQsliVWsYqplb8DYBWU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JS/U2IagR0j3PJS2IcinDGHKtLK54x/0vwyuN+4Uemrc1VOjoUh4tfUH/DQ6iV1pN
-	 pnk8vPidNCGJqubxUblPbHBJnKUxKTKbkp+JoRDzBMRaenuP+IAHW2mMaHrARObwbx
-	 1R7eV3jHunUA+yT2nd/J4in+l9O/19N88W4P6Tb4=
+	by mail.kernel.org (Postfix) with ESMTP id 7936E20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="UD2MFF8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388095AbfGHPhu (ORCPT
+        id S2389965AbfGHPh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389730AbfGHPbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:31:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39931216F4;
-        Mon,  8 Jul 2019 15:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599884;
-        bh=B3BWwCuukbc3fMSFs7l/VP/ypQsliVWsYqplb8DYBWU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bi22uf/P+knrg3Cura0AHXOWLJKZGocY3naQIS7fYD7NVc34Oc6OHCPU6yoLZ0gCD
-         6On4LdOS3clRXTpvrsQsCFRV3U6a42IL8mBa5WGNuqzYis4LftvRRRBD7eYUMJVMgb
-         C6rEJ4OvM3nIV2qzw5IxH01Hy39j3voMtN2U7gJk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 21/96] drm/mediatek: call drm_atomic_helper_shutdown() when unbinding driver
-Date:   Mon,  8 Jul 2019 17:12:53 +0200
-Message-Id: <20190708150527.588499671@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
-References: <20190708150526.234572443@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 8 Jul 2019 11:37:57 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:45384 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389541AbfGHPbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:31:22 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 76B182E0A4B;
+        Mon,  8 Jul 2019 18:31:16 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 8Wy5B9ijpR-VG4OoQWJ;
+        Mon, 08 Jul 2019 18:31:16 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1562599876; bh=SsanFjU22Vaczlbxo5tTMnEUSVJDr7loxpQ5rI782Ss=;
+        h=Message-ID:Date:To:From:Subject;
+        b=UD2MFF8XPtzcSpgoHILZKUJjR02m9ycsnyi7xGMSFRvcko2Dyf/Tx9B2b08Mfi4dF
+         LtiG0TauTbkK+Ax7FerlBDs5i5jwn1x3fhA2Fc4NoiqHg6TmkzZ5E6Xdcy2WTZAKJx
+         Cr2S67MFUGGToQMMILHZYw8Fs0lSFqY5uiKIsR1I=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:fce8:911:2fe8:4dfb])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 2IqeJGbJaS-VG90sNkH;
+        Mon, 08 Jul 2019 18:31:16 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH 1/2] null_blk: fix handling big requests with small mbps
+ limit
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 08 Jul 2019 18:31:15 +0300
+Message-ID: <156259987576.2590.3397115585587914567.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cf49b24ffa62766f8f04cd1c4cf17b75d29b240a ]
+Small mbps limit actually limits size of request which could be handled,
+because 'cur_bytes' never might be bigger than bandwidth limit over 20ms.
+For example with mbps=4 device cannot handle requests bigger than 81 KiB.
 
-shutdown all CRTC when unbinding drm driver.
+This patch allows to start request bigger than 'cur_bytes' but stops queue
+if 'cur_bytes' is negative. Bandwidth timer takes this into account.
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: eff2c4f10873 ("nullb: bandwidth control")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/null_blk_main.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index e7362bdafa82..8718d123ccaa 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -311,6 +311,7 @@ err_config_cleanup:
- static void mtk_drm_kms_deinit(struct drm_device *drm)
- {
- 	drm_kms_helper_poll_fini(drm);
-+	drm_atomic_helper_shutdown(drm);
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 447d635c79a2..15925b355965 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1132,6 +1132,18 @@ static void null_restart_queue_async(struct nullb *nullb)
+ 		blk_mq_start_stopped_hw_queues(q, true);
+ }
  
- 	component_unbind_all(drm->dev, drm);
- 	drm_mode_config_cleanup(drm);
--- 
-2.20.1
-
-
++static inline bool atomic_long_sub_unless_negative(long i, atomic_long_t *v)
++{
++	long c = atomic_long_read(v);
++
++	do {
++		if (unlikely(c < 0))
++			return false;
++	} while (!atomic_long_try_cmpxchg(v, &c, c - i));
++
++	return true;
++}
++
+ static blk_status_t null_handle_cmd(struct nullb_cmd *cmd)
+ {
+ 	struct nullb_device *dev = cmd->nq->dev;
+@@ -1144,8 +1156,8 @@ static blk_status_t null_handle_cmd(struct nullb_cmd *cmd)
+ 		if (!hrtimer_active(&nullb->bw_timer))
+ 			hrtimer_restart(&nullb->bw_timer);
+ 
+-		if (atomic_long_sub_return(blk_rq_bytes(rq),
+-				&nullb->cur_bytes) < 0) {
++		if (!atomic_long_sub_unless_negative(blk_rq_bytes(rq),
++						     &nullb->cur_bytes)) {
+ 			null_stop_queue(nullb);
+ 			/* race with timer */
+ 			if (atomic_long_read(&nullb->cur_bytes) > 0)
+@@ -1244,12 +1256,14 @@ static enum hrtimer_restart nullb_bwtimer_fn(struct hrtimer *timer)
+ {
+ 	struct nullb *nullb = container_of(timer, struct nullb, bw_timer);
+ 	ktime_t timer_interval = ktime_set(0, TIMER_INTERVAL);
+-	unsigned int mbps = nullb->dev->mbps;
++	long budget = atomic_long_read(&nullb->cur_bytes);
++	long limit = mb_per_tick(nullb->dev->mbps);
+ 
+-	if (atomic_long_read(&nullb->cur_bytes) == mb_per_tick(mbps))
++	if (budget == limit)
+ 		return HRTIMER_NORESTART;
+ 
+-	atomic_long_set(&nullb->cur_bytes, mb_per_tick(mbps));
++	atomic_long_set(&nullb->cur_bytes, limit + min(budget, 0L));
++
+ 	null_restart_queue_async(nullb);
+ 
+ 	hrtimer_forward_now(&nullb->bw_timer, timer_interval);
 
