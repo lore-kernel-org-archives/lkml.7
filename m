@@ -2,109 +2,91 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74543C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644A9C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5870920665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FB8216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562600767;
+	bh=LZUOOFuhUjjyyTKRw+j19FlGYCW4JvUoBkyLfWymUR8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bA8rPj6q1+G/3E/T8GASQDt/t9fA+aWQrA1DQmn8PjDwBXvNTUGDf0s4PSDu4SAEO
+	 hz/Jr7hVo7QDFhQ9LvW5C+MyAwa+14yFVg2hYTwh4F8+6W66GXU9Kz5wYVa9ZA2GWw
+	 Km5raiKFsO2I3+iyH8stFMpIA2782OZzQciNMlik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387759AbfGHPVd (ORCPT
+        id S2388170AbfGHPqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:21:33 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:36992 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387725AbfGHPV3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:29 -0400
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hkVSJ-0004kw-1p; Mon, 08 Jul 2019 16:21:27 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hkVSI-0002yG-7I; Mon, 08 Jul 2019 16:21:26 +0100
-Message-ID: <2d22b1fedc748e99a9975e3f9e105f7928676042.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 000/129] 3.16.70-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Mon, 08 Jul 2019 16:21:25 +0100
-In-Reply-To: <89ecc914-674d-6626-6741-2076ba974d46@roeck-us.net>
-References: <lsq.1562518456.876074874@decadent.org.uk>
-         <89ecc914-674d-6626-6741-2076ba974d46@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-BOLlnUszxZL14Izn6Si0"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 8 Jul 2019 11:46:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731089AbfGHPVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:21:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40679216C4;
+        Mon,  8 Jul 2019 15:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599296;
+        bh=LZUOOFuhUjjyyTKRw+j19FlGYCW4JvUoBkyLfWymUR8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fdQUu3ZCAKNvMnrumODvP9hyyc/BuOkmUaGPBDLkKxdp26XoKCE7HZ2dCapG/ZXbt
+         LjBCo76SetSR0ytP8LoF2ZktFdfHZFHSzz1qgwJUSUrGCYw7vHmQn7IqnbENlXLJga
+         /2upV+6ieVNNeYCScQzwK8OzsdodRRNl8DvcfZGE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 069/102] drm/mediatek: fix unbind functions
+Date:   Mon,  8 Jul 2019 17:13:02 +0200
+Message-Id: <20190708150530.033319183@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
+References: <20190708150525.973820964@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 8fd7a37b191f93737f6280a9b5de65f98acc12c9 ]
 
---=-BOLlnUszxZL14Izn6Si0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+detatch panel in mtk_dsi_destroy_conn_enc(), since .bind will try to
+attach it again.
 
-On Mon, 2019-07-08 at 04:05 -0700, Guenter Roeck wrote:
-> On 7/7/19 9:54 AM, Ben Hutchings wrote:
-> > This is the start of the stable review cycle for the 3.16.70 release.
-> > There are 129 patches in this series, which will be posted as responses
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >=20
-> > Responses should be made by Tue Jul 09 20:00:00 UTC 2019.
-> > Anything received after that time might be too late.
-> >=20
->=20
-> drivers/mtd/devices/docg3.c:1836:15: error: implicit declaration of funct=
-ion 'devm_kasprintf'
->=20
-> Seen in various builds.
+Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Sorry, I dropped the patch that causes that before sending out this
-series for review but I did not push to linux-stable-queue.git
-afterward.  I have done that now, so hopefully your builds should go
-green.
-
-Ben.
-
---=20
-Ben Hutchings
-Time is nature's way of making sure that
-everything doesn't happen at once.
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index eaa5a2240c0c..bdbf358697cd 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -720,6 +720,8 @@ static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi)
+ 	/* Skip connector cleanup if creation was delegated to the bridge */
+ 	if (dsi->conn.dev)
+ 		drm_connector_cleanup(&dsi->conn);
++	if (dsi->panel)
++		drm_panel_detach(dsi->panel);
+ }
+ 
+ static void mtk_dsi_ddp_start(struct mtk_ddp_comp *comp)
+-- 
+2.20.1
 
 
 
---=-BOLlnUszxZL14Izn6Si0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl0jX3UACgkQ57/I7JWG
-EQkuUw/7BknzVIFGJY7OipTRF/F25KUwnVVBIHXaIHkiMfmufQbI4vkCc4nXnkMX
-Loc5DLIVDNNeYQHYvEH2vmeXDKMwO0xxHqQvZAPpWogoYGpogYv4eh0+j30UFJqd
-XTi2sO0TG3QosRaaxADD3pALnrdsglwFeIRFRM/PNKUQJxHbC82VsDMB98s1f2vV
-Q4DjBcWaaN3jop2McA1V4rth+pluGRDFkSYHrZCvlElsaosgbHfOPg6Mkk8a9Bj+
-wR8YSwH9XUALYerMUXSh3LMapxxre+EKHef7WiyuHokqNczgT2xkfZHS/AZ/Awgt
-6Z9fdKP1y6Ij4o8NJHByJchZYH4O8y4jcgLLUB3q7vHm5wSkuaB4NSaFby93/yPz
-gAtf+g7tX7MGKxUzyu7zwBJ8OthaTGBrYS5s97bABbwYqIycNS6Oaii1KKrp/fli
-TjQJ70ULJaBiA15P2epG7DzSa1mkkmwibqAZJFLOgELUe7EvlfvYDcNSzyiKfTsb
-G34ZnONQ32BbDiPeQ5sFHgP6WQgJ9ltAm6hEIlsK+5Boa2RY4dMupug6Gaezb1Ac
-cbtqti9OS4MVrdV4pq6vggeOL3yNYyF1j4GWljqQT25xoH5+O2uFR4/cT50md6GZ
-14aEbpC7b06IVqVZRkgGZacnx1pMnLQ4CzVnn0VVsNzMePIhZas=
-=N24r
------END PGP SIGNATURE-----
-
---=-BOLlnUszxZL14Izn6Si0--
