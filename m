@@ -2,106 +2,89 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD14C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B19CC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF1CA21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ASziEEwA"
+	by mail.kernel.org (Postfix) with ESMTP id D036B217D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562603853;
+	bh=opYu2XkI3tRmE6/60hQ0j4L5QYeD4t6qcBLs8sVGjuE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SDBd8Im+OcQCuLDXxMJkOhGJXbZ7NtlB37WVo7RNPGgNHY8J699mZIEYog7j6r8Ga
+	 C8SF7mn1DjdXeJKU1Qp0jjHwEKJZfib51hNIrNM2ps1zuKRS8MZCUbaCSz7YipZ1oa
+	 z8gpBGcEyK2+UrEqfHs0naKUwoCkFzp7XkcaZ6Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfGHQgj (ORCPT
+        id S1729188AbfGHQhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:36:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46236 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfGHQgj (ORCPT
+        Mon, 8 Jul 2019 12:37:32 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43388 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfGHQhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:36:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5qbxX7uLGGM0j7ktC1ZeTbiIh4ZweqU0oC2EGZqjScg=; b=ASziEEwAmPt1Gy7ZpM0nciVC4
-        I+LUZ/OlLYQVIlfxtVeuLb1wEY6XhgOME6OuFx1x9YXJ2a24xpOvCSqE8WLy2l2gq8xzgHDz7dv+Q
-        faoOB5VNEtLd267bzpGsLd6VGAuQdqFYVRzEUYNgVJVp+XhXEFT6nPjd1TjgS5M713B3sjHiTCf2v
-        9ozy0ijuf4Ru/bakMDNwOLF7d2F8wM3e6Y7yIGGHCOrCGzt17a2IwO4Glfgq2METXceISM+RALqNJ
-        K1tMJGfPh/a9c+yxLSLQUUy+9xtC3lr9rFQP8IdmmAm72hRLxy6KgnnSPDKH/+ZeBdJHqDjDFyTMK
-        R5U67q6cQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkWcz-0001E7-TW; Mon, 08 Jul 2019 16:36:34 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 54C4A20976EFC; Mon,  8 Jul 2019 18:36:32 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 18:36:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 3/7] perf: order iterators for visit_groups_merge into a
- min-heap
-Message-ID: <20190708163632.GH3419@hirez.programming.kicks-ass.net>
-References: <20190702065955.165738-1-irogers@google.com>
- <20190702065955.165738-4-irogers@google.com>
+        Mon, 8 Jul 2019 12:37:32 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m14so13765730qka.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=d77j269b8ii4jGD4hk2Ust+/CV3shrzBdzDbm/56554=;
+        b=uYCSLFLo5IWrRj9BTn09XZfD5mBsOBwhtDYOHefm16fOEt9+8bUk3UTtmHF2I5Ujlm
+         CA4sFrts+vEyrL0L7u7u7nP7lrP0F6+L1hn6v6V4jepzWMgJDi4zhowOQOvnwNqC0Fs6
+         iVHx9LjyEvX6DNm1ZJKBwhRLJ6KCFa8U5PyVqOPMJyxKxCYUshYLiCfFQqVj6p4vvw2o
+         F4i7nr/glAa1/zAzP/ZuB+enz3ixQ56845Z7vsY77ziD9hFk1qLCJILZTxt2dN75FCig
+         oH6HnTje0x4pfjDxOZokrIs4UI7dy549syh5xokqYnCAwjYtGwh9fsNK++ababrCILWD
+         mB8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d77j269b8ii4jGD4hk2Ust+/CV3shrzBdzDbm/56554=;
+        b=lf7km//Yycd4nCx72Qt+bsrHGa3oWIw6yd59hbwjBx9e2PC/mJIZIkDYeXxN6arK8b
+         MTCbWkYghH9C4FZ9/arxiRjT+78ZUcBsA0ngWzMyTaRPdhnd7FgYD+Lz+pSrnGxenhrI
+         1tjX+LtwvHinxg//EHJVd+18bn6rnKAJ4G10X2kYpmSFzcDSzlTc57JlJswQ1tjrHuEg
+         mQ6nVPuSL1RSh+Mv3/hKVL65+0JykXR5G6ekWEmx+AYMUqmBR+s5L6Mp6uRhQvRKSZpR
+         MV+QCYxnKGCx3H57tdGyLx/NbPcv6xsvr+3m2qMiUuCCQInydsN92jbFU4k2vu1Ee444
+         ED3g==
+X-Gm-Message-State: APjAAAVXxB9zaW4RNKchn7P3sBfcOVAYx+kOrvvN6Bk3YiIL2Ew0b2Ao
+        8s+knuFKmMcAfFZAC5heX3A=
+X-Google-Smtp-Source: APXvYqyg6ZU38Ki/RRPgH24okSlx6akBtZnsqHskOvYhkaNo+9/Cad7dv/wCSe6v2WEcze0uXlCjbw==
+X-Received: by 2002:a37:f516:: with SMTP id l22mr13870793qkk.123.1562603851050;
+        Mon, 08 Jul 2019 09:37:31 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:fa50])
+        by smtp.gmail.com with ESMTPSA id p59sm2249911qtd.75.2019.07.08.09.37.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 09:37:29 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 09:37:28 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Peng Wang <rocking@whu.edu.cn>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kernfs: fix potential null pointer dereference
+Message-ID: <20190708163728.GC657710@devbig004.ftw2.facebook.com>
+References: <20190708151611.13242-1-rocking@whu.edu.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190702065955.165738-4-irogers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190708151611.13242-1-rocking@whu.edu.cn>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 11:59:51PM -0700, Ian Rogers wrote:
+On Mon, Jul 08, 2019 at 11:16:11PM +0800, Peng Wang wrote:
+> Get root safely after kn is ensureed to be not null.
+> 
+> Signed-off-by: Peng Wang <rocking@whu.edu.cn>
 
-> +/* Sift the perf_event at pos down the heap. */
-> +static void min_heapify(struct perf_event_heap *heap, int pos)
-> +{
-> +	int left_child, right_child;
-> +
-> +	while (pos > heap->num_elements / 2) {
+Acked-by: Tejun Heo <tj@kernel.org>
 
-Did that want to be 'pos < head->num_elements / 2' ?
+Thanks.
 
-> +		left_child = pos * 2;
-> +		right_child = pos * 2 + 1;
-> +		if (heap->storage[pos]->group_index >
-> +		    heap->storage[left_child]->group_index) {
-> +			min_heap_swap(heap, pos, left_child);
-> +			pos = left_child;
-> +		} else if (heap->storage[pos]->group_index >
-> +			   heap->storage[right_child]->group_index) {
-> +			min_heap_swap(heap, pos, right_child);
-> +			pos = right_child;
-> +		} else {
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +/* Floyd's approach to heapification that is O(n). */
-> +static void min_heapify_all(struct perf_event_heap *heap)
-> +{
-> +	int i;
-> +
-> +	for (i = heap->num_elements / 2; i > 0; i--)
-> +		min_heapify(heap, i);
-> +}
-
-Otherwise I don't actually see it do anything at all. Also, when pos >
-nr/2, then pos * 2 is silly.
-
-
+-- 
+tejun
