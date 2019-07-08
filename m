@@ -2,51 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D658C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A5AC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7530B217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3E020665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600098;
-	bh=DUoaMkVaR9WxNEeEBK1fXZQik05Ei44ca2pzesMf5k4=;
+	s=default; t=1562600103;
+	bh=jOGAo5Kf6rRcDT4LicwRH4ehDO0TFEjE18kYIJhuJN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQAdQ16/ntFChTR/jEkVzdlZh0OWOKSoelv6yELS4KM+GfxvKU2lrFOrs645muWRK
-	 VfyE4b/vr1Z8th/MsoBwwi5vemUkBvI/qST1CR6GNzIx8oPql6AGnYgDjhe34rYlku
-	 OGBQnGKFoTdILkkAl6dZf5aM7yv3/tRJpf3vmryQ=
+	b=TaJahQc6qADTltR29j5f5BJAUtGw7BN6nNQbYxMCpFstEUaQ5cTw46MlDiI27TAdy
+	 ymkqhRZm6pkUcO6BUl1Xp6NWt5kevFYtiMpo7F6+CEaSCl1QHUfMO5PBE9XrFXN8QS
+	 cjeRH85CiC1Syu6UPSJd5lZBGYubuy54uFJrrPBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390613AbfGHPeq (ORCPT
+        id S2390873AbfGHPfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37094 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:35:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390575AbfGHPeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:44 -0400
+        id S2390618AbfGHPes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 154BD21738;
-        Mon,  8 Jul 2019 15:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F18B204EC;
+        Mon,  8 Jul 2019 15:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600083;
-        bh=DUoaMkVaR9WxNEeEBK1fXZQik05Ei44ca2pzesMf5k4=;
+        s=default; t=1562600086;
+        bh=jOGAo5Kf6rRcDT4LicwRH4ehDO0TFEjE18kYIJhuJN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXsDcHEoJNJfSOpBKcC+RFytdwB3Q3AQk0dHzkAvI9PhNc6qJn/HTMXNFYHo5by5V
-         U0ETu8XfMHROdKpDuWpfjML1aWweXJ7ieJGmDwQO2VBxJLhW2bUySlppVJEBx9ycLd
-         zy4sUwVM42f6ghz9PiGxNaVWSGQQlXN1Tj7R05tc=
+        b=TEiaGyBTDWF1Z4qLtzxywUmmetxWC1q5nZscYRmlGutiN1zoYjXk8JopjaDonPnoF
+         V5slMUdo/NwfNwfxRoG56KimSfrd9PRKCK8Irco/NNnJnsOVyybB4tYFjfD4AMgKJ8
+         NEHhkiZqTdIg1DNNmqmPf5q+rq9Z9QiI/SSNFbpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.1 88/96] svcrdma: Ignore source port when computing DRC hash
-Date:   Mon,  8 Jul 2019 17:14:00 +0200
-Message-Id: <20190708150531.195325400@linuxfoundation.org>
+        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 47/96] platform/mellanox: mlxreg-hotplug: Add devm_free_irq call to remove flow
+Date:   Mon,  8 Jul 2019 17:13:19 +0200
+Message-Id: <20190708150529.065200329@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,54 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+[ Upstream commit 8c2eb7b6468ad4aa5600aed01aa0715f921a3f8b ]
 
-commit 1e091c3bbf51d34d5d96337a59ce5ab2ac3ba2cc upstream.
+Add devm_free_irq() call to mlxreg-hotplug remove() for clean release
+of devices irq resource. Fix debugobjects warning triggered by rmmod
+It prevents of use-after-free memory, related to
+mlxreg_hotplug_work_handler.
 
-The DRC appears to be effectively empty after an RPC/RDMA transport
-reconnect. The problem is that each connection uses a different
-source port, which defeats the DRC hash.
+Issue has been reported as debugobjects warning triggered by
+'rmmod mlxtreg-hotplug' flow, while running kernel with
+CONFIG_DEBUG_OBJECTS* options.
 
-Clients always have to disconnect before they send retransmissions
-to reset the connection's credit accounting, thus every retransmit
-on NFS/RDMA will miss the DRC.
+[ 2489.623551] ODEBUG: free active (active state 0) object type: work_struct hint: mlxreg_hotplug_work_handler+0x0/0x7f0 [mlxreg_hotplug]
+[ 2489.637097] WARNING: CPU: 5 PID: 3924 at lib/debugobjects.c:328 debug_print_object+0xfe/0x180
+[ 2489.637165] RIP: 0010:debug_print_object+0xfe/0x180
+?
+[ 2489.637214] Call Trace:
+[ 2489.637225]  __debug_check_no_obj_freed+0x25e/0x320
+[ 2489.637231]  kfree+0x82/0x110
+[ 2489.637238]  release_nodes+0x33c/0x4e0
+[ 2489.637242]  ? devres_remove_group+0x1b0/0x1b0
+[ 2489.637247]  device_release_driver_internal+0x146/0x270
+[ 2489.637251]  driver_detach+0x73/0xe0
+[ 2489.637254]  bus_remove_driver+0xa1/0x170
+[ 2489.637261]  __x64_sys_delete_module+0x29e/0x320
+[ 2489.637265]  ? __ia32_sys_delete_module+0x320/0x320
+[ 2489.637268]  ? blkcg_exit_queue+0x20/0x20
+[ 2489.637273]  ? task_work_run+0x7d/0x100
+[ 2489.637278]  ? exit_to_usermode_loop+0x5b/0xf0
+[ 2489.637281]  do_syscall_64+0x73/0x160
+[ 2489.637287]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 2489.637290] RIP: 0033:0x7f95c3596fd7
 
-An NFS/RDMA client's IP source port is meaningless for RDMA
-transports. The transport layer typically sets the source port value
-on the connection to a random ephemeral port. The server already
-ignores it for the "secure port" check. See commit 16e4d93f6de7
-("NFSD: Ignore client's source port on RDMA transports").
+The difference in release flow with and with no devm_free_irq is listed
+below:
 
-The Linux NFS server's DRC resolves XID collisions from the same
-source IP address by using the checksum of the first 200 bytes of
-the RPC call header.
+bus: 'platform': remove driver mlxreg-hotplug
+ mlxreg_hotplug_remove(start)
+					-> devm_free_irq (with new code)
+ mlxreg_hotplug_remove (end)
+ release_nodes (start)
+  mlxreg-hotplug: DEVRES REL devm_hwmon_release (8 bytes)
+  device: 'hwmon3': device_unregister
+  PM: Removing info for No Bus:hwmon3
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (88 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (6 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_irq_release (16 bytes) (no new code)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (1376 bytes)
+   ------------[ cut here ]------------ (no new code):
+   ODEBUG: free active (active state 0) object type: work_struct hint: mlxreg_hotplug_work_handler
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ release_nodes(end)
+driver: 'mlxreg-hotplug': driver_release
 
+Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/platform/mellanox/mlxreg-hotplug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -211,9 +211,14 @@ static void handle_connect_req(struct rd
- 	/* Save client advertised inbound read limit for use later in accept. */
- 	newxprt->sc_ord = param->initiator_depth;
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index 687ce6817d0d..f85a1b9d129b 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -694,6 +694,7 @@ static int mlxreg_hotplug_remove(struct platform_device *pdev)
  
--	/* Set the local and remote addresses in the transport */
- 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
- 	svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
-+	/* The remote port is arbitrary and not under the control of the
-+	 * client ULP. Set it to a fixed value so that the DRC continues
-+	 * to be effective after a reconnect.
-+	 */
-+	rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
-+
- 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
- 	svc_xprt_set_local(&newxprt->sc_xprt, sa, svc_addr_len(sa));
+ 	/* Clean interrupts setup. */
+ 	mlxreg_hotplug_unset_irq(priv);
++	devm_free_irq(&pdev->dev, priv->irq, priv);
  
+ 	return 0;
+ }
+-- 
+2.20.1
+
 
 
