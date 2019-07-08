@@ -2,64 +2,56 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B5DC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F1DC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DC5216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1AB2173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599439;
-	bh=56IrnD6Tc2gTYfbFkReMgZxeLTuPpNpPTzfiVjBAD5s=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=M7SL395A68/NZ+V/nBKVsNNSDzldHdJOpMHTpZxNkjgkOSbdI6HGHdfUvtmvI3UIA
-	 prCTtYX1Qb5RV7HEB1oQoCQ/V9IJDdsX5tNgncZ/4dFFlWc2aeubFiBSJmtdpr8vf5
-	 EqyzzyRMVLiAoLBfG9TrX05qiADrGKIpsyETBBw4=
+	s=default; t=1562599443;
+	bh=BL66CyQQAZYLkJtSJfiuk72pCvxOa8IC4WMFAcSz6Jk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HBG38T3tCtlg4Hen4GgYxgWD+UFTJTJ6a96Gpq0HmiHhk4pOys4L0ZPHz1StFqzDT
+	 C5W40NeFE6gAtpES+kF0BujTqK6bthJQOezhmtaBSFu8sr77SEzdT7UAOVdA/ElFwa
+	 xZY+2Yl1jFbK4HzjXnx2rdd9ERsbfNcVBScBDC/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388272AbfGHPX6 (ORCPT
+        id S2388284AbfGHPYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388261AbfGHPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:23:54 -0400
+        id S2388268AbfGHPX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:23:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B137214C6;
-        Mon,  8 Jul 2019 15:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3D9420665;
+        Mon,  8 Jul 2019 15:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599434;
-        bh=56IrnD6Tc2gTYfbFkReMgZxeLTuPpNpPTzfiVjBAD5s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pvksK43mrTFANkqJlYoZlaqFQl4eW6f53OWgGiBdQ57Kh4fRZW2d/77aeXkLCSrZz
-         Np1yR/Fcs0Ia8YNww7XFBvp+bnKXbxQGz1A8oFOtXN5O9ZI8dQrYCI1TXqzGK4rbS8
-         S/Ca8FNQpiyv3W4piyd4h8v85gyqTdhfzJ/D5V/E=
+        s=default; t=1562599437;
+        bh=BL66CyQQAZYLkJtSJfiuk72pCvxOa8IC4WMFAcSz6Jk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DGMYTBsmVGwHFyQyB/gOROwkCylW/VrVBrIjzIQwqR/LnS1G1XG20REwVtSRaXCqz
+         QGsHTIKuFgP7LAyh7wAOPPu6sR4Zu++dV65MgSoiPAJ4eVbIPWQrDId33Pm+VG8c+N
+         Q/BBIuadKEqHrtZZyiaansPoTDYPl3hJP2w56nAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/56] 4.14.133-stable review
-Date:   Mon,  8 Jul 2019 17:12:52 +0200
-Message-Id: <20190708150514.376317156@linuxfoundation.org>
+        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 07/56] drm/mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
+Date:   Mon,  8 Jul 2019 17:12:59 +0200
+Message-Id: <20190708150518.265644852@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
+In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
+References: <20190708150514.376317156@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.133-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.133-rc1
-X-KernelTest-Deadline: 2019-07-10T15:05+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,259 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.133 release.
-There are 56 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+[ Upstream commit 2458d9d6d94be982b917e93c61a89b4426f32e31 ]
+
+mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which
+needs ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is
+called, ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called
+after last irq, it will timeout with this message: "vblank wait timed out
+on crtc 0". This happens sometimes when turning off the screen.
+
+In drm_atomic_helper.c#disable_outputs(),
+the calling sequence when turning off the screen is:
+
+1. mtk_dsi_encoder_disable()
+     --> mtk_output_dsi_disable()
+       --> mtk_dsi_stop();  /* sometimes make vblank timeout in
+                               atomic_disable */
+       --> mtk_dsi_poweroff();
+2. mtk_drm_crtc_atomic_disable()
+     --> drm_crtc_wait_one_vblank();
+     ...
+       --> mtk_dsi_ddp_stop()
+         --> mtk_dsi_poweroff();
+
+mtk_dsi_poweroff() has reference count design, change to make
+mtk_dsi_stop() called in mtk_dsi_poweroff() when refcount is 0.
+
+Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 413313f19c36..c1b8caad65e6 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -631,6 +631,15 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+ 	if (--dsi->refcount != 0)
+ 		return;
+ 
++	/*
++	 * mtk_dsi_stop() and mtk_dsi_start() is asymmetric, since
++	 * mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(),
++	 * which needs irq for vblank, and mtk_dsi_stop() will disable irq.
++	 * mtk_dsi_start() needs to be called in mtk_output_dsi_enable(),
++	 * after dsi is fully set.
++	 */
++	mtk_dsi_stop(dsi);
++
+ 	if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
+ 		if (dsi->panel) {
+ 			if (drm_panel_unprepare(dsi->panel)) {
+@@ -697,7 +706,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+ 		}
+ 	}
+ 
+-	mtk_dsi_stop(dsi);
+ 	mtk_dsi_poweroff(dsi);
+ 
+ 	dsi->enabled = false;
+-- 
+2.20.1
 
-Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.133-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.133-rc1
-
-Stanislaw Gruszka <sgruszka@redhat.com>
-    stable/btrfs: fix backport bug in d819d97ea025 ("btrfs: honor path->skip_locking in backref code")
-
-Robin Gong <yibin.gong@nxp.com>
-    dmaengine: imx-sdma: remove BD_INTR for channel0
-
-Dmitry Korotin <dkorotin@wavecomp.com>
-    MIPS: Add missing EHB in mtc0 -> mfc0 sequence.
-
-Hauke Mehrtens <hauke@hauke-m.de>
-    MIPS: Fix bounds check virt_addr_valid
-
-Chuck Lever <chuck.lever@oracle.com>
-    svcrdma: Ignore source port when computing DRC hash
-
-Wanpeng Li <wanpengli@tencent.com>
-    KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable LAPIC
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86: degrade WARN to pr_warn_ratelimited
-
-Vineet Gupta <vgupta@synopsys.com>
-    ARC: handle gcc generated __builtin_trap for older compiler
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    tty: rocket: fix incorrect forward declaration of 'rp_init()'
-
-Jason Wang <jasowang@redhat.com>
-    vhost: scsi: add weight support
-
-Jason Wang <jasowang@redhat.com>
-    vhost: vsock: add weight support
-
-Jason Wang <jasowang@redhat.com>
-    vhost_net: fix possible infinite loop
-
-Jason Wang <jasowang@redhat.com>
-    vhost: introduce vhost_exceeds_weight()
-
-Jason Wang <jasowang@redhat.com>
-    vhost_net: introduce vhost_exceeds_weight()
-
-Paolo Abeni <pabeni@redhat.com>
-    vhost_net: use packet weight for rx handler, too
-
-haibinzhang(张海斌) <haibinzhang@tencent.com>
-    vhost-net: set packet weight of tx polling to 2 * vq size
-
-Nikolay Borisov <nborisov@suse.com>
-    btrfs: Ensure replaced device doesn't have pending chunk allocation
-
-Shakeel Butt <shakeelb@google.com>
-    mm/vmscan.c: prevent useless kswapd loops
-
-Petr Mladek <pmladek@suse.com>
-    ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()
-
-Robert Beckett <bob.beckett@collabora.com>
-    drm/imx: only send event on crtc disable if kept disabled
-
-Robert Beckett <bob.beckett@collabora.com>
-    drm/imx: notify drm core before sending event during crtc disable
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amdgpu/gfx9: use reset default for PA_SC_FIFO_SIZE
-
-Ard Biesheuvel <ard.biesheuvel@linaro.org>
-    arm64: kaslr: keep modules inside module region when KASAN is enabled
-
-Joshua Scott <joshua.scott@alliedtelesis.co.nz>
-    ARM: dts: armada-xp-98dx3236: Switch to armada-38x-uart serial node
-
-Eiichi Tsukata <devel@etsukata.com>
-    tracing/snapshot: Resize spare buffer if size changed
-
-Herbert Xu <herbert@gondor.apana.org.au>
-    lib/mpi: Fix karactx leak in mpi_powm
-
-Dennis Wassenberg <dennis.wassenberg@secunet.com>
-    ALSA: hda/realtek - Change front mic location for Lenovo M710q
-
-Colin Ian King <colin.king@canonical.com>
-    ALSA: usb-audio: fix sign unintended sign extension on left shifts
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: line6: Fix write on zero-sized buffer
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    ALSA: firewire-lib/fireworks: fix miss detection of received MIDI messages
-
-Colin Ian King <colin.king@canonical.com>
-    ALSA: seq: fix incorrect order of dest_client/dest_ports arguments
-
-Vincent Whitchurch <vincent.whitchurch@axis.com>
-    crypto: cryptd - Fix skcipher instance memory leak
-
-Eric Biggers <ebiggers@google.com>
-    crypto: user - prevent operating on larval algorithms
-
-Jann Horn <jannh@google.com>
-    ptrace: Fix ->ptracer_cred handling for PTRACE_TRACEME
-
-Lucas De Marchi <lucas.demarchi@intel.com>
-    drm/i915/dmc: protect against reading random memory
-
-Paul Burton <paul.burton@mips.com>
-    MIPS: netlogic: xlr: Remove erroneous check in nlm_fmn_send()
-
-Wei Li <liwei391@huawei.com>
-    ftrace: Fix NULL pointer dereference in free_ftrace_func_mapper()
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    module: Fix livepatch/ftrace module text permissions race
-
-swkhack <swkhack@gmail.com>
-    mm/mlock.c: change count_mm_mlocked_page_nr return type
-
-Manuel Traut <manut@linutronix.de>
-    scripts/decode_stacktrace.sh: prefix addr2line with $CROSS_COMPILE
-
-Joel Savitz <jsavitz@redhat.com>
-    cpuset: restore sanity to cpuset_cpus_allowed_fallback()
-
-Vadim Pasternak <vadimp@mellanox.com>
-    platform/x86: mlx-platform: Fix parent device in i2c-mux-reg device registration
-
-Don Brace <don.brace@microsemi.com>
-    scsi: hpsa: correct ioaccel2 chaining
-
-Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-    SoC: rt274: Fix internal jack assignment in set_jack callback
-
-Alexandre Belloni <alexandre.belloni@bootlin.com>
-    usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
-
-Young Xiao <92siuyang@gmail.com>
-    usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
-
-Marcus Cooper <codekipper@gmail.com>
-    ASoC: sun4i-i2s: Add offset to RX channel select
-
-Marcus Cooper <codekipper@gmail.com>
-    ASoC: sun4i-i2s: Fix sun8i tx channel offset mask
-
-Yu-Hsuan Hsu <yuhsuan@chromium.org>
-    ASoC: max98090: remove 24-bit format support if RJ is 0
-
-Hsin-Yi Wang <hsinyi@chromium.org>
-    drm/mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
-
-Hsin-Yi Wang <hsinyi@chromium.org>
-    drm/mediatek: call drm_atomic_helper_shutdown() when unbinding driver
-
-Hsin-Yi Wang <hsinyi@chromium.org>
-    drm/mediatek: fix unbind functions
-
-YueHaibing <yuehaibing@huawei.com>
-    spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-
-Libin Yang <libin.yang@intel.com>
-    ASoC: soc-pcm: BE dai needs prepare when pause release after resume
-
-Matt Flax <flatmax@flatmax.org>
-    ASoC : cs4265 : readable register too low
-
-Matias Karhumaa <matias.karhumaa@gmail.com>
-    Bluetooth: Fix faulty expression for minimum encryption key size check
-
-
--------------
-
-Diffstat:
-
- Makefile                                  |  4 ++--
- arch/arc/kernel/traps.c                   |  8 ++++++++
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi |  8 ++++++++
- arch/arm64/kernel/module.c                |  8 ++++++--
- arch/mips/include/asm/netlogic/xlr/fmn.h  |  2 --
- arch/mips/mm/mmap.c                       |  2 +-
- arch/mips/mm/tlbex.c                      | 29 ++++++++++++++++++---------
- arch/x86/kernel/ftrace.c                  |  3 +++
- arch/x86/kvm/lapic.c                      |  2 +-
- arch/x86/kvm/x86.c                        |  6 +++---
- crypto/cryptd.c                           |  1 +
- crypto/crypto_user.c                      |  3 +++
- drivers/dma/imx-sdma.c                    |  4 ++--
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c     | 19 ------------------
- drivers/gpu/drm/i915/intel_csr.c          | 18 +++++++++++++++++
- drivers/gpu/drm/imx/ipuv3-crtc.c          |  6 +++---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c    |  1 +
- drivers/gpu/drm/mediatek/mtk_dsi.c        | 12 ++++++++++-
- drivers/platform/x86/mlx-platform.c       |  2 +-
- drivers/scsi/hpsa.c                       |  7 ++++++-
- drivers/scsi/hpsa_cmd.h                   |  1 +
- drivers/spi/spi-bitbang.c                 |  2 +-
- drivers/tty/rocket.c                      |  2 +-
- drivers/usb/gadget/udc/fusb300_udc.c      |  5 +++++
- drivers/usb/gadget/udc/lpc32xx_udc.c      |  3 +--
- drivers/vhost/net.c                       | 33 ++++++++++++++++++-------------
- drivers/vhost/scsi.c                      | 14 +++++++++----
- drivers/vhost/vhost.c                     | 20 ++++++++++++++++++-
- drivers/vhost/vhost.h                     |  6 +++++-
- drivers/vhost/vsock.c                     | 27 ++++++++++++++++++-------
- fs/btrfs/backref.c                        |  2 --
- fs/btrfs/dev-replace.c                    | 29 +++++++++++++++++----------
- fs/btrfs/volumes.c                        |  2 ++
- fs/btrfs/volumes.h                        |  5 +++++
- kernel/cgroup/cpuset.c                    | 15 +++++++++++++-
- kernel/livepatch/core.c                   |  6 ++++++
- kernel/ptrace.c                           |  4 +---
- kernel/trace/ftrace.c                     |  7 +++++--
- kernel/trace/trace.c                      | 10 ++++++----
- lib/mpi/mpi-pow.c                         |  6 ++----
- mm/mlock.c                                |  4 ++--
- mm/vmscan.c                               | 27 ++++++++++++++-----------
- net/bluetooth/l2cap_core.c                |  2 +-
- net/sunrpc/xprtrdma/svc_rdma_transport.c  |  7 ++++++-
- scripts/decode_stacktrace.sh              |  2 +-
- sound/core/seq/oss/seq_oss_ioctl.c        |  2 +-
- sound/core/seq/oss/seq_oss_rw.c           |  2 +-
- sound/firewire/amdtp-am824.c              |  2 +-
- sound/pci/hda/patch_realtek.c             |  1 +
- sound/soc/codecs/cs4265.c                 |  2 +-
- sound/soc/codecs/max98090.c               | 16 +++++++++++++++
- sound/soc/codecs/rt274.c                  |  3 ++-
- sound/soc/soc-pcm.c                       |  3 ++-
- sound/soc/sunxi/sun4i-i2s.c               |  6 +++++-
- sound/usb/line6/pcm.c                     |  5 +++++
- sound/usb/mixer_quirks.c                  |  4 ++--
- 56 files changed, 302 insertions(+), 130 deletions(-)
 
 
