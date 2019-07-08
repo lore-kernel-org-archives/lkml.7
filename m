@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF64C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14620C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A133F21743
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9EB21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599559;
-	bh=2brGLRDW17KyZ3JkwFdSlCnobgYQ8m0GLWZgEhcWYYQ=;
+	s=default; t=1562599561;
+	bh=cYOXeoA13hecNXNXy0cMxkKIJAkMczHPDQI3mHpfdkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qZTWzRz6kIvcEeiwWbicZrUY3ebsTmMNUkVru5kRF07/CyosY9rumWIESCLMIpn+L
-	 tHf80g6l8wQTMRZkHL7AALwQK9Z8RXfPyd3rmeI4xufqEr6mcZJsyqJq2jq4t7LGcm
-	 d6EbMfEem/x4s1qzhGVC8fJmW+QIF8CoYZPcVdbQ=
+	b=eupREa2pXDoYm++u06qzYUqnw5nsHtJfWo0bxs+V6RCjlbmOyZBapznTUpmNdoY6g
+	 EfxjCjpGfx0L/GaAI/mMlFOLAc7mOvfkyjQ6ovapCGdDQ6TAByDri8qVNdfuMICwlR
+	 iSNoJ7LbB9DaJjVWtDAEYPYZQjrziKEg/dNdll6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388714AbfGHPZ6 (ORCPT
+        id S2388726AbfGHP0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53452 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388689AbfGHPZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:52 -0400
+        id S2388698AbfGHPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4554820665;
-        Mon,  8 Jul 2019 15:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA21620665;
+        Mon,  8 Jul 2019 15:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599551;
-        bh=2brGLRDW17KyZ3JkwFdSlCnobgYQ8m0GLWZgEhcWYYQ=;
+        s=default; t=1562599554;
+        bh=cYOXeoA13hecNXNXy0cMxkKIJAkMczHPDQI3mHpfdkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ei+LC5ZayvDSd7+FuH8hmMjP8OeXRzczVtO0UKRfK/mFYPghH7fenCtt6zZJCmJxv
-         ldZOkCe8hi2RXgD7yIu7vCvZM8oNjeXAHk3SEH6v7HFI/iGvTc6ocA+EgGBr1tMTvp
-         AbZHnk7bygQz0nne1qehvUjlGMHE2vM31H3kFMSE=
+        b=kJskHaMpUF64dSkfcz5t9Upc8PC4u89N/40c6eIip5skyqHeV07r3vShilCTeL5ut
+         SQWoIF2a5qep3vkSC+xh/NMbMk/+n9l7txT3QOpJmGxQKtxmbIsQku6QML79i5VbXw
+         vzYiCrp5bNvhkEZf9+G4qo/jFnP4un12FV78NCBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
+        stable@vger.kernel.org, Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        James Grant <jamesg@zaltys.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 11/56] usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
-Date:   Mon,  8 Jul 2019 17:13:03 +0200
-Message-Id: <20190708150519.076240236@linuxfoundation.org>
+Subject: [PATCH 4.14 12/56] usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
+Date:   Mon,  8 Jul 2019 17:13:04 +0200
+Message-Id: <20190708150519.367952815@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -60,49 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 62fd0e0a24abeebe2c19fce49dd5716d9b62042d ]
+[ Upstream commit fbc318afadd6e7ae2252d6158cf7d0c5a2132f7d ]
 
-There is no deallocation of fusb300->ep[i] elements, allocated at
-fusb300_probe.
+Gadget drivers may queue request in interrupt context. This would lead to
+a descriptor allocation in that context. In that case we would hit
+BUG_ON(in_interrupt()) in __get_vm_area_node.
 
-The patch adds deallocation of fusb300->ep array elements.
+Also remove the unnecessary cast.
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Tested-by: James Grant <jamesg@zaltys.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/fusb300_udc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/gadget/udc/lpc32xx_udc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/fusb300_udc.c b/drivers/usb/gadget/udc/fusb300_udc.c
-index e0c1b0099265..089f39de6897 100644
---- a/drivers/usb/gadget/udc/fusb300_udc.c
-+++ b/drivers/usb/gadget/udc/fusb300_udc.c
-@@ -1345,12 +1345,15 @@ static const struct usb_gadget_ops fusb300_gadget_ops = {
- static int fusb300_remove(struct platform_device *pdev)
- {
- 	struct fusb300 *fusb300 = platform_get_drvdata(pdev);
-+	int i;
+diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
+index 8f32b5ee7734..6df1aded4503 100644
+--- a/drivers/usb/gadget/udc/lpc32xx_udc.c
++++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+@@ -935,8 +935,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(struct lpc32xx_udc *udc)
+ 	dma_addr_t			dma;
+ 	struct lpc32xx_usbd_dd_gad	*dd;
  
- 	usb_del_gadget_udc(&fusb300->gadget);
- 	iounmap(fusb300->reg);
- 	free_irq(platform_get_irq(pdev, 0), fusb300);
+-	dd = (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
+-			udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
++	dd = dma_pool_alloc(udc->dd_cache, GFP_ATOMIC | GFP_DMA, &dma);
+ 	if (dd)
+ 		dd->this_dma = dma;
  
- 	fusb300_free_request(&fusb300->ep[0]->ep, fusb300->ep0_req);
-+	for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
-+		kfree(fusb300->ep[i]);
- 	kfree(fusb300);
- 
- 	return 0;
-@@ -1494,6 +1497,8 @@ clean_up:
- 		if (fusb300->ep0_req)
- 			fusb300_free_request(&fusb300->ep[0]->ep,
- 				fusb300->ep0_req);
-+		for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
-+			kfree(fusb300->ep[i]);
- 		kfree(fusb300);
- 	}
- 	if (reg)
 -- 
 2.20.1
 
