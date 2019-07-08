@@ -2,140 +2,178 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05092C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB045C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4F920861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8006C20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B0OFmaHS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qDHB7UOU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbfGHLvg (ORCPT
+        id S1730613AbfGHLwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:51:36 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:34878 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbfGHLvg (ORCPT
+        Mon, 8 Jul 2019 07:52:00 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:36184 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfGHLwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:51:36 -0400
-Received: by mail-pl1-f201.google.com with SMTP id s21so3100044plr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:51:36 -0700 (PDT)
+        Mon, 8 Jul 2019 07:52:00 -0400
+Received: by mail-vk1-f193.google.com with SMTP id b69so2393055vkb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=RUO0cgtogOledx1PUbIVwBv1WP5SbTQS/eUbtx6ca1A=;
-        b=B0OFmaHSy+LoXPkMA2Ul+miuzJXjvdo9LY8EJgk2lFUHwSUSB4ZmtFqaWavAsdj4od
-         snl/VTXx4lCoKMHUKCW4oO5innRUxx+6QMFHQHWdZV2KLezn4+jOtVMpJlLJd8OXJpno
-         J2bSSy8JyaZrLnQvfe9GOQm1/PRFnQ7QeIgWKOUPn72NqRKyO9M5wgG+YfYcF/AMnASr
-         VuuZb+NvgEQpvoUdHvQ/2N2MZ8IiQ2nSYCrSHYvDQ8RfD/1DbPl7gHQGaYM/weFidX+5
-         wVgeuPwmOQCZaeIfiPaH6FY2Q69hwYyORxDxBiM7C0EzotWxKYRGMr9y7prf4uIkXGsc
-         m2Fg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9PDRHy4wkZl9+Br30ibWAWCz004CWBTP1/Ht93SrVhE=;
+        b=qDHB7UOUimA7xh0CRledp9ZO50JFVc2w/3iPMP0nIJCuKKfDAFf2jGL2qaIy/ewtfj
+         LX+4Ql2EIGTBuzsoMpnmEP/0/My6UV24AzDr89EVSP70u5JFyTHKOuYzqn1MJA7lGeSu
+         G2vdEcSeYV4fn23D+3vqnY3ZauHfoUviwvf21IKpbr1d9BGn9LxULiRBMhuZvhDscwsN
+         ZxfupQ0/FOoYLmG9YBH7GmKtiAhg8XrohR35LpjZHJnmMNGo93tLGpRfY/rvFHm3x8BP
+         3aEB22U9ZOpKIZnbEEMSYF6zzimkX/84GNA5gqJAwDS3Ou/jqgKDs8On305WffHs1oGZ
+         CASw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=RUO0cgtogOledx1PUbIVwBv1WP5SbTQS/eUbtx6ca1A=;
-        b=oo41d/1gaqSY2kmEUGKO28x8VszoZFqCU0rKcI4JKmvZ+rtY0ek7tRgcqLv09gWW5m
-         CsEnTdhb1S3RxENeL23VJmAkBT1DLwDuuYy41NQng1WMrwpDD5XKlYICPgxI66JhakKJ
-         kJMlaTzStL1mEK3VC7YjcxkRlfHbC61XSkAoUR2pQxUIiJSrBO9HYrPDLyhXn4KRFMUl
-         lRL7xy8t4GfEIRmQJiE4cSVFiUxIsisqmB+byz0e/2LAvZdWkPl5OJWKUJ6NO2/no/3N
-         iA8qHL3qXJuPr9b1Upr2UkEY3+9KjqzKA59N2/QAGhnLYa6j7gZcH3XXDBhMO8aZFaSF
-         XwsQ==
-X-Gm-Message-State: APjAAAXWcbZVBCC0tKl9IYoN94DFE5w+xnvmUz1NTYxPgzkwQlSl39yZ
-        qztg2cnw1ts5/lZ4+9dk2BrO98nSsCY=
-X-Google-Smtp-Source: APXvYqyy3wqolz5H6URclfrxPsjBk3fSL9runmXFQbRxI7E/LFW05znauTpADCA+6Xq5+MqfLTdxro38OnM=
-X-Received: by 2002:a65:49cc:: with SMTP id t12mr6413038pgs.83.1562586695288;
- Mon, 08 Jul 2019 04:51:35 -0700 (PDT)
-Date:   Mon,  8 Jul 2019 13:51:30 +0200
-Message-Id: <20190708115130.250149-1-rburny@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v3] fs: Fix the default values of i_uid/i_gid on /proc/sys inodes.
-From:   Radoslaw Burny <rburny@google.com>
-To:     "Luis R . Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Seth Forshee <seth.forshee@canonical.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        jsperbeck@google.com, Andrew Morton <akpm@linux-foundation.org>,
-        Radoslaw Burny <rburny@google.com>, stable@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9PDRHy4wkZl9+Br30ibWAWCz004CWBTP1/Ht93SrVhE=;
+        b=djRX3qgHMSAs/oIGB8feVyk0jbysGTLhyRHGEkWxq29lonmAALwUjeYRHNbEdnITgU
+         xqSW1j2Tv5IQIcN2697GbXFha0Q/luVCTv2JWVh9xST+grR/524AHbOAxcoyJwutPYKZ
+         2Xtf+HMSGVEPjlWo6XwUsJS3vyoJEPv5uQYDhB/diPLdKAB+x8LdWSL0PcR2Rf9JrcN3
+         o2RNgY7i/WRak+5TTgvqdNI9DDW7g+sr8R3RIYTJwF8z8KrCtjTS+QbxbZsnEMbvggnj
+         hNT4xS8xyUiZ2r8FrjRN0LPM2Uhv5aMV5zkVoz9pI9Lcwl1++KOKKtALAjY4VeI7z5R2
+         1EKg==
+X-Gm-Message-State: APjAAAU2G3oMdJPYeoxB24CW/457X9viXyZCep8MOk69Fz9J95rA0mze
+        ZRKWjNngSPi/OqF9c+as32npZf+l7ojgwziu/3o=
+X-Google-Smtp-Source: APXvYqw6t3/DTwcBnZ2o0ffQaL+kB0nbUmh0pzDDqtZXoh1wju2grRydN4l18XvxVm4CDKKzufBT0NQ2OfNk1EeFm5A=
+X-Received: by 2002:a1f:2e56:: with SMTP id u83mr5041322vku.68.1562586718840;
+ Mon, 08 Jul 2019 04:51:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190708104355.32569-1-oded.gabbay@gmail.com> <20190708112136.GA13795@kroah.com>
+ <CAFCwf11XN_stq3HHVGqD4_LKG8W3uFiYarfbwP50hw58Hi10Sw@mail.gmail.com> <20190708114259.GA16677@kroah.com>
+In-Reply-To: <20190708114259.GA16677@kroah.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 8 Jul 2019 14:51:33 +0300
+Message-ID: <CAFCwf10Zk2hjLceEjM_2dwz0=h1jmn_EZVKVjsJEE3ORooOzgA@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: use correct variable to show fd open counter
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Omer Shpigelman <oshpigelman@habana.ai>,
+        Tomer Tayar <ttayar@habana.ai>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fs: Fix the default values of i_uid/i_gid on /proc/sys inodes.
-Normally, the inode's i_uid/i_gid are translated relative to s_user_ns,
-but this is not a correct behavior for proc. Since sysctl permission
-check in test_perm is done against GLOBAL_ROOT_[UG]ID, it makes more
-sense to use these values in u_[ug]id of proc inodes.
-In other words: although uid/gid in the inode is not read during
-test_perm, the inode logically belongs to the root of the namespace.
-I have confirmed this with Eric Biederman at LPC and in this thread:
-https://lore.kernel.org/lkml/87k1kzjdff.fsf@xmission.com
+On Mon, Jul 8, 2019 at 2:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jul 08, 2019 at 02:30:13PM +0300, Oded Gabbay wrote:
+> > On Mon, Jul 8, 2019 at 2:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Mon, Jul 08, 2019 at 01:43:55PM +0300, Oded Gabbay wrote:
+> > > > The current code checks if the user context pointer is NULL or not to
+> > > > display the number of open file descriptors of a device. However, that
+> > > > variable (user_ctx) will eventually go away as the driver will support
+> > > > multiple processes. Instead, the driver can use the atomic counter of
+> > > > the open file descriptors which the driver already maintains.
+> > > >
+> > > > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+> > > > ---
+> > > >  drivers/misc/habanalabs/sysfs.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/misc/habanalabs/sysfs.c b/drivers/misc/habanalabs/sysfs.c
+> > > > index 25eb46d29d88..881be19b5fad 100644
+> > > > --- a/drivers/misc/habanalabs/sysfs.c
+> > > > +++ b/drivers/misc/habanalabs/sysfs.c
+> > > > @@ -356,7 +356,7 @@ static ssize_t write_open_cnt_show(struct device *dev,
+> > > >  {
+> > > >       struct hl_device *hdev = dev_get_drvdata(dev);
+> > > >
+> > > > -     return sprintf(buf, "%d\n", hdev->user_ctx ? 1 : 0);
+> > > > +     return sprintf(buf, "%d\n", atomic_read(&hdev->fd_open_cnt));
+> > > >  }
+> > >
+> > > Odds are, this means nothing, as it doesn't get touched if the file
+> > > descriptor is duped or sent to another process.
+> > >
+> > > Why do you care about the number of open files?  Whenever someone tries
+> > > to do this type of logic, it is almost always wrong, just let userspace
+> > > do what it wants to do, and if wants to open something twice, then it
+> > > gets to keep the pieces when things break.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> > I care about the number of open file descriptors because I can't let
+> > multiple processes run simultaneously on my device, as we still don't
+> > have the code to do proper isolation between the processes, in regard
+> > of memory accesses on our device memory and by using our DMA engine.
+> > Basically, it's a security hole. If you want, I can explain more in
+> > length on this issue.
+>
+> But the issue is that you can't "force" this from the kernel side at
+> all.  Trying to catch this at open() time only catches the obvious
+> processes.
+>
+> As I said, how do you check for:
+>         fd = open(...);
+>         fd_new = dup(fd);
+>
+>         write(fd, ...);
+>         write(fd_new, ...);
+>
+> or, pass the fd across a socket?  Or other fun ways of sending file
+> descriptors around a system.
+>
+> You have to trust userspace here, sorry.  If someone wants to do
+> multiple accesses, they can, but again, they deserve the pieces when
+> things fall apart.
 
-Consequences
-============
-Since the i_[ug]id values of proc nodes are not used for permissions
-checks, this change usually makes no functional difference. However, it
-causes an issue in a setup where:
-* a namespace container is created without root user in container -
-  hence the i_[ug]id of proc nodes are set to INVALID_[UG]ID
-* container creator tries to configure it by writing /proc/sys files,
-  e.g. writing /proc/sys/kernel/shmmax to configure shared memory limit
-Kernel does not allow to open an inode for writing if its i_[ug]id are
-invalid, making it impossible to write shmmax and thus - configure the
-container.
-Using a container with no root mapping is apparently rare, but we do use
-this configuration at Google. Also, we use a generic tool to configure
-the container limits, and the inability to write any of them causes a
-failure.
+I see what you are saying, but from *security* perspective, I don't
+think I really care about the scenarios above, right ?
+Because that would mean a user duplicated his *own* fd. Sure, things
+won't work for him, but what do I care about that, as you rightly
+said.
+I'm only concerned about the security risk, where there is a
+legitimate user and a malicious one. Because I can't isolate between
+them, I want to be able to allow only one of them to run.
+I don't care if one of them duplicates his own FD, right ?
 
-History
-=======
-The invalid uids/gids in inodes first appeared due to 81754357770e (fs:
-Update i_[ug]id_(read|write) to translate relative to s_user_ns).
-However, AFAIK, this did not immediately cause any issues.
-The inability to write to these "invalid" inodes was only caused by a
-later commit 0bd23d09b874 (vfs: Don't modify inodes with a uid or gid
-unknown to the vfs).
+Please tell me if my assumption here is correct or not, because this
+has implications.
 
-Tested: Used a repro program that creates a user namespace without any
-mapping and stat'ed /proc/$PID/root/proc/sys/kernel/shmmax from outside.
-Before the change, it shows the overflow uid, with the change it's 0.
-The overflow uid indicates that the uid in the inode is not correct and
-thus it is not possible to open the file for writing.
+>
+> > We have the H/W infrastructure for that, using MMU and multiple
+> > address space IDs (ASID), but we didn't write the code yet in the
+> > driver, as that is a BIG feature but it wasn't requested by anyone
+> > yet.
+> >
+> > So the current solution is to block the ability to open multiple file
+> > descriptors.
+> >
+> > Regarding this specific sysfs property, I don't really care about it.
+> > I simply saw that it is shown in other drivers and I thought it may be
+> > nice for a system admin utility to show it.
+>
+> What drivers show the number of open file descriptors?  Time to go
+> delete them as well :)
+hehe
+I tried to grep for it but I couldn't find any. Strange because I was
+sure I saw this in some driver.
+As I said, I don't really care about it. I will delete this to prevent
+further errors.
 
-Fixes: 0bd23d09b874 ("vfs: Don't modify inodes with a uid or gid unknown to the vfs")
-Cc: stable@vger.kernel.org # v4.8+
-Signed-off-by: Radoslaw Burny <rburny@google.com>
----
-Changelog since v1:
-  - Updated the commit title and description.
+Oded
 
- fs/proc/proc_sysctl.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index c74570736b24..36ad1b0d6259 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -499,6 +499,10 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
- 
- 	if (root->set_ownership)
- 		root->set_ownership(head, table, &inode->i_uid, &inode->i_gid);
-+	else {
-+		inode->i_uid = GLOBAL_ROOT_UID;
-+		inode->i_gid = GLOBAL_ROOT_GID;
-+	}
- 
- 	return inode;
- }
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+>
+> thanks,
+>
+> greg k-h
