@@ -2,88 +2,125 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC6C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CB4C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDC5216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC29D20693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562602494;
+	bh=Qj6k0S1NNnHVBW6+5hhaH5MI5vaHdOUbXlJr2gF49e4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=irU/xo8fQtMwY65n+neFYWdelW7lLuMw+Nxy0zRj4/Y+FG0T55CwvNbNWyQAInEOt
+	 yhuvTiosuz4+fShLN3Id3jQA6UrnVcWDBQK4hDmD4Ec/WPYgQH27fIknBI7N+6TH+K
+	 Q1/QL3EcAz57VNhGPYoWaWA2VR/guFAX5VNEsI4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389990AbfGHQOg (ORCPT
+        id S2390376AbfGHQOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:14:36 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38979 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbfGHQOg (ORCPT
+        Mon, 8 Jul 2019 12:14:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44298 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728082AbfGHQOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:14:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so17782905wrt.6;
-        Mon, 08 Jul 2019 09:14:34 -0700 (PDT)
+        Mon, 8 Jul 2019 12:14:53 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so6617687wrf.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:14:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vv5ALn53OORkWfiJdQXxTQ+F2C2+p379sh9eSgXfuFU=;
+        b=aoBdlpc7ipgJLJfC43NigQcrk9CFm9Sj4GKQGeHU/B+HlfHGU1FzMfPn1IRfc0S0NY
+         vOIlBmW4YO5UOKgj0SUV58Z991q8+TH+HNYTgkRcLYtFmmmfio1TCY8MfrJIMG+4Zb5t
+         KqTTKY+KMFoUTjdfzgJdJdJ6AzjJnghP+dbt1G6C4V+tU6knQuQpCslr5Nx7yyGwUpeB
+         kkyHjwbcXW0RYAHv6+wvjdJEFrPbt+86k4Vlh831VkY7J3FH42EbDXqeCCK2WHmAjAl0
+         Q9lM1+Igab5RcE4UX0zeDVVZA+P6cOsJ4mHpGXvItm7SPSRMw2cJk4O/XManRsR4Yca6
+         Xp4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kzl7ySO00ACxBfoVjtfqCQyIPbur8JdXCvOsOSkfwVs=;
-        b=Eh1ANWy7KSHIGVPL/JqTDcjXii2sbzTOw7liXbRyQZ6f2Oiy/EmB1AqsNVlaIhFhFz
-         d5Ysddn9EMdoOSFpYrChGWdqh8q+u5tfB6rhrk/gTVWsv5Rq3NUJ4GpEJeB4Yvgu4OBg
-         OB867U6Y7RP1BsxaeKFym0eMgU+5u+8AEwXs1bNObMDO5EXUSMBGYIeHQn6T7fjrOeN3
-         J5ZOQbRayBqKFN2kN3avmH8+AS6Qgn3bO/aOO067tHBhoYWqI3kNCKDES+pywUUwAwUt
-         jS6+tkxfcYlkE0hpPA+IciIOmAzc/bJA02fr7ABwOQs+DT/qhzGMBLnp1ChQIpAx9hGE
-         HlgQ==
-X-Gm-Message-State: APjAAAXWRX5BiO5nHJS1yy5/QL9P7bvVq6sTYIv7IYmUcZbgwOaE4PB3
-        xpeJUMcenUSPY3NxvO6/MKk=
-X-Google-Smtp-Source: APXvYqzhg2ITqrH1Y+C2tesFza97u7BSDJ0IRGUgRDYRcxahn9+uxmwgCGqNa1cn4VfEK26tzypJLA==
-X-Received: by 2002:a5d:620d:: with SMTP id y13mr20519604wru.243.1562602474041;
-        Mon, 08 Jul 2019 09:14:34 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id 15sm13468wmk.34.2019.07.08.09.14.32
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=vv5ALn53OORkWfiJdQXxTQ+F2C2+p379sh9eSgXfuFU=;
+        b=rAwvqWAX+6bPvT8zhKxyPiHzlVFoCj9343icJbS3k7CgyUN2bR6UF3pu6Yak47CIqY
+         /BYkD1R/oaAIFZYxSKDetJ25B9u6+0BI7ta3TJDrX6TiXQp8CWfxlENBdVUpKIon4WBL
+         NXsyTXuu29AN/PLyLJeAEojk5Of3hl65z/9X5/s09BZFQ0QNWT1CGVG2j6hZ2LHsYL8I
+         d6HEzEv4HyiE4jMVX41oYcuXpFPyZ12i3QvUxU9wbmR7k7UkGFTmtp+hUv8InCEm75h/
+         p5NZc0Pk9OFTJleGBFE2eA2QRzHXLwvFDR+nE6XpYf/PbKNdrlombteNrQjRWb4fBk0X
+         qAQQ==
+X-Gm-Message-State: APjAAAVELOb8abGxYGycwdjRUZy5lMOwakThSdrGhLIPwEudi0I+kKug
+        PfU8I1kdZUPz+H9pqU0ROQe9/1Cc
+X-Google-Smtp-Source: APXvYqy/2xqx1vDZRJhyP8O3PQqLV9svh5LL2rpY5NXUoiIbxuVFvmmH/V1fSTFfxIAKAISeWUwzQQ==
+X-Received: by 2002:adf:fdd2:: with SMTP id i18mr14888307wrs.125.1562602491207;
+        Mon, 08 Jul 2019 09:14:51 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id c9sm8220wml.41.2019.07.08.09.14.50
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:14:33 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sunrpc/cache: remove the exporting of cache_seq_next
-Date:   Mon,  8 Jul 2019 19:14:23 +0300
-Message-Id: <20190708161423.31006-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 08 Jul 2019 09:14:50 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 18:14:48 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/paravirt changes for v5.3
+Message-ID: <20190708161448.GA115581@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function cache_seq_next is declared static and marked
-EXPORT_SYMBOL_GPL, which is at best an odd combination. Because the
-function is not used outside of the net/sunrpc/cache.c file it is
-defined in, this commit removes the EXPORT_SYMBOL_GPL() marking.
+Linus,
 
-Fixes: d48cf356a130 ("SUNRPC: Remove non-RCU protected lookup")
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- net/sunrpc/cache.c | 1 -
- 1 file changed, 1 deletion(-)
+Please pull the latest x86-paravirt-for-linus git tree from:
 
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 66fbb9d2fba7..6f1528f271ee 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -1375,7 +1375,6 @@ static void *cache_seq_next(struct seq_file *m, void *p, loff_t *pos)
- 				hlist_first_rcu(&cd->hash_table[hash])),
- 				struct cache_head, cache_list);
- }
--EXPORT_SYMBOL_GPL(cache_seq_next);
- 
- void *cache_seq_start_rcu(struct seq_file *m, loff_t *pos)
- 	__acquires(RCU)
--- 
-2.21.0
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-paravirt-for-linus
 
+   # HEAD: 46938cc8ab91354e6d751dc0790ddb4244b6703a x86/paravirt: Rename paravirt_patch_site::instrtype to paravirt_patch_site::type
+
+A handful of paravirt patching code enhancements to make it more robust 
+against patching failures, and related cleanups and not so related 
+cleanups - by Thomas Gleixner and myself.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Ingo Molnar (5):
+      x86/paravirt: Detect over-sized patching bugs in paravirt_patch_insns()
+      x86/paravirt: Detect over-sized patching bugs in paravirt_patch_call()
+      x86/paravirt: Match paravirt patchlet field definition ordering to initialization ordering
+      x86/paravirt: Standardize 'insn_buff' variable names
+      x86/paravirt: Rename paravirt_patch_site::instrtype to paravirt_patch_site::type
+
+Thomas Gleixner (3):
+      x86/paravirt: Remove bogus extern declarations
+      x86/paravirt: Unify the 32/64 bit paravirt patching code
+      x86/paravirt: Replace the paravirt patch asm magic
+
+
+ arch/x86/events/intel/ds.c            |   8 +--
+ arch/x86/include/asm/paravirt_types.h |  21 ++----
+ arch/x86/kernel/Makefile              |   4 +-
+ arch/x86/kernel/alternative.c         |  53 +++++++-------
+ arch/x86/kernel/kprobes/opt.c         |  16 ++---
+ arch/x86/kernel/paravirt.c            |  46 ++++++-------
+ arch/x86/kernel/paravirt_patch.c      | 126 ++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/paravirt_patch_32.c   |  67 ------------------
+ arch/x86/kernel/paravirt_patch_64.c   |  75 --------------------
+ arch/x86/tools/insn_decoder_test.c    |   8 +--
+ arch/x86/tools/insn_sanity.c          |  28 ++++----
+ 11 files changed, 214 insertions(+), 238 deletions(-)
+ create mode 100644 arch/x86/kernel/paravirt_patch.c
+ delete mode 100644 arch/x86/kernel/paravirt_patch_32.c
+ delete mode 100644 arch/x86/kernel/paravirt_patch_64.c
