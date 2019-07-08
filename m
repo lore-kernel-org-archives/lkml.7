@@ -2,246 +2,132 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63999C606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E2AC606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6BC20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v0b2W6GJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9C14920656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562582231;
+	bh=yPThQeFL/BhZ8+aoC7iBG0STcDJCCdd/GunD5L0du0Q=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=p+LTup0sBUurPDExrK0/tTllJ7dkJsMJw5kdKD3E+I7mURgy4aB0uHq0fwvoThcLI
+	 Sv3to5osUjlhPssXWnZiLvQdUdk6azdubBB9+Xi591PutwVsyeEUyP56Vkw/Wsrx89
+	 gl+QceP2GnYKc0hQmCS/HjWOyZG30FKcXpdXyRAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbfGHKgH (ORCPT
+        id S1729395AbfGHKhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 06:36:07 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37344 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729395AbfGHKgE (ORCPT
+        Mon, 8 Jul 2019 06:37:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53502 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfGHKhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 06:36:04 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x68AZv3h120681;
-        Mon, 8 Jul 2019 05:35:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562582157;
-        bh=Hylliwe9pIZ9vND2uq1hUCMIoYx9WN0BLGpxmuu5NBM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=v0b2W6GJGJ/PIXt3gMNPw2fh/1J8BsHI4W8cBuF3FLbvnYrnsuk0JWhup/RxFD1m7
-         Iks+iRNelGKMMzVT3BgJ2i3/wsbmbZq2p8d7ksmO/4RDSMaBvt7r7gS2fx9fzDuR+T
-         MATvABYE5IhyVRc5h1l/z2Gkm+Z19GqNaJyuOP2w=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x68AZvVH020909
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jul 2019 05:35:57 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Jul
- 2019 05:35:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 8 Jul 2019 05:35:57 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x68AZu0M040287;
-        Mon, 8 Jul 2019 05:35:56 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH 1/2] leds: Add control of the voltage/current regulator to the LED core
-Date:   Mon, 8 Jul 2019 12:35:46 +0200
-Message-ID: <20190708103547.23528-2-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190708103547.23528-1-jjhiblot@ti.com>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
+        Mon, 8 Jul 2019 06:37:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T91IgG+rHZNc0YB1ANzKPE0tZSQBRCXLcDSK9NZh7+k=; b=RIXKBBPou5htvmoG3XlZxb6a2
+        rEGkWuVCnCaSdxl5ztreMDUc4SIHfeRDMeiB0huUyOmip6ver5eZzY8I5dk7xVbXeW1XV1ywoG0tg
+        F0jgW6QQ9s4MijFnxH0iFuG+qpBpLy5UsgeQDkBvgX9gZ2bqtI3I7puoQERiJpkWbnVdw=;
+Received: from [217.140.106.54] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hkR19-0003DI-W4; Mon, 08 Jul 2019 10:37:08 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 92916D02D15; Mon,  8 Jul 2019 11:37:07 +0100 (BST)
+Date:   Mon, 8 Jul 2019 11:37:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] regmap updates for v5.3
+Message-ID: <20190708103707.GB8576@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
+Content-Disposition: inline
+X-Cookie: optimist, n:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A LED is usually powered by a voltage/current regulator. Let the LED core
-about it. This allows the LED core to turn on or off the power supply
-as needed.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- drivers/leds/led-class.c | 10 ++++++++
- drivers/leds/led-core.c  | 53 +++++++++++++++++++++++++++++++++++++---
- include/linux/leds.h     |  4 +++
- 3 files changed, 64 insertions(+), 3 deletions(-)
+--VrqPEDrXMn8OVzN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 4793e77808e2..e01b2d982564 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -17,6 +17,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/timer.h>
-+#include <linux/regulator/consumer.h>
- #include <uapi/linux/uleds.h>
- #include "leds.h"
- 
-@@ -272,6 +273,15 @@ int of_led_classdev_register(struct device *parent, struct device_node *np,
- 		dev_warn(parent, "Led %s renamed to %s due to name collision",
- 				led_cdev->name, dev_name(led_cdev->dev));
- 
-+	led_cdev->regulator = devm_regulator_get(led_cdev->dev, "power");
-+	if (IS_ERR(led_cdev->regulator)) {
-+		dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
-+			led_cdev->name);
-+		device_unregister(led_cdev->dev);
-+		mutex_unlock(&led_cdev->led_access);
-+		return PTR_ERR(led_cdev->regulator);
-+	}
-+
- 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
- 		ret = led_add_brightness_hw_changed(led_cdev);
- 		if (ret) {
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index 7107cd7e87cf..139de6b08cad 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -16,6 +16,7 @@
- #include <linux/rwsem.h>
- #include <linux/slab.h>
- #include "leds.h"
-+#include <linux/regulator/consumer.h>
- 
- DECLARE_RWSEM(leds_list_lock);
- EXPORT_SYMBOL_GPL(leds_list_lock);
-@@ -23,6 +24,31 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
- LIST_HEAD(leds_list);
- EXPORT_SYMBOL_GPL(leds_list);
- 
-+static bool __led_need_regulator_update(struct led_classdev *led_cdev,
-+					int brightness)
-+{
-+	bool new_regulator_state = (brightness != LED_OFF);
-+
-+	return led_cdev->regulator_state != new_regulator_state;
-+}
-+
-+static int __led_handle_regulator(struct led_classdev *led_cdev,
-+				int brightness)
-+{
-+	if (__led_need_regulator_update(led_cdev, brightness)) {
-+		int ret;
-+
-+		if (brightness != LED_OFF)
-+			ret = regulator_enable(led_cdev->regulator);
-+		else
-+			ret = regulator_disable(led_cdev->regulator);
-+		if (ret)
-+			return ret;
-+		led_cdev->regulator_state = (brightness != LED_OFF);
-+	}
-+	return 0;
-+}
-+
- static int __led_set_brightness(struct led_classdev *led_cdev,
- 				enum led_brightness value)
- {
-@@ -80,6 +106,7 @@ static void led_timer_function(struct timer_list *t)
- 	}
- 
- 	led_set_brightness_nosleep(led_cdev, brightness);
-+	__led_handle_regulator(led_cdev, brightness);
- 
- 	/* Return in next iteration if led is in one-shot mode and we are in
- 	 * the final blink state so that the led is toggled each delay_on +
-@@ -115,6 +142,8 @@ static void set_brightness_delayed(struct work_struct *ws)
- 	if (ret == -ENOTSUPP)
- 		ret = __led_set_brightness_blocking(led_cdev,
- 					led_cdev->delayed_set_value);
-+	__led_handle_regulator(led_cdev, led_cdev->delayed_set_value);
-+
- 	if (ret < 0 &&
- 	    /* LED HW might have been unplugged, therefore don't warn */
- 	    !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
-@@ -141,6 +170,7 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
- 	/* never on - just set to off */
- 	if (!delay_on) {
- 		led_set_brightness_nosleep(led_cdev, LED_OFF);
-+		__led_handle_regulator(led_cdev, LED_OFF);
- 		return;
- 	}
- 
-@@ -148,6 +178,7 @@ static void led_set_software_blink(struct led_classdev *led_cdev,
- 	if (!delay_off) {
- 		led_set_brightness_nosleep(led_cdev,
- 					   led_cdev->blink_brightness);
-+		__led_handle_regulator(led_cdev, led_cdev->blink_brightness);
- 		return;
- 	}
- 
-@@ -256,8 +287,14 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev,
- 			      enum led_brightness value)
- {
- 	/* Use brightness_set op if available, it is guaranteed not to sleep */
--	if (!__led_set_brightness(led_cdev, value))
--		return;
-+	if (!__led_set_brightness(led_cdev, value)) {
-+		/*
-+		 * if regulator state doesn't need to be changed, that is all/
-+		 * Otherwise delegate the change to a work queue
-+		 */
-+		if (!__led_need_regulator_update(led_cdev, value))
-+			return;
-+	}
- 
- 	/* If brightness setting can sleep, delegate it to a work queue task */
- 	led_cdev->delayed_set_value = value;
-@@ -280,6 +317,8 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
- int led_set_brightness_sync(struct led_classdev *led_cdev,
- 			    enum led_brightness value)
- {
-+	int ret;
-+
- 	if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
- 		return -EBUSY;
- 
-@@ -288,7 +327,15 @@ int led_set_brightness_sync(struct led_classdev *led_cdev,
- 	if (led_cdev->flags & LED_SUSPENDED)
- 		return 0;
- 
--	return __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-+	ret = __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-+	if (ret)
-+		return ret;
-+
-+	ret = __led_handle_regulator(led_cdev, led_cdev->brightness);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(led_set_brightness_sync);
- 
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 9b2bf574a17a..bee8e3f8dddd 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -123,6 +123,10 @@ struct led_classdev {
- 
- 	/* Ensures consistent access to the LED Flash Class device */
- 	struct mutex		led_access;
-+
-+	/* regulator */
-+	struct regulator	*regulator;
-+	bool			regulator_state;
- };
- 
- extern int of_led_classdev_register(struct device *parent,
--- 
-2.17.1
+The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
 
+  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git regmap-v5.3
+
+for you to fetch changes up to aaccf3863ce22108ae1d3bac82604eec9d8ae44c:
+
+  Merge branch 'regmap-5.3' into regmap-next (2019-07-04 17:33:59 +0100)
+
+----------------------------------------------------------------
+regmap: Updates for v5.3
+
+This is a relatively busy release for regmap, though not busy in the
+grand scheme of things, with the addition of support for I3C from Vitor
+Soares and a few small fixes and cleanups.
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      regmap: lzo: Switch to bitmap_zalloc()
+
+Daniel Baluta (1):
+      regmap: debugfs: Fix memory leak in regmap_debugfs_init
+
+Mark Brown (2):
+      Merge branch 'regmap-5.2' into regmap-linus
+      Merge branch 'regmap-5.3' into regmap-next
+
+Srinivas Kandagatla (1):
+      regmap: fix bulk writes on paged registers
+
+Vitor Soares (1):
+      regmap: add i3c bus support
+
+YueHaibing (1):
+      regmap: select CONFIG_REGMAP while REGMAP_SCCB is set
+
+ drivers/base/regmap/Kconfig          |  6 +++-
+ drivers/base/regmap/Makefile         |  1 +
+ drivers/base/regmap/regcache-lzo.c   |  8 ++---
+ drivers/base/regmap/regmap-debugfs.c |  2 ++
+ drivers/base/regmap/regmap-i3c.c     | 60 ++++++++++++++++++++++++++++++++++++
+ drivers/base/regmap/regmap.c         |  2 ++
+ include/linux/regmap.h               | 20 ++++++++++++
+ 7 files changed, 93 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/base/regmap/regmap-i3c.c
+
+--VrqPEDrXMn8OVzN4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0jHNIACgkQJNaLcl1U
+h9Bu1wf/eHD4yjePQu6Z/kPD2C6Fxm1/wRVuXC6/1DM1YPqCXWdL8s3VM3U4Rsim
+5BHF0SyQveKMaKm40BfhkcqUXD4BG7MmStroE9BEVmwC9VsUEkZNXvkgNkmbco9W
+eqFhpgITA9PKw+TF7cdJz/Y4SSVPWFgLPohb+hxfOzCg3QYKMosh5sIZiYh5mubF
+RTzWZOGL9Wkq21GP+Jckcur5uyc6sSJk16Ex0lr8tWJu3fiWxzRH+0XOjO7hIIAI
+NYQtL23V+FWJiaU3OqXBQQ/yK2MOByML1v1qiacA2EV+7EWoOzhv64J1V5S216JL
++/L/Ql6++ort1wsz2ZEeJmpTRF70Ow==
+=TWM6
+-----END PGP SIGNATURE-----
+
+--VrqPEDrXMn8OVzN4--
