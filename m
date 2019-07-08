@@ -2,53 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB75FC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A648FC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF669216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70AE320665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600771;
-	bh=9L0SttTa0BIq1Uf+MGhfQMvOxZrYpehlrhdYX9je6l8=;
+	s=default; t=1562600780;
+	bh=2SFi4Fqdpu8OLy4mfpNj84nLI+1c2zg3gYH+XC3PBEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YNpvtVo6LvSNiyZPY3GJAG7IJiJrqXES19X8TyTNkF6Gjb0+vkAq9PgQPtRqaG6Vz
-	 4AhZUzt5dsv2XJdR51m3NCZzdqmKouViXH5KthMpRqzkIWn8OIr6jK7viovcLK7+Y7
-	 iBWXQDypuW+CD8tSfalc0votGChYmL+NzVzAI8LQ=
+	b=BTUT5q8oFnUcmmIDeDAnJmc+pu+2ZYCKzNLWMACTrJ4ugeu69yaD3BCVWv7wvFFbi
+	 6VZ/trZbzxtqvbtMn3RUdgbfFpZmBMvfQvdDHOm3Lfw5Hix8clXW+bO32TccDtfbmT
+	 /KfycXZ9SxOJIahpUwrt1CXGA8yNL9TjUUVG+xOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387747AbfGHPVc (ORCPT
+        id S2390855AbfGHPqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47226 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387516AbfGHPV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:28 -0400
+        id S2387491AbfGHPVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:21:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 924602166E;
-        Mon,  8 Jul 2019 15:21:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C7E62173C;
+        Mon,  8 Jul 2019 15:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599287;
-        bh=9L0SttTa0BIq1Uf+MGhfQMvOxZrYpehlrhdYX9je6l8=;
+        s=default; t=1562599276;
+        bh=2SFi4Fqdpu8OLy4mfpNj84nLI+1c2zg3gYH+XC3PBEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hI7Prt/fF/VYR5FpIhyGCuxdVvN25DA6xVihRDiZKAKgt0EnPJ9SWSTOzXrRiXEL3
-         oWhSJcXF4c24GNqs62VM8RTZu+8vsaf1pkQ8O1DlO4NICCash8dL977ajaRPufgIrR
-         hGlobMU/Y0f5LfnOfrZL1GLyeEcXaD3WmEFw4/Ds=
+        b=v+bSbra1jsJOw3uonHFM8xE3tM0+czpRWO4prVUoQ8H24Uj+rcy1IV7ONQXx+4CXd
+         QmbEsY1uazlCVCO4QQT1nV5PSy7aFZIovGQBC8OjUoxwjKDwP5f1o1btpZ0hQ4Msga
+         2LO6G7CBOLzMi572HZuwrPvHaDtRqYaswemywaXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Flax <flatmax@flatmax.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 066/102] ASoC : cs4265 : readable register too low
-Date:   Mon,  8 Jul 2019 17:12:59 +0200
-Message-Id: <20190708150529.864746321@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Herbert <tom@herbertland.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 4.9 062/102] bpf: udp: Avoid calling reuseports bpf_prog from udp_gro
+Date:   Mon,  8 Jul 2019 17:12:55 +0200
+Message-Id: <20190708150529.667339334@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -61,43 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3df05c805983427319eddc2411a2105ee1757cf ]
+From: Martin KaFai Lau <kafai@fb.com>
 
-The cs4265_readable_register function stopped short of the maximum
-register.
+commit 257a525fe2e49584842c504a92c27097407f778f upstream.
 
-An example bug is taken from :
-https://github.com/Audio-Injector/Ultra/issues/25
+When the commit a6024562ffd7 ("udp: Add GRO functions to UDP socket")
+added udp[46]_lib_lookup_skb to the udp_gro code path, it broke
+the reuseport_select_sock() assumption that skb->data is pointing
+to the transport header.
 
-Where alsactl store fails with :
-Cannot read control '2,0,0,C Data Buffer,0': Input/output error
+This patch follows an earlier __udp6_lib_err() fix by
+passing a NULL skb to avoid calling the reuseport's bpf_prog.
 
-This patch fixes the bug by setting the cs4265 to have readable
-registers up to the maximum hardware register CS4265_MAX_REGISTER.
+Fixes: a6024562ffd7 ("udp: Add GRO functions to UDP socket")
+Cc: Tom Herbert <tom@herbertland.com>
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Matt Flax <flatmax@flatmax.org>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs4265.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/udp.c |    6 +++++-
+ net/ipv6/udp.c |    2 +-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/cs4265.c b/sound/soc/codecs/cs4265.c
-index 6e8eb1f5a041..bed64723e5d9 100644
---- a/sound/soc/codecs/cs4265.c
-+++ b/sound/soc/codecs/cs4265.c
-@@ -60,7 +60,7 @@ static const struct reg_default cs4265_reg_defaults[] = {
- static bool cs4265_readable_register(struct device *dev, unsigned int reg)
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -569,7 +569,11 @@ static inline struct sock *__udp4_lib_lo
+ struct sock *udp4_lib_lookup_skb(struct sk_buff *skb,
+ 				 __be16 sport, __be16 dport)
  {
- 	switch (reg) {
--	case CS4265_CHIP_ID ... CS4265_SPDIF_CTL2:
-+	case CS4265_CHIP_ID ... CS4265_MAX_REGISTER:
- 		return true;
- 	default:
- 		return false;
--- 
-2.20.1
-
+-	return __udp4_lib_lookup_skb(skb, sport, dport, &udp_table);
++	const struct iphdr *iph = ip_hdr(skb);
++
++	return __udp4_lib_lookup(dev_net(skb->dev), iph->saddr, sport,
++				 iph->daddr, dport, inet_iif(skb),
++				 &udp_table, NULL);
+ }
+ EXPORT_SYMBOL_GPL(udp4_lib_lookup_skb);
+ 
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -294,7 +294,7 @@ struct sock *udp6_lib_lookup_skb(struct
+ 
+ 	return __udp6_lib_lookup(dev_net(skb->dev), &iph->saddr, sport,
+ 				 &iph->daddr, dport, inet6_iif(skb),
+-				 &udp_table, skb);
++				 &udp_table, NULL);
+ }
+ EXPORT_SYMBOL_GPL(udp6_lib_lookup_skb);
+ 
 
 
