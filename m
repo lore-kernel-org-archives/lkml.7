@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3DCC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48754C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE3221479
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F0621479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600976;
-	bh=4Ahg2GXYYsHUau4Ok8zIOt9qfq6O1JPEwBm4JbHt6iM=;
+	s=default; t=1562600981;
+	bh=+GwPzEOpw5S18r0S/X3gJhyirxtrHyUFBlolXQlgkqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XonvKVkrc5weYFUJ95qYAhlhgsJZCvANYYjANg6HhQ3eRMGynFgtstra+XyLVrJ3l
-	 ylzjXJv5n0mbM5h1OTNmOVI6kyyoyo2FksEyvmRP4p4XXJ6xptgNbsQzvk61INn0rC
-	 0bverNk/Cff4cDejywBE2EIH13/4YVyvtpxmdRSA=
+	b=m/OX0WV7eEqfIBgMLIABNLmx4Us9qiUB+3yyB3Kd3fiucDtbzNFbx3emVTlEmw7kN
+	 F1gpSCLu5jpBWNbBzPxRl4ycvy7igYYx5oOw4Ex90PlMlvra5MIj7tCjKMagU4UeZW
+	 NV5bLtxxnv56jWRyABsx6XDbhWRo4U6xjU1IN3nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732553AbfGHPQ1 (ORCPT
+        id S2388513AbfGHPtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39246 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:49:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732518AbfGHPQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:16:19 -0400
+        id S1730447AbfGHPQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:16:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27A4E216F4;
-        Mon,  8 Jul 2019 15:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B24E216FD;
+        Mon,  8 Jul 2019 15:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598978;
-        bh=4Ahg2GXYYsHUau4Ok8zIOt9qfq6O1JPEwBm4JbHt6iM=;
+        s=default; t=1562598984;
+        bh=+GwPzEOpw5S18r0S/X3gJhyirxtrHyUFBlolXQlgkqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wADDV46KuZsm5fjLWjwotkorSttdf2NnALgmosPSt6AePCAnpt8zfIGp12Yx3G0z6
-         cch+kVU/m66FEQGpPA2xlHTJC/KNfqzTymy4nO632IYOFMgSkY0AUOem+5anEg8E4v
-         /6fXw1Yn9Bwl8ZDk4o5o4Yfc3Q+Gy1aj0lgs82oI=
+        b=ZjHCKq3E1/Gwg2MCm+XZCZ8YNXOcDLh5a7VhPsKR61nmoFFsP+RFn7FsvWfgzEJhd
+         DhprHsSYtSttCAFc+nEG4GCLtwr4pMERn8ApTGuQfBV2TypFWkcAxJmt7X/Gf1jOrp
+         pjyL2ahAp5T1L0VHULcOgpmPfXuzDYkFuR9Ds1mA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alejandro Jimenez <alejandro.j.jimenez@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Liam Merwick <liam.merwick@oracle.com>,
-        Mark Kanda <mark.kanda@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, bp@alien8.de,
-        rkrcmar@redhat.com, kvm@vger.kernel.org
-Subject: [PATCH 4.4 38/73] x86/speculation: Allow guests to use SSBD even if host does not
-Date:   Mon,  8 Jul 2019 17:12:48 +0200
-Message-Id: <20190708150523.343123789@linuxfoundation.org>
+        syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com,
+        syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 40/73] sctp: change to hold sk after auth shkey is created successfully
+Date:   Mon,  8 Jul 2019 17:12:50 +0200
+Message-Id: <20190708150523.470576582@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -64,70 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit c1f7fec1eb6a2c86d01bc22afce772c743451d88 upstream.
+[ Upstream commit 25bff6d5478b2a02368097015b7d8eb727c87e16 ]
 
-The bits set in x86_spec_ctrl_mask are used to calculate the guest's value
-of SPEC_CTRL that is written to the MSR before VMENTRY, and control which
-mitigations the guest can enable.  In the case of SSBD, unless the host has
-enabled SSBD always on mode (by passing "spec_store_bypass_disable=on" in
-the kernel parameters), the SSBD bit is not set in the mask and the guest
-can not properly enable the SSBD always on mitigation mode.
+Now in sctp_endpoint_init(), it holds the sk then creates auth
+shkey. But when the creation fails, it doesn't release the sk,
+which causes a sk defcnf leak,
 
-This has been confirmed by running the SSBD PoC on a guest using the SSBD
-always on mitigation mode (booted with kernel parameter
-"spec_store_bypass_disable=on"), and verifying that the guest is vulnerable
-unless the host is also using SSBD always on mode. In addition, the guest
-OS incorrectly reports the SSB vulnerability as mitigated.
+Here to fix it by only holding the sk when auth shkey is created
+successfully.
 
-Always set the SSBD bit in x86_spec_ctrl_mask when the host CPU supports
-it, allowing the guest to use SSBD whether or not the host has chosen to
-enable the mitigation in any of its modes.
-
-Fixes: be6fcb5478e9 ("x86/bugs: Rework spec_ctrl base and mask logic")
-Signed-off-by: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
-Reviewed-by: Mark Kanda <mark.kanda@oracle.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Cc: bp@alien8.de
-Cc: rkrcmar@redhat.com
-Cc: kvm@vger.kernel.org
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1560187210-11054-1-git-send-email-alejandro.j.jimenez@oracle.com
+Fixes: a29a5bd4f5c3 ("[SCTP]: Implement SCTP-AUTH initializations.")
+Reported-by: syzbot+afabda3890cc2f765041@syzkaller.appspotmail.com
+Reported-by: syzbot+276ca1c77a19977c0130@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/kernel/cpu/bugs.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ net/sctp/endpointola.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -807,6 +807,16 @@ static enum ssb_mitigation __init __ssb_
- 	}
+--- a/net/sctp/endpointola.c
++++ b/net/sctp/endpointola.c
+@@ -126,10 +126,6 @@ static struct sctp_endpoint *sctp_endpoi
+ 	/* Initialize the bind addr area */
+ 	sctp_bind_addr_init(&ep->base.bind_addr, 0);
  
- 	/*
-+	 * If SSBD is controlled by the SPEC_CTRL MSR, then set the proper
-+	 * bit in the mask to allow guests to use the mitigation even in the
-+	 * case where the host does not enable it.
-+	 */
-+	if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
-+	    static_cpu_has(X86_FEATURE_AMD_SSBD)) {
-+		x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
-+	}
+-	/* Remember who we are attached to.  */
+-	ep->base.sk = sk;
+-	sock_hold(ep->base.sk);
+-
+ 	/* Create the lists of associations.  */
+ 	INIT_LIST_HEAD(&ep->asocs);
+ 
+@@ -165,6 +161,10 @@ static struct sctp_endpoint *sctp_endpoi
+ 	ep->auth_hmacs_list = auth_hmacs;
+ 	ep->auth_chunk_list = auth_chunks;
+ 
++	/* Remember who we are attached to.  */
++	ep->base.sk = sk;
++	sock_hold(ep->base.sk);
 +
-+	/*
- 	 * We have three CPU feature flags that are in play here:
- 	 *  - X86_BUG_SPEC_STORE_BYPASS - CPU is susceptible.
- 	 *  - X86_FEATURE_SSBD - CPU is able to turn off speculative store bypass
-@@ -823,7 +833,6 @@ static enum ssb_mitigation __init __ssb_
- 			x86_amd_ssb_disable();
- 		} else {
- 			x86_spec_ctrl_base |= SPEC_CTRL_SSBD;
--			x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
- 			wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
- 		}
- 	}
+ 	return ep;
+ 
+ nomem_hmacs:
 
 
