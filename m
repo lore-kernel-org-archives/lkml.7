@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B848CC606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E976EC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9247A21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B762321738
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599587;
-	bh=HvHBuw5vhtQrTQzI5wIOwi6sqkK0R/TKJ+aJRAfCSjc=;
+	s=default; t=1562599590;
+	bh=mzbeTsKDy1cED57NDZNwyA+OUZJUbMKf/DQpwdW6/Uc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c9NZ4S4+dWyH1tQ78epyBO8SdAM/sDjCpwayI84OneT1pCr9effsBFeqaBAzStvGp
-	 YbAYeggR+AP0R5RhWGvt6H71hju+hB7shFEpLFnbFmjRKIrI68d4H6wcBEZbQ3mE8t
-	 6J5QbeuR+m+J5+B5q1RTHR3R0RBUOdlL5+yNasm4=
+	b=BxCHDuL7W7zuLX6iEurNpW8/O4OcEDcUsdklvoqVwHIDhNxszTBOOUYqfWZSf9HRH
+	 47gEZilGOmq1b60yr+HQxGBjKHGU76UEyMLxBuxIeJEj2mD7eiPNfmW1hHTU5bHNNC
+	 of9JunI0nYvi4ukfpz899CWsjhuyLtq2VM3EBnz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388819AbfGHP0Z (ORCPT
+        id S2388833AbfGHP03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54116 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:26:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388805AbfGHP0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:26:22 -0400
+        id S2388818AbfGHP0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:26:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 192EE20665;
-        Mon,  8 Jul 2019 15:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F5AE21738;
+        Mon,  8 Jul 2019 15:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599581;
-        bh=HvHBuw5vhtQrTQzI5wIOwi6sqkK0R/TKJ+aJRAfCSjc=;
+        s=default; t=1562599585;
+        bh=mzbeTsKDy1cED57NDZNwyA+OUZJUbMKf/DQpwdW6/Uc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSHNSUoc0zCMFwmKS/ae88XoDGAzyZE5lRB2Gs5c5FWcxdBPwPX6MVsGCfj6ExXCI
-         5Tx+yo6082VK3FbrYB0dOKx0sxsBGIHGnzxj7WgUlGPz+NNytx4khoLzRcK4sUkTxx
-         CvkyEGV6K6WZH9QQVWabICHCGMMnN3V6K6khWjO8=
+        b=2DOYO9mEbx6bk9Khb+rb1oXCDZzjMiCrFmzk52zpNa+IloozAq0zVkwl1UDBiOHwK
+         uhDsnN7LNVJRU4FppZdZCr0mfOJy2pYVXfcr7T/TNey7ZgG1lNYDlb4laxRNO3Bg/+
+         qrhP4J+hx/rkzYWvHX5AO9GB/t+WSMGAC2WHSFJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.14 52/56] svcrdma: Ignore source port when computing DRC hash
-Date:   Mon,  8 Jul 2019 17:13:44 +0200
-Message-Id: <20190708150524.139654936@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matias Karhumaa <matias.karhumaa@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 01/90] Bluetooth: Fix faulty expression for minimum encryption key size check
+Date:   Mon,  8 Jul 2019 17:12:28 +0200
+Message-Id: <20190708150522.058263336@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
-References: <20190708150514.376317156@linuxfoundation.org>
+In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
+References: <20190708150521.829733162@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,54 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Matias Karhumaa <matias.karhumaa@gmail.com>
 
-commit 1e091c3bbf51d34d5d96337a59ce5ab2ac3ba2cc upstream.
+commit eca94432934fe5f141d084f2e36ee2c0e614cc04 upstream.
 
-The DRC appears to be effectively empty after an RPC/RDMA transport
-reconnect. The problem is that each connection uses a different
-source port, which defeats the DRC hash.
+Fix minimum encryption key size check so that HCI_MIN_ENC_KEY_SIZE is
+also allowed as stated in the comment.
 
-Clients always have to disconnect before they send retransmissions
-to reset the connection's credit accounting, thus every retransmit
-on NFS/RDMA will miss the DRC.
+This bug caused connection problems with devices having maximum
+encryption key size of 7 octets (56-bit).
 
-An NFS/RDMA client's IP source port is meaningless for RDMA
-transports. The transport layer typically sets the source port value
-on the connection to a random ephemeral port. The server already
-ignores it for the "secure port" check. See commit 16e4d93f6de7
-("NFSD: Ignore client's source port on RDMA transports").
-
-The Linux NFS server's DRC resolves XID collisions from the same
-source IP address by using the checksum of the first 200 bytes of
-the RPC call header.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 693cd8ce3f88 ("Bluetooth: Fix regression with minimum encryption key size alignment")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203997
+Signed-off-by: Matias Karhumaa <matias.karhumaa@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/bluetooth/l2cap_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -524,9 +524,14 @@ static void handle_connect_req(struct rd
- 	/* Save client advertised inbound read limit for use later in accept. */
- 	newxprt->sc_ord = param->initiator_depth;
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -1352,7 +1352,7 @@ static bool l2cap_check_enc_key_size(str
+ 	 * actually encrypted before enforcing a key size.
+ 	 */
+ 	return (!test_bit(HCI_CONN_ENCRYPT, &hcon->flags) ||
+-		hcon->enc_key_size > HCI_MIN_ENC_KEY_SIZE);
++		hcon->enc_key_size >= HCI_MIN_ENC_KEY_SIZE);
+ }
  
--	/* Set the local and remote addresses in the transport */
- 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
- 	svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
-+	/* The remote port is arbitrary and not under the control of the
-+	 * client ULP. Set it to a fixed value so that the DRC continues
-+	 * to be effective after a reconnect.
-+	 */
-+	rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
-+
- 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
- 	svc_xprt_set_local(&newxprt->sc_xprt, sa, svc_addr_len(sa));
- 
+ static void l2cap_do_start(struct l2cap_chan *chan)
 
 
