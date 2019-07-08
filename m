@@ -2,120 +2,118 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5CEC606C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DEAC606C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FEB8216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562597199;
-	bh=rUe9M6ZXQlwXE3sh8ZuYxODKHdTnsKzP34MTX5bc5Kk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=paZnx0XYuQ5xzbCW1wec4dQ8gA8mGP7phM2mkqEYz6Zn+byjJb+48Pg0LS0Zfuf8M
-	 G7RODyEhxKK3sPFFiiYeChYvc7h/Jaye63WvedHmdTmZgvBeNI/HxgBB00NjXtSG7w
-	 kkOLlqKka1opfawzsCXDSmRaoQeUnGQc9VdQRIzM=
+	by mail.kernel.org (Postfix) with ESMTP id 404B3216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ho5fb5e9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731984AbfGHOqi (ORCPT
+        id S1732003AbfGHOqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:46:38 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35768 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731835AbfGHOqg (ORCPT
+        Mon, 8 Jul 2019 10:46:44 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42515 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731924AbfGHOqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:46:36 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r21so13206424qke.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:46:35 -0700 (PDT)
+        Mon, 8 Jul 2019 10:46:43 -0400
+Received: by mail-ed1-f67.google.com with SMTP id v15so8170339eds.9;
+        Mon, 08 Jul 2019 07:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=aVyE/Nb6xnoBUh0eSN7bHXiiu66sZ8TBOBRXV/pruw8=;
-        b=WuthXcWABYrK2IVm74B8GNUHJDp1q+id8kEBFSUJjVHH3t70Mvv4cwQn0xDpc7oyiA
-         HARII16/xePeJh0paOPkhq8TyKzg3nVgxdEITdtR9hBf2KTKEDfZ4fv84adXRDAbEmrE
-         1AplsvlLrnLqDSH3kNSx3x0l1Q8R38eG2LutyjmXhTXPoGJ8vSFAjk3W8LLgpUnloqvU
-         OoykdmjN8IcxOJuuGUpG9vWjKu6Om5h1ke2FAllylfyVsnPY7gcUTqWQZ8nXQ4cDykX/
-         sSdX+1v9T/zMcvsgHq5Lf/mpJygmlxYwxF8yM8rb+OXxi6R8l+F0u3YLG7ZpU5gBVhDW
-         wBOQ==
+        bh=5eQOVvdsTaaanCiXUg5m0ecZfqkTs7/uYhCRVIzkQcY=;
+        b=ho5fb5e98j7lt1EqeRVgFK9P2ThmVuNWY/IsNL32+L6vGvmk6b6O/bdL1Yanif0Ozb
+         C+14ZlVaESAoumg1W88RpiOB+W8BfJ2H/bsHXNRP4oLpbwZzgBdgPq0Bp1hRpJv5YFT4
+         WDHyzTLj8VC4p0fVvhyzGuAsTu+ztmqL3oC2L+mhVQ+lE4l3Y0p4pN9mbV+dBye4sIjb
+         2gpvmBV2IMoHL6cl7qtkVIK/elGiX/5uPqRAU3xMsXVGRY76vEnTcLP2P1DHQ1SD2kFZ
+         ESdKiA0/5bbWCBsdv0374XyjD05TZ6hgkjvFlYOximPS0FPAfpRsfSPK3110UeYli4Vr
+         eBHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aVyE/Nb6xnoBUh0eSN7bHXiiu66sZ8TBOBRXV/pruw8=;
-        b=PHcaFG0PoDwvRireG5gqogUaL9klbFpjXzqrAYkqmuQY3f4QOp6dGAyDuz8jxVKfGg
-         7JG1fW/CF07VcGwE1lUr0rMcDwiTMXOnH8Qy9NpgvUnRz+woefpWbGeEltRLl9OU392i
-         aWqAMYC+PpB3fCexp+HoQCD5RYWiS+wdshqsC3JAssfxKBjjG+uFyfhzsyib7RoFeocN
-         riyKQDpjm2nQHEawluc4pMr+unaw/3Nj7AFL5HaFkijKLXyZ/9uF7GeeYzxFDY5DBI87
-         9ii73/koh9uyW+u+7lvFFlUoD9/VH0PNF5ydV5KpmHGZILx9pEGlcZ+I5Ru/ouoU5hSS
-         RcZw==
-X-Gm-Message-State: APjAAAVq+y1FQZOS+fbKTuccLDq7j/+cZPVIDcscsuCStWD+qPjFNJ4u
-        2E9nDN92yL22lmNTq4WmXL4=
-X-Google-Smtp-Source: APXvYqyDFoIpeL9gDs21wZSb8aQ9VOlAPJvMDrI3NhLDKYQAz6fERnHpt/IOEVel6lyJjIiuTyp74g==
-X-Received: by 2002:a37:ad0:: with SMTP id 199mr14706570qkk.90.1562597194758;
-        Mon, 08 Jul 2019 07:46:34 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:fa50])
-        by smtp.gmail.com with ESMTPSA id y42sm10595026qtc.66.2019.07.08.07.46.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 07:46:34 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 07:46:32 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+38f5d5cf7ae88c46b11a@syzkaller.appspotmail.com>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in kernfs_create_dir_ns
-Message-ID: <20190708144632.GB657710@devbig004.ftw2.facebook.com>
-References: <0000000000003ec128058c7624ec@google.com>
- <0000000000003bbf1b058c83f55a@google.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5eQOVvdsTaaanCiXUg5m0ecZfqkTs7/uYhCRVIzkQcY=;
+        b=ZKH/guiJd0QkgdpSFzp7NfU6qHTEj15DXkCFKzsEJY69BDXJpn4GFPeOOjg7bWucNg
+         eqnwr9/E2hZiexrhDb7aZfGbwn0a2oph/92DXXpEvk5+iKOaw4ITG190VC6JDREUJTGE
+         IPq7AX94y6JCy3NCJ2QpzgbcbXc9pdMC+9iVWpppRmNhOXZWjwh4zn3HCgCJz+HSNyPx
+         xIsgQF+wfLqLTQzKEeyDEpSBnQ0Mra9iegLqdQP8FKOIaClIGxx50NwBnQK3T9aaMSLS
+         EIiMCZVQnQJa6drpaJ1uJ5F+gdQRtqgndlxmkBvUnCfLD6M8G8bzvutx8SB4rmwT1ez2
+         QxIQ==
+X-Gm-Message-State: APjAAAWum3iyNSTW5HMzHGJcm0TvOi/APX4ccfeTX9wxWobGUTDDVMsE
+        Z8+vjHVZN7fK919pQzBNWpPtmhPfLuTZKA==
+X-Google-Smtp-Source: APXvYqzsH/zRjVF76SiNwOOyuGr87Edn3PdTFH2U9QMtHFyQ3k6tAFR2z82Bhu61OHAzBrKaNrhaUA==
+X-Received: by 2002:a17:906:454d:: with SMTP id s13mr17053544ejq.255.1562597201565;
+        Mon, 08 Jul 2019 07:46:41 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id j7sm5767060eda.97.2019.07.08.07.46.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 07:46:40 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 07:46:38 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Miaoqing Pan <miaoqing@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rakesh Pillai <pillair@codeaurora.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Balaji Pothunoori <bpothuno@codeaurora.org>,
+        Wen Gong <wgong@codeaurora.org>,
+        Pradeep kumar Chitrapu <pradeepc@codeaurora.org>,
+        Sriram R <srirrama@codeaurora.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] ath10k: work around uninitialized vht_pfr variable
+Message-ID: <20190708144638.GA43693@archlinux-epyc>
+References: <20190708125050.3689133-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000003bbf1b058c83f55a@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190708125050.3689133-1-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Mon, Jul 01, 2019 at 01:52:35PM +0800, Hillf Danton wrote:
-> >WARNING: CPU: 0 PID: 8613 at fs/kernfs/dir.c:493 kernfs_get  fs/kernfs/dir.c:493 [inline]
-> >WARNING: CPU: 0 PID: 8613 at fs/kernfs/dir.c:493 kernfs_new_node  fs/kernfs/dir.c:700 [inline]
-> >WARNING: CPU: 0 PID: 8613 at fs/kernfs/dir.c:493 kernfs_create_dir_ns+0x205/0x230 fs/kernfs/dir.c:1022
-...
-> --- a/fs/sysfs/dir.c
-> +++ b/fs/sysfs/dir.c
-> @@ -53,6 +53,10 @@ int sysfs_create_dir_ns(struct kobject *kobj, const void *ns)
-> 	if (!parent)
-> 		return -ENOENT;
+On Mon, Jul 08, 2019 at 02:50:06PM +0200, Arnd Bergmann wrote:
+> As clang points out, the vht_pfr is assigned to a struct member
+> without being initialized in one case:
 > 
-> +	/* create dir if parent is not dying */
-> +	if (!atomic_inc_not_zero(&parent->count))
-> +		return -ENOENT;
-> +
-> 	kobject_get_ownership(kobj, &uid, &gid);
+> drivers/net/wireless/ath/ath10k/mac.c:7528:7: error: variable 'vht_pfr' is used uninitialized whenever 'if' condition
+>       is false [-Werror,-Wsometimes-uninitialized]
+>                 if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
+>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/ath/ath10k/mac.c:7551:20: note: uninitialized use occurs here
+>                 arvif->vht_pfr = vht_pfr;
+>                                  ^~~~~~~
+> drivers/net/wireless/ath/ath10k/mac.c:7528:3: note: remove the 'if' if its condition is always true
+>                 if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
+>                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/ath/ath10k/mac.c:7483:12: note: initialize the variable 'vht_pfr' to silence this warning
+>         u8 vht_pfr;
 > 
-> 	kn = kernfs_create_dir_ns(parent, kobject_name(kobj),
-> @@ -61,10 +65,12 @@ int sysfs_create_dir_ns(struct kobject *kobj, const void *ns)
-> 	if (IS_ERR(kn)) {
-> 		if (PTR_ERR(kn) == -EEXIST)
-> 			sysfs_warn_dup(parent, kobject_name(kobj));
-> +		kernfs_put(parent);
-> 		return PTR_ERR(kn);
-> 	}
+> Add an explicit but probably incorrect initialization here.
+> I suspect we want a better fix here, but chose this approach to
+> illustrate the issue.
+
+Yup, I reached out to the maintainers when this issue first cropped up,
+should have taken your approach though.
+
+https://lore.kernel.org/lkml/20190702181837.GA118849@archlinux-epyc/
+
+Initializing to zero is better than uninitialized.
+
 > 
-> 	kobj->sd = kn;
-> +	kernfs_put(parent);
+> Fixes: 8b97b055dc9d ("ath10k: fix failure to set multiple fixed rate")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I don't think this is the correct fix.  It's being called with kobj
-whose parent's sysfs node is dangling.  It gotta be fixed from the
-caller side.
-
-Thanks.
-
--- 
-tejun
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
