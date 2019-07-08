@@ -2,108 +2,116 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC52C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D33C606BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A883216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEA7216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yFqK2Fa5"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="n0kuHRY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfGHOck (ORCPT
+        id S1731816AbfGHOcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:32:40 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34596 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729179AbfGHOcj (ORCPT
+        Mon, 8 Jul 2019 10:32:48 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36195 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729179AbfGHOcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:32:39 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p17so16187910ljg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:32:38 -0700 (PDT)
+        Mon, 8 Jul 2019 10:32:47 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z4so14751606qtc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:32:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WAw/aU6LZwIL6FVu56mHN3vVX8j9GNHFwvAGIAISsSo=;
-        b=yFqK2Fa5FNVeLOgjpxiFNic8jzO/GwJcdLUaJGStjJNMhZz60Qo9R01U6fDs8KmWG4
-         GplEP1TLR3Pfsfch/6zDCoois6dE+JkDPJCZxL53pMK4aVXM+32qSKQovQelrf7BMije
-         Wb34buu0hSbVOhACpS1mqqhzcrpPeHcfvY0UrPjnphdg+bYXKFoXA/5tEdcSyOk+4y8L
-         LH7xym5vOdPlASdtQEntkguxyuXCVlObt47p67yK8XYa/3FY5Z0oORjMBRGzmTEebBVZ
-         QI1RP6a6eCQoe1mahq5d2fxAQzp/5GciyTf9t845dUVI5n/dqxrMk62beqjm37oYGp1n
-         lpIg==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rgj5LsjWMVt3uA7AU+5EiBzsCoU8sQY1EReSmwcxt0o=;
+        b=n0kuHRY3ZgOzBursA5auRJFUrsUpG9UEo8EViVHwRjZwW5OUjLi16etpytmAmQS4j5
+         sR7RFBRnGzpRWgg40zSvzE1tdzcYk2BM7rQl9ra8F4I91IQCSXneneFewJ3bbSGJUKVZ
+         tZ6y1jBYTjuPYk1H6SfcRcEwzXWZMnjvy/VsFECb17Ac9rlPoaJ6Wlzmgn/BYDNLF/cM
+         oUQ8lmXVuFu3PoTIaxitctRiD0r0hseyWMltfDH3rBQLq9DYTcWXjEgEhPRYWQFEuYLq
+         ZIsysXHCi2cYHbkGpITeDTindM2uJ1j96GaeaBv5OTEN/rfQ0jRGnkfp+/3ngK9h9co/
+         N+1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WAw/aU6LZwIL6FVu56mHN3vVX8j9GNHFwvAGIAISsSo=;
-        b=YCr5W4HEauR8Rz4sKjlhmdniIYO1zE7aNT5dd+4FQfufu3HGNipdbO+tPGANa5Nm0k
-         EJmG2OuZSnuingFv95z5l2j6GNofVHgjuwwBZyyOfUVreaBKHuvkhmXqPpgLFQMfrkkz
-         CWI09grPOFpNjYBtvow+CoPgjRK3maVbbJ1DPxReBwzfDmY/KWOH6lWD7ZHeKnQbS+7E
-         65nSjuj0EI3/8xiCyVoU19EXrrdDm7GOYtavWB0+3M5zfiYq4IoFVlFPE8fht6sqrfaX
-         yMbLg0lKPQ1Hz7AhZgjoyy1ni4xqMuuvNezgbGjh8nBxGSHZ/PEPeR3u0Z6e1cEUREUB
-         Zsrw==
-X-Gm-Message-State: APjAAAXVxTEbTf/xSqw1WNOtSQU5FencPGPBf0DXmWD832gNBbJslF8T
-        vZqaqtU9jE0SnewvIgLDtgdVWPB36AS3hepK9xo5Hg==
-X-Google-Smtp-Source: APXvYqzA7Vn8bG35rz7cR5NV9vyloKLEVm/Czse88spJybT0Aob5DfBfCdBt1z7MfJ3MzJlZPvwkGqI5V1izfq1OR94=
-X-Received: by 2002:a2e:9593:: with SMTP id w19mr7413475ljh.69.1562596357740;
- Mon, 08 Jul 2019 07:32:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190703205527.955320-1-arnd@arndb.de> <20190703205527.955320-2-arnd@arndb.de>
-In-Reply-To: <20190703205527.955320-2-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 8 Jul 2019 16:32:26 +0200
-Message-ID: <CACRpkdYnuSqiYBPMe_+u6dx_X1zSYKCnCtFznWtxkMf-BGBwjA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kasan: disable CONFIG_KASAN_STACK with clang on arm32
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Abbott Liu <liuwenliang@huawei.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        kasan-dev@googlegroups.com,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Will Deacon <will@kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rgj5LsjWMVt3uA7AU+5EiBzsCoU8sQY1EReSmwcxt0o=;
+        b=TT19+8Tcto3sRXRFA7+VC20ZS2Gwl9UjeVAz7IYu/IOafONh5IJ2KsyBgIgjI0gJiI
+         /IFaS9hDSKRlCHTT3mKRB3a7y1hM0XZz9rONKUEYDrOSimTH5zehvca0W+2cK0rekRH1
+         DxQooRYK2VkAKKAUUmFKh6F8WV45lWvTxhEKeQbn3kQmqOxLp50cI71fDTdDTUjUnqmz
+         6nsTPAbysYFjvtDyY+lqGrkaBHF1nFvR8fObuVFoZ3KIu+XitE7X08qsqPUB4Pf0xSVk
+         viaGbMf7W2YezcGabjok6p7FcnO8DZ5Gd6LmAdbKMGU49nq7cu7Q05ykRCeSCGHinA4T
+         X0qQ==
+X-Gm-Message-State: APjAAAU0T8FIJRjCJ5GH34BPajlyQMdwC80N04jf+s8DsNWBonDX6pWG
+        kv0mEZs9FMDT7UgJYm9m2xtDVQ==
+X-Google-Smtp-Source: APXvYqwwc4BaBrQsj5h8zlkbN6fHFM6eIvYFfivWzpf/pcxIjkWthFjzJx4pXwVHeGZYhdObZ/usig==
+X-Received: by 2002:ac8:4084:: with SMTP id p4mr14522174qtl.172.1562596366464;
+        Mon, 08 Jul 2019 07:32:46 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id l19sm4294245qtb.6.2019.07.08.07.32.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 07:32:45 -0700 (PDT)
+Message-ID: <1562596364.8510.1.camel@lca.pw>
+Subject: Re: [PATCH v2] sched/core: silence a warning in sched_init()
+From:   Qian Cai <cai@lca.pw>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     valentin.schneider@arm.com, linux-kernel@vger.kernel.org
+Date:   Mon, 08 Jul 2019 10:32:44 -0400
+In-Reply-To: <1561466662-22314-1-git-send-email-cai@lca.pw>
+References: <1561466662-22314-1-git-send-email-cai@lca.pw>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 10:56 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Ping. Per discussion, sounds like this is the best thing to do in order to avoid
+compilation warnings.
 
-> The CONFIG_KASAN_STACK symbol tells us whether we should be using the
-> asan-stack=1 parameter. On clang-8, this causes explosive kernel stack
-> frame growth, so it is currently disabled, hopefully to be turned back
-> on when a future clang version is fixed. Examples include
->
-> drivers/media/dvb-frontends/mb86a20s.c:1942:12: error: stack frame size of 4128 bytes in function
-> drivers/net/wireless/atmel/atmel.c:1307:5: error: stack frame size of 4928 bytes in function 'atmel_open'
-> drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgk104.c:1521:1: error: stack frame size of 5440 bytes in function
-> drivers/media/i2c/mt9t112.c:670:12: error: stack frame size of 9344 bytes in function 'mt9t112_init_camera'
-> drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c:185:12: error: stack frame size of 10048 bytes
->
-> For the 32-bit ARM build, the logic I introduced earlier does
-> not work because $(CFLAGS_KASAN_SHADOW) is empty, and we don't add
-> those flags.
->
-> Moving the asan-stack= parameter down fixes this. No idea of any
-> of the other parameters should also be moved though.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-For some reason the RealView doesn't boot after this patch. Trying to figure
-out why.
-
-Yours,
-Linus Walleij
+On Tue, 2019-06-25 at 08:44 -0400, Qian Cai wrote:
+> Compiling a kernel with both FAIR_GROUP_SCHED=n and RT_GROUP_SCHED=n
+> will generate a warning using W=1,
+> 
+> kernel/sched/core.c: In function 'sched_init':
+> kernel/sched/core.c:5906:32: warning: variable 'ptr' set but not used
+> [-Wunused-but-set-variable]
+>   unsigned long alloc_size = 0, ptr;
+>                                 ^~~
+> 
+> It apparently the maintainers don't like the previous fix [1] which
+> contains ugly idefs, so silence it by appending the __maybe_unused
+> attribute for it instead.
+> 
+> [1] https://lore.kernel.org/lkml/1559681162-5385-1-git-send-email-cai@lca.pw/
+> 
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: Incorporate the feedback from Valentin.
+> 
+>  kernel/sched/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 874c427742a9..12b9b69c8a66 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -5903,7 +5903,8 @@ int in_sched_functions(unsigned long addr)
+>  void __init sched_init(void)
+>  {
+>  	int i, j;
+> -	unsigned long alloc_size = 0, ptr;
+> +	unsigned long alloc_size = 0;
+> +	unsigned long __maybe_unused ptr;
+>  
+>  	wait_bit_init();
+>  
