@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDF8C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C702C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2964B21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39135204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599780;
-	bh=OYcuxhqUVb8Tjwl2xKM6ssuEmlmfYxwlb2hiW3ErcAM=;
+	s=default; t=1562599797;
+	bh=IXYegOQdh8W66Esya2jE5jhePux88Z2Un7Hwk2T2SAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1rE4KUDnItSh+gGNEkejA8L494ToCxysz4RU7GAQcdG4yd1c6L7I6RPcpvad79NZM
-	 9HV2toXajwN2UnuDG97iqQGW8ka1ZEYhKai5ajUYgrjhQD7UukUSHvFX3++P6W0EzZ
-	 IdYVn9jLZYu2d2hB+yU3QvrgWoMKpY6c8l2th7c0=
+	b=Y2YFGI9AM9L+EULdMAGm3/BioGqs8Rh8f+UXwkJ0pe+qIeOioKDHLrXYBazq3cmMG
+	 Xzc31aa3OBubKIA6vzW5yzQCPafI2YMFAfJej51n58L4WHjrP7LIo71qE0WNjt8QW6
+	 4Srgk3IcH7s9w2oPoaQXPm4R2FdjW6GQh34lzcxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389522AbfGHP3i (ORCPT
+        id S2387834AbfGHP34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389504AbfGHP3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:34 -0400
+        id S2389525AbfGHP3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:29:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 582ED21707;
-        Mon,  8 Jul 2019 15:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8BCA21537;
+        Mon,  8 Jul 2019 15:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599773;
-        bh=OYcuxhqUVb8Tjwl2xKM6ssuEmlmfYxwlb2hiW3ErcAM=;
+        s=default; t=1562599779;
+        bh=IXYegOQdh8W66Esya2jE5jhePux88Z2Un7Hwk2T2SAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ias2ZMSVkSqTxXmLscD81+aEbS4vTXH2p5wGTAr7i8owCwxQnf79bnDi64C1IbCwH
-         HquC8810b6n/SEB0LncTsHsjUyWbrYN7/M9tr6WHkqDq1Wa2cmluGJ1dRmDW6PUZ+P
-         ey3eSMuUfZEoytVkybhwrPLa3DPpONQ2Dmq8soWI=
+        b=VEiTPdbCbV6yapMfaFgkR81wtjkRiYLVFyGokh4rmv5e+FL4o/q6WEMQC09SKekV8
+         Kn+nSbnrRzQ4itLvW/F40j2Z0S5dix7UEcM3rFLqIo0YOx/q1lfhc6AOsZizwuxRrT
+         /fxymOTZ4TBgSwqAQ4+92o+XRAzx5Zd4QKyhxpfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 73/90] net: hns: Fixes the missing put_device in positive leg for roce reset
-Date:   Mon,  8 Jul 2019 17:13:40 +0200
-Message-Id: <20190708150526.015161864@linuxfoundation.org>
+Subject: [PATCH 4.19 75/90] rds: Fix warning.
+Date:   Mon,  8 Jul 2019 17:13:42 +0200
+Message-Id: <20190708150526.123716819@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -61,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4d96e13ee9cd1f7f801e8c7f4b12f09d1da4a5d8 ]
+[ Upstream commit d84e7bc0595a7e146ad0ddb80b240cea77825245 ]
 
-This patch fixes the missing device reference release-after-use in
-the positive leg of the roce reset API of the HNS DSAF.
+>> net/rds/send.c:1109:42: warning: Using plain integer as NULL pointer
 
-Fixes: c969c6e7ab8c ("net: hns: Fix object reference leaks in hns_dsaf_roce_reset()")
-Reported-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Fixes: ea010070d0a7 ("net/rds: fix warn in rds_message_alloc_sgs")
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/rds/send.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-index fdff5526d2e8..f5ff07cb2b72 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -3149,6 +3149,9 @@ int hns_dsaf_roce_reset(struct fwnode_handle *dsaf_fwnode, bool dereset)
- 		dsaf_set_bit(credit, DSAF_SBM_ROCEE_CFG_CRD_EN_B, 1);
- 		dsaf_write_dev(dsaf_dev, DSAF_SBM_ROCEE_CFG_REG_REG, credit);
- 	}
+diff --git a/net/rds/send.c b/net/rds/send.c
+index ec2267cbf85f..26e2c2305f7a 100644
+--- a/net/rds/send.c
++++ b/net/rds/send.c
+@@ -1106,9 +1106,11 @@ int rds_sendmsg(struct socket *sock, struct msghdr *msg, size_t payload_len)
+ 		      sock_flag(rds_rs_to_sk(rs), SOCK_ZEROCOPY));
+ 	int num_sgs = ceil(payload_len, PAGE_SIZE);
+ 	int namelen;
+-	struct rds_iov_vector_arr vct = {0};
++	struct rds_iov_vector_arr vct;
+ 	int ind;
+ 
++	memset(&vct, 0, sizeof(vct));
 +
-+	put_device(&pdev->dev);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(hns_dsaf_roce_reset);
+ 	/* expect 1 RDMA CMSG per rds_sendmsg. can still grow if more needed. */
+ 	vct.incr = 1;
+ 
 -- 
 2.20.1
 
