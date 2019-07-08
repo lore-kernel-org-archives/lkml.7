@@ -2,180 +2,140 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDA1C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05092C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A1820861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4F920861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="m6d7Soa5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B0OFmaHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfGHLu5 (ORCPT
+        id S1730610AbfGHLvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:50:57 -0400
-Received: from mout.web.de ([217.72.192.78]:50145 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727286AbfGHLu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:50:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1562586652;
-        bh=/5qdp01UeFPeTv/IgWA+SlPRl1cs1H2wIs2q7jCy5I8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=m6d7Soa5/r9et8gMWytPKSbEYtI5PTZPiGQpzIIwldIqmGr8G5LplpSSKQgRr/q6R
-         8BpCho0rMY8elKBbcQZPC46g8ZqjHReJL6HlM4vdmWBBzcQMUywKMZcqVX3PYGcZj4
-         yMBsdVKvmUv7Nt9p0n5RV0Gq4X1YVADPC0+RAhCE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.165.233]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MEEiK-1hiEBH3YJk-00FUik; Mon, 08
- Jul 2019 13:50:51 +0200
-Subject: Re: mfd: asic3: One function call less in asic3_irq_probe()
-To:     Enrico Weigelt <lkml@metux.net>, kernel-janitors@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Lee Jones <lee.jones@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <01f6a8cd-0205-8d34-2aa3-e4b691e7eb95@web.de>
- <20190707005251.GQ17978@ZenIV.linux.org.uk>
- <4b06e2fb-a0ba-56e5-b46b-98e986e6f2fd@web.de>
- <6e8eab5f-1f5c-b3dc-6b65-96a874ec2789@metux.net>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <b116fc90-9558-8609-d803-7d8da2b66e0a@web.de>
-Date:   Mon, 8 Jul 2019 13:50:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <6e8eab5f-1f5c-b3dc-6b65-96a874ec2789@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:R8Nk1rJ9MI+MdXfvRyrxSS5g0e0xYNiBoYEy/SLER36KdCnrqtQ
- IcQrfyMsyRr4gQ5wS42nX9iei78tHb1iL0PQK2sHKldSIpwvcf/EWth4AnZbd78OV0PZRDe
- paAvCvclUoSvDcKpB+wXSQ8DsUkR+QiyHOy52hFD4jOSirDeR8rh2TpySxwldXKrY8ALMC3
- lzoXkaQYEiH6aS5YMI5Rw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EPFzdssh9PI=:xXSK1eq7mJGphm94w2LPzY
- MosAtRMIU8GZK3MfraAwT2Zp7KI4q72tY1ISQP9D+pgJEIkHnA5fL3/WDmCJuZhz9wjBFOr7m
- 9pLxZfCR5ke6Exwp+53+c/pnp7isKrdGi6l6XFD/ZpjPD3wqQAbVnl0mbGr+WB9Lln8r0olNJ
- 5UaFiKhhhl4j7g6afndEVg4PfdXKiTaHWzaW2ABrj3TpyhqpBOTBXadskgnXt7GvEacS3M9lY
- wmLhWeHvAZ5yObWquRMTzHvdfh9PRKCSvmcloTUupG09pg8+Y3oTroP1eHNEDy0WAB2PdGtiD
- 4T9K7Mxp5ktYo///ioJnLGwSfJePb+Pk8UbOG0PJb4KI4ud7kspKIlPFyGKaoNHP5A1JH8ndI
- q6euDUM8ZV18y5vRsK1HhWammCIR1suZMqkZrEUruRBHaWZOVzeujUtFqd6kJKLN4Hfpenfbu
- dNbUae4dz+Ybqwx7Xhe82oUoMhQSl0hDXaw7tncwAhib5Bdju4sfUS7HTRWFUUi9b9an9KDK9
- 5JwJvG2cXltfn2C6/4P8edKZ9opv+IZ0444hY3QKCNXbWbhJCKp3AipGiEacY9HEfOE5apyso
- lfj7aKNlVi5lAJ/pWKrxZ6Yhaa7uzYguJwBdfA3FFQj/lUIgZJ0ZaIVsqzI6x2eSV4Wwf6GOl
- XT3wMNinbPjtZv5GS5TmnkrMvuDmI+Dn3QUn+AsDDn4pIIuKYnpG5W8KQwpdnu92Z7yBVPd1g
- fDlE5FGR4L6KKDhDuL2NZdt1v1K9seJK7X+Iot+e52xjPXcxCXRJmq8lZsddV32+W4FooZ+WV
- rs98oryF2cgKtYEXJxZDqOWNXnKoUUAZExst+xznAdkOolZ7yXRUn1vk6l4+fLzu9B1r2pm/5
- 8NZMCRbycztL3UzGMzBaVMVi6AkM7b2Su4rLpS/eFNTJm27tr8pwgCInjyvpt9Pn5A4S7Msro
- CM6rtjZ9WrGG4ICWiKIn5BTaZ+54zAxC9xt2MW6ccTB4o4PLEsiY8bM3JAng0w9EDJviZv0tI
- 826GoZCyj2kAqjWknQtd1yTJcJ7k5T+s2etGBJr5j7n8hEwI5Pd4XPrRPWPwRdBmue6+AVgCB
- 6bbn5qzgJN9L5zScnfoB7ly6zJFHHTwYY9f
+        Mon, 8 Jul 2019 07:51:36 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:34878 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727458AbfGHLvg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 07:51:36 -0400
+Received: by mail-pl1-f201.google.com with SMTP id s21so3100044plr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:51:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=RUO0cgtogOledx1PUbIVwBv1WP5SbTQS/eUbtx6ca1A=;
+        b=B0OFmaHSy+LoXPkMA2Ul+miuzJXjvdo9LY8EJgk2lFUHwSUSB4ZmtFqaWavAsdj4od
+         snl/VTXx4lCoKMHUKCW4oO5innRUxx+6QMFHQHWdZV2KLezn4+jOtVMpJlLJd8OXJpno
+         J2bSSy8JyaZrLnQvfe9GOQm1/PRFnQ7QeIgWKOUPn72NqRKyO9M5wgG+YfYcF/AMnASr
+         VuuZb+NvgEQpvoUdHvQ/2N2MZ8IiQ2nSYCrSHYvDQ8RfD/1DbPl7gHQGaYM/weFidX+5
+         wVgeuPwmOQCZaeIfiPaH6FY2Q69hwYyORxDxBiM7C0EzotWxKYRGMr9y7prf4uIkXGsc
+         m2Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=RUO0cgtogOledx1PUbIVwBv1WP5SbTQS/eUbtx6ca1A=;
+        b=oo41d/1gaqSY2kmEUGKO28x8VszoZFqCU0rKcI4JKmvZ+rtY0ek7tRgcqLv09gWW5m
+         CsEnTdhb1S3RxENeL23VJmAkBT1DLwDuuYy41NQng1WMrwpDD5XKlYICPgxI66JhakKJ
+         kJMlaTzStL1mEK3VC7YjcxkRlfHbC61XSkAoUR2pQxUIiJSrBO9HYrPDLyhXn4KRFMUl
+         lRL7xy8t4GfEIRmQJiE4cSVFiUxIsisqmB+byz0e/2LAvZdWkPl5OJWKUJ6NO2/no/3N
+         iA8qHL3qXJuPr9b1Upr2UkEY3+9KjqzKA59N2/QAGhnLYa6j7gZcH3XXDBhMO8aZFaSF
+         XwsQ==
+X-Gm-Message-State: APjAAAXWcbZVBCC0tKl9IYoN94DFE5w+xnvmUz1NTYxPgzkwQlSl39yZ
+        qztg2cnw1ts5/lZ4+9dk2BrO98nSsCY=
+X-Google-Smtp-Source: APXvYqyy3wqolz5H6URclfrxPsjBk3fSL9runmXFQbRxI7E/LFW05znauTpADCA+6Xq5+MqfLTdxro38OnM=
+X-Received: by 2002:a65:49cc:: with SMTP id t12mr6413038pgs.83.1562586695288;
+ Mon, 08 Jul 2019 04:51:35 -0700 (PDT)
+Date:   Mon,  8 Jul 2019 13:51:30 +0200
+Message-Id: <20190708115130.250149-1-rburny@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v3] fs: Fix the default values of i_uid/i_gid on /proc/sys inodes.
+From:   Radoslaw Burny <rburny@google.com>
+To:     "Luis R . Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Seth Forshee <seth.forshee@canonical.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        jsperbeck@google.com, Andrew Morton <akpm@linux-foundation.org>,
+        Radoslaw Burny <rburny@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> I suggest to reduce a bit of duplicate source code also at this place.
->
-> Duplicate code (logic) or just characters ?
+fs: Fix the default values of i_uid/i_gid on /proc/sys inodes.
+Normally, the inode's i_uid/i_gid are translated relative to s_user_ns,
+but this is not a correct behavior for proc. Since sysctl permission
+check in test_perm is done against GLOBAL_ROOT_[UG]ID, it makes more
+sense to use these values in u_[ug]id of proc inodes.
+In other words: although uid/gid in the inode is not read during
+test_perm, the inode logically belongs to the root of the namespace.
+I have confirmed this with Eric Biederman at LPC and in this thread:
+https://lore.kernel.org/lkml/87k1kzjdff.fsf@xmission.com
 
-Both.
+Consequences
+============
+Since the i_[ug]id values of proc nodes are not used for permissions
+checks, this change usually makes no functional difference. However, it
+causes an issue in a setup where:
+* a namespace container is created without root user in container -
+  hence the i_[ug]id of proc nodes are set to INVALID_[UG]ID
+* container creator tries to configure it by writing /proc/sys files,
+  e.g. writing /proc/sys/kernel/shmmax to configure shared memory limit
+Kernel does not allow to open an inode for writing if its i_[ug]id are
+invalid, making it impossible to write shmmax and thus - configure the
+container.
+Using a container with no root mapping is apparently rare, but we do use
+this configuration at Google. Also, we use a generic tool to configure
+the container limits, and the inability to write any of them causes a
+failure.
 
+History
+=======
+The invalid uids/gids in inodes first appeared due to 81754357770e (fs:
+Update i_[ug]id_(read|write) to translate relative to s_user_ns).
+However, AFAIK, this did not immediately cause any issues.
+The inability to write to these "invalid" inodes was only caused by a
+later commit 0bd23d09b874 (vfs: Don't modify inodes with a uid or gid
+unknown to the vfs).
 
-> IMHO, readability is an important aspect, so we could be careful about t=
-hat.
+Tested: Used a repro program that creates a user namespace without any
+mapping and stat'ed /proc/$PID/root/proc/sys/kernel/shmmax from outside.
+Before the change, it shows the overflow uid, with the change it's 0.
+The overflow uid indicates that the uid in the inode is not correct and
+thus it is not possible to open the file for writing.
 
-This is usual.
+Fixes: 0bd23d09b874 ("vfs: Don't modify inodes with a uid or gid unknown to the vfs")
+Cc: stable@vger.kernel.org # v4.8+
+Signed-off-by: Radoslaw Burny <rburny@google.com>
+---
+Changelog since v1:
+  - Updated the commit title and description.
 
-The code text size can influence this aspect in considerable ways.
+ fs/proc/proc_sysctl.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index c74570736b24..36ad1b0d6259 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -499,6 +499,10 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
+ 
+ 	if (root->set_ownership)
+ 		root->set_ownership(head, table, &inode->i_uid, &inode->i_gid);
++	else {
++		inode->i_uid = GLOBAL_ROOT_UID;
++		inode->i_gid = GLOBAL_ROOT_GID;
++	}
+ 
+ 	return inode;
+ }
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
->> We can have different opinions about the criteria which are relevant he=
-re.
->
-> Which criterias are you operating on ?
-
-I suggest occasionally again to reconsider consequences around a principle
-like =E2=80=9CDon't repeat yourself=E2=80=9D.
-
-
-> I think it's good that you're using tools like cocci for pointing out
-> *possible* points of useful refactoring.
-
-Thanks for your general understanding.
-
-
-> But that doesn't mean that a particular patch can be accepted
-> or not in the greater context.
-
-Would you like to find the corresponding change acceptance out at all?
-
-
-> Note that such issues are pretty subjective
-
-The situation depends on some factors.
-
-
-> - it's not a technical
-
-I got an other impression.
-
-
-> but an asthetic matter,
-
-This matters also.
-
-
-> so such issues can't be resolved by logic.
-
-I guess that it can help.
-
-Regards,
-Markus
