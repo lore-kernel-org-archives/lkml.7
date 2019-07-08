@@ -2,188 +2,125 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94EBC606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2454C606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A608520656
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562625040;
-	bh=OffiOYG6R13M9YyPeVgv7b8PG9UD7U6RoXa89hcavPk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sC92Zvz7F7FwXdE3doNqlEnIngsFBxwDJNT6a6dN1IMv2QBuiBKlx7CNv9xSTm43J
-	 uO5AeLzVm2o3HWxxfDsv4T6tAoDzG3C9x8/HK2zByz0DZ4dWy1H6gnLtclcotM/i8i
-	 6NR4hb2duGcMKZRR3H6uFJD6BuyWyv1fRyc9+7Ic=
+	by mail.kernel.org (Postfix) with ESMTP id A5DFD20656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfGHWaj (ORCPT
+        id S1727107AbfGHWcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:30:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35599 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfGHWaj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:30:39 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so29454806ioo.2;
-        Mon, 08 Jul 2019 15:30:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DKbe5Bw/ZWkGGevk11CJOS1MNbgfdugSW24hlqZbzbo=;
-        b=tHMaGIsLukSuB6CqKCJfcHL9Q2DOFCpwAXWWSJqaAnjJK7Dccec+nKsYSuzgWH1Qsx
-         OjYvYIkG3UklEh2PUBZnhTXpyY45+9DQJ/dfsozrg18ACjNAyHpx7M0apPwC5TOdr+dk
-         zCFpxo4g9KWhOE3WYJfsbw5YxJqwfxMtwQ08PZxLECgnXcWQJTpoVV7cANRHkPVhzy8J
-         /4WvOLHa6u+kJVvOSqyKIaklRRiI2rXfWFDz9iomvPvcBGkuThS5OKQPBTOdB6Q9We79
-         SWSyaQCvTopobbSFB00XXp6+BwoyBUPd4iEDRc7fqNSs8nIomdzKQK0L27lQ7l8Mmrht
-         Qdaw==
-X-Gm-Message-State: APjAAAUcwDDdnycTaKhTUoaRWJSSIcrwWbRoEi9yt9/deASN568xaA8W
-        Ll7zRL0jxaoN3V+nQ1NEVA==
-X-Google-Smtp-Source: APXvYqzSDWN6ooiwDgwx+KLeyHhdjBuL+QsFBURU2G0UGLCiUVOLkcMQl1URO5AdsIaKlOsojsMMsg==
-X-Received: by 2002:a5e:c00e:: with SMTP id u14mr7422195iol.196.1562625037976;
-        Mon, 08 Jul 2019 15:30:37 -0700 (PDT)
-Received: from localhost ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x22sm14429132iob.84.2019.07.08.15.30.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 15:30:36 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 16:30:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     min.guo@mediatek.com
-Cc:     Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, tony@atomide.com,
-        hdegoede@redhat.com
-Subject: Re: [PATCH v6 1/6] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Message-ID: <20190708223035.GA7005@bogus>
-References: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
- <1559648359-6569-2-git-send-email-min.guo@mediatek.com>
+        Mon, 8 Jul 2019 18:32:33 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14342 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726371AbfGHWcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 18:32:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 15:32:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,468,1557212400"; 
+   d="scan'208";a="192474660"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jul 2019 15:32:32 -0700
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     subhra mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, mgorman@techsingularity.net,
+        Paul Turner <pjt@google.com>, riel@surriel.com,
+        morten.rasmussen@arm.com, Aubrey Li <aubrey.li@linux.intel.com>
+References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
+ <20190701090204.GQ3402@hirez.programming.kicks-ass.net>
+ <20190701135552.kb4os6bxxhh2lyw6@e110439-lin>
+ <20190701140434.GW3402@hirez.programming.kicks-ass.net>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: [RESEND PATCH v3 0/7] Improve scheduler scalability for fast path
+Message-ID: <58617a6e-2ed7-ed02-5c41-0b8dd2c4b066@linux.intel.com>
+Date:   Mon, 8 Jul 2019 15:32:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559648359-6569-2-git-send-email-min.guo@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190701140434.GW3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 07:39:14PM +0800, min.guo@mediatek.com wrote:
-> From: Min Guo <min.guo@mediatek.com>
+On 7/1/19 7:04 AM, Peter Zijlstra wrote:
+> On Mon, Jul 01, 2019 at 02:55:52PM +0100, Patrick Bellasi wrote:
+>> On 01-Jul 11:02, Peter Zijlstra wrote:
 > 
-> This adds support for MediaTek musb controller in
-> host, peripheral and otg mode.
+>>> Some of the things we could tie to this would be:
+>>>
+>>>   - select_idle_siblings; -nice would scan more than +nice,
+>>
+>> Just to be sure, you are not proposing to use the nice value we
+>> already have, i.e.
+>>   p->{static,normal}_prio
+>> but instead a new similar concept, right?
 > 
-> Signed-off-by: Min Guo <min.guo@mediatek.com>
-> ---
-> changes in v6:
-> 1. Modify usb connector child node
+> Correct; a new sched_attr::sched_latency_nice value, which is like
+> sched_nice, but controls a different dimmension of behaviour.
 > 
-> changes in v5:
-> suggested by Rob:
-> 1. Modify compatible as 
-> - compatible : should be one of:
->                "mediatek,mt-2701"
 
-No, should be: mediatek,mt2701-musb
+I think the sched_latency_nice value could be also useful for AVX512 for x86.
+Running an AVX512 task could drop frequency of the cpu, including the sibling
+hardware thread.  So scheduling task that don't mind latency on the
+sibling while an AVX512 task runs will make sense.
 
->                ...
->                followed by "mediatek,mtk-musb"
-> 2. Add usb connector child node
-> 
-> changes in v4:
-> suggested by Sergei:
-> 1. String alignment
-> 
-> changes in v3:
-> 1. no changes
-> 
-> changes in v2:
-> suggested by Bin:
-> 1. Modify DRC to DRD
-> suggested by Rob:
-> 2. Drop the "<soc-model>-musb" in compatible
-> 3. Remove phy-names
-> 4. Add space after comma in clock-names
-> ---
->  .../devicetree/bindings/usb/mediatek,musb.txt      | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> new file mode 100644
-> index 0000000..7434299
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> @@ -0,0 +1,55 @@
-> +MediaTek musb DRD/OTG controller
-> +-------------------------------------------
-> +
-> +Required properties:
-> + - compatible      : should be one of:
-> +                     "mediatek,mt-2701"
-> +                     ...
-> +                     followed by "mediatek,mtk-musb"
-> + - reg             : specifies physical base address and size of
-> +                     the registers
-> + - interrupts      : interrupt used by musb controller
-> + - interrupt-names : must be "mc"
-> + - phys            : PHY specifier for the OTG phy
-> + - dr_mode         : should be one of "host", "peripheral" or "otg",
-> +                     refer to usb/generic.txt
-> + - clocks          : a list of phandle + clock-specifier pairs, one for
-> +                     each entry in clock-names
-> + - clock-names     : must contain "main", "mcu", "univpll"
-> +                     for clocks of controller
-> +
-> +Optional properties:
-> + - power-domains   : a phandle to USB power domain node to control USB's
-> +                     MTCMOS
-> +
-> +Required child nodes:
-> + usb connector node as defined in bindings/connector/usb-connector.txt
-> +Optional properties:
-> + - id-gpios        : input GPIO for USB ID pin.
-> + - vbus-gpios      : input GPIO for USB VBUS pin.
-> + - vbus-supply     : reference to the VBUS regulator, needed when supports
-> +                     dual-role mode
-> +
-> +Example:
-> +
-> +usb2: usb@11200000 {
-> +	compatible = "mediatek,mt2701-musb",
-> +		     "mediatek,mtk-musb";
-> +	reg = <0 0x11200000 0 0x1000>;
-> +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-> +	interrupt-names = "mc";
-> +	phys = <&u2port2 PHY_TYPE_USB2>;
-> +	dr_mode = "otg";
-> +	clocks = <&pericfg CLK_PERI_USB0>,
-> +		 <&pericfg CLK_PERI_USB0_MCU>,
-> +		 <&pericfg CLK_PERI_USB_SLV>;
-> +	clock-names = "main","mcu","univpll";
-> +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> +	connector{
-> +		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
-
-linux,typeb-conn-gpio is not an accepted compatible string.
-
-> +		label = "micro-USB";
-> +		type = "micro";
-> +		id-gpios = <&pio 44 GPIO_ACTIVE_HIGH>;
-> +		vbus-supply = <&usb_vbus>;
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+Tim
