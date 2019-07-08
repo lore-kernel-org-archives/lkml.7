@@ -2,279 +2,94 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DD2C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150F4C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E0A20693
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD81A20693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562600915;
+	bh=0+Ob6kcJ4trBT5TwGibYy0wCvDjVHQc9S5MFVCIbGR8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qXmTuzs4lWAODql4c/2+QwyqrebKX2EjaeWWenar7MF5Wf+H8l2gVXOol8CozDCiR
+	 5+H9HV41BSBqHjmmcjU/FZi3VDQTOty2PBfDwn8qrYDP5h9jza8bxaXVGvc36hUzRx
+	 yujqKSEOAybJWGHq56gLArEmOwosddMPzCez1dBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391310AbfGHPsa (ORCPT
+        id S1732999AbfGHPSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:48:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:52326 "EHLO foss.arm.com"
+        Mon, 8 Jul 2019 11:18:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388947AbfGHPrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:47:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EB79CFC;
-        Mon,  8 Jul 2019 08:47:42 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8BF583F59C;
-        Mon,  8 Jul 2019 08:47:41 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Bo Zhang <bozhang.zhang@broadcom.com>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-Subject: [PATCH 01/11] firmware: arm_scmi: Reorder some functions to avoid forward declarations
-Date:   Mon,  8 Jul 2019 16:47:20 +0100
-Message-Id: <20190708154730.16643-2-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190708154730.16643-1-sudeep.holla@arm.com>
-References: <20190708154730.16643-1-sudeep.holla@arm.com>
+        id S1732970AbfGHPSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:18:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D802216E3;
+        Mon,  8 Jul 2019 15:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599094;
+        bh=0+Ob6kcJ4trBT5TwGibYy0wCvDjVHQc9S5MFVCIbGR8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FEiL8r45aV1/9H3X28GtusFcNHObB4XtLLUdfocSogzP8uXY0q4XkyV2/p3tI7ZJn
+         I5fpFFkqkLEn5fxT6EEWYGmYVsSkujENj29MRNx4nckK4UzxcTCJSpAV66Lzq6CP9l
+         /pxnHX0jFCQV0bvxH7LR1m1G01c4Nqk7+7vZqWzQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 33/73] 9p/rdma: remove useless check in cm_event_handler
+Date:   Mon,  8 Jul 2019 17:12:43 +0200
+Message-Id: <20190708150523.054694987@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
+References: <20190708150513.136580595@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-shuffling few functions to keep definitions and their usages close.
-This is also needed to avoid too many unnecessary forward declarations
-while adding new features(delayed response and notifications).
+[ Upstream commit 473c7dd1d7b59ff8f88a5154737e3eac78a96e5b ]
 
-Keeping this separate to avoid mixing up of these trivial change that
-doesn't affect functionality into the ones that does.
+the client c is always dereferenced to get the rdma struct, so c has to
+be a valid pointer at this point.
+Gcc would optimize that away but let's make coverity happy...
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Link: http://lkml.kernel.org/r/1536339057-21974-3-git-send-email-asmadeus@codewreck.org
+Addresses-Coverity-ID: 102778 ("Dereference before null check")
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/driver.c | 180 ++++++++++++++---------------
- 1 file changed, 90 insertions(+), 90 deletions(-)
+ net/9p/trans_rdma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 765573756987..0bd2af0a008f 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -197,44 +197,6 @@ static void scmi_fetch_response(struct scmi_xfer *xfer,
- 	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
- }
+diff --git a/net/9p/trans_rdma.c b/net/9p/trans_rdma.c
+index f3a9254b6df9..83d2e7722ebf 100644
+--- a/net/9p/trans_rdma.c
++++ b/net/9p/trans_rdma.c
+@@ -255,8 +255,7 @@ p9_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
+ 	case RDMA_CM_EVENT_DISCONNECTED:
+ 		if (rdma)
+ 			rdma->state = P9_RDMA_CLOSED;
+-		if (c)
+-			c->status = Disconnected;
++		c->status = Disconnected;
+ 		break;
  
--/**
-- * scmi_rx_callback() - mailbox client callback for receive messages
-- *
-- * @cl: client pointer
-- * @m: mailbox message
-- *
-- * Processes one received message to appropriate transfer information and
-- * signals completion of the transfer.
-- *
-- * NOTE: This function will be invoked in IRQ context, hence should be
-- * as optimal as possible.
-- */
--static void scmi_rx_callback(struct mbox_client *cl, void *m)
--{
--	u16 xfer_id;
--	struct scmi_xfer *xfer;
--	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
--	struct device *dev = cinfo->dev;
--	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
--	struct scmi_xfers_info *minfo = &info->minfo;
--	struct scmi_shared_mem __iomem *mem = cinfo->payload;
--
--	xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
--
--	/* Are we even expecting this? */
--	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
--		dev_err(dev, "message for %d is not expected!\n", xfer_id);
--		return;
--	}
--
--	xfer = &minfo->xfer_block[xfer_id];
--
--	scmi_dump_header_dbg(dev, &xfer->hdr);
--
--	scmi_fetch_response(xfer, mem);
--	complete(&xfer->done);
--}
--
- /**
-  * pack_scmi_header() - packs and returns 32-bit header
-  *
-@@ -349,6 +311,44 @@ void scmi_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
- }
- 
-+/**
-+ * scmi_rx_callback() - mailbox client callback for receive messages
-+ *
-+ * @cl: client pointer
-+ * @m: mailbox message
-+ *
-+ * Processes one received message to appropriate transfer information and
-+ * signals completion of the transfer.
-+ *
-+ * NOTE: This function will be invoked in IRQ context, hence should be
-+ * as optimal as possible.
-+ */
-+static void scmi_rx_callback(struct mbox_client *cl, void *m)
-+{
-+	u16 xfer_id;
-+	struct scmi_xfer *xfer;
-+	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
-+	struct device *dev = cinfo->dev;
-+	struct scmi_info *info = handle_to_scmi_info(cinfo->handle);
-+	struct scmi_xfers_info *minfo = &info->minfo;
-+	struct scmi_shared_mem __iomem *mem = cinfo->payload;
-+
-+	xfer_id = MSG_XTRACT_TOKEN(ioread32(&mem->msg_header));
-+
-+	/* Are we even expecting this? */
-+	if (!test_bit(xfer_id, minfo->xfer_alloc_table)) {
-+		dev_err(dev, "message for %d is not expected!\n", xfer_id);
-+		return;
-+	}
-+
-+	xfer = &minfo->xfer_block[xfer_id];
-+
-+	scmi_dump_header_dbg(dev, &xfer->hdr);
-+
-+	scmi_fetch_response(xfer, mem);
-+	complete(&xfer->done);
-+}
-+
- static bool
- scmi_xfer_poll_done(const struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
- {
-@@ -599,20 +599,6 @@ int scmi_handle_put(const struct scmi_handle *handle)
- 	return 0;
- }
- 
--static const struct scmi_desc scmi_generic_desc = {
--	.max_rx_timeout_ms = 30,	/* We may increase this if required */
--	.max_msg = 20,		/* Limited by MBOX_TX_QUEUE_LEN */
--	.max_msg_size = 128,
--};
--
--/* Each compatible listed below must have descriptor associated with it */
--static const struct of_device_id scmi_of_match[] = {
--	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
--	{ /* Sentinel */ },
--};
--
--MODULE_DEVICE_TABLE(of, scmi_of_match);
--
- static int scmi_xfer_info_init(struct scmi_info *sinfo)
- {
- 	int i;
-@@ -659,44 +645,6 @@ static int scmi_mailbox_check(struct device_node *np)
- 	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, NULL);
- }
- 
--static int scmi_mbox_free_channel(int id, void *p, void *data)
--{
--	struct scmi_chan_info *cinfo = p;
--	struct idr *idr = data;
--
--	if (!IS_ERR_OR_NULL(cinfo->chan)) {
--		mbox_free_channel(cinfo->chan);
--		cinfo->chan = NULL;
--	}
--
--	idr_remove(idr, id);
--
--	return 0;
--}
--
--static int scmi_remove(struct platform_device *pdev)
--{
--	int ret = 0;
--	struct scmi_info *info = platform_get_drvdata(pdev);
--	struct idr *idr = &info->tx_idr;
--
--	mutex_lock(&scmi_list_mutex);
--	if (info->users)
--		ret = -EBUSY;
--	else
--		list_del(&info->node);
--	mutex_unlock(&scmi_list_mutex);
--
--	if (ret)
--		return ret;
--
--	/* Safe to free channels since no more users */
--	ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
--	idr_destroy(&info->tx_idr);
--
--	return ret;
--}
--
- static inline int
- scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
- {
-@@ -856,6 +804,58 @@ static int scmi_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int scmi_mbox_free_channel(int id, void *p, void *data)
-+{
-+	struct scmi_chan_info *cinfo = p;
-+	struct idr *idr = data;
-+
-+	if (!IS_ERR_OR_NULL(cinfo->chan)) {
-+		mbox_free_channel(cinfo->chan);
-+		cinfo->chan = NULL;
-+	}
-+
-+	idr_remove(idr, id);
-+
-+	return 0;
-+}
-+
-+static int scmi_remove(struct platform_device *pdev)
-+{
-+	int ret = 0;
-+	struct scmi_info *info = platform_get_drvdata(pdev);
-+	struct idr *idr = &info->tx_idr;
-+
-+	mutex_lock(&scmi_list_mutex);
-+	if (info->users)
-+		ret = -EBUSY;
-+	else
-+		list_del(&info->node);
-+	mutex_unlock(&scmi_list_mutex);
-+
-+	if (ret)
-+		return ret;
-+
-+	/* Safe to free channels since no more users */
-+	ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
-+	idr_destroy(&info->tx_idr);
-+
-+	return ret;
-+}
-+
-+static const struct scmi_desc scmi_generic_desc = {
-+	.max_rx_timeout_ms = 30,	/* We may increase this if required */
-+	.max_msg = 20,		/* Limited by MBOX_TX_QUEUE_LEN */
-+	.max_msg_size = 128,
-+};
-+
-+/* Each compatible listed below must have descriptor associated with it */
-+static const struct of_device_id scmi_of_match[] = {
-+	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
-+	{ /* Sentinel */ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, scmi_of_match);
-+
- static struct platform_driver scmi_driver = {
- 	.driver = {
- 		   .name = "arm-scmi",
+ 	case RDMA_CM_EVENT_TIMEWAIT_EXIT:
 -- 
-2.17.1
+2.20.1
+
+
 
