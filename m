@@ -2,150 +2,124 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC95DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2559C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863A320693
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:21:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8s8BDKl"
+	by mail.kernel.org (Postfix) with ESMTP id B5AC820693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733150AbfGHQV3 (ORCPT
+        id S2387996AbfGHQVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:21:29 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46960 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730848AbfGHQVZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:21:25 -0400
-Received: by mail-io1-f65.google.com with SMTP id i10so36501177iol.13;
-        Mon, 08 Jul 2019 09:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:message-id:in-reply-to:references:subject:mime-version
-         :content-transfer-encoding;
-        bh=SmN5EFIMBB9EcBNdZWlkN540cp3oExz4pb0qA9L1qq0=;
-        b=C8s8BDKlkCJFkRR5YpKL5tKi67LYuNipSHTx3qPwA1l1k/ZvVkNibT8UrpI3XNyNo/
-         CluZ44BMK/ziV5W7KzBNH0NXzmoX2Jq6jeIyEm4qaJAbwonTJu9c0JLcDxIOyeqqLKAj
-         mACxKh062/YsxNYiByf54n9NWqIxfJGoCu2X+yE3DqP4XOmSEbCnqADGtU/ydWJK+naG
-         4CNjv13KimDZJwuQ9Q4cNsNaQHJwuximAIrITUj0tZQRk4RV7Vc9/OY4F6nZ4zDre93Y
-         vjhd/EoSWSIv2CBNs7UuMO1Ueo7nEe3xUJyu3RisUWi92iFMOXGeGgC4SP9PXFXUfBDe
-         sqdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
-         :subject:mime-version:content-transfer-encoding;
-        bh=SmN5EFIMBB9EcBNdZWlkN540cp3oExz4pb0qA9L1qq0=;
-        b=gXamSzP3aN7DT2nSKOzN1nx8Qs5XWv83vMxXh8i26LI6641kQo5+ycg37oD7mSSIkl
-         wM60akWDNOQQib4GQazh4KNsRk+41nMA7mpmfFBayQqaNam1nia+ua3sK5oJKyT0qLAu
-         u+NEBYE4ZiddUYgOmD7xoF8NxTybFMhroq0LSXCLDzyiEf4excif1ddwZtmY18nU0tv1
-         qhfd0o+TExCzW2cZnTIrX/oHHDv1pvqHyZpyeCmv3x37UqeG238+0z6LEddAlVMjHKV3
-         d4qtFW97CcxvdrF6FJD2oP8lh7vl0YKyg6bQVRbWaiEDp1nb2v2HTozGttg+sluTZ695
-         ciNQ==
-X-Gm-Message-State: APjAAAVmWeB62vCExQJQ/QKvmJ/4bt3hZYf52+HY7YEXOQQ1tyJuUSea
-        5b7yJ2xttAfNCcvYhhjD+kQ=
-X-Google-Smtp-Source: APXvYqzxYEml55UqQKfbWptdyh8ixilXO5dGlZCem+0W98DhejyZCoJ3/cmypwI1xnh3L3ZN/AdIyQ==
-X-Received: by 2002:a6b:7b07:: with SMTP id l7mr15646304iop.225.1562602884883;
-        Mon, 08 Jul 2019 09:21:24 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id d25sm16525839iom.52.2019.07.08.09.21.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:21:24 -0700 (PDT)
-Date:   Mon, 08 Jul 2019 09:21:17 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>,
-        bpf@vger.kernel.org, ebiggers@kernel.org, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Message-ID: <5d236d7dc1db6_75f52af7c83505bcc3@john-XPS-13-9370.notmuch>
-In-Reply-To: <0000000000007eb42d058c9836ac@google.com>
-References: <5d199ad457036_1dd62b219ced25b86e@john-XPS-13-9370.notmuch>
- <0000000000007eb42d058c9836ac@google.com>
-Subject: Re: WARNING in mark_lock
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+        Mon, 8 Jul 2019 12:21:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:53294 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730848AbfGHQVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:21:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23496360;
+        Mon,  8 Jul 2019 09:21:32 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CF6A3F246;
+        Mon,  8 Jul 2019 09:21:31 -0700 (PDT)
+Subject: Re: [PATCH 5/6] firmware: arm_scmi: Use the term 'message' instead of
+ 'command'
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Peng Fan <peng.fan@nxp.com>, linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+References: <20190708154358.16227-1-sudeep.holla@arm.com>
+ <20190708154358.16227-6-sudeep.holla@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <a04dfc00-9c7a-8321-859d-7a12e7b84ea6@arm.com>
+Date:   Mon, 8 Jul 2019 17:21:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190708154358.16227-6-sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot wrote:
-> Hello,
+On 08/07/2019 16:43, Sudeep Holla wrote:
+> In preparation to adding support for other two types of messages that
+> SCMI specification mentions, let's replace the term 'command' with the
+> correct term 'message'.
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> KASAN: use-after-free Read in class_equal
+> As per the specification the messages are of 3 types:
+> commands(synchronous or asynchronous), delayed responses and notifications.
 > 
-> ==================================================================
-> BUG: KASAN: use-after-free in class_equal+0x40/0x50  
-> kernel/locking/lockdep.c:1527
-> Read of size 8 at addr ffff88808a268ba0 by task syz-executor.1/9270
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/arm_scmi/common.h | 10 +++++-----
+>  drivers/firmware/arm_scmi/driver.c |  6 +++---
+>  2 files changed, 8 insertions(+), 8 deletions(-)
 > 
-> CPU: 0 PID: 9270 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Call Trace:
-> 
-> Allocated by task 2647419968:
-> BUG: unable to handle page fault for address: ffffffff8c00b020
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 8a70067 P4D 8a70067 PUD 8a71063 PMD 0
-> Thread overran stack, or stack corrupted
-> Oops: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 9270 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> RIP: 0010:stack_depot_fetch+0x10/0x30 lib/stackdepot.c:203
-> Code: e9 7b fd ff ff 4c 89 ff e8 8d b4 62 fe e9 e6 fd ff ff 90 90 90 90 90  
-> 90 90 90 89 f8 c1 ef 11 25 ff ff 1f 00 81 e7 f0 3f 00 00 <48> 03 3c c5 20  
-> 6c 04 8b 48 8d 47 18 48 89 06 8b 47 0c c3 0f 1f 00
-> RSP: 0018:ffff88808a2688e8 EFLAGS: 00010006
-> RAX: 00000000001f8880 RBX: ffff88808a269304 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffff88808a2688f0 RDI: 0000000000003ff0
-> RBP: ffff88808a268908 R08: 0000000000000020 R09: ffffed1015d044fa
-> R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffea0002289a00
-> R13: ffff88808a268ba0 R14: ffff8880aa58ec40 R15: ffff88808a269300
-> FS:  00005555570ba940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffff8c00b020 CR3: 000000008dd00000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
-> Modules linked in:
-> CR2: ffffffff8c00b020
-> ---[ end trace 4acfe4b59fbc9cdb ]---
-> RIP: 0010:stack_depot_fetch+0x10/0x30 lib/stackdepot.c:203
-> Code: e9 7b fd ff ff 4c 89 ff e8 8d b4 62 fe e9 e6 fd ff ff 90 90 90 90 90  
-> 90 90 90 89 f8 c1 ef 11 25 ff ff 1f 00 81 e7 f0 3f 00 00 <48> 03 3c c5 20  
-> 6c 04 8b 48 8d 47 18 48 89 06 8b 47 0c c3 0f 1f 00
-> RSP: 0018:ffff88808a2688e8 EFLAGS: 00010006
-> RAX: 00000000001f8880 RBX: ffff88808a269304 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffff88808a2688f0 RDI: 0000000000003ff0
-> RBP: ffff88808a268908 R08: 0000000000000020 R09: ffffed1015d044fa
-> R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffea0002289a00
-> R13: ffff88808a268ba0 R14: ffff8880aa58ec40 R15: ffff88808a269300
-> FS:  00005555570ba940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffff8c00b020 CR3: 000000008dd00000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
-> Tested on:
-> 
-> commit:         0b58d013 bpf: tls, implement unhash to avoid transition ou..
-> git tree:       git://github.com/cilium/linux ktls-unhash
-> console output: https://syzkaller.appspot.com/x/log.txt?x=153368a3a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2cc918d28ebd06b4
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+> index 44fd4f9404a9..4349d836b392 100644
+> --- a/drivers/firmware/arm_scmi/common.h
+> +++ b/drivers/firmware/arm_scmi/common.h
+> @@ -48,11 +48,11 @@ struct scmi_msg_resp_prot_version {
+>  /**
+>   * struct scmi_msg_hdr - Message(Tx/Rx) header
+>   *
+> - * @id: The identifier of the command being sent
+> - * @protocol_id: The identifier of the protocol used to send @id command
+> - * @seq: The token to identify the message. when a message/command returns,
+> - *	the platform returns the whole message header unmodified including
+> - *	the token
+> + * @id: The identifier of the message being sent
+> + * @protocol_id: The identifier of the protocol used to send @id message
+> + * @seq: The token to identify the message. when a message returns, the]
+
+Stray ']' at the end of the line.
+
+Steve
+
+> + *	platform returns the whole message header unmodified including the
+> + *	token
+>   * @status: Status of the transfer once it's complete
+>   * @poll_completion: Indicate if the transfer needs to be polled for
+>   *	completion or interrupt mode is used
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index cac255c418b2..69bf85fea967 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -182,7 +182,7 @@ static inline int scmi_to_linux_errno(int errno)
+>  static inline void scmi_dump_header_dbg(struct device *dev,
+>  					struct scmi_msg_hdr *hdr)
+>  {
+> -	dev_dbg(dev, "Command ID: %x Sequence ID: %x Protocol: %x\n",
+> +	dev_dbg(dev, "Message ID: %x Sequence ID: %x Protocol: %x\n",
+>  		hdr->id, hdr->seq, hdr->protocol_id);
+>  }
+>  
+> @@ -241,7 +241,7 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
+>   * @hdr: pointer to header containing all the information on message id,
+>   *	protocol id and sequence id.
+>   *
+> - * Return: 32-bit packed command header to be sent to the platform.
+> + * Return: 32-bit packed message header to be sent to the platform.
+>   */
+>  static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
+>  {
+> @@ -280,7 +280,7 @@ static void scmi_tx_prepare(struct mbox_client *cl, void *m)
+>   *
+>   * @handle: Pointer to SCMI entity handle
+>   *
+> - * Helper function which is used by various command functions that are
+> + * Helper function which is used by various message functions that are
+>   * exposed to clients of this driver for allocating a message traffic event.
+>   *
+>   * This function can sleep depending on pending requests already in the system
 > 
 
-#syz test: git://github.com/cilium/linux fix-unhash
