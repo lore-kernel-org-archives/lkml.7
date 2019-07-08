@@ -2,92 +2,113 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28879C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334F9C606C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E8120665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AckAuQqa"
+	by mail.kernel.org (Postfix) with ESMTP id 0C94620844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562597407;
+	bh=htTulAks4yV7RBewepxmyXBolpOU1APsLx6lCZDTKvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p4iIQ8pAafgSUGoSaxyL2mMvaezFHNyZ03DQkgDGSQo+vL+pceRhyKJm8NWUvr8Ho
+	 rgJMhZAyLv1zHpD4NyUWZtdrklR4ySQNHGuQM/7rkUHblhgQg4bQ4epk0nVWR71o3q
+	 3ua8wiLESN4OhiVy/8Q5RzTw9a/pLRwGV85QLam4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731868AbfGHOsp (ORCPT
+        id S1731932AbfGHOuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:48:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34840 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728499AbfGHOsp (ORCPT
+        Mon, 8 Jul 2019 10:50:06 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41781 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfGHOuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:48:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cANsFjm+JWIcsDzpCtNJFjF3hQ3nZakimH4VaLTVSxY=; b=AckAuQqa73H6/hQ1nzW6pLF1S
-        O33B3m8zxunnN/ELUf0QDNNrY20PtnBQvHvkueJNBK3f1w2zTqEbe4Q18NaKGXfLwfWOotNaDnWiS
-        Y3aXcbkuqjFkCFWW84s44hDJ5tE7fpIzqv3iAbYZYgNe6Ie2H/YgMlSyFnql7lufAlSy8Wiv18QS0
-        TGnNaJo2h8x+HA+XBW6guVuXK9q3KG4O7a7z8axzddzN+5srKaJWUZ7MrpmMX4d3MOgUvDNrbirBZ
-        oWXmZyqADUOBXWVyTNwZ1HURRQT2nVZDgIwvC/5KDvTeY/cWMOVCnCUlCkxtlGprWV0EaJKQ1uOZZ
-        0qPKVHRXg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkUwT-0001tT-3s; Mon, 08 Jul 2019 14:48:33 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6313520B31C22; Mon,  8 Jul 2019 16:48:31 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 16:48:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
-        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
-        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
-Subject: Re: [PATCH v7 08/12] KVM/x86/vPMU: Add APIs to support host
- save/restore the guest lbr stack
-Message-ID: <20190708144831.GN3402@hirez.programming.kicks-ass.net>
-References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
- <1562548999-37095-9-git-send-email-wei.w.wang@intel.com>
+        Mon, 8 Jul 2019 10:50:05 -0400
+Received: by mail-qk1-f196.google.com with SMTP id v22so13487452qkj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:50:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m4lJKeNqPF6PUhJfVn2/MLy0a1U7ORLGNDoWGGROjW8=;
+        b=C7A5mLSiTfjgbzYTC3X6pmXN7G3Wa0TtLyNnOcY+pfGI7T0WZc5M/R2HsIgD+YdQsK
+         eBhyIx56QXOIenHYBSVIn5kiePzp9OrF6DSOXDoHLKZ9sDktvhuqOddkDWRXMPAkDfqf
+         3hxWPyzc/G2gDvbkL8XjGo2BSYPAipm/Dxh8RqebqTomEybidCUKAkHXKvSsH5kDGdb6
+         IFbnAwzFkOzkAcjF/gHCBS+BAe8M1QmocAucp0bEzqcyDxXWVcDX2Tza1HfNAgIdySM5
+         hq8wZeLaRg7vEAB44XJasKPie3agTxDLA/8Tu8W79Z/PRFx+ZuagUn4RnRioiVR3jRa2
+         itpQ==
+X-Gm-Message-State: APjAAAWL257FaERG0nIDvS1DWk1zzNlD3Gyn0zIFxdQ0fHlemh8+N4Z+
+        RRF1ohxQle6tEnGRAMu6mIrKiyFSTFM=
+X-Google-Smtp-Source: APXvYqzcydk75TJwyLHh1v1P7pYsUDMdBgKhP7Ny0LseHJK3GqpASJIMfeiWla1A76rTrchhM+b/iw==
+X-Received: by 2002:a37:2c46:: with SMTP id s67mr15092125qkh.396.1562597404820;
+        Mon, 08 Jul 2019 07:50:04 -0700 (PDT)
+Received: from dennisz-mbp ([2620:10d:c091:500::3:8b5a])
+        by smtp.gmail.com with ESMTPSA id a6sm6872044qkn.59.2019.07.08.07.50.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 07:50:03 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 10:50:02 -0400
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Dennis Zhou (Facebook)" <dennisszhou@gmail.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] percpu: fix pcpu_page_first_chunk return code handling
+Message-ID: <20190708145002.GA17098@dennisz-mbp>
+References: <20190708125217.3757973-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1562548999-37095-9-git-send-email-wei.w.wang@intel.com>
+In-Reply-To: <20190708125217.3757973-1-arnd@arndb.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 09:23:15AM +0800, Wei Wang wrote:
-> From: Like Xu <like.xu@intel.com>
+On Mon, Jul 08, 2019 at 02:52:09PM +0200, Arnd Bergmann wrote:
+> gcc complains that pcpu_page_first_chunk() might return an uninitialized
+> error code when the loop is never entered:
 > 
-> This patch adds support to enable/disable the host side save/restore
-
-This patch should be disqualified on Changelog alone...
-
-  Documentation/process/submitting-patches.rst:instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
-
-> for the guest lbr stack on vCPU switching. To enable that, the host
-> creates a perf event for the vCPU, and the event attributes are set
-> to the user callstack mode lbr so that all the conditions are meet in
-> the host perf subsystem to save the lbr stack on task switching.
+> mm/percpu.c: In function 'pcpu_page_first_chunk':
+> mm/percpu.c:2929:9: error: 'rc' may be used uninitialized in this function [-Werror=maybe-uninitialized]
 > 
-> The host side lbr perf event are created only for the purpose of saving
-> and restoring the lbr stack. There is no need to enable the lbr
-> functionality for this perf event, because the feature is essentially
-> used in the vCPU. So perf_event_create is invoked with need_counter=false
-> to get no counter assigned for the perf event.
+> Make it return zero like before the cleanup.
 > 
-> The vcpu_lbr field is added to cpuc, to indicate if the lbr perf event is
-> used by the vCPU only for context switching. When the perf subsystem
-> handles this event (e.g. lbr enable or read lbr stack on PMI) and finds
-> it's non-zero, it simply returns.
+> Fixes: a13e0ad81216 ("percpu: Make pcpu_setup_first_chunk() void function")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  mm/percpu.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/mm/percpu.c b/mm/percpu.c
+> index 5a918a4b1da0..5b65f753c575 100644
+> --- a/mm/percpu.c
+> +++ b/mm/percpu.c
+> @@ -2917,6 +2917,7 @@ int __init pcpu_page_first_chunk(size_t reserved_size,
+>  		ai->reserved_size, ai->dyn_size);
+>  
+>  	pcpu_setup_first_chunk(ai, vm.addr);
+> +	rc = 0;
+>  	goto out_free_ar;
+>  
+>  enomem:
+> -- 
+> 2.20.0
+> 
 
-*WHY* does the host need to save/restore? Why not make VMENTER/VMEXIT do
-this?
+Hi Arnd,
 
-Many of these patches don't explain why things are done; that's a
-problem.
+I got the report for the kbuild bot. I have the fix in my tree already.
+
+Thanks,
+Dennis
