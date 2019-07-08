@@ -2,155 +2,132 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DBFC48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15991C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51DA20861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F7920861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NZzlhmcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbfGHHXN convert rfc822-to-8bit (ORCPT
+        id S1729424AbfGHHYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:23:13 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:37073 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfGHHXN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:23:13 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x687N1D1015818, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x687N1D1015818
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 8 Jul 2019 15:23:01 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Mon, 8 Jul
- 2019 15:23:01 +0800
-From:   Tony Chuang <yhchuang@realtek.com>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] rtw88/pci: Rearrange the memory usage for skb in RX ISR
-Thread-Topic: [PATCH] rtw88/pci: Rearrange the memory usage for skb in RX ISR
-Thread-Index: AQHVNVeEOhZgR6M53kuE5XrXitIVDqbAR+xA
-Date:   Mon, 8 Jul 2019 07:23:00 +0000
-Message-ID: <F7CD281DE3E379468C6D07993EA72F84D1861A6D@RTITMBSVM04.realtek.com.tw>
-References: <20190708063252.4756-1-jian-hong@endlessm.com>
-In-Reply-To: <20190708063252.4756-1-jian-hong@endlessm.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.68.183]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 8 Jul 2019 03:24:21 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34307 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728949AbfGHHYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 03:24:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hxlk2Khnz9sNg;
+        Mon,  8 Jul 2019 17:24:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562570658;
+        bh=s8SgSFIM00NpB+69X3WJ5ZEiPfGeXTcmA8V1PK2fc94=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NZzlhmcuUONHM+3gJi6KA6cVGv3qiJIc6lvdd4l0uG3xkUfFkcISZHuH6sxhveZpw
+         8F6mzyqdHYGFW4OsorVI4LMc6enDUsCqgD1drOCrsFcaL9K+R5AgQ6E8qJ3ID+qG2G
+         5ArPOfI/LePpVOyaCgNgSFIzaKC/80x8+SfWDM/wVoLNQRty2oaLZ+GsrMdiqtjx3J
+         6v1X8ZZ0R9fwwGpfQFiMcu+UY7jekHcAVsOlmT5bJggLQfaer2u6ss7ceEmObmGQtv
+         MkmzBbW+3L4zH+5zH0iSI2Sm4sSHegxSjO6GX0uteWJ2bZB1mPktNHvTlSa+M88wSZ
+         G/7++dAXA20Ww==
+Date:   Mon, 8 Jul 2019 17:24:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoffer Dall <cdall@cs.columbia.edu>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: linux-next: manual merge of the kvm-arm tree with the arm64 tree
+Message-ID: <20190708172417.1d3a34fa@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/lYTARTvOyB=0uSljEKI1slV"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH] rtw88/pci: Rearrange the memory usage for skb in RX ISR
+--Sig_/lYTARTvOyB=0uSljEKI1slV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-nit, "rtw88: pci:" would be better.
+Hi all,
 
-> 
-> 
-> When skb allocation fails and the "rx routine starvation" is hit, the
-> function returns immediately without updating the RX ring. At this
-> point, the RX ring may continue referencing an old skb which was already
-> handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
-> bad things happen.
-> 
-> This patch allocates a new skb first in RX ISR. If we don't have memory
-> available, we discard the current frame, allowing the existing skb to be
-> reused in the ring. Otherwise, we simplify the code flow and just hand
-> over the RX-populated skb over to mac80211.
-> 
-> In addition, to fixing the kernel crash, the RX routine should now
-> generally behave better under low memory conditions.
-> 
-> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204053
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> Reviewed-by: Daniel Drake <drake@endlessm.com>
-> Cc: <stable@vger.kernel.org>
-> ---
->  drivers/net/wireless/realtek/rtw88/pci.c | 28 +++++++++++-------------
->  1 file changed, 13 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-> b/drivers/net/wireless/realtek/rtw88/pci.c
-> index cfe05ba7280d..1bfc99ae6b84 100644
-> --- a/drivers/net/wireless/realtek/rtw88/pci.c
-> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
-> @@ -786,6 +786,15 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev,
-> struct rtw_pci *rtwpci,
->  		rx_desc = skb->data;
->  		chip->ops->query_rx_desc(rtwdev, rx_desc, &pkt_stat, &rx_status);
-> 
-> +		/* discard current skb if the new skb cannot be allocated as a
-> +		 * new one in rx ring later
-> +		 * */
+Today's linux-next merge of the kvm-arm tree got a conflict in:
 
-nit, comment indentation.
+  arch/arm64/include/asm/cpufeature.h
 
-> +		new = dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
-> +		if (WARN(!new, "rx routine starvation\n")) {
-> +			new = skb;
-> +			goto next_rp;
-> +		}
-> +
->  		/* offset from rx_desc to payload */
->  		pkt_offset = pkt_desc_sz + pkt_stat.drv_info_sz +
->  			     pkt_stat.shift;
-> @@ -803,25 +812,14 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev,
-> struct rtw_pci *rtwpci,
->  			skb_put(skb, pkt_stat.pkt_len);
->  			skb_reserve(skb, pkt_offset);
-> 
-> -			/* alloc a smaller skb to mac80211 */
-> -			new = dev_alloc_skb(pkt_stat.pkt_len);
-> -			if (!new) {
-> -				new = skb;
-> -			} else {
-> -				skb_put_data(new, skb->data, skb->len);
-> -				dev_kfree_skb_any(skb);
-> -			}
+between commit:
 
-I am not sure if it's fine to deliver every huge SKB to mac80211.
-Because it will then be delivered to TCP/IP stack.
-Hence I think either it should be tested to know if the performance
-would be impacted or find out a more efficient way to send
-smaller SKB to mac80211 stack.
+  48ce8f80f590 ("arm64: irqflags: Introduce explicit debugging for IRQ prio=
+rities")
 
->  			/* TODO: merge into rx.c */
->  			rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
-> -			memcpy(new->cb, &rx_status, sizeof(rx_status));
-> -			ieee80211_rx_irqsafe(rtwdev->hw, new);
-> +			memcpy(skb->cb, &rx_status, sizeof(rx_status));
-> +			ieee80211_rx_irqsafe(rtwdev->hw, skb);
->  		}
-> 
-> -		/* skb delivered to mac80211, alloc a new one in rx ring */
-> -		new = dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
-> -		if (WARN(!new, "rx routine starvation\n"))
-> -			return;
-> -
-> +next_rp:
-> +		/* skb delivered to mac80211, attach the new one into rx ring */
->  		ring->buf[cur_rp] = new;
->  		rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc_sz);
-> 
+from the arm64 tree and commit:
 
---
+  c118bbb52743 ("arm64: KVM: Propagate full Spectre v2 workaround state to =
+KVM guests")
 
-Yan-Hsuan
+from the kvm-arm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/include/asm/cpufeature.h
+index 3d8db50d9ae2,948427f6b3d9..000000000000
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@@ -614,12 -614,12 +614,18 @@@ static inline bool system_uses_irq_prio
+  	       cpus_have_const_cap(ARM64_HAS_IRQ_PRIO_MASKING);
+  }
+ =20
+ +static inline bool system_has_prio_mask_debugging(void)
+ +{
+ +	return IS_ENABLED(CONFIG_ARM64_DEBUG_PRIORITY_MASKING) &&
+ +	       system_uses_irq_prio_masking();
+ +}
+ +
++ #define ARM64_BP_HARDEN_UNKNOWN		-1
++ #define ARM64_BP_HARDEN_WA_NEEDED	0
++ #define ARM64_BP_HARDEN_NOT_REQUIRED	1
++=20
++ int get_spectre_v2_workaround_state(void);
++=20
+  #define ARM64_SSBD_UNKNOWN		-1
+  #define ARM64_SSBD_FORCE_DISABLE	0
+  #define ARM64_SSBD_KERNEL		1
+
+--Sig_/lYTARTvOyB=0uSljEKI1slV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0i76EACgkQAVBC80lX
+0GwuyAf/X4XDfpURgS54pYJSE7ivCua9i8r93LDUS8oxViAWT9xvkWiiCAKCV0m3
+tBWrnKpPfvmHgEXR0Nl/CTdn3otAeXns5JSwVADq6WGdp1VNnivThYkSgx8Qo2HQ
+QwEFBr0xJM/4d8jUcFMVzAa/AmoPk/rnR9TSWuch6/kr0he3qZqXzsl4Iupt8UOH
+0dVznUFxXK+7oJhNreYFN2eFeydD6MPOaG8vuDStnlsLr32SUB0KGcsV8/gVAc8v
+/5uKS3XK4fQ/sb1APAwhzCbC+9MK69w3kw5028oRqh2CaHdSiQDIpEKDgdfOBnnY
+SGAdPVA/rgK5N6eaNJrAbMFYyUYdXQ==
+=fjl4
+-----END PGP SIGNATURE-----
+
+--Sig_/lYTARTvOyB=0uSljEKI1slV--
