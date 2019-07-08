@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B236C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D79EC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F302166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8D8214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599325;
-	bh=KawLcqAK8Jtlnzz5LbCaBUmEuHDVz6zoCaHEviFevVk=;
+	s=default; t=1562599329;
+	bh=MrBvBHU4mwEA3WSIv/aF/ziLSZLflftoJo/8fMLDxEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=irEADZOAwwTCXDEfQDJ2bwK71uNrhPHTLbSV9xHXo9b2EbsvUTNXWqgeuRM/cy2By
-	 JrkD1P3t2BqKm9kjXTRnttCuc1q6AKWqwR2xMc+nCndQreKMRFETjt/JDXJB3F+2I7
-	 pv8iM2ppEdEstdk+24HynzlgP3NG/JxbsvjTuB5I=
+	b=UnbL+N7fQQz+e3exvnq6qKIcfnTRl2jV+z6L+wsW/v3ly/6s/lSBg410xccMpEhlv
+	 RZKA01h5WhwFfgrLm/MMGT2/Bfh/da663joGCCT69RBQYUEkQbBSDyoVF9znxFLDI+
+	 X7V0dWHMCL3mSdybNz8mAUg4QdSinRStn1lA+NPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387882AbfGHPWE (ORCPT
+        id S2387890AbfGHPWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48214 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730971AbfGHPWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:01 -0400
+        id S1730971AbfGHPWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01E8521734;
-        Mon,  8 Jul 2019 15:22:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEE2921743;
+        Mon,  8 Jul 2019 15:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599321;
-        bh=KawLcqAK8Jtlnzz5LbCaBUmEuHDVz6zoCaHEviFevVk=;
+        s=default; t=1562599324;
+        bh=MrBvBHU4mwEA3WSIv/aF/ziLSZLflftoJo/8fMLDxEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9loN213sl9t7WNp4KeyDiWVjfcZ02yJpm6a0hnPjTCpek6uV0XVMk/P7TnKN1f2I
-         rHC1HzBWyx96lgisDgf36AzOr+OOWaR1zFNJKX0G578pvCHt368+GCBTUEuIa2BoeP
-         RGY0vpF6ReqUh9X7HnNZRHQKvS6O2QMR8hyH5X7M=
+        b=bD9mIY6DY1K8kGMJgbVKVMN8c3q8ZRpQyh+3cK53WnsKqAF+8lqArSJvnjjQLY9zY
+         dCvPBb2mfh+Da3PqBUCIBpEDgVCjR/ibKMxwymTLmDBW6itH4AXpI3d2dDwhqnpaIj
+         g00ikhG5c6zHWVINWUgYPe7kZMhfXsn02aQOKtdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Ganesan Ramalingam <ganesanr@broadcom.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jayachandran C <jnair@caviumnetworks.com>,
-        John Crispin <john@phrozen.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/102] MIPS: netlogic: xlr: Remove erroneous check in nlm_fmn_send()
-Date:   Mon,  8 Jul 2019 17:13:10 +0200
-Message-Id: <20190708150530.442187589@linuxfoundation.org>
+Subject: [PATCH 4.9 078/102] mfd: omap-usb-tll: Fix register offsets
+Date:   Mon,  8 Jul 2019 17:13:11 +0200
+Message-Id: <20190708150530.489167862@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -64,53 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 02eec6c9fc0cb13169cc97a6139771768791f92b ]
+[ Upstream commit 993dc737c0996c163325961fb62a0ed9fd0308b4 ]
 
-In nlm_fmn_send() we have a loop which attempts to send a message
-multiple times in order to handle the transient failure condition of a
-lack of available credit. When examining the status register to detect
-the failure we check for a condition that can never be true, which falls
-foul of gcc 8's -Wtautological-compare:
+gcc-8 notices that the register number calculation is wrong
+when the offset is an 'u8' but the number is larger than 256:
 
-  In file included from arch/mips/netlogic/common/irq.c:65:
-  ./arch/mips/include/asm/netlogic/xlr/fmn.h: In function 'nlm_fmn_send':
-  ./arch/mips/include/asm/netlogic/xlr/fmn.h:304:22: error: bitwise
-    comparison always evaluates to false [-Werror=tautological-compare]
-     if ((status & 0x2) == 1)
-                        ^~
+drivers/mfd/omap-usb-tll.c: In function 'omap_tll_init':
+drivers/mfd/omap-usb-tll.c:90:46: error: overflow in conversion from 'int' to 'u8 {aka unsigned char}' chages value from 'i * 256 + 2070' to '22' [-Werror=overflow]
 
-If the path taken if this condition were true all we do is print a
-message to the kernel console. Since failures seem somewhat expected
-here (making the console message questionable anyway) and the condition
-has clearly never evaluated true we simply remove it, rather than
-attempting to fix it to check status correctly.
+This addresses it by always using a 32-bit offset number for
+the register. This is apparently an old problem that previous
+compilers did not find.
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20174/
-Cc: Ganesan Ramalingam <ganesanr@broadcom.com>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Jayachandran C <jnair@caviumnetworks.com>
-Cc: John Crispin <john@phrozen.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
+Fixes: 16fa3dc75c22 ("mfd: omap-usb-tll: HOST TLL platform driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/netlogic/xlr/fmn.h | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/mfd/omap-usb-tll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/netlogic/xlr/fmn.h b/arch/mips/include/asm/netlogic/xlr/fmn.h
-index 5604db3d1836..d79c68fa78d9 100644
---- a/arch/mips/include/asm/netlogic/xlr/fmn.h
-+++ b/arch/mips/include/asm/netlogic/xlr/fmn.h
-@@ -301,8 +301,6 @@ static inline int nlm_fmn_send(unsigned int size, unsigned int code,
- 	for (i = 0; i < 8; i++) {
- 		nlm_msgsnd(dest);
- 		status = nlm_read_c2_status0();
--		if ((status & 0x2) == 1)
--			pr_info("Send pending fail!\n");
- 		if ((status & 0x4) == 0)
- 			return 0;
- 	}
+diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
+index 9d167c9af2c6..e153276ed954 100644
+--- a/drivers/mfd/omap-usb-tll.c
++++ b/drivers/mfd/omap-usb-tll.c
+@@ -131,12 +131,12 @@ static inline u32 usbtll_read(void __iomem *base, u32 reg)
+ 	return readl_relaxed(base + reg);
+ }
+ 
+-static inline void usbtll_writeb(void __iomem *base, u8 reg, u8 val)
++static inline void usbtll_writeb(void __iomem *base, u32 reg, u8 val)
+ {
+ 	writeb_relaxed(val, base + reg);
+ }
+ 
+-static inline u8 usbtll_readb(void __iomem *base, u8 reg)
++static inline u8 usbtll_readb(void __iomem *base, u32 reg)
+ {
+ 	return readb_relaxed(base + reg);
+ }
 -- 
 2.20.1
 
