@@ -2,88 +2,86 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E987FC606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22303C606CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6050216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="H/Qz6Zl4"
+	by mail.kernel.org (Postfix) with ESMTP id EFE2A217D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390747AbfGHTJt (ORCPT
+        id S2390886AbfGHTJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:09:49 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45260 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390590AbfGHTJr (ORCPT
+        Mon, 8 Jul 2019 15:09:58 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54421 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731402AbfGHTJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:09:47 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so17028063lje.12
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:09:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eng.ucsd.edu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dA2xhiNGZ0tuWmkiPtLUTjcqW1BzzQUxradpm/yDvWk=;
-        b=H/Qz6Zl4qWwcws/K4ttAjHFj7ySNEcnvAfua+hF3xC61yiKJu8+PHKTL9/3Q79Ov0F
-         04UJsxxgK8HOgQFcL+Y995nNvXIOkKe975rJKD3bDttCNpDbpKWx3P/LaqlIuugcGT8q
-         2ZyIADyyETAdZHQUyluRBkVRjZTX98gebReZo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dA2xhiNGZ0tuWmkiPtLUTjcqW1BzzQUxradpm/yDvWk=;
-        b=hJNaRHzhGF5btn42vYSLqizMqGfzQ4p2LGnb9Tcjr4o2lCn8UgfBfFKB4PwSTjmqA1
-         d64Rfh7FscE+Kaaqk5c5wK7BkeeZm9fSHwzDls6nMHy1BqpqE0bO9BLMzLnmHElOvAr3
-         KykRROrpaHd3dbn+gewbi7Y+145A0L/modnbqztziNx58GBa/ehyiSbmLRgHpongJMFy
-         oJqu3cMvW+0sRY3JfVEYMJvPJ+8w0ppsetUNbMZ8buKPXVL8uekI3Dic3G+tqTwjWYh0
-         HNuj4GyjocCrFOR/sBkEUaHWBCh+3kvX9E+TN7c4Q19Mhaq0BzF4Gg8XTdITRoD6gI8M
-         g+Zw==
-X-Gm-Message-State: APjAAAURrJEKT3LFZS4FQhy3aqTVt4qUK+jqdcdLrEBC7LcSNF/Wl4XX
-        8pC9wQTpOnDwO2cx6gMd8Z+Pmw==
-X-Google-Smtp-Source: APXvYqwcb8orHaqFemykl0AZtk0WZ0DDmrGen5cKEPKeIzWzqPpyTZWQsDBi7rDXGKW6XAxiXf08jg==
-X-Received: by 2002:a2e:858b:: with SMTP id b11mr11221294lji.159.1562612985927;
-        Mon, 08 Jul 2019 12:09:45 -0700 (PDT)
-Received: from luke-XPS-13 (77-255-206-190.adsl.inetia.pl. [77.255.206.190])
-        by smtp.gmail.com with ESMTPSA id k4sm3834016ljg.59.2019.07.08.12.09.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 12:09:45 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 12:09:42 -0700
-From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/56] 4.14.133-stable review
-Message-ID: <20190708190942.GA4652@luke-XPS-13>
-References: <20190708150514.376317156@linuxfoundation.org>
+        Mon, 8 Jul 2019 15:09:57 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=bo.liu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TWPWMSM_1562612890;
+Received: from US-160370MP2.local(mailfrom:bo.liu@linux.alibaba.com fp:SMTPD_---0TWPWMSM_1562612890)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 09 Jul 2019 03:08:12 +0800
+Date:   Mon, 8 Jul 2019 12:08:09 -0700
+From:   Liu Bo <bo.liu@linux.alibaba.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] blk-throttle: fix zero wait time for iops throttled group
+Message-ID: <20190708190809.l4fdhigexzdujvuv@US-160370MP2.local>
+Reply-To: bo.liu@linux.alibaba.com
+References: <156259979778.2486.6296077059654653057.stgit@buzz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <156259979778.2486.6296077059654653057.stgit@buzz>
+User-Agent: NeoMutt/20180323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 05:12:52PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.133 release.
-> There are 56 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Jul 08, 2019 at 06:29:57PM +0300, Konstantin Khlebnikov wrote:
+> After commit 991f61fe7e1d ("Blk-throttle: reduce tail io latency when iops
+> limit is enforced") wait time could be zero even if group is throttled and
+> cannot issue requests right now. As a result throtl_select_dispatch() turns
+> into busy-loop under irq-safe queue spinlock.
 > 
-> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
-> Anything received after that time might be too late.
+> Fix is simple: always round up target time to the next throttle slice.
+> 
+> Fixes: 991f61fe7e1d ("Blk-throttle: reduce tail io latency when iops limit is enforced")
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Cc: stable@vger.kernel.org # v4.19+
+> ---
+>  block/blk-throttle.c |    9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+> index 9ea7c0ecad10..8ab6c8153223 100644
+> --- a/block/blk-throttle.c
+> +++ b/block/blk-throttle.c
+> @@ -881,13 +881,10 @@ static bool tg_with_in_iops_limit(struct throtl_grp *tg, struct bio *bio,
+>  	unsigned long jiffy_elapsed, jiffy_wait, jiffy_elapsed_rnd;
+>  	u64 tmp;
+>  
+> -	jiffy_elapsed = jiffy_elapsed_rnd = jiffies - tg->slice_start[rw];
+> -
+> -	/* Slice has just started. Consider one slice interval */
+> -	if (!jiffy_elapsed)
+> -		jiffy_elapsed_rnd = tg->td->throtl_slice;
+> +	jiffy_elapsed = jiffies - tg->slice_start[rw];
+>  
+> -	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg->td->throtl_slice);
+> +	/* Round up to the next throttle slice, wait time must be nonzero */
+> +	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, tg->td->throtl_slice);
+>  
+>  	/*
+>  	 * jiffy_elapsed_rnd should not be a big value as minimum iops can be
 
-Hi Greg, 
+Did you use a tiny iops limit to run into this?
 
-Compiled and booted on my x86_64 system. 
-
-Thanks, 
-- Luke
+thanks,
+-liubo
