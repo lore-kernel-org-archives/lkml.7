@@ -2,103 +2,194 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96812C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B80C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B4E20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F8120844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:08:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="HjwQkZGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfGHIAM (ORCPT
+        id S1728107AbfGHIIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:00:12 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:48920 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfGHIAL (ORCPT
+        Mon, 8 Jul 2019 04:08:02 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:33566 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfGHIIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:00:11 -0400
-Received: from ramsan ([84.194.98.4])
-        by baptiste.telenet-ops.be with bizsmtp
-        id a8092000905gfCL01809mD; Mon, 08 Jul 2019 10:00:09 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hkOZG-0005UX-2Y; Mon, 08 Jul 2019 10:00:10 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hkOZG-0005wb-01; Mon, 08 Jul 2019 10:00:10 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [git pull] m68k updates for 5.3
-Date:   Mon,  8 Jul 2019 10:00:05 +0200
-Message-Id: <20190708080005.22806-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 8 Jul 2019 04:08:01 -0400
+Received: by mail-vk1-f193.google.com with SMTP id y130so2290852vkc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZOR8clYW+rncXTX2zDaB/JyvqUChf4gA7xNaU/YBSOg=;
+        b=HjwQkZGofNQdyJdhdsVJlTLKDMPO0orD/dj2rtP84s0BLxKprbw2Q0dPlIchoaQk1Q
+         G58ky89Ofz0eHD4HVvHRwHNfU9isBY0fIdt3WYIJC3EbFjKwqFFqBa7gqM5w4PUQpZ61
+         oPcCg1OYdgDCOhMgzIBHKZxAgWyNtsYps3kRElLlJb/aUAEV2h1RuR8baolPBQ8XUv7+
+         IZlQ7xdB401Vlqa39KXXlpK63Sa21h5vdTbM8X4/Td9P3eC3oGy/cnHM59B0rP5KX8my
+         CjR7J0rOwlm2GG2eurjO6bedWoMrLyvIEr3Jxm1dBPknhkUI9blYTV10DefQZajdhoA8
+         s+Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZOR8clYW+rncXTX2zDaB/JyvqUChf4gA7xNaU/YBSOg=;
+        b=TTBGZ1HW5w4N+3dyMENgDZsTGuP0e5APVDE/9js9Fr955Cgsr9Md/5/YtT45VrXMTK
+         Vj91lPLT/gXBIM1oB8rHKpDlHg0C5FYJ+7lIApqYRkwnrt6GvLyZf/PYj5ZpxD868rY2
+         FzBCHgz9cvFjUiDYUU1Cq/kB7rtoZvTAu1om0GHfpRWdIJ6XBU0/hLRXP9GbgeD9Ttk8
+         ZsEPHznubS6Kx2AJDMHJqS717wi6A5Ur3Elo5jstuvFBtlZVvw/obW3LCaQT7qovpr6u
+         f79s99uy0dkay6O6DgHUe2eMdeAbU/RtvZkDAUbm5oT+fjTJReBVtHBSzssod8Dv4NnN
+         /rQw==
+X-Gm-Message-State: APjAAAW3Ss7cPkWxmLjnf8i8IfTiRfQVeHJY6rnS3O0MNSMhpQeQobdp
+        CjoopePR8bqV+qYTzlFZX2OI+a3LpvYz8A1mDTWjog==
+X-Google-Smtp-Source: APXvYqxvi+ZGKZk70HDy/wcOVHFF+mkZN0c9aifSzp8ZeR05ajx0gubx1sPnRzwxwHIKL4hXvHNHgKeeEsePgZx9XtI=
+X-Received: by 2002:a1f:acc5:: with SMTP id v188mr4725232vke.16.1562573279892;
+ Mon, 08 Jul 2019 01:07:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190708063252.4756-1-jian-hong@endlessm.com> <F7CD281DE3E379468C6D07993EA72F84D1861A6D@RTITMBSVM04.realtek.com.tw>
+In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D1861A6D@RTITMBSVM04.realtek.com.tw>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Mon, 8 Jul 2019 16:07:23 +0800
+Message-ID: <CAPpJ_eebQtL0y_j98J2T7m9g77A61SVtvD8qnNN42bV0dm4MLA@mail.gmail.com>
+Subject: Re: [PATCH] rtw88/pci: Rearrange the memory usage for skb in RX ISR
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi Linus,
+Tony Chuang <yhchuang@realtek.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=888=E6=97=
+=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:23=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> > Subject: [PATCH] rtw88/pci: Rearrange the memory usage for skb in RX IS=
+R
+>
+> nit, "rtw88: pci:" would be better.
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+Ok.
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> >
+> > When skb allocation fails and the "rx routine starvation" is hit, the
+> > function returns immediately without updating the RX ring. At this
+> > point, the RX ring may continue referencing an old skb which was alread=
+y
+> > handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
+> > bad things happen.
+> >
+> > This patch allocates a new skb first in RX ISR. If we don't have memory
+> > available, we discard the current frame, allowing the existing skb to b=
+e
+> > reused in the ring. Otherwise, we simplify the code flow and just hand
+> > over the RX-populated skb over to mac80211.
+> >
+> > In addition, to fixing the kernel crash, the RX routine should now
+> > generally behave better under low memory conditions.
+> >
+> > Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=3D204053
+> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> > Reviewed-by: Daniel Drake <drake@endlessm.com>
+> > Cc: <stable@vger.kernel.org>
+> > ---
+> >  drivers/net/wireless/realtek/rtw88/pci.c | 28 +++++++++++-------------
+> >  1 file changed, 13 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
+> > b/drivers/net/wireless/realtek/rtw88/pci.c
+> > index cfe05ba7280d..1bfc99ae6b84 100644
+> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> > @@ -786,6 +786,15 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev,
+> > struct rtw_pci *rtwpci,
+> >               rx_desc =3D skb->data;
+> >               chip->ops->query_rx_desc(rtwdev, rx_desc, &pkt_stat, &rx_=
+status);
+> >
+> > +             /* discard current skb if the new skb cannot be allocated=
+ as a
+> > +              * new one in rx ring later
+> > +              * */
+>
+> nit, comment indentation.
 
-are available in the Git repository at:
+Thanks.  I will fix this.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.3-tag1
+> > +             new =3D dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+> > +             if (WARN(!new, "rx routine starvation\n")) {
+> > +                     new =3D skb;
+> > +                     goto next_rp;
+> > +             }
+> > +
+> >               /* offset from rx_desc to payload */
+> >               pkt_offset =3D pkt_desc_sz + pkt_stat.drv_info_sz +
+> >                            pkt_stat.shift;
+> > @@ -803,25 +812,14 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev=
+,
+> > struct rtw_pci *rtwpci,
+> >                       skb_put(skb, pkt_stat.pkt_len);
+> >                       skb_reserve(skb, pkt_offset);
+> >
+> > -                     /* alloc a smaller skb to mac80211 */
+> > -                     new =3D dev_alloc_skb(pkt_stat.pkt_len);
+> > -                     if (!new) {
+> > -                             new =3D skb;
+> > -                     } else {
+> > -                             skb_put_data(new, skb->data, skb->len);
+> > -                             dev_kfree_skb_any(skb);
+> > -                     }
+>
+> I am not sure if it's fine to deliver every huge SKB to mac80211.
+> Because it will then be delivered to TCP/IP stack.
+> Hence I think either it should be tested to know if the performance
+> would be impacted or find out a more efficient way to send
+> smaller SKB to mac80211 stack.
 
-for you to fetch changes up to 69878ef47562f32e02d0b7975c990e1c0339320d:
+I remember network stack only processes the skb with(in) pointers
+(skb->data) and the skb->len for data part.  It also checks real
+buffer boundary (head and end) of the skb to prevent memory overflow.
+Therefore, I think using the original skb is the most efficient way.
 
-  m68k: Implement arch_dma_prep_coherent() (2019-07-01 11:17:00 +0200)
+If I misunderstand something, please point out.
 
-----------------------------------------------------------------
-m68k updates for v5.3
 
-  - Switch to using the generic remapping DMA allocator,
-  - Defconfig updates.
 
-----------------------------------------------------------------
-Christoph Hellwig (2):
-      m68k: Use the generic dma coherent remap allocator
-      m68k: Implement arch_dma_prep_coherent()
-
-Geert Uytterhoeven (1):
-      m68k: defconfig: Update defconfigs for v5.2-rc1
-
- arch/m68k/Kconfig                    |  3 ++
- arch/m68k/configs/amiga_defconfig    | 17 +++++------
- arch/m68k/configs/apollo_defconfig   | 17 +++++------
- arch/m68k/configs/atari_defconfig    | 17 +++++------
- arch/m68k/configs/bvme6000_defconfig | 17 +++++------
- arch/m68k/configs/hp300_defconfig    | 17 +++++------
- arch/m68k/configs/mac_defconfig      | 17 +++++------
- arch/m68k/configs/multi_defconfig    | 17 +++++------
- arch/m68k/configs/mvme147_defconfig  | 17 +++++------
- arch/m68k/configs/mvme16x_defconfig  | 17 +++++------
- arch/m68k/configs/q40_defconfig      | 17 +++++------
- arch/m68k/configs/sun3_defconfig     | 17 +++++------
- arch/m68k/configs/sun3x_defconfig    | 17 +++++------
- arch/m68k/kernel/dma.c               | 57 +++++++-----------------------------
- 14 files changed, 98 insertions(+), 166 deletions(-)
-
-Thanks for pulling!
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+> >                       /* TODO: merge into rx.c */
+> >                       rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
+> > -                     memcpy(new->cb, &rx_status, sizeof(rx_status));
+> > -                     ieee80211_rx_irqsafe(rtwdev->hw, new);
+> > +                     memcpy(skb->cb, &rx_status, sizeof(rx_status));
+> > +                     ieee80211_rx_irqsafe(rtwdev->hw, skb);
+> >               }
+> >
+> > -             /* skb delivered to mac80211, alloc a new one in rx ring =
+*/
+> > -             new =3D dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+> > -             if (WARN(!new, "rx routine starvation\n"))
+> > -                     return;
+> > -
+> > +next_rp:
+> > +             /* skb delivered to mac80211, attach the new one into rx =
+ring */
+> >               ring->buf[cur_rp] =3D new;
+> >               rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc=
+_sz);
+> >
+>
+> --
+>
+> Yan-Hsuan
