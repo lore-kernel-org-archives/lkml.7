@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A514DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C26C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4C4216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761B4204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599380;
-	bh=frJ4X5lZTs/c6mGsUYgae9BT+bXQw78oMXGMLEz7q6s=;
+	s=default; t=1562599384;
+	bh=FG0Fd4yCVaRhYLAoDH+EcpNxQWOhdpbmj1xXw0TZ748=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GdLlJ3rILyJmPwns17kOt9Q0MEcHn1JVB+hbNADrmWjHVRI4A4WAJ1P0TRHJNPGCX
-	 yto7LQBrRqJLdBtY81GVMVhaxuRD3vRtIQN0M18e3p7sGTPeVWBKAhTFtFlE3iW4nd
-	 Qo939rkoqfehI7w4VxYNCrOe6aSlFE1+kWu6ogW4=
+	b=T2kGZbDmhguNlrACNZw3nTV+u0fmw6Y1jdwhe4UYL/wwHQWOpTb6ek52mUlHZGqIL
+	 4yWTodpPkofk9GfQutsGuHLjpJkMsTWjGvcLxYh+LeQRsnPoLZCOXYMyNpQQ/q/uR+
+	 HN1cRtQrFCnQqnv/RTpFECSIGl2WAhtt12RzbD5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388101AbfGHPW7 (ORCPT
+        id S2388113AbfGHPXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49682 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbfGHPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:57 -0400
+        id S2388096AbfGHPW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F8E214C6;
-        Mon,  8 Jul 2019 15:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36B662166E;
+        Mon,  8 Jul 2019 15:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599376;
-        bh=frJ4X5lZTs/c6mGsUYgae9BT+bXQw78oMXGMLEz7q6s=;
+        s=default; t=1562599378;
+        bh=FG0Fd4yCVaRhYLAoDH+EcpNxQWOhdpbmj1xXw0TZ748=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xrQ4omM7sAktLwsrmno8A2pUtZpcv5ULmrJv3F+qeajaf09hu0aCxeY/xRIMVDkPa
-         269FE0pKb1HZ2TXvlaj8KqKoaZZRvuOa2XjOATNCmFMXWpd+7Q8ZpNO3oE3IiT1n4S
-         wWHPCoJwsggDbQPljvumRmizCcMDwHIX0mCCIDR0=
+        b=XGKRJEEO2lvY81DeFLprtjV6EdeLZa/GfRq5jtnDRmgYgHcFOSG83DgX5V690y+lz
+         Sbgj/ve2f39TQ7f2os0vZ68y91KZj2jFKK6Tz6/ExxQrJLnlPxAHlPOuQE/Wg310bU
+         r8JWKIFSkP6o6w8ufSMighsfImSE6cv+nMFOq9uA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Subject: [PATCH 4.9 098/102] KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable LAPIC
-Date:   Mon,  8 Jul 2019 17:13:31 +0200
-Message-Id: <20190708150531.552030006@linuxfoundation.org>
+        stable@vger.kernel.org, Gary Leshner <Gary.S.Leshner@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.9 099/102] IB/hfi1: Close PSM sdma_progress sleep window
+Date:   Mon,  8 Jul 2019 17:13:32 +0200
+Message-Id: <20190708150531.607648948@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -63,135 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-commit bb34e690e9340bc155ebed5a3d75fc63ff69e082 upstream.
+commit da9de5f8527f4b9efc82f967d29a583318c034c7 upstream.
 
-Thomas reported that:
+The call to sdma_progress() is called outside the wait lock.
 
- | Background:
- |
- |    In preparation of supporting IPI shorthands I changed the CPU offline
- |    code to software disable the local APIC instead of just masking it.
- |    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
- |    register.
- |
- | Failure:
- |
- |    When the CPU comes back online the startup code triggers occasionally
- |    the warning in apic_pending_intr_clear(). That complains that the IRRs
- |    are not empty.
- |
- |    The offending vector is the local APIC timer vector who's IRR bit is set
- |    and stays set.
- |
- | It took me quite some time to reproduce the issue locally, but now I can
- | see what happens.
- |
- | It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
- | (and hardware support) it behaves correctly.
- |
- | Here is the series of events:
- |
- |     Guest CPU
- |
- |     goes down
- |
- |       native_cpu_disable()
- |
- | 			apic_soft_disable();
- |
- |     play_dead()
- |
- |     ....
- |
- |     startup()
- |
- |       if (apic_enabled())
- |         apic_pending_intr_clear()	<- Not taken
- |
- |      enable APIC
- |
- |         apic_pending_intr_clear()	<- Triggers warning because IRR is stale
- |
- | When this happens then the deadline timer or the regular APIC timer -
- | happens with both, has fired shortly before the APIC is disabled, but the
- | interrupt was not serviced because the guest CPU was in an interrupt
- | disabled region at that point.
- |
- | The state of the timer vector ISR/IRR bits:
- |
- |     	     	       	        ISR     IRR
- | before apic_soft_disable()    0	      1
- | after apic_soft_disable()     0	      1
- |
- | On startup		      		 0	      1
- |
- | Now one would assume that the IRR is cleared after the INIT reset, but this
- | happens only on CPU0.
- |
- | Why?
- |
- | Because our CPU0 hotplug is just for testing to make sure nothing breaks
- | and goes through an NMI wakeup vehicle because INIT would send it through
- | the boots-trap code which is not really working if that CPU was not
- | physically unplugged.
- |
- | Now looking at a real world APIC the situation in that case is:
- |
- |     	     	       	      	ISR     IRR
- | before apic_soft_disable()    0	      1
- | after apic_soft_disable()     0	      1
- |
- | On startup		      		 0	      0
- |
- | Why?
- |
- | Once the dying CPU reenables interrupts the pending interrupt gets
- | delivered as a spurious interupt and then the state is clear.
- |
- | While that CPU0 hotplug test case is surely an esoteric issue, the APIC
- | emulation is still wrong, Even if the play_dead() code would not enable
- | interrupts then the pending IRR bit would turn into an ISR .. interrupt
- | when the APIC is reenabled on startup.
+In this case, there is a race condition where sdma_progress() can return
+false and the sdma_engine can idle.  If that happens, there will be no
+more sdma interrupts to cause the wakeup and the user_sdma xmit will hang.
 
->From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
-* Pending interrupts in the IRR and ISR registers are held and require
-  masking or handling by the CPU.
+Fix by moving the lock to enclose the sdma_progress() call.
 
-In Thomas's testing, hardware cpu will not respect soft disable LAPIC
-when IRR has already been set or APICv posted-interrupt is in flight,
-so we can skip soft disable APIC checking when clearing IRR and set ISR,
-continue to respect soft disable APIC when attempting to set IRR.
+Also, delete busycount. The need for this was removed by:
+commit bcad29137a97 ("IB/hfi1: Serve the most starved iowait entry first")
 
-Reported-by: Rong Chen <rong.a.chen@intel.com>
-Reported-by: Feng Tang <feng.tang@intel.com>
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rong Chen <rong.a.chen@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Reviewed-by: Gary Leshner <Gary.S.Leshner@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/x86/kvm/lapic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1992,7 +1992,7 @@ int kvm_apic_has_interrupt(struct kvm_vc
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	int highest_irr;
+---
+ drivers/infiniband/hw/hfi1/user_sdma.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+--- a/drivers/infiniband/hw/hfi1/user_sdma.c
++++ b/drivers/infiniband/hw/hfi1/user_sdma.c
+@@ -260,7 +260,6 @@ struct user_sdma_txreq {
+ 	struct list_head list;
+ 	struct user_sdma_request *req;
+ 	u16 flags;
+-	unsigned busycount;
+ 	u64 seqnum;
+ };
  
--	if (!apic_enabled(apic))
-+	if (!kvm_apic_hw_enabled(apic))
- 		return -1;
+@@ -323,25 +322,22 @@ static int defer_packet_queue(
+ 	struct hfi1_user_sdma_pkt_q *pq =
+ 		container_of(wait, struct hfi1_user_sdma_pkt_q, busy);
+ 	struct hfi1_ibdev *dev = &pq->dd->verbs_dev;
+-	struct user_sdma_txreq *tx =
+-		container_of(txreq, struct user_sdma_txreq, txreq);
  
- 	apic_update_ppr(apic);
+-	if (sdma_progress(sde, seq, txreq)) {
+-		if (tx->busycount++ < MAX_DEFER_RETRY_COUNT)
+-			goto eagain;
+-	}
++	write_seqlock(&dev->iowait_lock);
++	if (sdma_progress(sde, seq, txreq))
++		goto eagain;
+ 	/*
+ 	 * We are assuming that if the list is enqueued somewhere, it
+ 	 * is to the dmawait list since that is the only place where
+ 	 * it is supposed to be enqueued.
+ 	 */
+ 	xchg(&pq->state, SDMA_PKT_Q_DEFERRED);
+-	write_seqlock(&dev->iowait_lock);
+ 	if (list_empty(&pq->busy.list))
+ 		list_add_tail(&pq->busy.list, &sde->dmawait);
+ 	write_sequnlock(&dev->iowait_lock);
+ 	return -EBUSY;
+ eagain:
++	write_sequnlock(&dev->iowait_lock);
+ 	return -EAGAIN;
+ }
+ 
+@@ -925,7 +921,6 @@ static int user_sdma_send_pkts(struct us
+ 
+ 		tx->flags = 0;
+ 		tx->req = req;
+-		tx->busycount = 0;
+ 		INIT_LIST_HEAD(&tx->list);
+ 
+ 		if (req->seqnum == req->info.npkts - 1)
 
 
