@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7E0C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED14DC606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173F821707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C683A216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599065;
-	bh=fYiUsu4wzAHAeLPGcXP9HexqGaEUj1/KrAmDgh4Lwl8=;
+	s=default; t=1562599067;
+	bh=PlbhsP/1l0Cu+F69o8LIBKwjU4G9z5OkTVqCpdeIhS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=od/APphB4/qadBkVyoNBeKQYUTauaBeVf2Nataot6P1bBBB4R0dHN8dWSLU6afnUv
-	 0CKLWROLJrnLMHRP1IxG51CbQocSgmhSVxL8vDnR6c3umUQVtUsHV8CJ19xb/6Ah4M
-	 Z/FurRO6Ot4McqrYsib4OmpLwUTSU9aigFqubB48=
+	b=mb1eSDKK9L78nkxPEK7Zb7yCX7c4pOB0NecSCDC3CYJhCDQYq/3csFSTYx7jNwKD4
+	 99MAEgNbT81PUz1UMDvMMyhk/ZPxtnlEEF+VjDGONUlI/KHIsMhJMGTGlthXuOozq2
+	 RdAPNcZkD9HCQnglb/cIJLxrDbPY23o2QqtJqGcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732879AbfGHPRn (ORCPT
+        id S1730498AbfGHPRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41160 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:17:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730500AbfGHPRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:17:42 -0400
+        id S1732856AbfGHPRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:17:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B481B216F4;
-        Mon,  8 Jul 2019 15:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14CFD216F4;
+        Mon,  8 Jul 2019 15:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599061;
-        bh=fYiUsu4wzAHAeLPGcXP9HexqGaEUj1/KrAmDgh4Lwl8=;
+        s=default; t=1562599058;
+        bh=PlbhsP/1l0Cu+F69o8LIBKwjU4G9z5OkTVqCpdeIhS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j2HY/7MZVpXeM7zY/QzwImT7nfxNC+wtw8bXYCc9QXcRDYEgM4pUDWqk4Fqa4YtpC
-         kjGBCWZSrgJ5FaR+3U3PSr2BdZszr5UB+w204sw0XmGtts3SZ0cN4s8ospfTRLEOZW
-         jD4XN3DTqA7mUX30WxaZxjFP51h85bDnW7v09v08=
+        b=AbmCWCihay2rGBfqI3iC0wxZ0rr8lF1q2qrcQZZ1JFywC73rh1rHuY2qlzoxqiicL
+         JnxhIpru+aP3MZy428pvY6ouv/HWXmqen/EBqpxb2sSiMKcaessL8GnWHCaKL8M4C+
+         6JrhL42/MUtsUZ4HseW25AipfJdoHUOvp2zW2gw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 65/73] ALSA: firewire-lib/fireworks: fix miss detection of received MIDI messages
-Date:   Mon,  8 Jul 2019 17:13:15 +0200
-Message-Id: <20190708150524.705914481@linuxfoundation.org>
+Subject: [PATCH 4.4 64/73] ALSA: seq: fix incorrect order of dest_client/dest_ports arguments
+Date:   Mon,  8 Jul 2019 17:13:14 +0200
+Message-Id: <20190708150524.660457073@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -59,54 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 7fbd1753b64eafe21cf842348a40a691d0dee440 upstream.
+commit c3ea60c231446663afd6ea1054da6b7f830855ca upstream.
 
-In IEC 61883-6, 8 MIDI data streams are multiplexed into single
-MIDI conformant data channel. The index of stream is calculated by
-modulo 8 of the value of data block counter.
+There are two occurrances of a call to snd_seq_oss_fill_addr where
+the dest_client and dest_port arguments are in the wrong order. Fix
+this by swapping them around.
 
-In fireworks, the value of data block counter in CIP header has a quirk
-with firmware version v5.0.0, v5.7.3 and v5.8.0. This brings ALSA
-IEC 61883-1/6 packet streaming engine to miss detection of MIDI
-messages.
-
-This commit fixes the miss detection to modify the value of data block
-counter for the modulo calculation.
-
-For maintainers, this bug exists since a commit 18f5ed365d3f ("ALSA:
-fireworks/firewire-lib: add support for recent firmware quirk") in Linux
-kernel v4.2. There're many changes since the commit.  This fix can be
-backported to Linux kernel v4.4 or later. I tagged a base commit to the
-backport for your convenience.
-
-Besides, my work for Linux kernel v5.3 brings heavy code refactoring and
-some structure members are renamed in 'sound/firewire/amdtp-stream.h'.
-The content of this patch brings conflict when merging -rc tree with
-this patch and the latest tree. I request maintainers to solve the
-conflict to replace 'tx_first_dbc' with 'ctx_data.tx.first_dbc'.
-
-Fixes: df075feefbd3 ("ALSA: firewire-lib: complete AM824 data block processing layer")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Addresses-Coverity: ("Arguments in wrong order")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/amdtp-am824.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/oss/seq_oss_ioctl.c |    2 +-
+ sound/core/seq/oss/seq_oss_rw.c    |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/firewire/amdtp-am824.c
-+++ b/sound/firewire/amdtp-am824.c
-@@ -388,7 +388,7 @@ static void read_midi_messages(struct am
- 	u8 *b;
+--- a/sound/core/seq/oss/seq_oss_ioctl.c
++++ b/sound/core/seq/oss/seq_oss_ioctl.c
+@@ -62,7 +62,7 @@ static int snd_seq_oss_oob_user(struct s
+ 	if (copy_from_user(ev, arg, 8))
+ 		return -EFAULT;
+ 	memset(&tmpev, 0, sizeof(tmpev));
+-	snd_seq_oss_fill_addr(dp, &tmpev, dp->addr.port, dp->addr.client);
++	snd_seq_oss_fill_addr(dp, &tmpev, dp->addr.client, dp->addr.port);
+ 	tmpev.time.tick = 0;
+ 	if (! snd_seq_oss_process_event(dp, (union evrec *)ev, &tmpev)) {
+ 		snd_seq_oss_dispatch(dp, &tmpev, 0, 0);
+--- a/sound/core/seq/oss/seq_oss_rw.c
++++ b/sound/core/seq/oss/seq_oss_rw.c
+@@ -174,7 +174,7 @@ insert_queue(struct seq_oss_devinfo *dp,
+ 	memset(&event, 0, sizeof(event));
+ 	/* set dummy -- to be sure */
+ 	event.type = SNDRV_SEQ_EVENT_NOTEOFF;
+-	snd_seq_oss_fill_addr(dp, &event, dp->addr.port, dp->addr.client);
++	snd_seq_oss_fill_addr(dp, &event, dp->addr.client, dp->addr.port);
  
- 	for (f = 0; f < frames; f++) {
--		port = (s->data_block_counter + f) % 8;
-+		port = (8 - s->tx_first_dbc + s->data_block_counter + f) % 8;
- 		b = (u8 *)&buffer[p->midi_position];
- 
- 		len = b[0] - 0x80;
+ 	if (snd_seq_oss_process_event(dp, rec, &event))
+ 		return 0; /* invalid event - no need to insert queue */
 
 
