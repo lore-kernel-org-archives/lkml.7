@@ -2,196 +2,109 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116D9C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C50C606C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D072166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0992166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgYD1/u9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJFGtNXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbfGHRy1 (ORCPT
+        id S1732420AbfGHRzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:54:27 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41846 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbfGHRy0 (ORCPT
+        Mon, 8 Jul 2019 13:55:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37840 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfGHRzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:54:26 -0400
-Received: by mail-qk1-f193.google.com with SMTP id v22so13986429qkj.8;
-        Mon, 08 Jul 2019 10:54:25 -0700 (PDT)
+        Mon, 8 Jul 2019 13:55:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so5344859plr.4;
+        Mon, 08 Jul 2019 10:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u4F7C/sV/odeCH+W9PMSNpHsM7J09hRexHDNA3lJNWc=;
-        b=XgYD1/u95qUNmWA4XvhmxxBgEdAaBIVnMwRm4+DSEOBZbmdJamzoE+0YkZ4RW20plL
-         l7mPfcanv4k/hXnC06/cfo8GKSsDhVNjdD9fljXFsYvHpI/HHRQVbs6PkHdsF7K4j/x0
-         eVn/7mH0T012NU+0Cb0MBG93yGNWGgZ9kQ18nfmqPjn5krdmEDRaS527yF/TldrWN698
-         FdXOuMY7H32piU8YTMitD+LnlA1CGSvKguzFkJu4Hs3ATX4Oa3IrYOpWe+i1xQz3KWa4
-         CU13m0knRWeDbwy6I1fqYTZh22Lk1K+HoicaItk97fcf3LeERFT/j/W7gHiov2P8zgNt
-         QSmQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JQzFF/RckCkhuwNFuRy0cMNgK/vj6j07C5gg5EjYC5w=;
+        b=eJFGtNXGJc32gGB/6l525EN+V8aaRxwPXh1Wvq/j9Za/SBLdzuupq+d6VjJA6eF1nZ
+         1fDEZSMvZeZr1QH2SjYRqOmRF6shJGpc49ujWUL+2e4cOhAa1Kb80FRs3GH8IQzicgBx
+         Bnm6zVKNMzgAT0V6hGs6Y7StIGeL550oEUgXZgxTCo4f92kobdUqw7/jechwBdkn7kw4
+         bj1K9Ohf0Q8VQbm3M2ZFVru9VgkL/H/vlqy62GRnZQYQ6yhePxTe5rG4XitPYfZ/NN07
+         wIfF7/42qBlnj2jsZyUQ2OalZuurg2ejLyw/1aH494x9NZpKajvCGqp9pKlyB6fMziAs
+         /esg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u4F7C/sV/odeCH+W9PMSNpHsM7J09hRexHDNA3lJNWc=;
-        b=tnUih2wTsCXloQosXGNvLpWNqPtAtItRgiSfuaPJErfzJt0nw5dB3pP35noXxT6NC5
-         tF4qn38LI4dEsbsJnV1g2whES4TTDasGGdPdDpToTQZ1WDDvSk1yjLZ2NaT6gS20iWBC
-         s90fF98MPP3+whlolysTeuN/ehLRCzyxTDcao8ARGgetruXglBKnfq8Zd3TjkVbgBL7r
-         lV90KFH8UEX8XDrYdal2L6XqCqrsHPn91oWlPSON6OSvQc579DS5wjtQrV7S0y7uxMoH
-         9hqlUjkB0XbjFVrZOYKQi+HX/Z0ZlTLKqtUFsSyOWtOKBJ2AanfwPJ/2YDXUFwuoxpma
-         R9eQ==
-X-Gm-Message-State: APjAAAXr4OPT2X3YKjTssMidsyeLhZanWhPc4A9+8qmA70nUGNc9TPbG
-        ++0SyELZ3crioiyvT1u6x09ZYQJfwj5unGWxV6M=
-X-Google-Smtp-Source: APXvYqyQ45p40cTwBps+eik6OzNyUlDBNZXh1tfc4f5IiVk6V7Vmbj9v0jH5hkQF+F9w/LQgGBst9wOgU7+dlp1u0vA=
-X-Received: by 2002:a37:9b48:: with SMTP id d69mr13551030qke.449.1562608464860;
- Mon, 08 Jul 2019 10:54:24 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JQzFF/RckCkhuwNFuRy0cMNgK/vj6j07C5gg5EjYC5w=;
+        b=bZlzx+CgF3D9xE8eQE87XIc4uAPgFkPBCbbTz3XdD5XIkkdytwn6C6RhJVVEbCFufM
+         kG/a/ou2HBa3bHQrGOPJy66PMOh+7o/wzke9NLMXmxZX8Jem2QtgUFYW7afBlNDQN2PQ
+         +BCVphOqB2SfN5jDbMXgsZmFX8vVBXe+pBbNmY/tp7GC/RnPFYSctvdNBi96G4waiJ3e
+         hOdPXgONzWay+fwtXdcI2+9Nv/WPZ7W4Ov+aVvg84xOA83AK/tRVNP3TvY++0pWv6Of8
+         CEm2EOiRod8OUu4HFrCpdkJrlyJLFkLfWWN2XQyvQw+iSEtH+NevBUyiLN9Y2edVsjQU
+         ebRQ==
+X-Gm-Message-State: APjAAAU7jfeUfn44RsRhL8aXTw61cyVNWJCpQcReVDOq8fPsNaeMVJDG
+        XCUD5xIksr2KaZ1iM8Ai+Uk=
+X-Google-Smtp-Source: APXvYqy/4PiXebRAVSHaa1fp8T9XCHHDOFkASSk4BR6LQjeyzB2HF7cNk4nyctjRgy+ekKKHDcRjTg==
+X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr26336254plq.223.1562608535496;
+        Mon, 08 Jul 2019 10:55:35 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k70sm174264pje.14.2019.07.08.10.55.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 10:55:34 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 10:55:33 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Peter Zijlstra <peterz@infradead.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 5/7] watchdog: ie6xx_wdt: Use spinlock_t instead of
+ struct spinlock
+Message-ID: <20190708175533.GA14138@roeck-us.net>
+References: <20190704153803.12739-1-bigeasy@linutronix.de>
+ <20190704153803.12739-6-bigeasy@linutronix.de>
 MIME-Version: 1.0
-References: <cover.1562359091.git.a.s.protopopov@gmail.com>
- <e183c0af99056f8ea4de06acb358ace7f3a3d6ae.1562359091.git.a.s.protopopov@gmail.com>
- <734dd45a-95b0-a7fd-9e1d-0535ef4d3e12@iogearbox.net>
-In-Reply-To: <734dd45a-95b0-a7fd-9e1d-0535ef4d3e12@iogearbox.net>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 8 Jul 2019 10:54:13 -0700
-Message-ID: <CAEf4BzaGGVv2z8jB8MnT7=gnn4nG0cp7DGYxfnnnpohOT=ujCA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf, libbpf: add a new API bpf_object__reuse_maps()
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Anton Protopopov <a.s.protopopov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704153803.12739-6-bigeasy@linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 2:53 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-> On 07/05/2019 10:44 PM, Anton Protopopov wrote:
-> > Add a new API bpf_object__reuse_maps() which can be used to replace all maps in
-> > an object by maps pinned to a directory provided in the path argument.  Namely,
-> > each map M in the object will be replaced by a map pinned to path/M.name.
-> >
-> > Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
-> > ---
-> >  tools/lib/bpf/libbpf.c   | 34 ++++++++++++++++++++++++++++++++++
-> >  tools/lib/bpf/libbpf.h   |  2 ++
-> >  tools/lib/bpf/libbpf.map |  1 +
-> >  3 files changed, 37 insertions(+)
-> >
-> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > index 4907997289e9..84c9e8f7bfd3 100644
-> > --- a/tools/lib/bpf/libbpf.c
-> > +++ b/tools/lib/bpf/libbpf.c
-> > @@ -3144,6 +3144,40 @@ int bpf_object__unpin_maps(struct bpf_object *obj, const char *path)
-> >       return 0;
-> >  }
-> >
-> > +int bpf_object__reuse_maps(struct bpf_object *obj, const char *path)
+On Thu, Jul 04, 2019 at 05:38:01PM +0200, Sebastian Andrzej Siewior wrote:
+> For spinlocks the type spinlock_t should be used instead of "struct
+> spinlock".
+> 
+> Use spinlock_t for spinlock's definition.
+> 
+> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-watchdog@vger.kernel.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-As is, bpf_object__reuse_maps() can be easily implemented by user
-applications, as it's only using public libbpf APIs, so I'm not 100%
-sure we need to add method like that to libbpf.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> > +{
-> > +     struct bpf_map *map;
-> > +
-> > +     if (!obj)
-> > +             return -ENOENT;
-> > +
-> > +     if (!path)
-> > +             return -EINVAL;
-> > +
-> > +     bpf_object__for_each_map(map, obj) {
-> > +             int len, err;
-> > +             int pinned_map_fd;
-> > +             char buf[PATH_MAX];
->
-> We'd need to skip the case of bpf_map__is_internal(map) since they are always
-> recreated for the given object.
->
-> > +             len = snprintf(buf, PATH_MAX, "%s/%s", path, bpf_map__name(map));
-> > +             if (len < 0) {
-> > +                     return -EINVAL;
-> > +             } else if (len >= PATH_MAX) {
-> > +                     return -ENAMETOOLONG;
-> > +             }
-> > +
-> > +             pinned_map_fd = bpf_obj_get(buf);
-> > +             if (pinned_map_fd < 0)
-> > +                     return pinned_map_fd;
->
-> Should we rather have a new map definition attribute that tells to reuse
-> the map if it's pinned in bpf fs, and if not, we create it and later on
-> pin it? This is what iproute2 is doing and which we're making use of heavily.
-
-I'd like something like that as well. This would play nicely with
-recently added BTF-defined maps as well.
-
-I think it should be not just pin/don't pin flag, but rather pinning
-strategy, to accommodate various typical strategies of handling maps
-that are already pinned. So something like this:
-
-1. BPF_PIN_NOTHING - default, don't pin;
-2. BPF_PIN_EXCLUSIVE - pin, but if map is already pinned - fail;
-3. BPF_PIN_SET - pin; if existing map exists, reset its state to be
-exact state of object's map;
-4. BPF_PIN_MERGE - pin, if map exists, fill in NULL entries only (this
-is how Cilium is pinning PROG_ARRAY maps, if I understand correctly);
-5. BPF_PIN_MERGE_OVERWRITE - pin, if map exists, overwrite non-NULL values.
-
-This list is only for illustrative purposes, ideally people that have
-a lot of experience using pinning for real-world use cases would chime
-in on what strategies are useful and make sense.
-
-> In bpf_object__reuse_maps() bailing out if bpf_obj_get() fails is perhaps
-> too limiting for a generic API as new version of an object file may contain
-> new maps which are not yet present in bpf fs at that point.
->
-> > +             err = bpf_map__reuse_fd(map, pinned_map_fd);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  int bpf_object__pin_programs(struct bpf_object *obj, const char *path)
-> >  {
-> >       struct bpf_program *prog;
-> > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-> > index d639f47e3110..7fe465a1be76 100644
-> > --- a/tools/lib/bpf/libbpf.h
-> > +++ b/tools/lib/bpf/libbpf.h
-> > @@ -82,6 +82,8 @@ int bpf_object__variable_offset(const struct bpf_object *obj, const char *name,
-> >  LIBBPF_API int bpf_object__pin_maps(struct bpf_object *obj, const char *path);
-> >  LIBBPF_API int bpf_object__unpin_maps(struct bpf_object *obj,
-> >                                     const char *path);
-> > +LIBBPF_API int bpf_object__reuse_maps(struct bpf_object *obj,
-> > +                                   const char *path);
-> >  LIBBPF_API int bpf_object__pin_programs(struct bpf_object *obj,
-> >                                       const char *path);
-> >  LIBBPF_API int bpf_object__unpin_programs(struct bpf_object *obj,
-> > diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-> > index 2c6d835620d2..66a30be6696c 100644
-> > --- a/tools/lib/bpf/libbpf.map
-> > +++ b/tools/lib/bpf/libbpf.map
-> > @@ -172,5 +172,6 @@ LIBBPF_0.0.4 {
-> >               btf_dump__new;
-> >               btf__parse_elf;
-> >               bpf_object__load_xattr;
-> > +             bpf_object__reuse_maps;
-> >               libbpf_num_possible_cpus;
-> >  } LIBBPF_0.0.3;
-> >
->
+> ---
+>  drivers/watchdog/ie6xx_wdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/ie6xx_wdt.c b/drivers/watchdog/ie6xx_wdt.c
+> index 508fbefce9f6a..82a8cf61efc2a 100644
+> --- a/drivers/watchdog/ie6xx_wdt.c
+> +++ b/drivers/watchdog/ie6xx_wdt.c
+> @@ -66,7 +66,7 @@ MODULE_PARM_DESC(resetmode,
+>  
+>  static struct {
+>  	unsigned short sch_wdtba;
+> -	struct spinlock unlock_sequence;
+> +	spinlock_t unlock_sequence;
+>  #ifdef CONFIG_DEBUG_FS
+>  	struct dentry *debugfs;
+>  #endif
