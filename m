@@ -2,177 +2,133 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E887C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB55C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083D720659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0984020659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:34:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="RgQ7pDHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfGHDc6 (ORCPT
+        id S1728884AbfGHDeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 23:32:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:36452 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbfGHDc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 23:32:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B57842B;
-        Sun,  7 Jul 2019 20:32:56 -0700 (PDT)
-Received: from [10.162.43.130] (p8cg001049571a15.blr.arm.com [10.162.43.130])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A45B13F738;
-        Sun,  7 Jul 2019 20:32:43 -0700 (PDT)
-Subject: Re: [PATCH] mm/kprobes: Add generic kprobe_fault_handler() fallback
- definition
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-mm@kvack.org, Vineet Gupta <vgupta@synopsys.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org
-References: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
- <20190705193028.f9e08fe9cf1ee86bc5c0bb82@kernel.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <3aee1f30-241c-d1c2-2ff5-ff521db47755@arm.com>
-Date:   Mon, 8 Jul 2019 09:03:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 7 Jul 2019 23:34:08 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:32908 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbfGHDeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 23:34:07 -0400
+Received: by mail-oi1-f196.google.com with SMTP id u15so11525511oiv.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 20:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wkIf/4d4XoQcXWNvxNaAongy4aNo7OFBScY9cTS8ZR8=;
+        b=RgQ7pDHD+4h0crwwiPkH/DqNHQaRqM5BuFD3KVrCdw5JSZqaSVtkv/PKlix7BoX2Gl
+         n3IJohJx3XQr+ErVc+lyFHz8W1RD92KAgpKoa8RtQJ4am1gLzg5oY5cfKKU30fInpNhe
+         qGGJJm2RxeBUpKRellKe4QVMoT31fHPk7MJ3HbtNdx0aALA0w814MFlxMwOwQvQdPSNR
+         yZaoub5PfXnOKybIxAvTqTzrf0BdlV7WX2hNj6nTTByFAkzy8yolBKGf8eFQLtO4BdXk
+         TezI1ASXbJfQugxNr15fZQ7SwRS7fhgPTRIag5Yc4iPsOBVxsMSNj2iB5xalBDn7C0hi
+         baOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wkIf/4d4XoQcXWNvxNaAongy4aNo7OFBScY9cTS8ZR8=;
+        b=RXkxNY4+RcXRPE6R9jfq2mz5hCrTp5eGHWFh6HUORDCgsJwhsuAqMxCkgU3KzmeE2i
+         bwiuVApa3ghOyQKyFohifa0BoLOd6bKcxl0Jm04JJaDEHl6fRNA6hEDf5Z+h8SzEzfM6
+         oLQxUhGqc4rZafaUPq+aYrymtypkH4maCmgFMl0DA4PctL4p/lTo6RGIjxRNbdfVCvI/
+         W8jifFUnXkF83hPRJBC83TdcTarTX/djR6AjN98SiSRBVGZadPH88H9GA+KYKxufToZD
+         au1/C9S0jWE0cv2XOxkLnShe1Kc1/AhSq4en+xL5l5rZYcuVbuZR6MENLXaVVKaTnAkw
+         8Hzw==
+X-Gm-Message-State: APjAAAVEd8/YXoSHXGeX6p/9TE9It74ajZ+k/NBt2irf4nizvSwx8U81
+        dLTRm3Tu2bX/6BCyamge+JUrCfW2LSj3TU4Ztbwwaw==
+X-Google-Smtp-Source: APXvYqw1WulD4u8DtuHK5p44+YCtiMFiJED8lZffzDI7s23QrInNyg0FnMg8wYsAmNPpyEBNKIS22UEKVsJkIB5GAe8=
+X-Received: by 2002:aca:50c6:: with SMTP id e189mr8127125oib.63.1562556846882;
+ Sun, 07 Jul 2019 20:34:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190705193028.f9e08fe9cf1ee86bc5c0bb82@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190627000412.GA527@kroah.com> <20190627225335.72107-1-trong@android.com>
+ <20190628151040.GA14074@kroah.com> <3451189.hAX5mKGt1u@kreacher>
+In-Reply-To: <3451189.hAX5mKGt1u@kreacher>
+From:   Tri Vo <trong@android.com>
+Date:   Mon, 8 Jul 2019 12:33:55 +0900
+Message-ID: <CANA+-vAxU5jp6PQ26NU+UMc6iyw6KkBS9nbd6wj0qqkO-1WhYg@mail.gmail.com>
+Subject: Re: [PATCH v2] PM / wakeup: show wakeup sources stats in sysfs
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>, kaleshsingh@google.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 4, 2019 at 7:31 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Friday, June 28, 2019 5:10:40 PM CEST Greg KH wrote:
+> > On Thu, Jun 27, 2019 at 03:53:35PM -0700, Tri Vo wrote:
+> > > Userspace can use wakeup_sources debugfs node to plot history of suspend
+> > > blocking wakeup sources over device's boot cycle. This information can
+> > > then be used (1) for power-specific bug reporting and (2) towards
+> > > attributing battery consumption to specific processes over a period of
+> > > time.
+> > >
+> > > However, debugfs doesn't have stable ABI. For this reason, expose wakeup
+> > > sources statistics in sysfs under /sys/power/wakeup_sources/<name>/
+> > >
+> > > Embedding a struct kobject into struct wakeup_source changes lifetime
+> > > requirements on the latter. To that end, change deallocation of struct
+> > > wakeup_source using kfree to kobject_put().
+> > >
+> > > Change struct wakelock's wakeup_source member to a pointer to decouple
+> > > lifetimes of struct wakelock and struct wakeup_source for above reason.
+> > >
+> > > Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
+> > > source statistics in sysfs.
+> > >
+> > > Signed-off-by: Tri Vo <trong@android.com>
+> >
+> > Ok, this looks much better, but I don't like the use of a "raw" kobject
+> > here.  It is much simpler, and less code, to use 'struct device'
+> > instead.
+> >
+> > As proof, I reworked the patch to do just that, and it saves over 50
+> > lines of .c code, which is always nice :)
+>
+> Thanks for taking the time to do that!
 
+Thanks a lot, Greg!
+>
+> > Attached below is the reworked code, along with the updated
+> > documentation file.  It creates devices in a virtual class, and you can
+> > easily iterate over them all by looking in /sys/class/wakeup/.
+>
+> That actually is nice - no need to add anything under /sys/power/.
+>
+> > Note, I'm note quite sure you need all of the changes you made in
+> > kernel/power/wakelock.c when you make the structure contain a pointer to
+> > the wakeup source and not the structure itself, but I just went with it
+> > and got it all to build properly.
+>
+> I'm not really sure about it either.
+>
+> > Also note, I've not actually tested this at all, only built it, so I
+> > _strongly_ suggest that you test this to make sure it really works :)
+> >
+> > What do you think?
+>
+> I agree with the direction. :-)
 
-On 07/05/2019 04:00 PM, Masami Hiramatsu wrote:
-> Hi Anshuman,
-
-
-Hello Masami,
-
-> 
-> On Fri,  5 Jul 2019 11:00:29 +0530
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> 
->> Architectures like parisc enable CONFIG_KROBES without having a definition
->> for kprobe_fault_handler() which results in a build failure.
-> 
-> Hmm, as far as I can see, kprobe_fault_handler() is closed inside each arch
-> specific code. The reason why include/linux/kprobes.h defines
-> dummy inline function is only for !CONFIG_KPROBES case.
-
-IIRC Andrew mentioned [1] that we should remove this stub from the generic kprobes
-header because this is very much architecture specific. As we see in this proposed
-patch, except x86 there is no other current user which actually calls this from
-some where when CONFIG_KPROBES is not enabled.
-
-[1] https://www.spinics.net/lists/linux-mm/msg182649.html
-> 
->> Arch needs to
->> provide kprobe_fault_handler() as it is platform specific and cannot have
->> a generic working alternative. But in the event when platform lacks such a
->> definition there needs to be a fallback.
-> 
-> Wait, indeed that each arch need to implement it, but that is for calling
-> kprobe->fault_handler() as user expected.
-> Hmm, why not fixing those architecture implementations?
-
-After the recent change which introduced a generic kprobe_page_fault() every
-architecture enabling CONFIG_KPROBES must have a kprobe_fault_handler() which
-was not the case earlier. Architectures like parisc which does enable KPROBES but
-never used (kprobe_page_fault or kprobe->fault_handler) kprobe_fault_handler() now
-needs one as well. I am not sure and will probably require inputs from arch parsic
-folks whether it at all needs one. We dont have a stub or fallback definition for
-kprobe_fault_handler() when CONFIG_KPROBES is enabled just to prevent a build
-failure in such cases.
-
-In such a situation it might be better defining a stub symbol fallback than to try
-to implement one definition which the architecture previously never needed or used.
-AFAICS there is no generic MM callers for kprobe_fault_handler() as well which would
-have made it mandatory for parisc to define a real one.
-
-> 
->> This adds a stub kprobe_fault_handler() definition which not only prevents
->> a build failure but also makes sure that kprobe_page_fault() if called will
->> always return negative in absence of a sane platform specific alternative.
-> 
-> I don't like introducing this complicated macro only for avoiding (not fixing)
-> build error. To fix that, kprobes on parisc should implement kprobe_fault_handler
-> correctly (and call kprobe->fault_handler).
-
-As I mentioned before parsic might not need a real one. But you are right this
-complicated (if perceived as such) change can be just avoided at least for the
-build failure problem by just defining a stub definition kprobe_fault_handler()
-for arch parsic when CONFIG_KPROBES is enabled. But this patch does some more
-and solves the kprobe_fault_handler() symbol dependency in a more generic way and
-forces kprobe_page_fault() to fail in absence a real arch kprobe_fault_handler().
-Is not it worth solving in this way ?
-
-> 
-> BTW, even if you need such generic stub, please use a weak function instead
-> of macros for every arch headers.
-
-There is a bit problem with that. The existing definitions are with different
-signatures and an weak function will need them to be exact same for override
-requiring more code changes. Hence choose to go with a macro in each header.
-
-arch/arc/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, unsigned long cause);
-arch/arm/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
-arch/arm64/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
-arch/ia64/include/asm/kprobes.h:extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-arch/powerpc/include/asm/kprobes.h:extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-arch/s390/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-arch/sh/include/asm/kprobes.h:extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-arch/sparc/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-arch/x86/include/asm/kprobes.h:extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-
-> 
->> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
->> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
->> just be dropped. Only on x86 it needs to be added back locally as it gets
->> used in a !CONFIG_KPROBES function do_general_protection().
-> 
-> If you want to remove kprobes_built_in(), you should replace it with
-> IS_ENABLED(CONFIG_KPROBES), instead of this...
-
-Apart from kprobes_built_in() the intent was to remove !CONFIG_KPROBES
-stub for kprobe_fault_handler() as well which required making generic
-kprobe_page_fault() to be empty in such case.
+I'll test things out and send v3 of the patch. Thanks!
