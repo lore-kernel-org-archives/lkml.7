@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE489C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF51C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CBF20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456DE21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600174;
-	bh=+7FiTRrLiAJdrxgP+15TtcJzC8osl96ZZyLt6gKPPFs=;
+	s=default; t=1562600176;
+	bh=CHO/JtLrHSUF6zrWQpzQrrCaKs2c1Yb/LPO0XVE+yO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zEdW5aEaFuy6J9h5jlUQg0jFYgT7KsC68f5eAG2OJyfYjUf4Z6Osl/pNDi+OIFErh
-	 eh6c7LfyiMWn2E72BclVOt/7AM+gzV5VEM2+h5wDS8xv5Jwp9xMDCM4NunzTC9sTbY
-	 Xzx/ZGKV4HxubRDTbEPu3NFEe/Kj9Vl+7RS3WiiQ=
+	b=KbljrGSCy7tfnyBRBgUXS2y4GuVim6wbQ0R9LcrB7Mhf9KZPVFcWfdUx4GO/pH+Hw
+	 DZDQS68xUuevoqlV8xxDFU308WbP5T926vYzRUl2zOqj7Y4Mp4ebc2ho5UNyfVzTnt
+	 pVai9FAGnodBhsyhTKKtzGlxfVegQuDAiSWNAlsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390502AbfGHPeP (ORCPT
+        id S2390490AbfGHPeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:34:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36216 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:34:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390471AbfGHPeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:02 -0400
+        id S1732904AbfGHPd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:33:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31B9A20651;
-        Mon,  8 Jul 2019 15:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 898ED20651;
+        Mon,  8 Jul 2019 15:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600041;
-        bh=+7FiTRrLiAJdrxgP+15TtcJzC8osl96ZZyLt6gKPPFs=;
+        s=default; t=1562600039;
+        bh=CHO/JtLrHSUF6zrWQpzQrrCaKs2c1Yb/LPO0XVE+yO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F3RmA1JNbjjYPA72IWaOYoPTLVrjoFl+MxQbjwm5PfD9IWKi3CLZ4StpMZPWG4ZRY
-         3B9ZXzNitV6Gwjnix5d4J8gM1T1BQ4YHuWH06LkzK6VofMI8SwK1qh8dBwW8+Roomr
-         cOrNovw+JrWgwU6jEz5me8wWO263Ny4hRMbzJDVI=
+        b=x+NdS/49S4iSPJYU2t8zvt6CkFvGChvtF4wIfhWRCV66+hgeE5AGZH4Hww1QDzfIM
+         36tp3f79zxBIZhgSL02X/rIHhQKvARbqaCkIbnV2ySheiNcY8qNEvLtllGcCwR6bUC
+         L+wcfjV73hQ8zxBNZw6kkCvOAHwreNEFixusj2Ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
-        Huang Rui <ray.huang@amd.com>, Rex Zhu <Rex.Zhu@amd.com>,
-        Likun Gao <Likun.Gao@amd.com>, Lyude Paul <lyude@redhat.com>
-Subject: [PATCH 5.1 74/96] drm/amdgpu: Dont skip display settings in hwmgr_resume()
-Date:   Mon,  8 Jul 2019 17:13:46 +0200
-Message-Id: <20190708150530.449312447@linuxfoundation.org>
+        Slava Abramov <slava.abramov@amd.com>
+Subject: [PATCH 5.1 73/96] drm/amd/powerplay: use hardware fan control if no powerplay fan table
+Date:   Mon,  8 Jul 2019 17:13:45 +0200
+Message-Id: <20190708150530.399773745@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,55 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Evan Quan <evan.quan@amd.com>
 
-commit 688f3d1ebedffa310b6591bd1b63fa0770d945fe upstream.
+commit f78c581e22d4b33359ac3462e8d0504735df01f4 upstream.
 
-I'm not entirely sure why this is, but for some reason:
+Otherwise, you may get divided-by-zero error or corrput the SMU fan
+control feature.
 
-921935dc6404 ("drm/amd/powerplay: enforce display related settings only on needed")
-
-Breaks runtime PM resume on the Radeon PRO WX 3100 (Lexa) in one the
-pre-production laptops I have. The issue manifests as the following
-messages in dmesg:
-
-[drm] UVD and UVD ENC initialized successfully.
-amdgpu 0000:3b:00.0: [drm:amdgpu_ring_test_helper [amdgpu]] *ERROR* ring vce1 test failed (-110)
-[drm:amdgpu_device_ip_resume_phase2 [amdgpu]] *ERROR* resume of IP block <vce_v3_0> failed -110
-[drm:amdgpu_device_resume [amdgpu]] *ERROR* amdgpu_device_ip_resume failed (-110).
-
-And happens after about 6-10 runtime PM suspend/resume cycles (sometimes
-sooner, if you're lucky!). Unfortunately I can't seem to pin down
-precisely which part in psm_adjust_power_state_dynamic that is causing
-the issue, but not skipping the display setting setup seems to fix it.
-Hopefully if there is a better fix for this, this patch will spark
-discussion around it.
-
-Fixes: 921935dc6404 ("drm/amd/powerplay: enforce display related settings only on needed")
-Cc: Evan Quan <evan.quan@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Huang Rui <ray.huang@amd.com>
-Cc: Rex Zhu <Rex.Zhu@amd.com>
-Cc: Likun Gao <Likun.Gao@amd.com>
-Cc: <stable@vger.kernel.org> # v5.1+
-Signed-off-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Tested-by: Slava Abramov <slava.abramov@amd.com>
+Acked-by: Slava Abramov <slava.abramov@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/process_pptables_v1_0.c |    4 +++-
+ drivers/gpu/drm/amd/powerplay/inc/hwmgr.h                   |    1 +
+ drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c     |    4 ++++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
-@@ -325,7 +325,7 @@ int hwmgr_resume(struct pp_hwmgr *hwmgr)
- 	if (ret)
- 		return ret;
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/process_pptables_v1_0.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/process_pptables_v1_0.c
+@@ -916,8 +916,10 @@ static int init_thermal_controller(
+ 			PHM_PlatformCaps_ThermalController
+ 		  );
  
--	ret = psm_adjust_power_state_dynamic(hwmgr, true, NULL);
-+	ret = psm_adjust_power_state_dynamic(hwmgr, false, NULL);
+-	if (0 == powerplay_table->usFanTableOffset)
++	if (0 == powerplay_table->usFanTableOffset) {
++		hwmgr->thermal_controller.use_hw_fan_control = 1;
+ 		return 0;
++	}
  
- 	return ret;
- }
+ 	fan_table = (const PPTable_Generic_SubTable_Header *)
+ 		(((unsigned long)powerplay_table) +
+--- a/drivers/gpu/drm/amd/powerplay/inc/hwmgr.h
++++ b/drivers/gpu/drm/amd/powerplay/inc/hwmgr.h
+@@ -694,6 +694,7 @@ struct pp_thermal_controller_info {
+ 	uint8_t ucType;
+ 	uint8_t ucI2cLine;
+ 	uint8_t ucI2cAddress;
++	uint8_t use_hw_fan_control;
+ 	struct pp_fan_info fanInfo;
+ 	struct pp_advance_fan_control_parameters advanceFanControlParameters;
+ };
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c
+@@ -2092,6 +2092,10 @@ static int polaris10_thermal_setup_fan_t
+ 		return 0;
+ 	}
+ 
++	/* use hardware fan control */
++	if (hwmgr->thermal_controller.use_hw_fan_control)
++		return 0;
++
+ 	tmp64 = hwmgr->thermal_controller.advanceFanControlParameters.
+ 			usPWMMin * duty100;
+ 	do_div(tmp64, 10000);
 
 
