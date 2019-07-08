@@ -2,51 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7DCC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D61C606C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B2320651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B071F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600191;
-	bh=MyymLWxB7oI6HyWoFiUfm3IGCoALyYheBe2ypwBZcOQ=;
+	s=default; t=1562600208;
+	bh=B5Ps5EHCwOMk/+GkMoCH5wo2EPVXUVjD2NyKOyU17y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kiPn7FpQIAS7IhU1gFvo3jeOmBq/BJWAJJbkyjciXgvbn1v9PJmbc3gtCQnbgOcqR
-	 kN2xiJ9Hi6AwEyrOHBtSSwJ6SYrFz9MDxtHxn1sgeW9hS3pCEN11XLS+HxE1WFtp4F
-	 rzdmCLF8ypVEeMmomMkvkpJyjcFazcvOUQuANMoQ=
+	b=Y8Bw8YJ5V7HYb9Cgtcpfs1Y9AL2pEfxvJ+pJaoPXUoa6qKbS/VgTBpvvqcqfTBfQh
+	 vN8ZJos+eo3kJ0g4Rai/E0xbALkRdDv3jt6gBUutGyEf2nd8f/ROA9Nt4nf5FT7Uil
+	 Lm89hq4Lx5X78BpVi/fw9QikpfrYDoWhYrH9WG7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390944AbfGHPga (ORCPT
+        id S2390577AbfGHPei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:34:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390398AbfGHPdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:33:45 -0400
+        id S2390551AbfGHPea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E9821743;
-        Mon,  8 Jul 2019 15:33:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DCDA20651;
+        Mon,  8 Jul 2019 15:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600024;
-        bh=MyymLWxB7oI6HyWoFiUfm3IGCoALyYheBe2ypwBZcOQ=;
+        s=default; t=1562600070;
+        bh=B5Ps5EHCwOMk/+GkMoCH5wo2EPVXUVjD2NyKOyU17y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OFbXvIYVRDCVdKCV06lePkOXk7p+fj5qZFYte/CtYdDMfhXYcWJQp8CF9iqmOgSS8
-         IGn8aAAo7TZY4spi4u+FcKPCWtoNTYHyLSGZcRmeBOlDAlV3VVz0+ZnIBn2ltIU6V6
-         TwF/F/Xa2E0w2Z3p8XB8fgv75Wu/Cfe+rFBAKsdU=
+        b=BjyLLxlUe45yjzl/CIIk1EPlJ1bn7Z4cc7asoiPALEhnaurBOr7pjfN1ioDJyCOT9
+         7/q+pfFF5FFH0m+X1W1bEZ9QKd94YCDlKlKdoQjXu+5FnerzNp/GOkjgEKq/UEZqsq
+         OUO2SWyxy1zVnbBcs0hz8i0fA/r5RsbAa6IIH7t4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.1 69/96] tracing/snapshot: Resize spare buffer if size changed
-Date:   Mon,  8 Jul 2019 17:13:41 +0200
-Message-Id: <20190708150530.189892715@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 83/96] tty: rocket: fix incorrect forward declaration of rp_init()
+Date:   Mon,  8 Jul 2019 17:13:55 +0200
+Message-Id: <20190708150530.936020429@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,105 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+[ Upstream commit 423ea3255424b954947d167681b71ded1b8fca53 ]
 
-commit 46cc0b44428d0f0e81f11ea98217fc0edfbeab07 upstream.
+Make the forward declaration actually match the real function
+definition, something that previous versions of gcc had just ignored.
 
-Current snapshot implementation swaps two ring_buffers even though their
-sizes are different from each other, that can cause an inconsistency
-between the contents of buffer_size_kb file and the current buffer size.
+This is another patch to fix new warnings from gcc-9 before I start the
+merge window pulls.  I don't want to miss legitimate new warnings just
+because my system update brought a new compiler with new warnings.
 
-For example:
-
-  # cat buffer_size_kb
-  7 (expanded: 1408)
-  # echo 1 > events/enable
-  # grep bytes per_cpu/cpu0/stats
-  bytes: 1441020
-  # echo 1 > snapshot             // current:1408, spare:1408
-  # echo 123 > buffer_size_kb     // current:123,  spare:1408
-  # echo 1 > snapshot             // current:1408, spare:123
-  # grep bytes per_cpu/cpu0/stats
-  bytes: 1443700
-  # cat buffer_size_kb
-  123                             // != current:1408
-
-And also, a similar per-cpu case hits the following WARNING:
-
-Reproducer:
-
-  # echo 1 > per_cpu/cpu0/snapshot
-  # echo 123 > buffer_size_kb
-  # echo 1 > per_cpu/cpu0/snapshot
-
-WARNING:
-
-  WARNING: CPU: 0 PID: 1946 at kernel/trace/trace.c:1607 update_max_tr_single.part.0+0x2b8/0x380
-  Modules linked in:
-  CPU: 0 PID: 1946 Comm: bash Not tainted 5.2.0-rc6 #20
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-  RIP: 0010:update_max_tr_single.part.0+0x2b8/0x380
-  Code: ff e8 dc da f9 ff 0f 0b e9 88 fe ff ff e8 d0 da f9 ff 44 89 ee bf f5 ff ff ff e8 33 dc f9 ff 41 83 fd f5 74 96 e8 b8 da f9 ff <0f> 0b eb 8d e8 af da f9 ff 0f 0b e9 bf fd ff ff e8 a3 da f9 ff 48
-  RSP: 0018:ffff888063e4fca0 EFLAGS: 00010093
-  RAX: ffff888066214380 RBX: ffffffff99850fe0 RCX: ffffffff964298a8
-  RDX: 0000000000000000 RSI: 00000000fffffff5 RDI: 0000000000000005
-  RBP: 1ffff1100c7c9f96 R08: ffff888066214380 R09: ffffed100c7c9f9b
-  R10: ffffed100c7c9f9a R11: 0000000000000003 R12: 0000000000000000
-  R13: 00000000ffffffea R14: ffff888066214380 R15: ffffffff99851060
-  FS:  00007f9f8173c700(0000) GS:ffff88806d000000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000714dc0 CR3: 0000000066fa6000 CR4: 00000000000006f0
-  Call Trace:
-   ? trace_array_printk_buf+0x140/0x140
-   ? __mutex_lock_slowpath+0x10/0x10
-   tracing_snapshot_write+0x4c8/0x7f0
-   ? trace_printk_init_buffers+0x60/0x60
-   ? selinux_file_permission+0x3b/0x540
-   ? tracer_preempt_off+0x38/0x506
-   ? trace_printk_init_buffers+0x60/0x60
-   __vfs_write+0x81/0x100
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   ? __ia32_sys_read+0xb0/0xb0
-   ? do_syscall_64+0x1f/0x390
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-This patch adds resize_buffer_duplicate_size() to check if there is a
-difference between current/spare buffer sizes and resize a spare buffer
-if necessary.
-
-Link: http://lkml.kernel.org/r/20190625012910.13109-1-devel@etsukata.com
-
-Cc: stable@vger.kernel.org
-Fixes: ad909e21bbe69 ("tracing: Add internal tracing_snapshot() functions")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/tty/rocket.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6696,11 +6696,13 @@ tracing_snapshot_write(struct file *filp
- 			break;
- 		}
- #endif
--		if (!tr->allocated_snapshot) {
-+		if (tr->allocated_snapshot)
-+			ret = resize_buffer_duplicate_size(&tr->max_buffer,
-+					&tr->trace_buffer, iter->cpu_file);
-+		else
- 			ret = tracing_alloc_snapshot_instance(tr);
--			if (ret < 0)
--				break;
--		}
-+		if (ret < 0)
-+			break;
- 		local_irq_disable();
- 		/* Now, we're going to swap */
- 		if (iter->cpu_file == RING_BUFFER_ALL_CPUS)
+diff --git a/drivers/tty/rocket.c b/drivers/tty/rocket.c
+index b121d8f8f3d7..27aeca30eeae 100644
+--- a/drivers/tty/rocket.c
++++ b/drivers/tty/rocket.c
+@@ -266,7 +266,7 @@ MODULE_PARM_DESC(pc104_3, "set interface types for ISA(PC104) board #3 (e.g. pc1
+ module_param_array(pc104_4, ulong, NULL, 0);
+ MODULE_PARM_DESC(pc104_4, "set interface types for ISA(PC104) board #4 (e.g. pc104_4=232,232,485,485,...");
+ 
+-static int rp_init(void);
++static int __init rp_init(void);
+ static void rp_cleanup_module(void);
+ 
+ module_init(rp_init);
+-- 
+2.20.1
+
 
 
