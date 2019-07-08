@@ -2,92 +2,105 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04303C606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B78C606D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E1420861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A8E21707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="O9TVM7vP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404991AbfGHUYe (ORCPT
+        id S2405002AbfGHU2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:24:34 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:42885 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfGHUYe (ORCPT
+        Mon, 8 Jul 2019 16:28:14 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43079 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730311AbfGHU2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:24:34 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 201so12199652qkm.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:24:33 -0700 (PDT)
+        Mon, 8 Jul 2019 16:28:13 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 16so17238046ljv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:28:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eng.ucsd.edu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aP50fU9jWh1SVwYTLC+Bnr2NJDpeCgQBUG33TJZRv3c=;
+        b=O9TVM7vPx877J6GvjeRwcyAevrgRrCuSS8pcoeJlEHDIViI420nOnFbTzd2KdqHImt
+         LUIC0flvjlPO8E3m0D1RH+5iydfGexIVXmCQSpk1/gC9ovhgdt1bBeeCH4oKESBwzqeV
+         2XeX4oxEZjXCAld8+vGogj5AhlRTWc2sU2VMk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pnrita1b0MkM7AyNkc/2C7SSvEndD1B5RxD62T0Ue1c=;
-        b=GRs8HCqScxd6y/khQCbsFwg8NN2n+h4vqwpj1IDtjjzAi+2CEZUH7eitWnGDiGcWuP
-         fh6zfl04mO+bbkThkEhW7J8ekKQin2iEcpwpg+hRhuxJamsK0ig/onrwiEd0gL1d3WDn
-         ThYZH4lAiNH4752P3D7TwC5WsgHrj4K80ZL+z6zqOaMcQ6OiBsq9Ybo0CdBr3JMA2Ozm
-         YmQxHUjyx2O6BZbFbdHbQ3usLaIQlDx2rap4sb3YfY4METLslMiVZtJcXfU7+xVrznlm
-         mxFl+KkSuYKd0MHiKRBiDz45hzxDbOVqgiuXP7uXurR83G8hULrPskLqv025YBl3rQHn
-         BrWA==
-X-Gm-Message-State: APjAAAV9aMqYTsQTnpXBXRueJDKTBBXFvvt+4IHG0U7HLBgXjb+95QL9
-        qGa1Neg9a3ZXw5SXXszSm4y+ASvJAzV6HuNCNeY=
-X-Google-Smtp-Source: APXvYqzp2meV/E+aj2azg0GgBkXPsp7U2/Lbp+hd+FV4m9ZLBmCI5eKAOPpe0FiTi+Kmeqqq3XmNzw77aVbgQtu74k4=
-X-Received: by 2002:a37:ad12:: with SMTP id f18mr15270829qkm.3.1562617472727;
- Mon, 08 Jul 2019 13:24:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aP50fU9jWh1SVwYTLC+Bnr2NJDpeCgQBUG33TJZRv3c=;
+        b=eTJpyhm1ysiauoRxnubVSJjqybIg4XKXD1RmtBWso83yXbX4Q0gAATTjlpwkuo+qlP
+         /ZOxxTwPFuG+6awdNVU9idK0SxLqsCExB4AtQeIZNP2IOtXGTvCp9oNpWMB6HhqBf8Zr
+         pvlOMl60dqegZdvCXP2SphiU9rbv7MuthmoKIzCq7sI5xaBxy2tn7jXyDcU9vj22X40S
+         4b4CsW7PC7zhVSQRsWQUip0SHPcnxBc/TPUnG3Goyq4oh8SKS4pVgpWtPmlGxkuD69bB
+         hdTVQjtv1Yx304zoIzehYOAlm7AA6xO2vAGZmz1S85U5d4pYVKbJ6UEvLHnaOv1vrlVD
+         YfNg==
+X-Gm-Message-State: APjAAAV/Ng75Mqt5tK2Cic9K/kbfKgGVpBV6kvR7bNvc4P9lHlaAexMh
+        JRiIdYl92q3roe5BXX3px63rxg==
+X-Google-Smtp-Source: APXvYqyqusmub7bifQwEMHiihwOyK5Pb+umaZm2KbS0Q9R3gTIIIHnNVYU0MymObvFosL9+y+wrpiA==
+X-Received: by 2002:a2e:b60f:: with SMTP id r15mr9591215ljn.172.1562617691526;
+        Mon, 08 Jul 2019 13:28:11 -0700 (PDT)
+Received: from luke-XPS-13 (77-255-206-190.adsl.inetia.pl. [77.255.206.190])
+        by smtp.gmail.com with ESMTPSA id l11sm2934729lfk.1.2019.07.08.13.28.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 13:28:10 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 13:28:08 -0700
+From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] Documentation: virtual: Add toctree hooks
+Message-ID: <20190708202808.GA8859@luke-XPS-13>
+References: <cover.1562448500.git.lnowakow@eng.ucsd.edu>
+ <ef1edb15bd6a6ef87abf4fef7636cd9213450e3c.1562448500.git.lnowakow@eng.ucsd.edu>
+ <20190708135404.3eeed68f@lwn.net>
 MIME-Version: 1.0
-References: <20190704055217.45860-1-natechancellor@gmail.com> <20190704055217.45860-2-natechancellor@gmail.com>
-In-Reply-To: <20190704055217.45860-2-natechancellor@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 8 Jul 2019 22:24:14 +0200
-Message-ID: <CAK8P3a1thzkjD5V39QcVWb1fQe62g6PLChMKuwodyu_rbWhgBw@mail.gmail.com>
-Subject: Re: [PATCH 1/7] drm/amdgpu/mes10.1: Fix header guard
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, Rex Zhu <rex.zhu@amd.com>,
-        Evan Quan <evan.quan@amd.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708135404.3eeed68f@lwn.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 7:52 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Mon, Jul 08, 2019 at 01:54:04PM -0600, Jonathan Corbet wrote:
+> On Sat,  6 Jul 2019 14:38:13 -0700
+> Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu> wrote:
+> 
+ 
+> At this point in the patch series, the above-mentioned RST files don't
+> exist.  So if somebody tries to build the docs here, the build will fail.
+> I suspect that it's pretty rare for people to use bisection with docs
+> builds, but it's still proper practice to ensure that things work at every
+> step in your series.  So the above entries should be added in the patches
+> that convert the files.
 >
-> clang warns:
->
->  In file included from drivers/gpu/drm/amd/amdgpu/nv.c:53:
->  drivers/gpu/drm/amd/amdgpu/../amdgpu/mes_v10_1.h:24:9: warning:
->  '__MES_V10_1_H__' is used as a header guard here, followed by #define of
->  a different macro [-Wheader-guard]
->  #ifndef __MES_V10_1_H__
->          ^~~~~~~~~~~~~~~
->  drivers/gpu/drm/amd/amdgpu/../amdgpu/mes_v10_1.h:25:9: note:
->  '__MES_v10_1_H__' is defined here; did you mean '__MES_V10_1_H__'?
->  #define __MES_v10_1_H__
->          ^~~~~~~~~~~~~~~
->          __MES_V10_1_H__
->  1 warning generated.
->
-> Capitalize the V.
->
-> Fixes: 886f82aa7a1d ("drm/amdgpu/mes10.1: add ip block mes10.1 (v2)")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/582
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-I ran into the same one now, and saw your version before sending an
-identical patch.
+Yes, agreed. It should be at the end of the series. 
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Also, vcpu-requests.txt is never touched in this patch series, which
+> suggests that you didn't build the docs even at the end of it.
+> 
+
+In the staging tree I was doing work out of I saw a vcpu-requests.rst
+file so thought I could add it "while I'm here". 
+
+You're right. I should only add the files I am converting. 
+
+> Thanks,
+> 
+> jon
+
+Thanks again, 
+- Luke
