@@ -5,49 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131FAC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C93CC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD55721738
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65ACB21738
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599911;
-	bh=i4YZhxEhpum9DmDPzI9pU8XkAK/3CfGO1Rg7YmxCLiU=;
+	s=default; t=1562599914;
+	bh=DNwRzKqCRJ/kSZuK+WVQ2r8v9h/vDkWGjs5cbDM/Bkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YW5Gr+91xGWgdf+kbLUgDdA8MlLkBkz7DKDAso4T9FfOWZaBVtr+q3ftcT2/zAjMR
-	 or2nko1i9T0JmN+ISvxXSeGitn4gC3uM3MwOXEdNqWDliulc2D5IQ2k4BUGjGSjK2V
-	 tMgZpm3mORq6izd6se2SZNdg5FsbULSf21v3TwuY=
+	b=z8ZlAIjIWjIvUchVX7n3/AVSp74OgeQ6m8Wsh9Fdxp0UFqIsLYZn/k3bs0NVbE3zS
+	 IXHkt9U8aNCmiP/6PpF14bQ0sEUcovc+aO9vjQd9OGGpt5Td2BUl0sGdfpoOdffnzE
+	 iIu0V/tTD+Lkxs3DDpwEjPiQmyg8W7NGqFMFoxTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389996AbfGHPbu (ORCPT
+        id S2389984AbfGHPbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33076 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389966AbfGHPbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:31:46 -0400
+        id S2389938AbfGHPbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:31:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD45020665;
-        Mon,  8 Jul 2019 15:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F9B421537;
+        Mon,  8 Jul 2019 15:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599905;
-        bh=i4YZhxEhpum9DmDPzI9pU8XkAK/3CfGO1Rg7YmxCLiU=;
+        s=default; t=1562599902;
+        bh=DNwRzKqCRJ/kSZuK+WVQ2r8v9h/vDkWGjs5cbDM/Bkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hNCYxQjOGTBgRD68Yi67tMA9PxcyaZWN75aOQCVeYp6S9m2vp4HxYoJ/6ajq8INJj
-         mfPcJ3O7sNaQ8FlHSrI+Qt7QLZx/oyQvCmmJftHODxQYLBSY/CVFm7PTNaXD9G2P8K
-         SYpJKGFaQTkahi0G5AxqXqXM7Gn0iWD3NThrsPCQ=
+        b=kQQglM5CWJiLvRz1P4+BOqd/Vpi2STBdalwLH/QwVES+QUawgp46fox547qts5xQF
+         4xT0eRN0UeXtsqt9JI8guKEwSTT8OL0IVZ7G57DSCZP28Jzz16B61sz5qRrHB5acFk
+         lxon0iHDDygMSrztt2bq/f8W8ZGATaww3Qg6/QGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        rui.zhang@intel.com, Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 28/96] usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
-Date:   Mon,  8 Jul 2019 17:13:00 +0200
-Message-Id: <20190708150528.045711167@linuxfoundation.org>
+Subject: [PATCH 5.1 27/96] x86/CPU: Add more Icelake model numbers
+Date:   Mon,  8 Jul 2019 17:12:59 +0200
+Message-Id: <20190708150527.989999310@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -60,49 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 62fd0e0a24abeebe2c19fce49dd5716d9b62042d ]
+[ Upstream commit e35faeb64146f2015f2aec14b358ae508e4066db ]
 
-There is no deallocation of fusb300->ep[i] elements, allocated at
-fusb300_probe.
+Add the CPUID model numbers of Icelake (ICL) desktop and server
+processors to the Intel family list.
 
-The patch adds deallocation of fusb300->ep array elements.
+ [ Qiuxu: Sort the macros by model number. ]
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc: rui.zhang@intel.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190603134122.13853-1-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/fusb300_udc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/include/asm/intel-family.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/fusb300_udc.c b/drivers/usb/gadget/udc/fusb300_udc.c
-index 263804d154a7..00e3f66836a9 100644
---- a/drivers/usb/gadget/udc/fusb300_udc.c
-+++ b/drivers/usb/gadget/udc/fusb300_udc.c
-@@ -1342,12 +1342,15 @@ static const struct usb_gadget_ops fusb300_gadget_ops = {
- static int fusb300_remove(struct platform_device *pdev)
- {
- 	struct fusb300 *fusb300 = platform_get_drvdata(pdev);
-+	int i;
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 9f15384c504a..310118805f57 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -52,6 +52,9 @@
  
- 	usb_del_gadget_udc(&fusb300->gadget);
- 	iounmap(fusb300->reg);
- 	free_irq(platform_get_irq(pdev, 0), fusb300);
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
  
- 	fusb300_free_request(&fusb300->ep[0]->ep, fusb300->ep0_req);
-+	for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
-+		kfree(fusb300->ep[i]);
- 	kfree(fusb300);
++#define INTEL_FAM6_ICELAKE_X		0x6A
++#define INTEL_FAM6_ICELAKE_XEON_D	0x6C
++#define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
  
- 	return 0;
-@@ -1491,6 +1494,8 @@ clean_up:
- 		if (fusb300->ep0_req)
- 			fusb300_free_request(&fusb300->ep[0]->ep,
- 				fusb300->ep0_req);
-+		for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
-+			kfree(fusb300->ep[i]);
- 		kfree(fusb300);
- 	}
- 	if (reg)
+ /* "Small Core" Processors (Atom) */
 -- 
 2.20.1
 
