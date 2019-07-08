@@ -2,90 +2,127 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67283C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EABCC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C60F216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020BD2171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:25:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aE8JZ4oL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389484AbfGHRZ0 (ORCPT
+        id S2390677AbfGHRZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:25:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:54422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728744AbfGHRZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:25:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2551928;
-        Mon,  8 Jul 2019 10:25:25 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 217E03F246;
-        Mon,  8 Jul 2019 10:25:24 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 18:25:22 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>,
-        linux-kernel@vger.kernel.org,
-        Bo Zhang <bozhang.zhang@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-Subject: Re: [PATCH 5/6] firmware: arm_scmi: Use the term 'message' instead
- of 'command'
-Message-ID: <20190708172522.GB11197@e107155-lin>
-References: <20190708154358.16227-1-sudeep.holla@arm.com>
- <20190708154358.16227-6-sudeep.holla@arm.com>
- <a04dfc00-9c7a-8321-859d-7a12e7b84ea6@arm.com>
+        Mon, 8 Jul 2019 13:25:30 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39801 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728744AbfGHRZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 13:25:30 -0400
+Received: by mail-qt1-f194.google.com with SMTP id l9so10560755qtu.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ku/o68pleqE6un6ZW/BvkhdW//GDmVPordPUQ3yzu6U=;
+        b=aE8JZ4oLuploE3xF/JrOpdr9AoVRhkEOsLUz30R2UjWMXOkivBepSb7ZtC0ZX+KsXy
+         3jJydV56/hO6tGXVAMdnk5HMzPdKt86jE10qCn/1Gf88ooDqWjePCTTNZ0F+BSMBygqX
+         YPq3EkN9XpWd27tk+5DaiRPVF5jljyVG7WLFWT1raAYswkHluQ+WIivkJ/9MijGIrDSx
+         woUAgC/OYAaDLs3ChTeqeOT97WIiKsdJIuVECqzzDxRRnFjmfYc0TVVKBO4QBv1Yc2gL
+         zNp5fGpXei7QgoOsN3bD6RPxGHKUtvFfX0ZuijlV/H08KY1uKgW6HuDlLPmodBgLWv82
+         dkKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ku/o68pleqE6un6ZW/BvkhdW//GDmVPordPUQ3yzu6U=;
+        b=Xy+Lb4NOgau1pfqcXkv4arteRubnV3Bm47MZlINIJ94ynh0Nn+ZHbV5QXgk7UKl5O0
+         vEIqS+Wt9KW6ehaL4z6wT9p6YgGrzWSGs3Cg5PR8+pN+EfjVyDcb679B3L+Os8/vjuEH
+         oh3E4/yYjxDMsoTrscUfnqD6szHlSpyX9E9L10biPLs4qOk4CQbEDGRchvqWDEkCsOvi
+         W32xEyFvokL4u6xvohOX4lINqb/GJpB3g+lN/lwyW607cpmVeNvPk4TceKDCuEYV0+jv
+         61k8tMcbJtFipdPZljTP3rlorGRrZtXdbV10ZYotE/nQjyPyMtK+7nvmUZl/DdvITabf
+         VrOg==
+X-Gm-Message-State: APjAAAXP9a1uaKDUs9I2Pu5vBDkue0MzIN0luKcFKMg7dfSxQsyiAKnJ
+        ouaERtDVQuvCbjxPX+tmkw4hzQ==
+X-Google-Smtp-Source: APXvYqxo7P6BBN+I5qF/OaEb7YKPon028ElmrspccvTXQPbFVXwjbGN4QtHkhSa38AtF7UfZ251zUw==
+X-Received: by 2002:ac8:1c42:: with SMTP id j2mr15087393qtk.68.1562606729322;
+        Mon, 08 Jul 2019 10:25:29 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id t2sm9809926qth.33.2019.07.08.10.25.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jul 2019 10:25:28 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hkXOK-0007Ke-A9; Mon, 08 Jul 2019 14:25:28 -0300
+Date:   Mon, 8 Jul 2019 14:25:28 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 35/39] docs: infiniband: add it to the driver-api bookset
+Message-ID: <20190708172528.GC23996@ziepe.ca>
+References: <cover.1561724493.git.mchehab+samsung@kernel.org>
+ <12743088687a9b0b305c05b62a5093056a4190b8.1561724493.git.mchehab+samsung@kernel.org>
+ <20190703180802.GA26557@ziepe.ca>
+ <20190706081950.4a629537@coco.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a04dfc00-9c7a-8321-859d-7a12e7b84ea6@arm.com>
+In-Reply-To: <20190706081950.4a629537@coco.lan>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 05:21:29PM +0100, Steven Price wrote:
-> On 08/07/2019 16:43, Sudeep Holla wrote:
-> > In preparation to adding support for other two types of messages that
-> > SCMI specification mentions, let's replace the term 'command' with the
-> > correct term 'message'.
-> > 
-> > As per the specification the messages are of 3 types:
-> > commands(synchronous or asynchronous), delayed responses and notifications.
-> > 
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  drivers/firmware/arm_scmi/common.h | 10 +++++-----
-> >  drivers/firmware/arm_scmi/driver.c |  6 +++---
-> >  2 files changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-> > index 44fd4f9404a9..4349d836b392 100644
-> > --- a/drivers/firmware/arm_scmi/common.h
-> > +++ b/drivers/firmware/arm_scmi/common.h
-> > @@ -48,11 +48,11 @@ struct scmi_msg_resp_prot_version {
-> >  /**
-> >   * struct scmi_msg_hdr - Message(Tx/Rx) header
-> >   *
-> > - * @id: The identifier of the command being sent
-> > - * @protocol_id: The identifier of the protocol used to send @id command
-> > - * @seq: The token to identify the message. when a message/command returns,
-> > - *	the platform returns the whole message header unmodified including
-> > - *	the token
-> > + * @id: The identifier of the message being sent
-> > + * @protocol_id: The identifier of the protocol used to send @id message
-> > + * @seq: The token to identify the message. when a message returns, the]
+On Sat, Jul 06, 2019 at 08:19:50AM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 3 Jul 2019 15:08:02 -0300
+> Jason Gunthorpe <jgg@ziepe.ca> escreveu:
 > 
-> Stray ']' at the end of the line.
+> > On Fri, Jun 28, 2019 at 09:30:28AM -0300, Mauro Carvalho Chehab wrote:
+> > > While this contains some uAPI stuff, it was intended to be
+> > > read by a kernel doc. So, let's not move it to a different
+> > > dir, but, instead, just add it to the driver-api bookset.
+> > > 
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > >  Documentation/index.rst            | 1 +
+> > >  Documentation/infiniband/index.rst | 2 +-
+> > >  2 files changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/index.rst b/Documentation/index.rst
+> > > index ea33cbbccd9d..e69d2fde7735 100644
+> > > +++ b/Documentation/index.rst
+> > > @@ -96,6 +96,7 @@ needed).
+> > >     block/index
+> > >     hid/index
+> > >     iio/index
+> > > +   infiniband/index
+> > >     leds/index
+> > >     media/index
+> > >     networking/index
+> > > diff --git a/Documentation/infiniband/index.rst b/Documentation/infiniband/index.rst
+> > > index 22eea64de722..9cd7615438b9 100644
+> > > +++ b/Documentation/infiniband/index.rst
+> > > @@ -1,4 +1,4 @@
+> > > -:orphan:
+> > > +.. SPDX-License-Identifier: GPL-2.0
+> > >  
+> > >  ==========
+> > >  InfiniBand  
+> > 
+> > Should this one go to the rdma.git as well? It looks like yes
 > 
+> I'm OK if you want to add to rdma.git. However, this will likely rise 
+> conflicts, though, as this series has lots of other patches touching
+> Documentation/index.rst. 
 
-Thanks for spotting, will fix it.
+Applied now, it seems better to keep everything consistent
 
---
-Regards,
-Sudeep
+Jason
