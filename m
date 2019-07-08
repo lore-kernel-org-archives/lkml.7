@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B05DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4417C606BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1A5216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC70216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+MArnBQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MQqQMln6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731870AbfGHOkN (ORCPT
+        id S1731894AbfGHOkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:40:13 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44786 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731855AbfGHOkM (ORCPT
+        Mon, 8 Jul 2019 10:40:22 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36237 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728823AbfGHOkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:40:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id b7so16389189otl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:40:12 -0700 (PDT)
+        Mon, 8 Jul 2019 10:40:20 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so16441546oti.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:40:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iIj/D2uFckhktV/1D81+BNHiSe7rGxGISfmtPBSrlSM=;
-        b=C+MArnBQMr2fem13xnS9J64lNmtz6x3eb264CDVGZm7lK3pxHAy8901qu3ZTI2HIS6
-         7K9WLnI/UgnLLE1IK0Nh+pHlhLXmB4gPUEqugQmc+xsgLxMQ0G8jeB+9KL1O/cfTMvXt
-         erNEljQYc3VzgMUZRXI+YJ1J59KILFnMJ3P2X1PNJo3Nx/w2yYFWGaccpDUTST0tS3yU
-         mXnMUWw1nnC/DFX/QkIj/wO9Sc2SGyy6oYCYidmXzXXV4Z+KDev9igsREiqaE5fOpfx0
-         DwfbUepPKKEmN0tnUtPOleWgPURufqT8O7xB3E3KtQGRrDjQ3fFnI4EDjpeLJ4WO90dI
-         zo/w==
+        bh=P0UfYuSIVn3ZdoCHgmfMQcQ4Bx5Zeyc6tJ2jWiXjhtc=;
+        b=MQqQMln6WxFnwJIxVdQq725CZ83Q5i8yiXXUbwPqunDJgW98k01CN/JD82UlujQDg/
+         xvc5BqdXrI7B2KwEaXdC6hl4VQKtrnKVZNmiYbAWtYG0kDWAgtu+3JxUWrfZzNAoOIhL
+         iLWZiyTa8qIrbYcNkUidLc/TpnZMFhl7DFZ/eiwZ9LXKbHVhU8HFHrRgacH66/AzYTtM
+         G3oDjb17sTWOV7mptFn+ZvPtuFddiAyZ6dtWk/RlotyddhooGD197KRCHZPP/pf9M1yb
+         RNLqLQ18cPnZqslKQNDY6jmTbFexEJZ2Ywgxy6iQSeP4Ys2LGPb6I8y91dmORZAsw9jG
+         c13A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=iIj/D2uFckhktV/1D81+BNHiSe7rGxGISfmtPBSrlSM=;
-        b=gImuxAI2nWfuOeI/xrbI1rUMW62d/XccnHwFQ2InuipXa7oWNtxKf2MfHltfsc6AC1
-         4+XcTGCN5F2nlAhK2tpipW0KxdNtRdMS99G3gUTtMhW91HCYYxTDc4cgMyrNh+98igML
-         PzBFxr1UfmWNcxj1D+0cvAQRTszbs1RDABuAyY4vE1kubnaT4iWlAU0WknpJQa3lfBdh
-         S6IknQtdx1aruXEjk1jSIhC3s5H/52thoGSBY944yuMkjUdLTit94iFAmhuvctsDeSJl
-         uSLXdqCZq8sLRnFwSrpJtB55xCJJSvf5qf2LWDuWkwINTu8D37Jub/ZGB1L8664Td09D
-         QuUA==
-X-Gm-Message-State: APjAAAWb50aED54qRL2jhNt8JlHPyIJnpGYoJ5YVBNROrnXQ14GySw+w
-        riK8lzBJ40ES5cvoVFrkxIB8xw==
-X-Google-Smtp-Source: APXvYqyCIgpXl9aMrnWlPCMuhtjBzNRKlFd2j+pNfi8a5y8SglLuLFVH3QGHkoz8B9mgc19PYS+Iiw==
-X-Received: by 2002:a05:6830:18a:: with SMTP id q10mr15142642ota.114.1562596812197;
-        Mon, 08 Jul 2019 07:40:12 -0700 (PDT)
+        bh=P0UfYuSIVn3ZdoCHgmfMQcQ4Bx5Zeyc6tJ2jWiXjhtc=;
+        b=c+SXYoSFmoCPO4hypwQntJtHPEDTHpMQ2WclkshZYZMy5IoRR8Y9ulaqFd3eaEuiOR
+         1bMRtD+EIrWAqkF0Ghx0sT07/5YveqtJzWDrTLc773OD6T7d7mg+lvwgT0uTqgf29dVz
+         cu5wmwqOQCmTunUJpIqmdnMz1O4FHFiYtDlfyhOqWVTXhjtjK0eCXYCsqLCA+if2llfe
+         hEaZi2dlliMyOPBuXTZC/qg/5t6tADHUN8jFL46R4rvS0NazcvN65TQLunFP/ZtNl+3x
+         T2/NkUzEiHfgsUDFhno05QICa8oylYtEnuHJ1ovD4cafEAtYIQ2BjvTHGqdhG7sLQczr
+         hCaA==
+X-Gm-Message-State: APjAAAVOr9pSOY4CSaAB19mmi1jvDJihTEhLuTT2WhDQtjg0wzN1mhpE
+        mmtNbYxhR21V3XeeDhwQd+JlvHisph/jqA==
+X-Google-Smtp-Source: APXvYqwwTW9A3b+wXlBAVQIpYYoeWSItpKpNNsXpU0V7ZdJPO57xQJQciFgrGOSa91Y67e+LLHjOFQ==
+X-Received: by 2002:a9d:5f1a:: with SMTP id f26mr15287602oti.91.1562596819691;
+        Mon, 08 Jul 2019 07:40:19 -0700 (PDT)
 Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id x5sm6386021otb.6.2019.07.08.07.40.04
+        by smtp.gmail.com with ESMTPSA id x5sm6386021otb.6.2019.07.08.07.40.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 07:40:11 -0700 (PDT)
+        Mon, 08 Jul 2019 07:40:19 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -66,9 +66,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 2/4] perf intel-bts: Smatch: Fix potential NULL pointer dereference
-Date:   Mon,  8 Jul 2019 22:39:35 +0800
-Message-Id: <20190708143937.7722-3-leo.yan@linaro.org>
+Subject: [PATCH v2 3/4] perf intel-pt: Smatch: Fix potential NULL pointer dereference
+Date:   Mon,  8 Jul 2019 22:39:36 +0800
+Message-Id: <20190708143937.7722-4-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190708143937.7722-1-leo.yan@linaro.org>
 References: <20190708143937.7722-1-leo.yan@linaro.org>
@@ -80,56 +80,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Based on the following report from Smatch, fix the potential
 NULL pointer dereference check.
 
-  tools/perf/util/intel-bts.c:898
-  intel_bts_process_auxtrace_info() error: we previously assumed
-  'session->itrace_synth_opts' could be null (see line 894)
+  tools/perf/util/intel-pt.c:3200
+  intel_pt_process_auxtrace_info() error: we previously assumed
+  'session->itrace_synth_opts' could be null (see line 3196)
 
-  tools/perf/util/intel-bts.c:899
-  intel_bts_process_auxtrace_info() warn: variable dereferenced before
-  check 'session->itrace_synth_opts' (see line 898)
+  tools/perf/util/intel-pt.c:3206
+  intel_pt_process_auxtrace_info() warn: variable dereferenced before
+  check 'session->itrace_synth_opts' (see line 3200)
 
-tools/perf/util/intel-bts.c
-894         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-895                 bts->synth_opts = *session->itrace_synth_opts;
-896         } else {
-897                 itrace_synth_opts__set_default(&bts->synth_opts,
-898                                 session->itrace_synth_opts->default_no_sample);
-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
-899                 if (session->itrace_synth_opts)
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
-900                         bts->synth_opts.thread_stack =
-901                                 session->itrace_synth_opts->thread_stack;
-902         }
+tools/perf/util/intel-pt.c
+3196         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+3197                 pt->synth_opts = *session->itrace_synth_opts;
+3198         } else {
+3199                 itrace_synth_opts__set_default(&pt->synth_opts,
+3200                                 session->itrace_synth_opts->default_no_sample);
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+3201                 if (!session->itrace_synth_opts->default_no_sample &&
+3202                     !session->itrace_synth_opts->inject) {
+3203                         pt->synth_opts.branches = false;
+3204                         pt->synth_opts.callchain = true;
+3205                 }
+3206                 if (session->itrace_synth_opts)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+3207                         pt->synth_opts.thread_stack =
+3208                                 session->itrace_synth_opts->thread_stack;
+3209         }
 
 'session->itrace_synth_opts' is impossible to be a NULL pointer in
-intel_bts_process_auxtrace_info(), thus this patch removes the NULL
+intel_pt_process_auxtrace_info(), thus this patch removes the NULL
 test for 'session->itrace_synth_opts'.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/intel-bts.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/util/intel-pt.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 5a21bcdb8ef7..5560e95afdda 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -891,13 +891,12 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
- 	if (dump_trace)
- 		return 0;
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index c76a96f777fb..df061599fef4 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -3210,7 +3210,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		goto err_delete_thread;
+ 	}
  
 -	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
 +	if (session->itrace_synth_opts->set) {
- 		bts->synth_opts = *session->itrace_synth_opts;
+ 		pt->synth_opts = *session->itrace_synth_opts;
  	} else {
- 		itrace_synth_opts__set_default(&bts->synth_opts,
- 				session->itrace_synth_opts->default_no_sample);
+ 		itrace_synth_opts__set_default(&pt->synth_opts,
+@@ -3220,8 +3220,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 			pt->synth_opts.branches = false;
+ 			pt->synth_opts.callchain = true;
+ 		}
 -		if (session->itrace_synth_opts)
--			bts->synth_opts.thread_stack =
-+		bts->synth_opts.thread_stack =
+-			pt->synth_opts.thread_stack =
++		pt->synth_opts.thread_stack =
  				session->itrace_synth_opts->thread_stack;
  	}
  
+@@ -3241,11 +3240,9 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		pt->cbr2khz = tsc_freq / pt->max_non_turbo_ratio / 1000;
+ 	}
+ 
+-	if (session->itrace_synth_opts) {
+-		err = intel_pt_setup_time_ranges(pt, session->itrace_synth_opts);
+-		if (err)
+-			goto err_delete_thread;
+-	}
++	err = intel_pt_setup_time_ranges(pt, session->itrace_synth_opts);
++	if (err)
++		goto err_delete_thread;
+ 
+ 	if (pt->synth_opts.calls)
+ 		pt->branches_filter |= PERF_IP_FLAG_CALL | PERF_IP_FLAG_ASYNC |
 -- 
 2.17.1
 
