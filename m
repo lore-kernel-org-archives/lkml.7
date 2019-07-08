@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DC6C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A463C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A251204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDAD9214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599411;
-	bh=FobOZ6lYp7URM5zIqLYbnisk5wnuT4aIooeVN8mJV9s=;
+	s=default; t=1562599413;
+	bh=8CW4HcZ2DSVrqyxKi1Wc3Cz091WSc5eEel58Rm3wUFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6UvRLYMeE5/TNwi6GA069m+j8CsTK3JUgs6Iw3fxU0KJgNKfbITnYnXOFlaKoyIZ
-	 UrE/u6im0mqA8T0Uucjycc4SrEAnEKOfxfGoehPHen7XaVFXZh2DcBPxnPCy8YPIPk
-	 7frjGXOjIxLd2bcr4xafejD/9XX7ObGswvLU62LI=
+	b=GxO2px4XP94rFwtEpmyfZh7jA4UsG27M+bmEszbFkjCbXIyiPnp8WSGEB1EK+GYQl
+	 yA2RWEaGH9GmkIcK+yjIgrJgHDODwxR76K6fx9eawM9dcao/9/jscyJlcng4gmdYFi
+	 aobnbbirKqq3kclLSke/YItmcwXwH/JpuKOkxuSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388203AbfGHPX3 (ORCPT
+        id S2388220AbfGHPXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:23:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50518 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:23:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388180AbfGHPX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:23:27 -0400
+        id S2388199AbfGHPXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:23:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116D02166E;
-        Mon,  8 Jul 2019 15:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0815204EC;
+        Mon,  8 Jul 2019 15:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599406;
-        bh=FobOZ6lYp7URM5zIqLYbnisk5wnuT4aIooeVN8mJV9s=;
+        s=default; t=1562599409;
+        bh=8CW4HcZ2DSVrqyxKi1Wc3Cz091WSc5eEel58Rm3wUFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cvSqA6LPvotOLECnUqX0uGnpFjKEFgaL3Kx3icqrkcbYNvoB+FDEvgChWG5dCqrLk
-         r2w5mDUHb9yLasfqarhmFBFsrco8jHrkYgdrV7BZdU4BEX8FkBWfa4heA3R9dmtglu
-         nJIJhuJ49joA9f3lBhtucPLeBiyUn/z+OpMhhBMw=
+        b=qK+K+xLiTykKGmRmOwJm1DmwuljjDkwPmZd5/he4OQXuS8IXUMybxFF3jBZdR4bOE
+         k/mUrTdiMlYWbiSeV4PqV4X+AnU/bR7P7GEdJ4wyvuad2rPCUzXkydWqyrnOUiaDRK
+         yEXOmu8idZ2Ux3dhbCHc1NyM4E2Rkup4V9EqPdIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Beckett <bob.beckett@collabora.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 4.9 094/102] drm/imx: only send event on crtc disable if kept disabled
-Date:   Mon,  8 Jul 2019 17:13:27 +0200
-Message-Id: <20190708150531.340590307@linuxfoundation.org>
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: [PATCH 4.9 095/102] btrfs: Ensure replaced device doesnt have pending chunk allocation
+Date:   Mon,  8 Jul 2019 17:13:28 +0200
+Message-Id: <20190708150531.396008385@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,34 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Beckett <bob.beckett@collabora.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-commit 5aeab2bfc9ffa72d3ca73416635cb3785dfc076f upstream.
+commit debd1c065d2037919a7da67baf55cc683fee09f0 upstream.
 
-The event will be sent as part of the vblank enable during the modeset
-if the crtc is not being kept disabled.
+Recent FITRIM work, namely bbbf7243d62d ("btrfs: combine device update
+operations during transaction commit") combined the way certain
+operations are recoded in a transaction. As a result an ASSERT was added
+in dev_replace_finish to ensure the new code works correctly.
+Unfortunately I got reports that it's possible to trigger the assert,
+meaning that during a device replace it's possible to have an unfinished
+chunk allocation on the source device.
 
-Fixes: 5f2f911578fb ("drm/imx: atomic phase 3 step 1: Use atomic configuration")
+This is supposed to be prevented by the fact that a transaction is
+committed before finishing the replace oepration and alter acquiring the
+chunk mutex. This is not sufficient since by the time the transaction is
+committed and the chunk mutex acquired it's possible to allocate a chunk
+depending on the workload being executed on the replaced device. This
+bug has been present ever since device replace was introduced but there
+was never code which checks for it.
 
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+The correct way to fix is to ensure that there is no pending device
+modification operation when the chunk mutex is acquire and if there is
+repeat transaction commit. Unfortunately it's not possible to just
+exclude the source device from btrfs_fs_devices::dev_alloc_list since
+this causes ENOSPC to be hit in transaction commit.
+
+Fixing that in another way would need to add special cases to handle the
+last writes and forbid new ones. The looped transaction fix is more
+obvious, and can be easily backported. The runtime of dev-replace is
+long so there's no noticeable delay caused by that.
+
+Reported-by: David Sterba <dsterba@suse.com>
+Fixes: 391cd9df81ac ("Btrfs: fix unprotected alloc list insertion during the finishing procedure of replace")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/imx/ipuv3-crtc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/dev-replace.c |   29 +++++++++++++++++++----------
+ fs/btrfs/volumes.c     |    2 ++
+ fs/btrfs/volumes.h     |    5 +++++
+ 3 files changed, 26 insertions(+), 10 deletions(-)
 
---- a/drivers/gpu/drm/imx/ipuv3-crtc.c
-+++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-@@ -79,7 +79,7 @@ static void ipu_crtc_atomic_disable(stru
- 	drm_crtc_vblank_off(crtc);
- 
- 	spin_lock_irq(&crtc->dev->event_lock);
--	if (crtc->state->event) {
-+	if (crtc->state->event && !crtc->state->active) {
- 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
- 		crtc->state->event = NULL;
+--- a/fs/btrfs/dev-replace.c
++++ b/fs/btrfs/dev-replace.c
+@@ -511,18 +511,27 @@ static int btrfs_dev_replace_finishing(s
  	}
+ 	btrfs_wait_ordered_roots(root->fs_info, -1, 0, (u64)-1);
+ 
+-	trans = btrfs_start_transaction(root, 0);
+-	if (IS_ERR(trans)) {
+-		mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
+-		return PTR_ERR(trans);
++	while (1) {
++		trans = btrfs_start_transaction(root, 0);
++		if (IS_ERR(trans)) {
++			mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
++			return PTR_ERR(trans);
++		}
++		ret = btrfs_commit_transaction(trans, root);
++		WARN_ON(ret);
++		mutex_lock(&uuid_mutex);
++		/* keep away write_all_supers() during the finishing procedure */
++		mutex_lock(&root->fs_info->fs_devices->device_list_mutex);
++		mutex_lock(&root->fs_info->chunk_mutex);
++		if (src_device->has_pending_chunks) {
++			mutex_unlock(&root->fs_info->chunk_mutex);
++			mutex_unlock(&root->fs_info->fs_devices->device_list_mutex);
++			mutex_unlock(&uuid_mutex);
++		} else {
++			break;
++		}
+ 	}
+-	ret = btrfs_commit_transaction(trans, root);
+-	WARN_ON(ret);
+ 
+-	mutex_lock(&uuid_mutex);
+-	/* keep away write_all_supers() during the finishing procedure */
+-	mutex_lock(&root->fs_info->fs_devices->device_list_mutex);
+-	mutex_lock(&root->fs_info->chunk_mutex);
+ 	btrfs_dev_replace_lock(dev_replace, 1);
+ 	dev_replace->replace_state =
+ 		scrub_ret ? BTRFS_IOCTL_DEV_REPLACE_STATE_CANCELED
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4876,6 +4876,7 @@ static int __btrfs_alloc_chunk(struct bt
+ 	for (i = 0; i < map->num_stripes; i++) {
+ 		num_bytes = map->stripes[i].dev->bytes_used + stripe_size;
+ 		btrfs_device_set_bytes_used(map->stripes[i].dev, num_bytes);
++		map->stripes[i].dev->has_pending_chunks = true;
+ 	}
+ 
+ 	spin_lock(&extent_root->fs_info->free_chunk_lock);
+@@ -7250,6 +7251,7 @@ void btrfs_update_commit_device_bytes_us
+ 		for (i = 0; i < map->num_stripes; i++) {
+ 			dev = map->stripes[i].dev;
+ 			dev->commit_bytes_used = dev->bytes_used;
++			dev->has_pending_chunks = false;
+ 		}
+ 	}
+ 	unlock_chunks(root);
+--- a/fs/btrfs/volumes.h
++++ b/fs/btrfs/volumes.h
+@@ -62,6 +62,11 @@ struct btrfs_device {
+ 
+ 	spinlock_t io_lock ____cacheline_aligned;
+ 	int running_pending;
++	/* When true means this device has pending chunk alloc in
++	 * current transaction. Protected by chunk_mutex.
++	 */
++	bool has_pending_chunks;
++
+ 	/* regular prio bios */
+ 	struct btrfs_pending_bios pending_bios;
+ 	/* WRITE_SYNC bios */
 
 
