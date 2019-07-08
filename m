@@ -2,56 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0B9C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22439C606C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B38C21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE9A21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599842;
-	bh=IWAfHE3MJdLP/FqmZHno6i2OiWv+r4s+QbncoVw12eo=;
+	s=default; t=1562599844;
+	bh=F0MLiEif0xXSL6E1WHyu/bkxCafh91cFapRm0n3w3PE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xgcytsmdaGxTKcyxJRJqrbrg6u7gt8cO9Jwjc4YM6KyTWNdfqwdocnTfzzybJuCu3
-	 KrlweXjgTye15T4W1IP6OQFHrwiKxIyMixCimm8OE9iImEtmPmdmfzB+hhnbcrc0lC
-	 iGTCAymzxBfePUXgtafGqtaqRK8IRZbIM7Lldm8A=
+	b=YA/iGPsn+PpCo955uDBT0VNGrY4RafEmoV/7XqBNB+r5CCCqo8YZDgdsB8KuFu0Ju
+	 Jo8Sv1X6VSi3LORXaXAKbFH+B4PHbRgd2YPn0KbVLmAAknwOLGU7UYTTD+u5ujX5pr
+	 nMYBkqroP2ndI/1AbFYKZkHZYvx1Ohn9aSy+Dss8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389512AbfGHP3f (ORCPT
+        id S2389767AbfGHPal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58332 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:30:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389500AbfGHP3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:32 -0400
+        id S2389720AbfGHPag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AD6321743;
-        Mon,  8 Jul 2019 15:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 651D320665;
+        Mon,  8 Jul 2019 15:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599771;
-        bh=IWAfHE3MJdLP/FqmZHno6i2OiWv+r4s+QbncoVw12eo=;
+        s=default; t=1562599835;
+        bh=F0MLiEif0xXSL6E1WHyu/bkxCafh91cFapRm0n3w3PE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XP06qAH2RDYGUkSv7oZhIlSEEe7XG80CLHf1iWkOB7ufmgLCZZAL+Co0T0NkMhlCW
-         Da+wpiT/vmybvto9hHcHioY7ekJXsSYJkhuj1oQHPddVjW+JfTgju7Qe124YWGfbpz
-         EpE6onTqGE8Ie1FEJ5v1ICITfxjuIzdaJx6N5fEU=
+        b=zqDn2s5Ph79ZC4ScrilMWRz1+7Zrg/UF51dP0anvaNiOHQM4tDkaNl9X0V5AdqUiF
+         ugx7EymBd/xZZ+jz0gNzgpz/k1E4cbC223lgTRTSOy8EyJTB1paKw74hmbKvSXo4d3
+         l+xbSUIOVwEq6u1Ybizo+Me6HoDkceNQ4bmKkRSI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle D Pelton <kyle.d.pelton@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>, dave.hansen@linux.intel.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Huang <wei@redhat.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 72/90] x86/boot/compressed/64: Do not corrupt EDX on EFER.LME=1 setting
-Date:   Mon,  8 Jul 2019 17:13:39 +0200
-Message-Id: <20190708150525.966995669@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org
+Subject: [PATCH 4.19 88/90] MIPS: have "plain" make calls build dtbs for selected platforms
+Date:   Mon,  8 Jul 2019 17:13:55 +0200
+Message-Id: <20190708150526.970098760@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -64,49 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 45b13b424faafb81c8c44541f093a682fdabdefc ]
+From: Cedric Hombourger <Cedric_Hombourger@mentor.com>
 
-RDMSR in the trampoline code overwrites EDX but that register is used
-to indicate whether 5-level paging has to be enabled and if clobbered,
-leads to failure to boot on a 5-level paging machine.
+commit 637dfa0fad6d91a9a709dc70549a6d20fa77f615 upstream.
 
-Preserve EDX on the stack while we are dealing with EFER.
+scripts/package/builddeb calls "make dtbs_install" after executing
+a plain make (i.e. no build targets specified). It will fail if dtbs
+were not built beforehand. Match the arm64 architecture where DTBs get
+built by the "all" target.
 
-Fixes: b677dfae5aa1 ("x86/boot/compressed/64: Set EFER.LME=1 in 32-bit trampoline before returning to long mode")
-Reported-by: Kyle D Pelton <kyle.d.pelton@intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: dave.hansen@linux.intel.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Wei Huang <wei@redhat.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190206115253.1907-1-kirill.shutemov@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+[paul.burton@mips.com: s/builddep/builddeb]
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.1+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/boot/compressed/head_64.S | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/Makefile |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index f105ae8651c9..f62e347862cc 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -602,10 +602,12 @@ ENTRY(trampoline_32bit_src)
- 3:
- 	/* Set EFER.LME=1 as a precaution in case hypervsior pulls the rug */
- 	pushl	%ecx
-+	pushl	%edx
- 	movl	$MSR_EFER, %ecx
- 	rdmsr
- 	btsl	$_EFER_LME, %eax
- 	wrmsr
-+	popl	%edx
- 	popl	%ecx
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -16,6 +16,7 @@ archscripts: scripts_basic
+ 	$(Q)$(MAKE) $(build)=arch/mips/boot/tools relocs
  
- 	/* Enable PAE and LA57 (if required) paging modes */
--- 
-2.20.1
-
+ KBUILD_DEFCONFIG := 32r2el_defconfig
++KBUILD_DTBS      := dtbs
+ 
+ #
+ # Select the object file format to substitute into the linker script.
+@@ -385,7 +386,7 @@ quiet_cmd_64 = OBJCOPY $@
+ vmlinux.64: vmlinux
+ 	$(call cmd,64)
+ 
+-all:	$(all-y)
++all:	$(all-y) $(KBUILD_DTBS)
+ 
+ # boot
+ $(boot-y): $(vmlinux-32) FORCE
 
 
