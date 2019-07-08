@@ -2,91 +2,67 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DB4C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30938C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705A3216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13748216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732197AbfGHPLt (ORCPT
+        id S1732185AbfGHPLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:11:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:47636 "EHLO mga11.intel.com"
+        Mon, 8 Jul 2019 11:11:47 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58570 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732146AbfGHPLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:11:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1732162AbfGHPLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:11:42 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 08:11:43 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 08:11:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
-   d="scan'208";a="159148473"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by orsmga008.jf.intel.com with ESMTP; 08 Jul 2019 08:11:38 -0700
-Message-ID: <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
-Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Date:   Mon, 08 Jul 2019 18:11:40 +0300
-In-Reply-To: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
-References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+   d="scan'208";a="165482391"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga008.fm.intel.com with ESMTP; 08 Jul 2019 08:11:40 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 3F381301BB6; Mon,  8 Jul 2019 08:11:41 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 08:11:41 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Wei Wang <wei.w.wang@intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, pbonzini@redhat.com, kan.liang@intel.com,
+        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
+        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
+Subject: Re: [PATCH v7 10/12] KVM/x86/lbr: lazy save the guest lbr stack
+Message-ID: <20190708151141.GL31027@tassilo.jf.intel.com>
+References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
+ <1562548999-37095-11-git-send-email-wei.w.wang@intel.com>
+ <20190708145326.GO3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708145326.GO3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-07-06 at 20:18 -0400, Nayna Jain wrote:
-> +/*
-> + * tpm_get_pcr_allocation() - initialize the chip allocated banks for PCRs
-> + * @chip: TPM chip to use.
-> + */
-> +static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-> +{
-> +	int rc;
-> +
-> +	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> +		rc = tpm2_get_pcr_allocation(chip);
-> +	else
-> +		rc = tpm1_get_pcr_allocation(chip);
-> +
-> +	return rc;
-> +}
+> I don't understand a word of that.
+> 
+> Who cares if the LBR MSRs are touched; the guest expects up-to-date
+> values when it does reads them.
 
-It is just a trivial static function, which means that kdoc comment is
-not required and neither it is useful. Please remove that. I would
-rewrite the function like:
+This is for only when the LBRs are disabled in the guest.
 
-static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-{
-	int rc;
+It doesn't make sense to constantly save/restore disabled LBRs, which
+would be a large overhead for guests that don't use LBRs. 
 
-	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
-     	     tpm2_get_pcr_allocation(chip) :
-     	     tpm1_get_pcr_allocation(chip);
+When the LBRs are enabled they always need to be saved/restored as you
+say.
 
-	return rc > 0 ? -ENODEV : rc;
-}
-
-This addresses the issue that Stefan also pointed out. You have to
-deal with the TPM error codes.
-
-/Jarkko
-
+-Andi
