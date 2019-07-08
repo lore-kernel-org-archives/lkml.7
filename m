@@ -2,153 +2,153 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796BAC606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD21FC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD762064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E872064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:57:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l4dpUgn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbfGHM4Y (ORCPT
+        id S1731121AbfGHM5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:56:24 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:57603 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728892AbfGHM4Y (ORCPT
+        Mon, 8 Jul 2019 08:57:19 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:59903 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbfGHM5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:56:24 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MbBQU-1iLzrJ3Egy-00bXQy; Mon, 08 Jul 2019 14:55:57 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH] [net-next] net/mlx5e: xsk: dynamically allocate mlx5e_channel_param
-Date:   Mon,  8 Jul 2019 14:55:41 +0200
-Message-Id: <20190708125554.3863901-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 8 Jul 2019 08:57:19 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190708125716euoutp01dbac24ca7bddb7455856e338f9e53f16~vb_fGj7213199231992euoutp01T
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2019 12:57:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190708125716euoutp01dbac24ca7bddb7455856e338f9e53f16~vb_fGj7213199231992euoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562590637;
+        bh=moH9FyJACg7taxt6hPEp6Gwj8L3RJFkHFSIW10SGh/8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=l4dpUgn+xlSJfnhPtOE0y2zqA0uxPILyb+BAmfDWwP5P7IculB9vc1dJWYMNOduP1
+         nAPUvD64tY1y0AzBt/dmFCWl2PWqhUkh+VayYV3XcglnJXDHUkiCCvG+1m8p6IV51r
+         OR4ZaEpTeHblAaIZDvEhDMWuRqkHPG1tf1cpNAZc=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190708125715eucas1p18070570968e5ad20755ba1e3578535aa~vb_d64wFK1523415234eucas1p1W;
+        Mon,  8 Jul 2019 12:57:15 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 00.A7.04377.BAD332D5; Mon,  8
+        Jul 2019 13:57:15 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190708125714eucas1p1f71616c08694fb91f20a664e59c339d0~vb_dNNfuL1523415234eucas1p1V;
+        Mon,  8 Jul 2019 12:57:14 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190708125714eusmtrp1ef454f56758f1cc56e77b9357db5ea29~vb_c_6sdD1747017470eusmtrp11;
+        Mon,  8 Jul 2019 12:57:14 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-41-5d233dabb673
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9A.1A.04140.AAD332D5; Mon,  8
+        Jul 2019 13:57:14 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190708125713eusmtip29fd40a6e2195085cb1853b84d3ad8143~vb_bebL6c2121721217eusmtip2-;
+        Mon,  8 Jul 2019 12:57:13 +0000 (GMT)
+Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
+ implementation
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Huw Davies <huw@codeweavers.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <ed758c10-7260-bec3-caf1-08cae7e0968d@samsung.com>
+Date:   Mon, 8 Jul 2019 14:57:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:4ftv1gHczqjAf8xH9IXsCPbra/fMKRspDTr8cIcpEuGznocAdGy
- iZhmNDyoSPnpnBZOyDHtT8Ynn4XQ9kQfpsqHva0dKZA5Ld4hMScUjAMHEbG6PrAbwLC6ASg
- g539BORMN8W974gKpYHP5K9v2Y2f956yutZO9dA6870giJkCXQ71FrqA8iO4eyLCZFzDhgI
- VQdm2P+yiXXKN+C7144Mw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:S7/kq/cX7g0=:jQ0xc1zhHRNbrh7x+xMeHd
- cA/orRXHrovfvXEwHXZJ26K0GbHxI2WZd/m4ZhxS4FbYUQCEDMUNy2qB1IFuJjaqe4Ok79Rw+
- xsVajdjRZLKA8iteii1S1tU6D3sQnjcMYzK9cBDLynaRMXbMijhwmTSSWvoElvXCgDhCTHqgW
- w0ZKb8UsaLYUJXJV+rtGWcvRINaruEIKSrH6zyPkiFs/7W8mhOpuPxnLYfSic/nmn9RqgeY16
- 9PpuKCJVcOTuXrv7FXqdCpcEkbg09EeepsRjKkKsJ9YvEiTXd49QbJ9EalG6aIK2+5SXA2OCH
- FfCwVe4ZWBH2Bf3cWn+IvsRaj/wv13R9p3joz6YNOZAPX0H5LLXq2sA6ckW2FC+QvSKaef0FP
- IGttL7qBy2wgExG+3GFBaWQHx5wWeH3fnAslbBWvM6JvbHjCUMueZa6l/jnSzleM8dgP1n2dF
- 3Kb7dt3tQKmc2ANAboFjOqOfOZqzpiye/4XZ1aBxc0wFo6nao0p9Xw+RjcYWxsEBKIY+2US1E
- Q7A0Ivd4/DgYN0zZDRXUko+thJnndO3/iuaeeJi9C0fcbmplbWvxWHZqPB94wdycirbrWGTbF
- 4BEHT3RgOKgOABrcp2tsqgnipoNcJTPr1Bq+Up14Mf3MERyrLi7AS4bXJNtz9L2BBMWBbtb/D
- pVfYxu7EZc+0WEYxD2gQWQwH4ouF7OYRnkAuotdjafrWCeio59oFCnNdU4D/4x9PfSKA6DpwF
- 7+b1dGFK0pTWht8vSCelCEwDbGj1EbJRNNE0DA==
+In-Reply-To: <06c264a8-8778-18b1-1094-4281a4a2abc9@arm.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0wUVxjtt3N3ZiAuGRYNn4uVZIpNSqKIMfG2WKoNTSemPxpSG1NDy1An
+        QISF7ABVa1Jaq+LKy0UFt3RdU1QYsZoBt7hImi4IKgbf6wsfBNJAEW0DWqmvsjs05d853znn
+        fo9cnrEeY218rr1IcdjlPJGNJL7uyQsLj7z7RsbiI1ocrd47TGijZxLoC1c3Rx8dKgfqGX+d
+        7mt8QGiZ/zGh+mDQTK/461la2/+IpTv0E0ADezqADro9LD3adYejlaPdDK3qv87Sy6cS6KQ+
+        AHT3yM8c9TbdIrRF38PQjpeThI78dYasiJV87T6z1OxpBulK8BIjPfvHBdLEtW9N0kn3HU7y
+        6sWSru1gpf7gKVZ62NfHSaebjpqkloZvpJoDU/7RrgEiXXSulypbNfg4+rPI5euUvNwSxZGU
+        mhmZs7u52Vx4nNnQ/rQfSqHP5ASeR2EpBs9+5IRI3io0Au593MIaZAKw4dcKMMg44J9dzikl
+        Ipy463QRQzgM+NzbyRlkDFB7UmcOuWKET7D1+x9JCM8WkvHk6Lbwu4zQwaJre2nYxE4JFacr
+        IYQtQiq2De4P14mQgNeGBpkQniOswXNdHmJ4ovHsvqEwjhBS8F7NwXCWEWLxu4kms4Hj8Zex
+        eibUDIUHPP4+3Goy5k5D35YKMHAM/tHTyhl4HvbWlBMjsAWwvP02Z5BqwHs93ulECnb2XDKH
+        bsYIb+Exf5JRXok7q6qmTxmFN8aijSGi0OWrZYyyBcu2WQ13Aj7TaqfHseHOoVekGkT3jNXc
+        M9Zxz1jH/X9fLxANYpViNT9bUZfYla8WqXK+WmzPXvRlQb4OU9+492XPRBv4n2cFQOBBnGXh
+        54sZVrNcom7MDwDyjDjbIqfHZ1gt6+SNmxRHwReO4jxFDUAcT8RYy9ev3V9rFbLlImW9ohQq
+        jv9UEx9hK4Vqy+U4/8X9vfd7tbmr3fH2RJr+w6efj0PMiQVtupiTtnLrO1vffFi4OXU8e9Ou
+        5fOfnuHqkvXR7qwo8dXcsrr0YOnbNvigRn7v6uYbUUUBoSRXqk/LuEkSz4+UpxTczqI2LXg4
+        qYNdtes3saFs8bK/1VWdHw5omZnvu39aezNpuEEkao6cnMg4VPlfv8cM1MIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sb0gTYRzHebzb7SbNzmX4ZPTHS4yiVue/PZZaEeERvoiKCNuqKy8NnZPd
+        JhVhFhZ5lNrUrGFLIUVtC7vMNBXSzJJgpdmMsD8ywcyclEZZGW2OwHcf+H4+L37wIzFVpyyM
+        PJ5t4o3ZXBZNBOLP/z59v74hcZVu46QUiUqufsJRnW0GoFlLjxxN1l4CyDa1DF2v+4Kjiw+/
+        40hyu2To1cNKAlUMTRKoULoPUFd5B0Buq41Aju53clQ03oOh4qFBAvW3R6AZaRigsrE7clRV
+        /xZH96RyDHX8ncHR2Ndn+NZQtrmtWcbabXbAvnL1YezvXxbATr8+G8C2Wt/J2SrJzEoNhQQ7
+        5GonWI/TKWef1DsC2Hu3zrCl1V5/vHsYZ1+KmWxRUwPYFZyqTjAazCZ+ZYZBMCXSBxgUpWbi
+        kToqJl7NRGt0m6Ji6Q1JCWl81vFc3rgh6bA6o8xul+U0Yifafg6BfOAMEIGChFQMfC9acBEE
+        kiqqBsDejxUyEZDeIQzeLKD9ziL4xyUSfmccQE/1J9w3LKL2wqaCG3McQjGwdfzCnIRRnQR8
+        0CLK/UUpBkunLst9FuG1Lj8pAj5WUkmwxX1T5mOcioCvR9yYjxdT+6HF1Yr7nWDYe31kjhXU
+        ZvihtGauxajV8I+tH/NzKDw3XS/z8wr4YKISKwEq67zcOi+xzkus85IqgDeAEN4s6NP1QpRa
+        4PSCOTtdfdSgl4D3fZp7ZppagOjZ0wUoEtALlORyWqeScbnCSX0XgCRGhyi53St0KmUad/IU
+        bzQcMpqzeKELxHqPu4KFLT5q8D5jtukQE8toUDyjidZExyE6VHmR6tSqqHTOxGfyfA5v/N8F
+        kIqwfJCaEFTbui6CeaQ1Bu3drl04uOWxM3zpNzL54DDJjZIOrfNFZ9zw5I6B5CXaNRFv3Hnn
+        b3sq23TF9q9L74qPcw8WTvz8rQ685jmSto+OYRPT+zpMiqlIx+iFnSndec2NY5bZ04k/ajRl
+        5Zb2VRXPHAOR4dsU0rGKH+Lqz3l3HPtSaFzI4Ji1mFHg/gEST985VAMAAA==
+X-CMS-MailID: 20190708125714eucas1p1f71616c08694fb91f20a664e59c339d0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190628130921eucas1p239935b0771032c331911eacc1a69dd2e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190628130921eucas1p239935b0771032c331911eacc1a69dd2e
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+        <20190621095252.32307-5-vincenzo.frascino@arm.com>
+        <CGME20190628130921eucas1p239935b0771032c331911eacc1a69dd2e@eucas1p2.samsung.com>
+        <1fd47b0d-f77f-8d07-c039-6ac9072834fc@samsung.com>
+        <27386d82-2906-b541-f71d-3c61f5099bdf@arm.com>
+        <530cd07e-0da7-1d83-be4e-b14813029424@samsung.com>
+        <06c264a8-8778-18b1-1094-4281a4a2abc9@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The structure is too large to put on the stack, resulting in a
-warning on 32-bit ARM:
+Hi Vincenzo, 
 
-drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c:59:5: error: stack frame size of 1344 bytes in function
-      'mlx5e_open_xsk' [-Werror,-Wframe-larger-than=]
+On 6/29/19 08:58, Vincenzo Frascino wrote:
+> If I may, I would like to ask to you one favor, could you please keep an eye on
+> next and once those patches are merged repeat the test?
+> 
+> I want just to make sure that the regression does not reappear.
 
-Use kzalloc() instead.
+My apologies, I forgot about this for a moment. I repeated the test with 
+next-20190705 tag and couldn't see any regressions.
 
-Fixes: a038e9794541 ("net/mlx5e: Add XSK zero-copy support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- .../mellanox/mlx5/core/en/xsk/setup.c         | 25 ++++++++++++-------
- 1 file changed, 16 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
-index aaffa6f68dc0..db9bbec68dbf 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
-@@ -60,24 +60,28 @@ int mlx5e_open_xsk(struct mlx5e_priv *priv, struct mlx5e_params *params,
- 		   struct mlx5e_xsk_param *xsk, struct xdp_umem *umem,
- 		   struct mlx5e_channel *c)
- {
--	struct mlx5e_channel_param cparam = {};
-+	struct mlx5e_channel_param *cparam;
- 	struct dim_cq_moder icocq_moder = {};
- 	int err;
- 
- 	if (!mlx5e_validate_xsk_param(params, xsk, priv->mdev))
- 		return -EINVAL;
- 
--	mlx5e_build_xsk_cparam(priv, params, xsk, &cparam);
-+	cparam = kzalloc(sizeof(*cparam), GFP_KERNEL);
-+	if (!cparam)
-+		return -ENOMEM;
- 
--	err = mlx5e_open_cq(c, params->rx_cq_moderation, &cparam.rx_cq, &c->xskrq.cq);
-+	mlx5e_build_xsk_cparam(priv, params, xsk, cparam);
-+
-+	err = mlx5e_open_cq(c, params->rx_cq_moderation, &cparam->rx_cq, &c->xskrq.cq);
- 	if (unlikely(err))
--		return err;
-+		goto err_kfree_cparam;
- 
--	err = mlx5e_open_rq(c, params, &cparam.rq, xsk, umem, &c->xskrq);
-+	err = mlx5e_open_rq(c, params, &cparam->rq, xsk, umem, &c->xskrq);
- 	if (unlikely(err))
- 		goto err_close_rx_cq;
- 
--	err = mlx5e_open_cq(c, params->tx_cq_moderation, &cparam.tx_cq, &c->xsksq.cq);
-+	err = mlx5e_open_cq(c, params->tx_cq_moderation, &cparam->tx_cq, &c->xsksq.cq);
- 	if (unlikely(err))
- 		goto err_close_rq;
- 
-@@ -87,18 +91,18 @@ int mlx5e_open_xsk(struct mlx5e_priv *priv, struct mlx5e_params *params,
- 	 * is disabled and then reenabled, but the SQ continues receiving CQEs
- 	 * from the old UMEM.
- 	 */
--	err = mlx5e_open_xdpsq(c, params, &cparam.xdp_sq, umem, &c->xsksq, true);
-+	err = mlx5e_open_xdpsq(c, params, &cparam->xdp_sq, umem, &c->xsksq, true);
- 	if (unlikely(err))
- 		goto err_close_tx_cq;
- 
--	err = mlx5e_open_cq(c, icocq_moder, &cparam.icosq_cq, &c->xskicosq.cq);
-+	err = mlx5e_open_cq(c, icocq_moder, &cparam->icosq_cq, &c->xskicosq.cq);
- 	if (unlikely(err))
- 		goto err_close_sq;
- 
- 	/* Create a dedicated SQ for posting NOPs whenever we need an IRQ to be
- 	 * triggered and NAPI to be called on the correct CPU.
- 	 */
--	err = mlx5e_open_icosq(c, params, &cparam.icosq, &c->xskicosq);
-+	err = mlx5e_open_icosq(c, params, &cparam->icosq, &c->xskicosq);
- 	if (unlikely(err))
- 		goto err_close_icocq;
- 
-@@ -123,6 +127,9 @@ int mlx5e_open_xsk(struct mlx5e_priv *priv, struct mlx5e_params *params,
- err_close_rx_cq:
- 	mlx5e_close_cq(&c->xskrq.cq);
- 
-+err_kfree_cparam:
-+	kfree(cparam);
-+
- 	return err;
- }
- 
 -- 
-2.20.0
-
+Regards,
+Sylwester
