@@ -2,144 +2,127 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11726C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06280C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE47205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D200D20645
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fte+4okD"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PIV2Xdbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbfGHJMk (ORCPT
+        id S1729722AbfGHJNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 05:12:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:35088 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbfGHJMj (ORCPT
+        Mon, 8 Jul 2019 05:13:23 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:56992 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727065AbfGHJNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 05:12:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6899QTb139444;
-        Mon, 8 Jul 2019 09:11:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=YuCOXIRb/dHuU0bztnXWfWAbrWp+ScSgOTP4KoY+oi4=;
- b=fte+4okDlbBOW36ZhZ3sYg4Sw9JLrnVas78c0E7OyeWp/fw11it2dHFh/v0iE+esoPkQ
- hE6WOYa8/KBehCvThKu+5w9YkRNP6XNbvmNXnWI5sph2Vd65unRfr8gGNwPsWxh87iiU
- LcZOeJyRUDNdxXD5zLPEIrJU+Pud/iK4nGZ0SLYVrbw88Om8H9m38zM8j75dmQ4ueqHC
- DWvnb2VIwA9R15lPz6+G7scJZhUiEf4UIoJwyiMilUrPiw/W7RhQuof09pHGpLGWAyIG
- Y7E3TiG+OgfsGnhgMQ8/SKFz9YHhUi5lh0WEy4tlYQhgZJV3kHV1GoBIswPJwpe/hL7s Iw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2tjk2td9c3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jul 2019 09:11:34 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6897t5O110914;
-        Mon, 8 Jul 2019 09:11:33 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2tjkf23d95-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jul 2019 09:11:33 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x689BWbg032749;
-        Mon, 8 Jul 2019 09:11:32 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jul 2019 02:11:31 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH v6 1/4] x86/xen: Mark xen_hvm_need_lapic() and xen_x2apic_para_available() as __init
-Date:   Sun,  7 Jul 2019 17:15:05 +0800
-Message-Id: <1562490908-17882-2-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1562490908-17882-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1562490908-17882-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9311 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907080120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9311 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907080121
+        Mon, 8 Jul 2019 05:13:23 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68967am006024;
+        Mon, 8 Jul 2019 11:12:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=J+VrRoM1vmsyKivpX5U+CqP541ilP0xEicODEegVLtM=;
+ b=PIV2XdbgB0aZJqgtreP6xTwlrWKCNkvJeRx2dKmHokXB9K9FELlV+YSQc6+QRoX/Me7z
+ TDtZikvgNRGqiCMZRB6CxGHEcgaz716HWePA8rGEnMVFAgb6Jp7OzvWQw2lUc+ooOdFD
+ P0QAYK42RYrC65eNtzvHzYcSo9p6i1felTNSB4wdhz+Vv4IvE/Jj5+3ZUGGWDBviHQOh
+ NyJOFo8BoqHSL1kyigcxpIpdMnprg4MYIpTXZv+mDaEzkbA2VwNJXmZRdSyvdjWSE4FS
+ TcTm26B+l+W5qLnlT9uiMEkQcH3zFSb5JwxnzketnNSAkFZWo9PJOWX8ha62R74IJ8TL pQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tjh405r6f-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 08 Jul 2019 11:12:54 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4971D34;
+        Mon,  8 Jul 2019 09:12:53 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07A2D2763;
+        Mon,  8 Jul 2019 09:12:53 +0000 (GMT)
+Received: from SFHDAG3NODE2.st.com (10.75.127.8) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 8 Jul
+ 2019 11:12:52 +0200
+Received: from SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96]) by
+ SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96%20]) with mapi id
+ 15.00.1347.000; Mon, 8 Jul 2019 11:12:52 +0200
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rtc: stm32: One condition check and function call less
+ in stm32_rtc_set_alarm()
+Thread-Topic: [PATCH v2] rtc: stm32: One condition check and function call
+ less in stm32_rtc_set_alarm()
+Thread-Index: AQHVNWk64H5f1akvVEOEc4o7Pyqv/6bATj4A
+Date:   Mon, 8 Jul 2019 09:12:52 +0000
+Message-ID: <b614006a-17ac-e738-a3f3-08649f69a42c@st.com>
+References: <f04277da-8a98-473e-2566-ac7846f9f8e1@web.de>
+ <20190707211638.sehikkear25dffah@shell.armlinux.org.uk>
+ <4da614a4-83c6-548c-a112-033b846c561b@web.de>
+In-Reply-To: <4da614a4-83c6-548c-a112-033b846c561b@web.de>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7C37AB1342C2294A8941E133C33BA759@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.. as they are only called at early bootup stage. In fact, other
-functions in x86_hyper_xen_hvm.init.* are all marked as __init.
-
-Unexport xen_hvm_need_lapic as it's never used outside.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
----
- arch/x86/include/asm/xen/hypervisor.h | 6 +++---
- arch/x86/xen/enlighten_hvm.c          | 3 +--
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/include/asm/xen/hypervisor.h b/arch/x86/include/asm/xen/hypervisor.h
-index 39171b3..42e1245 100644
---- a/arch/x86/include/asm/xen/hypervisor.h
-+++ b/arch/x86/include/asm/xen/hypervisor.h
-@@ -44,14 +44,14 @@ static inline uint32_t xen_cpuid_base(void)
- }
- 
- #ifdef CONFIG_XEN
--extern bool xen_hvm_need_lapic(void);
-+extern bool __init xen_hvm_need_lapic(void);
- 
--static inline bool xen_x2apic_para_available(void)
-+static inline bool __init xen_x2apic_para_available(void)
- {
- 	return xen_hvm_need_lapic();
- }
- #else
--static inline bool xen_x2apic_para_available(void)
-+static inline bool __init xen_x2apic_para_available(void)
- {
- 	return (xen_cpuid_base() != 0);
- }
-diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-index 0e75642..ac4943c 100644
---- a/arch/x86/xen/enlighten_hvm.c
-+++ b/arch/x86/xen/enlighten_hvm.c
-@@ -218,7 +218,7 @@ static __init int xen_parse_nopv(char *arg)
- }
- early_param("xen_nopv", xen_parse_nopv);
- 
--bool xen_hvm_need_lapic(void)
-+bool __init xen_hvm_need_lapic(void)
- {
- 	if (xen_nopv)
- 		return false;
-@@ -230,7 +230,6 @@ bool xen_hvm_need_lapic(void)
- 		return false;
- 	return true;
- }
--EXPORT_SYMBOL_GPL(xen_hvm_need_lapic);
- 
- static uint32_t __init xen_platform_hvm(void)
- {
--- 
-1.8.3.1
-
+T24gNy84LzE5IDEwOjQyIEFNLCBNYXJrdXMgRWxmcmluZyB3cm90ZToNCj4gRnJvbTogTWFya3Vz
+IEVsZnJpbmcgPGVsZnJpbmdAdXNlcnMuc291cmNlZm9yZ2UubmV0Pg0KPiBEYXRlOiBNb24sIDgg
+SnVsIDIwMTkgMTA6MjY6NDcgKzAyMDANCj4gDQo+IEEgY29uZGl0aW9uIGNoZWNrIHdhcyByZXBl
+YXRlZCBpbiB0aGlzIGZ1bmN0aW9uIGltcGxlbWVudGF0aW9uIGRlc3BpdGUgb2YNCj4gYSBjb3Jy
+ZXNwb25kaW5nIGNoZWNrIGluIHRoZSBzdG0zMl9ydGNfYWxhcm1faXJxX2VuYWJsZSgpIGZ1bmN0
+aW9uLg0KPiBUaHVzIGRlbGV0ZSByZWR1bmRhbnQgc291cmNlIGNvZGUgaGVyZS4NCj4gDQo+IFN1
+Z2dlc3RlZC1ieTogUnVzc2VsbCBLaW5nIDxsaW51eEBhcm1saW51eC5vcmcudWs+DQo+IExpbms6
+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxOTA3MDcyMTE2Mzguc2VoaWtrZWFyMjVk
+ZmZhaEBzaGVsbC5hcm1saW51eC5vcmcudWsvDQo+IA0KPiBUaGlzIGlzc3VlIHdhcyBkZXRlY3Rl
+ZCBieSB1c2luZyB0aGUgQ29jY2luZWxsZSBzb2Z0d2FyZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6
+IE1hcmt1cyBFbGZyaW5nIDxlbGZyaW5nQHVzZXJzLnNvdXJjZWZvcmdlLm5ldD4NCg0KUmV2aWV3
+ZWQtYnk6IEFtZWxpZSBEZWxhdW5heSA8YW1lbGllLmRlbGF1bmF5QHN0LmNvbT4NCg0KPiAtLS0N
+Cj4gDQo+IHYyOg0KPiBSdXNzZWxsIEtpbmcgcG9pbnRlZCB0aGUgY2hhbmdlIHBvc3NpYmlsaXR5
+IG91dCB0byBvbWl0IGEgY29uZGl0aW9uIGNoZWNrDQo+IGF0IHRoaXMgcGxhY2UuDQo+IA0KPiAN
+Cj4gICBkcml2ZXJzL3J0Yy9ydGMtc3RtMzIuYyB8IDYgKy0tLS0tDQo+ICAgMSBmaWxlIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9uKCspLCA1IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvcnRjL3J0Yy1zdG0zMi5jIGIvZHJpdmVycy9ydGMvcnRjLXN0bTMyLmMNCj4gaW5kZXgg
+OGU2YzliM2JjYzI5Li43NzNhMTk5MGI5M2YgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcnRjL3J0
+Yy1zdG0zMi5jDQo+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1zdG0zMi5jDQo+IEBAIC01MTksMTEg
+KzUxOSw3IEBAIHN0YXRpYyBpbnQgc3RtMzJfcnRjX3NldF9hbGFybShzdHJ1Y3QgZGV2aWNlICpk
+ZXYsIHN0cnVjdCBydGNfd2thbHJtICphbHJtKQ0KPiAgIAkvKiBXcml0ZSB0byBBbGFybSByZWdp
+c3RlciAqLw0KPiAgIAl3cml0ZWxfcmVsYXhlZChhbHJtYXIsIHJ0Yy0+YmFzZSArIHJlZ3MtPmFs
+cm1hcik7DQo+IA0KPiAtCWlmIChhbHJtLT5lbmFibGVkKQ0KPiAtCQlzdG0zMl9ydGNfYWxhcm1f
+aXJxX2VuYWJsZShkZXYsIDEpOw0KPiAtCWVsc2UNCj4gLQkJc3RtMzJfcnRjX2FsYXJtX2lycV9l
+bmFibGUoZGV2LCAwKTsNCj4gLQ0KPiArCXN0bTMyX3J0Y19hbGFybV9pcnFfZW5hYmxlKGRldiwg
+YWxybS0+ZW5hYmxlZCk7DQo+ICAgZW5kOg0KPiAgIAlzdG0zMl9ydGNfd3ByX2xvY2socnRjKTsN
+Cj4gDQo+IC0tDQo+IDIuMjIuMA0KPiANCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fDQo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwNCj4g
