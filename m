@@ -2,53 +2,55 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322B7C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3A0C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0665421707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE67216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599332;
-	bh=02UpBIi2kD3YHwnEWKXWDsNyLGN32xYTYA2qygZZHlk=;
+	s=default; t=1562599336;
+	bh=RSOkxXSyZ2sNkeOzn5fr775UMm1wxH2xyAEoEIewI0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NRuEHHKSOJers2PG5WUHEW10apS/2LkrRkap3ZVxr41XZ4LRYbGxoMl1gSazzf74u
-	 zDoXu+4P98CEBG3DVWAyN9AZyvfvdvXN9WedfntFJwMf1EuOHoUIuzp+ZlQpTmFdZp
-	 +nU/tUOzSJHDxWPwwtyWMb5yl8bA3k3YHgRf2I18=
+	b=DGWjnmZ74fsWV77rG/6URcsgOdEz6Liaau0HED3tlcDqEFR+dWdciWAZ2jGQqpCw8
+	 7b6meeQ3PkoWnLtAzNuM80S019DgAQyZCpulsabBjkmqgzKZfUYOAMq8l18/Dv6WS4
+	 5eu44A6xC+Jg2sCCLZyv509DXg68x0VdAopVKnMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387897AbfGHPWK (ORCPT
+        id S2387921AbfGHPWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48386 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387563AbfGHPWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:08 -0400
+        id S2387899AbfGHPWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C82FF214C6;
-        Mon,  8 Jul 2019 15:22:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41F2220665;
+        Mon,  8 Jul 2019 15:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599327;
-        bh=02UpBIi2kD3YHwnEWKXWDsNyLGN32xYTYA2qygZZHlk=;
+        s=default; t=1562599332;
+        bh=RSOkxXSyZ2sNkeOzn5fr775UMm1wxH2xyAEoEIewI0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TYt17OlXSlhbNGjHiChgTjUmQ42u/x5h6DqpOwj1frEPJwAvZbJnTungf0X5PMKH9
-         7erGODjRIg9yuZL7BIWVHn4lWDZKcSVejD6qtJlh1hSptcUQ3WlDb1Q5hgskTrHB+4
-         jdAjTZdc0MC6dX/A5HtXOzYq+YL4TfaeaKWmF43I=
+        b=AI2u1vXUNde5nxb+FNk04IZ24C/eubfvVTNTIHn38SgKg+IgM9qaT6TPTfZydQCT+
+         tYljTUc0JhTBBTv5KGd8sXOHonYjnscaTVrp1AglaiUkraBDu2IWX+zUAf6ym1WFEQ
+         3NswG7irJT8E0ukAO+4XcvdZJwKhgqzLO3ns6Qlk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitrii Kolesnichenko <dmitrii@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 079/102] ARC: fix allnoconfig build warning
-Date:   Mon,  8 Jul 2019 17:13:12 +0200
-Message-Id: <20190708150530.547997255@linuxfoundation.org>
+        stable@vger.kernel.org, John Ogness <john.ogness@linutronix.de>,
+        Jan Luebbe <jlu@pengutronix.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 045/102] fs/proc/array.c: allow reporting eip/esp for all coredumping threads
+Date:   Mon,  8 Jul 2019 17:12:38 +0200
+Message-Id: <20190708150528.760963103@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -61,30 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5464d03d92601ac2977ef605b0cbb33276567daf ]
+From: John Ogness <john.ogness@linutronix.de>
 
-Reported-by: Dmitrii Kolesnichenko <dmitrii@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+commit cb8f381f1613cafe3aec30809991cd56e7135d92 upstream.
+
+0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in /proc/PID/stat")
+stopped reporting eip/esp and fd7d56270b52 ("fs/proc: Report eip/esp in
+/prod/PID/stat for coredumping") reintroduced the feature to fix a
+regression with userspace core dump handlers (such as minicoredumper).
+
+Because PF_DUMPCORE is only set for the primary thread, this didn't fix
+the original problem for secondary threads.  Allow reporting the eip/esp
+for all threads by checking for PF_EXITING as well.  This is set for all
+the other threads when they are killed.  coredump_wait() waits for all the
+tasks to become inactive before proceeding to invoke a core dumper.
+
+Link: http://lkml.kernel.org/r/87y32p7i7a.fsf@linutronix.de
+Link: http://lkml.kernel.org/r/20190522161614.628-1-jlu@pengutronix.de
+Fixes: fd7d56270b526ca3 ("fs/proc: Report eip/esp in /prod/PID/stat for coredumping")
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reported-by: Jan Luebbe <jlu@pengutronix.de>
+Tested-by: Jan Luebbe <jlu@pengutronix.de>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arc/Kconfig | 2 +-
+ fs/proc/array.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index c7a081c583b9..2de75779a247 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -23,7 +23,7 @@ config ARC
- 	select GENERIC_SMP_IDLE_THREAD
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_TRACEHOOK
--	select HAVE_FUTEX_CMPXCHG
-+	select HAVE_FUTEX_CMPXCHG if FUTEX
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_KPROBES
- 	select HAVE_KRETPROBES
--- 
-2.20.1
-
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -448,7 +448,7 @@ static int do_task_stat(struct seq_file
+ 		 * a program is not able to use ptrace(2) in that case. It is
+ 		 * safe because the task has stopped executing permanently.
+ 		 */
+-		if (permitted && (task->flags & PF_DUMPCORE)) {
++		if (permitted && (task->flags & (PF_EXITING|PF_DUMPCORE))) {
+ 			if (try_get_task_stack(task)) {
+ 				eip = KSTK_EIP(task);
+ 				esp = KSTK_ESP(task);
 
 
