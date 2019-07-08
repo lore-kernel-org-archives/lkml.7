@@ -2,54 +2,54 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D9DC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBEDC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607A82175B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343F521537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599654;
-	bh=lpF8smmZKzXzIFKYhBNQHTJe28GZk9w9HrrXxBl46x0=;
+	s=default; t=1562599657;
+	bh=ZniNPnIxLs5zo56SL2aPcnRxDq6gXxwpSuoRCs+j7ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwtAEFISFr6uvRNlkMf72dZGZWry3Ylbq2reVRdOK88D0mIWi60DjbcOfGpfaSLUD
-	 3ACWvf+MvwCVRpndVqdm+6GmxfCJNvWyMzMmgTOPwG3XXv30tjd2quZYk6keisP969
-	 EnIyk8B+mnVFvIj/LnKgj2gAoZSxYeplzGABRWek=
+	b=OzsYREdK0wAOz4LE/VQyqCBAruuezgeGLeQkk5jTtUQjAIAeb4DjNWEEEkjy8QIkv
+	 3d8jBN+DizEDDiIcGqPznVm9MCyTiWWyUQLVhkzUbK74jaCIAMlq05aZ9hdVgxRS+E
+	 PGTuGubiVIOvY1c9Pm3s+ejRizKIdWkkpaptW58o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389091AbfGHP1d (ORCPT
+        id S2389079AbfGHP1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389074AbfGHP1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 11:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389061AbfGHP13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:27:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BC4920665;
-        Mon,  8 Jul 2019 15:27:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 384342173C;
+        Mon,  8 Jul 2019 15:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599652;
-        bh=lpF8smmZKzXzIFKYhBNQHTJe28GZk9w9HrrXxBl46x0=;
+        s=default; t=1562599648;
+        bh=ZniNPnIxLs5zo56SL2aPcnRxDq6gXxwpSuoRCs+j7ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FBHQ3cOk9QBAx5/l8LNXw8XZ4+WU7Bq2dznqgtd+nh90RubdrYSC+At3znnkD6xfd
-         hgXpV0lef/x8slvjJQBk0yuF73K9kGlN9JjtLUWRPCsxm0j2fCObJqCdGNhMNsGOMW
-         YlbRKMXCxU2n8rnn2qM7w/iV41Oqbu1aem61DRB4=
+        b=XNDbh2nn8TGX3xb3eDrNwn+LESXEpyz/8s+egKaWsTEO10iDj71A6PAX/DLQ2qdfb
+         ynNRnWEK9wy5GsqAYhNCiwN6BI1OjqZ+U2Ees4PtC7LGHQE+vo3zay0laNdS15PBPX
+         W2bBTlBk1wiA2PU2gQLWsICqk0qo7UQ5CmXSew9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathew King <mathewk@chromium.org>,
-        Jett Rink <jettrink@chromium.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/90] platform/x86: intel-vbtn: Report switch events when event wakes device
-Date:   Mon,  8 Jul 2019 17:12:57 +0200
-Message-Id: <20190708150524.134124013@linuxfoundation.org>
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.19 03/90] md/raid0: Do not bypass blocking queue entered for raid0 bios
+Date:   Mon,  8 Jul 2019 17:12:30 +0200
+Message-Id: <20190708150522.409130002@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -62,61 +62,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cb1921b17adbe6509538098ac431033378cd7165 ]
+From: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
 
-When a switch event, such as tablet mode/laptop mode or docked/undocked,
-wakes a device make sure that the value of the swich is reported.
-Without when a device is put in tablet mode from laptop mode when it is
-suspended or vice versa the device will wake up but mode will be
-incorrect.
+-----------------------------------------------------------------
+This patch is not on mainline and is meant to 4.19 stable *only*.
+After the patch description there's a reasoning about that.
+-----------------------------------------------------------------
 
-Tested by suspending a device in laptop mode and putting it in tablet
-mode, the device resumes and is in tablet mode. When suspending the
-device in tablet mode and putting it in laptop mode the device resumes
-and is in laptop mode.
+Commit cd4a4ae4683d ("block: don't use blocking queue entered for
+recursive bio submits") introduced the flag BIO_QUEUE_ENTERED in order
+split bios bypass the blocking queue entering routine and use the live
+non-blocking version. It was a result of an extensive discussion in
+a linux-block thread[0], and the purpose of this change was to prevent
+a hung task waiting on a reference to drop.
 
-Signed-off-by: Mathew King <mathewk@chromium.org>
-Reviewed-by: Jett Rink <jettrink@chromium.org>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Happens that md raid0 split bios all the time, and more important,
+it changes their underlying device to the raid member. After the change
+introduced by this flag's usage, we experience various crashes if a raid0
+member is removed during a large write. This happens because the bio
+reaches the live queue entering function when the queue of the raid0
+member is dying.
+
+A simple reproducer of this behavior is presented below:
+a) Build kernel v4.19.56-stable with CONFIG_BLK_DEV_THROTTLING=y.
+
+b) Create a raid0 md array with 2 NVMe devices as members, and mount
+it with an ext4 filesystem.
+
+c) Run the following oneliner (supposing the raid0 is mounted in /mnt):
+(dd of=/mnt/tmp if=/dev/zero bs=1M count=999 &); sleep 0.3;
+echo 1 > /sys/block/nvme1n1/device/device/remove
+(whereas nvme1n1 is the 2nd array member)
+
+This will trigger the following warning/oops:
+
+------------[ cut here ]------------
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000155
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+RIP: 0010:blk_throtl_bio+0x45/0x970
+[...]
+Call Trace:
+ generic_make_request_checks+0x1bf/0x690
+ generic_make_request+0x64/0x3f0
+ raid0_make_request+0x184/0x620 [raid0]
+ ? raid0_make_request+0x184/0x620 [raid0]
+ md_handle_request+0x126/0x1a0
+ md_make_request+0x7b/0x180
+ generic_make_request+0x19e/0x3f0
+ submit_bio+0x73/0x140
+[...]
+
+This patch changes raid0 driver to fallback to the "old" blocking queue
+entering procedure, by clearing the BIO_QUEUE_ENTERED from raid0 bios.
+This prevents the crashes and restores the regular behavior of raid0
+arrays when a member is removed during a large write.
+
+[0] lore.kernel.org/linux-block/343bbbf6-64eb-879e-d19e-96aebb037d47@I-love.SAKURA.ne.jp
+
+----------------------------
+Why this is not on mainline?
+----------------------------
+
+The patch was originally submitted upstream in linux-raid and
+linux-block mailing-lists - it was initially accepted by Song Liu,
+but Christoph Hellwig[1] observed that there was a clean-up series
+ready to be accepted from Ming Lei[2] that fixed the same issue.
+
+The accepted patches from Ming's series in upstream are: commit
+47cdee29ef9d ("block: move blk_exit_queue into __blk_release_queue") and
+commit fe2008640ae3 ("block: don't protect generic_make_request_checks
+with blk_queue_enter"). Those patches basically do a clean-up in the
+block layer involving:
+
+1) Putting back blk_exit_queue() logic into __blk_release_queue(); that
+path was changed in the past and the logic from blk_exit_queue() was
+added to blk_cleanup_queue().
+
+2) Removing the guard/protection in generic_make_request_checks() with
+blk_queue_enter().
+
+The problem with Ming's series for -stable is that it relies in the
+legacy request IO path removal. So it's "backport-able" to v5.0+,
+but doing that for early versions (like 4.19) would incur in complex
+code changes. Hence, it was suggested by Christoph and Song Liu that
+this patch was submitted to stable only; otherwise merging it upstream
+would add code to fix a path removed in a subsequent commit.
+
+[1] lore.kernel.org/linux-block/20190521172258.GA32702@infradead.org
+[2] lore.kernel.org/linux-block/20190515030310.20393-1-ming.lei@redhat.com
+
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Fixes: cd4a4ae4683d ("block: don't use blocking queue entered for recursive bio submits")
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/md/raid0.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 06cd7e818ed5..a0d0cecff55f 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	struct platform_device *device = context;
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
--	const struct key_entry *ke_rel;
-+	const struct key_entry *ke, *ke_rel;
- 	bool autorelease;
- 
- 	if (priv->wakeup_mode) {
--		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
-+		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
-+		if (ke) {
- 			pm_wakeup_hard_event(&device->dev);
-+
-+			/*
-+			 * Switch events like tablet mode will wake the device
-+			 * and report the new switch position to the input
-+			 * subsystem.
-+			 */
-+			if (ke->type == KE_SW)
-+				sparse_keymap_report_event(priv->input_dev,
-+							   event,
-+							   val,
-+							   0);
- 			return;
- 		}
- 		goto out_unknown;
--- 
-2.20.1
-
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -547,6 +547,7 @@ static void raid0_handle_discard(struct
+ 			trace_block_bio_remap(bdev_get_queue(rdev->bdev),
+ 				discard_bio, disk_devt(mddev->gendisk),
+ 				bio->bi_iter.bi_sector);
++		bio_clear_flag(bio, BIO_QUEUE_ENTERED);
+ 		generic_make_request(discard_bio);
+ 	}
+ 	bio_endio(bio);
+@@ -602,6 +603,7 @@ static bool raid0_make_request(struct md
+ 				disk_devt(mddev->gendisk), bio_sector);
+ 	mddev_check_writesame(mddev, bio);
+ 	mddev_check_write_zeroes(mddev, bio);
++	bio_clear_flag(bio, BIO_QUEUE_ENTERED);
+ 	generic_make_request(bio);
+ 	return true;
+ }
 
 
