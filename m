@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E939C606A0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A14C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E082053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339E820693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfGHCGX (ORCPT
+        id S1728548AbfGHCGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 22:06:23 -0400
-Received: from mga17.intel.com ([192.55.52.151]:44741 "EHLO mga17.intel.com"
+        Sun, 7 Jul 2019 22:06:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:44743 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727718AbfGHCGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 22:06:22 -0400
+        id S1728513AbfGHCG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 22:06:26 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:21 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:26 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,464,1557212400"; 
-   d="scan'208";a="364083510"
+   d="scan'208";a="364083524"
 Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:19 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:24 -0700
 From:   Wei Wang <wei.w.wang@intel.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         pbonzini@redhat.com, ak@linux.intel.com, peterz@infradead.org
 Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
         like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
         arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v7 01/12] perf/x86: fix the variable type of the LBR MSRs
-Date:   Mon,  8 Jul 2019 09:23:08 +0800
-Message-Id: <1562548999-37095-2-git-send-email-wei.w.wang@intel.com>
+Subject: [PATCH v7 03/12] KVM/x86: KVM_CAP_X86_GUEST_LBR
+Date:   Mon,  8 Jul 2019 09:23:10 +0800
+Message-Id: <1562548999-37095-4-git-send-email-wei.w.wang@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
 References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
@@ -46,33 +46,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MSR variable type can be "unsigned int", which uses less memory than
-the longer unsigned long. The lbr nr won't be a negative number, so make
-it "unsigned int" as well.
+Introduce KVM_CAP_X86_GUEST_LBR to allow per-VM enabling of the guest
+lbr feature.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/x86/events/perf_event.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 ++
+ arch/x86/kvm/x86.c              | 14 ++++++++++++++
+ include/uapi/linux/kvm.h        |  1 +
+ 3 files changed, 17 insertions(+)
 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index a6ac2f4..186c1c7 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -682,8 +682,8 @@ struct x86_pmu {
- 	/*
- 	 * Intel LBR
- 	 */
--	unsigned long	lbr_tos, lbr_from, lbr_to; /* MSR base regs       */
--	int		lbr_nr;			   /* hardware stack size */
-+	unsigned int	lbr_tos, lbr_from, lbr_to,
-+			lbr_nr;			   /* lbr stack and size */
- 	u64		lbr_sel_mask;		   /* LBR_SELECT valid bits */
- 	const int	*lbr_sel_map;		   /* lbr_select mappings */
- 	bool		lbr_double_abort;	   /* duplicated lbr aborts */
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 26d1eb8..8d80925 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -871,6 +871,7 @@ struct kvm_arch {
+ 	atomic_t vapics_in_nmi_mode;
+ 	struct mutex apic_map_lock;
+ 	struct kvm_apic_map *apic_map;
++	struct x86_perf_lbr_stack lbr_stack;
+ 
+ 	bool apic_access_page_done;
+ 
+@@ -879,6 +880,7 @@ struct kvm_arch {
+ 	bool mwait_in_guest;
+ 	bool hlt_in_guest;
+ 	bool pause_in_guest;
++	bool lbr_in_guest;
+ 
+ 	unsigned long irq_sources_bitmap;
+ 	s64 kvmclock_offset;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 9857992..b35a118 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3086,6 +3086,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_GET_MSR_FEATURES:
+ 	case KVM_CAP_MSR_PLATFORM_INFO:
+ 	case KVM_CAP_EXCEPTION_PAYLOAD:
++	case KVM_CAP_X86_GUEST_LBR:
+ 		r = 1;
+ 		break;
+ 	case KVM_CAP_SYNC_REGS:
+@@ -4622,6 +4623,19 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 		kvm->arch.exception_payload_enabled = cap->args[0];
+ 		r = 0;
+ 		break;
++	case KVM_CAP_X86_GUEST_LBR:
++		r = -EINVAL;
++		if (cap->args[0] &&
++		    x86_perf_get_lbr_stack(&kvm->arch.lbr_stack))
++			break;
++
++		if (copy_to_user((void __user *)cap->args[1],
++				 &kvm->arch.lbr_stack,
++				 sizeof(struct x86_perf_lbr_stack)))
++			break;
++		kvm->arch.lbr_in_guest = cap->args[0];
++		r = 0;
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 2fe12b4..5391cbc 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -993,6 +993,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_ARM_SVE 170
+ #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
+ #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
++#define KVM_CAP_X86_GUEST_LBR 173
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
 -- 
 2.7.4
 
