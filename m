@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E58C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D023EC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E724216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92752175B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600788;
-	bh=fXWdmvwzCD4AeHfGKZlRrZtFmcaqMe9v+NkRL7KYvl4=;
+	s=default; t=1562600792;
+	bh=tLVZwVgEy3INWT+QDUG63JAAvvmORHsEoFCuqJI91d8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zVADtKcFfHZ5VHWqjhXxXj4hH+uRlVdMnoUnzHpLQgwaA8AHOkknFCs+6zNn5K/Fk
-	 SRaF1/xnJnaPggQYxbrTwtLU7iivbR1+zWs1g0ZDRRmqJNWVMG9enb0CkdfY8Evav1
-	 tOEmiWSo9W0ouZQDHjW5iUrxbE4TrB5sFv50fMbA=
+	b=JpwI9YWMog/hZPeIkEtWKxcNasOCJ7jAr6U6jwxicgL2Nxp/bZl6TYvvmG1BekDkJ
+	 LUEnSWabA9JhmR2mf3H6ktIwrxu+4YKgJqi0ci8dy/OhOlfZolLnIl8cjmG8HnOvkZ
+	 h1+TaI2hgGmhY4w0QM5/61g0NNIQtzmyl8YjFcpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391269AbfGHPq0 (ORCPT
+        id S2387684AbfGHPU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46358 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:20:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387699AbfGHPVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:00 -0400
+        id S2387502AbfGHPTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:19:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 467622166E;
-        Mon,  8 Jul 2019 15:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25B6A21537;
+        Mon,  8 Jul 2019 15:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599259;
-        bh=fXWdmvwzCD4AeHfGKZlRrZtFmcaqMe9v+NkRL7KYvl4=;
+        s=default; t=1562599192;
+        bh=tLVZwVgEy3INWT+QDUG63JAAvvmORHsEoFCuqJI91d8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HidsiNnSZL6wJThDDpd4ZHN6hu5NpFbFDpsINKe5HT/iW2hTzDwoz6JvxYoyGtt4e
-         J8K/Ier5CHjKQVBfB2Uf/J4caEtN7e4RyLoXTogngOm0XPZZ4t81seDdmlCivwA7oA
-         HsJ/XkSVQXNJSn9oAlYaWgDsxQQMIqznprFEq0kc=
+        b=l7+miwscx8kolmmva2a8+Shi39ZZ9iakrYRH2OFoW71DKjcWEe11cRYzhxbUcVhKl
+         7YH3n/uojUkOJAH14NUtviV2HipS1VE7ytdGzfw0c7mbW53/RkXPr3XDY2Dg8Dl3IR
+         rv/eMfqsriT3V3cUHn727HY9D2+uoIobwPOxoqBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fei Li <lifei.shirley@bytedance.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 057/102] tun: wake up waitqueues after IFF_UP is set
-Date:   Mon,  8 Jul 2019 17:12:50 +0200
-Message-Id: <20190708150529.408617194@linuxfoundation.org>
+        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 035/102] mac80211: Do not use stack memory with scatterlist for GMAC
+Date:   Mon,  8 Jul 2019 17:12:28 +0200
+Message-Id: <20190708150528.209577232@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,76 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fei Li <lifei.shirley@bytedance.com>
+From: Jouni Malinen <j@w1.fi>
 
-[ Upstream commit 72b319dc08b4924a29f5e2560ef6d966fa54c429 ]
+commit a71fd9dac23613d96ba3c05619a8ef4fd6cdf9b9 upstream.
 
-Currently after setting tap0 link up, the tun code wakes tx/rx waited
-queues up in tun_net_open() when .ndo_open() is called, however the
-IFF_UP flag has not been set yet. If there's already a wait queue, it
-would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
-Then the saving vhost_poll_start() will add the wq into wqh until it
-is waken up again. Although this works when IFF_UP flag has been set
-when tun_chr_poll detects; this is not true if IFF_UP flag has not
-been set at that time. Sadly the latter case is a fatal error, as
-the wq will never be waken up in future unless later manually
-setting link up on purpose.
+ieee80211_aes_gmac() uses the mic argument directly in sg_set_buf() and
+that does not allow use of stack memory (e.g., BUG_ON() is hit in
+sg_set_buf() with CONFIG_DEBUG_SG). BIP GMAC TX side is fine for this
+since it can use the skb data buffer, but the RX side was using a stack
+variable for deriving the local MIC value to compare against the
+received one.
 
-Fix this by moving the wakeup process into the NETDEV_UP event
-notifying process, this makes sure IFF_UP has been set before all
-waited queues been waken up.
+Fix this by allocating heap memory for the mic buffer.
 
-Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This was found with hwsim test case ap_cipher_bip_gmac_128 hitting that
+BUG_ON() and kernel panic.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Jouni Malinen <j@w1.fi>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/tun.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -828,18 +828,8 @@ static void tun_net_uninit(struct net_de
- /* Net device open. */
- static int tun_net_open(struct net_device *dev)
- {
--	struct tun_struct *tun = netdev_priv(dev);
--	int i;
--
- 	netif_tx_start_all_queues(dev);
+---
+ net/mac80211/wpa.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+--- a/net/mac80211/wpa.c
++++ b/net/mac80211/wpa.c
+@@ -1169,7 +1169,7 @@ ieee80211_crypto_aes_gmac_decrypt(struct
+ 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+ 	struct ieee80211_key *key = rx->key;
+ 	struct ieee80211_mmie_16 *mmie;
+-	u8 aad[GMAC_AAD_LEN], mic[GMAC_MIC_LEN], ipn[6], nonce[GMAC_NONCE_LEN];
++	u8 aad[GMAC_AAD_LEN], *mic, ipn[6], nonce[GMAC_NONCE_LEN];
+ 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
  
--	for (i = 0; i < tun->numqueues; i++) {
--		struct tun_file *tfile;
--
--		tfile = rtnl_dereference(tun->tfiles[i]);
--		tfile->socket.sk->sk_write_space(tfile->socket.sk);
--	}
--
- 	return 0;
- }
+ 	if (!ieee80211_is_mgmt(hdr->frame_control))
+@@ -1200,13 +1200,18 @@ ieee80211_crypto_aes_gmac_decrypt(struct
+ 		memcpy(nonce, hdr->addr2, ETH_ALEN);
+ 		memcpy(nonce + ETH_ALEN, ipn, 6);
  
-@@ -2534,6 +2524,7 @@ static int tun_device_event(struct notif
- {
- 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
- 	struct tun_struct *tun = netdev_priv(dev);
-+	int i;
- 
- 	if (dev->rtnl_link_ops != &tun_link_ops)
- 		return NOTIFY_DONE;
-@@ -2543,6 +2534,14 @@ static int tun_device_event(struct notif
- 		if (tun_queue_resize(tun))
- 			return NOTIFY_BAD;
- 		break;
-+	case NETDEV_UP:
-+		for (i = 0; i < tun->numqueues; i++) {
-+			struct tun_file *tfile;
-+
-+			tfile = rtnl_dereference(tun->tfiles[i]);
-+			tfile->socket.sk->sk_write_space(tfile->socket.sk);
-+		}
-+		break;
- 	default:
- 		break;
++		mic = kmalloc(GMAC_MIC_LEN, GFP_ATOMIC);
++		if (!mic)
++			return RX_DROP_UNUSABLE;
+ 		if (ieee80211_aes_gmac(key->u.aes_gmac.tfm, aad, nonce,
+ 				       skb->data + 24, skb->len - 24,
+ 				       mic) < 0 ||
+ 		    crypto_memneq(mic, mmie->mic, sizeof(mmie->mic))) {
+ 			key->u.aes_gmac.icverrors++;
++			kfree(mic);
+ 			return RX_DROP_UNUSABLE;
+ 		}
++		kfree(mic);
  	}
+ 
+ 	memcpy(key->u.aes_gmac.rx_pn, ipn, 6);
 
 
