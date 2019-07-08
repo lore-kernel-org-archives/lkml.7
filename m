@@ -2,131 +2,121 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D24FC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D13C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C519220861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC6A20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ISRiZEZ6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MNqwKhb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbfGHNzt (ORCPT
+        id S1731552AbfGHNzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:55:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45190 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731401AbfGHNzt (ORCPT
+        Mon, 8 Jul 2019 09:55:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38093 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfGHNzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:55:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=z7WcggLAejPzEpSoHTmfAATgZoGx2QqDsys6bSdrrxM=; b=ISRiZEZ66YGoTqn07Ke3eUgF4
-        0oQOIuAyAQnRMcG3rrcypTh1+D7cXB7f1zv1mtzxST8wFhPrly2T0SiTI7zYJboDdQb/9G+Arm2/I
-        EckJr0WF3bs3OalPk0UvwP0ZXNLLPNlEaNHUe3o1a5QYnq5CdgiO2sQFNFJwQm2q+glyEZ/UWGW3l
-        TDPr1GNUEJvvQINCBWrUu1nC+fYbbdVj/mioF2yH/0aofIQ9Ft7U7yYffIL7pjm2bWJGKNZVSN7Mx
-        Jv/aCmeze/IKL7cwE+eMcm6Oug3u4Dw3OICM6GQoAAkcM7M3zbBwhwHeh6m24Dfboyr00aYk3bOca
-        rRjn67KuQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkU7G-0004LA-8w; Mon, 08 Jul 2019 13:55:38 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1CA4120B28AD7; Mon,  8 Jul 2019 15:55:36 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 15:55:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Luca Abeni <luca.abeni@santannapisa.it>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>
-Subject: Re: [RFC PATCH 3/6] sched/dl: Try better placement even for deadline
- tasks that do not block
-Message-ID: <20190708135536.GK3402@hirez.programming.kicks-ass.net>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
- <20190506044836.2914-4-luca.abeni@santannapisa.it>
+        Mon, 8 Jul 2019 09:55:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so16571932wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 06:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9sp/tZgDFKZU93dnNpAW0b42FyVjdurtoOYWEUaBdt4=;
+        b=MNqwKhb54VaXXVvgOIOJY1T5x7WYZBPhD3LvMNi4dxS18G0fkn22x/kmi92jSG5P0R
+         mlLrlJZjU3VGoquvDlACk8vmjE2c3NYlXMaYzWRlQr0k3sAy1PI7irBbB2OGRwyAKO5x
+         8GiOEucxVVhTVEZ42wAFrSJgQl1cm6CkIZW1SPxiuaa5GPpBswiU7/RgHhzT1//iU54I
+         w1O1Ie6zZhst9ZqvSCysxAOvg4ELDX8gRm5SWzvvhkurPMCMOCzom+ybHb9BSeQr7U+0
+         4eAaZKLU0RYwTW+jXOBOJ+GqATqgegWOseaSCWLwNFKo4IBLJY04hBCYRuW7sUp2+uQS
+         KngA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9sp/tZgDFKZU93dnNpAW0b42FyVjdurtoOYWEUaBdt4=;
+        b=VR6iJn86NvGojczJJxcyRWjTHugrSfXk/jQhf0vqmdBsyVqFp5zPL63XENw0aIGapc
+         WuEF8c8uF80t7T79NYRgjCIgIVXLYLlUjQ9k/lq8oOZa/63+XU4NRjGtSN3DzVRFrvVj
+         PbV6123HMB7IuQ1Jnji3FfA6KPtPqWHTHqWB7nkeUE+1io+lFEv56OsazjaYQgAT07iH
+         F36mQTLgspeAtGAKM5eTajs5A69oonwFQw95sWFvEk5Zl3uXu8D3mEERYfqJ6YDG6lB9
+         48kGhN1XkCttXUI6lW/MDAQRjo/Q3veTOpBsG4mdr2QP1CQe76IyKU8Rt62EUZM7oP7G
+         XE3A==
+X-Gm-Message-State: APjAAAUvhIZJiN6CkB+2OwZX7AdaaIw5G4mV8sdhhGjeyRIcSUajuv3e
+        y9yqc3HB8NsBd9m2W+n09JNWP85BPccK8bO2Q+xzxw==
+X-Google-Smtp-Source: APXvYqz3MLRLCiixcvJvT3c2PGSq0SN54PM/2CAHZS15T8aReVMNTcEdEHh6jTbUrUhw1ziE6ph6GPSVI0zEdXHDvhA=
+X-Received: by 2002:a05:600c:1008:: with SMTP id c8mr17201666wmc.133.1562594147798;
+ Mon, 08 Jul 2019 06:55:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506044836.2914-4-luca.abeni@santannapisa.it>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190708125733.3944836-1-arnd@arndb.de> <20190708125733.3944836-2-arnd@arndb.de>
+In-Reply-To: <20190708125733.3944836-2-arnd@arndb.de>
+From:   Soheil Hassas Yeganeh <soheil@google.com>
+Date:   Mon, 8 Jul 2019 09:55:11 -0400
+Message-ID: <CACSApvYkWwjzOhu+rvv1LOkcFYbU8Jgw=Q1f+HrCReEeKBLuuA@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/2] bpf: avoid unused variable warning in tcp_bpf_rtt()
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Priyaranjan Jha <priyarjha@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 06:48:33AM +0200, Luca Abeni wrote:
-> @@ -1223,8 +1250,17 @@ static void update_curr_dl(struct rq *rq)
->  			dl_se->dl_overrun = 1;
->  
->  		__dequeue_task_dl(rq, curr, 0);
-> -		if (unlikely(dl_se->dl_boosted || !start_dl_timer(curr)))
-> +		if (unlikely(dl_se->dl_boosted || !start_dl_timer(curr))) {
->  			enqueue_task_dl(rq, curr, ENQUEUE_REPLENISH);
-> +#ifdef CONFIG_SMP
-> +		} else if (dl_se->dl_adjust) {
-> +			if (rq->migrating_task == NULL) {
-> +				queue_balance_callback(rq, &per_cpu(dl_migrate_head, rq->cpu), migrate_dl_task);
+On Mon, Jul 8, 2019 at 8:57 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> When CONFIG_BPF is disabled, we get a warning for an unused
+> variable:
+>
+> In file included from drivers/target/target_core_device.c:26:
+> include/net/tcp.h:2226:19: error: unused variable 'tp' [-Werror,-Wunused-variable]
+>         struct tcp_sock *tp = tcp_sk(sk);
+>
+> The variable is only used in one place, so it can be
+> replaced with its value there to avoid the warning.
+>
+> Fixes: 23729ff23186 ("bpf: add BPF_CGROUP_SOCK_OPS callback that is executed on every RTT")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I'm not entirely sure about this one.
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 
-That is, we only do those callbacks from:
-
-  schedule_tail()
-  __schedule()
-  rt_mutex_setprio()
-  __sched_setscheduler()
-
-and the above looks like it can happen outside of those.
-
-The pattern in those sites is:
-
-	rq_lock();
-	... do crap that leads to queue_balance_callback()
-	rq_unlock()
-	if (rq->balance_callback) {
-		raw_spin_lock_irqsave(rq->lock, flags);
-		... do callbacks
-		raw_spin_unlock_irqrestore(rq->lock, flags);
-	}
-
-So I suppose can catch abuse of this API by doing something like the
-below; can you validate?
-
----
-
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index aaca0e743776..89e615f1eae6 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1134,6 +1134,14 @@ static inline void rq_pin_lock(struct rq *rq, struct rq_flags *rf)
- 	rf->cookie = lockdep_pin_lock(&rq->lock);
- 
- #ifdef CONFIG_SCHED_DEBUG
-+#ifdef CONFIG_SMP
-+	/*
-+	 * There should not be pending callbacks at the start of rq_lock();
-+	 * all sites that handle them flush them at the end.
-+	 */
-+	WARN_ON_ONCE(rq->balance_callback);
-+#endif
-+
- 	rq->clock_update_flags &= (RQCF_REQ_SKIP|RQCF_ACT_SKIP);
- 	rf->clock_update_flags = 0;
- #endif
+> ---
+>  include/net/tcp.h | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index e16d8a3fd3b4..cca3c59b98bf 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -2223,9 +2223,7 @@ static inline bool tcp_bpf_ca_needs_ecn(struct sock *sk)
+>
+>  static inline void tcp_bpf_rtt(struct sock *sk)
+>  {
+> -       struct tcp_sock *tp = tcp_sk(sk);
+> -
+> -       if (BPF_SOCK_OPS_TEST_FLAG(tp, BPF_SOCK_OPS_RTT_CB_FLAG))
+> +       if (BPF_SOCK_OPS_TEST_FLAG(tcp_sk(sk), BPF_SOCK_OPS_RTT_CB_FLAG))
+>                 tcp_call_bpf(sk, BPF_SOCK_OPS_RTT_CB, 0, NULL);
+>  }
+>
+> --
+> 2.20.0
+>
