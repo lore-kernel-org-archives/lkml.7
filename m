@@ -2,54 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48FDC606C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C064C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7DB217D6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB4A216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599215;
-	bh=F5ChGmoebv9E+y8/z1Bl6v1Dw13JI3HmgOrnE90SSAw=;
+	s=default; t=1562599221;
+	bh=Zs8cdzwW/322Rt7NUIextUwtakxIBwPqzOFo9x9q7OI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ISaE/HDKhNJWMv3kTqj7eHR2/j8O9j4gHQJULZnGCjELanUg4gZ3QwZRCJ0s+VRSN
-	 Tsnhlwy9BBBcrQQexv5mLRnIoVbryBugGKaLLxEgCClrZM3AvSnVjLENgBrdzsG8pl
-	 hXUMipoqsC5xofH18/6zq4gkuyRuff0k54F0CKHA=
+	b=pN0uMJ4heSW7xBOwkniXgnpjiUWSIpv4BjDQBqhDC3g+u3Yd6jiLzS45S0ntyf4Xw
+	 O7522avxd5OhHZFVcQN7oYpTuhVyEnb4xoIPIV0ShaXiRSITmVA9RnU+P7pqmvDCql
+	 DBDFDJBqxjiDZF3JeW5V+Bxym+J1yh0BClYr77gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387552AbfGHPT7 (ORCPT
+        id S1727667AbfGHPUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:19:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:20:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbfGHPT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:19:56 -0400
+        id S1726491AbfGHPUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:20:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3AC821734;
-        Mon,  8 Jul 2019 15:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6BCE21537;
+        Mon,  8 Jul 2019 15:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599195;
-        bh=F5ChGmoebv9E+y8/z1Bl6v1Dw13JI3HmgOrnE90SSAw=;
+        s=default; t=1562599213;
+        bh=Zs8cdzwW/322Rt7NUIextUwtakxIBwPqzOFo9x9q7OI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EhpjXUzC6KsfKqurf2yaY1HAToVfExpDu6g5G6cHCH9ZzZNtNP7/2gukU96vdt1qN
-         gbqFW4/DCzcTerjQRHIAgXqB0lJAjfDQzsQQMTH8r2zuIBZGBKfqLW7X83r8Fy9mGf
-         SMJi0rs02t+cwBO2VMvovygFE1NxqpQL/740ZG9o=
+        b=Vpw0+SWBVJWAV9D6FrJlIpfNo2EwBwrNwpPuLhB/LYTcT3tygy9KvL3rVyeE2f+3o
+         L2nhKkcg0D+WKwxdpmfIXHVh/ft9BE7f4CvcNubpye8Faaq5t81ztHkSpSVoWzeeXC
+         h2+hJ8Hlib8RjecVawY7yH4Nv/MqVULy28IAnbbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 036/102] IB/hfi1: Avoid hardlockup with flushlist_lock
-Date:   Mon,  8 Jul 2019 17:12:29 +0200
-Message-Id: <20190708150528.272739806@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.9 039/102] perf header: Fix unchecked usage of strncpy()
+Date:   Mon,  8 Jul 2019 17:12:32 +0200
+Message-Id: <20190708150528.431360994@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -62,64 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit cf131a81967583ae737df6383a0893b9fee75b4e upstream.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Heavy contention of the sde flushlist_lock can cause hard lockups at
-extreme scale when the flushing logic is under stress.
+commit 5192bde7d98c99f2cd80225649e3c2e7493722f7 upstream.
 
-Mitigate by replacing the item at a time copy to the local list with
-an O(1) list_splice_init() and using the high priority work queue to
-do the flushes.
+The strncpy() function may leave the destination string buffer
+unterminated, better use strlcpy() that we have a __weak fallback
+implementation for systems without it.
 
-Ported to linux-4.9.y.
+This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
 
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  util/header.c: In function 'perf_event__synthesize_event_update_name':
+  util/header.c:3625:2: error: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
+    strncpy(ev->data, evsel->name, len);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  util/header.c:3618:15: note: length computed here
+    size_t len = strlen(evsel->name);
+                 ^~~~~~~~~~~~~~~~~~~
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: a6e5281780d1 ("perf tools: Add event_update event unit type")
+Link: https://lkml.kernel.org/n/tip-wycz66iy8dl2z3yifgqf894p@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/hfi1/sdma.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ tools/perf/util/header.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
-index 9cbe52d21077..76e63c88a87a 100644
---- a/drivers/infiniband/hw/hfi1/sdma.c
-+++ b/drivers/infiniband/hw/hfi1/sdma.c
-@@ -410,10 +410,7 @@ static void sdma_flush(struct sdma_engine *sde)
- 	sdma_flush_descq(sde);
- 	spin_lock_irqsave(&sde->flushlist_lock, flags);
- 	/* copy flush list */
--	list_for_each_entry_safe(txp, txp_next, &sde->flushlist, list) {
--		list_del_init(&txp->list);
--		list_add_tail(&txp->list, &flushlist);
--	}
-+	list_splice_init(&sde->flushlist, &flushlist);
- 	spin_unlock_irqrestore(&sde->flushlist_lock, flags);
- 	/* flush from flush list */
- 	list_for_each_entry_safe(txp, txp_next, &flushlist, list)
-@@ -2406,7 +2403,7 @@ int sdma_send_txreq(struct sdma_engine *sde,
- 		wait->tx_count++;
- 		wait->count += tx->num_desc;
- 	}
--	schedule_work(&sde->flush_worker);
-+	queue_work_on(sde->cpu, system_highpri_wq, &sde->flush_worker);
- 	ret = -ECOMM;
- 	goto unlock;
- nodesc:
-@@ -2504,7 +2501,7 @@ int sdma_send_txlist(struct sdma_engine *sde, struct iowait *wait,
- 		}
- 	}
- 	spin_unlock(&sde->flushlist_lock);
--	schedule_work(&sde->flush_worker);
-+	queue_work_on(sde->cpu, system_highpri_wq, &sde->flush_worker);
- 	ret = -ECOMM;
- 	goto update_tail;
- nodesc:
--- 
-2.20.1
-
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3027,7 +3027,7 @@ perf_event__synthesize_event_update_name
+ 	if (ev == NULL)
+ 		return -ENOMEM;
+ 
+-	strncpy(ev->data, evsel->name, len);
++	strlcpy(ev->data, evsel->name, len + 1);
+ 	err = process(tool, (union perf_event*) ev, NULL, NULL);
+ 	free(ev);
+ 	return err;
 
 
