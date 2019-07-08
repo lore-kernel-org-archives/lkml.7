@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED30DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AD4C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1BD21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E4C21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="LcCICdsn"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="W11kKcw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391518AbfGHQcc (ORCPT
+        id S2389521AbfGHQb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:32:32 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55914 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389179AbfGHQb4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 12:31:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a15so136842wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:31:53 -0700 (PDT)
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34657 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388494AbfGHQbu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:31:50 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so1053488wrm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:31:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PA6jkJnM1L4hkSlGgnQo22GP2iGtLRU/PNmMpvPMBgI=;
-        b=LcCICdsn6TvVwfZTSN6FeDsew5y77UahVnYnI7ObUeF5duixZM79FFREJ2kZ9sE+yV
-         Eut5p0WpnIoCUxlOVy0lcgM5Z/Gh7JFczGvya5r5AN+3ABuo2UZMFLo2EXqTRFwxxJam
-         AjIlOeNvSEybpjsm/cxmkElaZHhwl16GnujbA=
+        bh=3geFFJ9tql4ZwrkQmT2Y6FVy9TSA0XcjotCe5RWiIWM=;
+        b=W11kKcw12664L0TISI/sieWZFZRo6VanqFvi/sZiO58JX6zHqbOe5vVsLBGA/+5B+Y
+         kKAtx9nfU9bBDJD3JcMKrs3s0vOlMoOeV4DK5ENYnVnXju2PxsleMeKcMdkefpydrt/X
+         /qu3fMa+w+lGdlcWFfAf4e1+K73wTK7C4pWbc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PA6jkJnM1L4hkSlGgnQo22GP2iGtLRU/PNmMpvPMBgI=;
-        b=Vsekijc+EJmp4tEqnmEFeXTG0sb1Y3I0c92ZVOd0GXMEyaNDl9PY3LnO9f0ceXbo3R
-         3eOeHLcKRXdh6o0T3bOlGvggnbnC4EUXcEyuUASdkgP1hEjhRNtpRHuG7Ovh/kmIylnD
-         ric1tfRNTbdgQ3EV4d1MCCbPH4EPjM1L4Jfq4YV1rlhuZUQaqJrain4opmdZwlIiOxqu
-         rLupBhJ14RB9NvRuEoGZ5j1lkxR5GLqfL9NDjRy6MgfjNUdOqGpkZJrc2wK2zn704RIm
-         CSKhEKijr3ASOmoLiD2cUzaXUloAXOcd0JRCARQxT7FWOclQg0c0iNM/BAq8ifKpg3QP
-         FFgQ==
-X-Gm-Message-State: APjAAAVESTz9d/JrTOSsH95TRvcTTrqo5Zlbp58Byzi8gkOLb9gMEaO5
-        rumGIPUoqPhY/caL0v8ZO+KDu4gfzMPQrg==
-X-Google-Smtp-Source: APXvYqzpsZtKBLIhoRGPKcTNBI7QH4tlhmTo6HYO5+fydKQ1czfQmJjn7PwyvaUNOoxcwlKb5PvfdQ==
-X-Received: by 2002:a1c:cc0d:: with SMTP id h13mr17034092wmb.119.1562603512663;
-        Mon, 08 Jul 2019 09:31:52 -0700 (PDT)
+        bh=3geFFJ9tql4ZwrkQmT2Y6FVy9TSA0XcjotCe5RWiIWM=;
+        b=hPFLO4gHFSe/yWm7SCLVPCeaJIjpY2pdkc1Y1JLCBzCvWCt+tri4r2nvIOGwP9Fhu8
+         VAJqMgAr28VnslrXSVxUQyUEu0UccUwplhrKPHbHivsDLlt4IFl2024FtDLyUcsT1Rnr
+         wNv6ex/mUoPKALUHUjpFQsdHYTguZLgsmaDMbRt/jucEbRowt/8Rw5TqOMYSKZMQnGoQ
+         6bvNHvhGfEv0MttMB8DLTUZ8JKUnany0tkVyDnHfVgrZa8PcujTXPZvL/WKwPywuF38t
+         xULhagXt+01hAJDaFtOmRV+kJYGW9xkVIdd3tsAUlFUoMD58PqRDS0VkbegQHQfMc0zK
+         q22w==
+X-Gm-Message-State: APjAAAWOmP0xkB1GP0TH8UDlXOY6Kxid0Ejw1Yxj4C45zLQF5epu+8Xj
+        17SGOaSufyVeXwA8RStR0V7xVzXPYiDvHw==
+X-Google-Smtp-Source: APXvYqzjb6vUPKfQHIBsttODvNl7TdmxISCG+2hXPuXBG5uEruZ3Y9wg/g4GGXFNnZrOITpNYyyoWQ==
+X-Received: by 2002:adf:ec0f:: with SMTP id x15mr19952633wrn.165.1562603508638;
+        Mon, 08 Jul 2019 09:31:48 -0700 (PDT)
 Received: from localhost.localdomain (ip5f5aedbe.dynamic.kabel-deutschland.de. [95.90.237.190])
-        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.51
+        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:31:52 -0700 (PDT)
+        Mon, 08 Jul 2019 09:31:48 -0700 (PDT)
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alban Crequy <alban@kinvolk.io>,
@@ -68,9 +68,9 @@ Cc:     Alban Crequy <alban@kinvolk.io>,
         Stanislav Fomichev <sdf@google.com>, netdev@vger.kernel.org,
         bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
         Krzesimir Nowak <krzesimir@kinvolk.io>
-Subject: [bpf-next v3 05/12] selftests/bpf: Allow passing more information to BPF prog test run
-Date:   Mon,  8 Jul 2019 18:31:14 +0200
-Message-Id: <20190708163121.18477-6-krzesimir@kinvolk.io>
+Subject: [bpf-next v3 02/12] selftests/bpf: Avoid a clobbering of errno
+Date:   Mon,  8 Jul 2019 18:31:11 +0200
+Message-Id: <20190708163121.18477-3-krzesimir@kinvolk.io>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190708163121.18477-1-krzesimir@kinvolk.io>
 References: <20190708163121.18477-1-krzesimir@kinvolk.io>
@@ -81,210 +81,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The test case can now specify a custom length of the data member,
-context data and its length, which will be passed to
-bpf_prog_test_run_xattr. For backward compatilibity, if the data
-length is 0 (which is what will happen when the field is left
-unspecified in the designated initializer of a struct), then the
-length passed to the bpf_prog_test_run_xattr is TEST_DATA_LEN.
+Save errno right after bpf_prog_test_run returns, so we later check
+the error code actually set by bpf_prog_test_run, not by some libcap
+function.
 
-Also for backward compatilibity, if context data length is 0, NULL is
-passed as a context to bpf_prog_test_run_xattr. This is to avoid
-breaking other tests, where context data being NULL and context data
-length being 0 is handled differently from the case where context data
-is not NULL and context data length is 0.
-
-Custom lengths still can't be greater than hardcoded 64 bytes for data
-and 192 for context data.
-
-192 for context data was picked to allow passing struct
-bpf_perf_event_data as a context for perf event programs. The struct
-is quite large, because it contains struct pt_regs.
-
-Test runs for perf event programs will not allow the copying the data
-back to data_out buffer, so they require data_out_size to be zero and
-data_out to be NULL. Since test_verifier hardcodes it, make it
-possible to override the size. Overriding the size to zero will cause
-the buffer to be NULL.
+Changes since v1:
+- Fix the "Fixes:" tag to mention actual commit that introduced the
+  bug
 
 Changes since v2:
-- Allow overriding the data out size and buffer.
+- Move the declaration so it fits the reverse christmas tree style.
 
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 832c6f2c29ec ("bpf: test make sure to run unpriv test cases in test_verifier")
 Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 ---
- tools/testing/selftests/bpf/test_verifier.c | 105 +++++++++++++++++---
- 1 file changed, 93 insertions(+), 12 deletions(-)
+ tools/testing/selftests/bpf/test_verifier.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 1640ba9f12c1..6f124cc4ee34 100644
+index b8d065623ead..3fe126e0083b 100644
 --- a/tools/testing/selftests/bpf/test_verifier.c
 +++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -54,6 +54,7 @@
- #define MAX_TEST_RUNS	8
- #define POINTER_VALUE	0xcafe4all
- #define TEST_DATA_LEN	64
-+#define TEST_CTX_LEN	192
- 
- #define F_NEEDS_EFFICIENT_UNALIGNED_ACCESS	(1 << 0)
- #define F_LOAD_WITH_STRICT_ALIGNMENT		(1 << 1)
-@@ -96,7 +97,12 @@ struct bpf_test {
- 	enum bpf_prog_type prog_type;
- 	uint8_t flags;
- 	__u8 data[TEST_DATA_LEN];
-+	__u32 data_len;
-+	__u8 ctx[TEST_CTX_LEN];
-+	__u32 ctx_len;
- 	void (*fill_helper)(struct bpf_test *self);
-+	bool override_data_out_len;
-+	__u32 overridden_data_out_len;
- 	uint8_t runs;
- 	struct {
- 		uint32_t retval, retval_unpriv;
-@@ -104,6 +110,9 @@ struct bpf_test {
- 			__u8 data[TEST_DATA_LEN];
- 			__u64 data64[TEST_DATA_LEN / 8];
- 		};
-+		__u32 data_len;
-+		__u8 ctx[TEST_CTX_LEN];
-+		__u32 ctx_len;
- 	} retvals[MAX_TEST_RUNS];
- };
- 
-@@ -818,21 +827,35 @@ static int set_admin(bool admin)
- }
- 
- static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
--			    void *data, size_t size_data)
-+			    void *data, size_t size_data, void *ctx,
-+			    size_t size_ctx, u32 *overridden_data_out_size)
- {
--	__u8 tmp[TEST_DATA_LEN << 2];
--	__u32 size_tmp = sizeof(tmp);
--	int saved_errno;
--	int err;
- 	struct bpf_prog_test_run_attr attr = {
- 		.prog_fd = fd_prog,
- 		.repeat = 1,
- 		.data_in = data,
- 		.data_size_in = size_data,
--		.data_out = tmp,
--		.data_size_out = size_tmp,
-+		.ctx_in = ctx,
-+		.ctx_size_in = size_ctx,
- 	};
-+	__u8 tmp[TEST_DATA_LEN << 2];
-+	__u32 size_tmp = sizeof(tmp);
-+	__u32 size_buf = size_tmp;
-+	__u8 *buf = tmp;
+@@ -823,16 +823,18 @@ static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
+ 	__u8 tmp[TEST_DATA_LEN << 2];
+ 	__u32 size_tmp = sizeof(tmp);
+ 	uint32_t retval;
 +	int saved_errno;
-+	int err;
+ 	int err;
  
-+	if (overridden_data_out_size)
-+		size_buf = *overridden_data_out_size;
-+	if (size_buf > size_tmp) {
-+		printf("FAIL: out data size (%d) greater than a buffer size (%d) ",
-+		       size_buf, size_tmp);
-+		return -EINVAL;
-+	}
-+	if (!size_buf)
-+		buf = NULL;
-+	attr.data_size_out = size_buf;
-+	attr.data_out = buf;
  	if (unpriv)
  		set_admin(true);
- 	err = bpf_prog_test_run_xattr(&attr);
-@@ -956,13 +979,45 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 	if (!alignment_prevented_execution && fd_prog >= 0) {
- 		uint32_t expected_val;
- 		int i;
-+		__u32 size_data;
-+		__u32 size_ctx;
-+		bool bad_size;
-+		void *ctx;
-+		__u32 *overridden_data_out_size;
- 
- 		if (!test->runs) {
-+			if (test->data_len > 0)
-+				size_data = test->data_len;
-+			else
-+				size_data = sizeof(test->data);
-+			if (test->override_data_out_len)
-+				overridden_data_out_size = &test->overridden_data_out_len;
-+			else
-+				overridden_data_out_size = NULL;
-+			size_ctx = test->ctx_len;
-+			bad_size = false;
- 			expected_val = unpriv && test->retval_unpriv ?
- 				test->retval_unpriv : test->retval;
- 
--			err = do_prog_test_run(fd_prog, unpriv, expected_val,
--					       test->data, sizeof(test->data));
-+			if (size_data > sizeof(test->data)) {
-+				printf("FAIL: data size (%u) greater than TEST_DATA_LEN (%lu) ", size_data, sizeof(test->data));
-+				bad_size = true;
-+			}
-+			if (size_ctx > sizeof(test->ctx)) {
-+				printf("FAIL: ctx size (%u) greater than TEST_CTX_LEN (%lu) ", size_ctx, sizeof(test->ctx));
-+				bad_size = true;
-+			}
-+			if (size_ctx)
-+				ctx = test->ctx;
-+			else
-+				ctx = NULL;
-+			if (bad_size)
-+				err = 1;
-+			else
-+				err = do_prog_test_run(fd_prog, unpriv, expected_val,
-+						       test->data, size_data,
-+						       ctx, size_ctx,
-+						       overridden_data_out_size);
- 			if (err)
- 				run_errs++;
- 			else
-@@ -970,14 +1025,40 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 		}
- 
- 		for (i = 0; i < test->runs; i++) {
-+			if (test->retvals[i].data_len > 0)
-+				size_data = test->retvals[i].data_len;
-+			else
-+				size_data = sizeof(test->retvals[i].data);
-+			if (test->override_data_out_len)
-+				overridden_data_out_size = &test->overridden_data_out_len;
-+			else
-+				overridden_data_out_size = NULL;
-+			size_ctx = test->retvals[i].ctx_len;
-+			bad_size = false;
- 			if (unpriv && test->retvals[i].retval_unpriv)
- 				expected_val = test->retvals[i].retval_unpriv;
- 			else
- 				expected_val = test->retvals[i].retval;
- 
--			err = do_prog_test_run(fd_prog, unpriv, expected_val,
--					       test->retvals[i].data,
--					       sizeof(test->retvals[i].data));
-+			if (size_data > sizeof(test->retvals[i].data)) {
-+				printf("FAIL: data size (%u) at run %i greater than TEST_DATA_LEN (%lu) ", size_data, i + 1, sizeof(test->retvals[i].data));
-+				bad_size = true;
-+			}
-+			if (size_ctx > sizeof(test->retvals[i].ctx)) {
-+				printf("FAIL: ctx size (%u) at run %i greater than TEST_CTX_LEN (%lu) ", size_ctx, i + 1, sizeof(test->retvals[i].ctx));
-+				bad_size = true;
-+			}
-+			if (size_ctx)
-+				ctx = test->retvals[i].ctx;
-+			else
-+				ctx = NULL;
-+			if (bad_size)
-+				err = 1;
-+			else
-+				err = do_prog_test_run(fd_prog, unpriv, expected_val,
-+						       test->retvals[i].data, size_data,
-+						       ctx, size_ctx,
-+						       overridden_data_out_size);
- 			if (err) {
- 				printf("(run %d/%d) ", i + 1, test->runs);
- 				run_errs++;
+ 	err = bpf_prog_test_run(fd_prog, 1, data, size_data,
+ 				tmp, &size_tmp, &retval, NULL);
++	saved_errno = errno;
+ 	if (unpriv)
+ 		set_admin(false);
+ 	if (err) {
+-		switch (errno) {
++		switch (saved_errno) {
+ 		case 524/*ENOTSUPP*/:
+ 			printf("Did not run the program (not supported) ");
+ 			return 0;
 -- 
 2.20.1
 
