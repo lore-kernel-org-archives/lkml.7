@@ -2,150 +2,108 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC47C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC52C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0749216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A883216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ANjX9kGQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yFqK2Fa5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731801AbfGHOaq (ORCPT
+        id S1731804AbfGHOck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:30:46 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:54858 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729179AbfGHOaq (ORCPT
+        Mon, 8 Jul 2019 10:32:40 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34596 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729179AbfGHOcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:30:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KZ+JyrNmsYozld9a4FapspL694KYxTiXMOBra+KG6/g=; b=ANjX9kGQaVVgnRye6huS/jIYR
-        Dc3UVfWIMQnfRv8II0PKtpKwVHWwyaHL1jQvcjynhtDBFqf7zFqFlTswwC/nD+OZnscyEOSOgd3W8
-        nnkc1aJGJzESAD2ELQRCTBUazn/b0zEcshB0uGl64XB28oFDi36inaIXBeL6z5oy9ERcsoDwkZegs
-        J61hbMmYOFHYJbWa/r+Rf8UcTstvmJwH3K9QkvH3U+OKfNdTL/CGQKZHrq5D3JAbJvnGYz9Xg/xac
-        ONL8h+tTggeNKhkcXJwBxHxIAxx1ycDlICAQI2csSVVpkew1DuqFc5oa/ZGdzjD/Xs5lTw7iwrVwZ
-        Amdhg2oHQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkUeL-0007gC-0R; Mon, 08 Jul 2019 14:29:49 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B9A5320B31C22; Mon,  8 Jul 2019 16:29:47 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 16:29:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
-        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
-        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
-Subject: Re: [PATCH v7 07/12] perf/x86: no counter allocation support
-Message-ID: <20190708142947.GM3402@hirez.programming.kicks-ass.net>
-References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
- <1562548999-37095-8-git-send-email-wei.w.wang@intel.com>
+        Mon, 8 Jul 2019 10:32:39 -0400
+Received: by mail-lj1-f195.google.com with SMTP id p17so16187910ljg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WAw/aU6LZwIL6FVu56mHN3vVX8j9GNHFwvAGIAISsSo=;
+        b=yFqK2Fa5FNVeLOgjpxiFNic8jzO/GwJcdLUaJGStjJNMhZz60Qo9R01U6fDs8KmWG4
+         GplEP1TLR3Pfsfch/6zDCoois6dE+JkDPJCZxL53pMK4aVXM+32qSKQovQelrf7BMije
+         Wb34buu0hSbVOhACpS1mqqhzcrpPeHcfvY0UrPjnphdg+bYXKFoXA/5tEdcSyOk+4y8L
+         LH7xym5vOdPlASdtQEntkguxyuXCVlObt47p67yK8XYa/3FY5Z0oORjMBRGzmTEebBVZ
+         QI1RP6a6eCQoe1mahq5d2fxAQzp/5GciyTf9t845dUVI5n/dqxrMk62beqjm37oYGp1n
+         lpIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WAw/aU6LZwIL6FVu56mHN3vVX8j9GNHFwvAGIAISsSo=;
+        b=YCr5W4HEauR8Rz4sKjlhmdniIYO1zE7aNT5dd+4FQfufu3HGNipdbO+tPGANa5Nm0k
+         EJmG2OuZSnuingFv95z5l2j6GNofVHgjuwwBZyyOfUVreaBKHuvkhmXqPpgLFQMfrkkz
+         CWI09grPOFpNjYBtvow+CoPgjRK3maVbbJ1DPxReBwzfDmY/KWOH6lWD7ZHeKnQbS+7E
+         65nSjuj0EI3/8xiCyVoU19EXrrdDm7GOYtavWB0+3M5zfiYq4IoFVlFPE8fht6sqrfaX
+         yMbLg0lKPQ1Hz7AhZgjoyy1ni4xqMuuvNezgbGjh8nBxGSHZ/PEPeR3u0Z6e1cEUREUB
+         Zsrw==
+X-Gm-Message-State: APjAAAXVxTEbTf/xSqw1WNOtSQU5FencPGPBf0DXmWD832gNBbJslF8T
+        vZqaqtU9jE0SnewvIgLDtgdVWPB36AS3hepK9xo5Hg==
+X-Google-Smtp-Source: APXvYqzA7Vn8bG35rz7cR5NV9vyloKLEVm/Czse88spJybT0Aob5DfBfCdBt1z7MfJ3MzJlZPvwkGqI5V1izfq1OR94=
+X-Received: by 2002:a2e:9593:: with SMTP id w19mr7413475ljh.69.1562596357740;
+ Mon, 08 Jul 2019 07:32:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562548999-37095-8-git-send-email-wei.w.wang@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190703205527.955320-1-arnd@arndb.de> <20190703205527.955320-2-arnd@arndb.de>
+In-Reply-To: <20190703205527.955320-2-arnd@arndb.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 8 Jul 2019 16:32:26 +0200
+Message-ID: <CACRpkdYnuSqiYBPMe_+u6dx_X1zSYKCnCtFznWtxkMf-BGBwjA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] kasan: disable CONFIG_KASAN_STACK with clang on arm32
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Abbott Liu <liuwenliang@huawei.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        kasan-dev@googlegroups.com,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Will Deacon <will@kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 09:23:14AM +0800, Wei Wang wrote:
-> In some cases, an event may be created without needing a counter
-> allocation. For example, an lbr event may be created by the host
-> only to help save/restore the lbr stack on the vCPU context switching.
-> 
-> This patch adds a new interface to allow users to create a perf event
-> without the need of counter assignment.
-> 
-> Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> ---
+On Wed, Jul 3, 2019 at 10:56 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-I _really_ hate this one.
+> The CONFIG_KASAN_STACK symbol tells us whether we should be using the
+> asan-stack=1 parameter. On clang-8, this causes explosive kernel stack
+> frame growth, so it is currently disabled, hopefully to be turned back
+> on when a future clang version is fixed. Examples include
+>
+> drivers/media/dvb-frontends/mb86a20s.c:1942:12: error: stack frame size of 4128 bytes in function
+> drivers/net/wireless/atmel/atmel.c:1307:5: error: stack frame size of 4928 bytes in function 'atmel_open'
+> drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramgk104.c:1521:1: error: stack frame size of 5440 bytes in function
+> drivers/media/i2c/mt9t112.c:670:12: error: stack frame size of 9344 bytes in function 'mt9t112_init_camera'
+> drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c:185:12: error: stack frame size of 10048 bytes
+>
+> For the 32-bit ARM build, the logic I introduced earlier does
+> not work because $(CFLAGS_KASAN_SHADOW) is empty, and we don't add
+> those flags.
+>
+> Moving the asan-stack= parameter down fixes this. No idea of any
+> of the other parameters should also be moved though.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
->  arch/x86/events/core.c     | 12 ++++++++++++
->  include/linux/perf_event.h | 13 +++++++++++++
->  kernel/events/core.c       | 37 +++++++++++++++++++++++++------------
->  3 files changed, 50 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index f315425..eebbd65 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -410,6 +410,9 @@ int x86_setup_perfctr(struct perf_event *event)
->  	struct hw_perf_event *hwc = &event->hw;
->  	u64 config;
->  
-> +	if (is_no_counter_event(event))
-> +		return 0;
-> +
->  	if (!is_sampling_event(event)) {
->  		hwc->sample_period = x86_pmu.max_period;
->  		hwc->last_period = hwc->sample_period;
-> @@ -1248,6 +1251,12 @@ static int x86_pmu_add(struct perf_event *event, int flags)
->  	hwc = &event->hw;
->  
->  	n0 = cpuc->n_events;
-> +
-> +	if (is_no_counter_event(event)) {
-> +		n = n0;
-> +		goto done_collect;
-> +	}
-> +
->  	ret = n = collect_events(cpuc, event, false);
->  	if (ret < 0)
->  		goto out;
-> @@ -1422,6 +1431,9 @@ static void x86_pmu_del(struct perf_event *event, int flags)
->  	if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
->  		goto do_del;
->  
-> +	if (is_no_counter_event(event))
-> +		goto do_del;
-> +
->  	/*
->  	 * Not a TXN, therefore cleanup properly.
->  	 */
+For some reason the RealView doesn't boot after this patch. Trying to figure
+out why.
 
-That's truely an abomination.
-
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 0ab99c7..19e6593 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -528,6 +528,7 @@ typedef void (*perf_overflow_handler_t)(struct perf_event *,
->   */
->  #define PERF_EV_CAP_SOFTWARE		BIT(0)
->  #define PERF_EV_CAP_READ_ACTIVE_PKG	BIT(1)
-> +#define PERF_EV_CAP_NO_COUNTER		BIT(2)
->  
->  #define SWEVENT_HLIST_BITS		8
->  #define SWEVENT_HLIST_SIZE		(1 << SWEVENT_HLIST_BITS)
-> @@ -895,6 +896,13 @@ extern int perf_event_refresh(struct perf_event *event, int refresh);
->  extern void perf_event_update_userpage(struct perf_event *event);
->  extern int perf_event_release_kernel(struct perf_event *event);
->  extern struct perf_event *
-> +perf_event_create(struct perf_event_attr *attr,
-> +		  int cpu,
-> +		  struct task_struct *task,
-> +		  perf_overflow_handler_t overflow_handler,
-> +		  void *context,
-> +		  bool counter_assignment);
-> +extern struct perf_event *
->  perf_event_create_kernel_counter(struct perf_event_attr *attr,
->  				int cpu,
->  				struct task_struct *task,
-
-Why the heck are you creating this wrapper nonsense?
+Yours,
+Linus Walleij
