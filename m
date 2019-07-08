@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2777DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26569C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F052621738
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE55C2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599275;
-	bh=OyvPrMEsL5zESbuuUbF6mok4H+383Nhd1CEAyymND5E=;
+	s=default; t=1562599278;
+	bh=mwOelXsrCuuMKCyZ0wYPajpulkmxdXMTo78dRT5AWPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgqZSLSfCdftexBxfJ2hR3PsU4oQp06YiJCrag1R+DVZeGXkM/+asbz7rvXi+V738
-	 yskFh/zlYAfoNbkijLt+Mpm/EeISBaw6H09akgY+x4HA5AaBlxdx2hGdZwYcWR3uvy
-	 9wv5BV0Mxi02I9NRzqZSXAag6HgRS5/6dW83wBbQ=
+	b=0slBVBjrI84ASCeshSwvkKpenVOMwzTKhEsdwYz8/xmzrDaWCcKAprVtpF2KiiL1G
+	 i9MTcMCotVyst8pfGREICdR6OmO8a2DWAxPUuRbF+I/j1iilSoIA6gda+d9k4ILzqc
+	 LrVw55qoZZOz0+Z8CViI+NLHOUlrgIefhG6I2BrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387470AbfGHPVN (ORCPT
+        id S2387495AbfGHPVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46616 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:21:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbfGHPVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:09 -0400
+        id S2387473AbfGHPVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:21:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7F42216E3;
-        Mon,  8 Jul 2019 15:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4206217D8;
+        Mon,  8 Jul 2019 15:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599268;
-        bh=OyvPrMEsL5zESbuuUbF6mok4H+383Nhd1CEAyymND5E=;
+        s=default; t=1562599273;
+        bh=mwOelXsrCuuMKCyZ0wYPajpulkmxdXMTo78dRT5AWPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HScheexg3J8PHfJdGCEJdNc+tIT9gGXi3Po60k8KIaD4osYrIvXrHt4Q37FJNdVqc
-         FK4zOHpGLpIBIRJ2gPz0auILwSCZzLzx0MHQe6j8bVlHpS9TpczpqShjpw5BXJQ4Ae
-         ZN7bjvVmv6s/wug2sisKovUpA5cBaaA9HuteMQ50=
+        b=MbUErqVTmgjCKVfFiU7BRxEV2AsD4evkJned2Ep5FHUxxm+2qz03VUoQSFmtlgYVB
+         mREcJQ0igO70jP8XuGh9h/jQBY582JgUdSzJ/ZPTSuWKmpZBbLmKMEBFDmyv+RJAd6
+         ynFxY8r73UnaJ4Lk2cv98Sps5Ekg2ZDLuf7eUvoc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 060/102] ipv4: Use return value of inet_iif() for __raw_v4_lookup in the while loop
-Date:   Mon,  8 Jul 2019 17:12:53 +0200
-Message-Id: <20190708150529.566741992@linuxfoundation.org>
+        Josh Elsasser <jelsasser@appneta.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Matteo Croce <mcroce@redhat.com>
+Subject: [PATCH 4.9 061/102] net: check before dereferencing netdev_ops during busy poll
+Date:   Mon,  8 Jul 2019 17:12:54 +0200
+Message-Id: <20190708150529.620430598@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,34 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Suryaputra <ssuryaextr@gmail.com>
+From: Josh Elsasser <jelsasser@appneta.com>
 
-[ Upstream commit 38c73529de13e1e10914de7030b659a2f8b01c3b ]
+init_dummy_netdev() leaves its netdev_ops pointer zeroed. This leads
+to a NULL pointer dereference when sk_busy_loop fires against an iwlwifi
+wireless adapter and checks napi->dev->netdev_ops->ndo_busy_poll.
 
-In commit 19e4e768064a8 ("ipv4: Fix raw socket lookup for local
-traffic"), the dif argument to __raw_v4_lookup() is coming from the
-returned value of inet_iif() but the change was done only for the first
-lookup. Subsequent lookups in the while loop still use skb->dev->ifIndex.
+Avoid this by ensuring napi->dev->netdev_ops is valid before following
+the pointer, avoiding the following panic when busy polling on a dummy
+netdev:
 
-Fixes: 19e4e768064a8 ("ipv4: Fix raw socket lookup for local traffic")
-Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  BUG: unable to handle kernel NULL pointer dereference at 00000000000000c8
+  IP: [<ffffffff817b4b72>] sk_busy_loop+0x92/0x2f0
+  Call Trace:
+   [<ffffffff815a3134>] ? uart_write_room+0x74/0xf0
+   [<ffffffff817964a9>] sock_poll+0x99/0xa0
+   [<ffffffff81223142>] do_sys_poll+0x2e2/0x520
+   [<ffffffff8118d3fc>] ? get_page_from_freelist+0x3bc/0xa30
+   [<ffffffff810ada22>] ? update_curr+0x62/0x140
+   [<ffffffff811ea671>] ? __slab_free+0xa1/0x2a0
+   [<ffffffff811ea671>] ? __slab_free+0xa1/0x2a0
+   [<ffffffff8179dbb1>] ? skb_free_head+0x21/0x30
+   [<ffffffff81221bd0>] ? poll_initwait+0x50/0x50
+   [<ffffffff811eaa36>] ? kmem_cache_free+0x1c6/0x1e0
+   [<ffffffff815a4884>] ? uart_write+0x124/0x1d0
+   [<ffffffff810bd1cd>] ? remove_wait_queue+0x4d/0x60
+   [<ffffffff810bd224>] ? __wake_up+0x44/0x50
+   [<ffffffff81582731>] ? tty_write_unlock+0x31/0x40
+   [<ffffffff8158c5c6>] ? tty_ldisc_deref+0x16/0x20
+   [<ffffffff81584820>] ? tty_write+0x1e0/0x2f0
+   [<ffffffff81587e50>] ? process_echoes+0x80/0x80
+   [<ffffffff8120c17b>] ? __vfs_write+0x2b/0x130
+   [<ffffffff8120d09a>] ? vfs_write+0x15a/0x1a0
+   [<ffffffff81223455>] SyS_poll+0x75/0x100
+   [<ffffffff819a6524>] entry_SYSCALL_64_fastpath+0x24/0xcf
+
+Commit 79e7fff47b7b ("net: remove support for per driver ndo_busy_poll()")
+indirectly fixed this upstream in linux-4.11 by removing the offending
+pointer usage. No other users of napi->dev touch its netdev_ops.
+
+Fixes: ce6aea93f751 ("net: network drivers no longer need to implement ndo_busy_poll()") # 4.9.y
+Signed-off-by: Josh Elsasser <jelsasser@appneta.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Tested-by: Matteo Croce <mcroce@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/raw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -197,7 +197,7 @@ static int raw_v4_input(struct sk_buff *
- 		}
- 		sk = __raw_v4_lookup(net, sk_next(sk), iph->protocol,
- 				     iph->saddr, iph->daddr,
--				     skb->dev->ifindex);
-+				     dif);
- 	}
- out:
- 	read_unlock(&raw_v4_hashinfo.lock);
+No changes since V2[1], resent as per discussiond on -stable[2]. I hope
+this is the correct way to send net fixes for older LTS releases, I'm
+going off of the latest netdev FAQ:
+
+   For earlier stable releases, each stable branch maintainer is supposed
+   to take care of them. If you find any patch is missing from an earlier
+   stable branch, please notify stable@vger.kernel.org with either a commit
+   ID or a formal patch backported, and CC Dave and other relevant networking
+   developers.
+
+[1]: https://patchwork.ozlabs.org/patch/884986/
+[2]: https://lore.kernel.org/stable/CAGnkfhx3ykbEsW+=FtpMFWU=_Vnie7RpPYWpWqa1S1HPMXj9kw@mail.gmail.com/
+
+
+ net/core/dev.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5083,7 +5083,10 @@ bool sk_busy_loop(struct sock *sk, int n
+ 		goto out;
+ 
+ 	/* Note: ndo_busy_poll method is optional in linux-4.5 */
+-	busy_poll = napi->dev->netdev_ops->ndo_busy_poll;
++	if (napi->dev->netdev_ops)
++		busy_poll = napi->dev->netdev_ops->ndo_busy_poll;
++	else
++		busy_poll = NULL;
+ 
+ 	do {
+ 		rc = 0;
 
 
