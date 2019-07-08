@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E454BC48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 05:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D76C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 05:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA7B20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 05:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB46720659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 05:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="0ivlzNsR"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="i8xjNfGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfGHFh4 (ORCPT
+        id S1728632AbfGHFio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 01:37:56 -0400
-Received: from mail-eopbgr80048.outbound.protection.outlook.com ([40.107.8.48]:65040
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Mon, 8 Jul 2019 01:38:44 -0400
+Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:27776
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727286AbfGHFhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 01:37:55 -0400
+        id S1727286AbfGHFin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 01:38:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xWtzVWm29lMeW7bLs8cDSUBSBDCuOadjFP/cGn0Kj1w=;
- b=0ivlzNsR6Xf9vl4KqrtO1Zd5tXNwB9FFL5F7+vP/27qBp4hJSG90iYkZMVZXztrd7hFQdVTN301wvSJ0N6ATisCbgpdXAaNSgoUG5TpQDxy5z68ruSE43woHsxABxqoevpqFG3of4umGqwB8swNaX8vMAkNQQB1bhouKcs4g3Go=
+ bh=Z70kcexbLeO0Hy6vrTImscr4g9/MuPHR8gD1w9lKGj8=;
+ b=i8xjNfGqNBVF3qWo1B8IR35Fsk10jjHN2Iv29BYlJFFyGUqMuwVBXos9HqtNPLOQeSL9+LZxDI/X8cjxbMyqAmH1FrDXP7geDBeRzu6YSK+taQYb0SvsU8yxssDYywXo1QbPocEx0O+KhLoIjqXCN7eBms3qJ12moeiosSLnedk=
 Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
  VE1PR08MB5181.eurprd08.prod.outlook.com (20.179.31.16) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Mon, 8 Jul 2019 05:37:50 +0000
+ 15.20.2052.19; Mon, 8 Jul 2019 05:38:39 +0000
 Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
  ([fe80::4062:a380:35ba:11d1]) by VE1PR08MB5006.eurprd08.prod.outlook.com
  ([fe80::4062:a380:35ba:11d1%3]) with mapi id 15.20.2032.019; Mon, 8 Jul 2019
- 05:37:50 +0000
+ 05:38:39 +0000
 From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
 To:     Liviu Dudau <Liviu.Dudau@arm.com>,
         "airlied@linux.ie" <airlied@linux.ie>,
@@ -57,43 +57,43 @@ CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
         "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
         "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
         "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH 1/2] drm/komeda: Computing layer_split internally
-Thread-Topic: [PATCH 1/2] drm/komeda: Computing layer_split internally
-Thread-Index: AQHVNU9H6u/+WBtsXEalJYGmE2ppQg==
-Date:   Mon, 8 Jul 2019 05:37:50 +0000
-Message-ID: <20190708053729.3502-1-james.qian.wang@arm.com>
+Subject: [PATCH 2/2] drm/komeda: Computing image enhancer internally
+Thread-Topic: [PATCH 2/2] drm/komeda: Computing image enhancer internally
+Thread-Index: AQHVNU9lN59GOuQcEkeNTfkO8UQO6Q==
+Date:   Mon, 8 Jul 2019 05:38:39 +0000
+Message-ID: <20190708053819.3574-1-james.qian.wang@arm.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK0PR03CA0054.apcprd03.prod.outlook.com
- (2603:1096:203:52::18) To VE1PR08MB5006.eurprd08.prod.outlook.com
+x-clientproxiedby: HK2PR04CA0072.apcprd04.prod.outlook.com
+ (2603:1096:202:15::16) To VE1PR08MB5006.eurprd08.prod.outlook.com
  (2603:10a6:803:113::31)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=james.qian.wang@arm.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.20.1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3396cd9f-f9e9-450a-56a9-08d703666a2e
+x-ms-office365-filtering-correlation-id: 2278cffa-255a-4770-7aea-08d703668781
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5181;
 x-ms-traffictypediagnostic: VE1PR08MB5181:
-x-microsoft-antispam-prvs: <VE1PR08MB51810DB52DFD5CF6AA60A4A9B3F60@VE1PR08MB5181.eurprd08.prod.outlook.com>
+x-microsoft-antispam-prvs: <VE1PR08MB518167C7B0C9B3C90E268733B3F60@VE1PR08MB5181.eurprd08.prod.outlook.com>
 nodisclaimer: True
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-oob-tlc-oobclassifiers: OLM:883;
 x-forefront-prvs: 00922518D8
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39850400004)(136003)(366004)(376002)(396003)(189003)(199004)(2906002)(99286004)(478600001)(8936002)(53936002)(6116002)(52116002)(3846002)(5660300002)(26005)(64756008)(86362001)(14454004)(71190400001)(66066001)(2201001)(66556008)(71200400001)(66446008)(73956011)(305945005)(66476007)(6486002)(1076003)(66946007)(25786009)(103116003)(14444005)(256004)(2616005)(6512007)(186003)(6436002)(316002)(102836004)(110136005)(6506007)(2501003)(476003)(386003)(54906003)(55236004)(36756003)(7736002)(81166006)(8676002)(486006)(50226002)(68736007)(4326008)(81156014)(309714004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5181;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xxlGQUQiQ/q4andzhrDJyhVBeDglWi7waFg5Gy7Hve35nOXYFgRj0PysRRr2DBuJ5Og3ucOlz5mZeBx3YPbhEbrmhgVTIqEZA+XPuVd8/Wbj5gYp+8hIhR+qgYqHafGWZWo7vlYDq+WxaGoFs0WsNaTTaZuC2QLyUyhiu1fbbeXmnACv/GAzDOpk1JW5aKJSoeNMr6kZYEGuBEv2Mo6Q5KrJNQnijYa5xLOzblWPPIqAujGdNWweiBst5nUWyyeUv+wW2FhvO+na0r68uYRXf+WBlnHhukzCCN5DPSeOP8/aR+dVJXL6dopHZVvrcwRMhqfb8xByTGm1GQb/Wk2Y49d2Fn8bg4Xzz7M6xHPZtmK9lMMXA9wK0WUvVOaghtLpyM4w3LNKpi3d5YxJweWAcX8N/WwgOgs6zNzMURpeDoM=
+x-microsoft-antispam-message-info: ylkJiGCSOXfjqMr6/NSldKdqtSn+HXgEvQEYsapdO56tX9b9GHESBHIr6r6P1JZm78aUn3YbkUXQaD4IjzAiw19aIl27FYm9oNsGbb+pNLILhtjf7Uwlw6k5dRFr59y/UWaly3tD3XIVuJcGEon87An7Gg3RvsQsIXrrU8QVBQUSJ4tqRZEkGer9ZNFACxULytcxiECcYLd3YFOVa0J3bn5aYK4t5ybDygfF3qodMW8JtiCUX6q8H7egqZktNi83vFchMPvNlgJZwc47ypiiL09IaineDkRPGyGA6QZjtTU9RJOYfTihco12QStuCpFmn4EBgYkzzXo4ZhdDrc0mUIF753yDFUxSYAleU/T0qlwPQW+4Ti3fd9XAibAB4sHgECmd5JmfTzAclPM3G1/BXk9HFEHMMB6aiz51Rfetbqo=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3396cd9f-f9e9-450a-56a9-08d703666a2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 05:37:50.3421
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2278cffa-255a-4770-7aea-08d703668781
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 05:38:39.4639
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
@@ -105,114 +105,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For layer_split no need user to enable/disable it, but compute it in
-komeda internally, komeda will enable it if the scaling exceed the
-acceptable range of scaler.
+Enable image enhancer when the input data flow is 2x+ upscaling.
 
 Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.=
 com>
 ---
- drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h  |  3 ++-
- .../drm/arm/display/komeda/komeda_pipeline_state.c    | 11 ++++++++++-
- drivers/gpu/drm/arm/display/komeda/komeda_plane.c     |  3 +--
- .../gpu/drm/arm/display/komeda/komeda_wb_connector.c  | 10 +---------
- 4 files changed, 14 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/arm/display/komeda/komeda_kms.h            | 7 ++-----
+ drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c | 4 ++++
+ drivers/gpu/drm/arm/display/komeda/komeda_plane.c          | 5 -----
+ 3 files changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers=
-/gpu/drm/arm/display/komeda/komeda_pipeline.h
-index fc1b8613385e..a90bcbb3cb23 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-@@ -537,7 +537,8 @@ void komeda_pipeline_disable(struct komeda_pipeline *pi=
-pe,
- void komeda_pipeline_update(struct komeda_pipeline *pipe,
- 			    struct drm_atomic_state *old_state);
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h b/drivers/gpu/=
+drm/arm/display/komeda/komeda_kms.h
+index 0c006576a25c..8c89fc245b83 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.h
+@@ -47,11 +47,8 @@ struct komeda_plane_state {
+ 	/** @zlist_node: zorder list node */
+ 	struct list_head zlist_node;
 =20
--void komeda_complete_data_flow_cfg(struct komeda_data_flow_cfg *dflow,
-+void komeda_complete_data_flow_cfg(struct komeda_layer *layer,
-+				   struct komeda_data_flow_cfg *dflow,
- 				   struct drm_framebuffer *fb);
+-	/* @img_enhancement: on/off image enhancement
+-	 * @layer_split: on/off layer_split
+-	 */
+-	u8 img_enhancement : 1,
+-	   layer_split : 1;
++	/** @layer_split: on/off layer_split */
++	u8 layer_split : 1;
+ };
 =20
- #endif /* _KOMEDA_PIPELINE_H_*/
+ /**
 diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/d=
 rivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-index 2b415ef2b7d3..972a0f25254d 100644
+index 972a0f25254d..950235af1e79 100644
 --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
 +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-@@ -784,9 +784,11 @@ komeda_timing_ctrlr_validate(struct komeda_timing_ctrl=
-r *ctrlr,
- 	return 0;
- }
-=20
--void komeda_complete_data_flow_cfg(struct komeda_data_flow_cfg *dflow,
-+void komeda_complete_data_flow_cfg(struct komeda_layer *layer,
-+				   struct komeda_data_flow_cfg *dflow,
- 				   struct drm_framebuffer *fb)
- {
-+	struct komeda_scaler *scaler =3D layer->base.pipeline->scalers[0];
- 	u32 w =3D dflow->in_w;
- 	u32 h =3D dflow->in_h;
-=20
-@@ -803,6 +805,13 @@ void komeda_complete_data_flow_cfg(struct komeda_data_=
-flow_cfg *dflow,
-=20
+@@ -806,6 +806,10 @@ void komeda_complete_data_flow_cfg(struct komeda_layer=
+ *layer,
  	dflow->en_scaling =3D (w !=3D dflow->out_w) || (h !=3D dflow->out_h);
  	dflow->is_yuv =3D fb->format->is_yuv;
-+
-+	/* try to enable split if scaling exceed the scaler's acceptable
-+	 * input/output range.
-+	 */
-+	if (dflow->en_scaling && scaler)
-+		dflow->en_split =3D !in_range(&scaler->hsize, dflow->in_w) ||
-+				  !in_range(&scaler->hsize, dflow->out_w);
- }
 =20
- static bool merger_is_available(struct komeda_pipeline *pipe,
++	/* try to enable image enhancer if data flow is a 2x+ upscaling */
++	dflow->en_img_enhancement =3D dflow->out_w >=3D 2 * w ||
++				    dflow->out_h >=3D 2 * h;
++
+ 	/* try to enable split if scaling exceed the scaler's acceptable
+ 	 * input/output range.
+ 	 */
 diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/gp=
 u/drm/arm/display/komeda/komeda_plane.c
-index 5bb8553cc117..b1386438357b 100644
+index b1386438357b..c095af154216 100644
 --- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
 +++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
-@@ -58,9 +58,8 @@ komeda_plane_init_data_flow(struct drm_plane_state *st,
+@@ -18,7 +18,6 @@ komeda_plane_init_data_flow(struct drm_plane_state *st,
+ 			    struct komeda_data_flow_cfg *dflow)
+ {
+ 	struct komeda_plane *kplane =3D to_kplane(st->plane);
+-	struct komeda_plane_state *kplane_st =3D to_kplane_st(st);
+ 	struct drm_framebuffer *fb =3D st->fb;
+ 	const struct komeda_format_caps *caps =3D to_kfb(fb)->format_caps;
+ 	struct komeda_pipeline *pipe =3D kplane->layer->base.pipeline;
+@@ -57,8 +56,6 @@ komeda_plane_init_data_flow(struct drm_plane_state *st,
+ 		return -EINVAL;
  	}
 =20
- 	dflow->en_img_enhancement =3D !!kplane_st->img_enhancement;
--	dflow->en_split =3D !!kplane_st->layer_split;
-=20
--	komeda_complete_data_flow_cfg(dflow, fb);
-+	komeda_complete_data_flow_cfg(kplane->layer, dflow, fb);
-=20
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/dri=
-vers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-index bb8a61f6e9a4..617e1f7b8472 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
-@@ -13,7 +13,6 @@ komeda_wb_init_data_flow(struct komeda_layer *wb_layer,
- 			 struct komeda_crtc_state *kcrtc_st,
- 			 struct komeda_data_flow_cfg *dflow)
- {
--	struct komeda_scaler *scaler =3D wb_layer->base.pipeline->scalers[0];
- 	struct drm_framebuffer *fb =3D conn_st->writeback_job->fb;
-=20
- 	memset(dflow, 0, sizeof(*dflow));
-@@ -28,14 +27,7 @@ komeda_wb_init_data_flow(struct komeda_layer *wb_layer,
- 	dflow->pixel_blend_mode =3D DRM_MODE_BLEND_PIXEL_NONE;
- 	dflow->rot =3D DRM_MODE_ROTATE_0;
-=20
--	komeda_complete_data_flow_cfg(dflow, fb);
+-	dflow->en_img_enhancement =3D !!kplane_st->img_enhancement;
 -
--	/* if scaling exceed the acceptable scaler input/output range, try to
--	 * enable split.
--	 */
--	if (dflow->en_scaling && scaler)
--		dflow->en_split =3D !in_range(&scaler->hsize, dflow->in_w) ||
--				  !in_range(&scaler->hsize, dflow->out_w);
-+	komeda_complete_data_flow_cfg(wb_layer, dflow, fb);
+ 	komeda_complete_data_flow_cfg(kplane->layer, dflow, fb);
 =20
  	return 0;
+@@ -174,8 +171,6 @@ komeda_plane_atomic_duplicate_state(struct drm_plane *p=
+lane)
+=20
+ 	old =3D to_kplane_st(plane->state);
+=20
+-	new->img_enhancement =3D old->img_enhancement;
+-
+ 	return &new->base;
  }
+=20
 --=20
 2.20.1
 
