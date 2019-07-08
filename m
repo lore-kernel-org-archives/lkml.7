@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66D3C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44130C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF50216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152162166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599094;
-	bh=Bw4rCkcWV7YQElstxkPBsPUJaLfwFXLBLmUmxql+ido=;
+	s=default; t=1562599099;
+	bh=u5OHYWXogRGyjPJCzh9MC2XrxCMiu/h0Ez/huW086Vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wqgXIBe0TJmysomzr0BjhjqoXlZWGjr+ee7S1E2CFHzDIiFAxQ5/6kaGpPxJgxiZA
-	 lpoqDxcuV3MkgIaSsnVd1Fw6gRGeanhnwVNtgG4+nwCyViNnqeCTO0Gj593Q73h6Gs
-	 eWBmAb6G72PjRp0uV05B0snXnzmIxbDboYMQPAQo=
+	b=V6JyPBxPq9UYCk2prTf5lmVk357Zk/AdbCLblvKCFyyx5AGPyQ6ej10j3wIsMXqlZ
+	 9VykFkJ1qpDD6At+VXH5jKIAcHEM2XS0cpCHu0QoSzMORn3mf2ALjoLUNkVLySMmC6
+	 /dVGpbUx+5GLSWyPBCTZK7ocvEQxPGWH+9dzHq9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732987AbfGHPSN (ORCPT
+        id S1727626AbfGHPSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41826 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:18:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732970AbfGHPSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:18:09 -0400
+        id S1728358AbfGHPSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:18:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F97221537;
-        Mon,  8 Jul 2019 15:18:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D43EF216C4;
+        Mon,  8 Jul 2019 15:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599088;
-        bh=Bw4rCkcWV7YQElstxkPBsPUJaLfwFXLBLmUmxql+ido=;
+        s=default; t=1562599091;
+        bh=u5OHYWXogRGyjPJCzh9MC2XrxCMiu/h0Ez/huW086Vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lUPT6LAGI0DRF11TRJzc1/Djs5ogR8lRiXOtBiQBPxU2peciIoyw8gowr4uJXSSfA
-         O8CT6Zw9QrkjelaySqV/nF9pjRoA3BUz6TrmYZPzj9ellgWDGGQjKqctK9P2NnFAS9
-         YVHmx5Syugwfawi06V7FNV+wGZVTM8AIy8wuIlE8=
+        b=JtSf5Abfl+gdlceY4i9RJ+XWPTedq6pEYWSSIBRihSOU89pg/EO4/QSejE7It8lJ0
+         VC096cDqSlTIYIp2moczyljMrAOJVMQHgOlTlIyFrch+MtzomiA3MuIO1hLbGgggAM
+         rsRSoD+4H/xfQuW5TvPL7cw2Z0lKZgrMik48Jx3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Dominique Martinet <dominique.martinet@cea.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 31/73] 9p/rdma: do not disconnect on down_interruptible EAGAIN
-Date:   Mon,  8 Jul 2019 17:12:41 +0200
-Message-Id: <20190708150522.837472615@linuxfoundation.org>
+Subject: [PATCH 4.4 32/73] 9p: acl: fix uninitialized iattr access
+Date:   Mon,  8 Jul 2019 17:12:42 +0200
+Message-Id: <20190708150522.953751349@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -60,43 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8b894adb2b7e1d1e64b8954569c761eaf3d51ab5 ]
+[ Upstream commit e02a53d92e197706cad1627bd84705d4aa20a145 ]
 
-9p/rdma would sometimes drop the connection and display errors in
-recv_done when the user does ^C.
-The errors were caused by recv buffers that were posted at the time
-of disconnect, and we just do not want to disconnect when
-down_interruptible is... interrupted.
+iattr is passed to v9fs_vfs_setattr_dotl which does send various
+values from iattr over the wire, even if it tells the server to
+only look at iattr.ia_valid fields this could leak some stack data.
 
-Link: http://lkml.kernel.org/r/1535625307-18019-1-git-send-email-asmadeus@codewreck.org
+Link: http://lkml.kernel.org/r/1536339057-21974-2-git-send-email-asmadeus@codewreck.org
+Addresses-Coverity-ID: 1195601 ("Uninitalized scalar variable")
 Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/trans_rdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/9p/acl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/9p/trans_rdma.c b/net/9p/trans_rdma.c
-index f42550dd3560..f3a9254b6df9 100644
---- a/net/9p/trans_rdma.c
-+++ b/net/9p/trans_rdma.c
-@@ -476,7 +476,7 @@ static int rdma_request(struct p9_client *client, struct p9_req_t *req)
+diff --git a/fs/9p/acl.c b/fs/9p/acl.c
+index c30c6ceac2c4..d02ee4026e32 100644
+--- a/fs/9p/acl.c
++++ b/fs/9p/acl.c
+@@ -282,7 +282,7 @@ static int v9fs_xattr_set_acl(const struct xattr_handler *handler,
+ 	switch (handler->flags) {
+ 	case ACL_TYPE_ACCESS:
+ 		if (acl) {
+-			struct iattr iattr;
++			struct iattr iattr = { 0 };
+ 			struct posix_acl *old_acl = acl;
  
- 	err = post_recv(client, rpl_context);
- 	if (err) {
--		p9_debug(P9_DEBUG_FCALL, "POST RECV failed\n");
-+		p9_debug(P9_DEBUG_ERROR, "POST RECV failed: %d\n", err);
- 		goto recv_error;
- 	}
- 	/* remove posted receive buffer from request structure */
-@@ -544,7 +544,7 @@ static int rdma_request(struct p9_client *client, struct p9_req_t *req)
-  recv_error:
- 	kfree(rpl_context);
- 	spin_lock_irqsave(&rdma->req_lock, flags);
--	if (rdma->state < P9_RDMA_CLOSING) {
-+	if (err != -EINTR && rdma->state < P9_RDMA_CLOSING) {
- 		rdma->state = P9_RDMA_CLOSING;
- 		spin_unlock_irqrestore(&rdma->req_lock, flags);
- 		rdma_disconnect(rdma->cm_id);
+ 			retval = posix_acl_update_mode(inode, &iattr.ia_mode, &acl);
 -- 
 2.20.1
 
