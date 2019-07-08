@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B27C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A75C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9F12177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B4E216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600594;
-	bh=yCzFsWiYhH4GWY7hiIepQmYETVQSUDi7twtZuK5iRUo=;
+	s=default; t=1562600599;
+	bh=BEWPwa95tbpi2kd9Ez0v9Jr5YtYJyUOPyBcWUfzfO60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSFfLuOuc89dPDUqheogoJdp764h5ls17KLKf766uyIJXHVui27u1RBx56CibiyIy
-	 c7pOD6KtepXUSzNzU8VVT0g1vqz1tu6gDVkslkQV0y8Yh+TUVa8stPGOKHOEB0qN2X
-	 vuAzQNSu0lXxstwDWbvjBw0PQWZgV9/UDookSWL8=
+	b=RN3Wdv8YZZ9YcX/HJtnR1DYlN3PGskvCatBRW2BxCAfDqq2CquItYeO2pLqvhtrdU
+	 jml4fGvVqkzdHLtOnWASBEYGxXcfJoHSDhULHBD04+7ihQErXe+jBDw9NNVvTJddES
+	 tPT1lTC3E/Jfp0vUydSg1WpAiIh09GyiSd/fAyyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391140AbfGHPnN (ORCPT
+        id S2391152AbfGHPnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43494 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:43:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388363AbfGHPnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:43:11 -0400
+        id S2388363AbfGHPnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:43:17 -0400
 Received: from quaco.ghostprotocols.net (179-240-135-35.3g.claro.net.br [179.240.135.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488AF20665;
-        Mon,  8 Jul 2019 15:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BB17216FD;
+        Mon,  8 Jul 2019 15:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600590;
-        bh=yCzFsWiYhH4GWY7hiIepQmYETVQSUDi7twtZuK5iRUo=;
+        s=default; t=1562600596;
+        bh=BEWPwa95tbpi2kd9Ez0v9Jr5YtYJyUOPyBcWUfzfO60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=trTSel9BCUtY4t8arzeDe1aMXTirgqz6CHE1ZE9QDdaNrsa0JAQlSBC5coRedQFtK
-         wt64lSiGhArTFODM6MepTC9csZDlvZivLLGl5kKGmLyfcV03yGawEJDowEZn3YSCNb
-         Kx76RtQAIzHtqRFXZphdqqoxts4pjs+dTU0+yK+I=
+        b=ly0cGnBU2xVK41PfCXU7Otsj2WE01B7Jvl5xVnJ3w8fb9/Yj8RU/ABqhEIU9lN739
+         tYa6dg0URHoLID99tKwV3Lg69tQKJLLKT7esrHy7LPNOO3zC6Q44/T5WiCEPMVtOgp
+         lzwpqn0E2gheyMAv6cyR4jU5OEVkM7mA2ndUwtUM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 6/8] perf annotate TUI browser: Do not use member from variable within its own initialization
-Date:   Mon,  8 Jul 2019 12:42:05 -0300
-Message-Id: <20190708154207.11403-7-acme@kernel.org>
+Subject: [PATCH 7/8] perf python: Remove -fstack-protector-strong if clang doesn't have it
+Date:   Mon,  8 Jul 2019 12:42:06 -0300
+Message-Id: <20190708154207.11403-8-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190708154207.11403-1-acme@kernel.org>
 References: <20190708154207.11403-1-acme@kernel.org>
@@ -62,54 +62,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Some compilers will complain when using a member of a struct to
-initialize another member, in the same struct initialization.
+Some distros put -fstack-protector-strong in the compiler flags to be
+used to build python extensions, but then, the clang version in that
+distro doesn't know about that, only gcc does.
 
-For instance:
+Check if that is the case and remove it from the set of options used to
+build the python binding with clang.
 
-  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
-  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
+Case at hand:
 
-Produce:
+oraclelinux:7
 
-  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
-                                              (!ops.current_entry ||
-                                                ^~~
-  1 error generated.
+  $ head -2 /etc/os-release
+  NAME="Oracle Linux Server"
+  VERSION="7.6"
+  $ grep stack-protector /usr/lib64/python2.7/_sysconfigdata.py | head -1 | cut -c-120
+ 'CFLAGS': '-fno-strict-aliasing -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --para
+  $
+  gcc version 4.8.5 20150623 (Red Hat 4.8.5-36.0.1) (GCC)
+  clang version 3.4.2 (tags/RELEASE_34/dot2-final)
 
-So use an extra variable, initialized just before that struct, to have
-the value used in the expressions used to init two of the struct
-members.
+  clang: error: unknown argument: '-fstack-protector-strong'
+  clang: error: unknown argument: '-fstack-protector-strong'
+  error: command 'clang' failed with exit status 1
+  cp: cannot stat '/tmp/build/perf/python_ext_build/lib/perf*.so': No such file or directory
+  make[2]: *** [/tmp/build/perf/python/perf.so] Error 1
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
-Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-brmp2415zxpbhz45etkgjoma@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/setup.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 98d934a36d86..b0d089a95dac 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -97,11 +97,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
- 	struct annotation *notes = browser__annotation(browser);
- 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
-+	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
- 	struct annotation_write_ops ops = {
- 		.first_line		 = row == 0,
--		.current_entry		 = ui_browser__is_current_entry(browser, row),
-+		.current_entry		 = is_current_entry,
- 		.change_color		 = (!notes->options->hide_src_code &&
--					    (!ops.current_entry ||
-+					    (!is_current_entry ||
- 					     (browser->use_navkeypressed &&
- 					      !browser->navkeypressed))),
- 		.width			 = browser->width,
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 5b5a167b43ce..a1a68a2fa917 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -17,6 +17,8 @@ if cc == "clang":
+             vars[var] = sub("-fcf-protection", "", vars[var])
+         if not clang_has_option("-fstack-clash-protection"):
+             vars[var] = sub("-fstack-clash-protection", "", vars[var])
++        if not clang_has_option("-fstack-protector-strong"):
++            vars[var] = sub("-fstack-protector-strong", "", vars[var])
+ 
+ from distutils.core import setup, Extension
+ 
 -- 
 2.20.1
 
