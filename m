@@ -2,149 +2,150 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D104C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ACCC5B57D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503AE2084A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3B320844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:56:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SBKlIJU/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="myXVVq/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfGHIyq (ORCPT
+        id S1729513AbfGHI4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:54:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46537 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbfGHIyp (ORCPT
+        Mon, 8 Jul 2019 04:56:10 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35236 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728082AbfGHI4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:54:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z23so15376708ote.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:54:45 -0700 (PDT)
+        Mon, 8 Jul 2019 04:56:10 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so7891653plp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=efd+BnPGvehL2A2UX02caz/Y1NvKnWaen2fuHX7MRzE=;
-        b=SBKlIJU/kRPxduwNsmhn4tfli4XHsNgkuvfs0vrliM2bO588TzaFFyJH5mpAvTSpyE
-         vMNX4Bd77Rl3/PaXl+2+z4JVB7NPoSm4GhlWUjVRlavKIQpL2Cxrd/FBWWa1j55aw4da
-         /QaiPrUGXrShadGQrBe86H0v+jTxpYgYb6ccgPiEacmVlt5b1e8v9q9rKiRW0dUtPMwT
-         0+XtYxiegFoER2tF+EwxhAwN0zyalL9YZrWD3dxmWJEgF864gq1gMwcHWrRSXfR1rdDs
-         GAgOGW8Zf5t8AedaZCgZCJOOkkpuaUfNlSBafi8WRxtyWJjnJiKk2YQymWEe/jUuSyjM
-         3EVw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=caOy47iObIWpUBNz9YBs1LqOSsSKOy2UuatZJ0Q43mo=;
+        b=myXVVq/De7PJ2z5d05SOEeW9WqlEyQ4+XK7XGpMu9Odl2pSEwuPPfvChi0jyw5HI/Y
+         xuQngalAkxwy/I+4pwJIpROTjgVrNECyKTo9JpQzuE+Fi5P2WKsW6/eGA9Awbr9WV1sl
+         SKYnJujSLhGvFnD+06SsWwRFcixnQ2wEL6xOWYiF6VyBQWrX3Hk5M/JtZia6vnYoX9/k
+         oX0O2CP1TL3Ma6mtYxuqAfS71NpdKPw3hWVN5yu0Hj+vXYAuiPwGBIn9Im3CBb26cB1d
+         eD35TTwwNZk5Sk5K0oVnz7hZCILs288rCBrPEDFZ1vQx2PDAlff0BHg5q48D66F9TkjT
+         T6ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=efd+BnPGvehL2A2UX02caz/Y1NvKnWaen2fuHX7MRzE=;
-        b=Gi7crQYUdPhJOiWDlzbKm4amliMYrU4nU2sxw+nGw+5Xkf/ugXL3dd+JoA1/xBSRiL
-         O5wBNwHnaDr3Rt/htOUI61B8gK6VVFvbEYJ/N34+HI+keU3Inw6V9iCkQ9YzPOknwZA2
-         Rg/uPt7GlPR8/y3vvUXGaaD3vQCtEyRjdd9WNikmKI+IO+qr29068Y7CUuJR1BBeaQo8
-         4GTXEOLfjXtR/xy9dslZxlsHbpd7SKHN0EDA0bTPPDVOl6ogNKRU4Dgxzw+hOujB8ctI
-         flgw9aW6WVwCuS8rOtPw+Mm2WGg2e2C07WiGWXYMBQi+kFjR0+F4h5lksJYOGImSlkYa
-         t+bw==
-X-Gm-Message-State: APjAAAWnaECIZjzx+YPHqoJHzl9+5sDdvKLMcrhxTljFMnrh47mXiOhb
-        QTxYswdXgP/n0hvl3FnZcMGWHZVuO0Wf7D1Zt0Rtkg==
-X-Google-Smtp-Source: APXvYqwNmok92+w9MyPlUpAdoQ0jznixJXwNaN4TFLNBf7nxlThGFjRAFzCSBqIuTyVm+vHd/Yc8XBJSCd7lJMaOlJQ=
-X-Received: by 2002:a05:6830:1681:: with SMTP id k1mr13388848otr.256.1562576084924;
- Mon, 08 Jul 2019 01:54:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=caOy47iObIWpUBNz9YBs1LqOSsSKOy2UuatZJ0Q43mo=;
+        b=Uo2RWGSPcK0QJUuS9K36yf2q3z180mE1Ui8EiMQnBbgPggkl0SFhctHqIODkZrL9xb
+         s/xXeikCZwiWjUusyVMrLM7hcNT5yU3BOGyV2EhvfVOMQ80iTi6rD3EHxqs6Tk6I8LXH
+         yElrzt1z1yK1eiBdFdVBZZoCj7WLGjd2i8iscoRu0QG64uPXJUNtDml7AMa4KypezRpd
+         j+eyvg/4sIQrL1v9unBRR+HLk3bLMAXusg1BN7/ODdzQWEBL12/btVp3dZdh4g5eXImS
+         jVkHO4jnQQ/+f3200G/A5KElIN+kaBF4W2CtdVCfTEimvX5GrF/s52aZJetLxo3Z5Ptm
+         m0FA==
+X-Gm-Message-State: APjAAAWYg+wVS4Pc+VwKQo008vWb5eLKq0gyuIOsQF7zjfHNMDi3c8bp
+        j+JISJHfzkcgHWtxxilY0oettQ==
+X-Google-Smtp-Source: APXvYqx9dBbfaCeSrlWG9YwA8C4t0s8GIS3+7DlJ/SNiwhtLdjCXdF/a0g0X0AN2yjaZsVJ4/G87lg==
+X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr22483969plo.290.1562576169340;
+        Mon, 08 Jul 2019 01:56:09 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id p68sm26882425pfb.80.2019.07.08.01.56.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 01:56:08 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 14:26:06 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3] cpufreq/pasemi: fix an use-after-free in
+ pas_cpufreq_cpu_init()
+Message-ID: <20190708085606.tqhb3dgotj7sztyj@vireshk-i7>
+References: <1562575726-17438-1-git-send-email-wen.yang99@zte.com.cn>
 MIME-Version: 1.0
-References: <20190708052308.27802-1-michael.wu@vatics.com>
-In-Reply-To: <20190708052308.27802-1-michael.wu@vatics.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 8 Jul 2019 10:54:34 +0200
-Message-ID: <CAMpxmJXZskz-cnqXVMRnUqxHjbQLwWZzQFrDc4eyGmronATCpg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
-To:     Michael Wu <michael.wu@vatics.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, morgan.chang@vatics.com,
-        "Stable # 4 . 20+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562575726-17438-1-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 8 lip 2019 o 07:23 Michael Wu <michael.wu@vatics.com> napisa=C5=82(a)=
-:
->
-> When a pin is active-low, logical trigger edge should be inverted to matc=
-h
-> the same interrupt opportunity.
->
-> For example, a button pushed triggers falling edge in ACTIVE_HIGH case; i=
-n
-> ACTIVE_LOW case, the button pushed triggers rising edge. For user space t=
-he
-> IRQ requesting doesn't need to do any modification except to configuring
-> GPIOHANDLE_REQUEST_ACTIVE_LOW.
->
-> For example, we want to catch the event when the button is pushed. The
-> button on the original board drives level to be low when it is pushed, an=
-d
-> drives level to be high when it is released.
->
-> In user space we can do:
->
->         req.handleflags =3D GPIOHANDLE_REQUEST_INPUT;
->         req.eventflags =3D GPIOEVENT_REQUEST_FALLING_EDGE;
->
->         while (1) {
->                 read(fd, &dat, sizeof(dat));
->                 if (dat.id =3D=3D GPIOEVENT_EVENT_FALLING_EDGE)
->                         printf("button pushed\n");
->         }
->
-> Run the same logic on another board which the polarity of the button is
-> inverted; it drives level to be high when pushed, and level to be low whe=
-n
-> released. For this inversion we add flag GPIOHANDLE_REQUEST_ACTIVE_LOW:
->
->         req.handleflags =3D GPIOHANDLE_REQUEST_INPUT |
->                 GPIOHANDLE_REQUEST_ACTIVE_LOW;
->         req.eventflags =3D GPIOEVENT_REQUEST_FALLING_EDGE;
->
-> At the result, there are no any events caught when the button is pushed.
-> By the way, button releasing will emit a "falling" event. The timing of
-> "falling" catching is not expected.
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael Wu <michael.wu@vatics.com>
+On 08-07-19, 16:48, Wen Yang wrote:
+> The cpu variable is still being used in the of_get_property() call
+> after the of_node_put() call, which may result in use-after-free.
+> 
+> Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
-> Changes from v1:
-> - Correct undeclared 'IRQ_TRIGGER_RISING'
-> - Add an example to descibe the issue
-> ---
->  drivers/gpio/gpiolib.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index e013d417a936..9c9597f929d7 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -956,9 +956,11 @@ static int lineevent_create(struct gpio_device *gdev=
-, void __user *ip)
->         }
->
->         if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
-> -               irqflags |=3D IRQF_TRIGGER_RISING;
-> +               irqflags |=3D test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-> +                       IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
->         if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
-> -               irqflags |=3D IRQF_TRIGGER_FALLING;
-> +               irqflags |=3D test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-> +                       IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
->         irqflags |=3D IRQF_ONESHOT;
->
->         INIT_KFIFO(le->events);
-> --
-> 2.17.1
->
+> v3: fix a leaked reference.
+> v2: clean up the code according to the advice of viresh.
+> 
+>  drivers/cpufreq/pasemi-cpufreq.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+> index 6b1e4ab..9dc5163 100644
+> --- a/drivers/cpufreq/pasemi-cpufreq.c
+> +++ b/drivers/cpufreq/pasemi-cpufreq.c
+> @@ -128,20 +128,20 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	int cur_astate, idx;
+>  	struct resource res;
+>  	struct device_node *cpu, *dn;
+> -	int err = -ENODEV;
+> +	int err;
+>  
+>  	cpu = of_get_cpu_node(policy->cpu, NULL);
+> -
+> -	of_node_put(cpu);
+>  	if (!cpu)
+> -		goto out;
+> +		return -ENODEV;
+>  
+>  	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+>  	if (!dn)
+>  		dn = of_find_compatible_node(NULL, NULL,
+>  					     "pasemi,pwrficient-sdc");
+> -	if (!dn)
+> +	if (!dn) {
+> +		err = -ENODEV;
+>  		goto out;
+> +	}
 
-Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Please restore the blank line here.
+
+>  	err = of_address_to_resource(dn, 0, &res);
+>  	of_node_put(dn);
+>  	if (err)
+> @@ -196,6 +196,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	policy->cur = pas_freqs[cur_astate].frequency;
+>  	ppc_proc_freq = policy->cur * 1000ul;
+>  
+> +	of_node_put(cpu);
+>  	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+>  
+>  out_unmap_sdcpwr:
+> @@ -204,6 +205,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  out_unmap_sdcasr:
+>  	iounmap(sdcasr_mapbase);
+>  out:
+> +	of_node_put(cpu);
+>  	return err;
+>  }
+>  
+> -- 
+> 2.9.5
+
+-- 
+viresh
