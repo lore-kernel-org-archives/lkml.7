@@ -2,95 +2,142 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CB4C606BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31180C606BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8FE21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0281F21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="th85+zag"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9aA4vJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732019AbfGHPB2 (ORCPT
+        id S1732051AbfGHPDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:01:28 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53371 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfGHPB2 (ORCPT
+        Mon, 8 Jul 2019 11:03:00 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40678 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730192AbfGHPC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:01:28 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x15so16168061wmj.3;
-        Mon, 08 Jul 2019 08:01:26 -0700 (PDT)
+        Mon, 8 Jul 2019 11:02:59 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k8so14856829eds.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:02:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cmLrO6SgdZZXRi2BL7k7ekrcbaxMPtoX1gv5vh7hK1o=;
-        b=th85+zagNvITYtMuCH1LWJQdl2IZTom7FW0ZixRGwkaOj8abqMmav1hy97sjS9QTQ8
-         6LkofalcXyx1O0kMCTwWu7ttv6ZLtLdnWNsQIKXp7ac4BR2/EDRxEpCKVFnNzv7x0KSk
-         uxkONO4Zq9mgDvyTcoIsuWcPjKXncKYLV7RmXJwuvNFm7lBHyLbyGzOTk3IzxRj+EkZw
-         PTDV7jnzTA/6KyR0ismpoc6Sy0ooleQMOdAqM4WqZ3b2CN3P4pRXGKlJ07iSmXjrXdGQ
-         JCgDYcWRVzmYS+VJl2CAAAL64qWlI63WGLA43YkfMqzkEdbpn+z1jzLssGbqHtuiCP/Q
-         MOyw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ReYLa8THvYygLIMuMww1npiIyJn+z8O5eLERg05TxLo=;
+        b=A9aA4vJcOv8CTIvKmXM6kq35C/loFJT19B7b2TukXUKPT6njRUK1RmmhZTEqsdS3qj
+         B/aeEn9/YcXxeIJj1htl+z5PO/UQiWeLNwxBtYB8t5EW3A60vRrhG8ZU2cHIs256H2hu
+         nE+QmPOhOh4rGjUOqtPM1iGrK6XbqsUvSn+DEYqY664YddVYLLg/Xb2WRlojeTg3w1UF
+         6xe370Hd4Bqnhom1jefZdABzOE8G5EtDcQNhXhGwEw1tuMyLHy3oHacGt0mlEkODy1Yi
+         4gnYr4mkNmvaT5+I/YF3IwvhgCvXT4ZnfERrQYPAViMcuGfT7sIloPJB9HElHTMx3KBh
+         iz/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cmLrO6SgdZZXRi2BL7k7ekrcbaxMPtoX1gv5vh7hK1o=;
-        b=ho/eBGzkvZHob1XAuZo/LY/LM6SD/w8Rdu723tgoYc2PK5Ig8f/RlvXybO6FG+38bL
-         4PiVryqTYb8pzWzCm/JOdzSFqHctXVmpbbYIff/GApq0n5W/+EMRpJjevuhSz28K6fs9
-         gVHzBhe1TODVGO4gQkVna/Dfi9p6FXl8Rn37ZkRjue/MJjV/wO4Iw+Fq01ppIZ3J0xE/
-         A26DLlX3c7NzaHxfcGgQUIdrVimrY5wktFbsbtcEn5TdW9KrYlc9QWZKxSTpRwLtDd4f
-         uHXFR9w9U6LE6Sfv7Uh07vXoLzegzyFLlsoi83JejBXWhl7i9A7/pstb/xCD3fNTqi/n
-         pcpw==
-X-Gm-Message-State: APjAAAV8QypK/0mJRosnDfRSkUSbdmriY+DXLrFFdQEvfy+4VuBSvDyw
-        2MvHitZricZdwpgO1EzuQU7iGjo1I/DNac0yqnXAvQ==
-X-Google-Smtp-Source: APXvYqwOIgYRrvOZ5+Exg2Q/kUvprdasOY1nACej7FCJQHAuiquh9HSp7nkENMPYcuDwuropQdGcJPToQ0yhcmEK2hY=
-X-Received: by 2002:a05:600c:2243:: with SMTP id a3mr16788036wmm.83.1562598084910;
- Mon, 08 Jul 2019 08:01:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ReYLa8THvYygLIMuMww1npiIyJn+z8O5eLERg05TxLo=;
+        b=QTv6vfw1JRfOnPTlAz09lTmfTSTifTnd4V8In/kXxD/tS/qTg09lFT3Q7nXVJYf+L2
+         EoLiU4vQYMCHNIVvsQ39oJ3L8vI4Sc9M9Gtit1xtVrap6wKhKfMZ4mXR+makDoCu6plH
+         wrwiiaLc7zm8ZcqfzRhc7hpbYCTXWnqMs9fcM61MeP2sC5fAtgl4mq7o/v9v6eWDgU3p
+         qWGkGWOwayJJBtnNggxU4i301yQi/I3UTCAWusxuCSqnwuDEBGYbwgxRg9QH3CUGx/O8
+         aDfP6xP+4iNg7g10HtDoJZ/Qn+lnzNkUoD11j5EHNqqCOyhOkul5dBHeBePnFDGzKjMv
+         Vrgg==
+X-Gm-Message-State: APjAAAWH360q6hdiGLMjdYAUb0Axkd8nNjl+2ljRavp7lNSMztDV7Rjh
+        y6NhVux47wKaaysU/EMAJsUBaIlCeszsGA==
+X-Google-Smtp-Source: APXvYqz5PyyErTzOCG114M0gE89vrP4oMgOAjm1oJ9lZL8Sh1Wv96cphR6rttUBJkwL11m1mMwIDCw==
+X-Received: by 2002:a50:aa7c:: with SMTP id p57mr20601951edc.179.1562598177936;
+        Mon, 08 Jul 2019 08:02:57 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id a6sm5425241eds.19.2019.07.08.08.02.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 08:02:57 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 08:02:55 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chengming Gui <Jack.Gui@amd.com>,
+        Kevin Wang <kevin1.wang@amd.com>, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Huang Rui <ray.huang@amd.com>,
+        dri-devel@lists.freedesktop.org, Likun Gao <Likun.Gao@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
+Subject: Re: [1/2] drm/amd/powerplay: smu_v11_0: fix uninitialized variable
+ use
+Message-ID: <20190708150255.GA32266@archlinux-epyc>
+References: <20190708140816.1334640-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20190705185519.31033-1-tranmanphong@gmail.com> <20190708075255.0f337b28@lwn.net>
-In-Reply-To: <20190708075255.0f337b28@lwn.net>
-From:   Phong Tran <tranmanphong@gmail.com>
-Date:   Mon, 8 Jul 2019 22:01:13 +0700
-Message-ID: <CAD3AR6EN7n5KXnJqW0UdgB_eQjuTedB6KdC8sJ_h+MJNKB6ZmA@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: usb: convert usb-help to rst
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, mchehab@kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708140816.1334640-1-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 8:52 PM Jonathan Corbet <corbet@lwn.net> wrote:
->
-> On Sat,  6 Jul 2019 01:55:19 +0700
-> Phong Tran <tranmanphong@gmail.com> wrote:
->
-> > Add new index.rst and change usb-help.txt format
-> > to rst.
-> >
-> > Signed-off-by: Phong Tran <tranmanphong@gmail.com>
->
-> Thank you for working to make the kernel's documentation better.  That
-> said, I really don't think there is value in keeping this document.  It
-> hasn't been updated in any useful way in decades, contains broken links,
-> and the links that still work are full of obsolete information.  Honestly,
-> a better patch would, IMO, just delete this file.
->
-@Jonathan Corbet  it's fine to me.
+On Mon, Jul 08, 2019 at 04:07:58PM +0200, Arnd Bergmann wrote:
+> A mistake in the error handling caused an uninitialized
+> variable to be used:
+> 
+> drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:1102:10: error: variable 'freq' is used uninitialized whenever '?:' condition is false [-Werror,-Wsometimes-uninitialized]
+>                 ret =  smu_get_current_clk_freq_by_table(smu, clk_id, &freq);
+>                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:880:3: note: expanded from macro 'smu_get_current_clk_freq_by_table'
+>         ((smu)->ppt_funcs->get_current_clk_freq_by_table ? (smu)->ppt_funcs->get_current_clk_freq_by_table((smu), (clk_type), (value)) : 0)
+>          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:1114:2: note: uninitialized use occurs here
+>         freq *= 100;
+>         ^~~~
+> drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:1102:10: note: remove the '?:' if its condition is always true
+>                 ret =  smu_get_current_clk_freq_by_table(smu, clk_id, &freq);
+>                        ^
+> drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:880:3: note: expanded from macro 'smu_get_current_clk_freq_by_table'
+>         ((smu)->ppt_funcs->get_current_clk_freq_by_table ? (smu)->ppt_funcs->get_current_clk_freq_by_table((smu), (clk_type), (value)) : 0)
+>          ^
+> drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:1095:15: note: initialize the variable 'freq' to silence this warning
+>         uint32_t freq;
+>                      ^
+>                       = 0
+> 
+> Bail out of smu_v11_0_get_current_clk_freq() before we get there.
+> 
+> Fixes: e36182490dec ("drm/amd/powerplay: fix dpm freq unit error (10KHz -> Mhz)")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+> index c3f9714e9047..bd89a13b6679 100644
+> --- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+> +++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+> @@ -1099,9 +1099,11 @@ static int smu_v11_0_get_current_clk_freq(struct smu_context *smu,
+>  		return -EINVAL;
+>  
+>  	/* if don't has GetDpmClockFreq Message, try get current clock by SmuMetrics_t */
+> -	if (smu_msg_get_index(smu, SMU_MSG_GetDpmClockFreq) == 0)
+> +	if (smu_msg_get_index(smu, SMU_MSG_GetDpmClockFreq) == 0) {
+>  		ret =  smu_get_current_clk_freq_by_table(smu, clk_id, &freq);
+> -	else {
+> +		if (ret)
+> +			return ret;
 
-Need ack from you @Greg Kroah-Hartman
-if yes, I will send the cleanup patch.
+I am kind of surprised that this fixes the warning. If I am interpreting
+the warning correctly, it is complaining that the member
+get_current_clk_freq_by_table could be NULL and not be called to
+initialize freq and that entire statement will become 0. If that is the
+case, it seems like this added error handling won't fix that problem,
+right?
 
-Regards,
-Phong.
+Cheers,
+Nathan
