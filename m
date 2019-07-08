@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB8FC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F5EC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05AD721738
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5052221707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599763;
-	bh=ND7lbqp39s4GIPSTjVhiU1UnmlxoVFRq31gK7a+756c=;
+	s=default; t=1562599770;
+	bh=ZhZoriRVOKoUzNCa44qcS0t87m2usU1A2Zc/KlAsm/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0OHLngE077TlNU9EsBdVeS0q2bPJ8ahAnHWJV1eq8rosur/uggfCeAiCkB4BqJHki
-	 UQVQ7mSCZddkb3eZmxdM5jm+pmyWVv9iq4oNv65Bx3QHF8MTuYhqXjLjsOUrZ56xK9
-	 EMhcCIgDBV25Au2Ti8A+gac0thtbVoxNRSgS83Rc=
+	b=Ye4pDKJLeH7dzpSxaMvs0qwWR2cN8PQ+NenIyMGvD6haYSFsZ5wYzGIXtRL1h9vtq
+	 E/9e9zT1yuBNLotbqfaV+uXWXGcMYgnnEVnNaEk+H8KXLRccapCAtX1OqvoNnCQryV
+	 X8nTzHyNetaGgCXgB/sG1hunDeLdaV3+NPEaY7lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389460AbfGHP3W (ORCPT
+        id S2389487AbfGHP33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:29:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:29:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbfGHP3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:16 -0400
+        id S2389463AbfGHP3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:29:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8553A20645;
-        Mon,  8 Jul 2019 15:29:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73CBD20645;
+        Mon,  8 Jul 2019 15:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599755;
-        bh=ND7lbqp39s4GIPSTjVhiU1UnmlxoVFRq31gK7a+756c=;
+        s=default; t=1562599762;
+        bh=ZhZoriRVOKoUzNCa44qcS0t87m2usU1A2Zc/KlAsm/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zFxZB17CU5QpOtN8G7HVbNOGW/zYNZULnz1paQ6PNH8w0qwIO+S+u8QKPlns09Ydk
-         5Sq/Aw0RkvsQXoAGfeubUCGCjL4LCOmjPQkhMaPdMiZ5d0tdeW+fegtEb41iudEMkF
-         nQvyDFhkSDFRCHaynmZLt6dK5ReED63ROgc0fVlI=
+        b=HLuKEMN7FAijYMrVIapVfXz1wsM99ENJcUtFYhuBd6KM8GufbQAUhFtnoZ3mxHXVp
+         6Y/M+Ctncv/gzhpP+YVohDENxOgh9sS2lxfG4FsLriq055urykof+D4mn9A+GxrupY
+         fRzfn0GXH9zm1Bx1Esx2zRynM4FMb+fv2j0bnFCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 67/90] drm/fb-helper: generic: Dont take module ref for fbcon
-Date:   Mon,  8 Jul 2019 17:13:34 +0200
-Message-Id: <20190708150525.748813850@linuxfoundation.org>
+Subject: [PATCH 4.19 69/90] mac80211: mesh: fix missing unlock on error in table_path_del()
+Date:   Mon,  8 Jul 2019 17:13:36 +0200
+Message-Id: <20190708150525.831910613@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -61,44 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6ab20a05f4c7ed45632e24d5397d6284e192567d ]
+[ Upstream commit f2ffff085d287eec499f1fccd682796ad8010303 ]
 
-It's now safe to let fbcon unbind automatically on fbdev unregister.
-The crash problem was fixed in commit 2122b40580dd
-("fbdev: fbcon: Fix unregister crash when more than one framebuffer")
+spin_lock_bh() is used in table_path_del() but rcu_read_unlock()
+is used for unlocking. Fix it by using spin_unlock_bh() instead
+of rcu_read_unlock() in the error handling case.
 
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190210131039.52664-13-noralf@tronnes.org
+Fixes: b4c3fbe63601 ("mac80211: Use linked list instead of rhashtable walk for mesh tables")
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_fb_helper.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/mac80211/mesh_pathtbl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index a0663f44e218..8b546fde139d 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -2957,7 +2957,8 @@ static int drm_fbdev_fb_open(struct fb_info *info, int user)
- {
- 	struct drm_fb_helper *fb_helper = info->par;
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index 49a90217622b..ac1f5db52994 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -627,7 +627,7 @@ static int table_path_del(struct mesh_table *tbl,
+ 	spin_lock_bh(&tbl->walk_lock);
+ 	mpath = rhashtable_lookup_fast(&tbl->rhead, addr, mesh_rht_params);
+ 	if (!mpath) {
+-		rcu_read_unlock();
++		spin_unlock_bh(&tbl->walk_lock);
+ 		return -ENXIO;
+ 	}
  
--	if (!try_module_get(fb_helper->dev->driver->fops->owner))
-+	/* No need to take a ref for fbcon because it unbinds on unregister */
-+	if (user && !try_module_get(fb_helper->dev->driver->fops->owner))
- 		return -ENODEV;
- 
- 	return 0;
-@@ -2967,7 +2968,8 @@ static int drm_fbdev_fb_release(struct fb_info *info, int user)
- {
- 	struct drm_fb_helper *fb_helper = info->par;
- 
--	module_put(fb_helper->dev->driver->fops->owner);
-+	if (user)
-+		module_put(fb_helper->dev->driver->fops->owner);
- 
- 	return 0;
- }
 -- 
 2.20.1
 
