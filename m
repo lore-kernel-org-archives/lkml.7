@@ -2,327 +2,545 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE533C606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E3FC606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C70A20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562578524;
-	bh=83f54rUK9OlwZGXTmSl7C//yjrl+eQvESDDLN+7JyFk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=gkBKzzfYGAbsQ2oyTMWoFd2K3OKkBIuP0N6lpbEBsl/xaAmhc7prkbDCLDFgk/T2W
-	 oQGUvgxQVjtbXHIN0Df5i2Iv3stqPa53oDoc82Vu9mI6N668nQalYGq899DB1nIRwF
-	 rVHIKpEcsLZRfWy4xnwS2ORnSVjJgdBsUv9UDasc=
+	by mail.kernel.org (Postfix) with ESMTP id 1964920651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbfGHJfX (ORCPT
+        id S1729894AbfGHJgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 05:35:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33430 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbfGHJfW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 05:35:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so16273209wru.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 02:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XYVD7q3KC16RGpAK+q6liM9weRe3VNFOCPHZu8WNuqU=;
-        b=H9Ogj9zrCzlTT5tsKY73uEJP8G1B/cUrBXhesbuK3IDl1ktuH+9+GYp1L/F3iEmqJk
-         JsmGfzhWiH5OJQ2V0QubaWOsEcpFd+UdPN7EyKa+QoG62tTq0w2o7yx4nRcPVb7zPcw/
-         tBhBSp8CHZkYJD3D0HDdAHb9hXD05x/f0CWwqKyJlR7rGrQTpvkoW1nbQPvR8Gu/MosV
-         z4rKPLa5/D2NCeISWbHZYhX7drz4no5FM7t90WKGQFkRaQ69Y1yZcXOfTPb1IxdrgixD
-         YXP1XQqLNO/sKEUoJIUhlok9v0c2N0cIQ6h6qmK06/Eu2gQlfiNsXTAn9jvgLENS9R9l
-         wY7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=XYVD7q3KC16RGpAK+q6liM9weRe3VNFOCPHZu8WNuqU=;
-        b=eTPOlO6Ai2/QiRPEVRgUtNKITYjS/GG/rB6MIqcTCvHR6SGO/FoBy1lCfGIsX+2Lx4
-         O5ueE5CrPk79eu8emLfIYSSjxk/1rE6s3hVUykoGvCkfMzF5rfQFIn3HBJULLxHcc6Pw
-         vKj92LimOBS9trEJ7PuXd2vouxKSFtemVheo+xDZuRmUwMEWVdu5FNlz4EmPiN3UMmw7
-         a7xX0SYlmR1Sw5Dt2q3CJ6M1icZH6aNz8WGjhZF+LLs17gKlL4q6H+sJJ2YwzrDJ/KXY
-         UB21pQkrR84dbOrZnwdhG8oub/6D01ZdjzRcevXmLgTp4PYrZ+2yMsk9fniRjKWfdcqM
-         0UYg==
-X-Gm-Message-State: APjAAAXEP1USeh0XnOTCkzbuibDBtqCfwU5LoW9sZ07Cu2Bt4Cs38mW/
-        tLByfZZ1QrMaFpR55igC72U=
-X-Google-Smtp-Source: APXvYqxpZ/i6MN+LrbGAIoDX9pyCZRtIDFL/rDeCjwh7Qf6SGSBj9MGD6lgUVSbq87MSopzx6J1zFA==
-X-Received: by 2002:adf:a55b:: with SMTP id j27mr18089631wrb.154.1562578519310;
-        Mon, 08 Jul 2019 02:35:19 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id w20sm45625750wra.96.2019.07.08.02.35.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 02:35:18 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 11:35:16 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Will Deacon <will.deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@us.ibm.com>,
+        Mon, 8 Jul 2019 05:36:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:43164 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728725AbfGHJgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 05:36:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E180E360;
+        Mon,  8 Jul 2019 02:36:16 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A99D3F246;
+        Mon,  8 Jul 2019 02:36:15 -0700 (PDT)
+Subject: Re: [PATCH 2/6] irqchip: Add Realtek RTD129x intc driver
+To:     Aleix Roca Nonell <kernelrocks@gmail.com>,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] locking changes for v5.3
-Message-ID: <20190708093516.GA57558@gmail.com>
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190707132256.GC13340@arks.localdomain>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <5efa2ccb-9659-443c-7986-8ceb01aa64b9@arm.com>
+Date:   Mon, 8 Jul 2019 10:36:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190707132256.GC13340@arks.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 07/07/2019 14:22, Aleix Roca Nonell wrote:
+> This driver adds support for the RTD1296 and RTD1295 interrupt
+> controller (intc). It is based on both the BPI-SINOVOIP project and
+> Andreas Färber's previous attempt to submit a similar driver.
+> 
+> There is currently no publicly available datasheet on this SoC and the
+> exact behaviour of the registers controlling the intc remain uncertain.
+> 
+> This driver controls two intcs: "iso" and "misc". Each intc has its own
+> Interrupt Enable Register (IER) and Interrupt Status Resgister (ISR).
 
-Please pull the latest locking-core-for-linus git tree from:
+Register
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-core-for-linus
+> However, not all "misc" intc irqs have the same offsets for both ISR and
+> IER. For this reason an ISR to IER offsets table is defined.
+> 
+> The driver catches the IER value to reduce accesses to the table inside the
+> interrupt handler. Actually, the driver stores the ISR offsets of currently
+> enabled interrupts in a variable.
+> 
+> Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
 
-   # HEAD: 9156e545765e467e6268c4814cfa609ebb16237e locking/lockdep: increase size of counters for lockdep statistics
+I expect Andreas and you to sort the attribution issue. I'm certainly
+not going to take this in if things are unclear.
 
-The main changes in this cycle are:
+> ---
+>  drivers/irqchip/Makefile      |   1 +
+>  drivers/irqchip/irq-rtd129x.c | 371 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 372 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-rtd129x.c
+> 
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 606a003a0000..0689c3956250 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -100,3 +100,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+>  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+> +obj-$(CONFIG_ARCH_REALTEK)		+= irq-rtd129x.o
+> diff --git a/drivers/irqchip/irq-rtd129x.c b/drivers/irqchip/irq-rtd129x.c
+> new file mode 100644
+> index 000000000000..76358ca50f10
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-rtd129x.c
+> @@ -0,0 +1,371 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/irqchip.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/io.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/bits.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +
+> +#define RTD129X_INTC_NR_IRQS 32
+> +#define DEV_NAME "RTD1296_INTC"
+> +
+> +/*
+> + * This interrupt controller (hereinafter intc) driver controls two intcs: "iso"
+> + * and "misc". Each intc has its own Interrupt Enable Register (IER) and
+> + * Interrupt Status Resgister (ISR). However, not all "misc" intc irqs have the
+> + * same offsets for both ISR and IER. For this reason an ISR to IER offsets
+> + * table is defined. Also, to reduce accesses to this table in the interrupt
+> + * handler, the driver stores the ISR offsets of currently enabled interrupts in
+> + * a variable.
+> + */
+> +
+> +enum misc_int_en {
+> +	MISC_INT_FAIL		= 0xFF,
+> +	MISC_INT_RVD		= 0xFE,
+> +	MISC_INT_EN_FAN		= 29,
+> +	MISC_INT_EN_I2C3	= 28,
+> +	MISC_INT_EN_GSPI	= 27,
+> +	MISC_INT_EN_I2C2	= 26,
+> +	MISC_INT_EN_SC0		= 24,
+> +	MISC_INT_EN_LSADC1	= 22,
+> +	MISC_INT_EN_LSADC0	= 21,
+> +	MISC_INT_EN_GPIODA	= 20,
+> +	MISC_INT_EN_GPIOA	= 19,
+> +	MISC_INT_EN_I2C4	= 15,
+> +	MISC_INT_EN_I2C5	= 14,
+> +	MISC_INT_EN_RTC_DATA	= 12,
+> +	MISC_INT_EN_RTC_HOUR	= 11,
+> +	MISC_INT_EN_RTC_MIN	= 10,
+> +	MISC_INT_EN_UR2		= 7,
+> +	MISC_INT_EN_UR2_TO	= 6,
+> +	MISC_INT_EN_UR1_TO	= 5,
+> +	MISC_INT_EN_UR1		= 3,
+> +};
+> +
+> +enum iso_int_en {
+> +	ISO_INT_FAIL		= 0xFF,
+> +	ISO_INT_RVD		= 0xFE,
+> +	ISO_INT_EN_I2C1_REQ	= 31,
+> +	ISO_INT_EN_GPHY_AV	= 30,
+> +	ISO_INT_EN_GPHY_DV	= 29,
+> +	ISO_INT_EN_GPIODA	= 20,
+> +	ISO_INT_EN_GPIOA	= 19,
+> +	ISO_INT_EN_RTC_ALARM	= 13,
+> +	ISO_INT_EN_RTC_HSEC	= 12,
+> +	ISO_INT_EN_I2C1		= 11,
+> +	ISO_INT_EN_I2C0		= 8,
+> +	ISO_INT_EN_IRDA		= 5,
+> +	ISO_INT_EN_UR0		= 2,
+> +};
+> +
+> +unsigned char rtd129x_intc_enable_map_misc[RTD129X_INTC_NR_IRQS] = {
+> +	MISC_INT_FAIL,		/* Bit0 */
+> +	MISC_INT_FAIL,		/* Bit1 */
+> +	MISC_INT_RVD,		/* Bit2 */
+> +	MISC_INT_EN_UR1,	/* Bit3 */
+> +	MISC_INT_FAIL,		/* Bit4 */
+> +	MISC_INT_EN_UR1_TO,	/* Bit5 */
+> +	MISC_INT_RVD,		/* Bit6 */
+> +	MISC_INT_RVD,		/* Bit7 */
+> +	MISC_INT_EN_UR2,	/* Bit8 */
+> +	MISC_INT_RVD,		/* Bit9 */
+> +	MISC_INT_EN_RTC_MIN,	/* Bit10 */
+> +	MISC_INT_EN_RTC_HOUR,	/* Bit11 */
+> +	MISC_INT_EN_RTC_DATA,	/* Bit12 */
+> +	MISC_INT_EN_UR2_TO,	/* Bit13 */
+> +	MISC_INT_EN_I2C5,	/* Bit14 */
+> +	MISC_INT_EN_I2C4,	/* Bit15 */
+> +	MISC_INT_FAIL,		/* Bit16 */
+> +	MISC_INT_FAIL,		/* Bit17 */
+> +	MISC_INT_FAIL,		/* Bit18 */
+> +	MISC_INT_EN_GPIOA,	/* Bit19 */
+> +	MISC_INT_EN_GPIODA,	/* Bit20 */
+> +	MISC_INT_EN_LSADC0,	/* Bit21 */
+> +	MISC_INT_EN_LSADC1,	/* Bit22 */
+> +	MISC_INT_EN_I2C3,	/* Bit23 */
+> +	MISC_INT_EN_SC0,	/* Bit24 */
+> +	MISC_INT_FAIL,		/* Bit25 */
+> +	MISC_INT_EN_I2C2,	/* Bit26 */
+> +	MISC_INT_EN_GSPI,	/* Bit27 */
+> +	MISC_INT_FAIL,		/* Bit28 */
+> +	MISC_INT_EN_FAN,	/* Bit29 */
+> +	MISC_INT_FAIL,		/* Bit30 */
+> +	MISC_INT_FAIL		/* Bit31 */
+> +};
+> +
+> +unsigned char rtd129x_intc_enable_map_iso[RTD129X_INTC_NR_IRQS] = {
+> +	ISO_INT_FAIL,		/* Bit0 */
+> +	ISO_INT_RVD,		/* Bit1 */
+> +	ISO_INT_EN_UR0,		/* Bit2 */
+> +	ISO_INT_FAIL,		/* Bit3 */
+> +	ISO_INT_FAIL,		/* Bit4 */
+> +	ISO_INT_EN_IRDA,	/* Bit5 */
+> +	ISO_INT_FAIL,		/* Bit6 */
+> +	ISO_INT_RVD,		/* Bit7 */
+> +	ISO_INT_EN_I2C0,	/* Bit8 */
+> +	ISO_INT_RVD,		/* Bit9 */
+> +	ISO_INT_FAIL,		/* Bit10 */
+> +	ISO_INT_EN_I2C1,	/* Bit11 */
+> +	ISO_INT_EN_RTC_HSEC,	/* Bit12 */
+> +	ISO_INT_EN_RTC_ALARM,	/* Bit13 */
+> +	ISO_INT_FAIL,		/* Bit14 */
+> +	ISO_INT_FAIL,		/* Bit15 */
+> +	ISO_INT_FAIL,		/* Bit16 */
+> +	ISO_INT_FAIL,		/* Bit17 */
+> +	ISO_INT_FAIL,		/* Bit18 */
+> +	ISO_INT_EN_GPIOA,	/* Bit19 */
+> +	ISO_INT_EN_GPIODA,	/* Bit20 */
+> +	ISO_INT_RVD,		/* Bit21 */
+> +	ISO_INT_RVD,		/* Bit22 */
+> +	ISO_INT_RVD,		/* Bit23 */
+> +	ISO_INT_RVD,		/* Bit24 */
+> +	ISO_INT_FAIL,		/* Bit25 */
+> +	ISO_INT_FAIL,		/* Bit26 */
+> +	ISO_INT_FAIL,		/* Bit27 */
+> +	ISO_INT_FAIL,		/* Bit28 */
+> +	ISO_INT_EN_GPHY_DV,	/* Bit29 */
+> +	ISO_INT_EN_GPHY_AV,	/* Bit30 */
+> +	ISO_INT_EN_I2C1_REQ	/* Bit31 */
+> +};
+> +
+> +struct rtd129x_intc_data {
+> +	void __iomem		*unmask;
+> +	void __iomem		*isr;
+> +	void __iomem		*ier;
+> +	u32			ier_cached;
+> +	u32			isr_en;
+> +	raw_spinlock_t		lock;
+> +	unsigned int		parent_irq;
+> +	const unsigned char	*en_map;
+> +};
+> +
+> +static struct irq_domain *rtd129x_intc_domain;
+> +
+> +static void rtd129x_intc_irq_handle(struct irq_desc *desc)
+> +{
+> +	struct rtd129x_intc_data *priv = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned int local_irq;
+> +	u32 status;
+> +	int i;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	raw_spin_lock(&priv->lock);
+> +	status = readl_relaxed(priv->isr);
+> +	status &= priv->isr_en;
+> +	raw_spin_unlock(&priv->lock);
 
- - rwsem scalability improvements, phase #2, by Waiman Long, which are 
-   rather impressive:
+What is this lock protecting? isr_en?
 
-    "On a 2-socket 40-core 80-thread Skylake system with 40 reader and 
-     writer locking threads, the min/mean/max locking operations done in a 
-     5-second testing window before the patchset were:
+> +
+> +	while (status) {
+> +		i = __ffs(status);
+> +		status &= ~BIT(i);
+> +
+> +		local_irq = irq_find_mapping(rtd129x_intc_domain, i);
+> +		if (likely(local_irq)) {
+> +			if (!generic_handle_irq(local_irq))
+> +				writel_relaxed(BIT(i), priv->isr);
 
-      40 readers, Iterations Min/Mean/Max = 1,807/1,808/1,810
-      40 writers, Iterations Min/Mean/Max = 1,807/50,344/151,255
+What are the write semantics of the ISR register? Hot bit clear? How
+does it work since mask() does the same thing? Clearly, something is
+wrong here.
 
-     After the patchset, they became:
+> +		} else {
+> +			handle_bad_irq(desc);
+> +		}
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void rtd129x_intc_mask(struct irq_data *data)
+> +{
+> +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> +
+> +	writel_relaxed(BIT(data->hwirq), priv->isr);
+> +}
+> +
+> +static void rtd129x_intc_unmask(struct irq_data *data)
+> +{
+> +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> +
+> +	writel_relaxed(BIT(data->hwirq), priv->unmask);
 
-      40 readers, Iterations Min/Mean/Max = 30,057/31,359/32,741
-      40 writers, Iterations Min/Mean/Max = 94,466/95,845/97,098"
+What effect does this have on the isr register? The whole mask/unmask
+thing seems to be pretty dodgy...
 
-   There's a lot of changes to the locking implementation that makes it 
-   similar to qrwlock, including owner handoff for more fair locking.
+> +}
+> +
+> +static void rtd129x_intc_enable(struct irq_data *data)
+> +{
+> +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> +	unsigned long flags;
+> +	u8 en_offset;
+> +
+> +	en_offset = priv->en_map[data->hwirq];
+> +
+> +	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
+> +		raw_spin_lock_irqsave(&priv->lock, flags);
+> +
+> +		priv->isr_en |= BIT(data->hwirq);
+> +		priv->ier_cached |= BIT(en_offset);
+> +		writel_relaxed(priv->ier_cached, priv->ier);
+> +
+> +		raw_spin_unlock_irqrestore(&priv->lock, flags);
+> +	} else if (en_offset == MISC_INT_FAIL) {
+> +		pr_err("[%s] Enable irq(%lu) failed\n", DEV_NAME, data->hwirq);
+> +	}
+> +}
+> +
+> +static void rtd129x_intc_disable(struct irq_data *data)
+> +{
+> +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> +	unsigned long flags;
+> +	u8 en_offset;
+> +
+> +	en_offset = priv->en_map[data->hwirq];
+> +
+> +	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
+> +		raw_spin_lock_irqsave(&priv->lock, flags);
+> +
+> +		priv->isr_en &= ~BIT(data->hwirq);
+> +		priv->ier_cached &= ~BIT(en_offset);
+> +		writel_relaxed(priv->ier_cached, priv->ier);
+> +
+> +		raw_spin_unlock_irqrestore(&priv->lock, flags);
+> +	} else if (en_offset == MISC_INT_FAIL) {
+> +		pr_err("[%s] Disable irq(%lu) failed\n", DEV_NAME, data->hwirq);
+> +	}
+> +}
 
-   Another microbenchmark shows how across the spectrum the improvements 
-   are:
+So here's a thought: Why do we need all of this? If mask/unmask do their
+job correctly, we could just enable all interrupts in one go (just a
+32bit write) at probe time, and leave all interrupts masked until they
+are in use. You could then drop all these silly tables that don't bring
+much...
 
-    "With a locking microbenchmark running on 5.1 based kernel, the total 
-     locking rates (in kops/s) on a 2-socket Skylake system with equal 
-     numbers of readers and writers (mixed) before and after this 
-     patchset were:
+> +
+> +static struct irq_chip rtd129x_intc_chip = {
+> +	.name		= DEV_NAME,
+> +	.irq_mask	= rtd129x_intc_mask,
+> +	.irq_unmask	= rtd129x_intc_unmask,
+> +	.irq_enable	= rtd129x_intc_enable,
+> +	.irq_disable	= rtd129x_intc_disable,
+> +};
+> +
+> +static int rtd129x_intc_map(struct irq_domain *d, unsigned int virq,
+> +			    irq_hw_number_t hw_irq)
+> +{
+> +	struct rtd129x_intc_data *priv = d->host_data;
+> +
+> +	irq_set_chip_and_handler(virq, &rtd129x_intc_chip, handle_level_irq);
+> +	irq_set_chip_data(virq, priv);
+> +	irq_set_probe(virq);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops rtd129x_intc_domain_ops = {
+> +	.xlate			= irq_domain_xlate_onecell,
+> +	.map			= rtd129x_intc_map,
+> +};
+> +
+> +static const struct of_device_id rtd129x_intc_matches[] = {
+> +	{ .compatible = "realtek,rtd129x-intc-misc",
+> +		.data = rtd129x_intc_enable_map_misc
+> +	},
+> +	{ .compatible = "realtek,rtd129x-intc-iso",
+> +		.data = rtd129x_intc_enable_map_iso
+> +	},
+> +	{ }
+> +};
+> +
+> +static int rtd129x_intc_of_init(struct device_node *node,
+> +				struct device_node *parent)
+> +{
+> +	struct rtd129x_intc_data *priv;
+> +	const struct of_device_id *match;
+> +	u32 isr_tmp, ier_tmp, ier_bit;
+> +	int ret, i;
+> +
+> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> +	if (!priv) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	raw_spin_lock_init(&priv->lock);
+> +
+> +	priv->isr = of_iomap(node, 0);
+> +	if (!priv->isr) {
+> +		pr_err("unable to obtain status reg iomap address\n");
+> +		ret = -ENOMEM;
+> +		goto free_priv;
+> +	}
+> +
+> +	priv->ier = of_iomap(node, 1);
+> +	if (!priv->ier) {
+> +		pr_err("unable to obtain enable reg iomap address\n");
+> +		ret = -ENOMEM;
+> +		goto iounmap_status;
+> +	}
+> +
+> +	priv->unmask = of_iomap(node, 2);
+> +	if (!priv->unmask) {
+> +		pr_err("unable to obtain unmask reg iomap address\n");
+> +		ret = -ENOMEM;
+> +		goto iounmap_enable;
+> +	}
+> +
+> +	priv->parent_irq = irq_of_parse_and_map(node, 0);
+> +	if (!priv->parent_irq) {
+> +		pr_err("failed to map parent interrupt %d\n", priv->parent_irq);
+> +		ret = -EINVAL;
+> +		goto iounmap_all;
+> +	}
+> +
+> +	match = of_match_node(rtd129x_intc_matches, node);
+> +	if (!match) {
+> +		pr_err("failed to find matching node\n");
+> +		ret = -ENODEV;
+> +		goto iounmap_all;
+> +	}
+> +	priv->en_map = match->data;
+> +
+> +	// initialize enabled irq's map to its matching status bit in isr by
+> +	// inverse walking the enable to status offsets map. Only needed for
+> +	// misc
 
-     # of Threads   Before Patch      After Patch
-     ------------   ------------      -----------
-          2            2,618             4,193
-          4            1,202             3,726
-          8              802             3,622
-         16              729             3,359
-         32              319             2,826
-         64              102             2,744"
+Why do we need any of this? The kernel is supposed to start from a clean
+slate, not to inherit whatever has been set before, unless there is a
+very compelling reason.
 
-   The changes are extensive and the patch-set has been through several 
-   iterations addressing various locking workloads. There might be more 
-   regressions, but unless they are pathological I believe we want to use 
-   this new implementation as the baseline going forward.
+> +	priv->ier_cached = readl_relaxed(priv->ier);
+> +	if (priv->en_map == rtd129x_intc_enable_map_misc) {
+> +		ier_tmp = priv->ier_cached;
+> +		isr_tmp = 0;
+> +		while (ier_tmp) {
+> +			ier_bit = __ffs(ier_tmp);
+> +			ier_tmp &= ~BIT(ier_bit);
+> +			for (i = 0; i < RTD129X_INTC_NR_IRQS; i++)
+> +				if (priv->en_map[i] == ier_bit)
+> +					isr_tmp |= BIT(i);
+> +		}
+> +		priv->isr_en = isr_tmp;
+> +	} else {
+> +		priv->isr_en = priv->ier_cached;
+> +	}
+> +
+> +	rtd129x_intc_domain = irq_domain_add_linear(node, RTD129X_INTC_NR_IRQS,
+> +						    &rtd129x_intc_domain_ops,
+> +						    priv);
+> +	if (!rtd129x_intc_domain) {
+> +		pr_err("failed to create irq domain\n");
+> +		ret = -ENOMEM;
+> +		goto iounmap_all;
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(priv->parent_irq,
+> +					 rtd129x_intc_irq_handle, priv);
+> +
+> +	return 0;
+> +
+> +iounmap_all:
+> +	iounmap(priv->unmask);
+> +iounmap_enable:
+> +	iounmap(priv->ier);
+> +iounmap_status:
+> +	iounmap(priv->isr);
+> +free_priv:
+> +	kfree(priv);
+> +err:
+> +	return ret;
+> +}
+> +
+> +IRQCHIP_DECLARE(rtd129x_intc_misc, "realtek,rtd129x-intc-misc",
+> +		rtd129x_intc_of_init);
+> +IRQCHIP_DECLARE(rtd129x_intc_iso, "realtek,rtd129x-intc-iso",
+> +		rtd129x_intc_of_init);
+> 
 
- - jump-label optimizations by Daniel Bristot de Oliveira: the primary 
-   motivation was to remove IPI disturbance of isolated RT-workload CPUs, 
-   which resulted in the implementation of batched jump-label updates.
-   Beyond the improvement of the real-time characteristics kernel, in one 
-   test this patchset improved static key update overhead from 57 msecs 
-   to just 1.4 msecs - which is a nice speedup as well.
+Thanks,
 
- - atomic64_t cross-arch type cleanups by Mark Rutland: over the last ~10 
-   years of atomic64_t existence the various types used by the APIs only 
-   had to be self-consistent within each architecture - which means they 
-   became wildly inconsistent across architectures. Mark puts and end to 
-   this by reworking all the atomic64 implementations to use 's64' as the 
-   base type for atomic64_t, and to ensure that this type is consistently 
-   used for parameters and return values in the API, avoiding further 
-   problems in this area.
-
- - A large set of small improvements to lockdep by Yuyang Du: type 
-   cleanups, output cleanups, function return type and othr cleanups all 
-   around the place.
-
- - A set of percpu ops cleanups and fixes by Peter Zijlstra.
-
- - Misc other changes - please see the Git log for more details.
-
- Thanks,
-
-	Ingo
-
------------------->
-Anders Roxell (1):
-      locking/lockdep: Remove the unused print_lock_trace() function
-
-Arnd Bergmann (1):
-      locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING
-
-Daniel Bristot de Oliveira (6):
-      jump_label: Add a jump_label_can_update() helper
-      x86/jump_label: Add a __jump_label_set_jump_code() helper
-      jump_label: Sort entries of the same key by the code
-      x86/alternative: Batch of patch operations
-      jump_label: Batch updates if arch supports it
-      x86/jump_label: Batch jump label updates
-
-Imre Deak (2):
-      locking/lockdep: Fix OOO unlock when hlocks need merging
-      locking/lockdep: Fix merging of hlocks with non-zero references
-
-Kobe Wu (2):
-      locking/lockdep: Remove unnecessary DEBUG_LOCKS_WARN_ON()
-      locking/lockdep: increase size of counters for lockdep statistics
-
-Mark Rutland (18):
-      locking/atomic, crypto/nx: Prepare for atomic64_read() conversion
-      locking/atomic, s390/pci: Prepare for atomic64_read() conversion
-      locking/atomic: Use s64 for atomic64
-      locking/atomic, alpha: Use s64 for atomic64
-      locking/atomic, arc: Use s64 for atomic64
-      locking/atomic, arm: Use s64 for atomic64
-      locking/atomic, arm64: Use s64 for atomic64
-      locking/atomic, ia64: Use s64 for atomic64
-      locking/atomic, mips: Use s64 for atomic64
-      locking/atomic, powerpc: Use s64 for atomic64
-      locking/atomic, riscv: Fix atomic64_sub_if_positive() offset argument
-      locking/atomic, riscv: Use s64 for atomic64
-      locking/atomic, s390: Use s64 for atomic64
-      locking/atomic, sparc: Use s64 for atomic64
-      locking/atomic, x86: Use s64 for atomic64
-      locking/atomic: Use s64 for atomic64_t on 64-bit
-      locking/atomic, crypto/nx: Remove redundant casts
-      locking/atomic, s390/pci: Remove redundant casts
-
-Michael Forney (1):
-      locking/atomics: Use sed(1) instead of non-standard head(1) option
-
-Nikolay Borisov (1):
-      locking/lockdep: Rename lockdep_assert_held_exclusive() -> lockdep_assert_held_write()
-
-Peter Zijlstra (8):
-      locking/lock_events: Use raw_cpu_{add,inc}() for stats
-      Documentation/atomic_t.txt: Clarify pure non-rmw usage
-      x86/atomic: Fix smp_mb__{before,after}_atomic()
-      x86/percpu: Differentiate this_cpu_{}() and __this_cpu_{}()
-      x86/percpu: Relax smp_processor_id()
-      x86/percpu, x86/irq: Relax {set,get}_irq_regs()
-      x86/percpu, sched/fair: Avoid local_clock()
-      x86/percpu: Optimize raw_cpu_xchg()
-
-Sebastian Andrzej Siewior (1):
-      locking/lockdep: Don't complain about incorrect name for no validate class
-
-Waiman Long (17):
-      futex: Consolidate duplicated timer setup code
-      locking/rwsem: Make owner available even if !CONFIG_RWSEM_SPIN_ON_OWNER
-      locking/rwsem: Remove rwsem_wake() wakeup optimization
-      locking/rwsem: Implement a new locking scheme
-      locking/rwsem: Merge rwsem.h and rwsem-xadd.c into rwsem.c
-      locking/rwsem: Code cleanup after files merging
-      locking/rwsem: Make rwsem_spin_on_owner() return owner state
-      locking/rwsem: Implement lock handoff to prevent lock starvation
-      locking/rwsem: Always release wait_lock before waking up tasks
-      locking/rwsem: More optimal RT task handling of null owner
-      locking/rwsem: Wake up almost all readers in wait queue
-      locking/rwsem: Clarify usage of owner's nonspinaable bit
-      locking/rwsem: Enable readers spinning on writer
-      locking/rwsem: Make rwsem->owner an atomic_long_t
-      locking/rwsem: Enable time-based spinning on reader-owned rwsem
-      locking/rwsem: Adaptive disabling of reader optimistic spinning
-      locking/rwsem: Guard against making count negative
-
-YueHaibing (1):
-      x86/jump_label: Make tp_vec_nr static
-
-Yuyang Du (23):
-      locking/lockdep: Change all print_*() return type to void
-      locking/lockdep: Add description and explanation in lockdep design doc
-      locking/lockdep: Adjust lock usage bit character checks
-      locking/lockdep: Remove useless conditional macro
-      locking/lockdep: Print the right depth for chain key collision
-      locking/lockdep: Update obsolete struct field description
-      locking/lockdep: Use lockdep_init_task for task initiation consistently
-      locking/lockdep: Define INITIAL_CHAIN_KEY for chain keys to start with
-      locking/lockdep: Change the range of class_idx in held_lock struct
-      locking/lockdep: Remove unused argument in validate_chain() and check_deadlock()
-      locking/lockdep: Update comment
-      locking/lockdep: Change type of the element field in circular_queue
-      locking/lockdep: Change the return type of __cq_dequeue()
-      locking/lockdep: Avoid constant checks in __bfs by using offset reference
-      locking/lockdep: Update comments on dependency search
-      locking/lockdep: Add explanation to lock usage rules in lockdep design doc
-      locking/lockdep: Remove redundant argument in check_deadlock
-      locking/lockdep: Remove unused argument in __lock_release
-      locking/lockdep: Refactorize check_noncircular and check_redundant
-      locking/lockdep: Check redundant dependency only when CONFIG_LOCKDEP_SMALL
-      locking/lockdep: Consolidate lock usage bit initialization
-      locking/lockdep: Adjust new bit cases in mark_lock
-      locking/lockdep: Remove !dir in lock irq usage check
-
-
- Documentation/atomic_t.txt               |    9 +-
- Documentation/locking/lockdep-design.txt |  112 ++-
- arch/alpha/include/asm/atomic.h          |   20 +-
- arch/arc/include/asm/atomic.h            |   41 +-
- arch/arm/include/asm/atomic.h            |   50 +-
- arch/arm64/include/asm/atomic_ll_sc.h    |   20 +-
- arch/arm64/include/asm/atomic_lse.h      |   34 +-
- arch/ia64/include/asm/atomic.h           |   20 +-
- arch/mips/include/asm/atomic.h           |   22 +-
- arch/powerpc/include/asm/atomic.h        |   44 +-
- arch/riscv/include/asm/atomic.h          |   44 +-
- arch/s390/include/asm/atomic.h           |   38 +-
- arch/s390/pci/pci_debug.c                |    2 +-
- arch/sparc/include/asm/atomic_64.h       |    8 +-
- arch/x86/events/core.c                   |    2 +-
- arch/x86/include/asm/atomic.h            |    8 +-
- arch/x86/include/asm/atomic64_32.h       |   66 +-
- arch/x86/include/asm/atomic64_64.h       |   46 +-
- arch/x86/include/asm/barrier.h           |    4 +-
- arch/x86/include/asm/irq_regs.h          |    4 +-
- arch/x86/include/asm/jump_label.h        |    2 +
- arch/x86/include/asm/percpu.h            |  236 ++---
- arch/x86/include/asm/smp.h               |    3 +-
- arch/x86/include/asm/text-patching.h     |   15 +
- arch/x86/kernel/alternative.c            |  154 +++-
- arch/x86/kernel/jump_label.c             |  121 ++-
- drivers/crypto/nx/nx-842-pseries.c       |    6 +-
- drivers/infiniband/core/device.c         |    2 +-
- drivers/tty/tty_ldisc.c                  |    8 +-
- fs/dax.c                                 |    2 +-
- include/asm-generic/atomic64.h           |   20 +-
- include/linux/jump_label.h               |    3 +
- include/linux/lockdep.h                  |   36 +-
- include/linux/percpu-rwsem.h             |    4 +-
- include/linux/rwsem.h                    |   16 +-
- include/linux/sched/wake_q.h             |    5 +
- include/linux/smp.h                      |   45 +-
- include/linux/types.h                    |    2 +-
- init/init_task.c                         |    2 +
- kernel/fork.c                            |    3 -
- kernel/futex.c                           |   69 +-
- kernel/jump_label.c                      |   64 +-
- kernel/locking/Makefile                  |    2 +-
- kernel/locking/lock_events.h             |   45 +-
- kernel/locking/lock_events_list.h        |   12 +-
- kernel/locking/lockdep.c                 |  742 ++++++++-------
- kernel/locking/lockdep_internals.h       |   36 +-
- kernel/locking/rwsem-xadd.c              |  745 ---------------
- kernel/locking/rwsem.c                   | 1453 +++++++++++++++++++++++++++++-
- kernel/locking/rwsem.h                   |  306 +------
- kernel/sched/fair.c                      |    5 +-
- lib/Kconfig.debug                        |    8 +-
- lib/atomic64.c                           |   32 +-
- scripts/atomic/check-atomics.sh          |    2 +-
- security/apparmor/label.c                |    8 +-
- 55 files changed, 2788 insertions(+), 2020 deletions(-)
- delete mode 100644 kernel/locking/rwsem-xadd.c
+	M.
+-- 
+Jazz is not dead. It just smells funny...
