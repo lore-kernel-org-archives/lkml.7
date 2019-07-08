@@ -2,83 +2,149 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762DFC48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDEBC48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7372084A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120BB20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:44:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jrhAt7QH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbfGHHg6 (ORCPT
+        id S1729482AbfGHHoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:36:58 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45685 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfGHHg5 (ORCPT
+        Mon, 8 Jul 2019 03:44:37 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39771 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbfGHHog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:36:57 -0400
-Received: by mail-ot1-f65.google.com with SMTP id x21so15162920otq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 00:36:57 -0700 (PDT)
+        Mon, 8 Jul 2019 03:44:36 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so6732558pgi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 00:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6yYLvyLEBI35unTfoBpTYZgBgYmEeKFbJbiIi6+Pm18=;
+        b=jrhAt7QHn1hfUTP3COeeH51Er61boYoW+oDIVMrr9COFzd9Upo4q27t48s4EWqhesa
+         KU35Ls9UQB0G45UVMerTSq1UJtXZFQ0YLdfSQ85nM3K3OTu4UzbX3fAjwNHPwxiF6i22
+         VWG+UdqpRCKTCF9pdkdySwfX2u8PuvZQNWb46wVpftzUmWNaBcyYsyf345kYKJBb/m28
+         FzLoPFg2ZkEOGzujoHE7dbijdRbLwq5RDamzdQv7GxV1z1Bbw2MxdeLiX9zp2SJpSxb+
+         1rNtxFARtLOqF4CLByMmOpiZIC/Ax2w4yn8VwnjE6QtO5m/DWsujGLML9vga4AY+jYyd
+         YXxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gNTUqnku8niNB9d4DJJdvCwiKFHyHplYOWjk0lkMatE=;
-        b=lcZ+HZaRxTIJKVlrSBQgzLCdNHYSFBocb28tpu0E1H/Qvn1ANvRNDcuMBA7WGphdER
-         bXxTuQzVRk9GYpibTZA5mCHwGAHtlhTSsmF5uP8iapUZ8cTR+kSWkF3jAAMwhHspmhs6
-         arFmCKnlbWQhlkvrzxf1/UkO3cFdb0STGP3LWqmCJvSm4E/S53QiJ/4KvF2QOQnZ+w6J
-         rQ5dcpuaL3Tpky1EIrPpzgKCRVWi27ZNCR1trzVQewUhuCNL204vUWvfJ8T3aXRk4u2N
-         rBBo8zYFXthtJe+e0Nkt/fjAmsRuhg/sVJexIUON9t9fBHVTSWMEsCMCX2U6/uPXdzc4
-         WQ/g==
-X-Gm-Message-State: APjAAAXN4tWjRh2Rvt/7V9GGRhdxh358HKsKHnimyDUgVfwdTB1j9uAr
-        eeU+EQbwkXa/hWKhn/kJW0eKKzyGGtBm5QDdX1Y=
-X-Google-Smtp-Source: APXvYqyo472/t+mGYfo5uuK1/V8g77+ciL53SR+frag8PpzDGidAds1XBVfRWATv1RPYNwBNDg7KEsURk1Vs+HdAyVs=
-X-Received: by 2002:a9d:5c11:: with SMTP id o17mr12692675otk.107.1562571416966;
- Mon, 08 Jul 2019 00:36:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn> <1562566745-7447-3-git-send-email-wen.yang99@zte.com.cn>
-In-Reply-To: <1562566745-7447-3-git-send-email-wen.yang99@zte.com.cn>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jul 2019 09:36:45 +0200
-Message-ID: <CAMuHMdVodmpcVXCESDxR3_oVK_5g2-9tW84YPP+eRh-0t_OBiQ@mail.gmail.com>
-Subject: Re: [PATCH] irqchip: renesas-rza1: fix an use-after-free in rza1_irqc_probe()
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6yYLvyLEBI35unTfoBpTYZgBgYmEeKFbJbiIi6+Pm18=;
+        b=roH9HnWXq4me7meAidSKGIJtru8B3XClE5ipxHEVsBMRtKjiUOuFJw2jhz6qLE1dLj
+         DMJ5m71wombyhLMoGAfPadHUO+Mo3IItvSqO1hwlhUGLSTFmVG52OGm/wUNCJAe0Cqkn
+         wI8qz0Dx2kqAWGxvlJ/OR2c86uVe1XK5N9ONK4V//1I6L6QIDn0JFyBpnljRG563TesF
+         Sk1QFCYEi3Afga3uhw+HmfHRpyZMkK8NMIbHKBlycWLNSNGNtWep33JKxfD+a+NaKGuU
+         wzU8sdc6nEGpfFDuXnpy5B/usrDPGVPRj0xNYRYtv/JeRBvKFP5tLH5J62p3SlBRYBja
+         Qz7A==
+X-Gm-Message-State: APjAAAVl3qZbzFKktcj7nFG5yiq7dUoyetNt85KO4Pw27tbDLnVVUJl8
+        GmUvSVgaeI5D87M7Cg8FuvDloA==
+X-Google-Smtp-Source: APXvYqwZWf9LLc+ir3bbSRqwnYrobSk3zS9QKp8UXA6ZaA547Hc+q9BjEik4iR2j0FZUtVmgXY79Og==
+X-Received: by 2002:a65:42c3:: with SMTP id l3mr21652248pgp.372.1562571875771;
+        Mon, 08 Jul 2019 00:44:35 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id p13sm46332015pjb.30.2019.07.08.00.44.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 00:44:34 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 13:14:32 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] cpufreq/pasemi: fix an use-after-free in
+ pas_cpufreq_cpu_init()
+Message-ID: <20190708074432.56q2e3ig5ehiee5f@vireshk-i7>
+References: <1562570393-8684-1-git-send-email-wen.yang99@zte.com.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562570393-8684-1-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wen,
-
-On Mon, Jul 8, 2019 at 8:22 AM Wen Yang <wen.yang99@zte.com.cn> wrote:
-> The gic_node is still being used in the rza1_irqc_parse_map() call
+On 08-07-19, 15:19, Wen Yang wrote:
+> The cpu variable is still being used in the of_get_property() call
 > after the of_node_put() call, which may result in use-after-free.
+> 
+> Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> v2: clean up the code according to the advice of viresh.
+> 
+>  drivers/cpufreq/pasemi-cpufreq.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+> index 6b1e4ab..c6d464b 100644
+> --- a/drivers/cpufreq/pasemi-cpufreq.c
+> +++ b/drivers/cpufreq/pasemi-cpufreq.c
+> @@ -128,20 +128,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	int cur_astate, idx;
+>  	struct resource res;
+>  	struct device_node *cpu, *dn;
+> -	int err = -ENODEV;
+> +	int err;
+>  
+>  	cpu = of_get_cpu_node(policy->cpu, NULL);
+> -
+> -	of_node_put(cpu);
+>  	if (!cpu)
+> -		goto out;
+> +		return -ENODEV;
+>  
 
-Thanks! This use was added in v3, but I forgot to move the of_node_put() call.
 
-> Fixes: a644ccb819bc ("irqchip: Add Renesas RZ/A1 Interrupt Controller driver")
+>  	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+>  	if (!dn)
+>  		dn = of_find_compatible_node(NULL, NULL,
+>  					     "pasemi,pwrficient-sdc");
+>  	if (!dn)
+> -		goto out;
+> +		return -ENODEV;
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This change looks incorrect. You still need to drop reference to cpu ?
 
-Gr{oetje,eeting}s,
-
-                        Geert
+>  	err = of_address_to_resource(dn, 0, &res);
+>  	of_node_put(dn);
+>  	if (err)
+> @@ -196,6 +194,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	policy->cur = pas_freqs[cur_astate].frequency;
+>  	ppc_proc_freq = policy->cur * 1000ul;
+>  
+> +	of_node_put(cpu);
+>  	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+>  
+>  out_unmap_sdcpwr:
+> @@ -204,6 +203,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  out_unmap_sdcasr:
+>  	iounmap(sdcasr_mapbase);
+>  out:
+> +	of_node_put(cpu);
+>  	return err;
+>  }
+>  
+> -- 
+> 2.9.5
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+viresh
