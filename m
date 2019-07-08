@@ -2,120 +2,88 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DC1C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC6C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76ED021537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562602308;
-	bh=deIYNiJGWk8xhKz5u1IiZV8tnnAGyzHTlwwSpvh0Nog=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ZjDaJ09zPounXjuF2ePIhg8BBwXADK0wMEA26BLRFviqbjqQzX6VN+VQ0JNpubjc+
-	 UqCjCpe9QsL4VgBk4MGWyffUnwQr1wAtCDyk/ujwvY6hy10j+xZIp4B+0aH62jIHqu
-	 Dn9Fge46ZZ72xkf7BPcADFE9cSwEBwE6wLiYLo/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 8EDC5216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389578AbfGHQLr (ORCPT
+        id S2389990AbfGHQOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:11:47 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52059 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbfGHQLq (ORCPT
+        Mon, 8 Jul 2019 12:14:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38979 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728082AbfGHQOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:11:46 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so97808wma.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:11:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=0YfI9ulneYjIAaJNmJ8mTywngdZ+lHgD4fcT0tv/HX4=;
-        b=KuJxlfGSU5CrH+UyUj3RrfYszPQdIS+qFBc/8q4LZQFsF8gr3fI1k06KNU/flDpO0Y
-         OaPUT7gkE+8A837BzZzqiJNoo/JaocYLjTEQmysD6qqRuASRcarZ8/YncjTdzagwHM3F
-         rBYcovuoG3gyfSMlmk7Onz3hc4rRxg7/waa1sXtgkaIhE42q6UAZJDyCi1Y9wrk5r/JF
-         mGTncNPvrZJMVePCOUOMNGhOnqMQUPg5dzC6Nm/tU2Qobl6p8cSYGeJfKucToh43Ng3U
-         pcCzYYa1FfV+ouprsLMvwi0tK+bQQkxFFbyghY2AJkmBS6IwtOMLYacVYUB4cNhqcrVa
-         EesA==
+        Mon, 8 Jul 2019 12:14:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x4so17782905wrt.6;
+        Mon, 08 Jul 2019 09:14:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=0YfI9ulneYjIAaJNmJ8mTywngdZ+lHgD4fcT0tv/HX4=;
-        b=nAT5aCdF315had+XT3ADLZQl2zal9dSN1zpjy97Ioiv8DQ9DdSAxRsByU+KFZSofOL
-         qLHL3Tyc9yKTLjvlXV0zRavvD8NCmH/LAGHWmFDZIKNR/0bjVNdwDyV6azqS5SG3qQv0
-         pX60Ux5iBxSCc/AjFMqRfr5w2dh1V5zMZDSoJRQYpFgvq3AWjo67o7Cb09Nf7YKVoe06
-         DAmbhP+rvi1m09y0jJG3cADydWzA/ZxT7AXeAAk0HE4LSaJcVFxLOcBgYJZvOTNrHojl
-         EW7iAk4RfbS+otuqGFGcXp9EwoS+zSTLTEsmHvTSZ0xj3fiVES0oJk24JM5p9BcYBD6v
-         bO0g==
-X-Gm-Message-State: APjAAAUcsrIoE85GlKcc3nYv3jTJ1++sTJ5Ls6M8t6qN5C7b1Dsm5Jer
-        Yu+nDiLsGg92ULPeiIPK03M=
-X-Google-Smtp-Source: APXvYqzPSP9SkpEHuug5qKqst+jRHha9sIk0sCJ3FTpsskyruj5gpiRwAlffmfG+JrPW6rJ8PPST1w==
-X-Received: by 2002:a7b:c398:: with SMTP id s24mr17777923wmj.53.1562602304553;
-        Mon, 08 Jul 2019 09:11:44 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id f204sm28747wme.18.2019.07.08.09.11.43
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kzl7ySO00ACxBfoVjtfqCQyIPbur8JdXCvOsOSkfwVs=;
+        b=Eh1ANWy7KSHIGVPL/JqTDcjXii2sbzTOw7liXbRyQZ6f2Oiy/EmB1AqsNVlaIhFhFz
+         d5Ysddn9EMdoOSFpYrChGWdqh8q+u5tfB6rhrk/gTVWsv5Rq3NUJ4GpEJeB4Yvgu4OBg
+         OB867U6Y7RP1BsxaeKFym0eMgU+5u+8AEwXs1bNObMDO5EXUSMBGYIeHQn6T7fjrOeN3
+         J5ZOQbRayBqKFN2kN3avmH8+AS6Qgn3bO/aOO067tHBhoYWqI3kNCKDES+pywUUwAwUt
+         jS6+tkxfcYlkE0hpPA+IciIOmAzc/bJA02fr7ABwOQs+DT/qhzGMBLnp1ChQIpAx9hGE
+         HlgQ==
+X-Gm-Message-State: APjAAAXWRX5BiO5nHJS1yy5/QL9P7bvVq6sTYIv7IYmUcZbgwOaE4PB3
+        xpeJUMcenUSPY3NxvO6/MKk=
+X-Google-Smtp-Source: APXvYqzhg2ITqrH1Y+C2tesFza97u7BSDJ0IRGUgRDYRcxahn9+uxmwgCGqNa1cn4VfEK26tzypJLA==
+X-Received: by 2002:a5d:620d:: with SMTP id y13mr20519604wru.243.1562602474041;
+        Mon, 08 Jul 2019 09:14:34 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id 15sm13468wmk.34.2019.07.08.09.14.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:11:44 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 18:11:42 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/core changes for v5.3
-Message-ID: <20190708161142.GA107326@gmail.com>
+        Mon, 08 Jul 2019 09:14:33 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sunrpc/cache: remove the exporting of cache_seq_next
+Date:   Mon,  8 Jul 2019 19:14:23 +0300
+Message-Id: <20190708161423.31006-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+The function cache_seq_next is declared static and marked
+EXPORT_SYMBOL_GPL, which is at best an odd combination. Because the
+function is not used outside of the net/sunrpc/cache.c file it is
+defined in, this commit removes the EXPORT_SYMBOL_GPL() marking.
 
-Please pull the latest x86-core-for-linus git tree from:
+Fixes: d48cf356a130 ("SUNRPC: Remove non-RCU protected lookup")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ net/sunrpc/cache.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-core-for-linus
-
-   # HEAD: 711486fd18596315d42cebaac3dba8c408f60a3d Documentation/filesystems/proc.txt: Add arch_status file
-
-This adds a new ABI that the main scheduler probably doesn't want to deal 
-with but HPC job schedulers might want to use, the AVX512_elapsed_ms 
-field in the new /proc/<pid>/arch_status task status file, which allows 
-the user-space job scheduler to cluster such tasks, to avoid turbo 
-frequency drops.
-
-
-  out-of-topic modifications in x86-core-for-linus:
-  ---------------------------------------------------
-  fs/proc/Kconfig                    # 68bc30bb9f33: proc: Add /proc/<pid>/arch_s
-  fs/proc/base.c                     # 68bc30bb9f33: proc: Add /proc/<pid>/arch_s
-  include/linux/proc_fs.h            # 68bc30bb9f33: proc: Add /proc/<pid>/arch_s
-
- Thanks,
-
-	Ingo
-
------------------->
-Aubrey Li (3):
-      proc: Add /proc/<pid>/arch_status
-      x86/process: Add AVX-512 usage elapsed time to /proc/pid/arch_status
-      Documentation/filesystems/proc.txt: Add arch_status file
-
-
- Documentation/filesystems/proc.txt | 40 ++++++++++++++++++++++++++++++++
- arch/x86/Kconfig                   |  1 +
- arch/x86/kernel/fpu/xstate.c       | 47 ++++++++++++++++++++++++++++++++++++++
- fs/proc/Kconfig                    |  4 ++++
- fs/proc/base.c                     |  6 +++++
- include/linux/proc_fs.h            |  9 ++++++++
- 6 files changed, 107 insertions(+)
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index 66fbb9d2fba7..6f1528f271ee 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -1375,7 +1375,6 @@ static void *cache_seq_next(struct seq_file *m, void *p, loff_t *pos)
+ 				hlist_first_rcu(&cd->hash_table[hash])),
+ 				struct cache_head, cache_list);
+ }
+-EXPORT_SYMBOL_GPL(cache_seq_next);
+ 
+ void *cache_seq_start_rcu(struct seq_file *m, loff_t *pos)
+ 	__acquires(RCU)
+-- 
+2.21.0
 
