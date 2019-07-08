@@ -2,119 +2,82 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4361C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E52C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C226720861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5944020861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbfGHNQy (ORCPT
+        id S1731260AbfGHNRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:16:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58034 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727352AbfGHNQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:16:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C59CFAE12;
-        Mon,  8 Jul 2019 13:16:52 +0000 (UTC)
-Date:   Mon, 8 Jul 2019 15:16:52 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mans Rullgard <mans@mansr.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] auxdisplay: charlcd: Deduplicate simple_strtoul()
-Message-ID: <20190708131652.s3gdoieixgyekued@pathway.suse.cz>
-References: <20190704115532.15679-1-andriy.shevchenko@linux.intel.com>
- <20190704115532.15679-2-andriy.shevchenko@linux.intel.com>
+        Mon, 8 Jul 2019 09:17:50 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39401 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfGHNRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:17:49 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w190so695423qkc.6;
+        Mon, 08 Jul 2019 06:17:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V+wz0H7gl6Q8zjC86ZgnxBevLyGHVnIvyQ3olnsvn8E=;
+        b=fjJxDPyFBybE513GphmBzJNiI70XekMgiG/AZaGOdL0cgXs2PZE+gyW0OE9tAmh8AJ
+         ryieVUBI2sqF1yUC+uF5doJF+ycYQpGL7ntNuJIUMn04R2OQpY9wtgU4duXuKnduqjWy
+         JwjccKHArKxO+ypso89Mo9XBAc+iP8rnrqtN2lrA5/sYhtPXWGlln8n6t43PMOTlNPNB
+         n/sGC8LpQMXqCiOjrHinmb+xWGqtwJUrWjklnP/RTR41UMJbJXjAZnAvJKGHCBaNy0sz
+         djrXbmqc0d3szCj3kFyiFRV/qZU9gSsA5J75KqnIo6ACnaR5+cL9y4wUI5z8HTNkDEOh
+         9yjA==
+X-Gm-Message-State: APjAAAWMRiibaw4/lMS2fYmR2VspnE5h/W4qWmox53fsM9cIyciLmHvd
+        4+GdZ7oooKi/yNmcrwiyQLV63+wKgQuidGpAkqw=
+X-Google-Smtp-Source: APXvYqyIS1Sjxxl24XUtXEUwisidsyy4+zyUtieDs6+t7pHB0J8zaYr1exFbHgLoYk5Qry+Zjrak17QcUlXg0jtwXFc=
+X-Received: by 2002:a37:5f45:: with SMTP id t66mr14271104qkb.286.1562591868590;
+ Mon, 08 Jul 2019 06:17:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704115532.15679-2-andriy.shevchenko@linux.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20190708124547.3515538-1-arnd@arndb.de> <20190708130010.pnxlzi5vptuyppxz@treble>
+In-Reply-To: <20190708130010.pnxlzi5vptuyppxz@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 8 Jul 2019 15:17:31 +0200
+Message-ID: <CAK8P3a0NggP8KbETOfXqoNfu6Gc13QTT+ME3SbK14nWaTWXvCg@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] Revert "bpf: Fix ORC unwinding in non-JIT BPF code"
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-07-04 14:55:32, Andy Shevchenko wrote:
-> Like in the commit
->   8b2303de399f ("serial: core: Fix handling of options after MMIO address")
-> we may use simple_strtoul() which in comparison to kstrtoul() can do conversion
-> in-place without additional and unnecessary code to be written.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> - no change since v2
->  drivers/auxdisplay/charlcd.c | 34 +++++++---------------------------
->  1 file changed, 7 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/auxdisplay/charlcd.c b/drivers/auxdisplay/charlcd.c
-> index 92745efefb54..3858dc7a4154 100644
-> --- a/drivers/auxdisplay/charlcd.c
-> +++ b/drivers/auxdisplay/charlcd.c
-> @@ -287,31 +287,6 @@ static int charlcd_init_display(struct charlcd *lcd)
->  	return 0;
->  }
->  
-> -/*
-> - * Parses an unsigned integer from a string, until a non-digit character
-> - * is found. The empty string is not accepted. No overflow checks are done.
-> - *
-> - * Returns whether the parsing was successful. Only in that case
-> - * the output parameters are written to.
-> - *
-> - * TODO: If the kernel adds an inplace version of kstrtoul(), this function
-> - * could be easily replaced by that.
-> - */
-> -static bool parse_n(const char *s, unsigned long *res, const char **next_s)
-> -{
-> -	if (!isdigit(*s))
-> -		return false;
-> -
-> -	*res = 0;
-> -	while (isdigit(*s)) {
-> -		*res = *res * 10 + (*s - '0');
-> -		++s;
-> -	}
-> -
-> -	*next_s = s;
-> -	return true;
-> -}
-> -
->  /*
->   * Parses a movement command of the form "(.*);", where the group can be
->   * any number of subcommands of the form "(x|y)[0-9]+".
-> @@ -336,6 +311,7 @@ static bool parse_xy(const char *s, unsigned long *x, unsigned long *y)
->  {
->  	unsigned long new_x = *x;
->  	unsigned long new_y = *y;
-> +	char *p;
->  
->  	for (;;) {
->  		if (!*s)
-> @@ -345,11 +321,15 @@ static bool parse_xy(const char *s, unsigned long *x, unsigned long *y)
->  			break;
->  
->  		if (*s == 'x') {
-> -			if (!parse_n(s + 1, &new_x, &s))
-> +			new_x = simple_strtoul(s + 1, &p, 10);
+On Mon, Jul 8, 2019 at 3:11 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Mon, Jul 08, 2019 at 02:45:23PM +0200, Arnd Bergmann wrote:
+> > Apparently this was a bit premature, at least I still get this
+> > warning with gcc-8.1:
+> >
+> > kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x44d2: sibling call from callable instruction with modified stack frame
+> >
+> > This reverts commit b22cf36c189f31883ad0238a69ccf82aa1f3b16b.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Yes, I have been working on a fix.
+>
+> The impact is that ORC unwinding is broken in this function for
+> CONFIG_RETPOLINE=n.
+>
+> I don't think we want to revert this patch though, because that will
+> broaden the impact to the CONFIG_RETPOLINE=y case.  Anyway I hope to
+> have fixes soon.
 
-simple_strtoul() tries to detect the base even when it has been
-explicitely specified. I am afraid that it might cause some
-regressions.
+Ok, sounds good. Thanks,
 
-For example, the following input is strange but it is valid:
-
-    x0x10;  new code would return (16, <orig_y>) instead of (10, <orig_y>)
-    x010;   new code would return (8, <orig_y>) instead of (10, <orig_y>)
-
-Best Regards,
-Petr
+     Arnd
