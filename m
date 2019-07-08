@@ -2,149 +2,119 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12D8C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA23CC5B57D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA67320659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:00:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCFcjFeC"
+	by mail.kernel.org (Postfix) with ESMTP id BDC2620659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbfGHGAU (ORCPT
+        id S1728879AbfGHGBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 02:00:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41070 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbfGHGAU (ORCPT
+        Mon, 8 Jul 2019 02:01:03 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:37352 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbfGHGBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 02:00:20 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m9so3991053pls.8
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 23:00:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6q22eQDDCUZWlcpujovTPxDLV/PDTFZTJgjMkPGNMDU=;
-        b=qCFcjFeCt5a05VcS5Cjwgn22CsE/7DQLunpoWaYJxF06aSHKpcocF0SZYql/0vvOYP
-         gPHsR+rNQ8P0MLJcpgJMZv56u/hBqdpZ+4ywoAGXcYG7ooS3XQGOlYkBql1rIr38HYqu
-         zXO/ZmzprkLvQ+rKetYp4s1jyIcpCCyb5Yum+pq78zZQC78pLqdUN+WUEssnXexeUcl2
-         6r7akeSW1kIBwVhljmpM32CmF2uqDXRZRx1l3pUy2HmHEpgzOjQvbhy6q8r+XK8pAmUJ
-         0nOeDi2SQsTmFSpK+2c+gl8zE08CvsvEj+Ys1POjFUK/eul15t4sQnwNGka0hZ+Hicpr
-         VmWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6q22eQDDCUZWlcpujovTPxDLV/PDTFZTJgjMkPGNMDU=;
-        b=ttS+kgxUsmASQfUjaESU7Z3+6nKpCuPfLGdUa7KwfITDTZ3iHgzGdlDV/5eGCNYnC5
-         2JcYFv+FVW0TlawJQ0iba0Bf/DncNRWKhqhsOwx+sinnVd3xDSe3hyxQUyVv7DNKXIeO
-         JaooGJnv1bdhZP/adr8lZVA/ug3Qtp9kG4JPIEnYRTfny4d2UZcQJlU/PWb2RAuDRuu4
-         tnwrPmT3U35W4VNgQbbVpIX7wydW9DunLys6qtRzdy00AfCc9kBQnBEwQTvL4YBKmBcA
-         oGQtpzSBSjVeZ9tZ8KTmBqHAE4uHJZmEhfFZz3l8OY9Jq0/oRflqry2mPshBw1CwNpvJ
-         qlDg==
-X-Gm-Message-State: APjAAAULWVjlfj8LBIGRT7e1noj/orgvSPhunVFeaug7kA9mpSExk/gD
-        gkqX77iBWrg4X1e0TuEBM+u94A==
-X-Google-Smtp-Source: APXvYqzCH6JkIGIMDnIOEIFv7dTqbgSevQnLuknmocRwHgxJb1MtM345JVgkwrUtGfT2CEe7k8z8kg==
-X-Received: by 2002:a17:902:1e7:: with SMTP id b94mr22716751plb.333.1562565619188;
-        Sun, 07 Jul 2019 23:00:19 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id f15sm21479445pje.17.2019.07.07.23.00.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Jul 2019 23:00:18 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] opp: Return genpd virtual devices from dev_pm_opp_attach_genpd()
-Date:   Mon,  8 Jul 2019 11:30:11 +0530
-Message-Id: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Jul 2019 02:01:03 -0400
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+        by 156.147.23.51 with ESMTP; 8 Jul 2019 15:01:01 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO localhost.localdomain) (10.177.222.33)
+        by 156.147.1.126 with ESMTP; 8 Jul 2019 15:01:01 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     paulmck@linux.ibm.com, josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Date:   Mon,  8 Jul 2019 15:00:09 +0900
+Message-Id: <1562565609-12482-1-git-send-email-byungchul.park@lge.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpufreq drivers don't need to do runtime PM operations on the
-virtual devices returned by dev_pm_domain_attach_by_name() and so the
-virtual devices weren't shared with the callers of
-dev_pm_opp_attach_genpd() earlier.
+jiffies_till_sched_qs is useless if it's readonly as it is used to set
+jiffies_to_sched_qs with its value regardless of first/next fqs jiffies.
+And it should be applied immediately on change through sysfs.
 
-But the IO device drivers would want to do that. This patch updates the
-prototype of dev_pm_opp_attach_genpd() to accept another argument to
-return the pointer to the array of genpd virtual devices.
+The function for setting jiffies_to_sched_qs,
+adjust_jiffies_till_sched_qs() will be called only if
+the value from sysfs != ULONG_MAX. And the value won't be adjusted
+unlike first/next fqs jiffies.
 
-Reported-by: Rajendra Nayak <rnayak@codeaurora.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+While at it, changed the positions of two module_param()s downward.
+
+Signed-off-by: Byungchul Park <byungchul.park@lge.com>
 ---
-@Rajendra: Can you please test this one ? I have only compile tested it.
+ kernel/rcu/tree.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
- drivers/opp/core.c     | 5 ++++-
- include/linux/pm_opp.h | 4 ++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 2958cc7bbb58..07b6f1187b3b 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1775,6 +1775,7 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
-  * dev_pm_opp_attach_genpd - Attach genpd(s) for the device and save virtual device pointer
-  * @dev: Consumer device for which the genpd is getting attached.
-  * @names: Null terminated array of pointers containing names of genpd to attach.
-+ * @virt_devs: Pointer to return the array of virtual devices.
-  *
-  * Multiple generic power domains for a device are supported with the help of
-  * virtual genpd devices, which are created for each consumer device - genpd
-@@ -1789,7 +1790,8 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
-  * This helper needs to be called once with a list of all genpd to attach.
-  * Otherwise the original device structure will be used instead by the OPP core.
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index a2f8ba2..a28e2fe 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -422,9 +422,7 @@ static int rcu_is_cpu_rrupt_from_idle(void)
+  * quiescent-state help from rcu_note_context_switch().
   */
--struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names)
-+struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
-+		const char **names, struct device ***virt_devs)
- {
- 	struct opp_table *opp_table;
- 	struct device *virt_dev;
-@@ -1850,6 +1852,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
- 		name++;
- 	}
+ static ulong jiffies_till_sched_qs = ULONG_MAX;
+-module_param(jiffies_till_sched_qs, ulong, 0444);
+ static ulong jiffies_to_sched_qs; /* See adjust_jiffies_till_sched_qs(). */
+-module_param(jiffies_to_sched_qs, ulong, 0444); /* Display only! */
  
-+	*virt_devs = opp_table->genpd_virt_devs;
- 	mutex_unlock(&opp_table->genpd_virt_dev_lock);
- 
- 	return opp_table;
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index be570761b77a..7c2fe2952f40 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -131,7 +131,7 @@ struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char * name);
- void dev_pm_opp_put_clkname(struct opp_table *opp_table);
- struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev, int (*set_opp)(struct dev_pm_set_opp_data *data));
- void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
--struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names);
-+struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names, struct device ***virt_devs);
- void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
- int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
- int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
-@@ -295,7 +295,7 @@ static inline struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const
- 
- static inline void dev_pm_opp_put_clkname(struct opp_table *opp_table) {}
- 
--static inline struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names)
-+static inline struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names, struct device ***virt_devs)
- {
- 	return ERR_PTR(-ENOTSUPP);
+ /*
+  * Make sure that we give the grace-period kthread time to detect any
+@@ -450,6 +448,18 @@ static void adjust_jiffies_till_sched_qs(void)
+ 	WRITE_ONCE(jiffies_to_sched_qs, j);
  }
+ 
++static int param_set_sched_qs_jiffies(const char *val, const struct kernel_param *kp)
++{
++	ulong j;
++	int ret = kstrtoul(val, 0, &j);
++
++	if (!ret && j != ULONG_MAX) {
++		WRITE_ONCE(*(ulong *)kp->arg, j);
++		adjust_jiffies_till_sched_qs();
++	}
++	return ret;
++}
++
+ static int param_set_first_fqs_jiffies(const char *val, const struct kernel_param *kp)
+ {
+ 	ulong j;
+@@ -474,6 +484,11 @@ static int param_set_next_fqs_jiffies(const char *val, const struct kernel_param
+ 	return ret;
+ }
+ 
++static struct kernel_param_ops sched_qs_jiffies_ops = {
++	.set = param_set_sched_qs_jiffies,
++	.get = param_get_ulong,
++};
++
+ static struct kernel_param_ops first_fqs_jiffies_ops = {
+ 	.set = param_set_first_fqs_jiffies,
+ 	.get = param_get_ulong,
+@@ -484,8 +499,11 @@ static int param_set_next_fqs_jiffies(const char *val, const struct kernel_param
+ 	.get = param_get_ulong,
+ };
+ 
++module_param_cb(jiffies_till_sched_qs, &sched_qs_jiffies_ops, &jiffies_till_sched_qs, 0644);
+ module_param_cb(jiffies_till_first_fqs, &first_fqs_jiffies_ops, &jiffies_till_first_fqs, 0644);
+ module_param_cb(jiffies_till_next_fqs, &next_fqs_jiffies_ops, &jiffies_till_next_fqs, 0644);
++
++module_param(jiffies_to_sched_qs, ulong, 0444); /* Display only! */
+ module_param(rcu_kick_kthreads, bool, 0644);
+ 
+ static void force_qs_rnp(int (*f)(struct rcu_data *rdp));
 -- 
-2.21.0.rc0.269.g1a574e7a288b
+1.9.1
 
