@@ -2,117 +2,125 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD3EC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2783FC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3503520651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600343;
-	bh=+3pnNI24UcgqddC+16lnH/sPlaUZ2koWchHGt+Hx0XE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oz9xt7ub3Afjepov3tPIwjWuWruttuKvwrT55pGLMlp6fH0vVPxhii7v81Pq33udT
-	 zqwB5A/qCUMr4SYVwKjnOAXjqRoTdB4NaO773DZARtS6d2fXMqB8KsDPuM/zh97CZm
-	 rHun9ih49psEX9x7bL4GkUNiJn5iQh/UjLyqrO1Y=
+	by mail.kernel.org (Postfix) with ESMTP id F3AA420651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R66ij/UO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390698AbfGHPjC (ORCPT
+        id S2390717AbfGHPjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:39:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389782AbfGHPaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5CAA216C4;
-        Mon,  8 Jul 2019 15:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599799;
-        bh=+3pnNI24UcgqddC+16lnH/sPlaUZ2koWchHGt+Hx0XE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nE1e5MS4mP6t0+CO9XgYa/EbKlNPKSq8EPXh93vXgFRpnXlQ7rIG6uZWL4BEwVRax
-         XsFpBxdpZGK3eSVSvZnYLvVXAQmMtYCyVezFa32TDJ6k11URLncCfUy0wtc/omIaWH
-         BxWssMTVFqwQxN37jvUpPjS0LcIf8FkQY+hJbP8U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 81/90] netfilter: ipv6: nf_defrag: accept duplicate fragments again
-Date:   Mon,  8 Jul 2019 17:13:48 +0200
-Message-Id: <20190708150526.488683525@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
-References: <20190708150521.829733162@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 8 Jul 2019 11:39:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56524 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390680AbfGHPjB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:39:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sd5xZswn82hM4I4a2QGWA7E+FVpWZoE4wHH+4GtUsDY=; b=R66ij/UOIQSDxm7NY4L1BZH2H
+        dD7Sn/QA8D1W+qg+4pfOien85BdI7rp/VVKl4fWrUylvwAeH6XyFxkl8m4jtt4Hn1aYDJGGFdZ/Ce
+        d1eazRqcK5dTM/XAkg9YFRXrPRD2hmp0yStXRSgxOW1IFJ7i5tznv5KZxYbx9+t6oCH0bxkT9zJ+j
+        ZE1jIZoCkCUyp+stkgq4oY0X8LfpUaNlfkDwTB0B4sLUU2SVBcLd+dnlK2mplxiWm4Pot1t9IzCKH
+        8kUAAKnNU/e2tuD1vXPmaiKeJ5PT8u2s1UX4W46Dhep1aiYcTZmyR68hlPNioIe4QkuLUVaMOWqzX
+        ktkHtnS1Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkVjF-0007Hi-Gr; Mon, 08 Jul 2019 15:38:57 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9DD5520976D60; Mon,  8 Jul 2019 17:38:55 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 17:38:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 2/7] perf/cgroup: order events in RB tree by cgroup id
+Message-ID: <20190708153855.GC3419@hirez.programming.kicks-ass.net>
+References: <20190702065955.165738-1-irogers@google.com>
+ <20190702065955.165738-3-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702065955.165738-3-irogers@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8a3dca632538c550930ce8bafa8c906b130d35cf ]
+On Mon, Jul 01, 2019 at 11:59:50PM -0700, Ian Rogers wrote:
+> @@ -1530,6 +1530,32 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
+>  	if (left->cpu > right->cpu)
+>  		return false;
+>  
+> +#ifdef CONFIG_CGROUP_PERF
+> +	if (left->cgrp != right->cgrp) {
+> +		if (!left->cgrp)
+> +			/*
+> +			 * Left has no cgroup but right does, no cgroups come
+> +			 * first.
+> +			 */
+> +			return true;
+> +		if (!right->cgrp)
+> +			/*
+> +			 * Right has no cgroup but left does, no cgroups come
+> +			 * first.
+> +			 */
+> +			return false;
 
-When fixing the skb leak introduced by the conversion to rbtree, I
-forgot about the special case of duplicate fragments. The condition
-under the 'insert_error' label isn't effective anymore as
-nf_ct_frg6_gather() doesn't override the returned value anymore. So
-duplicate fragments now get NF_DROP verdict.
+Per CodingStyle any multi-line statement (here due to comments) needs {
+}.
 
-To accept duplicate fragments again, handle them specially as soon as
-inet_frag_queue_insert() reports them. Return -EINPROGRESS which will
-translate to NF_STOLEN verdict, like any accepted fragment. However,
-such packets don't carry any new information and aren't queued, so we
-just drop them immediately.
+> +		if (left->cgrp->css.cgroup != right->cgrp->css.cgroup) {
+> +			if (!left->cgrp->css.cgroup)
+> +				return true;
+> +			if (!right->cgrp->css.cgroup)
+> +				return false;
+> +			/* Two dissimilar cgroups, order by id. */
+> +			return left->cgrp->css.cgroup->id <
+> +					right->cgrp->css.cgroup->id;
+> +		}
 
-Fixes: a0d56cb911ca ("netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/ipv6/netfilter/nf_conntrack_reasm.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+This is dis-similar to the existing style ( < true, > false, ==
+fall-through).
 
-diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
-index 73c29ddcfb95..35d5a76867d0 100644
---- a/net/ipv6/netfilter/nf_conntrack_reasm.c
-+++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -265,8 +265,14 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
- 
- 	prev = fq->q.fragments_tail;
- 	err = inet_frag_queue_insert(&fq->q, skb, offset, end);
--	if (err)
-+	if (err) {
-+		if (err == IPFRAG_DUP) {
-+			/* No error for duplicates, pretend they got queued. */
-+			kfree_skb(skb);
-+			return -EINPROGRESS;
-+		}
- 		goto insert_error;
-+	}
- 
- 	if (dev)
- 		fq->iif = dev->ifindex;
-@@ -304,8 +310,6 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
- 	return -EINPROGRESS;
- 
- insert_error:
--	if (err == IPFRAG_DUP)
--		goto err;
- 	inet_frag_kill(&fq->q);
- err:
- 	skb_dst_drop(skb);
--- 
-2.20.1
+Can all this be written like:
 
 
+	if (!left->cgrp || !left->cgrp.css.cgroup)
+		return true;
 
+	if (!right->cgrp || !right->cgrp.css.cgroup)
+		return false;
+
+	if (left->cgrp->css.cgroup->id < right->cgrp->css.cgroup->id)
+		retun true;
+
+	if (left->cgrp->css.cgroup->id > right->cgrp->css.cgroup->id)
+		return false;
+
+
+?
+
+> +	}
+> +#endif
+> +
+>  	if (left->group_index < right->group_index)
+>  		return true;
+>  	if (left->group_index > right->group_index)
