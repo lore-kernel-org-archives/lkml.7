@@ -2,53 +2,51 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49472C606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA880C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2264320651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A987B20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600255;
-	bh=ekdSFvh+SN6mN3zxQKPas/iAAKLnnIvSvZUc6aY/3Wk=;
+	s=default; t=1562600259;
+	bh=EMd2/EMEbomDp/HYQ44yrWt9W+8QT59uhc6NBw2ZYe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Op0dqHgwBDgnP34tLFlos7y1HCflfr5WtHg6449BBAa0qKD9U+qPxvnfVuk9A8szI
-	 B6OjJol8nXbnA5Ljj09CqWIuhVaFBX9JWPnzOcH91cWxS9kuY2+kx11JzG56rO3Jqd
-	 +4UYL5ZvHlYqc6ZUuhJlj5EZSBsj96p5cunL4/wc=
+	b=DlbLCoGCIP5qqLrUP3m5NCmjrfSMd0QTI4nsInFYp78TO72aRTs1soLPRgYgUbYoh
+	 1M0y/8yslVk1WEkqAG2WbyKiTR6GoZXPq9KRqCgQdzSJI3wRJeIMDQR9fQXlPnlUpm
+	 /VO+2x1tv6udlLN4/9uRZbcfZyrYClSr0uYOHT2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390019AbfGHPb7 (ORCPT
+        id S2390674AbfGHPhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:31:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33332 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390006AbfGHPbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:31:55 -0400
+        id S2389966AbfGHPbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:31:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 750992177B;
-        Mon,  8 Jul 2019 15:31:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18EA3216C4;
+        Mon,  8 Jul 2019 15:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599914;
-        bh=ekdSFvh+SN6mN3zxQKPas/iAAKLnnIvSvZUc6aY/3Wk=;
+        s=default; t=1562599911;
+        bh=EMd2/EMEbomDp/HYQ44yrWt9W+8QT59uhc6NBw2ZYe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKXLkfhXjQEPOTr3WB+2ZpZ1U3o2daacUl8vSpO1Sqk8ayiD8igX/dVy7DJntrwl9
-         iBO/23H2OLUz1ZvwvJJRqBztLsnbmVfRG7fqbUFuZYcuTtygPokgdBRWjEbmcG+guR
-         sqXi13imnmO+jbYo5PrTNPyOBMWiVyFKdL7CbSTA=
+        b=MSh3b6yhn37nohj71HrHxUFTqcJ9LUOsKJlpTwF31DJoPoUql06PoaWFNFd091WeF
+         aVW9SnM2jtZWid49ESN7Oy8GV56WFas2Yl04XNVC4Dlvs4P9K6hr+fWdpFKY4aZ2Sb
+         rCCAUX8lFfW1bCzXP7TtxXV/q2SwRbr7LeTAfuZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 30/96] usb: gadget: dwc2: fix zlp handling
-Date:   Mon,  8 Jul 2019 17:13:02 +0200
-Message-Id: <20190708150528.178999528@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.1 03/96] netfilter: nf_flow_table: ignore DF bit setting
+Date:   Mon,  8 Jul 2019 17:12:35 +0200
+Message-Id: <20190708150526.452638247@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,91 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 066cfd0770aba8a9ac79b59d99530653885d919d ]
+From: Florian Westphal <fw@strlen.de>
 
-The patch 10209abe87f5ebfd482a00323f5236d6094d0865
-usb: dwc2: gadget: Add scatter-gather mode
+commit e75b3e1c9bc5b997d09bdf8eb72ab3dd3c1a7072 upstream.
 
-avoided a NULL pointer dereference (hs_ep->req == NULL) by
-calling dwc2_gadget_fill_nonisoc_xfer_dma_one() directly instead of through
-the dwc2_gadget_config_nonisoc_xfer_ddma() wrapper, which unconditionally
-dereferenced the said pointer.
+Its irrelevant if the DF bit is set or not, we must pass packet to
+stack in either case.
 
-However, this was based on an incorrect assumption that in the context of
-dwc2_hsotg_program_zlp() the pointer is always NULL, which is not the case.
-The result were SB CV MSC tests failing starting from Test Case 6.
+If the DF bit is set, we must pass it to stack so the appropriate
+ICMP error can be generated.
 
-Instead, this patch reverts to calling the wrapper and adds a check for
-the pointer being NULL inside the wrapper.
+If the DF is not set, we must pass it to stack for fragmentation.
 
-Fixes: 10209abe87f5 (usb: dwc2: gadget: Add scatter-gather mode)
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/dwc2/gadget.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ net/netfilter/nf_flow_table_ip.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index a749de7604c6..c99ef9753930 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -833,19 +833,22 @@ static void dwc2_gadget_fill_nonisoc_xfer_ddma_one(struct dwc2_hsotg_ep *hs_ep,
-  * with corresponding information based on transfer data.
-  */
- static void dwc2_gadget_config_nonisoc_xfer_ddma(struct dwc2_hsotg_ep *hs_ep,
--						 struct usb_request *ureq,
--						 unsigned int offset,
-+						 dma_addr_t dma_buff,
- 						 unsigned int len)
- {
-+	struct usb_request *ureq = NULL;
- 	struct dwc2_dma_desc *desc = hs_ep->desc_list;
- 	struct scatterlist *sg;
- 	int i;
- 	u8 desc_count = 0;
+--- a/net/netfilter/nf_flow_table_ip.c
++++ b/net/netfilter/nf_flow_table_ip.c
+@@ -246,8 +246,7 @@ nf_flow_offload_ip_hook(void *priv, stru
+ 	flow = container_of(tuplehash, struct flow_offload, tuplehash[dir]);
+ 	rt = (struct rtable *)flow->tuplehash[dir].tuple.dst_cache;
  
-+	if (hs_ep->req)
-+		ureq = &hs_ep->req->req;
-+
- 	/* non-DMA sg buffer */
--	if (!ureq->num_sgs) {
-+	if (!ureq || !ureq->num_sgs) {
- 		dwc2_gadget_fill_nonisoc_xfer_ddma_one(hs_ep, &desc,
--			ureq->dma + offset, len, true);
-+			dma_buff, len, true);
- 		return;
- 	}
+-	if (unlikely(nf_flow_exceeds_mtu(skb, flow->tuplehash[dir].tuple.mtu)) &&
+-	    (ip_hdr(skb)->frag_off & htons(IP_DF)) != 0)
++	if (unlikely(nf_flow_exceeds_mtu(skb, flow->tuplehash[dir].tuple.mtu)))
+ 		return NF_ACCEPT;
  
-@@ -1133,7 +1136,7 @@ static void dwc2_hsotg_start_req(struct dwc2_hsotg *hsotg,
- 			offset = ureq->actual;
- 
- 		/* Fill DDMA chain entries */
--		dwc2_gadget_config_nonisoc_xfer_ddma(hs_ep, ureq, offset,
-+		dwc2_gadget_config_nonisoc_xfer_ddma(hs_ep, ureq->dma + offset,
- 						     length);
- 
- 		/* write descriptor chain address to control register */
-@@ -2026,12 +2029,13 @@ static void dwc2_hsotg_program_zlp(struct dwc2_hsotg *hsotg,
- 		dev_dbg(hsotg->dev, "Receiving zero-length packet on ep%d\n",
- 			index);
- 	if (using_desc_dma(hsotg)) {
-+		/* Not specific buffer needed for ep0 ZLP */
-+		dma_addr_t dma = hs_ep->desc_list_dma;
-+
- 		if (!index)
- 			dwc2_gadget_set_ep0_desc_chain(hsotg, hs_ep);
- 
--		/* Not specific buffer needed for ep0 ZLP */
--		dwc2_gadget_fill_nonisoc_xfer_ddma_one(hs_ep, &hs_ep->desc_list,
--			hs_ep->desc_list_dma, 0, true);
-+		dwc2_gadget_config_nonisoc_xfer_ddma(hs_ep, dma, 0);
- 	} else {
- 		dwc2_writel(hsotg, DXEPTSIZ_MC(1) | DXEPTSIZ_PKTCNT(1) |
- 			    DXEPTSIZ_XFERSIZE(0),
--- 
-2.20.1
-
+ 	if (skb_try_make_writable(skb, sizeof(*iph)))
 
 
