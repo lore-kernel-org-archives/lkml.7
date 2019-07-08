@@ -1,155 +1,163 @@
-Return-Path: <SRS0=HQPa=VE=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9240C48BDB
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 23:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA68BC48BDB
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 00:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92402075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jul 2019 23:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF4E2075C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 00:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbfGGX5F (ORCPT
+        id S1727865AbfGHA0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 19:57:05 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:41716 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727438AbfGGX5F (ORCPT
+        Sun, 7 Jul 2019 20:26:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25370 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727384AbfGHA0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 19:57:05 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2E2611AD14E;
-        Mon,  8 Jul 2019 09:56:58 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hkH0Y-0006sw-LI; Mon, 08 Jul 2019 09:55:50 +1000
-Date:   Mon, 8 Jul 2019 09:55:50 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Boaz Harrosh <openosd@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking
-Message-ID: <20190707235550.GG7689@dread.disaster.area>
-References: <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
- <20190619103838.GB32409@quack2.suse.cz>
- <20190619223756.GC26375@dread.disaster.area>
- <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
- <20190705233157.GD7689@dread.disaster.area>
- <b43e2707-89ec-3afa-8bca-37747ba6c944@gmail.com>
+        Sun, 7 Jul 2019 20:26:10 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x680MUKp049237;
+        Sun, 7 Jul 2019 20:25:58 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tkmsn8hf9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 07 Jul 2019 20:25:58 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x680Pvpo056350;
+        Sun, 7 Jul 2019 20:25:57 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tkmsn8hex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 07 Jul 2019 20:25:57 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x680JCoE022202;
+        Mon, 8 Jul 2019 00:25:56 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma01dal.us.ibm.com with ESMTP id 2tjk96tuch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jul 2019 00:25:56 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x680PtFt53150166
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jul 2019 00:25:55 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B112D124052;
+        Mon,  8 Jul 2019 00:25:55 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 839B9124053;
+        Mon,  8 Jul 2019 00:25:55 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jul 2019 00:25:55 +0000 (GMT)
+Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
+To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Mimi Zohar <zohar@linux.ibm.com>
+References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <510c30d0-34f4-1937-7882-1880eb9241ed@linux.ibm.com>
+Date:   Sun, 7 Jul 2019 20:25:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b43e2707-89ec-3afa-8bca-37747ba6c944@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=7-415B0cAAAA:8 a=5MAkLt6JDVzRolFkLr8A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-MW
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-07_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907080003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 07, 2019 at 06:05:16PM +0300, Boaz Harrosh wrote:
-> On 06/07/2019 02:31, Dave Chinner wrote:
-> 
-> > 
-> > As long as the IO ranges to the same file *don't overlap*, it should
-> > be perfectly safe to take separate range locks (in read or write
-> > mode) on either side of the mmap_sem as non-overlapping range locks
-> > can be nested and will not self-deadlock.
-> > 
-> > The "recursive lock problem" still arises with DIO and page faults
-> > inside gup, but it only occurs when the user buffer range overlaps
-> > the DIO range to the same file. IOWs, the application is trying to
-> > do something that has an undefined result and is likely to result in
-> > data corruption. So, in that case I plan to have the gup page faults
-> > fail and the DIO return -EDEADLOCK to userspace....
-> > 
-> 
-> This sounds very cool. I now understand. I hope you put all the tools
-> for this in generic places so it will be easier to salvage.
+On 7/6/19 8:18 PM, Nayna Jain wrote:
+> The nr_allocated_banks and allocated banks are initialized as part of
+> tpm_chip_register. Currently, this is done as part of auto startup
+> function. However, some drivers, like the ibm vtpm driver, do not run
+> auto startup during initialization. This results in uninitialized memory
+> issue and causes a kernel panic during boot.
+>
+> This patch moves the pcr allocation outside the auto startup function
+> into tpm_chip_register. This ensures that allocated banks are initialized
+> in any case.
+>
+> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
+> PCR read")
+> Reported-by: Michal Suchanek <msuchanek@suse.de>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> Tested-by: Michal Suchánek <msuchanek@suse.de>
+> ---
+> Changelog:
+>
+> v2:
+> * Includes Jarkko's feedbacks
+>    * fixes the function name to tpm_get_pcr_allocation()
+>    * adds new function tpm1_get_pcr_allocation()
+>    * updates patch summary line
+>    * fixes alignment
+>    * adds Reported-by: Michal Suchanek <msuchanek@suse.de>
+> * Includes Stefan's feedbacks
+>    * Fixes overwriting of return code
+>    * Fixes misplacing of tpm_chip_stop()
+> * Adds Reviewed-by, Tested-by
+>
+>   drivers/char/tpm/tpm-chip.c | 22 ++++++++++++++++++++++
+>   drivers/char/tpm/tpm.h      |  2 ++
+>   drivers/char/tpm/tpm1-cmd.c | 36 ++++++++++++++++++++++++------------
+>   drivers/char/tpm/tpm2-cmd.c |  6 +-----
+>   4 files changed, 49 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+> index 8804c9e916fd..6589291df355 100644
+> --- a/drivers/char/tpm/tpm-chip.c
+> +++ b/drivers/char/tpm/tpm-chip.c
+> @@ -550,6 +550,22 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
+>   	return hwrng_register(&chip->hwrng);
+>   }
+>
+> +/*
+> + * tpm_get_pcr_allocation() - initialize the chip allocated banks for PCRs
+> + * @chip: TPM chip to use.
+> + */
+> +static int tpm_get_pcr_allocation(struct tpm_chip *chip)
+> +{
+> +	int rc;
+> +
+> +	if (chip->flags & TPM_CHIP_FLAG_TPM2)
+> +		rc = tpm2_get_pcr_allocation(chip);
 
-That's the plan, though I'm not really caring about anything outside
-XFS for the moment.
 
-> One thing I will be very curious to see is how you teach lockdep
-> about the "range locks can be nested" thing. I know its possible,
-> other places do it, but its something I never understood.
+For tpm2 case you need:
 
-The issue with lockdep is not nested locks, it's that there is no
-concept of ranges. e.g.  This is fine:
+if (rc > 0)
 
-P0				P1
-read_lock(A, 0, 1000)
-				read_lock(B, 0, 1000)
-write_lock(B, 1001, 2000)
-				write_lock(A, 1001, 2000)
+     rc = -ENODEV;
 
-Because the read/write lock ranges on file A don't overlap and so
-can be held concurrently, similarly the ranges on file B. i.e. This
-lock pattern does not result in deadlock.
+Because tpm2_get_pcr_allocation(chip) returns ssize_t with return values 
+from tpm_transmit_cmd > 0 indicating a TPM 2 error code...
 
-However, this very similar lock pattern is not fine:
 
-P0				P1
-read_lock(A, 0, 1000)
-				read_lock(B, 0, 1000)
-write_lock(B, 500, 1500)
-				write_lock(A, 900, 1900)
+    Stefan
 
-i.e. it's an ABBA deadlock because the lock ranges partially
-overlap.
-
-IOWs, the problem with lockdep is not nesting read lock or nesting
-write locks (because that's valid, too), the problem is that it
-needs to be taught about ranges. Once it knows about ranges, nested
-read/write locking contexts don't require any special support...
-
-As it is, tracking overlapping lock ranges in lockdep will be
-interesting, given that I've been taking several thousand
-non-overlapping range locks concurrently on a single file in my
-testing. Tracking this sort of usage without completely killing the
-machine looking for conflicts and order violations likely makes
-lockdep validation of range locks a non-starter....
-
-> [ Ha one more question if you have time:
-> 
->   In one of the mails, and you also mentioned it before, you said about
->   the rw_read_lock not being able to scale well on mammoth machines
->   over 10ns of cores (maybe you said over 20).
->   I wonder why that happens. Is it because of the atomic operations,
->   or something in the lock algorithm. In my theoretical understanding,
->   as long as there are no write-lock-grabbers, why would the readers
->   interfere with each other?
-
-Concurrent shared read lock/unlock are still atomic counting
-operations.  Hence they bounce exclusive cachelines from CPU to
-CPU...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
