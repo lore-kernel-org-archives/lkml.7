@@ -2,208 +2,147 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C3AC606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021D4C606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D8E20656
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4X9uWXb"
+	by mail.kernel.org (Postfix) with ESMTP id C762320656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:51:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562579468;
+	bh=qRCxKkIY0GPpQ2ZT/W3B8z1ggZX8dFatDQO798K+K+E=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=UUD/+4FFfjsM89CQTxyoWrjZ0cKj6Nt88qEzudIXd41J0VBJnNAbpgWEaRfRDRrgW
+	 PvNturl+gHE5tcwjoG4LiqXQVISk48vMRuFlzinqv2M8KeHK3XoZTfZYU8XPM98hgT
+	 W7ghlcPhwP3hs8EY2wfGxjp4IMfYND4FtIh1mj04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbfGHJsJ (ORCPT
+        id S1729979AbfGHJvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 05:48:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44943 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728720AbfGHJsJ (ORCPT
+        Mon, 8 Jul 2019 05:51:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35305 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728720AbfGHJvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 05:48:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so5118759wrf.11;
-        Mon, 08 Jul 2019 02:48:06 -0700 (PDT)
+        Mon, 8 Jul 2019 05:51:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y4so7692343wrm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 02:51:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NwlWZnZ7zBN6lMDrY9iRaKbV18Be9yKKcDp04eaQZqw=;
-        b=L4X9uWXbU6RiKrYoUg2tgRwaWORYDiSTVLOeYpeJuxAruwz0azPyvOk8Jf4yhJqizT
-         Sjoag1bsd1lnxDMWoqWXLrdD3yVIUh57JZAPA2c3H3H2zbBYt8B67jd6Pel/2AgEa4gP
-         UaPzoeGUom5LJOBnL8pK/c/SnqUrKVpurbOn9VAskieXCXaYvjvzLjXxB8RiP3Z+TCF2
-         +S//IhKshMXkeWfHs9dFTv19u1RT3CyGreaY1P1dNUic3NzRB4JNQfiBJ+2VqzfRAsMr
-         ppKkr0g9JXj/PxeiIUrvGdln+1TpbzM9iqSsIbUChjswX3i3/1qDjh4PNGHFEs0oVxrK
-         0PxQ==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XC+MCenEOTbiEZaPU4ZpNhdfgGfWHfTIq6+TiHkM7NU=;
+        b=ZYqnUAQqlSDGhAPfPpBsqqtk/N5hnycFGScWzud4u27GZVoN7HOq4dnBcBTnr+nLw/
+         p+JQcy03Y8UlGofWg4aJFjrQsBG9E9g49AlTziJ6WuItj8pXJNWDa6FVAJQBNFBfakmY
+         RlJb/yEyw9c0Yicd1rtDNoi6gfG07B6LsZ/SzqoTycLeSn6a4O1nhx7FoNRKP2hlWRZ2
+         mniDzJxBFZLwX/dfifuag8h+5C26vvDq9PlPEFFkBQdvSE3uTigxcVPasXstqn7YsGRh
+         a0tzCNd8zOkwEJ7BSw+f/jpnmqgqgRB7qbqIFSbI16H1w9lTzlqNH2yWnTDI/TEIyClm
+         92nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NwlWZnZ7zBN6lMDrY9iRaKbV18Be9yKKcDp04eaQZqw=;
-        b=EXHQ+bBHIbGMhQofgKY3URGs8vyMe7T5152Tt0f7vnrrin8aXb4Ca6e2QpZ7b0oHf3
-         uODp1M5mHGFGob6HxziiEcZ7r+C1CsG1l1Y6tZkSyXvI1sYwOpvW4eBWN7hs21S5eXMB
-         2JnEnVf4d6Qdr7U3BpTS13v8EWCuAVC5f9Jga3PxLyCvV78YUKf/e7ZqmbSh+lJQDw4F
-         F5s/f5ZL1o3UgecaTTZf2XqyffBYfbFPraTPx7QnrAvL0H5NpTsH+T49loAkacY0K9Dw
-         0TjWlJjora6uBqH5mAjRcMV/7mIAX/4qv4EVyBg9FVX6mwXAe0woswjM8eWjo+7KpXwn
-         jy5Q==
-X-Gm-Message-State: APjAAAWSECR/XzS8smlkSYFIvxBw7hSF1oxU53U8vwsYPEshKCgTZvJt
-        F1ZTjDqoImPY9WU0f7xT2FSmJXemPFBFbM22L3o=
-X-Google-Smtp-Source: APXvYqxE67dD1GsBy6jRCG+SGo9SeaPdmJ0+fghvBxDKCiPovhUbI/A/avBvpADnzJyDg0CyZ7K+xQiy1/iVQCXybjo=
-X-Received: by 2002:a05:6000:1011:: with SMTP id a17mr18005281wrx.0.1562579286243;
- Mon, 08 Jul 2019 02:48:06 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=XC+MCenEOTbiEZaPU4ZpNhdfgGfWHfTIq6+TiHkM7NU=;
+        b=JZuhKjz0/86ICe3JSDE9s8p/6cci27LompkFVFpPiMCznuYqRQ4HCxuiALm2r1A0MM
+         ZIrVMBP8kUoZ2z18sTAnpWnz5GS/X4pm+b94P5jQP48pYcrtiL05hZn2Veh8tUKSBJCY
+         p9dIsbIgm3WFsjuNrqXfztJTJ9X028Je1UU6b4GevgNfAzYb+D/FV+kdNmAoyQcc6udu
+         Jdv8lLb/jIgU1H/8CI92qG9Jh6vCsyN1YUErQoAeVp6keBIgw453lQipm7cbi4kP8tzp
+         dU1owWzY1Ls8hO9iP5jDh+pHA0bs9Q8/ZpbBxH3MXE2INUe7prgLfffTc4bHgrDrNVmC
+         KZAg==
+X-Gm-Message-State: APjAAAXc+ibc3dgXz/LXYBCLJbKq6H+rBwWpMmlCbILPu957cra19vxm
+        +IDg74FsRpIyKAoaFUyqbYA=
+X-Google-Smtp-Source: APXvYqxDh4IthAZGfY5V5LAa7y4sh/8lal5dCeVm6w2KW5gWXtd16+sSzz19IRwApsglBcY2sC/KHw==
+X-Received: by 2002:adf:e6c5:: with SMTP id y5mr18746021wrm.235.1562579464969;
+        Mon, 08 Jul 2019 02:51:04 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id h9sm12818994wrw.85.2019.07.08.02.51.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 02:51:04 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 11:51:02 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] RAS changes for v5.3
+Message-ID: <20190708095102.GA59026@gmail.com>
 MIME-Version: 1.0
-References: <20190530112811.3066-1-pbonzini@redhat.com> <20190530112811.3066-3-pbonzini@redhat.com>
-In-Reply-To: <20190530112811.3066-3-pbonzini@redhat.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Mon, 8 Jul 2019 17:47:54 +0800
-Message-ID: <CACVXFVPE7vX1pEPH0G_C_eZW8eztdTEg8Xr=8+D=9-eVeMNZ_g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] virtio_scsi: implement request batching
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM General <kvm@vger.kernel.org>, jejb@linux.ibm.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 7:28 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> Adding the command and kicking the virtqueue so far was done one after
-> another.  Make the kick optional, so that we can take into account SCMD_LAST.
-> We also need a commit_rqs callback to kick the device if blk-mq aborts
-> the submission before the last request is reached.
->
-> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  drivers/scsi/virtio_scsi.c | 55 +++++++++++++++++++++++++++-----------
->  1 file changed, 40 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-> index 8af01777d09c..918c811cea95 100644
-> --- a/drivers/scsi/virtio_scsi.c
-> +++ b/drivers/scsi/virtio_scsi.c
-> @@ -375,14 +375,7 @@ static void virtscsi_event_done(struct virtqueue *vq)
->         virtscsi_vq_done(vscsi, &vscsi->event_vq, virtscsi_complete_event);
->  };
->
-> -/**
-> - * virtscsi_add_cmd - add a virtio_scsi_cmd to a virtqueue
-> - * @vq         : the struct virtqueue we're talking about
-> - * @cmd                : command structure
-> - * @req_size   : size of the request buffer
-> - * @resp_size  : size of the response buffer
-> - */
-> -static int virtscsi_add_cmd(struct virtqueue *vq,
-> +static int __virtscsi_add_cmd(struct virtqueue *vq,
->                             struct virtio_scsi_cmd *cmd,
->                             size_t req_size, size_t resp_size)
->  {
-> @@ -427,17 +420,39 @@ static int virtscsi_add_cmd(struct virtqueue *vq,
->         return virtqueue_add_sgs(vq, sgs, out_num, in_num, cmd, GFP_ATOMIC);
->  }
->
-> -static int virtscsi_kick_cmd(struct virtio_scsi_vq *vq,
-> +static void virtscsi_kick_vq(struct virtio_scsi_vq *vq)
-> +{
-> +       bool needs_kick;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&vq->vq_lock, flags);
-> +       needs_kick = virtqueue_kick_prepare(vq->vq);
-> +       spin_unlock_irqrestore(&vq->vq_lock, flags);
-> +
-> +       if (needs_kick)
-> +               virtqueue_notify(vq->vq);
-> +}
-> +
-> +/**
-> + * virtscsi_add_cmd - add a virtio_scsi_cmd to a virtqueue, optionally kick it
-> + * @vq         : the struct virtqueue we're talking about
-> + * @cmd                : command structure
-> + * @req_size   : size of the request buffer
-> + * @resp_size  : size of the response buffer
-> + * @kick       : whether to kick the virtqueue immediately
-> + */
-> +static int virtscsi_add_cmd(struct virtio_scsi_vq *vq,
->                              struct virtio_scsi_cmd *cmd,
-> -                            size_t req_size, size_t resp_size)
-> +                            size_t req_size, size_t resp_size,
-> +                            bool kick)
->  {
->         unsigned long flags;
->         int err;
->         bool needs_kick = false;
->
->         spin_lock_irqsave(&vq->vq_lock, flags);
-> -       err = virtscsi_add_cmd(vq->vq, cmd, req_size, resp_size);
-> -       if (!err)
-> +       err = __virtscsi_add_cmd(vq->vq, cmd, req_size, resp_size);
-> +       if (!err && kick)
->                 needs_kick = virtqueue_kick_prepare(vq->vq);
->
->         spin_unlock_irqrestore(&vq->vq_lock, flags);
-> @@ -502,6 +517,7 @@ static int virtscsi_queuecommand(struct Scsi_Host *shost,
->         struct virtio_scsi *vscsi = shost_priv(shost);
->         struct virtio_scsi_vq *req_vq = virtscsi_pick_vq_mq(vscsi, sc);
->         struct virtio_scsi_cmd *cmd = scsi_cmd_priv(sc);
-> +       bool kick;
->         unsigned long flags;
->         int req_size;
->         int ret;
-> @@ -531,7 +547,8 @@ static int virtscsi_queuecommand(struct Scsi_Host *shost,
->                 req_size = sizeof(cmd->req.cmd);
->         }
->
-> -       ret = virtscsi_kick_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd));
-> +       kick = (sc->flags & SCMD_LAST) != 0;
-> +       ret = virtscsi_add_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd), kick);
->         if (ret == -EIO) {
->                 cmd->resp.cmd.response = VIRTIO_SCSI_S_BAD_TARGET;
->                 spin_lock_irqsave(&req_vq->vq_lock, flags);
-> @@ -549,8 +566,8 @@ static int virtscsi_tmf(struct virtio_scsi *vscsi, struct virtio_scsi_cmd *cmd)
->         int ret = FAILED;
->
->         cmd->comp = &comp;
-> -       if (virtscsi_kick_cmd(&vscsi->ctrl_vq, cmd,
-> -                             sizeof cmd->req.tmf, sizeof cmd->resp.tmf) < 0)
-> +       if (virtscsi_add_cmd(&vscsi->ctrl_vq, cmd,
-> +                             sizeof cmd->req.tmf, sizeof cmd->resp.tmf, true) < 0)
->                 goto out;
->
->         wait_for_completion(&comp);
-> @@ -664,6 +681,13 @@ static int virtscsi_map_queues(struct Scsi_Host *shost)
->         return blk_mq_virtio_map_queues(qmap, vscsi->vdev, 2);
->  }
->
-> +static void virtscsi_commit_rqs(struct Scsi_Host *shost, u16 hwq)
-> +{
-> +       struct virtio_scsi *vscsi = shost_priv(shost);
-> +
-> +       virtscsi_kick_vq(&vscsi->req_vqs[hwq]);
-> +}
-> +
->  /*
->   * The host guarantees to respond to each command, although I/O
->   * latencies might be higher than on bare metal.  Reset the timer
-> @@ -681,6 +705,7 @@ static struct scsi_host_template virtscsi_host_template = {
->         .this_id = -1,
->         .cmd_size = sizeof(struct virtio_scsi_cmd),
->         .queuecommand = virtscsi_queuecommand,
-> +       .commit_rqs = virtscsi_commit_rqs,
->         .change_queue_depth = virtscsi_change_queue_depth,
->         .eh_abort_handler = virtscsi_abort,
->         .eh_device_reset_handler = virtscsi_device_reset,
-> --
-> 2.21.0
->
+Linus,
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Please pull the latest ras-core-for-linus git tree from:
 
-Thanks,
-Ming Lei
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
+
+   # HEAD: 6e4f929ea8b2097b0052f6674de839a3c9d477e9 x86/mce: Do not check return value of debugfs_create functions
+
+Boris is on vacation so I'm sending the RAS bits this time. The main 
+changes were:
+
+ - Various RAS/CEC improvements and fixes by Borislav Petkov:
+    - error insertion fixes
+    - offlining latency fix
+    - memory leak fix
+    - additional sanity checks
+    - cleanups
+    - debug output improvements
+
+ - More SMCA enhancements by Yazen Ghannam:
+ 
+    - make banks truly per-CPU which they are in the hardware,
+    - don't over-cache certain registers, 
+    - make the number of MCA banks per-CPU variable.
+
+   The long term goal with these changes is to support future 
+   heterogenous SMCA extensions.
+
+ - Misc fixes and improvements.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Borislav Petkov (8):
+      RAS/CEC: Fix pfn insertion
+      RAS/CEC: Check count_threshold unconditionally
+      RAS/CEC: Do not set decay value on error
+      RAS/CEC: Fix potential memory leak
+      RAS/CEC: Sanity-check array on every insertion
+      RAS/CEC: Rename count_threshold to action_threshold
+      RAS/CEC: Dump the different array element sections
+      RAS/CEC: Add copyright
+
+Greg Kroah-Hartman (1):
+      x86/mce: Do not check return value of debugfs_create functions
+
+Tony Luck (1):
+      RAS/CEC: Add CONFIG_RAS_CEC_DEBUG and move CEC debug features there
+
+Yazen Ghannam (5):
+      x86/MCE: Make struct mce_banks[] static
+      x86/MCE: Make mce_banks a per-CPU array
+      x86/MCE/AMD: Don't cache block addresses on SMCA systems
+      x86/MCE: Make the number of MCA banks a per-CPU variable
+      x86/MCE: Determine MCA banks' init state properly
+
+
+ arch/x86/kernel/cpu/mce/amd.c      |  92 +++++++++----------
+ arch/x86/kernel/cpu/mce/core.c     | 177 +++++++++++++++++++++++++------------
+ arch/x86/kernel/cpu/mce/inject.c   |  37 ++------
+ arch/x86/kernel/cpu/mce/internal.h |  12 +--
+ arch/x86/kernel/cpu/mce/severity.c |  14 +--
+ arch/x86/ras/Kconfig               |  10 +++
+ drivers/ras/cec.c                  | 132 ++++++++++++++++-----------
+ 7 files changed, 269 insertions(+), 205 deletions(-)
