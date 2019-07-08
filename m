@@ -2,52 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E458C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D073C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679832173C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B692166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599473;
-	bh=nbg1uAtIg45BUypnjfpcZWL6DWQHO8lCwuS5lg5vDss=;
+	s=default; t=1562599478;
+	bh=qLjg0DWNqTJ7BN/j9P64/y3e03eUz7PUOvgBE+41BOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tKuhNy7Bc9ABB+V5ZF0LXVZZG1eDSoDHdBWM9rRNv7gqrsyC4OErbUZbVFNhKqDY9
-	 7ZQ0JMNLK/wZB/GhphvIkN6DmSfxAhOyzXcT12qpLmxOOL+3s7+9Cpi0vk7v3+Kz4L
-	 IzjZWNOFlQuPOVQccO1UF8XVLsvaT32huvkAskp4=
+	b=Xss+V9Q1e/9IzhlraMdoYL+sJMIbIC93o27XcaVZVF2QVOTgtb9hPJnqh45/QQC76
+	 U0uLKXmBf+IdhtbTZPXmYK33jEPDM+FuEzdN9EsqjKGKFiQ5AiKg0dxTYMfUiZCIsP
+	 WUBCD0jNEiTAyM0TN8/Zr8x3Mtbya5BWgUGPIu2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388368AbfGHPYc (ORCPT
+        id S2388379AbfGHPYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51760 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388357AbfGHPY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:29 -0400
+        id S2388349AbfGHPY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:24:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6EE02173C;
-        Mon,  8 Jul 2019 15:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1156C2175B;
+        Mon,  8 Jul 2019 15:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599468;
-        bh=nbg1uAtIg45BUypnjfpcZWL6DWQHO8lCwuS5lg5vDss=;
+        s=default; t=1562599465;
+        bh=qLjg0DWNqTJ7BN/j9P64/y3e03eUz7PUOvgBE+41BOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eNkG/JCfE6RBsLN+gaG/KDl1vzNlt8EUl7CIh5HKD4FrZBosikvw6mH4YkvS9D1GB
-         b+SuKCUxe0Wn1LQ47mQGYsPawPXHYIVMX3buSwr96QvDg2cKpk6Css63+iDIrm0t9v
-         zqbzkmc4sPi229mTL3DiNsmReQrN21aqkxQQcL/Y=
+        b=f6gn8eTpQH1+r/WoC7kbGcHc18w14eiWY+hBXCmGrPDtkPagF/qJWsKxYg/as8dxe
+         BXuknRP9Hx3De6bMDRaUt/VQFaPUKImjR/1cVZuyxfh6swA6QtHwenYMW+QFr71m0W
+         1j6Kr3q63i1Ubde4VaWMYlNNn60Ry6mGBQ4KR7go=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 08/56] ASoC: max98090: remove 24-bit format support if RJ is 0
-Date:   Mon,  8 Jul 2019 17:13:00 +0200
-Message-Id: <20190708150518.499283297@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 25/56] crypto: cryptd - Fix skcipher instance memory leak
+Date:   Mon,  8 Jul 2019 17:13:17 +0200
+Message-Id: <20190708150521.910421953@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -60,56 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5628c8979642a076f91ee86c3bae5ad251639af0 ]
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-The supported formats are S16_LE and S24_LE now. However, by datasheet
-of max98090, S24_LE is only supported when it is in the right justified
-mode. We should remove 24-bit format if it is not in that mode to avoid
-triggering error.
+commit 1a0fad630e0b7cff38e7691b28b0517cfbb0633f upstream.
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+cryptd_skcipher_free() fails to free the struct skcipher_instance
+allocated in cryptd_create_skcipher(), leading to a memory leak.  This
+is detected by kmemleak on bootup on ARM64 platforms:
+
+ unreferenced object 0xffff80003377b180 (size 1024):
+   comm "cryptomgr_probe", pid 822, jiffies 4294894830 (age 52.760s)
+   backtrace:
+     kmem_cache_alloc_trace+0x270/0x2d0
+     cryptd_create+0x990/0x124c
+     cryptomgr_probe+0x5c/0x1e8
+     kthread+0x258/0x318
+     ret_from_fork+0x10/0x1c
+
+Fixes: 4e0958d19bd8 ("crypto: cryptd - Add support for skcipher")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/codecs/max98090.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ crypto/cryptd.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index cc66ea5cc776..3fe09828745a 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1924,6 +1924,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
- 	return 0;
+--- a/crypto/cryptd.c
++++ b/crypto/cryptd.c
+@@ -585,6 +585,7 @@ static void cryptd_skcipher_free(struct
+ 	struct skcipherd_instance_ctx *ctx = skcipher_instance_ctx(inst);
+ 
+ 	crypto_drop_skcipher(&ctx->spawn);
++	kfree(inst);
  }
  
-+static int max98090_dai_startup(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
-+	unsigned int fmt = max98090->dai_fmt;
-+
-+	/* Remove 24-bit format support if it is not in right justified mode. */
-+	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
-+		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
-+	}
-+	return 0;
-+}
-+
- static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
- 				   struct snd_pcm_hw_params *params,
- 				   struct snd_soc_dai *dai)
-@@ -2331,6 +2346,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
- #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
- 
- static const struct snd_soc_dai_ops max98090_dai_ops = {
-+	.startup = max98090_dai_startup,
- 	.set_sysclk = max98090_dai_set_sysclk,
- 	.set_fmt = max98090_dai_set_fmt,
- 	.set_tdm_slot = max98090_set_tdm_slot,
--- 
-2.20.1
-
+ static int cryptd_create_skcipher(struct crypto_template *tmpl,
 
 
