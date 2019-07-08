@@ -2,162 +2,185 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA68BC48BDB
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 00:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EC4C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 00:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF4E2075C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 00:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B857420693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 00:44:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eS5cq528"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfGHA0K (ORCPT
+        id S1727874AbfGHAob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 20:26:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25370 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727384AbfGHA0K (ORCPT
+        Sun, 7 Jul 2019 20:44:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38315 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbfGHAob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 20:26:10 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x680MUKp049237;
-        Sun, 7 Jul 2019 20:25:58 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tkmsn8hf9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 07 Jul 2019 20:25:58 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x680Pvpo056350;
-        Sun, 7 Jul 2019 20:25:57 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tkmsn8hex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 07 Jul 2019 20:25:57 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x680JCoE022202;
-        Mon, 8 Jul 2019 00:25:56 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2tjk96tuch-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jul 2019 00:25:56 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x680PtFt53150166
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jul 2019 00:25:55 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B112D124052;
-        Mon,  8 Jul 2019 00:25:55 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 839B9124053;
-        Mon,  8 Jul 2019 00:25:55 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Jul 2019 00:25:55 +0000 (GMT)
-Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
-To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Mimi Zohar <zohar@linux.ibm.com>
-References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <510c30d0-34f4-1937-7882-1880eb9241ed@linux.ibm.com>
-Date:   Sun, 7 Jul 2019 20:25:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 7 Jul 2019 20:44:31 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d17so14466731oth.5
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 17:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CsomF3aEkbaPuVGfhBvf4Nm3oaWnH5+QD4/iZjHcgwA=;
+        b=eS5cq5280vcnwuobSOUFvjmRcKOWP1kgjrPmfypy6STfdFWlr66YhOCwYs9ytLuvC2
+         1twr591jR5c5sqZASg6TW2rnAKIjZjAQkflnzHVoEASMGFmdiZy3Q0yrNyxBuJpnqLro
+         YPh1svz0A+U1rFnY99SKAxc3Zex9QQiefOjr7jvKd39Z5NtLgfjQcSuRJjA3KTU1t48r
+         R5+DfrzEOYj7U97QDUjutTr8YmB/qIu6L6NYRpdgfIeQxJWD46s6KowWs6D+fOh60lIk
+         UQPBY9fnB2bnrwvY22woW/RwSFhsYxQ6tBriwIjTqd3dR9xQ/s/8/jky2xJIblMt8MC3
+         DqAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CsomF3aEkbaPuVGfhBvf4Nm3oaWnH5+QD4/iZjHcgwA=;
+        b=tSpUWAO/4o2ayP/BgcPDxK0lsABJXauSNJQI9btw0PmhyP5vT7Mx0lVxCnLAwGWguQ
+         7dqTe7GqS4M4n3IqCEqPrKpoRbaFnK6sjo2wwEsFgQVoEwDxSWCNuj4qc3JOpVpmZyyQ
+         RSaQWLI83DVk5ic4WQmR7daK58hcS1HsjPsuvyPR1Nj5pM2LjjTmFVYIuxBBRgN03ef7
+         2UbLUCwFTLjr1jutmouB56Uj9yzK3F/p7hKp9+3TANo+7pZl87bhQYfNTQ2CYzxCYI/Y
+         dNcpMl/FU3Tv4KSdw3spNbo7EwXYLXmd6Lk2UHcOxeUXQHbDCEXUUxfYVr9jw5wBcRl+
+         MPdw==
+X-Gm-Message-State: APjAAAXjit30Q0iYVnAHIiAP0fswxbUF1P15gMZIbBiCRugdFo5MxT71
+        hz/Z13lNvKsAJJn3Rgf8wFu/pZqVYNvFxALJFVsq3F1GWEE=
+X-Google-Smtp-Source: APXvYqwBW3GMnNwfi4Q4e0SyCgOVh+/Nwg1G1S5Q/UvjCOJrIHoCz5LFLbMJ5XdtAqu2MWpce5AUCwJ8KVjY7a0uapU=
+X-Received: by 2002:a9d:6312:: with SMTP id q18mr11215164otk.45.1562546669932;
+ Sun, 07 Jul 2019 17:44:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-MW
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-07_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907080003
+References: <1561983877-4727-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1561983877-4727-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 8 Jul 2019 08:44:20 +0800
+Message-ID: <CANRm+Czp4cayC0Jk5CcpBJV3zc7ZTqqnTDEvmRu2LqhsNriwEQ@mail.gmail.com>
+Subject: Re: [PATCH] sched/core: Cache timer busy housekeeping target
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/6/19 8:18 PM, Nayna Jain wrote:
-> The nr_allocated_banks and allocated banks are initialized as part of
-> tpm_chip_register. Currently, this is done as part of auto startup
-> function. However, some drivers, like the ibm vtpm driver, do not run
-> auto startup during initialization. This results in uninitialized memory
-> issue and causes a kernel panic during boot.
+Ping Frederic, Peterz, any comments?
+On Mon, 1 Jul 2019 at 20:24, Wanpeng Li <kernellwp@gmail.com> wrote:
 >
-> This patch moves the pcr allocation outside the auto startup function
-> into tpm_chip_register. This ensures that allocated banks are initialized
-> in any case.
+> From: Wanpeng Li <wanpengli@tencent.com>
 >
-> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
-> PCR read")
-> Reported-by: Michal Suchanek <msuchanek@suse.de>
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-> Tested-by: Michal Suchánek <msuchanek@suse.de>
+> Cache the busy housekeeping target for timer instead of researching each time.
+> This patch reduces the total time of get_nohz_timer_target() for busy housekeeping
+> CPU from 2u~3us to less than 1us which can be observed by ftrace.
+>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Frederic Weisbecker <frederic@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 > ---
-> Changelog:
+>  include/linux/hrtimer.h    | 1 +
+>  include/linux/sched/nohz.h | 2 +-
+>  kernel/sched/core.c        | 6 +++++-
+>  kernel/time/hrtimer.c      | 6 ++++--
+>  kernel/time/timer.c        | 7 +++++--
+>  5 files changed, 16 insertions(+), 6 deletions(-)
 >
-> v2:
-> * Includes Jarkko's feedbacks
->    * fixes the function name to tpm_get_pcr_allocation()
->    * adds new function tpm1_get_pcr_allocation()
->    * updates patch summary line
->    * fixes alignment
->    * adds Reported-by: Michal Suchanek <msuchanek@suse.de>
-> * Includes Stefan's feedbacks
->    * Fixes overwriting of return code
->    * Fixes misplacing of tpm_chip_stop()
-> * Adds Reviewed-by, Tested-by
+> diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+> index 2e8957e..0d8b271 100644
+> --- a/include/linux/hrtimer.h
+> +++ b/include/linux/hrtimer.h
+> @@ -198,6 +198,7 @@ enum  hrtimer_base_type {
+>  struct hrtimer_cpu_base {
+>         raw_spinlock_t                  lock;
+>         unsigned int                    cpu;
+> +       unsigned int                    last_target_cpu;
+>         unsigned int                    active_bases;
+>         unsigned int                    clock_was_set_seq;
+>         unsigned int                    hres_active             : 1,
+> diff --git a/include/linux/sched/nohz.h b/include/linux/sched/nohz.h
+> index 1abe91f..0afb094 100644
+> --- a/include/linux/sched/nohz.h
+> +++ b/include/linux/sched/nohz.h
+> @@ -8,7 +8,7 @@
 >
->   drivers/char/tpm/tpm-chip.c | 22 ++++++++++++++++++++++
->   drivers/char/tpm/tpm.h      |  2 ++
->   drivers/char/tpm/tpm1-cmd.c | 36 ++++++++++++++++++++++++------------
->   drivers/char/tpm/tpm2-cmd.c |  6 +-----
->   4 files changed, 49 insertions(+), 17 deletions(-)
+>  #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+>  extern void nohz_balance_enter_idle(int cpu);
+> -extern int get_nohz_timer_target(void);
+> +extern int get_nohz_timer_target(unsigned int cpu);
+>  #else
+>  static inline void nohz_balance_enter_idle(int cpu) { }
+>  #endif
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 7968e0f..f4ba63e 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -549,11 +549,15 @@ void resched_cpu(int cpu)
+>   * selecting an idle CPU will add more delays to the timers than intended
+>   * (as that CPU's timer base may not be uptodate wrt jiffies etc).
+>   */
+> -int get_nohz_timer_target(void)
+> +int get_nohz_timer_target(unsigned int last_target_cpu)
+>  {
+>         int i, cpu = smp_processor_id(), default_cpu = -1;
+>         struct sched_domain *sd;
 >
-> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-> index 8804c9e916fd..6589291df355 100644
-> --- a/drivers/char/tpm/tpm-chip.c
-> +++ b/drivers/char/tpm/tpm-chip.c
-> @@ -550,6 +550,22 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
->   	return hwrng_register(&chip->hwrng);
->   }
->
-> +/*
-> + * tpm_get_pcr_allocation() - initialize the chip allocated banks for PCRs
-> + * @chip: TPM chip to use.
-> + */
-> +static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-> +{
-> +	int rc;
+> +       if (!idle_cpu(last_target_cpu) &&
+> +               housekeeping_cpu(last_target_cpu, HK_FLAG_TIMER))
+> +               return last_target_cpu;
 > +
-> +	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> +		rc = tpm2_get_pcr_allocation(chip);
-
-
-For tpm2 case you need:
-
-if (rc > 0)
-
-     rc = -ENODEV;
-
-Because tpm2_get_pcr_allocation(chip) returns ssize_t with return values 
-from tpm_transmit_cmd > 0 indicating a TPM 2 error code...
-
-
-    Stefan
-
+>         if (housekeeping_cpu(cpu, HK_FLAG_TIMER)) {
+>                 if (!idle_cpu(cpu))
+>                         return cpu;
+> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+> index 41dfff2..0d49bef 100644
+> --- a/kernel/time/hrtimer.c
+> +++ b/kernel/time/hrtimer.c
+> @@ -195,8 +195,10 @@ struct hrtimer_cpu_base *get_target_base(struct hrtimer_cpu_base *base,
+>                                          int pinned)
+>  {
+>  #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+> -       if (static_branch_likely(&timers_migration_enabled) && !pinned)
+> -               return &per_cpu(hrtimer_bases, get_nohz_timer_target());
+> +       if (static_branch_likely(&timers_migration_enabled) && !pinned) {
+> +               base->last_target_cpu = get_nohz_timer_target(base->last_target_cpu);
+> +               return &per_cpu(hrtimer_bases, base->last_target_cpu);
+> +       }
+>  #endif
+>         return base;
+>  }
+> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> index 343c7ba..6ae045a 100644
+> --- a/kernel/time/timer.c
+> +++ b/kernel/time/timer.c
+> @@ -199,6 +199,7 @@ struct timer_base {
+>         unsigned long           clk;
+>         unsigned long           next_expiry;
+>         unsigned int            cpu;
+> +       unsigned int            last_target_cpu;
+>         bool                    is_idle;
+>         bool                    must_forward_clk;
+>         DECLARE_BITMAP(pending_map, WHEEL_SIZE);
+> @@ -865,8 +866,10 @@ get_target_base(struct timer_base *base, unsigned tflags)
+>  {
+>  #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+>         if (static_branch_likely(&timers_migration_enabled) &&
+> -           !(tflags & TIMER_PINNED))
+> -               return get_timer_cpu_base(tflags, get_nohz_timer_target());
+> +           !(tflags & TIMER_PINNED)) {
+> +               base->last_target_cpu = get_nohz_timer_target(base->last_target_cpu);
+> +               return get_timer_cpu_base(tflags, base->last_target_cpu);
+> +       }
+>  #endif
+>         return get_timer_this_cpu_base(tflags);
+>  }
+> --
+> 2.7.4
+>
