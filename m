@@ -2,67 +2,116 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30938C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A611C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13748216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B3020844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:12:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLG9PY/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732185AbfGHPLr (ORCPT
+        id S1730106AbfGHPMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:11:47 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58570 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732162AbfGHPLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:11:42 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 08:11:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
-   d="scan'208";a="165482391"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Jul 2019 08:11:40 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 3F381301BB6; Mon,  8 Jul 2019 08:11:41 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 08:11:41 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Wei Wang <wei.w.wang@intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, pbonzini@redhat.com, kan.liang@intel.com,
-        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
-        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
-Subject: Re: [PATCH v7 10/12] KVM/x86/lbr: lazy save the guest lbr stack
-Message-ID: <20190708151141.GL31027@tassilo.jf.intel.com>
-References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
- <1562548999-37095-11-git-send-email-wei.w.wang@intel.com>
- <20190708145326.GO3402@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708145326.GO3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Mon, 8 Jul 2019 11:12:32 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37674 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfGHPMb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:12:31 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b3so5127645plr.4;
+        Mon, 08 Jul 2019 08:12:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0ZlZQON9aXZI6W+/rm8yZm1Su8lHYcjbQIV3vB7p7ls=;
+        b=WLG9PY/b56egrw6ro2o0M9u014Bd6pXU/gKDM9DWFKxH39OIF3810maRQKFlW5uRIq
+         pN+4h9otmfgFm2UMQ05iVf/Mz/oGsvnbZgMWTSNQujR8HC+qUf73scnCmGiRJH+v0k08
+         smv9KF8upZ4PAvBORJTFLeotH0hcXF9rwCuDgCTGs1M8R9cApI/vNYc7JLSeqATcqdfI
+         h9abqenJJqCvOVVx0LKtp2nIG/lIyiqsEPUtvRfgGJ5jymTuV3QTGxV7KiDXtnfmeQCk
+         IVOu6WplVBtQMIhTvR1thGTS8x4ieB5i5f/al64O31QA5Ml7yJ3AQVYX0yGYLoBoqLwD
+         PgJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0ZlZQON9aXZI6W+/rm8yZm1Su8lHYcjbQIV3vB7p7ls=;
+        b=uYOct0+wvqNwwBBTyNFFdnU/uVaetnVjvHCWcw+bD/hKA1RXhrTlIJbUqFOXnbKOBm
+         nTjoc+1minjXfYby7CAG4xZSJMQZEQTY+H/wCuhOk90B2PJj7RFARc6NnETL4y8xD+W8
+         56bV/arjwOG7WCGEGZqhOnAQ87AQNpNeDXEwrVoaKdGO+KAFLTf0ZON/USSruXh4OW53
+         6urZ0cChSp6I/BwFrchFaE6G9TLdbA8mJiIBC7xdad4fjnCl4UtuLtF5/tqLyPApX0Sn
+         NhAqtEePs20vrrpu8tBDnU2swl6vtQIJ/IgwHKPKOOu72f15lps8KxSZ5EYNA0T8ldL0
+         8lCg==
+X-Gm-Message-State: APjAAAXUswhjy8T6jwVVp/fNzGQnNRr0NIHcrH0PLZgm/ujCE2Newx5P
+        Kl+tXv5j5Y3vRxTWVAVhuzQ=
+X-Google-Smtp-Source: APXvYqzGcOLSRTDXNOYk/ZPO4pPqDF4I8CW3Kxig9leWs34URU+rJA8ZvqMFQ9pnLLDKwfcSi1JXAg==
+X-Received: by 2002:a17:902:b20d:: with SMTP id t13mr24385288plr.229.1562598750859;
+        Mon, 08 Jul 2019 08:12:30 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id q198sm23082354pfq.155.2019.07.08.08.12.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 08:12:30 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2] drm/msm/mdp5: Find correct node for creating gem address space
+Date:   Mon,  8 Jul 2019 08:12:24 -0700
+Message-Id: <20190708151224.22555-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I don't understand a word of that.
-> 
-> Who cares if the LBR MSRs are touched; the guest expects up-to-date
-> values when it does reads them.
+Creating the msm gem address space requires a reference to the dev where
+the iommu is located.  The driver currently assumes this is the same as
+the platform device, which breaks when the iommu is outside of the
+platform device (ie in the parent).  Default to using the platform device,
+but check to see if that has an iommu reference, and if not, use the parent
+device instead.  This should handle all the various iommu designs for
+mdp5 supported systems.
 
-This is for only when the LBRs are disabled in the guest.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
 
-It doesn't make sense to constantly save/restore disabled LBRs, which
-would be a large overhead for guests that don't use LBRs. 
+v2: It turns out there isn't a universal way to get the iommu device, so 
+check to see if its in the current node or parent
 
-When the LBRs are enabled they always need to be saved/restored as you
-say.
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
--Andi
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+index 4a60f5fca6b0..02dc7d426cb0 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+@@ -663,6 +663,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+ 	struct msm_kms *kms;
+ 	struct msm_gem_address_space *aspace;
+ 	int irq, i, ret;
++	struct device *iommu_dev;
+ 
+ 	/* priv->kms would have been populated by the MDP5 driver */
+ 	kms = priv->kms;
+@@ -702,7 +703,11 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+ 	mdelay(16);
+ 
+ 	if (config->platform.iommu) {
+-		aspace = msm_gem_address_space_create(&pdev->dev,
++		iommu_dev = &pdev->dev;
++		if (!iommu_dev->iommu_fwspec)
++			iommu_dev = iommu_dev->parent;
++
++		aspace = msm_gem_address_space_create(iommu_dev,
+ 				config->platform.iommu, "mdp5");
+ 		if (IS_ERR(aspace)) {
+ 			ret = PTR_ERR(aspace);
+-- 
+2.17.1
+
