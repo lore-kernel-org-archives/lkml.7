@@ -2,72 +2,105 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E76C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CB5C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED51C20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C75320665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfGHHJI (ORCPT
+        id S1729267AbfGHHKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:09:08 -0400
-Received: from mga14.intel.com ([192.55.52.115]:24913 "EHLO mga14.intel.com"
+        Mon, 8 Jul 2019 03:10:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:40042 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbfGHHJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:09:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 00:09:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,465,1557212400"; 
-   d="scan'208";a="248729596"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2019 00:09:00 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hkNlj-0007Il-Oj; Mon, 08 Jul 2019 15:08:59 +0800
-Date:   Mon, 8 Jul 2019 15:08:43 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Tony Xie <tony.xie@rock-chips.com>
-Cc:     kbuild-all@01.org, Lee Jones <lee.jones@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH linux-next] mfd: rk808: rk8xx_pm_ops can be static
-Message-ID: <20190708070843.GA23605@lkp-kbuild12>
-References: <201907081550.e4JO1ctY%lkp@intel.com>
+        id S1726684AbfGHHKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 03:10:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 876322B;
+        Mon,  8 Jul 2019 00:10:48 -0700 (PDT)
+Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0079D3F246;
+        Mon,  8 Jul 2019 00:12:42 -0700 (PDT)
+Subject: Re: [PATCH v2 1/5] perf: arm64: Add test to check userspace access to
+ hardware counters.
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, mark.rutland@arm.com
+References: <20190705085541.9356-1-raphael.gault@arm.com>
+ <20190705085541.9356-2-raphael.gault@arm.com>
+ <20190705145436.GA29396@kernel.org>
+From:   Raphael Gault <raphael.gault@arm.com>
+Message-ID: <7fcf5a01-15f3-5a97-bc1b-74d82f31981f@arm.com>
+Date:   Mon, 8 Jul 2019 08:10:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201907081550.e4JO1ctY%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190705145436.GA29396@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Arnaldo,
 
-Fixes: 586c1b4125b3 ("mfd: rk808: Add RK817 and RK809 support")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- rk808.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 7/5/19 3:54 PM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jul 05, 2019 at 09:55:37AM +0100, Raphael Gault escreveu:
+>> This test relies on the fact that the PMU registers are accessible
+>> from userspace. It then uses the perf_event_mmap_page to retrieve
+>> the counter index and access the underlying register.
+>>
+>> This test uses sched_setaffinity(2) in order to run on all CPU and thus
+>> check the behaviour of the PMU of all cpus in a big.LITTLE environment.
+>>
+>> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+>> ---
+>>   tools/perf/arch/arm64/include/arch-tests.h |   6 +
+>>   tools/perf/arch/arm64/tests/Build          |   1 +
+>>   tools/perf/arch/arm64/tests/arch-tests.c   |   4 +
+>>   tools/perf/arch/arm64/tests/user-events.c  | 255 +++++++++++++++++++++
+>>   4 files changed, 266 insertions(+)
+>>   create mode 100644 tools/perf/arch/arm64/tests/user-events.c
+>>
+>> diff --git a/tools/perf/arch/arm64/include/arch-tests.h b/tools/perf/arch/arm64/include/arch-tests.h
+>> index 90ec4c8cb880..a9b17ae0560b 100644
+>> --- a/tools/perf/arch/arm64/include/arch-tests.h
+>> +++ b/tools/perf/arch/arm64/include/arch-tests.h
+>> @@ -2,11 +2,17 @@
+>>   #ifndef ARCH_TESTS_H
+>>   #define ARCH_TESTS_H
+>>   
+>> +#define __maybe_unused	__attribute__((unused))
+> 
+> 
+> What is wrong with using:
+> 
+> #include <linux/compiler.h>
+> 
+> ?
+> 
+> [acme@quaco perf]$ find tools/perf/ -name "*.[ch]" | xargs grep __maybe_unused | wc -l
+> 1115
+> [acme@quaco perf]$ grep __maybe_unused tools/include/linux/compiler.h
+> #ifndef __maybe_unused
+> # define __maybe_unused		__attribute__((unused))
+> [acme@quaco perf]$
+> 
+> Also please don't break strings in multiple lines just to comply with
+> the 80 column limit. That is ok when you have multiple lines ending with
+> a newline, but otherwise just makes it look ugly.
+> 
 
-diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-index 6ee1c46..52666a9 100644
---- a/drivers/mfd/rk808.c
-+++ b/drivers/mfd/rk808.c
-@@ -751,7 +751,7 @@ static int rk8xx_resume(struct device *dev)
- 
- 	return ret;
- }
--SIMPLE_DEV_PM_OPS(rk8xx_pm_ops, rk8xx_suspend, rk8xx_resume);
-+static SIMPLE_DEV_PM_OPS(rk8xx_pm_ops, rk8xx_suspend, rk8xx_resume);
- 
- static struct i2c_driver rk808_i2c_driver = {
- 	.driver = {
+You're right, I shall correct those points.
+
+Thanks,
+
+-- 
+Raphael Gault
