@@ -2,112 +2,137 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE80C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A461C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5922084A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB8120665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:25:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TvcxpHNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfGHIXI (ORCPT
+        id S1727671AbfGHIZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:23:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50058 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728673AbfGHIXG (ORCPT
+        Mon, 8 Jul 2019 04:25:15 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40828 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfGHIZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:23:06 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x688MT0J143001
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 04:23:05 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tm02m4gf6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:23:05 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Mon, 8 Jul 2019 09:23:03 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Jul 2019 09:23:00 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x688MwZU39780634
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jul 2019 08:22:58 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B595D4C04A;
-        Mon,  8 Jul 2019 08:22:58 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79DB34C044;
-        Mon,  8 Jul 2019 08:22:58 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.112])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  8 Jul 2019 08:22:58 +0000 (GMT)
-Date:   Mon, 8 Jul 2019 10:22:57 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] s390: ap: constify parameter of match_apqn
-References: <your-ad-here.call-01562573328-ext-8139@work.hours>
+        Mon, 8 Jul 2019 04:25:14 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a93so7865848pla.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HBSOpGeilh1d+k1ITUctDAa0jlGTfzm/XYHfd6NAVZs=;
+        b=TvcxpHNWz4hgGUB+LNuHI5YWHzDVJt/1XgqQ6DFUhvMzKA3okKMpxbvr4ipDQOrT6v
+         cwArEjpPjqqcYw8uYvas1+s7vRj7ogC++JHqyLHMMj42y9wJKuSrE99NAaIapSSpHd0Z
+         bX3Qd8NBsMFZOfz4Dxqr3ghsVHfjX5JWFsctmRGbOuQQkxw+te0XbnZkUMzFGfHV+xDi
+         X1W1bPjecr55Nnewqc2U778mZbu4vyBHm/2woeQ+8Lyvq6WLSKzDktV/ZgZTtD+d1W8R
+         dCeTcHk0vXB/0ru0tum/y/vkPNnHtMUbAsKqibaCZaPqNAKKOV3l2wR1Y1vl+UFCpR2A
+         LFJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HBSOpGeilh1d+k1ITUctDAa0jlGTfzm/XYHfd6NAVZs=;
+        b=th31eM/SCyw6dEkMgPo/0d21GEQfx48c8Nr+BY7Y22Zws7e2cLcYJmYXCV5CM5EbjU
+         OKUHPAFgvPbfo6KmjM3z16x7h/ClhCU4+cD1Irj87k6YJuB+izTHsICBRVuxUvDzQCQB
+         Qr4vmy6gll4x+6lraySZ7wPySIbvAUsTO+hX+7+YtO5vkUbaUaep2sktdzo0Vvt63ASv
+         xDZTP7rwxpwZI9NC0sPLzIcH7OrfZZq3RVf8A0nc41oH9DWpxPRyAVYcdjf9TmJij+CK
+         TCQPe5Wbh/1nNnPbziBbZxq9+G9DcXluNjjIsGtKwPPmDjgslltyArI+FMIC4fl5BRNy
+         mrKg==
+X-Gm-Message-State: APjAAAVxosV+meH+9cDfSpl+dsf0n4qcoevxFmyMd71xFXBEdGaCL5rw
+        sQnwi9TUrVKgzETYoUprhjmSag==
+X-Google-Smtp-Source: APXvYqwCjNEbxbwIuNxeO93iHJHDw+JddjwVlDj89IzeQ0Xpdb6vLLbspbd5Q1ZKCMscFgvOECoAXw==
+X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr21412249plb.164.1562574313802;
+        Mon, 08 Jul 2019 01:25:13 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id k22sm22327205pfg.77.2019.07.08.01.25.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 01:25:12 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 13:55:11 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
+Message-ID: <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
+References: <20190704061403.8249-1-Anson.Huang@nxp.com>
+ <20190704061403.8249-2-Anson.Huang@nxp.com>
+ <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <your-ad-here.call-01562573328-ext-8139@work.hours>
-X-Patchwork-Bot: notify
-X-TM-AS-GCONF: 00
-x-cbid: 19070808-0020-0000-0000-000003513853
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070808-0021-0000-0000-000021A4E115
-Message-Id: <patch.git-14fdf13eac05.your-ad-here.call-01562573328-ext-8139@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907080110
+In-Reply-To: <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+On 04-07-19, 07:49, Leonard Crestez wrote:
+> On 7/4/2019 9:23 AM, Anson.Huang@nxp.com wrote:
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> > 
+> > Assign highest OPP as suspend OPP to reduce suspend/resume
+> > latency on i.MX8MM.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > index b11fc5e..3a62407 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > @@ -136,6 +136,7 @@
+> >   			opp-microvolt = <1000000>;
+> >   			opp-supported-hw = <0x8>, <0x3>;
+> >   			clock-latency-ns = <150000>;
+> > +			opp-suspend;
+> >   		};
+> >   	};
+> 
+> What if the highest OPP is unavailable due to speed grading?
 
-commit 92ce7e83b4e5 ("driver_find_device: Unify the match function with
-class_find_device()") changed the prototype of driver_find_device to
-use a const void pointer.
+What does this exactly mean ? How is the OPP made unavailable in your
+case ?
 
-Change match_apqn accordingly.
+What will dev_pm_opp_get_suspend_opp_freq() return in this case ?
 
-Fixes: ec89b55e3bce ("s390: ap: implement PAPQ AQIC interception in kernel")
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Ideally we 
+> should find a way to suspend at the highest *supported* OPP.
+> 
+> Maybe the opp-suspend marking could be assigned from imx-cpufreq-dt 
+> driver code?
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 2c9fb1423a39..7e85ba7c6ef0 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -26,7 +26,7 @@
- 
- static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
- 
--static int match_apqn(struct device *dev, void *data)
-+static int match_apqn(struct device *dev, const void *data)
- {
- 	struct vfio_ap_queue *q = dev_get_drvdata(dev);
- 
+Sorry for jumping in late, the latest patch from Anson drew my
+attention to this topic :)
+
 -- 
-2.21.0
-
+viresh
