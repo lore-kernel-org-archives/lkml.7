@@ -2,110 +2,123 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA930C606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C928C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BBA216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4D8216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562601016;
-	bh=qHMiyzD3NSictxhW3ptpV7ID5WhsyxLiRKcaXoJTaTk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nbUDIMhMP9MzO9jnF57fGnsEZHL2R5zW2PGvMnjqnG6px4sR51yHI/fLKExtGBv05
-	 kkPKCZURL7DlKFLKGP2278o3inMkta/W3jBuRAhGLU23ggXlOqTpB/Uru2xKjdD+Fq
-	 4Tt/a9VW0hsM/m8cSQrQfAfu8ZivtJ+scGbJdnnQ=
+	s=default; t=1562601220;
+	bh=VvyiDwXEdgFH6Y2FBTkFjaSans0W0KzuUuKrug84y58=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=lhfrfMgJEC0FCKCDUWPZA4jLmrAQvfXGiVQwKz3YdedkrBcsqNE/KjIGy8hHGSZkY
+	 Ijah4EZAB4H26/LghZM6Q5/WyQ3WPlo207Xk1I1bypOhDkScivMVO8h7yP2OyJSqqA
+	 r2GCO3nw5a3IpH295m6Pr/Zv4Q3KWPRjG8J593Vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbfGHPPW (ORCPT
+        id S2388531AbfGHPxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37750 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:53:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732307AbfGHPPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:15:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1731329AbfGHPxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:53:38 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93FAC216F4;
-        Mon,  8 Jul 2019 15:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE924216F4;
+        Mon,  8 Jul 2019 15:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598918;
-        bh=qHMiyzD3NSictxhW3ptpV7ID5WhsyxLiRKcaXoJTaTk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Bi+LY6JycLqrKQXQuzT5VQvnuVABXCdH6EXPxro9h1rEOrg9MukEyv45pMxudytf
-         wEu32z7A5UoxdGLOpUW3ZAlIfvVsVxNM/mO2u1xoIC09V3qMYz2i4MzkRDaqLYGNr+
-         OCDUjWQMXa/apZSL1BslpsBbv0J3YnEq2xxdlQSI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 17/73] s390/qeth: fix VLAN attribute in bridge_hostnotify udev event
-Date:   Mon,  8 Jul 2019 17:12:27 +0200
-Message-Id: <20190708150520.387956214@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
-References: <20190708150513.136580595@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1562601217;
+        bh=VvyiDwXEdgFH6Y2FBTkFjaSans0W0KzuUuKrug84y58=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Mlh6mIb2akdrOv0AfqfJolS9MsYUylanOcc85zuIB0hq7IzRqzaoQ/rQudsHKDlss
+         uCZD00SWjL5j+qehnDClmPsgaH1qpjI4CbciBoIAg3zUNmfIW+N0GGvPfJuj1wn+Bm
+         58bQ+y0xzZ4cN7OldQhFwkkjNUbRcadS41x+TBbY=
+Date:   Mon, 8 Jul 2019 08:53:33 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [GIT PULL] fscrypt updates for v5.3
+Message-ID: <20190708155333.GA722@sol.localdomain>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 335726195e460cb6b3f795b695bfd31f0ea70ef0 ]
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
-Enabling sysfs attribute bridge_hostnotify triggers a series of udev events
-for the MAC addresses of all currently connected peers. In case no VLAN is
-set for a peer, the device reports the corresponding MAC addresses with
-VLAN ID 4096. This currently results in attribute VLAN=4096 for all
-non-VLAN interfaces in the initial series of events after host-notify is
-enabled.
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
 
-Instead, no VLAN attribute should be reported in the udev event for
-non-VLAN interfaces.
+are available in the Git repository at:
 
-Only the initial events face this issue. For dynamic changes that are
-reported later, the device uses a validity flag.
+  git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt-for-linus
 
-This also changes the code so that it now sets the VLAN attribute for
-MAC addresses with VID 0. On Linux, no qeth interface will ever be
-registered with VID 0: Linux kernel registers VID 0 on all network
-interfaces initially, but qeth will drop .ndo_vlan_rx_add_vid for VID 0.
-Peers with other OSs could register MACs with VID 0.
+for you to fetch changes up to 0564336329f0b03a78221ddf51e52af3665e5720:
 
-Fixes: 9f48b9db9a22 ("qeth: bridgeport support - address notifications")
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/net/qeth_l2_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  fscrypt: document testing with xfstests (2019-06-27 10:29:46 -0700)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 34d3b7aff513..22045e7d78ac 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -2112,7 +2112,7 @@ static void qeth_bridgeport_an_set_cb(void *priv,
- 
- 	l2entry = (struct qdio_brinfo_entry_l2 *)entry;
- 	code = IPA_ADDR_CHANGE_CODE_MACADDR;
--	if (l2entry->addr_lnid.lnid)
-+	if (l2entry->addr_lnid.lnid < VLAN_N_VID)
- 		code |= IPA_ADDR_CHANGE_CODE_VLANID;
- 	qeth_bridge_emit_host_event(card, anev_reg_unreg, code,
- 		(struct net_if_token *)&l2entry->nit,
--- 
-2.20.1
+----------------------------------------------------------------
+fscrypt updates for v5.3
 
+- Preparations for supporting encryption on ext4 filesystems where the
+  filesystem block size is smaller than PAGE_SIZE.
 
+- Don't allow setting encryption policies on dead directories.
 
+- Various cleanups.
+
+----------------------------------------------------------------
+Chandan Rajendra (3):
+      ext4: clear BH_Uptodate flag on decryption error
+      ext4: decrypt only the needed blocks in ext4_block_write_begin()
+      ext4: decrypt only the needed block in __ext4_block_zero_page_range()
+
+Eric Biggers (14):
+      fscrypt: simplify bounce page handling
+      fscrypt: remove the "write" part of struct fscrypt_ctx
+      fscrypt: rename fscrypt_do_page_crypto() to fscrypt_crypt_block()
+      fscrypt: clean up some BUG_ON()s in block encryption/decryption
+      fscrypt: introduce fscrypt_encrypt_block_inplace()
+      fscrypt: support encrypting multiple filesystem blocks per page
+      fscrypt: handle blocksize < PAGE_SIZE in fscrypt_zeroout_range()
+      fscrypt: introduce fscrypt_decrypt_block_inplace()
+      fscrypt: support decrypting multiple filesystem blocks per page
+      fscrypt: decrypt only the needed blocks in __fscrypt_decrypt_bio()
+      ext4: encrypt only up to last block in ext4_bio_write_page()
+      fscrypt: remove unnecessary includes of ratelimit.h
+      fscrypt: remove selection of CONFIG_CRYPTO_SHA256
+      fscrypt: document testing with xfstests
+
+Hongjie Fang (1):
+      fscrypt: don't set policy for a dead directory
+
+ Documentation/filesystems/fscrypt.rst |  43 ++++-
+ fs/crypto/Kconfig                     |   1 -
+ fs/crypto/bio.c                       |  73 +++------
+ fs/crypto/crypto.c                    | 299 +++++++++++++++++++---------------
+ fs/crypto/fname.c                     |   1 -
+ fs/crypto/fscrypt_private.h           |  15 +-
+ fs/crypto/hooks.c                     |   1 -
+ fs/crypto/keyinfo.c                   |   1 -
+ fs/crypto/policy.c                    |   2 +
+ fs/ext4/inode.c                       |  37 +++--
+ fs/ext4/page-io.c                     |  44 +++--
+ fs/f2fs/data.c                        |  17 +-
+ fs/ubifs/crypto.c                     |  19 ++-
+ include/linux/fscrypt.h               |  96 +++++++----
+ 14 files changed, 363 insertions(+), 286 deletions(-)
