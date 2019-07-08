@@ -2,101 +2,95 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C85C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDF8C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D368C21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2964B21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562599780;
+	bh=OYcuxhqUVb8Tjwl2xKM6ssuEmlmfYxwlb2hiW3ErcAM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1rE4KUDnItSh+gGNEkejA8L494ToCxysz4RU7GAQcdG4yd1c6L7I6RPcpvad79NZM
+	 9HV2toXajwN2UnuDG97iqQGW8ka1ZEYhKai5ajUYgrjhQD7UukUSHvFX3++P6W0EzZ
+	 IdYVn9jLZYu2d2hB+yU3QvrgWoMKpY6c8l2th7c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389499AbfGHP3b (ORCPT
+        id S2389522AbfGHP3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:29:31 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:37168 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389481AbfGHP33 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:29 -0400
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hkVa3-00057b-E6; Mon, 08 Jul 2019 16:29:27 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hkVa2-00036G-T0; Mon, 08 Jul 2019 16:29:26 +0100
-Message-ID: <85820ecbcc368f992eb061481c388bb2ebb8ad65.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 000/129] 3.16.70-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Mon, 08 Jul 2019 16:29:22 +0100
-In-Reply-To: <20190708130511.GA4626@luke-XPS-13>
-References: <lsq.1562518456.876074874@decadent.org.uk>
-         <20190708130511.GA4626@luke-XPS-13>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-UBYcyYUNPEIlvLKJ/Id1"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 8 Jul 2019 11:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389504AbfGHP3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:29:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582ED21707;
+        Mon,  8 Jul 2019 15:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599773;
+        bh=OYcuxhqUVb8Tjwl2xKM6ssuEmlmfYxwlb2hiW3ErcAM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ias2ZMSVkSqTxXmLscD81+aEbS4vTXH2p5wGTAr7i8owCwxQnf79bnDi64C1IbCwH
+         HquC8810b6n/SEB0LncTsHsjUyWbrYN7/M9tr6WHkqDq1Wa2cmluGJ1dRmDW6PUZ+P
+         ey3eSMuUfZEoytVkybhwrPLa3DPpONQ2Dmq8soWI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 73/90] net: hns: Fixes the missing put_device in positive leg for roce reset
+Date:   Mon,  8 Jul 2019 17:13:40 +0200
+Message-Id: <20190708150526.015161864@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
+References: <20190708150521.829733162@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 4d96e13ee9cd1f7f801e8c7f4b12f09d1da4a5d8 ]
 
---=-UBYcyYUNPEIlvLKJ/Id1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This patch fixes the missing device reference release-after-use in
+the positive leg of the roce reset API of the HNS DSAF.
 
-On Mon, 2019-07-08 at 06:05 -0700, Luke Nowakowski-Krijger wrote:
-> Hello,=20
->=20
-> I got 1 error when applying this patch series to the latest linux-3.16.y
-> stable branch
->=20
-> fs/fuse/file.c:218:3: error: implicit declaration of function =E2=80=98st=
-ream_open=E2=80=99
+Fixes: c969c6e7ab8c ("net: hns: Fix object reference leaks in hns_dsaf_roce_reset()")
+Reported-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It is added by the previous patch and declared in <linux/fs.h>.=20
-fs/fuse/file.c always includes that (via fs/fuse/fuse_i.h), so I don't
-see how this error can happen.
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+index fdff5526d2e8..f5ff07cb2b72 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+@@ -3149,6 +3149,9 @@ int hns_dsaf_roce_reset(struct fwnode_handle *dsaf_fwnode, bool dereset)
+ 		dsaf_set_bit(credit, DSAF_SBM_ROCEE_CFG_CRD_EN_B, 1);
+ 		dsaf_write_dev(dsaf_dev, DSAF_SBM_ROCEE_CFG_REG_REG, credit);
+ 	}
++
++	put_device(&pdev->dev);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(hns_dsaf_roce_reset);
+-- 
+2.20.1
 
-Ben.
-
---=20
-Ben Hutchings
-Time is nature's way of making sure that
-everything doesn't happen at once.
 
 
-
---=-UBYcyYUNPEIlvLKJ/Id1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl0jYVIACgkQ57/I7JWG
-EQknpBAAvk1RxrLlsgscIZSmkbexOcj+NwhyieFM9Mc8zhCaEnj7OBTU+i6oABXO
-weQgt59Nm7byVZqHPYt9B1F4blgt9oj6dqSQWUDtOYECjp9MEFPA1jNYBMwomsEE
-/DSH2wC1fN1qvfTBATR9n8UilqlM4mzIMUQ3taiCmp8sUp1VRem09qCKfP5kNkzb
-HYhWLbJPkyUD1ii650Aa5K3M/+u6HVUpDEZ3UAXlkPJi19YRrL9NcmQNEceUsK1j
-GH/JrsrEgQqOshx5a9bzH69BNpradteS0eBV4oGhc82mywXvrsPdBxlrM+O5LQa2
-o4BltIEd3z25Lh+TrZm9OUtXk319s4h/FHyanHUl31V1e7zVxEes2DlDnRR8PPMI
-J2xJDBMOiBZOswtie6cF3w+Oa5PZvvYMY/9VlQ6IX2b451Jf+UCl9M6ta8NahowR
-jo1PAr5oGwzrogpEeZLSGDGFpZDsznUUUsFbRJoSJOaHC+06pxnSgHSPmmUc8eZM
-mioe22HfoRHJQ1LN06EkdbwvHS6Nogjpt0a15TGPrU5CIgkyXtOsoELFA42o+Iip
-89O0HahTYZAztYv74GBOrG60o3qd4KqxlHFknfD13qB2rG6/1zLNZg2DWHYhEwqM
-S7cZFBL23eu3o/EnFHQDKqL/2UHNS1p4AYPv8Tblz/MQVdFDvwg=
-=hRS3
------END PGP SIGNATURE-----
-
---=-UBYcyYUNPEIlvLKJ/Id1--
