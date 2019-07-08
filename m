@@ -2,53 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D4BC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA01C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411C821537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A712166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599106;
-	bh=+erWMCoHTiSsklg2eI6FKFJT38mbys5O4ZaxKE9Ogkc=;
+	s=default; t=1562599109;
+	bh=NBp3141aUWRgutwla6lWbITEXfVZ+XUjm3uAkRmQhoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPm2CvuvQHxBt4uHXIoGVcVRFXCyHbxGCxv4PatqY3vKU+vDRvA38ArOyJhz2yHXC
-	 MyW+T4hwv9NM3ke3TENU3Uvl2eGyEQQ2UqpsOj9E5hpLcQ579G3h5wdR5uVsS4JfLC
-	 Fo1GA0neZfTbK142Slteruqxl8h1Ji/L0iOQbdw0=
+	b=ugS7fzWW7XT4jKZOcZMYnfJo4Odh0i60WrNIazM//vJ1rNOcWR+6AM5qnpZ3Jb6ae
+	 4WJ15FKle342CZnOBtTL+aBLgc8FVDIWF1PT0zXM0TUbs0piPEvfDG5Al2oMuKQPrp
+	 MRdkT9H3eKo6pMND8r0lRHTfFuQLyJEL17q/bZ3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733024AbfGHPSY (ORCPT
+        id S1733038AbfGHPS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42116 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733013AbfGHPSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:18:21 -0400
+        id S1733018AbfGHPSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:18:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 220812171F;
-        Mon,  8 Jul 2019 15:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C120F216E3;
+        Mon,  8 Jul 2019 15:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599100;
-        bh=+erWMCoHTiSsklg2eI6FKFJT38mbys5O4ZaxKE9Ogkc=;
+        s=default; t=1562599103;
+        bh=NBp3141aUWRgutwla6lWbITEXfVZ+XUjm3uAkRmQhoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCmMan01dj6MvjpE1U0aYQSzOxExGa8v/EF5mdK3u7wbbeJ3cFgPpzc6fvWi5q78k
-         9Lxuy2GheRCO4JVgfjumejj1INQbfIC4U3VHTGesMkqrMwSsNegihh8tjUb6aoi0kc
-         YOGk8GMbjnA0EkcpBEYkTrZFX2BEPFUxtlRb0oJc=
+        b=Y2Yw1ErroxgspGLPsRFkLr/hc4gcz1TB0DSSzItNcirTl1xpa9WxgY1R8LZ5r1WXc
+         eT8C5JWqxiyj2W9mDdedXLBoOeV+gLDmrcWlK5uSlOfhWhL4dZbZjDKkbog2fglhR1
+         e0eZXe7nrGTbqTHEWVW6+GUYXxtf8V+1MgUjYBDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Adeodato=20Sim=C3=B3?= <dato@net.com.org.es>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 35/73] net/9p: include trans_common.h to fix missing prototype warning.
-Date:   Mon,  8 Jul 2019 17:12:45 +0200
-Message-Id: <20190708150523.187158218@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 4.4 26/73] SMB3: retry on STATUS_INSUFFICIENT_RESOURCES instead of failing write
+Date:   Mon,  8 Jul 2019 17:12:36 +0200
+Message-Id: <20190708150522.379448483@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -61,32 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 52ad259eaac0454c1ac7123e7148cf8d6e6f5301 ]
+From: Steve French <stfrench@microsoft.com>
 
-This silences -Wmissing-prototypes when defining p9_release_pages.
+commit 8d526d62db907e786fd88948c75d1833d82bd80e upstream.
 
-Link: http://lkml.kernel.org/r/b1c4df8f21689b10d451c28fe38e860722d20e71.1542089696.git.dato@net.com.org.es
-Signed-off-by: Adeodato Simó <dato@net.com.org.es>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Some servers such as Windows 10 will return STATUS_INSUFFICIENT_RESOURCES
+as the number of simultaneous SMB3 requests grows (even though the client
+has sufficient credits).  Return EAGAIN on STATUS_INSUFFICIENT_RESOURCES
+so that we can retry writes which fail with this status code.
+
+This (for example) fixes large file copies to Windows 10 on fast networks.
+
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/9p/trans_common.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/cifs/smb2maperror.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/9p/trans_common.c b/net/9p/trans_common.c
-index 38aa6345bdfa..9c0c894b56f8 100644
---- a/net/9p/trans_common.c
-+++ b/net/9p/trans_common.c
-@@ -14,6 +14,7 @@
- 
- #include <linux/mm.h>
- #include <linux/module.h>
-+#include "trans_common.h"
- 
- /**
-  *  p9_release_req_pages - Release pages after the transaction.
--- 
-2.20.1
-
+--- a/fs/cifs/smb2maperror.c
++++ b/fs/cifs/smb2maperror.c
+@@ -455,7 +455,7 @@ static const struct status_to_posix_erro
+ 	{STATUS_FILE_INVALID, -EIO, "STATUS_FILE_INVALID"},
+ 	{STATUS_ALLOTTED_SPACE_EXCEEDED, -EIO,
+ 	"STATUS_ALLOTTED_SPACE_EXCEEDED"},
+-	{STATUS_INSUFFICIENT_RESOURCES, -EREMOTEIO,
++	{STATUS_INSUFFICIENT_RESOURCES, -EAGAIN,
+ 				"STATUS_INSUFFICIENT_RESOURCES"},
+ 	{STATUS_DFS_EXIT_PATH_FOUND, -EIO, "STATUS_DFS_EXIT_PATH_FOUND"},
+ 	{STATUS_DEVICE_DATA_ERROR, -EIO, "STATUS_DEVICE_DATA_ERROR"},
 
 
