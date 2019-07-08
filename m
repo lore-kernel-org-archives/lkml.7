@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8EEC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203CCC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155F921738
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D17216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599580;
-	bh=7i5TIOHDCJrnRJK3is1Oicb1skMDjv9yLBrDM4cBtmo=;
+	s=default; t=1562599584;
+	bh=guJo8kQuNGCLr9IcAC48ivEXO+m7e0YNXbz8SATXBW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahisBVA/mkGID9PH6DBHYft1uQJTAGk3JlzLdcO0+At9JK3oRMz6OuHrxWLzGseGh
-	 aHuMffV3Cb8Xx0bbvs3u7n/zvdJ4qTkVM5G6NbbnMFRebW+9cLm5DrZj8eEHHPPSoW
-	 uxAjXL1Bd2a6VbZVImXhs8gXEpE+73WEx7NXPaGU=
+	b=KitTdGdgHwkHj018A5GVOJiTyw07Xu4LJ5y7oAAyx9+L1EHPHt9WYHWHoHA/i2oJm
+	 HK5kXa5lei7a74A5GFXdrgx1Yc5dZENe+7BzU4Kr8yzaDONjps0+9SYGH3qYOqKvsH
+	 JE6lQoTcI2MhYUXvWk1lyuoL1TX9IyQ/1jJS96n4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388790AbfGHP0T (ORCPT
+        id S1729338AbfGHP0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:26:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53964 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388777AbfGHP0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:26:15 -0400
+        id S2388791AbfGHP0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:26:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C18021738;
-        Mon,  8 Jul 2019 15:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 607062166E;
+        Mon,  8 Jul 2019 15:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599574;
-        bh=7i5TIOHDCJrnRJK3is1Oicb1skMDjv9yLBrDM4cBtmo=;
+        s=default; t=1562599578;
+        bh=guJo8kQuNGCLr9IcAC48ivEXO+m7e0YNXbz8SATXBW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jr7Y0Eg3e8OcJDo3fVdfPM9H63TBPiBTMFq9Pp23JxtpRVQCvRvWf7fkUtwuSowgN
-         3RMn7QKnAf8vUkts6YXotV8+fpzIUCnXD9LxLljYhh5XzHSaOTWbSx1cC/0LVuW8zR
-         4P25lley9fLZzbYb4oBIVxTaUAytNAYScEF6pozY=
+        b=jsWvngfjgFWWVBtahIQfeeEPDQjm8V/loCwWLhWg1KhVQvy1jE3fVGGG4QogqHKFQ
+         EpeRBlYLYx9717WXXGcJdyhNKgnct6T4oKzOcD0LO00S2Y05cDS9zB7ctfn/ry24OC
+         GGBaEohud9mY7gEiwum4S04upHuE+ADF0fAv07ys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Gong <yibin.gong@nxp.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Michael Olbrich <m.olbrich@pengutronix.de>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.14 55/56] dmaengine: imx-sdma: remove BD_INTR for channel0
-Date:   Mon,  8 Jul 2019 17:13:47 +0200
-Message-Id: <20190708150524.291969254@linuxfoundation.org>
+        linux-btrfs@vger.kernel.org,
+        Olivier Mazouffre <olivier.mazouffre@ims-bordeaux.fr>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: [PATCH 4.14 56/56] stable/btrfs: fix backport bug in d819d97ea025 ("btrfs: honor path->skip_locking in backref code")
+Date:   Mon,  8 Jul 2019 17:13:48 +0200
+Message-Id: <20190708150524.341162307@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -61,54 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-commit 3f93a4f297961c12bb17aa16cb3a4d1291823cae upstream.
+Upstream commit 38e3eebff643 ("btrfs: honor path->skip_locking in
+backref code") was incorrectly backported to 4.14.y . It misses removal
+of two lines from original commit, what cause deadlock.
 
-It is possible for an irq triggered by channel0 to be received later
-after clks are disabled once firmware loaded during sdma probe. If
-that happens then clearing them by writing to SDMA_H_INTR won't work
-and the kernel will hang processing infinite interrupts. Actually,
-don't need interrupt triggered on channel0 since it's pollling
-SDMA_H_STATSTOP to know channel0 done rather than interrupt in
-current code, just clear BD_INTR to disable channel0 interrupt to
-avoid the above case.
-This issue was brought by commit 1d069bfa3c78 ("dmaengine: imx-sdma:
-ack channel 0 IRQ in the interrupt handler") which didn't take care
-the above case.
-
-Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the interrupt handler")
-Cc: stable@vger.kernel.org #5.0+
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
-Tested-by: Sven Van Asbroeck <thesven73@gmail.com>
-Reviewed-by: Michael Olbrich <m.olbrich@pengutronix.de>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203993
+Reported-by: Olivier Mazouffre <olivier.mazouffre@ims-bordeaux.fr>
+Fixes: d819d97ea025 ("btrfs: honor path->skip_locking in backref code")
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/imx-sdma.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/backref.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -632,7 +632,7 @@ static int sdma_load_script(struct sdma_
- 	spin_lock_irqsave(&sdma->channel_0_lock, flags);
- 
- 	bd0->mode.command = C0_SETPM;
--	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
-+	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
- 	bd0->mode.count = size / 2;
- 	bd0->buffer_addr = buf_phys;
- 	bd0->ext_buffer_addr = address;
-@@ -909,7 +909,7 @@ static int sdma_load_context(struct sdma
- 	context->gReg[7] = sdmac->watermark_level;
- 
- 	bd0->mode.command = C0_SETDM;
--	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
-+	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
- 	bd0->mode.count = sizeof(*context) / 4;
- 	bd0->buffer_addr = sdma->context_phys;
- 	bd0->ext_buffer_addr = 2048 + (sizeof(*context) / 4) * channel;
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -1290,8 +1290,6 @@ again:
+ 					ret = -EIO;
+ 					goto out;
+ 				}
+-				btrfs_tree_read_lock(eb);
+-				btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
+ 				if (!path->skip_locking) {
+ 					btrfs_tree_read_lock(eb);
+ 					btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
 
 
