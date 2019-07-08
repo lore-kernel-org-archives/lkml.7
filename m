@@ -2,85 +2,101 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746FCC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20E3C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E30E216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1ACB2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562599150;
+	bh=uR1AjF105+UTf4n2pmOKr80VoeSOIiGe1oknHSF5fWo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1jrFVbb9OzSEnepftGt/cFARVS9I8KZnBgaV2sKKsBevewEf4WwMOpmlhAzevbhV5
+	 FlQ+/6Yfw0+OUOTmOmfrtEztFo7dnKncqmPNDJBPA6uQQ1xMTGpZce4BKCSQROlMWm
+	 B4RzJ4iR1nQoGxVHBsLTYGaRtl1qVL02ocp3bR9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfGHPTB (ORCPT
+        id S1729470AbfGHPTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:19:01 -0400
-Received: from app1.whu.edu.cn ([202.114.64.88]:40278 "EHLO whu.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733117AbfGHPSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:18:54 -0400
-Received: from localhost (unknown [111.202.192.5])
-        by email1 (Coremail) with SMTP id AQBjCgAnCTrQXiNdSDViAA--.46705S2;
-        Mon, 08 Jul 2019 23:18:46 +0800 (CST)
-From:   Peng Wang <rocking@whu.edu.cn>
-To:     gregkh@linuxfoundation.org, tj@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Peng Wang <rocking@whu.edu.cn>
-Subject: [PATCH v2] kernfs: fix potential null pointer dereference
-Date:   Mon,  8 Jul 2019 23:16:11 +0800
-Message-Id: <20190708151611.13242-1-rocking@whu.edu.cn>
-X-Mailer: git-send-email 2.19.1
+        Mon, 8 Jul 2019 11:19:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733161AbfGHPTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:19:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA07821537;
+        Mon,  8 Jul 2019 15:18:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599140;
+        bh=uR1AjF105+UTf4n2pmOKr80VoeSOIiGe1oknHSF5fWo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HP/G6prMK8JgvnHIC96pcgAJS0WYlbqUwOymBCBdNaxSM4T6pHKe3CpQVHbSNvGLc
+         /T8Ldo3e5/ous45uooj60A5aHvZLLpTgi7R7G/v/kp58Ni8ma/N6hrjo+MNLgpWYvc
+         +I6r5hBBF/yOU6euDBywh13FOp6crO7H/by35GRQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mark Lee <mark-mc.lee@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 019/102] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
+Date:   Mon,  8 Jul 2019 17:12:12 +0200
+Message-Id: <20190708150527.177997526@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
+References: <20190708150525.973820964@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQBjCgAnCTrQXiNdSDViAA--.46705S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrW3JF1DtrW5Jr1DXr4xJFb_yoW3AFX_Cr
-        18C3s09FW7Wrs7Wr13G3ySqryF9a1qv3W0vF4fta98tFZxta1DArn3Jw1vyrn7Gry8Wr9F
-        yFn0yryqkrWxXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb2AFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-        1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-        cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-        ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryrMxAI
-        w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
-        4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
-        rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
-        CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUz6wAUUUUU=
-X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get root safely after kn is ensureed to be not null.
+[ Upstream commit 880c2d4b2fdfd580ebcd6bb7240a8027a1d34751 ]
 
-Signed-off-by: Peng Wang <rocking@whu.edu.cn>
+Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
+equals to 2.
+
+Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/kernfs/dir.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-index a387534c9577..ddf537923a0a 100644
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -430,7 +430,6 @@ struct kernfs_node *kernfs_get_active(struct kernfs_node *kn)
-  */
- void kernfs_put_active(struct kernfs_node *kn)
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 03b599109619..d10c8a8156bc 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -1700,6 +1700,7 @@ static void mtk_poll_controller(struct net_device *dev)
+ 
+ static int mtk_start_dma(struct mtk_eth *eth)
  {
--	struct kernfs_root *root = kernfs_root(kn);
- 	int v;
++	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
+ 	int err;
  
- 	if (unlikely(!kn))
-@@ -442,7 +441,7 @@ void kernfs_put_active(struct kernfs_node *kn)
- 	if (likely(v != KN_DEACTIVATED_BIAS))
- 		return;
+ 	err = mtk_dma_init(eth);
+@@ -1714,7 +1715,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
+ 		MTK_QDMA_GLO_CFG);
  
--	wake_up_all(&root->deactivate_waitq);
-+	wake_up_all(&kernfs_root(kn)->deactivate_waitq);
- }
+ 	mtk_w32(eth,
+-		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
++		MTK_RX_DMA_EN | rx_2b_offset |
+ 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
+ 		MTK_PDMA_GLO_CFG);
  
- /**
 -- 
-2.19.1
+2.20.1
+
+
 
