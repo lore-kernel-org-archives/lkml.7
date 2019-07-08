@@ -2,141 +2,158 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655D4C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC39FC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADF3216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934A621738
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OXbjFpWm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAmRxpxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388947AbfGHP6y (ORCPT
+        id S2389202AbfGHP7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:58:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40389 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388088AbfGHP6x (ORCPT
+        Mon, 8 Jul 2019 11:59:03 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36660 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732250AbfGHP7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:58:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id h6so28173351iom.7
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:58:52 -0700 (PDT)
+        Mon, 8 Jul 2019 11:59:03 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so17761270wrs.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:59:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tMCiFsRLDuW6geBulr3EjyW7t17T9yVxinnBG4xjmyE=;
-        b=OXbjFpWmkvpDp2y6eTwPwQeZzYHFJ41RVnrCR/bBnbn3zmrcjD44kQV6AOejyYbCET
-         Xw1BD5zUF87gnasL9QHVthJWk8/FVdH2b4ELdIR34m4lfjlZPKmCl70qe5p2QRmHi8nA
-         uP0SYDtYKhdyMH1ZypI3iFmOV4Bcv5ysoSlXw=
+         :cc;
+        bh=rhoYdVDhN5ydgxX1VLJkMlHV7XsW0UoNaJF64lVsGBk=;
+        b=DAmRxpxTPdcbbcK+O3HYTUcs16PFJYrX3FKsYaQ8ARene0pNY7/VYxMv28MiHrqKSd
+         ziP7FSehowz+XtnvIhfzqDnMnaxcFtTI8UizF1Iai4nYy8dN8hZli9keuRW3qiFfc+U6
+         bgeHUXMK7EWN/b8r2MPcUIED8wbkJ48HdvVh/WpoU3u5d0Qob191RGyPOha/ZS0C4AZU
+         YBhHK286Xs/Jp3372/44rw6WNTmWLzgBc0VCAaQr9nhz9+xoUwYDZ6JK2sOvO2iUfNHT
+         EbUx7t013TFxsXI+irQxn+QXARfvPOnCX0u0yZbPerk1sIZX0E/wrTubt7SPEuFwq57r
+         qvSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tMCiFsRLDuW6geBulr3EjyW7t17T9yVxinnBG4xjmyE=;
-        b=sMf9gwyG/3kQW1imAHCCZ+3VqJZbWRyy6ghAfAt1qGPdN15GgFFnmJwmK4R4T57YCm
-         B/UOUDMo4geIvK3dS+lkl1HqoFVBTYN3m7K6ll88sp/SHXC+6998VyYWNqDMaucMHGFg
-         KSXLkD9gLeaHnEHljhls4qW8wY0OhUP2SSQ5k/rcao684NugGN8GsC8iRUuUrjUKbtMl
-         V1I45lSAw6vIh6CGsu6kB+wPqwqXgi5H3s8lcHHNM2dYI2UxZ8J607YfN/HRyu3Bvg24
-         J+/inesvFHXOgm03Os3+RLOSXX8Dt5yKO0v1qvZF3dtxRUI2qvr2Hz9PCPEiedklmwxH
-         L4CA==
-X-Gm-Message-State: APjAAAUm+Wm1/41yQq+0CSnALc7LyJuA7MoECkjMF0dpUyOc+5Lvfkdn
-        VbPcY1DJHljUqsXkDWGLz1QLNSqilJc=
-X-Google-Smtp-Source: APXvYqwBcxsZu1ODp6oLFBr6/t3E5EzNQPV4H7G1tmn+HtLLXdJhwjeEGnRhEXT+kFU7K5jn2UVZfA==
-X-Received: by 2002:a6b:8e82:: with SMTP id q124mr11725976iod.68.1562601532081;
-        Mon, 08 Jul 2019 08:58:52 -0700 (PDT)
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com. [209.85.166.49])
-        by smtp.gmail.com with ESMTPSA id j14sm14898788ioa.78.2019.07.08.08.58.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 08:58:50 -0700 (PDT)
-Received: by mail-io1-f49.google.com with SMTP id j6so36415294ioa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:58:49 -0700 (PDT)
-X-Received: by 2002:a5e:8f08:: with SMTP id c8mr20045788iok.52.1562601529525;
- Mon, 08 Jul 2019 08:58:49 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=rhoYdVDhN5ydgxX1VLJkMlHV7XsW0UoNaJF64lVsGBk=;
+        b=BVNIcsmgt/FB5WKLj+IhQTRkHhDnboZ6R+077mCCc7hJaaAmglirruX29CLSzoe7SN
+         LkEE8X1fo8D3dYS3OPB8dr4lWXz+sBD8YiJgsDAjze1VUwOTEDqFn2x7Grx8ngRVUDwM
+         hsGKu0rPsTDg+JyW4A7iA/p7rjxsssyMoOoEyqXdlxjt4p9CIn3BQpHa26MWbmejaLq2
+         D+0paz2uz7TGkVCNj1wGfTugJ+PJc66aGpWdmat3vABYuTZ28/bCM9ESG4kq9kZAKbgt
+         6N0tSyLx76lrHSgJWApPr3qLFyhpIrsygrLlgNePi56ZLi0vUzW1A/qGjzhIcITij6OH
+         ThDw==
+X-Gm-Message-State: APjAAAUarCZHfDViB+Pz1vIv5QqoJScjuBaLUcAPC4Q/FJul+HqsAACy
+        eoxi0gDBN6LKyTdSAeQOeC5zJqz55zDWRUtq9qA=
+X-Google-Smtp-Source: APXvYqzOWGyb0Raf4FDZ29HUA5m1lTCjYaZUm5S9loe+lEPW8cJi0cTQLV9I1lj73jWGDid/rYCzvpSKiVZ31ITPSUg=
+X-Received: by 2002:adf:e3c4:: with SMTP id k4mr14725529wrm.341.1562601541504;
+ Mon, 08 Jul 2019 08:59:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190401171724.215780-1-dianders@chromium.org>
- <CAD=FV=Vi2C7s2oWBDD0n+HK=_SuBYhRM9saMK-y6Qa0+k-g17w@mail.gmail.com>
- <20190628171342.GA2238@ravnborg.org> <2169143.hEFa8b2HQR@diego>
-In-Reply-To: <2169143.hEFa8b2HQR@diego>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 8 Jul 2019 08:58:41 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U3Wj8vaZcQLmkfX6zgjVFEra+GrHMH3OCs5QQ_-tM4hw@mail.gmail.com>
-Message-ID: <CAD=FV=U3Wj8vaZcQLmkfX6zgjVFEra+GrHMH3OCs5QQ_-tM4hw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
-To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20190708144205.2770771-1-arnd@arndb.de>
+In-Reply-To: <20190708144205.2770771-1-arnd@arndb.de>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 8 Jul 2019 11:58:50 -0400
+Message-ID: <CADnq5_PT8HyLUi-tSNdXbJVJiVWV-f_io8gOabiPxDfDONEfKg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] amdgpu: make pmu support optional
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Brian Norris <briannorris@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Jack Xiao <Jack.Xiao@amd.com>,
+        Jonathan Kim <Jonathan.Kim@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        xinhui pan <xinhui.pan@amd.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Emily Deng <Emily.Deng@amd.com>, Huang Rui <ray.huang@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Evan Quan <evan.quan@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Rex Zhu <Rex.Zhu@amd.com>, Xiaojie Yuan <xiaojie.yuan@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-On Sat, Jun 29, 2019 at 7:09 AM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+On Mon, Jul 8, 2019 at 10:42 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> Hi Sam,
+> When CONFIG_PERF_EVENTS is disabled, we cannot compile the pmu
+> portion of the amdgpu driver:
 >
-> Am Freitag, 28. Juni 2019, 19:13:42 CEST schrieb Sam Ravnborg:
-> > Hi Doug.
-> >
-> > > Sam: Oh!  I hadn't noticed that you've been added as a panel
-> > > maintainer in commit ef0db94f94a0 ("MAINTAINERS: Add Sam as reviewer
-> > > for drm/panel").  Does that mean you are able to provide some advice
-> > > for how to land this series?
-> > Reviewer only, not maintainer....
-> >
-> > It is on my TODO list for the weekend to go through the patch set in
-> > details and provide feedback. I have read them before, but I miss to do
-> > a more detailed read through.
-> >
-> > But I cannot apply this unless Thierry or one of the DRM maintainers
-> > ack it.
-> > We simply need someone with a better general knowledge of DRM to ack it
-> > than I have.
+> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:48:38: error: no member named 'hw' in 'struct perf_event'
+>         struct hw_perf_event *hwc = &event->hw;
+>                                      ~~~~~  ^
+> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:51:13: error: no member named 'attr' in 'struct perf_event'
+>         if (event->attr.type != event->pmu->type)
+>             ~~~~~  ^
+> ...
 >
-> So Thierry was able to look at the patches yesterday it seems and has Ack=
-ed
-> all the relevant ones. As a drm-misc-contributor I could also apply them
-> myself, but now don't want to preempt any additional comments you might
-> have ;-) . So I guess my question would be if you still want to do a revi=
-ew
-> or if I should apply them.
+> Use conditional compilation for this file.
+>
+> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Hopefully you saw, but I responded to all of your review feedback.  In
-the end, I thought it'd be OK to land the series as-is and I can fix
-up nits in a follow-up series, though I'm waiting for your responses
-to a couple questions first.
-
-It would be ideal if you could confirm that you're OK with this plan
-even if you don't have time to respond in detail to my emails yet.  I
-think Heiko can land them all through the appropriate channels since
-the patches have all the proper Acks.
+Applied this patch.
 
 Thanks!
 
--Doug
+Alex
+
+> ---
+>  drivers/gpu/drm/amd/amdgpu/Makefile        | 4 +++-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 6 ++++--
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/Makefile b/drivers/gpu/drm/amd/amdgpu/Makefile
+> index 3a15a46b4ecb..3f5329906fce 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/Makefile
+> +++ b/drivers/gpu/drm/amd/amdgpu/Makefile
+> @@ -54,7 +54,9 @@ amdgpu-y += amdgpu_device.o amdgpu_kms.o \
+>         amdgpu_gtt_mgr.o amdgpu_vram_mgr.o amdgpu_virt.o amdgpu_atomfirmware.o \
+>         amdgpu_vf_error.o amdgpu_sched.o amdgpu_debugfs.o amdgpu_ids.o \
+>         amdgpu_gmc.o amdgpu_xgmi.o amdgpu_csa.o amdgpu_ras.o amdgpu_vm_cpu.o \
+> -       amdgpu_vm_sdma.o amdgpu_pmu.o amdgpu_discovery.o
+> +       amdgpu_vm_sdma.o amdgpu_discovery.o
+> +
+> +amdgpu-$(CONFIG_PERF_EVENTS) += amdgpu_pmu.o
+>
+>  # add asic specific block
+>  amdgpu-$(CONFIG_DRM_AMDGPU_CIK)+= cik.o cik_ih.o kv_smc.o kv_dpm.o \
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> index 30989b455047..a02ccce7bf53 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> @@ -2816,7 +2816,8 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+>                 return r;
+>         }
+>
+> -       r = amdgpu_pmu_init(adev);
+> +       if (IS_ENABLED(CONFIG_PERF_EVENTS))
+> +               r = amdgpu_pmu_init(adev);
+>         if (r)
+>                 dev_err(adev->dev, "amdgpu_pmu_init failed\n");
+>
+> @@ -2888,7 +2889,8 @@ void amdgpu_device_fini(struct amdgpu_device *adev)
+>         amdgpu_debugfs_regs_cleanup(adev);
+>         device_remove_file(adev->dev, &dev_attr_pcie_replay_count);
+>         amdgpu_ucode_sysfs_fini(adev);
+> -       amdgpu_pmu_fini(adev);
+> +       if (IS_ENABLED(CONFIG_PERF_EVENTS))
+> +               amdgpu_pmu_fini(adev);
+>         amdgpu_debugfs_preempt_cleanup(adev);
+>         if (amdgpu_discovery)
+>                 amdgpu_discovery_fini(adev);
+> --
+> 2.20.0
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
