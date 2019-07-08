@@ -2,59 +2,57 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F4C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656ADC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493F220665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E38B21743
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599853;
-	bh=zHBeiH5UXBieVXJ3ReP2xV67oxVWXWvFsycG/3TsF4g=;
+	s=default; t=1562599855;
+	bh=GFDOw1vLokEPjrw2hC5T0pdoppLVaZ7rZOTfoI8Wvqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4i4YjDcc+3s1vUkCQ1c78SzFtM6XyJRjzJ/JId6EjNZ9IZJgmkH03Z+/r7keCAP8
-	 fJy65nihkd992ne37REULzsDOuqKXYIeabaJvzLeRHgn80M7+fH2aF65hq+fOORR99
-	 MBJd8YnZ+ZcdZ1CKWlZlxzrXbZ4a1cAdicVCbeoI=
+	b=PvgCXpo7M9o8Cv9zvlsSCwvv6zSeTzqhe8GylFFBCeR/1m/868+YqA05RaKH+O7PD
+	 a8+yU18D4bMarlTNKzQTBNOTt7MU7VyKFRwvjarqhoHJCNtotMCS6tpyLwh2+ZzgJl
+	 1j1x0oPlUMgPkHmIuKJLWe58701Ffd2FiDC2um/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389874AbfGHPaw (ORCPT
+        id S2389885AbfGHPay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:30:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59954 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389856AbfGHPas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:48 -0400
+        id S2389867AbfGHPav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C51C21537;
-        Mon,  8 Jul 2019 15:30:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3117520665;
+        Mon,  8 Jul 2019 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599848;
-        bh=zHBeiH5UXBieVXJ3ReP2xV67oxVWXWvFsycG/3TsF4g=;
+        s=default; t=1562599850;
+        bh=GFDOw1vLokEPjrw2hC5T0pdoppLVaZ7rZOTfoI8Wvqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PsfWslLHZVEQMglFj+kUZ0hGfLRdg5xlKtS748qE6zTHoqsEMwFbNAr45l22AXV27
-         /YwFf+pNN6N/ljqWf6GMufloQ89YsJ1PSvu0WLwjIqKwr6lOwRCzjPeEuFrIjrrpO0
-         89PbPyshSG5zYo3ec+XJH2j3V/YukD42yhIJp3tU=
+        b=jC6pVTCrajhDh0s54GS0qnGSnCSEAi/3BabpgxX46/E60ioxNLY1h/1j2c1TECpM4
+         0fo3dNknjQP5E3dE+XyP3K93S8web9KsFAvc8mbphFPrHDN9QHd9Cc0Ycrt2v12vvr
+         D9ZB9sH7KuYalkrU7sfbt1202IRU4Q+wAy32pa1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matias Karhumaa <matias.karhumaa@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 01/96] Bluetooth: Fix faulty expression for minimum encryption key size check
-Date:   Mon,  8 Jul 2019 17:12:33 +0200
-Message-Id: <20190708150526.333257976@linuxfoundation.org>
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 10/96] ASoC: ak4458: add return value for ak4458_probe
+Date:   Mon,  8 Jul 2019 17:12:42 +0200
+Message-Id: <20190708150526.894632053@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,38 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matias Karhumaa <matias.karhumaa@gmail.com>
+[ Upstream commit a8dee20d792432740509237943700fbcfc230bad ]
 
-commit eca94432934fe5f141d084f2e36ee2c0e614cc04 upstream.
+AK4458 is probed successfully even if AK4458 is not present - this
+is caused by probe function returning no error on i2c access failure.
+Return an error on probe if i2c access has failed.
 
-Fix minimum encryption key size check so that HCI_MIN_ENC_KEY_SIZE is
-also allowed as stated in the comment.
-
-This bug caused connection problems with devices having maximum
-encryption key size of 7 octets (56-bit).
-
-Fixes: 693cd8ce3f88 ("Bluetooth: Fix regression with minimum encryption key size alignment")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203997
-Signed-off-by: Matias Karhumaa <matias.karhumaa@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/l2cap_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/ak4458.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -1353,7 +1353,7 @@ static bool l2cap_check_enc_key_size(str
- 	 * actually encrypted before enforcing a key size.
- 	 */
- 	return (!test_bit(HCI_CONN_ENCRYPT, &hcon->flags) ||
--		hcon->enc_key_size > HCI_MIN_ENC_KEY_SIZE);
-+		hcon->enc_key_size >= HCI_MIN_ENC_KEY_SIZE);
+diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
+index eab7c76cfcd9..4c5c3ec92609 100644
+--- a/sound/soc/codecs/ak4458.c
++++ b/sound/soc/codecs/ak4458.c
+@@ -536,9 +536,10 @@ static void ak4458_power_on(struct ak4458_priv *ak4458)
+ 	}
  }
  
- static void l2cap_do_start(struct l2cap_chan *chan)
+-static void ak4458_init(struct snd_soc_component *component)
++static int ak4458_init(struct snd_soc_component *component)
+ {
+ 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
++	int ret;
+ 
+ 	/* External Mute ON */
+ 	if (ak4458->mute_gpiod)
+@@ -546,21 +547,21 @@ static void ak4458_init(struct snd_soc_component *component)
+ 
+ 	ak4458_power_on(ak4458);
+ 
+-	snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
++	ret = snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
+ 			    0x80, 0x80);   /* ACKS bit = 1; 10000000 */
++	if (ret < 0)
++		return ret;
+ 
+-	ak4458_rstn_control(component, 1);
++	return ak4458_rstn_control(component, 1);
+ }
+ 
+ static int ak4458_probe(struct snd_soc_component *component)
+ {
+ 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
+ 
+-	ak4458_init(component);
+-
+ 	ak4458->fs = 48000;
+ 
+-	return 0;
++	return ak4458_init(component);
+ }
+ 
+ static void ak4458_remove(struct snd_soc_component *component)
+-- 
+2.20.1
+
 
 
