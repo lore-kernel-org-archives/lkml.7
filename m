@@ -2,160 +2,92 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBC4C606A0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668F7C5B57D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8DF2084A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360312064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JR3BZbIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfGHIo1 (ORCPT
+        id S1728470AbfGHIsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:44:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:42014 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729602AbfGHIoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:44:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF58A152F;
-        Mon,  8 Jul 2019 01:44:23 -0700 (PDT)
-Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6AEE93F246;
-        Mon,  8 Jul 2019 01:44:21 -0700 (PDT)
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: [PATCH v11 5/5] sched/core: uclamp: Update CPU's refcount on TG's clamp changes
-Date:   Mon,  8 Jul 2019 09:43:57 +0100
-Message-Id: <20190708084357.12944-6-patrick.bellasi@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190708084357.12944-1-patrick.bellasi@arm.com>
-References: <20190708084357.12944-1-patrick.bellasi@arm.com>
+        Mon, 8 Jul 2019 04:48:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43784 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfGHIsn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 04:48:43 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x688mfSc105328;
+        Mon, 8 Jul 2019 03:48:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562575721;
+        bh=0vvrbq4sO8mI+45KfLyz6qhcBRue/QwX9tsHP/CDc7o=;
+        h=From:To:CC:Subject:Date;
+        b=JR3BZbImwQ5P/aIZK4o7eVKa/2secReGTOj/RZR4AakVNcnXSY4oP4wU6Vdngd8UT
+         EuGy7rzzQ2AOPj+dcYb/Ars00Ch4SQXRST3xGJr9uZDJguJIVzo6dGECi3VRfvpv8L
+         nfgYZUu+skpWWWhEjDkM9+gIwq0nb9zUyctiw35Y=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x688medG122916
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Jul 2019 03:48:40 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Jul
+ 2019 03:48:40 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 8 Jul 2019 03:48:40 -0500
+Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x688mc7P061716;
+        Mon, 8 Jul 2019 03:48:39 -0500
+From:   Keerthy <j-keerthy@ti.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <t-kristo@ti.com>, <j-keerthy@ti.com>
+Subject: [PATCH] gpio: davinci: silence error prints in case of EPROBE_DEFER
+Date:   Mon, 8 Jul 2019 14:19:04 +0530
+Message-ID: <20190708084904.18607-1-j-keerthy@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On updates of task group (TG) clamp values, ensure that these new values
-are enforced on all RUNNABLE tasks of the task group, i.e. all RUNNABLE
-tasks are immediately boosted and/or capped as requested.
+Silence error prints in case of EPROBE_DEFER. This avoids
+multiple/duplicate defer prints during boot.
 
-Do that each time we update effective clamps from cpu_util_update_eff().
-Use the *cgroup_subsys_state (css) to walk the list of tasks in each
-affected TG and update their RUNNABLE tasks.
-Update each task by using the same mechanism used for cpu affinity masks
-updates, i.e. by taking the rq lock.
-
-Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Tejun Heo <tj@kernel.org>
-
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
-Changes in v11:
- Message-ID: <20190624174607.GQ657710@devbig004.ftw2.facebook.com>
- - Ensure group limits always clamps group protection
----
- kernel/sched/core.c | 58 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-davinci.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2591a70c85cf..ddc5fcd4b9cf 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1043,6 +1043,57 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
- 		uclamp_rq_dec_id(rq, p, clamp_id);
- }
- 
-+static inline void
-+uclamp_update_active(struct task_struct *p, unsigned int clamp_id)
-+{
-+	struct rq_flags rf;
-+	struct rq *rq;
-+
-+	/*
-+	 * Lock the task and the rq where the task is (or was) queued.
-+	 *
-+	 * We might lock the (previous) rq of a !RUNNABLE task, but that's the
-+	 * price to pay to safely serialize util_{min,max} updates with
-+	 * enqueues, dequeues and migration operations.
-+	 * This is the same locking schema used by __set_cpus_allowed_ptr().
-+	 */
-+	rq = task_rq_lock(p, &rf);
-+
-+	/*
-+	 * Setting the clamp bucket is serialized by task_rq_lock().
-+	 * If the task is not yet RUNNABLE and its task_struct is not
-+	 * affecting a valid clamp bucket, the next time it's enqueued,
-+	 * it will already see the updated clamp bucket value.
-+	 */
-+	if (!p->uclamp[clamp_id].active)
-+		goto done;
-+
-+	uclamp_rq_dec_id(rq, p, clamp_id);
-+	uclamp_rq_inc_id(rq, p, clamp_id);
-+
-+done:
-+
-+	task_rq_unlock(rq, p, &rf);
-+}
-+
-+static inline void
-+uclamp_update_active_tasks(struct cgroup_subsys_state *css,
-+			   unsigned int clamps)
-+{
-+	struct css_task_iter it;
-+	struct task_struct *p;
-+	unsigned int clamp_id;
-+
-+	css_task_iter_start(css, 0, &it);
-+	while ((p = css_task_iter_next(&it))) {
-+		for_each_clamp_id(clamp_id) {
-+			if ((0x1 << clamp_id) & clamps)
-+				uclamp_update_active(p, clamp_id);
-+		}
-+	}
-+	css_task_iter_end(&it);
-+}
-+
- #ifdef CONFIG_UCLAMP_TASK_GROUP
- static void cpu_util_update_eff(struct cgroup_subsys_state *css);
- static void uclamp_update_root_tg(void)
-@@ -7087,8 +7138,13 @@ static void cpu_util_update_eff(struct cgroup_subsys_state *css)
- 			uc_se[clamp_id].bucket_id = uclamp_bucket_id(eff[clamp_id]);
- 			clamps |= (0x1 << clamp_id);
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index fc494a84a29d..e0b025689625 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -238,8 +238,9 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+ 	for (i = 0; i < nirq; i++) {
+ 		chips->irqs[i] = platform_get_irq(pdev, i);
+ 		if (chips->irqs[i] < 0) {
+-			dev_info(dev, "IRQ not populated, err = %d\n",
+-				 chips->irqs[i]);
++			if (chips->irqs[i] != -EPROBE_DEFER)
++				dev_info(dev, "IRQ not populated, err = %d\n",
++					 chips->irqs[i]);
+ 			return chips->irqs[i];
  		}
--		if (!clamps)
-+		if (!clamps) {
- 			css = css_rightmost_descendant(css);
-+			continue;
-+		}
-+
-+		/* Immediately update descendants RUNNABLE tasks */
-+		uclamp_update_active_tasks(css, clamps);
  	}
- }
- 
 -- 
-2.21.0
+2.17.1
 
