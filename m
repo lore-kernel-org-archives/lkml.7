@@ -2,163 +2,187 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21C8C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E32C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A3D21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365D521479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562603283;
-	bh=RSOyQPGuqo2Ektk1/T3q33xV5yaDm18j2rHpYs5l/3Q=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=j2auiool1NSRSz8ZFhXeK3V1xmMo+zoPcIDS92wqvxtN3DGRncaHBvEBi7GHgKUtt
-	 jkb/Th4vZk4wJ5UC2G1xOrAGghCwl8qwNP9M+21Iy1WD21n526fOOsmtSntjGlSUi/
-	 Ci1BwZKpEm62E3Pi/3O6tru1qUleEpMCQk3n3fP8=
+	s=default; t=1562603341;
+	bh=aW71/K4ecHLosDSDLDxZDE0IssLk1LqzCVnCsGZcpSM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=R/2+pYZwGgUHyYshqZ8lbBWc4v2YTh3Ao+Xit37vseU1VMtA/qEYLfqkPY0MpvgWW
+	 no8+uysOeE3EZ9Cj9XYSkAk22yh4SPViOb4IUGEBQSGQGHhumpsoMK0K3CrpC9yI38
+	 TSkKuMJWZCJiuMD981eWTykbUX3r7Ja0EQ+MuzvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730848AbfGHQ2C (ORCPT
+        id S1732138AbfGHQ3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:28:02 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37716 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbfGHQ2B (ORCPT
+        Mon, 8 Jul 2019 12:29:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44408 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728834AbfGHQ27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:28:01 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f17so157750wme.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ouK9evEJhjAVMk+/YE2G0orSDwgzJNLXQ7fBdFbs3CI=;
-        b=DcCtJgNUN146/g2R+AC4nUnKn5sNN3631w9YVmx43c/XOC6gbmGtA7T+yXXt35l7hz
-         Eix2DwAHxIn2evFN72sH5jCJFFPfA1icye0PLtXsrAmjkIGww6oe4HFVBdw2pAcqgIaq
-         clA2shDIZbayQnSvkwNATsM1KGPbM65HwtCPXXVy7lWgYyElAyhyhdU0zz3idukg/n23
-         UhHq4l6pGrdCezvaIl1Cgp38trEPtvhhBXpeYszzsHZKGsXAxtA28adR+l2XiBcVb9D+
-         797y5sf3uR/tBexEAWqVMelTTtTAkt6vk73fPf2AlesoPp3s3TPJWNVcvTZQbBuInncy
-         cAVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=ouK9evEJhjAVMk+/YE2G0orSDwgzJNLXQ7fBdFbs3CI=;
-        b=be0RkL31ZO/fjry43+CRO3wL9WstEf6oSfMWVob+81J8wIOVR2iHaE+xD1t1dnoewD
-         mGFNpUqxrDVQuCvtzEGaCaJUxaJ7w0f6FcccunzMs8PfEypbNuYcd15Qn2ZhE3WeENQ1
-         M9Fl4imjTYdxXOdbQIoq2p6RjmLzjUHHYJLg2DJx40k0zYxOxSDUAsVvwaTqQEF5V+P0
-         iJwC7KJMbXE9RV1o+Gk8D0J2dlElgv+UNBc3mwfDm1/NL27uIWvp939PrVzv+NDspaEt
-         vQK3mJAE5I22dezyt/UnrUgVDfmt31JpBYMDb/ebI2/ULZFpGmJAH/hSsOnhfFqW6/Oy
-         +LIQ==
-X-Gm-Message-State: APjAAAUSSAkIdp/7jktYuCwfbDJv6CfyP/T+LjXZTKpc526Jl2kouwJS
-        dyBw4AxjZdIncaiS8pUJRQw=
-X-Google-Smtp-Source: APXvYqzHqFhE2wgNPnmJ3eHNmxFUTsDTmIxcbcPw7EKuNIc9wj4lVW7Whkp82thKOCtWWX9j7MHTZA==
-X-Received: by 2002:a7b:c195:: with SMTP id y21mr13618720wmi.16.1562603279261;
-        Mon, 08 Jul 2019 09:27:59 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id s10sm83861wmf.8.2019.07.08.09.27.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:27:58 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 18:27:56 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/topology changes for v5.3
-Message-ID: <20190708162756.GA69120@gmail.com>
+        Mon, 8 Jul 2019 12:28:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QqUJReTurIBV3kcOzctiiT9WS5fiRjHeQEh1zDlTBHA=; b=IhhHHt3D1sjrMXz8D7Z4fP4+D
+        zHbSwD+uXt02lyJVCrocniNMoZPBP/GEArKSh9GV0JaEXXiAOz/uZ78ePuP+oK6jTxpSISWtoWdBC
+        KNF0pf0J0NlPij0lO1ejUtMl6ZbGA9vtYlaJ/x0e3Gxm0c/4/mMK4aB2PHBNV3YiOUCfYfP1whwmF
+        rZBozXXn5f2wASONLC/v6KDH26vyZuKE4ijD/UMcCpop0f2iMiMrpmPo2E3A82UXmmeGOEwdrSj7y
+        rC4kY7xyiqjutNWXmycyPPSVZoohR7ldDWESAFI499XtaOkhkjriYfzC9PCSjKAkYSM+Ga9BVBaUp
+        /Gw/Mm4kQ==;
+Received: from 177.43.30.58.dynamic.adsl.gvt.net.br ([177.43.30.58] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkWVe-00068h-AO; Mon, 08 Jul 2019 16:28:58 +0000
+Date:   Mon, 8 Jul 2019 13:28:53 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: automarkup.py: ignore exceptions when seeking for
+ xrefs
+Message-ID: <20190708132853.2fba9f62@coco.lan>
+In-Reply-To: <20190708092336.01ade0ab@lwn.net>
+References: <d9b1c85769ba659dba6c7c8b459e385be28ca478.1562430514.git.mchehab+samsung@kernel.org>
+        <20190708092336.01ade0ab@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Em Mon, 8 Jul 2019 09:23:36 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Please pull the latest x86-topology-for-linus git tree from:
+> On Sat,  6 Jul 2019 13:28:42 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > When using the automarkup extension with:
+> > 	make pdfdocs
+> > 
+> > without passing an specific book, the code will raise an exception:
+> > 
+> > 	  File "/devel/v4l/docs/Documentation/sphinx/automarkup.py", line 86, in auto_markup
+> > 	    node.parent.replace(node, markup_funcs(name, app, node))
+> > 	  File "/devel/v4l/docs/Documentation/sphinx/automarkup.py", line 59, in markup_funcs
+> > 	    'function', target, pxref, lit_text)
+> > 	  File "/devel/v4l/docs/sphinx_2.0/lib/python3.7/site-packages/sphinx/domains/c.py", line 308, in resolve_xref
+> > 	    contnode, target)
+> > 	  File "/devel/v4l/docs/sphinx_2.0/lib/python3.7/site-packages/sphinx/util/nodes.py", line 450, in make_refnode
+> > 	    '#' + targetid)
+> > 	  File "/devel/v4l/docs/sphinx_2.0/lib/python3.7/site-packages/sphinx/builders/latex/__init__.py", line 159, in get_relative_uri
+> > 	    return self.get_target_uri(to, typ)
+> > 	  File "/devel/v4l/docs/sphinx_2.0/lib/python3.7/site-packages/sphinx/builders/latex/__init__.py", line 152, in get_target_uri
+> > 	    raise NoUri
+> > 	sphinx.environment.NoUri
+> > 
+> > This happens because not all references will belong to a single
+> > PDF/LaTeX document.  
+> 
+> Interesting.  I'd like to understand better why the HTML builder doesn't do
+> this...it seems like a bug in the latex builder somehow.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-topology-for-linus
+It took me a while to identify what part of the extension was causing the
+build breakage with make pdfdocs, but this occurs upstream too, if you
+try to build all documents.
 
-   # HEAD: eb876fbc248e6eb4773a5bc80d205ff7262b1bb5 perf/x86/intel/rapl: Cosmetic rename internal variables in response to multi-die/pkg support
+The funny thing is that, if you try to build a single book, e. g.:
 
-Implement multi-die topology support on Intel CPUs and expose the die 
-topology to user-space tooling, by Len Brown, Kan Liang and Zhang Rui.
+	make SPHINXDIRS=foo pdfdocs
 
-These changes should have no effect on the kernel's existing 
-understanding of topologies, i.e. there should be no behavioral impact on 
-cache, NUMA, scheduler, perf and other topologies and overall system 
-performance.
+this won't happen.
 
+I didn't spend too much time trying to identify the exact breakage reason.
+All I did were to add some prints inside latex/*.py while debugging it, in
+order to get a rough idea about what was happening.
 
-  out-of-topic modifications in x86-topology-for-linus:
-  -------------------------------------------------------
-  drivers/base/topology.c            # 2e4c54dac7b3: topology: Create core_cpus a
-                                   # b73ed8dc0597: topology: Create package_cpu
-                                   # 0e344d8c709f: cpu/topology: Export die_id
-  drivers/hwmon/coretemp.c           # 835896a59b95: hwmon/coretemp: Cosmetic: Re
-                                   # cfcd82e63288: hwmon/coretemp: Support mult
-  drivers/powercap/intel_rapl.c      # 9ea7612c4658: powercap/intel_rapl: Update 
-                                   # 32fb480e0a2c: powercap/intel_rapl: Support
-                                   # aadf7b383371: powercap/intel_rapl: Simplif
-  drivers/thermal/intel/x86_pkg_temp_thermal.c# b2ce1c883df9: thermal/x86_pkg_temp_thermal
-                                   # 724adec33c24: thermal/x86_pkg_temp_thermal
-  include/linux/topology.h           # 2e4c54dac7b3: topology: Create core_cpus a
-                                   # 0e344d8c709f: cpu/topology: Export die_id
+On several places, the code with calls "raise NoUri" is called, but the
+caller silently ignores it (that happens, for example, when it parses
+:ref:`genindex`).
 
- Thanks,
+What I suspect is that, when you do an html build - or when you build just
+a single book with SPHINXDIRS=foo, all dependencies are either:
 
-	Ingo
+	- unsolved; or
+	- solved within the same document/html URL
 
------------------->
-Kan Liang (5):
-      perf/x86/intel/uncore: Support multi-die/package
-      perf/x86/intel/rapl: Support multi-die/package
-      perf/x86/intel/cstate: Support multi-die/package
-      perf/x86/intel/uncore: Cosmetic renames in response to multi-die/pkg support
-      perf/x86/intel/rapl: Cosmetic rename internal variables in response to multi-die/pkg support
+In other words, solved references will have a relative position within
+a single documentation body. So, there won't be any need for a document
+to refer to a symbol on some other document.
 
-Len Brown (9):
-      x86/topology: Add CPUID.1F multi-die/package support
-      x86/topology: Create topology_max_die_per_package()
-      cpu/topology: Export die_id
-      x86/topology: Define topology_die_id()
-      x86/topology: Define topology_logical_die_id()
-      topology: Create package_cpus sysfs attribute
-      topology: Create core_cpus and die_cpus sysfs attributes
-      thermal/x86_pkg_temp_thermal: Cosmetic: Rename internal variables to zones from packages
-      hwmon/coretemp: Cosmetic: Rename internal variables to zones from packages
+With PDF, a symbol defined under, let's say, "core-api" defines a
+core_foo() function, and this function is referenced inside the "driver-api"
+book. The automarkup.py will convert a driver-api core_foo() to:
+:ref:`core_foo()`, instead of :doc:`core-api`, but core_foo label
+doesn't exist within the "driver-api" book context.
 
-Zhang Rui (5):
-      powercap/intel_rapl: Simplify rapl_find_package()
-      powercap/intel_rapl: Support multi-die/package
-      thermal/x86_pkg_temp_thermal: Support multi-die/package
-      powercap/intel_rapl: Update RAPL domain name and debug messages
-      hwmon/coretemp: Support multi-die/package
+As we're not using intersphinx extension, Sphinx doesn't have any
+URL to convert the cross-reference in a way that, if one clicks at the
+reference, it will open the referenced document at the proper page. 
 
+So, it bails out.
 
- Documentation/cputopology.txt                |  48 ++++++---
- Documentation/x86/topology.rst               |   4 +
- arch/x86/events/intel/cstate.c               |  14 ++-
- arch/x86/events/intel/rapl.c                 |  20 ++--
- arch/x86/events/intel/uncore.c               |  80 +++++++--------
- arch/x86/events/intel/uncore.h               |   4 +-
- arch/x86/events/intel/uncore_snbep.c         |   4 +-
- arch/x86/include/asm/processor.h             |   4 +-
- arch/x86/include/asm/smp.h                   |   1 +
- arch/x86/include/asm/topology.h              |  17 ++++
- arch/x86/kernel/cpu/common.c                 |   1 +
- arch/x86/kernel/cpu/topology.c               |  88 +++++++++++++----
- arch/x86/kernel/smpboot.c                    |  69 +++++++++++++
- arch/x86/xen/smp_pv.c                        |   1 +
- drivers/base/topology.c                      |  22 +++++
- drivers/hwmon/coretemp.c                     |  36 +++----
- drivers/powercap/intel_rapl.c                |  75 +++++++-------
- drivers/thermal/intel/x86_pkg_temp_thermal.c | 142 ++++++++++++++-------------
- include/linux/topology.h                     |   6 ++
- 19 files changed, 422 insertions(+), 214 deletions(-)
+That's said, I didn't try to use intersphinx in order to check if
+LaTeX references to other documents would actually work.
+
+> 
+> > Better to just ignore those than breaking Sphinx build.
+> > 
+> > Fixes: d74b0d31ddde ("Docs: An initial automarkup extension for sphinx")
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > ---
+> >  Documentation/sphinx/automarkup.py | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
+> > index b300cf129869..dba14374f269 100644
+> > --- a/Documentation/sphinx/automarkup.py
+> > +++ b/Documentation/sphinx/automarkup.py
+> > @@ -55,8 +55,13 @@ def markup_funcs(docname, app, node):
+> >                                            reftype = 'function',
+> >                                            reftarget = target, modname = None,
+> >                                            classname = None)
+> > -            xref = cdom.resolve_xref(app.env, docname, app.builder,
+> > -                                     'function', target, pxref, lit_text)
+> > +
+> > +            # When building pdf documents, this may raise a NoUri exception
+> > +            try:
+> > +                xref = cdom.resolve_xref(app.env, docname, app.builder,
+> > +                                         'function', target, pxref, lit_text)
+> > +            except:
+> > +                xref = None  
+> 
+> So this absolutely needs to be "except sphinx.environment.NoUri".  I have
+> seen catch-all "except" clauses paper over or otherwise hide too many
+> problems over the years; I really try to avoid ever using them.
+
+Makes sense to me. Feel free to change it when you apply it.
+
+> 
+> I want to look at this problem and understand it a bit better; then I'll
+> probably end up applying this patch with the above tweak.
+
+Btw, I got some other issues when changed Sphinx to include all books to the
+pdf output on my documentation development tree:
+
+	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=convert_rst_renames_next_v2&id=cd72aaefc8b07ce7909be914e46dfb02bad5d86b
+
+They're related to having nested tables, with got fixed by this patch:
+
+	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=convert_rst_renames_next_v2&id=fd0b22e391431f766e9be6f161fab9646c0dd9ca
+
+Thanks,
+Mauro
