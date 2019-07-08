@@ -6,121 +6,90 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65C0C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540C8C606AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E23204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144D520665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731328AbfGHNbT (ORCPT
+        id S1731316AbfGHNeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:31:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33506 "EHLO mx1.suse.de"
+        Mon, 8 Jul 2019 09:34:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2239 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728124AbfGHNbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:31:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 04C9FAFF5;
-        Mon,  8 Jul 2019 13:31:16 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 39BF51E159B; Mon,  8 Jul 2019 15:31:14 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 15:31:14 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Boaz Harrosh <openosd@gmail.com>, Jan Kara <jack@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking
-Message-ID: <20190708133114.GC20507@quack2.suse.cz>
-References: <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
- <20190619103838.GB32409@quack2.suse.cz>
- <20190619223756.GC26375@dread.disaster.area>
- <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
- <20190705233157.GD7689@dread.disaster.area>
+        id S1729708AbfGHNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:34:23 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4101690DED667519EBA2;
+        Mon,  8 Jul 2019 21:34:17 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.120) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 8 Jul 2019
+ 21:34:15 +0800
+Subject: Re: [v2] time: Validate the usec before covert to nsec in do_adjtimex
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     <john.stultz@linaro.org>, <sboyd@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1562582568-129891-1-git-send-email-zhangxiaoxu5@huawei.com>
+ <alpine.DEB.2.21.1907081458400.1926@nanos.tec.linutronix.de>
+From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
+Message-ID: <5fcccfec-cd51-02d5-d096-5a14675c2132@huawei.com>
+Date:   Mon, 8 Jul 2019 21:33:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190705233157.GD7689@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.1907081458400.1926@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.189.120]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 06-07-19 09:31:57, Dave Chinner wrote:
-> On Wed, Jul 03, 2019 at 03:04:45AM +0300, Boaz Harrosh wrote:
-> > On 20/06/2019 01:37, Dave Chinner wrote:
-> > <>
-> > > 
-> > > I'd prefer it doesn't get lifted to the VFS because I'm planning on
-> > > getting rid of it in XFS with range locks. i.e. the XFS_MMAPLOCK is
-> > > likely to go away in the near term because a range lock can be
-> > > taken on either side of the mmap_sem in the page fault path.
-> > > 
-> > <>
-> > Sir Dave
-> > 
-> > Sorry if this was answered before. I am please very curious. In the zufs
-> > project I have an equivalent rw_MMAPLOCK that I _read_lock on page_faults.
-> > (Read & writes all take read-locks ...)
-> > The only reason I have it is because of lockdep actually.
-> > 
-> > Specifically for those xfstests that mmap a buffer then direct_IO in/out
-> > of that buffer from/to another file in the same FS or the same file.
-> > (For lockdep its the same case).
+
+
+ÔÚ 2019/7/8 21:04, Thomas Gleixner Ð´µÀ:
+> On Mon, 8 Jul 2019, ZhangXiaoxu wrote:
 > 
-> Which can deadlock if the same inode rwsem is taken on both sides of
-> the mmap_sem, as lockdep tells you...
+>> When covert the usec to nsec, it will multiple 1000, it maybe
+>> overflow and lead an undefined behavior.
+>>
+>> For example, users may input an negative tv_usec values when
+>> call adjtimex syscall, then multiple 1000 maybe overflow it
+>> to a positive and legal number.
+>>
+>> So, we should validate the usec before coverted it to nsec.
 > 
-> > I would be perfectly happy to recursively _read_lock both from the top
-> > of the page_fault at the DIO path, and under in the page_fault. I'm
-> > _read_locking after all. But lockdep is hard to convince. So I stole the
-> > xfs idea of having an rw_MMAPLOCK. And grab yet another _write_lock at
-> > truncate/punch/clone time when all mapping traversal needs to stop for
-> > the destructive change to take place. (Allocations are done another way
-> > and are race safe with traversal)
-> > 
-> > How do you intend to address this problem with range-locks? ie recursively
-> > taking the same "lock"? because if not for the recursive-ity and lockdep I would
-> > not need the extra lock-object per inode.
+> Looking deeper before applying it. That change is wrong for two reasons:
 > 
-> As long as the IO ranges to the same file *don't overlap*, it should
-> be perfectly safe to take separate range locks (in read or write
-> mode) on either side of the mmap_sem as non-overlapping range locks
-> can be nested and will not self-deadlock.
+>   1) The value is already validated in timekeeping_validate_timex()
+> 
+>   2) The tv_usec value can legitimately be >= USEC_PER_SEC if the ADJ_NANO
+>      mode bit is set. See timekeeping_validate_timex() and the code you
+>      actually modified:
+> 
+Yes, you are right.
+This actually found in an old version, and doesn't check more detail on mainline.
+Thank you very much.
+>>   	if (txc->modes & ADJ_SETOFFSET) {
+>>   		struct timespec64 delta;
+>> +
+>> +		if (txc->time.tv_usec < 0 || txc->time.tv_usec >= USEC_PER_SEC)
+>> +			return -EINVAL;
+>>   		delta.tv_sec  = txc->time.tv_sec;
+>>   		delta.tv_nsec = txc->time.tv_usec;
+>>   		if (!(txc->modes & ADJ_NANO))
+> 			delta.tv_nsec *= 1000;
+> 
+>      	The multiplication is conditional ....
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+> 
+> 
+> .
+> 
 
-I'd be really careful with nesting range locks. You can have nasty
-situations like:
-
-Thread 1		Thread 2
-read_lock(0,1000)	
-			write_lock(500,1500) -> blocks due to read lock
-read_lock(1001,1500) -> blocks due to write lock (or you have to break
-  fairness and then deal with starvation issues).
-
-So once you allow nesting of range locks, you have to very carefully define
-what is and what is not allowed. That's why in my range lock implementation
-ages back I've decided to treat range lock as a rwsem for deadlock
-verification purposes.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
