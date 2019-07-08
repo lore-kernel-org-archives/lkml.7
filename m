@@ -2,110 +2,106 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AB0C606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0208FC606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8184F216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="g4XD/1ZC"
+	by mail.kernel.org (Postfix) with ESMTP id D739C21707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404954AbfGHUVz (ORCPT
+        id S2404969AbfGHUWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:21:55 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39390 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfGHUVy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:21:54 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v18so17243574ljh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eng.ucsd.edu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ryt0cZPm5+/IznGSSDvtmucCW76NK93kkjZBDBiSaU0=;
-        b=g4XD/1ZCBPdBw3MXPRXdyCJWvsrzTaIUe6jPY4axcAEQWJc/15BcXBNxDYRFvpd2JW
-         8scl6PQh/JhxMhyJIcBt5+WwtCxICN5NktW76UrgZP4y0COZQzsqjaeUM0RzV4f57MPm
-         Z5LRsjsbIqdRu0JFi1MZSeMAjQl9+BeL1XobQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ryt0cZPm5+/IznGSSDvtmucCW76NK93kkjZBDBiSaU0=;
-        b=M4FZrpOs/OR78rHI2Fdg+3y4H3E60Z+HtMtbwOqeswfd8QqTn0KDA/C3qC96scXXT9
-         OF6bzGBKK0SLMboEVB0qWu7h2LN86gMvhVePkpReomoH5oqPJ0WFhWmwojs9pYh+zwgz
-         1UZGNEIL/PwTRfbe8IRb9CovzLQS+FiqCt4iNK1rBe/DiG21QkmJB30XFi8I14INFg9Q
-         LfKAgsPJqnoTePrNtxls0DeSK7+SMJ4TJb85Vv43Op6bDEgRAKW2qF9j6qq2tmr0XX9c
-         rfUXcpGLtxXjM+T5PQIv5eK5UIZBOghGC8indHSVqDCL3yZu2aKN+SLQCBmyKVPbpJJk
-         YJCg==
-X-Gm-Message-State: APjAAAW3nj4+2+fx2w/FosiJBwIjORh+sOMAd0bnzhjldTYm8cErWEub
-        jFWJ4T59FgqPcGa2TzGHoCm+x+tTKIxAyNO8
-X-Google-Smtp-Source: APXvYqxyeekyU2hfvc4ui92LSo7VMCed5IvscKuBWkBE75dmui02gIGzS6x4JiYAHFe9IbcMW4WewA==
-X-Received: by 2002:a2e:9117:: with SMTP id m23mr11599096ljg.134.1562617312886;
-        Mon, 08 Jul 2019 13:21:52 -0700 (PDT)
-Received: from luke-XPS-13 (77-255-206-190.adsl.inetia.pl. [77.255.206.190])
-        by smtp.gmail.com with ESMTPSA id y5sm3834659ljj.5.2019.07.08.13.21.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 13:21:52 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 13:21:50 -0700
-From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
-Subject: Re: [PATCH 3.16 000/129] 3.16.70-rc1 review
-Message-ID: <20190708202150.GB13296@luke-XPS-13>
-References: <lsq.1562518456.876074874@decadent.org.uk>
- <20190708130511.GA4626@luke-XPS-13>
- <85820ecbcc368f992eb061481c388bb2ebb8ad65.camel@decadent.org.uk>
+        Mon, 8 Jul 2019 16:22:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45638 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725869AbfGHUWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 16:22:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E1050AD85;
+        Mon,  8 Jul 2019 20:22:21 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id EFFA4E00B7; Mon,  8 Jul 2019 22:22:19 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 22:22:19 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 04/15] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190708202219.GE24474@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
+ <20190702122521.GN2250@nanopsycho>
+ <20190702145241.GD20101@unicorn.suse.cz>
+ <20190703084151.GR2250@nanopsycho>
+ <20190708172729.GC24474@unicorn.suse.cz>
+ <20190708192629.GD2282@nanopsycho.orion>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <85820ecbcc368f992eb061481c388bb2ebb8ad65.camel@decadent.org.uk>
+In-Reply-To: <20190708192629.GD2282@nanopsycho.orion>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 04:29:22PM +0100, Ben Hutchings wrote:
-> On Mon, 2019-07-08 at 06:05 -0700, Luke Nowakowski-Krijger wrote:
-> > Hello, 
-> > 
-> > I got 1 error when applying this patch series to the latest linux-3.16.y
-> > stable branch
-> > 
-> > fs/fuse/file.c:218:3: error: implicit declaration of function ‘stream_open’
+On Mon, Jul 08, 2019 at 09:26:29PM +0200, Jiri Pirko wrote:
+> Mon, Jul 08, 2019 at 07:27:29PM CEST, mkubecek@suse.cz wrote:
+> >
+> >There are two reasons for this design. First is to reduce the number of
+> >requests needed to get the information. This is not so much a problem of
+> >ethtool itself; the only existing commands that would result in multiple
+> >request messages would be "ethtool <dev>" and "ethtool -s <dev>". Maybe
+> >also "ethtool -x/-X <dev>" but even if the indirection table and hash
+> >key have different bits assigned now, they don't have to be split even
+> >if we split other commands. It may be bigger problem for daemons wanting
+> >to keep track of system configuration which would have to issue many
+> >requests whenever a new device appears.
+> >
+> >Second reason is that with 8-bit genetlink command/message id, the space
+> >is not as infinite as it might seem. I counted quickly, right now the
+> >full series uses 14 ids for kernel messages, with split you propose it
+> >would most likely grow to 44. For full implementation of all ethtool
+> >functionality, we could get to ~60 ids. It's still only 1/4 of the
+> >available space but it's not clear what the future development will look
+> >like. We would certainly need to be careful not to start allocating new
+> >commands for single parameters and try to be foreseeing about what can
+> >be grouped together. But we will need to do that in any case.
+> >
+> >On kernel side, splitting existing messages would make some things a bit
+> >easier. It would also reduce the number of scenarios where only part of
+> >requested information is available or only part of a SET request fails.
 > 
-> It is added by the previous patch and declared in <linux/fs.h>. 
-> fs/fuse/file.c always includes that (via fs/fuse/fuse_i.h), so I don't
-> see how this error can happen.
+> Okay, I got your point. So why don't we look at if from the other angle.
+> Why don't we have only single get/set command that would be in general
+> used to get/set ALL info from/to the kernel. Where we can have these
+> bits (perhaps rather varlen bitfield) to for user to indicate which data
+> is he interested in? This scales. The other commands would be
+> just for action.
 > 
-> Ben.
->
+> Something like RTM_GETLINK/RTM_SETLINK. Makes sense?
 
-I was actually in another src tree. My mistake.
+It's certainly an option but at the first glance it seems as just moving
+what I tried to avoid one level lower. It would work around the u8 issue
+(but as Johannes pointed out, we can handle it with genetlink when/if
+the time comes). We would almost certainly have to split the replies
+into multiple messages to keep the packet size reasonable. I'll have to
+think more about the consequences for both kernel and userspace.
 
-Rebuilding it off of your tree, I get no compilation errors and it
-boots on my x86_64 machine. 
+My gut feeling is that out of the two extreme options (one universal
+message type and message types corresponding to current infomask bits),
+the latter is more appealing. After all, ethtool has been gathering
+features that would need those ~60 message types for 20 years.
 
-> -- 
-> Ben Hutchings
-> Time is nature's way of making sure that
-> everything doesn't happen at once.
-> 
-> 
-
-Also this is a good thing to remember. 
-
-Thanks, 
-- Luke
-
+Michal
