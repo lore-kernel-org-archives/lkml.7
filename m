@@ -2,177 +2,163 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36C9C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3D7C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA1F21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDB821479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vCUqTPl2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jy8Ff5Ne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733060AbfGHQa3 (ORCPT
+        id S2388261AbfGHQbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:30:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44486 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728834AbfGHQa2 (ORCPT
+        Mon, 8 Jul 2019 12:31:47 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43034 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728834AbfGHQbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:30:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=04VsQin5fQQD6HrGTvlUwJ6xlZUOLvn+UaWNLc/zkB0=; b=vCUqTPl2ipzmd49ySsSXpS65M
-        eXeYC3nfJ/AjlLrdFTNrvfm6qaY6inXl3PWVbhn9hO92uioXOG3N8I6wMhs0Zi89HITX8AdcZ255l
-        RuMAYwE5LSqd9zGZLXua2w3KlVMxL62qsbvHtyWHJKQe7G/T7vbwOFzUovis0sVtMYL1y80d5p6Qq
-        QlnkSt5rwGGu9em8SB3D0qfIAfz+HkTJaEjeDULOAFkGsxbJqhkoY73kK36/TEjF7vTOdx1EDgG1w
-        3YNgyJQg1elhAxBsv8HtJdRiZrz8CWvd7HiYsEPUT3EFrXtMkceI6mTndjmTswwc8A06ozJRK+bmw
-        090eYDW4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkWX1-0007rA-5M; Mon, 08 Jul 2019 16:30:25 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8559420976EFB; Mon,  8 Jul 2019 18:30:21 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 18:30:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 3/7] perf: order iterators for visit_groups_merge into a
- min-heap
-Message-ID: <20190708163021.GG3419@hirez.programming.kicks-ass.net>
-References: <20190702065955.165738-1-irogers@google.com>
- <20190702065955.165738-4-irogers@google.com>
+        Mon, 8 Jul 2019 12:31:46 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c19so5746680lfm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3muSErcKEFndhXfaKY3ATCVtuVvwHasHWrKAnKptt3A=;
+        b=jy8Ff5Nekqo/UDsSM6LPdZ1/vxXRxHPPtCQNmrMM9JBSzKLh/D5A49NUn+QH8yxpsN
+         ZcneME9bQ5PEkkfjrJ5FFDXn51FOriVckEKMGfCX2C3b3tapU4Zog43RMlaoakymFFVr
+         8v2hEmD0TJZAZo2mtG7DNytqbW2S69YhcO4m+up5YxpC1iCRYbyIQ5rNjx0uOSmoxkvX
+         JAn9KqrTnU2fCfxIxP3Js5Muakzs0ucaDQ+dNOqm7KGl0mMoAvZd8PteWG2J87NJ6y5T
+         ApLhbzQONg2+flpPM4Evj/KZ0VrvDrl48NOSfNPbN7psuTAsrlP8nOA5fMCMQtkl1YMH
+         J2pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3muSErcKEFndhXfaKY3ATCVtuVvwHasHWrKAnKptt3A=;
+        b=MiTa4Z5sjw0ScdFi6+wrNfikbd0dO8YSqkgTycUdneADIdwY9ZUNJeWBgRTmZIJoE2
+         0orTgwY4kByoFyJwJRH0qtkVNP9yyvwpUakys0DVaVp1K+lQ/9kgUdwEK+ZEzckwUCXw
+         lfAwKwv7b3AkbgliQ3YT8Xt0CN/nqjMajOuk0itxupKgp+wDJilMWkfEEaRm5M9AHkJV
+         yyWdkGrBOpQrpGPsrVFCrbGDC4MNdo+k3bKYjFqyhaxe/jaqn2j390hGEdH3Oqj+Ice0
+         5z/rX+/EO+QV3wvmWksel46BUUS24tvDrgpnIG9y7X0f9OnXvFXk3geDOfG+y5bRbisS
+         kK0A==
+X-Gm-Message-State: APjAAAXhksEEcJw7pGr4mnNDUD36XmagOEGTierRNW2HXcw8LQDLwowy
+        rMfZHzBTw3LPY4cIRYHjjQHzEg==
+X-Google-Smtp-Source: APXvYqxUVvYjuVf39gxQ380dX6pWA86hhvJUjir+HrNiY0cZ5linR0Mbx8/ENcW/g4VOsocx8t9j7Q==
+X-Received: by 2002:a19:5f46:: with SMTP id a6mr9474420lfj.142.1562603504069;
+        Mon, 08 Jul 2019 09:31:44 -0700 (PDT)
+Received: from jax (h-84-105.A175.priv.bahnhof.se. [79.136.84.105])
+        by smtp.gmail.com with ESMTPSA id y5sm3724894ljj.5.2019.07.08.09.31.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jul 2019 09:31:43 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 18:31:41 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     corbet@lwn.net, dhowells@redhat.com, jejb@linux.ibm.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org,
+        serge@hallyn.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tee-dev@lists.linaro.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [RFC 0/7] Introduce TEE based Trusted Keys support
+Message-ID: <20190708163140.GB28253@jax>
+References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
+ <CAFA6WYPn3HB6BRocKmKTR+ZPE=Fav5w1TUdRgmLp-NkYobp3rw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190702065955.165738-4-irogers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFA6WYPn3HB6BRocKmKTR+ZPE=Fav5w1TUdRgmLp-NkYobp3rw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 11:59:51PM -0700, Ian Rogers wrote:
-> The groups rbtree holding perf events, either for a CPU or a task, needs
-> to have multiple iterators that visit events in group_index (insertion)
-> order. Rather than linearly searching the iterators, use a min-heap to go
-> from a O(#iterators) search to a O(log2(#iterators)) insert cost per event
-> visited.
+Hi Sumit,
 
-Is this actually faster for the common (very small n) case?
-
-ISTR 'stupid' sorting algorithms are actually faster when the data fits
-into L1
-
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  kernel/events/core.c | 123 +++++++++++++++++++++++++++++++++----------
->  1 file changed, 95 insertions(+), 28 deletions(-)
+On Mon, Jul 08, 2019 at 06:11:39PM +0530, Sumit Garg wrote:
+> Hi Jens,
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 9a2ad34184b8..396b5ac6dcd4 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -3318,6 +3318,77 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
->  	ctx_sched_out(&cpuctx->ctx, cpuctx, event_type);
->  }
->  
-> +/* Data structure used to hold a min-heap, ordered by group_index, of a fixed
-> + * maximum size.
-> + */
+> On Thu, 13 Jun 2019 at 16:01, Sumit Garg <sumit.garg@linaro.org> wrote:
+> >
+> > Add support for TEE based trusted keys where TEE provides the functionality
+> > to seal and unseal trusted keys using hardware unique key. Also, this is
+> > an alternative in case platform doesn't possess a TPM device.
+> >
+> > This series also adds some TEE features like:
+> >
+> > Patch #1, #2 enables support for registered kernel shared memory with TEE.
+> >
+> 
+> Would you like to pick up Patch #1, #2 separately? I think both these
+> patches add independent functionality and also got reviewed-by tags
+> too.
 
-Broken comment style.
+I think it makes more sense to keep them together in the same patch
+series or could end up with dependencies between trees.
 
-> +struct perf_event_heap {
-> +	struct perf_event **storage;
-> +	int num_elements;
-> +	int max_elements;
-> +};
-> +
-> +static void min_heap_swap(struct perf_event_heap *heap,
-> +			  int pos1, int pos2)
-> +{
-> +	struct perf_event *tmp = heap->storage[pos1];
-> +
-> +	heap->storage[pos1] = heap->storage[pos2];
-> +	heap->storage[pos2] = tmp;
-> +}
-> +
-> +/* Sift the perf_event at pos down the heap. */
-> +static void min_heapify(struct perf_event_heap *heap, int pos)
-> +{
-> +	int left_child, right_child;
-> +
-> +	while (pos > heap->num_elements / 2) {
-> +		left_child = pos * 2;
-> +		right_child = pos * 2 + 1;
-> +		if (heap->storage[pos]->group_index >
-> +		    heap->storage[left_child]->group_index) {
-> +			min_heap_swap(heap, pos, left_child);
-> +			pos = left_child;
-> +		} else if (heap->storage[pos]->group_index >
-> +			   heap->storage[right_child]->group_index) {
-> +			min_heap_swap(heap, pos, right_child);
-> +			pos = right_child;
-> +		} else {
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +/* Floyd's approach to heapification that is O(n). */
-> +static void min_heapify_all(struct perf_event_heap *heap)
-> +{
-> +	int i;
-> +
-> +	for (i = heap->num_elements / 2; i > 0; i--)
-> +		min_heapify(heap, i);
-> +}
-> +
-> +/* Remove minimum element from the heap. */
-> +static void min_heap_pop(struct perf_event_heap *heap)
-> +{
-> +	WARN_ONCE(heap->num_elements <= 0, "Popping an empty heap");
-> +	heap->num_elements--;
-> +	heap->storage[0] = heap->storage[heap->num_elements];
-> +	min_heapify(heap, 0);
-> +}
+If you don't think dependencies will be an issue then I don't mind
+picking them up, in that case they'd likely sit in an arm-soc branch
+until next merge window. However, I think that #3 (support for private
+kernel login method) should be included too and that one isn't ready
+yet.
 
-Is this really the first heap implementation in the kernel?
+Thanks,
+Jens
 
-> @@ -3378,12 +3453,14 @@ static int visit_groups_merge(struct perf_event_context *ctx,
->  			struct cgroup_subsys_state *css;
->  
->  			for (css = &cpuctx->cgrp->css; css; css = css->parent) {
-> -				itrs[num_itrs] = perf_event_groups_first(groups,
-> +				heap.storage[heap.num_elements] =
-> +						perf_event_groups_first(groups,
->  								   cpu,
->  								   css->cgroup);
-> -				if (itrs[num_itrs]) {
-> -					num_itrs++;
-> -					if (num_itrs == max_itrs) {
-> +				if (heap.storage[heap.num_elements]) {
-> +					heap.num_elements++;
-> +					if (heap.num_elements ==
-> +					    heap.max_elements) {
->  						WARN_ONCE(
->  				     max_cgroups_with_events_depth,
->  				     "Insufficient iterators for cgroup depth");
-
-That's turning into unreadable garbage due to indentation; surely
-there's a solution for that.
+> 
+> 
+> -Sumit
+> 
+> > Patch #3 enables support for private kernel login method required for
+> > cases like trusted keys where we don't wan't user-space to directly access
+> > TEE service to retrieve trusted key contents.
+> >
+> > Rest of the patches from #4 to #7 adds support for TEE based trusted keys.
+> >
+> > This patch-set has been tested with OP-TEE based pseudo TA which can be
+> > found here [1].
+> >
+> > Looking forward to your valuable feedback/suggestions.
+> >
+> > [1] https://github.com/OP-TEE/optee_os/pull/3082
+> >
+> > Sumit Garg (7):
+> >   tee: optee: allow kernel pages to register as shm
+> >   tee: enable support to register kernel memory
+> >   tee: add private login method for kernel clients
+> >   KEYS: trusted: Introduce TEE based Trusted Keys
+> >   KEYS: encrypted: Allow TEE based trusted master keys
+> >   doc: keys: Document usage of TEE based Trusted Keys
+> >   MAINTAINERS: Add entry for TEE based Trusted Keys
+> >
+> >  Documentation/security/keys/tee-trusted.rst      |  93 +++++
+> >  MAINTAINERS                                      |   9 +
+> >  drivers/tee/optee/call.c                         |   7 +
+> >  drivers/tee/tee_core.c                           |   6 +
+> >  drivers/tee/tee_shm.c                            |  16 +-
+> >  include/keys/tee_trusted.h                       |  84 ++++
+> >  include/keys/trusted-type.h                      |   1 +
+> >  include/linux/tee_drv.h                          |   1 +
+> >  include/uapi/linux/tee.h                         |   2 +
+> >  security/keys/Kconfig                            |   3 +
+> >  security/keys/Makefile                           |   3 +
+> >  security/keys/encrypted-keys/masterkey_trusted.c |  10 +-
+> >  security/keys/tee_trusted.c                      | 506 +++++++++++++++++++++++
+> >  13 files changed, 737 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/security/keys/tee-trusted.rst
+> >  create mode 100644 include/keys/tee_trusted.h
+> >  create mode 100644 security/keys/tee_trusted.c
+> >
+> > --
+> > 2.7.4
+> >
