@@ -2,94 +2,153 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555E4C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796BAC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 384DC2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD762064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731087AbfGHMyb convert rfc822-to-8bit (ORCPT
+        id S1731107AbfGHM4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:54:31 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:53471 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbfGHMya (ORCPT
+        Mon, 8 Jul 2019 08:56:24 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:57603 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728892AbfGHM4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:54:30 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 78D0A1C0012;
-        Mon,  8 Jul 2019 12:54:27 +0000 (UTC)
-Date:   Mon, 8 Jul 2019 14:54:26 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] mtd: remove c++ comments from uapi header
-Message-ID: <20190708145426.62b4aabd@xps13>
-In-Reply-To: <20190708124946.3679242-1-arnd@arndb.de>
-References: <20190708124946.3679242-1-arnd@arndb.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 8 Jul 2019 08:56:24 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MbBQU-1iLzrJ3Egy-00bXQy; Mon, 08 Jul 2019 14:55:57 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH] [net-next] net/mlx5e: xsk: dynamically allocate mlx5e_channel_param
+Date:   Mon,  8 Jul 2019 14:55:41 +0200
+Message-Id: <20190708125554.3863901-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:4ftv1gHczqjAf8xH9IXsCPbra/fMKRspDTr8cIcpEuGznocAdGy
+ iZhmNDyoSPnpnBZOyDHtT8Ynn4XQ9kQfpsqHva0dKZA5Ld4hMScUjAMHEbG6PrAbwLC6ASg
+ g539BORMN8W974gKpYHP5K9v2Y2f956yutZO9dA6870giJkCXQ71FrqA8iO4eyLCZFzDhgI
+ VQdm2P+yiXXKN+C7144Mw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:S7/kq/cX7g0=:jQ0xc1zhHRNbrh7x+xMeHd
+ cA/orRXHrovfvXEwHXZJ26K0GbHxI2WZd/m4ZhxS4FbYUQCEDMUNy2qB1IFuJjaqe4Ok79Rw+
+ xsVajdjRZLKA8iteii1S1tU6D3sQnjcMYzK9cBDLynaRMXbMijhwmTSSWvoElvXCgDhCTHqgW
+ w0ZKb8UsaLYUJXJV+rtGWcvRINaruEIKSrH6zyPkiFs/7W8mhOpuPxnLYfSic/nmn9RqgeY16
+ 9PpuKCJVcOTuXrv7FXqdCpcEkbg09EeepsRjKkKsJ9YvEiTXd49QbJ9EalG6aIK2+5SXA2OCH
+ FfCwVe4ZWBH2Bf3cWn+IvsRaj/wv13R9p3joz6YNOZAPX0H5LLXq2sA6ckW2FC+QvSKaef0FP
+ IGttL7qBy2wgExG+3GFBaWQHx5wWeH3fnAslbBWvM6JvbHjCUMueZa6l/jnSzleM8dgP1n2dF
+ 3Kb7dt3tQKmc2ANAboFjOqOfOZqzpiye/4XZ1aBxc0wFo6nao0p9Xw+RjcYWxsEBKIY+2US1E
+ Q7A0Ivd4/DgYN0zZDRXUko+thJnndO3/iuaeeJi9C0fcbmplbWvxWHZqPB94wdycirbrWGTbF
+ 4BEHT3RgOKgOABrcp2tsqgnipoNcJTPr1Bq+Up14Mf3MERyrLi7AS4bXJNtz9L2BBMWBbtb/D
+ pVfYxu7EZc+0WEYxD2gQWQwH4ouF7OYRnkAuotdjafrWCeio59oFCnNdU4D/4x9PfSKA6DpwF
+ 7+b1dGFK0pTWht8vSCelCEwDbGj1EbJRNNE0DA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+The structure is too large to put on the stack, resulting in a
+warning on 32-bit ARM:
 
-Arnd Bergmann <arnd@arndb.de> wrote on Mon,  8 Jul 2019 14:49:39 +0200:
+drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c:59:5: error: stack frame size of 1344 bytes in function
+      'mlx5e_open_xsk' [-Werror,-Wframe-larger-than=]
 
-> Checking the uapi headers now produces a warning with clang:
-> 
-> ./usr/include/mtd/mtd-abi.h:116:28: error: // comments are not allowed in this language [-Werror,-Wcomment]
-> 
-> Change these into standard C comments here.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  include/uapi/mtd/mtd-abi.h | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/uapi/mtd/mtd-abi.h b/include/uapi/mtd/mtd-abi.h
-> index aff5b5e59845..47ffe3208c27 100644
-> --- a/include/uapi/mtd/mtd-abi.h
-> +++ b/include/uapi/mtd/mtd-abi.h
-> @@ -113,11 +113,11 @@ struct mtd_write_req {
->  #define MTD_CAP_NVRAM		(MTD_WRITEABLE | MTD_BIT_WRITEABLE | MTD_NO_ERASE)
->  
->  /* Obsolete ECC byte placement modes (used with obsolete MEMGETOOBSEL) */
-> -#define MTD_NANDECC_OFF		0	// Switch off ECC (Not recommended)
-> -#define MTD_NANDECC_PLACE	1	// Use the given placement in the structure (YAFFS1 legacy mode)
-> -#define MTD_NANDECC_AUTOPLACE	2	// Use the default placement scheme
-> -#define MTD_NANDECC_PLACEONLY	3	// Use the given placement in the structure (Do not store ecc result on read)
-> -#define MTD_NANDECC_AUTOPL_USR 	4	// Use the given autoplacement scheme rather than using the default
-> +#define MTD_NANDECC_OFF		0	/* Switch off ECC (Not recommended) */
-> +#define MTD_NANDECC_PLACE	1	/* Use the given placement in the structure (YAFFS1 legacy mode) */
-> +#define MTD_NANDECC_AUTOPLACE	2	/* Use the default placement scheme */
-> +#define MTD_NANDECC_PLACEONLY	3	/* Use the given placement in the structure (Do not store ecc result on read) */
-> +#define MTD_NANDECC_AUTOPL_USR 	4	/* Use the given autoplacement scheme rather than using the default */
->  
->  /* OTP mode selection */
->  #define MTD_OTP_OFF		0
+Use kzalloc() instead.
 
-A similar patch has been sent a few weeks ago and has been applied
-yesterday night so it should have appeared this morning in linux-next :)
+Fixes: a038e9794541 ("net/mlx5e: Add XSK zero-copy support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ .../mellanox/mlx5/core/en/xsk/setup.c         | 25 ++++++++++++-------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
+index aaffa6f68dc0..db9bbec68dbf 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
+@@ -60,24 +60,28 @@ int mlx5e_open_xsk(struct mlx5e_priv *priv, struct mlx5e_params *params,
+ 		   struct mlx5e_xsk_param *xsk, struct xdp_umem *umem,
+ 		   struct mlx5e_channel *c)
+ {
+-	struct mlx5e_channel_param cparam = {};
++	struct mlx5e_channel_param *cparam;
+ 	struct dim_cq_moder icocq_moder = {};
+ 	int err;
+ 
+ 	if (!mlx5e_validate_xsk_param(params, xsk, priv->mdev))
+ 		return -EINVAL;
+ 
+-	mlx5e_build_xsk_cparam(priv, params, xsk, &cparam);
++	cparam = kzalloc(sizeof(*cparam), GFP_KERNEL);
++	if (!cparam)
++		return -ENOMEM;
+ 
+-	err = mlx5e_open_cq(c, params->rx_cq_moderation, &cparam.rx_cq, &c->xskrq.cq);
++	mlx5e_build_xsk_cparam(priv, params, xsk, cparam);
++
++	err = mlx5e_open_cq(c, params->rx_cq_moderation, &cparam->rx_cq, &c->xskrq.cq);
+ 	if (unlikely(err))
+-		return err;
++		goto err_kfree_cparam;
+ 
+-	err = mlx5e_open_rq(c, params, &cparam.rq, xsk, umem, &c->xskrq);
++	err = mlx5e_open_rq(c, params, &cparam->rq, xsk, umem, &c->xskrq);
+ 	if (unlikely(err))
+ 		goto err_close_rx_cq;
+ 
+-	err = mlx5e_open_cq(c, params->tx_cq_moderation, &cparam.tx_cq, &c->xsksq.cq);
++	err = mlx5e_open_cq(c, params->tx_cq_moderation, &cparam->tx_cq, &c->xsksq.cq);
+ 	if (unlikely(err))
+ 		goto err_close_rq;
+ 
+@@ -87,18 +91,18 @@ int mlx5e_open_xsk(struct mlx5e_priv *priv, struct mlx5e_params *params,
+ 	 * is disabled and then reenabled, but the SQ continues receiving CQEs
+ 	 * from the old UMEM.
+ 	 */
+-	err = mlx5e_open_xdpsq(c, params, &cparam.xdp_sq, umem, &c->xsksq, true);
++	err = mlx5e_open_xdpsq(c, params, &cparam->xdp_sq, umem, &c->xsksq, true);
+ 	if (unlikely(err))
+ 		goto err_close_tx_cq;
+ 
+-	err = mlx5e_open_cq(c, icocq_moder, &cparam.icosq_cq, &c->xskicosq.cq);
++	err = mlx5e_open_cq(c, icocq_moder, &cparam->icosq_cq, &c->xskicosq.cq);
+ 	if (unlikely(err))
+ 		goto err_close_sq;
+ 
+ 	/* Create a dedicated SQ for posting NOPs whenever we need an IRQ to be
+ 	 * triggered and NAPI to be called on the correct CPU.
+ 	 */
+-	err = mlx5e_open_icosq(c, params, &cparam.icosq, &c->xskicosq);
++	err = mlx5e_open_icosq(c, params, &cparam->icosq, &c->xskicosq);
+ 	if (unlikely(err))
+ 		goto err_close_icocq;
+ 
+@@ -123,6 +127,9 @@ int mlx5e_open_xsk(struct mlx5e_priv *priv, struct mlx5e_params *params,
+ err_close_rx_cq:
+ 	mlx5e_close_cq(&c->xskrq.cq);
+ 
++err_kfree_cparam:
++	kfree(cparam);
++
+ 	return err;
+ }
+ 
+-- 
+2.20.0
 
-Thanks anyway!
-Miquèl
