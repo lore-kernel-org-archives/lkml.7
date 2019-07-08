@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9F5C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B2FC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB762166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DBA2171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599180;
-	bh=1+Q+n2T36vHFqICV6VSuCkyGccLJr15Eui94FJpfp80=;
+	s=default; t=1562599184;
+	bh=o9feKfxPZvibdB5icEli4TLI3ch2T7CbYL+KrybYP9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zDYeKt0AqVh1jhFQ5JylLlw1TSTzsRfQg9ttXzqVlmsia6ClT67GdbLwdjO7mz7bV
-	 YWFyMOsz+h4JMxRoxkJ5m7LXSkhVyJr93m45tsj5QAwVnlSAV+AM7rjX6k03rwfyvH
-	 ozuEF4Ls1zpDbKJ7+0uDQap8ON60FZN1XrTk2aH8=
+	b=UuGbC+Eqf+yT+2W+pO+4pj87R9eeqsy+djOhTyVCPDfffogbV3Ujg9A6QK0hs5sjX
+	 h5BRV4i0Qdin1vRDfSnPTcut/X0uAGO8rF1ZUxVm4GuB6rMzFrbSMGu+/sQJo1QRlD
+	 pJkf9TwZeohW3VSP0g/zGO/p5Zn33VpwzpPFwgkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733285AbfGHPTj (ORCPT
+        id S1733296AbfGHPTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733273AbfGHPTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:19:36 -0400
+        id S1733282AbfGHPTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:19:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C4112171F;
-        Mon,  8 Jul 2019 15:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4596321537;
+        Mon,  8 Jul 2019 15:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599176;
-        bh=1+Q+n2T36vHFqICV6VSuCkyGccLJr15Eui94FJpfp80=;
+        s=default; t=1562599178;
+        bh=o9feKfxPZvibdB5icEli4TLI3ch2T7CbYL+KrybYP9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OhXT67/vIYtJqbEnVYWGFdPb0bKSJgKGMVH0nt1O4AgGChwLU5KNjRWFFTr/JdigK
-         ZtxsDpUo440j5makm4FXsIaOcXx4AvXGEV5ueFQria1K34IGI0JACRw7LZbTJuPRub
-         jlxdFWjmN1qXX0+kwZ97JUw3lXdCTb5OJz53HGKg=
+        b=NgAIasHtmNzJbAPbq/7dY0hCITTuUy36iYp7aFZIxeRx7IepkkdbkNVq2/0g/Sa89
+         GxUBfzzIZ1r6tmMwnWj3GVWaj/94tr71cIhgH7jy0AdhJKE/czueT/UTjG64+g9nDR
+         fDZrNPca4iqaIF3xcn4W6w3KVVdpRX429dGvQRxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 003/102] scsi: ufs: Avoid runtime suspend possibly being blocked forever
-Date:   Mon,  8 Jul 2019 17:11:56 +0200
-Message-Id: <20190708150526.157448476@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoph Niedermaier <cniedermaier@dh-electronics.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 4.9 030/102] ARM: imx: cpuidle-imx6sx: Restrict the SW2ISO increase to i.MX6SX
+Date:   Mon,  8 Jul 2019 17:12:23 +0200
+Message-Id: <20190708150527.898627615@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,69 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit 24e2e7a19f7e4b83d0d5189040d997bce3596473 upstream.
+commit b25af2ff7c07bd19af74e3f64ff82e2880d13d81 upstream.
 
-UFS runtime suspend can be triggered after pm_runtime_enable() is invoked
-in ufshcd_pltfrm_init(). However if the first runtime suspend is triggered
-before binding ufs_hba structure to ufs device structure via
-platform_set_drvdata(), then UFS runtime suspend will be no longer
-triggered in the future because its dev->power.runtime_error was set in the
-first triggering and does not have any chance to be cleared.
+Since commit 1e434b703248 ("ARM: imx: update the cpu power up timing
+setting on i.mx6sx") some characters loss is noticed on i.MX6ULL UART
+as reported by Christoph Niedermaier.
 
-To be more clear, dev->power.runtime_error is set if hba is NULL in
-ufshcd_runtime_suspend() which returns -EINVAL to rpm_callback() where
-dev->power.runtime_error is set as -EINVAL. In this case, any future
-rpm_suspend() for UFS device fails because rpm_check_suspend_allowed()
-fails due to non-zero
-dev->power.runtime_error.
+The intention of such commit was to increase the SW2ISO field for i.MX6SX
+only, but since cpuidle-imx6sx is also used on i.MX6UL/i.MX6ULL this caused
+unintended side effects on other SoCs.
 
-To resolve this issue, make sure the first UFS runtime suspend get valid
-"hba" in ufshcd_runtime_suspend(): Enable UFS runtime PM only after hba is
-successfully bound to UFS device structure.
+Fix this problem by keeping the original SW2ISO value for i.MX6UL/i.MX6ULL
+and only increase SW2ISO in the i.MX6SX case.
 
-Fixes: 62694735ca95 ([SCSI] ufs: Add runtime PM support for UFS host controller driver)
 Cc: stable@vger.kernel.org
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 1e434b703248 ("ARM: imx: update the cpu power up timing setting on i.mx6sx")
+Reported-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Tested-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Tested-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd-pltfrm.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ arch/arm/mach-imx/cpuidle-imx6sx.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -342,24 +342,21 @@ int ufshcd_pltfrm_init(struct platform_d
- 		goto dealloc_host;
- 	}
+--- a/arch/arm/mach-imx/cpuidle-imx6sx.c
++++ b/arch/arm/mach-imx/cpuidle-imx6sx.c
+@@ -15,6 +15,7 @@
  
--	pm_runtime_set_active(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
--
- 	ufshcd_init_lanes_per_dir(hba);
+ #include "common.h"
+ #include "cpuidle.h"
++#include "hardware.h"
  
- 	err = ufshcd_init(hba, mmio_base, irq);
- 	if (err) {
- 		dev_err(dev, "Initialization failed\n");
--		goto out_disable_rpm;
-+		goto dealloc_host;
- 	}
+ static int imx6sx_idle_finish(unsigned long val)
+ {
+@@ -108,7 +109,7 @@ int __init imx6sx_cpuidle_init(void)
+ 	 * except for power up sw2iso which need to be
+ 	 * larger than LDO ramp up time.
+ 	 */
+-	imx_gpc_set_arm_power_up_timing(0xf, 1);
++	imx_gpc_set_arm_power_up_timing(cpu_is_imx6sx() ? 0xf : 0x2, 1);
+ 	imx_gpc_set_arm_power_down_timing(1, 1);
  
- 	platform_set_drvdata(pdev, hba);
- 
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
- 	return 0;
- 
--out_disable_rpm:
--	pm_runtime_disable(&pdev->dev);
--	pm_runtime_set_suspended(&pdev->dev);
- dealloc_host:
- 	ufshcd_dealloc_host(hba);
- out:
+ 	return cpuidle_register(&imx6sx_cpuidle_driver, NULL);
 
 
