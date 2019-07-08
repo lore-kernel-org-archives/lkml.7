@@ -2,97 +2,105 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AF8C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D8CC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3192175B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:31:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jHtVNZux"
+	by mail.kernel.org (Postfix) with ESMTP id EE0A4216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562607102;
+	bh=GDXQTiVeUiU/VwsdCmMiL7pxP6SiviFJVgivXw6p7T0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sMq+r41WpEQ0DroUdesTYBhi1w5AnZCaAJKjQzhRLcm0lMQlYBGqx4890R4J4oKEc
+	 wI9zrU7I3dfxDfj+6o8q7IkQQCqF8XO0u+WWa41mw1P0NzK7IibLlvcVzJfwS28mtv
+	 Hj0vRK5KzYBPjXT8ODLSMHL3uaXDZ9waERyKrtSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390382AbfGHRa6 (ORCPT
+        id S2390207AbfGHRbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:30:58 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19911 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728708AbfGHRa5 (ORCPT
+        Mon, 8 Jul 2019 13:31:40 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36013 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfGHRbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:30:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d237dcc0001>; Mon, 08 Jul 2019 10:30:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 08 Jul 2019 10:30:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 08 Jul 2019 10:30:56 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 8 Jul
- 2019 17:30:55 +0000
-Subject: Re: hmm_range_fault related fixes and legacy API removal v2
-To:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>
-CC:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Mon, 8 Jul 2019 13:31:40 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z4so15385399qtc.3;
+        Mon, 08 Jul 2019 10:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F3Z8ODmIuThf6qIMsRJ9IwagYSAnPtGl9RN+7VHHChg=;
+        b=aqE1xvZMtT7tlMKN0uI2aPhS+B7q7NPQx57ZzTXE3rm2BGvJMUQYHZdGbsSR+ZNHfg
+         KfCyif2Z5T+CAzVEI8+uNEiuZ86jaLvvcnbumD1DftZwskChw61iCaejgttVDYeo+puX
+         EMcYe4mqQRkut1balpM3jphqF+6LvTpJVgsDGjeKNcaL2HrtEEceP6faQACtVF2GbCnH
+         EnfW9OChjLrUTnLaic14bALWa2BZWvwWjb4HbOhssw6ZZDbanIOucVyKb3DXFQID3zzN
+         6PaxqH4Gy69wl4Cd+/ST6a+M1Yks+kZdteW72v8EtAfrgEC6A0/zqxo7tvMMEc0VlKUl
+         /AcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F3Z8ODmIuThf6qIMsRJ9IwagYSAnPtGl9RN+7VHHChg=;
+        b=BVMfdo+CNJi8nbWz7KKml47a5Goq8IzdzN0kmr9EBWQqncPfGlMzMqYUowBqKdGVeB
+         8qdt6Nv3z5pXjJ6szNvoLpLjfjntkeIHN0cL1sAfyrHjvgNFHfpLdXJbNN8mI0xIrz+O
+         aRJ1MnkGgFn6Spd4pH1LFcH8ipprfkPUprraD3Nvpkr1XLOu3YFbIJla7NWEIlFA5RRd
+         XN2B8/PvPhBU+LzACo3M7ruKrnk78u5CC7xqfIoHBCcyaJKZzvjv2IL+6fcxtfvUse11
+         5VqHPUqaRUbuOIHDSzp9LZ1KfAtJJ11rJDqgbNu57uh6IEdIdA/vZPbjYkrCzVJQ33mt
+         1cIA==
+X-Gm-Message-State: APjAAAU9IjvhyNawQP2RDl2yx19ZZI1iChyKlUqO6Z5IsyuoFh1h2KBO
+        oTn1wYTf1WuRwKBNnJXS8Ro=
+X-Google-Smtp-Source: APXvYqzGrhEv1gxKVd1/9J9mYvxXMWJHhzWdHoqmqPs9JYDKKxlkOivbY+dTn6S37VhKMXYfjeiwoA==
+X-Received: by 2002:aed:2d67:: with SMTP id h94mr10495706qtd.154.1562607099035;
+        Mon, 08 Jul 2019 10:31:39 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:fa50])
+        by smtp.gmail.com with ESMTPSA id m44sm8984785qtm.54.2019.07.08.10.31.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 10:31:38 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 10:31:37 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Peng Wang <rocking@whu.edu.cn>,
+        "lizefan@huawei.com" <lizefan@huawei.com>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190703220214.28319-1-hch@lst.de>
- <20190704164236.GP3401@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <41dbb308-fc9e-d730-ffb0-6ce051dff1e1@nvidia.com>
-Date:   Mon, 8 Jul 2019 10:30:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+Subject: Re: [PATCH] cgroup: minor tweak for logic to get cgroup css
+Message-ID: <20190708173137.GH657710@devbig004.ftw2.facebook.com>
+References: <20190703020749.22988-1-rocking@whu.edu.cn>
+ <20190708164243.GE657710@devbig004.ftw2.facebook.com>
+ <20190708172944.GA24662@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190704164236.GP3401@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562607052; bh=uAosH4rcWhCpsYgdv7tD56ho8lbt2DTohfs/exVueGE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jHtVNZux6j3btAC9zECxouW2X2X+bK1i9oF4C4A/Q9DWBR6i+sgDlWhjq9OHySob+
-         NKYQ+ttlZ144MP71OeW7R8RFbx3dpzYZtDFxJ4U8MMtirXaSFOMFf5Wrr/ALyvn0NV
-         ImhfP70z7sKEnSBaWwJDHhcwMQ7Lzp2xgBPbUa5ma7/wScK0abV/JFCWJFKePtyEiY
-         3wz80LEdu5nuw/rDGedPWDuwfuYUC1cP3J4H+C0Ewt3gXjrcCe8fQAHRVFUUmKBA3V
-         pPffYKMqtSM0gysCMdxQnW88TizXrXplVyoXYIzb8LYYAAFg8PE1kZsaKHw5TlXlOl
-         tHpsXfTMIiEcw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708172944.GA24662@tower.DHCP.thefacebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 08, 2019 at 05:29:49PM +0000, Roman Gushchin wrote:
+> On Mon, Jul 08, 2019 at 09:42:43AM -0700, Tejun Heo wrote:
+> > On Wed, Jul 03, 2019 at 10:07:49AM +0800, Peng Wang wrote:
+> > > We could only handle the case that css exists
+> > > and css_try_get_online() fails.
+> > 
+> > As css_tryget_online() can't handle NULL input, this is a bug fix.
+> > Can you please clarify that in the description?
+> 
+> -       if (!css || !css_tryget_online(css))
+> +       if (css && !css_tryget_online(css))
+> 
+> If css == NULL, !css is true, and the second part of the || statement
+> will not be evaluated. So it's not a bug fix.
 
-On 7/4/19 9:42 AM, Jason Gunthorpe wrote:
-> On Wed, Jul 03, 2019 at 03:02:08PM -0700, Christoph Hellwig wrote:
->> Hi J=C3=A9r=C3=B4me, Ben and Jason,
->>
->> below is a series against the hmm tree which fixes up the mmap_sem
->> locking in nouveau and while at it also removes leftover legacy HMM APIs
->> only used by nouveau.
->>
->> Changes since v1:
->>   - don't return the valid state from hmm_range_unregister
->>   - additional nouveau cleanups
->=20
-> Ralph, since most of this is nouveau could you contribute a
-> Tested-by? Thanks
->=20
-> Jason
->=20
+Ah right, it's just confusing.  Will apply after the merge window.
 
-I can test things fairly easily but with all the different patches,
-conflicts, and personal git trees, can you specify the git tree
-and branch with everything applied that you want me to test?
+Thanks.
+
+-- 
+tejun
