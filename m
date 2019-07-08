@@ -2,153 +2,123 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9DEC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AB2C606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83EE42086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63FE02086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sxOtZW76"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iKTnDohQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389484AbfGHSsW (ORCPT
+        id S2389372AbfGHSsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 14:48:22 -0400
-Received: from mail-eopbgr20073.outbound.protection.outlook.com ([40.107.2.73]:22758
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727218AbfGHSsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 14:48:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Rw3c0lYfhYGbU92as2KehSCWfz5+bp2FLqc/x8iIhc=;
- b=sxOtZW76JnVhrsDTviJL9R3z/aUSNNM4QVUFZhs/YOO0X6M6NX1D5pljworojarLqHloAzju43NLew3W/vuF/BiVKa3xVKKZke4FN5y9D/r2dYtwd5EXzu9rvRljdw7iTPkW5otMjT26tnul7LLRVOlgESiJ1gOSFqiljf0te9A=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
- VE1PR04MB6672.eurprd04.prod.outlook.com (20.179.235.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.20; Mon, 8 Jul 2019 18:48:17 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::358c:d36c:4f8:db79]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::358c:d36c:4f8:db79%4]) with mapi id 15.20.2052.010; Mon, 8 Jul 2019
- 18:48:17 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Olof Johansson <olof@lixom.net>
-CC:     "arm@kernel.org" <arm@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "soc@kernel.org" <soc@kernel.org>
-Subject: RE: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
-Thread-Topic: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
-Thread-Index: AQHVJQRRM+rvlXmln0KUqEroTyzJyqaf1DJAgCFaZTA=
-Date:   Mon, 8 Jul 2019 18:48:17 +0000
-Message-ID: <VE1PR04MB668750E96558796A2E81DB678FF60@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190605194511.12127-1-leoyang.li@nxp.com>
- <20190617114948.7xxtpivve52c2jnb@localhost>
- <VE1PR04MB668773AB42154134CE18A6AB8FEB0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB668773AB42154134CE18A6AB8FEB0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b85f1e69-d2d2-450d-09b7-08d703d4d775
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6672;
-x-ms-traffictypediagnostic: VE1PR04MB6672:
-x-microsoft-antispam-prvs: <VE1PR04MB6672175C1F997916169970C88FF60@VE1PR04MB6672.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00922518D8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(376002)(346002)(136003)(13464003)(199004)(189003)(9686003)(71190400001)(6436002)(55016002)(86362001)(71200400001)(229853002)(5660300002)(76176011)(53546011)(6506007)(53936002)(26005)(6246003)(305945005)(7736002)(186003)(81156014)(8676002)(8936002)(25786009)(476003)(81166006)(486006)(11346002)(6916009)(6116002)(99286004)(446003)(4326008)(3846002)(7696005)(68736007)(102836004)(14444005)(256004)(74316002)(66446008)(64756008)(66476007)(66066001)(66556008)(66946007)(33656002)(73956011)(15650500001)(2906002)(478600001)(76116006)(316002)(14454004)(54906003)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6672;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ysCIHcd3Mg+gz9teEzJ6RHH4Qfy9AC00en/UkHDcoIN7ivTKboB7/YLgyOz6YNclMojLpDRd1H9aXVwAqmJ0SPTqfyONqjJtUhPGd1UQchnkTlPg2DxZXLPDwfypZhrzDcM0Ym1e2zoulssDnu2wKhQSB2mQzG+aqXeZ08wHwjoBI2BVIbXQFhQatfDn5qga8Fmo/tdTjMBAlpywTeFGlcLjRH/GjgnQj9fGEPjZ5VSfecA6cSlXEfqJjOBZYQestCntVOmfwVLlVtqgWE8tUi6bTjt+etWerT+id30EPef6+cPV0gzZvAevcZOZ7UK1akNnTrLHKcLDAEwxUh64dCONeYiNCTg1ZoDhoCcPZ7EmQFdLskkrnzMgfweOZohF7EKzNl5d7e4W/kKF28R1BLRrioex4BK0UaorchOghBY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Jul 2019 14:48:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41134 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbfGHSse (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 14:48:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68IhsaO030527;
+        Mon, 8 Jul 2019 18:47:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=9L+6tNo6/Js/Fs+4rHNN6VA6XVt717PhOqy1iR6GuTg=;
+ b=iKTnDohQ0owkh/1YSZxfbGThctmkgoarMRF073cvJ0mgkoe75xLPdWrdcACD44FRVaPd
+ 0/s+Ohw4TnbwqRmpJMprfHHOa9U1lGrEmYs6sbwPpTEhFFjbs/BWPsUNoQHr+3mDWAE3
+ 8mKx0fMJf/ovlBFSQNorfNnDjYtouk5Gfk/YG1hQA4kLR+iXhFNoTAlN82mU6o1j8nVs
+ QfamXZZmm2MbAmz6e9FBocoJbkY7ZY2hiafaht3AywRvyl7n8b/h50OnroShsgrKQu43
+ 1y8Z3an9KwSoIwHvhIgMxZi5AIbiO4CFuQreMvFz3Hwv1OsoK6PYMrhFg4yQdhxJbPNN hA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2tjk2tg6ew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 18:47:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68Ilf27061727;
+        Mon, 8 Jul 2019 18:47:43 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2tjkf2btpc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 18:47:43 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x68IlgYt029228;
+        Mon, 8 Jul 2019 18:47:42 GMT
+Received: from [10.65.147.235] (/10.65.147.235)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jul 2019 11:47:42 -0700
+Subject: Re: [PATCH v3] RDMA/core: Fix race when resolving IP address
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     dledford@redhat.com, leon@kernel.org, parav@mellanox.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1562584584-13132-1-git-send-email-dag.moxnes@oracle.com>
+ <20190708175025.GA6976@ziepe.ca>
+From:   Dag Moxnes <dag.moxnes@oracle.com>
+Message-ID: <4b9ae7b8-310c-e0b6-7a8e-33e6d5bef83d@oracle.com>
+Date:   Mon, 8 Jul 2019 20:47:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b85f1e69-d2d2-450d-09b7-08d703d4d775
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 18:48:17.7477
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6672
+In-Reply-To: <20190708175025.GA6976@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907080233
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907080232
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Leo Li
-> Sent: Monday, June 17, 2019 8:29 AM
-> To: Olof Johansson <olof@lixom.net>
-> Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; shawnguo@kernel.org
-> Subject: RE: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
->=20
->=20
->=20
-> > -----Original Message-----
-> > From: Olof Johansson <olof@lixom.net>
-> > Sent: Monday, June 17, 2019 6:50 AM
-> > To: Leo Li <leoyang.li@nxp.com>
-> > Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org; shawnguo@kernel.org
-> > Subject: Re: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
-> >
-> > On Wed, Jun 05, 2019 at 02:45:11PM -0500, Li Yang wrote:
-> > > Hi arm-soc maintainers,
-> > >
-> > > This is a rebase of patches that missed 5.2 merge window together
-> > > with some new patches for QE.  Please help to review and merge it.
-> > > We would like this to be merged earlier because there are other
-> > > patches depending on patches in this pull request.  After this is
-> > > merged in arm-soc, we can ask other sub-system maintainers to pull
-> > > from this tag and apply additional patches.  Thanks.
-> >
-> > Li,
-> >
-> > You never followed up with a reply, or removed, the previous tag. So
-> > when we process the pull requests that come in, we've already merged it=
-.
->=20
-> Sorry about that.  Will reply the previous pull request and remove the ol=
-d tag
-> if update is needed next time.
->=20
-> >
-> > So, I've merged the previous version. Can you send an incremental pull
-> > request on top of that branch/tag instead of a rebase like this was, pl=
-ease?
->=20
-> Actually the new pull request is based on the old pull request this time.=
-  I
-> sent the new one as V2 hoping that you can see this first and avoid mergi=
-ng
-> two times.  Since you have already merged the first one, you can merge th=
-e
-> second pull request as an incremental pull request directly.
-
-Hi Olof,
-
-I was on vacation for the past two weeks to follow up on this.  Hope this i=
-s not too late for this merge window.  Like I mentioned, the new tag is on =
-top of the previous tag (you merged) so that it should be able to be merged=
- incrementally.  The only thing is that the description of the new tag also=
- included patches you merged with old tag.  Do you want me to regenerate th=
-e tag before you can merge it?
+Thanks Jason,
 
 Regards,
-Leo
+Dag
+
+Den 08.07.2019 19:50, skrev Jason Gunthorpe:
+> On Mon, Jul 08, 2019 at 01:16:24PM +0200, Dag Moxnes wrote:
+>> Use neighbour lock when copying MAC address from neighbour data struct
+>> in dst_fetch_ha.
+>>
+>> When not using the lock, it is possible for the function to race with
+>> neigh_update, causing it to copy an invalid MAC address.
+>>
+>> It is possible to provoke this error by calling rdma_resolve_addr in a
+>> tight loop, while deleting the corresponding ARP entry in another tight
+>> loop.
+>>
+>> This will cause the race shown it the following sample trace:
+>>
+>> rdma_resolve_addr()
+>>    rdma_resolve_ip()
+>>      addr_resolve()
+>>        addr_resolve_neigh()
+>>          fetch_ha()
+>>            dst_fetch_ha()
+>>              n->nud_state == NUD_VALID
+> It isn't nud_state that is the problem here, it is the parallel
+> memcpy's onto ha. I fixed the commit message
+>
+> This could also have been solved by using the ha_lock, but I don't
+> think we have a reason to particularly over-optimize this.
+>
+>>   drivers/infiniband/core/addr.c | 9 ++++++---
+>>   1 file changed, 6 insertions(+), 3 deletions(-)
+> Applied to for-next, thanks
+>
+> Jason
+
