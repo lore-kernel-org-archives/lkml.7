@@ -2,181 +2,101 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F91C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A979C606C8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCB8218A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7191721874
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390386AbfGHSGT (ORCPT
+        id S2387996AbfGHSHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 14:06:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50052 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfGHSGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 14:06:18 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 903EA5D672;
-        Mon,  8 Jul 2019 18:06:12 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-14.phx2.redhat.com [10.3.112.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 43F002B9F2;
-        Mon,  8 Jul 2019 18:06:01 +0000 (UTC)
-Date:   Mon, 8 Jul 2019 14:05:58 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        ebiederm@xmission.com, nhorman@tuxdriver.com
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-Message-ID: <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca>
-References: <cover.1554732921.git.rgb@redhat.com>
- <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
- <20190529145742.GA8959@cisco>
- <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
- <20190529153427.GB8959@cisco>
- <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
- <20190529222835.GD8959@cisco>
- <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
- <20190530170913.GA16722@mail.hallyn.com>
- <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
+        Mon, 8 Jul 2019 14:07:08 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:60474 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfGHSHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 14:07:07 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkY2U-0003oz-6Z; Mon, 08 Jul 2019 18:06:58 +0000
+Date:   Mon, 8 Jul 2019 19:06:58 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, markward@linux.ibm.com
+Subject: Re: linux-next: Tree for Jul 8 --> bootup failure on s390x (bisected)
+Message-ID: <20190708180657.GV17978@ZenIV.linux.org.uk>
+References: <20190708224238.60bd0aff@canb.auug.org.au>
+ <0be7464d-f8ed-0567-b0ff-a6d31ecfd7a8@de.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 08 Jul 2019 18:06:17 +0000 (UTC)
+In-Reply-To: <0be7464d-f8ed-0567-b0ff-a6d31ecfd7a8@de.ibm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-30 15:29, Paul Moore wrote:
-> On Thu, May 30, 2019 at 1:09 PM Serge E. Hallyn <serge@hallyn.com> wrote:
-> > On Wed, May 29, 2019 at 06:39:48PM -0400, Paul Moore wrote:
-> > > On Wed, May 29, 2019 at 6:28 PM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > > On Wed, May 29, 2019 at 12:03:58PM -0400, Paul Moore wrote:
-> > > > > On Wed, May 29, 2019 at 11:34 AM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > > > > On Wed, May 29, 2019 at 11:29:05AM -0400, Paul Moore wrote:
-> > > > > > > On Wed, May 29, 2019 at 10:57 AM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > > > > > > On Mon, Apr 08, 2019 at 11:39:09PM -0400, Richard Guy Briggs wrote:
-> 
-> ...
-> 
-> > > > > > > The current thinking
-> > > > > > > is that you would only change the audit container ID from one
-> > > > > > > set/inherited value to another if you were nesting containers, in
-> > > > > > > which case the nested container orchestrator would need to be granted
-> > > > > > > CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
-> > > > > > > compromise).
-> > > >
-> > > > won't work in user namespaced containers, because they will never be
-> > > > capable(CAP_AUDIT_CONTROL); so I don't think this will work for
-> > > > nesting as is. But maybe nobody cares :)
-> > >
-> > > That's fun :)
-> > >
-> > > To be honest, I've never been a big fan of supporting nested
-> > > containers from an audit perspective, so I'm not really too upset
-> > > about this.  The k8s/cri-o folks seem okay with this, or at least I
-> > > haven't heard any objections; lxc folks, what do you have to say?
-> >
-> > I actually thought the answer to this (when last I looked, "some time" ago)
-> > was that userspace should track an audit message saying "task X in
-> > container Y is changing its auditid to Z", and then decide to also track Z.
-> > This should be doable, but a lot of extra work in userspace.
-> >
-> > Per-userns containerids would also work.  So task X1 is in containerid
-> > 1 on the host and creates a new task Y in new userns;  it continues to
-> > be reported in init_user_ns as containerid 1 forever;  but in its own
-> > userns it can request to be known as some other containerid.  Audit
-> > socks would be per-userns, allowing root in a container to watch for
-> > audit events in its own (and descendent) namespaces.
-> >
-> > But again I'm sure we've gone over all this in the last few years.
-> >
-> > I suppose we can look at this as a "first step", and talk about
-> > making it user-ns-nestable later.  But agreed it's not useful in a
-> > lot of situations as is.
-> 
-> [REMINDER: It is an "*audit* container ID" and not a general
-> "container ID" ;)  Smiley aside, I'm not kidding about that part.]
-> 
-> I'm not interested in supporting/merging something that isn't useful;
-> if this doesn't work for your use case then we need to figure out what
-> would work.  It sounds like nested containers are much more common in
-> the lxc world, can you elaborate a bit more on this?
-> 
-> As far as the possible solutions you mention above, I'm not sure I
-> like the per-userns audit container IDs, I'd much rather just emit the
-> necessary tracking information via the audit record stream and let the
-> log analysis tools figure it out.  However, the bigger question is how
-> to limit (re)setting the audit container ID when you are in a non-init
-> userns.  For reasons already mentioned, using capable() is a non
-> starter for everything but the initial userns, and using ns_capable()
-> is equally poor as it essentially allows any userns the ability to
-> munge it's audit container ID (obviously not good).  It appears we
-> need a different method for controlling access to the audit container
-> ID.
+On Mon, Jul 08, 2019 at 06:52:14PM +0200, Christian Borntraeger wrote:
 
-We're not quite ready yet for multiple audit daemons and possibly not
-yet for audit namespaces, but this is starting to look a lot like the
-latter.
+> smp: Brought up 1 node, 1 CPU
+> Unable to handle kernel pointer dereference in virtual kernel address space
+> Failing address: 000000003a070000 TEID: 000000003a070407
+> Fault in home space mode while using kernel ASCE.
+> AS:000000003a780007 R3:000000007ffd0007 S:000000007ffd4800 P:000000003a07021d 
+> Oops: 0004 ilc:2 [#1] SMP 
+> Modules linked in:
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc5-00101-gcb8f0b366109 #14
+> Hardware name: IBM 2964 NC9 712 (KVM/Linux)
+> Krnl PSW : 0704e00180000000 000000003974b580 (shmem_parse_monolithic+0x88/0x100)
+>            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+> Krnl GPRS: 0000000000000000 000000000000003d 000000003a07040e 000000000000003d
+>            000000003a07040f 000000000000006d 0000000000000001 0000000000000000
+>            000000007f7c1c00 0000000000000000 000000003a07040a 0000000000000000
+>            000000007f7e4000 000000003a190d78 000000003974b56c 000003e00031fd38
+> Krnl Code: 000000003974b574: b920002a		cgr	%r2,%r10
+>            000000003974b578: a784001b		brc	8,3974b5ae
+>           #000000003974b57c: 41402001		la	%r4,1(%r2)
+>           >000000003974b580: 92002000		mvi	0(%r2),0
+>            000000003974b584: a7090000		lghi	%r0,0
+>            000000003974b588: b9040014		lgr	%r1,%r4
+>            000000003974b58c: b25e0001		srst	%r0,%r1
+>            000000003974b590: a714fffe		brc	1,3974b58c
+> Call Trace:
+> ([<000003e00031fd80>] 0x3e00031fd80)
+>  [<0000000039811662>] vfs_kern_mount.part.0+0x9a/0xc8 
+>  [<000000003a302fc0>] devtmpfs_init+0x38/0x140 
+>  [<000000003a302e0a>] driver_init+0x22/0x60 
+>  [<000000003a2beff8>] kernel_init_freeable+0x298/0x4f0 
+>  [<0000000039e7b53a>] kernel_init+0x22/0x148 
+>  [<0000000039e87b70>] ret_from_fork+0x30/0x34 
+>  [<0000000039e87b74>] kernel_thread_starter+0x0/0xc 
+> INFO: lockdep is turned off.
+> [...]
 
-If we can't trust ns_capable() then why are we passing on
-CAP_AUDIT_CONTROL?  It is being passed down and not stripped purposely
-by the orchestrator/engine.  If ns_capable() isn't inherited how is it
-gained otherwise?  Can it be inserted by cotainer image?  I think the
-answer is "no".  Either we trust ns_capable() or we have audit
-namespaces (recommend based on user namespace) (or both).
+Oh, fuck...  OK, I understand what's going on; sorry, my fault.  Could you
+verify that the following helps?
 
-At this point I would say we are at an impasse unless we trust
-ns_capable() or we implement audit namespaces.
-
-I don't think another mechanism to trust nested orchestrators/engines
-will buy us anything.
-
-Am I missing something?
-
-> Punting this to a LSM hook is an obvious thing to do, and something we
-> might want to do anyway, but currently audit doesn't rely on the LSM
-> for proper/safe operation and I'm not sure I want to change that now.
-> 
-> The next obvious thing is to create some sort of access control knob
-> in audit itself.  Perhaps an auditctl operation that would allow the
-> administrator to specify which containers, via their corresponding
-> audit container IDs, are allowed to change their audit container ID?
-> The permission granting would need to be done in the init userns, but
-> it would allow containers with a non-init userns the ability to change
-> their audit container ID.  We would probably still want a
-> ns_capable(CAP_AUDIT_CONTROL) restriction in this case.
-
-This auditctl knob of which you speak is an additional API, not changing
-the existing proposed one.
-
-> Does anyone else have any other ideas?
-> 
-> -- 
-> paul moore
-> www.paul-moore.com
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
+index 52312c665a38..30d0523014e0 100644
+--- a/drivers/base/devtmpfs.c
++++ b/drivers/base/devtmpfs.c
+@@ -431,9 +431,10 @@ static int devtmpfsd(void *p)
+  */
+ int __init devtmpfs_init(void)
+ {
++	char opts[] = "mode=0755";
+ 	int err;
+ 
+-	mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", "mode=0755");
++	mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
+ 	if (IS_ERR(mnt)) {
+ 		printk(KERN_ERR "devtmpfs: unable to create devtmpfs %ld\n",
+ 				PTR_ERR(mnt));
