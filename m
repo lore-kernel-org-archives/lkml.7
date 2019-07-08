@@ -2,148 +2,114 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=GAPPY_SUBJECT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFED1C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0622AC606AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FA42086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8322086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbfGHMmV (ORCPT
+        id S1730892AbfGHMmX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:42:21 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:46413 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfGHMmV (ORCPT
+        Mon, 8 Jul 2019 08:42:23 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:45355 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730824AbfGHMmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 08:42:21 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mduym-1iKMCm2862-00az91; Mon, 08 Jul 2019 14:41:26 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH] vmscan: fix memcg_kmem build failure
-Date:   Mon,  8 Jul 2019 14:41:03 +0200
-Message-Id: <20190708124120.3400683-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-230-dcsia1rtNYyT8xw3SipVDQ-1; Mon, 08 Jul 2019 13:42:16 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 8 Jul 2019 13:42:15 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 8 Jul 2019 13:42:15 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Salvatore Mesoraca' <s.mesoraca16@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Brad Spengler <spender@grsecurity.net>,
+        "Casey Schaufler" <casey@schaufler-ca.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        James Morris <james.l.morris@oracle.com>,
+        Jann Horn <jannh@google.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        PaX Team <pageexec@freemail.hu>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: RE: [PATCH v5 06/12] S.A.R.A.: WX protection
+Thread-Topic: [PATCH v5 06/12] S.A.R.A.: WX protection
+Thread-Index: AQHVM+lhx/3G+gwH+UeGA1TJk0kwgabAq9yQ
+Date:   Mon, 8 Jul 2019 12:42:15 +0000
+Message-ID: <b946dd861874401a910740a9adea8e8e@AcuMS.aculab.com>
+References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
+ <1562410493-8661-7-git-send-email-s.mesoraca16@gmail.com>
+In-Reply-To: <1562410493-8661-7-git-send-email-s.mesoraca16@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8VkSE5EXRvXhg4WTtl1yfmQwLxnuqIVBWC3O64OvYEpHsptKShz
- liGdVTsfLuFY0hhVyQVWbff5R3bnb6E1HJhu20u8pAvj9sk57oG0RsiWEA+A1bIP/Uugd9q
- 2kMCOc7ttYjFkbS/CznPsTeFSIM1mWM86j4G6IquKv0/qHs1LJEQyDFHh4E7ePwwl6mD2aj
- jfri59CV9WSdBmPT0jJfA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BR6pqYPidxU=:IRaEjSZOktumWrt9EMStya
- IX38wDJ+IcfvW5pYQ44mrAN4pOG+fQBfdEpJjdSIiZkiiXgMWlz9OIiqV5DdcIp1mHsdwhTA9
- rtdTNxE957ciTEuUFcKJ3CMh6m/HMNfwb9KVY+QAVUGrwqr3ACpvagXxvl8xUcs3nevzRuERn
- rW0cF4laMbGlGWPzYD/E+eKlXk/TJDTKR8xGf4VfXa6DO4goKEHDJ1sKXj+o0I+QPV9ZbBJoH
- i96a7Zpg6KHtjYR7CkgUCmcwVzdkpAidWvro3JmDTPB/Xpm8XSLkJRoRUTO+qOld4Gt1YN0KO
- TPv5QgcYo34HcdMQppjFYyVe35Tn4bslNyZlESRD4UHV6zcUhDfgAIWd4Yc58B4hBFi7NNefD
- bw3ai4opAWaOE+iE2O5tMhwrPgKUpcy+xnCLPA4f4mTZf8VUaix5mzL4Rf0qotuQAbjPIosJ8
- zHTUCS0DxAJ4YTGxlKa9IWbst0+jW6ydHXPf+rZhQhlkLfSx3oHdSNaAaYGLwZG0998vvn7EP
- zrba2rn2a2fSR0fyAD5KSxXfoVqQfL413Q9mnGnKlTIWGrU6R/L7KPzHiSi761jL2euFRRVES
- effFfk1ECatHuTe8ZS7Ub5HMvBajqf0re1k1O9S3vlL+AbwNzwhAyXbCHpJ4gl04+uOvzzLhJ
- QWf7Y6snVpnfNAu3wMawsKQjVoz3bb4dDGiCEMKdpV+eZRnJnSmHlCIGpER7rTpkmEAPExn5c
- tdmnEbVumZyGVWj5RoAWRbXyX4mivgOuqISEGg==
-To:     unlisted-recipients:; (no To-header on input)
+X-MC-Unique: dcsia1rtNYyT8xw3SipVDQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_MEMCG_KMEM is disabled, we get a build failure
-for calling a nonexisting memcg_expand_shrinker_maps():
+From: Salvatore Mesoraca
+> Sent: 06 July 2019 11:55
+...
+> Executable MMAP prevention works by preventing any new executable
+> allocation after the dynamic libraries have been loaded. It works under the
+> assumption that, when the dynamic libraries have been finished loading, the
+> RELRO section will be marked read only.
 
-mm/vmscan.c:220:7: error: implicit declaration of function 'memcg_expand_shrinker_maps' [-Werror,-Wimplicit-function-declaration]
-                if (memcg_expand_shrinker_maps(id)) {
-                    ^
-mm/vmscan.c:220:7: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
-mm/vmscan.c:608:56: error: no member named 'shrinker_map' in 'struct mem_cgroup_per_node'
-        map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
-                                        ~~~~~~~~~~~~~~~~~~~~  ^
-include/linux/rcupdate.h:498:31: note: expanded from macro 'rcu_dereference_protected'
-        __rcu_dereference_protected((p), (c), __rcu)
-                                     ^
-include/linux/rcupdate.h:321:12: note: expanded from macro '__rcu_dereference_protected'
-        ((typeof(*p) __force __kernel *)(p)); \
-                  ^
-mm/vmscan.c:608:6: error: assigning to 'struct memcg_shrinker_map *' from incompatible type 'void'
-        map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
+What about writing to the file of a dynamic library after it is loaded
+but before it is faulted it (or after evicting it from the I$).
 
-and another issue trying to access invalid struct fields:
+...
+> +#define find_relro_section(ELFH, ELFP, FILE, RELRO, FOUND) do {		\
+> +	unsigned long i;						\
+> +	int _tmp;							\
+> +	loff_t _pos = 0;						\
+> +	if (ELFH.e_type == ET_DYN || ELFH.e_type == ET_EXEC) {		\
+> +		for (i = 0; i < ELFH.e_phnum; ++i) {			\
+> +			_pos = ELFH.e_phoff + i*sizeof(ELFP);		\
+> +			_tmp = kernel_read(FILE, &ELFP, sizeof(ELFP),	\
+> +					   &_pos);			\
+> +			if (_tmp != sizeof(ELFP))			\
+> +				break;					\
+> +			if (ELFP.p_type == PT_GNU_RELRO) {		\
+> +				RELRO = ELFP.p_offset >> PAGE_SHIFT;	\
+> +				FOUND = true;				\
+> +				break;					\
+> +			}						\
+> +		}							\
+> +	}								\
+> +} while (0)
 
-mm/vmscan.c:608:56: error: no member named 'shrinker_map' in 'struct mem_cgroup_per_node'
-        map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
-                                        ~~~~~~~~~~~~~~~~~~~~  ^
-include/linux/rcupdate.h:498:31: note: expanded from macro 'rcu_dereference_protected'
-        __rcu_dereference_protected((p), (c), __rcu)
-                                     ^
-include/linux/rcupdate.h:321:12: note: expanded from macro '__rcu_dereference_protected'
-        ((typeof(*p) __force __kernel *)(p)); \
-                  ^
-mm/vmscan.c:608:6: error: assigning to 'struct memcg_shrinker_map *' from incompatible type 'void'
-        map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map,
+This is big for a #define.
+Since it contains kernel_read() it can't really matter if it is
+a real function.
 
-Add a dummy definition for memcg_expand_shrinker_maps() that always fails,
-and hide the obviously nonworking shrink_slab_memcg() function.
+	David
 
-Fixes: 8236f517d69e ("mm: shrinker: make shrinker not depend on memcg kmem")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-No idea what the intended behavior is supposed to be for this case.
-Rather than failing, should we actually provide that function?
-Or maybe a more elaborate change is needed?
----
- include/linux/memcontrol.h | 5 +++++
- mm/vmscan.c                | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 5901a90f58eb..6b15e2066fc7 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1407,6 +1407,11 @@ static inline void memcg_put_cache_ids(void)
- {
- }
- 
-+static inline int memcg_expand_shrinker_maps(int new_id)
-+{
-+	return -ENOMEM;
-+}
-+
- static inline void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
- 					  int nid, int shrinker_id) { }
- #endif /* CONFIG_MEMCG_KMEM */
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index a0301edd8d03..323a9c50c0fe 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -591,7 +591,7 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
- 	return freed;
- }
- 
--#ifdef CONFIG_MEMCG
-+#ifdef CONFIG_MEMCG_KMEM
- static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 			struct mem_cgroup *memcg, int priority)
- {
--- 
-2.20.0
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
