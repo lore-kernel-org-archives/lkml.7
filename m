@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB790C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FD1C606BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDCFC21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3E021670
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731624AbfGHOI0 (ORCPT
+        id S1731635AbfGHOIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:08:26 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:51779 "EHLO
+        Mon, 8 Jul 2019 10:08:37 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:54365 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727401AbfGHOI0 (ORCPT
+        with ESMTP id S1727401AbfGHOIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:08:26 -0400
+        Mon, 8 Jul 2019 10:08:36 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MMoXC-1i375x3FCu-00Ik9A; Mon, 08 Jul 2019 16:08:17 +0200
+ 1M89P3-1ho4wp0FFr-005MGd; Mon, 08 Jul 2019 16:08:28 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
@@ -30,89 +30,90 @@ To:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
         "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kevin Wang <kevin1.wang@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>, Huang Rui <ray.huang@amd.com>,
+        Kevin Wang <kevin1.wang@amd.com>,
         Hawking Zhang <Hawking.Zhang@amd.com>,
         Likun Gao <Likun.Gao@amd.com>,
         Chengming Gui <Jack.Gui@amd.com>,
         amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] drm/amd/powerplay: smu_v11_0: fix uninitialized variable use
-Date:   Mon,  8 Jul 2019 16:07:58 +0200
-Message-Id: <20190708140816.1334640-1-arnd@arndb.de>
+Subject: [PATCH 2/2] drm/amd/powerplay: vega20: fix uninitialized variable use
+Date:   Mon,  8 Jul 2019 16:07:59 +0200
+Message-Id: <20190708140816.1334640-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190708140816.1334640-1-arnd@arndb.de>
+References: <20190708140816.1334640-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:X3J4e80NQyAuaqivhrauUEXEWU7jDdUAqZMBR/kGPcQ7CYCTHSi
- CIzF/Hx8mmfKT7DQSNax0/KaUiiTQnuK2hIJxk0dtFaoEHsVLxWeR+yR3fnKIhqt3Dfg4iP
- PIwtg8WqdZuu0vvm6p03mU3SVAQ/SbVVPQmeuP08r/dD1WfosPTHh5iYGmMh5e0Nlbbcmuq
- /M8IBS2hCeB21b3CZkm/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:14Ii1zw6QsU=:dUxvAlUg7CH/JD12q86ZkC
- NPa53AjNYyMTTFb6PHM3SufF/j4+MnmcH24nLk8u0Hgn3Zjyt5+jIgUAsdj/FId5IDMeL/Liv
- nFyB93a5FGykJUhWnsd4/N7+WiKiZeSeKFiN0Wkl7LFFMw8iFr3+IjVvXXAbkP91ATFF0Ky57
- Sjv+FZ05WJjs5A2oHVCsGp27DI94HU4OVvvM06CjWz+uVWaEXCeM6EYs+NNqDfLi75VqEWFdc
- xJltWBfGrxJgLug9v+coRVT7Min4kP/f1NnvKAuT0TL84cK3VbOCK/N9rwlVCBkSmdQljhiNd
- nzzBabj5pKnYUSWSsjizgTnUGaI7k8AWxy4JePuE0YNpj0iuFkvGMX/A2alZ/pnDBa36RMNp6
- KLTjObokalL6XkDdWgC3m1QyHYwwH/nJke3R/tdvxXI9MeyFxQDjo5Gn/JGtW1TD/3BGVd7Ii
- p+eI9SipxqKZeL8C23nGph/LlsHXy/jHq+HQ8dwOAwjeVJ3IiDQFvGnkib+FZPah4RGd4gHS6
- KetPom7A/2J3Z5F5XDDGeijFvIAYkQYOIBe5/ccHW7XwjieBCWCn0gSq0v8NkVz428AYUCWOP
- f/IYNPZfMsGCYPZHXFMb2OK+ig0J9/NSkIpixzmkcQY/IB/hpqCDMb2NGE/bJGZyPsIzvHsq2
- DwE37KZqnY9akc5gRm42udStAewy3dM3SVFb+Q6RYG6YeSCx/E/OylqA1frsCZe/E1QbFUXJE
- hMQvYzIH57lCSq586//fOLaruyhv252i6sZ/3g==
+X-Provags-ID: V03:K1:NyfhK5Y4jz7Zauo0keyLsO1GaKfDaYS9PZtk4wBhZX4qB8ZPG7o
+ XAcUVBB10BKXLj+ZVSeTI0D/l0efVGJTE5jS5oIEgaFpES91kHGCZp7xFl+VVFnyf2qjvYb
+ 2fB+TOUjE1u/eR4fhGyZ2JdQcYLO2UnbqY0jmhrnxJuGyQOSHKgFFx/hNbUk/9FeK4dtLtA
+ Oxe6uhkvKx0J1PnP+d+xQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ricJjI9sTU0=:jjXRZ80JOXKSZPGfAGrxJK
+ 5MnloyJFczjlnFDwjZoAv0fwMyEViU4SCNoRSWVfTEh0vtq9rHrXy8+CvjNqjl+T61doObwix
+ m3B5FUdbFLzwvqBot8udnBzZkUd7bTCsEPcWYm4kyB5GZCG9FMddxefo+Be04RtMXrb/Ym2Y+
+ PKpfcLUjN85jnj5vmcw0EJZ7GHa44LWiwS3HJFinSQZDng4N9nH10YapicmaHhS62nJy+s+R8
+ bL33CgjW9z0+yon2t3LZe9udh3ZRcKpjSKYOUY55qU8wDLQcW8dK4rqdbwqJ2r2/g6HtEoY/v
+ RuIHTcSjnKd+YeMHG2h2DC/OvaABlVnlTBWcyT3p2vfs+Ow+cEZFJUXVg603RYF4EJ5e/dNeu
+ c71aMaqg57jo/MLiiygnDKvAMvOHL2rEnX9nlZFTc22jLWmgaB52K5De7HPIL8evckboAMlec
+ xMRIyvSKQvWuxoRpvFUzRrcNKdl6qwqnG/O7R1Ul+0sAKP+HKT4mfU5HIisPTI69bLKUUWV2K
+ rd7gHOFQSW0dNEOw/wY4Rq/HDso6zIOiQsKwCDWehWy91e1zYwgmdbsDswzQllLmh9xNuDZ38
+ uwKA6AIUJQs1k1botxu8ysfXcNj3p9ZyAkUMfBjrPTx05zryPWmzNg/x2c4AcK7T1SIfWj9P9
+ JO9rk5eSeyYbi5CApjYKkYGASvXiEYCdPTRCIGr8wbUgOFSJTSlqaUqAftcbnNAyP+Zx8cf0w
+ 5bTezfc2UNfDfzWUxTUVcMij5exbEFDN9pIcAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A mistake in the error handling caused an uninitialized
-variable to be used:
+If smu_get_current_rpm() fails, we can't use the output,
+as that may be uninitialized:
 
-drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:1102:10: error: variable 'freq' is used uninitialized whenever '?:' condition is false [-Werror,-Wsometimes-uninitialized]
-                ret =  smu_get_current_clk_freq_by_table(smu, clk_id, &freq);
-                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:880:3: note: expanded from macro 'smu_get_current_clk_freq_by_table'
-        ((smu)->ppt_funcs->get_current_clk_freq_by_table ? (smu)->ppt_funcs->get_current_clk_freq_by_table((smu), (clk_type), (value)) : 0)
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:1114:2: note: uninitialized use occurs here
-        freq *= 100;
-        ^~~~
-drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:1102:10: note: remove the '?:' if its condition is always true
-                ret =  smu_get_current_clk_freq_by_table(smu, clk_id, &freq);
-                       ^
-drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:880:3: note: expanded from macro 'smu_get_current_clk_freq_by_table'
-        ((smu)->ppt_funcs->get_current_clk_freq_by_table ? (smu)->ppt_funcs->get_current_clk_freq_by_table((smu), (clk_type), (value)) : 0)
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:3023:8: error: variable 'current_rpm' is used uninitialized whenever '?:' condition is false [-Werror,-Wsometimes-uninitialized]
+        ret = smu_get_current_rpm(smu, &current_rpm);
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:735:3: note: expanded from macro 'smu_get_current_rpm'
+        ((smu)->funcs->get_current_rpm ? (smu)->funcs->get_current_rpm((smu), (speed)) : 0)
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:3024:12: note: uninitialized use occurs here
+        percent = current_rpm * 100 / pptable->FanMaximumRpm;
+                  ^~~~~~~~~~~
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:3023:8: note: remove the '?:' if its condition is always true
+        ret = smu_get_current_rpm(smu, &current_rpm);
+              ^
+drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:735:3: note: expanded from macro 'smu_get_current_rpm'
+        ((smu)->funcs->get_current_rpm ? (smu)->funcs->get_current_rpm((smu), (speed)) : 0)
          ^
-drivers/gpu/drm/amd/amdgpu/../powerplay/smu_v11_0.c:1095:15: note: initialize the variable 'freq' to silence this warning
-        uint32_t freq;
-                     ^
-                      = 0
+drivers/gpu/drm/amd/amdgpu/../powerplay/vega20_ppt.c:3020:22: note: initialize the variable 'current_rpm' to silence this warning
+        uint32_t current_rpm;
 
-Bail out of smu_v11_0_get_current_clk_freq() before we get there.
+Propagate the error code in that case.
 
-Fixes: e36182490dec ("drm/amd/powerplay: fix dpm freq unit error (10KHz -> Mhz)")
+Fixes: ee0db82027ee ("drm/amd/powerplay: move PPTable_t uses into asic level")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-index c3f9714e9047..bd89a13b6679 100644
---- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-+++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-@@ -1099,9 +1099,11 @@ static int smu_v11_0_get_current_clk_freq(struct smu_context *smu,
- 		return -EINVAL;
+diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+index 9ce3f1c8ae0f..20d477f8dc84 100644
+--- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+@@ -3021,10 +3021,13 @@ static int vega20_get_fan_speed_percent(struct smu_context *smu,
+ 	PPTable_t *pptable = smu->smu_table.driver_pptable;
  
- 	/* if don't has GetDpmClockFreq Message, try get current clock by SmuMetrics_t */
--	if (smu_msg_get_index(smu, SMU_MSG_GetDpmClockFreq) == 0)
-+	if (smu_msg_get_index(smu, SMU_MSG_GetDpmClockFreq) == 0) {
- 		ret =  smu_get_current_clk_freq_by_table(smu, clk_id, &freq);
--	else {
-+		if (ret)
-+			return ret;
-+	} else {
- 		ret = smu_send_smc_msg_with_param(smu, SMU_MSG_GetDpmClockFreq,
- 						  (smu_clk_get_index(smu, clk_id) << 16));
- 		if (ret)
+ 	ret = smu_get_current_rpm(smu, &current_rpm);
++	if (ret)
++		return ret;
++
+ 	percent = current_rpm * 100 / pptable->FanMaximumRpm;
+ 	*speed = percent > 100 ? 100 : percent;
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int vega20_get_gpu_power(struct smu_context *smu, uint32_t *value)
 -- 
 2.20.0
 
