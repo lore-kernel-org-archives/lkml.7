@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D023EC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B0C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92752175B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5C3216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600792;
-	bh=tLVZwVgEy3INWT+QDUG63JAAvvmORHsEoFCuqJI91d8=;
+	s=default; t=1562600795;
+	bh=bPbReT1Q2wWR3wdpKMn+8Jo3hIt0ICft7mkQIAevbeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JpwI9YWMog/hZPeIkEtWKxcNasOCJ7jAr6U6jwxicgL2Nxp/bZl6TYvvmG1BekDkJ
-	 LUEnSWabA9JhmR2mf3H6ktIwrxu+4YKgJqi0ci8dy/OhOlfZolLnIl8cjmG8HnOvkZ
-	 h1+TaI2hgGmhY4w0QM5/61g0NNIQtzmyl8YjFcpo=
+	b=foAX9V1v5hR16ARloHuWUyaJ81vBDRugP8eDrtBlXRzYwZO/trGscr5u+gD7WVEY2
+	 GW6bjE+geREpHlZXwmQH9n/MHpmIgbjzTHd3hb9LCpC1rNei2JdITrc/BYp8NCu6jA
+	 4zQfvXKdPGnmPxDa0GNO1rIlL9URJofLA2mWOQUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbfGHPU5 (ORCPT
+        id S2387674AbfGHPU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:20:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44448 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:20:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387502AbfGHPTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:19:53 -0400
+        id S2387421AbfGHPTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:19:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25B6A21537;
-        Mon,  8 Jul 2019 15:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E836E21707;
+        Mon,  8 Jul 2019 15:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599192;
-        bh=tLVZwVgEy3INWT+QDUG63JAAvvmORHsEoFCuqJI91d8=;
+        s=default; t=1562599189;
+        bh=bPbReT1Q2wWR3wdpKMn+8Jo3hIt0ICft7mkQIAevbeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l7+miwscx8kolmmva2a8+Shi39ZZ9iakrYRH2OFoW71DKjcWEe11cRYzhxbUcVhKl
-         7YH3n/uojUkOJAH14NUtviV2HipS1VE7ytdGzfw0c7mbW53/RkXPr3XDY2Dg8Dl3IR
-         rv/eMfqsriT3V3cUHn727HY9D2+uoIobwPOxoqBQ=
+        b=mCCE4keTrNyRCJU5OSjh8YR3lj7KtJQLm0H4N/8VXtvAQ6trCwa/TyebCixobXa57
+         C9sRTBEjZX4Ph0CEjeck/TSx5PqehMR0YXlP/Hndtlii2asSnIuVwrl7Q3NZwfxRMc
+         Pa6vX51GFtc/ESGQ72V+HFT+v8iRK/nQ9F0wJoLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 035/102] mac80211: Do not use stack memory with scatterlist for GMAC
-Date:   Mon,  8 Jul 2019 17:12:28 +0200
-Message-Id: <20190708150528.209577232@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 034/102] mac80211: drop robust management frames from unknown TA
+Date:   Mon,  8 Jul 2019 17:12:27 +0200
+Message-Id: <20190708150528.144266776@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -59,60 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <j@w1.fi>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit a71fd9dac23613d96ba3c05619a8ef4fd6cdf9b9 upstream.
+commit 588f7d39b3592a36fb7702ae3b8bdd9be4621e2f upstream.
 
-ieee80211_aes_gmac() uses the mic argument directly in sg_set_buf() and
-that does not allow use of stack memory (e.g., BUG_ON() is hit in
-sg_set_buf() with CONFIG_DEBUG_SG). BIP GMAC TX side is fine for this
-since it can use the skb data buffer, but the RX side was using a stack
-variable for deriving the local MIC value to compare against the
-received one.
-
-Fix this by allocating heap memory for the mic buffer.
-
-This was found with hwsim test case ap_cipher_bip_gmac_128 hitting that
-BUG_ON() and kernel panic.
+When receiving a robust management frame, drop it if we don't have
+rx->sta since then we don't have a security association and thus
+couldn't possibly validate the frame.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Jouni Malinen <j@w1.fi>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/wpa.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/mac80211/rx.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/mac80211/wpa.c
-+++ b/net/mac80211/wpa.c
-@@ -1169,7 +1169,7 @@ ieee80211_crypto_aes_gmac_decrypt(struct
- 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
- 	struct ieee80211_key *key = rx->key;
- 	struct ieee80211_mmie_16 *mmie;
--	u8 aad[GMAC_AAD_LEN], mic[GMAC_MIC_LEN], ipn[6], nonce[GMAC_NONCE_LEN];
-+	u8 aad[GMAC_AAD_LEN], *mic, ipn[6], nonce[GMAC_NONCE_LEN];
- 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
- 
- 	if (!ieee80211_is_mgmt(hdr->frame_control))
-@@ -1200,13 +1200,18 @@ ieee80211_crypto_aes_gmac_decrypt(struct
- 		memcpy(nonce, hdr->addr2, ETH_ALEN);
- 		memcpy(nonce + ETH_ALEN, ipn, 6);
- 
-+		mic = kmalloc(GMAC_MIC_LEN, GFP_ATOMIC);
-+		if (!mic)
-+			return RX_DROP_UNUSABLE;
- 		if (ieee80211_aes_gmac(key->u.aes_gmac.tfm, aad, nonce,
- 				       skb->data + 24, skb->len - 24,
- 				       mic) < 0 ||
- 		    crypto_memneq(mic, mmie->mic, sizeof(mmie->mic))) {
- 			key->u.aes_gmac.icverrors++;
-+			kfree(mic);
- 			return RX_DROP_UNUSABLE;
- 		}
-+		kfree(mic);
- 	}
- 
- 	memcpy(key->u.aes_gmac.rx_pn, ipn, 6);
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3568,6 +3568,8 @@ static bool ieee80211_accept_frame(struc
+ 	case NL80211_IFTYPE_STATION:
+ 		if (!bssid && !sdata->u.mgd.use_4addr)
+ 			return false;
++		if (ieee80211_is_robust_mgmt_frame(skb) && !rx->sta)
++			return false;
+ 		if (multicast)
+ 			return true;
+ 		return ether_addr_equal(sdata->vif.addr, hdr->addr1);
 
 
