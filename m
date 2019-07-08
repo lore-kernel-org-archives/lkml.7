@@ -2,220 +2,154 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26233C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCE0C606AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58CC20861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192AA2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p/W7OiNK"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kUdxhT/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbfGHLDz (ORCPT
+        id S1730339AbfGHLEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:03:55 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:46221 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727517AbfGHLDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:03:54 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190708110352euoutp019187cd4457af386fa8fb5bd5a7f843cf~vabdfoRXA1228012280euoutp01T
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2019 11:03:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190708110352euoutp019187cd4457af386fa8fb5bd5a7f843cf~vabdfoRXA1228012280euoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562583832;
-        bh=iJ/vgkwgHEVtdCA4ebVEDI6nMvu1XOQWTINwB5UZ21Y=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=p/W7OiNKgo0dmURd6p3j4pnJKCJsvGTOwhQY8qjyQTcAWqk0b4GYIMy8PEIB5pUdz
-         WSrGIapQc4oCR3H8UtrTg4S034/QGWszC5Shvp8EAAf0vqQM0n+0nnpRBFDI1UcWIO
-         u8UG9Ij9UTM2Ng6ULrFC9zTL3MkLLyFhsuutBRNs=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190708110351eucas1p2bde3ebc38e8c48b9413055c03c7ab96c~vabcvLjwd2083220832eucas1p2j;
-        Mon,  8 Jul 2019 11:03:51 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id F2.FD.04298.613232D5; Mon,  8
-        Jul 2019 12:03:50 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1~vabbxYcUy2519125191eucas1p1L;
-        Mon,  8 Jul 2019 11:03:50 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190708110349eusmtrp2de94694ed18e2b6000e2c0fca30ad84f~vabbjN_S43170831708eusmtrp2M;
-        Mon,  8 Jul 2019 11:03:49 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-7b-5d232316b880
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 84.EA.04140.513232D5; Mon,  8
-        Jul 2019 12:03:49 +0100 (BST)
-Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190708110349eusmtip2f28b183397c1dd08fb6127d5326a04e9~vaba1exG-1263912639eusmtip2c;
-        Mon,  8 Jul 2019 11:03:49 +0000 (GMT)
-From:   Ilya Maximets <i.maximets@samsung.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ilya Maximets <i.maximets@samsung.com>
-Subject: [PATCH bpf] xdp: fix potential deadlock on socket mutex
-Date:   Mon,  8 Jul 2019 14:03:44 +0300
-Message-Id: <20190708110344.23278-1-i.maximets@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKKsWRmVeSWpSXmKPExsWy7djP87piysqxBo9mWVh8+Xmb3eJP2wZG
-        i89HjrNZLF74jdlizvkWFosr7T/ZLY69aGGz2LVuJrPF5V1z2CxWHDoBFFsgZrG9fx+jA4/H
-        lpU3mTx2zrrL7rF4z0smj64bl5g9Nq3qZPOY3v2Q2aNvyypGj8+b5AI4orhsUlJzMstSi/Tt
-        Ergy1q3TKngjXrF/p0wDY69wFyMnh4SAicTLPRvYuxi5OIQEVjBKTGlZywjhfGGUeNk3Ecr5
-        zCgx/98mJpiWWzNfQLUsZ5TobX8OVfWDUeL5wivsIFVsAjoSp1YfYQSxRQSkJD7u2A7WwSxw
-        gFli9/F5zCAJYQEHiZeT/rOA2CwCqhJP286zgti8AtYSi6btYoNYJy+xesMBZpBmCYFudokp
-        X+4xQiRcJF7/3AxVJCzx6vgWdghbRuL/zvlQt9ZL3G95yQjR3MEoMf3QP6iEvcSW1+eAGjiA
-        TtKUWL9LHyLsKHGo8QkrSFhCgE/ixltBkDAzkDlp23RmiDCvREebEES1isTvg8uZIWwpiZvv
-        PkNd4CExf+MBsEVCArES02ZvY5/AKDcLYdcCRsZVjOKppcW56anFhnmp5XrFibnFpXnpesn5
-        uZsYgYnl9L/jn3Ywfr2UdIhRgINRiYd3g7RSrBBrYllxZe4hRgkOZiUR3sQg+Vgh3pTEyqrU
-        ovz4otKc1OJDjNIcLErivNUMD6KFBNITS1KzU1MLUotgskwcnFINjInnIpoEld5b//7503yH
-        pV+93+oTq0/lVi26bBPzT43zl7us9PVsv8DLhpJn+A0e7u9XLtuus3/hosLcS2fvWZ05ciPo
-        fJqbQdVc/X/pPrmO3WonW2sruA0XuF52W3TLNr2U+6jJPaNyvWxOuQ9JCn9tDSpXnzxkxeI+
-        aZNpG6OH30pWRgkNJZbijERDLeai4kQAvrZObygDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNLMWRmVeSWpSXmKPExsVy+t/xe7qiysqxBps3m1t8+Xmb3eJP2wZG
-        i89HjrNZLF74jdlizvkWFosr7T/ZLY69aGGz2LVuJrPF5V1z2CxWHDoBFFsgZrG9fx+jA4/H
-        lpU3mTx2zrrL7rF4z0smj64bl5g9Nq3qZPOY3v2Q2aNvyypGj8+b5AI4ovRsivJLS1IVMvKL
-        S2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQy1q3TKngjXrF/p0wDY69w
-        FyMnh4SAicStmS/Yuxi5OIQEljJKLP31kx0iISXx49cFVghbWOLPtS42iKJvjBKt3VcYQRJs
-        AjoSp1YfAbNFgBo+7tgONolZ4ASzxPdZn5lAEsICDhIvJ/1nAbFZBFQlnradB5vKK2AtsWja
-        LjaIDfISqzccYJ7AyLOAkWEVo0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYEBvO/Zzyw7GrnfB
-        hxgFOBiVeHg55JRihVgTy4orcw8xSnAwK4nwJgbJxwrxpiRWVqUW5ccXleakFh9iNAVaPpFZ
-        SjQ5HxhteSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGLUmScpt
-        2lh39vP3c40aJ7nn3+CPY/r9JfjmsatT10h2zWf0TknOdJ2+Yu3lN6W/fbV+ndi5oMU9n9dz
-        p80O1jnHhfX/L45gun9l+9UL/QwNilGHoxL3TX5vbap48Qz/hxCHJ4Fvq+/rl/5hqn54s88j
-        vOZv+8mE6QtqEzoUlqV9PzXf26j3m4sSS3FGoqEWc1FxIgDpDUB/fgIAAA==
-X-CMS-MailID: 20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1
-References: <CGME20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1@eucas1p1.samsung.com>
+        Mon, 8 Jul 2019 07:04:05 -0400
+Received: from mail-eopbgr150078.outbound.protection.outlook.com ([40.107.15.78]:57155
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727517AbfGHLEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 07:04:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CFpji26yOGrSjsAttjgL2sci4oAQyZkxB6UNZpzENkI=;
+ b=kUdxhT/l+uJRV5xCmrJgx287l7BoQnWWwO0QmoUVLizh0I1jPS65Q3BvTX+tjGf8mI4oiO1AvUmslb421WjlFkEXV098NznWetNcTIkbkBwsyjaoieUOQNHlevdmAY3xfROikg1iSwgxnLgbD3ucStERlT/7r7NpqF8iOW2lG/o=
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com (20.177.50.140) by
+ VI1PR04MB5136.eurprd04.prod.outlook.com (20.177.50.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Mon, 8 Jul 2019 11:04:01 +0000
+Received: from VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::d83:14c4:dedb:213b]) by VI1PR04MB5055.eurprd04.prod.outlook.com
+ ([fe80::d83:14c4:dedb:213b%5]) with mapi id 15.20.2052.019; Mon, 8 Jul 2019
+ 11:04:01 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] cpufreq: imx-cpufreq-dt: Assign max supported frequency
+ as suspend frequency
+Thread-Topic: [PATCH] cpufreq: imx-cpufreq-dt: Assign max supported frequency
+ as suspend frequency
+Thread-Index: AQHVNWKKfVJcms96j06437RrlyrVzA==
+Date:   Mon, 8 Jul 2019 11:04:01 +0000
+Message-ID: <VI1PR04MB5055565FFF1241B61B47F22AEEF60@VI1PR04MB5055.eurprd04.prod.outlook.com>
+References: <20190708074624.910-1-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [82.144.34.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a118af2f-cab3-40f6-b412-08d70393fbd8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5136;
+x-ms-traffictypediagnostic: VI1PR04MB5136:
+x-microsoft-antispam-prvs: <VI1PR04MB5136CA6473C9EBF43909DEE1EEF60@VI1PR04MB5136.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00922518D8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(366004)(396003)(376002)(136003)(346002)(39860400002)(199004)(189003)(76116006)(91956017)(66946007)(73956011)(71200400001)(71190400001)(33656002)(66446008)(64756008)(66556008)(66476007)(66066001)(86362001)(52536014)(5660300002)(7416002)(55016002)(9686003)(305945005)(446003)(486006)(74316002)(476003)(6116002)(478600001)(68736007)(7736002)(53936002)(3846002)(6436002)(8936002)(4326008)(81166006)(25786009)(229853002)(8676002)(81156014)(14454004)(102836004)(14444005)(15650500001)(53546011)(316002)(7696005)(26005)(2906002)(6506007)(256004)(76176011)(54906003)(110136005)(186003)(2501003)(99286004)(44832011)(6246003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5136;H:VI1PR04MB5055.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CQVNjzs9p6teEmSCfF9SvgX65rZGVuKpXKT2r7muCeBnkJq+INo0WFEesSOBGezWQGZEag1oI7MXu2LxC+DbgL1v2VmzdqPuEfMl4929wZXRCWLRkhxlVZsaQMMZxtWMJ3GKw/L+n8vH9F8WVjEN1Lgx6zirxUUiD5cQYnS+TsS6bLs8nGMMYy4untTFamQ7pDxnSYWn8mARvJ9n0IxakErc1AlSNqliTB4ITc9RabQzFB/5gLrhoSfKQVmyXNk20W09OyhK1O5MilXZIaQzOLilJEo7ZeDDjjC2ssm8CKfpMr6hxbNK/TISN7uw2tjA9qfN378xMDF2d3EukC4Iq/d2EwIELBo8kRd9sfF5Y8aYW2BsYHDLhG0VSaZQvT2NJ0Ejj9rjolN3qFXkdu7UEpOIs937qsm+35R66m/ynU4=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a118af2f-cab3-40f6-b412-08d70393fbd8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 11:04:01.5923
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leonard.crestez@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are 2 call chains:
-
-  a) xsk_bind --> xdp_umem_assign_dev
-  b) unregister_netdevice_queue --> xsk_notifier
-
-with the following locking order:
-
-  a) xs->mutex --> rtnl_lock
-  b) rtnl_lock --> xdp.lock --> xs->mutex
-
-Different order of taking 'xs->mutex' and 'rtnl_lock' could produce a
-deadlock here. Fix that by moving the 'rtnl_lock' before 'xs->lock' in
-the bind call chain (a).
-
-Reported-by: syzbot+bf64ec93de836d7f4c2c@syzkaller.appspotmail.com
-Fixes: 455302d1c9ae ("xdp: fix hang while unregistering device bound to xdp socket")
-Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
----
-
-This patch is a fix for patch that is not yet in mainline, but
-already in 'net' tree. I'm not sure what is the correct process
-for applying such fixes.
-
- net/xdp/xdp_umem.c | 16 ++++++----------
- net/xdp/xsk.c      |  2 ++
- 2 files changed, 8 insertions(+), 10 deletions(-)
-
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 20c91f02d3d8..83de74ca729a 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -87,21 +87,20 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
- 	struct netdev_bpf bpf;
- 	int err = 0;
- 
-+	ASSERT_RTNL();
-+
- 	force_zc = flags & XDP_ZEROCOPY;
- 	force_copy = flags & XDP_COPY;
- 
- 	if (force_zc && force_copy)
- 		return -EINVAL;
- 
--	rtnl_lock();
--	if (xdp_get_umem_from_qid(dev, queue_id)) {
--		err = -EBUSY;
--		goto out_rtnl_unlock;
--	}
-+	if (xdp_get_umem_from_qid(dev, queue_id))
-+		return -EBUSY;
- 
- 	err = xdp_reg_umem_at_qid(dev, umem, queue_id);
- 	if (err)
--		goto out_rtnl_unlock;
-+		return err;
- 
- 	umem->dev = dev;
- 	umem->queue_id = queue_id;
-@@ -110,7 +109,7 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
- 
- 	if (force_copy)
- 		/* For copy-mode, we are done. */
--		goto out_rtnl_unlock;
-+		return 0;
- 
- 	if (!dev->netdev_ops->ndo_bpf ||
- 	    !dev->netdev_ops->ndo_xsk_async_xmit) {
-@@ -125,7 +124,6 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
- 	err = dev->netdev_ops->ndo_bpf(dev, &bpf);
- 	if (err)
- 		goto err_unreg_umem;
--	rtnl_unlock();
- 
- 	umem->zc = true;
- 	return 0;
-@@ -135,8 +133,6 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
- 		err = 0; /* fallback to copy mode */
- 	if (err)
- 		xdp_clear_umem_at_qid(dev, queue_id);
--out_rtnl_unlock:
--	rtnl_unlock();
- 	return err;
- }
- 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 703cf5ea448b..2aa6072a3e55 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -416,6 +416,7 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
- 	if (flags & ~(XDP_SHARED_UMEM | XDP_COPY | XDP_ZEROCOPY))
- 		return -EINVAL;
- 
-+	rtnl_lock();
- 	mutex_lock(&xs->mutex);
- 	if (xs->state != XSK_READY) {
- 		err = -EBUSY;
-@@ -501,6 +502,7 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
- 		xs->state = XSK_BOUND;
- out_release:
- 	mutex_unlock(&xs->mutex);
-+	rtnl_unlock();
- 	return err;
- }
- 
--- 
-2.17.1
-
+On 7/8/2019 10:55 AM, Anson.Huang@nxp.com wrote:=0A=
+> To reduce the suspend/resume latency, CPU's max supported frequency=0A=
+> should be used during low level suspend/resume phase, "opp-suspend"=0A=
+> property is NOT feasible since OPP defined in DT could be NOT supported=
+=0A=
+> according to speed garding and market segment fuse settings. So we=0A=
+> can assign the cpufreq policy's suspend_freq with max available=0A=
+> frequency provided by cpufreq driver.=0A=
+> =0A=
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
+=0A=
+> diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufr=
+eq-dt.c=0A=
+=0A=
+> +static int __init imx_cpufreq_dt_setup_suspend_opp(void)=0A=
+> +{=0A=
+> +	struct cpufreq_policy *policy =3D cpufreq_cpu_get(0);=0A=
+> +=0A=
+> +	policy->suspend_freq =3D cpufreq_quick_get_max(0);=0A=
+> +=0A=
+> +	return 0;=0A=
+> +}=0A=
+> +late_initcall(imx_cpufreq_dt_setup_suspend_opp);=0A=
+=0A=
+The imx-cpufreq-dt driver is built as a module by default and this patch =
+=0A=
+produces an error:=0A=
+=0A=
+In file included from ../drivers/cpufreq/imx-cpufreq-dt.c:11:=0A=
+../include/linux/module.h:131:42: error: redefinition of =91__inittest=92=
+=0A=
+   static inline initcall_t __maybe_unused __inittest(void)  \=0A=
+                                           ^~~~~~~~~~=0A=
+../include/linux/device.h:1656:1: note: in expansion of macro =91module_ini=
+t=92=0A=
+  module_init(__driver##_init); \=0A=
+  ^~~~~~~~~~~=0A=
+=0A=
+As far as I can tell late_initcall is not supported for modules.=0A=
+=0A=
+Viresh: "max freq as suspend freq" is something that could be useful for =
+=0A=
+other SOC families. The hardware can suspend at any freq; it's just that =
+=0A=
+the highest one makes sense because it makes suspend/resume slightly faster=
+.=0A=
+=0A=
+Could this behavior be pushed to cpufreq-dt as a bool flag inside struct =
+=0A=
+cpufreq_dt_platform_data?=0A=
+=0A=
+Only a few other platforms use this, most others pass NULL like imx. But =
+=0A=
+passing custom SOC-specific flags to cpufreq-dt makes a lot of sense=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
+=0A=
