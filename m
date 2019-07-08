@@ -2,628 +2,327 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A03C606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE533C606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CCA20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C70A20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562578524;
+	bh=83f54rUK9OlwZGXTmSl7C//yjrl+eQvESDDLN+7JyFk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=gkBKzzfYGAbsQ2oyTMWoFd2K3OKkBIuP0N6lpbEBsl/xaAmhc7prkbDCLDFgk/T2W
+	 oQGUvgxQVjtbXHIN0Df5i2Iv3stqPa53oDoc82Vu9mI6N668nQalYGq899DB1nIRwF
+	 rVHIKpEcsLZRfWy4xnwS2ORnSVjJgdBsUv9UDasc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbfGHJe1 (ORCPT
+        id S1729840AbfGHJfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 05:34:27 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:53690 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbfGHJe1 (ORCPT
+        Mon, 8 Jul 2019 05:35:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33430 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728725AbfGHJfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 05:34:27 -0400
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 88EB529696; Mon,  8 Jul 2019 05:34:24 -0400 (EDT)
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "Laurent Vivier" <lvivier@redhat.com>,
-        "Joshua Thompson" <funaho@jurai.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Message-Id: <0cb35e79fef09b12af2c3448ac4cccfda2d205eb.1562578282.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH v2] m68k/mac: Revisit floppy disc controller base addresses
-Date:   Mon, 08 Jul 2019 19:31:22 +1000
+        Mon, 8 Jul 2019 05:35:22 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so16273209wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 02:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XYVD7q3KC16RGpAK+q6liM9weRe3VNFOCPHZu8WNuqU=;
+        b=H9Ogj9zrCzlTT5tsKY73uEJP8G1B/cUrBXhesbuK3IDl1ktuH+9+GYp1L/F3iEmqJk
+         JsmGfzhWiH5OJQ2V0QubaWOsEcpFd+UdPN7EyKa+QoG62tTq0w2o7yx4nRcPVb7zPcw/
+         tBhBSp8CHZkYJD3D0HDdAHb9hXD05x/f0CWwqKyJlR7rGrQTpvkoW1nbQPvR8Gu/MosV
+         z4rKPLa5/D2NCeISWbHZYhX7drz4no5FM7t90WKGQFkRaQ69Y1yZcXOfTPb1IxdrgixD
+         YXP1XQqLNO/sKEUoJIUhlok9v0c2N0cIQ6h6qmK06/Eu2gQlfiNsXTAn9jvgLENS9R9l
+         wY7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=XYVD7q3KC16RGpAK+q6liM9weRe3VNFOCPHZu8WNuqU=;
+        b=eTPOlO6Ai2/QiRPEVRgUtNKITYjS/GG/rB6MIqcTCvHR6SGO/FoBy1lCfGIsX+2Lx4
+         O5ueE5CrPk79eu8emLfIYSSjxk/1rE6s3hVUykoGvCkfMzF5rfQFIn3HBJULLxHcc6Pw
+         vKj92LimOBS9trEJ7PuXd2vouxKSFtemVheo+xDZuRmUwMEWVdu5FNlz4EmPiN3UMmw7
+         a7xX0SYlmR1Sw5Dt2q3CJ6M1icZH6aNz8WGjhZF+LLs17gKlL4q6H+sJJ2YwzrDJ/KXY
+         UB21pQkrR84dbOrZnwdhG8oub/6D01ZdjzRcevXmLgTp4PYrZ+2yMsk9fniRjKWfdcqM
+         0UYg==
+X-Gm-Message-State: APjAAAXEP1USeh0XnOTCkzbuibDBtqCfwU5LoW9sZ07Cu2Bt4Cs38mW/
+        tLByfZZ1QrMaFpR55igC72U=
+X-Google-Smtp-Source: APXvYqxpZ/i6MN+LrbGAIoDX9pyCZRtIDFL/rDeCjwh7Qf6SGSBj9MGD6lgUVSbq87MSopzx6J1zFA==
+X-Received: by 2002:adf:a55b:: with SMTP id j27mr18089631wrb.154.1562578519310;
+        Mon, 08 Jul 2019 02:35:19 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id w20sm45625750wra.96.2019.07.08.02.35.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 02:35:18 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 11:35:16 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Will Deacon <will.deacon@arm.com>,
+        "Paul E. McKenney" <paulmck@us.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] locking changes for v5.3
+Message-ID: <20190708093516.GA57558@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename floppy_type macros to make them more consistent with the scsi_type
-macros, which are named after classes of models with similar memory maps.
+Linus,
 
-The MAC_FLOPPY_OLD symbol is introduced to change the relevant base
-address from 0x50F00000 to 0x50000000 (consistent with MAC_SCSI_OLD).
+Please pull the latest locking-core-for-linus git tree from:
 
-The documentation for LC-class machines has the IO devices at offsets
-from $50F00000. Use these addresses for MAC_FLOPPY_LC (consistent with
-MAC_SCSI_LC) because they may not be aliased elsewhere in the memory map.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-core-for-linus
 
-Add comments with controller type information from 'Designing Cards and
-Drivers for the Macintosh Family', relevant Developer Notes and
-http://mess.redump.net/mess/driver_info/mac_technical_notes
+   # HEAD: 9156e545765e467e6268c4814cfa609ebb16237e locking/lockdep: increase size of counters for lockdep statistics
 
-Adopt phys_addr_t to avoid type casts.
+The main changes in this cycle are:
 
-Cc: Laurent Vivier <lvivier@redhat.com>
-Cc: Joshua Thompson <funaho@jurai.org>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Acked-by: Laurent Vivier <lvivier@redhat.com>
----
-Changed since v1:
- - Expanded the patch description.
----
- arch/m68k/include/asm/macintosh.h |  10 +--
- arch/m68k/mac/config.c            | 128 +++++++++++++++---------------
- 2 files changed, 69 insertions(+), 69 deletions(-)
+ - rwsem scalability improvements, phase #2, by Waiman Long, which are 
+   rather impressive:
 
-diff --git a/arch/m68k/include/asm/macintosh.h b/arch/m68k/include/asm/macintosh.h
-index d9a08bed4b12..8f0698bca3dc 100644
---- a/arch/m68k/include/asm/macintosh.h
-+++ b/arch/m68k/include/asm/macintosh.h
-@@ -82,11 +82,11 @@ struct mac_model
- #define MAC_EXP_PDS_NUBUS	3 /* Accepts PDS card and/or NuBus card(s) */
- #define MAC_EXP_PDS_COMM	4 /* Accepts PDS card or Comm Slot card */
- 
--#define MAC_FLOPPY_IWM		0
--#define MAC_FLOPPY_SWIM_ADDR1	1
--#define MAC_FLOPPY_SWIM_ADDR2	2
--#define MAC_FLOPPY_SWIM_IOP	3
--#define MAC_FLOPPY_AV		4
-+#define MAC_FLOPPY_UNSUPPORTED	0
-+#define MAC_FLOPPY_SWIM_IOP	1
-+#define MAC_FLOPPY_OLD		2
-+#define MAC_FLOPPY_QUADRA	3
-+#define MAC_FLOPPY_LC		4
- 
- extern struct mac_model *macintosh_config;
- 
-diff --git a/arch/m68k/mac/config.c b/arch/m68k/mac/config.c
-index 11be08f4f750..39835ca5a474 100644
---- a/arch/m68k/mac/config.c
-+++ b/arch/m68k/mac/config.c
-@@ -209,7 +209,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_IWM,
-+		.floppy_type	= MAC_FLOPPY_UNSUPPORTED, /* IWM */
- 	},
- 
- 	/*
-@@ -224,7 +224,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_IWM,
-+		.floppy_type	= MAC_FLOPPY_UNSUPPORTED, /* IWM */
- 	}, {
- 		.ident		= MAC_MODEL_IIX,
- 		.name		= "IIx",
-@@ -233,7 +233,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_IICX,
- 		.name		= "IIcx",
-@@ -242,7 +242,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_SE30,
- 		.name		= "SE/30",
-@@ -251,7 +251,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	},
- 
- 	/*
-@@ -269,7 +269,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_IIFX,
- 		.name		= "IIfx",
-@@ -278,7 +278,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_IIFX,
- 		.scc_type	= MAC_SCC_IOP,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_IOP,
-+		.floppy_type	= MAC_FLOPPY_SWIM_IOP, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_IISI,
- 		.name		= "IIsi",
-@@ -287,7 +287,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_IIVI,
- 		.name		= "IIvi",
-@@ -296,7 +296,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_IIVX,
- 		.name		= "IIvx",
-@@ -305,7 +305,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM */
- 	},
- 
- 	/*
-@@ -319,7 +319,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_IICI,
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_CCL,
- 		.name		= "Color Classic",
-@@ -328,7 +328,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_CCLII,
- 		.name		= "Color Classic II",
-@@ -337,7 +337,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM 2 */
- 	},
- 
- 	/*
-@@ -352,7 +352,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_LCII,
- 		.name		= "LC II",
-@@ -361,7 +361,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_LCIII,
- 		.name		= "LC III",
-@@ -370,7 +370,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM 2 */
- 	},
- 
- 	/*
-@@ -391,7 +391,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_QUADRA,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_Q605_ACC,
- 		.name		= "Quadra 605",
-@@ -400,7 +400,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_QUADRA,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_Q610,
- 		.name		= "Quadra 610",
-@@ -410,7 +410,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.ether_type	= MAC_ETHER_SONIC,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_Q630,
- 		.name		= "Quadra 630",
-@@ -420,7 +420,7 @@ static struct mac_model mac_data_table[] = {
- 		.ide_type	= MAC_IDE_QUADRA,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_PDS_COMM,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_Q650,
- 		.name		= "Quadra 650",
-@@ -430,7 +430,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.ether_type	= MAC_ETHER_SONIC,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	},
- 	/* The Q700 does have a NS Sonic */
- 	{
-@@ -442,7 +442,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.ether_type	= MAC_ETHER_SONIC,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_Q800,
- 		.name		= "Quadra 800",
-@@ -452,7 +452,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.ether_type	= MAC_ETHER_SONIC,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_Q840,
- 		.name		= "Quadra 840AV",
-@@ -462,7 +462,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_PSC,
- 		.ether_type	= MAC_ETHER_MACE,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_AV,
-+		.floppy_type	= MAC_FLOPPY_UNSUPPORTED, /* New Age */
- 	}, {
- 		.ident		= MAC_MODEL_Q900,
- 		.name		= "Quadra 900",
-@@ -472,7 +472,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_IOP,
- 		.ether_type	= MAC_ETHER_SONIC,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_IOP,
-+		.floppy_type	= MAC_FLOPPY_SWIM_IOP, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_Q950,
- 		.name		= "Quadra 950",
-@@ -482,7 +482,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_IOP,
- 		.ether_type	= MAC_ETHER_SONIC,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_IOP,
-+		.floppy_type	= MAC_FLOPPY_SWIM_IOP, /* SWIM */
- 	},
- 
- 	/*
-@@ -497,7 +497,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_P475,
- 		.name		= "Performa 475",
-@@ -506,7 +506,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_QUADRA,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_P475F,
- 		.name		= "Performa 475",
-@@ -515,7 +515,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_QUADRA,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_P520,
- 		.name		= "Performa 520",
-@@ -524,7 +524,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_P550,
- 		.name		= "Performa 550",
-@@ -533,7 +533,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM 2 */
- 	},
- 	/* These have the comm slot, and therefore possibly SONIC ethernet */
- 	{
-@@ -544,7 +544,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_QUADRA,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS_COMM,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_P588,
- 		.name		= "Performa 588",
-@@ -554,7 +554,7 @@ static struct mac_model mac_data_table[] = {
- 		.ide_type	= MAC_IDE_QUADRA,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_PDS_COMM,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_TV,
- 		.name		= "TV",
-@@ -562,7 +562,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_IICI,
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_P600,
- 		.name		= "Performa 600",
-@@ -571,7 +571,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_LC,
- 		.scc_type	= MAC_SCC_II,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_LC, /* SWIM */
- 	},
- 
- 	/*
-@@ -588,7 +588,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.ether_type	= MAC_ETHER_SONIC,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_C650,
- 		.name		= "Centris 650",
-@@ -598,7 +598,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.ether_type	= MAC_ETHER_SONIC,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR1,
-+		.floppy_type	= MAC_FLOPPY_QUADRA, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_C660,
- 		.name		= "Centris 660AV",
-@@ -608,7 +608,7 @@ static struct mac_model mac_data_table[] = {
- 		.scc_type	= MAC_SCC_PSC,
- 		.ether_type	= MAC_ETHER_MACE,
- 		.expansion_type	= MAC_EXP_PDS_NUBUS,
--		.floppy_type	= MAC_FLOPPY_AV,
-+		.floppy_type	= MAC_FLOPPY_UNSUPPORTED, /* New Age */
- 	},
- 
- 	/*
-@@ -624,7 +624,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_QUADRA,
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB145,
- 		.name		= "PowerBook 145",
-@@ -632,7 +632,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_QUADRA,
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB150,
- 		.name		= "PowerBook 150",
-@@ -641,7 +641,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.ide_type	= MAC_IDE_PB,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB160,
- 		.name		= "PowerBook 160",
-@@ -649,7 +649,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_QUADRA,
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB165,
- 		.name		= "PowerBook 165",
-@@ -657,7 +657,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_QUADRA,
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB165C,
- 		.name		= "PowerBook 165c",
-@@ -665,7 +665,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_QUADRA,
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB170,
- 		.name		= "PowerBook 170",
-@@ -673,7 +673,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_QUADRA,
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB180,
- 		.name		= "PowerBook 180",
-@@ -681,7 +681,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_QUADRA,
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB180C,
- 		.name		= "PowerBook 180c",
-@@ -689,7 +689,7 @@ static struct mac_model mac_data_table[] = {
- 		.via_type	= MAC_VIA_QUADRA,
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB190,
- 		.name		= "PowerBook 190",
-@@ -698,7 +698,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.ide_type	= MAC_IDE_BABOON,
- 		.scc_type	= MAC_SCC_QUADRA,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM 2 */
- 	}, {
- 		.ident		= MAC_MODEL_PB520,
- 		.name		= "PowerBook 520",
-@@ -707,7 +707,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_OLD,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.ether_type	= MAC_ETHER_SONIC,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM 2 */
- 	},
- 
- 	/*
-@@ -724,7 +724,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_DUO,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB230,
- 		.name		= "PowerBook Duo 230",
-@@ -733,7 +733,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_DUO,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB250,
- 		.name		= "PowerBook Duo 250",
-@@ -742,7 +742,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_DUO,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB270C,
- 		.name		= "PowerBook Duo 270c",
-@@ -751,7 +751,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_DUO,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB280,
- 		.name		= "PowerBook Duo 280",
-@@ -760,7 +760,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_DUO,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	}, {
- 		.ident		= MAC_MODEL_PB280C,
- 		.name		= "PowerBook Duo 280c",
-@@ -769,7 +769,7 @@ static struct mac_model mac_data_table[] = {
- 		.scsi_type	= MAC_SCSI_DUO,
- 		.scc_type	= MAC_SCC_QUADRA,
- 		.expansion_type	= MAC_EXP_NUBUS,
--		.floppy_type	= MAC_FLOPPY_SWIM_ADDR2,
-+		.floppy_type	= MAC_FLOPPY_OLD, /* SWIM */
- 	},
- 
- 	/*
-@@ -956,7 +956,7 @@ static const struct resource mac_scsi_ccl_rsrc[] __initconst = {
- 
- int __init mac_platform_init(void)
- {
--	u8 *swim_base;
-+	phys_addr_t swim_base = 0;
- 
- 	if (!MACH_IS_MAC)
- 		return -ENODEV;
-@@ -973,22 +973,22 @@ int __init mac_platform_init(void)
- 	 */
- 
- 	switch (macintosh_config->floppy_type) {
--	case MAC_FLOPPY_SWIM_ADDR1:
--		swim_base = (u8 *)(VIA1_BASE + 0x1E000);
-+	case MAC_FLOPPY_QUADRA:
-+		swim_base = 0x5001E000;
- 		break;
--	case MAC_FLOPPY_SWIM_ADDR2:
--		swim_base = (u8 *)(VIA1_BASE + 0x16000);
-+	case MAC_FLOPPY_OLD:
-+		swim_base = 0x50016000;
- 		break;
--	default:
--		swim_base = NULL;
-+	case MAC_FLOPPY_LC:
-+		swim_base = 0x50F16000;
- 		break;
- 	}
- 
- 	if (swim_base) {
- 		struct resource swim_rsrc = {
- 			.flags = IORESOURCE_MEM,
--			.start = (resource_size_t)swim_base,
--			.end   = (resource_size_t)swim_base + 0x1FFF,
-+			.start = swim_base,
-+			.end   = swim_base + 0x1FFF,
- 		};
- 
- 		platform_device_register_simple("swim", -1, &swim_rsrc, 1);
--- 
-2.21.0
+    "On a 2-socket 40-core 80-thread Skylake system with 40 reader and 
+     writer locking threads, the min/mean/max locking operations done in a 
+     5-second testing window before the patchset were:
 
+      40 readers, Iterations Min/Mean/Max = 1,807/1,808/1,810
+      40 writers, Iterations Min/Mean/Max = 1,807/50,344/151,255
+
+     After the patchset, they became:
+
+      40 readers, Iterations Min/Mean/Max = 30,057/31,359/32,741
+      40 writers, Iterations Min/Mean/Max = 94,466/95,845/97,098"
+
+   There's a lot of changes to the locking implementation that makes it 
+   similar to qrwlock, including owner handoff for more fair locking.
+
+   Another microbenchmark shows how across the spectrum the improvements 
+   are:
+
+    "With a locking microbenchmark running on 5.1 based kernel, the total 
+     locking rates (in kops/s) on a 2-socket Skylake system with equal 
+     numbers of readers and writers (mixed) before and after this 
+     patchset were:
+
+     # of Threads   Before Patch      After Patch
+     ------------   ------------      -----------
+          2            2,618             4,193
+          4            1,202             3,726
+          8              802             3,622
+         16              729             3,359
+         32              319             2,826
+         64              102             2,744"
+
+   The changes are extensive and the patch-set has been through several 
+   iterations addressing various locking workloads. There might be more 
+   regressions, but unless they are pathological I believe we want to use 
+   this new implementation as the baseline going forward.
+
+ - jump-label optimizations by Daniel Bristot de Oliveira: the primary 
+   motivation was to remove IPI disturbance of isolated RT-workload CPUs, 
+   which resulted in the implementation of batched jump-label updates.
+   Beyond the improvement of the real-time characteristics kernel, in one 
+   test this patchset improved static key update overhead from 57 msecs 
+   to just 1.4 msecs - which is a nice speedup as well.
+
+ - atomic64_t cross-arch type cleanups by Mark Rutland: over the last ~10 
+   years of atomic64_t existence the various types used by the APIs only 
+   had to be self-consistent within each architecture - which means they 
+   became wildly inconsistent across architectures. Mark puts and end to 
+   this by reworking all the atomic64 implementations to use 's64' as the 
+   base type for atomic64_t, and to ensure that this type is consistently 
+   used for parameters and return values in the API, avoiding further 
+   problems in this area.
+
+ - A large set of small improvements to lockdep by Yuyang Du: type 
+   cleanups, output cleanups, function return type and othr cleanups all 
+   around the place.
+
+ - A set of percpu ops cleanups and fixes by Peter Zijlstra.
+
+ - Misc other changes - please see the Git log for more details.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Anders Roxell (1):
+      locking/lockdep: Remove the unused print_lock_trace() function
+
+Arnd Bergmann (1):
+      locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING
+
+Daniel Bristot de Oliveira (6):
+      jump_label: Add a jump_label_can_update() helper
+      x86/jump_label: Add a __jump_label_set_jump_code() helper
+      jump_label: Sort entries of the same key by the code
+      x86/alternative: Batch of patch operations
+      jump_label: Batch updates if arch supports it
+      x86/jump_label: Batch jump label updates
+
+Imre Deak (2):
+      locking/lockdep: Fix OOO unlock when hlocks need merging
+      locking/lockdep: Fix merging of hlocks with non-zero references
+
+Kobe Wu (2):
+      locking/lockdep: Remove unnecessary DEBUG_LOCKS_WARN_ON()
+      locking/lockdep: increase size of counters for lockdep statistics
+
+Mark Rutland (18):
+      locking/atomic, crypto/nx: Prepare for atomic64_read() conversion
+      locking/atomic, s390/pci: Prepare for atomic64_read() conversion
+      locking/atomic: Use s64 for atomic64
+      locking/atomic, alpha: Use s64 for atomic64
+      locking/atomic, arc: Use s64 for atomic64
+      locking/atomic, arm: Use s64 for atomic64
+      locking/atomic, arm64: Use s64 for atomic64
+      locking/atomic, ia64: Use s64 for atomic64
+      locking/atomic, mips: Use s64 for atomic64
+      locking/atomic, powerpc: Use s64 for atomic64
+      locking/atomic, riscv: Fix atomic64_sub_if_positive() offset argument
+      locking/atomic, riscv: Use s64 for atomic64
+      locking/atomic, s390: Use s64 for atomic64
+      locking/atomic, sparc: Use s64 for atomic64
+      locking/atomic, x86: Use s64 for atomic64
+      locking/atomic: Use s64 for atomic64_t on 64-bit
+      locking/atomic, crypto/nx: Remove redundant casts
+      locking/atomic, s390/pci: Remove redundant casts
+
+Michael Forney (1):
+      locking/atomics: Use sed(1) instead of non-standard head(1) option
+
+Nikolay Borisov (1):
+      locking/lockdep: Rename lockdep_assert_held_exclusive() -> lockdep_assert_held_write()
+
+Peter Zijlstra (8):
+      locking/lock_events: Use raw_cpu_{add,inc}() for stats
+      Documentation/atomic_t.txt: Clarify pure non-rmw usage
+      x86/atomic: Fix smp_mb__{before,after}_atomic()
+      x86/percpu: Differentiate this_cpu_{}() and __this_cpu_{}()
+      x86/percpu: Relax smp_processor_id()
+      x86/percpu, x86/irq: Relax {set,get}_irq_regs()
+      x86/percpu, sched/fair: Avoid local_clock()
+      x86/percpu: Optimize raw_cpu_xchg()
+
+Sebastian Andrzej Siewior (1):
+      locking/lockdep: Don't complain about incorrect name for no validate class
+
+Waiman Long (17):
+      futex: Consolidate duplicated timer setup code
+      locking/rwsem: Make owner available even if !CONFIG_RWSEM_SPIN_ON_OWNER
+      locking/rwsem: Remove rwsem_wake() wakeup optimization
+      locking/rwsem: Implement a new locking scheme
+      locking/rwsem: Merge rwsem.h and rwsem-xadd.c into rwsem.c
+      locking/rwsem: Code cleanup after files merging
+      locking/rwsem: Make rwsem_spin_on_owner() return owner state
+      locking/rwsem: Implement lock handoff to prevent lock starvation
+      locking/rwsem: Always release wait_lock before waking up tasks
+      locking/rwsem: More optimal RT task handling of null owner
+      locking/rwsem: Wake up almost all readers in wait queue
+      locking/rwsem: Clarify usage of owner's nonspinaable bit
+      locking/rwsem: Enable readers spinning on writer
+      locking/rwsem: Make rwsem->owner an atomic_long_t
+      locking/rwsem: Enable time-based spinning on reader-owned rwsem
+      locking/rwsem: Adaptive disabling of reader optimistic spinning
+      locking/rwsem: Guard against making count negative
+
+YueHaibing (1):
+      x86/jump_label: Make tp_vec_nr static
+
+Yuyang Du (23):
+      locking/lockdep: Change all print_*() return type to void
+      locking/lockdep: Add description and explanation in lockdep design doc
+      locking/lockdep: Adjust lock usage bit character checks
+      locking/lockdep: Remove useless conditional macro
+      locking/lockdep: Print the right depth for chain key collision
+      locking/lockdep: Update obsolete struct field description
+      locking/lockdep: Use lockdep_init_task for task initiation consistently
+      locking/lockdep: Define INITIAL_CHAIN_KEY for chain keys to start with
+      locking/lockdep: Change the range of class_idx in held_lock struct
+      locking/lockdep: Remove unused argument in validate_chain() and check_deadlock()
+      locking/lockdep: Update comment
+      locking/lockdep: Change type of the element field in circular_queue
+      locking/lockdep: Change the return type of __cq_dequeue()
+      locking/lockdep: Avoid constant checks in __bfs by using offset reference
+      locking/lockdep: Update comments on dependency search
+      locking/lockdep: Add explanation to lock usage rules in lockdep design doc
+      locking/lockdep: Remove redundant argument in check_deadlock
+      locking/lockdep: Remove unused argument in __lock_release
+      locking/lockdep: Refactorize check_noncircular and check_redundant
+      locking/lockdep: Check redundant dependency only when CONFIG_LOCKDEP_SMALL
+      locking/lockdep: Consolidate lock usage bit initialization
+      locking/lockdep: Adjust new bit cases in mark_lock
+      locking/lockdep: Remove !dir in lock irq usage check
+
+
+ Documentation/atomic_t.txt               |    9 +-
+ Documentation/locking/lockdep-design.txt |  112 ++-
+ arch/alpha/include/asm/atomic.h          |   20 +-
+ arch/arc/include/asm/atomic.h            |   41 +-
+ arch/arm/include/asm/atomic.h            |   50 +-
+ arch/arm64/include/asm/atomic_ll_sc.h    |   20 +-
+ arch/arm64/include/asm/atomic_lse.h      |   34 +-
+ arch/ia64/include/asm/atomic.h           |   20 +-
+ arch/mips/include/asm/atomic.h           |   22 +-
+ arch/powerpc/include/asm/atomic.h        |   44 +-
+ arch/riscv/include/asm/atomic.h          |   44 +-
+ arch/s390/include/asm/atomic.h           |   38 +-
+ arch/s390/pci/pci_debug.c                |    2 +-
+ arch/sparc/include/asm/atomic_64.h       |    8 +-
+ arch/x86/events/core.c                   |    2 +-
+ arch/x86/include/asm/atomic.h            |    8 +-
+ arch/x86/include/asm/atomic64_32.h       |   66 +-
+ arch/x86/include/asm/atomic64_64.h       |   46 +-
+ arch/x86/include/asm/barrier.h           |    4 +-
+ arch/x86/include/asm/irq_regs.h          |    4 +-
+ arch/x86/include/asm/jump_label.h        |    2 +
+ arch/x86/include/asm/percpu.h            |  236 ++---
+ arch/x86/include/asm/smp.h               |    3 +-
+ arch/x86/include/asm/text-patching.h     |   15 +
+ arch/x86/kernel/alternative.c            |  154 +++-
+ arch/x86/kernel/jump_label.c             |  121 ++-
+ drivers/crypto/nx/nx-842-pseries.c       |    6 +-
+ drivers/infiniband/core/device.c         |    2 +-
+ drivers/tty/tty_ldisc.c                  |    8 +-
+ fs/dax.c                                 |    2 +-
+ include/asm-generic/atomic64.h           |   20 +-
+ include/linux/jump_label.h               |    3 +
+ include/linux/lockdep.h                  |   36 +-
+ include/linux/percpu-rwsem.h             |    4 +-
+ include/linux/rwsem.h                    |   16 +-
+ include/linux/sched/wake_q.h             |    5 +
+ include/linux/smp.h                      |   45 +-
+ include/linux/types.h                    |    2 +-
+ init/init_task.c                         |    2 +
+ kernel/fork.c                            |    3 -
+ kernel/futex.c                           |   69 +-
+ kernel/jump_label.c                      |   64 +-
+ kernel/locking/Makefile                  |    2 +-
+ kernel/locking/lock_events.h             |   45 +-
+ kernel/locking/lock_events_list.h        |   12 +-
+ kernel/locking/lockdep.c                 |  742 ++++++++-------
+ kernel/locking/lockdep_internals.h       |   36 +-
+ kernel/locking/rwsem-xadd.c              |  745 ---------------
+ kernel/locking/rwsem.c                   | 1453 +++++++++++++++++++++++++++++-
+ kernel/locking/rwsem.h                   |  306 +------
+ kernel/sched/fair.c                      |    5 +-
+ lib/Kconfig.debug                        |    8 +-
+ lib/atomic64.c                           |   32 +-
+ scripts/atomic/check-atomics.sh          |    2 +-
+ security/apparmor/label.c                |    8 +-
+ 55 files changed, 2788 insertions(+), 2020 deletions(-)
+ delete mode 100644 kernel/locking/rwsem-xadd.c
