@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25116C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E079EC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED89520651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B692920651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600322;
-	bh=B+i8pNq1u1zfuPaQG55uUzHzlNs42FTF9jCQlpAxVBg=;
+	s=default; t=1562600330;
+	bh=xvRlkvuBW/KaYctAaFfIuOV5/n9KBu7XEiPQHP4ruYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cKAXW/lAq7RS60Ke8da1hJ2kTuMTUi0CguVEOPMfmKDTVd2cEuB32XFbXAUX76m9K
-	 dfhlOY5SXukUYA1d0Acw2ir8aToWapb/RU6myhrEvgMRFkRIZtDGOhUlPk5gIFC9Wr
-	 bublQIy7A6f+85RRQrMlEuVd5FTFUOn8CADuLaaU=
+	b=a9+XLJTpEgTxSuSYJyhiIFttJ6kag7wu/0ZqfQu9/HwxgK7lS3ylDBR8Ff6vLzfWj
+	 LyauxlkwS4etTNQ0k3jiB3EguIX2K2ACsY86LrE3xGC9u5Ywqfkiple4RbE2/j7P2S
+	 aEPTODOOvnGnlOfW0KbXnf3wZ281nQ5cfeLuGCpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390638AbfGHPik (ORCPT
+        id S2387708AbfGHPit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:38:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59102 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:38:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730329AbfGHPaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:08 -0400
+        id S2389809AbfGHPaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 662AB2173E;
-        Mon,  8 Jul 2019 15:30:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C66DA21707;
+        Mon,  8 Jul 2019 15:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599807;
-        bh=B+i8pNq1u1zfuPaQG55uUzHzlNs42FTF9jCQlpAxVBg=;
+        s=default; t=1562599805;
+        bh=xvRlkvuBW/KaYctAaFfIuOV5/n9KBu7XEiPQHP4ruYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uw4pgwM+03xDqrXDOSOq27wk64ZJJC0NteCG38KHZV4QypaUIXicg5ivn8ykZsSJp
-         KhiKxQI+eWyWTflEtW4Y8m2fuYBnz+7Krd3zWlo324upVrtXc9KVX02Cz1iKEjZ0VH
-         YDFVyYXd2fQc+mQ2CtzbvOpxVOH9vHkNZcRp9GgE=
+        b=CI/m3+aA8GFkxwook6assp3wiHeeZt02jBW6aDQEDHW6ZGkyNVE1YVZUNvg3ucRUm
+         pHtmyMepvCcH+JMX5hvMLd5c3gQVMbUE/e7Y3s/VnKPE0b70r9XfbEIn44Zqc1GV31
+         ny+V+MDyGnlALjVavsSv+/lqHuR1ZBS/6VNY4t5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.19 84/90] nfsd: Fix overflow causing non-working mounts on 1 TB machines
-Date:   Mon,  8 Jul 2019 17:13:51 +0200
-Message-Id: <20190708150526.687176883@linuxfoundation.org>
+        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Subject: [PATCH 4.19 83/90] KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable LAPIC
+Date:   Mon,  8 Jul 2019 17:13:50 +0200
+Message-Id: <20190708150526.617437959@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -59,65 +63,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Menzel <pmenzel@molgen.mpg.de>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-commit 3b2d4dcf71c4a91b420f835e52ddea8192300a3b upstream.
+commit bb34e690e9340bc155ebed5a3d75fc63ff69e082 upstream.
 
-Since commit 10a68cdf10 (nfsd: fix performance-limiting session
-calculation) (Linux 5.1-rc1 and 4.19.31), shares from NFS servers with
-1 TB of memory cannot be mounted anymore. The mount just hangs on the
-client.
+Thomas reported that:
 
-The gist of commit 10a68cdf10 is the change below.
+ | Background:
+ |
+ |    In preparation of supporting IPI shorthands I changed the CPU offline
+ |    code to software disable the local APIC instead of just masking it.
+ |    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
+ |    register.
+ |
+ | Failure:
+ |
+ |    When the CPU comes back online the startup code triggers occasionally
+ |    the warning in apic_pending_intr_clear(). That complains that the IRRs
+ |    are not empty.
+ |
+ |    The offending vector is the local APIC timer vector who's IRR bit is set
+ |    and stays set.
+ |
+ | It took me quite some time to reproduce the issue locally, but now I can
+ | see what happens.
+ |
+ | It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
+ | (and hardware support) it behaves correctly.
+ |
+ | Here is the series of events:
+ |
+ |     Guest CPU
+ |
+ |     goes down
+ |
+ |       native_cpu_disable()
+ |
+ | 			apic_soft_disable();
+ |
+ |     play_dead()
+ |
+ |     ....
+ |
+ |     startup()
+ |
+ |       if (apic_enabled())
+ |         apic_pending_intr_clear()	<- Not taken
+ |
+ |      enable APIC
+ |
+ |         apic_pending_intr_clear()	<- Triggers warning because IRR is stale
+ |
+ | When this happens then the deadline timer or the regular APIC timer -
+ | happens with both, has fired shortly before the APIC is disabled, but the
+ | interrupt was not serviced because the guest CPU was in an interrupt
+ | disabled region at that point.
+ |
+ | The state of the timer vector ISR/IRR bits:
+ |
+ |     	     	       	        ISR     IRR
+ | before apic_soft_disable()    0	      1
+ | after apic_soft_disable()     0	      1
+ |
+ | On startup		      		 0	      1
+ |
+ | Now one would assume that the IRR is cleared after the INIT reset, but this
+ | happens only on CPU0.
+ |
+ | Why?
+ |
+ | Because our CPU0 hotplug is just for testing to make sure nothing breaks
+ | and goes through an NMI wakeup vehicle because INIT would send it through
+ | the boots-trap code which is not really working if that CPU was not
+ | physically unplugged.
+ |
+ | Now looking at a real world APIC the situation in that case is:
+ |
+ |     	     	       	      	ISR     IRR
+ | before apic_soft_disable()    0	      1
+ | after apic_soft_disable()     0	      1
+ |
+ | On startup		      		 0	      0
+ |
+ | Why?
+ |
+ | Once the dying CPU reenables interrupts the pending interrupt gets
+ | delivered as a spurious interupt and then the state is clear.
+ |
+ | While that CPU0 hotplug test case is surely an esoteric issue, the APIC
+ | emulation is still wrong, Even if the play_dead() code would not enable
+ | interrupts then the pending IRR bit would turn into an ISR .. interrupt
+ | when the APIC is reenabled on startup.
 
-    -avail = clamp_t(int, avail, slotsize, avail/3);
-    +avail = clamp_t(int, avail, slotsize, total_avail/3);
+>From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
+* Pending interrupts in the IRR and ISR registers are held and require
+  masking or handling by the CPU.
 
-Here are the macros.
+In Thomas's testing, hardware cpu will not respect soft disable LAPIC
+when IRR has already been set or APICv posted-interrupt is in flight,
+so we can skip soft disable APIC checking when clearing IRR and set ISR,
+continue to respect soft disable APIC when attempting to set IRR.
 
-    #define min_t(type, x, y)       __careful_cmp((type)(x), (type)(y), <)
-    #define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
-
-`total_avail` is 8,434,659,328 on the 1 TB machine. `clamp_t()` casts
-the values to `int`, which for 32-bit integers can only hold values
-−2,147,483,648 (−2^31) through 2,147,483,647 (2^31 − 1).
-
-`avail` (in the function signature) is just 65536, so that no overflow
-was happening. Before the commit the assignment would result in 21845,
-and `num = 4`.
-
-When using `total_avail`, it is causing the assignment to be
-18446744072226137429 (printed as %lu), and `num` is then 4164608182.
-
-My next guess is, that `nfsd_drc_mem_used` is then exceeded, and the
-server thinks there is no memory available any more for this client.
-
-Updating the arguments of `clamp_t()` and `min_t()` to `unsigned long`
-fixes the issue.
-
-Now, `avail = 65536` (before commit 10a68cdf10 `avail = 21845`), but
-`num = 4` remains the same.
-
-Fixes: c54f24e338ed (nfsd: fix performance-limiting session calculation)
+Reported-by: Rong Chen <rong.a.chen@intel.com>
+Reported-by: Feng Tang <feng.tang@intel.com>
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rong Chen <rong.a.chen@intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |    2 +-
+ arch/x86/kvm/lapic.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1523,7 +1523,7 @@ static u32 nfsd4_get_drc_mem(struct nfsd
- 	 * Never use more than a third of the remaining memory,
- 	 * unless it's the only way to give this client a slot:
- 	 */
--	avail = clamp_t(int, avail, slotsize, total_avail/3);
-+	avail = clamp_t(unsigned long, avail, slotsize, total_avail/3);
- 	num = min_t(int, num, avail / slotsize);
- 	nfsd_drc_mem_used += num * slotsize;
- 	spin_unlock(&nfsd_drc_lock);
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2275,7 +2275,7 @@ int kvm_apic_has_interrupt(struct kvm_vc
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 	u32 ppr;
+ 
+-	if (!apic_enabled(apic))
++	if (!kvm_apic_hw_enabled(apic))
+ 		return -1;
+ 
+ 	__apic_update_ppr(apic, &ppr);
 
 
