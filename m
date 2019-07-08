@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807EEC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14621C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A762166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD74421707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599498;
-	bh=5EPvFDkWTi7S1bCoNPsJ7tsaPgocg3PRyakfKGcKUnA=;
+	s=default; t=1562599502;
+	bh=+LiCpwHsjJSrbJyVIAOZQxJz3K+eHJCNVBkQ9T3ckGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nEUq2YnFzjB0Zbx5qROtdQfV+94fu3Udyv7WR6+Z/Bo2U1B2EjSrnb2ln/hQAiiyX
-	 v9AOETzjT8dNe9iyGn0Q0Bl1IovBw1/kysTG/LZuVo7GkfK9HsYLyPMxl2B48qoYBB
-	 SawZBmgdWr6j6b0bp1bPUezzASAha4bzAiwkIYhg=
+	b=sRiBKN6hp/u8WOw3rk6EQ8HQGqvNHIUaLZVSHj7kM4c88xBGJj6iGLS1ggG1Nhum+
+	 xm9LuG7z0dNr2GykylUIgDG6v8Ao6VMIo3C2AEgMWAUgKYZBQJ5wKXIE/KiwBSs3Ic
+	 aV2ePjIHQqoMgB+sbaE7VCADz03mSUrmjfuWss+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388514AbfGHPY5 (ORCPT
+        id S2388539AbfGHPZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52160 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388393AbfGHPYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:49 -0400
+        id S2388412AbfGHPY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:24:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CFDB20665;
-        Mon,  8 Jul 2019 15:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCF2F2166E;
+        Mon,  8 Jul 2019 15:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599488;
-        bh=5EPvFDkWTi7S1bCoNPsJ7tsaPgocg3PRyakfKGcKUnA=;
+        s=default; t=1562599495;
+        bh=+LiCpwHsjJSrbJyVIAOZQxJz3K+eHJCNVBkQ9T3ckGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qz4vmM6y+75dWKW7tvlx5p33tmmNdpyA1X4E/qZmbIy3IEZBoEpekHigOSXc67dHG
-         2SUCK7DEOmKi/XUIaQ1+pfMrnLItG5kMFchBgJtSh3XuvZEA+OHkYYkcioETXm919X
-         fyJGxyWuZfnqg/txmBZTxFf2uPHTKzIESS/bgvy0=
+        b=jbvVOL7AwI3h9VVKf3sC0RF0H6xN9e4NFZ+GsO/+3nsBd12oTiIa64sSamB0yEOYe
+         ddalTxlfNRHXfL1R+uO93jaYn46qSdHG335Z3xk+b2y43nz2GqQjgVYDVvDZcL7De6
+         sOn3wEBKZ3zN7DIO6ps48RaZ4eoOkcDKH5uoN9dY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 32/56] tracing/snapshot: Resize spare buffer if size changed
-Date:   Mon,  8 Jul 2019 17:13:24 +0200
-Message-Id: <20190708150522.894628460@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.14 34/56] arm64: kaslr: keep modules inside module region when KASAN is enabled
+Date:   Mon,  8 Jul 2019 17:13:26 +0200
+Message-Id: <20190708150523.116862643@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -59,105 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 46cc0b44428d0f0e81f11ea98217fc0edfbeab07 upstream.
+commit 6f496a555d93db7a11d4860b9220d904822f586a upstream.
 
-Current snapshot implementation swaps two ring_buffers even though their
-sizes are different from each other, that can cause an inconsistency
-between the contents of buffer_size_kb file and the current buffer size.
+When KASLR and KASAN are both enabled, we keep the modules where they
+are, and randomize the placement of the kernel so it is within 2 GB
+of the module region. The reason for this is that putting modules in
+the vmalloc region (like we normally do when KASLR is enabled) is not
+possible in this case, given that the entire vmalloc region is already
+backed by KASAN zero shadow pages, and so allocating dedicated KASAN
+shadow space as required by loaded modules is not possible.
 
-For example:
+The default module allocation window is set to [_etext - 128MB, _etext]
+in kaslr.c, which is appropriate for KASLR kernels booted without a
+seed or with 'nokaslr' on the command line. However, as it turns out,
+it is not quite correct for the KASAN case, since it still intersects
+the vmalloc region at the top, where attempts to allocate shadow pages
+will collide with the KASAN zero shadow pages, causing a WARN() and all
+kinds of other trouble. So cap the top end to MODULES_END explicitly
+when running with KASAN.
 
-  # cat buffer_size_kb
-  7 (expanded: 1408)
-  # echo 1 > events/enable
-  # grep bytes per_cpu/cpu0/stats
-  bytes: 1441020
-  # echo 1 > snapshot             // current:1408, spare:1408
-  # echo 123 > buffer_size_kb     // current:123,  spare:1408
-  # echo 1 > snapshot             // current:1408, spare:123
-  # grep bytes per_cpu/cpu0/stats
-  bytes: 1443700
-  # cat buffer_size_kb
-  123                             // != current:1408
-
-And also, a similar per-cpu case hits the following WARNING:
-
-Reproducer:
-
-  # echo 1 > per_cpu/cpu0/snapshot
-  # echo 123 > buffer_size_kb
-  # echo 1 > per_cpu/cpu0/snapshot
-
-WARNING:
-
-  WARNING: CPU: 0 PID: 1946 at kernel/trace/trace.c:1607 update_max_tr_single.part.0+0x2b8/0x380
-  Modules linked in:
-  CPU: 0 PID: 1946 Comm: bash Not tainted 5.2.0-rc6 #20
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-  RIP: 0010:update_max_tr_single.part.0+0x2b8/0x380
-  Code: ff e8 dc da f9 ff 0f 0b e9 88 fe ff ff e8 d0 da f9 ff 44 89 ee bf f5 ff ff ff e8 33 dc f9 ff 41 83 fd f5 74 96 e8 b8 da f9 ff <0f> 0b eb 8d e8 af da f9 ff 0f 0b e9 bf fd ff ff e8 a3 da f9 ff 48
-  RSP: 0018:ffff888063e4fca0 EFLAGS: 00010093
-  RAX: ffff888066214380 RBX: ffffffff99850fe0 RCX: ffffffff964298a8
-  RDX: 0000000000000000 RSI: 00000000fffffff5 RDI: 0000000000000005
-  RBP: 1ffff1100c7c9f96 R08: ffff888066214380 R09: ffffed100c7c9f9b
-  R10: ffffed100c7c9f9a R11: 0000000000000003 R12: 0000000000000000
-  R13: 00000000ffffffea R14: ffff888066214380 R15: ffffffff99851060
-  FS:  00007f9f8173c700(0000) GS:ffff88806d000000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000714dc0 CR3: 0000000066fa6000 CR4: 00000000000006f0
-  Call Trace:
-   ? trace_array_printk_buf+0x140/0x140
-   ? __mutex_lock_slowpath+0x10/0x10
-   tracing_snapshot_write+0x4c8/0x7f0
-   ? trace_printk_init_buffers+0x60/0x60
-   ? selinux_file_permission+0x3b/0x540
-   ? tracer_preempt_off+0x38/0x506
-   ? trace_printk_init_buffers+0x60/0x60
-   __vfs_write+0x81/0x100
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   ? __ia32_sys_read+0xb0/0xb0
-   ? do_syscall_64+0x1f/0x390
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-This patch adds resize_buffer_duplicate_size() to check if there is a
-difference between current/spare buffer sizes and resize a spare buffer
-if necessary.
-
-Link: http://lkml.kernel.org/r/20190625012910.13109-1-devel@etsukata.com
-
-Cc: stable@vger.kernel.org
-Fixes: ad909e21bbe69 ("tracing: Add internal tracing_snapshot() functions")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: <stable@vger.kernel.org> # 4.9+
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Tested-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/module.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6394,11 +6394,13 @@ tracing_snapshot_write(struct file *filp
- 			break;
- 		}
- #endif
--		if (!tr->allocated_snapshot) {
-+		if (tr->allocated_snapshot)
-+			ret = resize_buffer_duplicate_size(&tr->max_buffer,
-+					&tr->trace_buffer, iter->cpu_file);
-+		else
- 			ret = tracing_alloc_snapshot_instance(tr);
--			if (ret < 0)
--				break;
--		}
-+		if (ret < 0)
-+			break;
- 		local_irq_disable();
- 		/* Now, we're going to swap */
- 		if (iter->cpu_file == RING_BUFFER_ALL_CPUS)
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -32,6 +32,7 @@
+ 
+ void *module_alloc(unsigned long size)
+ {
++	u64 module_alloc_end = module_alloc_base + MODULES_VSIZE;
+ 	gfp_t gfp_mask = GFP_KERNEL;
+ 	void *p;
+ 
+@@ -39,9 +40,12 @@ void *module_alloc(unsigned long size)
+ 	if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
+ 		gfp_mask |= __GFP_NOWARN;
+ 
++	if (IS_ENABLED(CONFIG_KASAN))
++		/* don't exceed the static module region - see below */
++		module_alloc_end = MODULES_END;
++
+ 	p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
+-				module_alloc_base + MODULES_VSIZE,
+-				gfp_mask, PAGE_KERNEL_EXEC, 0,
++				module_alloc_end, gfp_mask, PAGE_KERNEL_EXEC, 0,
+ 				NUMA_NO_NODE, __builtin_return_address(0));
+ 
+ 	if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
 
 
