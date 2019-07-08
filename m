@@ -2,96 +2,88 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE207C606BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C76C606BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFCA205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13E421537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731931AbfGHOnL (ORCPT
+        id S1731880AbfGHOoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:43:11 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2242 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728764AbfGHOnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:43:10 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6E8F1943E1589C1575CA;
-        Mon,  8 Jul 2019 22:43:08 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 8 Jul 2019
- 22:42:58 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
-        <f.fainelli@gmail.com>, <davem@davemloft.net>,
-        <paweldembicki@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: dsa: vsc73xx: Fix Kconfig warning and build errors
-Date:   Mon, 8 Jul 2019 22:42:24 +0800
-Message-ID: <20190708144224.33376-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 8 Jul 2019 10:44:30 -0400
+Received: from mga06.intel.com ([134.134.136.31]:44328 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726580AbfGHOoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 10:44:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 07:44:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
+   d="scan'208";a="167695137"
+Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
+  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2019 07:44:26 -0700
+Message-ID: <de67f9ec37843f6ad92db37c4f5e53e45e3dd69a.camel@linux.intel.com>
+Subject: Re: [PATCH v2] tpm: Fix null pointer dereference on chip register
+ error path
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Milan Broz <gmazyland@gmail.com>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de,
+        gregkh@linuxfoundation.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date:   Mon, 08 Jul 2019 17:44:28 +0300
+In-Reply-To: <58070e5ee4e64b10df063b61612b021c23f0fc14.camel@linux.intel.com>
+References: <20190703230125.aynx4ianvqqjt5d7@linux.intel.com>
+         <20190704072615.31143-1-gmazyland@gmail.com>
+         <58070e5ee4e64b10df063b61612b021c23f0fc14.camel@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix Kconfig dependency warning and subsequent build errors
-caused by OF is not set:
+On Mon, 2019-07-08 at 17:34 +0300, Jarkko Sakkinen wrote:
+> On Thu, 2019-07-04 at 09:26 +0200, Milan Broz wrote:
+> > If clk_enable is not defined and chip initialization
+> > is canceled code hits null dereference.
+> > 
+> > Easily reproducible with vTPM init fail:
+> >   swtpm chardev --tpmstate dir=nonexistent_dir --tpm2 --vtpm-proxy
+> > 
+> > BUG: kernel NULL pointer dereference, address: 00000000
+> > ...
+> > Call Trace:
+> >  tpm_chip_start+0x9d/0xa0 [tpm]
+> >  tpm_chip_register+0x10/0x1a0 [tpm]
+> >  vtpm_proxy_work+0x11/0x30 [tpm_vtpm_proxy]
+> >  process_one_work+0x214/0x5a0
+> >  worker_thread+0x134/0x3e0
+> >  ? process_one_work+0x5a0/0x5a0
+> >  kthread+0xd4/0x100
+> >  ? process_one_work+0x5a0/0x5a0
+> >  ? kthread_park+0x90/0x90
+> >  ret_from_fork+0x19/0x24
+> > 
+> > Fixes: 719b7d81f204 ("tpm: introduce tpm_chip_start() and tpm_chip_stop()")
+> > Cc: stable@vger.kernel.org # v5.1+
+> > Signed-off-by: Milan Broz <gmazyland@gmail.com>
+> 
+> Looks legit.
+> 
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-WARNING: unmet direct dependencies detected for NET_DSA_VITESSE_VSC73XX
-  Depends on [n]: NETDEVICES [=y] && HAVE_NET_DSA [=y] && OF [=n] && NET_DSA [=m]
-  Selected by [m]:
-  - NET_DSA_VITESSE_VSC73XX_PLATFORM [=m] && NETDEVICES [=y] && HAVE_NET_DSA [=y] && HAS_IOMEM [=y]
+Please check master and next branches from
 
-Move OF and NET_DSA dependencies to NET_DSA_VITESSE_VSC73XX/
-NET_DSA_VITESSE_VSC73XX_PLATFORM to fix this.
+  git://git.infradead.org/users/jjs/linux-tpmdd.git
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 631e83bf7c0e ("net: dsa: vsc73xx: add support for parallel mode")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/dsa/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
-index cf9dbd1..e28c209 100644
---- a/drivers/net/dsa/Kconfig
-+++ b/drivers/net/dsa/Kconfig
-@@ -100,8 +100,6 @@ config NET_DSA_SMSC_LAN9303_MDIO
- 
- config NET_DSA_VITESSE_VSC73XX
- 	tristate
--	depends on OF
--	depends on NET_DSA
- 	select FIXED_PHY
- 	select VITESSE_PHY
- 	select GPIOLIB
-@@ -112,6 +110,7 @@ config NET_DSA_VITESSE_VSC73XX
- config NET_DSA_VITESSE_VSC73XX_SPI
- 	tristate "Vitesse VSC7385/7388/7395/7398 SPI mode support"
- 	depends on SPI
-+	depends on OF && NET_DSA
- 	select NET_DSA_VITESSE_VSC73XX
- 	---help---
- 	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
-@@ -120,6 +119,7 @@ config NET_DSA_VITESSE_VSC73XX_SPI
- config NET_DSA_VITESSE_VSC73XX_PLATFORM
- 	tristate "Vitesse VSC7385/7388/7395/7398 Platform mode support"
- 	depends on HAS_IOMEM
-+	depends on OF && NET_DSA
- 	select NET_DSA_VITESSE_VSC73XX
- 	---help---
- 	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
--- 
-2.7.4
-
+/Jarkko
 
