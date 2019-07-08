@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4B7C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6CFC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02C8216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C8C216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600944;
-	bh=vW42ojFpOhiTN10NCddLKcIMeP7xmsRkoUUclVbHmxw=;
+	s=default; t=1562600951;
+	bh=UqYaX4fyRfNX1yoi0yvqj0iqzoEcaynzbhGcyc602uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B4WBpwrBvP1FHcm/sQk3+Q1btdkIhF39QJRTyBN+aeEAuQtpl6rnpNLj2sIl9oUKH
-	 BY5xwI4lqFV0FmaISTlM5LeluwlYyJFN+KIyMs22KzE8NcIHSCsaC0TF6DLtqkeMJb
-	 7U+ALj6lpi0OZ6bQOAunQof2RxCJVaDddWoFVI2w=
+	b=iCO8CjJj5ztk0+JJQo54/k66azKQ8xCtv4GaZ4VA0gxzI2Y2vCfmRsiKgENeZ1wCk
+	 jWSm1EM9YRJqykwIApJVsbyDCVDTbn10+uGqPWM0TzRb1idZ4EzKZzf5ilYI2sEiXX
+	 oDxzS1Y8lvT0ok0NEHtD0umr7loV4thGJQapWPpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732692AbfGHPRW (ORCPT
+        id S1732716AbfGHPRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732759AbfGHPRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:17:17 -0400
+        id S1732697AbfGHPQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:16:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E287621707;
-        Mon,  8 Jul 2019 15:17:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7021B21707;
+        Mon,  8 Jul 2019 15:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599036;
-        bh=vW42ojFpOhiTN10NCddLKcIMeP7xmsRkoUUclVbHmxw=;
+        s=default; t=1562599017;
+        bh=UqYaX4fyRfNX1yoi0yvqj0iqzoEcaynzbhGcyc602uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kU0gCPrFEbdrsh5FXuRpFB2ogXt7pGZH8ueF4HJYFKQpZXuY6oeHbLT4XCLLGqEag
-         RRdl7VMhhGhExuzvdy6S4cYf9dmsLeZBMwU81Tcb6liPrRvc4rQQeSuAt3b0uQCifT
-         RYSxH3q/fVEJtuDaOv6ejLSZm1ywG94RJNSFx0tY=
+        b=nY2T2y1VHc+pPhSRgo9Yg/EBUYPkGcoSzPWKxdR0rixmncnC2swEKLmfcjGniHK6N
+         UBjqrNwF7b3CvFg6lbLrpwffGXMv3e3taNsM1mzjwsWtjXh91kHfCYCwLj1kfldSWE
+         PMbl6SnO8v91U8pS6Zbpwx4MRwhLy0snWo1P7aKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Axel Lin <axel.lin@ingics.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 56/73] ARC: fix build warning in elf.h
-Date:   Mon,  8 Jul 2019 17:13:06 +0200
-Message-Id: <20190708150524.308561908@linuxfoundation.org>
+Subject: [PATCH 4.4 50/73] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
+Date:   Mon,  8 Jul 2019 17:13:00 +0200
+Message-Id: <20190708150524.011326537@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -59,40 +64,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1dec78585328db00e33fb18dc1a6deed0e2095a5 ]
+[ Upstream commit 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 ]
 
-The cast valid since TASK_SIZE * 2 will never actually cause overflow.
+If spi_register_master fails in spi_bitbang_start
+because device_add failure, We should return the
+error code other than 0, otherwise calling
+spi_bitbang_stop may trigger NULL pointer dereference
+like this:
 
-|   CC      fs/binfmt_elf.o
-| In file included from ../include/linux/elf.h:4:0,
-|                  from ../include/linux/module.h:15,
-|                  from ../fs/binfmt_elf.c:12:
-| ../fs/binfmt_elf.c: In function load_elf_binar:
-| ../arch/arc/include/asm/elf.h:57:29: warning: integer overflow in expression [-Woverflow]
-|  #define ELF_ET_DYN_BASE  (2 * TASK_SIZE / 3)
-|                              ^
-| ../fs/binfmt_elf.c:921:16: note: in expansion of macro ELF_ET_DYN_BASE
-|     load_bias = ELF_ET_DYN_BASE - vaddr;
+BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
+Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ dump_stack+0xa9/0x10e
+ ? __list_del_entry_valid+0x45/0xd0
+ ? __list_del_entry_valid+0x45/0xd0
+ __kasan_report+0x171/0x18d
+ ? __list_del_entry_valid+0x45/0xd0
+ kasan_report+0xe/0x20
+ __list_del_entry_valid+0x45/0xd0
+ spi_unregister_controller+0x99/0x1b0
+ spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
+ ? 0xffffffffc1128000
+ ? klist_next+0x131/0x1e0
+ ? driver_detach+0x40/0x40 [parport]
+ port_check+0x3b/0x50 [parport]
+ bus_for_each_dev+0x115/0x180
+ ? subsys_dev_iter_exit+0x20/0x20
+ __parport_register_driver+0x1f0/0x210 [parport]
+ ? 0xffffffffc1150000
+ do_one_initcall+0xb9/0x3b5
+ ? perf_trace_initcall_level+0x270/0x270
+ ? kasan_unpoison_shadow+0x30/0x40
+ ? kasan_unpoison_shadow+0x30/0x40
+ do_init_module+0xe0/0x330
+ load_module+0x38eb/0x4270
+ ? module_frob_arch_sections+0x20/0x20
+ ? kernel_read_file+0x188/0x3f0
+ ? find_held_lock+0x6d/0xd0
+ ? fput_many+0x1a/0xe0
+ ? __do_sys_finit_module+0x162/0x190
+ __do_sys_finit_module+0x162/0x190
+ ? __ia32_sys_init_module+0x40/0x40
+ ? __mutex_unlock_slowpath+0xb4/0x3f0
+ ? wait_for_completion+0x240/0x240
+ ? vfs_write+0x160/0x2a0
+ ? lockdep_hardirqs_off+0xb5/0x100
+ ? mark_held_locks+0x1a/0x90
+ ? do_syscall_64+0x14/0x2a0
+ do_syscall_64+0x72/0x2a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/include/asm/elf.h | 2 +-
+ drivers/spi/spi-bitbang.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arc/include/asm/elf.h b/arch/arc/include/asm/elf.h
-index 51a99e25fe33..8ee9113b2f8b 100644
---- a/arch/arc/include/asm/elf.h
-+++ b/arch/arc/include/asm/elf.h
-@@ -55,7 +55,7 @@ extern int elf_check_arch(const struct elf32_hdr *);
-  * the loader.  We need to make sure that it is out of the way of the program
-  * that it will "exec", and that there is sufficient room for the brk.
-  */
--#define ELF_ET_DYN_BASE		(2 * TASK_SIZE / 3)
-+#define ELF_ET_DYN_BASE		(2UL * TASK_SIZE / 3)
+diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
+index 3aa9e6e3dac8..4ef54436b9d4 100644
+--- a/drivers/spi/spi-bitbang.c
++++ b/drivers/spi/spi-bitbang.c
+@@ -392,7 +392,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
+ 	if (ret)
+ 		spi_master_put(master);
  
- /*
-  * When the program starts, a1 contains a pointer to a function to be
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(spi_bitbang_start);
+ 
 -- 
 2.20.1
 
