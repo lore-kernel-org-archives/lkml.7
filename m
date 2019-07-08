@@ -2,96 +2,103 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6013CC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F3BC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4169020861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176F320861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfGHH6h (ORCPT
+        id S1728820AbfGHH6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:58:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60256 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbfGHH6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:58:34 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 268CB3092640;
-        Mon,  8 Jul 2019 07:58:34 +0000 (UTC)
-Received: from [10.36.116.46] (ovpn-116-46.ams2.redhat.com [10.36.116.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BDBC018ACB;
-        Mon,  8 Jul 2019 07:58:31 +0000 (UTC)
-Subject: Re: [PATCH 2/8] dt-bindings: document PASID property for IOMMU
- masters
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        will.deacon@arm.com
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        robin.murphy@arm.com, jacob.jun.pan@linux.intel.com,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-3-jean-philippe.brucker@arm.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <4a90dc21-e727-b2f6-1353-cb08babf0ec2@redhat.com>
-Date:   Mon, 8 Jul 2019 09:58:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 8 Jul 2019 03:58:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33899 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfGHH6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 03:58:39 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n5so15293207otk.1;
+        Mon, 08 Jul 2019 00:58:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=StnBZ5X9IU3YfBiysdeAUKuuUOczu/xn5Tp1Ip5xjbA=;
+        b=hpAyFmuJunqfuuxjK/crmrEZIjoht/cOoswSDwolGMNwu6KQTRzcQCR+7V/KPPP3px
+         qpE6Mf4GYoXVh3z3CU5Rrd4Twr1NvHHIGrO0bIG5qXn5K7dowdk4l67CcNpecRIWwWWL
+         ppMOk+bl6pL95Kx6x7CUAvHt/0pjN+FBLk9JjzHIUN4DkUBxcS+z/uLESBN7P+LnvqrN
+         u427DsGjW7HEgAHqsphKQkHuSTIwFyMgImLjbKRnkDhaK1KubWtgIN3PcE+/izi1QykI
+         xsWhfx2YOi7ht1sEU3lZeUVwHf4gFnqn01G8wbuVKR7Q0IBNtblEliTK5eDEd0e7j7ip
+         hj0Q==
+X-Gm-Message-State: APjAAAU52DMG/CCw2uyMNwEtcYG2gIqOA7BATkxdNNetH3uFUF9Jb9dA
+        dNeqBE2ZnVvGLfjq+G29UwSF5iFqs50FHiVkfdQ=
+X-Google-Smtp-Source: APXvYqzUPRCgrUBw97eCjHFCwkgqypz9WTte0c3NlDtkB2BijxQNV9v4lF/EwkMmVsOxNeMUvOg3BbZciubIJ9wch0I=
+X-Received: by 2002:a9d:7a90:: with SMTP id l16mr1458564otn.297.1562572719133;
+ Mon, 08 Jul 2019 00:58:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190610184714.6786-3-jean-philippe.brucker@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 08 Jul 2019 07:58:34 +0000 (UTC)
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org> <20190706140746.29132-2-jacopo+renesas@jmondi.org>
+In-Reply-To: <20190706140746.29132-2-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 8 Jul 2019 09:58:27 +0200
+Message-ID: <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+Hi Jacopo,
 
-On 6/10/19 8:47 PM, Jean-Philippe Brucker wrote:
-> On Arm systems, some platform devices behind an SMMU may support the PASID
-> feature, which offers multiple address space. Let the firmware tell us
-> when a device supports PASID.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> ---
-> Previous discussion on this patch last year:
-> https://patchwork.ozlabs.org/patch/872275/
-> I split PASID and stall definitions, keeping only PASID here.
-> ---
->  Documentation/devicetree/bindings/iommu/iommu.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
-> index 5a8b4624defc..3c36334e4f94 100644
-> --- a/Documentation/devicetree/bindings/iommu/iommu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/iommu.txt
-> @@ -86,6 +86,12 @@ have a means to turn off translation. But it is invalid in such cases to
->  disable the IOMMU's device tree node in the first place because it would
->  prevent any driver from properly setting up the translations.
->  
-> +Optional properties:
-> +--------------------
-> +- pasid-num-bits: Some masters support multiple address spaces for DMA, by
-> +  tagging DMA transactions with an address space identifier. By default,
-> +  this is 0, which means that the device only has one address space.
+On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add device tree bindings documentation for the Renesas R-Car Display
+> Unit Color Management Module.
+>
+> CMM is the image enhancement module available on each R-Car DU video
+> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> @@ -0,0 +1,25 @@
+> +* Renesas R-Car Color Management Module (CMM)
 > +
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> +
+> +Required properties:
+> + - compatible: shall be one of:
+> +   - "renesas,rcar-gen3-cmm"
+> +   - "renesas,rcar-gen2-cmm"
 
-Thanks
+Why do you think you do not need SoC-specific compatible values?
+What if you discover a different across the R-Car Gen3 line tomorrow?
+Does the IP block have a version register?
 
-Eric
->  
->  Notes:
->  ======
-> 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
