@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A648FC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E58C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70AE320665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E724216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600780;
-	bh=2SFi4Fqdpu8OLy4mfpNj84nLI+1c2zg3gYH+XC3PBEM=;
+	s=default; t=1562600788;
+	bh=fXWdmvwzCD4AeHfGKZlRrZtFmcaqMe9v+NkRL7KYvl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTUT5q8oFnUcmmIDeDAnJmc+pu+2ZYCKzNLWMACTrJ4ugeu69yaD3BCVWv7wvFFbi
-	 6VZ/trZbzxtqvbtMn3RUdgbfFpZmBMvfQvdDHOm3Lfw5Hix8clXW+bO32TccDtfbmT
-	 /KfycXZ9SxOJIahpUwrt1CXGA8yNL9TjUUVG+xOA=
+	b=zVADtKcFfHZ5VHWqjhXxXj4hH+uRlVdMnoUnzHpLQgwaA8AHOkknFCs+6zNn5K/Fk
+	 SRaF1/xnJnaPggQYxbrTwtLU7iivbR1+zWs1g0ZDRRmqJNWVMG9enb0CkdfY8Evav1
+	 tOEmiWSo9W0ouZQDHjW5iUrxbE4TrB5sFv50fMbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390855AbfGHPqS (ORCPT
+        id S2391269AbfGHPq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:46:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46870 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387491AbfGHPVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:16 -0400
+        id S2387699AbfGHPVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:21:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C7E62173C;
-        Mon,  8 Jul 2019 15:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 467622166E;
+        Mon,  8 Jul 2019 15:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599276;
-        bh=2SFi4Fqdpu8OLy4mfpNj84nLI+1c2zg3gYH+XC3PBEM=;
+        s=default; t=1562599259;
+        bh=fXWdmvwzCD4AeHfGKZlRrZtFmcaqMe9v+NkRL7KYvl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v+bSbra1jsJOw3uonHFM8xE3tM0+czpRWO4prVUoQ8H24Uj+rcy1IV7ONQXx+4CXd
-         QmbEsY1uazlCVCO4QQT1nV5PSy7aFZIovGQBC8OjUoxwjKDwP5f1o1btpZ0hQ4Msga
-         2LO6G7CBOLzMi572HZuwrPvHaDtRqYaswemywaXI=
+        b=HidsiNnSZL6wJThDDpd4ZHN6hu5NpFbFDpsINKe5HT/iW2hTzDwoz6JvxYoyGtt4e
+         J8K/Ier5CHjKQVBfB2Uf/J4caEtN7e4RyLoXTogngOm0XPZZ4t81seDdmlCivwA7oA
+         HsJ/XkSVQXNJSn9oAlYaWgDsxQQMIqznprFEq0kc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Herbert <tom@herbertland.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 4.9 062/102] bpf: udp: Avoid calling reuseports bpf_prog from udp_gro
-Date:   Mon,  8 Jul 2019 17:12:55 +0200
-Message-Id: <20190708150529.667339334@linuxfoundation.org>
+        stable@vger.kernel.org, Fei Li <lifei.shirley@bytedance.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 057/102] tun: wake up waitqueues after IFF_UP is set
+Date:   Mon,  8 Jul 2019 17:12:50 +0200
+Message-Id: <20190708150529.408617194@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -61,55 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Fei Li <lifei.shirley@bytedance.com>
 
-commit 257a525fe2e49584842c504a92c27097407f778f upstream.
+[ Upstream commit 72b319dc08b4924a29f5e2560ef6d966fa54c429 ]
 
-When the commit a6024562ffd7 ("udp: Add GRO functions to UDP socket")
-added udp[46]_lib_lookup_skb to the udp_gro code path, it broke
-the reuseport_select_sock() assumption that skb->data is pointing
-to the transport header.
+Currently after setting tap0 link up, the tun code wakes tx/rx waited
+queues up in tun_net_open() when .ndo_open() is called, however the
+IFF_UP flag has not been set yet. If there's already a wait queue, it
+would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
+Then the saving vhost_poll_start() will add the wq into wqh until it
+is waken up again. Although this works when IFF_UP flag has been set
+when tun_chr_poll detects; this is not true if IFF_UP flag has not
+been set at that time. Sadly the latter case is a fatal error, as
+the wq will never be waken up in future unless later manually
+setting link up on purpose.
 
-This patch follows an earlier __udp6_lib_err() fix by
-passing a NULL skb to avoid calling the reuseport's bpf_prog.
+Fix this by moving the wakeup process into the NETDEV_UP event
+notifying process, this makes sure IFF_UP has been set before all
+waited queues been waken up.
 
-Fixes: a6024562ffd7 ("udp: Add GRO functions to UDP socket")
-Cc: Tom Herbert <tom@herbertland.com>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/ipv4/udp.c |    6 +++++-
- net/ipv6/udp.c |    2 +-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/tun.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -569,7 +569,11 @@ static inline struct sock *__udp4_lib_lo
- struct sock *udp4_lib_lookup_skb(struct sk_buff *skb,
- 				 __be16 sport, __be16 dport)
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -828,18 +828,8 @@ static void tun_net_uninit(struct net_de
+ /* Net device open. */
+ static int tun_net_open(struct net_device *dev)
  {
--	return __udp4_lib_lookup_skb(skb, sport, dport, &udp_table);
-+	const struct iphdr *iph = ip_hdr(skb);
+-	struct tun_struct *tun = netdev_priv(dev);
+-	int i;
+-
+ 	netif_tx_start_all_queues(dev);
+ 
+-	for (i = 0; i < tun->numqueues; i++) {
+-		struct tun_file *tfile;
+-
+-		tfile = rtnl_dereference(tun->tfiles[i]);
+-		tfile->socket.sk->sk_write_space(tfile->socket.sk);
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -2534,6 +2524,7 @@ static int tun_device_event(struct notif
+ {
+ 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+ 	struct tun_struct *tun = netdev_priv(dev);
++	int i;
+ 
+ 	if (dev->rtnl_link_ops != &tun_link_ops)
+ 		return NOTIFY_DONE;
+@@ -2543,6 +2534,14 @@ static int tun_device_event(struct notif
+ 		if (tun_queue_resize(tun))
+ 			return NOTIFY_BAD;
+ 		break;
++	case NETDEV_UP:
++		for (i = 0; i < tun->numqueues; i++) {
++			struct tun_file *tfile;
 +
-+	return __udp4_lib_lookup(dev_net(skb->dev), iph->saddr, sport,
-+				 iph->daddr, dport, inet_iif(skb),
-+				 &udp_table, NULL);
- }
- EXPORT_SYMBOL_GPL(udp4_lib_lookup_skb);
- 
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -294,7 +294,7 @@ struct sock *udp6_lib_lookup_skb(struct
- 
- 	return __udp6_lib_lookup(dev_net(skb->dev), &iph->saddr, sport,
- 				 &iph->daddr, dport, inet6_iif(skb),
--				 &udp_table, skb);
-+				 &udp_table, NULL);
- }
- EXPORT_SYMBOL_GPL(udp6_lib_lookup_skb);
- 
++			tfile = rtnl_dereference(tun->tfiles[i]);
++			tfile->socket.sk->sk_write_space(tfile->socket.sk);
++		}
++		break;
+ 	default:
+ 		break;
+ 	}
 
 
