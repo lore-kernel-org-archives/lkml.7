@@ -2,105 +2,115 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F455C606AB
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE99C606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9E320651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79BAC20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbfGHKSo (ORCPT
+        id S1730015AbfGHKSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 06:18:44 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.131]:50831 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728766AbfGHKSn (ORCPT
+        Mon, 8 Jul 2019 06:18:52 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:34129 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728766AbfGHKSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 06:18:43 -0400
-Received: from [46.226.53.55] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-c.eu-west-1.aws.symcld.net id 1C/5E-11076-088132D5; Mon, 08 Jul 2019 10:18:40 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGIsWRWlGSWpSXmKPExsUyo1hfUrdeQjn
-  W4PNXa4svc0+xWOx6sI3NYsqf5UwWm+f/YbS4vGsOmwOrx/sbrewei6/dZvW4c20Pm8fnTXIB
-  LFGsmXlJ+RUJrBn77/5nLLjPWXHhTB9TA+NMji5GLg4hgTWMEl8u/mbtYuTk4BUwlph8+SmYL
-  SzgI/H66wT2LkYODjYBXYmuO6YgYRGBIInL/xpYQMLMAiUSt2+5gIRZBFQk3ixeyARicwJNub
-  j0EdgUIQEjiYtPdoDFmQU0JVq3/2YHsSUENCQ23DzGBLFVUOLkzCcsEDXyEs1bZzODjBcSkJU
-  4eikWolxB4uyWiYwQdpLEub4rbBMYBWYhmToLyaRZSCYtYGRexWiRVJSZnlGSm5iZo2toYKBr
-  aGika2RgCGQb6iVW6SbrpZbqlqcWl+gCueXFesWVuck5KXp5qSWbGIHBn1JwMnUH4/1Zb/QOM
-  UpyMCmJ8oakyscK8SXlp1RmJBZnxBeV5qQWH2KU4eBQkuCdI64cKyRYlJqeWpGWmQOMRJi0BA
-  ePkgjvbZA0b3FBYm5xZjpE6hSjopQ47wyQhABIIqM0D64NFv2XGGWlhHkZGRgYhHgKUotyM0t
-  Q5V8xinMwKgnzKoBM4cnMK4Gb/gpoMRPQ4rpIJZDFJYkIKakGJj0GLd/aTT8zJxmEFQQu2BQX
-  q6N2XHLCzRnLqk++7HX5Jqx/M58/sfOExeqpEr/lJiaYe+ob3N399pPQ66gin2u/FBy9/dWlW
-  4J8Bc7XOO5yOXB4T7nJBAWRzqRNob/Fjk3vufKn2+bJlD175q+5dOKl4HRltR9fkj36XbMzG2
-  v8p+mznckS1lMzLvfu+dC91XD9goPOjeHX+HdYxs86V7LJJPMYi9eOH/tnCHevyPW4xXVo+s+
-  uBYxvzM5aP6l/um7vKrVdCXHXElvV1YqSCy9Ile3o+rXl48f3h2eEV7fMKKhevDKZnVN905uj
-  m6Uns1V5dMk+Or6Z9xR//jLlCbv9ueQf3Z8T9X8CR9RLJiWW4oxEQy3mouJEAORXjy15AwAA
-X-Env-Sender: cst@phaseone.com
-X-Msg-Ref: server-3.tower-307.messagelabs.com!1562581119!941159!1
-X-Originating-IP: [152.115.47.25]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 2385 invoked from network); 8 Jul 2019 10:18:39 -0000
-Received: from unknown (HELO Exchange2.phaseone.com) (152.115.47.25)
-  by server-3.tower-307.messagelabs.com with AES256-SHA encrypted SMTP; 8 Jul 2019 10:18:39 -0000
-Received: from cstu16.phaseone.com (172.16.2.207) by Exchange2.phaseone.com
- (172.16.1.180) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 8 Jul
- 2019 12:18:38 +0200
-Message-ID: <1562581119.10420.8.camel@phaseone.com>
-Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
-From:   "Claus H. Stovgaard" <cst@phaseone.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>
-Date:   Mon, 8 Jul 2019 12:18:39 +0200
-In-Reply-To: <20190708082343.30726-1-brgl@bgdev.pl>
-References: <20190708082343.30726-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+        Mon, 8 Jul 2019 06:18:52 -0400
+Received: from [192.168.1.110] ([95.117.164.184]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MiIhU-1iOhhf3G5u-00fPo6; Mon, 08 Jul 2019 12:18:49 +0200
+Subject: Re: [PATCH] mfd: asic3: One function call less in asic3_irq_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        kernel-janitors@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <01f6a8cd-0205-8d34-2aa3-e4b691e7eb95@web.de>
+ <20190707005251.GQ17978@ZenIV.linux.org.uk>
+ <4b06e2fb-a0ba-56e5-b46b-98e986e6f2fd@web.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <6e8eab5f-1f5c-b3dc-6b65-96a874ec2789@metux.net>
+Date:   Mon, 8 Jul 2019 12:18:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [172.16.2.207]
-X-ClientProxiedBy: Exchange3.phaseone.com (172.16.1.184) To
- Exchange2.phaseone.com (172.16.1.180)
+In-Reply-To: <4b06e2fb-a0ba-56e5-b46b-98e986e6f2fd@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:wZhPg0d2X13sXXJjtQQzyQirdFpfMpeqPVXZaZlM41GPJExzFCm
+ Yw1C+00phsDHeK8fj/B0Jz3mjzhpy0c4vYxqe3T8coHtaCQMJwzl6uptENFSXwIO9xuTJzd
+ /QcZoWB2br6snlxnJ3BTEovycqeQOqQXkjIQ+m8c9XM2yVEWHj3ch4hPfL+5qZ3qZkQ1Mlk
+ awHv+xu7ro7PiwXuaK5kw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:L/dZ6YzWsiE=:yd5q3Vgf9pRCN5gJDxbbcL
+ xoxWY4mSkFE7gPPF4vO5p4el2qryucwMFujowPu81wrOt4m2kXMD1qHk8nhPOtxS0+LApVG0Q
+ RWj+GmJyQm9xv/qSRyAD4AHvWRubZDATHNEI1J7VgfPCRcO8LP8x+PZM+V38nHgCnk4jQnJEE
+ smqNVdTizDPJPTd6e0f+VnDbPQI4goDcQzLB1DBFp3Pe7pHT52KgQWB46X0iLzZRBI7H53X1G
+ bj9OdTSKmjlHhuvJIYnxTqU4GooY4lCCPGtpgUgDOh0XAzGTRDIgUZHISMoF0/MVFJ6yekiU7
+ YpPZBJqwcR2eT40ULUppI9Bffl9wsO7q98TJilMK7eyHsRfKwyMJ+eK2F33JoF3OnRYP3GDvo
+ n40U6P9olyDakCKDcSSLWES2AvkVh65oZTv/6clkq9tMhFKSYEIYj/bbtIohD09/uRsRFW+SK
+ YPw3WF+jYqZepazS1RgBmuXs26wfJ43K1cTge4e2tnMZRje6FPJSM3nN32tinSQ7QEcvgNSPB
+ pnLNQaz6KrmYjJ17WDJEDrcNTEWm5PMl5s9ouvlBnxk8ZpQnlrDvYzRLlN7B4j0Nq6/dkAVAy
+ DtjExW+RwASd8weyQVLsoCT5Qez41R7rQCJmkCSqaaneXD7PNko35N7YQw3YJxJLHU2Tw8Waf
+ YZ5VfkTDwINKj32GCVxljK08LpCACWloa/WCf2OtStIS9Yei2cd3Py5GYO+Mkez81vKPGJ+Hj
+ 1AwTJkAfoT0BiqOVyZlgnibStcTR+C/X8K4uyGJhu4YFxqhoWsReZGvV3KA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-08 at 10:23 +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 07.07.19 09:56, Markus Elfring wrote:
+>>> Avoid an extra function call by using a ternary operator instead of
+>>> a conditional statement.
+>>
+>> Which is a good thing, because...?
 > 
-> If gpiolib is disabled, we use the inline stubs from gpio/consumer.h
-> instead of regular definitions of GPIO API. The stubs for 'optional'
-> variants of gpiod_get routines return NULL in this case as if the
-> relevant GPIO wasn't found. This is correct so far.
-> 
-> Calling other (non-gpio_get) stubs from this header triggers a
-> warning
-> because the GPIO descriptor couldn't have been requested. The warning
-> however is unconditional (WARN_ON(1)) and is emitted even if the
-> passed
-> descriptor pointer is NULL.
-> 
-> We don't want to force the users of 'optional' gpio_get to check the
-> returned pointer before calling e.g. gpiod_set_value() so let's only
-> WARN on non-NULL descriptors.
-> 
-> Reported-by: Claus H. Stovgaard <cst@phaseone.com>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  include/linux/gpio/consumer.h | 64 +++++++++++++++++--------------
-> ----
->  1 file changed, 32 insertions(+), 32 deletions(-)
+> I suggest to reduce a bit of duplicate source code also at this place.
 
-Have tested it on my setup (ZynqMP with AT24 EEPROM), where it works
-great. This have removed the warnings in the log regarding settting
-wp_gpio for AT24.
+Duplicate code (logic) or just characters ?
 
-Thanks
-Claus
+IMHO, readability is an important aspect, so we could be careful about
+that. Some of your other patches IMHO made it actually a bit easier
+to read, but this particular case doesnt seem so to (just according
+to my personal taste).
+
+I believe the compiler can do optimize that, based on the given flags.
+(eg. size vs. speed). Therefore, I think that readability for the
+human reader should be primary argument.
+
+>> ... except that the result is not objectively better by any real criteria.
+> 
+> We can have different opinions about the criteria which are relevant here.
+
+Which criterias are you operating on ?
+
+> I dare to point another change possibility out.
+> I am unsure if this adjustment will be picked up finally.
+
+I think it's good that you're using tools like cocci for pointing out
+*possible* points of useful refactoring. But that doesn't mean that a
+particular patch can be accepted or not in the greater context.
+
+Note that such issues are pretty subjective - it's not a technical but
+an asthetic matter, so such issues can't be resolved by logic. Here, the
+better something fits the personal taste of the maintainrs, the easier
+it is for them to quickly understand the code (w/o having to give it any
+deeper thoughts), thus reduces their brain load. Therefore that should
+be the the primary argument left.
+
+Don't see this as a judgment of your work as such - this kind of work
+just tends to have a high rate of non-acceptable output (unless the
+individual maintainer doing it himself).
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
