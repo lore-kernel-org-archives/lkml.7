@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE73DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F3AC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7C821783
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB78E217D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599524;
-	bh=qlYa6o9khw8LBnQk5+vv9KWTKvgudxPcerG4S16Krx0=;
+	s=default; t=1562599530;
+	bh=if0EIBPsFsgQs35NsIDRgDUOAbmIkxolApa+jgCYInA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1BwcZy4H3NsYRQD02chfFP5H+zBG2Z5/MGJ1CnbniuqNQXb1kp13lJn444RUQvFK
-	 ur/8K3ShF6f3qF7hwrxzoI6aQdOwJtp7fNmcPs3x2nhAJGh7lRRsyv7A3kc3LrxC+/
-	 Tbrwgvo/InUHsd9hTNQAL3rhVZkYnbKo28Hm4Dxg=
+	b=RlGzRR3N1Pm6uAYyEBbl7wIPzW2GTNTXiKwNTOT5OTqWCXlS1X078n9tklvIk1Hh5
+	 WlktlFRdj6kJbDpYnX1ewtIJNmYf2d+oVcdjlzALmAx85pSjyx06ao/U+Wg2Y3R4pc
+	 ccMNhZL0HSoAIIvu1BKBt7nOKlji2qx7U6ohVsdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388573AbfGHPZX (ORCPT
+        id S2388607AbfGHPZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52674 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388491AbfGHPZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:15 -0400
+        id S2388584AbfGHPZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D1321707;
-        Mon,  8 Jul 2019 15:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033E421783;
+        Mon,  8 Jul 2019 15:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599514;
-        bh=qlYa6o9khw8LBnQk5+vv9KWTKvgudxPcerG4S16Krx0=;
+        s=default; t=1562599525;
+        bh=if0EIBPsFsgQs35NsIDRgDUOAbmIkxolApa+jgCYInA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CLFzJAERG2FtSzXEZj56NvK88d6kplom8h2nG7WgumSLekgR1Vmse3DwujsfNjvNn
-         1p0w9zGn0sBiNOzO+DsohsbIyzXmXCZq0xR5JZXAAexgAZX1bmmbRNidUVTBcTUeKe
-         +Oyn1e5RVtCc/O7kmh1FX4xou+lPk9QkicBvCcGo=
+        b=m9bZ1Oggincz111iCFw85BEE69i17sFBzkuUIMVXfHud3NACdibNyL5ma3IXlsLzQ
+         qTLNuvLn/y9+yWW7jIHyrI039t/3tBCQvtZ2LSrBI9OEA87SpmVaeJvcdM+ZTzXgdR
+         VU+7FvnIa0zD1xJoduHeqgFPqzEZzedlHIYaT16Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: [PATCH 4.14 40/56] btrfs: Ensure replaced device doesnt have pending chunk allocation
-Date:   Mon,  8 Jul 2019 17:13:32 +0200
-Message-Id: <20190708150523.470793458@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Balbir Singh <sblbir@amzn.com>
+Subject: [PATCH 4.14 44/56] vhost: introduce vhost_exceeds_weight()
+Date:   Mon,  8 Jul 2019 17:13:36 +0200
+Message-Id: <20190708150523.754548980@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -59,123 +61,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Jason Wang <jasowang@redhat.com>
 
-commit debd1c065d2037919a7da67baf55cc683fee09f0 upstream.
+commit e82b9b0727ff6d665fff2d326162b460dded554d upstream.
 
-Recent FITRIM work, namely bbbf7243d62d ("btrfs: combine device update
-operations during transaction commit") combined the way certain
-operations are recoded in a transaction. As a result an ASSERT was added
-in dev_replace_finish to ensure the new code works correctly.
-Unfortunately I got reports that it's possible to trigger the assert,
-meaning that during a device replace it's possible to have an unfinished
-chunk allocation on the source device.
+We used to have vhost_exceeds_weight() for vhost-net to:
 
-This is supposed to be prevented by the fact that a transaction is
-committed before finishing the replace oepration and alter acquiring the
-chunk mutex. This is not sufficient since by the time the transaction is
-committed and the chunk mutex acquired it's possible to allocate a chunk
-depending on the workload being executed on the replaced device. This
-bug has been present ever since device replace was introduced but there
-was never code which checks for it.
+- prevent vhost kthread from hogging the cpu
+- balance the time spent between TX and RX
 
-The correct way to fix is to ensure that there is no pending device
-modification operation when the chunk mutex is acquire and if there is
-repeat transaction commit. Unfortunately it's not possible to just
-exclude the source device from btrfs_fs_devices::dev_alloc_list since
-this causes ENOSPC to be hit in transaction commit.
+This function could be useful for vsock and scsi as well. So move it
+to vhost.c. Device must specify a weight which counts the number of
+requests, or it can also specific a byte_weight which counts the
+number of bytes that has been processed.
 
-Fixing that in another way would need to add special cases to handle the
-last writes and forbid new ones. The looped transaction fix is more
-obvious, and can be easily backported. The runtime of dev-replace is
-long so there's no noticeable delay caused by that.
-
-Reported-by: David Sterba <dsterba@suse.com>
-Fixes: 391cd9df81ac ("Btrfs: fix unprotected alloc list insertion during the finishing procedure of replace")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Balbir Singh <sblbir@amzn.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/btrfs/dev-replace.c |   29 +++++++++++++++++++----------
- fs/btrfs/volumes.c     |    2 ++
- fs/btrfs/volumes.h     |    5 +++++
- 3 files changed, 26 insertions(+), 10 deletions(-)
+ drivers/vhost/net.c   |   18 +++++-------------
+ drivers/vhost/scsi.c  |    8 +++++++-
+ drivers/vhost/vhost.c |   20 +++++++++++++++++++-
+ drivers/vhost/vhost.h |    6 +++++-
+ drivers/vhost/vsock.c |   11 ++++++++++-
+ 5 files changed, 46 insertions(+), 17 deletions(-)
 
---- a/fs/btrfs/dev-replace.c
-+++ b/fs/btrfs/dev-replace.c
-@@ -512,18 +512,27 @@ static int btrfs_dev_replace_finishing(s
- 	}
- 	btrfs_wait_ordered_roots(fs_info, U64_MAX, 0, (u64)-1);
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -446,12 +446,6 @@ static bool vhost_exceeds_maxpend(struct
+ 		== nvq->done_idx;
+ }
  
--	trans = btrfs_start_transaction(root, 0);
--	if (IS_ERR(trans)) {
--		mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
--		return PTR_ERR(trans);
-+	while (1) {
-+		trans = btrfs_start_transaction(root, 0);
-+		if (IS_ERR(trans)) {
-+			mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
-+			return PTR_ERR(trans);
-+		}
-+		ret = btrfs_commit_transaction(trans);
-+		WARN_ON(ret);
-+		mutex_lock(&uuid_mutex);
-+		/* keep away write_all_supers() during the finishing procedure */
-+		mutex_lock(&fs_info->fs_devices->device_list_mutex);
-+		mutex_lock(&fs_info->chunk_mutex);
-+		if (src_device->has_pending_chunks) {
-+			mutex_unlock(&root->fs_info->chunk_mutex);
-+			mutex_unlock(&root->fs_info->fs_devices->device_list_mutex);
-+			mutex_unlock(&uuid_mutex);
-+		} else {
-+			break;
-+		}
+-static bool vhost_exceeds_weight(int pkts, int total_len)
+-{
+-	return total_len >= VHOST_NET_WEIGHT ||
+-	       pkts >= VHOST_NET_PKT_WEIGHT;
+-}
+-
+ /* Expects to be always run from workqueue - which acts as
+  * read-size critical section for our kind of RCU. */
+ static void handle_tx(struct vhost_net *net)
+@@ -584,10 +578,9 @@ static void handle_tx(struct vhost_net *
+ 		else
+ 			vhost_zerocopy_signal_used(net, vq);
+ 		vhost_net_tx_packet(net);
+-		if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, ++sent_pkts,
++						  total_len)))
+ 			break;
+-		}
  	}
--	ret = btrfs_commit_transaction(trans);
--	WARN_ON(ret);
- 
--	mutex_lock(&uuid_mutex);
--	/* keep away write_all_supers() during the finishing procedure */
--	mutex_lock(&fs_info->fs_devices->device_list_mutex);
--	mutex_lock(&fs_info->chunk_mutex);
- 	btrfs_dev_replace_lock(dev_replace, 1);
- 	dev_replace->replace_state =
- 		scrub_ret ? BTRFS_IOCTL_DEV_REPLACE_STATE_CANCELED
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4851,6 +4851,7 @@ static int __btrfs_alloc_chunk(struct bt
- 	for (i = 0; i < map->num_stripes; i++) {
- 		num_bytes = map->stripes[i].dev->bytes_used + stripe_size;
- 		btrfs_device_set_bytes_used(map->stripes[i].dev, num_bytes);
-+		map->stripes[i].dev->has_pending_chunks = true;
+ out:
+ 	mutex_unlock(&vq->mutex);
+@@ -867,10 +860,8 @@ static void handle_rx(struct vhost_net *
+ 			vhost_log_write(vq, vq_log, log, vhost_len,
+ 					vq->iov, in);
+ 		total_len += vhost_len;
+-		if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
+ 			goto out;
+-		}
  	}
- 
- 	atomic64_sub(stripe_size * map->num_stripes, &info->free_chunk_space);
-@@ -7310,6 +7311,7 @@ void btrfs_update_commit_device_bytes_us
- 		for (i = 0; i < map->num_stripes; i++) {
- 			dev = map->stripes[i].dev;
- 			dev->commit_bytes_used = dev->bytes_used;
-+			dev->has_pending_chunks = false;
- 		}
+ 	vhost_net_enable_vq(net, vq);
+ out:
+@@ -949,7 +940,8 @@ static int vhost_net_open(struct inode *
+ 		n->vqs[i].sock_hlen = 0;
+ 		vhost_net_buf_init(&n->vqs[i].rxq);
  	}
- 	mutex_unlock(&fs_info->chunk_mutex);
---- a/fs/btrfs/volumes.h
-+++ b/fs/btrfs/volumes.h
-@@ -61,6 +61,11 @@ struct btrfs_device {
+-	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX);
++	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
++		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
  
- 	spinlock_t io_lock ____cacheline_aligned;
- 	int running_pending;
-+	/* When true means this device has pending chunk alloc in
-+	 * current transaction. Protected by chunk_mutex.
-+	 */
-+	bool has_pending_chunks;
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, POLLOUT, dev);
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, POLLIN, dev);
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -58,6 +58,12 @@
+ #define VHOST_SCSI_PREALLOC_UPAGES 2048
+ #define VHOST_SCSI_PREALLOC_PROT_SGLS 512
+ 
++/* Max number of requests before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * request.
++ */
++#define VHOST_SCSI_WEIGHT 256
 +
- 	/* regular prio bios */
- 	struct btrfs_pending_bios pending_bios;
- 	/* sync bios */
+ struct vhost_scsi_inflight {
+ 	/* Wait for the flush operation to finish */
+ 	struct completion comp;
+@@ -1427,7 +1433,7 @@ static int vhost_scsi_open(struct inode
+ 		vqs[i] = &vs->vqs[i].vq;
+ 		vs->vqs[i].vq.handle_kick = vhost_scsi_handle_kick;
+ 	}
+-	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ);
++	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ, VHOST_SCSI_WEIGHT, 0);
+ 
+ 	vhost_scsi_init_inflight(vs, NULL);
+ 
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -412,8 +412,24 @@ static void vhost_dev_free_iovecs(struct
+ 		vhost_vq_free_iovecs(dev->vqs[i]);
+ }
+ 
++bool vhost_exceeds_weight(struct vhost_virtqueue *vq,
++			  int pkts, int total_len)
++{
++	struct vhost_dev *dev = vq->dev;
++
++	if ((dev->byte_weight && total_len >= dev->byte_weight) ||
++	    pkts >= dev->weight) {
++		vhost_poll_queue(&vq->poll);
++		return true;
++	}
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(vhost_exceeds_weight);
++
+ void vhost_dev_init(struct vhost_dev *dev,
+-		    struct vhost_virtqueue **vqs, int nvqs)
++		    struct vhost_virtqueue **vqs, int nvqs,
++		    int weight, int byte_weight)
+ {
+ 	struct vhost_virtqueue *vq;
+ 	int i;
+@@ -427,6 +443,8 @@ void vhost_dev_init(struct vhost_dev *de
+ 	dev->iotlb = NULL;
+ 	dev->mm = NULL;
+ 	dev->worker = NULL;
++	dev->weight = weight;
++	dev->byte_weight = byte_weight;
+ 	init_llist_head(&dev->work_list);
+ 	init_waitqueue_head(&dev->wait);
+ 	INIT_LIST_HEAD(&dev->read_list);
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -173,9 +173,13 @@ struct vhost_dev {
+ 	struct list_head read_list;
+ 	struct list_head pending_list;
+ 	wait_queue_head_t wait;
++	int weight;
++	int byte_weight;
+ };
+ 
+-void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs, int nvqs);
++bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
++void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
++		    int nvqs, int weight, int byte_weight);
+ long vhost_dev_set_owner(struct vhost_dev *dev);
+ bool vhost_dev_has_owner(struct vhost_dev *dev);
+ long vhost_dev_check_owner(struct vhost_dev *);
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -21,6 +21,14 @@
+ #include "vhost.h"
+ 
+ #define VHOST_VSOCK_DEFAULT_HOST_CID	2
++/* Max number of bytes transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others. */
++#define VHOST_VSOCK_WEIGHT 0x80000
++/* Max number of packets transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * small pkts.
++ */
++#define VHOST_VSOCK_PKT_WEIGHT 256
+ 
+ enum {
+ 	VHOST_VSOCK_FEATURES = VHOST_FEATURES,
+@@ -531,7 +539,8 @@ static int vhost_vsock_dev_open(struct i
+ 	vsock->vqs[VSOCK_VQ_TX].handle_kick = vhost_vsock_handle_tx_kick;
+ 	vsock->vqs[VSOCK_VQ_RX].handle_kick = vhost_vsock_handle_rx_kick;
+ 
+-	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs));
++	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs),
++		       VHOST_VSOCK_PKT_WEIGHT, VHOST_VSOCK_WEIGHT);
+ 
+ 	file->private_data = vsock;
+ 	spin_lock_init(&vsock->send_pkt_list_lock);
 
 
