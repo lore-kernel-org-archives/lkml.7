@@ -2,143 +2,157 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D66C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC92C606AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728542064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562586185;
-	bh=5x2L1rmSEDec2vDe0Sb8wCP76ECPKQa4Kz5H6zt8fxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZHNxy4ztcX5dGsvbwXOCP/U11uuC41BfqGYh2IzjajTBZhHQ8q3oC6QaJ2kYp3xb7
-	 x/O3SuldE393GouoVetUvDcAGlmf/8yiAM3rfgjnW+K8XAJ4aSDAAVJPGXOlEScOw9
-	 57ryCpVRi2YmluX0ZsTMYzh+d+3rQ5rD4UnCAVu4=
+	by mail.kernel.org (Postfix) with ESMTP id 074132086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:43:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PNE9fPP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730526AbfGHLnE (ORCPT
+        id S1730540AbfGHLnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37148 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 07:43:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:41919 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727862AbfGHLnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:43:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727862AbfGHLne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 07:43:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D946820861;
-        Mon,  8 Jul 2019 11:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562586182;
-        bh=5x2L1rmSEDec2vDe0Sb8wCP76ECPKQa4Kz5H6zt8fxY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bKacZaFgUSWO6MoKe2w0oCHqDyUDVJHQ5zhE+/lhsx26jjhI3v5A+zZb66CBQtWu5
-         FXEuSWajHDpJDhRTk3ygAl8F09B/kth+qW8aCiRy9RjFrpf1abUVE9IYHjA/wqUgEt
-         sy+qac3MjSoOQdUueT6PK3pxI7dkIC7SFFa0Qufw=
-Date:   Mon, 8 Jul 2019 13:42:59 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Omer Shpigelman <oshpigelman@habana.ai>,
-        Tomer Tayar <ttayar@habana.ai>
-Subject: Re: [PATCH] habanalabs: use correct variable to show fd open counter
-Message-ID: <20190708114259.GA16677@kroah.com>
-References: <20190708104355.32569-1-oded.gabbay@gmail.com>
- <20190708112136.GA13795@kroah.com>
- <CAFCwf11XN_stq3HHVGqD4_LKG8W3uFiYarfbwP50hw58Hi10Sw@mail.gmail.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45j3Vp66yHz9sNT;
+        Mon,  8 Jul 2019 21:43:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562586211;
+        bh=fVX79QzuP3XmjxHGLGEV10dVgDN3UaHzkPoTyKKYOcA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PNE9fPP4AtS+EAZZ57DdHy5A7YADnOLwCPwb62eA6/pj0cH30EhWbzn+VeJHpY0o0
+         +OPK11rsLVRQhBc4T2CX//KkOibzFzQmJEqEdejdqKop73tMwe59NU0koXI1gfLsRO
+         YtJ4svZ04DY48nIQ76DYBI3mAOj2wwvT0ZNSAU2+2U3a2OOVbvXs9aZpInxTqN2Lon
+         6k5X5p7/uOaI8oxjwhhQmw6QacI81/wOsT4qxXl26NOIweqy1b/dlCm7+pRQq1maV9
+         roPT8Wi9a4PbKVJyNy9MrMxHtgb9OZy0c17f3NHG7b+fp2tmW3F7ZPYMmfQJWqysqy
+         htoarpWhoj7JA==
+Date:   Mon, 8 Jul 2019 21:43:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: linux-next: manual merge of the akpm-current tree with the powerpc
+ tree
+Message-ID: <20190708214328.6271f3f2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFCwf11XN_stq3HHVGqD4_LKG8W3uFiYarfbwP50hw58Hi10Sw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/a7GmsKm5bIq+lDE.W6JsJ0O"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 02:30:13PM +0300, Oded Gabbay wrote:
-> On Mon, Jul 8, 2019 at 2:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jul 08, 2019 at 01:43:55PM +0300, Oded Gabbay wrote:
-> > > The current code checks if the user context pointer is NULL or not to
-> > > display the number of open file descriptors of a device. However, that
-> > > variable (user_ctx) will eventually go away as the driver will support
-> > > multiple processes. Instead, the driver can use the atomic counter of
-> > > the open file descriptors which the driver already maintains.
-> > >
-> > > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-> > > ---
-> > >  drivers/misc/habanalabs/sysfs.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/misc/habanalabs/sysfs.c b/drivers/misc/habanalabs/sysfs.c
-> > > index 25eb46d29d88..881be19b5fad 100644
-> > > --- a/drivers/misc/habanalabs/sysfs.c
-> > > +++ b/drivers/misc/habanalabs/sysfs.c
-> > > @@ -356,7 +356,7 @@ static ssize_t write_open_cnt_show(struct device *dev,
-> > >  {
-> > >       struct hl_device *hdev = dev_get_drvdata(dev);
-> > >
-> > > -     return sprintf(buf, "%d\n", hdev->user_ctx ? 1 : 0);
-> > > +     return sprintf(buf, "%d\n", atomic_read(&hdev->fd_open_cnt));
-> > >  }
-> >
-> > Odds are, this means nothing, as it doesn't get touched if the file
-> > descriptor is duped or sent to another process.
-> >
-> > Why do you care about the number of open files?  Whenever someone tries
-> > to do this type of logic, it is almost always wrong, just let userspace
-> > do what it wants to do, and if wants to open something twice, then it
-> > gets to keep the pieces when things break.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> I care about the number of open file descriptors because I can't let
-> multiple processes run simultaneously on my device, as we still don't
-> have the code to do proper isolation between the processes, in regard
-> of memory accesses on our device memory and by using our DMA engine.
-> Basically, it's a security hole. If you want, I can explain more in
-> length on this issue.
+--Sig_/a7GmsKm5bIq+lDE.W6JsJ0O
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-But the issue is that you can't "force" this from the kernel side at
-all.  Trying to catch this at open() time only catches the obvious
-processes.
+Hi all,
 
-As I said, how do you check for:
-	fd = open(...);
-	fd_new = dup(fd);
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-	write(fd, ...);
-	write(fd_new, ...);
+  arch/powerpc/include/asm/pgtable.h
 
-or, pass the fd across a socket?  Or other fun ways of sending file
-descriptors around a system.
+between commit:
 
-You have to trust userspace here, sorry.  If someone wants to do
-multiple accesses, they can, but again, they deserve the pieces when
-things fall apart.
+  d6eacedd1f0e ("powerpc/book3s: Use config independent helpers for page ta=
+ble walk")
 
-> We have the H/W infrastructure for that, using MMU and multiple
-> address space IDs (ASID), but we didn't write the code yet in the
-> driver, as that is a BIG feature but it wasn't requested by anyone
-> yet.
-> 
-> So the current solution is to block the ability to open multiple file
-> descriptors.
-> 
-> Regarding this specific sysfs property, I don't really care about it.
-> I simply saw that it is shown in other drivers and I thought it may be
-> nice for a system admin utility to show it.
+from the powerpc tree and commit:
 
-What drivers show the number of open file descriptors?  Time to go
-delete them as well :)
+  be66a174b253 ("mm/nvdimm: add is_ioremap_addr and use that to check iorem=
+ap address")
 
-thanks,
+from the akpm-current tree.
 
-greg k-h
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/powerpc/include/asm/pgtable.h
+index bf7d771f342e,64145751b2fd..000000000000
+--- a/arch/powerpc/include/asm/pgtable.h
++++ b/arch/powerpc/include/asm/pgtable.h
+@@@ -140,30 -140,20 +140,44 @@@ static inline void pte_frag_set(mm_cont
+  }
+  #endif
+ =20
+ +#ifndef pmd_is_leaf
+ +#define pmd_is_leaf pmd_is_leaf
+ +static inline bool pmd_is_leaf(pmd_t pmd)
+ +{
+ +	return false;
+ +}
+ +#endif
+ +
+ +#ifndef pud_is_leaf
+ +#define pud_is_leaf pud_is_leaf
+ +static inline bool pud_is_leaf(pud_t pud)
+ +{
+ +	return false;
+ +}
+ +#endif
+ +
+ +#ifndef pgd_is_leaf
+ +#define pgd_is_leaf pgd_is_leaf
+ +static inline bool pgd_is_leaf(pgd_t pgd)
+ +{
+ +	return false;
+ +}
+ +#endif
+ +
++ #ifdef CONFIG_PPC64
++ #define is_ioremap_addr is_ioremap_addr
++ static inline bool is_ioremap_addr(const void *x)
++ {
++ #ifdef CONFIG_MMU
++ 	unsigned long addr =3D (unsigned long)x;
++=20
++ 	return addr >=3D IOREMAP_BASE && addr < IOREMAP_END;
++ #else
++ 	return false;
++ #endif
++ }
++ #endif /* CONFIG_PPC64 */
++=20
+  #endif /* __ASSEMBLY__ */
+ =20
+  #endif /* _ASM_POWERPC_PGTABLE_H */
+
+--Sig_/a7GmsKm5bIq+lDE.W6JsJ0O
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0jLGAACgkQAVBC80lX
+0Gw5TAf/UQ4Pcsr9wkHps9+Deq0YFrVCMpV0JfwT89naPooO9ldiZw/yjqtKFnIA
+8SldhZM8UVYcm+3Yvk41kxtsQZCBv/LzkGxtSu0HtcE8gK4FrEXK6CQSaaVIgGlM
+dta3LaWJJMUc+mXInQeWbsbAQQKT7m0Afmhocx6l1u1ZApLGzqCL9yHWLWaU28vv
+UWDEGT+6GB+MROd7LkW+a17HCApVVvBqE39hitNBjIxWrnWqGxMwt3tvABbFYUvK
+4cEs257dyqnXmdHZDw+93zYSuf4/WEquVaPnA++Yz6pKtTOVBDbGlMMBfYrk8exO
+43dPlNGCror53Ym/K7Kug9vqRSo5iA==
+=BNce
+-----END PGP SIGNATURE-----
+
+--Sig_/a7GmsKm5bIq+lDE.W6JsJ0O--
