@@ -6,48 +6,57 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F56DC606BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856C8C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F208F21670
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8FE21670
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbfGHOJO (ORCPT
+        id S1731667AbfGHOK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:09:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:48846 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbfGHOJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:09:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CA772B;
-        Mon,  8 Jul 2019 07:09:12 -0700 (PDT)
-Received: from [33.8.37.10] (unknown [10.37.8.33])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08B6B3F59C;
-        Mon,  8 Jul 2019 07:09:08 -0700 (PDT)
-Subject: Re: [PATCH] drm/exynos: add CONFIG_MMU dependency
-To:     Arnd Bergmann <arnd@arndb.de>, Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-samsung-soc@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190708134707.538501-1-arnd@arndb.de>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <ea185bd7-3ac7-dc38-1c0e-78cb1cffa6a0@arm.com>
-Date:   Mon, 8 Jul 2019 15:09:04 +0100
+        Mon, 8 Jul 2019 10:10:27 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38633 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbfGHOK1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 10:10:27 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so14688473edo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:10:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FH+lyCNVLpdqnAk6UMEnb6+29UF7KaAN4WAnL1+pJf8=;
+        b=j4ndGR7o9hEmq1jU3K8cxdaczCUGiKAqurTn+LDKqVpFTNh540uc1FJMdw15Ldx4k4
+         EVeCvBW0kaNAuYrMW6Hrqrc+COVSN+JuM4zwrG7FN0ERbA/Xckhlhm/ljsEIX9rHLf8x
+         7pHcpBK1YS5NYMewOZwAXUmgIls/KD/6Hs8JQgQFwwUDtsbNqKEDJPXmqZjhYocPn6Ny
+         t4cC+UidGZMlN55Wv1kamWLeLLONbsA5VnE4RdHvkhBMlYbw5q5j+ohuWpU44JacKT4E
+         OnyOst63sfVEE+Ri1CGX27t6K/PPPmAFtpzL8FlVsRb5TPyi6CJutnj2iaVDxxKCJbGG
+         ePTw==
+X-Gm-Message-State: APjAAAVzLaE59L1YEuzXdt6/91dWm7J3KmqLLVrOgNGKcJy7Gk9adXkC
+        agIYOJiIe8GkMMTEIAMgXYWhZK0voVo=
+X-Google-Smtp-Source: APXvYqz7q86JuU+HsIfclBqE21+u9+gdlm0Tg9gXGToP+XOoQWgeYFKXSU5/ltW6dCA+7haeRDOs7g==
+X-Received: by 2002:a50:89a2:: with SMTP id g31mr20613517edg.93.1562595025082;
+        Mon, 08 Jul 2019 07:10:25 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id bq1sm1133403ejb.45.2019.07.08.07.10.24
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 07:10:24 -0700 (PDT)
+Subject: Re: [PATCH] usb: roles: Add PM callbacks
+To:     "Chen, Hu" <hu1.chen@intel.com>
+Cc:     Balaji <m.balaji@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190708022514.7161-1-hu1.chen@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <8d304bb6-9849-ea77-3bd6-fe378de78ce7@redhat.com>
+Date:   Mon, 8 Jul 2019 16:10:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190708134707.538501-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190708022514.7161-1-hu1.chen@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,46 +64,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/19 2:46 PM, Arnd Bergmann wrote:
-> Compile-testing this driver on a NOMMU configuration shows a link failure:
-> 
-> drivers/gpu/drm/exynos/exynos_drm_gem.o: In function `exynos_drm_gem_fault':
-> exynos_drm_gem.c:(.text+0x484): undefined reference to `vmf_insert_mixed'
-> 
-> Add a CONFIG_MMU dependency to ensure we only enable this in configurations
-> that build correctly.
-> 
-> Many other drm drivers have the same dependency. It would be nice to
-> make this work in MMU-less configurations, but evidently nobody has
-> ever needed this so far.
-> 
-> Fixes: 156bdac99061 ("drm/exynos: trigger build of all modules")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpu/drm/exynos/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
-> index 60ce4a8ad9e1..6f7d3b3b3628 100644
-> --- a/drivers/gpu/drm/exynos/Kconfig
-> +++ b/drivers/gpu/drm/exynos/Kconfig
-> @@ -2,6 +2,7 @@
->  config DRM_EXYNOS
->  	tristate "DRM Support for Samsung SoC EXYNOS Series"
->  	depends on OF && DRM && (ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS || ARCH_MULTIPLATFORM || COMPILE_TEST)
-> +	depends on MMU
->  	select DRM_KMS_HELPER
->  	select VIDEOMODE_HELPERS
->  	select SND_SOC_HDMI_CODEC if SND_SOC
-> 
+Hi,
 
-I seen
+On 08-07-19 04:25, Chen, Hu wrote:
+> On some Broxton NUC, the usb role is lost after S3 (it becomes "none").
+> Add PM callbacks to address this issue: save the role during suspend and
+> restore usb to that role during resume.
+> 
+> Test:
+> Run Android on UC6CAY, a NUC powered by Broxton. Access this NUC via
+> "adb shell" from a host PC. After a suspend/resume cycle, the adb still
+> works well.
+> 
+> Signed-off-by: Chen, Hu <hu1.chen@intel.com>
+> Signed-off-by: Balaji <m.balaji@intel.com>
 
-ERROR: "vmf_insert_mixed" [drivers/gpu/drm/exynos/exynosdrm.ko] undefined!
+Hmm, but what if the user has say unplugged a host-adapter with a usb-stick
+in there and plugged in a cable to a computer *while suspended* because the
+battery was getting low?
 
-with older kernels when driver was build as a module, so FWIW
+I see 2 scenarios here:
 
-Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
+1) We may get an interrupt for the role change, followed by an
+intel_xhci_usb_set_role. In this case the interrupt handling may happen
+before the intel_xhci_usb_resume call and we would end up restoring the
+wrong value
 
-Cheers
-Vladimir
+2) The role may be changed underneath us by the firmware / AML code
+without us ever becoming aware of this.
+
+For the specific problem discussed in the commit message it might be better
+to do something like:
+
+static int intel_xhci_usb_resume(struct platform_device *pdev)
+{
+	struct intel_xhci_usb_data *data = platform_get_drvdata(pdev);
+	struct device *dev = &pdev->dev;
+
+	if (intel_xhci_usb_get_role(dev) == USB_ROLE_NONE &&
+	    power_supply_is_system_supplied())
+		intel_xhci_usb_set_role(dev, USB_ROLE_DEVICE);
+
+	return 0;
+}
+
+But that is somewhat specific for solving the problem described in
+the commit message, but it has the advantage of not being able to
+cause any regressions (that I can think of).
+
+Regards,
+
+Hans
+
+
+
+
+
+> 
+> diff --git a/drivers/usb/roles/intel-xhci-usb-role-switch.c b/drivers/usb/roles/intel-xhci-usb-role-switch.c
+> index 277de96181f9..caa1cfab41cc 100644
+> --- a/drivers/usb/roles/intel-xhci-usb-role-switch.c
+> +++ b/drivers/usb/roles/intel-xhci-usb-role-switch.c
+> @@ -37,6 +37,7 @@
+>   struct intel_xhci_usb_data {
+>   	struct usb_role_switch *role_sw;
+>   	void __iomem *base;
+> +	enum usb_role role;
+>   };
+>   
+>   static int intel_xhci_usb_set_role(struct device *dev, enum usb_role role)
+> @@ -167,6 +168,30 @@ static int intel_xhci_usb_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> +static int intel_xhci_usb_suspend(struct platform_device *pdev,
+> +				  pm_message_t state)
+> +{
+> +	struct intel_xhci_usb_data *data = platform_get_drvdata(pdev);
+> +	struct device *dev = &pdev->dev;
+> +
+> +	data->role = intel_xhci_usb_get_role(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int intel_xhci_usb_resume(struct platform_device *pdev)
+> +{
+> +	struct intel_xhci_usb_data *data = platform_get_drvdata(pdev);
+> +	struct device *dev = &pdev->dev;
+> +
+> +	if (intel_xhci_usb_get_role(dev) != data->role) {
+> +		if (intel_xhci_usb_set_role(dev, data->role) != 0)
+> +			dev_warn(dev, "Failed to set role during resume\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static const struct platform_device_id intel_xhci_usb_table[] = {
+>   	{ .name = DRV_NAME },
+>   	{}
+> @@ -180,6 +205,8 @@ static struct platform_driver intel_xhci_usb_driver = {
+>   	.id_table = intel_xhci_usb_table,
+>   	.probe = intel_xhci_usb_probe,
+>   	.remove = intel_xhci_usb_remove,
+> +	.suspend = intel_xhci_usb_suspend,
+> +	.resume = intel_xhci_usb_resume,
+>   };
+>   
+>   module_platform_driver(intel_xhci_usb_driver);
+> 
