@@ -2,140 +2,101 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F510C606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43455C606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3400216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1745B2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPEBr7Z6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dkzm6Eb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405212AbfGHV5m (ORCPT
+        id S2405332AbfGHV5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 17:57:42 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44283 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732609AbfGHV5m (ORCPT
+        Mon, 8 Jul 2019 17:57:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44788 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732609AbfGHV5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 17:57:42 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 44so15758998qtg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 14:57:42 -0700 (PDT)
+        Mon, 8 Jul 2019 17:57:48 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t14so5859193plr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 14:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cRr+V7DvslcvPopD8/4sPU5GgYY6W8gwxhNPdNZDYLM=;
-        b=kPEBr7Z6kspFKIoGgC2pZEtR3YiFDm6jHopgrqEXJrbrYFcgbmDwbbOqhN5Gi1wGXW
-         cpy750eg6g3/5SbCiy87z/xcmp9rD5Iiq2HgMWbXLQwxioi2WRpurSR9CtZz8PnpNqna
-         gXQrQlr+YlZL6Rwdu7tNEYJw2tXAFa8wsKaiK5JkVFkbfUrBFHdMro9X2m5rNj2zcL3J
-         vjmwT+Z4TO7SPt/3YZKvHKRiy2p5yD726eQuN1FC1aOnU/A6z5JiGOMFOwLgWMxMYJvh
-         eAxmljVjM7O6bgS+2Nq7K9NKtXWbThZBvVyDNWFHWDYTkdUPaGfCyzSLH9fz8HZxPa4n
-         akJg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Y8CJuOKko9oJgtG5ahZnBbPtRn/eAy/zK84EmYdDcE=;
+        b=Dkzm6Eb5DfT4NvKzpfAkELMDAMLcQEZY/Cb31xOomSzhah3o7N86ZvR3KGEHNtLhM1
+         p5H0b7SNVaY771X3Dag1dXFnRBntxiVTVARHO7XFmCRfJ9cmoRfwXBsyBMy9rdvYOukQ
+         ZEOirWuMSxvoO/AmXosAfGxTZL7rDf0y2zx5s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cRr+V7DvslcvPopD8/4sPU5GgYY6W8gwxhNPdNZDYLM=;
-        b=Lxdo8HjMLKr7SwAP6/npZXA8qiqbD9th8Shf9nYu9Wv2cG+/wV6vlpQ7ulUuZm18Wd
-         ILqQF9tWpEAaZa2JZ7T4RwEVrOh/TwFhJc9mWJnMSfCqfvghuFqF2whPFBgiwpR4iVCj
-         xM0/HWmzSVYBho37gRVFBVHeAuleRziC6Oh8Os5l6tONfNKbJRQx7c3kWN66n6VWi1sC
-         fU1Baq7famq4S68CkvcNL6j/Xzx8vfKhbFjNKSk/VDF8ZZlK3rAs3yN/kwD+foDGLTRT
-         1goRiCGOxbnwZqk4N7cKav0X2Vn4ZFoo3LvTsqOiAl/ETOl/mNTfSR9di5ZazUDI0RpH
-         TXGw==
-X-Gm-Message-State: APjAAAVI2z9D1MRlKGvLvcvtedW6vxcZZqFw1BUovFu8UruahIv6PDp8
-        QmKt/RE3bJHWCwMdNH4WrOg=
-X-Google-Smtp-Source: APXvYqxHtwWle9/lnZGk+HDl0RHyir01Sh5RlMtKpdadwLq/Ys8rGiW1B5ioOOrksBrZBDovZWz+Bw==
-X-Received: by 2002:ac8:32e8:: with SMTP id a37mr15960511qtb.231.1562623061523;
-        Mon, 08 Jul 2019 14:57:41 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id d12sm6455916qtj.50.2019.07.08.14.57.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 14:57:40 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2081B40340; Mon,  8 Jul 2019 18:57:38 -0300 (-03)
-Date:   Mon, 8 Jul 2019 18:57:38 -0300
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 4/4] perf cs-etm: Smatch: Fix potential NULL pointer
- dereference
-Message-ID: <20190708215738.GC7455@kernel.org>
-References: <20190708143937.7722-1-leo.yan@linaro.org>
- <20190708143937.7722-5-leo.yan@linaro.org>
- <CANLsYkwHMfVf-FUQ+wBkDfq9GnCihimFAhd+ybCsxMAt8d3HcA@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Y8CJuOKko9oJgtG5ahZnBbPtRn/eAy/zK84EmYdDcE=;
+        b=hLsYVu4Pm3HFTryO3uBhN2ma+EqqB+4Vd2uO7dJdKR0tA+iaDNe72AdEzPXWjN/8mC
+         J9aR8tqPRGawai5p6gTpWilX+LM5Z28WkaGoCnsrHDVEgS0J0VwnN8z3Z84FUs0Q00db
+         sDJPjvIduCXQ4zuPlHZLyXaeEco3IZjAu5Kbodl/pRJNogXWnHSmRGo4etCOHM14aPZd
+         eXwxJRmBloypLyGrJM5uE9Jn9OVB62yEgxQqDFigu3l9XMo4Cf6iH/eGRK7exl/pd7eG
+         SBJriPnoQ2RwEpJbeoQ8RLzIn4Sr3HW5qO4OQbaUksQIN900cPZ4szk4SH9cyBkQLgiq
+         ffzA==
+X-Gm-Message-State: APjAAAWzSu7GjY3zGacJJ002jc/ZqtuCTlzVkv4aq7bNzvoT3hMgMcTD
+        hA7uBZR/awITqP3dQBQxQNl8Jw==
+X-Google-Smtp-Source: APXvYqz1RDTx2QZBIo03gi0j/sbato5+lRn1n8CYyAe7jH63gLyN2lk8xM97zMB27z3dD1H4XUUI+w==
+X-Received: by 2002:a17:902:28c9:: with SMTP id f67mr27995481plb.19.1562623067211;
+        Mon, 08 Jul 2019 14:57:47 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id o14sm40059368pfh.153.2019.07.08.14.57.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 14:57:46 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] Bluetooth: btqca: Use correct byte format for opcode of injected command
+Date:   Mon,  8 Jul 2019 14:57:42 -0700
+Message-Id: <20190708215742.65960-1-mka@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANLsYkwHMfVf-FUQ+wBkDfq9GnCihimFAhd+ybCsxMAt8d3HcA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jul 08, 2019 at 11:38:48AM -0600, Mathieu Poirier escreveu:
-> On Mon, 8 Jul 2019 at 08:40, Leo Yan <leo.yan@linaro.org> wrote:
-> >
-> > Based on the following report from Smatch, fix the potential
-> > NULL pointer dereference check.
-> >
-> >   tools/perf/util/cs-etm.c:2545
-> >   cs_etm__process_auxtrace_info() error: we previously assumed
-> >   'session->itrace_synth_opts' could be null (see line 2541)
-> >
-> > tools/perf/util/cs-etm.c
-> > 2541         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-> > 2542                 etm->synth_opts = *session->itrace_synth_opts;
-> > 2543         } else {
-> > 2544                 itrace_synth_opts__set_default(&etm->synth_opts,
-> > 2545                                 session->itrace_synth_opts->default_no_sample);
-> >                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > 2546                 etm->synth_opts.callchain = false;
-> > 2547         }
-> >
-> > 'session->itrace_synth_opts' is impossible to be a NULL pointer in
-> > cs_etm__process_auxtrace_info(), thus this patch removes the NULL
-> > test for 'session->itrace_synth_opts'.
-> >
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  tools/perf/util/cs-etm.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> > index ad43a6e31827..ab578a06a790 100644
-> > --- a/tools/perf/util/cs-etm.c
-> > +++ b/tools/perf/util/cs-etm.c
-> > @@ -2537,7 +2537,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
-> >                 return 0;
-> >         }
-> >
-> > -       if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-> > +       if (session->itrace_synth_opts->set) {
-> >                 etm->synth_opts = *session->itrace_synth_opts;
-> >         } else {
-> >                 itrace_synth_opts__set_default(&etm->synth_opts,
-> 
-> This is in accordance with what was previously discussed.
-> 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+The opcode of the command injected by commit 32646db8cc28 ("Bluetooth:
+btqca: inject command complete event during fw download") uses the CPU
+byte format, however it should always be little endian. In practice it
+shouldn't really matter, since all we need is an opcode != 0, but still
+let's do things correctly and keep sparse happy.
 
-Thanks, applied.
+Fixes: 32646db8cc28 ("Bluetooth: btqca: inject command complete event during fw download")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/bluetooth/btqca.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Arnaldo
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 8b33128dccee..243a95c27dcd 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -268,7 +268,7 @@ static int qca_inject_cmd_complete_event(struct hci_dev *hdev)
+ 
+ 	evt = skb_put(skb, sizeof(*evt));
+ 	evt->ncmd = 1;
+-	evt->opcode = QCA_HCI_CC_OPCODE;
++	evt->opcode = cpu_to_le16(QCA_HCI_CC_OPCODE);
+ 
+ 	skb_put_u8(skb, QCA_HCI_CC_SUCCESS);
+ 
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
