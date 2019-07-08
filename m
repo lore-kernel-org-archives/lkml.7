@@ -8,148 +8,118 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC39FC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3706C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934A621738
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C0B216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAmRxpxT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b46S21mT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389202AbfGHP7D (ORCPT
+        id S2390491AbfGHQAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:59:03 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36660 "EHLO
+        Mon, 8 Jul 2019 12:00:01 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39985 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732250AbfGHP7D (ORCPT
+        with ESMTP id S1732250AbfGHQAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:59:03 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n4so17761270wrs.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:59:02 -0700 (PDT)
+        Mon, 8 Jul 2019 12:00:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r1so11394859wrl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:59:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rhoYdVDhN5ydgxX1VLJkMlHV7XsW0UoNaJF64lVsGBk=;
-        b=DAmRxpxTPdcbbcK+O3HYTUcs16PFJYrX3FKsYaQ8ARene0pNY7/VYxMv28MiHrqKSd
-         ziP7FSehowz+XtnvIhfzqDnMnaxcFtTI8UizF1Iai4nYy8dN8hZli9keuRW3qiFfc+U6
-         bgeHUXMK7EWN/b8r2MPcUIED8wbkJ48HdvVh/WpoU3u5d0Qob191RGyPOha/ZS0C4AZU
-         YBhHK286Xs/Jp3372/44rw6WNTmWLzgBc0VCAaQr9nhz9+xoUwYDZ6JK2sOvO2iUfNHT
-         EbUx7t013TFxsXI+irQxn+QXARfvPOnCX0u0yZbPerk1sIZX0E/wrTubt7SPEuFwq57r
-         qvSw==
+        bh=EfmsMBiD7ymdFFI6JkOA8q46/TMtliNwPPlkYR2dONs=;
+        b=b46S21mTjINToSoVkmj+AcRN+LZjkQgqcpeDF3pmzNQbtPHSOuQFGiCZ1iZKgiR1VI
+         5wUbKwy+k0sXzqpdeFD8VZkWg5mCpQio1phhXtkDz6AH3HgfTxiBMNzbuy/G1AWUbWH/
+         7sKYHM7/uuVTPWUvmB9z6Vty+Npia5pVNSCUMpIq1lDnOLg2xBYJ3y3rH/su7tQPocbe
+         1TAFvJZoecyq7m/JGFoH2nEttQIrdKi/FGO0VRZxRrdOBvUslKXAsh2Rrblplt8OsLgX
+         iZcyiovKDWKth+W1kHXNA7aZyn+PQ6bx56jxOrifjOCUnKJTtATcLdRvqaxhxzYonvw1
+         grFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rhoYdVDhN5ydgxX1VLJkMlHV7XsW0UoNaJF64lVsGBk=;
-        b=BVNIcsmgt/FB5WKLj+IhQTRkHhDnboZ6R+077mCCc7hJaaAmglirruX29CLSzoe7SN
-         LkEE8X1fo8D3dYS3OPB8dr4lWXz+sBD8YiJgsDAjze1VUwOTEDqFn2x7Grx8ngRVUDwM
-         hsGKu0rPsTDg+JyW4A7iA/p7rjxsssyMoOoEyqXdlxjt4p9CIn3BQpHa26MWbmejaLq2
-         D+0paz2uz7TGkVCNj1wGfTugJ+PJc66aGpWdmat3vABYuTZ28/bCM9ESG4kq9kZAKbgt
-         6N0tSyLx76lrHSgJWApPr3qLFyhpIrsygrLlgNePi56ZLi0vUzW1A/qGjzhIcITij6OH
-         ThDw==
-X-Gm-Message-State: APjAAAUarCZHfDViB+Pz1vIv5QqoJScjuBaLUcAPC4Q/FJul+HqsAACy
-        eoxi0gDBN6LKyTdSAeQOeC5zJqz55zDWRUtq9qA=
-X-Google-Smtp-Source: APXvYqzOWGyb0Raf4FDZ29HUA5m1lTCjYaZUm5S9loe+lEPW8cJi0cTQLV9I1lj73jWGDid/rYCzvpSKiVZ31ITPSUg=
-X-Received: by 2002:adf:e3c4:: with SMTP id k4mr14725529wrm.341.1562601541504;
- Mon, 08 Jul 2019 08:59:01 -0700 (PDT)
+        bh=EfmsMBiD7ymdFFI6JkOA8q46/TMtliNwPPlkYR2dONs=;
+        b=FPZQuFjeBivbAA7lPOTPkVQS6Yk85vhqAQGLWx0yIeUT1qe6fkCiOYBlf3kdqm7+jA
+         M+xwzFjk5/fqSm4k84Heb3jV+AujZ2iWgoOA4NcKHL6iIlB2ulSYllJZpPrxSkxQvAdx
+         VLSUEykZsgOXFW/05FIvMV++YLF3lwS14FFZblUHn2Yjpquv4130I1qZJNulCh4S8f71
+         c6ASrgusP2aiUeNzt+SaaVntu3eMNHvgzX9lAaLo+uFA4NmnJ457Y8EHIasN8aQP1zPI
+         Y3K/8tkbj8Wie4fqQVpiJjcAZV0FeeLFTCQDdUaafD4BchskGiu3KTsx0o4bYKthb2gH
+         IeSg==
+X-Gm-Message-State: APjAAAUN27kpMQuFZ5VVyo5xx6YIXALgyPP60tdpxOWfmHtzuSP5pQmV
+        meGEut5OR3kqM83qE/Q5ZGCVsGbu1VhQXWLdmU4=
+X-Google-Smtp-Source: APXvYqytfkoPC+fjFM+XSffDXhGPJpmy59YbqycegztPzyhvYtqPhdSsol9PfYzWA/XbYSdkxpR1BLoMjpk4RuAW7NA=
+X-Received: by 2002:adf:d847:: with SMTP id k7mr463991wrl.74.1562601598985;
+ Mon, 08 Jul 2019 08:59:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708144205.2770771-1-arnd@arndb.de>
-In-Reply-To: <20190708144205.2770771-1-arnd@arndb.de>
+References: <20190708135135.610355-1-arnd@arndb.de>
+In-Reply-To: <20190708135135.610355-1-arnd@arndb.de>
 From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 8 Jul 2019 11:58:50 -0400
-Message-ID: <CADnq5_PT8HyLUi-tSNdXbJVJiVWV-f_io8gOabiPxDfDONEfKg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] amdgpu: make pmu support optional
+Date:   Mon, 8 Jul 2019 11:59:47 -0400
+Message-ID: <CADnq5_PAQ0_tJApqzCc8tRx-x7gY1HGaAG5zo-jc=zknaAdPow@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: fix building without CONFIG_HMM_MIRROR
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Alex Deucher <alexander.deucher@amd.com>,
         =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
         "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Jack Xiao <Jack.Xiao@amd.com>,
-        Jonathan Kim <Jonathan.Kim@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philip Yang <Philip.Yang@amd.com>,
         Felix Kuehling <Felix.Kuehling@amd.com>,
-        xinhui pan <xinhui.pan@amd.com>,
+        =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@amd.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Emily Deng <Emily.Deng@amd.com>, Huang Rui <ray.huang@amd.com>,
         Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, Evan Quan <evan.quan@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Rex Zhu <Rex.Zhu@amd.com>, Xiaojie Yuan <xiaojie.yuan@amd.com>
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 10:42 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, Jul 8, 2019 at 9:51 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> When CONFIG_PERF_EVENTS is disabled, we cannot compile the pmu
-> portion of the amdgpu driver:
+> 'struct hmm_mirror' is not defined without the Kconfig option set,
+> so we cannot include it within another struct:
 >
-> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:48:38: error: no member named 'hw' in 'struct perf_event'
->         struct hw_perf_event *hwc = &event->hw;
->                                      ~~~~~  ^
-> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:51:13: error: no member named 'attr' in 'struct perf_event'
->         if (event->attr.type != event->pmu->type)
->             ~~~~~  ^
-> ...
+> In file included from drivers/gpu/drm/amd/amdgpu/../amdgpu/amdgpu.h:72:
+> drivers/gpu/drm/amd/amdgpu/../amdgpu/amdgpu_mn.h:69:20: error: field has incomplete type 'struct hmm_mirror'
+>         struct hmm_mirror       mirror;
+>                                 ^
+> drivers/gpu/drm/amd/amdgpu/../amdgpu/amdgpu_mn.h:69:9: note: forward declaration of 'struct hmm_mirror'
+>         struct hmm_mirror       mirror;
 >
-> Use conditional compilation for this file.
+> Add the #ifdef around it that is also used for all functions operating
+> on it.
 >
-> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
+> Fixes: 7590f6d211ec ("drm/amdgpu: Prepare for hmm_range_register API change")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Applied this patch.
-
-Thanks!
+Applied.  thanks!
 
 Alex
 
 > ---
->  drivers/gpu/drm/amd/amdgpu/Makefile        | 4 +++-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 6 ++++--
->  2 files changed, 7 insertions(+), 3 deletions(-)
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/Makefile b/drivers/gpu/drm/amd/amdgpu/Makefile
-> index 3a15a46b4ecb..3f5329906fce 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/Makefile
-> +++ b/drivers/gpu/drm/amd/amdgpu/Makefile
-> @@ -54,7 +54,9 @@ amdgpu-y += amdgpu_device.o amdgpu_kms.o \
->         amdgpu_gtt_mgr.o amdgpu_vram_mgr.o amdgpu_virt.o amdgpu_atomfirmware.o \
->         amdgpu_vf_error.o amdgpu_sched.o amdgpu_debugfs.o amdgpu_ids.o \
->         amdgpu_gmc.o amdgpu_xgmi.o amdgpu_csa.o amdgpu_ras.o amdgpu_vm_cpu.o \
-> -       amdgpu_vm_sdma.o amdgpu_pmu.o amdgpu_discovery.o
-> +       amdgpu_vm_sdma.o amdgpu_discovery.o
-> +
-> +amdgpu-$(CONFIG_PERF_EVENTS) += amdgpu_pmu.o
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
+> index 281fd9fef662..b8ed68943625 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
+> @@ -65,8 +65,10 @@ struct amdgpu_mn {
+>         struct rw_semaphore     lock;
+>         struct rb_root_cached   objects;
 >
->  # add asic specific block
->  amdgpu-$(CONFIG_DRM_AMDGPU_CIK)+= cik.o cik_ih.o kv_smc.o kv_dpm.o \
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> index 30989b455047..a02ccce7bf53 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -2816,7 +2816,8 @@ int amdgpu_device_init(struct amdgpu_device *adev,
->                 return r;
->         }
+> +#ifdef CONFIG_HMM_MIRROR
+>         /* HMM mirror */
+>         struct hmm_mirror       mirror;
+> +#endif
+>  };
 >
-> -       r = amdgpu_pmu_init(adev);
-> +       if (IS_ENABLED(CONFIG_PERF_EVENTS))
-> +               r = amdgpu_pmu_init(adev);
->         if (r)
->                 dev_err(adev->dev, "amdgpu_pmu_init failed\n");
->
-> @@ -2888,7 +2889,8 @@ void amdgpu_device_fini(struct amdgpu_device *adev)
->         amdgpu_debugfs_regs_cleanup(adev);
->         device_remove_file(adev->dev, &dev_attr_pcie_replay_count);
->         amdgpu_ucode_sysfs_fini(adev);
-> -       amdgpu_pmu_fini(adev);
-> +       if (IS_ENABLED(CONFIG_PERF_EVENTS))
-> +               amdgpu_pmu_fini(adev);
->         amdgpu_debugfs_preempt_cleanup(adev);
->         if (amdgpu_discovery)
->                 amdgpu_discovery_fini(adev);
+>  #if defined(CONFIG_HMM_MIRROR)
 > --
 > 2.20.0
 >
