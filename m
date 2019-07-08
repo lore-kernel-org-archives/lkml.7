@@ -2,236 +2,141 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA83C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114AAC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4B620665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600353;
-	bh=hKRj0eS5rQGOtRiBchqPO8962ZXO7miuVrEFXkqpxs0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1Ps+5EnlD5+GBn1CYiBh3rLzvUVF+dQZaKQvXOlQ9UWjPdf9gBnJeKYkWWvpB5gQ
-	 vDyIT9odw2lrpLJXSzs0eqZZ/EuNkHZDFtVJiM7Nv4Jo2TKVj/O6KDoQPBjwAS727Z
-	 i/x97Z+ZRU6mnhCvPBbKd1OIj4T9ZG/CwWiK/lVU=
+	by mail.kernel.org (Postfix) with ESMTP id D90E721537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="io4Hmy4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731277AbfGHPjM (ORCPT
+        id S2390747AbfGHPjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387809AbfGHP35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52D4320665;
-        Mon,  8 Jul 2019 15:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599795;
-        bh=hKRj0eS5rQGOtRiBchqPO8962ZXO7miuVrEFXkqpxs0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdD69SQJiRPM5Ork3NMr624FDrumHnYV11/U+dMlrTRtdfmYznJh5RsIwNvnwZjNc
-         3fMRQi6SK4In24ngK5kShc6ZkmnsB+MgI6KqvHk81KVtjHHNIIHGiMWNqKwzD4Zt3y
-         rQ2F04ArZE6vmcZK4HQFBBb/w3L1ShacLkXAl+u4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 80/90] bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K
-Date:   Mon,  8 Jul 2019 17:13:47 +0200
-Message-Id: <20190708150526.419263775@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
-References: <20190708150521.829733162@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 8 Jul 2019 11:39:19 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35410 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390739AbfGHPjO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:39:14 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x25so9653675ljh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D+MqPDavG72JIJh+i7ydfVr+tFhEdIBsYuNF/SflY4s=;
+        b=io4Hmy4BEIEFOl5wqrOg+jNWCZUftVq/uAlqqHmC8H9bJ2S5rVWY8hK0JE8NS5T0vr
+         aCbjTA4Hj1cj5dlTQiT80zVJEs9qrLxBttCaYZnj4YNKDVu8+juFC5o5z4AJICqsS+zz
+         uTbpSBiakCeD6b6B7FnRW2oRjOGCFy+4yYIRFEBFabVvraaWzJNOcxJsqDiy3qE3WhpN
+         TnnmXtXegQjvH6mgUvTHd3fQLkWf62scQzJECSXPTDM+yiUpwWR+KmSh71rS2rKrW/YU
+         96JRZYk/i8GLgfst1/CPaOJw/eW4bP0VBAsuPxQc0X8mBF2B8COTQH+VD9pXof91SbSq
+         rSwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D+MqPDavG72JIJh+i7ydfVr+tFhEdIBsYuNF/SflY4s=;
+        b=Xy6W/Fhm/jkDHdtTSBMu76cB49nRwOX/172pCe0Vn5LcgDBCHEsFwdbxVuui7yZeGl
+         DIla1pbEGXgqoahiyv8hjs/8z2CYpPuZQJ59DemlwXLYrwpqpLsu/RYZa4XePMKYt6U3
+         uirvRXugYpG/RO+o06uc9a/lkO9Xd84sTQ3LDzlyoEe9vugAVMgZYEPSovm5QXY8V/B2
+         +piH3GN4KA5GuGG6sWJu/sARnl1GrdA0pKQMRepFe/7CgsngrGX6Dmo7DduxGF0l2Rkt
+         qHLYrpCcn1KsC1GQXXr1VefHRt38xnoAIfsy9NMBpWoKeJ5YGp1/w+9RhmA1e7mFVWsH
+         oH+A==
+X-Gm-Message-State: APjAAAXz8xtobI7rayzoNSdi5hJfsocYYJ4qaqu2utSAcF5sOygADiNN
+        uANrJKIDyj6f34wocd2fSqGaAQ==
+X-Google-Smtp-Source: APXvYqzEx0jOXIVaLhPfITF9bzeu4HZ/KoZJiu7wenFGxHberguce7iX6HWLmFSF2s96U/hPTphqSg==
+X-Received: by 2002:a2e:9dd7:: with SMTP id x23mr11243163ljj.160.1562600352121;
+        Mon, 08 Jul 2019 08:39:12 -0700 (PDT)
+Received: from jax (h-84-105.A175.priv.bahnhof.se. [79.136.84.105])
+        by smtp.gmail.com with ESMTPSA id g4sm2832994lfb.31.2019.07.08.08.39.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jul 2019 08:39:11 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 17:39:09 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, corbet@lwn.net,
+        dhowells@redhat.com, jejb@linux.ibm.com,
+        jarkko.sakkinen@linux.intel.com, zohar@linux.ibm.com,
+        jmorris@namei.org, serge@hallyn.com, ard.biesheuvel@linaro.org,
+        daniel.thompson@linaro.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Subject: Re: [RFC 3/7] tee: add private login method for kernel clients
+Message-ID: <20190708153908.GA28253@jax>
+References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
+ <1560421833-27414-4-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1560421833-27414-4-git-send-email-sumit.garg@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fdadd04931c2d7cd294dc5b2b342863f94be53a3 ]
+Hi Sumit,
 
-Michael and Sandipan report:
+On Thu, Jun 13, 2019 at 04:00:29PM +0530, Sumit Garg wrote:
+> There are use-cases where user-space shouldn't be allowed to communicate
+> directly with a TEE device which is dedicated to provide a specific
+> service for a kernel client. So add a private login method for kernel
+> clients and disallow user-space to open-session using this login method.
+> 
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  drivers/tee/tee_core.c   | 6 ++++++
+>  include/uapi/linux/tee.h | 2 ++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index 0f16d9f..4581bd1 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -334,6 +334,12 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
+>  			goto out;
+>  	}
+>  
+> +	if (arg.clnt_login == TEE_IOCTL_LOGIN_REE_KERNEL) {
+TEE_IOCTL_LOGIN_REE_KERNEL is defined as 0x80000000 which is in the
+range specified and implementation defined by the GP spec. I wonder if
+we shouldn't filter the entire implementation defined range instead of
+just this value.
 
-  Commit ede95a63b5 introduced a bpf_jit_limit tuneable to limit BPF
-  JIT allocations. At compile time it defaults to PAGE_SIZE * 40000,
-  and is adjusted again at init time if MODULES_VADDR is defined.
+> +		pr_err("login method not allowed for user-space client\n");
+pr_debug(), if it's needed at all.
 
-  For ppc64 kernels, MODULES_VADDR isn't defined, so we're stuck with
-  the compile-time default at boot-time, which is 0x9c400000 when
-  using 64K page size. This overflows the signed 32-bit bpf_jit_limit
-  value:
+> +		rc = -EPERM;
+> +		goto out;
+> +	}
+> +
+>  	rc = ctx->teedev->desc->ops->open_session(ctx, &arg, params);
+>  	if (rc)
+>  		goto out;
+> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+> index 4b9eb06..f33c69c 100644
+> --- a/include/uapi/linux/tee.h
+> +++ b/include/uapi/linux/tee.h
+> @@ -172,6 +172,8 @@ struct tee_ioctl_buf_data {
+>  #define TEE_IOCTL_LOGIN_APPLICATION		4
+>  #define TEE_IOCTL_LOGIN_USER_APPLICATION	5
+>  #define TEE_IOCTL_LOGIN_GROUP_APPLICATION	6
+> +/* Private login method for REE kernel clients */
+It's worth noting that this is filtered by the TEE framework, compared
+to everything else which is treated opaquely.
 
-  root@ubuntu:/tmp# cat /proc/sys/net/core/bpf_jit_limit
-  -1673527296
+> +#define TEE_IOCTL_LOGIN_REE_KERNEL		0x80000000
+>  
+>  /**
+>   * struct tee_ioctl_param - parameter
+> -- 
+> 2.7.4
+> 
 
-  and can cause various unexpected failures throughout the network
-  stack. In one case `strace dhclient eth0` reported:
-
-  setsockopt(5, SOL_SOCKET, SO_ATTACH_FILTER, {len=11, filter=0x105dd27f8},
-             16) = -1 ENOTSUPP (Unknown error 524)
-
-  and similar failures can be seen with tools like tcpdump. This doesn't
-  always reproduce however, and I'm not sure why. The more consistent
-  failure I've seen is an Ubuntu 18.04 KVM guest booted on a POWER9
-  host would time out on systemd/netplan configuring a virtio-net NIC
-  with no noticeable errors in the logs.
-
-Given this and also given that in near future some architectures like
-arm64 will have a custom area for BPF JIT image allocations we should
-get rid of the BPF_JIT_LIMIT_DEFAULT fallback / default entirely. For
-4.21, we have an overridable bpf_jit_alloc_exec(), bpf_jit_free_exec()
-so therefore add another overridable bpf_jit_alloc_exec_limit() helper
-function which returns the possible size of the memory area for deriving
-the default heuristic in bpf_jit_charge_init().
-
-Like bpf_jit_alloc_exec() and bpf_jit_free_exec(), the new
-bpf_jit_alloc_exec_limit() assumes that module_alloc() is the default
-JIT memory provider, and therefore in case archs implement their custom
-module_alloc() we use MODULES_{END,_VADDR} for limits and otherwise for
-vmalloc_exec() cases like on ppc64 we use VMALLOC_{END,_START}.
-
-Additionally, for archs supporting large page sizes, we should change
-the sysctl to be handled as long to not run into sysctl restrictions
-in future.
-
-Fixes: ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv allocations")
-Reported-by: Sandipan Das <sandipan@linux.ibm.com>
-Reported-by: Michael Roth <mdroth@linux.vnet.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Michael Roth <mdroth@linux.vnet.ibm.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/filter.h     |  2 +-
- kernel/bpf/core.c          | 21 +++++++++++++++------
- net/core/sysctl_net_core.c | 20 +++++++++++++++++---
- 3 files changed, 33 insertions(+), 10 deletions(-)
-
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index d52a7484aeb2..3705c6f10b17 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -837,7 +837,7 @@ bpf_run_sk_reuseport(struct sock_reuseport *reuse, struct sock *sk,
- extern int bpf_jit_enable;
- extern int bpf_jit_harden;
- extern int bpf_jit_kallsyms;
--extern int bpf_jit_limit;
-+extern long bpf_jit_limit;
- 
- typedef void (*bpf_jit_fill_hole_t)(void *area, unsigned int size);
- 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index bad9985b8a08..36be400c3e65 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -366,13 +366,11 @@ void bpf_prog_kallsyms_del_all(struct bpf_prog *fp)
- }
- 
- #ifdef CONFIG_BPF_JIT
--# define BPF_JIT_LIMIT_DEFAULT	(PAGE_SIZE * 40000)
--
- /* All BPF JIT sysctl knobs here. */
- int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_ALWAYS_ON);
- int bpf_jit_harden   __read_mostly;
- int bpf_jit_kallsyms __read_mostly;
--int bpf_jit_limit    __read_mostly = BPF_JIT_LIMIT_DEFAULT;
-+long bpf_jit_limit   __read_mostly;
- 
- static __always_inline void
- bpf_get_prog_addr_region(const struct bpf_prog *prog,
-@@ -583,16 +581,27 @@ int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
- 
- static atomic_long_t bpf_jit_current;
- 
-+/* Can be overridden by an arch's JIT compiler if it has a custom,
-+ * dedicated BPF backend memory area, or if neither of the two
-+ * below apply.
-+ */
-+u64 __weak bpf_jit_alloc_exec_limit(void)
-+{
- #if defined(MODULES_VADDR)
-+	return MODULES_END - MODULES_VADDR;
-+#else
-+	return VMALLOC_END - VMALLOC_START;
-+#endif
-+}
-+
- static int __init bpf_jit_charge_init(void)
- {
- 	/* Only used as heuristic here to derive limit. */
--	bpf_jit_limit = min_t(u64, round_up((MODULES_END - MODULES_VADDR) >> 2,
--					    PAGE_SIZE), INT_MAX);
-+	bpf_jit_limit = min_t(u64, round_up(bpf_jit_alloc_exec_limit() >> 2,
-+					    PAGE_SIZE), LONG_MAX);
- 	return 0;
- }
- pure_initcall(bpf_jit_charge_init);
--#endif
- 
- static int bpf_jit_charge_modmem(u32 pages)
- {
-diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index 37b4667128a3..d67ec17f2cc8 100644
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -28,6 +28,8 @@ static int two __maybe_unused = 2;
- static int min_sndbuf = SOCK_MIN_SNDBUF;
- static int min_rcvbuf = SOCK_MIN_RCVBUF;
- static int max_skb_frags = MAX_SKB_FRAGS;
-+static long long_one __maybe_unused = 1;
-+static long long_max __maybe_unused = LONG_MAX;
- 
- static int net_msg_warn;	/* Unused, but still a sysctl */
- 
-@@ -289,6 +291,17 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
-+
-+static int
-+proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
-+				     void __user *buffer, size_t *lenp,
-+				     loff_t *ppos)
-+{
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
-+}
- #endif
- 
- static struct ctl_table net_core_table[] = {
-@@ -398,10 +411,11 @@ static struct ctl_table net_core_table[] = {
- 	{
- 		.procname	= "bpf_jit_limit",
- 		.data		= &bpf_jit_limit,
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(long),
- 		.mode		= 0600,
--		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
--		.extra1		= &one,
-+		.proc_handler	= proc_dolongvec_minmax_bpf_restricted,
-+		.extra1		= &long_one,
-+		.extra2		= &long_max,
- 	},
- #endif
- 	{
--- 
-2.20.1
-
-
-
+Thanks,
+Jens
