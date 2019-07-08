@@ -2,97 +2,101 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F5EC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C85C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5052221707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599770;
-	bh=ZhZoriRVOKoUzNCa44qcS0t87m2usU1A2Zc/KlAsm/w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ye4pDKJLeH7dzpSxaMvs0qwWR2cN8PQ+NenIyMGvD6haYSFsZ5wYzGIXtRL1h9vtq
-	 E/9e9zT1yuBNLotbqfaV+uXWXGcMYgnnEVnNaEk+H8KXLRccapCAtX1OqvoNnCQryV
-	 X8nTzHyNetaGgCXgB/sG1hunDeLdaV3+NPEaY7lg=
+	by mail.kernel.org (Postfix) with ESMTP id D368C21707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389487AbfGHP33 (ORCPT
+        id S2389499AbfGHP3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 8 Jul 2019 11:29:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:37168 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389481AbfGHP33 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 11:29:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389463AbfGHP3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73CBD20645;
-        Mon,  8 Jul 2019 15:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599762;
-        bh=ZhZoriRVOKoUzNCa44qcS0t87m2usU1A2Zc/KlAsm/w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HLuKEMN7FAijYMrVIapVfXz1wsM99ENJcUtFYhuBd6KM8GufbQAUhFtnoZ3mxHXVp
-         6Y/M+Ctncv/gzhpP+YVohDENxOgh9sS2lxfG4FsLriq055urykof+D4mn9A+GxrupY
-         fRzfn0GXH9zm1Bx1Esx2zRynM4FMb+fv2j0bnFCI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 69/90] mac80211: mesh: fix missing unlock on error in table_path_del()
-Date:   Mon,  8 Jul 2019 17:13:36 +0200
-Message-Id: <20190708150525.831910613@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
-References: <20190708150521.829733162@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hkVa3-00057b-E6; Mon, 08 Jul 2019 16:29:27 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hkVa2-00036G-T0; Mon, 08 Jul 2019 16:29:26 +0100
+Message-ID: <85820ecbcc368f992eb061481c388bb2ebb8ad65.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 000/129] 3.16.70-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
+        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Mon, 08 Jul 2019 16:29:22 +0100
+In-Reply-To: <20190708130511.GA4626@luke-XPS-13>
+References: <lsq.1562518456.876074874@decadent.org.uk>
+         <20190708130511.GA4626@luke-XPS-13>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-UBYcyYUNPEIlvLKJ/Id1"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2ffff085d287eec499f1fccd682796ad8010303 ]
 
-spin_lock_bh() is used in table_path_del() but rcu_read_unlock()
-is used for unlocking. Fix it by using spin_unlock_bh() instead
-of rcu_read_unlock() in the error handling case.
+--=-UBYcyYUNPEIlvLKJ/Id1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: b4c3fbe63601 ("mac80211: Use linked list instead of rhashtable walk for mesh tables")
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/mac80211/mesh_pathtbl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, 2019-07-08 at 06:05 -0700, Luke Nowakowski-Krijger wrote:
+> Hello,=20
+>=20
+> I got 1 error when applying this patch series to the latest linux-3.16.y
+> stable branch
+>=20
+> fs/fuse/file.c:218:3: error: implicit declaration of function =E2=80=98st=
+ream_open=E2=80=99
 
-diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
-index 49a90217622b..ac1f5db52994 100644
---- a/net/mac80211/mesh_pathtbl.c
-+++ b/net/mac80211/mesh_pathtbl.c
-@@ -627,7 +627,7 @@ static int table_path_del(struct mesh_table *tbl,
- 	spin_lock_bh(&tbl->walk_lock);
- 	mpath = rhashtable_lookup_fast(&tbl->rhead, addr, mesh_rht_params);
- 	if (!mpath) {
--		rcu_read_unlock();
-+		spin_unlock_bh(&tbl->walk_lock);
- 		return -ENXIO;
- 	}
- 
--- 
-2.20.1
+It is added by the previous patch and declared in <linux/fs.h>.=20
+fs/fuse/file.c always includes that (via fs/fuse/fuse_i.h), so I don't
+see how this error can happen.
+
+Ben.
+
+--=20
+Ben Hutchings
+Time is nature's way of making sure that
+everything doesn't happen at once.
 
 
 
+--=-UBYcyYUNPEIlvLKJ/Id1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl0jYVIACgkQ57/I7JWG
+EQknpBAAvk1RxrLlsgscIZSmkbexOcj+NwhyieFM9Mc8zhCaEnj7OBTU+i6oABXO
+weQgt59Nm7byVZqHPYt9B1F4blgt9oj6dqSQWUDtOYECjp9MEFPA1jNYBMwomsEE
+/DSH2wC1fN1qvfTBATR9n8UilqlM4mzIMUQ3taiCmp8sUp1VRem09qCKfP5kNkzb
+HYhWLbJPkyUD1ii650Aa5K3M/+u6HVUpDEZ3UAXlkPJi19YRrL9NcmQNEceUsK1j
+GH/JrsrEgQqOshx5a9bzH69BNpradteS0eBV4oGhc82mywXvrsPdBxlrM+O5LQa2
+o4BltIEd3z25Lh+TrZm9OUtXk319s4h/FHyanHUl31V1e7zVxEes2DlDnRR8PPMI
+J2xJDBMOiBZOswtie6cF3w+Oa5PZvvYMY/9VlQ6IX2b451Jf+UCl9M6ta8NahowR
+jo1PAr5oGwzrogpEeZLSGDGFpZDsznUUUsFbRJoSJOaHC+06pxnSgHSPmmUc8eZM
+mioe22HfoRHJQ1LN06EkdbwvHS6Nogjpt0a15TGPrU5CIgkyXtOsoELFA42o+Iip
+89O0HahTYZAztYv74GBOrG60o3qd4KqxlHFknfD13qB2rG6/1zLNZg2DWHYhEwqM
+S7cZFBL23eu3o/EnFHQDKqL/2UHNS1p4AYPv8Tblz/MQVdFDvwg=
+=hRS3
+-----END PGP SIGNATURE-----
+
+--=-UBYcyYUNPEIlvLKJ/Id1--
