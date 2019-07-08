@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038C3C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC97C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF0B2070D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1C72075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfGHCGj (ORCPT
+        id S1728680AbfGHCGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 22:06:39 -0400
+        Sun, 7 Jul 2019 22:06:43 -0400
 Received: from mga17.intel.com ([192.55.52.151]:44745 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728595AbfGHCGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 22:06:37 -0400
+        id S1728648AbfGHCGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 22:06:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:36 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,464,1557212400"; 
-   d="scan'208";a="364083573"
+   d="scan'208";a="364083589"
 Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:34 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:39 -0700
 From:   Wei Wang <wei.w.wang@intel.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         pbonzini@redhat.com, ak@linux.intel.com, peterz@infradead.org
 Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
         like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
         arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v7 08/12] KVM/x86/vPMU: Add APIs to support host save/restore the guest lbr stack
-Date:   Mon,  8 Jul 2019 09:23:15 +0800
-Message-Id: <1562548999-37095-9-git-send-email-wei.w.wang@intel.com>
+Subject: [PATCH v7 10/12] KVM/x86/lbr: lazy save the guest lbr stack
+Date:   Mon,  8 Jul 2019 09:23:17 +0800
+Message-Id: <1562548999-37095-11-git-send-email-wei.w.wang@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
 References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
@@ -46,200 +46,339 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Like Xu <like.xu@intel.com>
+When the vCPU is scheduled in:
+- if the lbr feature was used in the last vCPU time slice, set the lbr
+  stack to be interceptible, so that the host can capture whether the
+  lbr feature will be used in this time slice;
+- if the lbr feature wasn't used in the last vCPU time slice, disable
+  the vCPU support of the guest lbr switching.
 
-This patch adds support to enable/disable the host side save/restore
-for the guest lbr stack on vCPU switching. To enable that, the host
-creates a perf event for the vCPU, and the event attributes are set
-to the user callstack mode lbr so that all the conditions are meet in
-the host perf subsystem to save the lbr stack on task switching.
+Upon the first access to one of the lbr related MSRs (since the vCPU was
+scheduled in):
+- record that the guest has used the lbr;
+- create a host perf event to help save/restore the guest lbr stack;
+- pass the stack through to the guest.
 
-The host side lbr perf event are created only for the purpose of saving
-and restoring the lbr stack. There is no need to enable the lbr
-functionality for this perf event, because the feature is essentially
-used in the vCPU. So perf_event_create is invoked with need_counter=false
-to get no counter assigned for the perf event.
-
-The vcpu_lbr field is added to cpuc, to indicate if the lbr perf event is
-used by the vCPU only for context switching. When the perf subsystem
-handles this event (e.g. lbr enable or read lbr stack on PMI) and finds
-it's non-zero, it simply returns.
-
-Signed-off-by: Like Xu <like.xu@intel.com>
+Suggested-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Wei Wang <wei.w.wang@intel.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/x86/events/intel/lbr.c     | 13 +++++++--
- arch/x86/events/perf_event.h    |  1 +
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/pmu.h              |  3 ++
- arch/x86/kvm/vmx/pmu_intel.c    | 61 +++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 76 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/kvm_host.h |   2 +
+ arch/x86/kvm/pmu.c              |   6 ++
+ arch/x86/kvm/pmu.h              |   2 +
+ arch/x86/kvm/vmx/pmu_intel.c    | 141 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c          |   4 +-
+ arch/x86/kvm/vmx/vmx.h          |   2 +
+ arch/x86/kvm/x86.c              |   2 +
+ 7 files changed, 157 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 784642a..118764b 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -462,6 +462,9 @@ void intel_pmu_lbr_add(struct perf_event *event)
- 	if (!x86_pmu.lbr_nr)
- 		return;
- 
-+	if (event->attr.exclude_guest && is_no_counter_event(event))
-+		cpuc->vcpu_lbr = 1;
-+
- 	cpuc->br_sel = event->hw.branch_reg.reg;
- 
- 	if (branch_user_callstack(cpuc->br_sel) && event->ctx->task_ctx_data) {
-@@ -509,6 +512,9 @@ void intel_pmu_lbr_del(struct perf_event *event)
- 		task_ctx->lbr_callstack_users--;
- 	}
- 
-+	if (event->attr.exclude_guest && is_no_counter_event(event))
-+		cpuc->vcpu_lbr = 0;
-+
- 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
- 		cpuc->lbr_pebs_users--;
- 	cpuc->lbr_users--;
-@@ -521,7 +527,7 @@ void intel_pmu_lbr_enable_all(bool pmi)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	if (cpuc->lbr_users)
-+	if (cpuc->lbr_users && !cpuc->vcpu_lbr)
- 		__intel_pmu_lbr_enable(pmi);
- }
- 
-@@ -529,7 +535,7 @@ void intel_pmu_lbr_disable_all(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	if (cpuc->lbr_users)
-+	if (cpuc->lbr_users && !cpuc->vcpu_lbr)
- 		__intel_pmu_lbr_disable();
- }
- 
-@@ -669,7 +675,8 @@ void intel_pmu_lbr_read(void)
- 	 * This could be smarter and actually check the event,
- 	 * but this simple approach seems to work for now.
- 	 */
--	if (!cpuc->lbr_users || cpuc->lbr_users == cpuc->lbr_pebs_users)
-+	if (!cpuc->lbr_users || cpuc->vcpu_lbr ||
-+	    cpuc->lbr_users == cpuc->lbr_pebs_users)
- 		return;
- 
- 	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 186c1c7..86605d1 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -238,6 +238,7 @@ struct cpu_hw_events {
- 	/*
- 	 * Intel LBR bits
- 	 */
-+	u8				vcpu_lbr;
- 	int				lbr_users;
- 	int				lbr_pebs_users;
- 	struct perf_branch_stack	lbr_stack;
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 8d80925..79e9c92 100644
+index 79e9c92..cf8996e 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -474,6 +474,7 @@ struct kvm_pmu {
+@@ -469,6 +469,8 @@ struct kvm_pmu {
+ 	u64 global_ctrl_mask;
+ 	u64 global_ovf_ctrl_mask;
+ 	u64 reserved_bits;
++	/* Indicate if the lbr msrs were accessed in this vCPU time slice */
++	bool lbr_used;
+ 	u8 version;
+ 	struct kvm_pmc gp_counters[INTEL_PMC_MAX_GENERIC];
  	struct kvm_pmc fixed_counters[INTEL_PMC_MAX_FIXED];
- 	struct irq_work irq_work;
- 	u64 reprogram_pmi;
-+	struct perf_event *vcpu_lbr_event;
- };
- 
- struct kvm_pmu_ops;
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 7926b65..384a0b7 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -123,6 +123,9 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
- 
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
- 
-+extern int intel_pmu_enable_save_guest_lbr(struct kvm_vcpu *vcpu);
-+extern void intel_pmu_disable_save_guest_lbr(struct kvm_vcpu *vcpu);
-+
- extern struct kvm_pmu_ops intel_pmu_ops;
- extern struct kvm_pmu_ops amd_pmu_ops;
- #endif /* __KVM_X86_PMU_H */
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 09ae6ff..24a544e 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -507,6 +507,67 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
- 		pmu->global_ovf_ctrl = 0;
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index ee6ed47..323bb45 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -325,6 +325,12 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	return kvm_x86_ops->pmu_ops->set_msr(vcpu, msr_info);
  }
  
-+int intel_pmu_enable_save_guest_lbr(struct kvm_vcpu *vcpu)
++void kvm_pmu_sched_in(struct kvm_vcpu *vcpu, int cpu)
 +{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct perf_event *event;
++	if (kvm_x86_ops->pmu_ops->sched_in)
++		kvm_x86_ops->pmu_ops->sched_in(vcpu, cpu);
++}
++
+ /* refresh PMU settings. This function generally is called when underlying
+  * settings are changed (such as changes of PMU CPUID by guest VMs), which
+  * should rarely happen.
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index 384a0b7..cadf91a 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -32,6 +32,7 @@ struct kvm_pmu_ops {
+ 	bool (*lbr_enable)(struct kvm_vcpu *vcpu);
+ 	int (*get_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
+ 	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
++	void (*sched_in)(struct kvm_vcpu *vcpu, int cpu);
+ 	void (*refresh)(struct kvm_vcpu *vcpu);
+ 	void (*init)(struct kvm_vcpu *vcpu);
+ 	void (*reset)(struct kvm_vcpu *vcpu);
+@@ -116,6 +117,7 @@ int kvm_pmu_is_valid_msr_idx(struct kvm_vcpu *vcpu, unsigned idx);
+ bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr);
+ int kvm_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
+ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
++void kvm_pmu_sched_in(struct kvm_vcpu *vcpu, int cpu);
+ void kvm_pmu_refresh(struct kvm_vcpu *vcpu);
+ void kvm_pmu_reset(struct kvm_vcpu *vcpu);
+ void kvm_pmu_init(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 24a544e..fd09777 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -13,10 +13,12 @@
+ #include <linux/perf_event.h>
+ #include <asm/perf_event.h>
+ #include <asm/intel-family.h>
++#include <asm/vmx.h>
+ #include "x86.h"
+ #include "cpuid.h"
+ #include "lapic.h"
+ #include "pmu.h"
++#include "vmx.h"
+ 
+ static struct kvm_event_hw_type_mapping intel_arch_events[] = {
+ 	/* Index must match CPUID 0x0A.EBX bit vector */
+@@ -141,6 +143,18 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
+ 	return &counters[idx];
+ }
+ 
++static inline bool is_lbr_msr(struct kvm_vcpu *vcpu, u32 index)
++{
++	struct x86_perf_lbr_stack *stack = &vcpu->kvm->arch.lbr_stack;
++	int nr = stack->nr;
++
++	return !!(index == MSR_LBR_SELECT ||
++		  index == stack->tos ||
++		  (index >= stack->from && index < stack->from + nr) ||
++		  (index >= stack->to && index < stack->to + nr) ||
++		  (index >= stack->info && index < stack->info));
++}
++
+ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ {
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+@@ -152,9 +166,12 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ 	case MSR_CORE_PERF_GLOBAL_CTRL:
+ 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+ 	case MSR_IA32_PERF_CAPABILITIES:
++	case MSR_IA32_DEBUGCTLMSR:
+ 		ret = pmu->version > 1;
+ 		break;
+ 	default:
++		if (is_lbr_msr(vcpu, msr))
++			return pmu->version > 1;
+ 		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
+ 			get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0) ||
+ 			get_fixed_pmc(pmu, msr);
+@@ -298,6 +315,104 @@ static bool intel_pmu_lbr_enable(struct kvm_vcpu *vcpu)
+ 	return true;
+ }
+ 
++static void intel_pmu_set_intercept_for_lbr_msrs(struct kvm_vcpu *vcpu,
++						 bool set)
++{
++	unsigned long *msr_bitmap = to_vmx(vcpu)->vmcs01.msr_bitmap;
++	struct x86_perf_lbr_stack *stack = &vcpu->kvm->arch.lbr_stack;
++	int nr = stack->nr;
++	int i;
++
++	vmx_set_intercept_for_msr(msr_bitmap, MSR_LBR_SELECT,
++				  MSR_TYPE_RW, set);
++	vmx_set_intercept_for_msr(msr_bitmap, stack->tos,
++				  MSR_TYPE_RW, set);
++	for (i = 0; i < nr; i++) {
++		vmx_set_intercept_for_msr(msr_bitmap, stack->from + i,
++					  MSR_TYPE_RW, set);
++		vmx_set_intercept_for_msr(msr_bitmap, stack->to + i,
++					  MSR_TYPE_RW, set);
++		if (stack->info)
++			vmx_set_intercept_for_msr(msr_bitmap, stack->info + i,
++						  MSR_TYPE_RW, set);
++	}
++}
++
++static bool intel_pmu_get_lbr_msr(struct kvm_vcpu *vcpu,
++			      struct msr_data *msr_info)
++{
++	u32 index = msr_info->index;
++	bool ret = false;
++
++	switch (index) {
++	case MSR_IA32_DEBUGCTLMSR:
++		msr_info->data = vmcs_read64(GUEST_IA32_DEBUGCTL);
++		ret = true;
++		break;
++	default:
++		if (is_lbr_msr(vcpu, index)) {
++			ret = true;
++			rdmsrl(index, msr_info->data);
++		}
++	}
++
++	return ret;
++}
++
++static bool intel_pmu_set_lbr_msr(struct kvm_vcpu *vcpu,
++				  struct msr_data *msr_info)
++{
++	u32 index = msr_info->index;
++	u64 data = msr_info->data;
++	bool ret = false;
++
++	switch (index) {
++	case MSR_IA32_DEBUGCTLMSR:
++		ret = true;
++		/*
++		 * Currently, only FREEZE_LBRS_ON_PMI and DEBUGCTLMSR_LBR are
++		 * supported.
++		 */
++		data &= (DEBUGCTLMSR_FREEZE_LBRS_ON_PMI | DEBUGCTLMSR_LBR);
++		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
++		break;
++	default:
++		if (is_lbr_msr(vcpu, index)) {
++			ret = true;
++			wrmsrl(index, data);
++		}
++	}
++
++	return ret;
++}
++
++static bool intel_pmu_access_lbr_msr(struct kvm_vcpu *vcpu,
++				 struct msr_data *msr_info,
++				 bool set)
++{
++	bool ret = false;
 +
 +	/*
-+	 * The main purpose of this perf event is to have the host perf core
-+	 * help save/restore the guest lbr stack on vcpu switching. There is
-+	 * no perf counters allocated for the event.
-+	 *
-+	 * About the attr:
-+	 * exclude_guest: set to true to indicate that the event runs on the
-+	 *                host only.
-+	 * pinned:        set to false, so that the FLEXIBLE events will not
-+	 *                be rescheduled for this event which actually doesn't
-+	 *                need a perf counter.
-+	 * config:        Actually this field won't be used by the perf core
-+	 *                as this event doesn't have a perf counter.
-+	 * sample_period: Same as above.
-+	 * sample_type:   tells the perf core that it is an lbr event.
-+	 * branch_sample_type: tells the perf core that the lbr event works in
-+	 *                the user callstack mode so that the lbr stack will be
-+	 *                saved/restored on vCPU switching.
++	 * Some userspace implementations (e.g. QEMU) expects the msrs to be
++	 * always accesible.
 +	 */
-+	struct perf_event_attr attr = {
-+		.type = PERF_TYPE_RAW,
-+		.size = sizeof(attr),
-+		.exclude_guest = true,
-+		.pinned = false,
-+		.config = 0,
-+		.sample_period = 0,
-+		.sample_type = PERF_SAMPLE_BRANCH_STACK,
-+		.branch_sample_type = PERF_SAMPLE_BRANCH_CALL_STACK |
-+				      PERF_SAMPLE_BRANCH_USER,
-+	};
++	if (!msr_info->host_initiated && !vcpu->kvm->arch.lbr_in_guest)
++		return false;
 +
-+	if (pmu->vcpu_lbr_event)
-+		return 0;
++	if (set)
++		ret = intel_pmu_set_lbr_msr(vcpu, msr_info);
++	else
++		ret = intel_pmu_get_lbr_msr(vcpu, msr_info);
 +
-+	event = perf_event_create(&attr, -1, current, NULL, NULL, false);
-+	if (IS_ERR(event)) {
-+		pr_err("%s: failed %ld\n", __func__, PTR_ERR(event));
-+		return -ENOENT;
++	if (ret && !vcpu->arch.pmu.lbr_used) {
++		vcpu->arch.pmu.lbr_used = true;
++		intel_pmu_set_intercept_for_lbr_msrs(vcpu, false);
++		intel_pmu_enable_save_guest_lbr(vcpu);
 +	}
-+	pmu->vcpu_lbr_event = event;
 +
-+	return 0;
++	return ret;
 +}
 +
-+void intel_pmu_disable_save_guest_lbr(struct kvm_vcpu *vcpu)
+ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ {
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+@@ -344,6 +459,8 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+ 			msr_info->data = pmc->eventsel;
+ 			return 0;
++		} else if (intel_pmu_access_lbr_msr(vcpu, msr_info, false)) {
++			return 0;
+ 		}
+ 	}
+ 
+@@ -407,12 +524,33 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 				reprogram_gp_counter(pmc, data);
+ 				return 0;
+ 			}
++		} else if (intel_pmu_access_lbr_msr(vcpu, msr_info, true)) {
++			return 0;
+ 		}
+ 	}
+ 
+ 	return 1;
+ }
+ 
++static void intel_pmu_sched_in(struct kvm_vcpu *vcpu, int cpu)
 +{
 +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	struct perf_event *event = pmu->vcpu_lbr_event;
++	u64 guest_debugctl;
 +
-+	if (!event)
-+		return;
-+
-+	perf_event_release_kernel(event);
-+	pmu->vcpu_lbr_event = NULL;
++	if (pmu->lbr_used) {
++		pmu->lbr_used = false;
++		intel_pmu_set_intercept_for_lbr_msrs(vcpu, true);
++	} else if (pmu->vcpu_lbr_event) {
++		/*
++		 * The lbr feature wasn't used during that last vCPU time
++		 * slice, so it's time to disable the vCPU side save/restore.
++		 */
++		guest_debugctl = vmcs_read64(GUEST_IA32_DEBUGCTL);
++		if (!(guest_debugctl & DEBUGCTLMSR_LBR))
++			intel_pmu_disable_save_guest_lbr(vcpu);
++	}
 +}
 +
- struct kvm_pmu_ops intel_pmu_ops = {
- 	.find_arch_event = intel_find_arch_event,
- 	.find_fixed_event = intel_find_fixed_event,
+ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+@@ -505,6 +643,8 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
+ 
+ 	pmu->fixed_ctr_ctrl = pmu->global_ctrl = pmu->global_status =
+ 		pmu->global_ovf_ctrl = 0;
++
++	intel_pmu_disable_save_guest_lbr(vcpu);
+ }
+ 
+ int intel_pmu_enable_save_guest_lbr(struct kvm_vcpu *vcpu)
+@@ -579,6 +719,7 @@ struct kvm_pmu_ops intel_pmu_ops = {
+ 	.lbr_enable = intel_pmu_lbr_enable,
+ 	.get_msr = intel_pmu_get_msr,
+ 	.set_msr = intel_pmu_set_msr,
++	.sched_in = intel_pmu_sched_in,
+ 	.refresh = intel_pmu_refresh,
+ 	.init = intel_pmu_init,
+ 	.reset = intel_pmu_reset,
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d98eac3..5dc0dcf 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3523,8 +3523,8 @@ static __always_inline void vmx_enable_intercept_for_msr(unsigned long *msr_bitm
+ 	}
+ }
+ 
+-static __always_inline void vmx_set_intercept_for_msr(unsigned long *msr_bitmap,
+-			     			      u32 msr, int type, bool value)
++void vmx_set_intercept_for_msr(unsigned long *msr_bitmap, u32 msr, int type,
++			       bool value)
+ {
+ 	if (value)
+ 		vmx_enable_intercept_for_msr(msr_bitmap, msr, type);
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 61128b4..ed94909 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -317,6 +317,8 @@ void vmx_update_msr_bitmap(struct kvm_vcpu *vcpu);
+ bool vmx_get_nmi_mask(struct kvm_vcpu *vcpu);
+ void vmx_set_nmi_mask(struct kvm_vcpu *vcpu, bool masked);
+ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu);
++void vmx_set_intercept_for_msr(unsigned long *msr_bitmap, u32 msr, int type,
++			       bool value);
+ struct shared_msr_entry *find_msr_entry(struct vcpu_vmx *vmx, u32 msr);
+ void pt_update_intercept_for_msr(struct vcpu_vmx *vmx);
+ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3e34286..a3bc7f2 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9233,6 +9233,8 @@ void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu)
+ void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu)
+ {
+ 	vcpu->arch.l1tf_flush_l1d = true;
++
++	kvm_pmu_sched_in(vcpu, cpu);
+ 	kvm_x86_ops->sched_in(vcpu, cpu);
+ }
+ 
 -- 
 2.7.4
 
