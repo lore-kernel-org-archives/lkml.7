@@ -2,160 +2,238 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3770C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C79C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE08521537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059AF21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731734AbfGHO2V convert rfc822-to-8bit (ORCPT
+        id S1731779AbfGHO2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:28:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4822 "EHLO
+        Mon, 8 Jul 2019 10:28:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62326 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729760AbfGHO2V (ORCPT
+        by vger.kernel.org with ESMTP id S1730052AbfGHO2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:28:21 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68ERMMl115712
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 10:28:20 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [158.85.210.112])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tm60yvg5r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:28:19 -0400
+        Mon, 8 Jul 2019 10:28:41 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68ESaXY068737
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 10:28:40 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tm4urygf7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:28:39 -0400
 Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Mon, 8 Jul 2019 14:28:19 -0000
-Received: from us1b3-smtp04.a3dr.sjc01.isc4sb.com (10.122.203.161)
-        by smtp.notes.na.collabserv.com (10.122.47.54) with smtp.notes.na.collabserv.com ESMTP;
-        Mon, 8 Jul 2019 14:28:14 -0000
-Received: from us1b3-mail162.a3dr.sjc03.isc4sb.com ([10.160.174.187])
-          by us1b3-smtp04.a3dr.sjc01.isc4sb.com
-          with ESMTP id 2019070814281388-485737 ;
-          Mon, 8 Jul 2019 14:28:13 +0000 
-In-Reply-To: <20190708140858.GC23966@mellanox.com>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Jason Gunthorpe" <jgg@mellanox.com>
-Cc:     "Stephen Rothwell" <sfr@canb.auug.org.au>,
-        "Doug Ledford" <dledford@redhat.com>,
-        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Date:   Mon, 8 Jul 2019 14:28:13 +0000
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Mon, 8 Jul 2019 15:27:18 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 8 Jul 2019 15:27:15 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x68ERCd214942816
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jul 2019 14:27:12 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 397F6AE05F;
+        Mon,  8 Jul 2019 14:27:12 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E2213AE05C;
+        Mon,  8 Jul 2019 14:27:11 +0000 (GMT)
+Received: from [9.60.75.173] (unknown [9.60.75.173])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jul 2019 14:27:11 +0000 (GMT)
+Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate resource
+ in use
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
+ <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
+ <20190618182558.7d7e025a.cohuck@redhat.com>
+ <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
+ <20190701212643.0dd7d4ab.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Mon, 8 Jul 2019 10:27:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190708140858.GC23966@mellanox.com>,<20190708130351.2141a39b@canb.auug.org.au>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-KeepSent: 8B5D0A35:3AB4C2D3-00258431:004F7CF8;
- type=4; name=$KeepSent
-X-LLNOutbound: False
-X-Disclaimed: 37267
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19070814-0163-0000-0000-000006B23BBB
-X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.399202; ST=0; TS=0; UL=0; ISC=; MB=0.001805
+In-Reply-To: <20190701212643.0dd7d4ab.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070814-0052-0000-0000-000003DBC520
+X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011395; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01229239; UDB=6.00647369; IPR=6.01010498;
- BA=6.00006352; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
- ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027634; XFM=3.00000015;
- UTC=2019-07-08 14:28:18
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-07-08 08:53:28 - 6.00010139
-x-cbparentid: 19070814-0164-0000-0000-0000100845AC
-Message-Id: <OF8B5D0A35.3AB4C2D3-ON00258431.004F7CF8-00258431.004F7D00@notes.na.collabserv.com>
-Subject: Re:  Re: linux-next: build failure after merge of the rdma tree
+ PH=3.00000004; SC=3.00000286; SDB=6.01229239; UDB=6.00647369; IPR=6.01010497;
+ MB=3.00027634; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-08 14:27:17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070814-0053-0000-0000-0000619C95B9
+Message-Id: <c771961d-f840-fe8a-09b7-a11b39a74d4c@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_05:,,
  signatures=0
-X-Proofpoint-Spam-Reason: safe
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907080180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Jason Gunthorpe" <jgg@mellanox.com> wrote: -----
+On 7/1/19 3:26 PM, Cornelia Huck wrote:
+> On Wed, 19 Jun 2019 09:04:18 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> 
+>> On 6/18/19 12:25 PM, Cornelia Huck wrote:
+>>> On Thu, 13 Jun 2019 15:39:36 -0400
+>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>>    
+>>>> Introduces a new driver callback to prevent a root user from unbinding
+>>>> an AP queue from its device driver if the queue is in use. This prevents
+>>>> a root user from inadvertently taking a queue away from a guest and
+>>>> giving it to the host, or vice versa. The callback will be invoked
+>>>> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
+>>>> result in one or more AP queues being removed from its driver. If the
+>>>> callback responds in the affirmative for any driver queried, the change
+>>>> to the apmask or aqmask will be rejected with a device in use error.
+>>>>
+>>>> For this patch, only non-default drivers will be queried. Currently,
+>>>> there is only one non-default driver, the vfio_ap device driver. The
+>>>> vfio_ap device driver manages AP queues passed through to one or more
+>>>> guests and we don't want to unexpectedly take AP resources away from
+>>>> guests which are most likely independently administered.
+>>>>
+>>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>>>> ---
+>>>>    drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
+>>>>    drivers/s390/crypto/ap_bus.h |   3 +
+>>>>    2 files changed, 135 insertions(+), 6 deletions(-)
+>>>
+>>> Hm... I recall objecting to this patch before, fearing that it makes it
+>>> possible for a bad actor to hog resources that can't be removed by
+>>> root, even forcefully. (I have not had time to look at the intervening
+>>> versions, so I might be missing something.)
+>>>
+>>> Is there a way for root to forcefully override this?
+>>
+>> You recall correctly; however, after many internal crypto team
+>> discussions, it was decided that this feature was important
+>> and should be kept.
+> 
+> That's the problem with internal discussions: they're internal :( Would
+> have been nice to have some summary of this in the changelog.
 
->To: "Stephen Rothwell" <sfr@canb.auug.org.au>, "Bernard Metzler"
-><bmt@zurich.ibm.com>
->From: "Jason Gunthorpe" <jgg@mellanox.com>
->Date: 07/08/2019 04:09PM
->Cc: "Doug Ledford" <dledford@redhat.com>, "Linux Next Mailing List"
-><linux-next@vger.kernel.org>, "Linux Kernel Mailing List"
-><linux-kernel@vger.kernel.org>
->Subject: [EXTERNAL] Re: linux-next: build failure after merge of the
->rdma tree
->
->On Mon, Jul 08, 2019 at 01:03:51PM +1000, Stephen Rothwell wrote:
->> Hi all,
->> 
->> After merging the rdma tree, today's linux-next build (x86_64
->> allmodconfig) failed like this:
->> 
->> In file included from include/asm-generic/percpu.h:7,
->>                  from arch/x86/include/asm/percpu.h:544,
->>                  from arch/x86/include/asm/preempt.h:6,
->>                  from include/linux/preempt.h:78,
->>                  from include/linux/spinlock.h:51,
->>                  from include/linux/seqlock.h:36,
->>                  from include/linux/time.h:6,
->>                  from include/linux/ktime.h:24,
->>                  from include/linux/timer.h:6,
->>                  from include/linux/netdevice.h:24,
->>                  from drivers/infiniband/sw/siw/siw_main.c:8:
->> include/linux/percpu-defs.h:92:33: warning: '__pcpu_unique_use_cnt'
->initialized and declared 'extern'
->>   extern __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;  \
->>                                  ^~~~~~~~~~~~~~
->> include/linux/percpu-defs.h:115:2: note: in expansion of macro
->'DEFINE_PER_CPU_SECTION'
->>   DEFINE_PER_CPU_SECTION(type, name, "")
->>   ^~~~~~~~~~~~~~~~~~~~~~
->> drivers/infiniband/sw/siw/siw_main.c:129:8: note: in expansion of
->macro 'DEFINE_PER_CPU'
->>  static DEFINE_PER_CPU(atomic_t, use_cnt = ATOMIC_INIT(0));
->>         ^~~~~~~~~~~~~~
->> include/linux/percpu-defs.h:93:26: error: redefinition of
->'__pcpu_unique_use_cnt'
->>   __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;   \
->>                           ^~~~~~~~~~~~~~
->> include/linux/percpu-defs.h:115:2: note: in expansion of macro
->'DEFINE_PER_CPU_SECTION'
->>   DEFINE_PER_CPU_SECTION(type, name, "")
->>   ^~~~~~~~~~~~~~~~~~~~~~
->> drivers/infiniband/sw/siw/siw_main.c:129:8: note: in expansion of
->macro 'DEFINE_PER_CPU'
->>  static DEFINE_PER_CPU(atomic_t, use_cnt = ATOMIC_INIT(0));
->
->Bernard, 
->
->This looks like the wrong way to use DEFINE_PER_CPU these days. I'm
->not sure why my compiles don't hit it, or why 0-day didn't say
->something
->
->Looking at the other atomic_t PER_CPU users they just rely on
->automatic zero initialization, so this should just be:
->
->  static DEFINE_PER_CPU(atomic_t, use_cnt);
->
->?
->
->Please confirm ASAP.
->
+I tried to summarize everything here.
 
-Hi Jason,
+> 
+>>
+>> Allow me to first address your fear that a bad actor can hog
+>> resources that can't be removed by root. With this enhancement,
+>> there is nothing preventing a root user from taking resources
+>> from a matrix mdev, it simply forces him/her to follow the
+>> proper procedure. The resources to be removed must first be
+>> unassigned from the matrix mdev to which they are assigned.
+>> The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask
+>> sysfs attributes can then be edited to transfer ownership
+>> of the resources to zcrypt.
+> 
+> What is the suggested procedure when root wants to unbind a queue
+> device? Find the mdev using the queue (is that easy enough?), unassign
+> it, then unbind? Failing to unbind is a bit unexpected; can we point
+> the admin to the correct mdev from which the queue has to be removed
+> first?
 
-Thanks for  bringing this up. Indeed, that explicit
-initialization seem to be inappropriate. Can you please
-fix that as you suggest?
+The proper procedure is to first unassign the adapter, domain, or both
+from the mdev to which the APQN is assigned. The difficulty in finding
+the queue depends upon how many mdevs have been created. I would expect
+that an admin would keep records of who owns what, but in the case he or
+she doesn't, it would be a matter of printing out the matrix attribute
+of each mdev until you find the mdev to which the APQN is assigned.
+The only means I know of for informing the admin to which mdev a given
+APQN is assigned is to log the error when it occurs. I think Matt is
+also looking to provide query functions in the management tool on which
+he is currently working.
 
-Thanks very much,
-Bernard.
+> 
+>>
+>> The rationale for keeping this feature is:
+>>
+>> * It is a bad idea to steal an adapter in use from a guest. In the worst
+>>     case, the guest could end up without access to any crypto adapters
+>>     without knowing why. This could lead to performance issues on guests
+>>     that rely heavily on crypto such as guests used for blockchain
+>>     transactions.
+> 
+> Yanking adapters out from a running guest is not a good idea, yes; but
+> I see it more as a problem of the management layer. Performance issues
+> etc. are not something we want, obviously; but is removing access to
+> the adapter deadly, or can the guest keep limping along? (Does the
+> guest have any chance to find out that the adapter is gone? What
+> happens on an LPAR if an adapter is gone, maybe due to a hardware
+> failure?)
+
+I don't think anybody is going to die if an adapter is yanked out;), but
+if the guest has only one adapter, then other avenues for crypto
+services would have to be used.
+
+> 
+>>
+>> * There are plenty of examples in linux of the kernel preventing a root
+>>     user from performing a task. For example, a module can't be removed
+>>     if references are still held for it.
+> 
+> In this case, removing the module would actively break/crash anything
+> relying on it; I'm not sure how analogous the situation is here (i.e.
+> can we limp on without the device?)
+
+I believe crypto libraries like libica revert to using other means -
+such as crypto software or CPACF functions? - if no adapters are
+available, so I don't think the guest is dead in the water as far as
+crypto goes, but I'm certainly no expert in what happens above the AP
+layer.
+
+> 
+>> Another example would be trying
+>>     to bind a CEX4 adapter to a device driver not registered for CEX4;
+>>     this action will also be rejected.
+> 
+> I don't think this one is analogous at all: The device driver can't
+> drive the device, so why should it be able to bind to it?
+
+Yes, probably a bad example
+
+> 
+>>
+>> * The semantics are much cleaner and the logic is far less complicated.
+> 
+> This is actually the most convincing of the arguments, I think :) If we
+> need some really byzantine logic to allow unbinding, it's probably not
+> worth it.
+> 
+>>
+>> * It forces the use of the proper procedure to change ownership of AP
+>>     queues.
+> 
+> This needs to be properly documented, and the admin needs to have a
+> chance to find out why unbinding didn't work and what needs to be done
+> (see my comments above).
+
+I will create a section in the vfio-ap.txt document that comes with this
+patch set describing the proper procedure for unbinding queues. Of
+course, we'll make sure the official IBM doc also more thoroughly
+describes this.
+
+> 
 
