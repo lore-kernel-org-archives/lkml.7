@@ -2,117 +2,111 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243BBC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF3FC606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8272218A0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA622189F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gWdTavZI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZ3DRy2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404017AbfGHRtv (ORCPT
+        id S2404028AbfGHRty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:49:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44920 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390712AbfGHRtk (ORCPT
+        Mon, 8 Jul 2019 13:49:54 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35246 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403870AbfGHRtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:49:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t16so7941933pfe.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:49:40 -0700 (PDT)
+        Mon, 8 Jul 2019 13:49:53 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so8643693plp.2;
+        Mon, 08 Jul 2019 10:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jvubPfiCRWcqYJeQKrlvplKJ87mcq6CV3rScnhJCQ5U=;
-        b=gWdTavZInEF8s+f73QfuvdZZVflT//tp6s2gup+DG7rzJx++7Zxn4YR8R+P3cCQ3vg
-         0XtUyooDHCqvJfLoTxIPl7CFHlSKSceFQO1IeLxzta92vXckW46gHBQduoya2pJJMyio
-         nnulEIodWWvqRkpqb1gs8njfVwcB7aV8EdjTo=
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/ancY3EFLWrWbOtiL61BFmmz+2+LYOXr28AVKYlsboM=;
+        b=ZZ3DRy2AB9jjXaaZclJtiEqiGrrohKz++rVEG+SoD5ns9yAK/NrkarsxDMEIQaF0TI
+         rdtLQYAsp8m36P3/LrUQNzNj0WQ1eVPK+GLAqmkZ4Jr4fGLFCw7QGWg0UFqQaHJYR8jZ
+         WAPy0Y061TGQCSPRwJ5GV1uNGLn+sZehMQBgSI3jCOXddLlIQcBM5xrumBonGw4WcWb8
+         Lb27EJ4fY5DdW3OgJ843HaZsJdua0L2AE0FcYzNC5J/Lk48hPVamyrO6VWTOBbKJ8Vr6
+         bQ9X1yqU+zXwWMhwBgMOStKpsmVaBNp9vZf0qoAiCgm9Z5AXdTKm4XfLK5DRcDFmTGJE
+         dAfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jvubPfiCRWcqYJeQKrlvplKJ87mcq6CV3rScnhJCQ5U=;
-        b=sikNjAnFUPgd9IqAbhyCFYa3J2KOgd9NDoEYXhsyuRoZX6gaDsmRvIgdPIHP5MjZKf
-         iolMcjoBrRieTw7hXW2cjRfWe8YQ7Mxjlk/Dy5AQtU5jLUAunKSYISXNwv2GREdwa6Zq
-         R5dqlOXbadZr3LxYBtgjbIinMnAL0CMviTKRr2Arqex1bsrKr22nxecP7MBHPvMuKzEi
-         DOKFbnRiazZPm3DxPZxJGMWKTTPUS0G1/5ZouGzSsssNG2Rb0AlYvuWQxGx0P2mEleKv
-         qLFU9K3nWW0F06rcbdp4ynfHhRErjI2tmv4zy1jWlgqb9Mtc5UA49M9DhAVaaYu8zil3
-         DSdg==
-X-Gm-Message-State: APjAAAW5tEDWVVqUD7RYq660MhuPVorZahfCMJl2SaDEMCWr5hb3Jazx
-        AKp7yCOI8OSbltC1lJGF6h8uwQ==
-X-Google-Smtp-Source: APXvYqx8rkznkGCAzouh1iIQ84Mhjqiwd/g+Pg/qIIPvd4iT14Pzd6lYH1LAJdK/xxZzTbQTVpJPsA==
-X-Received: by 2002:a63:2310:: with SMTP id j16mr26308534pgj.238.1562608179726;
-        Mon, 08 Jul 2019 10:49:39 -0700 (PDT)
-Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id j1sm20151686pfe.101.2019.07.08.10.49.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 10:49:39 -0700 (PDT)
-From:   Thomas Garnier <thgarnie@chromium.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     kristen@linux.intel.com, keescook@chromium.org,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 09/11] x86/power/64: Adapt assembly for PIE support
-Date:   Mon,  8 Jul 2019 10:49:02 -0700
-Message-Id: <20190708174913.123308-10-thgarnie@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190708174913.123308-1-thgarnie@chromium.org>
-References: <20190708174913.123308-1-thgarnie@chromium.org>
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/ancY3EFLWrWbOtiL61BFmmz+2+LYOXr28AVKYlsboM=;
+        b=WIDfkZ/Wq01LB+bmfFFuCoaT5uvfxkLYXiFQ0+8jCGrB3OgcfRFQn52EXsyNL5jk9z
+         pjWo8TSAiWDl1EExzHFkZwytqBHkSnIykHHZIs9TumCZK40dhtPHoN6n5ZPBnxgmLJXL
+         dok4z3gDVZN+7BG36xgs7uyLOEypIUTxfIu9vvF1eRKo9Z/QU2IuRpUJJv0roS4tA1xV
+         627zrZh90k0jzAJrI9odt6bkkVreINCCLnQ3M9zUi9udiRIxwaJ1nPoBOF2M7541L8NY
+         aUQ2DC40Uug/BRSF4VKgr05blFcxFaNYd0TObhT+akbhqM/siO7Gn2Q1mlLgYVQDKEOz
+         1G7Q==
+X-Gm-Message-State: APjAAAWhZqb2UkEaxcMTBgKamZQ9Lf7DdqKKe+67Zd3R40zdKByUZghD
+        209oKIWRPy4iXQaUIPwsoC38z6VP
+X-Google-Smtp-Source: APXvYqzHnvoi64IAIYQAQwAjuuMAntEhX7GX0pOHKTC9bgLPVxmBM8eJrVrMWtkmJ8mmPUq2/gkPSg==
+X-Received: by 2002:a17:902:2a27:: with SMTP id i36mr26194794plb.161.1562608192793;
+        Mon, 08 Jul 2019 10:49:52 -0700 (PDT)
+Received: from ?IPv6:2405:4800:58c7:1881:3232:ec6:81a5:864b? ([2405:4800:58c7:1881:3232:ec6:81a5:864b])
+        by smtp.gmail.com with ESMTPSA id x9sm11038532pfn.177.2019.07.08.10.49.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 10:49:52 -0700 (PDT)
+Cc:     linux-kernel@vger.kernel.org, tranmanphong@gmail.com,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 5.1 00/96] 5.1.17-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190708150526.234572443@linuxfoundation.org>
+From:   Phong Tran <tranmanphong@gmail.com>
+Message-ID: <c1498293-f0f6-0599-bd72-4156370a7599@gmail.com>
+Date:   Tue, 9 Jul 2019 00:49:48 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the assembly code to use only relative references of symbols for the
-kernel to be PIE compatible.
+On 7/8/19 10:12 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.17 release.
+> There are 96 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.17-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
 
-Position Independent Executable (PIE) support will allow to extend the
-KASLR randomization range below 0xffffffff80000000.
+build and boot fine with qemu-system-riscv64
 
-Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/power/hibernate_asm_64.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+root@(none):~# uname  -a
+Linux (none) 5.1.17-rc1-00097-gb64119f8dffe #4 SMP Tue Jul 9 00:44:23 
++07 2019 riscv64 GNU/Linux
+root@(none):~# cat /proc/cpuinfo
+processor	: 0
+hart		: 0
+isa		: rv64imafdcu
+mmu		: sv48
 
-diff --git a/arch/x86/power/hibernate_asm_64.S b/arch/x86/power/hibernate_asm_64.S
-index a4d5eb0a7ece..796cd19d575b 100644
---- a/arch/x86/power/hibernate_asm_64.S
-+++ b/arch/x86/power/hibernate_asm_64.S
-@@ -23,7 +23,7 @@
- #include <asm/frame.h>
- 
- ENTRY(swsusp_arch_suspend)
--	movq	$saved_context, %rax
-+	leaq	saved_context(%rip), %rax
- 	movq	%rsp, pt_regs_sp(%rax)
- 	movq	%rbp, pt_regs_bp(%rax)
- 	movq	%rsi, pt_regs_si(%rax)
-@@ -114,7 +114,7 @@ ENTRY(restore_registers)
- 	movq	%rax, %cr4;  # turn PGE back on
- 
- 	/* We don't restore %rax, it must be 0 anyway */
--	movq	$saved_context, %rax
-+	leaq	saved_context(%rip), %rax
- 	movq	pt_regs_sp(%rax), %rsp
- 	movq	pt_regs_bp(%rax), %rbp
- 	movq	pt_regs_si(%rax), %rsi
--- 
-2.22.0.410.gd8fdbe21b5-goog
 
