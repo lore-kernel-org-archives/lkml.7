@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203CCC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B848CC606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D17216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9247A21707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599584;
-	bh=guJo8kQuNGCLr9IcAC48ivEXO+m7e0YNXbz8SATXBW8=;
+	s=default; t=1562599587;
+	bh=HvHBuw5vhtQrTQzI5wIOwi6sqkK0R/TKJ+aJRAfCSjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KitTdGdgHwkHj018A5GVOJiTyw07Xu4LJ5y7oAAyx9+L1EHPHt9WYHWHoHA/i2oJm
-	 HK5kXa5lei7a74A5GFXdrgx1Yc5dZENe+7BzU4Kr8yzaDONjps0+9SYGH3qYOqKvsH
-	 JE6lQoTcI2MhYUXvWk1lyuoL1TX9IyQ/1jJS96n4=
+	b=c9NZ4S4+dWyH1tQ78epyBO8SdAM/sDjCpwayI84OneT1pCr9effsBFeqaBAzStvGp
+	 YbAYeggR+AP0R5RhWGvt6H71hju+hB7shFEpLFnbFmjRKIrI68d4H6wcBEZbQ3mE8t
+	 6J5QbeuR+m+J5+B5q1RTHR3R0RBUOdlL5+yNasm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbfGHP0W (ORCPT
+        id S2388819AbfGHP0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388791AbfGHP0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:26:19 -0400
+        id S2388805AbfGHP0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:26:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 607062166E;
-        Mon,  8 Jul 2019 15:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 192EE20665;
+        Mon,  8 Jul 2019 15:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599578;
-        bh=guJo8kQuNGCLr9IcAC48ivEXO+m7e0YNXbz8SATXBW8=;
+        s=default; t=1562599581;
+        bh=HvHBuw5vhtQrTQzI5wIOwi6sqkK0R/TKJ+aJRAfCSjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsWvngfjgFWWVBtahIQfeeEPDQjm8V/loCwWLhWg1KhVQvy1jE3fVGGG4QogqHKFQ
-         EpeRBlYLYx9717WXXGcJdyhNKgnct6T4oKzOcD0LO00S2Y05cDS9zB7ctfn/ry24OC
-         GGBaEohud9mY7gEiwum4S04upHuE+ADF0fAv07ys=
+        b=uSHNSUoc0zCMFwmKS/ae88XoDGAzyZE5lRB2Gs5c5FWcxdBPwPX6MVsGCfj6ExXCI
+         5Tx+yo6082VK3FbrYB0dOKx0sxsBGIHGnzxj7WgUlGPz+NNytx4khoLzRcK4sUkTxx
+         CvkyEGV6K6WZH9QQVWabICHCGMMnN3V6K6khWjO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-btrfs@vger.kernel.org,
-        Olivier Mazouffre <olivier.mazouffre@ims-bordeaux.fr>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: [PATCH 4.14 56/56] stable/btrfs: fix backport bug in d819d97ea025 ("btrfs: honor path->skip_locking in backref code")
-Date:   Mon,  8 Jul 2019 17:13:48 +0200
-Message-Id: <20190708150524.341162307@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.14 52/56] svcrdma: Ignore source port when computing DRC hash
+Date:   Mon,  8 Jul 2019 17:13:44 +0200
+Message-Id: <20190708150524.139654936@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -61,33 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislaw Gruszka <sgruszka@redhat.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Upstream commit 38e3eebff643 ("btrfs: honor path->skip_locking in
-backref code") was incorrectly backported to 4.14.y . It misses removal
-of two lines from original commit, what cause deadlock.
+commit 1e091c3bbf51d34d5d96337a59ce5ab2ac3ba2cc upstream.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203993
-Reported-by: Olivier Mazouffre <olivier.mazouffre@ims-bordeaux.fr>
-Fixes: d819d97ea025 ("btrfs: honor path->skip_locking in backref code")
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+The DRC appears to be effectively empty after an RPC/RDMA transport
+reconnect. The problem is that each connection uses a different
+source port, which defeats the DRC hash.
+
+Clients always have to disconnect before they send retransmissions
+to reset the connection's credit accounting, thus every retransmit
+on NFS/RDMA will miss the DRC.
+
+An NFS/RDMA client's IP source port is meaningless for RDMA
+transports. The transport layer typically sets the source port value
+on the connection to a random ephemeral port. The server already
+ignores it for the "secure port" check. See commit 16e4d93f6de7
+("NFSD: Ignore client's source port on RDMA transports").
+
+The Linux NFS server's DRC resolves XID collisions from the same
+source IP address by using the checksum of the first 200 bytes of
+the RPC call header.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/backref.c |    2 --
- 1 file changed, 2 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/backref.c
-+++ b/fs/btrfs/backref.c
-@@ -1290,8 +1290,6 @@ again:
- 					ret = -EIO;
- 					goto out;
- 				}
--				btrfs_tree_read_lock(eb);
--				btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
- 				if (!path->skip_locking) {
- 					btrfs_tree_read_lock(eb);
- 					btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -524,9 +524,14 @@ static void handle_connect_req(struct rd
+ 	/* Save client advertised inbound read limit for use later in accept. */
+ 	newxprt->sc_ord = param->initiator_depth;
+ 
+-	/* Set the local and remote addresses in the transport */
+ 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+ 	svc_xprt_set_remote(&newxprt->sc_xprt, sa, svc_addr_len(sa));
++	/* The remote port is arbitrary and not under the control of the
++	 * client ULP. Set it to a fixed value so that the DRC continues
++	 * to be effective after a reconnect.
++	 */
++	rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
++
+ 	sa = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
+ 	svc_xprt_set_local(&newxprt->sc_xprt, sa, svc_addr_len(sa));
+ 
 
 
