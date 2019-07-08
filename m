@@ -2,112 +2,102 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CEBC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DF4C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A3B21743
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07AEB20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562600703;
+	bh=BesVByDq8mCJjgxBxvP/tGyTuLfvKdH/Hlzf+VbiDIE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q7Ur97EPBkRqzxllHe8X0ICS85L8UUXZsuwjvQMtgFXf70uuwbKc+diBD4Xew3SrU
+	 wA7UjYQsvi+LI+es1ObFEYinneZG7bDpVb9ZpCTSsQ/rresyjY+rACse86aIhZyRPo
+	 3FZSh0vMi3TNB8W5tnLgd9WMsnaZErhKT5iF5OzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391243AbfGHPoc (ORCPT
+        id S1729329AbfGHPpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:44:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:52052 "EHLO foss.arm.com"
+        Mon, 8 Jul 2019 11:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403855AbfGHPoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:44:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A85B152B;
-        Mon,  8 Jul 2019 08:44:13 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 166063F59C;
-        Mon,  8 Jul 2019 08:44:11 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Bo Zhang <bozhang.zhang@broadcom.com>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-Subject: [PATCH 5/6] firmware: arm_scmi: Use the term 'message' instead of 'command'
-Date:   Mon,  8 Jul 2019 16:43:57 +0100
-Message-Id: <20190708154358.16227-6-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190708154358.16227-1-sudeep.holla@arm.com>
-References: <20190708154358.16227-1-sudeep.holla@arm.com>
+        id S1732408AbfGHPXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:23:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BDDE204EC;
+        Mon,  8 Jul 2019 15:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599397;
+        bh=BesVByDq8mCJjgxBxvP/tGyTuLfvKdH/Hlzf+VbiDIE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H8nRmfymwfN9nbGNcsfS95TFzKBPZHKAq++Dq9Ks8s8i6KGu/6f0aG4qycdq7/TPN
+         d9bVNi0TNHHc2FIQfqDDfqZmqZPz1uA46JT/ubLtOXXDcjL6ath/H8nFyLxpd43ceH
+         yWDNmpUisQdD4TjBjTrVM5DZkEg5rRvB829b8RDE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 091/102] ALSA: usb-audio: fix sign unintended sign extension on left shifts
+Date:   Mon,  8 Jul 2019 17:13:24 +0200
+Message-Id: <20190708150531.179422241@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
+References: <20190708150525.973820964@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to adding support for other two types of messages that
-SCMI specification mentions, let's replace the term 'command' with the
-correct term 'message'.
+From: Colin Ian King <colin.king@canonical.com>
 
-As per the specification the messages are of 3 types:
-commands(synchronous or asynchronous), delayed responses and notifications.
+commit 2acf5a3e6e9371e63c9e4ff54d84d08f630467a0 upstream.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+There are a couple of left shifts of unsigned 8 bit values that
+first get promoted to signed ints and hence get sign extended
+on the shift if the top bit of the 8 bit values are set. Fix
+this by casting the 8 bit values to unsigned ints to stop the
+unintentional sign extension.
+
+Addresses-Coverity: ("Unintended sign extension")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/firmware/arm_scmi/common.h | 10 +++++-----
- drivers/firmware/arm_scmi/driver.c |  6 +++---
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ sound/usb/mixer_quirks.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 44fd4f9404a9..4349d836b392 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -48,11 +48,11 @@ struct scmi_msg_resp_prot_version {
- /**
-  * struct scmi_msg_hdr - Message(Tx/Rx) header
-  *
-- * @id: The identifier of the command being sent
-- * @protocol_id: The identifier of the protocol used to send @id command
-- * @seq: The token to identify the message. when a message/command returns,
-- *	the platform returns the whole message header unmodified including
-- *	the token
-+ * @id: The identifier of the message being sent
-+ * @protocol_id: The identifier of the protocol used to send @id message
-+ * @seq: The token to identify the message. when a message returns, the]
-+ *	platform returns the whole message header unmodified including the
-+ *	token
-  * @status: Status of the transfer once it's complete
-  * @poll_completion: Indicate if the transfer needs to be polled for
-  *	completion or interrupt mode is used
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index cac255c418b2..69bf85fea967 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -182,7 +182,7 @@ static inline int scmi_to_linux_errno(int errno)
- static inline void scmi_dump_header_dbg(struct device *dev,
- 					struct scmi_msg_hdr *hdr)
- {
--	dev_dbg(dev, "Command ID: %x Sequence ID: %x Protocol: %x\n",
-+	dev_dbg(dev, "Message ID: %x Sequence ID: %x Protocol: %x\n",
- 		hdr->id, hdr->seq, hdr->protocol_id);
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -753,7 +753,7 @@ static int snd_ni_control_init_val(struc
+ 		return err;
+ 	}
+ 
+-	kctl->private_value |= (value << 24);
++	kctl->private_value |= ((unsigned int)value << 24);
+ 	return 0;
  }
  
-@@ -241,7 +241,7 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
-  * @hdr: pointer to header containing all the information on message id,
-  *	protocol id and sequence id.
-  *
-- * Return: 32-bit packed command header to be sent to the platform.
-+ * Return: 32-bit packed message header to be sent to the platform.
-  */
- static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
- {
-@@ -280,7 +280,7 @@ static void scmi_tx_prepare(struct mbox_client *cl, void *m)
-  *
-  * @handle: Pointer to SCMI entity handle
-  *
-- * Helper function which is used by various command functions that are
-+ * Helper function which is used by various message functions that are
-  * exposed to clients of this driver for allocating a message traffic event.
-  *
-  * This function can sleep depending on pending requests already in the system
--- 
-2.17.1
+@@ -914,7 +914,7 @@ static int snd_ftu_eff_switch_init(struc
+ 	if (err < 0)
+ 		return err;
+ 
+-	kctl->private_value |= value[0] << 24;
++	kctl->private_value |= (unsigned int)value[0] << 24;
+ 	return 0;
+ }
+ 
+
 
