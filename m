@@ -2,118 +2,125 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,GAPPY_SUBJECT,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E9AC606C5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654E5C606C5
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F415F20644
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3E020644
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oTS27VBG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g4m7gvOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388499AbfGHRiC (ORCPT
+        id S2388923AbfGHRjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:38:02 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36968 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729329AbfGHRiB (ORCPT
+        Mon, 8 Jul 2019 13:39:00 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43169 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfGHRjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:38:01 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t76so13275648oih.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:38:01 -0700 (PDT)
+        Mon, 8 Jul 2019 13:39:00 -0400
+Received: by mail-io1-f65.google.com with SMTP id k20so37095734ios.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:38:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7dDlUWXE3BDiYJAkGp7CGjzY68vf5TiBs2gkLxCROPg=;
-        b=oTS27VBGAXTGyWJrG+1bRf5KktV5vuIvxa8IWh1u4JAjBQEhi23d4SyczOUH26kY2R
-         y//ajtI2TI29q75dcyp4FSN6kHo6UyR1wPu6Y62WtELMtJtY2Xkr824CBphlKwNvrFuO
-         ieIrosIuDlKuPw3h2M3licdQ3No/OcsZmxHFpt3c0Kc+o5hSNDIzOkDfH9Z91ZQWyD9C
-         grhZTvCUxZJhweX5ja9rWveALtoabLG30fihRzI/xTkp6fk/mdSPQab2R5qH1XoaWpiD
-         o9GNdIcFxNYegyyTxVLrvQTgO8RvIuuA7e/Fsm1h2c1BcSOCqsarhQ/oMOQ4o/vR2/An
-         BE2Q==
+        bh=Zbi2cNv/TpuGlJ+YwPJTmlkeVMXSjEZ67mVfSwn9d+Y=;
+        b=g4m7gvOwoL8Ba1jns6Vi7Q0m7sKlLgR0n7bYq20Z6JRByef52LeaAH9UNBZVxMyR2Y
+         kSFxaR2KvLg7WW02N7GBW5BEgQMpFC/6tr94/kgULAkrwJDGfW5XMzq0pNpGNdX3mbHY
+         jn3m7Vp1rWq9E/OmIRAm0gw9aNdNXR0H3WzctXiWac6JFF/2/D2UcDoaJ0BH+tSjoeBZ
+         NlzonlxwJGzqmTc/QtIbrfDZpOzzfRItibON733/czW7HyXutsq79w32S2LzRDCr2boI
+         Q8uyho1YPz5O5JkMA7+EMMlH7Ivkm+Poch85s58zIS41MTAaCL0zX4K8PmnKds9Wnjgz
+         8Q2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7dDlUWXE3BDiYJAkGp7CGjzY68vf5TiBs2gkLxCROPg=;
-        b=uZ5po+O/Z3Pu4DXAkn8PhMNPns6WbnYiN9lXrKQBbspizRxEZ4IxtkJSpyGKaRqx4r
-         MTXDvlr02jWNFeiDfXEvhMiNtZv7bZ/m9aWQpWVrog3IFfnpZVcqNir7X26fovVPo4RH
-         lhxbV6aON8RXWrN7rmQQYDo4/egLL38Kub7VupdKYS0JSbIwWx0rkDsqjH9cXj/wIPLu
-         +s+aJP0cDFOXswkCl/YBSG6w4L35hy/Xdnc25DZsaOowJbJzLqg9n7az6ZUfUCS8NlKY
-         7oCy710R/H5JUdqLozB21yMtbFKx/HaWplti+zH8QCH+jUz+ssKjFnouGVDvExf0R6CQ
-         J42Q==
-X-Gm-Message-State: APjAAAUyrfZlVIiezsSjYt+K5uQg3LIgQqOBKVwQezG6hvXsoUQaLOzA
-        VK2icoO4HVuMS8dNIJL5RRZ9eBBALJ+ICFL4SSvjEQ==
-X-Google-Smtp-Source: APXvYqxWC2WzfHpl8ZigyXVHyyT6QtrbedYXY8/NrWJL/zNHr0x2cmYj/XsDrwdBKxwSxPY6OsYxHdMmiMEzeBNat6Y=
-X-Received: by 2002:aca:b06:: with SMTP id 6mr10585303oil.175.1562607480451;
- Mon, 08 Jul 2019 10:38:00 -0700 (PDT)
+        bh=Zbi2cNv/TpuGlJ+YwPJTmlkeVMXSjEZ67mVfSwn9d+Y=;
+        b=CAIRwDCjRcWvbN8fQP2nRwxkSu5p+Z7T9KOYBXJslGa5yOBnu7gSsODDWaQi6uqfmW
+         0JQ/rQfAuUTiHTh3zkposSyh6OGnHAYmSZ5iMBJfVpaCyqPJtfiwCnRyMFxGf3b33QaN
+         K65i7FHUA7MsmA6bz4a3Wsu9JqyJ7YpbGiqIv6xMEZK3fGkHYkou1ApUuON7VCTwYdoe
+         h5oCaecpIrT5XT94lJKS8IdX3IsP3RTXdcsEieJthSps3zw4O5vrDJD8exJ/SJBBcykd
+         50Jd6yZsViqzxo/cXNRiZVvbbQ0gLOjdrf9GjfJBG6zVTIQvRkExxtVi6H2+X1Rh1hdg
+         XlpA==
+X-Gm-Message-State: APjAAAVg6qvmwiqUKhLVxbYJlBZYIhcg7FCVmPfNRPLk9iISSJR8CevW
+        GRpqTNT+q6KVwY58IMCIHtbFWoKV3QWdoKmNEBVknw==
+X-Google-Smtp-Source: APXvYqxPB5rd83qO7WjtBsChtu5/pgbFbGNDXikxw3NiTLQIaHzZaXtQcaTt7ebej7HCBTiHTBW7E6PNgxgW9KMJQZg=
+X-Received: by 2002:a5d:9dc7:: with SMTP id 7mr20717541ioo.237.1562607539359;
+ Mon, 08 Jul 2019 10:38:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com>
- <1562410493-8661-5-git-send-email-s.mesoraca16@gmail.com> <CAG48ez35oJhey5WNzMQR14ko6RPJUJp+nCuAHVUJqX7EPPPokA@mail.gmail.com>
- <CAJHCu1+35GhGJY8jDMPEU8meYhJTVgvzY5sJgVCuLrxCoGgHEg@mail.gmail.com>
-In-Reply-To: <CAJHCu1+35GhGJY8jDMPEU8meYhJTVgvzY5sJgVCuLrxCoGgHEg@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 8 Jul 2019 19:37:33 +0200
-Message-ID: <CAG48ez2f1TbUZt_0F99DLyzn-3DhjuoTJZ7Dwxgmto7J9ZQ95g@mail.gmail.com>
-Subject: Re: [PATCH v5 04/12] S.A.R.A.: generic DFA for string matching
-To:     Salvatore Mesoraca <s.mesoraca16@gmail.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Brad Spengler <spender@grsecurity.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        PaX Team <pageexec@freemail.hu>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        James Morris <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>
+References: <20190708143937.7722-1-leo.yan@linaro.org> <20190708143937.7722-5-leo.yan@linaro.org>
+In-Reply-To: <20190708143937.7722-5-leo.yan@linaro.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 8 Jul 2019 11:38:48 -0600
+Message-ID: <CANLsYkwHMfVf-FUQ+wBkDfq9GnCihimFAhd+ybCsxMAt8d3HcA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf cs-etm: Smatch: Fix potential NULL pointer dereference
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 7, 2019 at 6:01 PM Salvatore Mesoraca
-<s.mesoraca16@gmail.com> wrote:
-> Jann Horn <jannh@google.com> wrote:
-> > Throughout the series, you are adding files that both add an SPDX
-> > identifier and have a description of the license in the comment block
-> > at the top. The SPDX identifier already identifies the license.
+On Mon, 8 Jul 2019 at 08:40, Leo Yan <leo.yan@linaro.org> wrote:
 >
-> I added the license description because I thought it was required anyway.
-> IANAL, if you tell me that SPDX it's enough I'll remove the description.
+> Based on the following report from Smatch, fix the potential
+> NULL pointer dereference check.
+>
+>   tools/perf/util/cs-etm.c:2545
+>   cs_etm__process_auxtrace_info() error: we previously assumed
+>   'session->itrace_synth_opts' could be null (see line 2541)
+>
+> tools/perf/util/cs-etm.c
+> 2541         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+> 2542                 etm->synth_opts = *session->itrace_synth_opts;
+> 2543         } else {
+> 2544                 itrace_synth_opts__set_default(&etm->synth_opts,
+> 2545                                 session->itrace_synth_opts->default_no_sample);
+>                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 2546                 etm->synth_opts.callchain = false;
+> 2547         }
+>
+> 'session->itrace_synth_opts' is impossible to be a NULL pointer in
+> cs_etm__process_auxtrace_info(), thus this patch removes the NULL
+> test for 'session->itrace_synth_opts'.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/cs-etm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index ad43a6e31827..ab578a06a790 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -2537,7 +2537,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>                 return 0;
+>         }
+>
+> -       if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+> +       if (session->itrace_synth_opts->set) {
+>                 etm->synth_opts = *session->itrace_synth_opts;
+>         } else {
+>                 itrace_synth_opts__set_default(&etm->synth_opts,
 
-IANAL too, but Documentation/process/license-rules.rst says:
+This is in accordance with what was previously discussed.
 
-====
-The common way of expressing the license of a source file is to add the
-matching boilerplate text into the top comment of the file.  Due to
-formatting, typos etc. these "boilerplates" are hard to validate for
-tools which are used in the context of license compliance.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-An alternative to boilerplate text is the use of Software Package Data
-Exchange (SPDX) license identifiers in each source file.  SPDX license
-identifiers are machine parsable and precise shorthands for the license
-under which the content of the file is contributed.  SPDX license
-identifiers are managed by the SPDX Workgroup at the Linux Foundation and
-have been agreed on by partners throughout the industry, tool vendors, and
-legal teams.  For further information see https://spdx.org/
-
-The Linux kernel requires the precise SPDX identifier in all source files.
-The valid identifiers used in the kernel are explained in the section
-`License identifiers`_ and have been retrieved from the official SPDX
-license list at https://spdx.org/licenses/ along with the license texts.
-====
-
-and there have been lots of conversion patches to replace license
-boilerplate headers with SPDX identifiers, see e.g. all the "treewide:
-Replace GPLv2 boilerplate/reference with SPDX" patches.
+> --
+> 2.17.1
+>
