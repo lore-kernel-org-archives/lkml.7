@@ -2,143 +2,256 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9520C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8EAC606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B64620693
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5CD320693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="R0un0m8m";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="gVxZ351c"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="UjQy/5ly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391485AbfGHQIQ (ORCPT
+        id S2391492AbfGHQIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:08:16 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:50454 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732554AbfGHQIP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:08:15 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 132AEC2A41;
-        Mon,  8 Jul 2019 16:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562602095; bh=5mfH7ysD+UZuoG2sEri0/zBaDfd9CEWJGoSBbkvtS0s=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=R0un0m8mu0KmE3hRNTIY6IBJbyq7a5AL50V+qIUzPgNsOSYhVrOyB8AtU/HTVhILj
-         Dqh9BT9xz4mv/X3I8fuFkCUMWQqxA89gemfXxr+7grE0UJwzejtEDcC/Y6qIifvXog
-         /tGOX3fMeQHNGhKNaXS7SID5OD/JrFYv97ynKkuiNhmG4+e8AblB0M8RFsCu3KyjoE
-         69PU83HNgLRzUFpX+9Ms6Y5H8t1NzIpPg2YwpwH8lG9uhJkRhWaZo4ypya2bIhV4MU
-         LkGL/GGo+TG8wOYjl5TmPYULjaW5C5Ud1F5KSGMcS8SUQ8KTpbfgiZE8CeK+ABgeDC
-         i4aXU50PwheoA==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 79FB1A0067;
-        Mon,  8 Jul 2019 16:08:10 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 8 Jul 2019 09:08:10 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 8 Jul 2019 09:08:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+        Mon, 8 Jul 2019 12:08:31 -0400
+Received: from mail-eopbgr00060.outbound.protection.outlook.com ([40.107.0.60]:47236
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729062AbfGHQIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:08:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5mfH7ysD+UZuoG2sEri0/zBaDfd9CEWJGoSBbkvtS0s=;
- b=gVxZ351cMPg6TPSQxMwQCyMKHkqPg/HzjwKwcpS2a+V/jlOUqXLi7e1gyAR18EqaZFgF7zA2/s+Sll9pEPpZ1ZjZMfLAv7OsA4zgp/RTnBI1CBSHKt6Tq1P3LO4+/jCZITCMyVwOMGDCACzeRTfmQuuCE5hdQnN884dE10Dq1eM=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
- BN8PR12MB2931.namprd12.prod.outlook.com (20.179.66.78) with Microsoft SMTP
+ bh=HeD22x2qu+E+nXXZqFU5iuBwex3iZJyWZOj/1xg4mVw=;
+ b=UjQy/5lyimJXQMngqpeNrWyY46OAfwmxNeu/DoagKF0ZDIzhxY8KWVXHs1oYrIX0AfTUYRvdoOn3nYcHEGviU1viszBezez7Zjs8iYCkIcW+yUawVKY1C9q2nwpyWuhrbW1aEvOkVTywLDmFsla561hXd9sX6dJcL+CmDREOTE8=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5648.eurprd05.prod.outlook.com (20.178.120.154) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Mon, 8 Jul 2019 16:08:08 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
- 16:08:08 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: RE: [PATCH net-next v3 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Topic: [PATCH net-next v3 3/3] net: stmmac: Introducing support for
- Page Pool
-Thread-Index: AQHVMwKNzVmUsJPJMUCkE31Cd4D9oqa8BTaAgAAezsCAAAGNgIAEwrOw
-Date:   Mon, 8 Jul 2019 16:08:07 +0000
-Message-ID: <BN8PR12MB32667BCA58B617432CACE677D3F60@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1562311299.git.joabreu@synopsys.com>
- <384dab52828c4b65596ef4202562a574eed93b91.1562311299.git.joabreu@synopsys.com>
- <20190705132905.GA15433@apalos>
- <BN8PR12MB32666359FABD7D7E55FE4761D3F50@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190705152453.GA24683@apalos>
-In-Reply-To: <20190705152453.GA24683@apalos>
+ 15.20.2052.19; Mon, 8 Jul 2019 16:08:27 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
+ 16:08:27 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kamenee Arumugam <kamenee.arumugam@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: linux-next: build failure after merge of the rdma tree
+Thread-Topic: linux-next: build failure after merge of the rdma tree
+Thread-Index: AQHVNTjoB8aYc7vyLEKUSeiDY6rDZ6bA5EqA
+Date:   Mon, 8 Jul 2019 16:08:27 +0000
+Message-ID: <20190708160823.GH23966@mellanox.com>
+References: <20190708125725.25c38fa7@canb.auug.org.au>
+In-Reply-To: <20190708125725.25c38fa7@canb.auug.org.au>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR10CA0020.namprd10.prod.outlook.com
+ (2603:10b6:208:120::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 659d1876-be61-4c12-018d-08d703be7790
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB2931;
-x-ms-traffictypediagnostic: BN8PR12MB2931:
-x-microsoft-antispam-prvs: <BN8PR12MB29312361A1CDAF296642E500D3F60@BN8PR12MB2931.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-office365-filtering-correlation-id: a567b7a6-5a96-4f3e-7d90-08d703be82d8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5648;
+x-ms-traffictypediagnostic: VI1PR05MB5648:
+x-microsoft-antispam-prvs: <VI1PR05MB5648176402E5223F3FC9640FCFF60@VI1PR05MB5648.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:962;
 x-forefront-prvs: 00922518D8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(376002)(39850400004)(136003)(366004)(189003)(199004)(316002)(66556008)(68736007)(478600001)(4326008)(76176011)(2906002)(66446008)(7696005)(7416002)(64756008)(55016002)(73956011)(52536014)(6246003)(76116006)(9686003)(3846002)(66946007)(66476007)(6636002)(6436002)(53936002)(256004)(6116002)(33656002)(99286004)(25786009)(229853002)(486006)(7736002)(305945005)(446003)(4744005)(66066001)(11346002)(476003)(74316002)(26005)(54906003)(5660300002)(71190400001)(186003)(110136005)(6506007)(71200400001)(8676002)(86362001)(81166006)(102836004)(14454004)(81156014)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2931;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(396003)(366004)(53754006)(189003)(199004)(26005)(53546011)(76176011)(6512007)(186003)(99286004)(4326008)(102836004)(6506007)(386003)(7736002)(66066001)(305945005)(81166006)(81156014)(5660300002)(36756003)(6246003)(14444005)(54906003)(316002)(53936002)(33656002)(68736007)(52116002)(8676002)(478600001)(25786009)(3846002)(6116002)(8936002)(256004)(86362001)(2906002)(1076003)(6436002)(14454004)(486006)(229853002)(476003)(2616005)(446003)(64756008)(66476007)(66556008)(71190400001)(73956011)(66946007)(66446008)(71200400001)(11346002)(6916009)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5648;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nWOmyTqcVfbVFZU26fx7lSKZy1K2Afy1rDHrkjo08oZKMW0jegDQcXa/w1gvgzDTzpkPgcvfk1q51WAgzXSJkxEfRpH0EQMm/E7IssVG+Db0Exg+rSMeZgkqKp9JOH1jv0S3mdikBxGMbj2noIXAc8gSspyUXvRpM6+HtW5VmCt2/OkIYA2FYdPwukAEPFz0fNshnS0Tmu9YxR+/5txJ2tlzHy1doQYk14292bzdWqvSqWNhp/eJ9z0lGxR/1YpaW7GCjx5oOFYoCIsV8BvYit1tgu/8uKd8hD/vBeje8pSYfjg2DMH3/ZDnJQaIXtYImupqWR1paHKaDNOxX4UHMNLH5cPcx/nG5/1O1CmHNesbwXYVokg1XoH4DWR4lHMuegqLqttyJ3L5QeUQSrMT+V0Srnh2PcP7Hrun9CxlyJo=
+x-microsoft-antispam-message-info: eE0eMjDzXoKSKMuz7U4vgPkEGxiHLZ3Ob/PbbL4N2Gzk7+c7kpW8tC5bsWH2/2ByeSHzc/gQgtkh7V3K5Q2OeG1+05l4opiWQTvYmfA9XrlcKYxs9ksNC+D02l26Mu7KdIYUKMKSKwwoPo02UkaE6W+YQLNPuxBqqIb4q7aPrgiB/89gh1BrPHjaPmQtG8c8E+qklfIqb5p7T96+GA4LGhrHs96X4zuvl0yq0xklYW4ClDzvsTlBQZ7+Zjc+o5NBvetTuZHGCNWMg+hF1m4IdQ1/IIt7mE3VHDymtGY4HZY02ubRoXyS+Tx8voAGaLtRd01Z5Xbyy+Q5OrQv9r/SHkoXqAY8Ceg1v+gORlRIWnWpnMxguVuniDxTKoGh6xU/ECx5ciGb3RpZCNw/B8yrytYaX6l52jHbNhwzPYVhkoA=
 Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7B68358B9440FE4D909878D8CE94B3C7@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 659d1876-be61-4c12-018d-08d703be7790
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 16:08:07.9850
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a567b7a6-5a96-4f3e-7d90-08d703be82d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 16:08:27.2408
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2931
-X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5648
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org> | Date: Fri, Jul=20
-05, 2019 at 16:24:53
+On Mon, Jul 08, 2019 at 12:57:25PM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> After merging the rdma tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> In file included from <command-line>:32:
+> ./usr/include/rdma/rvt-abi.h:13:10: fatal error: rdma/ib_verbs.h: No such=
+ file or directory
+>  #include <rdma/ib_verbs.h>
+>           ^~~~~~~~~~~~~~~~~
+>=20
+> Caused by commits
+>=20
+>   dabac6e460ce ("IB/hfi1: Move receive work queue struct into uapi direct=
+ory")
+>=20
+> interacting with commit
+>=20
+>   0c422a3d4e1b ("kbuild: compile-test exported headers to ensure they are=
+ self-contained")
+>=20
+> from the kbuild tree.
+>=20
+> You can't reference the include/linux headers from uapi headers ...
+>=20
+> I have used the rmda tree from 20190628 again today (given the previous
+> errors).
 
-> Well ideally we'd like to get the change in before the merge window ourse=
-lves,
-> since we dont want to remove->re-add the same function in stable kernels.=
- If
-> that doesn't go in i am fine fixing it in the next merge window i guess, =
-since
-> it offers substantial speedups
+This is a bug that will break our userspace package too, we must fix
+it, very happy to see the functionality in "kbuild: compile-test
+exported headers to ensure they are self-contained"
 
-I think the series is marked as "Changes Requested" in patchwork. What's=20
-the status of this ?
+Dennis, you must put stuff in rdma-core and run the rdma-core CI if
+you are messing with the uapi headers.
 
+I'm adding this fixup so we can progress with the merge window. Please
+check it right away.
+
+From f10ff380fd7dfba4a36d40f8dd00fe17da8a1a10 Mon Sep 17 00:00:00 2001
+From: Jason Gunthorpe <jgg@mellanox.com>
+Date: Mon, 8 Jul 2019 12:17:48 -0300
+Subject: [PATCH] RDMA/rvt: Do not use a kernel header in the ABI
+
+rvt was using ib_sge as part of it's ABI, which is not allowed. Introduce
+a new struct with the same layout and use it instead.
+
+Fixes: dabac6e460ce ("IB/hfi1: Move receive work queue struct into uapi dir=
+ectory")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 ---
-Thanks,
-Jose Miguel Abreu
+ drivers/infiniband/sw/rdmavt/qp.c | 32 ++++++++++++++++++++++++++-----
+ include/uapi/rdma/rvt-abi.h       |  9 +++++++--
+ 2 files changed, 34 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdma=
+vt/qp.c
+index 11b4d3c1efd486..0b0a241c57ff37 100644
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -1847,8 +1847,11 @@ int rvt_post_recv(struct ib_qp *ibqp, const struct i=
+b_recv_wr *wr,
+ 			wqe =3D rvt_get_rwqe_ptr(&qp->r_rq, wq->head);
+ 			wqe->wr_id =3D wr->wr_id;
+ 			wqe->num_sge =3D wr->num_sge;
+-			for (i =3D 0; i < wr->num_sge; i++)
+-				wqe->sg_list[i] =3D wr->sg_list[i];
++			for (i =3D 0; i < wr->num_sge; i++) {
++				wqe->sg_list[i].addr =3D wr->sg_list[i].addr;
++				wqe->sg_list[i].length =3D wr->sg_list[i].length;
++				wqe->sg_list[i].lkey =3D wr->sg_list[i].lkey;
++			}
+ 			/*
+ 			 * Make sure queue entry is written
+ 			 * before the head index.
+@@ -2250,8 +2253,11 @@ int rvt_post_srq_recv(struct ib_srq *ibsrq, const st=
+ruct ib_recv_wr *wr,
+ 		wqe =3D rvt_get_rwqe_ptr(&srq->rq, wq->head);
+ 		wqe->wr_id =3D wr->wr_id;
+ 		wqe->num_sge =3D wr->num_sge;
+-		for (i =3D 0; i < wr->num_sge; i++)
+-			wqe->sg_list[i] =3D wr->sg_list[i];
++		for (i =3D 0; i < wr->num_sge; i++) {
++			wqe->sg_list[i].addr =3D wr->sg_list[i].addr;
++			wqe->sg_list[i].length =3D wr->sg_list[i].length;
++			wqe->sg_list[i].lkey =3D wr->sg_list[i].lkey;
++		}
+ 		/* Make sure queue entry is written before the head index. */
+ 		smp_store_release(&wq->head, next);
+ 		spin_unlock_irqrestore(&srq->rq.kwq->p_lock, flags);
+@@ -2259,6 +2265,22 @@ int rvt_post_srq_recv(struct ib_srq *ibsrq, const st=
+ruct ib_recv_wr *wr,
+ 	return 0;
+ }
+=20
++/*
++ * rvt used the internal kernel struct as part of its ABI, for now make su=
+re
++ * the kernel struct does not change layout. FIXME: rvt should never cast =
+the
++ * user struct to a kernel struct.
++ */
++static struct ib_sge *rvt_cast_sge(struct rvt_wqe_sge *sge)
++{
++	BUILD_BUG_ON(offsetof(struct ib_sge, addr) !=3D
++		     offsetof(struct rvt_wqe_sge, addr));
++	BUILD_BUG_ON(offsetof(struct ib_sge, length) !=3D
++		     offsetof(struct rvt_wqe_sge, length));
++	BUILD_BUG_ON(offsetof(struct ib_sge, lkey) !=3D
++		     offsetof(struct rvt_wqe_sge, lkey));
++	return (struct ib_sge *)sge;
++}
++
+ /*
+  * Validate a RWQE and fill in the SGE state.
+  * Return 1 if OK.
+@@ -2282,7 +2304,7 @@ static int init_sge(struct rvt_qp *qp, struct rvt_rwq=
+e *wqe)
+ 			continue;
+ 		/* Check LKEY */
+ 		ret =3D rvt_lkey_ok(rkt, pd, j ? &ss->sg_list[j - 1] : &ss->sge,
+-				  NULL, &wqe->sg_list[i],
++				  NULL, rvt_cast_sge(&wqe->sg_list[i]),
+ 				  IB_ACCESS_LOCAL_WRITE);
+ 		if (unlikely(ret <=3D 0))
+ 			goto bad_lkey;
+diff --git a/include/uapi/rdma/rvt-abi.h b/include/uapi/rdma/rvt-abi.h
+index d2e35d24f1a9e6..7328293c715cfb 100644
+--- a/include/uapi/rdma/rvt-abi.h
++++ b/include/uapi/rdma/rvt-abi.h
+@@ -10,11 +10,16 @@
+=20
+ #include <linux/types.h>
+ #include <rdma/ib_user_verbs.h>
+-#include <rdma/ib_verbs.h>
+ #ifndef RDMA_ATOMIC_UAPI
+ #define RDMA_ATOMIC_UAPI(_type, _name) struct{ _type val; } _name
+ #endif
+=20
++struct rvt_wqe_sge {
++	__aligned_u64 addr;
++	__u32 length;
++	__u32 lkey;
++};
++
+ /*
+  * This structure is used to contain the head pointer, tail pointer,
+  * and completion queue entries as a single memory allocation so
+@@ -39,7 +44,7 @@ struct rvt_rwqe {
+ 	__u64 wr_id;
+ 	__u8 num_sge;
+ 	__u8 padding[7];
+-	struct ib_sge sg_list[];
++	struct rvt_wqe_sge sg_list[];
+ };
+=20
+ /*
+--=20
+2.21.0
+
+
