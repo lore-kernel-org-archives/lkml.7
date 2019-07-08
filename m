@@ -2,134 +2,128 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C801EC48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F42C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9647D20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18EB2084A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kVwkmPHN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="puPUinBZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfGHGgz (ORCPT
+        id S1729173AbfGHGh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 02:36:55 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51478 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728998AbfGHGgy (ORCPT
+        Mon, 8 Jul 2019 02:37:56 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35708 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728525AbfGHGh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 02:36:54 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 207so14487593wma.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 23:36:52 -0700 (PDT)
+        Mon, 8 Jul 2019 02:37:56 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s27so7136687pgl.2;
+        Sun, 07 Jul 2019 23:37:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=4XQUJtwFCPubD2c81CREAUVgFw9rYm1UoaxaFdnnNdo=;
-        b=kVwkmPHNEJB2whTCj7Hri7TN3H0Ok4sdeM5HMvBye0w8ir6Vt3JF8ZnYJ0jyORbsIE
-         rMB0Kp4pC5ErQmTNwAoFY8UUjUcq6wuQocxvHv5VTlPRQvkeiu8SXeVry9qJnNu6iW+B
-         h1hOBOkABCBZ9unLqhCzvqwOP/X/HrP+UveABdIk9TBKC+idtVWe7HAaroxPCu1q4rXT
-         2urnOQkRWuUq5EBl77zqXXVrXmYIg2uCNMtVeMAGYiqgChJQpm2m8341qu9qFoFDQ74q
-         6hmOW1VwzmlED5el7XISCNx8xRy4LQagIJyt/i3RoEzXWtO5mJphXxVQXtkIhS44SmlA
-         7cDw==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=yEeJ0/+qhOXMvZlC71qdNTbuwGZpqThMJW5wphAArgY=;
+        b=puPUinBZbbxSifsinP7NIei+rmd3EpEBHFRAnKoqwkoM6vdeKOwt+SbBzkwyGQdUeS
+         Lq7jq/YQzuYjUop+1iRf7DAHsFpRoLWsflvx0UcxJFB87mlA+CojH2EmpjbrB5WXvlJS
+         6zj542gwZ9eViQYThRVxdkLa2pP6Mi5RkciCiqV2lmgskmTsxrEP3s0hV0ZWqwpvHeVs
+         96izHoZZpglXTLG1ibgywjatF5ayaFaBm5aP9ZoaLjopd9EfYLkT0K4lynabwAhyRCP1
+         lEWAS9AsUDyY84Y3kxcqi8fKtrtmaQeqsYmwJQW3GWi1ZfC0g5ZpRbHerA48yKzY4I4U
+         SnGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=4XQUJtwFCPubD2c81CREAUVgFw9rYm1UoaxaFdnnNdo=;
-        b=AJ50CqL20q1vPeDcbXz6YtOotvAzJM1DGEbJ/r73Xn+Oa0mNSduplvw052j+j0wmaB
-         UPB0e5iDpuOJglwcnoYePtXFGCwwmJOsEoaNpGmrWmtJwLrul80625ChKjwrktq/Nifu
-         HJOLubpKuJPOyap+McQ7wDrjzIGFZE/gQu0AIfEhqRTN6GK8R6Reps+2B80XQbrwP8tK
-         2XLTV9/34mUlwXt/zmMu/q+VTS2CzRIOKXB50pm8A06JIitoME5kbRj7XEgxLdYswpq+
-         j254O81Yq4AYNWtYKr7SASyb47UHg1mu9/hNgbYTqh+OtyJHGAHQ+nYCphOvu+oKRIzt
-         u7SA==
-X-Gm-Message-State: APjAAAUhf9nO6UTF9LvLP/gBl0lQxSq0eIEMe7sY/uU8/9/m3VOv7oGD
-        Cm+6nFXv4f00nh8Qb7dHjy0VWA==
-X-Google-Smtp-Source: APXvYqwSNgc9S2iC3V5CvgiU/2zkAD/yGZ0BqC+lBVBbcliz34DQX1ZB4h5yyXS0VjK2R2oLvwvezQ==
-X-Received: by 2002:a1c:228b:: with SMTP id i133mr15042590wmi.140.1562567811920;
-        Sun, 07 Jul 2019 23:36:51 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id f12sm16775878wrg.5.2019.07.07.23.36.51
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=yEeJ0/+qhOXMvZlC71qdNTbuwGZpqThMJW5wphAArgY=;
+        b=n2lXpUndHOQAwBcO/0PHz6ocFjjw/c7pXLED6jROvNu/PyqCEnpnDQqF2Z+rMUlfRC
+         3iD4sHa2ffhwLp7QQGKpNEAtoaHcALjpRRqqao3+gaRKwHR2XGnVY53C/E7CFn/PJO3J
+         cmM2kFk32K4uEt1ft+URRq59Zmbcnk1gmOXgBsi6eolIZHkSOgj2l/ADBIgOOwDI1oqS
+         xljh9SnVMJp66jYcAsFSrbuqNlKaa6LQUU/DmoXoKXZSl+cKSwyEIyS+zVEbr+LN0W80
+         MzzRIlXsHKQIz9LxlNGBkLTwYMvP4iWW7sGBjLckblm3t5d77p6Dm9RCQ711XynwKH4l
+         mIVQ==
+X-Gm-Message-State: APjAAAVVKhExz6CevHB5L0StSfBguYYYeO2PctPffAWy9H+PoVkUQbEi
+        eL6tWbS41in/0Me2KyKJvmE=
+X-Google-Smtp-Source: APXvYqyNlhSSjHOzwA17kQ5Em+gCAOgkxUQ/u2unNcCC9Q2UJGj3PHTwFSQAQFbVIu5NXgMASck/zw==
+X-Received: by 2002:a17:90a:db08:: with SMTP id g8mr22384413pjv.39.1562567875035;
+        Sun, 07 Jul 2019 23:37:55 -0700 (PDT)
+Received: from localhost (114-32-69-186.HINET-IP.hinet.net. [114.32.69.186])
+        by smtp.gmail.com with ESMTPSA id l25sm6602761pff.143.2019.07.07.23.37.53
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 07 Jul 2019 23:36:51 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 07:36:49 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] mfd: asic3: One function call less in asic3_irq_probe()
-Message-ID: <20190708063649.GA4800@dell>
-References: <01f6a8cd-0205-8d34-2aa3-e4b691e7eb95@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <01f6a8cd-0205-8d34-2aa3-e4b691e7eb95@web.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sun, 07 Jul 2019 23:37:54 -0700 (PDT)
+From:   AceLan Kao <acelan.kao@canonical.com>
+To:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] r8169: add enable_aspm parameter
+Date:   Mon,  8 Jul 2019 14:37:51 +0800
+Message-Id: <20190708063751.16234-1-acelan.kao@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 05 Jul 2019, Markus Elfring wrote:
+We have many commits in the driver which enable and then disable ASPM
+function over and over again.
+   commit b75bb8a5b755 ("r8169: disable ASPM again")
+   commit 0866cd15029b ("r8169: enable ASPM on RTL8106E")
+   commit 94235460f9ea ("r8169: Align ASPM/CLKREQ setting function with vendor driver")
+   commit aa1e7d2c31ef ("r8169: enable ASPM on RTL8168E-VL")
+   commit f37658da21aa ("r8169: align ASPM entry latency setting with vendor driver")
+   commit a99790bf5c7f ("r8169: Reinstate ASPM Support")
+   commit 671646c151d4 ("r8169: Don't disable ASPM in the driver")
+   commit 4521e1a94279 ("Revert "r8169: enable internal ASPM and clock request settings".")
+   commit d64ec841517a ("r8169: enable internal ASPM and clock request settings")
 
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 5 Jul 2019 20:22:26 +0200
-> 
-> Avoid an extra function call by using a ternary operator instead of
-> a conditional statement.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  drivers/mfd/asic3.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mfd/asic3.c b/drivers/mfd/asic3.c
-> index 83b18c998d6f..50f5368fb170 100644
-> --- a/drivers/mfd/asic3.c
-> +++ b/drivers/mfd/asic3.c
-> @@ -401,11 +401,10 @@ static int __init asic3_irq_probe(struct platform_device *pdev)
->  	irq_base = asic->irq_base;
-> 
->  	for (irq = irq_base; irq < irq_base + ASIC3_NR_IRQS; irq++) {
-> -		if (irq < asic->irq_base + ASIC3_NUM_GPIOS)
-> -			irq_set_chip(irq, &asic3_gpio_irq_chip);
-> -		else
-> -			irq_set_chip(irq, &asic3_irq_chip);
-> -
-> +		irq_set_chip(irq,
-> +			     (irq < asic->irq_base + ASIC3_NUM_GPIOS)
-> +			     ? &asic3_gpio_irq_chip
-> +			     : &asic3_irq_chip);
+This function is very important for production, and if we can't come out
+a solution to make both happy, I'd suggest we add a parameter in the
+driver to toggle it.
 
-The comparison better suits an if statement IMHO.
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/net/ethernet/realtek/r8169.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-How about:
-
-  		struct irq_chip *chip;
-
-		if (irq < asic->irq_base + ASIC3_NUM_GPIOS)
-			chip = &asic3_gpio_irq_chip;
-		else
-			chip = &asic3_irq_chip);
-
-		irq_set_chip(irq, chip);
-
->  		irq_set_chip_data(irq, asic);
->  		irq_set_handler(irq, handle_level_irq);
->  		irq_clear_status_flags(irq, IRQ_NOREQUEST | IRQ_NOPROBE);
-
+diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
+index d06a61f00e78..f557cb36e2c6 100644
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -702,10 +702,13 @@ struct rtl8169_private {
+ 
+ typedef void (*rtl_generic_fct)(struct rtl8169_private *tp);
+ 
++static int enable_aspm;
+ MODULE_AUTHOR("Realtek and the Linux r8169 crew <netdev@vger.kernel.org>");
+ MODULE_DESCRIPTION("RealTek RTL-8169 Gigabit Ethernet driver");
+ module_param_named(debug, debug.msg_enable, int, 0);
+ MODULE_PARM_DESC(debug, "Debug verbosity level (0=none, ..., 16=all)");
++module_param(enable_aspm, int, 0);
++MODULE_PARM_DESC(enable_aspm, "Enable ASPM support (0 = disable, 1 = enable");
+ MODULE_SOFTDEP("pre: realtek");
+ MODULE_LICENSE("GPL");
+ MODULE_FIRMWARE(FIRMWARE_8168D_1);
+@@ -7163,10 +7166,12 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (rc)
+ 		return rc;
+ 
+-	/* Disable ASPM completely as that cause random device stop working
+-	 * problems as well as full system hangs for some PCIe devices users.
+-	 */
+-	pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
++	if (!enable_aspm) {
++		/* Disable ASPM completely as that cause random device stop working
++		 * problems as well as full system hangs for some PCIe devices users.
++		 */
++		pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
++	}
+ 
+ 	/* enable device (incl. PCI PM wakeup and hotplug setup) */
+ 	rc = pcim_enable_device(pdev);
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
