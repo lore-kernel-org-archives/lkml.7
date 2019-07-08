@@ -2,60 +2,125 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9268C606A1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 05:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA68EC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 05:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D44B20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 05:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837E320665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 05:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vivotek.com header.i=@vivotek.com header.b="Adx0F6ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfGHFSH (ORCPT
+        id S1728556AbfGHFXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 01:18:07 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:46728 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727286AbfGHFSG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 01:18:06 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8C8AD152F8549;
-        Sun,  7 Jul 2019 22:18:05 -0700 (PDT)
-Date:   Sun, 07 Jul 2019 22:18:05 -0700 (PDT)
-Message-Id: <20190707.221805.2104668553072088371.davem@davemloft.net>
-To:     xiaojiangfeng@huawei.com
-Cc:     yisen.zhuang@huawei.com, salil.mehta@huawei.com,
-        dingtianhong@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, leeyou.li@huawei.com,
-        xiekunxun@huawei.com, jianping.liu@huawei.com,
-        nixiaoming@huawei.com
-Subject: Re: [PATCH] net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1562307003-103516-1-git-send-email-xiaojiangfeng@huawei.com>
-References: <1562307003-103516-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 07 Jul 2019 22:18:06 -0700 (PDT)
+        Mon, 8 Jul 2019 01:23:38 -0400
+Received: from mail.vivotek.com ([60.248.39.150]:49538 "EHLO mail.vivotek.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727286AbfGHFXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 01:23:38 -0400
+Received: from pps.filterd (vivotekpps.vivotek.com [127.0.0.1])
+        by vivotekpps.vivotek.com (8.16.0.22/8.16.0.22) with SMTP id x685MZlM025500;
+        Mon, 8 Jul 2019 13:23:23 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivotek.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=dkim;
+ bh=zi7h8BLqmWEo/Z3srkGQhYbbOAKvfqg0vBi17vSUil8=;
+ b=Adx0F6ezhMxVIIptEfA5rPG46jj1FPYfXb8sTpCLtLqNFH4pMGuxWVUGLzIjq4Gni2cD
+ 2G7eBWc/88AtkAruGc6iLIU/FuRMiULHvKwvzmtYSu21qjn3y/krSsrQdDazdcTUB3+w
+ hRTXg9Tf47ZsCI665I+UTIYi9e7/veLmD3w= 
+Received: from cas01.vivotek.tw ([192.168.0.58])
+        by vivotekpps.vivotek.com with ESMTP id 2tkyevr0by-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 08 Jul 2019 13:23:23 +0800
+Received: from localhost.localdomain (192.168.17.134) by CAS01.vivotek.tw
+ (192.168.0.58) with Microsoft SMTP Server (TLS) id 14.3.319.2; Mon, 8 Jul
+ 2019 13:23:22 +0800
+From:   Michael Wu <michael.wu@vatics.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <morgan.chang@vatics.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
+Date:   Mon, 8 Jul 2019 13:23:08 +0800
+Message-ID: <20190708052308.27802-1-michael.wu@vatics.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [192.168.17.134]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_01:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Date: Fri, 5 Jul 2019 14:10:03 +0800
+When a pin is active-low, logical trigger edge should be inverted to match
+the same interrupt opportunity.
 
-> HI13X1 changed the offsets and bitmaps for tx_desc
-> registers in the same peripheral device on different
-> models of the hip04_eth.
-> 
-> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+For example, a button pushed triggers falling edge in ACTIVE_HIGH case; in
+ACTIVE_LOW case, the button pushed triggers rising edge. For user space the
+IRQ requesting doesn't need to do any modification except to configuring
+GPIOHANDLE_REQUEST_ACTIVE_LOW.
 
-Applied.
+For example, we want to catch the event when the button is pushed. The
+button on the original board drives level to be low when it is pushed, and
+drives level to be high when it is released.
+
+In user space we can do:
+
+	req.handleflags = GPIOHANDLE_REQUEST_INPUT;
+	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
+
+	while (1) {
+		read(fd, &dat, sizeof(dat));
+		if (dat.id == GPIOEVENT_EVENT_FALLING_EDGE)
+			printf("button pushed\n");
+	}
+
+Run the same logic on another board which the polarity of the button is
+inverted; it drives level to be high when pushed, and level to be low when
+released. For this inversion we add flag GPIOHANDLE_REQUEST_ACTIVE_LOW:
+
+	req.handleflags = GPIOHANDLE_REQUEST_INPUT |
+		GPIOHANDLE_REQUEST_ACTIVE_LOW;
+	req.eventflags = GPIOEVENT_REQUEST_FALLING_EDGE;
+
+At the result, there are no any events caught when the button is pushed.
+By the way, button releasing will emit a "falling" event. The timing of
+"falling" catching is not expected.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Wu <michael.wu@vatics.com>
+---
+Changes from v1:
+- Correct undeclared 'IRQ_TRIGGER_RISING'
+- Add an example to descibe the issue
+---
+ drivers/gpio/gpiolib.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e013d417a936..9c9597f929d7 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -956,9 +956,11 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	}
+ 
+ 	if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
+-		irqflags |= IRQF_TRIGGER_RISING;
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
+ 	if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
+-		irqflags |= IRQF_TRIGGER_FALLING;
++		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
++			IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+ 	irqflags |= IRQF_ONESHOT;
+ 
+ 	INIT_KFIFO(le->events);
+-- 
+2.17.1
+
