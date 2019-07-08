@@ -2,53 +2,51 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C714BC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7E0C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB0C21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173F821707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599061;
-	bh=QFAINz4lEj37zVrti+YsB6KbcFaaj4VKelkdmK9Ww1o=;
+	s=default; t=1562599065;
+	bh=fYiUsu4wzAHAeLPGcXP9HexqGaEUj1/KrAmDgh4Lwl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zPsaCjeGSkaLcN5iyqnJJDTNs7XM+6KSFQ70SA9734vZHjQHYSYz4zHRZtgX+xTQ/
-	 vbCNYMNacEYc0yO9wzlj6aK3owKyy/TJYH9zw+CKPXUpOMDPbG3E0ZMsYNnWNauAjn
-	 YdcW+zr5LMbLEQk+hM/gR2kRhnkScnQGCJHTtwkw=
+	b=od/APphB4/qadBkVyoNBeKQYUTauaBeVf2Nataot6P1bBBB4R0dHN8dWSLU6afnUv
+	 0CKLWROLJrnLMHRP1IxG51CbQocSgmhSVxL8vDnR6c3umUQVtUsHV8CJ19xb/6Ah4M
+	 Z/FurRO6Ot4McqrYsib4OmpLwUTSU9aigFqubB48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732870AbfGHPRk (ORCPT
+        id S1732879AbfGHPRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41040 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:17:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732834AbfGHPRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:17:36 -0400
+        id S1730500AbfGHPRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:17:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E45921738;
-        Mon,  8 Jul 2019 15:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B481B216F4;
+        Mon,  8 Jul 2019 15:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599055;
-        bh=QFAINz4lEj37zVrti+YsB6KbcFaaj4VKelkdmK9Ww1o=;
+        s=default; t=1562599061;
+        bh=fYiUsu4wzAHAeLPGcXP9HexqGaEUj1/KrAmDgh4Lwl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E0lStX4ArPFRRNOfJbXlLkM3wPJYbsuZmdInxLZ6zsdUQXe7ya+Va5EytXXKRFgwz
-         t5114JfqlvXnxklAJSIkQI/eoiV9x67Dj4arM4rMFKysTVfBV9j+BuvA8w0/VoTF1z
-         rClKY4wToFnovV8ROWGiHI4IoWEhmYtUdUUsUxWs=
+        b=j2HY/7MZVpXeM7zY/QzwImT7nfxNC+wtw8bXYCc9QXcRDYEgM4pUDWqk4Fqa4YtpC
+         kjGBCWZSrgJ5FaR+3U3PSr2BdZszr5UB+w204sw0XmGtts3SZ0cN4s8ospfTRLEOZW
+         jD4XN3DTqA7mUX30WxaZxjFP51h85bDnW7v09v08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.4 63/73] crypto: user - prevent operating on larval algorithms
-Date:   Mon,  8 Jul 2019 17:13:13 +0200
-Message-Id: <20190708150524.620939033@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 65/73] ALSA: firewire-lib/fireworks: fix miss detection of received MIDI messages
+Date:   Mon,  8 Jul 2019 17:13:15 +0200
+Message-Id: <20190708150524.705914481@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -61,55 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 21d4120ec6f5b5992b01b96ac484701163917b63 upstream.
+commit 7fbd1753b64eafe21cf842348a40a691d0dee440 upstream.
 
-Michal Suchanek reported [1] that running the pcrypt_aead01 test from
-LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
-alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
-The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
+In IEC 61883-6, 8 MIDI data streams are multiplexed into single
+MIDI conformant data channel. The index of stream is calculated by
+modulo 8 of the value of data block counter.
 
-The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
-unregister isn't a real registered algorithm, but rather is a "test
-larval", which is a special "algorithm" added to the algorithms list
-while the real algorithm is still being tested.  Larvals don't have
-initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
-doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
-to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
+In fireworks, the value of data block counter in CIP header has a quirk
+with firmware version v5.0.0, v5.7.3 and v5.8.0. This brings ALSA
+IEC 61883-1/6 packet streaming engine to miss detection of MIDI
+messages.
 
-Everything else in the "crypto user configuration" API has this same bug
-too, i.e. it inappropriately allows operating on larval algorithms
-(though it doesn't look like the other cases can cause a crash).
+This commit fixes the miss detection to modify the value of data block
+counter for the modulo calculation.
 
-Fix this by making crypto_alg_match() exclude larval algorithms.
+For maintainers, this bug exists since a commit 18f5ed365d3f ("ALSA:
+fireworks/firewire-lib: add support for recent firmware quirk") in Linux
+kernel v4.2. There're many changes since the commit.  This fix can be
+backported to Linux kernel v4.4 or later. I tagged a base commit to the
+backport for your convenience.
 
-[1] https://lkml.kernel.org/r/20190625071624.27039-1-msuchanek@suse.de
-[2] https://github.com/linux-test-project/ltp/blob/20190517/testcases/kernel/crypto/pcrypt_aead01.c
+Besides, my work for Linux kernel v5.3 brings heavy code refactoring and
+some structure members are renamed in 'sound/firewire/amdtp-stream.h'.
+The content of this patch brings conflict when merging -rc tree with
+this patch and the latest tree. I request maintainers to solve the
+conflict to replace 'tx_first_dbc' with 'ctx_data.tx.first_dbc'.
 
-Reported-by: Michal Suchanek <msuchanek@suse.de>
-Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
-Cc: <stable@vger.kernel.org> # v3.2+
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: df075feefbd3 ("ALSA: firewire-lib: complete AM824 data block processing layer")
+Cc: <stable@vger.kernel.org> # v4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/crypto_user.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/firewire/amdtp-am824.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/crypto/crypto_user.c
-+++ b/crypto/crypto_user.c
-@@ -54,6 +54,9 @@ static struct crypto_alg *crypto_alg_mat
- 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
- 		int match = 0;
+--- a/sound/firewire/amdtp-am824.c
++++ b/sound/firewire/amdtp-am824.c
+@@ -388,7 +388,7 @@ static void read_midi_messages(struct am
+ 	u8 *b;
  
-+		if (crypto_is_larval(q))
-+			continue;
-+
- 		if ((q->cra_flags ^ p->cru_type) & p->cru_mask)
- 			continue;
+ 	for (f = 0; f < frames; f++) {
+-		port = (s->data_block_counter + f) % 8;
++		port = (8 - s->tx_first_dbc + s->data_block_counter + f) % 8;
+ 		b = (u8 *)&buffer[p->midi_position];
  
+ 		len = b[0] - 0x80;
 
 
