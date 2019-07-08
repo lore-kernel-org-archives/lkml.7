@@ -2,65 +2,55 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B368C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53002C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B3E2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D19216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598898;
-	bh=wCVyoJVrCGjaHqF9vGVuonpAoeKlGm1R0XOa321y7M4=;
+	s=default; t=1562598903;
+	bh=d37ICMBKvoimNiAqVg+adZ7Qd5e54zOXaNlzOgph3Rw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WsD1Rgv5Zz8XOTIyKKBQJ+JtETxyEZ2tu10XfBpZKYWWN6DEzLmb8UyZlBxTOXQ9s
-	 t8j0a4RSQALM+67Kp6geiBXV5t6VshkeoUj4DL4CrODFtOEsWMz5QofWjVnfUEBdFb
-	 Y7kRUc0Vxq9XjtI2NtnT8rs8PLfxhOFOLMHH7R50=
+	b=mC6ru3yeC1e8J36SBAlCZIUQVyO8QcN4z7lUpKV5ZENGzPwZRvdViKgUJtUc8rg9G
+	 usiwJEyClZQqMo1CLuBxLvnAMEeuKcvIfD+d5eviFcmKmgbm7PoV4rJfA6QRz20qfI
+	 9jcur72S7P+zNgGtLGmiBNdz4chOhqm8LBQt5onY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732210AbfGHPO5 (ORCPT
+        id S1732224AbfGHPPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37106 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:15:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbfGHPO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:14:57 -0400
+        id S1728720AbfGHPO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:14:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6865D214C6;
-        Mon,  8 Jul 2019 15:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F420216C4;
+        Mon,  8 Jul 2019 15:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598895;
-        bh=wCVyoJVrCGjaHqF9vGVuonpAoeKlGm1R0XOa321y7M4=;
+        s=default; t=1562598898;
+        bh=d37ICMBKvoimNiAqVg+adZ7Qd5e54zOXaNlzOgph3Rw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m5BqSmL3B1oC1+lCjpQyqSWl/XJwP1BuSVgYOdsGt8rIaIxBeKVdQEyOOCjAiV+aR
-         nr9d1Q0Ekgx3Udb68lN2iXQIhn/QE9rd8Bm/ulWYMtTI/UTvP4DeZ8R+VrchPVLFw3
-         5llbtu+WbMWR4XjOXLb10cfB1tYJ4aXXL8WfQpYo=
+        b=llBmrusD/8WLZvlRE+fRMNLzY9o4+ZkoQhg/DGOT1u7jznkhV9F4hjrZKL/jIBv6q
+         V0uspvVdiGTk4t4yCAYvvrY7b3/qGtXzO50lLobqtPyrLgw+f1xtWBY/QUGwqaaEB1
+         BBxYFnCjp5BGq4oobAhUqH8WB1Mj4Hk+Ql8pC8I4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 01/73] fs/binfmt_flat.c: make load_flat_shared_library() work
-Date:   Mon,  8 Jul 2019 17:12:11 +0200
-Message-Id: <20190708150516.969813037@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 10/73] parisc: Fix compiler warnings in float emulation code
+Date:   Mon,  8 Jul 2019 17:12:20 +0200
+Message-Id: <20190708150519.010095758@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -69,86 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+[ Upstream commit 6b98d9134e14f5ef4bcf64b27eedf484ed19a1ec ]
 
-commit 867bfa4a5fcee66f2b25639acae718e8b28b25a5 upstream.
+Avoid such compiler warnings:
+arch/parisc/math-emu/cnv_float.h:71:27: warning: ‘<<’ in boolean context, did you mean ‘<’ ? [-Wint-in-bool-context]
+     ((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) || Dintp2(dint_valueB))
+arch/parisc/math-emu/fcnvxf.c:257:6: note: in expansion of macro ‘Dint_isinexact_to_sgl’
+  if (Dint_isinexact_to_sgl(srcp1,srcp2)) {
 
-load_flat_shared_library() is broken: It only calls load_flat_file() if
-prepare_binprm() returns zero, but prepare_binprm() returns the number of
-bytes read - so this only happens if the file is empty.
-
-Instead, call into load_flat_file() if the number of bytes read is
-non-negative. (Even if the number of bytes is zero - in that case,
-load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
-
-In addition, remove the code related to bprm creds and stop using
-prepare_binprm() - this code is loading a library, not a main executable,
-and it only actually uses the members "buf", "file" and "filename" of the
-linux_binprm struct. Instead, call kernel_read() directly.
-
-Link: http://lkml.kernel.org/r/20190524201817.16509-1-jannh@google.com
-Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
-Signed-off-by: Jann Horn <jannh@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Greg Ungerer <gerg@linux-m68k.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/binfmt_flat.c |   24 +++++++-----------------
- 1 file changed, 7 insertions(+), 17 deletions(-)
+ arch/parisc/math-emu/cnv_float.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -808,9 +808,14 @@ err:
+diff --git a/arch/parisc/math-emu/cnv_float.h b/arch/parisc/math-emu/cnv_float.h
+index 933423fa5144..b0db61188a61 100644
+--- a/arch/parisc/math-emu/cnv_float.h
++++ b/arch/parisc/math-emu/cnv_float.h
+@@ -60,19 +60,19 @@
+     ((exponent < (SGL_P - 1)) ?				\
+      (Sall(sgl_value) << (SGL_EXP_LENGTH + 1 + exponent)) : FALSE)
  
- static int load_flat_shared_library(int id, struct lib_info *libs)
- {
-+	/*
-+	 * This is a fake bprm struct; only the members "buf", "file" and
-+	 * "filename" are actually used.
-+	 */
- 	struct linux_binprm bprm;
- 	int res;
- 	char buf[16];
-+	loff_t pos = 0;
+-#define Int_isinexact_to_sgl(int_value)	(int_value << 33 - SGL_EXP_LENGTH)
++#define Int_isinexact_to_sgl(int_value)	((int_value << 33 - SGL_EXP_LENGTH) != 0)
  
- 	memset(&bprm, 0, sizeof(bprm));
+ #define Sgl_roundnearest_from_int(int_value,sgl_value)			\
+     if (int_value & 1<<(SGL_EXP_LENGTH - 2))   /* round bit */		\
+-    	if ((int_value << 34 - SGL_EXP_LENGTH) || Slow(sgl_value))	\
++	if (((int_value << 34 - SGL_EXP_LENGTH) != 0) || Slow(sgl_value)) \
+ 		Sall(sgl_value)++
  
-@@ -824,25 +829,10 @@ static int load_flat_shared_library(int
- 	if (IS_ERR(bprm.file))
- 		return res;
+ #define Dint_isinexact_to_sgl(dint_valueA,dint_valueB)		\
+-    ((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) || Dintp2(dint_valueB))
++    (((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) != 0) || Dintp2(dint_valueB))
  
--	bprm.cred = prepare_exec_creds();
--	res = -ENOMEM;
--	if (!bprm.cred)
--		goto out;
--
--	/* We don't really care about recalculating credentials at this point
--	 * as we're past the point of no return and are dealing with shared
--	 * libraries.
--	 */
--	bprm.cred_prepared = 1;
--
--	res = prepare_binprm(&bprm);
--
--	if (!IS_ERR_VALUE(res))
-+	res = kernel_read(bprm.file, pos, bprm.buf, BINPRM_BUF_SIZE);
-+	if (res >= 0)
- 		res = load_flat_file(&bprm, libs, id, NULL);
+ #define Sgl_roundnearest_from_dint(dint_valueA,dint_valueB,sgl_value)	\
+     if (Dintp1(dint_valueA) & 1<<(SGL_EXP_LENGTH - 2)) 			\
+-    	if ((Dintp1(dint_valueA) << 34 - SGL_EXP_LENGTH) ||		\
++	if (((Dintp1(dint_valueA) << 34 - SGL_EXP_LENGTH) != 0) ||	\
+     	Dintp2(dint_valueB) || Slow(sgl_value)) Sall(sgl_value)++
  
--	abort_creds(bprm.cred);
--
--out:
- 	allow_write_access(bprm.file);
- 	fput(bprm.file);
- 
+ #define Dint_isinexact_to_dbl(dint_value) 	\
+-- 
+2.20.1
+
 
 
