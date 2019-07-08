@@ -2,80 +2,91 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA564C61081
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93810C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C323220659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D35520848
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562559171;
+	bh=Z4vk7mVRT8EztIag0rUhGUeHxNVQ35Bv5DXVMPCwSCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gkC0zVsjvxdf73xJG+WbGqdfLmGqVt1kMDvDifhPu6Mu8EdCam0mpMd6SOw36QXCG
+	 QuZdU4E4gpwjFttNJ21jS/GCpa0GDlxWctZcn5HC8B++RHLc0X+o+v/g74d385cGME
+	 KoyAqRni1o3ieiJMoF1JuTfkD/iA54ifrZaNvOpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbfGHELL (ORCPT
+        id S1726126AbfGHEMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 00:11:11 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:48100 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfGHELL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 00:11:11 -0400
-Received: from [192.168.1.8] (c-67-168-100-174.hsd1.wa.comcast.net [67.168.100.174])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 72B8820B7185;
-        Sun,  7 Jul 2019 21:11:10 -0700 (PDT)
-Subject: Re: [PATCH] tpm: Document UEFI event log quirks
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     tweek@google.com, matthewgarrett@google.com,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
- <dacf145d-49e0-16e5-5963-415bab1884e1@linux.microsoft.com>
- <fcf497b7aa95cd6915986bc4581f10814c4d5341.camel@linux.intel.com>
-From:   Jordan Hand <jorhand@linux.microsoft.com>
-Message-ID: <33ff21e2-1e27-cc85-0ea3-5127cb2598ba@linux.microsoft.com>
-Date:   Sun, 7 Jul 2019 21:10:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 8 Jul 2019 00:12:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbfGHEMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 00:12:48 -0400
+Received: from localhost (unknown [49.207.58.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8C9620659;
+        Mon,  8 Jul 2019 04:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562559167;
+        bh=Z4vk7mVRT8EztIag0rUhGUeHxNVQ35Bv5DXVMPCwSCw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H0S+38m2yKXez1xDC8vjH36iNHJgAnJy1mYZjSaq+Bq53wkAX7PDFYGRp9ZGOOPJk
+         P6GLPc7NV0rk1M+ijQpA2s6UFvhBOqmq5DK10POK1AWxcbNKXeSHn1AlRIHi2HAO6I
+         DpoNEGhCbXNanQCq5OcO1u9U5i9XYzF8n9KWB1EY=
+Date:   Mon, 8 Jul 2019 09:39:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Angelo Dureghello <angelo@sysam.it>
+Subject: Re: linux-next: build failure after merge of the slave-dma tree
+Message-ID: <20190708040931.GJ2911@vkoul-mobl>
+References: <20190704173108.0646eef8@canb.auug.org.au>
+ <VE1PR04MB6638782ADA8BFB8A17BAF19D89F40@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20190706144324.GH2911@vkoul-mobl>
+ <VE1PR04MB6638DAA60BE5910113D5DE0E89F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <fcf497b7aa95cd6915986bc4581f10814c4d5341.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6638DAA60BE5910113D5DE0E89F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/5/19 3:26 AM, Jarkko Sakkinen wrote:
-> On Wed, 2019-07-03 at 10:08 -0700, Jordan Hand wrote:
->>> +This introduces another problem: nothing guarantees that it is not
->>> +called before the stub gets to run. Thus, it needs to copy the final
->>> +events table preboot size to the custom configuration table so that
->>> +kernel offset it later on.
->>
->> This doesn't really explain what the size will be used for. Matthew's
->> patch description for "tpm: Don't duplicate events from the final event
->> log in the TCG2 log" outlines this well. You could maybe word it
->> differently but I think the information is necessary:
->>
->> "We can avoid this problem by looking at the size of the Final Event Log
->> just before we call ExitBootServices() and exporting this to the main
->> kernel. The kernel can then skip over all events that occured before
->> ExitBootServices() and only append events that were not also logged to
->> the main log."
-> 
-> Not exactly sure what is missing from my paragraph. The way I see it has
-> more information as it states what is used at as the vessel for
-> exportation (the custom configuration table).
-> 
-> Maybe something like:
-> 
-> "Thus, it nees to save the final events table size at the time to the
-> custom configuration table so that the TPM driver can later on skip the
-> events generated during the preboot time."
-> 
-Yes, that sounds more clear to me.
+On 08-07-19, 02:01, Robin Gong wrote:
+> On 06-07-19, 22:43, Vinod Koul <vkoul@kernel.org> wrote:
+> > > 	That's caused by 'of_irq_count' NOT export to global symbol, and I'm
+> > > curious why it has been here for so long since Zhangfei found it in
+> > > 2015.
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
+> > >
+> > hwork.kernel.org%2Fpatch%2F7404681%2F&amp;data=02%7C01%7Cyibin.gon
+> > g%40
+> > >
+> > nxp.com%7C6172242dfadd4f71c09a08d70220bf6f%7C686ea1d3bc2b4c6fa92
+> > cd99c5
+> > >
+> > c301635%7C0%7C0%7C636980211986259586&amp;sdata=L8v%2B1o5zfgIAS
+> > go4qr3pu
+> > > cQ%2Byox1irANsvRv5ZNLlLM%3D&amp;reserved=0
+> > 
+> > Yes this does not seem to be applied, perhaps Rob can explain why. But this was
+> > not exported how did you test it?
+> I had no such issue because I built in fsl-edma instead of Stephen's config with building module.
 
-Thanks,
-Jordan
+But you support it as a module, right? I am inclined to revert the patch
+now!
+
+-- 
+~Vinod
