@@ -2,156 +2,157 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2702C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B697C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02CE20656
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140C220656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:05:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cs2Ah93r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390872AbfGHQDb (ORCPT
+        id S2389749AbfGHQFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:03:31 -0400
-Received: from sed198n136.SEDSystems.ca ([198.169.180.136]:45157 "EHLO
-        sed198n136.sedsystems.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388273AbfGHQDa (ORCPT
+        Mon, 8 Jul 2019 12:05:23 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38524 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfGHQFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:03:30 -0400
-Received: from barney.sedsystems.ca (barney [198.169.180.121])
-        by sed198n136.sedsystems.ca  with ESMTP id x68G2noa027639
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 8 Jul 2019 10:02:49 -0600 (CST)
-Received: from eng1n65.eng.sedsystems.ca (eng1n65.eng.sedsystems.ca [172.21.1.65])
-        by barney.sedsystems.ca (8.14.7/8.14.4) with ESMTP id x68G2mat051132
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Mon, 8 Jul 2019 10:02:48 -0600
-Subject: Re: [PATCH] net: axienet: fix a potential double free in
- axienet_probe()
-To:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org
-Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, Anirudha Sarangi <anirudh@xilinx.com>,
-        John Linn <John.Linn@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1562384321-46727-1-git-send-email-wen.yang99@zte.com.cn>
-From:   Robert Hancock <hancock@sedsystems.ca>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hancock@sedsystems.ca; prefer-encrypt=mutual; keydata=
- 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
-Organization: SED Systems
-Message-ID: <b1264f91-25f3-1117-2546-1ddd1eea4007@sedsystems.ca>
-Date:   Mon, 8 Jul 2019 10:02:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jul 2019 12:05:23 -0400
+Received: by mail-pl1-f196.google.com with SMTP id az7so1051081plb.5;
+        Mon, 08 Jul 2019 09:05:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zj4h3LPFwWX/eUpF2K+qOBGx59jHvRg14Pyk3N6ZIj8=;
+        b=Cs2Ah93rCf/JmPqAEHCi8TaA0qrOFhqaE5hmqN67kLV2wG8IVxSv1FOCkToM6klGMS
+         /YaIg8vFcv6FWh8xwVfD2FPUtzykQLsLETpwwG4c9R3BEmTTtAwRaAzGdgtlHlXkImAI
+         F1WzTwlRb//4YarU/QOUUEE2M2AK69iu2ItsTGuvNxVRVa3H+URF6XKHKZ7fQ+aWbFaI
+         ky91CHbsurW0JSNx0/t2jawrFN/MXPdK/dBRD9asRGleMS2N7pzNupOMnonuoWMHVLbz
+         qdjAWbE7b5bexbDBctTCFMFncQsO+0e2GUGsA4xAU7ElAt6IsCr24C4OC0GKUknqGEen
+         6PBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zj4h3LPFwWX/eUpF2K+qOBGx59jHvRg14Pyk3N6ZIj8=;
+        b=OYUuuAX1tcBzBC5NV6fxdDuPrDpKTqGR4PnD2vwMsi4K06RxpafHDFRQBZIZU1WeTf
+         0OXqR+wAI9+7HG8B7KLUCMk9zq47M9mSU/Zumnb2E85atoA0HjVyT2bHcvqRuRlP8xTy
+         DQaO+8MCKh9u9w42t6+lV4bUV4fIVgZwh9qjyorfogEtUha7CDdY2Q8srn3D+VZT1eXz
+         Ht/fOlMdnyqlU7rSUvMcefMpRoRpTvi9N2PWvTddiTurcAGR7jp0sowa3oLIqL8l2PQd
+         e/zLT5iKilOx2V1heAU2vdQD1xDaxpz7Vwocbl4x1G9FrZrbENXaGS+tUNIWaYLz09rp
+         4qOQ==
+X-Gm-Message-State: APjAAAUc9ViP7GktujAP0BeTeYF7lkSpbADNNQGPp9cuiLMGa1F2nh4g
+        6bfdWnZ9SSwwmm4O94G/pEI=
+X-Google-Smtp-Source: APXvYqyTXYeYdUKJVxZlIQ1sQYegDbAsQ25fSAznBmuferVZ1DpzRqW+HYMbh+MGvB0mQxyasDEQeQ==
+X-Received: by 2002:a17:902:5998:: with SMTP id p24mr25814533pli.110.1562601922829;
+        Mon, 08 Jul 2019 09:05:22 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t2sm15708380pgo.61.2019.07.08.09.05.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 09:05:21 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 09:05:20 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH 08/11] firmware: arm_scmi: Drop async flag in
+ sensor_ops->reading_get
+Message-ID: <20190708160520.GA6741@roeck-us.net>
+References: <20190708154730.16643-1-sudeep.holla@arm.com>
+ <20190708154730.16643-9-sudeep.holla@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1562384321-46727-1-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.64 on 198.169.180.136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708154730.16643-9-sudeep.holla@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-05 9:38 p.m., Wen Yang wrote:
-> There is a possible use-after-free issue in the axienet_probe():
+On Mon, Jul 08, 2019 at 04:47:27PM +0100, Sudeep Holla wrote:
+> SENSOR_DESCRIPTION_GET provides attributes to indicate if the sensor
+> supports asynchronous read. Ideally we should be able to read that flag
+> and use asynchronous reads for any sensors with that attribute set.
 > 
-> 1701:	np = of_parse_phandle(pdev->dev.of_node, "axistream-connected", 0);
-> 1702:   if (np) {
-> ...
-> 1787:		of_node_put(np); ---> released here
-> 1788:		lp->eth_irq = platform_get_irq(pdev, 0);
-> 1789:	} else {
-> ...
-> 1801:	}
-> 1802:	if (IS_ERR(lp->dma_regs)) {
-> ...
-> 1805:		of_node_put(np); ---> double released here
-> 1806:		goto free_netdev;
-> 1807:	}
+> In order to add that support, let's drop the async flag passed to
+> sensor_ops->reading_get and dynamically switch between sync and async
+> flags based on the attributes as provided by the firmware.
 > 
-> We solve this problem by removing the unnecessary of_node_put().
-> 
-> Fixes: 28ef9ebdb64c ("net: axienet: make use of axistream-connected attribute optional")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Anirudha Sarangi <anirudh@xilinx.com>
-> Cc: John Linn <John.Linn@xilinx.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Cc: Robert Hancock <hancock@sedsystems.ca>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-hwmon@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Yes, looks valid.
+For hwmon:
 
-Reviewed-by: Robert Hancock <hancock@sedsystems.ca>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
 
 > ---
->  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 1 -
->  1 file changed, 1 deletion(-)
+>  drivers/firmware/arm_scmi/sensors.c | 4 ++--
+>  drivers/hwmon/scmi-hwmon.c          | 2 +-
+>  include/linux/scmi_protocol.h       | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index 561e28a..4fc627f 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -1802,7 +1802,6 @@ static int axienet_probe(struct platform_device *pdev)
->  	if (IS_ERR(lp->dma_regs)) {
->  		dev_err(&pdev->dev, "could not map DMA regs\n");
->  		ret = PTR_ERR(lp->dma_regs);
-> -		of_node_put(np);
->  		goto free_netdev;
->  	}
->  	if ((lp->rx_irq <= 0) || (lp->tx_irq <= 0)) {
+> diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
+> index 17dbabd8a94a..1b5757c77a35 100644
+> --- a/drivers/firmware/arm_scmi/sensors.c
+> +++ b/drivers/firmware/arm_scmi/sensors.c
+> @@ -211,7 +211,7 @@ scmi_sensor_trip_point_config(const struct scmi_handle *handle, u32 sensor_id,
+>  }
+>  
+>  static int scmi_sensor_reading_get(const struct scmi_handle *handle,
+> -				   u32 sensor_id, bool async, u64 *value)
+> +				   u32 sensor_id, u64 *value)
+>  {
+>  	int ret;
+>  	struct scmi_xfer *t;
+> @@ -225,7 +225,7 @@ static int scmi_sensor_reading_get(const struct scmi_handle *handle,
+>  
+>  	sensor = t->tx.buf;
+>  	sensor->id = cpu_to_le32(sensor_id);
+> -	sensor->flags = cpu_to_le32(async ? SENSOR_READ_ASYNC : 0);
+> +	sensor->flags = cpu_to_le32(0);
+>  
+>  	ret = scmi_do_xfer(handle, t);
+>  	if (!ret) {
+> diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+> index 0c93fc5ca762..8a7732c0bef3 100644
+> --- a/drivers/hwmon/scmi-hwmon.c
+> +++ b/drivers/hwmon/scmi-hwmon.c
+> @@ -72,7 +72,7 @@ static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+>  	const struct scmi_handle *h = scmi_sensors->handle;
+>  
+>  	sensor = *(scmi_sensors->info[type] + channel);
+> -	ret = h->sensor_ops->reading_get(h, sensor->id, false, &value);
+> +	ret = h->sensor_ops->reading_get(h, sensor->id, &value);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+> index ea6b72018752..697e30fb9004 100644
+> --- a/include/linux/scmi_protocol.h
+> +++ b/include/linux/scmi_protocol.h
+> @@ -182,7 +182,7 @@ struct scmi_sensor_ops {
+>  	int (*trip_point_config)(const struct scmi_handle *handle,
+>  				 u32 sensor_id, u8 trip_id, u64 trip_value);
+>  	int (*reading_get)(const struct scmi_handle *handle, u32 sensor_id,
+> -			   bool async, u64 *value);
+> +			   u64 *value);
+>  };
+>  
+>  /**
+> -- 
+> 2.17.1
 > 
-
--- 
-Robert Hancock
-Senior Software Developer
-SED Systems, a division of Calian Ltd.
-Email: hancock@sedsystems.ca
