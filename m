@@ -2,170 +2,200 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E3EC606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E33C606D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602EA21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:50:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEqVYpqj"
+	by mail.kernel.org (Postfix) with ESMTP id D448821537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562626226;
+	bh=XUjjtuCRxNl4u6eltM5Ai3Id/4IGkmaUAl0q8/rYk9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pOejTkun1IgeW763cfDMe1KOaCFEWHD/X/DnuMhgRu6UjRlO3tqWsHMlvSb+VJpYn
+	 hkVyGO5u8tYzt21jU3fVQnQVK8smYG1c/Edz8yZnwG4+05snZ/k7/Pbg5LQlMiLPvr
+	 IwrkZ1YpIScDUsdhbuiPRGzeXtDNdJzkga5yhKb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbfGHWt7 (ORCPT
+        id S1728225AbfGHWuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:49:59 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44804 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfGHWts (ORCPT
+        Mon, 8 Jul 2019 18:50:25 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42313 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfGHWuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:49:48 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so12020040lfm.11;
-        Mon, 08 Jul 2019 15:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XmrTaZHs1ZyCmACajXt2dKReVOHzkg6ke3uUVhyxo4M=;
-        b=aEqVYpqjDZcGuLK2ahuFzS+p2IEBZfuD4zCnmcDMu75SAR3MX00Y8tNziZQWqVxzmR
-         jhIpgWzjXdsKpwRjXKd0z2Css+YwUfm3Nr2Xdqwzl8b4imYwNX21uICFBeMON75NQ3O7
-         EqF2oKFFRAnpC+h+BqXRfnBWijVkOJk9CnvvKpWO4h4FYl3sNSZGrG/UBCFvcP/+b2oB
-         g2jfMuN4Kh5Ix2Qroi85YMPJCQ9UMneE0ksyoYpvsFHnYQLzfyMBpp1zt7qTVKAE/7mZ
-         QV/AS+pw6X24acX9feE/Tk5wOeqeJ8pC3iLvqaRGnGIQ+MiriwAfTy/rfqIVA2jVbhOH
-         1E9w==
+        Mon, 8 Jul 2019 18:50:23 -0400
+Received: by mail-io1-f68.google.com with SMTP id u19so38972090ior.9;
+        Mon, 08 Jul 2019 15:50:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XmrTaZHs1ZyCmACajXt2dKReVOHzkg6ke3uUVhyxo4M=;
-        b=o+plOB3xFtYLT0NCSTUfI3cs08U3z8p8yLbbF/g4ZHb4lzbP6Xzy8o5nK1ujER9zyz
-         RwxxxS+1kYzx/uj0BCWhq02K0Sio0VoCnBPDnr15MSFj1JDynx3GGLBwPcdtiHzVrvnk
-         qJTzQd/gbA0BxKdzrXqfduQPNCa3acLnszSpwHi/c0EfXlYajMw9Yart3CdNt1TBwEEW
-         auc7QCzjiE/6BHZQMWrGoeKRo4isrAlgaEkDKhFpbBMmYi6YFGmy7kpNL1uByScjyQQY
-         qg8K/H7txXfqZ+JUeePr4cbluL82f5CoSBUf3Ad62v3Y7ICb6lwGcUjMcBfsjg9zstRR
-         ffQQ==
-X-Gm-Message-State: APjAAAXrgg9+1AiSDSRwQmRoXPSGTM1d7r7fjxjF5jB3+Os0WNMb4EdF
-        G/boBpNT1Ov+GnqU54TQUOd23utP1VhMocJlFEM=
-X-Google-Smtp-Source: APXvYqy4kqghwIdIQp/CAfc3t7rFXhI48koEdHw+Y84L5nOOyLEsRjP++eYeupExwtuxO98BWa0FYtb84R9lNNyV5VM=
-X-Received: by 2002:ac2:5bc7:: with SMTP id u7mr10110824lfn.167.1562626185210;
- Mon, 08 Jul 2019 15:49:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H/MyjdanrQ6K/py9dIxz3e56bfKj5atUb0fchKi3Mro=;
+        b=n/tyF1mXNSSP9vpo6g0k/fdUbM6rrMbK/gnPA8QeYC/sNBGocrZbtOst2mdRhdk11i
+         9st6PNys6pMxvhFQgim/bD1m4SDq/o6/7JVM5wQHC97zjNvhlRmp0fEyq5HhUAMU9eJc
+         GRevuFxc0vvR16kRO+UbWudvNxviyrnkIZ7Sccg9v7au6kjtw1/d9JvwarlB1X1TTdEV
+         IlidT+vP5OWquLKDFJsNgubuvYDp2MU9MhtTyrT7NawD9txLKh87La5WCAAILU8vWw8K
+         FMZX5Z8gpLCnstxDjHKF4YIoaLngm8EfZa/sN5/Dq41Am6skyCxmv5UI1yDodsAXojcO
+         z3hg==
+X-Gm-Message-State: APjAAAXuC1wBadTuZWnSdWyY8ww6zEfE6YCEe0Yb2f8VwSXpA3u0ksSn
+        v3Pocy/70OOGKDV3uZlN2w==
+X-Google-Smtp-Source: APXvYqzZFN9dAG5V65nMJvTNBFQoqUzrTk2W0/Fnk2oO/UP/uvEe0rRUTXgyk6ynGmU3h+IdLkXYAQ==
+X-Received: by 2002:a5e:9701:: with SMTP id w1mr22230948ioj.294.1562626222486;
+        Mon, 08 Jul 2019 15:50:22 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y20sm16723564iol.34.2019.07.08.15.50.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 15:50:21 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 16:50:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyun.kwon@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>
+Subject: Re: [PATCH 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ UHD-SDI Receiver Subsystem
+Message-ID: <20190708225020.GA28126@bogus>
+References: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
+ <1559656556-79174-2-git-send-email-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
-References: <881939122b88f32be4c374d248c09d7527a87e35.1561685471.git.jpoimboe@redhat.com>
- <tip-b22cf36c189f31883ad0238a69ccf82aa1f3b16b@git.kernel.org>
- <20190706202942.GA123403@gmail.com> <20190707013206.don22x3tfldec4zm@treble>
- <20190707055209.xqyopsnxfurhrkxw@treble> <CAADnVQJqT8o=_6P6xHjwxrXqX9ToSb0cTfoOcm2Xcha3KRNNSw@mail.gmail.com>
- <20190708223834.zx7u45a4uuu2yyol@treble>
-In-Reply-To: <20190708223834.zx7u45a4uuu2yyol@treble>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 8 Jul 2019 15:49:33 -0700
-Message-ID: <CAADnVQKWDvzsvyjGoFvSQV7VGr2hF2zzCsC9vnpncWMxOJWYdw@mail.gmail.com>
-Subject: Re: [tip:x86/urgent] bpf: Fix ORC unwinding in non-JIT BPF code
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Song Liu <songliubraving@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kairui Song <kasong@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559656556-79174-2-git-send-email-vishal.sagar@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:38 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Mon, Jul 08, 2019 at 03:15:37PM -0700, Alexei Starovoitov wrote:
-> > > 2)
-> > >
-> > >   After doing the first optimization, GCC then does another one which is
-> > >   a little trickier.  It replaces:
-> > >
-> > >         select_insn:
-> > >                 jmp *jumptable(, %rax, 8)
-> > >                 ...
-> > >         ALU64_ADD_X:
-> > >                 ...
-> > >                 jmp *jumptable(, %rax, 8)
-> > >         ALU_ADD_X:
-> > >                 ...
-> > >                 jmp *jumptable(, %rax, 8)
-> > >
-> > >   with
-> > >
-> > >         select_insn:
-> > >                 mov jumptable, %r12
-> > >                 jmp *(%r12, %rax, 8)
-> > >                 ...
-> > >         ALU64_ADD_X:
-> > >                 ...
-> > >                 jmp *(%r12, %rax, 8)
-> > >         ALU_ADD_X:
-> > >                 ...
-> > >                 jmp *(%r12, %rax, 8)
-> > >
-> > >   The problem is that it only moves the jumptable address into %r12
-> > >   once, for the entire function, then it goes through multiple recursive
-> > >   indirect jumps which rely on that %r12 value.  But objtool isn't yet
-> > >   smart enough to be able to track the value across multiple recursive
-> > >   indirect jumps through the jump table.
-> > >
-> > >   After some digging I found that the quick and easy fix is to disable
-> > >   -fgcse.  In fact, this seems to be recommended by the GCC manual, for
-> > >   code like this:
-> > >
-> > >     -fgcse
-> > >         Perform a global common subexpression elimination pass.  This
-> > >         pass also performs global constant and copy propagation.
-> > >
-> > >         Note: When compiling a program using computed gotos, a GCC
-> > >         extension, you may get better run-time performance if you
-> > >         disable the global common subexpression elimination pass by
-> > >         adding -fno-gcse to the command line.
-> > >
-> > >         Enabled at levels -O2, -O3, -Os.
-> > >
-> > >   This code indeed relies extensively on computed gotos.  I don't know
-> > >   *why* disabling this optimization would improve performance.  In fact
-> > >   I really don't see how it could make much of a difference either way.
-> > >
-> > >   Anyway, using -fno-gcse makes optimization #2 go away and makes
-> > >   objtool happy, with only a fix for #1 needed.
-> > >
-> > >   If -fno-gcse isn't an option, we might be able to fix objtool by using
-> > >   the "first_jump_src" thing which Peter added, improving it such that
-> > >   it also takes table jumps into account.
-> >
-> > Sorry for delay. I'm mostly offgrid until next week.
-> > As far as -fno-gcse.. I don't mind as long as it doesn't hurt performance.
-> > Which I suspect it will :(
-> > All these indirect gotos are there for performance.
-> > Single indirect goto and a bunch of jmp select_insn
-> > are way slower, since there is only one instruction
-> > for cpu branch predictor to work with.
-> > When every insn is followed by "jmp *jumptable"
-> > there is more room for cpu to speculate.
-> > It's been long time, but when I wrote it the difference
-> > between all indirect goto vs single indirect goto was almost 2x.
->
-> Just to clarify, -fno-gcse doesn't get rid of any of the indirect jumps.
-> It still has 166 indirect jumps.  It just gets rid of the second
-> optimization, where the jumptable address is placed in a register.
+On Tue, Jun 04, 2019 at 07:25:55PM +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
+> 
+> The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
+> core, an SDI RX to Video Bridge IP core to convert SDI video to native
+> video and a Video In to AXI4-Stream IP core to convert native video to
+> AXI4-Stream.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> ---
+>  .../bindings/media/xilinx/xlnx,sdirxss.txt         | 80 ++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt
+> new file mode 100644
+> index 0000000..8445bee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.txt
+> @@ -0,0 +1,80 @@
+> +
+> +Xilinx SMPTE UHD-SDI Receiver Subsystem Device Tree Bindings
+> +------------------------------------------------------------
+> +
+> +The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
+> +based on SMPTE SDI protocols. It receives unaligned native SDI streams from
+> +the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
+> +native SDI using Xilinx transceivers as the physical layer.
+> +
+> +The subsystem consists of
+> +1 - SMPTE UHD-SDI Rx
+> +2 - SDI Rx to Native Video Bridge
+> +3 - Video In to AXI4-Stream Bridge
+> +
+> +The subsystem can capture SDI streams in utpo 12G mode and output a dual pixel
+> +per clock YUV 422 or 420 10 bits per component AXI4-Stream.
+> +
+> +Required properties:
+> +--------------------
+> +- compatible: Must contain "xlnx,v-smpte-uhdsdi-rx-ss"
 
-what about other functions in core.c ?
-May be it's easier to teach objtool to recognize that pattern?
+Only one version?
 
-> If you have a benchmark which is relatively easy to use, I could try to
-> run some tests.
+> +- reg: Physical base address and length of the registers set for the device.
+> +- interrupts: Contains the interrupt line number.
+> +- clocks: List of phandles to AXI4-Lite clock, core clock to SMPTE UHD-SDI Rx
+> +  and Video clocks.
+> +- clock-names: Must contain "s_axi_aclk", "sdi_rx_clk" and "video_out_clk" in
+> +  the same order as clocks listed in clocks property.
+> +- xlnx,line-rate: The maximum mode supported by the design. Possible values are
+> +  are as below -
+> +  12G_SDI_8DS	- 12G mode
+> +  6G_SDI	-  6G mode
+> +  3G_SDI	-  3G mode
 
-modprobe test_bpf
-selftests/bpf/test_progs
-both print runtime.
-Some of test_progs have high run-to-run variations though.
+I don't think a string is a good fit here. Using 3, 6, 12 with a defined 
+unit as defined in property-units.txt is preferred. Register field values are 
+okay for vendor specific stuff, too.
+
+> +
+> +Optional properties:
+> +--------------------
+> +- xlnx,include-edh: This is present when the Error Detection and Handling
+> +  processor is enabled in design.
+> +
+> +Ports
+> +-----
+> +The device node shall contain one 'port' child node as defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Generally the SDI port is connected to a device like SDI Broadcast camera which
+> +is independently controlled. Hence port@0 is a source port which can be
+> +connected to downstream IP which can work with AXI4 Stream data.
+> +
+> +Required port properties:
+> +-------------------------
+> +- reg: 0 - for source port.
+> +
+> +- xlnx,video-format: This can be XVIP_VF_YUV_422 or XVIP_VF_YUV_420.
+> +- xlnx,video-width: This is should be 10.
+
+Don't we have standard properties for these?
+
+I assume width here is really part of the pixel or bus interface format 
+rather than physical signals? We typically only have a separate property 
+for the latter case.
+
+> +
+> +Example:
+> +		v_smpte_uhdsdi_rx_ss: v_smpte_uhdsdi_rx_ss@80000000 {
+
+s/_/-/ in the node name. Node names are supposed to be generic when 
+possible, but I don't have a suggestion here.
+
+> +			compatible = "xlnx,v-smpte-uhdsdi-rx-ss";
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <0 89 4>;
+> +			reg = <0x0 0x80000000 0x0 0x10000>;
+> +			xlnx,include-edh;
+> +			xlnx,line-rate = "12G_SDI_8DS";
+> +			clocks = <&clk_1>, <&si570_1>, <&clk_2>;
+> +			clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +
+> +					xlnx,video-format = <XVIP_VF_YUV_422>;
+> +					xlnx,video-width = <10>;
+> +
+> +					sdirx_out: endpoint {
+> +						remote-endpoint = <&vcap_sdirx_in>;
+> +					};
+> +				};
+> +			};
+> +		};
+> -- 
+> 1.8.3.1
+> 
