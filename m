@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCBFC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047C8C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7164216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FBA21707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599023;
-	bh=bHZKW6WfXp8UbgOTjFC0id34g7lNLGcNbag2Dtz+Dtk=;
+	s=default; t=1562599026;
+	bh=9HGfosyz4rMqfLNB/CN21fCDu1xqGpNd+21+lEo5jJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xf6ZrLhL6DFb1ECn/i6Ws/ltPema/tI4fr/PyKFpsBb/ob+kI9Ot+buK+PULLfFad
-	 i28G7wUl35Jr6JHvRSPneFJQrf71vCZOt02+tLP3iPFBE6M8IcO2dzcdmcff5gaK+b
-	 x+yp+GHAzw3uBCcVVOOBuFrheG93OTysU0A5EMhk=
+	b=iv1fB+dkIz+TO5IQOro59KVzoFjGQVmrWoaoR5yOdN6WcXWq7xSnPdp50RQhZP7Gd
+	 WJYYypKssVr7usM4BDy1Ml/XjlkI7Zfqna6dIZ0M+O4lq7ke/PGCEE70mH5r/wZrll
+	 Hs1W9xN2fjhA/ts29zsFGWAhF5r84Q4/dpT5Vejs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732727AbfGHPRC (ORCPT
+        id S1732740AbfGHPRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:17:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40182 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:17:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732710AbfGHPRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:17:00 -0400
+        id S1732710AbfGHPRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:17:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A68121738;
-        Mon,  8 Jul 2019 15:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA47221537;
+        Mon,  8 Jul 2019 15:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599019;
-        bh=bHZKW6WfXp8UbgOTjFC0id34g7lNLGcNbag2Dtz+Dtk=;
+        s=default; t=1562599022;
+        bh=9HGfosyz4rMqfLNB/CN21fCDu1xqGpNd+21+lEo5jJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZDds5150IkwB+V0B9cw/4XuWWZdWqWLUpzOPleLgHPUGEvzclAERddubvy/7kMAl
-         H/Pr7n4jUO+frOQvA2CaciQqDOal6HrIQfZ3NhGmBm54MN5D2eiYtkn1nje7I/Yf21
-         MI1PewJV6wH8LZ7GlcWdtKCV4vD9Pj2dX+IsvU5Y=
+        b=DnGoOK3+0vRh5fI9uxqTfajPzwwIjSmRYwlDJNz58Ru62oVja6q7qO+L3gC1PBQiz
+         ZghOXpVSUoeRs0PbixlqHAyJM01CCjmTSejNeLx2tOVMUFySKf1PddBaEQRed1+67s
+         y+7MD6kbIyHzmukavvVIrDzu34SMuKs/t9taqi4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 51/73] ASoC: max98090: remove 24-bit format support if RJ is 0
-Date:   Mon,  8 Jul 2019 17:13:01 +0200
-Message-Id: <20190708150524.056878577@linuxfoundation.org>
+Subject: [PATCH 4.4 52/73] usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
+Date:   Mon,  8 Jul 2019 17:13:02 +0200
+Message-Id: <20190708150524.105871798@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -60,54 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5628c8979642a076f91ee86c3bae5ad251639af0 ]
+[ Upstream commit 62fd0e0a24abeebe2c19fce49dd5716d9b62042d ]
 
-The supported formats are S16_LE and S24_LE now. However, by datasheet
-of max98090, S24_LE is only supported when it is in the right justified
-mode. We should remove 24-bit format if it is not in that mode to avoid
-triggering error.
+There is no deallocation of fusb300->ep[i] elements, allocated at
+fusb300_probe.
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The patch adds deallocation of fusb300->ep array elements.
+
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/max98090.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/usb/gadget/udc/fusb300_udc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index 3e65dc74eb33..e7aef841f87d 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1924,6 +1924,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
+diff --git a/drivers/usb/gadget/udc/fusb300_udc.c b/drivers/usb/gadget/udc/fusb300_udc.c
+index 948845c90e47..351012c498c5 100644
+--- a/drivers/usb/gadget/udc/fusb300_udc.c
++++ b/drivers/usb/gadget/udc/fusb300_udc.c
+@@ -1345,12 +1345,15 @@ static const struct usb_gadget_ops fusb300_gadget_ops = {
+ static int fusb300_remove(struct platform_device *pdev)
+ {
+ 	struct fusb300 *fusb300 = platform_get_drvdata(pdev);
++	int i;
+ 
+ 	usb_del_gadget_udc(&fusb300->gadget);
+ 	iounmap(fusb300->reg);
+ 	free_irq(platform_get_irq(pdev, 0), fusb300);
+ 
+ 	fusb300_free_request(&fusb300->ep[0]->ep, fusb300->ep0_req);
++	for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
++		kfree(fusb300->ep[i]);
+ 	kfree(fusb300);
+ 
  	return 0;
- }
- 
-+static int max98090_dai_startup(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
-+	unsigned int fmt = max98090->dai_fmt;
-+
-+	/* Remove 24-bit format support if it is not in right justified mode. */
-+	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
-+		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
-+	}
-+	return 0;
-+}
-+
- static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
- 				   struct snd_pcm_hw_params *params,
- 				   struct snd_soc_dai *dai)
-@@ -2331,6 +2346,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
- #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
- 
- static const struct snd_soc_dai_ops max98090_dai_ops = {
-+	.startup = max98090_dai_startup,
- 	.set_sysclk = max98090_dai_set_sysclk,
- 	.set_fmt = max98090_dai_set_fmt,
- 	.set_tdm_slot = max98090_set_tdm_slot,
+@@ -1494,6 +1497,8 @@ clean_up:
+ 		if (fusb300->ep0_req)
+ 			fusb300_free_request(&fusb300->ep[0]->ep,
+ 				fusb300->ep0_req);
++		for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
++			kfree(fusb300->ep[i]);
+ 		kfree(fusb300);
+ 	}
+ 	if (reg)
 -- 
 2.20.1
 
