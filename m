@@ -2,102 +2,96 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D01FC606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C191C606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8072063F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312632063F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:44:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m1KSdGBd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbfGHKnj (ORCPT
+        id S1730192AbfGHKoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 06:43:39 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:44657 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfGHKni (ORCPT
+        Mon, 8 Jul 2019 06:44:00 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55521 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730166AbfGHKn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 06:43:38 -0400
-Received: from [192.168.1.110] ([95.117.164.184]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N8nrc-1iXbIp3f9y-015u8i; Mon, 08 Jul 2019 12:43:25 +0200
-Subject: Re: [PATCH] platform/x86: Fix PCENGINES_APU2 Kconfig warning
-To:     YueHaibing <yuehaibing@huawei.com>, dvhart@infradead.org,
-        andy@infradead.org, linus.walleij@linaro.org,
-        rdunlap@infradead.org, info@metux.net
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20190704062725.50400-1-yuehaibing@huawei.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <603661e6-8694-4787-6cee-61cc6ba61fc2@metux.net>
-Date:   Mon, 8 Jul 2019 12:43:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190704062725.50400-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:k1ASFLMCv+5OWSYUYYtaraIfKomT4nTCcaVf4oT+GAFdybzzBGA
- PMb83RA+PAxxOKE0M8vADo5wuHV1V/hOEXU5l+aZkjda3H4wt8MadTRAVhSMVQqlfXX5wXE
- a+v+66cBXAt2x41H8wI8Yro2gERQGLi6T6V8YQd1IX6QBHvD5CMJLd4BOj3YoWuUstGPf/F
- 1kAO0j4X3EQCrgCNrqGrA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Pkz+poKC/9g=:RQzTbx4w0e9jQQHrKZwyOK
- S+jIiWDIfD8snEe3ikdQ3qPoVvo4Xypssgid430xCNfykbAuuGXrrFcO5kUtNsBAAj/VWPtT3
- oasB7iSchd8DoF9OiKKa8LTIILFXQMIgYxrPutmXaECL4np2FESPe0ta7egNgf9Rk4iXBXvzE
- ktl9nXyExrYYIu/0O1b1+72zn8gO6hR54yMUImSBoCfu+H9IZ7Ufx3JZAoYXHew739kjhlOil
- ow5hccagNxFoVO3ekxB14bblysTE9MRpsr4uQrYsc3QqQ6Ho4staeQbG4RPyKK0+5AoyZnkGi
- KKhD2162g7E/59YB/OVpgkuaftPmB0r4H15dgywkQU2uEvtOe2BrH1sbjUbz6AdxXpZxky8XR
- WBNX+F47SHc+iIS3hes2fzMNkMTwGHM3XAi2yXm88wd2jyh976R4ultLTnQUlGz521i/KJQL6
- Cr/iGv9LTbGNE8n0H9tlD1F8FjqUtQ2s/pNDfQPruSVLHlKrED/5+npsaKbEzAWI5yD2866OQ
- m7XNLTZtdQ8MjerXFWgZ2sq1x4A8eeaiwWAIXQgMHfdoia12j9ef2eHAw5A9UxD06q0pI3Chz
- ZQs8qRexnrY+AUJVoPp+3wQsI952+HtfPiLl8SVCAnPvMq0jb3F5bsBibQ0J2gkEwmY+c+bGd
- cwNpe5SdjArjOIKbBAKCFHTNRi9hCI+3CWUcrXBzELjEZL4bx/q3TveG9GlaS4P6g0dNnRjOB
- C1mcgoTbxzFeRkAG4kMamxuzgrM4jkc/QiyB31aZScT485Fj8S8CVAKtjw0=
+        Mon, 8 Jul 2019 06:43:59 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so15236758wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 03:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eujF1oLjze7pb4jIJlX9eMHOqe7uxjlgbIwlUyWR6Rc=;
+        b=m1KSdGBdMekRdgFHD2ZIyPqpyLP45HkUC6sYXf9QE9tzqOSeNEPB4mauJVQpxa5rDd
+         iiQ8O8koMrPMBXljjU7YSWky/V1GMTLpduoCHG/ACVh1/JPx0ddExD7MvCkpeA1okJJM
+         WrRXZVouorSV8upneMnRboD2XlxebmQMII7Ic+7sZjZjCqocWhAph2ITj0eYvXpH133R
+         B87/4jh1nBzAkQaF1qMbi3RjaKRxtqncy0lZzU7jX2O8VWbcQR/IcHwIfHpnnRMXHpQK
+         EIVJZS31h8bkNVFcxVRpiNEIh86gqSWN/xJ6XqYrQXdoVb02EiM6XjXr9LunXae9Cy9z
+         R5gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eujF1oLjze7pb4jIJlX9eMHOqe7uxjlgbIwlUyWR6Rc=;
+        b=TKHhw2ohibCNnIPtF1NDPbhrubj0AT6IvuD6rPTZPRDnSnoZGFpRPGLtOEoPP+QlM6
+         a+KYPCDtcgWYtL42yZBZtDY7H9KN18Br1yWQHs2GzAhTEyioAtaJf8ScA/yo6+1ldTDP
+         tHZiJ4c5DOyBWSwhsRj6tPtdMGV2p15wVJknaDJrNLcXVD2wMif8+Q82Sn3E71OCl/KP
+         SwkWe2n0sVNjXWDKZzt5j629Kjj9bjLf1lEAGzgZrQLJm2GjH/PxHlBzzEbyrKu7kyoz
+         7plPZ82L04zjz0ypxCVIWmugHKjfXZ0zkDbY5GfMJ0QiierWhC+t+k2xDMvFHtHylORq
+         ICZA==
+X-Gm-Message-State: APjAAAXyP67JFPQvt3zLqvAY8vbjSgN8h3lBzwEh1UeeJb3zfOk8f40d
+        MZq9vXm8Uq3xoQ9KQKdqsjbaMcRyDTc=
+X-Google-Smtp-Source: APXvYqwxDGUrO1EoWFLCNcHaJa7sC0Cag7oeCFg26y9lcsRJevDTxKJn/LO+6KpSIvzODKfImup8WQ==
+X-Received: by 2002:a1c:d10c:: with SMTP id i12mr16433415wmg.152.1562582637791;
+        Mon, 08 Jul 2019 03:43:57 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id 4sm4914027wro.78.2019.07.08.03.43.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 03:43:57 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: use correct variable to show fd open counter
+Date:   Mon,  8 Jul 2019 13:43:55 +0300
+Message-Id: <20190708104355.32569-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.07.19 08:27, YueHaibing wrote:
-> Fix Kconfig warning for PCENGINES_APU2 symbol:
-> 
-> WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
->   Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
->   Selected by [y]:
->   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-> 
-> WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
->   Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
->   Selected by [y]:
->   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-> 
-> Add GPIOLIB dependency to fix it.
+The current code checks if the user context pointer is NULL or not to
+display the number of open file descriptors of a device. However, that
+variable (user_ctx) will eventually go away as the driver will support
+multiple processes. Instead, the driver can use the atomic counter of
+the open file descriptors which the driver already maintains.
 
-hmm, I'm not really happy w/ the kernel config system at that point:
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If the select on the gpio driver would just subsequently enable gpiolib,
-everything would be fine. But that contradicts how subsystems are
-currently handled - you first have to enable gpio subsystem before
-choosing anything that depends on it :(
-
-Could it make sense to refactor gpiolib in a way that pieces directly
-needed by gpio consumers or drivers (hmm, perhaps have separate
-dependency symbols for consumer vs driver) can be selected directly,
-even if the big gpio subsystem knob is disabled ? (but the other things
-like userland interfaces would remain disabled) ?
-
-OTOH, for this particular patch:
-
-Ack-By: Enrico Weigelt <info@metux.net>
-
-
---mtx
-
+diff --git a/drivers/misc/habanalabs/sysfs.c b/drivers/misc/habanalabs/sysfs.c
+index 25eb46d29d88..881be19b5fad 100644
+--- a/drivers/misc/habanalabs/sysfs.c
++++ b/drivers/misc/habanalabs/sysfs.c
+@@ -356,7 +356,7 @@ static ssize_t write_open_cnt_show(struct device *dev,
+ {
+ 	struct hl_device *hdev = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", hdev->user_ctx ? 1 : 0);
++	return sprintf(buf, "%d\n", atomic_read(&hdev->fd_open_cnt));
+ }
+ 
+ static ssize_t soft_reset_cnt_show(struct device *dev,
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.17.1
+
