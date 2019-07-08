@@ -2,152 +2,139 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23D4C606CE
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D185C606CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EE02086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA4620861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:56:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gNmioWhm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404147AbfGHTzq (ORCPT
+        id S2404701AbfGHT4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:55:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54335 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbfGHTzp (ORCPT
+        Mon, 8 Jul 2019 15:56:21 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39685 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729760AbfGHT4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:55:45 -0400
-Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1hkZjd-0008Dn-Ik; Mon, 08 Jul 2019 19:55:37 +0000
-Date:   Mon, 8 Jul 2019 14:55:32 -0500
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     jarkko.sakkinen@linux.intel.com, jejb@linux.ibm.com,
-        zohar@linux.ibm.com, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
-        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
-Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
- deactivated
-Message-ID: <20190708195532.GB5292@elm>
-References: <20190705163735.11539-1-roberto.sassu@huawei.com>
+        Mon, 8 Jul 2019 15:56:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so7726771pgi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WObWYhhWlfWVBGeUnBqR5A/L2O8ETbPGrJcR8O8Db+c=;
+        b=gNmioWhmY2wZycPdn5yPVxFNf4/YAXjwTI9s4RDYwu2xnnlj/3goSphgltDej0PS17
+         DC+0ihNLMIIzIMopYL+xn0JNO/PA4Fw9/bp2vL0D8nElqL5DNQ4TfWHa5xnu700NLV10
+         gKr3iSyypDw7cCTFJSCs7W4lZhzX8ls4q4IUE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WObWYhhWlfWVBGeUnBqR5A/L2O8ETbPGrJcR8O8Db+c=;
+        b=lOYeOY1ium4OvwYM87qBFwijYeClQxmry6W8Q7lkOked0JZjcZte7GBSw4+PfDsI0z
+         WFO+5JyBKXrL9eZqMM419VcTxeCqgmOQc68mcpImw/WJt4wfYoVBCELa7/IJrsvNbb2x
+         XV9IsVzOZW2/tO0OB6IClkqpiGawAQ96nLFUiU316mO3uta9usGsklAwdOiBgY1oLpk1
+         VX3oW3CgJQjde5WZZVbFT512/F8NhtY+EjTt4KS+8cPFRHTYDv2glSWUZWrqx71fN3D8
+         o5/UZtM4V9JbVEYyAuJthErW+RIuIVGNXCgkQNTgRMt1QEYcUIYPJi3pq/lZq51NT65m
+         7UTg==
+X-Gm-Message-State: APjAAAWiAUOaUc6D3v2Rz1qFaZf2Wmw796pAu00n10ZCdk6zDCBf08Hi
+        tT+o12mTqAMdA5KccGPo4irKGg==
+X-Google-Smtp-Source: APXvYqx0vPrcrmzmPc2DLYJb81E8l+aNgHwjY9pCxax4+LIpY8c/9QsUPLKt9oRE2ZQV2Jvf9k9JCA==
+X-Received: by 2002:a17:90a:bd8c:: with SMTP id z12mr28068802pjr.60.1562615780074;
+        Mon, 08 Jul 2019 12:56:20 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id v185sm23322644pfb.14.2019.07.08.12.56.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 12:56:19 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-samsung-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, briannorris@chromium.org,
+        mka@chromium.org, groeck@chromium.org, sonnyrao@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Alim Akhtar <alim.akhtar@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: dw_mmc: Fix occasional hang after tuning on eMMC
+Date:   Mon,  8 Jul 2019 12:56:13 -0700
+Message-Id: <20190708195613.205729-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190705163735.11539-1-roberto.sassu@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-05 18:37:35, Roberto Sassu wrote:
-> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize w/o a
-> TPM") allows the trusted module to be loaded even a TPM is not found to
-> avoid module dependency problems.
-> 
-> Unfortunately, this does not completely solve the issue, as there could be
-> a case where a TPM is found but is not functional (the TPM commands return
-> an error). Specifically, after the tpm_chip structure is returned by
-> tpm_default_chip() in init_trusted(), the execution terminates after
-> init_digests() returns -EFAULT (due to the fact that tpm_get_random()
-> returns a positive value, but less than TPM_MAX_DIGEST_SIZE).
-> 
-> This patch fixes the issue by ignoring the TPM_ERR_DEACTIVATED and
-> TPM_ERR_DISABLED errors.
-> 
-> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->  drivers/char/tpm/tpm.h  | 2 --
->  include/linux/tpm.h     | 3 +++
->  security/keys/trusted.c | 6 +++++-
->  3 files changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-> index e503ffc3aa39..a216ac396711 100644
-> --- a/drivers/char/tpm/tpm.h
-> +++ b/drivers/char/tpm/tpm.h
-> @@ -54,8 +54,6 @@ enum tpm_addr {
->  
->  #define TPM_WARN_RETRY          0x800
->  #define TPM_WARN_DOING_SELFTEST 0x802
-> -#define TPM_ERR_DEACTIVATED     0x6
-> -#define TPM_ERR_DISABLED        0x7
->  #define TPM_ERR_INVALID_POSTINIT 38
->  
->  #define TPM_HEADER_SIZE		10
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 53c0ea9ec9df..efd3ccbb6aee 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -26,6 +26,9 @@
->  #define TPM_DIGEST_SIZE 20	/* Max TPM v1.2 PCR size */
->  #define TPM_MAX_DIGEST_SIZE SHA512_DIGEST_SIZE
->  
-> +#define TPM_ERR_DEACTIVATED     0x6
-> +#define TPM_ERR_DISABLED        0x7
-> +
->  struct tpm_chip;
->  struct trusted_key_payload;
->  struct trusted_key_options;
-> diff --git a/security/keys/trusted.c b/security/keys/trusted.c
-> index 9a94672e7adc..430d85090b3b 100644
-> --- a/security/keys/trusted.c
-> +++ b/security/keys/trusted.c
-> @@ -389,6 +389,10 @@ static int pcrlock(const int pcrnum)
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
-> +	/* This can happen if the TPM is inactive. */
-> +	if (!digests)
-> +		return -EINVAL;
-> +
->  	return tpm_pcr_extend(chip, pcrnum, digests) ? -EINVAL : 0;
->  }
->  
-> @@ -1233,7 +1237,7 @@ static int __init init_digests(void)
->  	int i;
->  
->  	ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
-> -	if (ret < 0)
-> +	if (ret < 0 || ret == TPM_ERR_DEACTIVATED || ret == TPM_ERR_DISABLED)
->  		return ret;
+In commit 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after
+response errors.") we fixed a tuning-induced hang that I saw when
+stress testing tuning on certain SD cards.  I won't re-hash that whole
+commit, but the summary is that as a normal part of tuning you need to
+deal with transfer errors and there were cases where these transfer
+errors was putting my system into a bad state causing all future
+transfers to fail.  That commit fixed handling of the transfer errors
+for me.
 
-As someone who hasn't looked at much of the TPM code, I would have
-expected tpm_get_random() to return a positive value that only ever
-indicates the number of random bytes saved to the buffer. From the
-function documentation:
+In downstream Chrome OS my fix landed and had the same behavior for
+all SD/MMC commands.  However, it looks like when the commit landed
+upstream we limited it to only SD tuning commands.  Presumably this
+was to try to get around problems that Alim Akhtar reported on exynos
+[1].
 
-  Return: number of random bytes read or a negative error value.
+Unfortunately while stress testing reboots (and suspend/resume) on
+some rk3288-based Chromebooks I found the same problem on the eMMC on
+some of my Chromebooks (the ones with Hynix eMMC).  Since the eMMC
+tuning command is different (MMC_SEND_TUNING_BLOCK_HS200
+vs. MMC_SEND_TUNING_BLOCK) we were basically getting back into the
+same situation.
 
-Despite the function documentation and as your patch suggests, I can
-see that it is possible for tpm_transmit_cmd() to return
-a positive value that's also returned by tpm_get_random() even though it
-may not have filled the buffer when the TPM is in an
-inactive/deactivated state.
+I'm hoping that whatever problems exynos was having in the past are
+somehow magically fixed now and we can make the behavior the same for
+all commands.
 
-I think there are other callers which are not prepared for positive
-return values that indicate a failure to fill the buffer with random
-data. For instance, the way that tpm_hwrng_read() is calling
-tpm_get_random() looks a little worrisome.
+[1] https://lkml.kernel.org/r/CAGOxZ53WfNbaMe0_AM0qBqU47kAfgmPBVZC8K8Y-_J3mDMqW4A@mail.gmail.com
 
-This patch would likely fix the bug reported against eCryptfs
-(https://bugzilla.kernel.org/show_bug.cgi?id=203953) but I can't help to
-think that callers of tpm_get_random() would benefit from a more
-consolidated approach of handling TPM_ERR_* return values rather than
-handling them at this single call site.
+Fixes: 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after response errors.")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+Marek (or anyone else using exynos): is it easy for you to test this
+and check if things are still broken when we land this patch?  If so,
+I guess we could have a quirk to have different behavior for just
+Rockchip SoCs but I'd rather avoid that if possible.
 
-Tyler
+NOTE: I'm not hoping totally in vain here.  It is possible that some
+of the CTO/DTO timers that landed could be the magic that would get
+exynos unstuck.
 
->  	if (ret < TPM_MAX_DIGEST_SIZE)
->  		return -EFAULT;
-> -- 
-> 2.17.1
-> 
+ drivers/mmc/host/dw_mmc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index b53b6b7d4dd4..60c3a06e3469 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -2034,8 +2034,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+ 				 * delayed. Allowing the transfer to take place
+ 				 * avoids races and keeps things simple.
+ 				 */
+-				if ((err != -ETIMEDOUT) &&
+-				    (cmd->opcode == MMC_SEND_TUNING_BLOCK)) {
++				if (err != -ETIMEDOUT) {
+ 					state = STATE_SENDING_DATA;
+ 					continue;
+ 				}
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
