@@ -2,193 +2,142 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC17C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02938C5B57D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630D620844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E5620861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfGHGSC (ORCPT
+        id S1729058AbfGHGSX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 02:18:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:6540 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727218AbfGHGSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 02:18:02 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 23:18:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,465,1557212400"; 
-   d="scan'208";a="173175976"
-Received: from npg-dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.66])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Jul 2019 23:17:58 -0700
-Date:   Mon, 8 Jul 2019 14:16:25 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com
-Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
-Message-ID: <20190708061625.GA15936@___>
-References: <20190703091339.1847-1-tiwei.bie@intel.com>
- <7b8279b2-aa7e-7adc-eeff-20dfaf4400d0@redhat.com>
- <20190703115245.GA22374@___>
- <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com>
- <20190703130817.GA1978@___>
- <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
- <20190704062134.GA21116@___>
- <20190705084946.67b8f9f5@x1.home>
+        Mon, 8 Jul 2019 02:18:23 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60212 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729044AbfGHGSX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 02:18:23 -0400
+Received: from mail-wm1-f69.google.com ([209.85.128.69])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <chia-lin.kao@canonical.com>)
+        id 1hkMyj-0007Kd-8u
+        for linux-kernel@vger.kernel.org; Mon, 08 Jul 2019 06:18:21 +0000
+Received: by mail-wm1-f69.google.com with SMTP id u19so3857126wmj.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 23:18:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ni/ZsRUHJQeGte3cJaCva9RYqIeypB1jmcG6EYYS4M0=;
+        b=dzGUSMS7NzFs6G5RdLmMjB70WtLj4dRk/ubaB0SjCqVEMT+Aaw/Xr8lVASqP02N0ce
+         X3vTp598zxgJtzNP7SbedZErONPM5j/Su6yhSka8NUGxpZ+EqUPMo3IqWv6y87tPMeds
+         8DLGDZrR+qJjGeCKXClpeSF67uuzNkF0jr1Ymuk3ladKvkxzynDXpzqajPjgSSldZe7o
+         rl+6AowsgijktIQhXThxgzqxIhL1TsUVUPZSInUg7gecZM6MgX624kuBxITp+0+Hg1ts
+         hZV1ffAmxPEdZ/sNLtYSsESW0yaMs01vaxR6TG5A72bJMRRDNsVrtgbcXYzOIvzI5DKx
+         qsFQ==
+X-Gm-Message-State: APjAAAWuRAZGaldZVGksFV86SVvZsvM1bRsIei/y11LpL9F2DIR09cn3
+        OIOaGZ8GyJiMvx6T/357eUzke+stCaG3Ga+Edu6FC+Gl4vMgScs6wsRN/g+Ym+d9dVTbAhL82yu
+        FSj42f2VmaaPlMJ2FBVBlsKB65UlycitVlEVpIRrDkVvjNekGebxVO0zhbg==
+X-Received: by 2002:adf:ec0f:: with SMTP id x15mr16856900wrn.165.1562566700888;
+        Sun, 07 Jul 2019 23:18:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwig7hgNaptLx4qBqsvR/0MyqEqHKYxSDJDbwqswzvIlF/Euk+VlLhQjiYtbYlLVahTH/1T47u6IHnv1+zpsmk=
+X-Received: by 2002:adf:ec0f:: with SMTP id x15mr16856867wrn.165.1562566700631;
+ Sun, 07 Jul 2019 23:18:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190705084946.67b8f9f5@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190625083051.30332-1-acelan.kao@canonical.com>
+ <a3469010-829c-16dc-be83-6fe9b3021530@linux.intel.com> <CAFv23QnaKMs9bjS9ry_L4K7wskUqNR2AsgDG-v+fah2XO7EpKw@mail.gmail.com>
+ <5c14537d-b6aa-b478-fdd8-29f690b15e07@linux.intel.com>
+In-Reply-To: <5c14537d-b6aa-b478-fdd8-29f690b15e07@linux.intel.com>
+From:   AceLan Kao <acelan.kao@canonical.com>
+Date:   Mon, 8 Jul 2019 14:18:09 +0800
+Message-ID: <CAFv23Qmo_f=FEVM2ZOfL-8SvP624doY-OxU_T091uweKwJJ7QA@mail.gmail.com>
+Subject: Re: [PATCH] i2c: designware: Add disable runtime pm quirk
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 08:49:46AM -0600, Alex Williamson wrote:
-> On Thu, 4 Jul 2019 14:21:34 +0800
-> Tiwei Bie <tiwei.bie@intel.com> wrote:
-> > On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
-> > > On 2019/7/3 下午9:08, Tiwei Bie wrote:  
-> > > > On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:  
-> > > > > On 2019/7/3 下午7:52, Tiwei Bie wrote:  
-> > > > > > On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:  
-> > > > > > > On 2019/7/3 下午5:13, Tiwei Bie wrote:  
-> > > > > > > > Details about this can be found here:
-> > > > > > > > 
-> > > > > > > > https://lwn.net/Articles/750770/
-> > > > > > > > 
-> > > > > > > > What's new in this version
-> > > > > > > > ==========================
-> > > > > > > > 
-> > > > > > > > A new VFIO device type is introduced - vfio-vhost. This addressed
-> > > > > > > > some comments from here:https://patchwork.ozlabs.org/cover/984763/
-> > > > > > > > 
-> > > > > > > > Below is the updated device interface:
-> > > > > > > > 
-> > > > > > > > Currently, there are two regions of this device: 1) CONFIG_REGION
-> > > > > > > > (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
-> > > > > > > > device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
-> > > > > > > > can be used to notify the device.
-> > > > > > > > 
-> > > > > > > > 1. CONFIG_REGION
-> > > > > > > > 
-> > > > > > > > The region described by CONFIG_REGION is the main control interface.
-> > > > > > > > Messages will be written to or read from this region.
-> > > > > > > > 
-> > > > > > > > The message type is determined by the `request` field in message
-> > > > > > > > header. The message size is encoded in the message header too.
-> > > > > > > > The message format looks like this:
-> > > > > > > > 
-> > > > > > > > struct vhost_vfio_op {
-> > > > > > > > 	__u64 request;
-> > > > > > > > 	__u32 flags;
-> > > > > > > > 	/* Flag values: */
-> > > > > > > >     #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
-> > > > > > > > 	__u32 size;
-> > > > > > > > 	union {
-> > > > > > > > 		__u64 u64;
-> > > > > > > > 		struct vhost_vring_state state;
-> > > > > > > > 		struct vhost_vring_addr addr;
-> > > > > > > > 	} payload;
-> > > > > > > > };
-> > > > > > > > 
-> > > > > > > > The existing vhost-kernel ioctl cmds are reused as the message
-> > > > > > > > requests in above structure.  
-> > > > > > > Still a comments like V1. What's the advantage of inventing a new protocol?  
-> > > > > > I'm trying to make it work in VFIO's way..
-> > > > > >   
-> > > > > > > I believe either of the following should be better:
-> > > > > > > 
-> > > > > > > - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
-> > > > > > > extend it with e.g notify region. The advantages is that all exist userspace
-> > > > > > > program could be reused without modification (or minimal modification). And
-> > > > > > > vhost API hides lots of details that is not necessary to be understood by
-> > > > > > > application (e.g in the case of container).  
-> > > > > > Do you mean reusing vhost's ioctl on VFIO device fd directly,
-> > > > > > or introducing another mdev driver (i.e. vhost_mdev instead of
-> > > > > > using the existing vfio_mdev) for mdev device?  
-> > > > > Can we simply add them into ioctl of mdev_parent_ops?  
-> > > > Right, either way, these ioctls have to be and just need to be
-> > > > added in the ioctl of the mdev_parent_ops. But another thing we
-> > > > also need to consider is that which file descriptor the userspace
-> > > > will do the ioctl() on. So I'm wondering do you mean let the
-> > > > userspace do the ioctl() on the VFIO device fd of the mdev
-> > > > device?
-> > > >   
-> > > 
-> > > Yes.  
-> > 
-> > Got it! I'm not sure what's Alex opinion on this. If we all
-> > agree with this, I can do it in this way.
-> > 
-> > > Is there any other way btw?  
-> > 
-> > Just a quick thought.. Maybe totally a bad idea. I was thinking
-> > whether it would be odd to do non-VFIO's ioctls on VFIO's device
-> > fd. So I was wondering whether it's possible to allow binding
-> > another mdev driver (e.g. vhost_mdev) to the supported mdev
-> > devices. The new mdev driver, vhost_mdev, can provide similar
-> > ways to let userspace open the mdev device and do the vhost ioctls
-> > on it. To distinguish with the vfio_mdev compatible mdev devices,
-> > the device API of the new vhost_mdev compatible mdev devices
-> > might be e.g. "vhost-net" for net?
-> > 
-> > So in VFIO case, the device will be for passthru directly. And
-> > in VHOST case, the device can be used to accelerate the existing
-> > virtualized devices.
-> > 
-> > How do you think?
-> 
-> VFIO really can't prevent vendor specific ioctls on the device file
-> descriptor for mdevs, but a) we'd want to be sure the ioctl address
-> space can't collide with ioctls we'd use for vfio defined purposes and
-> b) maybe the VFIO user API isn't what you want in the first place if
-> you intend to mostly/entirely ignore the defined ioctl set and replace
-> them with your own.  In the case of the latter, you're also not getting
-> the advantages of the existing VFIO userspace code, so why expose a
-> VFIO device at all.
+Hi Jarkko,
 
-Yeah, I totally agree.
+Sorry, I lost track of this thread and didn't understand what you want
+me to try.
+I'm willing to try it if you can explain it more.
 
-> 
-> The mdev interface does provide a general interface for creating and
-> managing virtual devices, vfio-mdev is just one driver on the mdev
-> bus.  Parav (Mellanox) has been doing work on mdev-core to help clean
-> out vfio-isms from the interface, aiui, with the intent of implementing
-> another mdev bus driver for using the devices within the kernel.
+My colleague comes out another solution for this issue
+   https://lkml.org/lkml/2019/7/5/17
+and it explains why it takes up to 100ms to wake up.
+This solution is more aggressive to zero the d3cold_delay and it looks
+like the delay is not necessary.
 
-Great to know this! I found below series after some searching:
+Anyway, we have two different proposed solutions now, my proposed
+solution is specific to the listed platforms, but we may have to
+extent the list(platforms which uses the old firmware),
+the other proposed solution from my colleague is generic and apply to
+all platforms which loads intel-lpss-pci driver, it may lead to
+unexpected regressions which we don't see now.
+Please give some suggestions, thanks.
 
-https://lkml.org/lkml/2019/3/8/821
+Best regards,
+AceLan Kao.
 
-In above series, the new mlx5_core mdev driver will do the probe
-by calling mlx5_get_core_dev() first on the parent device of the
-mdev device. In vhost_mdev, maybe we can also keep track of all
-the compatible mdev devices and use this info to do the probe.
-But we also need a way to allow vfio_mdev driver to distinguish
-and reject the incompatible mdev devices.
-
-> It
-> seems like this vhost-mdev driver might be similar, using mdev but not
-> necessarily vfio-mdev to expose devices.  Thanks,
-
-Yeah, I also think so!
-
-Thanks!
-Tiwei
-
-> 
-> Alex
+Jarkko Nikula <jarkko.nikula@linux.intel.com> 於 2019年6月26日 週三 下午2:27寫道：
+>
+> On 6/26/19 5:32 AM, AceLan Kao wrote:
+> > Adding I2C_HID_QUIRK_NO_RUNTIME_PM quirk doesn't help on this issue.
+> > Actually, Goodix touchpad already has that PM quirk in the list for other issue.
+> >          { I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
+> >                 I2C_HID_QUIRK_NO_RUNTIME_PM },
+> > I also modify the code as you suggested, but no luck.
+> >
+> Yeah, I realized it won't help as the i2c-hid device is anyway powered
+> on constantly when the device is open by the pm_runtime_get_sync() call
+> in i2c_hid_open().
+>
+> > It's not Goodix takes time to wakeup, it's designware I2C controller.
+> > Designware doesn't do anything wrong here, it's Goodix set the interrupt timeout
+> > that leads to the issue, so we have to prevent designware from runtime
+> > suspended.
+> > But only on that bus where Goodix is connected and open by user space.
+> What I mean something like below:
+>
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c
+> b/drivers/hid/i2c-hid/i2c-hid-core.c
+> index 90164fed08d3..bbeaa39ddc23 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -795,6 +795,9 @@ static int i2c_hid_open(struct hid_device *hid)
+>         struct i2c_hid *ihid = i2c_get_clientdata(client);
+>         int ret = 0;
+>
+> +       /* some quirk test here */
+> +       pm_runtime_get_sync(&client->adapter->dev);
+> +
+>         ret = pm_runtime_get_sync(&client->dev);
+>         if (ret < 0)
+>                 return ret;
+> @@ -812,6 +815,9 @@ static void i2c_hid_close(struct hid_device *hid)
+>
+>         /* Save some power */
+>         pm_runtime_put(&client->dev);
+> +
+> +       /* some quirk test here */
+> +       pm_runtime_put(&client->adapter->dev);
+>   }
+>
+>   static int i2c_hid_power(struct hid_device *hid, int lvl)
+>
+> --
+> Jarkko
