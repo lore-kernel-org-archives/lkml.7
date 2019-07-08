@@ -6,114 +6,117 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B602C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F66EC48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E76A20844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1D720665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbfGHGVX (ORCPT
+        id S1729101AbfGHGWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 02:21:23 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:33566 "EHLO mxct.zte.com.cn"
+        Mon, 8 Jul 2019 02:22:14 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:34286 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727218AbfGHGVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 02:21:21 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 1553A895BBB8E99657FC;
-        Mon,  8 Jul 2019 14:21:16 +0800 (CST)
+        id S1727452AbfGHGWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 02:22:13 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id E1517169850ABFE0DA36;
+        Mon,  8 Jul 2019 14:22:11 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x686Klnf049223;
-        Mon, 8 Jul 2019 14:20:47 +0800 (GMT-8)
+        by mse-fl1.zte.com.cn with ESMTP id x686KmqA015529;
+        Mon, 8 Jul 2019 14:20:48 +0800 (GMT-8)
         (envelope-from wen.yang99@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070814205103-2164426 ;
-          Mon, 8 Jul 2019 14:20:51 +0800 
+          with ESMTP id 2019070814205273-2164428 ;
+          Mon, 8 Jul 2019 14:20:52 +0800 
 From:   Wen Yang <wen.yang99@zte.com.cn>
 To:     linux-kernel@vger.kernel.org
 Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
         cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
-Subject: [PATCH] cpufreq/pasemi: fix an use-after-free in pas_cpufreq_cpu_init()
-Date:   Mon, 8 Jul 2019 14:19:02 +0800
-Message-Id: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH] irqchip: renesas-rza1: fix an use-after-free in rza1_irqc_probe()
+Date:   Mon, 8 Jul 2019 14:19:04 +0800
+Message-Id: <1562566745-7447-3-git-send-email-wen.yang99@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
+References: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-08 14:20:51,
+ 21, 2013) at 2019-07-08 14:20:52,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-08 14:20:48,
-        Serialize complete at 2019-07-08 14:20:48
-X-MAIL: mse-fl2.zte.com.cn x686Klnf049223
+ 2019-07-08 14:20:50,
+        Serialize complete at 2019-07-08 14:20:50
+X-MAIL: mse-fl1.zte.com.cn x686KmqA015529
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpu variable is still being used in the of_get_property() call
+The gic_node is still being used in the rza1_irqc_parse_map() call
 after the of_node_put() call, which may result in use-after-free.
 
-Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
+Fixes: a644ccb819bc ("irqchip: Add Renesas RZ/A1 Interrupt Controller driver")
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pm@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/cpufreq/pasemi-cpufreq.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-renesas-rza1.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-index 6b1e4ab..d2dd47b 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -132,7 +132,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+diff --git a/drivers/irqchip/irq-renesas-rza1.c b/drivers/irqchip/irq-renesas-rza1.c
+index b1f19b21..b0d46ac 100644
+--- a/drivers/irqchip/irq-renesas-rza1.c
++++ b/drivers/irqchip/irq-renesas-rza1.c
+@@ -208,20 +208,19 @@ static int rza1_irqc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->base);
  
- 	cpu = of_get_cpu_node(policy->cpu, NULL);
+ 	gic_node = of_irq_find_parent(np);
+-	if (gic_node) {
++	if (gic_node)
+ 		parent = irq_find_host(gic_node);
+-		of_node_put(gic_node);
+-	}
  
--	of_node_put(cpu);
- 	if (!cpu)
- 		goto out;
- 
-@@ -141,15 +140,15 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 		dn = of_find_compatible_node(NULL, NULL,
- 					     "pasemi,pwrficient-sdc");
- 	if (!dn)
--		goto out;
-+		goto out_put_cpu_node;
- 	err = of_address_to_resource(dn, 0, &res);
- 	of_node_put(dn);
- 	if (err)
--		goto out;
-+		goto out_put_cpu_node;
- 	sdcasr_mapbase = ioremap(res.start + SDCASR_OFFSET, 0x2000);
- 	if (!sdcasr_mapbase) {
- 		err = -EINVAL;
--		goto out;
-+		goto out_put_cpu_node;
+ 	if (!parent) {
+ 		dev_err(dev, "cannot find parent domain\n");
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto out_put_node;
  	}
  
- 	dn = of_find_compatible_node(NULL, NULL, "1682m-gizmo");
-@@ -177,6 +176,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 		err = -EINVAL;
- 		goto out_unmap_sdcpwr;
+ 	ret = rza1_irqc_parse_map(priv, gic_node);
+ 	if (ret) {
+ 		dev_err(dev, "cannot parse %s: %d\n", "interrupt-map", ret);
+-		return ret;
++		goto out_put_node;
  	}
-+	of_node_put(cpu);
  
- 	/* we need the freq in kHz */
- 	max_freq = *max_freqp / 1000;
-@@ -203,6 +203,8 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	priv->chip.name = "rza1-irqc",
+@@ -237,10 +236,12 @@ static int rza1_irqc_probe(struct platform_device *pdev)
+ 						    priv);
+ 	if (!priv->irq_domain) {
+ 		dev_err(dev, "cannot initialize irq domain\n");
+-		return -ENOMEM;
++		ret = -ENOMEM;
+ 	}
  
- out_unmap_sdcasr:
- 	iounmap(sdcasr_mapbase);
-+out_put_cpu_node:
-+	of_node_put(cpu);
- out:
- 	return err;
+-	return 0;
++out_put_node:
++	of_node_put(gic_node);
++	return ret;
  }
+ 
+ static int rza1_irqc_remove(struct platform_device *pdev)
 -- 
 2.9.5
 
