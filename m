@@ -2,94 +2,80 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746B3C606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02645C606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A37821707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:43:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="RzIIhyQJ"
+	by mail.kernel.org (Postfix) with ESMTP id C95452171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405195AbfGHUnw (ORCPT
+        id S2405202AbfGHUuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:43:52 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:58082 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732062AbfGHUnv (ORCPT
+        Mon, 8 Jul 2019 16:50:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:44994 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732062AbfGHUuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:43:51 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id DF9D3886BF;
-        Tue,  9 Jul 2019 08:43:48 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1562618628;
-        bh=fBOgWho/L+jCIgMTzoizCUsTLsw86EQjS5wwOnSKlCM=;
-        h=From:To:CC:Subject:Date:References;
-        b=RzIIhyQJSjMe1wCLFmqIk7+BC0oBIsFfacQO6/LwbF3g4EU9OOG91aB7m70uimJyW
-         RwXnQjiCuTNBqiVSOTzapcVrJTq1dQdjp90M4/GS8pKW3+qJzspXt7Yg5tz2b/ZGDT
-         /R/P382uvTxR4Utb7COQ1A6R3rtQig6PZ15E1R5I/FMo9KqGbY2N9yhoscJCiN5P4M
-         XXMNgPYPYI5TazhF1PGeewwpf4q5uD0iOnxJUjxmBMic0ye5grvrFy7Jg8NacJyTGq
-         SYoQAYx+tEMJiqufV5SzDAHHYFZ5rTSH7zxB0E+cbHXu4xHrnE1A5/jmTslbITLteZ
-         j8fWMHFOMpHGg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d23ab040001>; Tue, 09 Jul 2019 08:43:48 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 9 Jul 2019 08:43:48 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Tue, 9 Jul 2019 08:43:48 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        "jon.maloy@ericsson.com" <jon.maloy@ericsson.com>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tipc: ensure skb->lock is initialised
-Thread-Topic: [PATCH] tipc: ensure skb->lock is initialised
-Thread-Index: AQHVNRbM8H0dBbuBFkyTwxApCbaMkw==
-Date:   Mon, 8 Jul 2019 20:43:47 +0000
-Message-ID: <361940337b0d4833a5634ddd1e1896a9@svr-chch-ex1.atlnz.lc>
-References: <20190707225328.15852-1-chris.packham@alliedtelesis.co.nz>
- <2298b9eb-100f-6130-60c4-0e5e2c7b84d1@gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Jul 2019 16:50:02 -0400
+Received: by mail-io1-f70.google.com with SMTP id s9so17143093iob.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:50:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=vS8SIynIAO1niTjX4OQUTnBY4wnYj3RxM6IVuk/LaD0=;
+        b=l77IiodgmizdYkmEq9x50anJWIfBAmn16CQfIiDl4ilBqUWkNEUnw3UntWxJcFQBy8
+         bxIT/5rc6Qe92eZVyXbAI6rqPgTITjG5rCMhiTvUkdH9k0eubcwyzRU5Uk6t+L+YX4vn
+         hbgutjkXSGHssy0D0a1b99znIz+JHYkgWWI7EF6fqOh7MLZH1lg+rCzhZCDVYgtZmMoI
+         uwsT1paHHoDfL9pNZVfxhwHP1DqQslGmwxNQ+38Y9K0+qs0bwcfpCuDb/FTjyhmQwy1J
+         P7hC+H55xTrYpDNycOZyHdxMDgb6pd+lbVIvAnwuoXg7rVzdt3MMr1nqW0WasbKfGRv/
+         nGOw==
+X-Gm-Message-State: APjAAAX8K1jYWWzjqcsWHd7VdT56WuTxtlQ98GWAv3Il24i7hKTuGGsJ
+        pg2eN3P6AYzHMGLdeicVCwJzHeDYdRU1dZ5FeX+Y77t11ZS4
+X-Google-Smtp-Source: APXvYqz7Mex/eD2OdoHL8oINO6gsJGtHoTjt54wV5yzwa/nG4sene7Zkk4Wf8u8nfN+cT0C1boueLV+OkMcBcFefNswglCuyyAnW
 MIME-Version: 1.0
+X-Received: by 2002:a5d:96cc:: with SMTP id r12mr18877749iol.99.1562619001197;
+ Mon, 08 Jul 2019 13:50:01 -0700 (PDT)
+Date:   Mon, 08 Jul 2019 13:50:01 -0700
+In-Reply-To: <000000000000b519af058d3091d1@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007c5b83058d3196cd@google.com>
+Subject: Re: kernel BUG at lib/lockref.c:LINE!
+From:   syzbot <syzbot+f70e9b00f8c7d4187bd0@syzkaller.appspotmail.com>
+To:     arvid.brodin@alten.se, darrick.wong@oracle.com,
+        davem@davemloft.net, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/07/19 8:18 PM, Eric Dumazet wrote:=0A=
-> =0A=
-> =0A=
-> On 7/8/19 12:53 AM, Chris Packham wrote:=0A=
->> tipc_named_node_up() creates a skb list. It passes the list to=0A=
->> tipc_node_xmit() which has some code paths that can call=0A=
->> skb_queue_purge() which relies on the list->lock being initialised.=0A=
->> Ensure tipc_named_node_up() uses skb_queue_head_init() so that the lock=
-=0A=
->> is explicitly initialised.=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
-> =0A=
-> I would rather change the faulty skb_queue_purge() to __skb_queue_purge()=
-=0A=
-> =0A=
-=0A=
-Makes sense. I'll look at that for v2.=0A=
+syzbot has bisected this bug to:
+
+commit 867c90eeea9d81ad1336881b61a4dcf692fc5d50
+Author: Stephen Rothwell <sfr@canb.auug.org.au>
+Date:   Mon Jul 8 00:22:38 2019 +0000
+
+     Merge remote-tracking branch 'xfs/for-next'
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c69bc3a00000
+start commit:   d58b5ab9 Add linux-next specific files for 20190708
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c69bc3a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c69bc3a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bf9882946ecc11d9
+dashboard link: https://syzkaller.appspot.com/bug?extid=f70e9b00f8c7d4187bd0
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=173375c7a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1536f9bfa00000
+
+Reported-by: syzbot+f70e9b00f8c7d4187bd0@syzkaller.appspotmail.com
+Fixes: 867c90eeea9d ("Merge remote-tracking branch 'xfs/for-next'")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
