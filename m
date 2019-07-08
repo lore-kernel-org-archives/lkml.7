@@ -2,251 +2,166 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D40C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17766C606C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB99217D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5E421874
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cdBffCSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387931AbfGHRkc (ORCPT
+        id S2389823AbfGHRkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:40:32 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:48333 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729517AbfGHRkb (ORCPT
+        Mon, 8 Jul 2019 13:40:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43502 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbfGHRkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:40:31 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hkXcq-0003nl-RL; Mon, 08 Jul 2019 11:40:28 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hkXcp-0003jJ-P0; Mon, 08 Jul 2019 11:40:28 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     <linux-kernel@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        <linux-arch@vger.kernel.org>
-Date:   Mon, 08 Jul 2019 12:40:05 -0500
-Message-ID: <87v9wcl91m.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Mon, 8 Jul 2019 13:40:32 -0400
+Received: by mail-ot1-f65.google.com with SMTP id q10so17021108otk.10;
+        Mon, 08 Jul 2019 10:40:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KSVacs8YIm4Q8FN/mo4VvWI9vvPJ+1SwGrfqSjXCwAs=;
+        b=cdBffCSMGovpdqOuw2eSAroY4VE3XeTKZxsETQ39SYm80rCHztdOezzH+hyadWxoF6
+         9dF8HVPWqM2q7E/vKF4k5/jrbKVOhfmoDju+uAtMNFbI/MTySJ5BUf1T96iKq5aLuUJg
+         /edDw5SHMcsEJXpJlZyLKdfiM7PZ1ETj1uPHBJTw1H8278WnXEmz2dPlUImQct6O/LHi
+         jLjPYYsoXgdmgPplMoare0LZmrcaFgAtR6HN3+WQvmvfpw653It07PGr6VZZLfWt5d0r
+         PhbGvmsdyM1q0L6fhqjrhsUDeNpWbHLlUA3R/ocXz8R4FCpSnzbcj4DqOko+OJqaMsHC
+         LJ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KSVacs8YIm4Q8FN/mo4VvWI9vvPJ+1SwGrfqSjXCwAs=;
+        b=fa4zjA5TAXTTLj+SSoSr1nwZ6JAk/PRxA/CQwrGFLnxWjTlO0DZje8UeckR8JkUgrH
+         Nv0kFKxq2j95EDKwC7TlpdJ+brIiRpo3kTQcvkL/GOtvl86Jr85KkrFJBYgxzNgtQz+3
+         fZheclsnatohiCfNoggLLfYFvkQtLUsGk+XI0xV6k1TYqzft+0Orp2nNJmXi3nKTMBX1
+         mQLDzeL10IRDT23WPykfzl9ZN7TqDTzoHRELKrMVxEB5+o9QB2dxC+XLQHMxj8/c2Kg5
+         UpS4dS8Je5DbGJ61JLZ7zmCQJYrH4caCmOAtEHtYA4J4/v0bKP0GLG4TeCTGjWKfGK5c
+         cA9A==
+X-Gm-Message-State: APjAAAXWGsx//6kinMCE0Cu/C1XHhTG4k62oySvAmLTf1YxK6q/ZGqBo
+        GS13dhlRwc0RVq/PD6W7eoO0np+nn2/Wma+VGgI=
+X-Google-Smtp-Source: APXvYqynS/GXRYen51q6ZZMCoT3bwhm+IUspfjINhfxpNq0N4KVOCnl2xnKfOrIoZv2GGw5qYNdOUzo9QUm7BhURwy0=
+X-Received: by 2002:a9d:39a6:: with SMTP id y35mr16024114otb.81.1562607630822;
+ Mon, 08 Jul 2019 10:40:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hkXcp-0003jJ-P0;;;mid=<87v9wcl91m.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+ep3e4WNamFJQGEhYFLaK+V+CRG6aa5Ps=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [GIT PULL] signal: Removing the task parameter from force_sig
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <20190708173330.13217-1-martin.blumenstingl@googlemail.com> <20190708173330.13217-3-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190708173330.13217-3-martin.blumenstingl@googlemail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 8 Jul 2019 19:40:19 +0200
+Message-ID: <CAFBinCD8UG5PtCLzFDmiK22T03TVgGrgLB1zW3vLOAvXWs3Tvg@mail.gmail.com>
+Subject: Re: [PATCH RFC v1 2/2] mmc: host: meson-mx-sdhc: new driver for the
+ Amlogic Meson SDHC host
+To:     jianxin.pan@amlogic.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Jianxin,
 
-Linus,
+I thought I'd put my questions inline again so it's easier to follow me.
+I hope you can help clarify some of the questions I have.
 
-Please pull the siginfo-linus branch from the git tree:
+On Mon, Jul 8, 2019 at 7:33 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> WiP - only partially working - see performance numbers.
+>
+> Odroid-C1 eMMC (HS-200):
+> Amlogic's vendor driver @ Linux 3.10:
+>   7781351936 bytes (7.8 GB) copied, 134.714 s, 57.8 MB/s
+> This driver:
+>   7781351936 bytes (7.8 GB, 7.2 GiB) copied, 189.02 s, 41.2 MB/s
+>
+> EC-100 eMMC (HS MMC):
+> Amlogic's vendor driver @ Linux 3.10:
+>   15762194432 bytes (16 GB) copied, 422.967 s, 37.3 MB/s
+> This driver:
+>   15762194432 bytes (16 GB, 15 GiB) copied, 9232.65 s, 1.7 MB/s
+my EC-100 board uses high-speed MMC (no HS-200) mode only and it's
+really bad there
+on Odroid-C1 the MMC the performance is at ~70% of the 3.10 kernel driver
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git siginfo-linus
+my thinking is that phase tuning "fixes" the performance on Odroid-C1
+(EC-100 doesn't use tuning because it's not using HS-200 mode).
+I could be wrong here though. Please let me know if you have any suggestions
 
-   HEAD: 318759b4737c3b3789e2fd64d539f437d52386f5 signal/x86: Move tsk inside of CONFIG_MEMORY_FAILURE in do_sigbus
 
-A source of error over the years has been that force_sig has taken a
-task parameter when it is only safe to use force_sig with the current
-task. The force_sig function is built for delivering synchronous signals
-such as SIGSEGV where the userspace application caused a synchronous
-fault (such as a page fault) and the kernel responded with a signal.
+[...]
+> +               if (mmc->actual_clock > 100000000) {
+> +                       rx_clk_phase = 1;
+> +               } else if (mmc->actual_clock > 45000000) {
+> +                       if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330)
+> +                               rx_clk_phase = 15;
+> +                       else
+> +                               rx_clk_phase = 11;
+> +               } else if (mmc->actual_clock >= 25000000) {
+> +                       rx_clk_phase = 15;
+> +               } else if (mmc->actual_clock > 5000000) {
+> +                       rx_clk_phase = 23;
+> +               } else if (mmc->actual_clock > 1000000) {
+> +                       rx_clk_phase = 55;
+> +               } else {
+> +                       rx_clk_phase = 1061;
+> +               }
+this MMC clock frequency to RX clock phase mapping only seems to work
+for FCLK_DIV3
+how do I calculate this dynamically?
 
-Because the name force_sig does not make this clear, and because the
-force_sig takes a task parameter the function force_sig has been
-abused for sending other kinds of signals over the years.  Slowly those
-have been fixed when the oopses have been tracked down.
+[...]
+> +static int meson_mx_sdhc_register_clks(struct meson_mx_sdhc_host *host)
+> +{
+> +       struct clk *mux_parents[MESON_SDHC_PARENT_CLKS];
+> +       struct clk *mux_clk, *div_clk;
+> +       int i;
+> +
+> +       for (i = 0; i < MESON_SDHC_PARENT_CLKS; i++)
+> +               mux_parents[i] = host->parent_clks[i].clk;
+> +
+> +       host->clkc_clk_src_sel.reg = host->base + MESON_SDHC_CLKC;
+> +       host->clkc_clk_src_sel.shift = __ffs(MESON_SDHC_CLKC_CLK_SRC_SEL);
+> +       host->clkc_clk_src_sel.mask = MESON_SDHC_CLKC_CLK_SRC_SEL >>
+> +                                     host->clkc_clk_src_sel.shift;
+> +       mux_clk = meson_mx_sdhc_register_clk(mmc_dev(host->mmc),
+> +                                            &host->clkc_clk_src_sel.hw,
+> +                                            "clk_src_sel",
+> +                                            MESON_SDHC_PARENT_CLKS,
+> +                                            mux_parents,
+> +                                            CLK_SET_RATE_NO_REPARENT,
+> +                                            &clk_mux_ops);
+> +       if (IS_ERR(mux_clk))
+> +               return PTR_ERR(mux_clk);
+> +
+> +       host->clkc_clk_div.reg = host->base + MESON_SDHC_CLKC;
+> +       host->clkc_clk_div.shift = __ffs(MESON_SDHC_CLKC_CLK_DIV);
+> +       host->clkc_clk_div.width = fls(MESON_SDHC_CLKC_CLK_DIV) -
+> +                                  host->clkc_clk_div.shift;
+are there any constraints for the divider?
+the driver from the Amlogic kernel sources does this, but I'm not sure
+what this is trying to achieve (and why):
+       clk_div = input_rate / clk_ios - !(input_rate%clk_ios);
+       if (!(clk_div & 0x01)) // if even number, turn it to an odd one
+          clk_div++;
 
-This set of changes fixes the remaining abusers of force_sig and
-carefully rips out the task parameter from force_sig and friends making
-this kind of error almost impossible in the future.
+[...]
+> +       mmc->max_busy_timeout = 0; // TODO: actual value?
+do you know the actual busy timeout of this IP block?
 
-Eric W. Biederman (27):
-      signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
-      signal: Correct namespace fixups of si_pid and si_uid
-      signal/arm64: Use force_sig not force_sig_fault for SIGKILL
-      signal/drbd: Use send_sig not force_sig
-      signal/bpfilter: Fix bpfilter_kernl to use send_sig not force_sig
-      signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
-      signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
-      signal: Remove task parameter from force_sigsegv
-      signal: Remove task parameter from force_sig
-      signal: Remove task parameter from force_sig_mceerr
-      signal/x86: Remove task parameter from send_sigtrap
-      signal/um: Remove task parameter from send_sigtrap
-      signal/sh: Remove tsk parameter from force_sig_info_fault
-      signal/riscv: Remove tsk parameter from do_trap
-      signal/nds32: Remove tsk parameter from send_sigtrap
-      signal/arm: Remove tsk parameter from ptrace_break
-      signal/arm: Remove tsk parameter from __do_user_fault
-      signal/unicore32: Remove tsk parameter from __do_user_fault
-      signal: Explicitly call force_sig_fault on current
-      signal: Use force_sig_fault_to_task for the two calls that don't deliver to current
-      signal: Remove the task parameter from force_sig_fault
-      signal: Properly set TRACE_SIGNAL_LOSE_INFO in __send_signal
-      signal: Move the computation of force into send_signal and correct it.
-      signal: Generate the siginfo in force_sig
-      signal: Factor force_sig_info_to_task out of force_sig_info
-      signal: Remove the signal number and task parameters from force_sig_info
-      signal/x86: Move tsk inside of CONFIG_MEMORY_FAILURE in do_sigbus
 
- arch/alpha/kernel/signal.c                |   4 +-
- arch/alpha/kernel/traps.c                 |   2 +-
- arch/alpha/mm/fault.c                     |   4 +-
- arch/arc/kernel/process.c                 |   4 +-
- arch/arc/kernel/signal.c                  |   2 +-
- arch/arc/kernel/traps.c                   |   2 +-
- arch/arc/mm/fault.c                       |   4 +-
- arch/arm/include/asm/traps.h              |   2 +-
- arch/arm/kernel/ptrace.c                  |   6 +-
- arch/arm/kernel/signal.c                  |   4 +-
- arch/arm/kernel/traps.c                   |   4 +-
- arch/arm/mm/alignment.c                   |   2 +-
- arch/arm/mm/fault.c                       |  13 +-
- arch/arm64/kernel/traps.c                 |   7 +-
- arch/c6x/kernel/signal.c                  |   2 +-
- arch/c6x/kernel/traps.c                   |   2 +-
- arch/csky/abiv1/alignment.c               |   2 +-
- arch/csky/abiv2/fpu.c                     |   2 +-
- arch/csky/kernel/signal.c                 |   4 +-
- arch/csky/kernel/traps.c                  |   2 +-
- arch/csky/mm/fault.c                      |   4 +-
- arch/h8300/kernel/ptrace_h.c              |   4 +-
- arch/h8300/kernel/ptrace_s.c              |   2 +-
- arch/h8300/kernel/signal.c                |   2 +-
- arch/hexagon/kernel/signal.c              |   2 +-
- arch/hexagon/kernel/traps.c               |  12 +-
- arch/hexagon/mm/vm_fault.c                |   4 +-
- arch/ia64/kernel/brl_emu.c                |   6 +-
- arch/ia64/kernel/signal.c                 |   8 +-
- arch/ia64/kernel/traps.c                  |  24 +--
- arch/ia64/kernel/unaligned.c              |   2 +-
- arch/ia64/mm/fault.c                      |   2 +-
- arch/m68k/kernel/signal.c                 |   4 +-
- arch/m68k/kernel/traps.c                  |  20 +--
- arch/m68k/mm/fault.c                      |   4 +-
- arch/microblaze/kernel/exceptions.c       |   2 +-
- arch/microblaze/kernel/signal.c           |   2 +-
- arch/microblaze/mm/fault.c                |   2 +-
- arch/mips/kernel/branch.c                 |  18 +--
- arch/mips/kernel/kprobes.c                |   2 +-
- arch/mips/kernel/signal.c                 |   8 +-
- arch/mips/kernel/signal_n32.c             |   4 +-
- arch/mips/kernel/signal_o32.c             |   8 +-
- arch/mips/kernel/traps.c                  |  50 +++---
- arch/mips/kernel/unaligned.c              |  20 +--
- arch/mips/mm/fault.c                      |   4 +-
- arch/mips/sgi-ip22/ip22-berr.c            |   2 +-
- arch/mips/sgi-ip22/ip28-berr.c            |   2 +-
- arch/mips/sgi-ip27/ip27-berr.c            |   2 +-
- arch/mips/sgi-ip32/ip32-berr.c            |   2 +-
- arch/nds32/kernel/fpu.c                   |   2 +-
- arch/nds32/kernel/signal.c                |   2 +-
- arch/nds32/kernel/traps.c                 |  17 +-
- arch/nds32/mm/fault.c                     |   4 +-
- arch/nios2/kernel/signal.c                |   4 +-
- arch/nios2/kernel/traps.c                 |   2 +-
- arch/openrisc/kernel/signal.c             |   2 +-
- arch/openrisc/kernel/traps.c              |  12 +-
- arch/openrisc/mm/fault.c                  |   4 +-
- arch/parisc/kernel/ptrace.c               |   6 +-
- arch/parisc/kernel/signal.c               |   2 +-
- arch/parisc/kernel/traps.c                |  14 +-
- arch/parisc/kernel/unaligned.c            |   4 +-
- arch/parisc/math-emu/driver.c             |   2 +-
- arch/parisc/mm/fault.c                    |   4 +-
- arch/powerpc/kernel/process.c             |   2 +-
- arch/powerpc/kernel/signal_32.c           |   6 +-
- arch/powerpc/kernel/signal_64.c           |   2 +-
- arch/powerpc/kernel/traps.c               |   4 +-
- arch/powerpc/mm/fault.c                   |   5 +-
- arch/powerpc/platforms/cell/spufs/fault.c |   9 +-
- arch/powerpc/platforms/cell/spufs/run.c   |   2 +-
- arch/riscv/include/asm/bug.h              |   2 +-
- arch/riscv/kernel/signal.c                |   2 +-
- arch/riscv/kernel/traps.c                 |  11 +-
- arch/riscv/mm/fault.c                     |   6 +-
- arch/s390/kernel/compat_signal.c          |   4 +-
- arch/s390/kernel/signal.c                 |   4 +-
- arch/s390/kernel/traps.c                  |   6 +-
- arch/s390/mm/fault.c                      |   6 +-
- arch/sh/kernel/cpu/sh2a/fpu.c             |   2 +-
- arch/sh/kernel/cpu/sh4/fpu.c              |   2 +-
- arch/sh/kernel/cpu/sh5/fpu.c              |   4 +-
- arch/sh/kernel/hw_breakpoint.c            |   2 +-
- arch/sh/kernel/ptrace_64.c                |   4 +-
- arch/sh/kernel/signal_32.c                |   4 +-
- arch/sh/kernel/signal_64.c                |   4 +-
- arch/sh/kernel/traps.c                    |   4 +-
- arch/sh/kernel/traps_32.c                 |  12 +-
- arch/sh/kernel/traps_64.c                 |   2 +-
- arch/sh/math-emu/math.c                   |   2 +-
- arch/sh/mm/fault.c                        |  11 +-
- arch/sparc/kernel/process_64.c            |   4 +-
- arch/sparc/kernel/signal32.c              |   8 +-
- arch/sparc/kernel/signal_32.c             |   4 +-
- arch/sparc/kernel/signal_64.c             |   8 +-
- arch/sparc/kernel/sys_sparc_32.c          |   2 +-
- arch/sparc/kernel/sys_sparc_64.c          |   2 +-
- arch/sparc/kernel/traps_32.c              |   4 +-
- arch/sparc/kernel/traps_64.c              |  41 +++--
- arch/sparc/mm/fault_32.c                  |   4 +-
- arch/sparc/mm/fault_64.c                  |   2 +-
- arch/um/kernel/exec.c                     |   2 +-
- arch/um/kernel/ptrace.c                   |   7 +-
- arch/um/kernel/skas/mmu.c                 |   2 +-
- arch/um/kernel/tlb.c                      |   4 +-
- arch/um/kernel/trap.c                     |  16 +-
- arch/unicore32/kernel/signal.c            |   4 +-
- arch/unicore32/kernel/traps.c             |   2 +-
- arch/unicore32/mm/fault.c                 |  13 +-
- arch/x86/entry/vsyscall/vsyscall_64.c     |   4 +-
- arch/x86/include/asm/ptrace.h             |   3 +-
- arch/x86/kernel/cpu/mce/core.c            |   2 +-
- arch/x86/kernel/ptrace.c                  |   9 +-
- arch/x86/kernel/signal.c                  |   2 +-
- arch/x86/kernel/traps.c                   |  10 +-
- arch/x86/kernel/umip.c                    |   2 +-
- arch/x86/kernel/uprobes.c                 |   2 +-
- arch/x86/kernel/vm86_32.c                 |   2 +-
- arch/x86/mm/fault.c                       |  12 +-
- arch/x86/mm/mpx.c                         |   2 +-
- arch/x86/um/signal.c                      |   4 +-
- arch/xtensa/kernel/signal.c               |   2 +-
- arch/xtensa/kernel/traps.c                |   8 +-
- arch/xtensa/mm/fault.c                    |   4 +-
- drivers/block/drbd/drbd_int.h             |   2 +-
- drivers/block/drbd/drbd_main.c            |   2 +-
- drivers/block/drbd/drbd_nl.c              |   2 +-
- drivers/misc/lkdtm/bugs.c                 |   2 +-
- drivers/usb/core/devio.c                  |  48 +++---
- fs/cifs/connect.c                         |   2 +-
- fs/exec.c                                 |   2 +-
- include/linux/ptrace.h                    |   2 +-
- include/linux/sched/signal.h              |  15 +-
- include/linux/syscalls.h                  |   2 +-
- kernel/events/uprobes.c                   |   4 +-
- kernel/pid_namespace.c                    |   2 +-
- kernel/rseq.c                             |   4 +-
- kernel/seccomp.c                          |   2 +-
- kernel/signal.c                           | 249 +++++++++++++++++++++---------
- mm/memory-failure.c                       |   2 +-
- net/bpfilter/bpfilter_kern.c              |   2 +-
- security/safesetid/lsm.c                  |   4 +-
- 143 files changed, 569 insertions(+), 483 deletions(-)
-
-Eric
+Thank you for your time!
+Regards
+Martin
