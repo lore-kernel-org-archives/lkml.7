@@ -2,74 +2,95 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E07C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E608C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A51A20844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C3020844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:18:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SUdyA0AW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xx1gnwaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfGHIIp (ORCPT
+        id S1728455AbfGHISv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:08:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53176 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfGHIIp (ORCPT
+        Mon, 8 Jul 2019 04:18:51 -0400
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:37581 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfGHISu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:08:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FUCY1YwB/R6KzNtkKi2x6Os1qnizb1f0SoTtRRtZD2A=; b=SUdyA0AWMY8khw0UPLe6tbgfZ
-        eCLU1CRCRERKczG1r8Pia4WtZ72Uuswsu7Yx/4phnU00dlxVjSG1CaFlGX0vZv7Gvo7Y3iZKcDkUk
-        B1xSnmvcsHRpj1sFC1hCJ+vfiKui+mYV4kpDeugcVolpiJKOebZP5D6vVBKLZ5gFPqLIxvbUemmoM
-        GRKqOqEhxdcGJZUPGRYIh98WfShwAWPGNmJjA+cFpDH77zPwQotm5D3G7Uf4F1RWSpqqUrd0Nfa3J
-        34ucxvzP3hlhEBTV/neDtgwyFP3WWENp1N93ifqMS8QUFONHkLcZJ9/i7X0HWzpiP+o6s85sTp0sK
-        ohEGj2GDw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkOhS-0002sL-HC; Mon, 08 Jul 2019 08:08:38 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 413C420977821; Mon,  8 Jul 2019 10:08:36 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 10:08:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, subhra.mazumdar@oracle.com
-Subject: Re: [RFC 0/2] Optimize the idle CPU search
-Message-ID: <20190708080836.GW3402@hirez.programming.kicks-ass.net>
-References: <20190708045432.18774-1-parth@linux.ibm.com>
+        Mon, 8 Jul 2019 04:18:50 -0400
+Received: by mail-wm1-f45.google.com with SMTP id f17so15356873wme.2;
+        Mon, 08 Jul 2019 01:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+dxzi0LW4RlPK/kr+U7GGFfgJIv2CJ7BbeIglATqCiM=;
+        b=Xx1gnwaWiyxSlgtlzf3yAzKGunNNKWCamksFgNqACmRfMnB3qTEzonbb6HpNBjskO3
+         VBuamkf1unnUZNEg+YBFTnFV+JYYrYUOKvukPLsooxkCEOPPM3YH4O6VwCdearhpstOs
+         2qTRX2X59LSJAl7UZP39U5CMCnYXilBC+O8vhf5Fs/CLCr4qMBdSY/CSCb0sfNyuIyfI
+         yhzRjiK+8XoiOKtj7+lu1HRVwlnRFbAZ7+28o4D8uQ4SKsa9TrJ8z9kkNO7KNFn7ebWw
+         Lb31XL3B0edWdisbq8vxl4tsEpeiLcQ3yj02g2ZguS5nczVyO4EVvnvkn7qpYFgf0Dk6
+         qh8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+dxzi0LW4RlPK/kr+U7GGFfgJIv2CJ7BbeIglATqCiM=;
+        b=jGvKb9xmB7tb1AZlHpOsvhtRZGlLEX4EZhVDIjgEkd1o2LASpFglOAbbOBAhur86wa
+         FelRRS9HOuZy/8z3HU6zLwFNvKoql70rbIlbPcpmohTb8hb9HtpQ+Ki/7wWt2jKs40D1
+         QR/yT04uzrL54u8RsBPAWwC4k9eeDqT//ytgjyB0qV8udWMPOrKdaGMx/4Iq6jeyptJU
+         Kjsnc+MHMTRxHiYYjKkW4m+0B9aTdthu0z5t9jJC/YmWWXv0NoDGiE4pqs3RWkfbxXNk
+         LlfvzaLAm5z0prYWeUPfGfWIBkDTFEzeh10gzJ+cedJpubS4nEKCK0014pqAcSazhPfV
+         d72w==
+X-Gm-Message-State: APjAAAVwa2RIUG07xDDB/JmCQGJuEzYXEAtWGc9W3a6yEt8yL8RzXoak
+        ddHCo+4+Yc4GMGXJ3Ycj9jsVe0RC
+X-Google-Smtp-Source: APXvYqyCQbOKo2RqOsqLd/VCvYjgup3UpiELMSIF4/nqiPfRBkPLqMgPoxWK4lGjvFxqlHSLgghiYg==
+X-Received: by 2002:a1c:7d4e:: with SMTP id y75mr15658420wmc.169.1562573928266;
+        Mon, 08 Jul 2019 01:18:48 -0700 (PDT)
+Received: from [192.168.8.147] (130.165.185.81.rev.sfr.net. [81.185.165.130])
+        by smtp.gmail.com with ESMTPSA id b15sm14964597wrt.77.2019.07.08.01.18.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 01:18:47 -0700 (PDT)
+Subject: Re: [PATCH] tipc: ensure skb->lock is initialised
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        jon.maloy@ericsson.com, ying.xue@windriver.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <20190707225328.15852-1-chris.packham@alliedtelesis.co.nz>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <2298b9eb-100f-6130-60c4-0e5e2c7b84d1@gmail.com>
+Date:   Mon, 8 Jul 2019 10:18:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708045432.18774-1-parth@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190707225328.15852-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 10:24:30AM +0530, Parth Shah wrote:
-> When searching for an idle_sibling, scheduler first iterates to search for
-> an idle core and then for an idle CPU. By maintaining the idle CPU mask
-> while iterating through idle cores, we can mark non-idle CPUs for which
-> idle CPU search would not have to iterate through again. This is especially
-> true in a moderately load system
+
+
+On 7/8/19 12:53 AM, Chris Packham wrote:
+> tipc_named_node_up() creates a skb list. It passes the list to
+> tipc_node_xmit() which has some code paths that can call
+> skb_queue_purge() which relies on the list->lock being initialised.
+> Ensure tipc_named_node_up() uses skb_queue_head_init() so that the lock
+> is explicitly initialised.
 > 
-> Optimize idle CPUs search by marking already found non idle CPUs during
-> idle core search. This reduces iteration count when searching for idle
-> CPUs, resulting in lower iteration count.
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-Have you seen these patches:
+I would rather change the faulty skb_queue_purge() to __skb_queue_purge()
 
-  https://lkml.kernel.org/r/20180530142236.667774973@infradead.org
 
-I've meant to get back to that, but never quite had the time :/
+
