@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66390C606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E4CC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C470216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2150216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600958;
-	bh=2qhzfsLtRC+4/kABIINMSLG+GVDZvREe7CyKIpCpHPY=;
+	s=default; t=1562600964;
+	bh=sDXebu2e+r4/wIVAxEIgAHCYmAW/ZJinDnlmbmhye8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ddl+TFdHZ6YV1K3FDpAWx5TfNWdCDre0PGF3UM9RJX7D/M887vi4bC2kUykPPPVT8
-	 4xJmoUaIkeYCStWYSAw2zQOKEYjPAoKCjZ2T91w4qpYzZFFtlD/VfzXX1vHrK2LSCD
-	 xUnasrJH2MjyRoA15PFXdF5wO4bLT9Vj0n1078dA=
+	b=PWTMmy+zwW887Mkn43RPq76ZvZVe8wJ3S/LgeCaQwphyiqOzWUMJMupbAlrhXRYH6
+	 kT0nA530LXfHpjmnIFCYfDN4SK7FSg71ISeUPj0kHb1z6wqn7V+GT2yo0JYm9YBJhN
+	 jZk6hQi54QhjlKMnFNbPFM7k7m1fAWTDRXVesTws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732655AbfGHPQv (ORCPT
+        id S1732589AbfGHPQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39896 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732648AbfGHPQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:16:46 -0400
+        id S1732551AbfGHPQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:16:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF89216E3;
-        Mon,  8 Jul 2019 15:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC54721734;
+        Mon,  8 Jul 2019 15:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599005;
-        bh=2qhzfsLtRC+4/kABIINMSLG+GVDZvREe7CyKIpCpHPY=;
+        s=default; t=1562598987;
+        bh=sDXebu2e+r4/wIVAxEIgAHCYmAW/ZJinDnlmbmhye8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r5pOcczNbddipoOgshQ0enhhF9Q+f/KoLO0g+0B9lFJZEtsgVrHUMGgcyJMQEkcwr
-         /wMPM3rT7NIlvMg+KiQWprh8J+BvoHVxe5cfqNksxT8UB5P3MxVGIu+z0sBKfRV+CG
-         a5r5xsKkS+TsJVLegAs5POATIczZeNtHRn2tNiWI=
+        b=0s1uFIdRoCdgpK92IOO7fSfRtHXa9wFCk+CJJyhJJc8sWRsvzah+7/tdX8rPHjEMW
+         4jyL6BOKS/exenaGs5p3jka9qu9f8yclkkxeMBwMs6AEu5OpG0gZNgEUW1mzPPXuB5
+         KxZCvxyC1n1TY75M63T+vAEyUxEuC5ke5tyr3Hhg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Elsasser <jelsasser@appneta.com>
-Subject: [PATCH 4.4 46/73] net: check before dereferencing netdev_ops during busy poll
-Date:   Mon,  8 Jul 2019 17:12:56 +0200
-Message-Id: <20190708150523.819580216@linuxfoundation.org>
+        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 41/73] tipc: change to use register_pernet_device
+Date:   Mon,  8 Jul 2019 17:12:51 +0200
+Message-Id: <20190708150523.546959181@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -58,69 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Elsasser <jelsasser@appneta.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-init_dummy_netdev() leaves its netdev_ops pointer zeroed. This leads
-to a NULL pointer dereference when sk_busy_loop fires against an iwlwifi
-wireless adapter and checks napi->dev->netdev_ops->ndo_busy_poll.
+[ Upstream commit c492d4c74dd3f87559883ffa0f94a8f1ae3fe5f5 ]
 
-Avoid this by ensuring napi->dev->netdev_ops is valid before following
-the pointer, avoiding the following panic when busy polling on a dummy
-netdev:
+This patch is to fix a dst defcnt leak, which can be reproduced by doing:
 
-  BUG: unable to handle kernel NULL pointer dereference at 00000000000000c8
-  IP: [<ffffffff817b4b72>] sk_busy_loop+0x92/0x2f0
-  Call Trace:
-   [<ffffffff815a3134>] ? uart_write_room+0x74/0xf0
-   [<ffffffff817964a9>] sock_poll+0x99/0xa0
-   [<ffffffff81223142>] do_sys_poll+0x2e2/0x520
-   [<ffffffff8118d3fc>] ? get_page_from_freelist+0x3bc/0xa30
-   [<ffffffff810ada22>] ? update_curr+0x62/0x140
-   [<ffffffff811ea671>] ? __slab_free+0xa1/0x2a0
-   [<ffffffff811ea671>] ? __slab_free+0xa1/0x2a0
-   [<ffffffff8179dbb1>] ? skb_free_head+0x21/0x30
-   [<ffffffff81221bd0>] ? poll_initwait+0x50/0x50
-   [<ffffffff811eaa36>] ? kmem_cache_free+0x1c6/0x1e0
-   [<ffffffff815a4884>] ? uart_write+0x124/0x1d0
-   [<ffffffff810bd1cd>] ? remove_wait_queue+0x4d/0x60
-   [<ffffffff810bd224>] ? __wake_up+0x44/0x50
-   [<ffffffff81582731>] ? tty_write_unlock+0x31/0x40
-   [<ffffffff8158c5c6>] ? tty_ldisc_deref+0x16/0x20
-   [<ffffffff81584820>] ? tty_write+0x1e0/0x2f0
-   [<ffffffff81587e50>] ? process_echoes+0x80/0x80
-   [<ffffffff8120c17b>] ? __vfs_write+0x2b/0x130
-   [<ffffffff8120d09a>] ? vfs_write+0x15a/0x1a0
-   [<ffffffff81223455>] SyS_poll+0x75/0x100
-   [<ffffffff819a6524>] entry_SYSCALL_64_fastpath+0x24/0xcf
+  # ip net a c; ip net a s; modprobe tipc
+  # ip net e s ip l a n eth1 type veth peer n eth1 netns c
+  # ip net e c ip l s lo up; ip net e c ip l s eth1 up
+  # ip net e s ip l s lo up; ip net e s ip l s eth1 up
+  # ip net e c ip a a 1.1.1.2/8 dev eth1
+  # ip net e s ip a a 1.1.1.1/8 dev eth1
+  # ip net e c tipc b e m udp n u1 localip 1.1.1.2
+  # ip net e s tipc b e m udp n u1 localip 1.1.1.1
+  # ip net d c; ip net d s; rmmod tipc
 
-Commit 79e7fff47b7b ("net: remove support for per driver ndo_busy_poll()")
-indirectly fixed this upstream in linux-4.11 by removing the offending
-pointer usage. No other users of napi->dev touch its netdev_ops.
+and it will get stuck and keep logging the error:
 
-Fixes: 8b80cda536ea ("net: rename include/net/ll_poll.h to include/net/busy_poll.h") # 4.4.y
-Signed-off-by: Josh Elsasser <jelsasser@appneta.com>
+  unregister_netdevice: waiting for lo to become free. Usage count = 1
+
+The cause is that a dst is held by the udp sock's sk_rx_dst set on udp rx
+path with udp_early_demux == 1, and this dst (eventually holding lo dev)
+can't be released as bearer's removal in tipc pernet .exit happens after
+lo dev's removal, default_device pernet .exit.
+
+ "There are two distinct types of pernet_operations recognized: subsys and
+  device.  At creation all subsys init functions are called before device
+  init functions, and at destruction all device exit functions are called
+  before subsys exit function."
+
+So by calling register_pernet_device instead to register tipc_net_ops, the
+pernet .exit() will be invoked earlier than loopback dev's removal when a
+netns is being destroyed, as fou/gue does.
+
+Note that vxlan and geneve udp tunnels don't have this issue, as the udp
+sock is released in their device ndo_stop().
+
+This fix is also necessary for tipc dst_cache, which will hold dsts on tx
+path and I will introduce in my next patch.
+
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ net/tipc/core.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-This is a straightforward backport of the 4.9.y fix[1] for this crash, which doesn't
-apply to the older LTS releases. Only build-tested on 4.4.y, as I don't have access
-to wireless hardware and firmware that runs on older LTS kernels.
-
-[1]: https://lore.kernel.org/stable/20190701234143.72631-1-jelsasser@appneta.com/T/#u
-
- include/net/busy_poll.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/include/net/busy_poll.h
-+++ b/include/net/busy_poll.h
-@@ -93,7 +93,7 @@ static inline bool sk_busy_loop(struct s
- 		goto out;
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -129,7 +129,7 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_sysctl;
  
- 	ops = napi->dev->netdev_ops;
--	if (!ops->ndo_busy_poll)
-+	if (!ops || !ops->ndo_busy_poll)
- 		goto out;
+-	err = register_pernet_subsys(&tipc_net_ops);
++	err = register_pernet_device(&tipc_net_ops);
+ 	if (err)
+ 		goto out_pernet;
  
- 	do {
+@@ -137,7 +137,7 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_socket;
+ 
+-	err = register_pernet_subsys(&tipc_topsrv_net_ops);
++	err = register_pernet_device(&tipc_topsrv_net_ops);
+ 	if (err)
+ 		goto out_pernet_topsrv;
+ 
+@@ -148,11 +148,11 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
+-	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++	unregister_pernet_device(&tipc_topsrv_net_ops);
+ out_pernet_topsrv:
+ 	tipc_socket_stop();
+ out_socket:
+-	unregister_pernet_subsys(&tipc_net_ops);
++	unregister_pernet_device(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+ out_sysctl:
+@@ -167,9 +167,9 @@ out_netlink:
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
+-	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++	unregister_pernet_device(&tipc_topsrv_net_ops);
+ 	tipc_socket_stop();
+-	unregister_pernet_subsys(&tipc_net_ops);
++	unregister_pernet_device(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
+ 	tipc_unregister_sysctl();
 
 
