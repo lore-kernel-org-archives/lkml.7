@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F188C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B42C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3698216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2D8216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598933;
-	bh=Cx+RAoOkfIeIwwGcurKCke5Cr4Mrics5L7HjGT3jk1A=;
+	s=default; t=1562598936;
+	bh=2VdFkdk9SIaAdzepBOAW1EfUckj2mgK2DM94z7kTn2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YBSz5Fm4U6DVSifGjl1fUBXpc8ZVGRVA9oqMCJ7bNPsDZwV9lITQc4oqs6VuR89bb
-	 0wxbCGqGnICdRFwHd5e7c9EWWtxZc587dVi3MHcjexAkDNUiYSJNmpojXdxaepXcKM
-	 8h69crSF1vBst4eOiBwevKC08H/Uky7Y9ozd58gc=
+	b=mZv8g3igWGH0Zx+5eA+4GdhTmi1Aig/vk1+1A9OHkVX4SQu+KROhhsAuT4zKWYR8R
+	 30dp2BZqEAgMxSK9PgqI2/LYPSffxzeU+2K2Zpj1biUD4PtnHiqh52vTzQOuFUR+oe
+	 ZfKwppvqjoIhuwQOmRu88YIi3PONuGXmnDDIsBXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732354AbfGHPPc (ORCPT
+        id S1730268AbfGHPPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37962 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbfGHPP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:15:27 -0400
+        id S1726072AbfGHPPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:15:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4610221738;
-        Mon,  8 Jul 2019 15:15:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D506214C6;
+        Mon,  8 Jul 2019 15:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598926;
-        bh=Cx+RAoOkfIeIwwGcurKCke5Cr4Mrics5L7HjGT3jk1A=;
+        s=default; t=1562598932;
+        bh=2VdFkdk9SIaAdzepBOAW1EfUckj2mgK2DM94z7kTn2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dy/KrY2qsG3jWXbQT55cBzxAVit3tI3+uy+94e666UZsqkNfFiT4/ALcUPi0C4iKg
-         9+MSfOm+IBa1I9mu1DyV7w9dJ5Qhl0b7cygIB4HcsaBnh1GihaNrn+dh6Ozn+iIbwg
-         bmJA/1hcDyNQXz+bnWjUXEk9HocRIm+yhjlIDvxs=
+        b=TFCtYKYQ0vJ7BO85v3Dh+JL6ToPQ0JDdXxDeYIrTk3kYjtC2pg9png1FOzGyNJboy
+         C8Ai+oaTFfhFuvWjsHxvaLhR9w3Cjt0fRMBpuAn/Cdi1koTJe0Iu0v3S/YctmlHxrc
+         s7U5k3CnlT7vMyc6Y0Ge+n+HycUyAzVcyoPUMIbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 02/73] mm/page_idle.c: fix oops because end_pfn is larger than max_pfn
-Date:   Mon,  8 Jul 2019 17:12:12 +0200
-Message-Id: <20190708150517.108200534@linuxfoundation.org>
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.4 21/73] can: flexcan: fix timeout when set small bitrate
+Date:   Mon,  8 Jul 2019 17:12:31 +0200
+Message-Id: <20190708150521.367974176@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -66,85 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-commit 7298e3b0a149c91323b3205d325e942c3b3b9ef6 upstream.
+commit 247e5356a709eb49a0d95ff2a7f07dac05c8252c upstream.
 
-Currently the calcuation of end_pfn can round up the pfn number to more
-than the actual maximum number of pfns, causing an Oops.  Fix this by
-ensuring end_pfn is never more than max_pfn.
+Current we can meet timeout issue when setting a small bitrate like
+10000 as follows on i.MX6UL EVK board (ipg clock = 66MHZ, per clock =
+30MHZ):
 
-This can be easily triggered when on systems where the end_pfn gets
-rounded up to more than max_pfn using the idle-page stress-ng stress test:
+| root@imx6ul7d:~# ip link set can0 up type can bitrate 10000
 
-sudo stress-ng --idle-page 0
+A link change request failed with some changes committed already.
+Interface can0 may have been left with an inconsistent configuration,
+please check.
 
-  BUG: unable to handle kernel paging request at 00000000000020d8
-  #PF error: [normal kernel read fault]
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  CPU: 1 PID: 11039 Comm: stress-ng-idle- Not tainted 5.0.0-5-generic #6-Ubuntu
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-  RIP: 0010:page_idle_get_page+0xc8/0x1a0
-  Code: 0f b1 0a 75 7d 48 8b 03 48 89 c2 48 c1 e8 33 83 e0 07 48 c1 ea 36 48 8d 0c 40 4c 8d 24 88 49 c1 e4 07 4c 03 24 d5 00 89 c3 be <49> 8b 44 24 58 48 8d b8 80 a1 02 00 e8 07 d5 77 00 48 8b 53 08 48
-  RSP: 0018:ffffafd7c672fde8 EFLAGS: 00010202
-  RAX: 0000000000000005 RBX: ffffe36341fff700 RCX: 000000000000000f
-  RDX: 0000000000000284 RSI: 0000000000000275 RDI: 0000000001fff700
-  RBP: ffffafd7c672fe00 R08: ffffa0bc34056410 R09: 0000000000000276
-  R10: ffffa0bc754e9b40 R11: ffffa0bc330f6400 R12: 0000000000002080
-  R13: ffffe36341fff700 R14: 0000000000080000 R15: ffffa0bc330f6400
-  FS: 00007f0ec1ea5740(0000) GS:ffffa0bc7db00000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00000000000020d8 CR3: 0000000077d68000 CR4: 00000000000006e0
-  Call Trace:
-    page_idle_bitmap_write+0x8c/0x140
-    sysfs_kf_bin_write+0x5c/0x70
-    kernfs_fop_write+0x12e/0x1b0
-    __vfs_write+0x1b/0x40
-    vfs_write+0xab/0x1b0
-    ksys_write+0x55/0xc0
-    __x64_sys_write+0x1a/0x20
-    do_syscall_64+0x5a/0x110
-    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+| RTNETLINK answers: Connection timed out
 
-Link: http://lkml.kernel.org/r/20190618124352.28307-1-colin.king@canonical.com
-Fixes: 33c3fc71c8cf ("mm: introduce idle page tracking")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+It is caused by calling of flexcan_chip_unfreeze() timeout.
+
+Originally the code is using usleep_range(10, 20) for unfreeze
+operation, but the patch (8badd65 can: flexcan: avoid calling
+usleep_range from interrupt context) changed it into udelay(10) which is
+only a half delay of before, there're also some other delay changes.
+
+After double to FLEXCAN_TIMEOUT_US to 100 can fix the issue.
+
+Meanwhile, Rasmus Villemoes reported that even with a timeout of 100,
+flexcan_probe() fails on the MPC8309, which requires a value of at least
+140 to work reliably. 250 works for everyone.
+
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_idle.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/flexcan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/page_idle.c
-+++ b/mm/page_idle.c
-@@ -130,7 +130,7 @@ static ssize_t page_idle_bitmap_read(str
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -171,7 +171,7 @@
+ #define FLEXCAN_MB_CNT_LENGTH(x)	(((x) & 0xf) << 16)
+ #define FLEXCAN_MB_CNT_TIMESTAMP(x)	((x) & 0xffff)
  
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
+-#define FLEXCAN_TIMEOUT_US		(50)
++#define FLEXCAN_TIMEOUT_US		(250)
  
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
-@@ -175,7 +175,7 @@ static ssize_t page_idle_bitmap_write(st
- 
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
- 
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
+ /* FLEXCAN hardware feature flags
+  *
 
 
