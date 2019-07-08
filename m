@@ -2,194 +2,74 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B80C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E07C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F8120844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A51A20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="HjwQkZGo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SUdyA0AW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfGHIIC (ORCPT
+        id S1728249AbfGHIIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:08:02 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:33566 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfGHIIB (ORCPT
+        Mon, 8 Jul 2019 04:08:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53176 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfGHIIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:08:01 -0400
-Received: by mail-vk1-f193.google.com with SMTP id y130so2290852vkc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZOR8clYW+rncXTX2zDaB/JyvqUChf4gA7xNaU/YBSOg=;
-        b=HjwQkZGofNQdyJdhdsVJlTLKDMPO0orD/dj2rtP84s0BLxKprbw2Q0dPlIchoaQk1Q
-         G58ky89Ofz0eHD4HVvHRwHNfU9isBY0fIdt3WYIJC3EbFjKwqFFqBa7gqM5w4PUQpZ61
-         oPcCg1OYdgDCOhMgzIBHKZxAgWyNtsYps3kRElLlJb/aUAEV2h1RuR8baolPBQ8XUv7+
-         IZlQ7xdB401Vlqa39KXXlpK63Sa21h5vdTbM8X4/Td9P3eC3oGy/cnHM59B0rP5KX8my
-         CjR7J0rOwlm2GG2eurjO6bedWoMrLyvIEr3Jxm1dBPknhkUI9blYTV10DefQZajdhoA8
-         s+Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZOR8clYW+rncXTX2zDaB/JyvqUChf4gA7xNaU/YBSOg=;
-        b=TTBGZ1HW5w4N+3dyMENgDZsTGuP0e5APVDE/9js9Fr955Cgsr9Md/5/YtT45VrXMTK
-         Vj91lPLT/gXBIM1oB8rHKpDlHg0C5FYJ+7lIApqYRkwnrt6GvLyZf/PYj5ZpxD868rY2
-         FzBCHgz9cvFjUiDYUU1Cq/kB7rtoZvTAu1om0GHfpRWdIJ6XBU0/hLRXP9GbgeD9Ttk8
-         ZsEPHznubS6Kx2AJDMHJqS717wi6A5Ur3Elo5jstuvFBtlZVvw/obW3LCaQT7qovpr6u
-         f79s99uy0dkay6O6DgHUe2eMdeAbU/RtvZkDAUbm5oT+fjTJReBVtHBSzssod8Dv4NnN
-         /rQw==
-X-Gm-Message-State: APjAAAW3Ss7cPkWxmLjnf8i8IfTiRfQVeHJY6rnS3O0MNSMhpQeQobdp
-        CjoopePR8bqV+qYTzlFZX2OI+a3LpvYz8A1mDTWjog==
-X-Google-Smtp-Source: APXvYqxvi+ZGKZk70HDy/wcOVHFF+mkZN0c9aifSzp8ZeR05ajx0gubx1sPnRzwxwHIKL4hXvHNHgKeeEsePgZx9XtI=
-X-Received: by 2002:a1f:acc5:: with SMTP id v188mr4725232vke.16.1562573279892;
- Mon, 08 Jul 2019 01:07:59 -0700 (PDT)
+        Mon, 8 Jul 2019 04:08:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FUCY1YwB/R6KzNtkKi2x6Os1qnizb1f0SoTtRRtZD2A=; b=SUdyA0AWMY8khw0UPLe6tbgfZ
+        eCLU1CRCRERKczG1r8Pia4WtZ72Uuswsu7Yx/4phnU00dlxVjSG1CaFlGX0vZv7Gvo7Y3iZKcDkUk
+        B1xSnmvcsHRpj1sFC1hCJ+vfiKui+mYV4kpDeugcVolpiJKOebZP5D6vVBKLZ5gFPqLIxvbUemmoM
+        GRKqOqEhxdcGJZUPGRYIh98WfShwAWPGNmJjA+cFpDH77zPwQotm5D3G7Uf4F1RWSpqqUrd0Nfa3J
+        34ucxvzP3hlhEBTV/neDtgwyFP3WWENp1N93ifqMS8QUFONHkLcZJ9/i7X0HWzpiP+o6s85sTp0sK
+        ohEGj2GDw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkOhS-0002sL-HC; Mon, 08 Jul 2019 08:08:38 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 413C420977821; Mon,  8 Jul 2019 10:08:36 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 10:08:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Parth Shah <parth@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        vincent.guittot@linaro.org, subhra.mazumdar@oracle.com
+Subject: Re: [RFC 0/2] Optimize the idle CPU search
+Message-ID: <20190708080836.GW3402@hirez.programming.kicks-ass.net>
+References: <20190708045432.18774-1-parth@linux.ibm.com>
 MIME-Version: 1.0
-References: <20190708063252.4756-1-jian-hong@endlessm.com> <F7CD281DE3E379468C6D07993EA72F84D1861A6D@RTITMBSVM04.realtek.com.tw>
-In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D1861A6D@RTITMBSVM04.realtek.com.tw>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 8 Jul 2019 16:07:23 +0800
-Message-ID: <CAPpJ_eebQtL0y_j98J2T7m9g77A61SVtvD8qnNN42bV0dm4MLA@mail.gmail.com>
-Subject: Re: [PATCH] rtw88/pci: Rearrange the memory usage for skb in RX ISR
-To:     Tony Chuang <yhchuang@realtek.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@endlessm.com" <linux@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708045432.18774-1-parth@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Chuang <yhchuang@realtek.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=888=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:23=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> > Subject: [PATCH] rtw88/pci: Rearrange the memory usage for skb in RX IS=
-R
->
-> nit, "rtw88: pci:" would be better.
+On Mon, Jul 08, 2019 at 10:24:30AM +0530, Parth Shah wrote:
+> When searching for an idle_sibling, scheduler first iterates to search for
+> an idle core and then for an idle CPU. By maintaining the idle CPU mask
+> while iterating through idle cores, we can mark non-idle CPUs for which
+> idle CPU search would not have to iterate through again. This is especially
+> true in a moderately load system
+> 
+> Optimize idle CPUs search by marking already found non idle CPUs during
+> idle core search. This reduces iteration count when searching for idle
+> CPUs, resulting in lower iteration count.
 
-Ok.
+Have you seen these patches:
 
-> >
-> > When skb allocation fails and the "rx routine starvation" is hit, the
-> > function returns immediately without updating the RX ring. At this
-> > point, the RX ring may continue referencing an old skb which was alread=
-y
-> > handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
-> > bad things happen.
-> >
-> > This patch allocates a new skb first in RX ISR. If we don't have memory
-> > available, we discard the current frame, allowing the existing skb to b=
-e
-> > reused in the ring. Otherwise, we simplify the code flow and just hand
-> > over the RX-populated skb over to mac80211.
-> >
-> > In addition, to fixing the kernel crash, the RX routine should now
-> > generally behave better under low memory conditions.
-> >
-> > Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=3D204053
-> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> > Reviewed-by: Daniel Drake <drake@endlessm.com>
-> > Cc: <stable@vger.kernel.org>
-> > ---
-> >  drivers/net/wireless/realtek/rtw88/pci.c | 28 +++++++++++-------------
-> >  1 file changed, 13 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
-> > b/drivers/net/wireless/realtek/rtw88/pci.c
-> > index cfe05ba7280d..1bfc99ae6b84 100644
-> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
-> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
-> > @@ -786,6 +786,15 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev,
-> > struct rtw_pci *rtwpci,
-> >               rx_desc =3D skb->data;
-> >               chip->ops->query_rx_desc(rtwdev, rx_desc, &pkt_stat, &rx_=
-status);
-> >
-> > +             /* discard current skb if the new skb cannot be allocated=
- as a
-> > +              * new one in rx ring later
-> > +              * */
->
-> nit, comment indentation.
+  https://lkml.kernel.org/r/20180530142236.667774973@infradead.org
 
-Thanks.  I will fix this.
-
-> > +             new =3D dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
-> > +             if (WARN(!new, "rx routine starvation\n")) {
-> > +                     new =3D skb;
-> > +                     goto next_rp;
-> > +             }
-> > +
-> >               /* offset from rx_desc to payload */
-> >               pkt_offset =3D pkt_desc_sz + pkt_stat.drv_info_sz +
-> >                            pkt_stat.shift;
-> > @@ -803,25 +812,14 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev=
-,
-> > struct rtw_pci *rtwpci,
-> >                       skb_put(skb, pkt_stat.pkt_len);
-> >                       skb_reserve(skb, pkt_offset);
-> >
-> > -                     /* alloc a smaller skb to mac80211 */
-> > -                     new =3D dev_alloc_skb(pkt_stat.pkt_len);
-> > -                     if (!new) {
-> > -                             new =3D skb;
-> > -                     } else {
-> > -                             skb_put_data(new, skb->data, skb->len);
-> > -                             dev_kfree_skb_any(skb);
-> > -                     }
->
-> I am not sure if it's fine to deliver every huge SKB to mac80211.
-> Because it will then be delivered to TCP/IP stack.
-> Hence I think either it should be tested to know if the performance
-> would be impacted or find out a more efficient way to send
-> smaller SKB to mac80211 stack.
-
-I remember network stack only processes the skb with(in) pointers
-(skb->data) and the skb->len for data part.  It also checks real
-buffer boundary (head and end) of the skb to prevent memory overflow.
-Therefore, I think using the original skb is the most efficient way.
-
-If I misunderstand something, please point out.
-
-
-
-> >                       /* TODO: merge into rx.c */
-> >                       rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
-> > -                     memcpy(new->cb, &rx_status, sizeof(rx_status));
-> > -                     ieee80211_rx_irqsafe(rtwdev->hw, new);
-> > +                     memcpy(skb->cb, &rx_status, sizeof(rx_status));
-> > +                     ieee80211_rx_irqsafe(rtwdev->hw, skb);
-> >               }
-> >
-> > -             /* skb delivered to mac80211, alloc a new one in rx ring =
-*/
-> > -             new =3D dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
-> > -             if (WARN(!new, "rx routine starvation\n"))
-> > -                     return;
-> > -
-> > +next_rp:
-> > +             /* skb delivered to mac80211, attach the new one into rx =
-ring */
-> >               ring->buf[cur_rp] =3D new;
-> >               rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc=
-_sz);
-> >
->
-> --
->
-> Yan-Hsuan
+I've meant to get back to that, but never quite had the time :/
