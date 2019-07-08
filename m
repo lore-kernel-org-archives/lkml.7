@@ -2,95 +2,131 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9ADC606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3800EC606D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CD3216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562624561;
-	bh=kl7lshorB1seah0gjr1h95Ypn9QDinq2vxeGaGQTBaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IsVAQJS3KxnICBparlIl4vEOCoHbIrMqZbENMCVGofNsQGsvWPHASyziQ6/l95JuQ
-	 8hGoopc0vlq1GP366xnX1vEgtbhg9R6daxSUADXkVHdqGE2RPMQH6hNOckFTSx9aVu
-	 kUyL2GTsa/fLRLG4TosQIrCDRCSR7HJHywFQptIg=
+	by mail.kernel.org (Postfix) with ESMTP id 0D693216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbfGHWWk (ORCPT
+        id S1726529AbfGHWYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:22:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44459 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfGHWWk (ORCPT
+        Mon, 8 Jul 2019 18:24:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9402 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725815AbfGHWYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:22:40 -0400
-Received: by mail-io1-f65.google.com with SMTP id s7so38854552iob.11;
-        Mon, 08 Jul 2019 15:22:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j+TKZB9O7k+DtANgHGBfHBHuGR2fL+XIDhYBGfnpm5c=;
-        b=a8+AIXAQifBduWrllVxwxQPlXuIh1jF1Rj1PS+jkXmAACQ72pFPNG7SaQH4TYXdW/c
-         ZxpmDWbqFW/5Rwmz5DJZb2Zwq26EPZ8iMWTkY6K4Y69skgrRDNOAihLQIoePD4Fo9dYZ
-         Z0nwi0DkaCEPT1WpG6XVLeo/Ow84UoJNa+Aq2DHQh3gKEASU994K1jBw4Ukhr5lJpsJI
-         HoBGxerWBzEOOjg4WrNeh2OR5AW7c3F93PuKPsGAfWOniaffO3L1pIF81EhYafcNbKTD
-         psVlESlvNf3mzeJwub0dqSGXEXiurfka4aRamcS9CGuW6MPuTlNA46kHc8dpUeG9C+nm
-         bTjw==
-X-Gm-Message-State: APjAAAWdaX89LLWb4pwepS73r5Y2CPmak0gu8gBH7nCaxQI7Uel5wgmF
-        ImzPa0k/szDxuVMQ1JlBat6qebU=
-X-Google-Smtp-Source: APXvYqzFDsbgQ7fCs+NRybe+k3ZWI7EOwEOe9pO2Lrk17Q9cymxTA8kXF6V9k6yESGcyJ8+BjKOEZQ==
-X-Received: by 2002:a6b:b985:: with SMTP id j127mr21421472iof.186.1562624559280;
-        Mon, 08 Jul 2019 15:22:39 -0700 (PDT)
-Received: from localhost ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t133sm21552866iof.21.2019.07.08.15.22.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 15:22:38 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 16:22:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3 v2] dt-bindings: power: reset: qcom: Add
- qcom,pm8998-pon compatability line
-Message-ID: <20190708222237.GA30944@bogus>
-References: <20190603222319.62842-1-john.stultz@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603222319.62842-1-john.stultz@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 8 Jul 2019 18:24:24 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68MM2kS132420
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 18:24:23 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmdtb1f6d-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 18:24:22 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 8 Jul 2019 23:24:21 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 8 Jul 2019 23:24:18 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x68MOGwh62586898
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jul 2019 22:24:17 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF966A4055;
+        Mon,  8 Jul 2019 22:24:16 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5545FA4051;
+        Mon,  8 Jul 2019 22:24:15 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.58])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jul 2019 22:24:15 +0000 (GMT)
+Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Christoph Hellwig <hch@infradead.org>
+Date:   Mon, 08 Jul 2019 18:24:04 -0400
+In-Reply-To: <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
+References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
+         <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070822-0020-0000-0000-000003516D0B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070822-0021-0000-0000-000021A5192F
+Message-Id: <1562624644.11461.66.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907080276
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  3 Jun 2019 22:23:17 +0000, John Stultz wrote:
-> Update bindings to support for qcom,pm8998-pon which uses gen2 pon
-> 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: David Brown <david.brown@linaro.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Amit Pundir <amit.pundir@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  Documentation/devicetree/bindings/power/reset/qcom,pon.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hi Jarkko,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, 2019-07-08 at 18:11 +0300, Jarkko Sakkinen wrote:
+> On Sat, 2019-07-06 at 20:18 -0400, Nayna Jain wrote:
+> > +/*
+> > + * tpm_get_pcr_allocation() - initialize the chip allocated banks for PCRs
+> > + * @chip: TPM chip to use.
+> > + */
+> > +static int tpm_get_pcr_allocation(struct tpm_chip *chip)
+> > +{
+> > +	int rc;
+> > +
+> > +	if (chip->flags & TPM_CHIP_FLAG_TPM2)
+> > +		rc = tpm2_get_pcr_allocation(chip);
+> > +	else
+> > +		rc = tpm1_get_pcr_allocation(chip);
+> > +
+> > +	return rc;
+> > +}
+> 
+> It is just a trivial static function, which means that kdoc comment is
+> not required and neither it is useful. Please remove that. I would
+> rewrite the function like:
+> 
+> static int tpm_get_pcr_allocation(struct tpm_chip *chip)
+> {
+> 	int rc;
+> 
+> 	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
+>      	     tpm2_get_pcr_allocation(chip) :
+>      	     tpm1_get_pcr_allocation(chip);
+
+> 
+> 	return rc > 0 ? -ENODEV : rc;
+> }
+> 
+> This addresses the issue that Stefan also pointed out. You have to
+> deal with the TPM error codes.
+
+Hm, in the past I was told by Christoph not to use the ternary
+operator.  Have things changed?  Other than removing the comment, the
+only other difference is the return.
+
+Mimi
+
