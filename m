@@ -2,53 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECE0C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B53C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB23620665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE9C2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599506;
-	bh=h7dxYQZZoJDmLEaLirceWiPTOe+djBBoPaO0SnvyirU=;
+	s=default; t=1562599510;
+	bh=pPvXy1dg4w7R9+7wjQwCiC2XVNsumn72yQ7jifnr8r8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u6x2XnbyCWH/VV5zpuo97XqJYPexNp6WTHJfyI4YJCac1kW/Sna1zNpVgF2Cth4hT
-	 JE2tWS1GlWhfvFhQaqsdRj5yOStXOEZgyg4MLWaPyG2AAqUcoRcakULaF/4fIkS2gc
-	 EeRaA5v+LeKR/ZcZA6cHubFdZHDwJw+HXoxHfW0w=
+	b=cXMao+grpwxsMot/124zQPzU4U6Sy5LdpwECjTQqMrfaOTATt4XVLtV7JKwtWhU0Y
+	 PxH1Ix82DcYIVi3+SshIejpsFgyb8yhXLf3eaFnXaHqayjbFph+5Q5lhg1rTaPg0+7
+	 G3emfKwHdG+Ypc4H17yiErlJxkYPT6W3NgDPdg4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388422AbfGHPZE (ORCPT
+        id S2388438AbfGHPZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52368 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388538AbfGHPZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:01 -0400
+        id S2388543AbfGHPZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2F1B2166E;
-        Mon,  8 Jul 2019 15:25:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73C14204EC;
+        Mon,  8 Jul 2019 15:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599501;
-        bh=h7dxYQZZoJDmLEaLirceWiPTOe+djBBoPaO0SnvyirU=;
+        s=default; t=1562599503;
+        bh=pPvXy1dg4w7R9+7wjQwCiC2XVNsumn72yQ7jifnr8r8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JxQIlx+2bveoPeARpzf8c8MIDJWTgyB2Q+dXwAd6pz/gjeVOO0DN21Y3pZwhupl90
-         F3o62KIU9XDeK7KfwioSDLja3HbOfbf8Skz/KG+foHFxY1D91dLoihQ67sf0BBppbf
-         yDHPqlVuYl9Bi+cA0Q6iVCUya8BMsTXnur5oiK/4=
+        b=Him/r2HsdoSrrp3T6ruIjV38vZkl8RqtyXUsH4ObErqBkDNywW2Pe1v8o3TJWqgH3
+         6MONPYsGo6g0pSQlcLTu6T7oSSCFpYlNpoi8tswv2CdrMxKKXQ4JxrQJthtY8FySQj
+         ol5/J/0Eh1Zv8rpQa6ZYifF39VEq2+jjIqHBtEaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcus Cooper <codekipper@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/56] ASoC: sun4i-i2s: Fix sun8i tx channel offset mask
-Date:   Mon,  8 Jul 2019 17:13:01 +0200
-Message-Id: <20190708150518.661098702@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Beckett <bob.beckett@collabora.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 4.14 36/56] drm/imx: notify drm core before sending event during crtc disable
+Date:   Mon,  8 Jul 2019 17:13:28 +0200
+Message-Id: <20190708150523.216561571@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -61,35 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7e46169a5f35762f335898a75d1b8a242f2ae0f5 ]
+From: Robert Beckett <bob.beckett@collabora.com>
 
-Although not causing any noticeable issues, the mask for the
-channel offset is covering too many bits.
+commit 78c68e8f5cd24bd32ba4ca1cdfb0c30cf0642685 upstream.
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Notify drm core before sending pending events during crtc disable.
+This fixes the first event after disable having an old stale timestamp
+by having drm_crtc_vblank_off update the timestamp to now.
+
+This was seen while debugging weston log message:
+Warning: computed repaint delay is insane: -8212 msec
+
+This occurred due to:
+1. driver starts up
+2. fbcon comes along and restores fbdev, enabling vblank
+3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
+seq number and time set at current value
+(some time later)
+4. weston starts and does a modeset
+5. atomic commit disables crtc while it does the modeset
+6. ipu_crtc_atomic_disable sends vblank with old seq number and time
+
+Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
+
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/sunxi/sun4i-i2s.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/imx/ipuv3-crtc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index b4af5ce78ecb..a10913f8293f 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -110,7 +110,7 @@
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -99,14 +99,14 @@ static void ipu_crtc_atomic_disable(stru
+ 	ipu_dc_disable(ipu);
+ 	ipu_prg_disable(ipu);
  
- #define SUN8I_I2S_TX_CHAN_MAP_REG	0x44
- #define SUN8I_I2S_TX_CHAN_SEL_REG	0x34
--#define SUN8I_I2S_TX_CHAN_OFFSET_MASK		GENMASK(13, 11)
-+#define SUN8I_I2S_TX_CHAN_OFFSET_MASK		GENMASK(13, 12)
- #define SUN8I_I2S_TX_CHAN_OFFSET(offset)	(offset << 12)
- #define SUN8I_I2S_TX_CHAN_EN_MASK		GENMASK(11, 4)
- #define SUN8I_I2S_TX_CHAN_EN(num_chan)		(((1 << num_chan) - 1) << 4)
--- 
-2.20.1
-
++	drm_crtc_vblank_off(crtc);
++
+ 	spin_lock_irq(&crtc->dev->event_lock);
+ 	if (crtc->state->event) {
+ 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+ 		crtc->state->event = NULL;
+ 	}
+ 	spin_unlock_irq(&crtc->dev->event_lock);
+-
+-	drm_crtc_vblank_off(crtc);
+ }
+ 
+ static void imx_drm_crtc_reset(struct drm_crtc *crtc)
 
 
