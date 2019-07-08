@@ -2,131 +2,188 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3800EC606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94EBC606D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D693216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A608520656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562625040;
+	bh=OffiOYG6R13M9YyPeVgv7b8PG9UD7U6RoXa89hcavPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sC92Zvz7F7FwXdE3doNqlEnIngsFBxwDJNT6a6dN1IMv2QBuiBKlx7CNv9xSTm43J
+	 uO5AeLzVm2o3HWxxfDsv4T6tAoDzG3C9x8/HK2zByz0DZ4dWy1H6gnLtclcotM/i8i
+	 6NR4hb2duGcMKZRR3H6uFJD6BuyWyv1fRyc9+7Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfGHWYZ (ORCPT
+        id S1726823AbfGHWaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:24:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9402 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725815AbfGHWYY (ORCPT
+        Mon, 8 Jul 2019 18:30:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35599 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfGHWaj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:24:24 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68MM2kS132420
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 18:24:23 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmdtb1f6d-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 18:24:22 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 8 Jul 2019 23:24:21 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 8 Jul 2019 23:24:18 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x68MOGwh62586898
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jul 2019 22:24:17 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF966A4055;
-        Mon,  8 Jul 2019 22:24:16 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5545FA4051;
-        Mon,  8 Jul 2019 22:24:15 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.58])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Jul 2019 22:24:15 +0000 (GMT)
-Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Christoph Hellwig <hch@infradead.org>
-Date:   Mon, 08 Jul 2019 18:24:04 -0400
-In-Reply-To: <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
-References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
-         <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070822-0020-0000-0000-000003516D0B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070822-0021-0000-0000-000021A5192F
-Message-Id: <1562624644.11461.66.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907080276
+        Mon, 8 Jul 2019 18:30:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so29454806ioo.2;
+        Mon, 08 Jul 2019 15:30:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DKbe5Bw/ZWkGGevk11CJOS1MNbgfdugSW24hlqZbzbo=;
+        b=tHMaGIsLukSuB6CqKCJfcHL9Q2DOFCpwAXWWSJqaAnjJK7Dccec+nKsYSuzgWH1Qsx
+         OjYvYIkG3UklEh2PUBZnhTXpyY45+9DQJ/dfsozrg18ACjNAyHpx7M0apPwC5TOdr+dk
+         zCFpxo4g9KWhOE3WYJfsbw5YxJqwfxMtwQ08PZxLECgnXcWQJTpoVV7cANRHkPVhzy8J
+         /4WvOLHa6u+kJVvOSqyKIaklRRiI2rXfWFDz9iomvPvcBGkuThS5OKQPBTOdB6Q9We79
+         SWSyaQCvTopobbSFB00XXp6+BwoyBUPd4iEDRc7fqNSs8nIomdzKQK0L27lQ7l8Mmrht
+         Qdaw==
+X-Gm-Message-State: APjAAAUcwDDdnycTaKhTUoaRWJSSIcrwWbRoEi9yt9/deASN568xaA8W
+        Ll7zRL0jxaoN3V+nQ1NEVA==
+X-Google-Smtp-Source: APXvYqzSDWN6ooiwDgwx+KLeyHhdjBuL+QsFBURU2G0UGLCiUVOLkcMQl1URO5AdsIaKlOsojsMMsg==
+X-Received: by 2002:a5e:c00e:: with SMTP id u14mr7422195iol.196.1562625037976;
+        Mon, 08 Jul 2019 15:30:37 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id x22sm14429132iob.84.2019.07.08.15.30.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 15:30:36 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 16:30:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     min.guo@mediatek.com
+Cc:     Bin Liu <b-liu@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, tony@atomide.com,
+        hdegoede@redhat.com
+Subject: Re: [PATCH v6 1/6] dt-bindings: usb: musb: Add support for MediaTek
+ musb controller
+Message-ID: <20190708223035.GA7005@bogus>
+References: <1559648359-6569-1-git-send-email-min.guo@mediatek.com>
+ <1559648359-6569-2-git-send-email-min.guo@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559648359-6569-2-git-send-email-min.guo@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jarkko,
-
-On Mon, 2019-07-08 at 18:11 +0300, Jarkko Sakkinen wrote:
-> On Sat, 2019-07-06 at 20:18 -0400, Nayna Jain wrote:
-> > +/*
-> > + * tpm_get_pcr_allocation() - initialize the chip allocated banks for PCRs
-> > + * @chip: TPM chip to use.
-> > + */
-> > +static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-> > +{
-> > +	int rc;
-> > +
-> > +	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> > +		rc = tpm2_get_pcr_allocation(chip);
-> > +	else
-> > +		rc = tpm1_get_pcr_allocation(chip);
-> > +
-> > +	return rc;
-> > +}
+On Tue, Jun 04, 2019 at 07:39:14PM +0800, min.guo@mediatek.com wrote:
+> From: Min Guo <min.guo@mediatek.com>
 > 
-> It is just a trivial static function, which means that kdoc comment is
-> not required and neither it is useful. Please remove that. I would
-> rewrite the function like:
+> This adds support for MediaTek musb controller in
+> host, peripheral and otg mode.
 > 
-> static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-> {
-> 	int rc;
+> Signed-off-by: Min Guo <min.guo@mediatek.com>
+> ---
+> changes in v6:
+> 1. Modify usb connector child node
 > 
-> 	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
->      	     tpm2_get_pcr_allocation(chip) :
->      	     tpm1_get_pcr_allocation(chip);
+> changes in v5:
+> suggested by Rob:
+> 1. Modify compatible as 
+> - compatible : should be one of:
+>                "mediatek,mt-2701"
 
+No, should be: mediatek,mt2701-musb
+
+>                ...
+>                followed by "mediatek,mtk-musb"
+> 2. Add usb connector child node
 > 
-> 	return rc > 0 ? -ENODEV : rc;
-> }
+> changes in v4:
+> suggested by Sergei:
+> 1. String alignment
 > 
-> This addresses the issue that Stefan also pointed out. You have to
-> deal with the TPM error codes.
+> changes in v3:
+> 1. no changes
+> 
+> changes in v2:
+> suggested by Bin:
+> 1. Modify DRC to DRD
+> suggested by Rob:
+> 2. Drop the "<soc-model>-musb" in compatible
+> 3. Remove phy-names
+> 4. Add space after comma in clock-names
+> ---
+>  .../devicetree/bindings/usb/mediatek,musb.txt      | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> new file mode 100644
+> index 0000000..7434299
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> @@ -0,0 +1,55 @@
+> +MediaTek musb DRD/OTG controller
+> +-------------------------------------------
+> +
+> +Required properties:
+> + - compatible      : should be one of:
+> +                     "mediatek,mt-2701"
+> +                     ...
+> +                     followed by "mediatek,mtk-musb"
+> + - reg             : specifies physical base address and size of
+> +                     the registers
+> + - interrupts      : interrupt used by musb controller
+> + - interrupt-names : must be "mc"
+> + - phys            : PHY specifier for the OTG phy
+> + - dr_mode         : should be one of "host", "peripheral" or "otg",
+> +                     refer to usb/generic.txt
+> + - clocks          : a list of phandle + clock-specifier pairs, one for
+> +                     each entry in clock-names
+> + - clock-names     : must contain "main", "mcu", "univpll"
+> +                     for clocks of controller
+> +
+> +Optional properties:
+> + - power-domains   : a phandle to USB power domain node to control USB's
+> +                     MTCMOS
+> +
+> +Required child nodes:
+> + usb connector node as defined in bindings/connector/usb-connector.txt
+> +Optional properties:
+> + - id-gpios        : input GPIO for USB ID pin.
+> + - vbus-gpios      : input GPIO for USB VBUS pin.
+> + - vbus-supply     : reference to the VBUS regulator, needed when supports
+> +                     dual-role mode
+> +
+> +Example:
+> +
+> +usb2: usb@11200000 {
+> +	compatible = "mediatek,mt2701-musb",
+> +		     "mediatek,mtk-musb";
+> +	reg = <0 0x11200000 0 0x1000>;
+> +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
+> +	interrupt-names = "mc";
+> +	phys = <&u2port2 PHY_TYPE_USB2>;
+> +	dr_mode = "otg";
+> +	clocks = <&pericfg CLK_PERI_USB0>,
+> +		 <&pericfg CLK_PERI_USB0_MCU>,
+> +		 <&pericfg CLK_PERI_USB_SLV>;
+> +	clock-names = "main","mcu","univpll";
+> +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+> +	connector{
+> +		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
 
-Hm, in the past I was told by Christoph not to use the ternary
-operator.  Have things changed?  Other than removing the comment, the
-only other difference is the return.
+linux,typeb-conn-gpio is not an accepted compatible string.
 
-Mimi
-
+> +		label = "micro-USB";
+> +		type = "micro";
+> +		id-gpios = <&pio 44 GPIO_ACTIVE_HIGH>;
+> +		vbus-supply = <&usb_vbus>;
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
