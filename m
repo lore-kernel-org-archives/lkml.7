@@ -2,55 +2,55 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1C7C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A514DC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21182166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4C4216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599376;
-	bh=RYOBTpTrNjHCdpFk/eqreEmSwKZHskeo9MtL8o1Q9yE=;
+	s=default; t=1562599380;
+	bh=frJ4X5lZTs/c6mGsUYgae9BT+bXQw78oMXGMLEz7q6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hFE8ycjOT0q/mvcA6zjiQj9Kdhi8LMJqvh8TIYxRfoi48TaB7GTcBMkOhwhzMXwOb
-	 oGbGzp3C9THMd57oVy/cb7xkCZO0chQZmH+tsLuHBPyOb4ntaHP6g6PAAdGVX0CO+n
-	 J2/an2znokLRqM6beO/3wthCrunRF5dPmHRqu3SY=
+	b=GdLlJ3rILyJmPwns17kOt9Q0MEcHn1JVB+hbNADrmWjHVRI4A4WAJ1P0TRHJNPGCX
+	 yto7LQBrRqJLdBtY81GVMVhaxuRD3vRtIQN0M18e3p7sGTPeVWBKAhTFtFlE3iW4nd
+	 Qo939rkoqfehI7w4VxYNCrOe6aSlFE1+kWu6ogW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388087AbfGHPWz (ORCPT
+        id S2388101AbfGHPW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49592 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbfGHPWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:52 -0400
+        id S1729493AbfGHPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 053B1216E3;
-        Mon,  8 Jul 2019 15:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F8E214C6;
+        Mon,  8 Jul 2019 15:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599372;
-        bh=RYOBTpTrNjHCdpFk/eqreEmSwKZHskeo9MtL8o1Q9yE=;
+        s=default; t=1562599376;
+        bh=frJ4X5lZTs/c6mGsUYgae9BT+bXQw78oMXGMLEz7q6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kg3k7zI+m+Ix2C5BAir51JmPWH8kzy1NHBL68UtNaW0YCPnDjtV+QIztqz2UqLDmo
-         b20WldLZb3dPFDI3X6emCo6EKSLGPwtrlaFMzFmuXqVVZHSmV2IoJl56wfLxkDqmAU
-         CRX5z2oMzAvlOHnah7G7BrQamoR3hmoCH3aXWS24=
+        b=xrQ4omM7sAktLwsrmno8A2pUtZpcv5ULmrJv3F+qeajaf09hu0aCxeY/xRIMVDkPa
+         269FE0pKb1HZ2TXvlaj8KqKoaZZRvuOa2XjOATNCmFMXWpd+7Q8ZpNO3oE3IiT1n4S
+         wWHPCoJwsggDbQPljvumRmizCcMDwHIX0mCCIDR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 097/102] arm64, vdso: Define vdso_{start,end} as array
-Date:   Mon,  8 Jul 2019 17:13:30 +0200
-Message-Id: <20190708150531.499551020@linuxfoundation.org>
+        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Subject: [PATCH 4.9 098/102] KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable LAPIC
+Date:   Mon,  8 Jul 2019 17:13:31 +0200
+Message-Id: <20190708150531.552030006@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -63,64 +63,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit dbbb08f500d6146398b794fdc68a8e811366b451 upstream.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Adjust vdso_{start|end} to be char arrays to avoid compile-time analysis
-that flags "too large" memcmp() calls with CONFIG_FORTIFY_SOURCE.
+commit bb34e690e9340bc155ebed5a3d75fc63ff69e082 upstream.
 
-Cc: Jisheng Zhang <jszhang@marvell.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Thomas reported that:
+
+ | Background:
+ |
+ |    In preparation of supporting IPI shorthands I changed the CPU offline
+ |    code to software disable the local APIC instead of just masking it.
+ |    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
+ |    register.
+ |
+ | Failure:
+ |
+ |    When the CPU comes back online the startup code triggers occasionally
+ |    the warning in apic_pending_intr_clear(). That complains that the IRRs
+ |    are not empty.
+ |
+ |    The offending vector is the local APIC timer vector who's IRR bit is set
+ |    and stays set.
+ |
+ | It took me quite some time to reproduce the issue locally, but now I can
+ | see what happens.
+ |
+ | It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
+ | (and hardware support) it behaves correctly.
+ |
+ | Here is the series of events:
+ |
+ |     Guest CPU
+ |
+ |     goes down
+ |
+ |       native_cpu_disable()
+ |
+ | 			apic_soft_disable();
+ |
+ |     play_dead()
+ |
+ |     ....
+ |
+ |     startup()
+ |
+ |       if (apic_enabled())
+ |         apic_pending_intr_clear()	<- Not taken
+ |
+ |      enable APIC
+ |
+ |         apic_pending_intr_clear()	<- Triggers warning because IRR is stale
+ |
+ | When this happens then the deadline timer or the regular APIC timer -
+ | happens with both, has fired shortly before the APIC is disabled, but the
+ | interrupt was not serviced because the guest CPU was in an interrupt
+ | disabled region at that point.
+ |
+ | The state of the timer vector ISR/IRR bits:
+ |
+ |     	     	       	        ISR     IRR
+ | before apic_soft_disable()    0	      1
+ | after apic_soft_disable()     0	      1
+ |
+ | On startup		      		 0	      1
+ |
+ | Now one would assume that the IRR is cleared after the INIT reset, but this
+ | happens only on CPU0.
+ |
+ | Why?
+ |
+ | Because our CPU0 hotplug is just for testing to make sure nothing breaks
+ | and goes through an NMI wakeup vehicle because INIT would send it through
+ | the boots-trap code which is not really working if that CPU was not
+ | physically unplugged.
+ |
+ | Now looking at a real world APIC the situation in that case is:
+ |
+ |     	     	       	      	ISR     IRR
+ | before apic_soft_disable()    0	      1
+ | after apic_soft_disable()     0	      1
+ |
+ | On startup		      		 0	      0
+ |
+ | Why?
+ |
+ | Once the dying CPU reenables interrupts the pending interrupt gets
+ | delivered as a spurious interupt and then the state is clear.
+ |
+ | While that CPU0 hotplug test case is surely an esoteric issue, the APIC
+ | emulation is still wrong, Even if the play_dead() code would not enable
+ | interrupts then the pending IRR bit would turn into an ISR .. interrupt
+ | when the APIC is reenabled on startup.
+
+>From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
+* Pending interrupts in the IRR and ISR registers are held and require
+  masking or handling by the CPU.
+
+In Thomas's testing, hardware cpu will not respect soft disable LAPIC
+when IRR has already been set or APICv posted-interrupt is in flight,
+so we can skip soft disable APIC checking when clearing IRR and set ISR,
+continue to respect soft disable APIC when attempting to set IRR.
+
+Reported-by: Rong Chen <rong.a.chen@intel.com>
+Reported-by: Feng Tang <feng.tang@intel.com>
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rong Chen <rong.a.chen@intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/kernel/vdso.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kvm/lapic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index c9b9a5a322eb..c0f315ecfa7c 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -37,7 +37,7 @@
- #include <asm/vdso.h>
- #include <asm/vdso_datapage.h>
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1992,7 +1992,7 @@ int kvm_apic_has_interrupt(struct kvm_vc
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 	int highest_irr;
  
--extern char vdso_start, vdso_end;
-+extern char vdso_start[], vdso_end[];
- static unsigned long vdso_pages __ro_after_init;
+-	if (!apic_enabled(apic))
++	if (!kvm_apic_hw_enabled(apic))
+ 		return -1;
  
- /*
-@@ -124,14 +124,14 @@ static int __init vdso_init(void)
- 	int i;
- 	struct page **vdso_pagelist;
- 
--	if (memcmp(&vdso_start, "\177ELF", 4)) {
-+	if (memcmp(vdso_start, "\177ELF", 4)) {
- 		pr_err("vDSO is not a valid ELF object!\n");
- 		return -EINVAL;
- 	}
- 
--	vdso_pages = (&vdso_end - &vdso_start) >> PAGE_SHIFT;
-+	vdso_pages = (vdso_end - vdso_start) >> PAGE_SHIFT;
- 	pr_info("vdso: %ld pages (%ld code @ %p, %ld data @ %p)\n",
--		vdso_pages + 1, vdso_pages, &vdso_start, 1L, vdso_data);
-+		vdso_pages + 1, vdso_pages, vdso_start, 1L, vdso_data);
- 
- 	/* Allocate the vDSO pagelist, plus a page for the data. */
- 	vdso_pagelist = kcalloc(vdso_pages + 1, sizeof(struct page *),
-@@ -144,7 +144,7 @@ static int __init vdso_init(void)
- 
- 	/* Grab the vDSO code pages. */
- 	for (i = 0; i < vdso_pages; i++)
--		vdso_pagelist[i + 1] = pfn_to_page(PHYS_PFN(__pa(&vdso_start)) + i);
-+		vdso_pagelist[i + 1] = pfn_to_page(PHYS_PFN(__pa(vdso_start)) + i);
- 
- 	vdso_spec[0].pages = &vdso_pagelist[0];
- 	vdso_spec[1].pages = &vdso_pagelist[1];
--- 
-2.20.1
-
+ 	apic_update_ppr(apic);
 
 
