@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D186C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF34C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EC720665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895132173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600075;
-	bh=i6acdeAxEMRD6gcNSjYZvA9AZg+jD55NhOTvfBmifLY=;
+	s=default; t=1562600083;
+	bh=LM5F0Foz7CGLRgH2lWz/bad1ZpG8VxUk5A261MLxHCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qwAGcwYP/8MZt+e+9c0tr/W9on0SXE+Jnmian7YntOsRNbxrsTEwUjl/68RhjLDct
-	 zAjDeHU2CTmYCmyrorPQQmpEZvw/iAFn0N4G3SKLdw3WlrsgHVabZfmHDxulM5O8W2
-	 qg6drgJpUfou6kRuV+qJtBiu0CmMZbKdxU8e7bdI=
+	b=zbQrMHHZBm0px43CU4QUdQdobzxHdOL9XciohttuUiLqxAr7jLffj7hGdkkC7PB2K
+	 uMTLskDD2ChhgACBHsPBjy2QrJmzkoU2JXIiqFu7EBg8oZWiMKnPW9kwzRFv3pw54h
+	 +gLNFO3WgQX+wEpIWRY6KrYVUE3sv3MToRZKYhMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390565AbfGHPee (ORCPT
+        id S2390599AbfGHPem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:34:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36752 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390543AbfGHPe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:28 -0400
+        id S2390575AbfGHPei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CF520651;
-        Mon,  8 Jul 2019 15:34:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A696221537;
+        Mon,  8 Jul 2019 15:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600067;
-        bh=i6acdeAxEMRD6gcNSjYZvA9AZg+jD55NhOTvfBmifLY=;
+        s=default; t=1562600078;
+        bh=LM5F0Foz7CGLRgH2lWz/bad1ZpG8VxUk5A261MLxHCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/TCMQ8VSGHTv7b/OFkcpcWG9Ml9c0sGF8jEfQG/A4rBLKABrI55xfv6c2/hHgFu2
-         +rXpdE9jfcOyTEmfcnP5oUljU9Y/zc47uRGa1nOgmyM1cxTmaesGaylRo1BdwOl2dv
-         BP+PuzBY4XOl8G3ovPkXWKL+2IEEEBNEzbKrC5Vk=
+        b=sAFhJQ/+J/jh+eCs73yxhRAUaOeSSZ4e2Lm/TdGr93GLKkYS9jr86myuohuEI6t/W
+         XIvVMCYmG1JWzO9B1TTHALecas07e/8k6uRja76SxHbIiXK5l/KII9+l03ZS01SdOa
+         pa435e6xhFf/Dn8yYcIrY3ya/zo0e9wHkut6oAuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: [PATCH 5.1 82/96] btrfs: Ensure replaced device doesnt have pending chunk allocation
-Date:   Mon,  8 Jul 2019 17:13:54 +0200
-Message-Id: <20190708150530.889083692@linuxfoundation.org>
+        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Subject: [PATCH 5.1 86/96] KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable LAPIC
+Date:   Mon,  8 Jul 2019 17:13:58 +0200
+Message-Id: <20190708150531.088265193@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,124 +63,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-commit debd1c065d2037919a7da67baf55cc683fee09f0 upstream.
+commit bb34e690e9340bc155ebed5a3d75fc63ff69e082 upstream.
 
-Recent FITRIM work, namely bbbf7243d62d ("btrfs: combine device update
-operations during transaction commit") combined the way certain
-operations are recoded in a transaction. As a result an ASSERT was added
-in dev_replace_finish to ensure the new code works correctly.
-Unfortunately I got reports that it's possible to trigger the assert,
-meaning that during a device replace it's possible to have an unfinished
-chunk allocation on the source device.
+Thomas reported that:
 
-This is supposed to be prevented by the fact that a transaction is
-committed before finishing the replace oepration and alter acquiring the
-chunk mutex. This is not sufficient since by the time the transaction is
-committed and the chunk mutex acquired it's possible to allocate a chunk
-depending on the workload being executed on the replaced device. This
-bug has been present ever since device replace was introduced but there
-was never code which checks for it.
+ | Background:
+ |
+ |    In preparation of supporting IPI shorthands I changed the CPU offline
+ |    code to software disable the local APIC instead of just masking it.
+ |    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
+ |    register.
+ |
+ | Failure:
+ |
+ |    When the CPU comes back online the startup code triggers occasionally
+ |    the warning in apic_pending_intr_clear(). That complains that the IRRs
+ |    are not empty.
+ |
+ |    The offending vector is the local APIC timer vector who's IRR bit is set
+ |    and stays set.
+ |
+ | It took me quite some time to reproduce the issue locally, but now I can
+ | see what happens.
+ |
+ | It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
+ | (and hardware support) it behaves correctly.
+ |
+ | Here is the series of events:
+ |
+ |     Guest CPU
+ |
+ |     goes down
+ |
+ |       native_cpu_disable()
+ |
+ | 			apic_soft_disable();
+ |
+ |     play_dead()
+ |
+ |     ....
+ |
+ |     startup()
+ |
+ |       if (apic_enabled())
+ |         apic_pending_intr_clear()	<- Not taken
+ |
+ |      enable APIC
+ |
+ |         apic_pending_intr_clear()	<- Triggers warning because IRR is stale
+ |
+ | When this happens then the deadline timer or the regular APIC timer -
+ | happens with both, has fired shortly before the APIC is disabled, but the
+ | interrupt was not serviced because the guest CPU was in an interrupt
+ | disabled region at that point.
+ |
+ | The state of the timer vector ISR/IRR bits:
+ |
+ |     	     	       	        ISR     IRR
+ | before apic_soft_disable()    0	      1
+ | after apic_soft_disable()     0	      1
+ |
+ | On startup		      		 0	      1
+ |
+ | Now one would assume that the IRR is cleared after the INIT reset, but this
+ | happens only on CPU0.
+ |
+ | Why?
+ |
+ | Because our CPU0 hotplug is just for testing to make sure nothing breaks
+ | and goes through an NMI wakeup vehicle because INIT would send it through
+ | the boots-trap code which is not really working if that CPU was not
+ | physically unplugged.
+ |
+ | Now looking at a real world APIC the situation in that case is:
+ |
+ |     	     	       	      	ISR     IRR
+ | before apic_soft_disable()    0	      1
+ | after apic_soft_disable()     0	      1
+ |
+ | On startup		      		 0	      0
+ |
+ | Why?
+ |
+ | Once the dying CPU reenables interrupts the pending interrupt gets
+ | delivered as a spurious interupt and then the state is clear.
+ |
+ | While that CPU0 hotplug test case is surely an esoteric issue, the APIC
+ | emulation is still wrong, Even if the play_dead() code would not enable
+ | interrupts then the pending IRR bit would turn into an ISR .. interrupt
+ | when the APIC is reenabled on startup.
 
-The correct way to fix is to ensure that there is no pending device
-modification operation when the chunk mutex is acquire and if there is
-repeat transaction commit. Unfortunately it's not possible to just
-exclude the source device from btrfs_fs_devices::dev_alloc_list since
-this causes ENOSPC to be hit in transaction commit.
+>From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
+* Pending interrupts in the IRR and ISR registers are held and require
+  masking or handling by the CPU.
 
-Fixing that in another way would need to add special cases to handle the
-last writes and forbid new ones. The looped transaction fix is more
-obvious, and can be easily backported. The runtime of dev-replace is
-long so there's no noticeable delay caused by that.
+In Thomas's testing, hardware cpu will not respect soft disable LAPIC
+when IRR has already been set or APICv posted-interrupt is in flight,
+so we can skip soft disable APIC checking when clearing IRR and set ISR,
+continue to respect soft disable APIC when attempting to set IRR.
 
-Reported-by: David Sterba <dsterba@suse.com>
-Fixes: 391cd9df81ac ("Btrfs: fix unprotected alloc list insertion during the finishing procedure of replace")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Rong Chen <rong.a.chen@intel.com>
+Reported-by: Feng Tang <feng.tang@intel.com>
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rong Chen <rong.a.chen@intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/dev-replace.c |   26 +++++++++++++++++---------
- fs/btrfs/volumes.c     |    5 ++++-
- fs/btrfs/volumes.h     |    5 +++++
- 3 files changed, 26 insertions(+), 10 deletions(-)
+ arch/x86/kvm/lapic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/dev-replace.c
-+++ b/fs/btrfs/dev-replace.c
-@@ -603,17 +603,25 @@ static int btrfs_dev_replace_finishing(s
- 	}
- 	btrfs_wait_ordered_roots(fs_info, U64_MAX, 0, (u64)-1);
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2331,7 +2331,7 @@ int kvm_apic_has_interrupt(struct kvm_vc
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 	u32 ppr;
  
--	trans = btrfs_start_transaction(root, 0);
--	if (IS_ERR(trans)) {
--		mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
--		return PTR_ERR(trans);
-+	while (1) {
-+		trans = btrfs_start_transaction(root, 0);
-+		if (IS_ERR(trans)) {
-+			mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
-+			return PTR_ERR(trans);
-+		}
-+		ret = btrfs_commit_transaction(trans);
-+		WARN_ON(ret);
-+		/* keep away write_all_supers() during the finishing procedure */
-+		mutex_lock(&fs_info->fs_devices->device_list_mutex);
-+		mutex_lock(&fs_info->chunk_mutex);
-+		if (src_device->has_pending_chunks) {
-+			mutex_unlock(&root->fs_info->chunk_mutex);
-+			mutex_unlock(&root->fs_info->fs_devices->device_list_mutex);
-+		} else {
-+			break;
-+		}
- 	}
--	ret = btrfs_commit_transaction(trans);
--	WARN_ON(ret);
+-	if (!apic_enabled(apic))
++	if (!kvm_apic_hw_enabled(apic))
+ 		return -1;
  
--	/* keep away write_all_supers() during the finishing procedure */
--	mutex_lock(&fs_info->fs_devices->device_list_mutex);
--	mutex_lock(&fs_info->chunk_mutex);
- 	down_write(&dev_replace->rwsem);
- 	dev_replace->replace_state =
- 		scrub_ret ? BTRFS_IOCTL_DEV_REPLACE_STATE_CANCELED
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -5222,9 +5222,11 @@ static int __btrfs_alloc_chunk(struct bt
- 	if (ret)
- 		goto error_del_extent;
- 
--	for (i = 0; i < map->num_stripes; i++)
-+	for (i = 0; i < map->num_stripes; i++) {
- 		btrfs_device_set_bytes_used(map->stripes[i].dev,
- 				map->stripes[i].dev->bytes_used + stripe_size);
-+		map->stripes[i].dev->has_pending_chunks = true;
-+	}
- 
- 	atomic64_sub(stripe_size * map->num_stripes, &info->free_chunk_space);
- 
-@@ -7716,6 +7718,7 @@ void btrfs_update_commit_device_bytes_us
- 		for (i = 0; i < map->num_stripes; i++) {
- 			dev = map->stripes[i].dev;
- 			dev->commit_bytes_used = dev->bytes_used;
-+			dev->has_pending_chunks = false;
- 		}
- 	}
- 	mutex_unlock(&fs_info->chunk_mutex);
---- a/fs/btrfs/volumes.h
-+++ b/fs/btrfs/volumes.h
-@@ -54,6 +54,11 @@ struct btrfs_device {
- 
- 	spinlock_t io_lock ____cacheline_aligned;
- 	int running_pending;
-+	/* When true means this device has pending chunk alloc in
-+	 * current transaction. Protected by chunk_mutex.
-+	 */
-+	bool has_pending_chunks;
-+
- 	/* regular prio bios */
- 	struct btrfs_pending_bios pending_bios;
- 	/* sync bios */
+ 	__apic_update_ppr(apic, &ppr);
 
 
