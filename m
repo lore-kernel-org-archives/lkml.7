@@ -2,120 +2,119 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92431C5B57D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2DDC5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9A520844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mQGXN5xu"
+	by mail.kernel.org (Postfix) with ESMTP id 6B4DC20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfGHHBl (ORCPT
+        id S1729277AbfGHHFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:01:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:50681 "EHLO ozlabs.org"
+        Mon, 8 Jul 2019 03:05:16 -0400
+Received: from mga17.intel.com ([192.55.52.151]:63267 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbfGHHBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:01:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hxFW0X2dz9s3Z;
-        Mon,  8 Jul 2019 17:01:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562569298;
-        bh=bMGbYY+lSE5Cbp9Av6xqmzjx/6qiPYjokp+Ycp0jkLw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mQGXN5xunPpyWgWK7B4WvaRWwOWb5pe3ZmS8ziNGwwhlGjvUfClALjD9HAjS4CXn3
-         4530pRcSjDhTSuTVc6Xi3Gfc2y5MHzxa3B5/N+sAZrroXkO05oGaFdpGWHnDnMmRtj
-         a1ox+YujmLS97s7zozea0pAC73HXfyNcmqp5v09dISS5EOYBFnCPkAUY06WTLpuwr6
-         zdi8x4l7j9eIaMXHjrzFLU4xYD+kc+JXOdpW/UdJh/OLPMXSo8n6t9h6n0SC5tQVM2
-         78F+yseIgXfzhneRSor2kWO+zcJ2Rw/kslqRe9uWP0isoZjlerAQGbgEbqyyVC9vP5
-         yqZHpKmgm3/rA==
-Date:   Mon, 8 Jul 2019 17:01:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Borislav Petkov <bp@alien8.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul@pwsan.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yash Shah <yash.shah@sifive.com>,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: linux-next: manual merge of the edac-amd tree with the risc-v tree
-Message-ID: <20190708170134.15f225ca@canb.auug.org.au>
+        id S1726962AbfGHHFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 03:05:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 00:05:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,465,1557212400"; 
+   d="scan'208";a="167591766"
+Received: from liujing-mobl.ccr.corp.intel.com (HELO [10.238.129.57]) ([10.238.129.57])
+  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2019 00:05:14 -0700
+Subject: Re: [PATCH 1/5] KVM: cpuid: do_cpuid_ent works on a whole CPUID
+ function
+References: <20190704140715.31181-1-pbonzini@redhat.com>
+ <20190704140715.31181-2-pbonzini@redhat.com>
+From:   Jing Liu <jing2.liu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Message-ID: <50fccadc-ad5c-6548-529d-412f68cab1f5@linux.intel.com>
+Date:   Mon, 8 Jul 2019 15:05:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Dx6LgHkcvDoM2xS/FEnOu3I"; protocol="application/pgp-signature"
+In-Reply-To: <20190704140715.31181-2-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Dx6LgHkcvDoM2xS/FEnOu3I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Paolo,
 
-Hi all,
+On 7/4/2019 10:07 PM, Paolo Bonzini wrote:
+> Rename it as well as __do_cpuid_ent and __do_cpuid_ent_emulated to have
+> "func" in its name, and drop the index parameter which is always 0.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/cpuid.c | 89 +++++++++++++++++++++-----------------------
+>   1 file changed, 42 insertions(+), 47 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 004cbd84c351..ddffc56c39b4 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -294,14 +294,19 @@ static void do_cpuid_1_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>   {
+>   	entry->function = function;
+>   	entry->index = index;
+> +	entry->flags = 0;
+> +
 
-Today's linux-next merge of the edac-amd tree got a conflict in:
+I'm wondering if we need set entry->flags = 0 here?
+entry->flags was initialized as zero when vzalloc.
 
-  arch/riscv/Kconfig
+>   	cpuid_count(entry->function, entry->index,
+>   		    &entry->eax, &entry->ebx, &entry->ecx, &entry->edx);
+> -	entry->flags = 0;
+>   }
+>   
+> -static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
+> -				   u32 func, u32 index, int *nent, int maxnent)
+> +static int __do_cpuid_func_emulated(struct kvm_cpuid_entry2 *entry,
+> +				    u32 func, int *nent, int maxnent)
+>   {
+> +	entry->function = func;
+> +	entry->index = 0;
+> +	entry->flags = 0;
+> +
 
-between commit:
+The same question for flags and index, because entry is allocated
+by vzalloc.
 
-  9e953cda5cdf ("riscv: Introduce huge page support for 32/64bit kernel")
+>   	switch (func) {
+>   	case 0:
+>   		entry->eax = 7;
+> @@ -313,21 +318,18 @@ static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
+>   		break;
+>   	case 7:
+>   		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> -		if (index == 0)
+> -			entry->ecx = F(RDPID);
+> +		entry->eax = 0;
+> +		entry->ecx = F(RDPID);
+>   		++*nent;
+>   	default:
+>   		break;
+>   	}
+>   
+> -	entry->function = func;
+> -	entry->index = index;
+> -
+>   	return 0;
+>   }
+>   
 
-from the risc-v tree and commit:
 
-  a1ee570c831d ("EDAC/sifive: Add EDAC platform driver for SiFive SoCs")
-
-from the edac-amd tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/riscv/Kconfig
-index 8bf447b36955,4961deaa3b1d..000000000000
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@@ -51,8 -50,7 +51,9 @@@ config RISC
-  	select ARCH_HAS_PTE_SPECIAL
-  	select ARCH_HAS_MMIOWB
-  	select HAVE_EBPF_JIT if 64BIT
- +	select ARCH_HAS_GIGANTIC_PAGE
- +	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
-+ 	select EDAC_SUPPORT
- =20
-  config MMU
-  	def_bool y
-
---Sig_/Dx6LgHkcvDoM2xS/FEnOu3I
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0i6k4ACgkQAVBC80lX
-0GwH2wgAi9+yPQKaDLy9YB+z/0Lmkfle7vlxlItVu10iYdMQ8Oc8H/2wMFQzjpff
-evIJ52L5ANoZYAUsMtoM5wKR6uEA6zbZFYvLr3xmv2qHSxR8/Vi6+bCaGd5ENyT/
-Hc0WWTRq70o1vMzPdvciGNr2XRJWcMnOhI2tNXPYUhA3NIUhqUoh2ZFsKOjQInR+
-FnqtkAFYTwlNTQIaHHEMZ+rjG8Ryilpiis6Zjpn4vNfJRSXLwr0xwf0eG1ztlyFc
-iXVXLUUQQWpnuiZBpSPPi+aXzaNEvjGK9OmbH4WBTJhAys+TKxaZqRaLTP+tLxHP
-Elu1h5NZZz6n4mxX8bDgEBFhToWErg==
-=njlY
------END PGP SIGNATURE-----
-
---Sig_/Dx6LgHkcvDoM2xS/FEnOu3I--
+Thanks,
+Jing
