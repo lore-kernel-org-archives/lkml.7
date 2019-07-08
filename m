@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FC4C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845F9C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BEBF2177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54291217D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599864;
-	bh=123LvG5HBWrU6fX8TV7jwY6aig2FA9GCYpsfdvH6b/4=;
+	s=default; t=1562599867;
+	bh=tBGJppEdGFFvrxTeTzEIabKLeJJ5I527rwRcoTmsQ8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wq7ltr96plb7VCEz+cfEtj5q9nA68k8FFe9l5EzLszzzJgKzPI/+UsiwvdBd6J5ri
-	 w3soT+Jvf4jrO5Uqt/+qT01llMijKhB4a2TJGmSrFWJl2LdmLWtP/CtRtzqqep1afK
-	 DkKz2Q/KlKur/SkMTu1+O0GM30nH44xx0erzAwCM=
+	b=YezQnhGLpbsIzHnmabRjUbvsSMCwakbL5trIcduwiE89OozLfv7iaemPazMY6sQ0w
+	 NgUcyT4m1DBFWPoIaq9gciyWVRDpnzbrOIqXXQNmItkoBA3oLqoFoiaOjxlqeh80l5
+	 PiluhSF7UGTuofyRnd1zKFVH2Ce7WPBzdwneRPxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389606AbfGHPbD (ORCPT
+        id S2389629AbfGHPbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60246 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389568AbfGHPbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:31:01 -0400
+        id S2389568AbfGHPbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:31:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10F3D21537;
-        Mon,  8 Jul 2019 15:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7B01204EC;
+        Mon,  8 Jul 2019 15:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599861;
-        bh=123LvG5HBWrU6fX8TV7jwY6aig2FA9GCYpsfdvH6b/4=;
+        s=default; t=1562599864;
+        bh=tBGJppEdGFFvrxTeTzEIabKLeJJ5I527rwRcoTmsQ8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWrM2T/LYXzQdPZhzpU2NsTOazgmQPeql/rWm4OwOpSH/c9CR45zcQUfuJclbLMdM
-         LgsI7+NlUNZ7XFDnpPnLbH7xkmAJAzPxxJ4TCtAlj9IRPrRCOX8WbOV8Hoos2GS2CS
-         S0o77fR8Ugb+Plo4rrhtA7ylRo1lD8j9XoD9xraM=
+        b=AlHKc8zKoT9h96OyCacqb/hfu2qOd09uEkNFfLdOEQL9hqObLjyW+AOi17aFR8gaG
+         WZ7YZ9K06TIIJ+f/M0CE2Rkyf+DI+vBXskDLHCX64iFDuqXnoMNG9R73zRZCJMje51
+         3rJSCQnt5AlnbmAc2n1HE7kQoKJRwyVf9Qxvik5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 14/96] ASoC: core: lock client_mutex while removing link components
-Date:   Mon,  8 Jul 2019 17:12:46 +0200
-Message-Id: <20190708150527.154167492@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 15/96] iommu/vt-d: Set the right field for Page Walk Snoop
+Date:   Mon,  8 Jul 2019 17:12:47 +0200
+Message-Id: <20190708150527.220399058@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,39 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb ]
+[ Upstream commit 66d78ad316b0e1ca5ae19663468554e2c0e31c26 ]
 
-Removing link components results in topology unloading. So,
-acquire the client_mutex before removing components in
-soc_remove_link_components. This will prevent the lockdep warning
-seen when dai links are removed during topology removal.
+Set the page walk snoop to the right bit, otherwise the domain
+id field will be overlapped.
 
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Dave Jiang <dave.jiang@intel.com>
+Fixes: 6f7db75e1c469 ("iommu/vt-d: Add second level page table interface")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/intel-pasid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index a7b4fab92f26..a4668a788ed5 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1008,12 +1008,14 @@ static void soc_remove_link_components(struct snd_soc_card *card,
- 	struct snd_soc_component *component;
- 	struct snd_soc_rtdcom_list *rtdcom;
- 
-+	mutex_lock(&client_mutex);
- 	for_each_rtdcom(rtd, rtdcom) {
- 		component = rtdcom->component;
- 
- 		if (component->driver->remove_order == order)
- 			soc_remove_component(component);
- 	}
-+	mutex_unlock(&client_mutex);
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index 03b12d2ee213..fdf05c45d516 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -387,7 +387,7 @@ static inline void pasid_set_present(struct pasid_entry *pe)
+  */
+ static inline void pasid_set_page_snoop(struct pasid_entry *pe, bool value)
+ {
+-	pasid_set_bits(&pe->val[1], 1 << 23, value);
++	pasid_set_bits(&pe->val[1], 1 << 23, value << 23);
  }
  
- static void soc_remove_dai_links(struct snd_soc_card *card)
+ /*
 -- 
 2.20.1
 
