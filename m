@@ -2,215 +2,126 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2EEC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91895C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1899820665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="NZCX+JPb"
+	by mail.kernel.org (Postfix) with ESMTP id 6ABA320651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562600482;
+	bh=RFVm29ryirTG0QEkrh8ZtTBCZywLkITGid4jBQ3+04s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Hq6SZuZla/3R9c59wnkhGSofYf2wWb94b/+OddJgzrSD41ju3F5gmyQT1WDsY/2v9
+	 91UhaK79OdhtN7zQcXY6hfDYe1nloA70PpF3AQjl/A2giEdHUuShFgqrYqSIlKXnTA
+	 4+Ch4+QTBWr6ecgm/nauvgpskPCEN3jSU8f/h7M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391026AbfGHPlL (ORCPT
+        id S2391041AbfGHPlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:41:11 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44250 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388936AbfGHP0y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:26:54 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t14so5366795plr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7uQTH3OcgzeKrUaIrqap40UutFGlqwAtpcZhCaX6jUc=;
-        b=NZCX+JPb3J/Ba1H15qxqjVVmC43oGd0/5R+fizpHvOHReDSm71HhQWpzicKanc7zuU
-         xTkjlduOzAXIkqcuaJ+rSst+RkY0OdSqgMFCOf9PqJMiESecfIi3GYb7BBVMb+ZErtbc
-         jVtqr7S+OSEthgMCTd2qX5QUDs+7EIEzd5+ZsBh7MiPzNhPx9HIMsPqyrJ4W4SNCPxhf
-         yVndlq9o+r5mbNPvgj4tevsFcoThGyckNNLwtvEIO0XS1vpy8imYZyMqosQTGKOZgIA3
-         rFogvC2d8ffM+YNwwo4CQi/SK3OEYfGpCVfMXzC5nfA5FZoBhIZEw6bmnhyrGqZqkCtK
-         3Ieg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7uQTH3OcgzeKrUaIrqap40UutFGlqwAtpcZhCaX6jUc=;
-        b=ntrikMmaMPGiN4ihgMYeFGz6wsWzJQLDCEEQA8QzHUWP80q+VZAkABVSL2ERsOvqCk
-         DcGZWEZDfploB7WDmxvetDpDk6KE4nCf+haySg7hCzkrk0ivdpLrPSMREY49AsDQnx5C
-         WqPpKDejIu2+SsFmSuTQicXpVlUkywG1kk8vyimT3qjfvUHVrvZ+WXqltGZda8wrhEuU
-         sc9+V3hn6PyEcwcxbJ/cQptXaFWxdwrwEPm3nXSFlWnFc9AMFv3novW4Ggn64+BNxsI2
-         IsAhVyVhOynMQ1XlguU1qbdQWMEn5YSAhS9KpY3IC2+aWjf/+3tE36PtPZFFhrP2zZWK
-         eNYQ==
-X-Gm-Message-State: APjAAAUtUwTX/Bk3/ueXCDEnjXpl3C2vaNqX1k1tAL/2beNYBYBfXVER
-        ohxNzAJcyOjCvZ2lL4ay9EphiX+HEMQ=
-X-Google-Smtp-Source: APXvYqy4tOhnyVmwkiETtoSux9WBcSLUM3Tp33UkOdSJp4D6eiUl2ThY74SdfVRxBWmuyS00Xq6cGg==
-X-Received: by 2002:a17:902:aa5:: with SMTP id 34mr26642421plp.166.1562599613134;
-        Mon, 08 Jul 2019 08:26:53 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id w14sm20758035pfn.47.2019.07.08.08.26.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 08:26:53 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 08:26:46 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [ANNOUNCE] iproute2 5.2
-Message-ID: <20190708082646.37428502@hermes.lan>
+        Mon, 8 Jul 2019 11:41:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388907AbfGHP0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:26:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 917DE2166E;
+        Mon,  8 Jul 2019 15:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599609;
+        bh=RFVm29ryirTG0QEkrh8ZtTBCZywLkITGid4jBQ3+04s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WvLzFKDQJgxG2OE0wUQ/ceXg7pcVSaovfCaBsI19Fc24let90SaGeVeucqR7IzrBM
+         yhIjKi9uJW5r+NY4qRbAyBZ4hfstRzRwHu4qTq/Gu7XotVH0D9GlB0L0+CtGUXRVz5
+         KWknxCHXg9vxrvIbs2WQyS3yDld8mMpyaHp54UT4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 17/90] drm/mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
+Date:   Mon,  8 Jul 2019 17:12:44 +0200
+Message-Id: <20190708150523.489858370@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
+References: <20190708150521.829733162@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 5.2 kernel has been released, and therefore time for another
-update to iproute2.
+[ Upstream commit 2458d9d6d94be982b917e93c61a89b4426f32e31 ]
 
-Not a lot of big new features in this release. Just the usual array of
-small fixes across the board.
+mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which
+needs ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is
+called, ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called
+after last irq, it will timeout with this message: "vblank wait timed out
+on crtc 0". This happens sometimes when turning off the screen.
 
-Download:
-    https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-5.2.0.tar.gz
+In drm_atomic_helper.c#disable_outputs(),
+the calling sequence when turning off the screen is:
 
-Repository for upcoming release:
-    git://git.kernel.org/pub/scm/network/iproute2/iproute2.git
+1. mtk_dsi_encoder_disable()
+     --> mtk_output_dsi_disable()
+       --> mtk_dsi_stop();  /* sometimes make vblank timeout in
+                               atomic_disable */
+       --> mtk_dsi_poweroff();
+2. mtk_drm_crtc_atomic_disable()
+     --> drm_crtc_wait_one_vblank();
+     ...
+       --> mtk_dsi_ddp_stop()
+         --> mtk_dsi_poweroff();
 
-And future release (net-next):
-    git://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git
+mtk_dsi_poweroff() has reference count design, change to make
+mtk_dsi_stop() called in mtk_dsi_poweroff() when refcount is 0.
 
-Thanks for all the contributions.
-
-Report problems (or enhancements) to the netdev@vger.kernel.org mailing list.
-
+Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Andrea Claudi (6):
-      Makefile: use make -C
-      ip address: do not set nodad option for IPv4 addresses
-      ip address: do not set home option for IPv4 addresses
-      ip address: do not set mngtmpaddr option for IPv4 addresses
-      man: tc-netem.8: fix URL for netem page
-      tc: netem: fix r parameter in Bernoulli loss model
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Baruch Siach (2):
-      devlink: fix format string warning for 32bit targets
-      devlink: fix libc and kernel headers collision
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 84bb66866631..0dd317ac5fe5 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -630,6 +630,15 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+ 	if (--dsi->refcount != 0)
+ 		return;
+ 
++	/*
++	 * mtk_dsi_stop() and mtk_dsi_start() is asymmetric, since
++	 * mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(),
++	 * which needs irq for vblank, and mtk_dsi_stop() will disable irq.
++	 * mtk_dsi_start() needs to be called in mtk_output_dsi_enable(),
++	 * after dsi is fully set.
++	 */
++	mtk_dsi_stop(dsi);
++
+ 	if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
+ 		if (dsi->panel) {
+ 			if (drm_panel_unprepare(dsi->panel)) {
+@@ -696,7 +705,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+ 		}
+ 	}
+ 
+-	mtk_dsi_stop(dsi);
+ 	mtk_dsi_poweroff(dsi);
+ 
+ 	dsi->enabled = false;
+-- 
+2.20.1
 
-David Ahern (5):
-      Update kernel headers
-      Update kernel headers
-      Update kernel headers
-      uapi: wrap SIOCGSTAMP and SIOCGSTAMPNS in ifndef
-      Update kernel headers
 
-Davide Caratti (2):
-      man: tc-skbedit.8: document 'inheritdsfield'
-      tc: simple: don't hardcode the control action
-
-Eyal Birger (1):
-      tc: adjust xtables_match and xtables_target to changes in recent iptables
-
-Gal Pressman (1):
-      rdma: Update node type strings
-
-Hangbin Liu (1):
-      ip/iptoken: fix dump error when ipv6 disabled
-
-Hoang Le (3):
-      tipc: add link broadcast set method and ratio
-      tipc: add link broadcast get
-      tipc: add link broadcast man page
-
-Ido Schimmel (2):
-      ipneigh: Print neighbour offload indication
-      devlink: Increase column size for larger shared buffers
-
-Josh Hunt (1):
-      ss: add option to print socket information on one line
-
-Kristian Evensen (1):
-      ip fou: Support binding FOU ports
-
-Lucas Siba 2019-04-20 11:40 UTC (1):
-      Update tc-bpf.8 man page examples
-
-Lukasz Czapnik (1):
-      tc: flower: fix port value truncation
-
-Mahesh Bandewar (1):
-      ip6tunnel: fix 'ip -6 {show|change} dev <name>' cmds
-
-Matteo Croce (4):
-      ip: reset netns after each command in batch mode
-      netns: switch netns in the child when executing commands
-      ip vrf: use hook to change VRF in the child
-      netns: make netns_{save,restore} static
-
-Michael Forney (1):
-      ipmroute: Prevent overlapping storage of `filter` global
-
-Mike Manning (1):
-      iplink_vlan: add support for VLAN bridge binding flag
-
-Moshe Shemesh (1):
-      devlink: mnlg: Catch returned error value of dumpit commands
-
-Nicolas Dichtel (3):
-      lib: suppress error msg when filling the cache
-      iplink: don't try to get ll addr len when creating an iface
-      ip monitor: display interfaces from all groups
-
-Nikolay Aleksandrov (2):
-      iplink: bridge: add support for vlan_stats_per_port
-      bridge: mdb: restore text output format
-
-Paolo Abeni (2):
-      tc: add support for plug qdisc
-      m_mirred: don't bail if the control action is missing
-
-Parav Pandit (1):
-      devlink: Increase bus, device buffer size to 64 bytes
-
-Pete Morici (1):
-      Add support for configuring MACsec gcm-aes-256 cipher type.
-
-Roman Mashak (1):
-      tc: Fix binding of gact action by index.
-
-Stefano Brivio (1):
-      iproute: Set flags and attributes on dump to get IPv6 cached routes to be flushed
-
-Stephen Hemminger (14):
-      uapi: update to elf-em header
-      uapi: add include/linux/net.h
-      uapi: update headers to import asm-generic/sockios.h
-      mailmap: add myself
-      mailmap: map David's mail address
-      uapi: add sockios.h
-      uapi: merge bpf.h from 5.2
-      rdma: update uapi headers
-      man: fix macaddr section of ip-link
-      uapi: minor upstream btf.h header change
-      testsuite: intent if/else in Makefile
-      uapi: update headers and add if_link.h and if_infiniband.h
-      devlink: replace print macros with functions
-      vv5.2.0
-
-Steve Wise (4):
-      Add .mailmap file
-      rdma: add helper rd_sendrecv_msg()
-      rdma: add 'link add/delete' commands
-      rdma: man page update for link add/delete
-
-Tomasz Torcz (1):
-      ss: in --numeric mode, print raw numbers for data rates
-
-Vinicius Costa Gomes (2):
-      taprio: Add support for changing schedules
-      taprio: Add support for cycle_time and cycle_time_extension
 
