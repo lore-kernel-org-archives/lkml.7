@@ -2,118 +2,93 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4A9C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201D1C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25302166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599543;
-	bh=RQlXnzawyAM0Ymk4SmrNvx0u3Rgqb3w5rE3zGbGCebo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mtWnmQ9uLuE15jXvpCzbia838svZTM4vs3HE3axdR83ZsINBex8dPbHoaZ7pwKSGH
-	 tF1WTdKfzpQSd5Cb49MgI3NXkhoQxKKmY1/jiqXNRz7FgPNhG0UqwoU72lOEddUtUH
-	 xRUtBAi4pa9SjZSjFS+Sgm5ZeIJOW6nyyecQ9Nss=
+	by mail.kernel.org (Postfix) with ESMTP id D6C752173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388657AbfGHPZm (ORCPT
+        id S2388668AbfGHPZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53126 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:18169 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388633AbfGHPZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1FC921537;
-        Mon,  8 Jul 2019 15:25:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599537;
-        bh=RQlXnzawyAM0Ymk4SmrNvx0u3Rgqb3w5rE3zGbGCebo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vykdINJlQahSquoOspvoQHvwveJbibTxcYyXp2EUQAmSkpeTmuoiyXz3nzuONDpvY
-         JmkNzjPu2rcvoLuOC5TsTywJu2MxIl1rVfmtfaUVjpSlrivrzTk5cgOktVNdyvLOu9
-         uCrw0lOQ9oqUqe9oFL3VIPechcKGjynPxpi9gSUg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Balbir Singh <sblbir@amzn.com>
-Subject: [PATCH 4.14 47/56] vhost: scsi: add weight support
-Date:   Mon,  8 Jul 2019 17:13:39 +0200
-Message-Id: <20190708150523.895837718@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
-References: <20190708150514.376317156@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2388641AbfGHPZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 08:25:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
+   d="scan'208";a="363835132"
+Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jul 2019 08:25:35 -0700
+Message-ID: <846cacae8cede764a2e84f628f539d94582fdbe0.camel@linux.intel.com>
+Subject: Re: [PATCH] tpm: Document UEFI event log quirks
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     tweek@google.com, matthewgarrett@google.com,
+        Jonathan Corbet <corbet@lwn.net>
+Date:   Mon, 08 Jul 2019 18:25:38 +0300
+In-Reply-To: <ec274596-6bc8-07a0-d09b-1d191646c5cd@infradead.org>
+References: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
+         <6acf78df-b168-14d3-fea4-9a9d2945e77f@infradead.org>
+         <a8ee93721a674434e22d31fd1d10bf9472c1c739.camel@linux.intel.com>
+         <ec274596-6bc8-07a0-d09b-1d191646c5cd@infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+On Sun, 2019-07-07 at 12:33 -0700, Randy Dunlap wrote:
+> On 7/5/19 3:15 AM, Jarkko Sakkinen wrote:
+> > On Wed, 2019-07-03 at 09:45 -0700, Randy Dunlap wrote:
+> > > > +This introduces another problem: nothing guarantees that it is not
+> > > > +called before the stub gets to run. Thus, it needs to copy the final
+> > > > +events table preboot size to the custom configuration table so that
+> > > > +kernel offset it later on.
+> 
+>      (so that)
+>      the kernel can use that final table preboot size as an events table
+>      offset later on.
+> 
+> > > ?  kernel can offset it later on.
+> > 
+> > EFI stub calculates the total size of the events in the final events
+> > table at the time.
+> > 
+> > Later on, TPM driver uses this offset to copy only the events that
+> > were actually generated after ExitBootServices():
+> > 
+> > /*
+> >  * Copy any of the final events log that didn't also end up in the
+> >  * main log. Events can be logged in both if events are generated
+> >  * between GetEventLog() and ExitBootServices().
+> >  */
+> > memcpy((void *)log->bios_event_log + log_size,
+> >        final_tbl->events + log_tbl->final_events_preboot_size,
+> >        efi_tpm_final_log_size);
+> > 
+> > What would be a better way to describe this?
+> 
+> Yeah, I think I see what it's doing, how it's using that.
+> See above.
+> 
+> OK?
 
-commit c1ea02f15ab5efb3e93fc3144d895410bf79fcf2 upstream.
+Your propsal looks legit, thank you. I'll send an update that
+tries to address yours and Jordan's feedback.
 
-This patch will check the weight and exit the loop if we exceeds the
-weight. This is useful for preventing scsi kthread from hogging cpu
-which is guest triggerable.
-
-This addresses CVE-2019-3900.
-
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Fixes: 057cbf49a1f0 ("tcm_vhost: Initial merge for vhost level target fabric driver")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Balbir Singh <sblbir@amzn.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/vhost/scsi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -846,7 +846,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
- 	u64 tag;
- 	u32 exp_data_len, data_direction;
- 	unsigned int out = 0, in = 0;
--	int head, ret, prot_bytes;
-+	int head, ret, prot_bytes, c = 0;
- 	size_t req_size, rsp_size = sizeof(struct virtio_scsi_cmd_resp);
- 	size_t out_size, in_size;
- 	u16 lun;
-@@ -865,7 +865,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
- 
- 	vhost_disable_notify(&vs->dev, vq);
- 
--	for (;;) {
-+	do {
- 		head = vhost_get_vq_desc(vq, vq->iov,
- 					 ARRAY_SIZE(vq->iov), &out, &in,
- 					 NULL, NULL);
-@@ -1080,7 +1080,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
- 		 */
- 		INIT_WORK(&cmd->work, vhost_scsi_submission_work);
- 		queue_work(vhost_scsi_workqueue, &cmd->work);
--	}
-+	} while (likely(!vhost_exceeds_weight(vq, ++c, 0)));
- out:
- 	mutex_unlock(&vq->mutex);
- }
-
+/Jarkko 
 
