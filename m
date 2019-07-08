@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A8AC606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1C7C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBA92173E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21182166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599372;
-	bh=2bcg2DM1IE8ugKmuof6Mw84sS9E6si19t81ORiMJElU=;
+	s=default; t=1562599376;
+	bh=RYOBTpTrNjHCdpFk/eqreEmSwKZHskeo9MtL8o1Q9yE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0YZyZOI4MKeA7m696Vuy0R6QSoWBWOATe8ra+Gsfr88TpBxRWcydDpJax2ifYDxn
-	 MlpWiVLn7F1vjZqTYMMkLUqCkP6aRZaciQS5Ew9pWryHfpNNKdJfkJXGm310EYeral
-	 ffa3oUJzoZfLMzgb52GF2NvSMTB0ccreJqMZuu+w=
+	b=hFE8ycjOT0q/mvcA6zjiQj9Kdhi8LMJqvh8TIYxRfoi48TaB7GTcBMkOhwhzMXwOb
+	 oGbGzp3C9THMd57oVy/cb7xkCZO0chQZmH+tsLuHBPyOb4ntaHP6g6PAAdGVX0CO+n
+	 J2/an2znokLRqM6beO/3wthCrunRF5dPmHRqu3SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388069AbfGHPWu (ORCPT
+        id S2388087AbfGHPWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388042AbfGHPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:47 -0400
+        id S1729493AbfGHPWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7130214C6;
-        Mon,  8 Jul 2019 15:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 053B1216E3;
+        Mon,  8 Jul 2019 15:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599366;
-        bh=2bcg2DM1IE8ugKmuof6Mw84sS9E6si19t81ORiMJElU=;
+        s=default; t=1562599372;
+        bh=RYOBTpTrNjHCdpFk/eqreEmSwKZHskeo9MtL8o1Q9yE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIaZKJ/KsZTePPXol/VE6P3gnY6dOMUQ6RDfdvZjJpGBsYdgWXj2sGpcnUJ/ypiZx
-         H8XumY54iyTUp5Q6KreILhkEL9AUcd0b0U1kIXT/IzbK8wLcX0xkqHBVntRn0K3eeM
-         m+nh/gZ3gf7nhDJmDnwtcuu03PLuloFJwdZ6fIrQ=
+        b=kg3k7zI+m+Ix2C5BAir51JmPWH8kzy1NHBL68UtNaW0YCPnDjtV+QIztqz2UqLDmo
+         b20WldLZb3dPFDI3X6emCo6EKSLGPwtrlaFMzFmuXqVVZHSmV2IoJl56wfLxkDqmAU
+         CRX5z2oMzAvlOHnah7G7BrQamoR3hmoCH3aXWS24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominique Martinet <dominique.martinet@cea.fr>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 041/102] 9p: acl: fix uninitialized iattr access
-Date:   Mon,  8 Jul 2019 17:12:34 +0200
-Message-Id: <20190708150528.542270211@linuxfoundation.org>
+        stable@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 097/102] arm64, vdso: Define vdso_{start,end} as array
+Date:   Mon,  8 Jul 2019 17:13:30 +0200
+Message-Id: <20190708150531.499551020@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,33 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e02a53d92e197706cad1627bd84705d4aa20a145 ]
+Commit dbbb08f500d6146398b794fdc68a8e811366b451 upstream.
 
-iattr is passed to v9fs_vfs_setattr_dotl which does send various
-values from iattr over the wire, even if it tells the server to
-only look at iattr.ia_valid fields this could leak some stack data.
+Adjust vdso_{start|end} to be char arrays to avoid compile-time analysis
+that flags "too large" memcmp() calls with CONFIG_FORTIFY_SOURCE.
 
-Link: http://lkml.kernel.org/r/1536339057-21974-2-git-send-email-asmadeus@codewreck.org
-Addresses-Coverity-ID: 1195601 ("Uninitalized scalar variable")
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Cc: Jisheng Zhang <jszhang@marvell.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/acl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/vdso.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/9p/acl.c b/fs/9p/acl.c
-index 082d227fa56b..6261719f6f2a 100644
---- a/fs/9p/acl.c
-+++ b/fs/9p/acl.c
-@@ -276,7 +276,7 @@ static int v9fs_xattr_set_acl(const struct xattr_handler *handler,
- 	switch (handler->flags) {
- 	case ACL_TYPE_ACCESS:
- 		if (acl) {
--			struct iattr iattr;
-+			struct iattr iattr = { 0 };
- 			struct posix_acl *old_acl = acl;
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index c9b9a5a322eb..c0f315ecfa7c 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -37,7 +37,7 @@
+ #include <asm/vdso.h>
+ #include <asm/vdso_datapage.h>
  
- 			retval = posix_acl_update_mode(inode, &iattr.ia_mode, &acl);
+-extern char vdso_start, vdso_end;
++extern char vdso_start[], vdso_end[];
+ static unsigned long vdso_pages __ro_after_init;
+ 
+ /*
+@@ -124,14 +124,14 @@ static int __init vdso_init(void)
+ 	int i;
+ 	struct page **vdso_pagelist;
+ 
+-	if (memcmp(&vdso_start, "\177ELF", 4)) {
++	if (memcmp(vdso_start, "\177ELF", 4)) {
+ 		pr_err("vDSO is not a valid ELF object!\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	vdso_pages = (&vdso_end - &vdso_start) >> PAGE_SHIFT;
++	vdso_pages = (vdso_end - vdso_start) >> PAGE_SHIFT;
+ 	pr_info("vdso: %ld pages (%ld code @ %p, %ld data @ %p)\n",
+-		vdso_pages + 1, vdso_pages, &vdso_start, 1L, vdso_data);
++		vdso_pages + 1, vdso_pages, vdso_start, 1L, vdso_data);
+ 
+ 	/* Allocate the vDSO pagelist, plus a page for the data. */
+ 	vdso_pagelist = kcalloc(vdso_pages + 1, sizeof(struct page *),
+@@ -144,7 +144,7 @@ static int __init vdso_init(void)
+ 
+ 	/* Grab the vDSO code pages. */
+ 	for (i = 0; i < vdso_pages; i++)
+-		vdso_pagelist[i + 1] = pfn_to_page(PHYS_PFN(__pa(&vdso_start)) + i);
++		vdso_pagelist[i + 1] = pfn_to_page(PHYS_PFN(__pa(vdso_start)) + i);
+ 
+ 	vdso_spec[0].pages = &vdso_pagelist[0];
+ 	vdso_spec[1].pages = &vdso_pagelist[1];
 -- 
 2.20.1
 
