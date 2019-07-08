@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A623C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5DDC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FA320651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B0820651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600106;
-	bh=1y6TrxPpo4z/VeD6N4ELESCYUlwBI91glaQM5xDDCtU=;
+	s=default; t=1562600110;
+	bh=ZqQAp2f71kUMzWjXrmUXyEvoOcVtQiz/zU3rz+gLjXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N67CObg0xu7iitoxDkJX34oTwkueUhM86/zxwyUaiKR31M0KpKIqmIxHnSG0jfMhW
-	 3jQ7GHYGFsXzR10+G1aFr4JKVEsd232V9YtmSYbfS0MRLwuQ58/h1Ggw0z89CLi/1a
-	 4dSmtKU2JagqsvpE7YssuDoX2FMmpqioVdl10GgU=
+	b=iZDSZdC6tWr1/knWdgDw1pyWib87BuxO5dEp91rBdGZ+bGgVy4IWQb9f3eWwsYvbw
+	 Hk7nANd34zXBKAQcr6S6yj+KIk+zwwyDxGd8rOs8KhOT8JRCPnEoMQYuUQXa858epg
+	 97CkQy5KShXywy1n1XuANVeNxYJPyHby7EPFBNj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390884AbfGHPfF (ORCPT
+        id S2390894AbfGHPfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37214 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390655AbfGHPeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:50 -0400
+        id S2390729AbfGHPex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F19FF204EC;
-        Mon,  8 Jul 2019 15:34:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6729E2173E;
+        Mon,  8 Jul 2019 15:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600089;
-        bh=1y6TrxPpo4z/VeD6N4ELESCYUlwBI91glaQM5xDDCtU=;
+        s=default; t=1562600092;
+        bh=ZqQAp2f71kUMzWjXrmUXyEvoOcVtQiz/zU3rz+gLjXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hc8PLI2jRy20ldAzu9exvzxgnLEh5iCGOvPFtT7FbSO6qWbnX5a+84RuJEgFatCLQ
-         /jFfDJh3qrx6E4hdltMPNGIFdF+BL2c39BJ663aNHUbDvJIKun8FTMhlApzxyPTQun
-         HFo/AimHSqvRf4Tf7wVzDkwtMF1itjPj35BLIEqk=
+        b=hd0gRF56gSHJBOb19XGU98/Z7WN7dL4BAGkpKYPv/oxuEn+OBTxxbAHSkHWvzLmxz
+         Jo9tL+w+zkKmnykKuMK1Lvpiirmn5L6iyBaFtkY/wLCTZQHK6ptzMG+JxH5k3XXAgG
+         Gi3m1ECbCZQqKpNM8HBNIItr+o2l7VvCdowUAGks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 48/96] i2c: pca-platform: Fix GPIO lookup code
-Date:   Mon,  8 Jul 2019 17:13:20 +0200
-Message-Id: <20190708150529.113774328@linuxfoundation.org>
+Subject: [PATCH 5.1 49/96] arm64: tlbflush: Ensure start/end of address range are aligned to stride
+Date:   Mon,  8 Jul 2019 17:13:21 +0200
+Message-Id: <20190708150529.164511039@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,48 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0cac264a86fbf4d6cb201fbbb73c1d335e3248a ]
+[ Upstream commit 01d57485fcdb9f9101a10a18e32d5f8b023cab86 ]
 
-The devm_gpiod_request_gpiod() call will add "-gpios" to
-any passed connection ID before looking it up.
+Since commit 3d65b6bbc01e ("arm64: tlbi: Set MAX_TLBI_OPS to
+PTRS_PER_PTE"), we resort to per-ASID invalidation when attempting to
+perform more than PTRS_PER_PTE invalidation instructions in a single
+call to __flush_tlb_range(). Whilst this is beneficial, the mmu_gather
+code does not ensure that the end address of the range is rounded-up
+to the stride when freeing intermediate page tables in pXX_free_tlb(),
+which defeats our range checking.
 
-I do not think the reset GPIO on this platform is named
-"reset-gpios-gpios" but rather "reset-gpios" in the device
-tree, so fix this up so that we get a proper reset GPIO
-handle.
+Align the bounds passed into __flush_tlb_range().
 
-Also drop the inclusion of the legacy GPIO header.
-
-Fixes: 0e8ce93bdceb ("i2c: pca-platform: add devicetree awareness")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Reported-by: Hanjun Guo <guohanjun@huawei.com>
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pca-platform.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/include/asm/tlbflush.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i2c-pca-platform.c
-index de3fe6e828cb..f50afa8e3cba 100644
---- a/drivers/i2c/busses/i2c-pca-platform.c
-+++ b/drivers/i2c/busses/i2c-pca-platform.c
-@@ -21,7 +21,6 @@
- #include <linux/platform_device.h>
- #include <linux/i2c-algo-pca.h>
- #include <linux/platform_data/i2c-pca-platform.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
- #include <linux/of.h>
-@@ -173,7 +172,7 @@ static int i2c_pca_pf_probe(struct platform_device *pdev)
- 	i2c->adap.dev.parent = &pdev->dev;
- 	i2c->adap.dev.of_node = np;
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index 3a1870228946..dff8f9ea5754 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -195,6 +195,9 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 	unsigned long asid = ASID(vma->vm_mm);
+ 	unsigned long addr;
  
--	i2c->gpio = devm_gpiod_get_optional(&pdev->dev, "reset-gpios", GPIOD_OUT_LOW);
-+	i2c->gpio = devm_gpiod_get_optional(&pdev->dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(i2c->gpio))
- 		return PTR_ERR(i2c->gpio);
- 
++	start = round_down(start, stride);
++	end = round_up(end, stride);
++
+ 	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
+ 		flush_tlb_mm(vma->vm_mm);
+ 		return;
 -- 
 2.20.1
 
