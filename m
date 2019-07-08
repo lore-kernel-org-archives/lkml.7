@@ -2,53 +2,51 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB3DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EAAC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A6D20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F1520651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600154;
-	bh=8atBNu46beg+VWS2TbE2mQKXdNdpnS6fAWsFMrBMSoE=;
+	s=default; t=1562600157;
+	bh=OJDLQOcdybuyHyxH9hn4IuPrRW0uqi1uBwTFieaK9Gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jBwPhKd9CsUP7pAb2kHRojd3r+ZfYxAypevvMJb+/rKfyLSbfW9k0+9eZIdzolMgg
-	 DtB4Iqxt7k1WL67kgRy9B70i6x5Bpu1ayKhpVV4ct3wxpEZ02CKf4FOMeCnBBEXrYy
-	 I75UykvzGOo73gMwKyMgPvc2DSrx/VSIXJr5ZIPo=
+	b=k0JY3JNNsvEcG+9YFZTmts6pvMhH4ija5zKhDnlBEVKT1OP2zKrllkL6vcKbFM531
+	 YPRTDbCU88+ZgJELK2uFNBcbEBH0zNZOB3p9Xft7+cKPWx5abX32kFqIGyQ3d7rUiF
+	 vz0MFpYKaiUku30B+0zgEOAoxJdfM12PMk7FVySo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390731AbfGHPfx (ORCPT
+        id S1731493AbfGHPfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:35:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37464 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390867AbfGHPfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:35:02 -0400
+        id S2390559AbfGHPel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD6020665;
-        Mon,  8 Jul 2019 15:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6566D20665;
+        Mon,  8 Jul 2019 15:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600101;
-        bh=8atBNu46beg+VWS2TbE2mQKXdNdpnS6fAWsFMrBMSoE=;
+        s=default; t=1562600080;
+        bh=OJDLQOcdybuyHyxH9hn4IuPrRW0uqi1uBwTFieaK9Gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o0YPyVK6UICLAkEPQqynmpYWG5ynJh4HjmXBLqWqqDPqd1uRNva0LHAnzFG8zHDd+
-         H2FjvgzPTN8OB2jMznXPE4pwWtE8jfG9Wi0ZIhj+Q4fM9SJyjztbsAdz8CPI2+lF6X
-         dF+bK8HCX+WTfDy1uVm8FnTRwL19iKUWpOFo7c4U=
+        b=fKHC8tJNowkb39m0dhTKK0De+X/xg3wb2DpujGE33FfxgDkgH/b6K6L2POJYt7/tY
+         3+WLFuQ7g3oZeEyEz5CQIctjC3FTr+ASqL8V70ANmHYl70FhrWvjtwR+MItydZDkiV
+         8RQRN+ML9YJug53pjYrjeLO683uhNkRvaN2FO+To=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 42/96] ASoC: core: Fix deadlock in snd_soc_instantiate_card()
-Date:   Mon,  8 Jul 2019 17:13:14 +0200
-Message-Id: <20190708150528.822507752@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 5.1 87/96] nfsd: Fix overflow causing non-working mounts on 1 TB machines
+Date:   Mon,  8 Jul 2019 17:13:59 +0200
+Message-Id: <20190708150531.142591359@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,58 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 495f926c68ddb905a7a0192963096138c6a934e1 ]
+From: Paul Menzel <pmenzel@molgen.mpg.de>
 
-Move the client_mutex lock to snd_soc_unbind_card() before
-removing link components. This prevents the deadlock
-in the error path in snd_soc_instantiate_card().
+commit 3b2d4dcf71c4a91b420f835e52ddea8192300a3b upstream.
 
-Fixes: 34ac3c3eb8 (ASoC: core: lock client_mutex while removing
-link components)
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Since commit 10a68cdf10 (nfsd: fix performance-limiting session
+calculation) (Linux 5.1-rc1 and 4.19.31), shares from NFS servers with
+1 TB of memory cannot be mounted anymore. The mount just hangs on the
+client.
+
+The gist of commit 10a68cdf10 is the change below.
+
+    -avail = clamp_t(int, avail, slotsize, avail/3);
+    +avail = clamp_t(int, avail, slotsize, total_avail/3);
+
+Here are the macros.
+
+    #define min_t(type, x, y)       __careful_cmp((type)(x), (type)(y), <)
+    #define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
+
+`total_avail` is 8,434,659,328 on the 1 TB machine. `clamp_t()` casts
+the values to `int`, which for 32-bit integers can only hold values
+−2,147,483,648 (−2^31) through 2,147,483,647 (2^31 − 1).
+
+`avail` (in the function signature) is just 65536, so that no overflow
+was happening. Before the commit the assignment would result in 21845,
+and `num = 4`.
+
+When using `total_avail`, it is causing the assignment to be
+18446744072226137429 (printed as %lu), and `num` is then 4164608182.
+
+My next guess is, that `nfsd_drc_mem_used` is then exceeded, and the
+server thinks there is no memory available any more for this client.
+
+Updating the arguments of `clamp_t()` and `min_t()` to `unsigned long`
+fixes the issue.
+
+Now, `avail = 65536` (before commit 10a68cdf10 `avail = 21845`), but
+`num = 4` remains the same.
+
+Fixes: c54f24e338ed (nfsd: fix performance-limiting session calculation)
+Cc: stable@vger.kernel.org
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/soc-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4state.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 9df3bdeb5c47..c010cc864cf3 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1008,14 +1008,12 @@ static void soc_remove_link_components(struct snd_soc_card *card,
- 	struct snd_soc_component *component;
- 	struct snd_soc_rtdcom_list *rtdcom;
- 
--	mutex_lock(&client_mutex);
- 	for_each_rtdcom(rtd, rtdcom) {
- 		component = rtdcom->component;
- 
- 		if (component->driver->remove_order == order)
- 			soc_remove_component(component);
- 	}
--	mutex_unlock(&client_mutex);
- }
- 
- static void soc_remove_dai_links(struct snd_soc_card *card)
-@@ -2836,12 +2834,14 @@ static void snd_soc_unbind_card(struct snd_soc_card *card, bool unregister)
- 		snd_soc_dapm_shutdown(card);
- 		snd_soc_flush_all_delayed_work(card);
- 
-+		mutex_lock(&client_mutex);
- 		/* remove all components used by DAI links on this card */
- 		for_each_comp_order(order) {
- 			for_each_card_rtds(card, rtd) {
- 				soc_remove_link_components(card, rtd, order);
- 			}
- 		}
-+		mutex_unlock(&client_mutex);
- 
- 		soc_cleanup_card_resources(card);
- 		if (!unregister)
--- 
-2.20.1
-
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1562,7 +1562,7 @@ static u32 nfsd4_get_drc_mem(struct nfsd
+ 	 * Never use more than a third of the remaining memory,
+ 	 * unless it's the only way to give this client a slot:
+ 	 */
+-	avail = clamp_t(int, avail, slotsize, total_avail/3);
++	avail = clamp_t(unsigned long, avail, slotsize, total_avail/3);
+ 	num = min_t(int, num, avail / slotsize);
+ 	nfsd_drc_mem_used += num * slotsize;
+ 	spin_unlock(&nfsd_drc_lock);
 
 
