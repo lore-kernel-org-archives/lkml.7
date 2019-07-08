@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACB1C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8E1C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA67920665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B615920665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600313;
-	bh=h/g+fnyqelDIBef6lZ+o2cuNEp5nnEToVRY3PLkrDnc=;
+	s=default; t=1562600316;
+	bh=YfYnE2EjNzOFpBmQyvvAYXtKa4/nrf6T7RqUEnwwf8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjE4msaq1U52w4MBoyTLmDLcogQw1LQTp/9ougGLsw5xhADKO6+pLtp45uwLF4PaR
-	 TVusKYIyn4lvQhqH646vRsToffQ6rnlXBsTB0YsaPMtDYDbmONXkwvHwoSMhI5A+r9
-	 +KJWODdcmuwgLAxjMTGlPG+S5D8pjFsyYqyTCTBk=
+	b=M+wK9FeNoR/iODvnOAUCW0tObDWGuEmYdndkShlEXs+iMVLY4w2eLSZgCm4lqW6s4
+	 XXYnOZ5ZS+tw2Ak0IYLPVviyFTwbtlHyjb/fT2fjaCeh5dqE64ZWzlWSCpom3+/hTI
+	 JPv8XVdQJaLXzMvK6Y4Suet1vOEcebapB8ODMv8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389822AbfGHPaL (ORCPT
+        id S2389812AbfGHPaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:30:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58982 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:30:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbfGHPaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:02 -0400
+        id S2389716AbfGHP3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:29:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE4F20645;
-        Mon,  8 Jul 2019 15:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F8D204EC;
+        Mon,  8 Jul 2019 15:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599801;
-        bh=h/g+fnyqelDIBef6lZ+o2cuNEp5nnEToVRY3PLkrDnc=;
+        s=default; t=1562599789;
+        bh=YfYnE2EjNzOFpBmQyvvAYXtKa4/nrf6T7RqUEnwwf8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1wXTDn/4x8odbEdu1cd0cOqflBHrt9PsRD/Ivu2nOdhTHYCxXHKtKQc3g6IDW3MR6
-         DLnujIMJUJZY2OEOqTuYIr9LysO+69eBb5g9LQrnBMMz+YVl6yjpTV2oJFLUdBbs4B
-         02Z5DbtdtI7VPpkD5xSqXU5OmyGimblljI3w5pgs=
+        b=R+sRL/Q+bt7DCG8L2FZioQMLe+JWZQdlOyiUXk4Ot/iUUhmhRJfeqs0LXGtN0iOjj
+         TT+gV+ilhkEz2HUV0fMLFRsI/DQ4o1Ix2KKsDrcNcj9ayZX4Qj98m60frGlJnVenPD
+         BcLTnfnQ4pCc1AOKq4NsANCtUAvGhDHDGdot/dec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com,
-        Alexander Potapenko <glider@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 82/90] KVM: x86: degrade WARN to pr_warn_ratelimited
-Date:   Mon,  8 Jul 2019 17:13:49 +0200
-Message-Id: <20190708150526.553674137@linuxfoundation.org>
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 43/90] crypto: cryptd - Fix skcipher instance memory leak
+Date:   Mon,  8 Jul 2019 17:13:10 +0200
+Message-Id: <20190708150524.730642298@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -61,44 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-commit 3f16a5c318392cbb5a0c7a3d19dff8c8ef3c38ee upstream.
+commit 1a0fad630e0b7cff38e7691b28b0517cfbb0633f upstream.
 
-This warning can be triggered easily by userspace, so it should certainly not
-cause a panic if panic_on_warn is set.
+cryptd_skcipher_free() fails to free the struct skcipher_instance
+allocated in cryptd_create_skcipher(), leading to a memory leak.  This
+is detected by kmemleak on bootup on ARM64 platforms:
 
-Reported-by: syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com
-Suggested-by: Alexander Potapenko <glider@google.com>
-Acked-by: Alexander Potapenko <glider@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+ unreferenced object 0xffff80003377b180 (size 1024):
+   comm "cryptomgr_probe", pid 822, jiffies 4294894830 (age 52.760s)
+   backtrace:
+     kmem_cache_alloc_trace+0x270/0x2d0
+     cryptd_create+0x990/0x124c
+     cryptomgr_probe+0x5c/0x1e8
+     kthread+0x258/0x318
+     ret_from_fork+0x10/0x1c
+
+Fixes: 4e0958d19bd8 ("crypto: cryptd - Add support for skcipher")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ crypto/cryptd.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1447,7 +1447,7 @@ static int set_tsc_khz(struct kvm_vcpu *
- 			vcpu->arch.tsc_always_catchup = 1;
- 			return 0;
- 		} else {
--			WARN(1, "user requested TSC rate below hardware speed\n");
-+			pr_warn_ratelimited("user requested TSC rate below hardware speed\n");
- 			return -1;
- 		}
- 	}
-@@ -1457,8 +1457,8 @@ static int set_tsc_khz(struct kvm_vcpu *
- 				user_tsc_khz, tsc_khz);
+--- a/crypto/cryptd.c
++++ b/crypto/cryptd.c
+@@ -586,6 +586,7 @@ static void cryptd_skcipher_free(struct
+ 	struct skcipherd_instance_ctx *ctx = skcipher_instance_ctx(inst);
  
- 	if (ratio == 0 || ratio >= kvm_max_tsc_scaling_ratio) {
--		WARN_ONCE(1, "Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
--			  user_tsc_khz);
-+		pr_warn_ratelimited("Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
-+			            user_tsc_khz);
- 		return -1;
- 	}
+ 	crypto_drop_skcipher(&ctx->spawn);
++	kfree(inst);
+ }
  
+ static int cryptd_create_skcipher(struct crypto_template *tmpl,
 
 
