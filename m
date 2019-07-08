@@ -2,54 +2,55 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D562C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A61C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C8220665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F532173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599618;
-	bh=cYmtbt2v6RfDc7FjULI93abk3YL+Uslmq20nfWzd5mE=;
+	s=default; t=1562599621;
+	bh=jZouWAH0ydmDcuQIbBTMDuOvcyAk4CEZcD2IbEZAhTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5uTfjTwRRNQTeZL7eU0GsksPweuYzGf+F51DI4X4lVTnFAu/p04wg4Cy1R1Wtjd6
-	 GhO2XuJR0W86nWVh6cvN4hwkfnyAiM7DsS35MgbntnrycxchSdBEkbvck2uj9aPEco
-	 n2ZPN0HMZO2l+mMMRbCa9uCs70uU6URhqvX5sBkQ=
+	b=z7ydKfSHYSDMgnCxdXVewqMK1nLI4TJmAO8IsmSAcNMLVZ9KajGt7rh7gdYUJu/vR
+	 CERW8fVJ39cGBWF/Z1IidrMghodpZwRbyuEb+Pwy8qu39q/FwFwdzHoYQF7l2A4P3E
+	 Ufg4K6tGxf6QmmAemLkf1BRPvXesuvhFfjjfITdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388963AbfGHP05 (ORCPT
+        id S1731590AbfGHP1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:26:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388371AbfGHPYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:35 -0400
+        id S2388924AbfGHP0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:26:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D81A2177B;
-        Mon,  8 Jul 2019 15:24:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E9E321738;
+        Mon,  8 Jul 2019 15:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599474;
-        bh=cYmtbt2v6RfDc7FjULI93abk3YL+Uslmq20nfWzd5mE=;
+        s=default; t=1562599611;
+        bh=jZouWAH0ydmDcuQIbBTMDuOvcyAk4CEZcD2IbEZAhTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CAQ2wTnE57QEmtCaWCB55t0AOYVEqkH7aOOvQA9de9otYG5UpDLaszv4SKXaC0XQv
-         ZwfjFw3HxxEy8lVXRr9d18QaEZf3MFe5RKm4hOJcc3Xh6v1PalMvPgJHQ4jYXoEfxe
-         eMzGNap8o7BYpEC36zIjEIzJhtWI48NC7HMMPPTc=
+        b=vVPc0Eoz5bydjuf+lnRP3IWHtQ3RQNCHqIpdXGO/gfTRiDa0inT3UpZekyjTucpF+
+         oa4nLdhv46eHMIhH02tiBCPzMsOOkXBNCtFuY23euQJEtwWpghaL2SbZ1Bz+ZcpJiA
+         JLRTcPqJPVTkwV7Ude1ICpcimriw2B/F07Pq5oZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 27/56] ALSA: firewire-lib/fireworks: fix miss detection of received MIDI messages
-Date:   Mon,  8 Jul 2019 17:13:19 +0200
-Message-Id: <20190708150522.354885399@linuxfoundation.org>
+        stable@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 18/90] ASoC: max98090: remove 24-bit format support if RJ is 0
+Date:   Mon,  8 Jul 2019 17:12:45 +0200
+Message-Id: <20190708150523.530394685@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
-References: <20190708150514.376317156@linuxfoundation.org>
+In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
+References: <20190708150521.829733162@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,54 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+[ Upstream commit 5628c8979642a076f91ee86c3bae5ad251639af0 ]
 
-commit 7fbd1753b64eafe21cf842348a40a691d0dee440 upstream.
+The supported formats are S16_LE and S24_LE now. However, by datasheet
+of max98090, S24_LE is only supported when it is in the right justified
+mode. We should remove 24-bit format if it is not in that mode to avoid
+triggering error.
 
-In IEC 61883-6, 8 MIDI data streams are multiplexed into single
-MIDI conformant data channel. The index of stream is calculated by
-modulo 8 of the value of data block counter.
-
-In fireworks, the value of data block counter in CIP header has a quirk
-with firmware version v5.0.0, v5.7.3 and v5.8.0. This brings ALSA
-IEC 61883-1/6 packet streaming engine to miss detection of MIDI
-messages.
-
-This commit fixes the miss detection to modify the value of data block
-counter for the modulo calculation.
-
-For maintainers, this bug exists since a commit 18f5ed365d3f ("ALSA:
-fireworks/firewire-lib: add support for recent firmware quirk") in Linux
-kernel v4.2. There're many changes since the commit.  This fix can be
-backported to Linux kernel v4.4 or later. I tagged a base commit to the
-backport for your convenience.
-
-Besides, my work for Linux kernel v5.3 brings heavy code refactoring and
-some structure members are renamed in 'sound/firewire/amdtp-stream.h'.
-The content of this patch brings conflict when merging -rc tree with
-this patch and the latest tree. I request maintainers to solve the
-conflict to replace 'tx_first_dbc' with 'ctx_data.tx.first_dbc'.
-
-Fixes: df075feefbd3 ("ALSA: firewire-lib: complete AM824 data block processing layer")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/amdtp-am824.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/max98090.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/sound/firewire/amdtp-am824.c
-+++ b/sound/firewire/amdtp-am824.c
-@@ -321,7 +321,7 @@ static void read_midi_messages(struct am
- 	u8 *b;
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index f06ae43650a3..c3b28b2f4b10 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1924,6 +1924,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
+ 	return 0;
+ }
  
- 	for (f = 0; f < frames; f++) {
--		port = (s->data_block_counter + f) % 8;
-+		port = (8 - s->tx_first_dbc + s->data_block_counter + f) % 8;
- 		b = (u8 *)&buffer[p->midi_position];
++static int max98090_dai_startup(struct snd_pcm_substream *substream,
++				struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
++	unsigned int fmt = max98090->dai_fmt;
++
++	/* Remove 24-bit format support if it is not in right justified mode. */
++	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
++		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
++		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
++	}
++	return 0;
++}
++
+ static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params,
+ 				   struct snd_soc_dai *dai)
+@@ -2331,6 +2346,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
+ #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
  
- 		len = b[0] - 0x80;
+ static const struct snd_soc_dai_ops max98090_dai_ops = {
++	.startup = max98090_dai_startup,
+ 	.set_sysclk = max98090_dai_set_sysclk,
+ 	.set_fmt = max98090_dai_set_fmt,
+ 	.set_tdm_slot = max98090_set_tdm_slot,
+-- 
+2.20.1
+
 
 
