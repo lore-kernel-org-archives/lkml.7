@@ -2,148 +2,102 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EA1C606AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CABC606AA
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9923B20656
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rzCV+8qb"
+	by mail.kernel.org (Postfix) with ESMTP id 486B920656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:35:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbfGHK1e (ORCPT
+        id S1727444AbfGHKfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 06:27:34 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57174 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729360AbfGHK1S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 06:27:18 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x68ARA5C041885;
-        Mon, 8 Jul 2019 05:27:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562581630;
-        bh=ItirwO8erJEYpB2ZQfeB1f9//VYKLfEYE9vUyXsRw94=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=rzCV+8qb6tT+XQFnBxYkqKRu5ioTGUuoZo+fLVFgaj3Ur0V2PNb2lsCjKlEpCQf43
-         a2SKqGFo0uMCkT41mL7ltLHS66jhCKu47cNWhgjfUexCpCYYsymf/kp+ZlME/UPoCe
-         KoZ4Pb+J02tmNRiaXbJGBHOCg7qmyM34Chigmu+c=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x68ARAkR112018
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jul 2019 05:27:10 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Jul
- 2019 05:27:09 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 8 Jul 2019 05:27:09 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x68AR8MN074669;
-        Mon, 8 Jul 2019 05:27:09 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v2 2/4] leds: Add managed API to get a LED from a device driver
-Date:   Mon, 8 Jul 2019 12:26:58 +0200
-Message-ID: <20190708102700.23138-3-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190708102700.23138-1-jjhiblot@ti.com>
-References: <20190708102700.23138-1-jjhiblot@ti.com>
+        Mon, 8 Jul 2019 06:35:46 -0400
+Received: from swift.blarg.de ([138.201.185.127]:34415 "EHLO swift.blarg.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfGHKfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 06:35:46 -0400
+Received: by swift.blarg.de (Postfix, from userid 1000)
+        id 1097840363; Mon,  8 Jul 2019 12:35:44 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 12:35:44 +0200
+From:   Max Kellermann <max@blarg.de>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Kernel 5.1.15 stuck in compaction
+Message-ID: <20190708103543.GA10364@swift.blarg.de>
+Mail-Followup-To: linux-kernel@vger.kernel.org, linux-mm@kvack.org
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the LED is acquired by a consumer device with devm_led_get(), it is
-automatically release when the device is detach.
+Hi,
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- drivers/leds/led-class.c | 42 ++++++++++++++++++++++++++++++++++++++++
- include/linux/leds.h     |  2 ++
- 2 files changed, 44 insertions(+)
+one of our web servers got repeatedly stuck in the memory compaction
+code; two PHP processes have been busy at 100% inside memory
+compaction after a page fault:
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 0f67b13b0f1f..521cb76fbaf7 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -264,6 +264,48 @@ void led_put(struct led_classdev *led_cdev)
- }
- EXPORT_SYMBOL_GPL(led_put);
- 
-+static void devm_led_release(struct device *dev, void *res)
-+{
-+	struct led_classdev **p = res;
-+
-+	led_put(*p);
-+}
-+
-+/**
-+ * devm_led_get - Resource-managed request of a LED device
-+ * @dev:	LED consumer
-+ * @idx:	index of the LED to obtain in the consumer
-+ *
-+ * The device node of the device is parse to find the request LED device.
-+ * The LED device returned from this function is automatically released
-+ * on driver detach.
-+ *
-+ * @return a pointer to a LED device or ERR_PTR(errno) on failure.
-+ */
-+struct led_classdev *__must_check devm_led_get(struct device *dev,
-+					       int index)
-+{
-+	struct led_classdev *led;
-+	struct led_classdev **dr;
-+
-+	led = of_led_get(dev->of_node, index);
-+	if (IS_ERR(led))
-+		return led;
-+
-+	dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *),
-+			  GFP_KERNEL);
-+	if (!dr) {
-+		led_put(led);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	*dr = led;
-+	devres_add(dev, dr);
-+
-+	return led;
-+}
-+EXPORT_SYMBOL_GPL(devm_led_get);
-+
- static int match_name(struct device *dev, const void *data)
- {
- 	if (!dev_name(dev))
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 0a71c7cdd191..7fcec566d774 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -148,6 +148,8 @@ extern void led_classdev_resume(struct led_classdev *led_cdev);
- 
- extern struct led_classdev *of_led_get(struct device_node *np, int index);
- extern void led_put(struct led_classdev *led_cdev);
-+struct led_classdev *__must_check devm_led_get(struct device *dev,
-+					       int index);
- 
- /**
-  * led_blink_set - set blinking with software fallback
--- 
-2.17.1
+   100.00%     0.00%  php-cgi7.0  [kernel.vmlinux]  [k] page_fault
+            |
+            ---page_fault
+               __do_page_fault
+               handle_mm_fault
+               __handle_mm_fault
+               do_huge_pmd_anonymous_page
+               __alloc_pages_nodemask
+               __alloc_pages_slowpath
+               __alloc_pages_direct_compact
+               try_to_compact_pages
+               compact_zone_order
+               compact_zone
+               |          
+               |--61.30%--isolate_migratepages_block
+               |          |          
+               |          |--20.44%--node_page_state
+               |          |          
+               |          |--5.88%--compact_unlock_should_abort.isra.33
+               |          |          
+               |           --3.28%--_cond_resched
+               |                     |          
+               |                      --2.19%--rcu_all_qs
+               |          
+                --3.37%--pageblock_skip_persistent
 
+ftrace:
+
+           <...>-962300 [033] .... 236536.493919: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493919: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493919: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493919: _cond_resched <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493919: rcu_all_qs <-_cond_resched
+           <...>-962300 [033] .... 236536.493919: compact_unlock_should_abort.isra.33 <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493919: pageblock_skip_persistent <-compact_zone
+           <...>-962300 [033] .... 236536.493919: isolate_migratepages_block <-compact_zone
+           <...>-962300 [033] .... 236536.493919: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493919: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493919: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493919: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493920: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493920: node_page_state <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493920: _cond_resched <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493920: rcu_all_qs <-_cond_resched
+           <...>-962300 [033] .... 236536.493920: compact_unlock_should_abort.isra.33 <-isolate_migratepages_block
+           <...>-962300 [033] .... 236536.493920: pageblock_skip_persistent <-compact_zone
+           <...>-962300 [033] .... 236536.493920: isolate_migratepages_block <-compact_zone
+           <...>-962300 [033] .... 236536.493920: node_page_state <-isolate_migratepages_block
+
+Nothing useful in /proc/PID/{stack,wchan,syscall}.
+
+slabinfo/kmalloc-{16,32} are going through the roof (~ 15 GB each),
+and this memleak-lookalike triggering the oomkiller all the time is
+what drew our attention to this server.
+
+Right now, the server is still stuck, and I can attempt to collect
+more information on request.
+
+Max
