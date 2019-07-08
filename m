@@ -2,52 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AF6C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5304EC606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC9F20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDBF2177B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599550;
-	bh=64V9h1K9sOO1/vFNR+nqekbcBPvH68uwg+pEVDOf8Yc=;
+	s=default; t=1562599555;
+	bh=lILbjS1MfLSQF9cZm/MWdMJLBOHiKCzQiSBXSvNAmBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYQ41c0A9uHvZCivZIk8gBjFKJBLYu7f06mlBRGiwOQ30EkalH73GcXijxX19cejB
-	 nw/8akNMLlVBzdLceacvfnW8kMdBuKtfpdAArnTjNS7G5vE9F20fP4EImMY2H4yaVJ
-	 an0eNRvfbuUuOAWRBuKh19U7CR/zs8QFGS2mT/qI=
+	b=JysSe0Xrl3+lavRSIE43KYLfsKv3Bnz9LBge4IJt13P3IxeHNWVYlcfwhwG+gyiTV
+	 s91DkX7TndW/qF8OhG6cj03i3RLZTBOB7z/mSgbKxjO3V8rbrLqnYvLSoxsf7GCYFL
+	 oT0nmtIfUZSZTdALRdXDd7kbM7SAWROGqXFAM8Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388680AbfGHPZt (ORCPT
+        id S2388695AbfGHPZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53184 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388649AbfGHPZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:41 -0400
+        id S2388667AbfGHPZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71B3A20665;
-        Mon,  8 Jul 2019 15:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D67B62166E;
+        Mon,  8 Jul 2019 15:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599540;
-        bh=64V9h1K9sOO1/vFNR+nqekbcBPvH68uwg+pEVDOf8Yc=;
+        s=default; t=1562599546;
+        bh=lILbjS1MfLSQF9cZm/MWdMJLBOHiKCzQiSBXSvNAmBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cPKvA7nf1nLXFV8mRgNeUarJZ/0aleZka6iOwuej5FtH7Z9WbohroRIMTIwgxrrNH
-         1JXIp2rh5CCNyQrpDRgK0fbvOs1318j5wCdL6TctpRava+I/REkhHJfvpOBeC9n5lO
-         Ry9pvr7m1qaVs7wzifXoZb8HEZpuqqUPEjh2zXLA=
+        b=mKA+9kXXKZ8awfhAfn81ajgitkhlQlMVVLKeucdyKIRbl3Qk66reqCGbBYd5Nk82P
+         PoEhTYe6vVq0IylyU0uT5R3ctDOxE4UFftteM9pKWNmdXuynmh9m8dyS2vHdKpdOXx
+         mKFGVqLg+/AybpcYNjvL0Rd7jdaOfP8WPDyNhgKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 48/56] tty: rocket: fix incorrect forward declaration of rp_init()
-Date:   Mon,  8 Jul 2019 17:13:40 +0200
-Message-Id: <20190708150523.944446224@linuxfoundation.org>
+        syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com,
+        Alexander Potapenko <glider@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 50/56] KVM: x86: degrade WARN to pr_warn_ratelimited
+Date:   Mon,  8 Jul 2019 17:13:42 +0200
+Message-Id: <20190708150524.041316708@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -60,36 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 423ea3255424b954947d167681b71ded1b8fca53 ]
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-Make the forward declaration actually match the real function
-definition, something that previous versions of gcc had just ignored.
+commit 3f16a5c318392cbb5a0c7a3d19dff8c8ef3c38ee upstream.
 
-This is another patch to fix new warnings from gcc-9 before I start the
-merge window pulls.  I don't want to miss legitimate new warnings just
-because my system update brought a new compiler with new warnings.
+This warning can be triggered easily by userspace, so it should certainly not
+cause a panic if panic_on_warn is set.
 
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com
+Suggested-by: Alexander Potapenko <glider@google.com>
+Acked-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/tty/rocket.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/x86.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/rocket.c b/drivers/tty/rocket.c
-index 070733ca94d5..32943afacffd 100644
---- a/drivers/tty/rocket.c
-+++ b/drivers/tty/rocket.c
-@@ -279,7 +279,7 @@ MODULE_PARM_DESC(pc104_3, "set interface types for ISA(PC104) board #3 (e.g. pc1
- module_param_array(pc104_4, ulong, NULL, 0);
- MODULE_PARM_DESC(pc104_4, "set interface types for ISA(PC104) board #4 (e.g. pc104_4=232,232,485,485,...");
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1392,7 +1392,7 @@ static int set_tsc_khz(struct kvm_vcpu *
+ 			vcpu->arch.tsc_always_catchup = 1;
+ 			return 0;
+ 		} else {
+-			WARN(1, "user requested TSC rate below hardware speed\n");
++			pr_warn_ratelimited("user requested TSC rate below hardware speed\n");
+ 			return -1;
+ 		}
+ 	}
+@@ -1402,8 +1402,8 @@ static int set_tsc_khz(struct kvm_vcpu *
+ 				user_tsc_khz, tsc_khz);
  
--static int rp_init(void);
-+static int __init rp_init(void);
- static void rp_cleanup_module(void);
+ 	if (ratio == 0 || ratio >= kvm_max_tsc_scaling_ratio) {
+-		WARN_ONCE(1, "Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
+-			  user_tsc_khz);
++		pr_warn_ratelimited("Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
++			            user_tsc_khz);
+ 		return -1;
+ 	}
  
- module_init(rp_init);
--- 
-2.20.1
-
 
 
