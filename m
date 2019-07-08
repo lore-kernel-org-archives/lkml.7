@@ -2,56 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6CFC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35682C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C8C216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F10216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600951;
-	bh=UqYaX4fyRfNX1yoi0yvqj0iqzoEcaynzbhGcyc602uk=;
+	s=default; t=1562600956;
+	bh=HewXvozBQ14YfeBODjCwdlOontBrIeyaFihaoGU3Knw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iCO8CjJj5ztk0+JJQo54/k66azKQ8xCtv4GaZ4VA0gxzI2Y2vCfmRsiKgENeZ1wCk
-	 jWSm1EM9YRJqykwIApJVsbyDCVDTbn10+uGqPWM0TzRb1idZ4EzKZzf5ilYI2sEiXX
-	 oDxzS1Y8lvT0ok0NEHtD0umr7loV4thGJQapWPpg=
+	b=TYCVjX6ub/GCxzK/1ydVyamZvcsdKV7z4ON94/p/L7w+tX7n0HWGuKtXTCOfWhkB1
+	 iwCA3eBiRB9MC41CNbQC4t37tJFuxtxb1J0kZs7b/H8ODaKj6vStC7u85LOPxAlewV
+	 lCIOJms/IAdiUnjZKZeB+WCej+QjsaxqQ8Shrz/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732716AbfGHPRA (ORCPT
+        id S1732680AbfGHPQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40104 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732697AbfGHPQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:16:58 -0400
+        id S1732659AbfGHPQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:16:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7021B21707;
-        Mon,  8 Jul 2019 15:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 807D521537;
+        Mon,  8 Jul 2019 15:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599017;
-        bh=UqYaX4fyRfNX1yoi0yvqj0iqzoEcaynzbhGcyc602uk=;
+        s=default; t=1562599009;
+        bh=HewXvozBQ14YfeBODjCwdlOontBrIeyaFihaoGU3Knw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nY2T2y1VHc+pPhSRgo9Yg/EBUYPkGcoSzPWKxdR0rixmncnC2swEKLmfcjGniHK6N
-         UBjqrNwF7b3CvFg6lbLrpwffGXMv3e3taNsM1mzjwsWtjXh91kHfCYCwLj1kfldSWE
-         PMbl6SnO8v91U8pS6Zbpwx4MRwhLy0snWo1P7aKU=
+        b=0pr07ywVn+cf4feGQJWNFHJV1nD+k/d7yRRw2jQMpcKCumw5RclNsjxp4c4Z9Elp3
+         zjZzxCROsZe/BaJtPq/HK6S3WDUF0nuPfZvo0E/aLDr6+6AqZUxGx+7KdmgtbuaHkU
+         UJ9B2ip1iRE5OOO1RBKhbFOIoJKAIYaFMlMSJfiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 50/73] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-Date:   Mon,  8 Jul 2019 17:13:00 +0200
-Message-Id: <20190708150524.011326537@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matias Karhumaa <matias.karhumaa@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 47/73] Bluetooth: Fix faulty expression for minimum encryption key size check
+Date:   Mon,  8 Jul 2019 17:12:57 +0200
+Message-Id: <20190708150523.864229426@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -64,86 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 ]
+From: Matias Karhumaa <matias.karhumaa@gmail.com>
 
-If spi_register_master fails in spi_bitbang_start
-because device_add failure, We should return the
-error code other than 0, otherwise calling
-spi_bitbang_stop may trigger NULL pointer dereference
-like this:
+commit eca94432934fe5f141d084f2e36ee2c0e614cc04 upstream.
 
-BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
-Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
+Fix minimum encryption key size check so that HCI_MIN_ENC_KEY_SIZE is
+also allowed as stated in the comment.
 
-CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- dump_stack+0xa9/0x10e
- ? __list_del_entry_valid+0x45/0xd0
- ? __list_del_entry_valid+0x45/0xd0
- __kasan_report+0x171/0x18d
- ? __list_del_entry_valid+0x45/0xd0
- kasan_report+0xe/0x20
- __list_del_entry_valid+0x45/0xd0
- spi_unregister_controller+0x99/0x1b0
- spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
- ? 0xffffffffc1128000
- ? klist_next+0x131/0x1e0
- ? driver_detach+0x40/0x40 [parport]
- port_check+0x3b/0x50 [parport]
- bus_for_each_dev+0x115/0x180
- ? subsys_dev_iter_exit+0x20/0x20
- __parport_register_driver+0x1f0/0x210 [parport]
- ? 0xffffffffc1150000
- do_one_initcall+0xb9/0x3b5
- ? perf_trace_initcall_level+0x270/0x270
- ? kasan_unpoison_shadow+0x30/0x40
- ? kasan_unpoison_shadow+0x30/0x40
- do_init_module+0xe0/0x330
- load_module+0x38eb/0x4270
- ? module_frob_arch_sections+0x20/0x20
- ? kernel_read_file+0x188/0x3f0
- ? find_held_lock+0x6d/0xd0
- ? fput_many+0x1a/0xe0
- ? __do_sys_finit_module+0x162/0x190
- __do_sys_finit_module+0x162/0x190
- ? __ia32_sys_init_module+0x40/0x40
- ? __mutex_unlock_slowpath+0xb4/0x3f0
- ? wait_for_completion+0x240/0x240
- ? vfs_write+0x160/0x2a0
- ? lockdep_hardirqs_off+0xb5/0x100
- ? mark_held_locks+0x1a/0x90
- ? do_syscall_64+0x14/0x2a0
- do_syscall_64+0x72/0x2a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+This bug caused connection problems with devices having maximum
+encryption key size of 7 octets (56-bit).
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 693cd8ce3f88 ("Bluetooth: Fix regression with minimum encryption key size alignment")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203997
+Signed-off-by: Matias Karhumaa <matias.karhumaa@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/spi-bitbang.c | 2 +-
+ net/bluetooth/l2cap_core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
-index 3aa9e6e3dac8..4ef54436b9d4 100644
---- a/drivers/spi/spi-bitbang.c
-+++ b/drivers/spi/spi-bitbang.c
-@@ -392,7 +392,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
- 	if (ret)
- 		spi_master_put(master);
- 
--	return 0;
-+	return ret;
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -1341,7 +1341,7 @@ static bool l2cap_check_enc_key_size(str
+ 	 * actually encrypted before enforcing a key size.
+ 	 */
+ 	return (!test_bit(HCI_CONN_ENCRYPT, &hcon->flags) ||
+-		hcon->enc_key_size > HCI_MIN_ENC_KEY_SIZE);
++		hcon->enc_key_size >= HCI_MIN_ENC_KEY_SIZE);
  }
- EXPORT_SYMBOL_GPL(spi_bitbang_start);
  
--- 
-2.20.1
-
+ static void l2cap_do_start(struct l2cap_chan *chan)
 
 
