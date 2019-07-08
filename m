@@ -5,48 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A63C606BD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0B9C606C1
 	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F80221537
+	by mail.kernel.org (Postfix) with ESMTP id 7B38C21537
 	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1562599842;
-	bh=fEV56gnYpPkogzIow6iloZq2JvmolkSAjPoJ9ZYsC2g=;
+	bh=IWAfHE3MJdLP/FqmZHno6i2OiWv+r4s+QbncoVw12eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FijxInrl/uLH3cmBi4+96caGTvlbtxVA3XRenEQR7drmLp1dDcP+RskfPVNaErUdL
-	 B2o1/nSwFtFNSTgTl95Sr3Aba1b9Kb5goJdnelndgxG6UI7YV9shnqKarrqxRhlngz
-	 nx/hWdffGTNKinkbM22CaPTkxaZogFtbtDtrp2Qo=
+	b=xgcytsmdaGxTKcyxJRJqrbrg6u7gt8cO9Jwjc4YM6KyTWNdfqwdocnTfzzybJuCu3
+	 KrlweXjgTye15T4W1IP6OQFHrwiKxIyMixCimm8OE9iImEtmPmdmfzB+hhnbcrc0lC
+	 iGTCAymzxBfePUXgtafGqtaqRK8IRZbIM7Lldm8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389546AbfGHP3m (ORCPT
+        id S2389512AbfGHP3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:29:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389500AbfGHP3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:36 -0400
+        id S2389500AbfGHP3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:29:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A96821537;
-        Mon,  8 Jul 2019 15:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AD6321743;
+        Mon,  8 Jul 2019 15:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599776;
-        bh=fEV56gnYpPkogzIow6iloZq2JvmolkSAjPoJ9ZYsC2g=;
+        s=default; t=1562599771;
+        bh=IWAfHE3MJdLP/FqmZHno6i2OiWv+r4s+QbncoVw12eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYGY+mhPmi37zMqSfg7AegEVulzSXUFIH6fongyl8CkNdLq1ZLY6WbifKfE8PwzMv
-         mipCRyvkhJiHfa39tEFSHhJRz9OlIrbMUCk434nCaob4jm364fdSXjyKLeBRy87icn
-         4KX1Y/KfZXh4UgGfudawW3hUvWPmT97d5VU+tGHo=
+        b=XP06qAH2RDYGUkSv7oZhIlSEEe7XG80CLHf1iWkOB7ufmgLCZZAL+Co0T0NkMhlCW
+         Da+wpiT/vmybvto9hHcHioY7ekJXsSYJkhuj1oQHPddVjW+JfTgju7Qe124YWGfbpz
+         EpE6onTqGE8Ie1FEJ5v1ICITfxjuIzdaJx6N5fEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Kyle D Pelton <kyle.d.pelton@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, dave.hansen@linux.intel.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wei Huang <wei@redhat.com>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 74/90] ALSA: hda: Initialize power_state field properly
-Date:   Mon,  8 Jul 2019 17:13:41 +0200
-Message-Id: <20190708150526.070864123@linuxfoundation.org>
+Subject: [PATCH 4.19 72/90] x86/boot/compressed/64: Do not corrupt EDX on EFER.LME=1 setting
+Date:   Mon,  8 Jul 2019 17:13:39 +0200
+Message-Id: <20190708150525.966995669@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -59,34 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 183ab39eb0ea9879bb68422a83e65f750f3192f0 ]
+[ Upstream commit 45b13b424faafb81c8c44541f093a682fdabdefc ]
 
-The recent commit 98081ca62cba ("ALSA: hda - Record the current power
-state before suspend/resume calls") made the HD-audio driver to store
-the PM state in power_state field.  This forgot, however, the
-initialization at power up.  Although the codec drivers usually don't
-need to refer to this field in the normal operation, let's initialize
-it properly for consistency.
+RDMSR in the trampoline code overwrites EDX but that register is used
+to indicate whether 5-level paging has to be enabled and if clobbered,
+leads to failure to boot on a 5-level paging machine.
 
-Fixes: 98081ca62cba ("ALSA: hda - Record the current power state before suspend/resume calls")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Preserve EDX on the stack while we are dealing with EFER.
+
+Fixes: b677dfae5aa1 ("x86/boot/compressed/64: Set EFER.LME=1 in 32-bit trampoline before returning to long mode")
+Reported-by: Kyle D Pelton <kyle.d.pelton@intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: dave.hansen@linux.intel.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Wei Huang <wei@redhat.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190206115253.1907-1-kirill.shutemov@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_codec.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/boot/compressed/head_64.S | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 21de8145f1a6..a6233775e779 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -971,6 +971,7 @@ int snd_hda_codec_device_new(struct hda_bus *bus, struct snd_card *card,
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index f105ae8651c9..f62e347862cc 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -602,10 +602,12 @@ ENTRY(trampoline_32bit_src)
+ 3:
+ 	/* Set EFER.LME=1 as a precaution in case hypervsior pulls the rug */
+ 	pushl	%ecx
++	pushl	%edx
+ 	movl	$MSR_EFER, %ecx
+ 	rdmsr
+ 	btsl	$_EFER_LME, %eax
+ 	wrmsr
++	popl	%edx
+ 	popl	%ecx
  
- 	/* power-up all before initialization */
- 	hda_set_power_state(codec, AC_PWRST_D0);
-+	codec->core.dev.power.power_state = PMSG_ON;
- 
- 	snd_hda_codec_proc_new(codec);
- 
+ 	/* Enable PAE and LA57 (if required) paging modes */
 -- 
 2.20.1
 
