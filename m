@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52333C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06B0C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D3E216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DF72166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598943;
-	bh=gecknaLnpxJAkcz09//PUVx/i0m8/5EUXaITOfUOD1g=;
+	s=default; t=1562598946;
+	bh=3s485M+LWeT8MncYdT3mtF1nFnXOQ9inBgm8ZFbXAmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xgnPsxye/smryml+grvphJMBGTx+V9bh+kURhcaKZSBCGJJ69c6MwIkxFfkYS6TXy
-	 stqtELmYP8ROEXW+u22wFDcIJ1NlflS3s7NLxljuo2xsyVJoWv56pokHoCh9DxatcI
-	 JsXJSh8rKicY1LETeOjLkvYCqFNK4gdBBhuao8AI=
+	b=IQDZdO8n5E9pCE7Z7X5pATZj4oQ83xm7IvO7cC0XHKa7B/ddVtdRN8va7wEaAdvD2
+	 XUhlIl9Z3PN8nRyBETjgklwp4fDoxXloxMzOBuywNFfw5uvIyEG0Qb8NvvxnvLWBuC
+	 MVxvbIcYuuSQ5F/+4ixku7mMqVVg/VNrt/afIWzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732386AbfGHPPl (ORCPT
+        id S1732400AbfGHPPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:15:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38206 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:15:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732370AbfGHPPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:15:37 -0400
+        id S1732388AbfGHPPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:15:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADAC4216E3;
-        Mon,  8 Jul 2019 15:15:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC6862166E;
+        Mon,  8 Jul 2019 15:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598936;
-        bh=gecknaLnpxJAkcz09//PUVx/i0m8/5EUXaITOfUOD1g=;
+        s=default; t=1562598942;
+        bh=3s485M+LWeT8MncYdT3mtF1nFnXOQ9inBgm8ZFbXAmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nUbuHdEqul2Ayrn57K1uUUGbv8TftxwrD0w71YO1qNQg5vCyzPKvSIz1bxXHJDeVS
-         gXlUimtWtWuD9NYjB4zkvApTDtFM/iVhNpPmCwVAqV8QmC2laSW1a9Ycfu/o0aiRQs
-         BD4qlVPCxYfjSuB1KGbbEshIj4bJnZ09ZTXG4lnw=
+        b=Ec1Mf6sedC/Y4l9ZgdOu+OMgOhur+J/gm0e6LJNlU60hJfEtYHL6YeTcKIQy6Xbv1
+         MCpdF6vt/t2FKMsT7Ay2k9/6oBMBJD1Zdsz7yfddQd3HmUmYjfGqzUUQHAkjSGVz9i
+         XZv06Fx4oZ2c3pQdxiNiqB/WL3keaCFOhrr61cJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a90604060cb40f5bdd16@syzkaller.appspotmail.com,
-        Willem de Bruijn <willemb@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.4 22/73] can: purge socket error queue on sock destruct
-Date:   Mon,  8 Jul 2019 17:12:32 +0200
-Message-Id: <20190708150521.526939612@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 4.4 24/73] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+Date:   Mon,  8 Jul 2019 17:12:34 +0200
+Message-Id: <20190708150521.870389311@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -61,33 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit fd704bd5ee749d560e86c4f1fd2ef486d8abf7cf upstream.
+commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
 
-CAN supports software tx timestamps as of the below commit. Purge
-any queued timestamp packets on socket destroy.
+The minimum encryption key size for LE connections is 56 bits and to
+align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
+BR/EDR connections as well.
 
-Fixes: 51f31cabe3ce ("ip: support for TX timestamps on UDP and RAW sockets")
-Reported-by: syzbot+a90604060cb40f5bdd16@syzkaller.appspotmail.com
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/can/af_can.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/net/bluetooth/hci_core.h |    3 +++
+ net/bluetooth/hci_conn.c         |    8 ++++++++
+ 2 files changed, 11 insertions(+)
 
---- a/net/can/af_can.c
-+++ b/net/can/af_can.c
-@@ -113,6 +113,7 @@ EXPORT_SYMBOL(can_ioctl);
- static void can_sock_destruct(struct sock *sk)
- {
- 	skb_queue_purge(&sk->sk_receive_queue);
-+	skb_queue_purge(&sk->sk_error_queue);
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -174,6 +174,9 @@ struct adv_info {
+ 
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
++/* Min encryption key size to match with SMP */
++#define HCI_MIN_ENC_KEY_SIZE		7
++
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
+ 
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1177,6 +1177,14 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
+ 
++	/* The minimum encryption key size needs to be enforced by the
++	 * host stack before establishing any L2CAP connections. The
++	 * specification in theory allows a minimum of 1, but to align
++	 * BR/EDR and LE transports, a minimum of 7 is chosen.
++	 */
++	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
++		return 0;
++
+ 	return 1;
  }
  
- static const struct can_proto *can_get_proto(int protocol)
 
 
