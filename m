@@ -2,55 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E079EC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD3EC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B692920651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3503520651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600330;
-	bh=xvRlkvuBW/KaYctAaFfIuOV5/n9KBu7XEiPQHP4ruYA=;
+	s=default; t=1562600343;
+	bh=+3pnNI24UcgqddC+16lnH/sPlaUZ2koWchHGt+Hx0XE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a9+XLJTpEgTxSuSYJyhiIFttJ6kag7wu/0ZqfQu9/HwxgK7lS3ylDBR8Ff6vLzfWj
-	 LyauxlkwS4etTNQ0k3jiB3EguIX2K2ACsY86LrE3xGC9u5Ywqfkiple4RbE2/j7P2S
-	 aEPTODOOvnGnlOfW0KbXnf3wZ281nQ5cfeLuGCpQ=
+	b=oz9xt7ub3Afjepov3tPIwjWuWruttuKvwrT55pGLMlp6fH0vVPxhii7v81Pq33udT
+	 zqwB5A/qCUMr4SYVwKjnOAXjqRoTdB4NaO773DZARtS6d2fXMqB8KsDPuM/zh97CZm
+	 rHun9ih49psEX9x7bL4GkUNiJn5iQh/UjLyqrO1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387708AbfGHPit (ORCPT
+        id S2390698AbfGHPjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:38:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59034 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:39:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389809AbfGHPaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:07 -0400
+        id S2389782AbfGHPaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C66DA21707;
-        Mon,  8 Jul 2019 15:30:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5CAA216C4;
+        Mon,  8 Jul 2019 15:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599805;
-        bh=xvRlkvuBW/KaYctAaFfIuOV5/n9KBu7XEiPQHP4ruYA=;
+        s=default; t=1562599799;
+        bh=+3pnNI24UcgqddC+16lnH/sPlaUZ2koWchHGt+Hx0XE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CI/m3+aA8GFkxwook6assp3wiHeeZt02jBW6aDQEDHW6ZGkyNVE1YVZUNvg3ucRUm
-         pHtmyMepvCcH+JMX5hvMLd5c3gQVMbUE/e7Y3s/VnKPE0b70r9XfbEIn44Zqc1GV31
-         ny+V+MDyGnlALjVavsSv+/lqHuR1ZBS/6VNY4t5U=
+        b=nE1e5MS4mP6t0+CO9XgYa/EbKlNPKSq8EPXh93vXgFRpnXlQ7rIG6uZWL4BEwVRax
+         XsFpBxdpZGK3eSVSvZnYLvVXAQmMtYCyVezFa32TDJ6k11URLncCfUy0wtc/omIaWH
+         BxWssMTVFqwQxN37jvUpPjS0LcIf8FkQY+hJbP8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Subject: [PATCH 4.19 83/90] KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable LAPIC
-Date:   Mon,  8 Jul 2019 17:13:50 +0200
-Message-Id: <20190708150526.617437959@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 81/90] netfilter: ipv6: nf_defrag: accept duplicate fragments again
+Date:   Mon,  8 Jul 2019 17:13:48 +0200
+Message-Id: <20190708150526.488683525@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -63,135 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+[ Upstream commit 8a3dca632538c550930ce8bafa8c906b130d35cf ]
 
-commit bb34e690e9340bc155ebed5a3d75fc63ff69e082 upstream.
+When fixing the skb leak introduced by the conversion to rbtree, I
+forgot about the special case of duplicate fragments. The condition
+under the 'insert_error' label isn't effective anymore as
+nf_ct_frg6_gather() doesn't override the returned value anymore. So
+duplicate fragments now get NF_DROP verdict.
 
-Thomas reported that:
+To accept duplicate fragments again, handle them specially as soon as
+inet_frag_queue_insert() reports them. Return -EINPROGRESS which will
+translate to NF_STOLEN verdict, like any accepted fragment. However,
+such packets don't carry any new information and aren't queued, so we
+just drop them immediately.
 
- | Background:
- |
- |    In preparation of supporting IPI shorthands I changed the CPU offline
- |    code to software disable the local APIC instead of just masking it.
- |    That's done by clearing the APIC_SPIV_APIC_ENABLED bit in the APIC_SPIV
- |    register.
- |
- | Failure:
- |
- |    When the CPU comes back online the startup code triggers occasionally
- |    the warning in apic_pending_intr_clear(). That complains that the IRRs
- |    are not empty.
- |
- |    The offending vector is the local APIC timer vector who's IRR bit is set
- |    and stays set.
- |
- | It took me quite some time to reproduce the issue locally, but now I can
- | see what happens.
- |
- | It requires apicv_enabled=0, i.e. full apic emulation. With apicv_enabled=1
- | (and hardware support) it behaves correctly.
- |
- | Here is the series of events:
- |
- |     Guest CPU
- |
- |     goes down
- |
- |       native_cpu_disable()
- |
- | 			apic_soft_disable();
- |
- |     play_dead()
- |
- |     ....
- |
- |     startup()
- |
- |       if (apic_enabled())
- |         apic_pending_intr_clear()	<- Not taken
- |
- |      enable APIC
- |
- |         apic_pending_intr_clear()	<- Triggers warning because IRR is stale
- |
- | When this happens then the deadline timer or the regular APIC timer -
- | happens with both, has fired shortly before the APIC is disabled, but the
- | interrupt was not serviced because the guest CPU was in an interrupt
- | disabled region at that point.
- |
- | The state of the timer vector ISR/IRR bits:
- |
- |     	     	       	        ISR     IRR
- | before apic_soft_disable()    0	      1
- | after apic_soft_disable()     0	      1
- |
- | On startup		      		 0	      1
- |
- | Now one would assume that the IRR is cleared after the INIT reset, but this
- | happens only on CPU0.
- |
- | Why?
- |
- | Because our CPU0 hotplug is just for testing to make sure nothing breaks
- | and goes through an NMI wakeup vehicle because INIT would send it through
- | the boots-trap code which is not really working if that CPU was not
- | physically unplugged.
- |
- | Now looking at a real world APIC the situation in that case is:
- |
- |     	     	       	      	ISR     IRR
- | before apic_soft_disable()    0	      1
- | after apic_soft_disable()     0	      1
- |
- | On startup		      		 0	      0
- |
- | Why?
- |
- | Once the dying CPU reenables interrupts the pending interrupt gets
- | delivered as a spurious interupt and then the state is clear.
- |
- | While that CPU0 hotplug test case is surely an esoteric issue, the APIC
- | emulation is still wrong, Even if the play_dead() code would not enable
- | interrupts then the pending IRR bit would turn into an ISR .. interrupt
- | when the APIC is reenabled on startup.
-
->From SDM 10.4.7.2 Local APIC State After It Has Been Software Disabled
-* Pending interrupts in the IRR and ISR registers are held and require
-  masking or handling by the CPU.
-
-In Thomas's testing, hardware cpu will not respect soft disable LAPIC
-when IRR has already been set or APICv posted-interrupt is in flight,
-so we can skip soft disable APIC checking when clearing IRR and set ISR,
-continue to respect soft disable APIC when attempting to set IRR.
-
-Reported-by: Rong Chen <rong.a.chen@intel.com>
-Reported-by: Feng Tang <feng.tang@intel.com>
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rong Chen <rong.a.chen@intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: a0d56cb911ca ("netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/lapic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/netfilter/nf_conntrack_reasm.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2275,7 +2275,7 @@ int kvm_apic_has_interrupt(struct kvm_vc
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	u32 ppr;
+diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
+index 73c29ddcfb95..35d5a76867d0 100644
+--- a/net/ipv6/netfilter/nf_conntrack_reasm.c
++++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
+@@ -265,8 +265,14 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
  
--	if (!apic_enabled(apic))
-+	if (!kvm_apic_hw_enabled(apic))
- 		return -1;
+ 	prev = fq->q.fragments_tail;
+ 	err = inet_frag_queue_insert(&fq->q, skb, offset, end);
+-	if (err)
++	if (err) {
++		if (err == IPFRAG_DUP) {
++			/* No error for duplicates, pretend they got queued. */
++			kfree_skb(skb);
++			return -EINPROGRESS;
++		}
+ 		goto insert_error;
++	}
  
- 	__apic_update_ppr(apic, &ppr);
+ 	if (dev)
+ 		fq->iif = dev->ifindex;
+@@ -304,8 +310,6 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
+ 	return -EINPROGRESS;
+ 
+ insert_error:
+-	if (err == IPFRAG_DUP)
+-		goto err;
+ 	inet_frag_kill(&fq->q);
+ err:
+ 	skb_dst_drop(skb);
+-- 
+2.20.1
+
 
 
