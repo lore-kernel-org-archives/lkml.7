@@ -2,120 +2,98 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7797C606BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3294BC606BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B20216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A9621537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m63z72u3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbfGHOit (ORCPT
+        id S1731840AbfGHOj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:38:49 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:45329 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728998AbfGHOit (ORCPT
+        Mon, 8 Jul 2019 10:39:58 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:39695 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728823AbfGHOj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:38:49 -0400
-Received: from [192.168.1.110] ([95.117.164.184]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MAfMc-1hdwH01vQ0-00B2ME; Mon, 08 Jul 2019 16:38:46 +0200
-Subject: Re: mfd: asic3: One function call less in asic3_irq_probe()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        kernel-janitors@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Lee Jones <lee.jones@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <01f6a8cd-0205-8d34-2aa3-e4b691e7eb95@web.de>
- <20190707005251.GQ17978@ZenIV.linux.org.uk>
- <4b06e2fb-a0ba-56e5-b46b-98e986e6f2fd@web.de>
- <6e8eab5f-1f5c-b3dc-6b65-96a874ec2789@metux.net>
- <b116fc90-9558-8609-d803-7d8da2b66e0a@web.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <143cb102-f310-c3e4-a1fc-ac45690999fa@metux.net>
-Date:   Mon, 8 Jul 2019 16:38:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <b116fc90-9558-8609-d803-7d8da2b66e0a@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:wa7vmB3eJM2UpBn+wAPEzGkfKJ2qKOqgvGNbxbvku5a1wslOmVr
- FRpRQQLBz3PNGao7N5PClZR+gBakHaR05nUZdjrGoaFuNqz7uEGKC2Qrlzm7lOLzeU1ePyW
- JESsH2qmwEENE2vIu3mgj7H7W5Us79wtGNoLGSygMv/YsxlBg2b6jCOp01oQtwsFMjfXXrR
- 2cqY1zvK7GbwVqubPP6CA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oOuyiMjqq54=:25L/bs01Xm7tAAvobZsgq4
- T0SvS/gYqrVjQVAbfbL194m/LuZSNuXjkALOcPWXp3LcxYsMtvlYk97/tEuloZlunHIkVcxVg
- DQgLa06j3g3yryuIvINidsDpastN43LMrdCFf0QsdboV7+dYz2EGM/Z52PYs04DtRymoS3fJa
- OYTt5rWFIy1Fn1Ta1iINRemiZ/tqXXDJGIdDwwAPOqp0jJ1uzUA4aSilhm0XP3rPZH/An0pWq
- 1qtb0OE90fsUSqBD/le9PnJvghPLNRNa0b6uQmIhyQjZREG3/qYndELaF4WZLeNtRJcPGmA33
- AaIQymTJ02n9dcRDWuawRP/GH+FIqH9Qpm6LqoOoHa0maINAWHvZDOt8BrUVi3THGdqRoK6lR
- fDYSNPZEJP7tgz7L9u9IqapNxD2YMRHGXwid3NJzfD7TpKoerCOiaC0N2X3MigcOG1LtTs02U
- P5Z++duQURUza8BDhzTuAl2iL2H3xD1qwJYnIZxWG7ElFiYvyXEOkpnOZYd9r8n/OJC8Kp3yE
- lYaR+lYKCZTF3xGYe3t8B/vzmNNBWtdA+RZjbeOU2ElHBor9NxcPpNWs1moksXfM55WtB8rbO
- xIKpKUi1S7uBIaTJpjcXfXL/iwMoLozuB5/xYyCMP+ZdJrCfPZibsv8HJNju+I0NmvGAmEbqf
- nV3tu0ZdD3cIrGFk9fjjOzZBmdbzh3nVPI7HS+TfMbsBjrndvNWAYUZSPwd+hwhn3hepx6G4L
- ixQI+cirM9pWIy2Bp4Lq7VuLztU5ra01VezabvxVZhud3USvjIGKa0ajzH9MV3+f8l/xNFWgu
- bl7xsddWrHikYOpWECGSLrHyxKTXR1awkV1IKqFJcfr4B4Zf0/d0oFnZdz+Q6jgz0fUrsuO
+        Mon, 8 Jul 2019 10:39:58 -0400
+Received: by mail-ot1-f53.google.com with SMTP id r21so980700otq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=SDiQ+8VF4G7lQEr1WiQ+q4pu7BnAiOb9j0rphzoCZ8A=;
+        b=m63z72u3/ha3hSHjwxVl/t7mnA/CQ/8pSssVOwxczftYFTB03o+yCUGvSF2Q3rCtYV
+         IwoxVzfjEhlfe/sILAO16+vFUKChhY0kP+jkPAzBqc5RSbPENcasiEtjIt/eMCSoeUkt
+         UR+0JU3fuY7QwETYy9MRuvft5eXi3KV6ed6xcoKXbKrPc3BPOV07NI4/4Sx+kZkuYj+2
+         30CVmbzaz0CjCwLJ19ZvacDws+ptnxdvzDLwKJF+wk1/8bLwyDYxs3u8QT3EVUZjyL5n
+         FsLFqqTJ4tivZUDq+0AZT/PszsjReMqgLI2nd35L4X04RX/1Hy2vuQkHN2+ZtrvANsWI
+         N1Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SDiQ+8VF4G7lQEr1WiQ+q4pu7BnAiOb9j0rphzoCZ8A=;
+        b=cTjh8m/6f+jhMPS/LXBum0bWmt3PUXNexqt/Xdz1C1CNssPEfwhhQEIqvBRFBhI4RW
+         EO0s9MLgNrhWVCg2DB4FimZ/DkkpLjee4dfIEIJXmJimYV5Oaqsc2jAoL9JELmSYRUs9
+         D3VLs9kdB7Td3+GHBcYsgtavdqn65rMbFvtEvuy1Epu/T5kifODM9VOiVDSCROVARzYz
+         C11eCOZM13BiDhy5Y2/Jbu3RfeKLlWZRmDZ2CgYiXYHMW4s/ZQYJEIqJoDG6WE1yRSPP
+         2xiIAnyLdWK9nLF6YNWoQ2hA7wZmzlvXcChHj4yf6jEUE+qYRxWaQQvouuNTYIjBhknr
+         Tlbg==
+X-Gm-Message-State: APjAAAVP60i8sOuhFyDJrFCSy7etImsz2KUexP/GlMGQbGgcdYWFBbmk
+        Tdjme8TxJqj7Dbe5/VwG7zACMw==
+X-Google-Smtp-Source: APXvYqw+YSilI0PUAlEf1gAqmMoAHe3DA/X4BARsrtzJe9i9zFf1au9YeKZ6j24wXDlX3HkapZYZfQ==
+X-Received: by 2002:a9d:5f10:: with SMTP id f16mr15005073oti.320.1562596797636;
+        Mon, 08 Jul 2019 07:39:57 -0700 (PDT)
+Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
+        by smtp.gmail.com with ESMTPSA id x5sm6386021otb.6.2019.07.08.07.39.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 07:39:56 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/4] perf: Fix errors detected by Smatch
+Date:   Mon,  8 Jul 2019 22:39:33 +0800
+Message-Id: <20190708143937.7722-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.07.19 13:50, Markus Elfring wrote:
->>> I suggest to reduce a bit of duplicate source code also at this place.
->>
->> Duplicate code (logic) or just characters ?
-> 
-> Both.
+Since Arnaldo has picked up several patches from patch set v1 and have
+left four patches which are needed to be refined based on the feedback.
+So this is patch set v2 which contains the rest four patches with
+addressed the comments and suggestions.
 
-You could also complexity for the human reader. That's a point where
-personal perception comes in, which needs to be taken into account.
+Changes from v1:
+* Added WARN_ON_ONCE(!hbt) in ui/browsers/hists.c (Jiri)
+* Removed NULL test for 'session->itrace_synth_opts (Adrian)
 
-> The code text size can influence this aspect in considerable ways.
+Leo Yan (4):
+  perf hists: Smatch: Fix potential NULL pointer dereference
+  perf intel-bts: Smatch: Fix potential NULL pointer dereference
+  perf intel-pt: Smatch: Fix potential NULL pointer dereference
+  perf cs-etm: Smatch: Fix potential NULL pointer dereference
 
-It *can*, but not necessarily. I'd prefer leaving this choice to the
-maintainer, as he's the one who finally needs to care about all the
-code. Discussions about such choices tend to be pointless (personal
-perception / taste isn't something that can be debated by argument) and
-risks annoying people and waste precious brain time.
-
-> I suggest occasionally again to reconsider consequences around a principle
-> like “Don't repeat yourself”.
-
-In general correct. But in some cases repeating a few words can make the
-code actually easier to read (psychologic phenomenon - human brains work
-very different from computers). This needs to be carefully weighted.
-
-Theorettically, we could do this conversation with much less words,
-using some purely logic language, similar to math formulas - but for
-most people this hard to do. Therefore, let's make the code easy for
-us humans and let the machines (eg. compiler) do the heavy lifting.
-
->> But that doesn't mean that a particular patch can be accepted
->> or not in the greater context.
-> 
-> Would you like to find the corresponding change acceptance out at all?
-
-For particular change, I wouldn't really object, but I don't like it
-so much either. Some your other changes IMHO do make the code prettier.
-
->> - it's not a technical
-> 
-> I got an other impression.
-
-That's the point. Psychology / personal perception plays a big role
-here. We can't deduce it by pure logic.
-
-
---mtx
+ tools/perf/ui/browsers/hists.c | 15 +++++++++++----
+ tools/perf/util/cs-etm.c       |  2 +-
+ tools/perf/util/intel-bts.c    |  5 ++---
+ tools/perf/util/intel-pt.c     | 13 +++++--------
+ 4 files changed, 19 insertions(+), 16 deletions(-)
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.17.1
+
