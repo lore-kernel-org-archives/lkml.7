@@ -2,37 +2,37 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D89EC606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29BCC606D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09BA02171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A1721479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfGHWgY (ORCPT
+        id S1728305AbfGHWgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:36:24 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:44939 "EHLO
+        Mon, 8 Jul 2019 18:36:32 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:49691 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727349AbfGHWek (ORCPT
+        with ESMTP id S1727360AbfGHWei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:34:40 -0400
-X-UUID: fdeafbdf9c22410f886fbf0f04f424c0-20190709
-X-UUID: fdeafbdf9c22410f886fbf0f04f424c0-20190709
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        Mon, 8 Jul 2019 18:34:38 -0400
+X-UUID: 7c4ad35451564c1aab465acf09bfb93a-20190709
+X-UUID: 7c4ad35451564c1aab465acf09bfb93a-20190709
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2038621960; Tue, 09 Jul 2019 06:34:35 +0800
+        with ESMTP id 1010391794; Tue, 09 Jul 2019 06:34:30 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 9 Jul 2019 06:34:34 +0800
+ 15.0.1395.4; Tue, 9 Jul 2019 06:34:29 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 9 Jul 2019 06:34:34 +0800
+ Transport; Tue, 9 Jul 2019 06:34:29 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -44,9 +44,9 @@ CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v4, 16/33] drm/mediatek: add commponent OVL_2L0
-Date:   Tue, 9 Jul 2019 06:33:56 +0800
-Message-ID: <1562625253-29254-17-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 10/33] drm/mediatek: add mutex sof into ddp private data
+Date:   Tue, 9 Jul 2019 06:33:50 +0800
+Message-ID: <1562625253-29254-11-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
 References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
@@ -60,55 +60,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add commponent OVL_2L0
+mutex sof will be ddp private data
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 2 ++
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 43 +++++++++++++++++++++++++++-------
+ 1 file changed, 35 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index b357b24..bcbf673 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -227,6 +227,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 8bde2cf..ab396ee 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -149,8 +149,19 @@ struct mtk_disp_mutex {
+ 	bool claimed;
+ };
  
- static const char * const mtk_ddp_comp_stem[MTK_DDP_COMP_TYPE_MAX] = {
- 	[MTK_DISP_OVL] = "ovl",
-+	[MTK_DISP_OVL_2L] = "ovl_2l",
- 	[MTK_DISP_RDMA] = "rdma",
- 	[MTK_DISP_WDMA] = "wdma",
- 	[MTK_DISP_COLOR] = "color",
-@@ -266,6 +267,7 @@ struct mtk_ddp_comp_match {
- 	[DDP_COMPONENT_OD1]	= { MTK_DISP_OD,	1, &ddp_od },
- 	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
- 	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
-+	[DDP_COMPONENT_OVL_2L0]	= { MTK_DISP_OVL_2L,	0, NULL },
- 	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
- 	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
- 	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index bd5fcc9..8f586d0 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -25,6 +25,7 @@
++enum mtk_ddp_mutex_sof_id {
++	DDP_MUTEX_SOF_SINGLE_MODE,
++	DDP_MUTEX_SOF_DSI0,
++	DDP_MUTEX_SOF_DSI1,
++	DDP_MUTEX_SOF_DPI0,
++	DDP_MUTEX_SOF_DPI1,
++	DDP_MUTEX_SOF_DSI2,
++	DDP_MUTEX_SOF_DSI3,
++};
++
+ struct mtk_ddp_data {
+ 	const unsigned int *mutex_mod;
++	const unsigned int *mutex_sof;
+ 	const unsigned int mutex_mod_reg;
+ };
  
- enum mtk_ddp_comp_type {
- 	MTK_DISP_OVL,
-+	MTK_DISP_OVL_2L,
- 	MTK_DISP_RDMA,
- 	MTK_DISP_WDMA,
- 	MTK_DISP_COLOR,
-@@ -58,6 +59,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_OD0,
- 	DDP_COMPONENT_OD1,
- 	DDP_COMPONENT_OVL0,
-+	DDP_COMPONENT_OVL_2L0,
- 	DDP_COMPONENT_OVL1,
- 	DDP_COMPONENT_PWM0,
- 	DDP_COMPONENT_PWM1,
+@@ -209,18 +220,31 @@ struct mtk_ddp {
+ 	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+ };
+ 
++static const unsigned int mt2712_mutex_sof[DDP_MUTEX_SOF_DSI3 + 1] = {
++	[DDP_MUTEX_SOF_SINGLE_MODE] = MUTEX_SOF_SINGLE_MODE,
++	[DDP_MUTEX_SOF_DSI0] = MUTEX_SOF_DSI0,
++	[DDP_MUTEX_SOF_DSI1] = MUTEX_SOF_DSI1,
++	[DDP_MUTEX_SOF_DPI0] = MUTEX_SOF_DPI0,
++	[DDP_MUTEX_SOF_DPI1] = MUTEX_SOF_DPI1,
++	[DDP_MUTEX_SOF_DSI2] = MUTEX_SOF_DSI2,
++	[DDP_MUTEX_SOF_DSI3] = MUTEX_SOF_DSI3,
++};
++
+ static const struct mtk_ddp_data mt2701_ddp_driver_data = {
+ 	.mutex_mod = mt2701_mutex_mod,
++	.mutex_sof = mt2712_mutex_sof,
+ 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+ static const struct mtk_ddp_data mt2712_ddp_driver_data = {
+ 	.mutex_mod = mt2712_mutex_mod,
++	.mutex_sof = mt2712_mutex_sof,
+ 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+ static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+ 	.mutex_mod = mt8173_mutex_mod,
++	.mutex_sof = mt2712_mutex_sof,
+ 	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
+ };
+ 
+@@ -462,28 +486,29 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+ 	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
+ 					   mutex[mutex->id]);
+ 	unsigned int reg;
++	unsigned int sof_id;
+ 	unsigned int offset;
+ 
+ 	WARN_ON(&ddp->mutex[mutex->id] != mutex);
+ 
+ 	switch (id) {
+ 	case DDP_COMPONENT_DSI0:
+-		reg = MUTEX_SOF_DSI0;
++		sof_id = DDP_MUTEX_SOF_DSI0;
+ 		break;
+ 	case DDP_COMPONENT_DSI1:
+-		reg = MUTEX_SOF_DSI0;
++		sof_id = DDP_MUTEX_SOF_DSI0;
+ 		break;
+ 	case DDP_COMPONENT_DSI2:
+-		reg = MUTEX_SOF_DSI2;
++		sof_id = DDP_MUTEX_SOF_DSI2;
+ 		break;
+ 	case DDP_COMPONENT_DSI3:
+-		reg = MUTEX_SOF_DSI3;
++		sof_id = DDP_MUTEX_SOF_DSI3;
+ 		break;
+ 	case DDP_COMPONENT_DPI0:
+-		reg = MUTEX_SOF_DPI0;
++		sof_id = DDP_MUTEX_SOF_DPI0;
+ 		break;
+ 	case DDP_COMPONENT_DPI1:
+-		reg = MUTEX_SOF_DPI1;
++		sof_id = DDP_MUTEX_SOF_DPI1;
+ 		break;
+ 	default:
+ 		if (ddp->data->mutex_mod[id] < 32) {
+@@ -501,7 +526,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+ 		return;
+ 	}
+ 
+-	writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
++	writel_relaxed(ddp->data->mutex_sof[sof_id],
++		       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+ }
+ 
+ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+@@ -522,7 +548,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+ 	case DDP_COMPONENT_DPI0:
+ 	case DDP_COMPONENT_DPI1:
+ 		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
+-			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
++			       ddp->regs +
++			       DISP_REG_MUTEX_SOF(mutex->id));
+ 		break;
+ 	default:
+ 		if (ddp->data->mutex_mod[id] < 32) {
 -- 
 1.8.1.1.dirty
 
