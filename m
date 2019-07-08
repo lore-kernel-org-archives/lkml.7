@@ -2,121 +2,258 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6261C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44049C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9B620665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="2FLKiWfJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0E58520665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfGHIam (ORCPT
+        id S1729276AbfGHIcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:30:42 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44664 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbfGHIam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:30:42 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r15so10288612lfm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ztkKFuoNyYWW8TvhBAfe9IkmKE0E5S6jFYK6qsfI+as=;
-        b=2FLKiWfJ6TELTzv2UmKaQ8Ce56VitiUoFyz37Mt8idG0Tcb4aShmNk9A2xRnAANDpr
-         Wbg75xrRLdbKNJ9uoFgb+pO81pUcwd90P8+6xsLyLKWhMtbPz4bHKlO7X4f83xbPsAp5
-         f9Uz94axmque8KceNcL14YcYjqYwtHUYfXJeO4UHb9UbtCRYUUpB7JCRQpgzt7IVzHKY
-         7a018YhWOu8XMrX6cE2ddTJzD7zApYVPIwACOiH5/sw/WWJIt2l45fcdutxjIl6JVqaI
-         jJ6fM+bdvubDrKkV6uQ49DLMg1kEf+q5pwn2eFlIjWPdOmwIfNMSHbu9bt/fkcAC/Gvv
-         MvhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ztkKFuoNyYWW8TvhBAfe9IkmKE0E5S6jFYK6qsfI+as=;
-        b=qBP5b1bT4W/P3DcmYIliKC7igcLvva26zcnEn9tagqH98Cr4oNy+BFIHsUS6MRFIlX
-         LHtULMmvq/jtnUdFe1Nh28R5XS4UFZUk0sS6Sw/KsThGmy/PIDqLVu0FJ3ZfPrbL9uJC
-         tveeT5bMtRsuYV62zfYuRxRnIG6iIPXtkl+QQsYUUUzTtjEbbF3MPz2GXIxVKoo/XYXo
-         bWhvZTJE9yt/mTUkZMJr96jqWLSpc/xpNRTEU8lMY6n3PNc+6LTxcic0vKfJmI78SC0T
-         wrEcK6ns3mUlLlHuB1Y8ewli8UDLxbcW13GD5UvaR8jgfIpDGwvsEB+c79aXCOT6Qlm/
-         0BFA==
-X-Gm-Message-State: APjAAAUHmmIequOnR8+r3/lBo6We9zcqqad3A9ogN8LuqMiF/qRWq6HR
-        dNk8MwcFwLQweHKZT11NFY10KUC1QZlsWw==
-X-Google-Smtp-Source: APXvYqxI1tVn7Kh3jFQltkzQRum0mRc1xHVC7YeMg/XXBNxCzrBu9D7uRCAaeKQOWInbA16ct1+25A==
-X-Received: by 2002:ac2:455a:: with SMTP id j26mr7890772lfm.18.1562574640173;
-        Mon, 08 Jul 2019 01:30:40 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:80a:6f53:f8ef:3097:c1a4:9983? ([2a00:1fa0:80a:6f53:f8ef:3097:c1a4:9983])
-        by smtp.gmail.com with ESMTPSA id j7sm3887470lji.27.2019.07.08.01.30.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 01:30:39 -0700 (PDT)
-Subject: Re: [PATCH] usb: roles: Add PM callbacks
-To:     "Chen, Hu" <hu1.chen@intel.com>, hdegoede@redhat.com
-Cc:     Balaji <m.balaji@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190708022514.7161-1-hu1.chen@intel.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <699cc89d-7366-c167-4295-5153ab7b5716@cogentembedded.com>
-Date:   Mon, 8 Jul 2019 11:30:36 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+        Mon, 8 Jul 2019 04:32:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22286 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727373AbfGHIcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 04:32:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 01:32:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
+   d="scan'208";a="167614241"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.239.195.234]) ([10.239.195.234])
+  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2019 01:32:31 -0700
+Subject: Re: [LKP] [SUNRPC] 0472e47660: fsmark.app_overhead 16.0% regression
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "rong.a.chen@intel.com" <rong.a.chen@intel.com>
+Cc:     "lkp@01.org" <lkp@01.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190520055434.GZ31424@shao2-debian>
+ <f1abba58-5fd2-5f26-74cc-f72724cfa13f@linux.intel.com>
+ <9a07c589f955e5af5acc0fa09a16a3256089e764.camel@hammerspace.com>
+ <d796ac23-d5d6-cdfa-89c8-536e9496b551@linux.intel.com>
+ <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
+ <2bbe636a-14f1-4592-d1f9-a9f765a02939@linux.intel.com>
+Message-ID: <81fb0e7d-1879-9267-83da-4671fec50920@linux.intel.com>
+Date:   Mon, 8 Jul 2019 16:32:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190708022514.7161-1-hu1.chen@intel.com>
+In-Reply-To: <2bbe636a-14f1-4592-d1f9-a9f765a02939@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi Trond,
 
-On 08.07.2019 5:25, Chen, Hu wrote:
+    I retest, it still can be reproduced. I test with the following 
+parameters, only change "nr_threads", the test results are as the 
+following. From the test results, more threads in the test, more 
+regression will happen. Could you help to check? Thanks.
 
-> On some Broxton NUC, the usb role is lost after S3 (it becomes "none").
-> Add PM callbacks to address this issue: save the role during suspend and
-> restore usb to that role during resume.
+
+In testcase: fsmark
+on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @ 3.00GHz 
+with 384G memory
+with following parameters:
+
+         iterations: 20x
+         nr_threads: 1t
+         disk: 1BRD_48G
+         fs: xfs
+         fs2: nfsv4
+         filesize: 4M
+         test_size: 80G
+         sync_method: fsyncBeforeClose
+         cpufreq_governor: performance
+
+test-description: The fsmark is a file system benchmark to test 
+synchronous write workloads, for example, mail servers workload.
+test-url: https://sourceforge.net/projects/fsmark/
+
+commit:
+   e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use iov_iter_kvec()")
+   0472e47660 ("SUNRPC: Convert socket page send code to use iov_iter()")
+
+e791f8e9380d945e 0472e476604998c127f3c80d291
+---------------- ---------------------------
+          %stddev     %change         %stddev
+              \          |                \
+      59.74            -0.7%      59.32        fsmark.files_per_sec 
+(nr_threads= 1)
+     114.06            -8.1%     104.83        fsmark.files_per_sec 
+(nr_threads= 2)
+     184.53           -13.1%     160.29        fsmark.files_per_sec 
+(nr_threads= 4)
+     257.05           -15.5%     217.22        fsmark.files_per_sec 
+(nr_threads= 8)
+     306.08           -15.5%     258.68        fsmark.files_per_sec 
+(nr_threads=16)
+     498.34           -22.7%     385.33        fsmark.files_per_sec 
+(nr_threads=32)
+     527.29           -22.6%     407.96        fsmark.files_per_sec 
+(nr_threads=64)
+
+
+
+On 5/31/2019 11:27 AM, Xing Zhengjun wrote:
 > 
-> Test:
-> Run Android on UC6CAY, a NUC powered by Broxton. Access this NUC via
-> "adb shell" from a host PC. After a suspend/resume cycle, the adb still
-> works well.
 > 
-> Signed-off-by: Chen, Hu <hu1.chen@intel.com>
-> Signed-off-by: Balaji <m.balaji@intel.com>
+> On 5/31/2019 3:10 AM, Trond Myklebust wrote:
+>> On Thu, 2019-05-30 at 15:20 +0800, Xing Zhengjun wrote:
+>>>
+>>> On 5/30/2019 10:00 AM, Trond Myklebust wrote:
+>>>> Hi Xing,
+>>>>
+>>>> On Thu, 2019-05-30 at 09:35 +0800, Xing Zhengjun wrote:
+>>>>> Hi Trond,
+>>>>>
+>>>>> On 5/20/2019 1:54 PM, kernel test robot wrote:
+>>>>>> Greeting,
+>>>>>>
+>>>>>> FYI, we noticed a 16.0% improvement of fsmark.app_overhead due
+>>>>>> to
+>>>>>> commit:
+>>>>>>
+>>>>>>
+>>>>>> commit: 0472e476604998c127f3c80d291113e77c5676ac ("SUNRPC:
+>>>>>> Convert
+>>>>>> socket page send code to use iov_iter()")
+>>>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
+>>>>>> master
+>>>>>>
+>>>>>> in testcase: fsmark
+>>>>>> on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @
+>>>>>> 3.00GHz with 384G memory
+>>>>>> with following parameters:
+>>>>>>
+>>>>>>     iterations: 1x
+>>>>>>     nr_threads: 64t
+>>>>>>     disk: 1BRD_48G
+>>>>>>     fs: xfs
+>>>>>>     fs2: nfsv4
+>>>>>>     filesize: 4M
+>>>>>>     test_size: 40G
+>>>>>>     sync_method: fsyncBeforeClose
+>>>>>>     cpufreq_governor: performance
+>>>>>>
+>>>>>> test-description: The fsmark is a file system benchmark to test
+>>>>>> synchronous write workloads, for example, mail servers
+>>>>>> workload.
+>>>>>> test-url: https://sourceforge.net/projects/fsmark/
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Details are as below:
+>>>>>> -------------------------------------------------------------
+>>>>>> ----
+>>>>>> --------------------------------->
+>>>>>>
+>>>>>>
+>>>>>> To reproduce:
+>>>>>>
+>>>>>>            git clone https://github.com/intel/lkp-tests.git
+>>>>>>            cd lkp-tests
+>>>>>>            bin/lkp install job.yaml  # job file is attached in
+>>>>>> this
+>>>>>> email
+>>>>>>            bin/lkp run     job.yaml
+>>>>>>
+>>>>>> ===============================================================
+>>>>>> ====
+>>>>>> ======================
+>>>>>> compiler/cpufreq_governor/disk/filesize/fs2/fs/iterations/kconf
+>>>>>> ig/n
+>>>>>> r_threads/rootfs/sync_method/tbox_group/test_size/testcase:
+>>>>>>      gcc-7/performance/1BRD_48G/4M/nfsv4/xfs/1x/x86_64-rhel-
+>>>>>> 7.6/64t/debian-x86_64-2018-04-03.cgz/fsyncBeforeClose/lkp-ivb-
+>>>>>> ep01/40G/fsmark
+>>>>>>
+>>>>>> commit:
+>>>>>>      e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use
+>>>>>> iov_iter_kvec()")
+>>>>>>      0472e47660 ("SUNRPC: Convert socket page send code to use
+>>>>>> iov_iter()")
+>>>>>>
+>>>>>> e791f8e9380d945e 0472e476604998c127f3c80d291
+>>>>>> ---------------- ---------------------------
+>>>>>>           fail:runs  %reproduction    fail:runs
+>>>>>>               |             |             |
+>>>>>>               :4           50%           2:4     dmesg.WARNING:a
+>>>>>> t#for
+>>>>>> _ip_interrupt_entry/0x
+>>>>>>             %stddev     %change         %stddev
+>>>>>>                 \          |                \
+>>>>>>      15118573
+>>>>>> ±  2%     +16.0%   17538083        fsmark.app_overhead
+>>>>>>        510.93           -
+>>>>>> 22.7%     395.12        fsmark.files_per_sec
+>>>>>>         24.90           +22.8%      30.57        fsmark.time.ela
+>>>>>> psed_
+>>>>>> time
+>>>>>>         24.90           +22.8%      30.57        fsmark.time.ela
+>>>>>> psed_
+>>>>>> time.max
+>>>>>>        288.00 ±  2%     -
+>>>>>> 27.8%     208.00        fsmark.time.percent_of_cpu_this_job_got
+>>>>>>         70.03 ±  2%     -
+>>>>>> 11.3%      62.14        fsmark.time.system_time
+>>>>>>
+>>>>>
+>>>>> Do you have time to take a look at this regression?
+>>>>
+>>>>   From your stats, it looks to me as if the problem is increased
+>>>> NUMA
+>>>> overhead. Pretty much everything else appears to be the same or
+>>>> actually performing better than previously. Am I interpreting that
+>>>> correctly?
+>>> The real regression is the throughput(fsmark.files_per_sec) is
+>>> decreased
+>>> by 22.7%.
+>>
+>> Understood, but I'm trying to make sense of why. I'm not able to
+>> reproduce this, so I have to rely on your performance stats to
+>> understand where the 22.7% regression is coming from. As far as I can
+>> see, the only numbers in the stats you published that are showing a
+>> performance regression (other than the fsmark number itself), are the
+>> NUMA numbers. Is that a correct interpretation?
+>>
+> We re-test the case yesterday, the test result almost is the same.
+> we will do more test and also check the test case itself, if you need
+> more information, please let me know, thanks.
 > 
-> diff --git a/drivers/usb/roles/intel-xhci-usb-role-switch.c b/drivers/usb/roles/intel-xhci-usb-role-switch.c
-> index 277de96181f9..caa1cfab41cc 100644
-> --- a/drivers/usb/roles/intel-xhci-usb-role-switch.c
-> +++ b/drivers/usb/roles/intel-xhci-usb-role-switch.c
-[...]
-> @@ -167,6 +168,30 @@ static int intel_xhci_usb_remove(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> +static int intel_xhci_usb_suspend(struct platform_device *pdev,
-> +				  pm_message_t state)
-> +{
-> +	struct intel_xhci_usb_data *data = platform_get_drvdata(pdev);
-> +	struct device *dev = &pdev->dev;
-> +
-> +	data->role = intel_xhci_usb_get_role(dev);
+>>>> If my interpretation above is correct, then I'm not seeing where
+>>>> this
+>>>> patch would be introducing new NUMA regressions. It is just
+>>>> converting
+>>>> from using one method of doing socket I/O to another. Could it
+>>>> perhaps
+>>>> be a memory artefact due to your running the NFS client and server
+>>>> on
+>>>> the same machine?
+>>>>
+>>>> Apologies for pushing back a little, but I just don't have the
+>>>> hardware available to test NUMA configurations, so I'm relying on
+>>>> external testing for the above kind of scenario.
+>>>>
+>>> Thanks for looking at this.  If you need more information, please let
+>>> me
+>>> know.
+>>>> Thanks
+>>>>     Trond
+>>>>
+> 
 
-    Why not just pass &pdev->dev here?
-
-> +
-> +	return 0;
-> +}
-> +
-[...]
-
-MBR, Sergei
+-- 
+Zhengjun Xing
