@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF14C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D55C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229DE20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68FA821537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600018;
-	bh=nYm/RderVs60C9q8/W5MAG7vDMW9frDiYsHdNMrgyGU=;
+	s=default; t=1562600019;
+	bh=II54N9oyz9p4+uMfs8XurpWIeyvXpBd2PwxshOEByrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IOSWRfffp1Dh1BirSQCB5C5i4QKFL4eHP7EdBt8MTsSnpzMgE3UfeCySYtV7ba63A
-	 dWKxX4HQIv2Mbnj6nTleTjlsoAFcYDFmwDFbSZYlYKx8TjKoPjWhR4MbV3++3+zeAm
-	 SEcd4LONipamiRwU3HbKw9kLdR2W7yTl0v1zNwgo=
+	b=sUFhPvvsaTPQbRoXmQ0CfqOYqNBIcsVnNrEsw9amg+5AE33AIOsNOgwUt5hqL/dvf
+	 v4iT1XMZQEfjsIzc2ZjjlI3OSVYeTVomikpNHnT03cs8ahtMmqad039n01M4XViPGM
+	 8TFMoIUZbJ0bBHY/hb8Zvh6rv2UkuqpaZGV8DdqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbfGHPdg (ORCPT
+        id S2390412AbfGHPdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35674 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390388AbfGHPdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:33:33 -0400
+        id S2390398AbfGHPdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:33:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8768F20665;
-        Mon,  8 Jul 2019 15:33:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 483F720665;
+        Mon,  8 Jul 2019 15:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600013;
-        bh=nYm/RderVs60C9q8/W5MAG7vDMW9frDiYsHdNMrgyGU=;
+        s=default; t=1562600015;
+        bh=II54N9oyz9p4+uMfs8XurpWIeyvXpBd2PwxshOEByrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9HWnZcqZ51DRh0VJGhSD7zkvW4+7TIbu0wAZLzTNveb/eVWKR+0Qctq5iI10Fz0E
-         21buNWJCICGjtFqYTS0BBVbGjxnLgj2lZC/W8oWIGqvzCWMs6DJkTzGM3fHe4kaG5z
-         honcauOxXp9xkwqs/3qjf3tAnFyAfpKZCOJ/evrw=
+        b=imjfrNwRF+InIqtOfoetEWG3UYMn0eRijtSXQC20py5k3xPmwrP5uCPaWfPohimjB
+         y5nHASE6qZLtg6PCqOkT0j/hpAlJM/ajVJiDV+EVNb7ZTBNURdCmoC0BgtSoIyTyPH
+         UYE6Uei8X1VFQd271vInhxa2JG9+z+E6ClN/s7FI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 5.1 65/96] dax: Fix xarray entry association for mixed mappings
-Date:   Mon,  8 Jul 2019 17:13:37 +0200
-Message-Id: <20190708150529.982103261@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH 5.1 66/96] lib/mpi: Fix karactx leak in mpi_powm
+Date:   Mon,  8 Jul 2019 17:13:38 +0200
+Message-Id: <20190708150530.038193433@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,58 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 1571c029a2ff289683ddb0a32253850363bcb8a7 upstream.
+commit c8ea9fce2baf7b643384f36f29e4194fa40d33a6 upstream.
 
-When inserting entry into xarray, we store mapping and index in
-corresponding struct pages for memory error handling. When it happened
-that one process was mapping file at PMD granularity while another
-process at PTE granularity, we could wrongly deassociate PMD range and
-then reassociate PTE range leaving the rest of struct pages in PMD range
-without mapping information which could later cause missed notifications
-about memory errors. Fix the problem by calling the association /
-deassociation code if and only if we are really going to update the
-xarray (deassociating and associating zero or empty entries is just
-no-op so there's no reason to complicate the code with trying to avoid
-the calls for these cases).
+Sometimes mpi_powm will leak karactx because a memory allocation
+failure causes a bail-out that skips the freeing of karactx.  This
+patch moves the freeing of karactx to the end of the function like
+everything else so that it can't be skipped.
 
+Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
+Fixes: cdec9cb5167a ("crypto: GnuPG based MPI lib - source files...")
 Cc: <stable@vger.kernel.org>
-Fixes: d2c997c0f145 ("fs, dax: use page->mapping to warn if truncate...")
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/dax.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ lib/mpi/mpi-pow.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -728,12 +728,11 @@ static void *dax_insert_entry(struct xa_
+--- a/lib/mpi/mpi-pow.c
++++ b/lib/mpi/mpi-pow.c
+@@ -37,6 +37,7 @@
+ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
+ {
+ 	mpi_ptr_t mp_marker = NULL, bp_marker = NULL, ep_marker = NULL;
++	struct karatsuba_ctx karactx = {};
+ 	mpi_ptr_t xp_marker = NULL;
+ 	mpi_ptr_t tspace = NULL;
+ 	mpi_ptr_t rp, ep, mp, bp;
+@@ -163,13 +164,11 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ 		int c;
+ 		mpi_limb_t e;
+ 		mpi_limb_t carry_limb;
+-		struct karatsuba_ctx karactx;
  
- 	xas_reset(xas);
- 	xas_lock_irq(xas);
--	if (dax_entry_size(entry) != dax_entry_size(new_entry)) {
-+	if (dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
-+		void *old;
-+
- 		dax_disassociate_entry(entry, mapping, false);
- 		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address);
--	}
+ 		xp = xp_marker = mpi_alloc_limb_space(2 * (msize + 1));
+ 		if (!xp)
+ 			goto enomem;
+ 
+-		memset(&karactx, 0, sizeof karactx);
+ 		negative_result = (ep[0] & 1) && base->sign;
+ 
+ 		i = esize - 1;
+@@ -294,8 +293,6 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ 		if (mod_shift_cnt)
+ 			mpihelp_rshift(rp, rp, rsize, mod_shift_cnt);
+ 		MPN_NORMALIZE(rp, rsize);
 -
--	if (dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
- 		/*
- 		 * Only swap our new entry into the page cache if the current
- 		 * entry is a zero page or an empty entry.  If a normal PTE or
-@@ -742,7 +741,7 @@ static void *dax_insert_entry(struct xa_
- 		 * existing entry is a PMD, we will just leave the PMD in the
- 		 * tree and dirty it if necessary.
- 		 */
--		void *old = dax_lock_entry(xas, new_entry);
-+		old = dax_lock_entry(xas, new_entry);
- 		WARN_ON_ONCE(old != xa_mk_value(xa_to_value(entry) |
- 					DAX_LOCKED));
- 		entry = new_entry;
+-		mpihelp_release_karatsuba_ctx(&karactx);
+ 	}
+ 
+ 	if (negative_result && rsize) {
+@@ -312,6 +309,7 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ leave:
+ 	rc = 0;
+ enomem:
++	mpihelp_release_karatsuba_ctx(&karactx);
+ 	if (assign_rp)
+ 		mpi_assign_limb_space(res, rp, size);
+ 	if (mp_marker)
 
 
