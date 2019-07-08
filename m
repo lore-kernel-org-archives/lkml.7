@@ -2,179 +2,134 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EC9C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B05DC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5E0216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1A5216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="K8VWReGc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+MArnBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731882AbfGHOkQ (ORCPT
+        id S1731870AbfGHOkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:40:16 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55633 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728823AbfGHOkN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 10:40:13 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so16085207wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:40:10 -0700 (PDT)
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44786 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731855AbfGHOkM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 10:40:12 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b7so16389189otl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:40:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aNM2HHUKYN3Z30rarpgJHb3B+z3yOgtryVi4p7TAV6A=;
-        b=K8VWReGcXuKK931JWuikb4bcCWOdIQYUnxzmIWOAqah5atfanD2BcERGVU5HIVeYQx
-         kQ+k5ey7K9wvG9n5xXrkJ7XxJB+DQq6v7rfLc1Ape4VOqMpueTEwfk6OF0/SmHUoWOAQ
-         TIoEHlU9q8Wc/emW66NaKvCZiJaQ8NShI37Tya7KdkGOZJr9hk0kGGp4w2IasHf1R1fs
-         SZ5RUuikOqY3UiPF8z/UhfNbXvzW9Q4KDQOEck+mu2XYWUyIRhqdz9b/UMZuc1CfDoy/
-         OemKdHSJwrk+GHb6v+x4fEtrPBK0eYL+aKKujjrhtkx2EN71x5Zd/g1MS5J42XF/stpT
-         ahnA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=iIj/D2uFckhktV/1D81+BNHiSe7rGxGISfmtPBSrlSM=;
+        b=C+MArnBQMr2fem13xnS9J64lNmtz6x3eb264CDVGZm7lK3pxHAy8901qu3ZTI2HIS6
+         7K9WLnI/UgnLLE1IK0Nh+pHlhLXmB4gPUEqugQmc+xsgLxMQ0G8jeB+9KL1O/cfTMvXt
+         erNEljQYc3VzgMUZRXI+YJ1J59KILFnMJ3P2X1PNJo3Nx/w2yYFWGaccpDUTST0tS3yU
+         mXnMUWw1nnC/DFX/QkIj/wO9Sc2SGyy6oYCYidmXzXXV4Z+KDev9igsREiqaE5fOpfx0
+         DwfbUepPKKEmN0tnUtPOleWgPURufqT8O7xB3E3KtQGRrDjQ3fFnI4EDjpeLJ4WO90dI
+         zo/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aNM2HHUKYN3Z30rarpgJHb3B+z3yOgtryVi4p7TAV6A=;
-        b=rKg6ByJZ9gvWiPfNm13esWtP51GXM8USsePEvZ3OPMCDQklFSijZJCKm67DRMdKyeD
-         1pszFTNqGuTxnEZXbSG07RQhc3Bn92PhRHi90//26NNBaaFSCZqGx8iW1Mi+wi0+/hPZ
-         GCkN9wkjG+KaDoh4rEvJ3wYhAHPcnqpoz6FqiryuuSiU2oYCnU9l4zqzUG1RkKYkBNsz
-         6z63U8AXhaIZKBWHFFOcqIrdC068BVuZ0wjBcqliY3fhOI9SgILsmfgXBpshF82vFHct
-         1UiTqkOmsebpa4ilSbHzQ0/qkIQkaWm7lJ4MQvef9oTjTfmZg47Sa21+6tRKGhM9R7dc
-         4b7w==
-X-Gm-Message-State: APjAAAXtctLYfRnRlNitmm6rZpbNvdKxbk2M+X7fqDMLf8WvTwZlPJAz
-        BnUfzdb0/Z2+kZekOTGc3RN4homBwMU=
-X-Google-Smtp-Source: APXvYqzuzB9o4b5WEISaZOIs6OJxClnTRM2VLk8ABJvAaTCPneIdEpjmLXKlFoUQ9W51TCJqBKbqQA==
-X-Received: by 2002:a1c:6555:: with SMTP id z82mr17679060wmb.129.1562596809434;
-        Mon, 08 Jul 2019 07:40:09 -0700 (PDT)
-Received: from localhost (mail.chocen-mesto.cz. [85.163.43.2])
-        by smtp.gmail.com with ESMTPSA id o6sm32458519wra.27.2019.07.08.07.40.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 07:40:08 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 16:40:08 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 05/15] ethtool: helper functions for netlink
- interface
-Message-ID: <20190708144008.GK2201@nanopsycho>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <44957b13e8edbced71aca893908d184eb9e57341.1562067622.git.mkubecek@suse.cz>
- <20190702130515.GO2250@nanopsycho>
- <20190702163437.GE20101@unicorn.suse.cz>
- <20190703100435.GS2250@nanopsycho>
- <20190708122251.GB24474@unicorn.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708122251.GB24474@unicorn.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=iIj/D2uFckhktV/1D81+BNHiSe7rGxGISfmtPBSrlSM=;
+        b=gImuxAI2nWfuOeI/xrbI1rUMW62d/XccnHwFQ2InuipXa7oWNtxKf2MfHltfsc6AC1
+         4+XcTGCN5F2nlAhK2tpipW0KxdNtRdMS99G3gUTtMhW91HCYYxTDc4cgMyrNh+98igML
+         PzBFxr1UfmWNcxj1D+0cvAQRTszbs1RDABuAyY4vE1kubnaT4iWlAU0WknpJQa3lfBdh
+         S6IknQtdx1aruXEjk1jSIhC3s5H/52thoGSBY944yuMkjUdLTit94iFAmhuvctsDeSJl
+         uSLXdqCZq8sLRnFwSrpJtB55xCJJSvf5qf2LWDuWkwINTu8D37Jub/ZGB1L8664Td09D
+         QuUA==
+X-Gm-Message-State: APjAAAWb50aED54qRL2jhNt8JlHPyIJnpGYoJ5YVBNROrnXQ14GySw+w
+        riK8lzBJ40ES5cvoVFrkxIB8xw==
+X-Google-Smtp-Source: APXvYqyCIgpXl9aMrnWlPCMuhtjBzNRKlFd2j+pNfi8a5y8SglLuLFVH3QGHkoz8B9mgc19PYS+Iiw==
+X-Received: by 2002:a05:6830:18a:: with SMTP id q10mr15142642ota.114.1562596812197;
+        Mon, 08 Jul 2019 07:40:12 -0700 (PDT)
+Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
+        by smtp.gmail.com with ESMTPSA id x5sm6386021otb.6.2019.07.08.07.40.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 07:40:11 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 2/4] perf intel-bts: Smatch: Fix potential NULL pointer dereference
+Date:   Mon,  8 Jul 2019 22:39:35 +0800
+Message-Id: <20190708143937.7722-3-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190708143937.7722-1-leo.yan@linaro.org>
+References: <20190708143937.7722-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Jul 08, 2019 at 02:22:51PM CEST, mkubecek@suse.cz wrote:
->On Wed, Jul 03, 2019 at 12:04:35PM +0200, Jiri Pirko wrote:
->> Tue, Jul 02, 2019 at 06:34:37PM CEST, mkubecek@suse.cz wrote:
->> >On Tue, Jul 02, 2019 at 03:05:15PM +0200, Jiri Pirko wrote:
->> >> Tue, Jul 02, 2019 at 01:50:04PM CEST, mkubecek@suse.cz wrote:
->> >> >+/**
->> >> >+ * ethnl_is_privileged() - check if request has sufficient privileges
->> >> >+ * @skb: skb with client request
->> >> >+ *
->> >> >+ * Checks if client request has CAP_NET_ADMIN in its netns. Unlike the flags
->> >> >+ * in genl_ops, this allows finer access control, e.g. allowing or denying
->> >> >+ * the request based on its contents or witholding only part of the data
->> >> >+ * from unprivileged users.
->> >> >+ *
->> >> >+ * Return: true if request is privileged, false if not
->> >> >+ */
->> >> >+static inline bool ethnl_is_privileged(struct sk_buff *skb)
->> >> 
->> >> I wonder why you need this helper. Genetlink uses
->> >> ops->flags & GENL_ADMIN_PERM for this. 
->> >
->> >It's explained in the function description. Sometimes we need finer
->> >control than by request message type. An example is the WoL password:
->> >ETHTOOL_GWOL is privileged because of it but I believe there si no
->> >reason why unprivileged user couldn't see enabled WoL modes, we can
->> >simply omit the password for him. (Also, it allows to combine query for
->> >WoL settings with other unprivileged settings.)
->> 
->> Why can't we have rather:
->> ETHTOOL_WOL_GET for all
->> ETHTOOL_WOL_PASSWORD_GET  with GENL_ADMIN_PERM
->> ?
->> Better to stick with what we have in gennetlink rather then to bend the
->> implementation from the very beginning I think.
->
->We can. But it would also mean two separate SET requests (or breaking
->the rule that _GET_REPLY, _SET and _NTF share the layout). That would be
->unfortunate as ethtool_ops callback does not actually allow setting only
->the modes so that the ETHTOOL_MSG_WOL_SET request (which would have to
->go first as many drivers ignore .sopass if WAKE_MAGICSECURE is not set)
->would have to pass a different password (most likely just leaving what
->->get_wol() put there) and that password would be actually set until the
->second request arrives. There goes the idea of getting rid of ioctl
->interface raciness...
+Based on the following report from Smatch, fix the potential
+NULL pointer dereference check.
 
-I understand. That is my concern, not to bring baggage from ioclt :/
+  tools/perf/util/intel-bts.c:898
+  intel_bts_process_auxtrace_info() error: we previously assumed
+  'session->itrace_synth_opts' could be null (see line 894)
 
+  tools/perf/util/intel-bts.c:899
+  intel_bts_process_auxtrace_info() warn: variable dereferenced before
+  check 'session->itrace_synth_opts' (see line 898)
 
->
->I would rather see returning to WoL modes not being visible to
->unprivileged users than that (even if there is no actual reason for it).
->Anyway, shortening the series left WoL settings out if the first part so
->that I can split this out for now and leave the discussion for when we
->get to WoL one day.
+tools/perf/util/intel-bts.c
+894         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+895                 bts->synth_opts = *session->itrace_synth_opts;
+896         } else {
+897                 itrace_synth_opts__set_default(&bts->synth_opts,
+898                                 session->itrace_synth_opts->default_no_sample);
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+899                 if (session->itrace_synth_opts)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+900                         bts->synth_opts.thread_stack =
+901                                 session->itrace_synth_opts->thread_stack;
+902         }
 
-Fine.
+'session->itrace_synth_opts' is impossible to be a NULL pointer in
+intel_bts_process_auxtrace_info(), thus this patch removes the NULL
+test for 'session->itrace_synth_opts'.
 
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/util/intel-bts.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
->
->> >> >+/**
->> >> >+ * ethnl_reply_header_size() - total size of reply header
->> >> >+ *
->> >> >+ * This is an upper estimate so that we do not need to hold RTNL lock longer
->> >> >+ * than necessary (to prevent rename between size estimate and composing the
->> >> 
->> >> I guess this description is not relevant anymore. I don't see why to
->> >> hold rtnl mutex for this function...
->> >
->> >You don't need it for this function, it's the other way around: unless
->> >you hold RTNL lock for the whole time covering both checking needed
->> >message size and filling the message - and we don't - the device could
->> >be renamed in between. Thus if we returned size based on current device
->> >name, it might not be sufficient at the time the header is filled.
->> >That's why this function returns maximum possible size (which is
->> >actually a constant).
->> 
->> I suggest to avoid the description. It is misleading. Perhaps something
->> to have in a patch description but not here in code.
->
->The reason I put the comment there was to prevent someone "optimizing"
->the helper by using strlen() later. Maybe something shorter and more to
->the point, e.g.
->
->  Using IFNAMSIZ is faster and prevents a race if the device is renamed
->  before we fill the name into skb.
->
->?
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 5a21bcdb8ef7..5560e95afdda 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -891,13 +891,12 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
+ 	if (dump_trace)
+ 		return 0;
+ 
+-	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
++	if (session->itrace_synth_opts->set) {
+ 		bts->synth_opts = *session->itrace_synth_opts;
+ 	} else {
+ 		itrace_synth_opts__set_default(&bts->synth_opts,
+ 				session->itrace_synth_opts->default_no_sample);
+-		if (session->itrace_synth_opts)
+-			bts->synth_opts.thread_stack =
++		bts->synth_opts.thread_stack =
+ 				session->itrace_synth_opts->thread_stack;
+ 	}
+ 
+-- 
+2.17.1
 
-Sounds good, thanks!
-
-
->
->Michal
