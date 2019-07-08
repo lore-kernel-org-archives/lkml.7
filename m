@@ -2,52 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14621C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECE0C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD74421707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB23620665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599502;
-	bh=+LiCpwHsjJSrbJyVIAOZQxJz3K+eHJCNVBkQ9T3ckGk=;
+	s=default; t=1562599506;
+	bh=h7dxYQZZoJDmLEaLirceWiPTOe+djBBoPaO0SnvyirU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sRiBKN6hp/u8WOw3rk6EQ8HQGqvNHIUaLZVSHj7kM4c88xBGJj6iGLS1ggG1Nhum+
-	 xm9LuG7z0dNr2GykylUIgDG6v8Ao6VMIo3C2AEgMWAUgKYZBQJ5wKXIE/KiwBSs3Ic
-	 aV2ePjIHQqoMgB+sbaE7VCADz03mSUrmjfuWss+U=
+	b=u6x2XnbyCWH/VV5zpuo97XqJYPexNp6WTHJfyI4YJCac1kW/Sna1zNpVgF2Cth4hT
+	 JE2tWS1GlWhfvFhQaqsdRj5yOStXOEZgyg4MLWaPyG2AAqUcoRcakULaF/4fIkS2gc
+	 EeRaA5v+LeKR/ZcZA6cHubFdZHDwJw+HXoxHfW0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388539AbfGHPZB (ORCPT
+        id S2388422AbfGHPZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52264 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388412AbfGHPY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:56 -0400
+        id S2388538AbfGHPZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF2F2166E;
-        Mon,  8 Jul 2019 15:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2F1B2166E;
+        Mon,  8 Jul 2019 15:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599495;
-        bh=+LiCpwHsjJSrbJyVIAOZQxJz3K+eHJCNVBkQ9T3ckGk=;
+        s=default; t=1562599501;
+        bh=h7dxYQZZoJDmLEaLirceWiPTOe+djBBoPaO0SnvyirU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jbvVOL7AwI3h9VVKf3sC0RF0H6xN9e4NFZ+GsO/+3nsBd12oTiIa64sSamB0yEOYe
-         ddalTxlfNRHXfL1R+uO93jaYn46qSdHG335Z3xk+b2y43nz2GqQjgVYDVvDZcL7De6
-         sOn3wEBKZ3zN7DIO6ps48RaZ4eoOkcDKH5uoN9dY=
+        b=JxQIlx+2bveoPeARpzf8c8MIDJWTgyB2Q+dXwAd6pz/gjeVOO0DN21Y3pZwhupl90
+         F3o62KIU9XDeK7KfwioSDLja3HbOfbf8Skz/KG+foHFxY1D91dLoihQ67sf0BBppbf
+         yDHPqlVuYl9Bi+cA0Q6iVCUya8BMsTXnur5oiK/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.14 34/56] arm64: kaslr: keep modules inside module region when KASAN is enabled
-Date:   Mon,  8 Jul 2019 17:13:26 +0200
-Message-Id: <20190708150523.116862643@linuxfoundation.org>
+        stable@vger.kernel.org, Marcus Cooper <codekipper@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 09/56] ASoC: sun4i-i2s: Fix sun8i tx channel offset mask
+Date:   Mon,  8 Jul 2019 17:13:01 +0200
+Message-Id: <20190708150518.661098702@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -60,62 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+[ Upstream commit 7e46169a5f35762f335898a75d1b8a242f2ae0f5 ]
 
-commit 6f496a555d93db7a11d4860b9220d904822f586a upstream.
+Although not causing any noticeable issues, the mask for the
+channel offset is covering too many bits.
 
-When KASLR and KASAN are both enabled, we keep the modules where they
-are, and randomize the placement of the kernel so it is within 2 GB
-of the module region. The reason for this is that putting modules in
-the vmalloc region (like we normally do when KASLR is enabled) is not
-possible in this case, given that the entire vmalloc region is already
-backed by KASAN zero shadow pages, and so allocating dedicated KASAN
-shadow space as required by loaded modules is not possible.
-
-The default module allocation window is set to [_etext - 128MB, _etext]
-in kaslr.c, which is appropriate for KASLR kernels booted without a
-seed or with 'nokaslr' on the command line. However, as it turns out,
-it is not quite correct for the KASAN case, since it still intersects
-the vmalloc region at the top, where attempts to allocate shadow pages
-will collide with the KASAN zero shadow pages, causing a WARN() and all
-kinds of other trouble. So cap the top end to MODULES_END explicitly
-when running with KASAN.
-
-Cc: <stable@vger.kernel.org> # 4.9+
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/module.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -32,6 +32,7 @@
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index b4af5ce78ecb..a10913f8293f 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -110,7 +110,7 @@
  
- void *module_alloc(unsigned long size)
- {
-+	u64 module_alloc_end = module_alloc_base + MODULES_VSIZE;
- 	gfp_t gfp_mask = GFP_KERNEL;
- 	void *p;
- 
-@@ -39,9 +40,12 @@ void *module_alloc(unsigned long size)
- 	if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
- 		gfp_mask |= __GFP_NOWARN;
- 
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		/* don't exceed the static module region - see below */
-+		module_alloc_end = MODULES_END;
-+
- 	p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
--				module_alloc_base + MODULES_VSIZE,
--				gfp_mask, PAGE_KERNEL_EXEC, 0,
-+				module_alloc_end, gfp_mask, PAGE_KERNEL_EXEC, 0,
- 				NUMA_NO_NODE, __builtin_return_address(0));
- 
- 	if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
+ #define SUN8I_I2S_TX_CHAN_MAP_REG	0x44
+ #define SUN8I_I2S_TX_CHAN_SEL_REG	0x34
+-#define SUN8I_I2S_TX_CHAN_OFFSET_MASK		GENMASK(13, 11)
++#define SUN8I_I2S_TX_CHAN_OFFSET_MASK		GENMASK(13, 12)
+ #define SUN8I_I2S_TX_CHAN_OFFSET(offset)	(offset << 12)
+ #define SUN8I_I2S_TX_CHAN_EN_MASK		GENMASK(11, 4)
+ #define SUN8I_I2S_TX_CHAN_EN(num_chan)		(((1 << num_chan) - 1) << 4)
+-- 
+2.20.1
+
 
 
