@@ -2,54 +2,54 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F87C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D562C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0BB4204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C8220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599612;
-	bh=airXRAxZKDnos46/zoucRow1iqpdjYT320OPeYpozhM=;
+	s=default; t=1562599618;
+	bh=cYmtbt2v6RfDc7FjULI93abk3YL+Uslmq20nfWzd5mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h6GjAtvkUO/jn8IEewZarYvaKpplh+pgD4qcJ67H3fRP5BzAIL68Y4F28cb5rILMC
-	 lP2CvSMsRNGOCedggI0EPF6sy7DTlTkIIGl2shSyDkm1AeHhbMSL3BcaXsDOZaHRx9
-	 Pl3pIB78D+JRar+ahrbCZbtzAFNGyS9FR7rXR4MU=
+	b=c5uTfjTwRRNQTeZL7eU0GsksPweuYzGf+F51DI4X4lVTnFAu/p04wg4Cy1R1Wtjd6
+	 GhO2XuJR0W86nWVh6cvN4hwkfnyAiM7DsS35MgbntnrycxchSdBEkbvck2uj9aPEco
+	 n2ZPN0HMZO2l+mMMRbCa9uCs70uU6URhqvX5sBkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388923AbfGHP0v (ORCPT
+        id S2388963AbfGHP05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:26:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388881AbfGHP0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:26:46 -0400
+        id S2388371AbfGHPYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:24:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36F44204EC;
-        Mon,  8 Jul 2019 15:26:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D81A2177B;
+        Mon,  8 Jul 2019 15:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599605;
-        bh=airXRAxZKDnos46/zoucRow1iqpdjYT320OPeYpozhM=;
+        s=default; t=1562599474;
+        bh=cYmtbt2v6RfDc7FjULI93abk3YL+Uslmq20nfWzd5mE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGbzQ5muSDu8YuntNrESEa/9u2MrUHXnHYSp2+wXXu+/peswEGJiM0wbYMnY5DdbC
-         qGV3iUd9Y5SyZancnSHrLjLgP/UtbHjLjn7L6YdqwskDLbjcC3Sa7hlNf4AdoS2iQW
-         3MA9KcXX7wpTqgYhrksP6jzCXV3Ro9HOXhK5dZq4=
+        b=CAQ2wTnE57QEmtCaWCB55t0AOYVEqkH7aOOvQA9de9otYG5UpDLaszv4SKXaC0XQv
+         ZwfjFw3HxxEy8lVXRr9d18QaEZf3MFe5RKm4hOJcc3Xh6v1PalMvPgJHQ4jYXoEfxe
+         eMzGNap8o7BYpEC36zIjEIzJhtWI48NC7HMMPPTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/90] drm/mediatek: clear num_pipes when unbind driver
-Date:   Mon,  8 Jul 2019 17:12:43 +0200
-Message-Id: <20190708150523.443835624@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 27/56] ALSA: firewire-lib/fireworks: fix miss detection of received MIDI messages
+Date:   Mon,  8 Jul 2019 17:13:19 +0200
+Message-Id: <20190708150522.354885399@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
-References: <20190708150521.829733162@linuxfoundation.org>
+In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
+References: <20190708150514.376317156@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,35 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a4cd1d2b016d5d043ab2c4b9c4ec50a5805f5396 ]
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-num_pipes is used for mutex created in mtk_drm_crtc_create(). If we
-don't clear num_pipes count, when rebinding driver, the count will
-be accumulated. From mtk_disp_mutex_get(), there can only be at most
-10 mutex id. Clear this number so it starts from 0 in every rebind.
+commit 7fbd1753b64eafe21cf842348a40a691d0dee440 upstream.
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In IEC 61883-6, 8 MIDI data streams are multiplexed into single
+MIDI conformant data channel. The index of stream is calculated by
+modulo 8 of the value of data block counter.
+
+In fireworks, the value of data block counter in CIP header has a quirk
+with firmware version v5.0.0, v5.7.3 and v5.8.0. This brings ALSA
+IEC 61883-1/6 packet streaming engine to miss detection of MIDI
+messages.
+
+This commit fixes the miss detection to modify the value of data block
+counter for the modulo calculation.
+
+For maintainers, this bug exists since a commit 18f5ed365d3f ("ALSA:
+fireworks/firewire-lib: add support for recent firmware quirk") in Linux
+kernel v4.2. There're many changes since the commit.  This fix can be
+backported to Linux kernel v4.4 or later. I tagged a base commit to the
+backport for your convenience.
+
+Besides, my work for Linux kernel v5.3 brings heavy code refactoring and
+some structure members are renamed in 'sound/firewire/amdtp-stream.h'.
+The content of this patch brings conflict when merging -rc tree with
+this patch and the latest tree. I request maintainers to solve the
+conflict to replace 'tx_first_dbc' with 'ctx_data.tx.first_dbc'.
+
+Fixes: df075feefbd3 ("ALSA: firewire-lib: complete AM824 data block processing layer")
+Cc: <stable@vger.kernel.org> # v4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/firewire/amdtp-am824.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 3df8a9dbccfe..fd83046d8376 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -393,6 +393,7 @@ static void mtk_drm_unbind(struct device *dev)
- 	drm_dev_unregister(private->drm);
- 	mtk_drm_kms_deinit(private->drm);
- 	drm_dev_put(private->drm);
-+	private->num_pipes = 0;
- 	private->drm = NULL;
- }
+--- a/sound/firewire/amdtp-am824.c
++++ b/sound/firewire/amdtp-am824.c
+@@ -321,7 +321,7 @@ static void read_midi_messages(struct am
+ 	u8 *b;
  
--- 
-2.20.1
-
+ 	for (f = 0; f < frames; f++) {
+-		port = (s->data_block_counter + f) % 8;
++		port = (8 - s->tx_first_dbc + s->data_block_counter + f) % 8;
+ 		b = (u8 *)&buffer[p->midi_position];
+ 
+ 		len = b[0] - 0x80;
 
 
