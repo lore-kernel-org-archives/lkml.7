@@ -2,112 +2,148 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918EAC606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E82C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6475D20844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWwOohpp"
+	by mail.kernel.org (Postfix) with ESMTP id B55F720844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbfGHNn1 (ORCPT
+        id S1731407AbfGHNn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:43:27 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40746 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729066AbfGHNn1 (ORCPT
+        Mon, 8 Jul 2019 09:43:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39417 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbfGHNn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:43:27 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so8320883pla.7;
-        Mon, 08 Jul 2019 06:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=XuKn7QldX9ga0MGEIqR1MDmcCIUcjpzwfNVtfmUSJ4w=;
-        b=uWwOohpp2nqU3NtPtZWQxFxwCSSm8ZlE19OOy4vbMIq1RF6fgtut/kIc5iouE9ONyv
-         DDRwvD7kH0cqzKbjYh6pBwotAYyfo3954KUPnpfA0+tEAJbJXyJngJWcSj/DUrFsrY4X
-         6mREzGaO206+umbYNT9ZUpYaNQ3iZ4xIzXOv7KkVt504W58WK7ouRHWY0HqqOTbLT4Tn
-         Q4HhXdHdxbv0dqgXCyf6WpDIwTdCG+wfwODsphKMKSZug+MrcS1eaffkum5PtF8cbI1y
-         3uRWttVKxGkO0i4SgenaoOzwM405HUwXjnH2Jk4P8ecMWVwyZ7fQwab+rwbP9fjHOQmz
-         RlPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=XuKn7QldX9ga0MGEIqR1MDmcCIUcjpzwfNVtfmUSJ4w=;
-        b=E2HsFIX2M/+4M1EipvbAJw5EDYadihVB3cYXbz2Poqb9iWUmZs3tw85whoqV8WxFY8
-         Wfidb9zTZIjHqa1GImCbQsWPUA0bUfi+RrNhaL9lJUIgtQvl919kBhrQGn8Kgf/La3RI
-         Cw2SszOr8D9KMIv2y5eSFqmHhDojNoRVTAI4ZtKJf2QQ5/3wNqwdPwn81O8hjQobNjeG
-         8NmJHsPJ2T9jWgKksZN9BGfueSmPZlsO+cTXgRNuDjXe7nXIYaLrxEgWKM2JN5desRti
-         lUG9WeDF+vS2PpHTjmvITYq3bPN9o1t2ChC5bxmn36ifGcOpBQCF3aqv2ehEr/KcxR0Q
-         odOA==
-X-Gm-Message-State: APjAAAWCFmgb3nijZY5vwxHMtJp8QFg/L1uzMX2IGm5gz1/aOUNN/ODY
-        fhfA46/CtF1Y8ocM4Vr+Ilw=
-X-Google-Smtp-Source: APXvYqxJZKLKGQL7DHLKzYDKoNJH1aiFzFzS+IvviyDVDkgXb+/bk5t9P31KksFr5hLmmWfehkMXOQ==
-X-Received: by 2002:a17:902:424:: with SMTP id 33mr25088347ple.151.1562593406398;
-        Mon, 08 Jul 2019 06:43:26 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w16sm22871212pfj.85.2019.07.08.06.43.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 06:43:25 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH -next] btrfs: Select LIBCRC32C again
-Date:   Mon,  8 Jul 2019 06:43:23 -0700
-Message-Id: <1562593403-19545-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        Mon, 8 Jul 2019 09:43:59 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hkTvv-0000r7-Vv; Mon, 08 Jul 2019 15:43:56 +0200
+Date:   Mon, 8 Jul 2019 15:43:55 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+cc:     Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Nadav Amit <namit@vmware.com>,
+        paulmck <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH V2] cpu/hotplug: Cache number of online CPUs
+In-Reply-To: <alpine.DEB.2.21.1907052256490.3648@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907081531560.4709@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907042237010.1802@nanos.tec.linutronix.de> <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907042302570.1802@nanos.tec.linutronix.de> <1623929363.5480.1562277655641.JavaMail.zimbra@efficios.com>
+ <alpine.DEB.2.21.1907050024270.1802@nanos.tec.linutronix.de> <611100399.5550.1562283294601.JavaMail.zimbra@efficios.com> <20190705084910.GA6592@gmail.com> <824482130.8027.1562341133252.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907052246220.3648@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907052256490.3648@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_BTRFS_FS=y and CONFIG_CRYPTO_CRC32C=m, we get:
+Revaluating the bitmap wheight of the online cpus bitmap in every
+invocation of num_online_cpus() over and over is a pretty useless
+exercise. Especially when num_online_cpus() is used in code pathes like the
+IPI delivery of x86 or the membarrier code.
 
-fs/btrfs/super.o: In function `btrfs_mount_root':
-fs/btrfs/super.c:1557: undefined reference to `crc32c_impl'
-fs/btrfs/super.o: In function `btrfs_print_mod_info':
-fs/btrfs/super.c:2348: undefined reference to `crc32c_impl'
-fs/btrfs/extent-tree.o: In function `btrfs_crc32c':
-fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
-fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
-fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
-fs/btrfs/dir-item.o: In function `btrfs_name_hash':
-fs/btrfs/ctree.h:2619: undefined reference to `crc32c'
-fs/btrfs/ctree.h:2619: undefined reference to `crc32c'
+Cache the number of online CPUs in the core and just return the cached
+variable.
 
-and more.
-
-Note that the comment in the offending commit "The module dependency on
-crc32c is preserved via MODULE_SOFTDEP("pre: crc32c"), which was previously
-provided by LIBCRC32C config option doing the same." is wrong, since it
-permits CONFIG_BTRFS_FS=y in combination with CONFIG_CRYPTO_CRC32C=m.
-
-Cc: David Sterba <dsterba@suse.com>
-Fixes: d5178578bcd4 ("btrfs: directly call into crypto framework for checksumming")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- fs/btrfs/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+V2: Use READ/WRITE_ONCE() and add comment what it actually achieves. Remove
+    the bogus lockdep assert in the write path as the caller cannot hold the
+    lock. It's a task on the plugged CPU which is not the controlling task.
+---
+ include/linux/cpumask.h |   26 +++++++++++++++++---------
+ kernel/cpu.c            |   22 ++++++++++++++++++++++
+ 2 files changed, 39 insertions(+), 9 deletions(-)
 
-diff --git a/fs/btrfs/Kconfig b/fs/btrfs/Kconfig
-index 212b4a854f2c..4c80c70597f9 100644
---- a/fs/btrfs/Kconfig
-+++ b/fs/btrfs/Kconfig
-@@ -2,6 +2,7 @@
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -95,8 +95,23 @@ extern struct cpumask __cpu_active_mask;
+ #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
+ #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
  
- config BTRFS_FS
- 	tristate "Btrfs filesystem support"
-+	select LIBCRC32C
- 	select CRYPTO
- 	select CRYPTO_CRC32C
- 	select ZLIB_INFLATE
--- 
-2.7.4
-
++extern unsigned int __num_online_cpus;
++
+ #if NR_CPUS > 1
+-#define num_online_cpus()	cpumask_weight(cpu_online_mask)
++/**
++ * num_online_cpus() - Read the number of online CPUs
++ *
++ * READ_ONCE() protects against theoretical load tearing and prevents
++ * the compiler from reloading the value in a function or loop.
++ *
++ * Even with that, this interface gives only a momentary snapshot and is
++ * not protected against concurrent CPU hotplug operations unless invoked
++ * from a cpuhp_lock held region.
++ */
++static inline unsigned int num_online_cpus(void)
++{
++	return READ_ONCE(__num_online_cpus);
++}
+ #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
+ #define num_present_cpus()	cpumask_weight(cpu_present_mask)
+ #define num_active_cpus()	cpumask_weight(cpu_active_mask)
+@@ -805,14 +820,7 @@ set_cpu_present(unsigned int cpu, bool p
+ 		cpumask_clear_cpu(cpu, &__cpu_present_mask);
+ }
+ 
+-static inline void
+-set_cpu_online(unsigned int cpu, bool online)
+-{
+-	if (online)
+-		cpumask_set_cpu(cpu, &__cpu_online_mask);
+-	else
+-		cpumask_clear_cpu(cpu, &__cpu_online_mask);
+-}
++void set_cpu_online(unsigned int cpu, bool online);
+ 
+ static inline void
+ set_cpu_active(unsigned int cpu, bool active)
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2288,6 +2288,9 @@ EXPORT_SYMBOL(__cpu_present_mask);
+ struct cpumask __cpu_active_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_active_mask);
+ 
++unsigned int __num_online_cpus __read_mostly;
++EXPORT_SYMBOL(__num_online_cpus);
++
+ void init_cpu_present(const struct cpumask *src)
+ {
+ 	cpumask_copy(&__cpu_present_mask, src);
+@@ -2303,6 +2306,25 @@ void init_cpu_online(const struct cpumas
+ 	cpumask_copy(&__cpu_online_mask, src);
+ }
+ 
++void set_cpu_online(unsigned int cpu, bool online)
++{
++	int adj = 0;
++
++	if (online) {
++		if (!cpumask_test_and_set_cpu(cpu, &__cpu_online_mask))
++			adj = 1;
++	} else {
++		if (cpumask_test_and_clear_cpu(cpu, &__cpu_online_mask))
++			adj = -1;
++	}
++	/*
++	 * WRITE_ONCE() protects only against the theoretical stupidity of
++	 * a compiler to tear the store, but won't protect readers which
++	 * are not serialized against concurrent hotplug operations.
++	 */
++	WRITE_ONCE(__num_online_cpus, __num_online_cpus + adj);
++}
++
+ /*
+  * Activate the first processor.
+  */
