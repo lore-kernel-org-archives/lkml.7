@@ -2,118 +2,190 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8B3C5B57D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8AFC5B57D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720CC20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:18:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nCctON+2"
+	by mail.kernel.org (Postfix) with ESMTP id 2712C20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562559654;
+	bh=3wZD58tp9mnWfaLtCngO7bIDdHwZX+UzA+iianPh1Oc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MkpqZ4fQWaxS/gG2SI8PyyVLxnt8YkMvy5ru5cGIZQBYQkGNUoq4b4oget3eSiBiN
+	 qeqsX9fJrw80Vt6IfR5G1UuhOYzzkPAmwjLVbkbhU66sI/fOG0zONEJthzhUD3mamH
+	 Pz6ca8y1AmsU+8MG/zZJ1tEVFilSqW5eKv7GEqAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfGHER7 (ORCPT
+        id S1727551AbfGHEUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 00:17:59 -0400
-Received: from ozlabs.org ([203.11.71.1]:45259 "EHLO ozlabs.org"
+        Mon, 8 Jul 2019 00:20:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbfGHER7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 00:17:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725889AbfGHEUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 00:20:52 -0400
+Received: from localhost (unknown [49.207.58.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hscg58vyz9s3l;
-        Mon,  8 Jul 2019 14:17:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562559476;
-        bh=VieVy7UWn7o5F9dBWHqJRxeZCvRi9w06XTxRVgaaLSo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nCctON+2mEZ27IiocbsqLKyxSCENVjWSU9x7Tcp7egEBJWMEo+WVMLGy4Dptq5sAG
-         TMEqZd/cyEKNVqIoSYQFCIpSBV5QcAuZlNp1+cmxK73L6sodwH1lfSib76PjoJvjNh
-         hSgWdK/t0ZC19MZk0+sLV5eMvvT5L287XP3PjMXoRVcqq412MC3OGeIMNadzwjG8z2
-         DeIFTfUCZXf4WoAh3zCtEqKXRS4yCXaK1Xi0lKN6Q2OOxex0dOvV2HXKGw8jdi4GTn
-         QUxq06GYcN1LzvZpBr3OnHHg13XgWbyAaUBzgN7jhir6moezog7492chDqB/I+LTlN
-         +WuLel+ynccwQ==
-Date:   Mon, 8 Jul 2019 14:17:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F84420659;
+        Mon,  8 Jul 2019 04:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562559652;
+        bh=3wZD58tp9mnWfaLtCngO7bIDdHwZX+UzA+iianPh1Oc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T0hseX16jvVjtegeR6Rdz8wsWyEs7Dza6o9rVzqdlGvZqyeb/rTQiBLIjuHC6iMcK
+         X7/Xsg0FIfQgBNV98CuAv/BAmfeSoT+6cs5c1/LL6KS95CXLVnTgqk6vZ4mIcYeN4P
+         4EmvoOgBZEiTZSRlVZprQk3LzVDMiLGDLDPSBpHU=
+Date:   Mon, 8 Jul 2019 09:47:28 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        John Garry <john.garry@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Greg Hackmann <ghackmann@google.com>
-Subject: linux-next: manual merge of the drm tree with the vfs tree
-Message-ID: <20190708141754.64d32ebe@canb.auug.org.au>
+        Angelo Dureghello <angelo@sysam.it>
+Subject: Re: linux-next: build failure after merge of the slave-dma tree
+Message-ID: <20190708041728.GK2911@vkoul-mobl>
+References: <20190704173108.0646eef8@canb.auug.org.au>
+ <VE1PR04MB6638080C43EC68EFF9F7B38A89F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <58c9b815-9bfc-449c-6017-c6da582dffc5@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/u04U78ytM4vB=CX3N=GbpPy"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <58c9b815-9bfc-449c-6017-c6da582dffc5@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/u04U78ytM4vB=CX3N=GbpPy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 08-07-19, 11:06, zhangfei wrote:
+> Hi, Robin
+> 
+> On 2019/7/8 上午9:22, Robin Gong wrote:
+> > Hi Stephen,
+> > 	That's caused by 'of_irq_count' NOT export to global symbol, and I'm curious why it has been
+> > here for so long since Zhangfei found it in 2015. https://patchwork.kernel.org/patch/7404681/
+> > Hi Rob,
+> > 	Is there something I miss so that Zhangfei's patch not accepted finally?
+> > 
+> > 
+> 
+> I remembered Rob suggested us not using of_irq_count and use
+> platform_get_irq etc.
+> https://lkml.org/lkml/2015/11/18/466
 
-Hi all,
+The explanation looks sane to me, so it makes sense to revert the commit
+for now. Reverted now
 
-Today's linux-next merge of the drm tree got a conflict in:
+-- >8 --
 
-  include/uapi/linux/magic.h
+From 5c274ca4cfb22a455e880f61536b1894fa29fd17 Mon Sep 17 00:00:00 2001
+From: Vinod Koul <vkoul@kernel.org>
+Date: Mon, 8 Jul 2019 09:42:55 +0530
+Subject: [PATCH] dmaengine: Revert "dmaengine: fsl-edma: add i.mx7ulp edma2
+ version support"
 
-between commit:
+This reverts commit 7144afd025b2 ("dmaengine: fsl-edma: add i.mx7ulp
+edma2 version support") as this fails to build with module option due to
+usage of of_irq_count() which is not an exported symbol as kernel
+drivers are *not* expected to use it (rightly so).
 
-  ea8157ab2ae5 ("zsfold: Convert zsfold to use the new mount API")
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/dma/fsl-edma-common.c | 18 +---------
+ drivers/dma/fsl-edma-common.h |  4 ---
+ drivers/dma/fsl-edma.c        | 66 -----------------------------------
+ 3 files changed, 1 insertion(+), 87 deletions(-)
 
-from the vfs tree and commit:
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 6d6d8a4e8e38..44d92c34dec3 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -90,19 +90,6 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+ 	iowrite8(val8, addr + off);
+ }
+ 
+-void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+-		     u32 off, u32 slot, bool enable)
+-{
+-	u32 val;
+-
+-	if (enable)
+-		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
+-	else
+-		val = EDMAMUX_CHCFG_DIS;
+-
+-	iowrite32(val, addr + off * 4);
+-}
+-
+ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 			unsigned int slot, bool enable)
+ {
+@@ -116,10 +103,7 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
+ 	slot = EDMAMUX_CHCFG_SOURCE(slot);
+ 
+-	if (fsl_chan->edma->drvdata->version == v3)
+-		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
+-	else
+-		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
++	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+ }
+ EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
+ 
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index 5eaa2902ed39..4e175560292c 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -125,7 +125,6 @@ struct fsl_edma_chan {
+ 	dma_addr_t			dma_dev_addr;
+ 	u32				dma_dev_size;
+ 	enum dma_data_direction		dma_dir;
+-	char				chan_name[16];
+ };
+ 
+ struct fsl_edma_desc {
+@@ -140,13 +139,11 @@ struct fsl_edma_desc {
+ enum edma_version {
+ 	v1, /* 32ch, Vybrid, mpc57x, etc */
+ 	v2, /* 64ch Coldfire */
+-	v3, /* 32ch, i.mx7ulp */
+ };
+ 
+ struct fsl_edma_drvdata {
+ 	enum edma_version	version;
+ 	u32			dmamuxs;
+-	bool			has_dmaclk;
+ 	int			(*setup_irq)(struct platform_device *pdev,
+ 					     struct fsl_edma_engine *fsl_edma);
+ };
+@@ -156,7 +153,6 @@ struct fsl_edma_engine {
+ 	void __iomem		*membase;
+ 	void __iomem		*muxbase[DMAMUX_NR];
+ 	struct clk		*muxclk[DMAMUX_NR];
+-	struct clk		*dmaclk;
+ 	struct mutex		fsl_edma_mutex;
+ 	const struct fsl_edma_drvdata *drvdata;
+ 	u32			n_chans;
+diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
+index 50fe196b0c73..e616425acd5f 100644
+--- a/drivers/dma/fsl-edma.c
++++ b/drivers/dma/fsl-edma.c
+@@ -166,50 +166,6 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
+ 	return 0;
+ }
+ 
+-static int
+-fsl_edma2_irq_init(struct platform_device *pdev,
+-		   struct fsl_edma_engine *fsl_edma)
+-{
 
-  ed63bb1d1f84 ("dma-buf: give each buffer a full-fledged inode")
-
-from the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/uapi/linux/magic.h
-index 85c1119d0b0b,665e18627f78..000000000000
---- a/include/uapi/linux/magic.h
-+++ b/include/uapi/linux/magic.h
-@@@ -91,6 -91,6 +91,7 @@@
-  #define UDF_SUPER_MAGIC		0x15013346
-  #define BALLOON_KVM_MAGIC	0x13661366
-  #define ZSMALLOC_MAGIC		0x58295829
- +#define Z3FOLD_MAGIC		0x33
-+ #define DMA_BUF_MAGIC		0x444d4142	/* "DMAB" */
- =20
-  #endif /* __LINUX_MAGIC_H__ */
-
---Sig_/u04U78ytM4vB=CX3N=GbpPy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0iw/IACgkQAVBC80lX
-0Gw5VAf8DDgJkQqJA0KHL5lzWfnr+HAflbMU2MMXJBSG3NsClNnp1GE5JDyRxueR
-HXZqxdX8X0pQ9bNsELol5xB75QB5cTedZdc29EFeTcB7EB95DSzzBHRBrL/ygvJg
-d43wZR3GJtnKPRiOajlXwfE13piL2v8iJzarCmsVwC8Qr3cOqScUxsk0xaCMVfxK
-fFLbdrW9J04vf+iS//JLLdvDboj1xtQIN2I/kWIklV06+QwxI1ThjX/PpMUocHbb
-DWZSW41v4wjv+IqHqElhL4ZyQRuPcIQVPGtDdGPTXndClaKfCD7P/WNyoCRNtycG
-l8NnwvFCccaiCnsaFDBrWHl0bOQihA==
-=8SNV
------END PGP SIGNATURE-----
-
---Sig_/u04U78ytM4vB=CX3N=GbpPy--
+-- 
+~Vinod
