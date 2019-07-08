@@ -6,69 +6,101 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DF1C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A67C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECAC2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A616920844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbfGHNtZ (ORCPT
+        id S1731505AbfGHNuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:49:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39442 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727401AbfGHNtY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:49:24 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hkU12-0000w0-Qv; Mon, 08 Jul 2019 15:49:12 +0200
-Date:   Mon, 8 Jul 2019 15:49:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Liam Shepherd <liam@dancer.es>
-cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        keescook@chromium.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Cannot build 5.2.0 with gold linker
-In-Reply-To: <CAB8B+d3QEJ4kqzXnT7xaE26F8qqREeNm2M2=DKv+2vUsTSu4sQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907081548160.4709@nanos.tec.linutronix.de>
-References: <CAB8B+d3QEJ4kqzXnT7xaE26F8qqREeNm2M2=DKv+2vUsTSu4sQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 8 Jul 2019 09:50:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:48442 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727401AbfGHNuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:50:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A456E2B;
+        Mon,  8 Jul 2019 06:50:00 -0700 (PDT)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D4FA3F738;
+        Mon,  8 Jul 2019 06:49:59 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com
+References: <20190627171603.14767-1-douglas.raillard@arm.com>
+ <20190702154422.GV3436@hirez.programming.kicks-ass.net>
+ <590e3dd9-ea4e-5230-d12c-d04bb3916e89@arm.com>
+ <20190708111348.o6o63jisbukuk64d@e110439-lin>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <13a596f8-1c9c-f1da-f26e-d832fccbf563@arm.com>
+Date:   Mon, 8 Jul 2019 14:49:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190708111348.o6o63jisbukuk64d@e110439-lin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019, Liam Shepherd wrote:
 
-> Hi,
-> 
-> It results in this error:
-> 
-> Invalid absolute R_X86_64_32S relocation: _etext
-> make[2]: *** [arch/x86/boot/compressed/Makefile:130:
-> arch/x86/boot/compressed/vmlinux.relocs] Error 1
-> make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
-> make[2]: *** Waiting for unfinished jobs....
->   CC      arch/x86/boot/compressed/cpuflags.o
-> make[1]: *** [arch/x86/boot/Makefile:112:
-> arch/x86/boot/compressed/vmlinux] Error 2
-> make: *** [arch/x86/Makefile:283: bzImage] Error 2
-> 
-> This was introduced under this commit:
-> 
-> 392bef709659abea614abfe53cf228e7a59876a4: x86/build: Move _etext to
-> actual end of .text
-> 
-> The commit was reverted on 5.18 by Greg...
 
-Know issue and the fix is queued for mainline, but did not make it to 5.2
-for an unrelated reason. Will show up soon and be backported.
+On 7/8/19 12:13 PM, Patrick Bellasi wrote:
+> On 03-Jul 14:38, Douglas Raillard wrote:
+>> Hi Peter,
+>>
+>> On 7/2/19 4:44 PM, Peter Zijlstra wrote:
+>>> On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
+>>>> Make schedutil cpufreq governor energy-aware.
+>>>>
+>>>> - patch 1 introduces a function to retrieve a frequency given a base
+>>>>     frequency and an energy cost margin.
+>>>> - patch 2 links Energy Model perf_domain to sugov_policy.
+>>>> - patch 3 updates get_next_freq() to make use of the Energy Model.
+>>>
+>>>>
+>>>> 1) Selecting the highest possible frequency for a given cost. Some
+>>>>      platforms can have lower frequencies that are less efficient than
+>>>>      higher ones, in which case they should be skipped for most purposes.
+>>>>      They can still be useful to give more freedom to thermal throttling
+>>>>      mechanisms, but not under normal circumstances.
+>>>>      note: the EM framework will warn about such OPPs "hertz/watts ratio
+>>>>      non-monotonically decreasing"
+>>>
+>>> Humm, for some reason I was thinking we explicitly skipped those OPPs
+>>> and they already weren't used.
+>>>
+>>> This isn't in fact so, and these first few patches make it so?
+>>
+>> That's correct, the cost information about each OPP has been introduced recently in mainline
+>> by the energy model series. Without that info, the only way to skip them that comes to my
+>> mind is to set a policy min frequency, since these inefficient OPPs are usually located
+>> at the lower end.
+> 
+> Perhaps it's also worth to point out that the alternative approach you
+> point out above is a system wide solution.
+> 
+> While, the ramp_boost thingy you propose, it's a more fine grained
+> mechanisms which could be extended in the future to have a per-task
+> side. IOW, it could contribute to have better user-space hints, for
+> example to ramp_boost more certain tasks and not others.
 
-Thanks,
+ramp_boost and the situation you describe are more what solves point 2) (which has been cut out in that answer),
+this point "1)" is really just about avoiding selection of some OPPs, regardless of task util. IOW, it's better to
+skip the OPPs we talk about here, and race to idle at a higher OPP regardless of what the task need.
 
-	tglx
+
+> Best,
+> Patrick
+> 
+
+Cheers,
+Douglas
