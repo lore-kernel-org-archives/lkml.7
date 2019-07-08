@@ -2,124 +2,98 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EFDC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7EDC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7936E20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="UD2MFF8X"
+	by mail.kernel.org (Postfix) with ESMTP id 1DBC621537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562600298;
+	bh=TSKGw1r5dLtQbJRCdmKWf5HSmP9FklzelECTG9HgAjA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mnPh3Wu+30DORYDWqjzn0vLE3/wQnG5aHqexNKsMzySsT/8LdktRIorESHzIEA37Z
+	 cP71fd60CodVRTYSYkoTPSJJope7qy62BVvA/K5XLCgO2Itqc3Hr2eu72xUDCi+5Cw
+	 LuE4nZxO4NztjoUG37fQGAVjTMbrmw4fNNX8IPFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389965AbfGHPh5 (ORCPT
+        id S2388229AbfGHPiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:37:57 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:45384 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389541AbfGHPbW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:31:22 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 76B182E0A4B;
-        Mon,  8 Jul 2019 18:31:16 +0300 (MSK)
-Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
-        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 8Wy5B9ijpR-VG4OoQWJ;
-        Mon, 08 Jul 2019 18:31:16 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1562599876; bh=SsanFjU22Vaczlbxo5tTMnEUSVJDr7loxpQ5rI782Ss=;
-        h=Message-ID:Date:To:From:Subject;
-        b=UD2MFF8XPtzcSpgoHILZKUJjR02m9ycsnyi7xGMSFRvcko2Dyf/Tx9B2b08Mfi4dF
-         LtiG0TauTbkK+Ax7FerlBDs5i5jwn1x3fhA2Fc4NoiqHg6TmkzZ5E6Xdcy2WTZAKJx
-         Cr2S67MFUGGToQMMILHZYw8Fs0lSFqY5uiKIsR1I=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:fce8:911:2fe8:4dfb])
-        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 2IqeJGbJaS-VG90sNkH;
-        Mon, 08 Jul 2019 18:31:16 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH 1/2] null_blk: fix handling big requests with small mbps
- limit
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 08 Jul 2019 18:31:15 +0300
-Message-ID: <156259987576.2590.3397115585587914567.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 8 Jul 2019 11:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389649AbfGHPaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:39 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F90521537;
+        Mon,  8 Jul 2019 15:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599838;
+        bh=TSKGw1r5dLtQbJRCdmKWf5HSmP9FklzelECTG9HgAjA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qgZfkfXY0XbGKfxsXZnwLi8u9lwUgkygkjSfepjCkZGOk0Lb9oX1J+jJvio0c6NI1
+         dbVjjTlyrEMWR51kbGdUz2oF+OPP/HdcjK72zqoNTXom4BJlIN5FzPPFv6FS/aI+YO
+         63vYKFpyTHo7fCnfEctPpWvejY3SePzjyRiwLdPM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Sricharan R <sricharan@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.19 89/90] dmaengine: qcom: bam_dma: Fix completed descriptors count
+Date:   Mon,  8 Jul 2019 17:13:56 +0200
+Message-Id: <20190708150527.042392553@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
+References: <20190708150521.829733162@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Small mbps limit actually limits size of request which could be handled,
-because 'cur_bytes' never might be bigger than bandwidth limit over 20ms.
-For example with mbps=4 device cannot handle requests bigger than 81 KiB.
+From: Sricharan R <sricharan@codeaurora.org>
 
-This patch allows to start request bigger than 'cur_bytes' but stops queue
-if 'cur_bytes' is negative. Bandwidth timer takes this into account.
+commit f6034225442c4a87906d36e975fd9e99a8f95487 upstream.
 
-Fixes: eff2c4f10873 ("nullb: bandwidth control")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+One space is left unused in circular FIFO to differentiate
+'full' and 'empty' cases. So take that in to account while
+counting for the descriptors completed.
+
+Fixes the issue reported here,
+	https://lkml.org/lkml/2019/6/18/669
+
+Cc: stable@vger.kernel.org
+Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/null_blk_main.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/dma/qcom/bam_dma.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 447d635c79a2..15925b355965 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1132,6 +1132,18 @@ static void null_restart_queue_async(struct nullb *nullb)
- 		blk_mq_start_stopped_hw_queues(q, true);
- }
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -808,6 +808,9 @@ static u32 process_channel_irqs(struct b
+ 		/* Number of bytes available to read */
+ 		avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
  
-+static inline bool atomic_long_sub_unless_negative(long i, atomic_long_t *v)
-+{
-+	long c = atomic_long_read(v);
++		if (offset < bchan->head)
++			avail--;
 +
-+	do {
-+		if (unlikely(c < 0))
-+			return false;
-+	} while (!atomic_long_try_cmpxchg(v, &c, c - i));
-+
-+	return true;
-+}
-+
- static blk_status_t null_handle_cmd(struct nullb_cmd *cmd)
- {
- 	struct nullb_device *dev = cmd->nq->dev;
-@@ -1144,8 +1156,8 @@ static blk_status_t null_handle_cmd(struct nullb_cmd *cmd)
- 		if (!hrtimer_active(&nullb->bw_timer))
- 			hrtimer_restart(&nullb->bw_timer);
- 
--		if (atomic_long_sub_return(blk_rq_bytes(rq),
--				&nullb->cur_bytes) < 0) {
-+		if (!atomic_long_sub_unless_negative(blk_rq_bytes(rq),
-+						     &nullb->cur_bytes)) {
- 			null_stop_queue(nullb);
- 			/* race with timer */
- 			if (atomic_long_read(&nullb->cur_bytes) > 0)
-@@ -1244,12 +1256,14 @@ static enum hrtimer_restart nullb_bwtimer_fn(struct hrtimer *timer)
- {
- 	struct nullb *nullb = container_of(timer, struct nullb, bw_timer);
- 	ktime_t timer_interval = ktime_set(0, TIMER_INTERVAL);
--	unsigned int mbps = nullb->dev->mbps;
-+	long budget = atomic_long_read(&nullb->cur_bytes);
-+	long limit = mb_per_tick(nullb->dev->mbps);
- 
--	if (atomic_long_read(&nullb->cur_bytes) == mb_per_tick(mbps))
-+	if (budget == limit)
- 		return HRTIMER_NORESTART;
- 
--	atomic_long_set(&nullb->cur_bytes, mb_per_tick(mbps));
-+	atomic_long_set(&nullb->cur_bytes, limit + min(budget, 0L));
-+
- 	null_restart_queue_async(nullb);
- 
- 	hrtimer_forward_now(&nullb->bw_timer, timer_interval);
+ 		list_for_each_entry_safe(async_desc, tmp,
+ 					 &bchan->desc_list, desc_node) {
+ 			/* Not enough data to read */
+
 
