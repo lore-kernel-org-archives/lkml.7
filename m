@@ -2,53 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0782C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E458C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A8221707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679832173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599469;
-	bh=DS4k/28IlLaFYt9GbiZOqgQw5cQBJh4xa+XDZaWXaQ4=;
+	s=default; t=1562599473;
+	bh=nbg1uAtIg45BUypnjfpcZWL6DWQHO8lCwuS5lg5vDss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ym11F61E8yD8hfWsFeO4i7MoTB+Miz7RT91YMNixIxIYhJy25RIpnnW5TApXEOWbW
-	 r2ZICNsebZSMreCMEcii9mAdzdzN9Vdl4xrVCXfs/KFP5NU8xlvL3deZwSMrntlW/N
-	 9x3gw6b+OpMlhRHy+6wh9J8EwcBzrW+3NNM79BdM=
+	b=tKuhNy7Bc9ABB+V5ZF0LXVZZG1eDSoDHdBWM9rRNv7gqrsyC4OErbUZbVFNhKqDY9
+	 7ZQ0JMNLK/wZB/GhphvIkN6DmSfxAhOyzXcT12qpLmxOOL+3s7+9Cpi0vk7v3+Kz4L
+	 IzjZWNOFlQuPOVQccO1UF8XVLsvaT32huvkAskp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbfGHPY1 (ORCPT
+        id S2388368AbfGHPYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:24:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51550 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388335AbfGHPYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:18 -0400
+        id S2388357AbfGHPY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:24:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B6521738;
-        Mon,  8 Jul 2019 15:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6EE02173C;
+        Mon,  8 Jul 2019 15:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599457;
-        bh=DS4k/28IlLaFYt9GbiZOqgQw5cQBJh4xa+XDZaWXaQ4=;
+        s=default; t=1562599468;
+        bh=nbg1uAtIg45BUypnjfpcZWL6DWQHO8lCwuS5lg5vDss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HHyHM6EfPqnf8cxyt1Nu9AUc2yA1ueSZL/6bUi+WrG4l9SDPX8CyYETuYTZru/KZH
-         smgGTNTXG0D3G56FQnnVau+eqHLHciEJmdXFiza5p4i8B6qpB2p6yNXgDpqbrP5xyj
-         EnKMVC2rfubds5xrYTU2su0qbAfiAMPbLeBuo7yo=
+        b=eNkG/JCfE6RBsLN+gaG/KDl1vzNlt8EUl7CIh5HKD4FrZBosikvw6mH4YkvS9D1GB
+         b+SuKCUxe0Wn1LQ47mQGYsPawPXHYIVMX3buSwr96QvDg2cKpk6Css63+iDIrm0t9v
+         zqbzkmc4sPi229mTL3DiNsmReQrN21aqkxQQcL/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>,
+        stable@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/56] drm/i915/dmc: protect against reading random memory
-Date:   Mon,  8 Jul 2019 17:13:14 +0200
-Message-Id: <20190708150521.041295238@linuxfoundation.org>
+Subject: [PATCH 4.14 08/56] ASoC: max98090: remove 24-bit format support if RJ is 0
+Date:   Mon,  8 Jul 2019 17:13:00 +0200
+Message-Id: <20190708150518.499283297@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -61,97 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit bc7b488b1d1c71dc4c5182206911127bc6c410d6 upstream.
+[ Upstream commit 5628c8979642a076f91ee86c3bae5ad251639af0 ]
 
-While loading the DMC firmware we were double checking the headers made
-sense, but in no place we checked that we were actually reading memory
-we were supposed to. This could be wrong in case the firmware file is
-truncated or malformed.
+The supported formats are S16_LE and S24_LE now. However, by datasheet
+of max98090, S24_LE is only supported when it is in the right justified
+mode. We should remove 24-bit format if it is not in that mode to avoid
+triggering error.
 
-Before this patch:
-	# ls -l /lib/firmware/i915/icl_dmc_ver1_07.bin
-	-rw-r--r-- 1 root root  25716 Feb  1 12:26 icl_dmc_ver1_07.bin
-	# truncate -s 25700 /lib/firmware/i915/icl_dmc_ver1_07.bin
-	# modprobe i915
-	# dmesg| grep -i dmc
-	[drm:intel_csr_ucode_init [i915]] Loading i915/icl_dmc_ver1_07.bin
-	[drm] Finished loading DMC firmware i915/icl_dmc_ver1_07.bin (v1.7)
-
-i.e. it loads random data. Now it fails like below:
-	[drm:intel_csr_ucode_init [i915]] Loading i915/icl_dmc_ver1_07.bin
-	[drm:csr_load_work_fn [i915]] *ERROR* Truncated DMC firmware, rejecting.
-	i915 0000:00:02.0: Failed to load DMC firmware i915/icl_dmc_ver1_07.bin. Disabling runtime power management.
-	i915 0000:00:02.0: DMC firmware homepage: https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/i915
-
-Before reading any part of the firmware file, validate the input first.
-
-Fixes: eb805623d8b1 ("drm/i915/skl: Add support to load SKL CSR firmware.")
-Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190605235535.17791-1-lucas.demarchi@intel.com
-(cherry picked from commit bc7b488b1d1c71dc4c5182206911127bc6c410d6)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-[ Lucas: backported to 4.9+ adjusting the context ]
-Cc: stable@vger.kernel.org # v4.9+
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_csr.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ sound/soc/codecs/max98090.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/i915/intel_csr.c b/drivers/gpu/drm/i915/intel_csr.c
-index 92c1f8e166dc..0bdbbd4027fe 100644
---- a/drivers/gpu/drm/i915/intel_csr.c
-+++ b/drivers/gpu/drm/i915/intel_csr.c
-@@ -277,10 +277,17 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
- 	uint32_t i;
- 	uint32_t *dmc_payload;
- 	uint32_t required_version;
-+	size_t fsize;
- 
- 	if (!fw)
- 		return NULL;
- 
-+	fsize = sizeof(struct intel_css_header) +
-+		sizeof(struct intel_package_header) +
-+		sizeof(struct intel_dmc_header);
-+	if (fsize > fw->size)
-+		goto error_truncated;
-+
- 	/* Extract CSS Header information*/
- 	css_header = (struct intel_css_header *)fw->data;
- 	if (sizeof(struct intel_css_header) !=
-@@ -350,6 +357,9 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
- 		return NULL;
- 	}
- 	readcount += dmc_offset;
-+	fsize += dmc_offset;
-+	if (fsize > fw->size)
-+		goto error_truncated;
- 
- 	/* Extract dmc_header information. */
- 	dmc_header = (struct intel_dmc_header *)&fw->data[readcount];
-@@ -380,6 +390,10 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
- 
- 	/* fw_size is in dwords, so multiplied by 4 to convert into bytes. */
- 	nbytes = dmc_header->fw_size * 4;
-+	fsize += nbytes;
-+	if (fsize > fw->size)
-+		goto error_truncated;
-+
- 	if (nbytes > CSR_MAX_FW_SIZE) {
- 		DRM_ERROR("CSR firmware too big (%u) bytes\n", nbytes);
- 		return NULL;
-@@ -393,6 +407,10 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
- 	}
- 
- 	return memcpy(dmc_payload, &fw->data[readcount], nbytes);
-+
-+error_truncated:
-+	DRM_ERROR("Truncated DMC firmware, rejecting.\n");
-+	return NULL;
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index cc66ea5cc776..3fe09828745a 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1924,6 +1924,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
+ 	return 0;
  }
  
- static void csr_load_work_fn(struct work_struct *work)
++static int max98090_dai_startup(struct snd_pcm_substream *substream,
++				struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
++	unsigned int fmt = max98090->dai_fmt;
++
++	/* Remove 24-bit format support if it is not in right justified mode. */
++	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
++		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
++		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
++	}
++	return 0;
++}
++
+ static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params,
+ 				   struct snd_soc_dai *dai)
+@@ -2331,6 +2346,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
+ #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
+ 
+ static const struct snd_soc_dai_ops max98090_dai_ops = {
++	.startup = max98090_dai_startup,
+ 	.set_sysclk = max98090_dai_set_sysclk,
+ 	.set_fmt = max98090_dai_set_fmt,
+ 	.set_tdm_slot = max98090_set_tdm_slot,
 -- 
 2.20.1
 
