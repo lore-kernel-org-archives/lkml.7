@@ -2,127 +2,120 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EABCC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29404C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020BD2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aE8JZ4oL"
+	by mail.kernel.org (Postfix) with ESMTP id 06196216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390677AbfGHRZa (ORCPT
+        id S2388703AbfGHR1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:25:30 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39801 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728744AbfGHRZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:25:30 -0400
-Received: by mail-qt1-f194.google.com with SMTP id l9so10560755qtu.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ku/o68pleqE6un6ZW/BvkhdW//GDmVPordPUQ3yzu6U=;
-        b=aE8JZ4oLuploE3xF/JrOpdr9AoVRhkEOsLUz30R2UjWMXOkivBepSb7ZtC0ZX+KsXy
-         3jJydV56/hO6tGXVAMdnk5HMzPdKt86jE10qCn/1Gf88ooDqWjePCTTNZ0F+BSMBygqX
-         YPq3EkN9XpWd27tk+5DaiRPVF5jljyVG7WLFWT1raAYswkHluQ+WIivkJ/9MijGIrDSx
-         woUAgC/OYAaDLs3ChTeqeOT97WIiKsdJIuVECqzzDxRRnFjmfYc0TVVKBO4QBv1Yc2gL
-         zNp5fGpXei7QgoOsN3bD6RPxGHKUtvFfX0ZuijlV/H08KY1uKgW6HuDlLPmodBgLWv82
-         dkKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ku/o68pleqE6un6ZW/BvkhdW//GDmVPordPUQ3yzu6U=;
-        b=Xy+Lb4NOgau1pfqcXkv4arteRubnV3Bm47MZlINIJ94ynh0Nn+ZHbV5QXgk7UKl5O0
-         vEIqS+Wt9KW6ehaL4z6wT9p6YgGrzWSGs3Cg5PR8+pN+EfjVyDcb679B3L+Os8/vjuEH
-         oh3E4/yYjxDMsoTrscUfnqD6szHlSpyX9E9L10biPLs4qOk4CQbEDGRchvqWDEkCsOvi
-         W32xEyFvokL4u6xvohOX4lINqb/GJpB3g+lN/lwyW607cpmVeNvPk4TceKDCuEYV0+jv
-         61k8tMcbJtFipdPZljTP3rlorGRrZtXdbV10ZYotE/nQjyPyMtK+7nvmUZl/DdvITabf
-         VrOg==
-X-Gm-Message-State: APjAAAXP9a1uaKDUs9I2Pu5vBDkue0MzIN0luKcFKMg7dfSxQsyiAKnJ
-        ouaERtDVQuvCbjxPX+tmkw4hzQ==
-X-Google-Smtp-Source: APXvYqxo7P6BBN+I5qF/OaEb7YKPon028ElmrspccvTXQPbFVXwjbGN4QtHkhSa38AtF7UfZ251zUw==
-X-Received: by 2002:ac8:1c42:: with SMTP id j2mr15087393qtk.68.1562606729322;
-        Mon, 08 Jul 2019 10:25:29 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id t2sm9809926qth.33.2019.07.08.10.25.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Jul 2019 10:25:28 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hkXOK-0007Ke-A9; Mon, 08 Jul 2019 14:25:28 -0300
-Date:   Mon, 8 Jul 2019 14:25:28 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 35/39] docs: infiniband: add it to the driver-api bookset
-Message-ID: <20190708172528.GC23996@ziepe.ca>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
- <12743088687a9b0b305c05b62a5093056a4190b8.1561724493.git.mchehab+samsung@kernel.org>
- <20190703180802.GA26557@ziepe.ca>
- <20190706081950.4a629537@coco.lan>
+        Mon, 8 Jul 2019 13:27:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42434 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728744AbfGHR1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 13:27:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 65D94AFE2;
+        Mon,  8 Jul 2019 17:27:31 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 9676BE00B7; Mon,  8 Jul 2019 19:27:29 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 19:27:29 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 04/15] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190708172729.GC24474@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
+ <20190702122521.GN2250@nanopsycho>
+ <20190702145241.GD20101@unicorn.suse.cz>
+ <20190703084151.GR2250@nanopsycho>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190706081950.4a629537@coco.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190703084151.GR2250@nanopsycho>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 06, 2019 at 08:19:50AM -0300, Mauro Carvalho Chehab wrote:
-> Em Wed, 3 Jul 2019 15:08:02 -0300
-> Jason Gunthorpe <jgg@ziepe.ca> escreveu:
+On Wed, Jul 03, 2019 at 10:41:51AM +0200, Jiri Pirko wrote:
+> Tue, Jul 02, 2019 at 04:52:41PM CEST, mkubecek@suse.cz wrote:
+> >On Tue, Jul 02, 2019 at 02:25:21PM +0200, Jiri Pirko wrote:
+> >> Tue, Jul 02, 2019 at 01:49:59PM CEST, mkubecek@suse.cz wrote:
+> >> >+
+> >> >+    ETHTOOL_A_HEADER_DEV_INDEX	(u32)		device ifindex
+> >> >+    ETHTOOL_A_HEADER_DEV_NAME	(string)	device name
+> >> >+    ETHTOOL_A_HEADER_INFOMASK	(u32)		info mask
+> >> >+    ETHTOOL_A_HEADER_GFLAGS	(u32)		flags common for all requests
+> >> >+    ETHTOOL_A_HEADER_RFLAGS	(u32)		request specific flags
+> >> >+
+> >> >+ETHTOOL_A_HEADER_DEV_INDEX and ETHTOOL_A_HEADER_DEV_NAME identify the device
+> >> >+message relates to. One of them is sufficient in requests, if both are used,
+> >> >+they must identify the same device. Some requests, e.g. global string sets, do
+> >> >+not require device identification. Most GET requests also allow dump requests
+> >> >+without device identification to query the same information for all devices
+> >> >+providing it (each device in a separate message).
+> >> >+
+> >> >+Optional info mask allows to ask only for a part of data provided by GET
+> >> 
+> >> How this "infomask" works? What are the bits related to? Is that request
+> >> specific?
+> >
+> >The interpretation is request specific, the information returned for
+> >a GET request is divided into multiple parts and client can choose to
+> >request one of them (usually one). In the code so far, infomask bits
+> >correspond to top level (nest) attributes but I would rather not make it
+> >a strict rule.
 > 
-> > On Fri, Jun 28, 2019 at 09:30:28AM -0300, Mauro Carvalho Chehab wrote:
-> > > While this contains some uAPI stuff, it was intended to be
-> > > read by a kernel doc. So, let's not move it to a different
-> > > dir, but, instead, just add it to the driver-api bookset.
-> > > 
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > >  Documentation/index.rst            | 1 +
-> > >  Documentation/infiniband/index.rst | 2 +-
-> > >  2 files changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/index.rst b/Documentation/index.rst
-> > > index ea33cbbccd9d..e69d2fde7735 100644
-> > > +++ b/Documentation/index.rst
-> > > @@ -96,6 +96,7 @@ needed).
-> > >     block/index
-> > >     hid/index
-> > >     iio/index
-> > > +   infiniband/index
-> > >     leds/index
-> > >     media/index
-> > >     networking/index
-> > > diff --git a/Documentation/infiniband/index.rst b/Documentation/infiniband/index.rst
-> > > index 22eea64de722..9cd7615438b9 100644
-> > > +++ b/Documentation/infiniband/index.rst
-> > > @@ -1,4 +1,4 @@
-> > > -:orphan:
-> > > +.. SPDX-License-Identifier: GPL-2.0
-> > >  
-> > >  ==========
-> > >  InfiniBand  
-> > 
-> > Should this one go to the rdma.git as well? It looks like yes
-> 
-> I'm OK if you want to add to rdma.git. However, this will likely rise 
-> conflicts, though, as this series has lots of other patches touching
-> Documentation/index.rst. 
+> Wait, so it is a matter of verbosity? If you have multiple parts and the
+> user is able to chose one of them, why don't you rather have multiple
+> get commands, one per bit. This infomask construct seems redundant to me.
 
-Applied now, it seems better to keep everything consistent
+I thought it was a matter of verbosity because it is a very basic
+element of the design, it was even advertised in the cover letter among
+the basic ideas, it has been there since the very beginning and in five
+previous versions through year and a half, noone did question it. That's
+why I thought you objected against unclear description, not against the
+concept as such.
 
-Jason
+There are two reasons for this design. First is to reduce the number of
+requests needed to get the information. This is not so much a problem of
+ethtool itself; the only existing commands that would result in multiple
+request messages would be "ethtool <dev>" and "ethtool -s <dev>". Maybe
+also "ethtool -x/-X <dev>" but even if the indirection table and hash
+key have different bits assigned now, they don't have to be split even
+if we split other commands. It may be bigger problem for daemons wanting
+to keep track of system configuration which would have to issue many
+requests whenever a new device appears.
+
+Second reason is that with 8-bit genetlink command/message id, the space
+is not as infinite as it might seem. I counted quickly, right now the
+full series uses 14 ids for kernel messages, with split you propose it
+would most likely grow to 44. For full implementation of all ethtool
+functionality, we could get to ~60 ids. It's still only 1/4 of the
+available space but it's not clear what the future development will look
+like. We would certainly need to be careful not to start allocating new
+commands for single parameters and try to be foreseeing about what can
+be grouped together. But we will need to do that in any case.
+
+On kernel side, splitting existing messages would make some things a bit
+easier. It would also reduce the number of scenarios where only part of
+requested information is available or only part of a SET request fails.
+
+Michal
