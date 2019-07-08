@@ -2,53 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C6EC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C3BC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB27204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA6321738
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599534;
-	bh=0kw5P18G4j3qrgM0UcDgYuj3COmMTxB/GNf33UXOcts=;
+	s=default; t=1562599538;
+	bh=iBOC9dvPBYWGAoKwG89YY6adm4gY1wvKQMBrGA/bDF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n5FD+JrcaTefdZbfS4tazBxt8LfyR9x7CqGLN7vqPKR4aHu52+MdzfD3+ND343bzM
-	 kWA6FROQa9rC33bBqtlJls9efZ1czkZ3sA8Y27B+xfljU8qgAjpxpQbUTTv0Ix1sKT
-	 nC9ihoNDqZciYs27AX5HOEwjVbQLIu+J0O3tMYOQ=
+	b=UHWYyWsBHSwRA4qjegd9uHWvrSnvcjFPTyzHgPwLax7xMKg8nRceC9QK7srwMMTUn
+	 W8SNd6np50tv3FWF+2MByfezSzPxhkoFffRb1+vF72R/i0hBBQ+YNW7YL0LCF3mhOv
+	 MZGh2PekRiLpsofw/TxHA3CbMjIV4W3hcTJmCp9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388619AbfGHPZc (ORCPT
+        id S1730603AbfGHPZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52940 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388603AbfGHPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:30 -0400
+        id S2388611AbfGHPZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E54F217D4;
-        Mon,  8 Jul 2019 15:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 004F9204EC;
+        Mon,  8 Jul 2019 15:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599528;
-        bh=0kw5P18G4j3qrgM0UcDgYuj3COmMTxB/GNf33UXOcts=;
+        s=default; t=1562599531;
+        bh=iBOC9dvPBYWGAoKwG89YY6adm4gY1wvKQMBrGA/bDF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=klEDArTuEsefwaSzH4wjDJlFR7CXx3P2hjBnEDnefIg9r1YA5GuCVjwf3okwbNPTI
-         SwAFOmyoP/dl+Z2mXL2HzJCuyTTnGLDhBEHd7FuP1KO6wrqTklU+oiWOp4h43Z4dp6
-         90T0wxVG/yAoW+DnSvjxG2uYZvAk0F/6AT0uqoCw=
+        b=QYQ23Sy8S0sgNwN5kzMS4+TD6EPFOqcJBBMymAOaKhWyn23oGVn+GvdabGwJeSPnm
+         eVJnddvlpwiPPICSbUc2ptbPzMjWlbkHiEJFpgO7/dHNe2fJ1GZaea05TxK/uaFKR2
+         Fhue66E0ZIUc77V321NkLJt9Vpn3wmD0wugUZI0U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Balbir Singh <sblbir@amzn.com>
-Subject: [PATCH 4.14 45/56] vhost_net: fix possible infinite loop
-Date:   Mon,  8 Jul 2019 17:13:37 +0200
-Message-Id: <20190708150523.805847811@linuxfoundation.org>
+        stable@vger.kernel.org, Marcus Cooper <codekipper@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 10/56] ASoC: sun4i-i2s: Add offset to RX channel select
+Date:   Mon,  8 Jul 2019 17:13:02 +0200
+Message-Id: <20190708150518.948056826@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -61,112 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+[ Upstream commit f9927000cb35f250051f0f1878db12ee2626eea1 ]
 
-commit e2412c07f8f3040593dfb88207865a3cd58680c0 upstream.
+Whilst testing the capture functionality of the i2s on the newer
+SoCs it was noticed that the recording was somewhat distorted.
+This was due to the offset not being set correctly on the receiver
+side.
 
-When the rx buffer is too small for a packet, we will discard the vq
-descriptor and retry it for the next packet:
-
-while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
-					      &busyloop_intr))) {
-...
-	/* On overrun, truncate and discard */
-	if (unlikely(headcount > UIO_MAXIOV)) {
-		iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
-		err = sock->ops->recvmsg(sock, &msg,
-					 1, MSG_DONTWAIT | MSG_TRUNC);
-		pr_debug("Discarded rx packet: len %zd\n", sock_len);
-		continue;
-	}
-...
-}
-
-This makes it possible to trigger a infinite while..continue loop
-through the co-opreation of two VMs like:
-
-1) Malicious VM1 allocate 1 byte rx buffer and try to slow down the
-   vhost process as much as possible e.g using indirect descriptors or
-   other.
-2) Malicious VM2 generate packets to VM1 as fast as possible
-
-Fixing this by checking against weight at the end of RX and TX
-loop. This also eliminate other similar cases when:
-
-- userspace is consuming the packets in the meanwhile
-- theoretical TOCTOU attack if guest moving avail index back and forth
-  to hit the continue after vhost find guest just add new buffers
-
-This addresses CVE-2019-3900.
-
-Fixes: d8316f3991d20 ("vhost: fix total length when packets are too short")
-Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Balbir Singh <sblbir@amzn.com>
-
+Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -482,7 +482,7 @@ static void handle_tx(struct vhost_net *
- 	hdr_size = nvq->vhost_hlen;
- 	zcopy = nvq->ubufs;
- 
--	for (;;) {
-+	do {
- 		/* Release DMAs done buffers first */
- 		if (zcopy)
- 			vhost_zerocopy_signal_used(net, vq);
-@@ -578,10 +578,7 @@ static void handle_tx(struct vhost_net *
- 		else
- 			vhost_zerocopy_signal_used(net, vq);
- 		vhost_net_tx_packet(net);
--		if (unlikely(vhost_exceeds_weight(vq, ++sent_pkts,
--						  total_len)))
--			break;
--	}
-+	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
- out:
- 	mutex_unlock(&vq->mutex);
- }
-@@ -779,7 +776,11 @@ static void handle_rx(struct vhost_net *
- 		vq->log : NULL;
- 	mergeable = vhost_has_feature(vq, VIRTIO_NET_F_MRG_RXBUF);
- 
--	while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk))) {
-+	do {
-+		sock_len = vhost_net_rx_peek_head_len(net, sock->sk);
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index a10913f8293f..da0a2083e12a 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -442,6 +442,10 @@ static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 		regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+ 				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
+ 				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
 +
-+		if (!sock_len)
-+			break;
- 		sock_len += sock_hlen;
- 		vhost_len = sock_len + vhost_hlen;
- 		headcount = get_rx_bufs(vq, vq->heads, vhost_len,
-@@ -860,9 +861,8 @@ static void handle_rx(struct vhost_net *
- 			vhost_log_write(vq, vq_log, log, vhost_len,
- 					vq->iov, in);
- 		total_len += vhost_len;
--		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
--			goto out;
--	}
-+	} while (likely(!vhost_exceeds_weight(vq, ++recv_pkts, total_len)));
-+
- 	vhost_net_enable_vq(net, vq);
- out:
- 	mutex_unlock(&vq->mutex);
-@@ -941,7 +941,7 @@ static int vhost_net_open(struct inode *
- 		vhost_net_buf_init(&n->vqs[i].rxq);
++		regmap_update_bits(i2s->regmap, SUN8I_I2S_RX_CHAN_SEL_REG,
++				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
++				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
  	}
- 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
--		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
-+		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT);
  
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, POLLOUT, dev);
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, POLLIN, dev);
+ 	regmap_field_write(i2s->field_fmt_mode, val);
+-- 
+2.20.1
+
 
 
