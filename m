@@ -2,94 +2,109 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DECC5B57D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D86C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B63520665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE5420665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="fWJqeTPF"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OhbgFB4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfGHDly (ORCPT
+        id S1728839AbfGHDst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 23:41:54 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39283 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727286AbfGHDly (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 23:41:54 -0400
-Received: by mail-qk1-f196.google.com with SMTP id i125so12221129qkd.6;
-        Sun, 07 Jul 2019 20:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5vshiXcXoqLWXoh5b9sIO/G0bRIAMP3O5iBVUywrN6Y=;
-        b=fWJqeTPFnRVITMgqOSt+foYJd6IRCAwvi/aRIhfRJnfGYb6kIeYUO8JhHRU6iZBXvB
-         sm2VEoyPeXcNxwZZuoP9wp4qVlwc1y0C8Sy40bsa+5bJoI6aTSUfLCJG4fVA0Y9e1s73
-         wU0RjDHMI6FO3FWGLcZmqsiV1g/lcvnd5++vM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5vshiXcXoqLWXoh5b9sIO/G0bRIAMP3O5iBVUywrN6Y=;
-        b=nerpqND2em/xqaczaOaZC4xo9RcUiKAlbM3jAS/2FJlHUQ5GfAwJZSCWXYHit42f5N
-         59LvIXoXa6E2vOjWgaa/iziol1bKrWvZLjxjdsngunEMgDLNMzUmLFzqDYSSQ9T143wn
-         tcPBs80tjnKZeL6YZnO3ognn6RIMK7dr/Ps17Xsi9Qfw0R4ToqkGGm7TK0uWU9NhKNUZ
-         3sPkusFRq5nX49rsGNilfHfy82RKhKbmrkEHFcoQjcMrytUebSITDsnBeASi04XlvyI9
-         Y1dtMiwkDoGZEzT2SC67N23oF3M6x4aiucluNaPVXb1IDSzLkpaN6vi1yR5ogO85TUfl
-         tNqA==
-X-Gm-Message-State: APjAAAU4Tr95GLOkUX6nB3nNz1H8mqwmY2jPB6WquV+VsuWPqOe710ws
-        QCGymWspslnjfcOJ3H/LHaf4gP5rGhal3H6RKuzW4Q==
-X-Google-Smtp-Source: APXvYqx4M7vpNqLlCyb15EJ3sQkocolgJm6QJ9Q8vviG4FjGb+7Buz7arc5O5ak1IQ7W1aztYieBRVuPufJS3MV678c=
-X-Received: by 2002:a37:b0c6:: with SMTP id z189mr12507331qke.208.1562557313014;
- Sun, 07 Jul 2019 20:41:53 -0700 (PDT)
+        Sun, 7 Jul 2019 23:48:49 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39905 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727189AbfGHDss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 23:48:48 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hryy5RVhz9sN1;
+        Mon,  8 Jul 2019 13:48:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562557726;
+        bh=mDrD1Sn4fzfTzidyBGIKFqxSZ2KwSgFmpIydyvvKGVk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OhbgFB4GR7zBvporksGbd4ZLzYKRN5c6Co9heK4GsjTiUk/YPcJqdBFjB1RxakRTM
+         2/wp0ldM9QAcH0m3emVCEsrT000FYyAP2HjJIt+5w9NzgGQO2uydbC0solsNhcyOGJ
+         Jxj0X4DYcfqfUic6ldosKA6ri7eT1OreyOgceniU7KN4zxnqPOYl8rTzmLztIyqenO
+         YoEElT7uC1FSRA6tMIYW9cmhia9eQv8uAa5QuanTtf4+RV7QXjBWoWZXoA7Uch+/F0
+         jmPlo4gqaUjzP8dq3v4Ne+k1IT6ski/3F/y7X8dhYKCO3O9Rx70Nz6yPOmBaJarxF/
+         PKekBsttorJ7Q==
+Date:   Mon, 8 Jul 2019 13:48:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Price <anprice@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: linux-next: manual merge of the gfs2 tree with the vfs tree
+Message-ID: <20190708134842.1e947318@canb.auug.org.au>
 MIME-Version: 1.0
-References: <CACPK8XfCpgjAwMeoyhcZqgqtXO=-wtpuB2kwsogvBnd1VzynDg@mail.gmail.com>
- <041ce2ab04d0594accdbf51078906ac116cc0253.camel@kernel.crashing.org>
- <CACPK8XdGC4V5xs5S=JHk=tUayLGHQkF5eH0pvFnyffpDaUuqQQ@mail.gmail.com> <20190705073158.1c8384ed@canb.auug.org.au>
-In-Reply-To: <20190705073158.1c8384ed@canb.auug.org.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Mon, 8 Jul 2019 03:41:40 +0000
-Message-ID: <CACPK8XeZTG8dxiQNi_HRyRAnfGnoagn2WonwYZD1mez9vzpJNA@mail.gmail.com>
-Subject: Re: [GIT PULL] FSI changes for 5.3
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Alistair Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-fsi@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/rAX5HKHynv6BEhQ3eqYwSgn"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jul 2019 at 21:32, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Joel,
->
-> On Thu, 4 Jul 2019 06:03:18 +0000 Joel Stanley <joel@jms.id.au> wrote:
+--Sig_/rAX5HKHynv6BEhQ3eqYwSgn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > Stephen, can you swap out ben's fsi tree in linux-next for this one:
-> >
-> > git://git.kernel.org/pub/scm/linux/kernel/git/joel/fsi.git
-> >
-> > Branch is 'next'.
->
-> There is no "next" branch in that tree, so for now I have used the
-> master branch.   I have replaced Ben with you and Jeremy as contacts.
+Hi all,
 
-Thanks. There is a next branch now, please take that instead.
+Today's linux-next merge of the gfs2 tree got a conflict in:
 
+  fs/gfs2/super.c
+
+between commit:
+
+  000c8e591016 ("gfs2: Convert gfs2 to fs_context")
+
+from the vfs tree and commit:
+
+  5b3a9f348bc5 ("gfs2: kthread and remount improvements")
+
+from the gfs2 tree.
+
+I fixed it up (I just used the vfs tree version since it removed some of
+the code modified by the latter) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+
+
+--=20
 Cheers,
+Stephen Rothwell
 
-Joel
+--Sig_/rAX5HKHynv6BEhQ3eqYwSgn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ivRoACgkQAVBC80lX
+0Gw+VAf+PpQ35iJhw5gaiz8VEgvYW3NcTC2QBnxmNFiyKQfE4gq3ludE43XTT8r5
+UJ18rP4u+b7GxwlsYJmzvJxZyteSFB96UNqobzWjHyICF46ovhCbOC/4srOAokbQ
+yRswzXZvpCWhYTpgsX/sjpt9X6yZeA5ImUZjcR6VKQFH7q2cGWLVbefn3VKdLOw1
+5miwxGVJWz9/7X4N5jZgKbushwFtsxrrOvjfQylgmGstq6xmXUgOGwxaH+tik8hi
+2lmFku6tiHg4gE+zGvapTRD5JQIBoyWTB1YAR1GE9GUwdtkG57SNlD+e+5PrzDiL
+9HQIaixJQnFkdk0UTpAHX6889QFN5w==
+=I2b8
+-----END PGP SIGNATURE-----
+
+--Sig_/rAX5HKHynv6BEhQ3eqYwSgn--
