@@ -2,91 +2,118 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93810C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8B3C5B57D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D35520848
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562559171;
-	bh=Z4vk7mVRT8EztIag0rUhGUeHxNVQ35Bv5DXVMPCwSCw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gkC0zVsjvxdf73xJG+WbGqdfLmGqVt1kMDvDifhPu6Mu8EdCam0mpMd6SOw36QXCG
-	 QuZdU4E4gpwjFttNJ21jS/GCpa0GDlxWctZcn5HC8B++RHLc0X+o+v/g74d385cGME
-	 KoyAqRni1o3ieiJMoF1JuTfkD/iA54ifrZaNvOpg=
+	by mail.kernel.org (Postfix) with ESMTP id 720CC20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:18:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nCctON+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfGHEMt (ORCPT
+        id S1727478AbfGHER7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 00:12:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 00:17:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:45259 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfGHEMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 00:12:48 -0400
-Received: from localhost (unknown [49.207.58.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726300AbfGHER7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 00:17:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8C9620659;
-        Mon,  8 Jul 2019 04:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562559167;
-        bh=Z4vk7mVRT8EztIag0rUhGUeHxNVQ35Bv5DXVMPCwSCw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H0S+38m2yKXez1xDC8vjH36iNHJgAnJy1mYZjSaq+Bq53wkAX7PDFYGRp9ZGOOPJk
-         P6GLPc7NV0rk1M+ijQpA2s6UFvhBOqmq5DK10POK1AWxcbNKXeSHn1AlRIHi2HAO6I
-         DpoNEGhCbXNanQCq5OcO1u9U5i9XYzF8n9KWB1EY=
-Date:   Mon, 8 Jul 2019 09:39:31 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hscg58vyz9s3l;
+        Mon,  8 Jul 2019 14:17:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562559476;
+        bh=VieVy7UWn7o5F9dBWHqJRxeZCvRi9w06XTxRVgaaLSo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nCctON+2mEZ27IiocbsqLKyxSCENVjWSU9x7Tcp7egEBJWMEo+WVMLGy4Dptq5sAG
+         TMEqZd/cyEKNVqIoSYQFCIpSBV5QcAuZlNp1+cmxK73L6sodwH1lfSib76PjoJvjNh
+         hSgWdK/t0ZC19MZk0+sLV5eMvvT5L287XP3PjMXoRVcqq412MC3OGeIMNadzwjG8z2
+         DeIFTfUCZXf4WoAh3zCtEqKXRS4yCXaK1Xi0lKN6Q2OOxex0dOvV2HXKGw8jdi4GTn
+         QUxq06GYcN1LzvZpBr3OnHHg13XgWbyAaUBzgN7jhir6moezog7492chDqB/I+LTlN
+         +WuLel+ynccwQ==
+Date:   Mon, 8 Jul 2019 14:17:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Angelo Dureghello <angelo@sysam.it>
-Subject: Re: linux-next: build failure after merge of the slave-dma tree
-Message-ID: <20190708040931.GJ2911@vkoul-mobl>
-References: <20190704173108.0646eef8@canb.auug.org.au>
- <VE1PR04MB6638782ADA8BFB8A17BAF19D89F40@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20190706144324.GH2911@vkoul-mobl>
- <VE1PR04MB6638DAA60BE5910113D5DE0E89F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        David Howells <dhowells@redhat.com>,
+        Greg Hackmann <ghackmann@google.com>
+Subject: linux-next: manual merge of the drm tree with the vfs tree
+Message-ID: <20190708141754.64d32ebe@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638DAA60BE5910113D5DE0E89F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/u04U78ytM4vB=CX3N=GbpPy"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-07-19, 02:01, Robin Gong wrote:
-> On 06-07-19, 22:43, Vinod Koul <vkoul@kernel.org> wrote:
-> > > 	That's caused by 'of_irq_count' NOT export to global symbol, and I'm
-> > > curious why it has been here for so long since Zhangfei found it in
-> > > 2015.
-> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
-> > >
-> > hwork.kernel.org%2Fpatch%2F7404681%2F&amp;data=02%7C01%7Cyibin.gon
-> > g%40
-> > >
-> > nxp.com%7C6172242dfadd4f71c09a08d70220bf6f%7C686ea1d3bc2b4c6fa92
-> > cd99c5
-> > >
-> > c301635%7C0%7C0%7C636980211986259586&amp;sdata=L8v%2B1o5zfgIAS
-> > go4qr3pu
-> > > cQ%2Byox1irANsvRv5ZNLlLM%3D&amp;reserved=0
-> > 
-> > Yes this does not seem to be applied, perhaps Rob can explain why. But this was
-> > not exported how did you test it?
-> I had no such issue because I built in fsl-edma instead of Stephen's config with building module.
+--Sig_/u04U78ytM4vB=CX3N=GbpPy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-But you support it as a module, right? I am inclined to revert the patch
-now!
+Hi all,
 
--- 
-~Vinod
+Today's linux-next merge of the drm tree got a conflict in:
+
+  include/uapi/linux/magic.h
+
+between commit:
+
+  ea8157ab2ae5 ("zsfold: Convert zsfold to use the new mount API")
+
+from the vfs tree and commit:
+
+  ed63bb1d1f84 ("dma-buf: give each buffer a full-fledged inode")
+
+from the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/uapi/linux/magic.h
+index 85c1119d0b0b,665e18627f78..000000000000
+--- a/include/uapi/linux/magic.h
++++ b/include/uapi/linux/magic.h
+@@@ -91,6 -91,6 +91,7 @@@
+  #define UDF_SUPER_MAGIC		0x15013346
+  #define BALLOON_KVM_MAGIC	0x13661366
+  #define ZSMALLOC_MAGIC		0x58295829
+ +#define Z3FOLD_MAGIC		0x33
++ #define DMA_BUF_MAGIC		0x444d4142	/* "DMAB" */
+ =20
+  #endif /* __LINUX_MAGIC_H__ */
+
+--Sig_/u04U78ytM4vB=CX3N=GbpPy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0iw/IACgkQAVBC80lX
+0Gw5VAf8DDgJkQqJA0KHL5lzWfnr+HAflbMU2MMXJBSG3NsClNnp1GE5JDyRxueR
+HXZqxdX8X0pQ9bNsELol5xB75QB5cTedZdc29EFeTcB7EB95DSzzBHRBrL/ygvJg
+d43wZR3GJtnKPRiOajlXwfE13piL2v8iJzarCmsVwC8Qr3cOqScUxsk0xaCMVfxK
+fFLbdrW9J04vf+iS//JLLdvDboj1xtQIN2I/kWIklV06+QwxI1ThjX/PpMUocHbb
+DWZSW41v4wjv+IqHqElhL4ZyQRuPcIQVPGtDdGPTXndClaKfCD7P/WNyoCRNtycG
+l8NnwvFCccaiCnsaFDBrWHl0bOQihA==
+=8SNV
+-----END PGP SIGNATURE-----
+
+--Sig_/u04U78ytM4vB=CX3N=GbpPy--
