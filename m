@@ -2,205 +2,199 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EDAC606C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B079CC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C74121670
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDfQjIQO"
+	by mail.kernel.org (Postfix) with ESMTP id 8F917216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731752AbfGHOVJ (ORCPT
+        id S1731646AbfGHOYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:21:09 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37065 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728596AbfGHOVI (ORCPT
+        Mon, 8 Jul 2019 10:24:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40040 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725869AbfGHOYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:21:08 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 19so7707340pfa.4;
-        Mon, 08 Jul 2019 07:21:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=r0uciddUbrYB675XnBhSdwuvsW7gK3pQurz+1tUBwU0=;
-        b=pDfQjIQOg6v5OIMJZjtvSI4rQ9nm+0bSXGZMDSYhrzkdw2x0TLwVcl2Ak7v2UAtStb
-         63YtNfgc/puBCqx9VcKrq/y8FBxtoPvSZAdr42I3IM+3zkUdUvo62URIXyGH9J/Es2oO
-         RsPKgd0L1Rr9KBGmnlHCw587RqNCYZQS6eG7/uqI8KjjZGg3BllZcvdcBkJTBvUHqcfY
-         bQMUflu5lAbYvH8fYAwqG41vIIgeezU5BgQt1zN4obeGeiG4e4x8FIfgRxYfz4OnlYRG
-         yampkbdJmxp8KkkiENM0+i9pNDGaWv8B8PHthcXYxDrdumwQNBkLeNk56czeAhh7CvJy
-         0FYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=r0uciddUbrYB675XnBhSdwuvsW7gK3pQurz+1tUBwU0=;
-        b=QC2c+TmfCd1r0ASA8pWvjgnIVC393VuQ/8C5ND9Mz3XPX/MsllikWlF9SmRjgAWg48
-         l5647wGAkNyNFWAZkQEXCr4aRDN5yltJ/984Gsa1vc5dwDbMDoDXZtnG+NQbKzmEPA57
-         C9XIErG6q8KpksbVr864YumRziJHsRtpa5wgApBQWhCW/WrH2PxvQPYlkwJjuaYMd/5V
-         +vr/tBrU2G2bzua1D9fu4aqNf4DAbyTm+zGrlsk7n22mB9za50ZrCPp2FOnHHEdgiYnI
-         50xioU8Un4ABosjpTPnWjJDPUXQCVK8SW1XZhOaYl2e0upbdEFDKH0dNpAh0cQ3UhzaC
-         cwqw==
-X-Gm-Message-State: APjAAAWCJg61GPuykwQBukGuo0weHX+iSjzVO8AbM0elYQPD10Oe+yT0
-        nz9S05nisvjaHapeoyd3t6E=
-X-Google-Smtp-Source: APXvYqxMJMh0UDniT45bAPaZb98umldlVKp/e/8Kk08/6HPtJZwnxDa7zY6Vd+3nv/5wvv7EHZADAQ==
-X-Received: by 2002:a17:90a:22aa:: with SMTP id s39mr25953680pjc.39.1562595667805;
-        Mon, 08 Jul 2019 07:21:07 -0700 (PDT)
-Received: from [172.20.95.170] ([2620:10d:c090:180::1:c37b])
-        by smtp.gmail.com with ESMTPSA id p68sm29668205pfb.80.2019.07.08.07.21.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 07:21:07 -0700 (PDT)
-From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     "Ilya Maximets" <i.maximets@samsung.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
-        "Magnus Karlsson" <magnus.karlsson@intel.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf] xdp: fix potential deadlock on socket mutex
-Date:   Mon, 08 Jul 2019 07:21:05 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <0617EEA7-7883-4800-B1E2-5D59D8120C67@gmail.com>
-In-Reply-To: <20190708110344.23278-1-i.maximets@samsung.com>
-References: <CGME20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1@eucas1p1.samsung.com>
- <20190708110344.23278-1-i.maximets@samsung.com>
+        Mon, 8 Jul 2019 10:24:09 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68ENmOK148314
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 10:24:07 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tm4eqyjk8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:23:58 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Mon, 8 Jul 2019 15:21:55 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 8 Jul 2019 15:21:52 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x68ELpKF57540610
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jul 2019 14:21:51 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ABF5C52054;
+        Mon,  8 Jul 2019 14:21:51 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.85.86.140])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BFB005204F;
+        Mon,  8 Jul 2019 14:21:49 +0000 (GMT)
+X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 4/4] powerpc/64: reuse PPC32 static inline flush_dcache_range()
+In-Reply-To: <d6f628ffdeb9c7863da722a8f6ef2949e57bb360.1557824379.git.christophe.leroy@c-s.fr>
+References: <239d1c8f15b8bedc161a234f9f1a22a07160dbdf.1557824379.git.christophe.leroy@c-s.fr> <d6f628ffdeb9c7863da722a8f6ef2949e57bb360.1557824379.git.christophe.leroy@c-s.fr>
+Date:   Mon, 08 Jul 2019 19:51:46 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19070814-0028-0000-0000-00000381FCA9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070814-0029-0000-0000-000024420592
+Message-Id: <87y318d2th.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907080179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8 Jul 2019, at 4:03, Ilya Maximets wrote:
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-> There are 2 call chains:
+> This patch drops the assembly PPC64 version of flush_dcache_range()
+> and re-uses the PPC32 static inline version.
 >
->   a) xsk_bind --> xdp_umem_assign_dev
->   b) unregister_netdevice_queue --> xsk_notifier
+> With GCC 8.1, the following code is generated:
 >
-> with the following locking order:
+> void flush_test(unsigned long start, unsigned long stop)
+> {
+> 	flush_dcache_range(start, stop);
+> }
 >
->   a) xs->mutex --> rtnl_lock
->   b) rtnl_lock --> xdp.lock --> xs->mutex
+> 0000000000000130 <.flush_test>:
+>  130:	3d 22 00 00 	addis   r9,r2,0
+> 			132: R_PPC64_TOC16_HA	.data+0x8
+>  134:	81 09 00 00 	lwz     r8,0(r9)
+> 			136: R_PPC64_TOC16_LO	.data+0x8
+>  138:	3d 22 00 00 	addis   r9,r2,0
+> 			13a: R_PPC64_TOC16_HA	.data+0xc
+>  13c:	80 e9 00 00 	lwz     r7,0(r9)
+> 			13e: R_PPC64_TOC16_LO	.data+0xc
+>  140:	7d 48 00 d0 	neg     r10,r8
+>  144:	7d 43 18 38 	and     r3,r10,r3
+>  148:	7c 00 04 ac 	hwsync
+>  14c:	4c 00 01 2c 	isync
+>  150:	39 28 ff ff 	addi    r9,r8,-1
+>  154:	7c 89 22 14 	add     r4,r9,r4
+>  158:	7c 83 20 50 	subf    r4,r3,r4
+>  15c:	7c 89 3c 37 	srd.    r9,r4,r7
+>  160:	41 82 00 1c 	beq     17c <.flush_test+0x4c>
+>  164:	7d 29 03 a6 	mtctr   r9
+>  168:	60 00 00 00 	nop
+>  16c:	60 00 00 00 	nop
+>  170:	7c 00 18 ac 	dcbf    0,r3
+>  174:	7c 63 42 14 	add     r3,r3,r8
+>  178:	42 00 ff f8 	bdnz    170 <.flush_test+0x40>
+>  17c:	7c 00 04 ac 	hwsync
+>  180:	4c 00 01 2c 	isync
+>  184:	4e 80 00 20 	blr
+>  188:	60 00 00 00 	nop
+>  18c:	60 00 00 00 	nop
 >
-> Different order of taking 'xs->mutex' and 'rtnl_lock' could produce a
-> deadlock here. Fix that by moving the 'rtnl_lock' before 'xs->lock' in
-> the bind call chain (a).
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/include/asm/cache.h      | 10 ++++++++++
+>  arch/powerpc/include/asm/cacheflush.h | 14 ++++++++------
+>  arch/powerpc/kernel/misc_64.S         | 29 -----------------------------
+>  3 files changed, 18 insertions(+), 35 deletions(-)
 >
-> Reported-by: syzbot+bf64ec93de836d7f4c2c@syzkaller.appspotmail.com
-> Fixes: 455302d1c9ae ("xdp: fix hang while unregistering device bound 
-> to xdp socket")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-
-Thanks, Ilya!
-
-I think in the long run the locking needs to be revisited,
-but this should fix the deadlock for now.
-
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-
-
-
-> This patch is a fix for patch that is not yet in mainline, but
-> already in 'net' tree. I'm not sure what is the correct process
-> for applying such fixes.
->
->  net/xdp/xdp_umem.c | 16 ++++++----------
->  net/xdp/xsk.c      |  2 ++
->  2 files changed, 8 insertions(+), 10 deletions(-)
->
-> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-> index 20c91f02d3d8..83de74ca729a 100644
-> --- a/net/xdp/xdp_umem.c
-> +++ b/net/xdp/xdp_umem.c
-> @@ -87,21 +87,20 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, 
-> struct net_device *dev,
->  	struct netdev_bpf bpf;
->  	int err = 0;
->
-> +	ASSERT_RTNL();
+> diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
+> index 0009a0a82e86..45e3137ccd71 100644
+> --- a/arch/powerpc/include/asm/cache.h
+> +++ b/arch/powerpc/include/asm/cache.h
+> @@ -54,6 +54,16 @@ struct ppc64_caches {
+>  };
+>  
+>  extern struct ppc64_caches ppc64_caches;
 > +
->  	force_zc = flags & XDP_ZEROCOPY;
->  	force_copy = flags & XDP_COPY;
->
->  	if (force_zc && force_copy)
->  		return -EINVAL;
->
-> -	rtnl_lock();
-> -	if (xdp_get_umem_from_qid(dev, queue_id)) {
-> -		err = -EBUSY;
-> -		goto out_rtnl_unlock;
-> -	}
-> +	if (xdp_get_umem_from_qid(dev, queue_id))
-> +		return -EBUSY;
->
->  	err = xdp_reg_umem_at_qid(dev, umem, queue_id);
->  	if (err)
-> -		goto out_rtnl_unlock;
-> +		return err;
->
->  	umem->dev = dev;
->  	umem->queue_id = queue_id;
-> @@ -110,7 +109,7 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, 
-> struct net_device *dev,
->
->  	if (force_copy)
->  		/* For copy-mode, we are done. */
-> -		goto out_rtnl_unlock;
-> +		return 0;
->
->  	if (!dev->netdev_ops->ndo_bpf ||
->  	    !dev->netdev_ops->ndo_xsk_async_xmit) {
-> @@ -125,7 +124,6 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, 
-> struct net_device *dev,
->  	err = dev->netdev_ops->ndo_bpf(dev, &bpf);
->  	if (err)
->  		goto err_unreg_umem;
-> -	rtnl_unlock();
->
->  	umem->zc = true;
->  	return 0;
-> @@ -135,8 +133,6 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, 
-> struct net_device *dev,
->  		err = 0; /* fallback to copy mode */
->  	if (err)
->  		xdp_clear_umem_at_qid(dev, queue_id);
-> -out_rtnl_unlock:
-> -	rtnl_unlock();
->  	return err;
+> +static inline u32 l1_cache_shift(void)
+> +{
+> +	return ppc64_caches.l1d.log_block_size;
+> +}
+> +
+> +static inline u32 l1_cache_bytes(void)
+> +{
+> +	return ppc64_caches.l1d.block_size;
+> +}
+>  #else
+>  static inline u32 l1_cache_shift(void)
+>  {
+> diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+> index d405f18441cd..3cd7ce3dec8b 100644
+> --- a/arch/powerpc/include/asm/cacheflush.h
+> +++ b/arch/powerpc/include/asm/cacheflush.h
+> @@ -57,7 +57,6 @@ static inline void __flush_dcache_icache_phys(unsigned long physaddr)
 >  }
->
-> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> index 703cf5ea448b..2aa6072a3e55 100644
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -416,6 +416,7 @@ static int xsk_bind(struct socket *sock, struct 
-> sockaddr *addr, int addr_len)
->  	if (flags & ~(XDP_SHARED_UMEM | XDP_COPY | XDP_ZEROCOPY))
->  		return -EINVAL;
->
-> +	rtnl_lock();
->  	mutex_lock(&xs->mutex);
->  	if (xs->state != XSK_READY) {
->  		err = -EBUSY;
-> @@ -501,6 +502,7 @@ static int xsk_bind(struct socket *sock, struct 
-> sockaddr *addr, int addr_len)
->  		xs->state = XSK_BOUND;
->  out_release:
->  	mutex_unlock(&xs->mutex);
-> +	rtnl_unlock();
->  	return err;
+>  #endif
+>  
+> -#ifdef CONFIG_PPC32
+>  /*
+>   * Write any modified data cache blocks out to memory and invalidate them.
+>   * Does not invalidate the corresponding instruction cache blocks.
+> @@ -70,9 +69,17 @@ static inline void flush_dcache_range(unsigned long start, unsigned long stop)
+>  	unsigned long size = stop - (unsigned long)addr + (bytes - 1);
+>  	unsigned long i;
+>  
+> +	if (IS_ENABLED(CONFIG_PPC64)) {
+> +		mb();	/* sync */
+> +		isync();
+> +	}
+> +
+>  	for (i = 0; i < size >> shift; i++, addr += bytes)
+>  		dcbf(addr);
+>  	mb();	/* sync */
+> +
+> +	if (IS_ENABLED(CONFIG_PPC64))
+> +		isync();
 >  }
->
-> -- 
-> 2.17.1
+
+
+Was checking with Michael about why we need that extra isync. Michael 
+pointed this came via 
+
+https://github.com/mpe/linux-fullhistory/commit/faa5ee3743ff9b6df9f9a03600e34fdae596cfb2#diff-67c7ffa8e420c7d4206cae4a9e888e14
+
+for 970 which doesn't have coherent icache. So possibly isync there is
+to flush the prefetch instructions? But even so we would need an icbi
+there before that isync.
+
+So overall wondering why we need that extra barriers there. 
+
+>  
+>  /*
+> @@ -112,11 +119,6 @@ static inline void invalidate_dcache_range(unsigned long start,
+>  	mb();	/* sync */
+>  }
+>  
+
+-aneesh
+
