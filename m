@@ -2,51 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A463C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F79C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDAD9214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED61216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599413;
-	bh=8CW4HcZ2DSVrqyxKi1Wc3Cz091WSc5eEel58Rm3wUFU=;
+	s=default; t=1562599427;
+	bh=XQyksg6BQprAUNPQBRwXdMzPOwjy+Jls0OH6AIq2J9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GxO2px4XP94rFwtEpmyfZh7jA4UsG27M+bmEszbFkjCbXIyiPnp8WSGEB1EK+GYQl
-	 yA2RWEaGH9GmkIcK+yjIgrJgHDODwxR76K6fx9eawM9dcao/9/jscyJlcng4gmdYFi
-	 aobnbbirKqq3kclLSke/YItmcwXwH/JpuKOkxuSI=
+	b=WxN7y0HZKpoL3m0GKmKfcEb2VZJA0XJ0lefmZiHqEw+uX0zVk8FrIy5IwRP8jrq5e
+	 uQrQWUfx4AwZtDhAdFJ/V2IRBD7HNt79aHxa7i4VktamppAK5dzE/avmbA/+xhdy/q
+	 GWo1Ovhi8rGqcFctUYA5x3ZJt17NLfN5AZErimOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388220AbfGHPXc (ORCPT
+        id S2388245AbfGHPXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:23:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50606 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388199AbfGHPXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:23:30 -0400
+        id S1729120AbfGHPXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:23:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0815204EC;
-        Mon,  8 Jul 2019 15:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A46214C6;
+        Mon,  8 Jul 2019 15:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599409;
-        bh=8CW4HcZ2DSVrqyxKi1Wc3Cz091WSc5eEel58Rm3wUFU=;
+        s=default; t=1562599415;
+        bh=XQyksg6BQprAUNPQBRwXdMzPOwjy+Jls0OH6AIq2J9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qK+K+xLiTykKGmRmOwJm1DmwuljjDkwPmZd5/he4OQXuS8IXUMybxFF3jBZdR4bOE
-         k/mUrTdiMlYWbiSeV4PqV4X+AnU/bR7P7GEdJ4wyvuad2rPCUzXkydWqyrnOUiaDRK
-         yEXOmu8idZ2Ux3dhbCHc1NyM4E2Rkup4V9EqPdIY=
+        b=KTgMyMm4GkzU0kKGG8qEuamUOVPVJ1JBT0EUCjJnzNKFEayqyu5pudG9YN23zrart
+         jdcgzYzX2B6p68/KJlHFuXtzeTequ89eh3Scufu+XHqTqRRIX6xpDHOK/sdf8TX/Tz
+         ISgvRd9UKIVeZGoLMOHzcvaeY2VceOG0jj0c9yF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: [PATCH 4.9 095/102] btrfs: Ensure replaced device doesnt have pending chunk allocation
-Date:   Mon,  8 Jul 2019 17:13:28 +0200
-Message-Id: <20190708150531.396008385@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 087/102] crypto: user - prevent operating on larval algorithms
+Date:   Mon,  8 Jul 2019 17:13:20 +0200
+Message-Id: <20190708150530.971650838@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -59,122 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit debd1c065d2037919a7da67baf55cc683fee09f0 upstream.
+commit 21d4120ec6f5b5992b01b96ac484701163917b63 upstream.
 
-Recent FITRIM work, namely bbbf7243d62d ("btrfs: combine device update
-operations during transaction commit") combined the way certain
-operations are recoded in a transaction. As a result an ASSERT was added
-in dev_replace_finish to ensure the new code works correctly.
-Unfortunately I got reports that it's possible to trigger the assert,
-meaning that during a device replace it's possible to have an unfinished
-chunk allocation on the source device.
+Michal Suchanek reported [1] that running the pcrypt_aead01 test from
+LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
+alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
+The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
 
-This is supposed to be prevented by the fact that a transaction is
-committed before finishing the replace oepration and alter acquiring the
-chunk mutex. This is not sufficient since by the time the transaction is
-committed and the chunk mutex acquired it's possible to allocate a chunk
-depending on the workload being executed on the replaced device. This
-bug has been present ever since device replace was introduced but there
-was never code which checks for it.
+The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
+unregister isn't a real registered algorithm, but rather is a "test
+larval", which is a special "algorithm" added to the algorithms list
+while the real algorithm is still being tested.  Larvals don't have
+initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
+doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
+to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
 
-The correct way to fix is to ensure that there is no pending device
-modification operation when the chunk mutex is acquire and if there is
-repeat transaction commit. Unfortunately it's not possible to just
-exclude the source device from btrfs_fs_devices::dev_alloc_list since
-this causes ENOSPC to be hit in transaction commit.
+Everything else in the "crypto user configuration" API has this same bug
+too, i.e. it inappropriately allows operating on larval algorithms
+(though it doesn't look like the other cases can cause a crash).
 
-Fixing that in another way would need to add special cases to handle the
-last writes and forbid new ones. The looped transaction fix is more
-obvious, and can be easily backported. The runtime of dev-replace is
-long so there's no noticeable delay caused by that.
+Fix this by making crypto_alg_match() exclude larval algorithms.
 
-Reported-by: David Sterba <dsterba@suse.com>
-Fixes: 391cd9df81ac ("Btrfs: fix unprotected alloc list insertion during the finishing procedure of replace")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+[1] https://lkml.kernel.org/r/20190625071624.27039-1-msuchanek@suse.de
+[2] https://github.com/linux-test-project/ltp/blob/20190517/testcases/kernel/crypto/pcrypt_aead01.c
+
+Reported-by: Michal Suchanek <msuchanek@suse.de>
+Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
+Cc: <stable@vger.kernel.org> # v3.2+
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/dev-replace.c |   29 +++++++++++++++++++----------
- fs/btrfs/volumes.c     |    2 ++
- fs/btrfs/volumes.h     |    5 +++++
- 3 files changed, 26 insertions(+), 10 deletions(-)
+ crypto/crypto_user.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/btrfs/dev-replace.c
-+++ b/fs/btrfs/dev-replace.c
-@@ -511,18 +511,27 @@ static int btrfs_dev_replace_finishing(s
- 	}
- 	btrfs_wait_ordered_roots(root->fs_info, -1, 0, (u64)-1);
+--- a/crypto/crypto_user.c
++++ b/crypto/crypto_user.c
+@@ -55,6 +55,9 @@ static struct crypto_alg *crypto_alg_mat
+ 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
+ 		int match = 0;
  
--	trans = btrfs_start_transaction(root, 0);
--	if (IS_ERR(trans)) {
--		mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
--		return PTR_ERR(trans);
-+	while (1) {
-+		trans = btrfs_start_transaction(root, 0);
-+		if (IS_ERR(trans)) {
-+			mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
-+			return PTR_ERR(trans);
-+		}
-+		ret = btrfs_commit_transaction(trans, root);
-+		WARN_ON(ret);
-+		mutex_lock(&uuid_mutex);
-+		/* keep away write_all_supers() during the finishing procedure */
-+		mutex_lock(&root->fs_info->fs_devices->device_list_mutex);
-+		mutex_lock(&root->fs_info->chunk_mutex);
-+		if (src_device->has_pending_chunks) {
-+			mutex_unlock(&root->fs_info->chunk_mutex);
-+			mutex_unlock(&root->fs_info->fs_devices->device_list_mutex);
-+			mutex_unlock(&uuid_mutex);
-+		} else {
-+			break;
-+		}
- 	}
--	ret = btrfs_commit_transaction(trans, root);
--	WARN_ON(ret);
- 
--	mutex_lock(&uuid_mutex);
--	/* keep away write_all_supers() during the finishing procedure */
--	mutex_lock(&root->fs_info->fs_devices->device_list_mutex);
--	mutex_lock(&root->fs_info->chunk_mutex);
- 	btrfs_dev_replace_lock(dev_replace, 1);
- 	dev_replace->replace_state =
- 		scrub_ret ? BTRFS_IOCTL_DEV_REPLACE_STATE_CANCELED
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4876,6 +4876,7 @@ static int __btrfs_alloc_chunk(struct bt
- 	for (i = 0; i < map->num_stripes; i++) {
- 		num_bytes = map->stripes[i].dev->bytes_used + stripe_size;
- 		btrfs_device_set_bytes_used(map->stripes[i].dev, num_bytes);
-+		map->stripes[i].dev->has_pending_chunks = true;
- 	}
- 
- 	spin_lock(&extent_root->fs_info->free_chunk_lock);
-@@ -7250,6 +7251,7 @@ void btrfs_update_commit_device_bytes_us
- 		for (i = 0; i < map->num_stripes; i++) {
- 			dev = map->stripes[i].dev;
- 			dev->commit_bytes_used = dev->bytes_used;
-+			dev->has_pending_chunks = false;
- 		}
- 	}
- 	unlock_chunks(root);
---- a/fs/btrfs/volumes.h
-+++ b/fs/btrfs/volumes.h
-@@ -62,6 +62,11 @@ struct btrfs_device {
- 
- 	spinlock_t io_lock ____cacheline_aligned;
- 	int running_pending;
-+	/* When true means this device has pending chunk alloc in
-+	 * current transaction. Protected by chunk_mutex.
-+	 */
-+	bool has_pending_chunks;
++		if (crypto_is_larval(q))
++			continue;
 +
- 	/* regular prio bios */
- 	struct btrfs_pending_bios pending_bios;
- 	/* WRITE_SYNC bios */
+ 		if ((q->cra_flags ^ p->cru_type) & p->cru_mask)
+ 			continue;
+ 
 
 
