@@ -2,56 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D5EC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20672C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9782171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1DB5216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599037;
-	bh=ck8dNozvVLjcBbZbq+KwIKDsepkypfUgtNrS12l/Qss=;
+	s=default; t=1562599041;
+	bh=fHVNVZ/yi3kAe7zp1/zq7MgpT0N4EdP/+nIB0OHB9BY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RfAvpjMIFtCnlO86YdFzfAxBG1QxAavvdVEdl8ZRPSWGNvAlspT3nG9tpPgqdQhUh
-	 aheKMa1V39bq+Ryn2Ml1oUr6i3bRnJaOd3V7R7Pn26FA0396D9bfhelfHvZViVKbZg
-	 67YDjyNtJVRIgyIL2QxMGGG5iDLGwJtpzkObm+Fo=
+	b=SxAEHIF+LOCdZHA9THNeYEDSpZ+LnSfqApTqV3Nx1MX650IVTvcZ5D7lMZJPx76ol
+	 27v856gBSRt5MBaasHIpJkcA13NjmsaM+AgfndTtHx653PdzLCS/p9AnzPRG2zVnWM
+	 EZQ3wNqg592dzewOcXEmW4Jfz2o2nx/2g2MVrlyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732764AbfGHPRL (ORCPT
+        id S1732789AbfGHPRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40374 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:17:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732754AbfGHPRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:17:08 -0400
+        id S1732777AbfGHPRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:17:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DB1C2171F;
-        Mon,  8 Jul 2019 15:17:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3862E2166E;
+        Mon,  8 Jul 2019 15:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599027;
-        bh=ck8dNozvVLjcBbZbq+KwIKDsepkypfUgtNrS12l/Qss=;
+        s=default; t=1562599033;
+        bh=fHVNVZ/yi3kAe7zp1/zq7MgpT0N4EdP/+nIB0OHB9BY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bMSHsqj9ziay6KkpBkAYrTvQkx12ympsP7N4+8xQ8+oXHLkxFJGdr4q23b4vTlbtX
-         pRQMU4kNW11FCpI0AgyFSIxUHWDFLcEZKBTrZXbvSmNJ0sc0E7HpxqVax0UqsB166M
-         TuD0ZlBsHNJFVlR1rAMlZB/PocgXjrgsKZSfGyGA=
+        b=BrRfn3aUa45dzJRVHSqsOwEQL+K+J8H2dzu14Qx+K/dkNA70zdsUUKp/6NOmTxZlB
+         g/bCFJDIk5GztoK0HtkzdEHFM+S1bLgJ1+MMf/RQxpPsHPiG1OUghmm4J8Pbp4XA2H
+         RQgj623eUujfebjH9hMHw/yCYkiBeoEdBL1fY/sY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Matt Perricone <matt.perricone@microsemi.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 54/73] scsi: hpsa: correct ioaccel2 chaining
-Date:   Mon,  8 Jul 2019 17:13:04 +0200
-Message-Id: <20190708150524.206587765@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.4 29/73] perf ui helpline: Use strlcpy() as a shorter form of strncpy() + explicit set nul
+Date:   Mon,  8 Jul 2019 17:12:39 +0200
+Message-Id: <20190708150522.673884057@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -64,64 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 625d7d3518875c4d303c652a198feaa13d9f52d9 ]
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_LAST_SG for
-  the last s/g element.
+commit 4d0f16d059ddb91424480d88473f7392f24aebdc upstream.
 
-- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_CHAIN when
-  chaining.
+The strncpy() function may leave the destination string buffer
+unterminated, better use strlcpy() that we have a __weak fallback
+implementation for systems without it.
 
-Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Reviewed-by: Matt Perricone <matt.perricone@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In this case we are actually setting the null byte at the right place,
+but since we pass the buffer size as the limit to strncpy() and not
+it minus one, gcc ends up warning us about that, see below. So, lets
+just switch to the shorter form provided by strlcpy().
+
+This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
+
+  ui/tui/helpline.c: In function 'tui_helpline__push':
+  ui/tui/helpline.c:27:2: error: 'strncpy' specified bound 512 equals destination size [-Werror=stringop-truncation]
+    strncpy(ui_helpline__current, msg, sz)[sz - 1] = '\0';
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  cc1: all warnings being treated as errors
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: e6e904687949 ("perf ui: Introduce struct ui_helpline")
+Link: https://lkml.kernel.org/n/tip-d1wz0hjjsh19xbalw69qpytj@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/hpsa.c     | 7 ++++++-
- drivers/scsi/hpsa_cmd.h | 1 +
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/ui/tui/helpline.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 910b795fc5eb..e0952882e132 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -4562,7 +4562,7 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
- 			curr_sg->reserved[0] = 0;
- 			curr_sg->reserved[1] = 0;
- 			curr_sg->reserved[2] = 0;
--			curr_sg->chain_indicator = 0x80;
-+			curr_sg->chain_indicator = IOACCEL2_CHAIN;
+--- a/tools/perf/ui/tui/helpline.c
++++ b/tools/perf/ui/tui/helpline.c
+@@ -23,7 +23,7 @@ static void tui_helpline__push(const cha
+ 	SLsmg_set_color(0);
+ 	SLsmg_write_nstring((char *)msg, SLtt_Screen_Cols);
+ 	SLsmg_refresh();
+-	strncpy(ui_helpline__current, msg, sz)[sz - 1] = '\0';
++	strlcpy(ui_helpline__current, msg, sz);
+ }
  
- 			curr_sg = h->ioaccel2_cmd_sg_list[c->cmdindex];
- 		}
-@@ -4579,6 +4579,11 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
- 			curr_sg++;
- 		}
- 
-+		/*
-+		 * Set the last s/g element bit
-+		 */
-+		(curr_sg - 1)->chain_indicator = IOACCEL2_LAST_SG;
-+
- 		switch (cmd->sc_data_direction) {
- 		case DMA_TO_DEVICE:
- 			cp->direction &= ~IOACCEL2_DIRECTION_MASK;
-diff --git a/drivers/scsi/hpsa_cmd.h b/drivers/scsi/hpsa_cmd.h
-index 26488e2a7f02..7ffde12d57d4 100644
---- a/drivers/scsi/hpsa_cmd.h
-+++ b/drivers/scsi/hpsa_cmd.h
-@@ -513,6 +513,7 @@ struct ioaccel2_sg_element {
- 	u8 reserved[3];
- 	u8 chain_indicator;
- #define IOACCEL2_CHAIN 0x80
-+#define IOACCEL2_LAST_SG 0x40
- };
- 
- /*
--- 
-2.20.1
-
+ static int tui_helpline__show(const char *format, va_list ap)
 
 
