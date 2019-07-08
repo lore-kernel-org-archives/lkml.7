@@ -2,79 +2,102 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3997C606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D01FC606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B6D2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8072063F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbfGHKml (ORCPT
+        id S1730158AbfGHKnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 06:42:41 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2177 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725836AbfGHKml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 06:42:41 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 213007686DB78DAE8ABD;
-        Mon,  8 Jul 2019 18:42:39 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.120) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 8 Jul 2019
- 18:42:26 +0800
-Subject: Re: [PATCH] time: Validate the usec before covert to nsec in
- do_adjtimex
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     <john.stultz@linaro.org>, <sboyd@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1562572504-142115-1-git-send-email-zhangxiaoxu5@huawei.com>
- <alpine.DEB.2.21.1907081124000.3648@nanos.tec.linutronix.de>
-From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
-Message-ID: <2c4e8e8d-6e90-0d09-cf28-45330eb598ce@huawei.com>
-Date:   Mon, 8 Jul 2019 18:42:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Jul 2019 06:43:39 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:44657 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfGHKni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 06:43:38 -0400
+Received: from [192.168.1.110] ([95.117.164.184]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N8nrc-1iXbIp3f9y-015u8i; Mon, 08 Jul 2019 12:43:25 +0200
+Subject: Re: [PATCH] platform/x86: Fix PCENGINES_APU2 Kconfig warning
+To:     YueHaibing <yuehaibing@huawei.com>, dvhart@infradead.org,
+        andy@infradead.org, linus.walleij@linaro.org,
+        rdunlap@infradead.org, info@metux.net
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20190704062725.50400-1-yuehaibing@huawei.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <603661e6-8694-4787-6cee-61cc6ba61fc2@metux.net>
+Date:   Mon, 8 Jul 2019 12:43:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907081124000.3648@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.189.120]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190704062725.50400-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:k1ASFLMCv+5OWSYUYYtaraIfKomT4nTCcaVf4oT+GAFdybzzBGA
+ PMb83RA+PAxxOKE0M8vADo5wuHV1V/hOEXU5l+aZkjda3H4wt8MadTRAVhSMVQqlfXX5wXE
+ a+v+66cBXAt2x41H8wI8Yro2gERQGLi6T6V8YQd1IX6QBHvD5CMJLd4BOj3YoWuUstGPf/F
+ 1kAO0j4X3EQCrgCNrqGrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Pkz+poKC/9g=:RQzTbx4w0e9jQQHrKZwyOK
+ S+jIiWDIfD8snEe3ikdQ3qPoVvo4Xypssgid430xCNfykbAuuGXrrFcO5kUtNsBAAj/VWPtT3
+ oasB7iSchd8DoF9OiKKa8LTIILFXQMIgYxrPutmXaECL4np2FESPe0ta7egNgf9Rk4iXBXvzE
+ ktl9nXyExrYYIu/0O1b1+72zn8gO6hR54yMUImSBoCfu+H9IZ7Ufx3JZAoYXHew739kjhlOil
+ ow5hccagNxFoVO3ekxB14bblysTE9MRpsr4uQrYsc3QqQ6Ho4staeQbG4RPyKK0+5AoyZnkGi
+ KKhD2162g7E/59YB/OVpgkuaftPmB0r4H15dgywkQU2uEvtOe2BrH1sbjUbz6AdxXpZxky8XR
+ WBNX+F47SHc+iIS3hes2fzMNkMTwGHM3XAi2yXm88wd2jyh976R4ultLTnQUlGz521i/KJQL6
+ Cr/iGv9LTbGNE8n0H9tlD1F8FjqUtQ2s/pNDfQPruSVLHlKrED/5+npsaKbEzAWI5yD2866OQ
+ m7XNLTZtdQ8MjerXFWgZ2sq1x4A8eeaiwWAIXQgMHfdoia12j9ef2eHAw5A9UxD06q0pI3Chz
+ ZQs8qRexnrY+AUJVoPp+3wQsI952+HtfPiLl8SVCAnPvMq0jb3F5bsBibQ0J2gkEwmY+c+bGd
+ cwNpe5SdjArjOIKbBAKCFHTNRi9hCI+3CWUcrXBzELjEZL4bx/q3TveG9GlaS4P6g0dNnRjOB
+ C1mcgoTbxzFeRkAG4kMamxuzgrM4jkc/QiyB31aZScT485Fj8S8CVAKtjw0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04.07.19 08:27, YueHaibing wrote:
+> Fix Kconfig warning for PCENGINES_APU2 symbol:
+> 
+> WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
+>   Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
+>   Selected by [y]:
+>   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+> 
+> WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
+>   Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
+>   Selected by [y]:
+>   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+> 
+> Add GPIOLIB dependency to fix it.
+
+hmm, I'm not really happy w/ the kernel config system at that point:
+
+If the select on the gpio driver would just subsequently enable gpiolib,
+everything would be fine. But that contradicts how subsystems are
+currently handled - you first have to enable gpio subsystem before
+choosing anything that depends on it :(
+
+Could it make sense to refactor gpiolib in a way that pieces directly
+needed by gpio consumers or drivers (hmm, perhaps have separate
+dependency symbols for consumer vs driver) can be selected directly,
+even if the big gpio subsystem knob is disabled ? (but the other things
+like userland interfaces would remain disabled) ?
+
+OTOH, for this particular patch:
+
+Ack-By: Enrico Weigelt <info@metux.net>
 
 
-ÔÚ 2019/7/8 17:24, Thomas Gleixner Ð´µÀ:
-> On Mon, 8 Jul 2019, ZhangXiaoxu wrote:
-> 
->> When covert the usec to nsec, it will multiple 1000, it maybe
->> overflow and lead an undefined behavior.
->>
->> For example, users may input an negative tv_usec values when
->> call adjtimex syscall, then multiple 1000 maybe overflow it
->> to a positive and legal number.
->>
->> So, we should validate the usec before coverted it to nsec.
-> 
-> That's correct, but the actuall inject function wants to keep the sanity
-> check,
-timekeeping_inject_offset is called only by timekeeping_warp_clock and do_adjtimex.
-The do_adjtimex already validate it, and timekeeping_warp_clock is set tv_nsec=0.
-We keep the sanity check is for some other maybe use this function?
-I had send a v2 to keep the sanity check in timekeeping_inject_offset.
+--mtx
 
-Thanks.
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-> .
-> 
-
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
