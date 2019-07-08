@@ -2,196 +2,268 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF09C606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DDAC606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A329217D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0CC2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gBmEy4V1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BkK5QJIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404084AbfGHTZk (ORCPT
+        id S2404181AbfGHT0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:25:40 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46634 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391692AbfGHTZQ (ORCPT
+        Mon, 8 Jul 2019 15:26:18 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34162 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404164AbfGHT0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:25:16 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c73so3406031pfb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:25:16 -0700 (PDT)
+        Mon, 8 Jul 2019 15:26:16 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so3469141pfo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gsMzjspqX3PBUZb1UD3dZ0p1pkEN9yJx+z3bVdge6HE=;
-        b=gBmEy4V1hNpseoZ1vK24G6r5sQQc1WuGEApGLyKkyTNhv0IB3fQZ75F/tS+bVGBQqV
-         CqgCf+0auXNgyWW7hepUDvcm6z98KEU0Hlp07b0I/8EzahCCwsVZo3aMY8NK/M5CwB46
-         IV6J4WwKYIdMJZnbU0ngbzbYBrt88Bfb/nEYc=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HxfZuw01tuRQlI3u5x7pWAP9zYOxJGJcmWPvFAPk6as=;
+        b=BkK5QJIKT0J2d2OkK0pM+sLi0kUL/QZVjVWzmRavRYnqNFJ/hkUf18htyGDJnHzTGc
+         eAKYdfsit4sS+aYHPLTCt9MUtCLY+x3SsQoLoN7Gdv25yzh/++ugk+Z4V5/3cTfcjRKh
+         NVRZgCLjgf2K0MYUrt5CcHKsdAt7j2Z4eDkMpuxNKFsewo4rdOgWIYkkNp9+GLVV4Jk4
+         O7otQyEmxC22qw9ITvLwRU/y1L0IzZp/i0Xb9vCHxi2qFiks+t2tECGeIUrR6hMyqdWU
+         mZcQGaijGsyDT7WXQqrZmK+zzDwIb/5JD5nYfqcydGXYIfEiycdQD7BmhuRSmo0kmfZc
+         t7ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gsMzjspqX3PBUZb1UD3dZ0p1pkEN9yJx+z3bVdge6HE=;
-        b=IagXdsPjmy3Ha24Kg1xLmeFPfnOIlVMrIy9lUY0rnUkwrpAbUB7Tjh3QgHOTYTF9k+
-         i0gG70woiIQr8OCMk9RDlebi9cggSFUaOArExgi2+cYIB/ftSArbNjDB4y5MDs4xfFEX
-         dTQy3MN/Ll6EP2v/w8hgxQDaqV6yJBkAX0csh+CgX/jC4XGk+lOqwI15QCQ2wyRCqgI6
-         ur68+Xxt3nOQNPRiHBSXdka7MyH+Nh7Jw+92UpOBkdWQA+1YfWMmfR3kxtkD8f9FUMM9
-         cDVVcep39i7rCDU8NB3BE/T7VkaswHao0md+jiJu8RqBJv2JyhmEfxqbLp7IUCwN1zBw
-         ir0Q==
-X-Gm-Message-State: APjAAAV/f4Xr68fXbClGsrEMy3mM6Dl7bFNMZS0I4UhRM7JqpiUcH61X
-        53WMMC4Zu5wgHtTpibrJIGoqiw==
-X-Google-Smtp-Source: APXvYqylcRq50zbSzhERqOYxz7ym2pNAUb3Qod4Wqyjxbm7tazdrmWPBYtrJXN3TGqm1Hyv4LvCP5A==
-X-Received: by 2002:a17:90a:71ca:: with SMTP id m10mr28247509pjs.27.1562613916243;
-        Mon, 08 Jul 2019 12:25:16 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id p13sm351144pjb.30.2019.07.08.12.25.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 12:25:15 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v3 4/7] net: phy: realtek: Add helpers for accessing RTL8211E extension pages
-Date:   Mon,  8 Jul 2019 12:24:56 -0700
-Message-Id: <20190708192459.187984-5-mka@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190708192459.187984-1-mka@chromium.org>
-References: <20190708192459.187984-1-mka@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HxfZuw01tuRQlI3u5x7pWAP9zYOxJGJcmWPvFAPk6as=;
+        b=V+bPsZDe7kAfLFxYkOJPkOtpPx2ES5HiGy5vBeUEa1sDuZkwlxFDNY1k2NNQlpXwFC
+         JiJigNRI3CscScJp3Bu09+1MkR7ad/w0iCY3Eann3NKraFawj4H1chaAVFUGimkrNqH3
+         MlIgMJ7PRH8L1ouXwQxJnUy85jLw6cqpu8uh2857Z7YyVZIP/dha0Ql3udmvsd3kXyuN
+         m2PGm07L44tjD+9bxxoKpbbIkw2DbyBluH2JhLUMZFOZjb9yi/om9v5FwdEXdn52eegJ
+         AdlX7NfyDpScw4fRhnjiKUYVz7W4x2Vn5R8sseyBEOtHnhtziubp2WvCXwJIhuDNn4cG
+         xT1g==
+X-Gm-Message-State: APjAAAV4hKhZ/JYkZ0qzsBkEYWTkIbHwZhcDs80VSZgSJevAieVnM9g8
+        +5wwLTPNGH3RrTsMbOc+0jKLqg==
+X-Google-Smtp-Source: APXvYqw+pAcqr/xA1niNx2ZJZRMX6HHEsJq5NJaAqjp7dEa1Zr3sTl6gVBuGUSL7HUilkdcVkKIlNg==
+X-Received: by 2002:a63:18d:: with SMTP id 135mr25833845pgb.62.1562613975220;
+        Mon, 08 Jul 2019 12:26:15 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f88sm309324pjg.5.2019.07.08.12.26.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 12:26:14 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 12:26:12 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org,
+        evgreen@chromium.org, daidavid1@codeaurora.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: interconnect: Add Qualcomm QCS404 DT
+ bindings
+Message-ID: <20190708192612.GE30636@minitux>
+References: <20190613151323.10850-1-georgi.djakov@linaro.org>
+ <20190613151323.10850-2-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613151323.10850-2-georgi.djakov@linaro.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RTL8211E has extension pages, which can be accessed after
-selecting a page through a custom method. Add a function to
-modify bits in a register of an extension page and a helper for
-selecting an ext page. Use rtl8211e_modify_ext_paged() in
-rtl8211e_config_init() instead of doing things 'manually'.
+On Thu 13 Jun 08:13 PDT 2019, Georgi Djakov wrote:
 
-rtl8211e_modify_ext_paged() is inspired by its counterpart
-phy_modify_paged().
+> The Qualcomm QCS404 platform has several buses that could be controlled
+> and tuned according to the bandwidth demand.
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> 
+> v4:
+> - Add the DT header into this patch.
+> - Pick Bjorn's r-b.
+> 
+> v3:
+> - Add a reg property and move the interconnect nodes under the "soc" node.
+> 
+> v2:
+> - No changes.
+> 
+>  .../bindings/interconnect/qcom,qcs404.txt     | 46 ++++++++++
+>  .../dt-bindings/interconnect/qcom,qcs404.h    | 88 +++++++++++++++++++
+>  2 files changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+>  create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> new file mode 100644
+> index 000000000000..14a827268dda
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+> @@ -0,0 +1,46 @@
+> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
+> +-----------------------------------------------------------
+> +
+> +Required properties :
+> +- compatible : shall contain only one of the following:
+> +			"qcom,qcs404-bimc"
+> +			"qcom,qcs404-pcnoc"
+> +			"qcom,qcs404-snoc"
+> +- #interconnect-cells : should contain 1
+> +
+> +Optional properties :
+> +reg : specifies the physical base address and size of registers
+> +clocks : list of phandles and specifiers to all interconnect bus clocks
+> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v3:
-- use the new function in rtl8211e_config_init() instead of
-  doing things 'manually'
-- use existing RTL8211E_EXT_PAGE instead of adding a new define
-- updated commit message
+Spoke to Rob about this patch, and I don't think these properties should
+not be described as optional.
 
-Changes in v2:
-- use phy_select_page() and phy_restore_page(), get rid of
-  rtl8211e_restore_page()
-- s/rtl821e_select_ext_page/rtl8211e_select_ext_page/
-- updated commit message
----
- drivers/net/phy/realtek.c | 57 +++++++++++++++++++++++++++++----------
- 1 file changed, 43 insertions(+), 14 deletions(-)
+The reg isn't used unless we're implementing support for QoS, but let's
+include them in the binding as required anyways.
 
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index 827ea7ed080d..fa11ae5ebd91 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -27,6 +27,8 @@
- #define RTL821x_EXT_PAGE_SELECT			0x1e
- #define RTL821x_PAGE_SELECT			0x1f
- 
-+#define RTL8211E_EXT_PAGE			7
-+
- /* RTL8211E page 5 */
- #define RTL8211E_EEE_LED_MODE1			0x05
- #define RTL8211E_EEE_LED_MODE2			0x06
-@@ -58,6 +60,44 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
- 	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
- }
- 
-+static int rtl8211e_select_ext_page(struct phy_device *phydev, int page)
-+{
-+	int ret, oldpage;
-+
-+	oldpage = phy_select_page(phydev, RTL8211E_EXT_PAGE);
-+	if (oldpage < 0)
-+		return oldpage;
-+
-+	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, page);
-+	if (ret)
-+		return phy_restore_page(phydev, page, ret);
-+
-+	return 0;
-+}
-+
-+static int rtl8211e_modify_ext_paged(struct phy_device *phydev, int page,
-+				     u32 regnum, u16 mask, u16 set)
-+{
-+	int ret = 0;
-+	int oldpage;
-+	int new;
-+
-+	oldpage = rtl8211e_select_ext_page(phydev, page);
-+	if (oldpage < 0)
-+		goto out;
-+
-+	ret = __phy_read(phydev, regnum);
-+	if (ret < 0)
-+		goto out;
-+
-+	new = (ret & ~mask) | set;
-+	if (new != ret)
-+		ret = __phy_write(phydev, regnum, new);
-+
-+out:
-+	return phy_restore_page(phydev, oldpage, ret);
-+}
-+
- static void rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
- {
- 	int oldpage;
-@@ -210,7 +250,6 @@ static int rtl8211f_config_init(struct phy_device *phydev)
- static int rtl8211e_config_init(struct phy_device *phydev)
- {
- 	struct device *dev = &phydev->mdio.dev;
--	int ret = 0, oldpage;
- 	u16 val;
- 
- 	if (of_property_read_bool(dev->of_node, "realtek,eee-led-mode-disable"))
-@@ -242,19 +281,9 @@ static int rtl8211e_config_init(struct phy_device *phydev)
- 	 * 2 = RX Delay, 1 = TX Delay, 0 = SELRGV (see original PHY datasheet
- 	 * for details).
- 	 */
--	oldpage = phy_select_page(phydev, 0x7);
--	if (oldpage < 0)
--		goto err_restore_page;
--
--	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
--	if (ret)
--		goto err_restore_page;
--
--	ret = __phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
--			   val);
--
--err_restore_page:
--	return phy_restore_page(phydev, oldpage, ret);
-+	return rtl8211e_modify_ext_paged(phydev, 0xa4, 0x1c,
-+					 RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
-+					 val);
- }
- 
- static int rtl8211b_suspend(struct phy_device *phydev)
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Iirc the two clocks are required with the current implementation, but
+shouldn't there be an iface clock as well, for accessing the QoS
+register space?
 
+
+PS. As I read this again, please drop _clk from the two clocks names -
+we know they are clocks...
+
+Regards,
+Bjorn
+
+> +
+> +Example:
+> +
+> +soc {
+> +	...
+> +	bimc: interconnect@400000 {
+> +		reg = <0x00400000 0x80000>;
+> +		compatible = "qcom,qcs404-bimc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> +			<&rpmcc RPM_SMD_BIMC_A_CLK>;
+> +	};
+> +
+> +	pnoc: interconnect@500000 {
+> +		reg = <0x00500000 0x15080>;
+> +		compatible = "qcom,qcs404-pcnoc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+> +			<&rpmcc RPM_SMD_PNOC_A_CLK>;
+> +	};
+> +
+> +	snoc: interconnect@580000 {
+> +		reg = <0x00580000 0x23080>;
+> +		compatible = "qcom,qcs404-snoc";
+> +		#interconnect-cells = <1>;
+> +		clock-names = "bus_clk", "bus_a_clk";
+> +		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> +			<&rpmcc RPM_SMD_SNOC_A_CLK>;
+> +	};
+> +};
+> diff --git a/include/dt-bindings/interconnect/qcom,qcs404.h b/include/dt-bindings/interconnect/qcom,qcs404.h
+> new file mode 100644
+> index 000000000000..960f6e39c5f2
+> --- /dev/null
+> +++ b/include/dt-bindings/interconnect/qcom,qcs404.h
+> @@ -0,0 +1,88 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Qualcomm interconnect IDs
+> + *
+> + * Copyright (c) 2019, Linaro Ltd.
+> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
+> +#define __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
+> +
+> +#define MASTER_AMPSS_M0			0
+> +#define MASTER_OXILI			1
+> +#define MASTER_MDP_PORT0		2
+> +#define MASTER_SNOC_BIMC_1		3
+> +#define MASTER_TCU_0			4
+> +#define SLAVE_EBI_CH0			5
+> +#define SLAVE_BIMC_SNOC			6
+> +
+> +#define MASTER_SPDM			0
+> +#define MASTER_BLSP_1			1
+> +#define MASTER_BLSP_2			2
+> +#define MASTER_XI_USB_HS1		3
+> +#define MASTER_CRYPT0			4
+> +#define MASTER_SDCC_1			5
+> +#define MASTER_SDCC_2			6
+> +#define MASTER_SNOC_PCNOC		7
+> +#define MASTER_QPIC			8
+> +#define PCNOC_INT_0			9
+> +#define PCNOC_INT_2			10
+> +#define PCNOC_INT_3			11
+> +#define PCNOC_S_0			12
+> +#define PCNOC_S_1			13
+> +#define PCNOC_S_2			14
+> +#define PCNOC_S_3			15
+> +#define PCNOC_S_4			16
+> +#define PCNOC_S_6			17
+> +#define PCNOC_S_7			18
+> +#define PCNOC_S_8			19
+> +#define PCNOC_S_9			20
+> +#define PCNOC_S_10			21
+> +#define PCNOC_S_11			22
+> +#define SLAVE_SPDM			23
+> +#define SLAVE_PDM			24
+> +#define SLAVE_PRNG			25
+> +#define SLAVE_TCSR			26
+> +#define SLAVE_SNOC_CFG			27
+> +#define SLAVE_MESSAGE_RAM		28
+> +#define SLAVE_DISP_SS_CFG		29
+> +#define SLAVE_GPU_CFG			30
+> +#define SLAVE_BLSP_1			31
+> +#define SLAVE_BLSP_2			32
+> +#define SLAVE_TLMM_NORTH		33
+> +#define SLAVE_PCIE			34
+> +#define SLAVE_ETHERNET			35
+> +#define SLAVE_TLMM_EAST			36
+> +#define SLAVE_TCU			37
+> +#define SLAVE_PMIC_ARB			38
+> +#define SLAVE_SDCC_1			39
+> +#define SLAVE_SDCC_2			40
+> +#define SLAVE_TLMM_SOUTH		41
+> +#define SLAVE_USB_HS			42
+> +#define SLAVE_USB3			43
+> +#define SLAVE_CRYPTO_0_CFG		44
+> +#define SLAVE_PCNOC_SNOC		45
+> +
+> +#define MASTER_QDSS_BAM			0
+> +#define MASTER_BIMC_SNOC		1
+> +#define MASTER_PCNOC_SNOC		2
+> +#define MASTER_QDSS_ETR			3
+> +#define MASTER_EMAC			4
+> +#define MASTER_PCIE			5
+> +#define MASTER_USB3			6
+> +#define QDSS_INT			7
+> +#define SNOC_INT_0			8
+> +#define SNOC_INT_1			9
+> +#define SNOC_INT_2			10
+> +#define SLAVE_KPSS_AHB			11
+> +#define SLAVE_WCSS			12
+> +#define SLAVE_SNOC_BIMC_1		13
+> +#define SLAVE_IMEM			14
+> +#define SLAVE_SNOC_PCNOC		15
+> +#define SLAVE_QDSS_STM			16
+> +#define SLAVE_CATS_0			17
+> +#define SLAVE_CATS_1			18
+> +#define SLAVE_LPASS			19
+> +
+> +#endif
