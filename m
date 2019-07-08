@@ -2,120 +2,68 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D046DC606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E6CC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C9E20861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLDb3RQj"
+	by mail.kernel.org (Postfix) with ESMTP id 9285720861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbfGHMe0 (ORCPT
+        id S1729644AbfGHMgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:34:26 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35554 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfGHMe0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:34:26 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so8205012plp.2;
-        Mon, 08 Jul 2019 05:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ArpUmrHHBFx5bD0LIxUTdEY5clgZRpqyjNAxZpDPt5s=;
-        b=FLDb3RQjrqS80g8SocCGkpBtBUhLrL7LVWoDIB6S6KXskaCiwggA6DhRzp0XSuDEWP
-         CBPWkzbnLLzASSpFC9ot5cTmcTTFgEnJE7nT0wUxihFgorgAaLB7AOUvMGrAr13WQadh
-         AtpXKAUCIRStRTuI5HyyqxpwKrmtd5DgaQ0xQHkRJ2hMBA7j7RjXBkMufSOJ1WMX19gj
-         bUCf6clIk/vZekzJfs1IibS1gcvXNyZWW/AwOzzJpOCVzqictDRN7ILc0cWZIoe4zwqs
-         2wwLALPcmH+1HnlZ/Yj2eLwb0Ih5YLJWnFbDT47VxUUT4zw6JSOqlgGgQGi9lYezS7IS
-         yg8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ArpUmrHHBFx5bD0LIxUTdEY5clgZRpqyjNAxZpDPt5s=;
-        b=Zx9exd1gjPW1W82kKTGjBQTggI+UR9pxPxlR/M2UOhxtlbiy9QlAeA4nrh29wvlYtA
-         PeKW87xFGZJyeliwmKdNXAVfvTUuBhjXbKEG8yK05G9ACOTMC9+NRSkRwZq4RTBebYlg
-         Ja/Y1wE8AVy2UeNHrvZNSBAlybUjiiamIIoppHmaDHMftSKYR5Qv+OaEj7X0LqdwKs86
-         reDB6dLjPM9uXukCM41ueoYZ63Xuv72mmEm3+yYqMXQ5xg1peCELztXsFWj8LF4S03bh
-         vUHxo3B9o9tc2Pf40H49yqgaikaw7WezBX1BjnF7V9QJfwGFNC2A6tDYbBNEE/HXMVg8
-         +cxg==
-X-Gm-Message-State: APjAAAUH0vuy6oFldSRZOBvf5asKtEza3bCHZuNjYkueYjVdNMDr4ewz
-        JfSLBJ7WhKijGi+wmsBPzE2kyinXKkM=
-X-Google-Smtp-Source: APXvYqx/0oIpfjHn1PzBLCg3X+/OP7H+bK32tmaheN9gUhk+d1xkmbYrjC0WvI7tHEpk88OM6QlKMw==
-X-Received: by 2002:a17:902:ac1:: with SMTP id 59mr24777149plp.168.1562589265440;
-        Mon, 08 Jul 2019 05:34:25 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id q19sm20679649pfc.62.2019.07.08.05.34.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 05:34:25 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 14/14] net: phy: Make use of linkmode_mod_bit helper
-Date:   Mon,  8 Jul 2019 20:34:17 +0800
-Message-Id: <20190708123417.12265-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 8 Jul 2019 08:36:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2237 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727544AbfGHMgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 08:36:44 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9F5538B1A157E02D993C;
+        Mon,  8 Jul 2019 20:36:40 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 8 Jul 2019
+ 20:36:32 +0800
+From:   zhengbin <zhengbin13@huawei.com>
+To:     <willy@haproxy.com>, <ksenija.stanojevic@gmail.com>,
+        <miguel.ojeda.sandonis@gmail.com>, <linux-kernel@vger.kernel.org>
+CC:     <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
+Subject: [PATCH] auxdisplay: panel: need to delete scan_timer when misc_register fails in panel_attach
+Date:   Mon, 8 Jul 2019 20:42:18 +0800
+Message-ID: <1562589738-10595-1-git-send-email-zhengbin13@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-linkmode_mod_bit is introduced as a helper function to set/clear
-bits in a linkmode.
-Replace the if else code structure with a call to the helper
-linkmode_mod_bit.
+In panel_attach, if misc_register fails, we need to delete scan_timer,
+which was setup in keypad_init->init_scan_timer.
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
 ---
- drivers/net/phy/phy.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ drivers/auxdisplay/panel.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index e8885429293a..75b8e5aff747 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -297,12 +297,8 @@ int phy_ethtool_sset(struct phy_device *phydev, struct ethtool_cmd *cmd)
- 
- 	linkmode_copy(phydev->advertising, advertising);
- 
--	if (AUTONEG_ENABLE == cmd->autoneg)
--		linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
--				 phydev->advertising);
--	else
--		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
--				   phydev->advertising);
-+	linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-+			 phydev->advertising, AUTONEG_ENABLE == cmd->autoneg);
- 
- 	phydev->duplex = cmd->duplex;
- 
-@@ -352,12 +348,8 @@ int phy_ethtool_ksettings_set(struct phy_device *phydev,
- 
- 	linkmode_copy(phydev->advertising, advertising);
- 
--	if (autoneg == AUTONEG_ENABLE)
--		linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
--				 phydev->advertising);
--	else
--		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
--				   phydev->advertising);
-+	linkmode_mod_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-+			 phydev->advertising, autoneg == AUTONEG_ENABLE);
- 
- 	phydev->duplex = duplex;
- 
--- 
-2.11.0
+diff --git a/drivers/auxdisplay/panel.c b/drivers/auxdisplay/panel.c
+index e06de63..e6bd727 100644
+--- a/drivers/auxdisplay/panel.c
++++ b/drivers/auxdisplay/panel.c
+@@ -1617,6 +1617,8 @@ static void panel_attach(struct parport *port)
+ 	return;
+
+ err_lcd_unreg:
++	if (scan_timer.function)
++		del_timer_sync(&scan_timer);
+ 	if (lcd.enabled)
+ 		charlcd_unregister(lcd.charlcd);
+ err_unreg_device:
+--
+2.7.4
 
