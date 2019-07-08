@@ -2,59 +2,56 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FUZZY_XPILL,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA59EC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA39C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BB7216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D8520665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600559;
-	bh=9QjbTOdq9g3tK/ac5CbO1VgIDYm/V3qGsSOxsJIgGvE=;
+	s=default; t=1562600565;
+	bh=S9MveyUPoPJqyWBk6RkG+PIi4txbqqIJER1Z9E/hWqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QuVPNGQJqeqjeokwai0yR/l07wJUVPQRvx+/o5M5I/zOp9IvnUI87RffKd1cc1eg2
-	 /qFJyeiUu0UfGEsEd2xDX6q+Ue1MNGA0WujoqNb7IpLdaBcq9Pjybr1tTpiDEXeJ7s
-	 0e/dGRCm7sWCWeVGk0LyNflZcegzqfb1XJkOehwg=
+	b=Tc79tBAtmj5E8VJA+OT2iTV0MBoqfu7cAB7AZ/T5c6MjVSmRMbz+/nqvaOsgzgJmM
+	 o9zT3Bz8omkAy2GnSXnRK8D4jzcb6MuziqGH/Dvh6h8pxQkHvJZZg1D4r8brIlvcmu
+	 XXmQ84M0ydzqXRW3MD4jBZzdd+ENb0oBLXi8Nl/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403798AbfGHPmi (ORCPT
+        id S2389625AbfGHPmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:42:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42958 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:42:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391084AbfGHPmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:42:36 -0400
+        id S1729789AbfGHPmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:42:43 -0400
 Received: from quaco.ghostprotocols.net (179-240-135-35.3g.claro.net.br [179.240.135.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 449C0216FD;
-        Mon,  8 Jul 2019 15:42:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EECB42175B;
+        Mon,  8 Jul 2019 15:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600555;
-        bh=9QjbTOdq9g3tK/ac5CbO1VgIDYm/V3qGsSOxsJIgGvE=;
+        s=default; t=1562600562;
+        bh=S9MveyUPoPJqyWBk6RkG+PIi4txbqqIJER1Z9E/hWqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfdscly4ahJ83nAqGiUSkApns24HPQzx/BnbsNPHuufvrkIoYrjtHd2KbQ+RH/DyH
-         5J1S+bubBDB35eknSD8AKqprb4DGxBEc5VZmeWJDmPJjCCK9pL4joPa0gijSi4MSwr
-         6UtkSbW/YJFEAdi5HHubG7AyFfEhYgUQaIfuVxs0=
+        b=pHBftSrSoiwG3GXjuEXHGxjHj+npFvOYz70topazH9n7VFCgWBv0VsW2mN+rvN9FJ
+         7A0rhyn0KgTRvdBQaThFHIp93uDCHk79WeDwA9lNXxIZiN56wVmpccCo+lzJEUjHYl
+         RtsVlbaxocp9BKcdUNk2ATJ2/CWybZSsZbr34R+0=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        David Carrillo Cisneros <davidca@fb.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 1/8] tools arch kvm: Sync kvm headers with the kernel sources
-Date:   Mon,  8 Jul 2019 12:42:00 -0300
-Message-Id: <20190708154207.11403-2-acme@kernel.org>
+        kernel-team@fb.com, stable@vger.kernel.org
+Subject: [PATCH 2/8] perf header: Assign proper ff->ph in perf_event__synthesize_features()
+Date:   Mon,  8 Jul 2019 12:42:01 -0300
+Message-Id: <20190708154207.11403-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190708154207.11403-1-acme@kernel.org>
 References: <20190708154207.11403-1-acme@kernel.org>
@@ -65,119 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Song Liu <songliubraving@fb.com>
 
-To pick up the changes from:
+bpf/btf write_* functions need ff->ph->env.
 
-  41040cf7c5f0 ("arm64/sve: Fix missing SVE/FPSIMD endianness conversions")
-  6ca00dfafda7 ("KVM: x86: Modify struct kvm_nested_state to have explicit fields for data")
+With this missing, pipe-mode (perf record -o -)  would crash like:
 
-None entail changes in tooling.
+Program terminated with signal SIGSEGV, Segmentation fault.
 
-This silences these tools/perf build warnings:
+This patch assign proper ph value to ff.
 
-  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/kvm.h' differs from latest version at 'arch/x86/include/uapi/asm/kvm.h'
-  diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
-  Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm64/include/uapi/asm/kvm.h'
-  diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi/asm/kvm.h
+Committer testing:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Dave Martin <Dave.Martin@arm.com>
+  (gdb) run record -o -
+  Starting program: /root/bin/perf record -o -
+  PERFILE2
+  <SNIP start of perf.data headers>
+  Thread 1 "perf" received signal SIGSEGV, Segmentation fault.
+  __do_write_buf (size=4, buf=0x160, ff=0x7fffffff8f80) at util/header.c:126
+  126		memcpy(ff->buf + ff->offset, buf, size);
+  (gdb) bt
+  #0  __do_write_buf (size=4, buf=0x160, ff=0x7fffffff8f80) at util/header.c:126
+  #1  do_write (ff=ff@entry=0x7fffffff8f80, buf=buf@entry=0x160, size=4) at util/header.c:137
+  #2  0x00000000004eddba in write_bpf_prog_info (ff=0x7fffffff8f80, evlist=<optimized out>) at util/header.c:912
+  #3  0x00000000004f69d7 in perf_event__synthesize_features (tool=tool@entry=0x97cc00 <record>, session=session@entry=0x7fffe9c6d010,
+      evlist=0x7fffe9cae010, process=process@entry=0x4435d0 <process_synthesized_event>) at util/header.c:3695
+  #4  0x0000000000443c79 in record__synthesize (tail=tail@entry=false, rec=0x97cc00 <record>) at builtin-record.c:1214
+  #5  0x0000000000444ec9 in __cmd_record (rec=0x97cc00 <record>, argv=<optimized out>, argc=0) at builtin-record.c:1435
+  #6  cmd_record (argc=0, argv=<optimized out>) at builtin-record.c:2450
+  #7  0x00000000004ae3e9 in run_builtin (p=p@entry=0x98e058 <commands+216>, argc=argc@entry=3, argv=0x7fffffffd670) at perf.c:304
+  #8  0x000000000042eded in handle_internal_command (argv=<optimized out>, argc=<optimized out>) at perf.c:356
+  #9  run_argv (argcp=<optimized out>, argv=<optimized out>) at perf.c:400
+  #10 main (argc=3, argv=<optimized out>) at perf.c:522
+  (gdb)
+
+After the patch the SEGSEGV is gone.
+
+Reported-by: David Carrillo Cisneros <davidca@fb.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Liran Alon <liran.alon@oracle.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/n/tip-1cdbq5ulr4d6cx3iv2ye5wdv@git.kernel.org
+Cc: kernel-team@fb.com
+Cc: stable@vger.kernel.org # v5.1+
+Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers to perf.data")
+Link: http://lkml.kernel.org/r/20190620010453.4118689-1-songliubraving@fb.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/arm64/include/uapi/asm/kvm.h |  7 ++++++
- tools/arch/x86/include/uapi/asm/kvm.h   | 31 +++++++++++++++++--------
- 2 files changed, 28 insertions(+), 10 deletions(-)
+ tools/perf/util/header.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
-index 7b7ac0f6cec9..d819a3e8b552 100644
---- a/tools/arch/arm64/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm64/include/uapi/asm/kvm.h
-@@ -260,6 +260,13 @@ struct kvm_vcpu_events {
- 	 KVM_REG_SIZE_U256 |						\
- 	 ((i) & (KVM_ARM64_SVE_MAX_SLICES - 1)))
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 847ae51a524b..fb0aa661644b 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3602,6 +3602,7 @@ int perf_event__synthesize_features(struct perf_tool *tool,
+ 		return -ENOMEM;
  
-+/*
-+ * Register values for KVM_REG_ARM64_SVE_ZREG(), KVM_REG_ARM64_SVE_PREG() and
-+ * KVM_REG_ARM64_SVE_FFR() are represented in memory in an endianness-
-+ * invariant layout which differs from the layout used for the FPSIMD
-+ * V-registers on big-endian systems: see sigcontext.h for more explanation.
-+ */
-+
- #define KVM_ARM64_SVE_VQ_MIN __SVE_VQ_MIN
- #define KVM_ARM64_SVE_VQ_MAX __SVE_VQ_MAX
+ 	ff.size = sz - sz_hdr;
++	ff.ph = &session->header;
  
-diff --git a/tools/arch/x86/include/uapi/asm/kvm.h b/tools/arch/x86/include/uapi/asm/kvm.h
-index 24a8cd229df6..d6ab5b4d15e5 100644
---- a/tools/arch/x86/include/uapi/asm/kvm.h
-+++ b/tools/arch/x86/include/uapi/asm/kvm.h
-@@ -383,6 +383,9 @@ struct kvm_sync_regs {
- #define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	(1 << 2)
- #define KVM_X86_QUIRK_OUT_7E_INC_RIP	(1 << 3)
- 
-+#define KVM_STATE_NESTED_FORMAT_VMX	0
-+#define KVM_STATE_NESTED_FORMAT_SVM	1	/* unused */
-+
- #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
- #define KVM_STATE_NESTED_EVMCS		0x00000004
-@@ -390,7 +393,14 @@ struct kvm_sync_regs {
- #define KVM_STATE_NESTED_SMM_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_SMM_VMXON	0x00000002
- 
--struct kvm_vmx_nested_state {
-+#define KVM_STATE_NESTED_VMX_VMCS_SIZE	0x1000
-+
-+struct kvm_vmx_nested_state_data {
-+	__u8 vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
-+	__u8 shadow_vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
-+};
-+
-+struct kvm_vmx_nested_state_hdr {
- 	__u64 vmxon_pa;
- 	__u64 vmcs12_pa;
- 
-@@ -401,24 +411,25 @@ struct kvm_vmx_nested_state {
- 
- /* for KVM_CAP_NESTED_STATE */
- struct kvm_nested_state {
--	/* KVM_STATE_* flags */
- 	__u16 flags;
--
--	/* 0 for VMX, 1 for SVM.  */
- 	__u16 format;
--
--	/* 128 for SVM, 128 + VMCS size for VMX.  */
- 	__u32 size;
- 
- 	union {
--		/* VMXON, VMCS */
--		struct kvm_vmx_nested_state vmx;
-+		struct kvm_vmx_nested_state_hdr vmx;
- 
- 		/* Pad the header to 128 bytes.  */
- 		__u8 pad[120];
--	};
-+	} hdr;
- 
--	__u8 data[0];
-+	/*
-+	 * Define data region as 0 bytes to preserve backwards-compatability
-+	 * to old definition of kvm_nested_state in order to avoid changing
-+	 * KVM_{GET,PUT}_NESTED_STATE ioctl values.
-+	 */
-+	union {
-+		struct kvm_vmx_nested_state_data vmx[0];
-+	} data;
- };
- 
- #endif /* _ASM_X86_KVM_H */
+ 	for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
+ 		if (!feat_ops[feat].synthesize) {
 -- 
 2.20.1
 
