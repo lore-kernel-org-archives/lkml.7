@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA6DC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A547FC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C25E21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D962216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599076;
-	bh=Pr10lBXTCXfhz8TBC39By1kx7n25cADHhVfMpU5SvRc=;
+	s=default; t=1562599079;
+	bh=XP/wjr61UkwKqFacjGA1z8OfOfSKKAteAPObbnI2bmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJW4RVGMCRsQBkxxm+IvsrNm+Yeo6/PXsQnUAGKvqMqgmvnDM6AgvBgGyWzgPJlWA
-	 HdBZG1FV6Bfbut2bqV8gPqk6WCNE/T4ZZ4WP9b1665h93k5BZOdA/qkWsJisJeZDEI
-	 O+JQkAU1bJsP3brBnGD1aYjx9nHwnEgWk3c/1lx0=
+	b=h5nYeZLCqp08wKD0qR0z4k781Z5yuE35RjxfTpNE0UFwZia8WCq9h4WUYLV0/YGog
+	 4kkewgNNE7UM/DfCVJLdcZyYAtF8Sm96sdOJS9wNlMFMwkUra3xie3Ta7zFoo/7IZE
+	 ot4d5fZZ761Lbjwhce0B3iqm7dFLTptw2JkMIPMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732922AbfGHPRz (ORCPT
+        id S1732935AbfGHPR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:17:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41466 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732890AbfGHPRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:17:54 -0400
+        id S1732895AbfGHPRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:17:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85EC82173E;
-        Mon,  8 Jul 2019 15:17:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5446216E3;
+        Mon,  8 Jul 2019 15:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599073;
-        bh=Pr10lBXTCXfhz8TBC39By1kx7n25cADHhVfMpU5SvRc=;
+        s=default; t=1562599070;
+        bh=XP/wjr61UkwKqFacjGA1z8OfOfSKKAteAPObbnI2bmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xe761iyRfDaxUsGNY4OWEJtPSKZqfXG3OlSqg2GWUQd88lNCupDfC6J6YZEUNgcaT
-         r+psYeFznkCQLOK8k1XTwqqpFlBhUoyFRW3KkRjppz0sVYyLyJUlnx6/E/jtUBdKAT
-         goilTK2Xm5z7mtQLjwbCNs9/8ZyZ8fpZ6gcTUZ2s=
+        b=lcqHqrws4HO19Zd4iG9Bu+/w4aMV0GQwqNSmwSuMbpSm1VcIj4DILHWUkXJmogsvV
+         IEQz+NNDsTTSS4R2KYRswNqDpt7EZpqqG5D4/upGP9wXFdIP3tJ5Vy2DGFDuYpf3PA
+         7n36KOoo8TwN85WzZtERYoBBLSFoiPBMvYgk2f6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: [PATCH 4.4 68/73] btrfs: Ensure replaced device doesnt have pending chunk allocation
-Date:   Mon,  8 Jul 2019 17:13:18 +0200
-Message-Id: <20190708150524.847065903@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH 4.4 67/73] lib/mpi: Fix karactx leak in mpi_powm
+Date:   Mon,  8 Jul 2019 17:13:17 +0200
+Message-Id: <20190708150524.807209089@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -59,122 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit debd1c065d2037919a7da67baf55cc683fee09f0 upstream.
+commit c8ea9fce2baf7b643384f36f29e4194fa40d33a6 upstream.
 
-Recent FITRIM work, namely bbbf7243d62d ("btrfs: combine device update
-operations during transaction commit") combined the way certain
-operations are recoded in a transaction. As a result an ASSERT was added
-in dev_replace_finish to ensure the new code works correctly.
-Unfortunately I got reports that it's possible to trigger the assert,
-meaning that during a device replace it's possible to have an unfinished
-chunk allocation on the source device.
+Sometimes mpi_powm will leak karactx because a memory allocation
+failure causes a bail-out that skips the freeing of karactx.  This
+patch moves the freeing of karactx to the end of the function like
+everything else so that it can't be skipped.
 
-This is supposed to be prevented by the fact that a transaction is
-committed before finishing the replace oepration and alter acquiring the
-chunk mutex. This is not sufficient since by the time the transaction is
-committed and the chunk mutex acquired it's possible to allocate a chunk
-depending on the workload being executed on the replaced device. This
-bug has been present ever since device replace was introduced but there
-was never code which checks for it.
-
-The correct way to fix is to ensure that there is no pending device
-modification operation when the chunk mutex is acquire and if there is
-repeat transaction commit. Unfortunately it's not possible to just
-exclude the source device from btrfs_fs_devices::dev_alloc_list since
-this causes ENOSPC to be hit in transaction commit.
-
-Fixing that in another way would need to add special cases to handle the
-last writes and forbid new ones. The looped transaction fix is more
-obvious, and can be easily backported. The runtime of dev-replace is
-long so there's no noticeable delay caused by that.
-
-Reported-by: David Sterba <dsterba@suse.com>
-Fixes: 391cd9df81ac ("Btrfs: fix unprotected alloc list insertion during the finishing procedure of replace")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
+Fixes: cdec9cb5167a ("crypto: GnuPG based MPI lib - source files...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/dev-replace.c |   29 +++++++++++++++++++----------
- fs/btrfs/volumes.c     |    2 ++
- fs/btrfs/volumes.h     |    5 +++++
- 3 files changed, 26 insertions(+), 10 deletions(-)
+ lib/mpi/mpi-pow.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/dev-replace.c
-+++ b/fs/btrfs/dev-replace.c
-@@ -495,18 +495,27 @@ static int btrfs_dev_replace_finishing(s
- 	}
- 	btrfs_wait_ordered_roots(root->fs_info, -1);
+--- a/lib/mpi/mpi-pow.c
++++ b/lib/mpi/mpi-pow.c
+@@ -37,6 +37,7 @@
+ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
+ {
+ 	mpi_ptr_t mp_marker = NULL, bp_marker = NULL, ep_marker = NULL;
++	struct karatsuba_ctx karactx = {};
+ 	mpi_ptr_t xp_marker = NULL;
+ 	mpi_ptr_t tspace = NULL;
+ 	mpi_ptr_t rp, ep, mp, bp;
+@@ -164,13 +165,11 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ 		int c;
+ 		mpi_limb_t e;
+ 		mpi_limb_t carry_limb;
+-		struct karatsuba_ctx karactx;
  
--	trans = btrfs_start_transaction(root, 0);
--	if (IS_ERR(trans)) {
--		mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
--		return PTR_ERR(trans);
-+	while (1) {
-+		trans = btrfs_start_transaction(root, 0);
-+		if (IS_ERR(trans)) {
-+			mutex_unlock(&dev_replace->lock_finishing_cancel_unmount);
-+			return PTR_ERR(trans);
-+		}
-+		ret = btrfs_commit_transaction(trans, root);
-+		WARN_ON(ret);
-+		mutex_lock(&uuid_mutex);
-+		/* keep away write_all_supers() during the finishing procedure */
-+		mutex_lock(&root->fs_info->fs_devices->device_list_mutex);
-+		mutex_lock(&root->fs_info->chunk_mutex);
-+		if (src_device->has_pending_chunks) {
-+			mutex_unlock(&root->fs_info->chunk_mutex);
-+			mutex_unlock(&root->fs_info->fs_devices->device_list_mutex);
-+			mutex_unlock(&uuid_mutex);
-+		} else {
-+			break;
-+		}
- 	}
--	ret = btrfs_commit_transaction(trans, root);
--	WARN_ON(ret);
+ 		xp = xp_marker = mpi_alloc_limb_space(2 * (msize + 1));
+ 		if (!xp)
+ 			goto enomem;
  
--	mutex_lock(&uuid_mutex);
--	/* keep away write_all_supers() during the finishing procedure */
--	mutex_lock(&root->fs_info->fs_devices->device_list_mutex);
--	mutex_lock(&root->fs_info->chunk_mutex);
- 	btrfs_dev_replace_lock(dev_replace);
- 	dev_replace->replace_state =
- 		scrub_ret ? BTRFS_IOCTL_DEV_REPLACE_STATE_CANCELED
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4760,6 +4760,7 @@ static int __btrfs_alloc_chunk(struct bt
- 	for (i = 0; i < map->num_stripes; i++) {
- 		num_bytes = map->stripes[i].dev->bytes_used + stripe_size;
- 		btrfs_device_set_bytes_used(map->stripes[i].dev, num_bytes);
-+		map->stripes[i].dev->has_pending_chunks = true;
+-		memset(&karactx, 0, sizeof karactx);
+ 		negative_result = (ep[0] & 1) && base->sign;
+ 
+ 		i = esize - 1;
+@@ -295,8 +294,6 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ 		if (mod_shift_cnt)
+ 			mpihelp_rshift(rp, rp, rsize, mod_shift_cnt);
+ 		MPN_NORMALIZE(rp, rsize);
+-
+-		mpihelp_release_karatsuba_ctx(&karactx);
  	}
  
- 	spin_lock(&extent_root->fs_info->free_chunk_lock);
-@@ -7064,6 +7065,7 @@ void btrfs_update_commit_device_bytes_us
- 		for (i = 0; i < map->num_stripes; i++) {
- 			dev = map->stripes[i].dev;
- 			dev->commit_bytes_used = dev->bytes_used;
-+			dev->has_pending_chunks = false;
- 		}
- 	}
- 	unlock_chunks(root);
---- a/fs/btrfs/volumes.h
-+++ b/fs/btrfs/volumes.h
-@@ -62,6 +62,11 @@ struct btrfs_device {
- 
- 	spinlock_t io_lock ____cacheline_aligned;
- 	int running_pending;
-+	/* When true means this device has pending chunk alloc in
-+	 * current transaction. Protected by chunk_mutex.
-+	 */
-+	bool has_pending_chunks;
-+
- 	/* regular prio bios */
- 	struct btrfs_pending_bios pending_bios;
- 	/* WRITE_SYNC bios */
+ 	if (negative_result && rsize) {
+@@ -313,6 +310,7 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ leave:
+ 	rc = 0;
+ enomem:
++	mpihelp_release_karatsuba_ctx(&karactx);
+ 	if (assign_rp)
+ 		mpi_assign_limb_space(res, rp, size);
+ 	if (mp_marker)
 
 
