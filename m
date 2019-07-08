@@ -2,163 +2,83 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30BEC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF407C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D83216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600857;
-	bh=FFd/xfkqQfdj7tPoU5yVTMz52FyidRSCtUzDLR4F/CY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TCURn3OfojvMtUz6rQs40hH9odC5nkOHTMr31XJReAvO0abTbq9MJ1L+4JoiOkWfo
-	 1QBbcN8WIwa04FtHz5WMZ80YobyHPAfCUGZ4jx/B/3Ljj9DlTsu88rGkQSy6gcZ7mI
-	 9Bt74+Ousm2oz3xTwi/zZr0HTpd6Zj6XQ2mZPLqM=
+	by mail.kernel.org (Postfix) with ESMTP id 79B4A20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbfGHPSe (ORCPT
+        id S2391267AbfGHPrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42302 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:47:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:52312 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733042AbfGHPSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:18:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1254E21537;
-        Mon,  8 Jul 2019 15:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599109;
-        bh=FFd/xfkqQfdj7tPoU5yVTMz52FyidRSCtUzDLR4F/CY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQN1Jes0mM3FacruHaldlT5LOsQ2ymps9+nUNwIWlWS7/SinvAF4Q2yyUKFXFi2Tk
-         4Cgw+2zAoG0Es8dhDN0bGyBYcvNBfaXQLGt5ITffLJOUwxEVJY1hvIQI1hmOi2XBVU
-         QYueC0QS0i18FhSnDQo+ukv8iXfxCh+5QQFRmEaw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.9 001/102] tracing: Silence GCC 9 array bounds warning
-Date:   Mon,  8 Jul 2019 17:11:54 +0200
-Message-Id: <20190708150526.052616305@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
-References: <20190708150525.973820964@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1733310AbfGHPrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:47:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5864F360;
+        Mon,  8 Jul 2019 08:47:41 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5442B3F59C;
+        Mon,  8 Jul 2019 08:47:40 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+Subject: [PATCH 00/11] firmware: arm_scmi: Add support for Rx, async commands and delayed response
+Date:   Mon,  8 Jul 2019 16:47:19 +0100
+Message-Id: <20190708154730.16643-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Hi,
 
-commit 0c97bf863efce63d6ab7971dad811601e6171d2f upstream.
+This patch series adds SCMI infrastructure/core support for recieve(Rx)
+channels, asynchronous commands and delayed response. It adds async
+command support for clock rate setting and sensor reading based on the
+attributes read from the firmware.
 
-Starting with GCC 9, -Warray-bounds detects cases when memset is called
-starting on a member of a struct but the size to be cleared ends up
-writing over further members.
+The code is rebased on the cleanup series[1] and is available @[2]
 
-Such a call happens in the trace code to clear, at once, all members
-after and including `seq` on struct trace_iterator:
+--
+Regards,
+Sudeep
 
-    In function 'memset',
-        inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
-    ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
-    [8505, 8560] from the object at 'iter' is out of the bounds of
-    referenced subobject 'seq' with type 'struct trace_seq' at offset
-    4368 [-Warray-bounds]
-      344 |  return __builtin_memset(p, c, size);
-          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[1] https://lore.kernel.org/lkml/20190708154358.16227-1-sudeep.holla@arm.com
+[2] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git scmi_updates
 
-In order to avoid GCC complaining about it, we compute the address
-ourselves by adding the offsetof distance instead of referring
-directly to the member.
+Sudeep Holla (11):
+  firmware: arm_scmi: Reorder some functions to avoid forward declarations
+  firmware: arm_scmi: Segregate tx channel handling and prepare to add rx
+  firmware: arm_scmi: Add receive channel support for notifications
+  firmware: arm_scmi: Separate out tx buffer handling and prepare to add rx
+  firmware: arm_scmi: Add receive buffer support for notifications
+  firmware: arm_scmi: Add mechanism to unpack message headers
+  firmware: arm_scmi: Add support for asynchronous commands and delayed response
+  firmware: arm_scmi: Drop async flag in sensor_ops->reading_get
+  firmware: arm_scmi: Add asynchronous sensor read if it supports
+  firmware: arm_scmi: Drop config flag in clk_ops->rate_set
+  firmware: arm_scmi: Use asynchronous CLOCK_RATE_SET when possible
 
-Since there are two places doing this clear (trace.c and trace_kdb.c),
-take the chance to move the workaround into a single place in
-the internal header.
+ drivers/clk/clk-scmi.c              |   2 +-
+ drivers/firmware/arm_scmi/clock.c   |  23 +-
+ drivers/firmware/arm_scmi/common.h  |   6 +-
+ drivers/firmware/arm_scmi/driver.c  | 346 ++++++++++++++++++----------
+ drivers/firmware/arm_scmi/sensors.c |  32 ++-
+ drivers/hwmon/scmi-hwmon.c          |   2 +-
+ include/linux/scmi_protocol.h       |   6 +-
+ 7 files changed, 280 insertions(+), 137 deletions(-)
 
-Link: http://lkml.kernel.org/r/20190523124535.GA12931@gmail.com
-
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-[ Removed unnecessary parenthesis around "iter" ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/trace/trace.c     |    6 +-----
- kernel/trace/trace.h     |   18 ++++++++++++++++++
- kernel/trace/trace_kdb.c |    6 +-----
- 3 files changed, 20 insertions(+), 10 deletions(-)
-
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7613,12 +7613,8 @@ void ftrace_dump(enum ftrace_dump_mode o
- 
- 		cnt++;
- 
--		/* reset all but tr, trace, and overruns */
--		memset(&iter.seq, 0,
--		       sizeof(struct trace_iterator) -
--		       offsetof(struct trace_iterator, seq));
-+		trace_iterator_reset(&iter);
- 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
--		iter.pos = -1;
- 
- 		if (trace_find_next_entry_inc(&iter) != NULL) {
- 			int ret;
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1673,4 +1673,22 @@ static inline void trace_event_enum_upda
- 
- extern struct trace_iterator *tracepoint_print_iter;
- 
-+/*
-+ * Reset the state of the trace_iterator so that it can read consumed data.
-+ * Normally, the trace_iterator is used for reading the data when it is not
-+ * consumed, and must retain state.
-+ */
-+static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
-+{
-+	const size_t offset = offsetof(struct trace_iterator, seq);
-+
-+	/*
-+	 * Keep gcc from complaining about overwriting more than just one
-+	 * member in the structure.
-+	 */
-+	memset((char *)iter + offset, 0, sizeof(struct trace_iterator) - offset);
-+
-+	iter->pos = -1;
-+}
-+
- #endif /* _LINUX_KERNEL_TRACE_H */
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -40,12 +40,8 @@ static void ftrace_dump_buf(int skip_lin
- 
- 	kdb_printf("Dumping ftrace buffer:\n");
- 
--	/* reset all but tr, trace, and overruns */
--	memset(&iter.seq, 0,
--		   sizeof(struct trace_iterator) -
--		   offsetof(struct trace_iterator, seq));
-+	trace_iterator_reset(&iter);
- 	iter.iter_flags |= TRACE_FILE_LAT_FMT;
--	iter.pos = -1;
- 
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
-
+-- 
+2.17.1
 
