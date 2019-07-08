@@ -2,134 +2,170 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E10BC606BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8A0C606BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509AB21670
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49333216B7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaTwLTP8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g6rvMLBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbfGHOLr (ORCPT
+        id S1731694AbfGHOME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:11:47 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52997 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbfGHOLq (ORCPT
+        Mon, 8 Jul 2019 10:12:04 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60329 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731688AbfGHOMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:11:46 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so15972823wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 07:11:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=eJ0S/Raol8XcxvKWX+Ed75gL5bHK9WT/BojiEGZktq8=;
-        b=iaTwLTP8yo4gu3s3vUMaO0xfNrFuPKWd58eUeO7/WPOqyE8rXHxPWWTZVsP0ugAvQz
-         bIscIRJmkioV+y5ARNd6IrHZ3mcnpsq5lLfRe98lYleY+fitB3Eg8EJRzQdDJonZHGkH
-         nbe43B903XvBHeaAfaUStxuybAFoCt2G0hhTLOlhYVI5/2yTWZyxwNe/44jpTObaR+bU
-         TtwoYzwB1AEUTt03LDnfiDBZBRGdoIC1apXrIoyzwTfuLCnioV8AwWv9G7Ug+6oT/PKK
-         AwSvIgRZtyh8AMm8+4UaSrTNW4y22bMQREz1dG9mtxeYNG6gk/qgbH+WzshN6wbiv4AU
-         Ekjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=eJ0S/Raol8XcxvKWX+Ed75gL5bHK9WT/BojiEGZktq8=;
-        b=j+FgNQ+2rI7N9b34uv/JOORiMR0ThVRDA0aE48PZ0ro8nFiSGSwhg5AEr4mm7v8CoD
-         FVFCseLLsKq5R3Qs1vH5Bh5AmCJ9M2+WsI2+/Vq0Tk7uHsXS53nIhrSwGtCnuPBE1zL2
-         kOgcaMfsPWqngt9w3HX7iHykEgWKq9tTQZ0lwPxKTXszlX+bG7JhpyOsImH29n205y8r
-         jbEGdbshUzz6dZzn7WloegChLvTiOYmKdbawoRW2hNb5QMhsQtaJ8hLW5npca3zMf9gh
-         RwlNZ/sb4kF0gYsCx0caFBAP+WYLJawfcH6p6jTvZ/YO6pWAn/j7xZiTp5sjPxbvEKV/
-         lx1A==
-X-Gm-Message-State: APjAAAWI8dRykU0schxXjV4tECHEarfOQg25asFmCPlKSu4RdqBmGMLm
-        3O7G8ZK32tr++QfSX5g02+mCDuWJcLY=
-X-Google-Smtp-Source: APXvYqxovVxqH0khiD29A8w+5kC97us+A87KL80NHv/3HvI71zrLoamCHLx4W113ekjuYY2L3qHDLQ==
-X-Received: by 2002:a1c:dc46:: with SMTP id t67mr15838307wmg.159.1562595104111;
-        Mon, 08 Jul 2019 07:11:44 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id e3sm4629258wrt.93.2019.07.08.07.11.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 07:11:43 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai, gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: remove write_open_cnt property
-Date:   Mon,  8 Jul 2019 17:11:41 +0300
-Message-Id: <20190708141141.15300-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 8 Jul 2019 10:12:02 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190708141200euoutp018997ebb9b6519a63dc83e15858975d59~vc-vGLZgt2342323423euoutp01X
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2019 14:12:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190708141200euoutp018997ebb9b6519a63dc83e15858975d59~vc-vGLZgt2342323423euoutp01X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562595120;
+        bh=os/t6E50bR1XYLSweFwdc4MuERNk7+i5wjswJXfr9q4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g6rvMLBAIG02GP0iXIZySEJ9Rna6j7fdGVt9fPIndh++TDnmZQ1e8xyZG3sgeBfn8
+         KXXDYagacqMS368ZaR0/pxs0khgHWjwZfpxOw37if1Phl//Z2d+iSTWfoxDY7Q7zvX
+         h/HdbhZkxjEdXdR8wW7QaIXCiFcVHOApqB9KFcAA=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190708141200eucas1p25a0b91036cfceef1fd330224c2ac57cb~vc-uVUUTk1502515025eucas1p2T;
+        Mon,  8 Jul 2019 14:12:00 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 92.A2.04377.F2F432D5; Mon,  8
+        Jul 2019 15:11:59 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190708141159eucas1p1751506975ff96a436e14940916623722~vc-tbV9W_0589605896eucas1p1e;
+        Mon,  8 Jul 2019 14:11:59 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190708141159eusmtrp2be6df2275f74fc9e54f0afa1b7e06dcb~vc-tal0f51954319543eusmtrp2Q;
+        Mon,  8 Jul 2019 14:11:59 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-4d-5d234f2fea98
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E6.D4.04140.E2F432D5; Mon,  8
+        Jul 2019 15:11:59 +0100 (BST)
+Received: from AMDC3218.DIGITAL.local (unknown [106.120.51.18]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190708141158eusmtip2f27b39034436cb773a2fd293718d5259~vc-sprwv20438404384eusmtip2d;
+        Mon,  8 Jul 2019 14:11:58 +0000 (GMT)
+From:   k.konieczny@partner.samsung.com
+To:     k.konieczny@partner.samsung.com
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Subject: [PATCH 1/3] opp: core: add regulators enable and disable
+Date:   Mon,  8 Jul 2019 16:11:38 +0200
+Message-Id: <20190708141140.24379-2-k.konieczny@partner.samsung.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SeyyVcRjH+72X877UsddheRa6HOsPmk5abb+tVIp1tta6/1MTb7yhnMPO
+        QdQKXYiNLhROjTRGKNeQyvXEGpFsSNNOncq6GaOhyem8563Vf5/n+zzf3/N8tx9LKkbpZWyE
+        NkbQaflIpcyequ+c6/VW7fEIXFfe5o2rcytpPDQ9RuMCYy+NM5stCF8xfyVxX18Vg1+c/8bg
+        GvMgjQeabsvwVIYR4dy+ZgLfN44yuHion8Bvkktl+NvsCwJfempk8MJgNYVrTZ2ybQp1RX4F
+        UteUpcnUtUWJ6rbxJ4Q6s64MqbuGGwj1VM3yvcxh+82hQmREnKBTbQm2D39f8oyIHlwcf2My
+        W5aE3tmlIzsWuA3QkzGJ0pE9q+BKEYzOfiKkYhpBQYWBkoopBN/7J2R/LfUZI0hkBVeC4O0v
+        XmKrozJFLrKMWw11uZ8ZkZ05D8h6m0OKD5HcHAVVA9W2hhPnB1lJT2mRKathNO+alVlWzvlD
+        +dXt0q4VkNb4mBLZjgsAoznftlfOOcLzvA82nbTOXHh4y/Y+cD8YeD07Q0pmf2gZavxztBN8
+        6apjJHYDy6MCQuJT8LEwk5HMFxGYUicpqbEJOrr6bQeRnCdUNqkk2Q/MaR2EKAPnAMPfHaUb
+        HOB6vZhRlOVwOUUhTXtDvqWHltgV0i0P/rAacqzJr6JVhv/SGP5LY/i39w4iy5CLEKvXhAn6
+        9Vrh1Fo9r9HHasPWhkRpapD103UvdE03oqb5Y+2IY5FyiZxdrgxU0HycPkHTjoAllc7y5p0e
+        gQp5KJ9wWtBFBeliIwV9O3JlKaWL/Mwi0xEFF8bHCCcFIVrQ/e0SrN2yJBTZqCo99N5PdffV
+        0nLH4pDE7KCgka1F+9PvPz5bW3LUtG/3idLEO72p5+d3z3nNlS0YfCHHrB2AgI9an9bgQneL
+        b86al+EtRR2qiZ/m7uID8VX33AJGLpncAgvjSvIT2maWjvvSTis1PzRbyeTWsZ3R7qG7DiZu
+        9GQbzDtuHj/HeyopfTjv40Xq9PxvirXbMnADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsVy+t/xe7r6/sqxBvv2MVpsnLGe1eL6l+es
+        FvOPnGO16Nv3n9Gi//FrZovz5zewW5xtesNusenxNVaLy7vmsFl87j3CaDHj/D4mi7VH7rJb
+        LL1+kcniduMKNos3P84yWbTuPcJu8e/aRhaLzQ+OsTkIeayZt4bRY9OqTjaPzUvqPQ6+28Pk
+        0bdlFaPH8RvbmTw+b5ILYI/SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3
+        s0lJzcksSy3St0vQy3i0/ChTwTXuiqkfp7A1MD7k7GLk5JAQMJHY1nuLsYuRi0NIYCmjRMv6
+        V8wQCWmJxtOrmSBsYYk/17rYIIo+MUqc/72EBSTBJqAqsWXGS3YQW0RAWWLyvenMIEXMAp2s
+        EiueHGEDSQgLOEpMbtjLCmKzADXcnTkRyObg4BVwkVg9wQligbxE547dYDM5BVwljjyexwhi
+        CwGVrLs8BewIXgFBiZMzn4DVMAPVN2+dzTyBUWAWktQsJKkFjEyrGEVSS4tz03OLjfSKE3OL
+        S/PS9ZLzczcxAqNy27GfW3Ywdr0LPsQowMGoxMPLIacUK8SaWFZcmXuIUYKDWUmEd5+7cqwQ
+        b0piZVVqUX58UWlOavEhRlOgHyYyS4km5wMTRl5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0
+        xJLU7NTUgtQimD4mDk6pBsaqG6o+aov5H/eGOu2PPPffwPa3hV7shh+vqiy+R/ysfeEX/Clg
+        T2EBl3r0nG1HuXb//PLvcfULO/7lO/5nNjz+PDNS2GNffJytUzD79hdsJU5zP+42FNsfa+Xw
+        vPTImr8H+bwfvz3Y47w84sZ8FdPyAz9d7Case79XttfC7rfsBMGdzWIba+qVWIozEg21mIuK
+        EwGIHphj4AIAAA==
+X-CMS-MailID: 20190708141159eucas1p1751506975ff96a436e14940916623722
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190708141159eucas1p1751506975ff96a436e14940916623722
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190708141159eucas1p1751506975ff96a436e14940916623722
+References: <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+        <CGME20190708141159eucas1p1751506975ff96a436e14940916623722@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This property has attempted to show the number of open file descriptors on
-the device. This was a stupid and futile attempt so remove this property
-completely.
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Add enable regulators to dev_pm_opp_set_regulators() and disable
+regulators to dev_pm_opp_put_regulators(). This prepares for
+converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
+
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
 ---
- Documentation/ABI/testing/sysfs-driver-habanalabs |  9 +--------
- drivers/misc/habanalabs/sysfs.c                   | 10 ----------
- 2 files changed, 1 insertion(+), 18 deletions(-)
+ drivers/opp/core.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-habanalabs b/Documentation/ABI/testing/sysfs-driver-habanalabs
-index f433fc6db3c6..8d1c81cc9167 100644
---- a/Documentation/ABI/testing/sysfs-driver-habanalabs
-+++ b/Documentation/ABI/testing/sysfs-driver-habanalabs
-@@ -186,11 +186,4 @@ What:           /sys/class/habanalabs/hl<n>/uboot_ver
- Date:           Jan 2019
- KernelVersion:  5.1
- Contact:        oded.gabbay@gmail.com
--Description:    Version of the u-boot running on the device's CPU
--
--What:           /sys/class/habanalabs/hl<n>/write_open_cnt
--Date:           Jan 2019
--KernelVersion:  5.1
--Contact:        oded.gabbay@gmail.com
--Description:    Displays the total number of user processes that are currently
--                opened on the device's file
-+Description:    Version of the u-boot running on the device's CPU
-\ No newline at end of file
-diff --git a/drivers/misc/habanalabs/sysfs.c b/drivers/misc/habanalabs/sysfs.c
-index 25eb46d29d88..67e3424d4e65 100644
---- a/drivers/misc/habanalabs/sysfs.c
-+++ b/drivers/misc/habanalabs/sysfs.c
-@@ -351,14 +351,6 @@ static ssize_t status_show(struct device *dev, struct device_attribute *attr,
- 	return sprintf(buf, "%s\n", str);
- }
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 0e7703fe733f..947cac452854 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -1580,8 +1580,19 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+ 	if (ret)
+ 		goto free_regulators;
  
--static ssize_t write_open_cnt_show(struct device *dev,
--		struct device_attribute *attr, char *buf)
--{
--	struct hl_device *hdev = dev_get_drvdata(dev);
--
--	return sprintf(buf, "%d\n", hdev->user_ctx ? 1 : 0);
--}
--
- static ssize_t soft_reset_cnt_show(struct device *dev,
- 		struct device_attribute *attr, char *buf)
- {
-@@ -461,7 +453,6 @@ static DEVICE_ATTR_RO(soft_reset_cnt);
- static DEVICE_ATTR_RO(status);
- static DEVICE_ATTR_RO(thermal_ver);
- static DEVICE_ATTR_RO(uboot_ver);
--static DEVICE_ATTR_RO(write_open_cnt);
++	for (i = 0; i < opp_table->regulator_count; i++) {
++		ret = regulator_enable(opp_table->regulators[i]);
++		if (ret < 0)
++			goto disable;
++	}
++
+ 	return opp_table;
  
- static struct bin_attribute bin_attr_eeprom = {
- 	.attr = {.name = "eeprom", .mode = (0444)},
-@@ -488,7 +479,6 @@ static struct attribute *hl_dev_attrs[] = {
- 	&dev_attr_status.attr,
- 	&dev_attr_thermal_ver.attr,
- 	&dev_attr_uboot_ver.attr,
--	&dev_attr_write_open_cnt.attr,
- 	NULL,
- };
++disable:
++	while (i != 0)
++		regulator_disable(opp_table->regulators[--i]);
++
++	i = opp_table->regulator_count;
+ free_regulators:
+ 	while (i != 0)
+ 		regulator_put(opp_table->regulators[--i]);
+@@ -1609,6 +1620,8 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
  
+ 	/* Make sure there are no concurrent readers while updating opp_table */
+ 	WARN_ON(!list_empty(&opp_table->opp_list));
++	for (i = opp_table->regulator_count - 1; i >= 0; i--)
++		regulator_disable(opp_table->regulators[i]);
+ 
+ 	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+ 		regulator_put(opp_table->regulators[i]);
 -- 
-2.17.1
+2.22.0
 
