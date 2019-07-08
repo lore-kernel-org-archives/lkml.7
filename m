@@ -2,280 +2,108 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F71C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C355C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87341216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:00:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BwqSOM3N"
+	by mail.kernel.org (Postfix) with ESMTP id 021D2216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562601655;
+	bh=4+nUPSUPPBUqM7g0oEfIbTl7e4jDJxR2coI+1h5sTyE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=PBzqnP25sCEBIxJHRlSlyOY3kDEWOp6ecD4zCXyWORi0kTk3Gi6c4TGfMVIviARhH
+	 2c3wDspfSOkJMy2qtp8XYIvwj4A843AQVjRoIn5b9ddfSh7oEJUg1+R773Yv6+0ULY
+	 RvEiM6AMflsJk7T8Spl67VSM4we+3ZrmahHt0hcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390773AbfGHQAf (ORCPT
+        id S2390460AbfGHQAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:00:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40598 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbfGHQAe (ORCPT
+        Mon, 8 Jul 2019 12:00:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40169 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728609AbfGHQAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:00:34 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x68FxVoL125385;
-        Mon, 8 Jul 2019 10:59:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562601571;
-        bh=WYMtImaCxAOoIyA7/35xcxJIjFE/oBu67J2Df3jze4w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BwqSOM3NdjWVOMhRyEoDP0f5NuJ8YLHB9C1WL6enHdk2sGL2ro7MUrskBFCG3kosc
-         nHo18CpXHmQMlCUW/Fezva/pbGSCKu1p1Jy5piFwr6vm6buVyPEVHGgRXVW9PMD+V6
-         zH6+l/naVaNO1yciCFl47hQL0dMKyIftVbj4CLQc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x68FxV3A100427
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jul 2019 10:59:31 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Jul
- 2019 10:59:30 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 8 Jul 2019 10:59:30 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x68FxUrw088409;
-        Mon, 8 Jul 2019 10:59:30 -0500
-Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
- bindings
-To:     "Andrew F. Davis" <afd@ti.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-CC:     Tony Lindgren <tony@atomide.com>, Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        David Lechner <david@lechnology.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-2-s-anna@ti.com>
- <b67e8ce6-a291-ce4c-9972-b7fc7cd08bb4@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <53868885-a78d-448a-1f2a-03a16251d028@ti.com>
-Date:   Mon, 8 Jul 2019 10:59:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Jul 2019 12:00:53 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r1so11398931wrl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=AmYPt+E4TRsks482BwVamsAcsHm6mV5jPDB/+CpZ9xI=;
+        b=VfzOwlrcl1g5HNPNVNipgh+BJOA0A1Ke9whminXJI8/+aODvJMt91RV0m3aOjylZjt
+         0NY+84y7NAX7LFUCvf1uljKZwldWKR6TX1KSy55YhE46H4kdzD9qNDb12ALR+87taRJ6
+         8qBnkwrarGRVuqRiuMWbfxnlAqFa3UmSZoQ6jpJYyV3rHEoltNcg9xk2FJ1OA3x11S4h
+         lIAWrv1S+J8nDcbSjJrc3dCJyOuPNtsY9P/ujfhxbEaLMEsh9HfOwVNQ0SGSPWQizWrH
+         GKxCVZ6ZpB5Q1ezkaAnsfLIs8QWAjDtt/lURxP4oKwDjLFkIXtqPrtXvMKeA8UlM9oHn
+         Ixng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=AmYPt+E4TRsks482BwVamsAcsHm6mV5jPDB/+CpZ9xI=;
+        b=nKst9fiBJSQuveK6deWPM485hOW0oN1ZgKkLQCQZBfKK53gQTN25pk6sCbLy/e33TK
+         JZUfoLE7EeR+SK/4axS9BbT1x6bnvWaABNmTlCuKbDNqVadQJmKmshhchLA6rY4MLAuK
+         PjsJR7qtBjNnFlo/XyLZaBaZ3Ezcv+xgHNmeYpu6fQvO9k5Jt1mN4GOnXZgFc5et2B/b
+         7OeYmAPaYHI5Pxjr/n0RYGwk8AxMZC4mTx2841FOLZTvSY/4XE++JqsZKzVRggKmI5i1
+         /P64omSeLocEEW7tsHGgQXTWkR4El7GedBozdzFO4gbLgjwlaCtbYUwuXQ/i0/c0dcqS
+         7i4w==
+X-Gm-Message-State: APjAAAV4Nm0NZK5sc5Tu8zg1UOC1a6jnlQLkNEbU4tOYNHljPJHP5Zvq
+        LLffY5nGEYbqjhcwkZT5ulE=
+X-Google-Smtp-Source: APXvYqybFpk6zwtQG2V/vBLKLLYrMWkYA1f5sOKAXKMH98nBsP1VCwEMKU41RGmoEoFe4FrBmCVkHw==
+X-Received: by 2002:adf:d08e:: with SMTP id y14mr657690wrh.309.1562601651145;
+        Mon, 08 Jul 2019 09:00:51 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id p12sm8014658wrt.13.2019.07.08.09.00.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 09:00:50 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 18:00:48 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/cache changes for v5.3
+Message-ID: <20190708160048.GA33834@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b67e8ce6-a291-ce4c-9972-b7fc7cd08bb4@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Linus,
 
-On 7/8/19 9:34 AM, Andrew F. Davis wrote:
-> On 7/7/19 11:52 PM, Suman Anna wrote:
->> The Programmable Real-Time Unit Subsystem (PRUSS) contains an interrupt
->> controller (INTC) that can handle various system input events and post
->> interrupts back to the device-level initiators. The INTC can support
->> upto 64 input events on most SoCs with individual control configuration
->> and hardware prioritization. These events are mapped onto 10 interrupt
->> lines through two levels of many-to-one mapping support. Different
->> interrupt lines are routed to the individual PRU cores or to the
->> host CPU or to other PRUSS instances.
->>
->> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
->> commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
->> a higher number of host interrupts (20 vs 10) and can handle an increased
->> number of input events (160 vs 64) from various SoC interrupt sources.
->>
->> Add the bindings document for these interrupt controllers on all the
->> applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
->> and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
->> architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
->> and J721E SoCs.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->> Prior version: https://patchwork.kernel.org/patch/10795771/
->>
->>  .../interrupt-controller/ti,pruss-intc.txt    | 92 +++++++++++++++++++
->>  1 file changed, 92 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
->> new file mode 100644
->> index 000000000000..020073c07a92
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
->> @@ -0,0 +1,92 @@
->> +PRU ICSS INTC on TI SoCs
->> +========================
->> +
->> +Each PRUSS has a single interrupt controller instance that is common to both
->> +the PRU cores. Most interrupt controllers can route 64 input events which are
->> +then mapped to 10 possible output interrupts through two levels of mapping.
->> +The input events can be triggered by either the PRUs and/or various other
->> +PRUSS internal and external peripherals. The first 2 output interrupts are
->> +fed exclusively to the internal PRU cores, with the remaining 8 (2 through 9)
->> +connected to external interrupt controllers including the MPU and/or other
->> +PRUSS instances, DSPs or devices.
->> +
->> +The K3 family of SoCs can handle 160 input events that can be mapped to 20
->> +different possible output interrupts. The additional output interrupts (10
->> +through 19) are connected to new sub-modules within the ICSSG instances.
->> +
->> +This interrupt-controller node should be defined as a child node of the
->> +corresponding PRUSS node. The node should be named "interrupt-controller".
->> +Please see the overall PRUSS bindings document for additional details
->> +including a complete example,
->> +    Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->> +
->> +Required Properties:
->> +--------------------
->> +- compatible           : should be one of the following,
->> +                             "ti,pruss-intc" for OMAP-L13x/AM18x/DA850 SoCs,
->> +                                                 AM335x family of SoCs,
->> +                                                 AM437x family of SoCs,
->> +                                                 AM57xx family of SoCs
->> +                                                 66AK2G family of SoCs
->> +                             "ti,icssg-intc" for K3 AM65x & J721E family of SoCs
->> +- reg                  : base address and size for the PRUSS INTC sub-module
->> +- interrupts           : all the interrupts generated towards the main host
->> +                         processor in the SoC. The format depends on the
->> +                         interrupt specifier for the particular SoC's ARM GIC
->> +                         parent interrupt controller. A shared interrupt can
->> +                         be skipped if the desired destination and usage is by
->> +                         a different processor/device.
->> +- interrupt-names      : should use one of the following names for each valid
->> +                         interrupt connected to ARM GIC, the name should match
->> +                         the corresponding host interrupt number,
->> +                             "host0", "host1", "host2", "host3", "host4",
->> +                             "host5", "host6" or "host7"
->> +- interrupt-controller : mark this node as an interrupt controller
->> +- #interrupt-cells     : should be 1. Client users shall use the PRU System
->> +                         event number (the interrupt source that the client
->> +                         is interested in) as the value of the interrupts
->> +                         property in their node
->> +
->> +Optional Properties:
->> +--------------------
->> +The following properties are _required_ only for some SoCs. If none of the below
->> +properties are defined, it implies that all the host interrupts 2 through 9 are
->> +connected exclusively to the ARM GIC.
->> +
->> +- ti,irqs-reserved     : an array of 8-bit elements of host interrupts between
->> +                         0 and 7 (corresponding to PRUSS INTC output interrupts
->> +                         2 through 9) that are not connected to the ARM GIC.
-> 
-> The reason for 0-7 mapping to 2-9 is not instantly clear to someone
-> reading this. If you respin this could you note that reason is
-> interrupts 0 and 1 are always routed back into the PRUSS. 
+Please pull the latest x86-cache-for-linus git tree from:
 
-Yeah, this is always going to be somewhat confusing since the driver has
-to deal with all hosts from channel-mapping perspective, but only the 8
-interrupts at most that reach MPU for handling interrupts. TRM has
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cache-for-linus
 
-Anyway, I have already mentioned the first 2 interrupt routing in the
-first paragraph above.
+   # HEAD: 2ef085bd110c5723ca08a522608ac3468dc304bd x86/resctrl: Cleanup cbm_ensure_valid()
 
-Thinking more
-> on that, the same is true for interrupt 7 ("host5") on AM437x/66AK2G yet
-> we don't skip that in the naming.. now that we have the reserved IRQ
-> mechanism above, why not leave the one-to-one interrupt to name mapping,
-> but always have at least the first two marked as reserved for all the
-> current devices:
-> 
-> ti,irqs-reserved = /bits/ 8 <0 1>;
-> 
-> Then any "hostx" listed as reserved need not be present in the host
-> interrupts property array. To me that would solve the "managing
-> interrupts not targeting the Linux running core" problem and keep the
-> names consistent, e.g.:
+Two cleanup patches.
 
-I had actually used the interrupt-names always starting from "host2"
-through "host9" (names from PRU perspective) previously, and I have
-changed this to start indexing from 0 in this series to address an
-internal review comment from Grygorii and to align with TRM. All the
-TRMs (except for AM572x) actually use the names/signals "host_intr0",
-"host_intr1".."host_intr7" etc for the interrupts going towards MPU.
-Maybe I should actually rename the interrupt-names to be host_intrX
-instead of hostX to avoid confusion and be exactly aligned with the TRM
-names. I will file a bug against AM57xx TRM to align the names with all
-other SoC TRMs.
+ Thanks,
 
-I am using "output interrupt lines" to imply names w.r.t PRU vs "host
-interrupt" to imply ARM GIC names.
+	Ingo
 
-regards
-Suman
+------------------>
+Reinette Chatre (1):
+      x86/resctrl: Cleanup cbm_ensure_valid()
 
-> 
-> /* AM437x PRU-ICSS */
-> pruss_intc: interrupt-controller@20000 {
-> 	compatible = "ti,pruss-intc";
-> 	reg = <0x20000 0x2000>;
-> 	interrupts = <                       20       21       22
-> 	                   23       24                25       26>;
-> 	interrupt-names =                   "host2", "host3", "host4",
-> 	                  "host5", "host6",          "host8", "host9";
-> 	interrupt-controller;
-> 	#interrupt-cells = <1>;
-> 	ti,irqs-reserved = /bits/ 8 <0 1 7>;
-> };
-> 
-> Instantly clear which are missing and which "hostx" maps to which host
-> interrupt number.
-> 
-> Andrew
-> 
->> +                           Eg: AM437x and 66AK2G SoCs do not have "host5"
->> +                               interrupt connected to MPU
->> +- ti,irqs-shared       : an array of 8-bit elements of host interrupts between
->> +                         0 and 7 (corresponding to PRUSS INTC output interrupts
->> +                         2 through 9) that are also connected to other devices
->> +                         or processors in the SoC.
->> +                           Eg: AM65x and J721E SoCs have "host5", "host6" and
->> +                               "host7" interrupts connected to MPU, and other
->> +                               ICSSG instances
->> +
->> +
->> +Example:
->> +--------
->> +
->> +1.	/* AM33xx PRU-ICSS */
->> +	pruss: pruss@0 {
->> +		compatible = "ti,am3356-pruss";
->> +		reg = <0x0 0x80000>;
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		...
->> +
->> +		pruss_intc: interrupt-controller@20000 {
->> +			compatible = "ti,pruss-intc";
->> +			reg = <0x20000 0x2000>;
->> +			interrupts = <20 21 22 23 24 25 26 27>;
->> +			interrupt-names = "host0", "host1", "host2",
->> +					  "host3", "host4", "host5",
->> +					  "host6", "host7";
->> +			interrupt-controller;
->> +			#interrupt-cells = <1>;
->> +			ti,irqs-shared = /bits/ 8 <0 6 7>;
->> +		};
->> +	};
->>
+Thomas Gleixner (1):
+      Merge branch 'x86/urgent' into x86/cache
+
+Uros Bizjak (1):
+      x86/resctrl: Use _ASM_BX to avoid ifdeffery
+
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  6 +-----
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 12 ++++++------
+ 2 files changed, 7 insertions(+), 11 deletions(-)
 
