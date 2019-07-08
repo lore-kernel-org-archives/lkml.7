@@ -2,243 +2,87 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D045C606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12BDC606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560C5216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=joaomoreno-com.20150623.gappssmtp.com header.i=@joaomoreno-com.20150623.gappssmtp.com header.b="SV9RDrTe"
+	by mail.kernel.org (Postfix) with ESMTP id AF76E216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405073AbfGHUfR (ORCPT
+        id S1732041AbfGHUgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:35:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39949 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405062AbfGHUfR (ORCPT
+        Mon, 8 Jul 2019 16:36:17 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38419 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728390AbfGHUgR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:35:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v19so847241wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joaomoreno-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UuwCEqDKtFNaxLgpfGBTzCIagX0sLcEdRYJOztRbLvI=;
-        b=SV9RDrTexrJPqnpIhsttuUGYNlRae4HSdIDRfIAKXbk2G4xNrnWzH5HUyDmd+K1EPP
-         QWsmjEqM+vCPc+CUm5F4n1LUqLMGWAejLBbDn1pSh0jSTQO7fDDUSOYL8b2H/ULWjlAF
-         Pi1Vv2OwnewEY2EVekqfy91E6YfDadXEN1Bvhz0dP7clSbwegkVKf+IRUZyLbPuhtRBZ
-         uSRT8jJdOPMH9RgD85x1us5uuX5B+ZV3P6rGtC8ZxmIF2mWN7owcs48xiP0r4OasH2md
-         QWIkB8dVNSIxGEL3jfUQGktgfVvpgA/BycajGr3eLSP5q4il72ZplwNGHLdMvk88kY7C
-         1s7A==
+        Mon, 8 Jul 2019 16:36:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id d17so17593496oth.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:36:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UuwCEqDKtFNaxLgpfGBTzCIagX0sLcEdRYJOztRbLvI=;
-        b=E547TgGqCKFgIDovV5DErQOmmiI7wXti39tk4QQXdL44sYHS51+Om6Kt1Lq7JP0D7c
-         r+ps3/6Gc66w74u06iqte9UxfkH9CEygRiH7pyW3EoyTjf4xBq6p2U7wbYUiFjKzhqU2
-         7s1WnlC52QUFIyPTkgKB4YSfmm+wPC1H3kpZW9Sd4SNFGoJBGsoyhGtjMNhS672fFpYi
-         tGuOmSL7mI49C9Xz+b7o8/ZtFm41hUl/SbCeJdGvZhqfIQzvLDU23yUz1vFZLsxUGkC9
-         mVlzIITlXNieqTVMNudRl/g5WID31tt6FsuHFxCs148V56u7D5I6Ws8G4E7Yh6YeRyKH
-         IrKg==
-X-Gm-Message-State: APjAAAWS2zRPajv5nIS/m7hgvxM1imRsfRtPyTD5bMFrlBNN1Nnko+A6
-        h/kB/wnSShIo9bfMFswFARnsDL3F4kt2ljrToel6FA==
-X-Google-Smtp-Source: APXvYqzq8LNRu78ZuIsVr8TOU5x9QMidvYaMJ0m8eLnZk/XPkGLmOSnGrxcnTKAUfzugpNkc9p9RvzmeHvd47d2ZbYA=
-X-Received: by 2002:a1c:f70c:: with SMTP id v12mr18080402wmh.42.1562618115193;
- Mon, 08 Jul 2019 13:35:15 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=qe5f0EDVATVL0N7NSDDI5WXAMQmNtXY4o6ydJGSb8Vs=;
+        b=hK8tK7cjj5MyLXUnojRmG64LHq5JV3s0kBTMl18nCy5vHXnz/MkMV7/YebLnI1I9hm
+         awpUSeSukqZXa56AI3tcSLVkPXWzFFmo9TB96mRJ5CH20qxvCbSpOHu+UAyUwOZ3N65l
+         RLg7V7Fxjbkduv46ydURu2FUtXr2eUKbvuY3n8sx38C8iRppQO19TBkSFli/ZjwpfU9B
+         lvyhu6dxcR9/P4QesOCunFCciWT2fM/MUc3tzjkT0g9M7UnGO3fvvyfeEzc+Lx07ZYBT
+         HxD3qL+ZKae8oATC/vd14WRmtUQ1mPFRUNNMzl8gjUzVCGeIQWhVv3bp1CS/AGQft8fM
+         ZOuQ==
+X-Gm-Message-State: APjAAAUECU6bZLqW4O0QH/Eyqt6jGl8gkAzdGUA7k7Zbm1tUwrooaYy7
+        h0MIOp2M3lyT850Dh/lOVyy1ZdNY0BO/VKYJAiY=
+X-Google-Smtp-Source: APXvYqx6tI2WpnaTybSb+TCvct1+nq7729w6Hn0HlYlR5aWgq9/dN9+1X8Vt+weNtgqwX0+zQ6R1vJ4m6gUNP+v65qs=
+X-Received: by 2002:a9d:5c11:: with SMTP id o17mr1403051otk.107.1562618176346;
+ Mon, 08 Jul 2019 13:36:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190610213106.19342-1-mail@joaomoreno.com> <CAHxFc3QC147B6j4pBztjK7stLgCveeYhJWojai_SbKNbnpC9yw@mail.gmail.com>
- <CAO-hwJ+1FyaXj0iuCjvc5R-Kqdh6PNB7Un0ko1F_NV7-f5GMdw@mail.gmail.com>
-In-Reply-To: <CAO-hwJ+1FyaXj0iuCjvc5R-Kqdh6PNB7Un0ko1F_NV7-f5GMdw@mail.gmail.com>
-From:   =?UTF-8?B?Sm/Do28gTW9yZW5v?= <mail@joaomoreno.com>
-Date:   Mon, 8 Jul 2019 22:35:04 +0200
-Message-ID: <CAHxFc3QJ1Xkgckt1BPptXT5S1xkROVdJzHTYT=GAcHXgm5UGqg@mail.gmail.com>
-Subject: Re: [PATCH] HID: apple: Fix stuck function keys when using FN
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <20190708170647.GA12313@roeck-us.net> <CAMuHMdUnSqKHA7EN1S8U7eBODs4gi-raw4P3FxnR_afhb2Zd5g@mail.gmail.com>
+ <20190708194516.GA18304@roeck-us.net> <CAMuHMdVKKkx_S_mXmCzckyiw1fbLQMEZroRT+UchHv+tgF-3RA@mail.gmail.com>
+ <20190708202226.GA15167@lst.de>
+In-Reply-To: <20190708202226.GA15167@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 8 Jul 2019 22:36:05 +0200
+Message-ID: <CAMuHMdUUpyiRp3LdfE0M96dM6kAzse+gfXWqEQWe9ScwT9GX4A@mail.gmail.com>
+Subject: Re: m68k build failures in -next: undefined reference to `arch_dma_prep_coherent'
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Greg Ungerer <gerg@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
+Hi Christoph,
 
-No worries, also pretty busy over here. Didn't mean to press.
+On Mon, Jul 8, 2019 at 10:22 PM Christoph Hellwig <hch@lst.de> wrote:
+> On Mon, Jul 08, 2019 at 10:19:41PM +0200, Geert Uytterhoeven wrote:
+> > Yeah, it started when I queued up the DMA rework.
+> > I didn't double-check when Greg said it was OK for him, as it wouldn't affect
+> > Coldfire or mmu. Sorry for that.
+> > And that has just been pulled by Linus... Oops...
 
-On Mon, 1 Jul 2019 at 10:32, Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> Hi Jo=C3=A3o,
->
-> On Sun, Jun 30, 2019 at 10:15 PM Jo=C3=A3o Moreno <mail@joaomoreno.com> w=
-rote:
-> >
-> > Hi Jiri & Benjamin,
-> >
-> > Let me know if you need something else to get this patch moving forward=
-. This
-> > fixes an issue I hit daily, it would be great to get it fixed.
->
-> Sorry for the delay, I am very busy with internal corporate stuff, and
-> I tried setting up a new CI system at home, and instead of spending a
-> couple of ours, I am down to 2 weeks of hard work, without possibility
-> to switch to the new right now :(
-> Anyway.
->
-> >
-> > Thanks.
-> >
-> > On Mon, 10 Jun 2019 at 23:31, Joao Moreno <mail@joaomoreno.com> wrote:
-> > >
-> > > This fixes an issue in which key down events for function keys would =
-be
-> > > repeatedly emitted even after the user has raised the physical key. F=
-or
-> > > example, the driver fails to emit the F5 key up event when going thro=
-ugh
-> > > the following steps:
-> > > - fnmode=3D1: hold FN, hold F5, release FN, release F5
-> > > - fnmode=3D2: hold F5, hold FN, release F5, release FN
->
-> Ouch :/
->
+Note that the build failure is more subtle: both m5307c3_defconfig and
+m5475evb_defconfig build fine in m68k/for-linus, but fail in
+next-20190708.  So it fails when combined with other changes, going
+in through a different tree (the DMA tree?).
 
-Right?!
+> The fix should have been in your inbox for a while..
 
-> > >
-> > > The repeated F5 key down events can be easily verified using xev.
-> > >
-> > > Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-> > > ---
-> > >  drivers/hid/hid-apple.c | 21 +++++++++++----------
-> > >  1 file changed, 11 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-> > > index 1cb41992aaa1..81867a6fa047 100644
-> > > --- a/drivers/hid/hid-apple.c
-> > > +++ b/drivers/hid/hid-apple.c
-> > > @@ -205,20 +205,21 @@ static int hidinput_apple_event(struct hid_devi=
-ce *hid, struct input_dev *input,
-> > >                 trans =3D apple_find_translation (table, usage->code)=
-;
-> > >
-> > >                 if (trans) {
-> > > -                       if (test_bit(usage->code, asc->pressed_fn))
-> > > -                               do_translate =3D 1;
-> > > -                       else if (trans->flags & APPLE_FLAG_FKEY)
-> > > -                               do_translate =3D (fnmode =3D=3D 2 && =
-asc->fn_on) ||
-> > > -                                       (fnmode =3D=3D 1 && !asc->fn_=
-on);
-> > > +                       int fn_on =3D value ? asc->fn_on :
-> > > +                               test_bit(usage->code, asc->pressed_fn=
-);
-> > > +
-> > > +                       if (!value)
-> > > +                               clear_bit(usage->code, asc->pressed_f=
-n);
-> > > +                       else if (asc->fn_on)
-> > > +                               set_bit(usage->code, asc->pressed_fn)=
-;
->
-> I have the feeling that this is not the correct fix here.
->
-> I might be wrong, but the following sequence might also mess up the
-> driver state, depending on how the reports are emitted:
-> - hold FN, hold F4, hold F5, release F4, release FN, release F5
->
+Thanks, your patch fixes that.
+Gr{oetje,eeting}s,
 
-I believe this should be fine. Following the code:
+                        Geert
 
-- hold FN, sets asc->fn_on to true
-- hold F4, in the trans block fn_on will be true and we'll set the F4
-bit in the bitmap
-- hold F5, in the trans block fn_on will be true and we'll set the F5 bit
-- release F4, in the trans block fn_on will be true (because of the bitmap)=
- and
-we'll clear the F4 bit
-- release FN, asc->fn_on will be false, but it doesn't matter since...
-- release F5, in the trans block we'll look into the bitmap (instead
-of asc->fn_on),
-so fn_on will be true and we'll clear the F5 bit
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-I tested it in practice using my changes:
-
-Interestingly the Apple keyboard doesn't seem to emit an even for F5 when F=
-4 is
-pressed, seems like a hardware limitation. But F6 does work. So, when I exe=
-cute
-these events in that order, everything works as it should: xev reports
-the following:
-
-KeyPress F4
-KeyPress F6
-KeyRelease F4
-KeyRelease F6
-
-> The reason is that the driver only considers you have one key pressed
-> with the modifier, and as the code changed its state based on the last
-> value.
->
-
-I believe the bitmap takes care of storing the FN state per key press. The
-trick I did was to check on the global `asc->fn_on` state only when a key
-is pressed, but check on the bitmap instead when it's released.
-
-Let me know what you think. Am I missing something here?
-
-Cheers,
-Jo=C3=A3o.
-
-> IMO a better fix would:
->
-> - keep the existing `trans` mapping lookout
-> - whenever a `trans` mapping gets found:
->   * get both translated and non-translated currently reported values
-> (`test_bit(keycode, input_dev->key)`)
->   * if one of them is set to true, then consider the keycode to be the
-> one of the key (no matter fn_on)
->     -> deal with `value` with the corrected keycode
->   * if the key was not pressed:
->     -> chose the keycode based on `fn_on` and `fnmode` states
->     and report the key press event
->
-> This should remove the nasty pressed_fn state which depends on the
-> other pressed keys.
->
-> Cheers,
-> Benjamin
->
-> > > +
-> > > +                       if (trans->flags & APPLE_FLAG_FKEY)
-> > > +                               do_translate =3D (fnmode =3D=3D 2 && =
-fn_on) ||
-> > > +                                       (fnmode =3D=3D 1 && !fn_on);
-> > >                         else
-> > >                                 do_translate =3D asc->fn_on;
-> > >
-> > >                         if (do_translate) {
-> > > -                               if (value)
-> > > -                                       set_bit(usage->code, asc->pre=
-ssed_fn);
-> > > -                               else
-> > > -                                       clear_bit(usage->code, asc->p=
-ressed_fn);
-> > > -
-> > >                                 input_event(input, usage->type, trans=
-->to,
-> > >                                                 value);
-> > >
-> > > --
-> > > 2.19.1
-> > >
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
