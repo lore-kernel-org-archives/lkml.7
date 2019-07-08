@@ -2,53 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987A0C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6EAC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F2A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EBB204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600214;
-	bh=tpryO/u4wY0j9D9y9WvRP0yb5FCkbs8oBo3Kv9/O4Rw=;
+	s=default; t=1562600218;
+	bh=xca8CYeIjzR1uo/T5EIi/0+4EJ+hh7CYFRBwbcFEwBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hZMrvG3Ykhnp+Fjwd4Aq5wE1wOmX8n7Tp3TAP3Od0GldB2fgIgunCiU4ek5kDhzaB
-	 O1E1ASeEO3n5x/X8xOP143z1xCkR6n3/QyzZX0CgbiEEXNQeAn091KZjDXQEw0pSGJ
-	 FU+vFfT2Ko+XLIH8y0WbfQ+of0UaPkIIPz1GZg30=
+	b=QnZDJVB10ldUZzeJpNCYRAlU1yn2kbhIfXYV1UNKEKMOk4+Ii8bRgLmkVuPJz20H4
+	 kCvwRvwX1TYDnC6U2AsQSy05znCo+7HEqhS+UFGYr1kifghBTHb3bKGW2pCPZvv7nL
+	 1wqHxfXabQ/sP0MByDMOv41m/hZJ9ZWhHs6vmp0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390960AbfGHPgx (ORCPT
+        id S2390949AbfGHPgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37302 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390800AbfGHPe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:56 -0400
+        id S2390543AbfGHPeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5D2204EC;
-        Mon,  8 Jul 2019 15:34:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 062DF204EC;
+        Mon,  8 Jul 2019 15:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600095;
-        bh=tpryO/u4wY0j9D9y9WvRP0yb5FCkbs8oBo3Kv9/O4Rw=;
+        s=default; t=1562600075;
+        bh=xca8CYeIjzR1uo/T5EIi/0+4EJ+hh7CYFRBwbcFEwBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ONgrxA3T0vz4/hsft7fVl1QFz1n2LBF/gpfjYvFYuh0KNVslF3vGxxFYGhbHb1E1+
-         roW7nSTucPxMXU0KYAkaiwlNub2VY+Fy/jtrN7IPKJBhph7tO0LPYmFRS+hFdTr4Nd
-         lNKg9huxct+N1HWOkvZeDuHAdy+riYtGm6h/LAFY=
+        b=im/odn07bZqIZJdy8KlF9w7/tRE8NGlRFIW4Ya13LpVn+1UX1dB0/9ksBpVtA4ksP
+         yBhseCrWSbycZAzTSfnDlmSg0ks79qSQefW1gU0BthSdEubNCFco0O9UIkh2AxlQCu
+         /XwLfYvq/RFZGmMIgMPX1EAYacrG93UzEprHh5+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Phil Auld <pauld@redhat.com>, Joel Savitz <jsavitz@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 50/96] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
-Date:   Mon,  8 Jul 2019 17:13:22 +0200
-Message-Id: <20190708150529.223016390@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com,
+        Alexander Potapenko <glider@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.1 85/96] KVM: x86: degrade WARN to pr_warn_ratelimited
+Date:   Mon,  8 Jul 2019 17:13:57 +0200
+Message-Id: <20190708150531.038899561@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,143 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d477f8c202d1f0d4791ab1263ca7657bbe5cf79e ]
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-In the case that a process is constrained by taskset(1) (i.e.
-sched_setaffinity(2)) to a subset of available cpus, and all of those are
-subsequently offlined, the scheduler will set tsk->cpus_allowed to
-the current value of task_cs(tsk)->effective_cpus.
+commit 3f16a5c318392cbb5a0c7a3d19dff8c8ef3c38ee upstream.
 
-This is done via a call to do_set_cpus_allowed() in the context of
-cpuset_cpus_allowed_fallback() made by the scheduler when this case is
-detected. This is the only call made to cpuset_cpus_allowed_fallback()
-in the latest mainline kernel.
+This warning can be triggered easily by userspace, so it should certainly not
+cause a panic if panic_on_warn is set.
 
-However, this is not sane behavior.
+Reported-by: syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com
+Suggested-by: Alexander Potapenko <glider@google.com>
+Acked-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-I will demonstrate this on a system running the latest upstream kernel
-with the following initial configuration:
-
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	ffffffff,fffffff
-	Cpus_allowed_list:	0-63
-
-(Where cpus 32-63 are provided via smt.)
-
-If we limit our current shell process to cpu2 only and then offline it
-and reonline it:
-
-	# taskset -p 4 $$
-	pid 2272's current affinity mask: ffffffffffffffff
-	pid 2272's new affinity mask: 4
-
-	# echo off > /sys/devices/system/cpu/cpu2/online
-	# dmesg | tail -3
-	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
-	[ 2195.872700] IRQ 114: no longer affine to CPU2
-	[ 2195.879128] smpboot: CPU 2 is now offline
-
-	# echo on > /sys/devices/system/cpu/cpu2/online
-	# dmesg | tail -1
-	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
-
-We see that our current process now has an affinity mask containing
-every cpu available on the system _except_ the one we originally
-constrained it to:
-
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:   ffffffff,fffffffb
-	Cpus_allowed_list:      0-1,3-63
-
-This is not sane behavior, as the scheduler can now not only place the
-process on previously forbidden cpus, it can't even schedule it on
-the cpu it was originally constrained to!
-
-Other cases result in even more exotic affinity masks. Take for instance
-a process with an affinity mask containing only cpus provided by smt at
-the moment that smt is toggled, in a configuration such as the following:
-
-	# taskset -p f000000000 $$
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	000000f0,00000000
-	Cpus_allowed_list:	36-39
-
-A double toggle of smt results in the following behavior:
-
-	# echo off > /sys/devices/system/cpu/smt/control
-	# echo on > /sys/devices/system/cpu/smt/control
-	# grep -i cpus /proc/$$/status
-	Cpus_allowed:	ffffff00,ffffffff
-	Cpus_allowed_list:	0-31,40-63
-
-This is even less sane than the previous case, as the new affinity mask
-excludes all smt-provided cpus with ids less than those that were
-previously in the affinity mask, as well as those that were actually in
-the mask.
-
-With this patch applied, both of these cases end in the following state:
-
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	ffffffff,ffffffff
-	Cpus_allowed_list:	0-63
-
-The original policy is discarded. Though not ideal, it is the simplest way
-to restore sanity to this fallback case without reinventing the cpuset
-wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
-for the previous affinity mask to be restored in this fallback case can use
-that mechanism instead.
-
-This patch modifies scheduler behavior by instead resetting the mask to
-task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
-mode. I tested the cases above on both modes.
-
-Note that the scheduler uses this fallback mechanism if and only if
-_every_ other valid avenue has been traveled, and it is the last resort
-before calling BUG().
-
-Suggested-by: Waiman Long <longman@redhat.com>
-Suggested-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Joel Savitz <jsavitz@redhat.com>
-Acked-by: Phil Auld <pauld@redhat.com>
-Acked-by: Waiman Long <longman@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/cpuset.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/kvm/x86.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 4834c4214e9c..6c9deb2cc687 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -3255,10 +3255,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
- 	spin_unlock_irqrestore(&callback_lock, flags);
- }
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1547,7 +1547,7 @@ static int set_tsc_khz(struct kvm_vcpu *
+ 			vcpu->arch.tsc_always_catchup = 1;
+ 			return 0;
+ 		} else {
+-			WARN(1, "user requested TSC rate below hardware speed\n");
++			pr_warn_ratelimited("user requested TSC rate below hardware speed\n");
+ 			return -1;
+ 		}
+ 	}
+@@ -1557,8 +1557,8 @@ static int set_tsc_khz(struct kvm_vcpu *
+ 				user_tsc_khz, tsc_khz);
  
-+/**
-+ * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
-+ * @tsk: pointer to task_struct with which the scheduler is struggling
-+ *
-+ * Description: In the case that the scheduler cannot find an allowed cpu in
-+ * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
-+ * mode however, this value is the same as task_cs(tsk)->effective_cpus,
-+ * which will not contain a sane cpumask during cases such as cpu hotplugging.
-+ * This is the absolute last resort for the scheduler and it is only used if
-+ * _every_ other avenue has been traveled.
-+ **/
-+
- void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
- {
- 	rcu_read_lock();
--	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
-+	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
-+		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
- 	rcu_read_unlock();
+ 	if (ratio == 0 || ratio >= kvm_max_tsc_scaling_ratio) {
+-		WARN_ONCE(1, "Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
+-			  user_tsc_khz);
++		pr_warn_ratelimited("Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
++			            user_tsc_khz);
+ 		return -1;
+ 	}
  
- 	/*
--- 
-2.20.1
-
 
 
