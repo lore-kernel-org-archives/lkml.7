@@ -2,132 +2,358 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DDBC606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4753C606AB
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4076C2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836AC20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 10:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tx0P6Ygy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OaJtkbrq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbfGHKuc (ORCPT
+        id S1730258AbfGHK6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 06:50:32 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38452 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfGHKub (ORCPT
+        Mon, 8 Jul 2019 06:58:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43660 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfGHK6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 06:50:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so6377702wrr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 03:50:30 -0700 (PDT)
+        Mon, 8 Jul 2019 06:58:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i189so7412554pfg.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 03:58:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lej7Q+QP3kcSJDvUANx4MpD1co7bVMerIr3ru5n/a4c=;
-        b=tx0P6Ygyb6DdA7G9POdLYsY1nwSb8R4k49+VwLBqIM1T9U1q/43us/Hdp8RMCdxoM6
-         CxuFx8aefoTs/hCz3yvx7UmSMCQs75fPh2oqTpzSzgEAVtuMo0TiIddSX/MloG/0NaMC
-         /OuHfKw1t3wHozbRyinjBNu/uYqpLFdPDxvZTgi28Oj1nGIxdbftq3SUKZrE3RxOOkST
-         1JZo4hQM22IsH+9TgOURFthDgZYKAc/w1OfQpWX5hwJ4HsE0k/ydx+szAcuMarDgp4qs
-         4If7zr2vnPvh63kFDa+exPDoE6uCHeBsdsee98ujGIC3d2X6vubZP2v1YiFM3agasNf0
-         SaBQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=d6dAM1ci7o4TpmVIsFndVbeON4KwXV2vAddiMtp+2rg=;
+        b=OaJtkbrqh3wVDVn0wJ1z7YpmxrRLRh7Cq81kUShPCKTuv09KsroCnCNfvB4j55bW/3
+         SToRBa4nJ6lmtBZr+9D8ElurhqxQTG+1VIfel9R8AapebZJEp7Z+0IwivYl4RWWkw8aN
+         sFZ+Q2iY0NBb5MAwCYcXHhQ1mpKCtq6ApGvcaq1f845FCj8cZw3gTwc9sPpoTwTZiLQX
+         Q9LSh0ThqxKYgbOYp++tUBXPzpGzT6dAnMf7o5oSZ7iei/9l11qtfLYb3N2jhc7t1vcw
+         d9FGmJCdl2o9ftP1q2fRo/jq3KUkI0D2bBdx4FlFPUdYZQ7ComK8Kh0JtRttr1W7q5bs
+         FalA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lej7Q+QP3kcSJDvUANx4MpD1co7bVMerIr3ru5n/a4c=;
-        b=iTiXQqiFGEVhhTPuBlIp9cKILjEncyMtiesaPXXbWSByPPtP4O8yKSa+Qi0xy5+NDn
-         qqq8kdPtZCNhVrLjaEFNTaCUQ9yD02AXSEzCGSCZMQsurB+UhTNsl7lSA/1aqv08wBZO
-         MyiX6cNN4fPlEJ7udLEn4Bns64pE622l981VY2VMwXGgIDC6A9rs4KLxpMsQz60+qVU/
-         Fb2Iz0dNEOr0KYamqUdeLydHAnyLTkFsYFADHXCi/4iDYzo1lENcXxfweCm0RJY38PR5
-         zb/huczoJ1hbZiJSJo8OCk4VMefg2Je++TBLL235BdL2HF7DpEuAufj/jcJvtLOaUI6j
-         8F0Q==
-X-Gm-Message-State: APjAAAXBHou/twZb00DKEmjTja5q5FXW6gpRb3leN1RqeSD+kepw3OHC
-        /As4YmcsinVAnK9J3IZiSlb7zQ==
-X-Google-Smtp-Source: APXvYqyu3f1q1SnNB9p5IHgyIAns7STGef0JfhMHOgez/jYHIaz1D/lShD2tvop5KW5jyBLxrvSP+g==
-X-Received: by 2002:a5d:5446:: with SMTP id w6mr13496134wrv.164.1562583029398;
-        Mon, 08 Jul 2019 03:50:29 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id o11sm16642628wmh.37.2019.07.08.03.50.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 03:50:28 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 11:50:26 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, lee.jones@linaro.org, jingoohan1@gmail.com,
-        dmurphy@ti.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com
-Subject: Re: [PATCH v2 3/4] dt-bindings: backlight: Add led-backlight binding
-Message-ID: <20190708105026.jfl4krv2veb7gzow@holly.lan>
-References: <20190708102700.23138-1-jjhiblot@ti.com>
- <20190708102700.23138-4-jjhiblot@ti.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=d6dAM1ci7o4TpmVIsFndVbeON4KwXV2vAddiMtp+2rg=;
+        b=PKjVyislPXThYHb59r363Pw02TGiUgefk1RfC2X46p/Z2FGf22Ouo9nLIyOA+TDM7r
+         /7xwZ59XJNDkKgC90weeSX7eYNb9VP0MT6DjQqmjAFZ5JR+x5VlF8pyGI1x5wn2XHkoX
+         w/qwpLGGcL+KkzooH9Td020MChBaPNFRHpbhcMiCuPwu7sYE8IhIhJNqOZsT32I0ZyUo
+         gEnqpU4UcmRDWIVk94mZ5wQn9lqZAtejrYYafKclmq1Ye4KEJXFqWLH85uX2QEpaPhcq
+         CmkD7snsg9x0z7Zd17rR8s/73t/flzhhYDJD4zgFYiMZLaiZas+Uzk0juJfwh2K25//k
+         3QoA==
+X-Gm-Message-State: APjAAAWqtpyZHVjX0HAM39gtbYRSpKBF1BXI3oBThXrduMuFr3fLaweB
+        tG/ydzP/7r2i8uU+E2XBXRzv7w==
+X-Google-Smtp-Source: APXvYqz1++7+NABdTV15GtQMlvDYbNUBN3T/HAMKhj2R4v7YzhrP7J3zu2vSkKjkEzUM7x+bjDCQ+Q==
+X-Received: by 2002:a63:7a4f:: with SMTP id j15mr23302231pgn.427.1562583485927;
+        Mon, 08 Jul 2019 03:58:05 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id p7sm21360144pfp.131.2019.07.08.03.58.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 03:58:05 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, mka@chromium.org,
+        ulf.hansson@linaro.org, sfr@canb.auug.org.au, pavel@ucw.cz,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V7 5/7] cpufreq: Register notifiers with the PM QoS framework
+Date:   Mon,  8 Jul 2019 16:27:52 +0530
+Message-Id: <2c7a751a58adb4ce6f345dab9714b924504009b6.1562583394.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+In-Reply-To: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
+References: <5ad2624194baa2f53acc1f1e627eb7684c577a19.1562210705.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708102700.23138-4-jjhiblot@ti.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 12:26:59PM +0200, Jean-Jacques Hiblot wrote:
-> Add DT binding for led-backlight.
-> 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> ---
->  .../bindings/leds/backlight/led-backlight.txt | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> new file mode 100644
-> index 000000000000..4f545316b288
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
-> @@ -0,0 +1,29 @@
-> +led-backlight bindings
-> +
-> +This binding is used to describe a basic backlight device made of LEDs.
-> +It can also be used to describe a backlight device controlled by the output of
-> +a LED driver.
-> +
-> +Required properties:
-> +  - compatible: "led-backlight"
-> +  - leds: a list of LEDs
-> +
-> +Optional properties:
-> +  - brightness-levels: Array of distinct brightness levels. These
-> +                       are in the range from 0 to 255. The actual brightness
-> +                       level programmed in each LED will be adjusted based on
-> +                       its maximum brightness:
-> +                       led brightness = (level * maximum brightness) / 255
+This registers the notifiers for min/max frequency constraints with the
+PM QoS framework. The constraints are also taken into consideration in
+cpufreq_set_policy().
 
-8-bits is a narrow range and likely to make animated backlight effects
-impossible because the stepping artefacts would be too obvious.
+This also relocates cpufreq_policy_put_kobj() as it is required to be
+called from cpufreq_policy_alloc() now.
 
-I'd rather see the brightness-levels table expressed in the native
-steps of the LEDs in the leds list.
+refresh_frequency_limits() is updated to avoid calling
+cpufreq_set_policy() for inactive policies and handle_update() is
+updated to have proper locking in place.
 
-I know this means that the LEDs must have identical ranges but I think
-it is OK. A backlight design whose LEDs are connected to non-identical
-drivers is either badly broken or sufficiently exotic to need to special
-purpose driver. The driver can therefore fail to probe if the LEDs are
-mismatched.
+No constraints are added until now though.
 
-> +
-> +  - default-brightness-level: The default brightness level (index into the
-> +                              array defined by the "brightness-levels" property).
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+V6->V7:
+- All callers of refresh_frequency_limits(), except handle_update(),
+  take the policy->rwsem and result in deadlock as
+  refresh_frequency_limits() also takes the same lock again. Fix that
+  by taking the rwsem from handle_update() instead.
 
-The brightness-levels property is optional... this text needs to be
-updated.
+@Rafael: Sending it before Pavel has verified it as I would be offline
+later, in case you want to apply this today itself.
 
+ drivers/cpufreq/cpufreq.c | 135 +++++++++++++++++++++++++++++---------
+ include/linux/cpufreq.h   |   3 +
+ 2 files changed, 108 insertions(+), 30 deletions(-)
 
-Daniel.
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index ceb57af15ca0..b96ef6db1bfe 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -26,6 +26,7 @@
+ #include <linux/kernel_stat.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/pm_qos.h>
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
+ #include <linux/syscore_ops.h>
+@@ -999,7 +1000,7 @@ static void add_cpu_dev_symlink(struct cpufreq_policy *policy, unsigned int cpu)
+ {
+ 	struct device *dev = get_cpu_device(cpu);
+ 
+-	if (!dev)
++	if (unlikely(!dev))
+ 		return;
+ 
+ 	if (cpumask_test_and_set_cpu(cpu, policy->real_cpus))
+@@ -1117,14 +1118,16 @@ static int cpufreq_add_policy_cpu(struct cpufreq_policy *policy, unsigned int cp
+ 
+ static void refresh_frequency_limits(struct cpufreq_policy *policy)
+ {
+-	struct cpufreq_policy new_policy = *policy;
+-
+-	pr_debug("updating policy for CPU %u\n", policy->cpu);
++	struct cpufreq_policy new_policy;
+ 
+-	new_policy.min = policy->user_policy.min;
+-	new_policy.max = policy->user_policy.max;
++	if (!policy_is_inactive(policy)) {
++		new_policy = *policy;
++		pr_debug("updating policy for CPU %u\n", policy->cpu);
+ 
+-	cpufreq_set_policy(policy, &new_policy);
++		new_policy.min = policy->user_policy.min;
++		new_policy.max = policy->user_policy.max;
++		cpufreq_set_policy(policy, &new_policy);
++	}
+ }
+ 
+ static void handle_update(struct work_struct *work)
+@@ -1133,14 +1136,60 @@ static void handle_update(struct work_struct *work)
+ 		container_of(work, struct cpufreq_policy, update);
+ 
+ 	pr_debug("handle_update for cpu %u called\n", policy->cpu);
++	down_write(&policy->rwsem);
+ 	refresh_frequency_limits(policy);
++	up_write(&policy->rwsem);
++}
++
++static int cpufreq_notifier_min(struct notifier_block *nb, unsigned long freq,
++				void *data)
++{
++	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_min);
++
++	schedule_work(&policy->update);
++	return 0;
++}
++
++static int cpufreq_notifier_max(struct notifier_block *nb, unsigned long freq,
++				void *data)
++{
++	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_max);
++
++	schedule_work(&policy->update);
++	return 0;
++}
++
++static void cpufreq_policy_put_kobj(struct cpufreq_policy *policy)
++{
++	struct kobject *kobj;
++	struct completion *cmp;
++
++	down_write(&policy->rwsem);
++	cpufreq_stats_free_table(policy);
++	kobj = &policy->kobj;
++	cmp = &policy->kobj_unregister;
++	up_write(&policy->rwsem);
++	kobject_put(kobj);
++
++	/*
++	 * We need to make sure that the underlying kobj is
++	 * actually not referenced anymore by anybody before we
++	 * proceed with unloading.
++	 */
++	pr_debug("waiting for dropping of refcount\n");
++	wait_for_completion(cmp);
++	pr_debug("wait complete\n");
+ }
+ 
+ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+ {
+ 	struct cpufreq_policy *policy;
++	struct device *dev = get_cpu_device(cpu);
+ 	int ret;
+ 
++	if (!dev)
++		return NULL;
++
+ 	policy = kzalloc(sizeof(*policy), GFP_KERNEL);
+ 	if (!policy)
+ 		return NULL;
+@@ -1157,7 +1206,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+ 	ret = kobject_init_and_add(&policy->kobj, &ktype_cpufreq,
+ 				   cpufreq_global_kobject, "policy%u", cpu);
+ 	if (ret) {
+-		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
++		dev_err(dev, "%s: failed to init policy->kobj: %d\n", __func__, ret);
+ 		/*
+ 		 * The entire policy object will be freed below, but the extra
+ 		 * memory allocated for the kobject name needs to be freed by
+@@ -1167,6 +1216,25 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+ 		goto err_free_real_cpus;
+ 	}
+ 
++	policy->nb_min.notifier_call = cpufreq_notifier_min;
++	policy->nb_max.notifier_call = cpufreq_notifier_max;
++
++	ret = dev_pm_qos_add_notifier(dev, &policy->nb_min,
++				      DEV_PM_QOS_MIN_FREQUENCY);
++	if (ret) {
++		dev_err(dev, "Failed to register MIN QoS notifier: %d (%*pbl)\n",
++			ret, cpumask_pr_args(policy->cpus));
++		goto err_kobj_remove;
++	}
++
++	ret = dev_pm_qos_add_notifier(dev, &policy->nb_max,
++				      DEV_PM_QOS_MAX_FREQUENCY);
++	if (ret) {
++		dev_err(dev, "Failed to register MAX QoS notifier: %d (%*pbl)\n",
++			ret, cpumask_pr_args(policy->cpus));
++		goto err_min_qos_notifier;
++	}
++
+ 	INIT_LIST_HEAD(&policy->policy_list);
+ 	init_rwsem(&policy->rwsem);
+ 	spin_lock_init(&policy->transition_lock);
+@@ -1177,6 +1245,11 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+ 	policy->cpu = cpu;
+ 	return policy;
+ 
++err_min_qos_notifier:
++	dev_pm_qos_remove_notifier(dev, &policy->nb_min,
++				   DEV_PM_QOS_MIN_FREQUENCY);
++err_kobj_remove:
++	cpufreq_policy_put_kobj(policy);
+ err_free_real_cpus:
+ 	free_cpumask_var(policy->real_cpus);
+ err_free_rcpumask:
+@@ -1189,30 +1262,9 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+ 	return NULL;
+ }
+ 
+-static void cpufreq_policy_put_kobj(struct cpufreq_policy *policy)
+-{
+-	struct kobject *kobj;
+-	struct completion *cmp;
+-
+-	down_write(&policy->rwsem);
+-	cpufreq_stats_free_table(policy);
+-	kobj = &policy->kobj;
+-	cmp = &policy->kobj_unregister;
+-	up_write(&policy->rwsem);
+-	kobject_put(kobj);
+-
+-	/*
+-	 * We need to make sure that the underlying kobj is
+-	 * actually not referenced anymore by anybody before we
+-	 * proceed with unloading.
+-	 */
+-	pr_debug("waiting for dropping of refcount\n");
+-	wait_for_completion(cmp);
+-	pr_debug("wait complete\n");
+-}
+-
+ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+ {
++	struct device *dev = get_cpu_device(policy->cpu);
+ 	unsigned long flags;
+ 	int cpu;
+ 
+@@ -1224,6 +1276,11 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
+ 		per_cpu(cpufreq_cpu_data, cpu) = NULL;
+ 	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+ 
++	dev_pm_qos_remove_notifier(dev, &policy->nb_max,
++				   DEV_PM_QOS_MAX_FREQUENCY);
++	dev_pm_qos_remove_notifier(dev, &policy->nb_min,
++				   DEV_PM_QOS_MIN_FREQUENCY);
++
+ 	cpufreq_policy_put_kobj(policy);
+ 	free_cpumask_var(policy->real_cpus);
+ 	free_cpumask_var(policy->related_cpus);
+@@ -2283,6 +2340,8 @@ int cpufreq_set_policy(struct cpufreq_policy *policy,
+ 		       struct cpufreq_policy *new_policy)
+ {
+ 	struct cpufreq_governor *old_gov;
++	struct device *cpu_dev = get_cpu_device(policy->cpu);
++	unsigned long min, max;
+ 	int ret;
+ 
+ 	pr_debug("setting new policy for CPU %u: %u - %u kHz\n",
+@@ -2297,11 +2356,27 @@ int cpufreq_set_policy(struct cpufreq_policy *policy,
+ 	if (new_policy->min > new_policy->max)
+ 		return -EINVAL;
+ 
++	/*
++	 * PM QoS framework collects all the requests from users and provide us
++	 * the final aggregated value here.
++	 */
++	min = dev_pm_qos_read_value(cpu_dev, DEV_PM_QOS_MIN_FREQUENCY);
++	max = dev_pm_qos_read_value(cpu_dev, DEV_PM_QOS_MAX_FREQUENCY);
++
++	if (min > new_policy->min)
++		new_policy->min = min;
++	if (max < new_policy->max)
++		new_policy->max = max;
++
+ 	/* verify the cpu speed can be set within this limit */
+ 	ret = cpufreq_driver->verify(new_policy);
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * The notifier-chain shall be removed once all the users of
++	 * CPUFREQ_ADJUST are moved to use the QoS framework.
++	 */
+ 	/* adjust if necessary - all reasons */
+ 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
+ 			CPUFREQ_ADJUST, new_policy);
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index a1467aa7f58b..95425941f46d 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -147,6 +147,9 @@ struct cpufreq_policy {
+ 
+ 	/* Pointer to the cooling device if used for thermal mitigation */
+ 	struct thermal_cooling_device *cdev;
++
++	struct notifier_block nb_min;
++	struct notifier_block nb_max;
+ };
+ 
+ struct cpufreq_freqs {
+-- 
+2.21.0.rc0.269.g1a574e7a288b
+
