@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D2AC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ED1C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDC321743
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB13B204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599993;
-	bh=YfYnE2EjNzOFpBmQyvvAYXtKa4/nrf6T7RqUEnwwf8o=;
+	s=default; t=1562599995;
+	bh=PlbhsP/1l0Cu+F69o8LIBKwjU4G9z5OkTVqCpdeIhS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SYxahDsvJGBvk9namxyNxpBd7dgrpTSKeHCnmU+XK1jjNBy6yZu68+2iNwSM+jaJP
-	 +HxrSX091pWNhNePEBzR4XsYmqGxLdLycQjcIdCQ7X7IrBfAddQGC9+5OW+DQ/SAnO
-	 XBk82iav2WP+FHf6/Fz6neI2p4x7uZCG16tKOKvU=
+	b=lnADYkHXUC5BG4j5rS3/CfNri3FPbt0FthFfD/riGFltZJneaptxtWSucds3yAf9e
+	 V4cxVGRecx3yN63AG5aefRIrWOj4XhcfNANS5nbYPzEoNDjEcgojaYxKNFgu6o08Pm
+	 xQUX19nPSZ0n+bdqnRD1hyJ+/bdv+e8kKq9f+VOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390297AbfGHPdL (ORCPT
+        id S2390312AbfGHPdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35164 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390272AbfGHPdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:33:08 -0400
+        id S2390299AbfGHPdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:33:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D12B216E3;
-        Mon,  8 Jul 2019 15:33:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC2A821743;
+        Mon,  8 Jul 2019 15:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599988;
-        bh=YfYnE2EjNzOFpBmQyvvAYXtKa4/nrf6T7RqUEnwwf8o=;
+        s=default; t=1562599991;
+        bh=PlbhsP/1l0Cu+F69o8LIBKwjU4G9z5OkTVqCpdeIhS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MZxLz+eZkGZh6xiJPM0vhh9eWdVNS1EqkEEVzFBzEuf1FrEa88mRJteXaJqu6KTM7
-         0touDKqohWGOWKXFpt/oeMAFcVfyUzHsrEDFzOdE28UOYghDTSk9x+rX7wyBAVxfuq
-         suNpQ962WBFu77tLpWzIp5MOJEvQOcCIZG2FskFY=
+        b=LliRj3q5HO6mVo5thflTnto48Pd54G6MnnJ11y0df1zwPfNUywK3Y//HgIsR/zrdf
+         jZY/wlJFZX7JwaJQGoQiZlrQD7IGNTbZZbmMFSbWDdTWPc11FVx0uuDJGrrFuadCME
+         V6BYj8J7cf/xHzEWkgdYcb/PA9sNdj/DLHxVge5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 58/96] crypto: cryptd - Fix skcipher instance memory leak
-Date:   Mon,  8 Jul 2019 17:13:30 +0200
-Message-Id: <20190708150529.641082612@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.1 59/96] ALSA: seq: fix incorrect order of dest_client/dest_ports arguments
+Date:   Mon,  8 Jul 2019 17:13:31 +0200
+Message-Id: <20190708150529.688888192@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -60,42 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 1a0fad630e0b7cff38e7691b28b0517cfbb0633f upstream.
+commit c3ea60c231446663afd6ea1054da6b7f830855ca upstream.
 
-cryptd_skcipher_free() fails to free the struct skcipher_instance
-allocated in cryptd_create_skcipher(), leading to a memory leak.  This
-is detected by kmemleak on bootup on ARM64 platforms:
+There are two occurrances of a call to snd_seq_oss_fill_addr where
+the dest_client and dest_port arguments are in the wrong order. Fix
+this by swapping them around.
 
- unreferenced object 0xffff80003377b180 (size 1024):
-   comm "cryptomgr_probe", pid 822, jiffies 4294894830 (age 52.760s)
-   backtrace:
-     kmem_cache_alloc_trace+0x270/0x2d0
-     cryptd_create+0x990/0x124c
-     cryptomgr_probe+0x5c/0x1e8
-     kthread+0x258/0x318
-     ret_from_fork+0x10/0x1c
-
-Fixes: 4e0958d19bd8 ("crypto: cryptd - Add support for skcipher")
+Addresses-Coverity: ("Arguments in wrong order")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/cryptd.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/core/seq/oss/seq_oss_ioctl.c |    2 +-
+ sound/core/seq/oss/seq_oss_rw.c    |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/cryptd.c
-+++ b/crypto/cryptd.c
-@@ -586,6 +586,7 @@ static void cryptd_skcipher_free(struct
- 	struct skcipherd_instance_ctx *ctx = skcipher_instance_ctx(inst);
+--- a/sound/core/seq/oss/seq_oss_ioctl.c
++++ b/sound/core/seq/oss/seq_oss_ioctl.c
+@@ -62,7 +62,7 @@ static int snd_seq_oss_oob_user(struct s
+ 	if (copy_from_user(ev, arg, 8))
+ 		return -EFAULT;
+ 	memset(&tmpev, 0, sizeof(tmpev));
+-	snd_seq_oss_fill_addr(dp, &tmpev, dp->addr.port, dp->addr.client);
++	snd_seq_oss_fill_addr(dp, &tmpev, dp->addr.client, dp->addr.port);
+ 	tmpev.time.tick = 0;
+ 	if (! snd_seq_oss_process_event(dp, (union evrec *)ev, &tmpev)) {
+ 		snd_seq_oss_dispatch(dp, &tmpev, 0, 0);
+--- a/sound/core/seq/oss/seq_oss_rw.c
++++ b/sound/core/seq/oss/seq_oss_rw.c
+@@ -174,7 +174,7 @@ insert_queue(struct seq_oss_devinfo *dp,
+ 	memset(&event, 0, sizeof(event));
+ 	/* set dummy -- to be sure */
+ 	event.type = SNDRV_SEQ_EVENT_NOTEOFF;
+-	snd_seq_oss_fill_addr(dp, &event, dp->addr.port, dp->addr.client);
++	snd_seq_oss_fill_addr(dp, &event, dp->addr.client, dp->addr.port);
  
- 	crypto_drop_skcipher(&ctx->spawn);
-+	kfree(inst);
- }
- 
- static int cryptd_create_skcipher(struct crypto_template *tmpl,
+ 	if (snd_seq_oss_process_event(dp, rec, &event))
+ 		return 0; /* invalid event - no need to insert queue */
 
 
