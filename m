@@ -2,51 +2,51 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA880C606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F5CC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A987B20651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C432F20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600259;
-	bh=EMd2/EMEbomDp/HYQ44yrWt9W+8QT59uhc6NBw2ZYe4=;
+	s=default; t=1562600267;
+	bh=ONtoK3BXZ/toMaRLrlTctSDqZ492BitQ+Z3AMHfxM84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DlbLCoGCIP5qqLrUP3m5NCmjrfSMd0QTI4nsInFYp78TO72aRTs1soLPRgYgUbYoh
-	 1M0y/8yslVk1WEkqAG2WbyKiTR6GoZXPq9KRqCgQdzSJI3wRJeIMDQR9fQXlPnlUpm
-	 /VO+2x1tv6udlLN4/9uRZbcfZyrYClSr0uYOHT2U=
+	b=G0Mt29JZm0Uu5Sgw8ymgHghOCTli+ycACSCDdD9RE1GE2WrStv4gi4yToIkSHfc9Q
+	 AALcj1RMnD7uxcDe39RL2kmNVzX+DzBMifrVF9nkqFgfdwVRT76Qvwkvl8wCTNv5yr
+	 ida+sRbc5c5UerxPBmZjyNvOgYm5HLsKcYyB2k2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390674AbfGHPhj (ORCPT
+        id S2389768AbfGHPb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33236 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389966AbfGHPbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:31:52 -0400
+        id S1732229AbfGHPb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:31:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18EA3216C4;
-        Mon,  8 Jul 2019 15:31:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD24620665;
+        Mon,  8 Jul 2019 15:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599911;
-        bh=EMd2/EMEbomDp/HYQ44yrWt9W+8QT59uhc6NBw2ZYe4=;
+        s=default; t=1562599887;
+        bh=ONtoK3BXZ/toMaRLrlTctSDqZ492BitQ+Z3AMHfxM84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSh3b6yhn37nohj71HrHxUFTqcJ9LUOsKJlpTwF31DJoPoUql06PoaWFNFd091WeF
-         aVW9SnM2jtZWid49ESN7Oy8GV56WFas2Yl04XNVC4Dlvs4P9K6hr+fWdpFKY4aZ2Sb
-         rCCAUX8lFfW1bCzXP7TtxXV/q2SwRbr7LeTAfuZY=
+        b=F7BTSWC8ktSNbLI2FlQxdg5p2GbouLYKyXJHpSIBCBR4+yxkkOYzZXznzwhOrp2m8
+         1pFflH2DEJ7xXaQeCZq+1tzjKetvez4Cb5H3k7HEaMxAJRtHmxoiWlS15O86yngW37
+         v3PRnXnivnWJvPUwGvWr2R/aDgGGxBBSJQZ7K+io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.1 03/96] netfilter: nf_flow_table: ignore DF bit setting
-Date:   Mon,  8 Jul 2019 17:12:35 +0200
-Message-Id: <20190708150526.452638247@linuxfoundation.org>
+        stable@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 22/96] drm/mediatek: clear num_pipes when unbind driver
+Date:   Mon,  8 Jul 2019 17:12:54 +0200
+Message-Id: <20190708150527.653822146@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,37 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+[ Upstream commit a4cd1d2b016d5d043ab2c4b9c4ec50a5805f5396 ]
 
-commit e75b3e1c9bc5b997d09bdf8eb72ab3dd3c1a7072 upstream.
+num_pipes is used for mutex created in mtk_drm_crtc_create(). If we
+don't clear num_pipes count, when rebinding driver, the count will
+be accumulated. From mtk_disp_mutex_get(), there can only be at most
+10 mutex id. Clear this number so it starts from 0 in every rebind.
 
-Its irrelevant if the DF bit is set or not, we must pass packet to
-stack in either case.
-
-If the DF bit is set, we must pass it to stack so the appropriate
-ICMP error can be generated.
-
-If the DF is not set, we must pass it to stack for fragmentation.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_flow_table_ip.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/netfilter/nf_flow_table_ip.c
-+++ b/net/netfilter/nf_flow_table_ip.c
-@@ -246,8 +246,7 @@ nf_flow_offload_ip_hook(void *priv, stru
- 	flow = container_of(tuplehash, struct flow_offload, tuplehash[dir]);
- 	rt = (struct rtable *)flow->tuplehash[dir].tuple.dst_cache;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 8718d123ccaa..bbfe3a464aea 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -400,6 +400,7 @@ static void mtk_drm_unbind(struct device *dev)
+ 	drm_dev_unregister(private->drm);
+ 	mtk_drm_kms_deinit(private->drm);
+ 	drm_dev_put(private->drm);
++	private->num_pipes = 0;
+ 	private->drm = NULL;
+ }
  
--	if (unlikely(nf_flow_exceeds_mtu(skb, flow->tuplehash[dir].tuple.mtu)) &&
--	    (ip_hdr(skb)->frag_off & htons(IP_DF)) != 0)
-+	if (unlikely(nf_flow_exceeds_mtu(skb, flow->tuplehash[dir].tuple.mtu)))
- 		return NF_ACCEPT;
- 
- 	if (skb_try_make_writable(skb, sizeof(*iph)))
+-- 
+2.20.1
+
 
 
