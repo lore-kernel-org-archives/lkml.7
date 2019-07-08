@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB498C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7A8C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46F92177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0403A2175B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599648;
-	bh=sG0Foj3U+q11NH5M5t+rxF9XnnjNxtXcNZYDCEbC3YE=;
+	s=default; t=1562599651;
+	bh=9LWas1KayOGH3hc2un4Hs+C/XRRrVJ0OVtYVULhv7Nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xCBbG9jtr3wYFSqUmXICn6peNXrYOikAbzXlHBVH+xrPyLvSSHWWKX7e4BJJZC5/v
-	 AmW97gXehPBhotuzEHdOCrNhKPPUcNZ3HZ/yGJARWunUMJ37G3kYNtT9+NkJyqwgCT
-	 +b39EOYRTlkpZyuYZJa0x4a5KG/nGsyqVlo5zQco=
+	b=AzHHt5DzSTN/n6IhQgI6YkWjMDza3VSTZQQz0g5iQwVzKXWEt/jJhRvgw4JywT8qK
+	 HSgdPlbnfyM7Nw9mXJXjO6D+Ad/f2h2d8IMjK9W33r28v6I3X7kGhVEipif3AQfGh0
+	 9NwRdH6krInbbcwslDVVlvhKIXB6PWX3TVjbiBR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389043AbfGHP1X (ORCPT
+        id S2389066AbfGHP1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55440 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389028AbfGHP1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:27:20 -0400
+        id S2389037AbfGHP11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:27:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AE9921537;
-        Mon,  8 Jul 2019 15:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 858DE2166E;
+        Mon,  8 Jul 2019 15:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599639;
-        bh=sG0Foj3U+q11NH5M5t+rxF9XnnjNxtXcNZYDCEbC3YE=;
+        s=default; t=1562599646;
+        bh=9LWas1KayOGH3hc2un4Hs+C/XRRrVJ0OVtYVULhv7Nk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RaT1T3BLA8Zs542Ano+gq5a3Mhjf/Hw0uw0DvkJqREDasr/m1PEeTRHJAO3QAJRn4
-         tSHdboSOecPhZ6IBma2nQsedIwvdBccMhs8rSPQW6cZ12TQbmaUiPujd+V73W9ATYv
-         KZSU91M1J40iWC7ICVyRvOYoOTsj/jRI/q9ZpkbE=
+        b=Shwp7gGNX1v8kOb80lPg/5KWNtWtU8Cvu/c9vHcqM7Kke8NUivBBMsjSGBGM8RPOr
+         b3QapeBtckVlm9pPGq9d32EO4NXvwoMgrXwhy4gaGHr0F6wGe94kFtRc02Mq3ZXECI
+         FL/AlJfw82e0dYSGbL4hWVyGgyEf9mThN8N4tYqc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jurgen Kramer <gtmkramer@xs4all.nl>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
         Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/90] drm: panel-orientation-quirks: Add quirk for GPD pocket2
-Date:   Mon,  8 Jul 2019 17:12:54 +0200
-Message-Id: <20190708150523.979357450@linuxfoundation.org>
+Subject: [PATCH 4.19 29/90] platform/x86: asus-wmi: Only Tell EC the OS will handle display hotkeys from asus_nb_wmi
+Date:   Mon,  8 Jul 2019 17:12:56 +0200
+Message-Id: <20190708150524.083465965@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -61,63 +62,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 15abc7110a77555d3bf72aaef46d1557db0a4ac5 ]
+[ Upstream commit 401fee8195d401b2b94dee57383f627050724d5b ]
 
-GPD has done it again, make a nice device (good), use way too generic
-DMI strings (bad) and use a portrait screen rotated 90 degrees (ugly).
+Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
+handle the display off hotkey") causes the backlight to be permanently off
+on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
+1015BX, Asus EeePC 1025C).
 
-Because of the too generic DMI strings this entry is also doing bios-date
-matching, so the gpd_pocket2 data struct may very well need to be updated
-with some extra bios-dates in the future.
+The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call added
+by that commit is made conditional in this commit and only enabled in
+the quirk_entry structs in the asus-nb-wmi driver fixing the broken
+display / backlight on various EeePC laptop models.
 
-Changes in v2:
--Add one more known BIOS date to the list of BIOS dates
-
-Cc: Jurgen Kramer <gtmkramer@xs4all.nl>
-Reported-by: Jurgen Kramer <gtmkramer@xs4all.nl>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: João Paulo Rechi Vita <jprvita@endlessm.com>
+Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey")
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190524125759.14131-1-hdegoede@redhat.com
-(cherry picked from commit 6dab9102dd7b144e5723915438e0d6c473018cd0)
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
+ drivers/platform/x86/asus-wmi.c    | 2 +-
+ drivers/platform/x86/asus-wmi.h    | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index ee4a5e1221f1..088363675940 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -50,6 +50,14 @@ static const struct drm_dmi_panel_orientation_data gpd_pocket = {
- 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index b6f2ff95c3ed..59f3a37a44d7 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -78,10 +78,12 @@ static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
+ 
+ static struct quirk_entry quirk_asus_unknown = {
+ 	.wapf = 0,
++	.wmi_backlight_set_devstate = true,
  };
  
-+static const struct drm_dmi_panel_orientation_data gpd_pocket2 = {
-+	.width = 1200,
-+	.height = 1920,
-+	.bios_dates = (const char * const []){ "06/28/2018", "08/28/2018",
-+		"12/07/2018", NULL },
-+	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
-+};
-+
- static const struct drm_dmi_panel_orientation_data gpd_win = {
- 	.width = 720,
- 	.height = 1280,
-@@ -98,6 +106,14 @@ static const struct dmi_system_id orientation_data[] = {
- 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Default string"),
- 		},
- 		.driver_data = (void *)&gpd_pocket,
-+	}, {	/* GPD Pocket 2 (generic strings, also match on bios date) */
-+		.matches = {
-+		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
-+		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Default string"),
-+		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Default string"),
-+		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Default string"),
-+		},
-+		.driver_data = (void *)&gpd_pocket2,
- 	}, {	/* GPD Win (same note on DMI match as GPD Pocket) */
- 		.matches = {
- 		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ static struct quirk_entry quirk_asus_q500a = {
+ 	.i8042_filter = asus_q500a_i8042_filter,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ /*
+@@ -92,26 +94,32 @@ static struct quirk_entry quirk_asus_q500a = {
+ static struct quirk_entry quirk_asus_x55u = {
+ 	.wapf = 4,
+ 	.wmi_backlight_power = true,
++	.wmi_backlight_set_devstate = true,
+ 	.no_display_toggle = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_wapf4 = {
+ 	.wapf = 4,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_x200ca = {
+ 	.wapf = 2,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_ux303ub = {
+ 	.wmi_backlight_native = true,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_x550lb = {
++	.wmi_backlight_set_devstate = true,
+ 	.xusb2pr = 0x01D9,
+ };
+ 
+ static struct quirk_entry quirk_asus_forceals = {
++	.wmi_backlight_set_devstate = true,
+ 	.wmi_force_als_set = true,
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index db3556dc90d1..22eac449d3a3 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2231,7 +2231,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 		err = asus_wmi_backlight_init(asus);
+ 		if (err && err != -ENODEV)
+ 			goto fail_backlight;
+-	} else
++	} else if (asus->driver->quirks->wmi_backlight_set_devstate)
+ 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
+ 
+ 	status = wmi_install_notify_handler(asus->driver->event_guid,
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 6c1311f4b04d..57a79bddb286 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -44,6 +44,7 @@ struct quirk_entry {
+ 	bool store_backlight_power;
+ 	bool wmi_backlight_power;
+ 	bool wmi_backlight_native;
++	bool wmi_backlight_set_devstate;
+ 	bool wmi_force_als_set;
+ 	int wapf;
+ 	/*
 -- 
 2.20.1
 
