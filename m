@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75509C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B38FC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450A2216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8FE21783
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599518;
-	bh=3rlcjAJthrL8jMYOtcCNxy3wPnFG1Y09KFzXtGtO8pc=;
+	s=default; t=1562599520;
+	bh=2zJRIXTgaPtOVf64Ebd7s0xuJx6YoXNgOJtmlAmSkPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VeQhpZI/c7b2TpQKeE5JWO35nfYt5iYF+RHmAhUSkyT5PVd7CHRE4/X1M4a78845r
-	 pSGpQJ0Jx5urBcKa2Nt+h1jH+M+3dRgmyfJ2ySis+H6yM5fAA4hundC2uRXkmKmPf5
-	 pGf3t4QA+Xr2nXGRZmmQRCZQ85vgysHgkUwwz/QE=
+	b=oloM90jd7hvPBxvxRD4ZSlepxz3tW+3zhkPZwMw3V31xacw5ecnJJT//yAlgZ3vl/
+	 6PRwLtPF09mDw/0M+3MSJ4gAvZKzH97WaOI5RRPdlhfZQhs7S4tGzCkBY6JdIikqBs
+	 orIxKZPJj6cdaObZtCDgo4tnQbNpaONIEeWGd3SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388548AbfGHPZQ (ORCPT
+        id S2388559AbfGHPZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52548 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388437AbfGHPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:10 -0400
+        id S2388463AbfGHPZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9C9E204EC;
-        Mon,  8 Jul 2019 15:25:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 404DE21738;
+        Mon,  8 Jul 2019 15:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599509;
-        bh=3rlcjAJthrL8jMYOtcCNxy3wPnFG1Y09KFzXtGtO8pc=;
+        s=default; t=1562599511;
+        bh=2zJRIXTgaPtOVf64Ebd7s0xuJx6YoXNgOJtmlAmSkPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6+JtOrQOQOF6J9MnG5MhAwWfHCxURK2SIbGkz4S06AuuTUl4Xk+9ZZX0pzkE1i/E
-         nmbbr84TWWRAkQ7tlmOK41I5nddUnW1yalgp/cmb62/nMetJ6rr0WVWnROos6mzwaC
-         mVUuAr8P0RlRvi3YTt1PgikPnZgKtjmgnVSFtK2A=
+        b=zGgRCTo/Cv3OmOtsjcXIyVxdqr9DmbRh/6pD6YASrWyjFb//Yg9k4tTkwy1GW/ae+
+         iHTO4vpJLQCLklpYPtbhyHu5Or7GR/NQKYTcAzkpn1jUQ7tdfSG/9LrAEWnLpYvKtu
+         SyBZsUAJlS2piiB4t+pQGaqmFWYfpJz/ALrD61b8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 38/56] ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()
-Date:   Mon,  8 Jul 2019 17:13:30 +0200
-Message-Id: <20190708150523.325386979@linuxfoundation.org>
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Hillf Danton <hdanton@sina.com>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 39/56] mm/vmscan.c: prevent useless kswapd loops
+Date:   Mon,  8 Jul 2019 17:13:31 +0200
+Message-Id: <20190708150523.402553344@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -62,184 +66,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit d5b844a2cf507fc7642c9ae80a9d585db3065c28 upstream.
+commit dffcac2cb88e4ec5906235d64a83d802580b119e upstream.
 
-The commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text
-permissions race") causes a possible deadlock between register_kprobe()
-and ftrace_run_update_code() when ftrace is using stop_machine().
+In production we have noticed hard lockups on large machines running
+large jobs due to kswaps hoarding lru lock within isolate_lru_pages when
+sc->reclaim_idx is 0 which is a small zone.  The lru was couple hundred
+GiBs and the condition (page_zonenum(page) > sc->reclaim_idx) in
+isolate_lru_pages() was basically skipping GiBs of pages while holding
+the LRU spinlock with interrupt disabled.
 
-The existing dependency chain (in reverse order) is:
+On further inspection, it seems like there are two issues:
 
--> #1 (text_mutex){+.+.}:
-       validate_chain.isra.21+0xb32/0xd70
-       __lock_acquire+0x4b8/0x928
-       lock_acquire+0x102/0x230
-       __mutex_lock+0x88/0x908
-       mutex_lock_nested+0x32/0x40
-       register_kprobe+0x254/0x658
-       init_kprobes+0x11a/0x168
-       do_one_initcall+0x70/0x318
-       kernel_init_freeable+0x456/0x508
-       kernel_init+0x22/0x150
-       ret_from_fork+0x30/0x34
-       kernel_thread_starter+0x0/0xc
+(1) If kswapd on the return from balance_pgdat() could not sleep (i.e.
+    node is still unbalanced), the classzone_idx is unintentionally set
+    to 0 and the whole reclaim cycle of kswapd will try to reclaim only
+    the lowest and smallest zone while traversing the whole memory.
 
--> #0 (cpu_hotplug_lock.rw_sem){++++}:
-       check_prev_add+0x90c/0xde0
-       validate_chain.isra.21+0xb32/0xd70
-       __lock_acquire+0x4b8/0x928
-       lock_acquire+0x102/0x230
-       cpus_read_lock+0x62/0xd0
-       stop_machine+0x2e/0x60
-       arch_ftrace_update_code+0x2e/0x40
-       ftrace_run_update_code+0x40/0xa0
-       ftrace_startup+0xb2/0x168
-       register_ftrace_function+0x64/0x88
-       klp_patch_object+0x1a2/0x290
-       klp_enable_patch+0x554/0x980
-       do_one_initcall+0x70/0x318
-       do_init_module+0x6e/0x250
-       load_module+0x1782/0x1990
-       __s390x_sys_finit_module+0xaa/0xf0
-       system_call+0xd8/0x2d0
+(2) Fundamentally isolate_lru_pages() is really bad when the
+    allocation has woken kswapd for a smaller zone on a very large machine
+    running very large jobs.  It can hoard the LRU spinlock while skipping
+    over 100s of GiBs of pages.
 
- Possible unsafe locking scenario:
+This patch only fixes (1).  (2) needs a more fundamental solution.  To
+fix (1), in the kswapd context, if pgdat->kswapd_classzone_idx is
+invalid use the classzone_idx of the previous kswapd loop otherwise use
+the one the waker has requested.
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(text_mutex);
-                               lock(cpu_hotplug_lock.rw_sem);
-                               lock(text_mutex);
-  lock(cpu_hotplug_lock.rw_sem);
-
-It is similar problem that has been solved by the commit 2d1e38f56622b9b
-("kprobes: Cure hotplug lock ordering issues"). Many locks are involved.
-To be on the safe side, text_mutex must become a low level lock taken
-after cpu_hotplug_lock.rw_sem.
-
-This can't be achieved easily with the current ftrace design.
-For example, arm calls set_all_modules_text_rw() already in
-ftrace_arch_code_modify_prepare(), see arch/arm/kernel/ftrace.c.
-This functions is called:
-
-  + outside stop_machine() from ftrace_run_update_code()
-  + without stop_machine() from ftrace_module_enable()
-
-Fortunately, the problematic fix is needed only on x86_64. It is
-the only architecture that calls set_all_modules_text_rw()
-in ftrace path and supports livepatching at the same time.
-
-Therefore it is enough to move text_mutex handling from the generic
-kernel/trace/ftrace.c into arch/x86/kernel/ftrace.c:
-
-   ftrace_arch_code_modify_prepare()
-   ftrace_arch_code_modify_post_process()
-
-This patch basically reverts the ftrace part of the problematic
-commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module
-text permissions race"). And provides x86_64 specific-fix.
-
-Some refactoring of the ftrace code will be needed when livepatching
-is implemented for arm or nds32. These architectures call
-set_all_modules_text_rw() and use stop_machine() at the same time.
-
-Link: http://lkml.kernel.org/r/20190627081334.12793-1-pmladek@suse.com
-
-Fixes: 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text permissions race")
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-[
-  As reviewed by Miroslav Benes <mbenes@suse.cz>, removed return value of
-  ftrace_run_update_code() as it is a void function.
-]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190701201847.251028-1-shakeelb@google.com
+Fixes: e716f2eb24de ("mm, vmscan: prevent kswapd sleeping prematurely due to mismatched classzone_idx")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Yang Shi <yang.shi@linux.alibaba.com>
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: Roman Gushchin <guro@fb.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/ftrace.c |    3 +++
- kernel/trace/ftrace.c    |   10 +---------
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ mm/vmscan.c |   27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -22,6 +22,7 @@
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/memory.h>
- 
- #include <trace/syscall.h>
- 
-@@ -36,6 +37,7 @@
- 
- int ftrace_arch_code_modify_prepare(void)
- {
-+	mutex_lock(&text_mutex);
- 	set_kernel_text_rw();
- 	set_all_modules_text_rw();
- 	return 0;
-@@ -45,6 +47,7 @@ int ftrace_arch_code_modify_post_process
- {
- 	set_all_modules_text_ro();
- 	set_kernel_text_ro();
-+	mutex_unlock(&text_mutex);
- 	return 0;
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3439,19 +3439,18 @@ out:
  }
  
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -34,7 +34,6 @@
- #include <linux/hash.h>
- #include <linux/rcupdate.h>
- #include <linux/kprobes.h>
--#include <linux/memory.h>
- 
- #include <trace/events/sched.h>
- 
-@@ -2693,12 +2692,10 @@ static void ftrace_run_update_code(int c
+ /*
+- * pgdat->kswapd_classzone_idx is the highest zone index that a recent
+- * allocation request woke kswapd for. When kswapd has not woken recently,
+- * the value is MAX_NR_ZONES which is not a valid index. This compares a
+- * given classzone and returns it or the highest classzone index kswapd
+- * was recently woke for.
++ * The pgdat->kswapd_classzone_idx is used to pass the highest zone index to be
++ * reclaimed by kswapd from the waker. If the value is MAX_NR_ZONES which is not
++ * a valid index then either kswapd runs for first time or kswapd couldn't sleep
++ * after previous reclaim attempt (node is still unbalanced). In that case
++ * return the zone index of the previous kswapd reclaim cycle.
+  */
+ static enum zone_type kswapd_classzone_idx(pg_data_t *pgdat,
+-					   enum zone_type classzone_idx)
++					   enum zone_type prev_classzone_idx)
  {
- 	int ret;
- 
--	mutex_lock(&text_mutex);
+ 	if (pgdat->kswapd_classzone_idx == MAX_NR_ZONES)
+-		return classzone_idx;
 -
- 	ret = ftrace_arch_code_modify_prepare();
- 	FTRACE_WARN_ON(ret);
- 	if (ret)
--		goto out_unlock;
-+		return;
- 
- 	/*
- 	 * By default we use stop_machine() to modify the code.
-@@ -2710,9 +2707,6 @@ static void ftrace_run_update_code(int c
- 
- 	ret = ftrace_arch_code_modify_post_process();
- 	FTRACE_WARN_ON(ret);
--
--out_unlock:
--	mutex_unlock(&text_mutex);
+-	return max(pgdat->kswapd_classzone_idx, classzone_idx);
++		return prev_classzone_idx;
++	return pgdat->kswapd_classzone_idx;
  }
  
- static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
-@@ -5800,7 +5794,6 @@ void ftrace_module_enable(struct module
- 	struct ftrace_page *pg;
+ static void kswapd_try_to_sleep(pg_data_t *pgdat, int alloc_order, int reclaim_order,
+@@ -3592,7 +3591,7 @@ kswapd_try_sleep:
  
- 	mutex_lock(&ftrace_lock);
--	mutex_lock(&text_mutex);
+ 		/* Read the new order and classzone_idx */
+ 		alloc_order = reclaim_order = pgdat->kswapd_order;
+-		classzone_idx = kswapd_classzone_idx(pgdat, 0);
++		classzone_idx = kswapd_classzone_idx(pgdat, classzone_idx);
+ 		pgdat->kswapd_order = 0;
+ 		pgdat->kswapd_classzone_idx = MAX_NR_ZONES;
  
- 	if (ftrace_disabled)
- 		goto out_unlock;
-@@ -5861,7 +5854,6 @@ void ftrace_module_enable(struct module
- 		ftrace_arch_code_modify_post_process();
- 
-  out_unlock:
--	mutex_unlock(&text_mutex);
- 	mutex_unlock(&ftrace_lock);
- 
- 	process_cached_mods(mod->name);
+@@ -3643,8 +3642,12 @@ void wakeup_kswapd(struct zone *zone, in
+ 	if (!cpuset_zone_allowed(zone, GFP_KERNEL | __GFP_HARDWALL))
+ 		return;
+ 	pgdat = zone->zone_pgdat;
+-	pgdat->kswapd_classzone_idx = kswapd_classzone_idx(pgdat,
+-							   classzone_idx);
++
++	if (pgdat->kswapd_classzone_idx == MAX_NR_ZONES)
++		pgdat->kswapd_classzone_idx = classzone_idx;
++	else
++		pgdat->kswapd_classzone_idx = max(pgdat->kswapd_classzone_idx,
++						  classzone_idx);
+ 	pgdat->kswapd_order = max(pgdat->kswapd_order, order);
+ 	if (!waitqueue_active(&pgdat->kswapd_wait))
+ 		return;
 
 
