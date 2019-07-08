@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FB1C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0A4C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E6A20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FB1216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599665;
-	bh=1y6TrxPpo4z/VeD6N4ELESCYUlwBI91glaQM5xDDCtU=;
+	s=default; t=1562599668;
+	bh=EeN8P+8ubVqVRWHrFYaLidONZiymiRhuZH2JS9gXpZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IY+x59gg0Mjr2P7/vE2QoM+eCp9cSO4U81dHct+LovSEZimcOZ6+COj5PzQxIt5Se
-	 UKVtSTMLgxpeW72H2oz5ohJnCfq1iYHnoB95R0bA7hak7vVmx/Q9LEz3uRpXNh6+oY
-	 2SSZtxYqUlgPJgVGnXTqsLgXYzBf/3wpqquQ5YBw=
+	b=aLtnDGCwtT/GBJHjznNW0K9DeQwmxvIVS4aPQ5bax5wHq4Y7d5i8ma/T3N8Mf/QMj
+	 Kc7A3DE05QwoVZ0yyOfpZ/uCQ8dvG1r3Jy3b2Rom1RZU2VOj0uiO+PEI3EXA126WEL
+	 sTrrRG/uvftKBtSuaaC65//66MXBzeXEqFEhIKA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389128AbfGHP1n (ORCPT
+        id S2389145AbfGHP1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:27:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55924 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:27:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389116AbfGHP1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:27:41 -0400
+        id S2389116AbfGHP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:27:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42EB320665;
-        Mon,  8 Jul 2019 15:27:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97DCF2166E;
+        Mon,  8 Jul 2019 15:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599660;
-        bh=1y6TrxPpo4z/VeD6N4ELESCYUlwBI91glaQM5xDDCtU=;
+        s=default; t=1562599664;
+        bh=EeN8P+8ubVqVRWHrFYaLidONZiymiRhuZH2JS9gXpZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ViqgjE5JbFzlO51oDc9wuwlzQfLuFXhr9K0nepVfEtEbMM4+7jdTyCdPv08mK1df1
-         ocZbGth8JRx37IUShICr7s86NHKwO9Vxh1hikHge8bvD3fh5y3bmDM8lLzAPE/j90C
-         sIsZFIW8EomDmZrSdftAwjr//5TzWkuPXJUKW7L4=
+        b=0S2bSYC8wVBsBaFZW/pzDoYUS8usVHt5ZAetNCyW3yorM8QhMLdC+gsP/KTzgh4Uc
+         4/p5pwXOMQE06zeaI6sbsOwPpSZt6/RYvjtKPkpl159y36IMJJM5A+Ma4+I0wlWyt+
+         ylgSia1NMmGhsxfZXC1QyAtSpYVUFV8yYasbdo8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/90] i2c: pca-platform: Fix GPIO lookup code
-Date:   Mon,  8 Jul 2019 17:13:00 +0200
-Message-Id: <20190708150524.275620662@linuxfoundation.org>
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Phil Auld <pauld@redhat.com>, Joel Savitz <jsavitz@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 34/90] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
+Date:   Mon,  8 Jul 2019 17:13:01 +0200
+Message-Id: <20190708150524.329971848@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -61,48 +61,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0cac264a86fbf4d6cb201fbbb73c1d335e3248a ]
+[ Upstream commit d477f8c202d1f0d4791ab1263ca7657bbe5cf79e ]
 
-The devm_gpiod_request_gpiod() call will add "-gpios" to
-any passed connection ID before looking it up.
+In the case that a process is constrained by taskset(1) (i.e.
+sched_setaffinity(2)) to a subset of available cpus, and all of those are
+subsequently offlined, the scheduler will set tsk->cpus_allowed to
+the current value of task_cs(tsk)->effective_cpus.
 
-I do not think the reset GPIO on this platform is named
-"reset-gpios-gpios" but rather "reset-gpios" in the device
-tree, so fix this up so that we get a proper reset GPIO
-handle.
+This is done via a call to do_set_cpus_allowed() in the context of
+cpuset_cpus_allowed_fallback() made by the scheduler when this case is
+detected. This is the only call made to cpuset_cpus_allowed_fallback()
+in the latest mainline kernel.
 
-Also drop the inclusion of the legacy GPIO header.
+However, this is not sane behavior.
 
-Fixes: 0e8ce93bdceb ("i2c: pca-platform: add devicetree awareness")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+I will demonstrate this on a system running the latest upstream kernel
+with the following initial configuration:
+
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	ffffffff,fffffff
+	Cpus_allowed_list:	0-63
+
+(Where cpus 32-63 are provided via smt.)
+
+If we limit our current shell process to cpu2 only and then offline it
+and reonline it:
+
+	# taskset -p 4 $$
+	pid 2272's current affinity mask: ffffffffffffffff
+	pid 2272's new affinity mask: 4
+
+	# echo off > /sys/devices/system/cpu/cpu2/online
+	# dmesg | tail -3
+	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
+	[ 2195.872700] IRQ 114: no longer affine to CPU2
+	[ 2195.879128] smpboot: CPU 2 is now offline
+
+	# echo on > /sys/devices/system/cpu/cpu2/online
+	# dmesg | tail -1
+	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
+
+We see that our current process now has an affinity mask containing
+every cpu available on the system _except_ the one we originally
+constrained it to:
+
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:   ffffffff,fffffffb
+	Cpus_allowed_list:      0-1,3-63
+
+This is not sane behavior, as the scheduler can now not only place the
+process on previously forbidden cpus, it can't even schedule it on
+the cpu it was originally constrained to!
+
+Other cases result in even more exotic affinity masks. Take for instance
+a process with an affinity mask containing only cpus provided by smt at
+the moment that smt is toggled, in a configuration such as the following:
+
+	# taskset -p f000000000 $$
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	000000f0,00000000
+	Cpus_allowed_list:	36-39
+
+A double toggle of smt results in the following behavior:
+
+	# echo off > /sys/devices/system/cpu/smt/control
+	# echo on > /sys/devices/system/cpu/smt/control
+	# grep -i cpus /proc/$$/status
+	Cpus_allowed:	ffffff00,ffffffff
+	Cpus_allowed_list:	0-31,40-63
+
+This is even less sane than the previous case, as the new affinity mask
+excludes all smt-provided cpus with ids less than those that were
+previously in the affinity mask, as well as those that were actually in
+the mask.
+
+With this patch applied, both of these cases end in the following state:
+
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	ffffffff,ffffffff
+	Cpus_allowed_list:	0-63
+
+The original policy is discarded. Though not ideal, it is the simplest way
+to restore sanity to this fallback case without reinventing the cpuset
+wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
+for the previous affinity mask to be restored in this fallback case can use
+that mechanism instead.
+
+This patch modifies scheduler behavior by instead resetting the mask to
+task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
+mode. I tested the cases above on both modes.
+
+Note that the scheduler uses this fallback mechanism if and only if
+_every_ other valid avenue has been traveled, and it is the last resort
+before calling BUG().
+
+Suggested-by: Waiman Long <longman@redhat.com>
+Suggested-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+Acked-by: Phil Auld <pauld@redhat.com>
+Acked-by: Waiman Long <longman@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pca-platform.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/cgroup/cpuset.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i2c-pca-platform.c
-index de3fe6e828cb..f50afa8e3cba 100644
---- a/drivers/i2c/busses/i2c-pca-platform.c
-+++ b/drivers/i2c/busses/i2c-pca-platform.c
-@@ -21,7 +21,6 @@
- #include <linux/platform_device.h>
- #include <linux/i2c-algo-pca.h>
- #include <linux/platform_data/i2c-pca-platform.h>
--#include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
- #include <linux/of.h>
-@@ -173,7 +172,7 @@ static int i2c_pca_pf_probe(struct platform_device *pdev)
- 	i2c->adap.dev.parent = &pdev->dev;
- 	i2c->adap.dev.of_node = np;
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 266f10cb7222..ff956ccbb6df 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -2432,10 +2432,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+ 	spin_unlock_irqrestore(&callback_lock, flags);
+ }
  
--	i2c->gpio = devm_gpiod_get_optional(&pdev->dev, "reset-gpios", GPIOD_OUT_LOW);
-+	i2c->gpio = devm_gpiod_get_optional(&pdev->dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(i2c->gpio))
- 		return PTR_ERR(i2c->gpio);
++/**
++ * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
++ * @tsk: pointer to task_struct with which the scheduler is struggling
++ *
++ * Description: In the case that the scheduler cannot find an allowed cpu in
++ * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
++ * mode however, this value is the same as task_cs(tsk)->effective_cpus,
++ * which will not contain a sane cpumask during cases such as cpu hotplugging.
++ * This is the absolute last resort for the scheduler and it is only used if
++ * _every_ other avenue has been traveled.
++ **/
++
+ void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+ {
+ 	rcu_read_lock();
+-	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
++	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
++		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
+ 	rcu_read_unlock();
  
+ 	/*
 -- 
 2.20.1
 
