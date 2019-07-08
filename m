@@ -2,45 +2,45 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2DDC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D362C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4DC20844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4C320665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfGHHFQ (ORCPT
+        id S1729287AbfGHHHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:05:16 -0400
-Received: from mga17.intel.com ([192.55.52.151]:63267 "EHLO mga17.intel.com"
+        Mon, 8 Jul 2019 03:07:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:16452 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfGHHFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:05:15 -0400
+        id S1726962AbfGHHHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 03:07:18 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 00:05:15 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 00:07:17 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,465,1557212400"; 
-   d="scan'208";a="167591766"
+   d="scan'208";a="167592741"
 Received: from liujing-mobl.ccr.corp.intel.com (HELO [10.238.129.57]) ([10.238.129.57])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2019 00:05:14 -0700
-Subject: Re: [PATCH 1/5] KVM: cpuid: do_cpuid_ent works on a whole CPUID
- function
-References: <20190704140715.31181-1-pbonzini@redhat.com>
- <20190704140715.31181-2-pbonzini@redhat.com>
-From:   Jing Liu <jing2.liu@linux.intel.com>
+  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2019 00:07:16 -0700
+Subject: Re: [PATCH 2/5] KVM: cpuid: extract do_cpuid_7_mask and support
+ multiple subleafs
 To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
-Message-ID: <50fccadc-ad5c-6548-529d-412f68cab1f5@linux.intel.com>
-Date:   Mon, 8 Jul 2019 15:05:13 +0800
+References: <20190704140715.31181-1-pbonzini@redhat.com>
+ <20190704140715.31181-3-pbonzini@redhat.com>
+From:   Jing Liu <jing2.liu@linux.intel.com>
+Message-ID: <5af77de6-3a18-a3b9-b492-c280ac4310a1@linux.intel.com>
+Date:   Mon, 8 Jul 2019 15:07:15 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190704140715.31181-2-pbonzini@redhat.com>
+In-Reply-To: <20190704140715.31181-3-pbonzini@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -51,70 +51,123 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Paolo,
 
+Thank you for refining the cpuid codes especially for case 7! It looks
+much clear now!
+
 On 7/4/2019 10:07 PM, Paolo Bonzini wrote:
-> Rename it as well as __do_cpuid_ent and __do_cpuid_ent_emulated to have
-> "func" in its name, and drop the index parameter which is always 0.
+> CPUID function 7 has multiple subleafs.  Instead of having nested
+> switch statements, move the logic to filter supported features to
+> a separate function, and call it for each subleaf.
 > 
 > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
->   arch/x86/kvm/cpuid.c | 89 +++++++++++++++++++++-----------------------
->   1 file changed, 42 insertions(+), 47 deletions(-)
+> 	Here you would have something like entry->eax = min(entry->eax, 1)
+> 	when adding subleaf 1.
 > 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 004cbd84c351..ddffc56c39b4 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -294,14 +294,19 @@ static void do_cpuid_1_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->   {
->   	entry->function = function;
->   	entry->index = index;
-> +	entry->flags = 0;
+>   arch/x86/kvm/cpuid.c | 128 +++++++++++++++++++++++++++----------------
+>   1 file changed, 81 insertions(+), 47 deletions(-)
+> 
+[...]
 > +
-
-I'm wondering if we need set entry->flags = 0 here?
-entry->flags was initialized as zero when vzalloc.
-
->   	cpuid_count(entry->function, entry->index,
->   		    &entry->eax, &entry->ebx, &entry->ecx, &entry->edx);
-> -	entry->flags = 0;
->   }
->   
-> -static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
-> -				   u32 func, u32 index, int *nent, int maxnent)
-> +static int __do_cpuid_func_emulated(struct kvm_cpuid_entry2 *entry,
-> +				    u32 func, int *nent, int maxnent)
->   {
-> +	entry->function = func;
-> +	entry->index = 0;
-> +	entry->flags = 0;
-> +
-
-The same question for flags and index, because entry is allocated
-by vzalloc.
-
->   	switch (func) {
->   	case 0:
->   		entry->eax = 7;
-> @@ -313,21 +318,18 @@ static int __do_cpuid_ent_emulated(struct kvm_cpuid_entry2 *entry,
->   		break;
->   	case 7:
->   		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
-> -		if (index == 0)
-> -			entry->ecx = F(RDPID);
+> +	switch (index) {
+> +	case 0:
 > +		entry->eax = 0;
-> +		entry->ecx = F(RDPID);
->   		++*nent;
->   	default:
+
+Here, mark: when adding subleaf 1, change to
+entry->eax = min(entry->eax, 1).
+
+> +		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+> +		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
+> +		/* TSC_ADJUST is emulated */
+> +		entry->ebx |= F(TSC_ADJUST);
+> +
+> +		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+> +		f_la57 = entry->ecx & F(LA57);
+> +		cpuid_mask(&entry->ecx, CPUID_7_ECX);
+> +		/* Set LA57 based on hardware capability. */
+> +		entry->ecx |= f_la57;
+> +		entry->ecx |= f_umip;
+> +		/* PKU is not yet implemented for shadow paging. */
+> +		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
+> +			entry->ecx &= ~F(PKU);
+> +
+> +		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+> +		cpuid_mask(&entry->edx, CPUID_7_EDX);
+> +		/*
+> +		 * We emulate ARCH_CAPABILITIES in software even
+> +		 * if the host doesn't support it.
+> +		 */
+> +		entry->edx |= F(ARCH_CAPABILITIES);
+> +		break;
+And when adding subleaf 1, plan to add codes,
+
+case 1:
+	entry->eax |= kvm_cpuid_7_1_eax_x86_features;
+	entry->ebx = entry->ecx = entry->edx =0;
+	break;
+
+What do you think?
+
+> +	default:
+> +		WARN_ON_ONCE(1);
+> +		entry->eax = 0;
+> +		entry->ebx = 0;
+> +		entry->ecx = 0;
+> +		entry->edx = 0;
+> +		break;
+> +	}
+> +}
+> +
+>   static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+>   				  int *nent, int maxnent)
+[...]
+> +	/* function 7 has additional index. */
+>   	case 7: {
+> +		int i;
+> +
+>   		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> -		entry->eax = 0;
+> -		/* Mask ebx against host capability word 9 */
+> -		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
+> -		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
+> -		// TSC_ADJUST is emulated
+> -		entry->ebx |= F(TSC_ADJUST);
+> -		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+> -		f_la57 = entry->ecx & F(LA57);
+> -		cpuid_mask(&entry->ecx, CPUID_7_ECX);
+> -		/* Set LA57 based on hardware capability. */
+> -		entry->ecx |= f_la57;
+> -		entry->ecx |= f_umip;
+> -		/* PKU is not yet implemented for shadow paging. */
+> -		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
+> -			entry->ecx &= ~F(PKU);
+> -		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+> -		cpuid_mask(&entry->edx, CPUID_7_EDX);
+> -		/*
+> -		 * We emulate ARCH_CAPABILITIES in software even
+> -		 * if the host doesn't support it.
+> -		 */
+> -		entry->edx |= F(ARCH_CAPABILITIES);
+> +		for (i = 0; ; ) {
+> +			do_cpuid_7_mask(&entry[i], i);
+> +			if (i == entry->eax)
+> +				break;
+> +			if (*nent >= maxnent)
+> +				goto out;
+> +
+> +			++i;
+> +			do_cpuid_1_ent(&entry[i], function, i);
+> +			entry[i].flags |=
+> +			       KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> +			++*nent;
+> +		}
+
+The new logic is great and adding subleaf support would be much easier!
+
 >   		break;
 >   	}
->   
-> -	entry->function = func;
-> -	entry->index = index;
-> -
->   	return 0;
->   }
->   
-
+>   	case 9:
+> 
 
 Thanks,
 Jing
