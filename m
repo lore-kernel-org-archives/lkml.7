@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46788C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D87EC606AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F50520861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9CD20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="biKGCEB3"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="R1W8KCUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbfGHLB7 (ORCPT
+        id S1730294AbfGHLCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:01:59 -0400
-Received: from onstation.org ([52.200.56.107]:56130 "EHLO onstation.org"
+        Mon, 8 Jul 2019 07:02:05 -0400
+Received: from onstation.org ([52.200.56.107]:56190 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbfGHLB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:01:57 -0400
+        id S1730266AbfGHLB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 07:01:58 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 26C3E3EE9C;
-        Mon,  8 Jul 2019 11:01:56 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 9E60048975;
+        Mon,  8 Jul 2019 11:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1562583716;
-        bh=ABCfObbpbwuoupDoFMigDxKhE1zAF3XOt0cZUmn746o=;
+        s=default; t=1562583718;
+        bh=DgaHBZzlEyqiB3ritaN8n33SgsqcrBxMo8HWSjWaz0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=biKGCEB3hPCdsoZvEmt4KP6nEyNW/8vTY1LYgY8xgImoGEstmu4nzwpIQDBx88Fp4
-         9hDkAUPsvyucUC6m6BqyGCwhzt7DxeGU51JksjBHnLT1L0RE7NyG3ZOeb+oSolH7uJ
-         Pi84jEIP+NBfh+BZ1eeVS4jT3HqydqyCUv/l25Vc=
+        b=R1W8KCUrDNvaDFW0VvoF6RuvHAmiufdyCW1EKHA1QGGOvkJ/g79ehdd3LSyCwkLdH
+         WNQMvwLojw/0TLaau0mNyl4XdF/yUA4xvLv7jY+PYSpGEZeLL8Rkgl4Sxlkj25O859
+         8v4Tl70fvCWeCsaIYIMhXfUcBmktrz1Yo7vswcao=
 From:   Brian Masney <masneyb@onstation.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
@@ -44,9 +44,9 @@ Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
         yamada.masahiro@socionext.com, treding@nvidia.com,
         bjorn.andersson@linaro.org, agross@kernel.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] gpio: introduce gpiochip_populate_parent_fwspec_{two,four}cell functions
-Date:   Mon,  8 Jul 2019 07:01:35 -0400
-Message-Id: <20190708110138.24657-2-masneyb@onstation.org>
+Subject: [PATCH 4/4] qcom: spmi-gpio: convert to hierarchical IRQ helpers in gpio core
+Date:   Mon,  8 Jul 2019 07:01:38 -0400
+Message-Id: <20190708110138.24657-5-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190708110138.24657-1-masneyb@onstation.org>
 References: <20190708110138.24657-1-masneyb@onstation.org>
@@ -57,91 +57,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce the functions gpiochip_populate_parent_fwspec_{two,four}cell
-that will be used for hierarchical IRQ support in GPIO drivers.
+Now that the GPIO core has support for hierarchical IRQ chips, convert
+Qualcomm's spmi-gpio over to use these new helpers to reduce duplicated
+code across drivers.
+
+This change was tested on a LG Nexus 5 (hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- drivers/gpio/gpiolib.c      | 24 ++++++++++++++++++++++++
- include/linux/gpio/driver.h | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+ drivers/pinctrl/qcom/Kconfig             |  1 +
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 92 +++++++-----------------
+ 2 files changed, 26 insertions(+), 67 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index d767e111694d..06c9cf714c99 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1946,6 +1946,30 @@ static bool gpiochip_hierarchy_is_hierarchical(struct gpio_chip *gc)
- 	return !!gc->irq.parent_domain;
- }
- 
-+void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
-+					     struct irq_fwspec *fwspec,
-+					     unsigned int parent_hwirq,
-+					     unsigned int parent_type)
-+{
-+	fwspec->param_count = 2;
-+	fwspec->param[0] = parent_hwirq;
-+	fwspec->param[1] = parent_type;
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_populate_parent_fwspec_twocell);
-+
-+void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
-+					      struct irq_fwspec *fwspec,
-+					      unsigned int parent_hwirq,
-+					      unsigned int parent_type)
-+{
-+	fwspec->param_count = 4;
-+	fwspec->param[0] = 0;
-+	fwspec->param[1] = parent_hwirq;
-+	fwspec->param[2] = 0;
-+	fwspec->param[3] = parent_type;
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_populate_parent_fwspec_fourcell);
-+
- #else
- 
- static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 682ad09e29f4..6b6bca20c8f9 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -493,6 +493,36 @@ struct bgpio_pdata {
- 	int ngpio;
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index 27ab585a639c..9b36da702925 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -138,6 +138,7 @@ config PINCTRL_QCOM_SPMI_PMIC
+        select PINMUX
+        select PINCONF
+        select GENERIC_PINCONF
++       select GPIOLIB_IRQCHIP
+        select IRQ_DOMAIN_HIERARCHY
+        help
+          This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index f39da87ea185..0bef149c2f16 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -170,8 +170,6 @@ struct pmic_gpio_state {
+ 	struct regmap	*map;
+ 	struct pinctrl_dev *ctrl;
+ 	struct gpio_chip chip;
+-	struct fwnode_handle *fwnode;
+-	struct irq_domain *domain;
  };
  
-+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-+
-+void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
-+					     struct irq_fwspec *fwspec,
-+					     unsigned int parent_hwirq,
-+					     unsigned int parent_type);
-+void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
-+					      struct irq_fwspec *fwspec,
-+					      unsigned int parent_hwirq,
-+					      unsigned int parent_type);
-+
-+#else
-+
-+static void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
-+						    struct irq_fwspec *fwspec,
-+						    unsigned int parent_hwirq,
-+						    unsigned int parent_type)
-+{
-+}
-+
-+static void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
-+						     struct irq_fwspec *fwspec,
-+						     unsigned int parent_hwirq,
-+						     unsigned int parent_type)
-+{
-+}
-+
-+#endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
-+
-+
- #if IS_ENABLED(CONFIG_GPIO_GENERIC)
+ static const struct pinconf_generic_params pmic_gpio_bindings[] = {
+@@ -751,23 +749,6 @@ static int pmic_gpio_of_xlate(struct gpio_chip *chip,
+ 	return gpio_desc->args[0] - PMIC_GPIO_PHYSICAL_OFFSET;
+ }
  
- int bgpio_init(struct gpio_chip *gc, struct device *dev,
+-static int pmic_gpio_to_irq(struct gpio_chip *chip, unsigned pin)
+-{
+-	struct pmic_gpio_state *state = gpiochip_get_data(chip);
+-	struct irq_fwspec fwspec;
+-
+-	fwspec.fwnode = state->fwnode;
+-	fwspec.param_count = 2;
+-	fwspec.param[0] = pin + PMIC_GPIO_PHYSICAL_OFFSET;
+-	/*
+-	 * Set the type to a safe value temporarily. This will be overwritten
+-	 * later with the proper value by irq_set_type.
+-	 */
+-	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+-
+-	return irq_create_fwspec_mapping(&fwspec);
+-}
+-
+ static void pmic_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ {
+ 	struct pmic_gpio_state *state = gpiochip_get_data(chip);
+@@ -787,7 +768,6 @@ static const struct gpio_chip pmic_gpio_gpio_template = {
+ 	.request		= gpiochip_generic_request,
+ 	.free			= gpiochip_generic_free,
+ 	.of_xlate		= pmic_gpio_of_xlate,
+-	.to_irq			= pmic_gpio_to_irq,
+ 	.dbg_show		= pmic_gpio_dbg_show,
+ };
+ 
+@@ -964,46 +944,24 @@ static int pmic_gpio_domain_translate(struct irq_domain *domain,
+ 	return 0;
+ }
+ 
+-static int pmic_gpio_domain_alloc(struct irq_domain *domain, unsigned int virq,
+-				  unsigned int nr_irqs, void *data)
++static unsigned int pmic_gpio_child_pin_to_irq(struct gpio_chip *chip,
++					       unsigned int pin)
+ {
+-	struct pmic_gpio_state *state = container_of(domain->host_data,
+-						     struct pmic_gpio_state,
+-						     chip);
+-	struct irq_fwspec *fwspec = data;
+-	struct irq_fwspec parent_fwspec;
+-	irq_hw_number_t hwirq;
+-	unsigned int type;
+-	int ret, i;
+-
+-	ret = pmic_gpio_domain_translate(domain, fwspec, &hwirq, &type);
+-	if (ret)
+-		return ret;
+-
+-	for (i = 0; i < nr_irqs; i++)
+-		irq_domain_set_info(domain, virq + i, hwirq + i,
+-				    &pmic_gpio_irq_chip, state,
+-				    handle_level_irq, NULL, NULL);
++	return pin + PMIC_GPIO_PHYSICAL_OFFSET;
++}
+ 
+-	parent_fwspec.fwnode = domain->parent->fwnode;
+-	parent_fwspec.param_count = 4;
+-	parent_fwspec.param[0] = 0;
+-	parent_fwspec.param[1] = hwirq + 0xc0;
+-	parent_fwspec.param[2] = 0;
+-	parent_fwspec.param[3] = fwspec->param[1];
++static int pmic_gpio_child_to_parent_hwirq(struct gpio_chip *chip,
++					   unsigned int child_hwirq,
++					   unsigned int child_type,
++					   unsigned int *parent_hwirq,
++					   unsigned int *parent_type)
++{
++	*parent_hwirq = child_hwirq + 0xc0;
++	*parent_type = child_type;
+ 
+-	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
+-					    &parent_fwspec);
++	return 0;
+ }
+ 
+-static const struct irq_domain_ops pmic_gpio_domain_ops = {
+-	.activate = gpiochip_irq_domain_activate,
+-	.alloc = pmic_gpio_domain_alloc,
+-	.deactivate = gpiochip_irq_domain_deactivate,
+-	.free = irq_domain_free_irqs_common,
+-	.translate = pmic_gpio_domain_translate,
+-};
+-
+ static int pmic_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct irq_domain *parent_domain;
+@@ -1013,6 +971,7 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	struct pinctrl_desc *pctrldesc;
+ 	struct pmic_gpio_pad *pad, *pads;
+ 	struct pmic_gpio_state *state;
++	struct gpio_irq_chip *girq;
+ 	int ret, npins, i;
+ 	u32 reg;
+ 
+@@ -1092,19 +1051,21 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	if (!parent_domain)
+ 		return -ENXIO;
+ 
+-	state->fwnode = of_node_to_fwnode(state->dev->of_node);
+-	state->domain = irq_domain_create_hierarchy(parent_domain, 0,
+-						    state->chip.ngpio,
+-						    state->fwnode,
+-						    &pmic_gpio_domain_ops,
+-						    &state->chip);
+-	if (!state->domain)
+-		return -ENODEV;
++	girq = &state->chip.irq;
++	girq->chip = &pmic_gpio_irq_chip;
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_level_irq;
++	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
++	girq->parent_domain = parent_domain;
++	girq->child_to_parent_hwirq = pmic_gpio_child_to_parent_hwirq;
++	girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_fourcell;
++	girq->child_pin_to_irq = pmic_gpio_child_pin_to_irq;
++	girq->child_irq_domain_ops.translate = pmic_gpio_domain_translate;
+ 
+ 	ret = gpiochip_add_data(&state->chip, state);
+ 	if (ret) {
+ 		dev_err(state->dev, "can't add gpio chip\n");
+-		goto err_chip_add_data;
++		return ret;
+ 	}
+ 
+ 	/*
+@@ -1130,8 +1091,6 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 
+ err_range:
+ 	gpiochip_remove(&state->chip);
+-err_chip_add_data:
+-	irq_domain_remove(state->domain);
+ 	return ret;
+ }
+ 
+@@ -1140,7 +1099,6 @@ static int pmic_gpio_remove(struct platform_device *pdev)
+ 	struct pmic_gpio_state *state = platform_get_drvdata(pdev);
+ 
+ 	gpiochip_remove(&state->chip);
+-	irq_domain_remove(state->domain);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
