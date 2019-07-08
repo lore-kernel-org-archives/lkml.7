@@ -2,163 +2,130 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3D7C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361ECC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDB821479
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD6D21743
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jy8Ff5Ne"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="iGxEo3Er"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388261AbfGHQbr (ORCPT
+        id S2388297AbfGHQbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:31:47 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43034 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728834AbfGHQbq (ORCPT
+        Mon, 8 Jul 2019 12:31:52 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40160 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388418AbfGHQbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:31:46 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c19so5746680lfm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:31:44 -0700 (PDT)
+        Mon, 8 Jul 2019 12:31:49 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r1so11513185wrl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3muSErcKEFndhXfaKY3ATCVtuVvwHasHWrKAnKptt3A=;
-        b=jy8Ff5Nekqo/UDsSM6LPdZ1/vxXRxHPPtCQNmrMM9JBSzKLh/D5A49NUn+QH8yxpsN
-         ZcneME9bQ5PEkkfjrJ5FFDXn51FOriVckEKMGfCX2C3b3tapU4Zog43RMlaoakymFFVr
-         8v2hEmD0TJZAZo2mtG7DNytqbW2S69YhcO4m+up5YxpC1iCRYbyIQ5rNjx0uOSmoxkvX
-         JAn9KqrTnU2fCfxIxP3Js5Muakzs0ucaDQ+dNOqm7KGl0mMoAvZd8PteWG2J87NJ6y5T
-         ApLhbzQONg2+flpPM4Evj/KZ0VrvDrl48NOSfNPbN7psuTAsrlP8nOA5fMCMQtkl1YMH
-         J2pg==
+        d=kinvolk.io; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=amfYeislYJ8EeT6TDcXvFdnxBjp9KM9m4SLqeYyRX4s=;
+        b=iGxEo3ErstIbpnRCA6hd+jmfSU0hCfTpvTKR6lvsxesRxZHf1hoNU5JuBoXW3jQVVU
+         QpC+S686rdjpn9J+WWGmQaUXctXp5v5m2wY/OlhNR+Ayr3kqJxXU3Ig9XtNGK75HceN9
+         r6SBGDX9r2Mm8acAfQ74175bgJbek0xTFYta4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3muSErcKEFndhXfaKY3ATCVtuVvwHasHWrKAnKptt3A=;
-        b=MiTa4Z5sjw0ScdFi6+wrNfikbd0dO8YSqkgTycUdneADIdwY9ZUNJeWBgRTmZIJoE2
-         0orTgwY4kByoFyJwJRH0qtkVNP9yyvwpUakys0DVaVp1K+lQ/9kgUdwEK+ZEzckwUCXw
-         lfAwKwv7b3AkbgliQ3YT8Xt0CN/nqjMajOuk0itxupKgp+wDJilMWkfEEaRm5M9AHkJV
-         yyWdkGrBOpQrpGPsrVFCrbGDC4MNdo+k3bKYjFqyhaxe/jaqn2j390hGEdH3Oqj+Ice0
-         5z/rX+/EO+QV3wvmWksel46BUUS24tvDrgpnIG9y7X0f9OnXvFXk3geDOfG+y5bRbisS
-         kK0A==
-X-Gm-Message-State: APjAAAXhksEEcJw7pGr4mnNDUD36XmagOEGTierRNW2HXcw8LQDLwowy
-        rMfZHzBTw3LPY4cIRYHjjQHzEg==
-X-Google-Smtp-Source: APXvYqxUVvYjuVf39gxQ380dX6pWA86hhvJUjir+HrNiY0cZ5linR0Mbx8/ENcW/g4VOsocx8t9j7Q==
-X-Received: by 2002:a19:5f46:: with SMTP id a6mr9474420lfj.142.1562603504069;
-        Mon, 08 Jul 2019 09:31:44 -0700 (PDT)
-Received: from jax (h-84-105.A175.priv.bahnhof.se. [79.136.84.105])
-        by smtp.gmail.com with ESMTPSA id y5sm3724894ljj.5.2019.07.08.09.31.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Jul 2019 09:31:43 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 18:31:41 +0200
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     corbet@lwn.net, dhowells@redhat.com, jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org,
-        serge@hallyn.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Subject: Re: [RFC 0/7] Introduce TEE based Trusted Keys support
-Message-ID: <20190708163140.GB28253@jax>
-References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
- <CAFA6WYPn3HB6BRocKmKTR+ZPE=Fav5w1TUdRgmLp-NkYobp3rw@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=amfYeislYJ8EeT6TDcXvFdnxBjp9KM9m4SLqeYyRX4s=;
+        b=e0/NC+ZDmRfkD77rXMGzW9ckwzZA5Lvq28AyNLmcaG9lzHZFKEXnJrlWM0OLAUZD9Q
+         H7eJ5SrF1Q2DDrmL2Sj2+rDYjtL13KnsDv/3KvHGla9TCtbWvAeY3uom4WlumomTLDEv
+         wWgmhqusCLhv7fMWhqImMGl96yJDKrWRsXCg2ZgNxTnTAlrOnsgdn9jPtU3V5isDXKAJ
+         MO+8BtVzYMSVMFh3MK8sSWwDZ1DOgaxthKZ6J6V82lCxBKlVWSNNKcLXUj5i82AiGbtL
+         ceZtcxirT338Jq2LW75UbJppjyug10FCNEfNfi0Cs4KqFUCY9XL/bgzwEo7hKZ31DqC2
+         wSBw==
+X-Gm-Message-State: APjAAAUSvMl3NcX93d4QdFAkD2eugDdDvOyJv7GoAa6f4gDEJ//d1mK8
+        YHVLcPCKF9Y/QVQiqOttLDWMcRcxzy+lnA==
+X-Google-Smtp-Source: APXvYqwxUunAJhKUnVcTSUV6gdzpyIQotbg9qXmr0mcKTSCOn3444ijLQOND9itE4kXqRoTQnQgfrw==
+X-Received: by 2002:adf:f8cf:: with SMTP id f15mr19391048wrq.333.1562603507442;
+        Mon, 08 Jul 2019 09:31:47 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5aedbe.dynamic.kabel-deutschland.de. [95.90.237.190])
+        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 09:31:46 -0700 (PDT)
+From:   Krzesimir Nowak <krzesimir@kinvolk.io>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        Krzesimir Nowak <krzesimir@kinvolk.io>
+Subject: [bpf-next v3 01/12] selftests/bpf: Print a message when tester could not run a program
+Date:   Mon,  8 Jul 2019 18:31:10 +0200
+Message-Id: <20190708163121.18477-2-krzesimir@kinvolk.io>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190708163121.18477-1-krzesimir@kinvolk.io>
+References: <20190708163121.18477-1-krzesimir@kinvolk.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYPn3HB6BRocKmKTR+ZPE=Fav5w1TUdRgmLp-NkYobp3rw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sumit,
+This prints a message when the error is about program type being not
+supported by the test runner or because of permissions problem. This
+is to see if the program we expected to run was actually executed.
 
-On Mon, Jul 08, 2019 at 06:11:39PM +0530, Sumit Garg wrote:
-> Hi Jens,
-> 
-> On Thu, 13 Jun 2019 at 16:01, Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Add support for TEE based trusted keys where TEE provides the functionality
-> > to seal and unseal trusted keys using hardware unique key. Also, this is
-> > an alternative in case platform doesn't possess a TPM device.
-> >
-> > This series also adds some TEE features like:
-> >
-> > Patch #1, #2 enables support for registered kernel shared memory with TEE.
-> >
-> 
-> Would you like to pick up Patch #1, #2 separately? I think both these
-> patches add independent functionality and also got reviewed-by tags
-> too.
+The messages are open-coded because strerror(ENOTSUPP) returns
+"Unknown error 524".
 
-I think it makes more sense to keep them together in the same patch
-series or could end up with dependencies between trees.
+Changes since v2:
+- Also print "FAIL" on an unexpected bpf_prog_test_run error, so there
+  is a corresponding "FAIL" message for each failed test.
 
-If you don't think dependencies will be an issue then I don't mind
-picking them up, in that case they'd likely sit in an arm-soc branch
-until next merge window. However, I think that #3 (support for private
-kernel login method) should be included too and that one isn't ready
-yet.
+Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+---
+ tools/testing/selftests/bpf/test_verifier.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-Thanks,
-Jens
+diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+index c5514daf8865..b8d065623ead 100644
+--- a/tools/testing/selftests/bpf/test_verifier.c
++++ b/tools/testing/selftests/bpf/test_verifier.c
+@@ -831,11 +831,20 @@ static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
+ 				tmp, &size_tmp, &retval, NULL);
+ 	if (unpriv)
+ 		set_admin(false);
+-	if (err && errno != 524/*ENOTSUPP*/ && errno != EPERM) {
+-		printf("Unexpected bpf_prog_test_run error ");
+-		return err;
++	if (err) {
++		switch (errno) {
++		case 524/*ENOTSUPP*/:
++			printf("Did not run the program (not supported) ");
++			return 0;
++		case EPERM:
++			printf("Did not run the program (no permission) ");
++			return 0;
++		default:
++			printf("FAIL: Unexpected bpf_prog_test_run error (%s) ", strerror(saved_errno));
++			return err;
++		}
+ 	}
+-	if (!err && retval != expected_val &&
++	if (retval != expected_val &&
+ 	    expected_val != POINTER_VALUE) {
+ 		printf("FAIL retval %d != %d ", retval, expected_val);
+ 		return 1;
+-- 
+2.20.1
 
-> 
-> 
-> -Sumit
-> 
-> > Patch #3 enables support for private kernel login method required for
-> > cases like trusted keys where we don't wan't user-space to directly access
-> > TEE service to retrieve trusted key contents.
-> >
-> > Rest of the patches from #4 to #7 adds support for TEE based trusted keys.
-> >
-> > This patch-set has been tested with OP-TEE based pseudo TA which can be
-> > found here [1].
-> >
-> > Looking forward to your valuable feedback/suggestions.
-> >
-> > [1] https://github.com/OP-TEE/optee_os/pull/3082
-> >
-> > Sumit Garg (7):
-> >   tee: optee: allow kernel pages to register as shm
-> >   tee: enable support to register kernel memory
-> >   tee: add private login method for kernel clients
-> >   KEYS: trusted: Introduce TEE based Trusted Keys
-> >   KEYS: encrypted: Allow TEE based trusted master keys
-> >   doc: keys: Document usage of TEE based Trusted Keys
-> >   MAINTAINERS: Add entry for TEE based Trusted Keys
-> >
-> >  Documentation/security/keys/tee-trusted.rst      |  93 +++++
-> >  MAINTAINERS                                      |   9 +
-> >  drivers/tee/optee/call.c                         |   7 +
-> >  drivers/tee/tee_core.c                           |   6 +
-> >  drivers/tee/tee_shm.c                            |  16 +-
-> >  include/keys/tee_trusted.h                       |  84 ++++
-> >  include/keys/trusted-type.h                      |   1 +
-> >  include/linux/tee_drv.h                          |   1 +
-> >  include/uapi/linux/tee.h                         |   2 +
-> >  security/keys/Kconfig                            |   3 +
-> >  security/keys/Makefile                           |   3 +
-> >  security/keys/encrypted-keys/masterkey_trusted.c |  10 +-
-> >  security/keys/tee_trusted.c                      | 506 +++++++++++++++++++++++
-> >  13 files changed, 737 insertions(+), 4 deletions(-)
-> >  create mode 100644 Documentation/security/keys/tee-trusted.rst
-> >  create mode 100644 include/keys/tee_trusted.h
-> >  create mode 100644 security/keys/tee_trusted.c
-> >
-> > --
-> > 2.7.4
-> >
