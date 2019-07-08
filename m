@@ -2,82 +2,73 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E52C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D605C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5944020861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B8520861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbfGHNRu (ORCPT
+        id S1731282AbfGHNTp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:17:50 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39401 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfGHNRt (ORCPT
+        Mon, 8 Jul 2019 09:19:45 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46789 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfGHNTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:17:49 -0400
-Received: by mail-qk1-f193.google.com with SMTP id w190so695423qkc.6;
-        Mon, 08 Jul 2019 06:17:49 -0700 (PDT)
+        Mon, 8 Jul 2019 09:19:45 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r4so13166247qkm.13;
+        Mon, 08 Jul 2019 06:19:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+wz0H7gl6Q8zjC86ZgnxBevLyGHVnIvyQ3olnsvn8E=;
-        b=fjJxDPyFBybE513GphmBzJNiI70XekMgiG/AZaGOdL0cgXs2PZE+gyW0OE9tAmh8AJ
-         ryieVUBI2sqF1yUC+uF5doJF+ycYQpGL7ntNuJIUMn04R2OQpY9wtgU4duXuKnduqjWy
-         JwjccKHArKxO+ypso89Mo9XBAc+iP8rnrqtN2lrA5/sYhtPXWGlln8n6t43PMOTlNPNB
-         n/sGC8LpQMXqCiOjrHinmb+xWGqtwJUrWjklnP/RTR41UMJbJXjAZnAvJKGHCBaNy0sz
-         djrXbmqc0d3szCj3kFyiFRV/qZU9gSsA5J75KqnIo6ACnaR5+cL9y4wUI5z8HTNkDEOh
-         9yjA==
-X-Gm-Message-State: APjAAAWMRiibaw4/lMS2fYmR2VspnE5h/W4qWmox53fsM9cIyciLmHvd
-        4+GdZ7oooKi/yNmcrwiyQLV63+wKgQuidGpAkqw=
-X-Google-Smtp-Source: APXvYqyIS1Sjxxl24XUtXEUwisidsyy4+zyUtieDs6+t7pHB0J8zaYr1exFbHgLoYk5Qry+Zjrak17QcUlXg0jtwXFc=
-X-Received: by 2002:a37:5f45:: with SMTP id t66mr14271104qkb.286.1562591868590;
- Mon, 08 Jul 2019 06:17:48 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SzbhuV/R5taZNptI2ygE950lIemU0Db18Xrnu/N80Ms=;
+        b=TFIj4WrTZbwUuFW59QihtT38QwlNrWOS3yfe6WB9v/XmotdI7crfXsd8zgmhgACVjT
+         e8fkVzBdeBAf6/MDU/vyWaKPNCkWI33Mm8UxPMYs9PmJVsdkRAoLrNqKFB8yR+l7OCHg
+         +icqHrWBhdk9PYvr7a1+07zMatl+MgC58N2COmrnEM+ijMBV/ufr2k+g0txoEYu4ir3+
+         dQeFJCvN6IDIm+2tabZI991NDEc/pfdfe+6p1qUMs2fOs1gbLtVU2JzWuE8QjKzOin6b
+         +5KgzkYgmDmNgAU1R2YcpjcKCxBOPNR0Ejs8CU67J5OSwZq5gWyAjKiWDmqut1uD5D6d
+         JT5w==
+X-Gm-Message-State: APjAAAWh3XeiV35+pfLKx1lAU6+Xu/S0xi/C96atzvLIIqInTGIvTlQV
+        q/HuLgo+5IQDbRonBm5LG/sr4ERU4yxBGjTdSio=
+X-Google-Smtp-Source: APXvYqyWMbI3aMnuYlyu/Ox1IffphTH+LvZqJH0Foq2cj6a51UdOphd5OwiQr9EqCu3tWjnBP4Hoy2gaxLwVDA4T2UI=
+X-Received: by 2002:a05:620a:b:: with SMTP id j11mr10525816qki.352.1562591984354;
+ Mon, 08 Jul 2019 06:19:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708124547.3515538-1-arnd@arndb.de> <20190708130010.pnxlzi5vptuyppxz@treble>
-In-Reply-To: <20190708130010.pnxlzi5vptuyppxz@treble>
+References: <20190708123843.3302581-1-arnd@arndb.de> <d30c122c-297e-3370-86d6-039388b48cea@gmail.com>
+In-Reply-To: <d30c122c-297e-3370-86d6-039388b48cea@gmail.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 8 Jul 2019 15:17:31 +0200
-Message-ID: <CAK8P3a0NggP8KbETOfXqoNfu6Gc13QTT+ME3SbK14nWaTWXvCg@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] Revert "bpf: Fix ORC unwinding in non-JIT BPF code"
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+Date:   Mon, 8 Jul 2019 15:19:28 +0200
+Message-ID: <CAK8P3a3NBrBRuRQawJqZr+awRVfqNsMmDw7qw7oRjWKhKOjPkg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: tegra: fix debugfs compile error
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:11 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Mon, Jul 8, 2019 at 3:06 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+> 08.07.2019 15:38, Arnd Bergmann пишет:
 >
-> On Mon, Jul 08, 2019 at 02:45:23PM +0200, Arnd Bergmann wrote:
-> > Apparently this was a bit premature, at least I still get this
-> > warning with gcc-8.1:
-> >
-> > kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x44d2: sibling call from callable instruction with modified stack frame
-> >
-> > This reverts commit b22cf36c189f31883ad0238a69ccf82aa1f3b16b.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> The offending patch should be reverted already, please see [1].
 >
-> Yes, I have been working on a fix.
->
-> The impact is that ORC unwinding is broken in this function for
-> CONFIG_RETPOLINE=n.
->
-> I don't think we want to revert this patch though, because that will
-> broaden the impact to the CONFIG_RETPOLINE=y case.  Anyway I hope to
-> have fixes soon.
+> [1] https://patchwork.ozlabs.org/patch/1128007/#2210871
 
-Ok, sounds good. Thanks,
+Ok,  sounds good. With my patch on top, the other version is a little
+nicer, but the revert is correct as well, and probably the safe choice
+during the merge window.
 
-     Arnd
+         Arnd
