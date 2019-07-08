@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45162C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FD1C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B25C21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A40021537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600011;
-	bh=a19q6HBJseF2Wd1PAwtLqB5gVl5woajPfylehEwf/b4=;
+	s=default; t=1562600014;
+	bh=Cn59R0hjP9jko++YODYmfbD33Y1aZXomBBzJTh8Jg28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=erv2uH/OJa+F1cfb9RobZ0t5LlVXpHdo6l5Bfxr4jkqfpBN23ueyvVAMWGRaCY4Jk
-	 ErZI5yhPW1QVgDXH+m7M+9AsvlWi6SO4cscuuUTSiPlW8ZR43K4Fiv6ZjFFVxcKfUn
-	 lBcO6ly3N+i+RVUJ9QY9dPn4w6aro+y35URoe7iI=
+	b=cPIy7d69Ebi8MdXX5J64hdeK0ggGL/aKIc4r2m9zWYd2HWchfzl1inTYSTAKbFkGV
+	 f7Jq59cQE+/xfIEPyG8pQbG4+8+MugrkvhdR7SAgyp3l69oBbIPGfaoxQo6k2e76KN
+	 qbNTExVP3bn7i2qv+QF2HrMHo5QFtPriPbmSLlic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390377AbfGHPda (ORCPT
+        id S2390382AbfGHPdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:33:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35548 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:33:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390347AbfGHPd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:33:27 -0400
+        id S2390371AbfGHPda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:33:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C94020665;
-        Mon,  8 Jul 2019 15:33:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 006A320665;
+        Mon,  8 Jul 2019 15:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600006;
-        bh=a19q6HBJseF2Wd1PAwtLqB5gVl5woajPfylehEwf/b4=;
+        s=default; t=1562600009;
+        bh=Cn59R0hjP9jko++YODYmfbD33Y1aZXomBBzJTh8Jg28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L7oNdHN9Zz2u+TrPIhALXRVQjThrEp9bJ1hYsL6ql84EN2bOMXCACQXOPCxGgT/aK
-         hl2N6Ij+GxTC4yshDCvs+O82Kq817RpTGGc8yfD3rLDj7KHNJqbpxf2Y7GTpZjzlLZ
-         z+Pz+aKs3OFXFpm7AfTVovbpaga6JE05J5EEtDJc=
+        b=mw3nAzdsIIL18wtgvpi/TUzwo7X2JZQdRUGwOoiF1a3HSSj7meUwtIMOgTEisgCm9
+         5DYvav4dyde86tfNImmKgqV4lsPZGBJB4+Uu6utm0uNaN3SIWJY7r3+c/LGebSK5tZ
+         4bdOMoOkCoJgGZhX6Qb9O0kOo+WhLb9Zw8Cn84ek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Sailer <rs@tuxedocomputers.com>,
+        stable@vger.kernel.org,
+        Dennis Wassenberg <dennis.wassenberg@secunet.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 63/96] ALSA: hda/realtek: Add quirks for several Clevo notebook barebones
-Date:   Mon,  8 Jul 2019 17:13:35 +0200
-Message-Id: <20190708150529.874500232@linuxfoundation.org>
+Subject: [PATCH 5.1 64/96] ALSA: hda/realtek - Change front mic location for Lenovo M710q
+Date:   Mon,  8 Jul 2019 17:13:36 +0200
+Message-Id: <20190708150529.932581082@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,46 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Sailer <rs@tuxedocomputers.com>
+From: Dennis Wassenberg <dennis.wassenberg@secunet.com>
 
-commit 503d90b30602a3295978e46d844ccc8167400fe6 upstream.
+commit bef33e19203dde434bcdf21c449e3fb4f06c2618 upstream.
 
-This adds 4 SND_PCI_QUIRK(...) lines for several barebone models of the ODM
-Clevo. The model names are written in regex syntax to describe/match all clevo
-models that are similar enough and use the same PCI SSID that this fixup works
-for them.
+On M710q Lenovo ThinkCentre machine, there are two front mics,
+we change the location for one of them to avoid conflicts.
 
-Additionally the lines regarding SSID 0x96e1 and 0x97e1 didn't fix audio for the
-all our Clevo notebooks using these SSIDs (models Clevo P960* and P970*) since
-ALC1220_FIXP_CLEVO_PB51ED_PINS swapped pins that are not necesarry to be
-swapped. This patch initiates ALC1220_FIXUP_CLEVO_P950 instead for these model
-and fixes the audio.
-
-Fixes: 80690a276f44 ("ALSA: hda/realtek - Add quirk for Tuxedo XC 1509")
-Signed-off-by: Richard Sailer <rs@tuxedocomputers.com>
+Signed-off-by: Dennis Wassenberg <dennis.wassenberg@secunet.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -2443,9 +2443,10 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1558, 0x9501, "Clevo P950HR", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1558, 0x95e1, "Clevo P95xER", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1558, 0x95e2, "Clevo P950ER", ALC1220_FIXUP_CLEVO_P950),
--	SND_PCI_QUIRK(0x1558, 0x96e1, "System76 Oryx Pro (oryp5)", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
--	SND_PCI_QUIRK(0x1558, 0x97e1, "System76 Oryx Pro (oryp5)", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
--	SND_PCI_QUIRK(0x1558, 0x65d1, "Tuxedo Book XC1509", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
-+	SND_PCI_QUIRK(0x1558, 0x96e1, "Clevo P960[ER][CDFN]-K", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1558, 0x97e1, "Clevo P970[ER][CDFN]", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1558, 0x65d1, "Clevo PB51[ER][CDF]", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
-+	SND_PCI_QUIRK(0x1558, 0x67d1, "Clevo PB71[ER][CDF]", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
- 	SND_PCI_QUIRK_VENDOR(0x1558, "Clevo laptop", ALC882_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x161f, 0x2054, "Medion laptop", ALC883_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x17aa, 0x3a0d, "Lenovo Y530", ALC882_FIXUP_LENOVO_Y530),
+@@ -7031,6 +7031,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
++	SND_PCI_QUIRK(0x17aa, 0x3111, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312a, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
 
 
