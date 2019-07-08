@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A5C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCF9C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A26720645
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF9220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600140;
-	bh=iTSKftyqIVwrvdwu0ceOYFM/FFLEUplnkq6vr6rQeIs=;
+	s=default; t=1562600148;
+	bh=aw3R7eOnBAmNqbUhTp0UkZa3L8zcJ/9lggnLn8268MA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P2DLCtf8It8tVM9x6FNFpxINpweDwCqN8dRXS13AmZxJHu9mcBjnGn7BOfb1llxvG
-	 135ILdFpfecNloeqvhkZQR7aQlxBBUOleyMQyVk6+fu2Wr5neZWse0qFl6nVf54glS
-	 7lO/K7hlRGb60+bXGskuqMN261Jny7vdyJDQwGts=
+	b=zzjO+KlI7yH//dy3TlmXOWmDqAKMypVuVlGVW2bv0Zv9fLLHwYpQOprzQTJhFr39q
+	 e4utsQvXHJp72HMjjCriteEoQ219ufmOp02Wap9Lz0HsKzxMF2aiksvQbGKV/Eyyf5
+	 9eo1Nb2o1Ggkn3kayEkF0IhjfnZwYpyeWQ/E90HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390707AbfGHPfj (ORCPT
+        id S2390647AbfGHPfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:35:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37750 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390911AbfGHPfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:35:14 -0400
+        id S2390885AbfGHPfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:35:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E1B204EC;
-        Mon,  8 Jul 2019 15:35:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC12F20665;
+        Mon,  8 Jul 2019 15:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600113;
-        bh=iTSKftyqIVwrvdwu0ceOYFM/FFLEUplnkq6vr6rQeIs=;
+        s=default; t=1562600105;
+        bh=aw3R7eOnBAmNqbUhTp0UkZa3L8zcJ/9lggnLn8268MA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2j3SHHCutVqCrjAG5dWxn2lz8m1yYeVM0f9Lm+gnePXjF3d50Zy104alFJJoI/Im7
-         Cxs4xo2jPOvMa/pHm5EVuK011MiP0hPAimu5Dah0nyfLoE0TJC71ry9O/pVZLqPv2j
-         caH7Q20XSch7aErezxM1+L8BsM+m9F7HAzYWJFsg=
+        b=Kv1jbgMcPR2Cwd5EF57X74PX3FEPdoKpIrEKbocXxYEo74zcdO5VDYBi9O12tR9om
+         fKw+yx43066aSh/p7TLs4ZEE36FRYKhYM0edU5sGBEq1eN5R2mRQpevklISU/VMv08
+         93O0xfkJCsUGZA94NCFsYQD7u53DR1DUUO7wix48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Gong <yibin.gong@nxp.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Michael Olbrich <m.olbrich@pengutronix.de>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.1 93/96] dmaengine: imx-sdma: remove BD_INTR for channel0
-Date:   Mon,  8 Jul 2019 17:14:05 +0200
-Message-Id: <20190708150531.463009320@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Korotin <dkorotin@wavecomp.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org
+Subject: [PATCH 5.1 90/96] MIPS: Add missing EHB in mtc0 -> mfc0 sequence.
+Date:   Mon,  8 Jul 2019 17:14:02 +0200
+Message-Id: <20190708150531.301538782@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,54 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Dmitry Korotin <dkorotin@wavecomp.com>
 
-commit 3f93a4f297961c12bb17aa16cb3a4d1291823cae upstream.
+commit 0b24cae4d535045f4c9e177aa228d4e97bad212c upstream.
 
-It is possible for an irq triggered by channel0 to be received later
-after clks are disabled once firmware loaded during sdma probe. If
-that happens then clearing them by writing to SDMA_H_INTR won't work
-and the kernel will hang processing infinite interrupts. Actually,
-don't need interrupt triggered on channel0 since it's pollling
-SDMA_H_STATSTOP to know channel0 done rather than interrupt in
-current code, just clear BD_INTR to disable channel0 interrupt to
-avoid the above case.
-This issue was brought by commit 1d069bfa3c78 ("dmaengine: imx-sdma:
-ack channel 0 IRQ in the interrupt handler") which didn't take care
-the above case.
+Add a missing EHB (Execution Hazard Barrier) in mtc0 -> mfc0 sequence.
+Without this execution hazard barrier it's possible for the value read
+back from the KScratch register to be the value from before the mtc0.
 
-Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the interrupt handler")
-Cc: stable@vger.kernel.org #5.0+
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
-Tested-by: Sven Van Asbroeck <thesven73@gmail.com>
-Reviewed-by: Michael Olbrich <m.olbrich@pengutronix.de>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reproducible on P5600 & P6600.
+
+The hazard is documented in the MIPS Architecture Reference Manual Vol.
+III: MIPS32/microMIPS32 Privileged Resource Architecture (MD00088), rev
+6.03 table 8.1 which includes:
+
+   Producer | Consumer | Hazard
+  ----------|----------|----------------------------
+   mtc0     | mfc0     | any coprocessor 0 register
+
+Signed-off-by: Dmitry Korotin <dkorotin@wavecomp.com>
+[paul.burton@mips.com:
+  - Commit message tweaks.
+  - Add Fixes tags.
+  - Mark for stable back to v3.15 where P5600 support was introduced.]
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: 3d8bfdd03072 ("MIPS: Use C0_KScratch (if present) to hold PGD pointer.")
+Fixes: 829dcc0a956a ("MIPS: Add MIPS P5600 probe support")
+Cc: linux-mips@vger.kernel.org
+Cc: stable@vger.kernel.org # v3.15+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/imx-sdma.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/mm/tlbex.c |   29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -703,7 +703,7 @@ static int sdma_load_script(struct sdma_
- 	spin_lock_irqsave(&sdma->channel_0_lock, flags);
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -391,6 +391,7 @@ static struct work_registers build_get_w
+ static void build_restore_work_registers(u32 **p)
+ {
+ 	if (scratch_reg >= 0) {
++		uasm_i_ehb(p);
+ 		UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
+ 		return;
+ 	}
+@@ -668,10 +669,12 @@ static void build_restore_pagemask(u32 *
+ 			uasm_i_mtc0(p, 0, C0_PAGEMASK);
+ 			uasm_il_b(p, r, lid);
+ 		}
+-		if (scratch_reg >= 0)
++		if (scratch_reg >= 0) {
++			uasm_i_ehb(p);
+ 			UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
+-		else
++		} else {
+ 			UASM_i_LW(p, 1, scratchpad_offset(0), 0);
++		}
+ 	} else {
+ 		/* Reset default page size */
+ 		if (PM_DEFAULT_MASK >> 16) {
+@@ -938,10 +941,12 @@ build_get_pgd_vmalloc64(u32 **p, struct
+ 		uasm_i_jr(p, ptr);
  
- 	bd0->mode.command = C0_SETPM;
--	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
-+	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
- 	bd0->mode.count = size / 2;
- 	bd0->buffer_addr = buf_phys;
- 	bd0->ext_buffer_addr = address;
-@@ -1025,7 +1025,7 @@ static int sdma_load_context(struct sdma
- 	context->gReg[7] = sdmac->watermark_level;
+ 		if (mode == refill_scratch) {
+-			if (scratch_reg >= 0)
++			if (scratch_reg >= 0) {
++				uasm_i_ehb(p);
+ 				UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
+-			else
++			} else {
+ 				UASM_i_LW(p, 1, scratchpad_offset(0), 0);
++			}
+ 		} else {
+ 			uasm_i_nop(p);
+ 		}
+@@ -1258,6 +1263,7 @@ build_fast_tlb_refill_handler (u32 **p,
+ 	UASM_i_MTC0(p, odd, C0_ENTRYLO1); /* load it */
  
- 	bd0->mode.command = C0_SETDM;
--	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
-+	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
- 	bd0->mode.count = sizeof(*context) / 4;
- 	bd0->buffer_addr = sdma->context_phys;
- 	bd0->ext_buffer_addr = 2048 + (sizeof(*context) / 4) * channel;
+ 	if (c0_scratch_reg >= 0) {
++		uasm_i_ehb(p);
+ 		UASM_i_MFC0(p, scratch, c0_kscratch(), c0_scratch_reg);
+ 		build_tlb_write_entry(p, l, r, tlb_random);
+ 		uasm_l_leave(l, *p);
+@@ -1603,15 +1609,17 @@ static void build_setup_pgd(void)
+ 		uasm_i_dinsm(&p, a0, 0, 29, 64 - 29);
+ 		uasm_l_tlbl_goaround1(&l, p);
+ 		UASM_i_SLL(&p, a0, a0, 11);
+-		uasm_i_jr(&p, 31);
+ 		UASM_i_MTC0(&p, a0, C0_CONTEXT);
++		uasm_i_jr(&p, 31);
++		uasm_i_ehb(&p);
+ 	} else {
+ 		/* PGD in c0_KScratch */
+-		uasm_i_jr(&p, 31);
+ 		if (cpu_has_ldpte)
+ 			UASM_i_MTC0(&p, a0, C0_PWBASE);
+ 		else
+ 			UASM_i_MTC0(&p, a0, c0_kscratch(), pgd_reg);
++		uasm_i_jr(&p, 31);
++		uasm_i_ehb(&p);
+ 	}
+ #else
+ #ifdef CONFIG_SMP
+@@ -1625,13 +1633,16 @@ static void build_setup_pgd(void)
+ 	UASM_i_LA_mostly(&p, a2, pgdc);
+ 	UASM_i_SW(&p, a0, uasm_rel_lo(pgdc), a2);
+ #endif /* SMP */
+-	uasm_i_jr(&p, 31);
+ 
+ 	/* if pgd_reg is allocated, save PGD also to scratch register */
+-	if (pgd_reg != -1)
++	if (pgd_reg != -1) {
+ 		UASM_i_MTC0(&p, a0, c0_kscratch(), pgd_reg);
+-	else
++		uasm_i_jr(&p, 31);
++		uasm_i_ehb(&p);
++	} else {
++		uasm_i_jr(&p, 31);
+ 		uasm_i_nop(&p);
++	}
+ #endif
+ 	if (p >= (u32 *)tlbmiss_handler_setup_pgd_end)
+ 		panic("tlbmiss_handler_setup_pgd space exceeded");
 
 
