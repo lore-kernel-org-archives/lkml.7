@@ -2,147 +2,91 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1BDC606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFF5C606AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9132064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8CP2oM8"
+	by mail.kernel.org (Postfix) with ESMTP id 639CC20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731242AbfGHNGd (ORCPT
+        id S1731247AbfGHNJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:06:33 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37808 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731110AbfGHNGd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:06:33 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y26so5328864qto.4;
-        Mon, 08 Jul 2019 06:06:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KoMC8LXO5EEvOm3VOqkpDs92MU/5hTNIGOWZvmPTxTU=;
-        b=V8CP2oM88CrqqxQemPWzixs304sty9d+wK6csQ+vtCaQYrekV5ZlstaBS7bOuqIr3l
-         Mwd1CG1xU3lRAuuUZa3EHYCWeVkbAX8ZkuITw4GC4NG9Xq7nzWwhPIo5xk9Nk9Q0TWik
-         Whi4alVNGxYYNv0WqGRb4kudphYuGaKL9TwzkL7Dxl5/jYZcKE0FlfmhfCKlZMKS8zco
-         r+mVEFtqAtg/X22DdLEHbMhcIVjrqFoeCT1FgpFXmitMAMmwHvZhUNlQjmYgl38jcHpX
-         RWj2en/j7DXVvckPefOzhnlgxVys2FUizC0RIliWrg/HeaUF8WoPjMcvbHf8VRfJESe4
-         Mvuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KoMC8LXO5EEvOm3VOqkpDs92MU/5hTNIGOWZvmPTxTU=;
-        b=kvpLFGQ/NX7aTMNdyRcBTvwjE589GWHXnNEI9DFY7tygACampW+P4UQihzmY0EuUEN
-         fls5KABEjGQKA0yuPGdqDErBN+6/fhSgYe3REO+iBFE7Ndo6XidYaYHf6q+A5JEs9YmA
-         9XyFXYCNuDyQZkKxt/YNSNXc5k7pOfE9XMdthrQa51+W8h0WKRfhD9ePg93X5F3b0vvA
-         nPvbKTsoWtdo5Koscx66URZXqYLGF5wNhG3yDF9RcwWS795wDS4ZyRleZgJLoxPMibm7
-         HJIkEtbCz9vCkq81lAyUfXvXB1VSrQEvQUoqjceF5qGcb9q7PmpOd91HrdTyKOeALNNY
-         4PwQ==
-X-Gm-Message-State: APjAAAXjOKTKpdL+jD5Wadt4c2MF8NrAxvmlVI+UkuJEqm6Z9iv15+tm
-        mZ+YAxSkx1RzNG1PAOWxtRXohvWb
-X-Google-Smtp-Source: APXvYqyUD6Ax2FLlVZ70ZPrHkQ+xZWbVy2xkBrPkuZCL3SJk9Jo5tvbYwmHL51eyTi7DL+N3gvHSUQ==
-X-Received: by 2002:ac8:1a9d:: with SMTP id x29mr14322373qtj.128.1562591190514;
-        Mon, 08 Jul 2019 06:06:30 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id v28sm5436669qkj.11.2019.07.08.06.06.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 06:06:29 -0700 (PDT)
-Subject: Re: [PATCH] gpio: tegra: fix debugfs compile error
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190708123843.3302581-1-arnd@arndb.de>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d30c122c-297e-3370-86d6-039388b48cea@gmail.com>
-Date:   Mon, 8 Jul 2019 16:06:26 +0300
+        Mon, 8 Jul 2019 09:09:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:47580 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731110AbfGHNJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:09:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA27B2B;
+        Mon,  8 Jul 2019 06:09:12 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C89363F738;
+        Mon,  8 Jul 2019 06:09:08 -0700 (PDT)
+Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
+ implementation
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Huw Davies <huw@codeweavers.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Peter Collingbourne <pcc@google.com>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <20190621095252.32307-5-vincenzo.frascino@arm.com>
+ <CGME20190628130921eucas1p239935b0771032c331911eacc1a69dd2e@eucas1p2.samsung.com>
+ <1fd47b0d-f77f-8d07-c039-6ac9072834fc@samsung.com>
+ <27386d82-2906-b541-f71d-3c61f5099bdf@arm.com>
+ <530cd07e-0da7-1d83-be4e-b14813029424@samsung.com>
+ <06c264a8-8778-18b1-1094-4281a4a2abc9@arm.com>
+ <ed758c10-7260-bec3-caf1-08cae7e0968d@samsung.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <b10b6723-6d5f-e667-b626-f13f5a5c3400@arm.com>
+Date:   Mon, 8 Jul 2019 14:09:07 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190708123843.3302581-1-arnd@arndb.de>
+In-Reply-To: <ed758c10-7260-bec3-caf1-08cae7e0968d@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.07.2019 15:38, Arnd Bergmann пишет:
-> Without this header, some configurations now run into a build failure:
+Hi Sylwester,
+
+On 08/07/2019 13:57, Sylwester Nawrocki wrote:
+> Hi Vincenzo, 
 > 
-> drivers/gpio/gpio-tegra.c:665:2: error: implicit declaration of function 'debugfs_create_file'
->       [-Werror,-Wimplicit-function-declaration]
->         debugfs_create_file("tegra_gpio", 0444, NULL, tgi,
->         ^
-> drivers/gpio/gpio-tegra.c:665:2: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
-> drivers/gpio/gpio-tegra.c:666:9: error: use of undeclared identifier 'tegra_dbg_gpio_fops'
+> On 6/29/19 08:58, Vincenzo Frascino wrote:
+>> If I may, I would like to ask to you one favor, could you please keep an eye on
+>> next and once those patches are merged repeat the test?
+>>
+>> I want just to make sure that the regression does not reappear.
 > 
-> Remove the #ifdef here and let the compiler drop the unused
-> functions itself when debugfs_create_file() is an empty inline
-> function.
-> 
-> Fixes: a4de43049a1d ("gpio: tegra: Clean-up debugfs initialisation")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpio/gpio-tegra.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-> index 59b99d8c3647..dbcecbe5f52f 100644
-> --- a/drivers/gpio/gpio-tegra.c
-> +++ b/drivers/gpio/gpio-tegra.c
-> @@ -9,6 +9,7 @@
->   *	Erik Gilling <konkers@google.com>
->   */
->  
-> +#include <linux/debugfs.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
->  #include <linux/irq.h>
-> @@ -22,6 +23,7 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/pinctrl/consumer.h>
->  #include <linux/pm.h>
-> +#include <linux/seq_file.h>
->  
->  #define GPIO_BANK(x)		((x) >> 5)
->  #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
-> @@ -508,10 +510,6 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
->  }
->  #endif
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -
-> -#include <linux/debugfs.h>
-> -#include <linux/seq_file.h>
->  
->  static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
->  {
-> @@ -538,7 +536,6 @@ static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
->  }
->  
->  DEFINE_SHOW_ATTRIBUTE(tegra_dbg_gpio);
-> -#endif
->  
->  static const struct dev_pm_ops tegra_gpio_pm_ops = {
->  	SET_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
+> My apologies, I forgot about this for a moment. I repeated the test with 
+> next-20190705 tag and couldn't see any regressions.
 > 
 
-The offending patch should be reverted already, please see [1].
+No problem and thank you for the confirmation.
 
-[1] https://patchwork.ozlabs.org/patch/1128007/#2210871
+-- 
+Regards,
+Vincenzo
