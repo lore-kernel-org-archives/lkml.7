@@ -2,52 +2,51 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB11C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41881C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DD4216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AFC216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600839;
-	bh=ZqmW10D35p/x6y7IAQNUyGnMQXsoa6AxexrI/IJgfog=;
+	s=default; t=1562600841;
+	bh=7SOyGxXUyKgnF2RBPDDk0vkQ0YmwBw4ow/U9fFAQ/kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EY9/FDL4vLV7/1BxrsfSp4lA1olaIAkrjaSbenmpzHzCHBhcguZPb2YYjSyZg6y+o
-	 2gvNctGcoSGf3xZqahMYxD75M8HiTArN7Pa/c4vg6Y5LoFDBVSh6PWWRD/AsQUPRA+
-	 8tlqNBWLuYseA5GrfwH9LjBZKn5BvVTc6AzFrFGE=
+	b=gaduPHDcOte4shSLimMA6ZIf8GHs9esxLkY3h4EW0uMrAng8OIMXupodOFvMJs1Sn
+	 kk9eW6SO+s7631yzlopvvshk/e1hrwMfnEcI0XB4KFLXrwQ5VKXH/XAAZec/ovLm5C
+	 TKhFKdGnJCY7+D98dy+HcxRh060/vr2/IljZegTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391417AbfGHPrS (ORCPT
+        id S2391458AbfGHPrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43264 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:47:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729475AbfGHPTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:19:07 -0400
+        id S1733147AbfGHPTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:19:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 156C92166E;
-        Mon,  8 Jul 2019 15:19:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E58221537;
+        Mon,  8 Jul 2019 15:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599146;
-        bh=ZqmW10D35p/x6y7IAQNUyGnMQXsoa6AxexrI/IJgfog=;
+        s=default; t=1562599143;
+        bh=7SOyGxXUyKgnF2RBPDDk0vkQ0YmwBw4ow/U9fFAQ/kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ST7H5e4QF73WPKdFEVbmMxSgznbri/gdtWgzhyw3IgUoTO9boI+u4gO4TQ3WVi6Sx
-         y1JyE84aEmEtyK6W41qQ+SImqYmkuF0lMf/Ezq9qSjmXt0okvLPIQD7YMDu3+yO6PH
-         I9m6tLVt2drOI/58WpuxEqarIdQvBacihawDQfio=
+        b=IauCUPloCggEKkoif+F8AQv5lFrJQakPeWl27Afjel8OHI3i02ZCdUlAHWt9tDrUo
+         87YtvHmk0nkqzL2DO1/4Av2zD8XZEODNrnN/rnL2N3dVO1IC7p7WKZ9eM4talkCyfk
+         uqHnLLbZgVmhLjxhoyBN3y9L6iG+abty3FL1fpvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 020/102] drm/arm/hdlcd: Allow a bit of clock tolerance
-Date:   Mon,  8 Jul 2019 17:12:13 +0200
-Message-Id: <20190708150527.236742908@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 002/102] gcc-9: silence address-of-packed-member warning
+Date:   Mon,  8 Jul 2019 17:11:55 +0200
+Message-Id: <20190708150526.106087644@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,39 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1c810739097fdeb31b393b67a0a1e3d7ffdd9f63 ]
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-On the Arm Juno platform, the HDLCD pixel clock is constrained to 250KHz
-resolution in order to avoid the tiny System Control Processor spending
-aeons trying to calculate exact PLL coefficients. This means that modes
-like my oddball 1600x1200 with 130.89MHz clock get rejected since the
-rate cannot be matched exactly. In practice, though, this mode works
-quite happily with the clock at 131MHz, so let's relax the check to
-allow a little bit of slop.
+commit 6f303d60534c46aa1a239f29c321f95c83dda748 upstream.
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Liviu Dudau <liviu.dudau@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We already did this for clang, but now gcc has that warning too.  Yes,
+yes, the address may be unaligned.  And that's kind of the point.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/arm/hdlcd_crtc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
-index 28341b32067f..84dea276175b 100644
---- a/drivers/gpu/drm/arm/hdlcd_crtc.c
-+++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
-@@ -170,7 +170,8 @@ static int hdlcd_crtc_atomic_check(struct drm_crtc *crtc,
- 	long rate, clk_rate = mode->clock * 1000;
+--- a/Makefile
++++ b/Makefile
+@@ -647,6 +647,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warni
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-truncation)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, int-in-bool-context)
++KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, attribute-alias)
  
- 	rate = clk_round_rate(hdlcd->clk, clk_rate);
--	if (rate != clk_rate) {
-+	/* 0.1% seems a close enough tolerance for the TDA19988 on Juno */
-+	if (abs(rate - clk_rate) * 1000 > clk_rate) {
- 		/* clock required by mode not supported by hardware */
- 		return -EINVAL;
- 	}
--- 
-2.20.1
-
+ ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+@@ -718,7 +719,6 @@ ifeq ($(cc-name),clang)
+ KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
+ KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
+ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+-KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+ # Quiet clang warning: comparison of unsigned expression < 0 is always false
+ KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
+ # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
 
 
