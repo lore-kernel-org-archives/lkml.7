@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B42C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE10C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2D8216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F042216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598936;
-	bh=2VdFkdk9SIaAdzepBOAW1EfUckj2mgK2DM94z7kTn2A=;
+	s=default; t=1562598939;
+	bh=okyOBT5ELOJB0plyytjTCGl9+FCxWoDkx2tkGuR3290=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZv8g3igWGH0Zx+5eA+4GdhTmi1Aig/vk1+1A9OHkVX4SQu+KROhhsAuT4zKWYR8R
-	 30dp2BZqEAgMxSK9PgqI2/LYPSffxzeU+2K2Zpj1biUD4PtnHiqh52vTzQOuFUR+oe
-	 ZfKwppvqjoIhuwQOmRu88YIi3PONuGXmnDDIsBXU=
+	b=fUvgl59qvsUpVTREjkKOCcGLIPDaGg0/PRQUIuXkoafD7sMY1Je7rFRdZedpVEoSK
+	 sA5asHGND4GvDMZDZRFtN9WOWJkpRAi09rOxHIPW/aaUgC4cHLZ+9eyil4TpmGyJCV
+	 OgKYa/LOrN+iEl0ZDoMLxLnl3Bf3Cx3pYSpYQSos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbfGHPPf (ORCPT
+        id S1732375AbfGHPPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38112 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbfGHPPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:15:33 -0400
+        id S1732346AbfGHPPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:15:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D506214C6;
-        Mon,  8 Jul 2019 15:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9977021707;
+        Mon,  8 Jul 2019 15:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598932;
-        bh=2VdFkdk9SIaAdzepBOAW1EfUckj2mgK2DM94z7kTn2A=;
+        s=default; t=1562598930;
+        bh=okyOBT5ELOJB0plyytjTCGl9+FCxWoDkx2tkGuR3290=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TFCtYKYQ0vJ7BO85v3Dh+JL6ToPQ0JDdXxDeYIrTk3kYjtC2pg9png1FOzGyNJboy
-         C8Ai+oaTFfhFuvWjsHxvaLhR9w3Cjt0fRMBpuAn/Cdi1koTJe0Iu0v3S/YctmlHxrc
-         s7U5k3CnlT7vMyc6Y0Ge+n+HycUyAzVcyoPUMIbg=
+        b=M4rQZY1Ytov9/hvpfHGFfYhix9LiDHzy2qp5Fb3HYY3unec0BgohEsYBDcOmKYaI/
+         syE4s+ZyJQhgUSs06TAp0ghah2fZ49MD0OeqD2z0Q24qFCSjGKjPL89yV1ysppNevM
+         u+ojAzsvYjeinYwBEk5kNSY6FhdWrOlNy11+2rNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.4 21/73] can: flexcan: fix timeout when set small bitrate
-Date:   Mon,  8 Jul 2019 17:12:31 +0200
-Message-Id: <20190708150521.367974176@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.4 20/73] btrfs: start readahead also in seed devices
+Date:   Mon,  8 Jul 2019 17:12:30 +0200
+Message-Id: <20190708150521.015528717@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -60,55 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+From: Naohiro Aota <naohiro.aota@wdc.com>
 
-commit 247e5356a709eb49a0d95ff2a7f07dac05c8252c upstream.
+commit c4e0540d0ad49c8ceab06cceed1de27c4fe29f6e upstream.
 
-Current we can meet timeout issue when setting a small bitrate like
-10000 as follows on i.MX6UL EVK board (ipg clock = 66MHZ, per clock =
-30MHZ):
+Currently, btrfs does not consult seed devices to start readahead. As a
+result, if readahead zone is added to the seed devices, btrfs_reada_wait()
+indefinitely wait for the reada_ctl to finish.
 
-| root@imx6ul7d:~# ip link set can0 up type can bitrate 10000
+You can reproduce the hung by modifying btrfs/163 to have larger initial
+file size (e.g. xfs_io pwrite 4M instead of current 256K).
 
-A link change request failed with some changes committed already.
-Interface can0 may have been left with an inconsistent configuration,
-please check.
-
-| RTNETLINK answers: Connection timed out
-
-It is caused by calling of flexcan_chip_unfreeze() timeout.
-
-Originally the code is using usleep_range(10, 20) for unfreeze
-operation, but the patch (8badd65 can: flexcan: avoid calling
-usleep_range from interrupt context) changed it into udelay(10) which is
-only a half delay of before, there're also some other delay changes.
-
-After double to FLEXCAN_TIMEOUT_US to 100 can fix the issue.
-
-Meanwhile, Rasmus Villemoes reported that even with a timeout of 100,
-flexcan_probe() fails on the MPC8309, which requires a value of at least
-140 to work reliably. 250 works for everyone.
-
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Fixes: 7414a03fbf9e ("btrfs: initial readahead code and prototypes")
+Cc: stable@vger.kernel.org # 3.2+: ce7791ffee1e: Btrfs: fix race between readahead and device replace/removal
+Cc: stable@vger.kernel.org # 3.2+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/flexcan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/reada.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@ -171,7 +171,7 @@
- #define FLEXCAN_MB_CNT_LENGTH(x)	(((x) & 0xf) << 16)
- #define FLEXCAN_MB_CNT_TIMESTAMP(x)	((x) & 0xffff)
+--- a/fs/btrfs/reada.c
++++ b/fs/btrfs/reada.c
+@@ -762,6 +762,7 @@ static void __reada_start_machine(struct
+ 	u64 total = 0;
+ 	int i;
  
--#define FLEXCAN_TIMEOUT_US		(50)
-+#define FLEXCAN_TIMEOUT_US		(250)
++again:
+ 	do {
+ 		enqueued = 0;
+ 		mutex_lock(&fs_devices->device_list_mutex);
+@@ -774,6 +775,10 @@ static void __reada_start_machine(struct
+ 		mutex_unlock(&fs_devices->device_list_mutex);
+ 		total += enqueued;
+ 	} while (enqueued && total < 10000);
++	if (fs_devices->seed) {
++		fs_devices = fs_devices->seed;
++		goto again;
++	}
  
- /* FLEXCAN hardware feature flags
-  *
+ 	if (enqueued == 0)
+ 		return;
 
 
