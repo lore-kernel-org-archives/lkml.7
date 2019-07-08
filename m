@@ -2,92 +2,125 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D546C606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8A0C606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27EA216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D010C216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:33:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="guiXzaD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405015AbfGHUbJ (ORCPT
+        id S2405029AbfGHUc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:31:09 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:44861 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729370AbfGHUbI (ORCPT
+        Mon, 8 Jul 2019 16:32:59 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37053 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731895AbfGHUc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:31:08 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MOAJt-1i8aQU1YWP-00OYvi; Mon, 08 Jul 2019 22:30:59 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] ARM: mtd-xip: work around clang/llvm bug
-Date:   Mon,  8 Jul 2019 22:30:31 +0200
-Message-Id: <20190708203049.3484750-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 8 Jul 2019 16:32:59 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z28so8375469ljn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QmhLmLZUpQw51TcWj6xz/UWa7Fe+O+3V90DXK/aEFco=;
+        b=guiXzaD+Q8k8J8Y2zzy+eGlckI4Qfj/1ia32W8QPEpVyDxD+5hgsVF1EBjtMcdA2s/
+         5R6J5f6GgfGC+nFAbBkYPeDw/XfsFDCoboRXhsd0sXhsudSf3059LbepmLdXf+bGovGT
+         qc6zCll9qpQztznsNGoUo1/z6sIst7IWs3z+Pv7nR02bMmC5DCviI65aoqFu1kzeunE8
+         sJFWmex7qjLe3ziuuenXDF2zBUBKL8qpBXz1MQYcrJEwVtkCqsinEygD57Y8dbRhrT+j
+         eNRMf0cE5rKvU5kEP5hfxK9mWRVAK1SjUcuMmd409q26ptgM28q5w2oyc86eWpf2IN5O
+         UeiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=QmhLmLZUpQw51TcWj6xz/UWa7Fe+O+3V90DXK/aEFco=;
+        b=PLBQCZAdcGeUkaHJik1q08GS9yg/JdVHPun15Ny+2ze8wgbfgcRxVg6Qex5wI6ukFa
+         UmycJG+TV+Awlp9um6e+lZf/tj+HWbFKZ5Mmkzw5C5B5aFI0iLvyF+VgD+TW6mCP70Jj
+         pyOuWwwpWt1AYlMNsv8huZswpy81Y+iE71hJl35wiiP9CvGBRzJxgBVYGJssuTv6TTJX
+         5TRz6jyaDVyF559K7XDuwZu4RIMPpAikc08ZFKiDKY2vcneWC9s1FdS9CGX3YNMVIpEB
+         lclgbuKI4ZvJUrnTudJpO1yZ2rNhfUvHTTy3aqMzYNpQ5P3xwL9zL1A411zXj4YmgbCh
+         L+GQ==
+X-Gm-Message-State: APjAAAXQhpCnCCVHnksUxYXSI+dAJdgExPdH4OTLyo1sM0X3Qcom87tk
+        y0iGQr6exOlrb96NBzZ9gas2uw==
+X-Google-Smtp-Source: APXvYqwVRisXI+W1yDsrFdBvfB5lZcfxm6xx+YU6rvWYruaiHxMRpCBIx1t+9hogA9dGSL6dnfZZgQ==
+X-Received: by 2002:a2e:981:: with SMTP id 123mr11792658ljj.66.1562617977232;
+        Mon, 08 Jul 2019 13:32:57 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id z23sm2925562lfq.77.2019.07.08.13.32.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jul 2019 13:32:56 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 23:32:54 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH v8 net-next 0/5] net: ethernet: ti: cpsw: Add XDP support
+Message-ID: <20190708203252.GA12580@khorivan>
+Mail-Followup-To: David Miller <davem@davemloft.net>,
+        grygorii.strashko@ti.com, hawk@kernel.org, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+References: <20190705150502.6600-1-ivan.khoronzhuk@linaro.org>
+ <20190707.183146.1123763637704790378.davem@davemloft.net>
+ <20190707.183511.503486832061897586.davem@davemloft.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:V7NNcdZbV6mw7tfdYJiUJWjfhAMjQ4ZOz+c5SMkPzy2jzCIxgH/
- pt3z+EXXXxY3LSweF/O5LBo2UxCpnX3kg0YItAVqxX3M9B2A5HrqQ81VPjg6+j1qPFmB85f
- ImodRn9ATMXuOL36cdfA72rGbINvDJVBi1P9wvZ162xPRURHIwauaITV/6GYiZlrruAZgD3
- yPClGNspWQsjkOU9QoV/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:v+XvPb26ioU=:TjLKe2p2Vyy1aD8C0Nufwj
- FrZeID3M43k7HjEvkInllCLnR/9x6gufxWP8ADpgN0auCuIIjPIP2tu0X3ASOv/QXifZ6fjb4
- fKlZu6xDaoZtt8x67I8YacbTs4bBwepXTeep7F354PTBA34UGC8lZ+V1nE8sRbnncu3ob8/LP
- JR0tuXEqyWPyKcDtlpOHMZAMaZDwcg/kfr6xkzsUVYV75zOGIx8sq6NyqGQF3c1arsqTwrNcN
- hJhsQ7lnpgflhynJ5Bc549TYzbbcpmDJv2EPESCR8ZfGYOQGAR64bD1MNNDqeNGf32tFXzLi0
- +CkgAvnFKTjFeL8w8Gps4Rw4jiiWmhItlP2H/zFPsYwEBMV/uyZolwmW2WffgtqMKYreIRpoD
- wxA5LNyE+X+NdLbrzC7F/w5oKECDdDNa+wEsQMZS8O/NKs4gGpJ9Wl0QpYQ1z5zga8wlaFtHd
- ypJVr3q8cXSs7REZxwEZeSbfMZ6LXVm9uUQQcImXbb2yyrvpOdcgw8YpBgSshFJe0dW3AwA+L
- xIRheBgbluwdF4sFdEOy+IqW/QuHkind6qLv3FGlEGcHh/n5ErPd5rSn67lwA9/dQ3sew4ELj
- 0IJABvVcc/M72PPepyFP1dkhf9bcvHnoPaE8lUm7HhlCHX+5g2CTjshcvagx/93ZVV/VZ+DFN
- YdDjg4aD2IE+NkZFigDlAijfbNlhkhrMyh45aKVjofJ8rIJiGPbgcDt1eVJiz39O5rlLq6RGW
- BhGY84gtjs1+dnjKiPjpNUMaPmILlrDBvvo1Gg==
+In-Reply-To: <20190707.183511.503486832061897586.davem@davemloft.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-llvm gets confused by inline asm with .rep directives, which
-can lead to miscalculating the number of instructions inside it,
-and in turn lead to an overflow for relative address calculation:
+On Sun, Jul 07, 2019 at 06:35:11PM -0700, David Miller wrote:
+>From: David Miller <davem@davemloft.net>
+>Date: Sun, 07 Jul 2019 18:31:46 -0700 (PDT)
+>
+>> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> Date: Fri,  5 Jul 2019 18:04:57 +0300
+>>
+>>> This patchset adds XDP support for TI cpsw driver and base it on
+>>> page_pool allocator. It was verified on af_xdp socket drop,
+>>> af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
+>>>
+>>> It was verified with following configs enabled:
+>>  ...
+>>
+>> I'm applying this to net-next, please deal with whatever follow-ups are
+>> necessary.
+>
+>Nevermind, you really have to fix this:
+>
+>drivers/net/ethernet/ti/davinci_cpdma.c: In function ‘cpdma_chan_submit_si’:
+>drivers/net/ethernet/ti/davinci_cpdma.c:1047:12: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>   buffer = (u32)si->data;
+>            ^
+>drivers/net/ethernet/ti/davinci_cpdma.c: In function ‘cpdma_chan_idle_submit_mapped’:
+>drivers/net/ethernet/ti/davinci_cpdma.c:1114:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+>  si.data = (void *)(u32)data;
+>            ^
+>drivers/net/ethernet/ti/davinci_cpdma.c: In function ‘cpdma_chan_submit_mapped’:
+>drivers/net/ethernet/ti/davinci_cpdma.c:1164:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+>  si.data = (void *)(u32)data;
+>            ^
+Actrually that's fixed in reply v9 patch.
+But, nevermind, i will send v9 for whole series.
 
-/tmp/cfi_cmdset_0002-539a47.s: Assembler messages:
-/tmp/cfi_cmdset_0002-539a47.s:11288: Error: bad immediate value for offset (4100)
-/tmp/cfi_cmdset_0002-539a47.s:11289: Error: bad immediate value for offset (4100)
-
-This might be fixed in future clang versions, but is not hard
-to work around by just replacing the .rep with a series of
-eight unrolled nop instructions.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=42539
-https://godbolt.org/z/DSM2Jy
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/include/asm/mtd-xip.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/include/asm/mtd-xip.h b/arch/arm/include/asm/mtd-xip.h
-index dfcef0152e3d..5ad0325604e4 100644
---- a/arch/arm/include/asm/mtd-xip.h
-+++ b/arch/arm/include/asm/mtd-xip.h
-@@ -15,6 +15,8 @@
- #include <mach/mtd-xip.h>
- 
- /* fill instruction prefetch */
--#define xip_iprefetch() 	do { asm volatile (".rep 8; nop; .endr"); } while (0)
-+#define xip_iprefetch()	do {						\
-+	 asm volatile ("nop; nop; nop; nop; nop; nop; nop; nop;");	\
-+} while (0)								\
- 
- #endif /* __ARM_MTD_XIP_H__ */
 -- 
-2.20.0
-
+Regards,
+Ivan Khoronzhuk
