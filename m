@@ -4,118 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944D2C606B2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29671C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7666D2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC05620665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbfGHMix (ORCPT
+        id S1730714AbfGHMkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:38:53 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:49197 "EHLO
+        Mon, 8 Jul 2019 08:40:00 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:39187 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfGHMiw (ORCPT
+        with ESMTP id S1727544AbfGHMkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:38:52 -0400
+        Mon, 8 Jul 2019 08:40:00 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MFsAJ-1hiUBN3Zux-00HNox; Mon, 08 Jul 2019 14:38:46 +0200
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M4aA4-1hl1Qt3yXm-001fJc; Mon, 08 Jul 2019 14:39:54 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Dmitry Osipenko <digetx@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+To:     Oded Gabbay <oded.gabbay@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Tomer Tayar <ttayar@habana.ai>, Mike Rapoport <rppt@linux.ibm.com>,
+        Omer Shpigelman <oshpigelman@habana.ai>,
+        Dalit Ben Zoor <dbenzoor@habana.ai>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: tegra: fix debugfs compile error
-Date:   Mon,  8 Jul 2019 14:38:17 +0200
-Message-Id: <20190708123843.3302581-1-arnd@arndb.de>
+Subject: [PATCH] habanalabs: use %pad for printing a dma_addr_t
+Date:   Mon,  8 Jul 2019 14:39:32 +0200
+Message-Id: <20190708123952.3341920-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MSFUKXJPI4w10gi5nIw9N7d6gTewK6MnUXHlro7LaCUr6eFZ32c
- CVfIwEp/Yeh2OhpLrwyRjgIVMO5VvpaD6HE4pdXXoesHctLKVesrcGNX3JbJ6V3xjVERn4J
- HOMNBm2NYE9hdU2W600TMEH9qHk6BmEGTny9CIIUUpNcQIOXNYjfwNPvwMo8T72gXkgDl7p
- /yuw1mdSJjFQ3zuMGWqxg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mtajkxsIi98=:gEYCd7m+A0QSVqeIysMG6+
- I8KyaNRiW26n1eB4lByLWF3jJDDBdojMUsI8iWNqG5k14EE4JQjWZQ9EmVlVcvnxnQsxdZ2wu
- FNorKrqPUQugWbe/QePFvtdkYuJzJnmiermFLrmcVmerxfgluQ6TvLBO7XeOL5DU6O2bweKMt
- QjnyHD/caoKBS0idl3Fe7rNHZJYKjtR2HcRHwgcxK5sfDOVu/Uvy5gXv2OC2nDbXGTVDVfMjl
- kteR5fl9+Pg26kS94OxE1Yte7HjN8fE1kOJyci1ZeLyLqWBFnVnIbcFtSRvxGPvdomm8bsNqT
- wKFkMIb8fsu33boEPOKVabhv8CtTpCjeTZNzFYlKs9uov/q36g1sh1jBrmIA9a/Zv7fjPZBvZ
- HZFjfgvLkKXmM46gLB5MnHr5k580PHUxeXC/JU2fEQ9EeeA4qO9KOUjAgaFRdUzsM1Kpq/il+
- iYJ/k+CTAWbS+rJ4tnFbvJjjpZk4JdGgJArWxWyTmDObvIKiQQ7jgUxD66jei+D7mNDP/fIcU
- Z+l8SVz/wzV26Swqw4hjwH1DNYpWoIf4DSXwnyfq3lg7Bn1XmOJt8taMG/LWZkbmq7Mmk5Bkh
- WeThMPl4iiExHOuV9hjB40mqH9kmJD074vp6D7VltBZ8CEm41qR1G2Tn+xKT6c1uaCC4f11dN
- A87qC0mjojL7s73TRNLtqdfDs9KS3d4DAYrnGRrynd+FV0Fp7lVjyNe0lMx1jMBl4hVtl6B+N
- e9g0ypuomU8RZxnrqaMknmUTJbgRJaGrglSwwQ==
+X-Provags-ID: V03:K1:9KNFd67BZo1dqHvppWZBvDSpSYm3pm8KWs3mfIsotE8h1IyJq1I
+ G0D/8p8NiJyBhKa0O7acqodqZOo1a6SpxuWHZ/pqJ0nTfbFYOE10Sv5O42/BvsRdUdjPH6X
+ wsaEVl5xvFS1X/5YJtRqDN+ZQU9iNMIrNH+nSA5UKMx5A79FterfXlPOHG14d3a3BVRl8Qv
+ JFw2H4VoEZ59O8TUy9kSw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ovUOMzlveHI=:6C6A4+y9pT7C8oErjMlWNT
+ pvgsyWaPCsLtZsvs5Wu3aMh2o6n+1puYBqeV3iP3ziw28SIV8heGDpwa/hXsmUEWkmMHjY76w
+ h7Pt4Ej/qH26y1zVf0svxyvg535A7A6inHoNIvUcE0/UOczrXqqqCU6+nKrgsxWad458oYIJr
+ 4uq41gFGF3a0M308yv/yw4LsQAW3GOpp+qnOuEkQ8mIFDwPHUaVIgFW9LCOoW0UhmaC3UQWdF
+ 3wkT54WfyESH4WYQAzLaWne/w1PsMPponKxK0mGcQnrVaf2nXbpQGxkyndrD16cLJTIR4BXHi
+ QkPayR01Lja03eCDSsqcQjmWOcj11AyTWbuxxyOY/JbNVRh9GC6sGPqjio38g1p0FC27n9bP9
+ 3suad9uDlF0a7BeYjnI8qFkq5GpCtSHyHQuYdlOQnnGPa+zzdKF67NtLMWgYq46t/0dL+RJ1G
+ pt7m/sclO4DKO7zfLOTh5/iSnF26gJxsVRVQRRaDhD9DzYdx96tD9uZN2+JGQ7zB7cRy48nNM
+ eaa/fYnKGrS9SH4NjCV7q7Q605bWPiSpkDgZm/eTPyAG/zFh8DPXvO5wnHLK6fs1grY9QeMVb
+ DEhKs3uo1KUjjaJABwD7LQeuCPCyrYczjMHSxrY4VXLkShHRGyK8vBe1pTWAxt9hRdzrHGAcw
+ UwZQ7mCYgwbp3cBv/JAofd4b8LJmT+mcJkO6pl9K2NjhMQTrJ5vfjjzhpRJsSIRo0HdeSV/xj
+ AwM47spIvazAwNaAUN+0zBTt/59QE9yR/vtu+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this header, some configurations now run into a build failure:
+dma_addr_t might be different sizes depending on the configuration,
+so we cannot print it as %llx:
 
-drivers/gpio/gpio-tegra.c:665:2: error: implicit declaration of function 'debugfs_create_file'
-      [-Werror,-Wimplicit-function-declaration]
-        debugfs_create_file("tegra_gpio", 0444, NULL, tgi,
-        ^
-drivers/gpio/gpio-tegra.c:665:2: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
-drivers/gpio/gpio-tegra.c:666:9: error: use of undeclared identifier 'tegra_dbg_gpio_fops'
+drivers/misc/habanalabs/goya/goya.c: In function 'goya_sw_init':
+drivers/misc/habanalabs/goya/goya.c:698:21: error: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'dma_addr_t' {aka 'unsigned int'} [-Werror=format=]
 
-Remove the #ifdef here and let the compiler drop the unused
-functions itself when debugfs_create_file() is an empty inline
-function.
+Use the special %pad format string. This requires passing the
+argument by reference.
 
-Fixes: a4de43049a1d ("gpio: tegra: Clean-up debugfs initialisation")
+Fixes: 2a51558c8c7f ("habanalabs: remove DMA mask hack for Goya")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpio/gpio-tegra.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/misc/habanalabs/goya/goya.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 59b99d8c3647..dbcecbe5f52f 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -9,6 +9,7 @@
-  *	Erik Gilling <konkers@google.com>
-  */
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 75294ec65257..60e509f64051 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -695,8 +695,8 @@ static int goya_sw_init(struct hl_device *hdev)
+ 		goto free_dma_pool;
+ 	}
  
-+#include <linux/debugfs.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/irq.h>
-@@ -22,6 +23,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pm.h>
-+#include <linux/seq_file.h>
+-	dev_dbg(hdev->dev, "cpu accessible memory at bus address 0x%llx\n",
+-		hdev->cpu_accessible_dma_address);
++	dev_dbg(hdev->dev, "cpu accessible memory at bus address %pad\n",
++		&hdev->cpu_accessible_dma_address);
  
- #define GPIO_BANK(x)		((x) >> 5)
- #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
-@@ -508,10 +510,6 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
- }
- #endif
- 
--#ifdef CONFIG_DEBUG_FS
--
--#include <linux/debugfs.h>
--#include <linux/seq_file.h>
- 
- static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
- {
-@@ -538,7 +536,6 @@ static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
- }
- 
- DEFINE_SHOW_ATTRIBUTE(tegra_dbg_gpio);
--#endif
- 
- static const struct dev_pm_ops tegra_gpio_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
+ 	hdev->cpu_accessible_dma_pool = gen_pool_create(ilog2(32), -1);
+ 	if (!hdev->cpu_accessible_dma_pool) {
 -- 
 2.20.0
 
