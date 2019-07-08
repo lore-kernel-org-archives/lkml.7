@@ -2,53 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C60AC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A30C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF95521537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A71216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599702;
-	bh=eoMCDfK9f3NWMu6z1T5aINWr+ZuhRVivufvmgFHOXT0=;
+	s=default; t=1562599706;
+	bh=VH1TYRstC5ShWk42dKKa0fzC4vYZr7ryq5lXB8Azkk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VCpojkMKEVEDOurItYMF2YMLU4dj0b0r+c9lGMwGybx21iUtn8YmJeOoV9gmPsRSO
-	 QdC27HKToGxy2CVkVpubhJkB9XGsXUa/d+XLNF9s3cYZjNOEs0QDFGi0fu0KFrOG1X
-	 IVTIxTcWgipAO1C4QHCPs4ijZLpW5li0E2V1ZQPw=
+	b=y/fR4blutiNzeERxEDdNCCgz5MSrQ+xtCeUDZ249n5LqqWgzIkvyHU9CyWwCjzumW
+	 1pGEGyvpQGNV8c/oED9l1gZTvufyZuUWrX3yYsBSC0dsVEbxyhJCYs823rdzQeX8vA
+	 7pPEtnTswBoQeztA8109+KyU3Fqq/eW0UEI1M7gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389249AbfGHP2Q (ORCPT
+        id S2389285AbfGHP2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:28:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:28:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730098AbfGHP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:28:12 -0400
+        id S2389261AbfGHP2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:28:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35359216F4;
-        Mon,  8 Jul 2019 15:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A77A4204EC;
+        Mon,  8 Jul 2019 15:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599691;
-        bh=eoMCDfK9f3NWMu6z1T5aINWr+ZuhRVivufvmgFHOXT0=;
+        s=default; t=1562599701;
+        bh=VH1TYRstC5ShWk42dKKa0fzC4vYZr7ryq5lXB8Azkk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G8tzQh5OokOdtZJepjmx7BhxuXPqhRQ4GxS/x7uqe24IO8pdzM00ln+J1dw7LsN85
-         b1U29PfHxCelrcKJd7Ns7HVS5/KvnVvuzSd0NnkTx8KlmMq3ZWwVNjp1mNdw0qzffY
-         UZTNRUtyqBiZrlyAvDtjg37Kg7HFYkwYVvcg6MXY=
+        b=0jh+HJtdT0yCuM0mwRVW+H6nI8V564HDYr561IYjofiS09rsanM9ufQ6+hbhMS3Mu
+         pNJPt/mZ00Y06DrV4bAf/9pwW+sKpc/kJTUO1aAq6iHrtyLRYMWaOiG7VHfodPXmAW
+         TWBBqfKXYtdyehNuE+o2r4x5w+eFagTj0zM5I+I4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 09/90] ASoC: ak4458: add return value for ak4458_probe
-Date:   Mon,  8 Jul 2019 17:12:36 +0200
-Message-Id: <20190708150523.045910122@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dennis Wassenberg <dennis.wassenberg@secunet.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 49/90] ALSA: hda/realtek - Change front mic location for Lenovo M710q
+Date:   Mon,  8 Jul 2019 17:13:16 +0200
+Message-Id: <20190708150525.029445260@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -61,65 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8dee20d792432740509237943700fbcfc230bad ]
+From: Dennis Wassenberg <dennis.wassenberg@secunet.com>
 
-AK4458 is probed successfully even if AK4458 is not present - this
-is caused by probe function returning no error on i2c access failure.
-Return an error on probe if i2c access has failed.
+commit bef33e19203dde434bcdf21c449e3fb4f06c2618 upstream.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+On M710q Lenovo ThinkCentre machine, there are two front mics,
+we change the location for one of them to avoid conflicts.
+
+Signed-off-by: Dennis Wassenberg <dennis.wassenberg@secunet.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/codecs/ak4458.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index 299ada4dfaa0..58b6ca1de993 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -492,9 +492,10 @@ static void ak4458_power_on(struct ak4458_priv *ak4458)
- 	}
- }
- 
--static void ak4458_init(struct snd_soc_component *component)
-+static int ak4458_init(struct snd_soc_component *component)
- {
- 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
-+	int ret;
- 
- 	/* External Mute ON */
- 	if (ak4458->mute_gpiod)
-@@ -502,21 +503,21 @@ static void ak4458_init(struct snd_soc_component *component)
- 
- 	ak4458_power_on(ak4458);
- 
--	snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
-+	ret = snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
- 			    0x80, 0x80);   /* ACKS bit = 1; 10000000 */
-+	if (ret < 0)
-+		return ret;
- 
--	ak4458_rstn_control(component, 1);
-+	return ak4458_rstn_control(component, 1);
- }
- 
- static int ak4458_probe(struct snd_soc_component *component)
- {
- 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
- 
--	ak4458_init(component);
--
- 	ak4458->fs = 48000;
- 
--	return 0;
-+	return ak4458_init(component);
- }
- 
- static void ak4458_remove(struct snd_soc_component *component)
--- 
-2.20.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6939,6 +6939,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
++	SND_PCI_QUIRK(0x17aa, 0x3111, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312a, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+ 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
 
 
