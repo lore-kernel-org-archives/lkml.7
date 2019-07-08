@@ -2,124 +2,120 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC4DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DC1C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732CD21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76ED021537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:11:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562602308;
+	bh=deIYNiJGWk8xhKz5u1IiZV8tnnAGyzHTlwwSpvh0Nog=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ZjDaJ09zPounXjuF2ePIhg8BBwXADK0wMEA26BLRFviqbjqQzX6VN+VQ0JNpubjc+
+	 UqCjCpe9QsL4VgBk4MGWyffUnwQr1wAtCDyk/ujwvY6hy10j+xZIp4B+0aH62jIHqu
+	 Dn9Fge46ZZ72xkf7BPcADFE9cSwEBwE6wLiYLo/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391516AbfGHQLA (ORCPT
+        id S2389578AbfGHQLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:11:00 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37494 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbfGHQK7 (ORCPT
+        Mon, 8 Jul 2019 12:11:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52059 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728082AbfGHQLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:10:59 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y26so6001453qto.4;
-        Mon, 08 Jul 2019 09:10:59 -0700 (PDT)
+        Mon, 8 Jul 2019 12:11:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so97808wma.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:11:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=0YfI9ulneYjIAaJNmJ8mTywngdZ+lHgD4fcT0tv/HX4=;
+        b=KuJxlfGSU5CrH+UyUj3RrfYszPQdIS+qFBc/8q4LZQFsF8gr3fI1k06KNU/flDpO0Y
+         OaPUT7gkE+8A837BzZzqiJNoo/JaocYLjTEQmysD6qqRuASRcarZ8/YncjTdzagwHM3F
+         rBYcovuoG3gyfSMlmk7Onz3hc4rRxg7/waa1sXtgkaIhE42q6UAZJDyCi1Y9wrk5r/JF
+         mGTncNPvrZJMVePCOUOMNGhOnqMQUPg5dzC6Nm/tU2Qobl6p8cSYGeJfKucToh43Ng3U
+         pcCzYYa1FfV+ouprsLMvwi0tK+bQQkxFFbyghY2AJkmBS6IwtOMLYacVYUB4cNhqcrVa
+         EesA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jh0oOry33evDCob3/YqLaYbNG4TIUCz5wsbv0do5P2w=;
-        b=o7CzYH5vJ2cQkP1HRxkor1wrQwSukCQqGhU/EkdhIe0lrOesO0rhMYJH4uQsLIH95B
-         2aonHfEVFYfzk3B+uAmksG1dOvsumq03tor8c5NWfIZSdQ0E2xtwRcheC+E5+509MbZF
-         HG6c626n6aE7vDXYZxviTOyDVXz1OEWk3b6RUWxvwdG/ttRrGM2H7g2omCoT+Dq7bUpE
-         dCbHanAqYHNp55UJ/iYuAqAv18/0RGBtsaG0J6TxDj1HmGGejSbWo55+XNbLIX/KSBge
-         DFKM95ehtupl8fQAp+4aHPISOMWBP5j0Q/Hruzem81ZgLeeKu27RuvH1ePPZ6Goefdf7
-         61CA==
-X-Gm-Message-State: APjAAAWPiNxTUmaanWZbQei3UmMWyGP16IOeWk62QlZJKgxj6L9ANQCs
-        qyLmLuyK/klE/IkPxFjS1iRjxKuoQhajBJWyJoc=
-X-Google-Smtp-Source: APXvYqyUVlqAlYEFg1FiYPVuvS6vybH5FVE/+B+9DSKZt9RHUYdBNACismBwlh/kyryGPOKmOUdWAvsI1rvyHn+Ipoc=
-X-Received: by 2002:ac8:5311:: with SMTP id t17mr14543108qtn.304.1562602258765;
- Mon, 08 Jul 2019 09:10:58 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=0YfI9ulneYjIAaJNmJ8mTywngdZ+lHgD4fcT0tv/HX4=;
+        b=nAT5aCdF315had+XT3ADLZQl2zal9dSN1zpjy97Ioiv8DQ9DdSAxRsByU+KFZSofOL
+         qLHL3Tyc9yKTLjvlXV0zRavvD8NCmH/LAGHWmFDZIKNR/0bjVNdwDyV6azqS5SG3qQv0
+         pX60Ux5iBxSCc/AjFMqRfr5w2dh1V5zMZDSoJRQYpFgvq3AWjo67o7Cb09Nf7YKVoe06
+         DAmbhP+rvi1m09y0jJG3cADydWzA/ZxT7AXeAAk0HE4LSaJcVFxLOcBgYJZvOTNrHojl
+         EW7iAk4RfbS+otuqGFGcXp9EwoS+zSTLTEsmHvTSZ0xj3fiVES0oJk24JM5p9BcYBD6v
+         bO0g==
+X-Gm-Message-State: APjAAAUcsrIoE85GlKcc3nYv3jTJ1++sTJ5Ls6M8t6qN5C7b1Dsm5Jer
+        Yu+nDiLsGg92ULPeiIPK03M=
+X-Google-Smtp-Source: APXvYqzPSP9SkpEHuug5qKqst+jRHha9sIk0sCJ3FTpsskyruj5gpiRwAlffmfG+JrPW6rJ8PPST1w==
+X-Received: by 2002:a7b:c398:: with SMTP id s24mr17777923wmj.53.1562602304553;
+        Mon, 08 Jul 2019 09:11:44 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id f204sm28747wme.18.2019.07.08.09.11.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 09:11:44 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 18:11:42 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/core changes for v5.3
+Message-ID: <20190708161142.GA107326@gmail.com>
 MIME-Version: 1.0
-References: <20190708124227.3422311-1-arnd@arndb.de> <e752a638c0bde6893adf805322f73de5bd459dbc.camel@fi.rohmeurope.com>
-In-Reply-To: <e752a638c0bde6893adf805322f73de5bd459dbc.camel@fi.rohmeurope.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 8 Jul 2019 18:10:42 +0200
-Message-ID: <CAK8P3a1HNnstePcreH-ZLyiJi3tNcCNJ=VozZUMnp-VLvYLSaA@mail.gmail.com>
-Subject: Re: [PATCH] rtc: bd70528: fix link error
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:24 PM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+Linus,
 
-> On Mon, 2019-07-08 at 14:41 +0200, Arnd Bergmann wrote:
-> > With CONFIG_BD70528_WATCHDOG=m, a built-in rtc driver cannot call
-> > into the low-level functions that are part of the watchdog module:
-> >
-> > drivers/rtc/rtc-bd70528.o: In function `bd70528_set_time':
-> > rtc-bd70528.c:(.text+0x22c): undefined reference to
-> > `bd70528_wdt_lock'
-> > rtc-bd70528.c:(.text+0x2a8): undefined reference to
-> > `bd70528_wdt_unlock'
-> > drivers/rtc/rtc-bd70528.o: In function
-> > `bd70528_set_rtc_based_timers':
-> > rtc-bd70528.c:(.text+0x50c): undefined reference to `bd70528_wdt_set'
-> >
-> > Add a Kconfig dependency on this driver, but still allow compile-
-> > testing
-> > without it.
-> >
-> > Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528
-> > RTC")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/rtc/Kconfig | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> > index 3bfc04a86529..7b071cc74422 100644
-> > --- a/drivers/rtc/Kconfig
-> > +++ b/drivers/rtc/Kconfig
-> > @@ -498,8 +498,10 @@ config RTC_DRV_M41T80_WDT
-> >       help
-> >         If you say Y here you will get support for the
-> >         watchdog timer in the ST M41T60 and M41T80 RTC chips series.
-> > +
-> >  config RTC_DRV_BD70528
-> >       tristate "ROHM BD70528 PMIC RTC"
-> > +     depends on BD70528_WATCHDOG || (COMPILE_TEST &&
-> > !BD70528_WATCHDOG)
->
-> I am not fan of this. There may well be use-cases where it is desirable
-> to leave the watchdog out but still compile in the RTC. This is why we
-> have static inline stubs in the header for cases where WDG is not
-> compiled in. (RTC does not need to stop WDG if WDG driver is not
-> included)
->
-> Adding dependency from RTC to MFD for BD70528 should be done - this
-> will avoid most of the issues (And there has been few patches sent for
-> this already). But that's still not complete solution because
-> configuring RTC and MFD to be built in-kernel and WDG as a module will
-> cause errors again.
->
-> Is there a way to force WDG in-kernel if RTC is in-kernel? (Or
-> disallow configuring RTC in-kernel if WDG is a module - while still
-> allow RTC to be built without WDG?
+Please pull the latest x86-core-for-linus git tree from:
 
-We could make this
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-core-for-linus
 
-        depends on BD70528_WATCHDOG || !BD70528_WATCHDOG
+   # HEAD: 711486fd18596315d42cebaac3dba8c408f60a3d Documentation/filesystems/proc.txt: Add arch_status file
 
-which would allow building with or without watchdog, even when not
-compile-testing, but still disallow the combination of
-BD70528_WATCHDOG=m with RTC_DRV_BD70528=y.
+This adds a new ABI that the main scheduler probably doesn't want to deal 
+with but HPC job schedulers might want to use, the AVX512_elapsed_ms 
+field in the new /proc/<pid>/arch_status task status file, which allows 
+the user-space job scheduler to cluster such tasks, to avoid turbo 
+frequency drops.
 
-       Arnd
+
+  out-of-topic modifications in x86-core-for-linus:
+  ---------------------------------------------------
+  fs/proc/Kconfig                    # 68bc30bb9f33: proc: Add /proc/<pid>/arch_s
+  fs/proc/base.c                     # 68bc30bb9f33: proc: Add /proc/<pid>/arch_s
+  include/linux/proc_fs.h            # 68bc30bb9f33: proc: Add /proc/<pid>/arch_s
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Aubrey Li (3):
+      proc: Add /proc/<pid>/arch_status
+      x86/process: Add AVX-512 usage elapsed time to /proc/pid/arch_status
+      Documentation/filesystems/proc.txt: Add arch_status file
+
+
+ Documentation/filesystems/proc.txt | 40 ++++++++++++++++++++++++++++++++
+ arch/x86/Kconfig                   |  1 +
+ arch/x86/kernel/fpu/xstate.c       | 47 ++++++++++++++++++++++++++++++++++++++
+ fs/proc/Kconfig                    |  4 ++++
+ fs/proc/base.c                     |  6 +++++
+ include/linux/proc_fs.h            |  9 ++++++++
+ 6 files changed, 107 insertions(+)
+
