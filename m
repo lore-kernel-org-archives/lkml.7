@@ -2,57 +2,61 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7F0C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DD5C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D560320665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAFE20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600608;
-	bh=XQyksg6BQprAUNPQBRwXdMzPOwjy+Jls0OH6AIq2J9M=;
+	s=default; t=1562600611;
+	bh=/8nzzgTpLpo7FUdm6nCfC8NOHzv5gXsTv6CLp9XYgAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQ9RmvmcFtxHx7Y7SvhGGAIiaqbDMEjnpo0Q7KbFfVhtw7s3GMJMywt9iR5riX+GK
-	 DZO9SfIy/2GY/APZnrMLm6ooSIBgeX3d2jlDrwL4Nd+BeYSxYakMLrm7tDFnuYncwg
-	 VsDzRIDRtM0R9lnbYDjrBrFruBJPy7ubKM1GGCGk=
+	b=pVlrWNUeAmsJaNOxcPDuaT8Zklf4WLGz41EnSD1cYVlIQhZoWscY36SC7eCP1OU1D
+	 vjcHXNf//x2X1wOy28DxmC3G7ROGwGwfUASFoI+mhmKsCXi9WpA1gxbW9sS/iRJpM5
+	 oF5aR3s/CoDZgDUDk9fo1tqvJ1PP9GMyFqVjeGOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391166AbfGHPn2 (ORCPT
+        id S2403838AbfGHPna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51634 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388344AbfGHPYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729890AbfGHPnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:43:25 -0400
+Received: from quaco.ghostprotocols.net (179-240-135-35.3g.claro.net.br [179.240.135.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5314221743;
-        Mon,  8 Jul 2019 15:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87ED421783;
+        Mon,  8 Jul 2019 15:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599462;
-        bh=XQyksg6BQprAUNPQBRwXdMzPOwjy+Jls0OH6AIq2J9M=;
+        s=default; t=1562600604;
+        bh=/8nzzgTpLpo7FUdm6nCfC8NOHzv5gXsTv6CLp9XYgAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbJ6+HI8mtVam6hkveGTsj0eg24KyQ7n7y5oVdwjpRjzP/VLrbodw2OHHJ9meT6IQ
-         VjhideNPWKJRWpfkQus8NWmlURjdAQTx0jd69167ci9M3U0U7cTtqLBnaTt2wIurdX
-         fOIyyYu/xcLFxNGRgVmpMmX4Ls+zClvsCvFdOj8U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 24/56] crypto: user - prevent operating on larval algorithms
-Date:   Mon,  8 Jul 2019 17:13:16 +0200
-Message-Id: <20190708150521.596980733@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
-References: <20190708150514.376317156@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=IaJZWXCs2J7G54N6J8XUZEwB1FoHSTZRUkOL2r4NDSUac3Zw09OFJcRPl8tcBtfRU
+         +wQh2p9p29r/RM3KXAuT3W8MYMAnygkSR8pMDgWaF+8S11gz62hWk/qgUupSgelsdx
+         GOointIzG1xHq9Q06mr4qE4k3woD9e29WIXdq0BI=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ben Gainey <ben.gainey@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: [PATCH 8/8] perf jvmti: Address gcc string overflow warning for strncpy()
+Date:   Mon,  8 Jul 2019 12:42:07 -0300
+Message-Id: <20190708154207.11403-9-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190708154207.11403-1-acme@kernel.org>
+References: <20190708154207.11403-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,55 +65,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jiri Olsa <jolsa@redhat.com>
 
-commit 21d4120ec6f5b5992b01b96ac484701163917b63 upstream.
+We are getting false positive gcc warning when we compile with gcc9 (9.1.1):
 
-Michal Suchanek reported [1] that running the pcrypt_aead01 test from
-LTP [2] in a loop and holding Ctrl-C causes a NULL dereference of
-alg->cra_users.next in crypto_remove_spawns(), via crypto_del_alg().
-The test repeatedly uses CRYPTO_MSG_NEWALG and CRYPTO_MSG_DELALG.
+     CC       jvmti/libjvmti.o
+   In file included from /usr/include/string.h:494,
+                    from jvmti/libjvmti.c:5:
+   In function ‘strncpy’,
+       inlined from ‘copy_class_filename.constprop’ at jvmti/libjvmti.c:166:3:
+   /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+     106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   jvmti/libjvmti.c: In function ‘copy_class_filename.constprop’:
+   jvmti/libjvmti.c:165:26: note: length computed here
+     165 |   size_t file_name_len = strlen(file_name);
+         |                          ^~~~~~~~~~~~~~~~~
+   cc1: all warnings being treated as errors
 
-The crash occurs when the instance that CRYPTO_MSG_DELALG is trying to
-unregister isn't a real registered algorithm, but rather is a "test
-larval", which is a special "algorithm" added to the algorithms list
-while the real algorithm is still being tested.  Larvals don't have
-initialized cra_users, so that causes the crash.  Normally pcrypt_aead01
-doesn't trigger this because CRYPTO_MSG_NEWALG waits for the algorithm
-to be tested; however, CRYPTO_MSG_NEWALG returns early when interrupted.
+As per Arnaldo's suggestion use strlcpy(), which does the same thing and keeps
+gcc silent.
 
-Everything else in the "crypto user configuration" API has this same bug
-too, i.e. it inappropriately allows operating on larval algorithms
-(though it doesn't look like the other cases can cause a crash).
-
-Fix this by making crypto_alg_match() exclude larval algorithms.
-
-[1] https://lkml.kernel.org/r/20190625071624.27039-1-msuchanek@suse.de
-[2] https://github.com/linux-test-project/ltp/blob/20190517/testcases/kernel/crypto/pcrypt_aead01.c
-
-Reported-by: Michal Suchanek <msuchanek@suse.de>
-Fixes: a38f7907b926 ("crypto: Add userspace configuration API")
-Cc: <stable@vger.kernel.org> # v3.2+
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ben Gainey <ben.gainey@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190531131321.GB1281@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- crypto/crypto_user.c |    3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/jvmti/libjvmti.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/crypto_user.c
-+++ b/crypto/crypto_user.c
-@@ -55,6 +55,9 @@ static struct crypto_alg *crypto_alg_mat
- 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
- 		int match = 0;
+diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+index aea7b1fe85aa..c441a34cb1c0 100644
+--- a/tools/perf/jvmti/libjvmti.c
++++ b/tools/perf/jvmti/libjvmti.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/compiler.h>
++#include <linux/string.h>
+ #include <sys/types.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -162,8 +163,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
+ 		result[i] = '\0';
+ 	} else {
+ 		/* fallback case */
+-		size_t file_name_len = strlen(file_name);
+-		strncpy(result, file_name, file_name_len < max_length ? file_name_len : max_length);
++		strlcpy(result, file_name, max_length);
+ 	}
+ }
  
-+		if (crypto_is_larval(q))
-+			continue;
-+
- 		if ((q->cra_flags ^ p->cru_type) & p->cru_mask)
- 			continue;
- 
-
+-- 
+2.20.1
 
