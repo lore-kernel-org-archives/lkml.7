@@ -2,29 +2,29 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF407C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81EAC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B4A20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4DE216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391267AbfGHPrn (ORCPT
+        id S2391298AbfGHPrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:47:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:52312 "EHLO foss.arm.com"
+        Mon, 8 Jul 2019 11:47:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:52340 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733310AbfGHPrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:47:41 -0400
+        id S2391277AbfGHPro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:47:44 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5864F360;
-        Mon,  8 Jul 2019 08:47:41 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C62471509;
+        Mon,  8 Jul 2019 08:47:43 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5442B3F59C;
-        Mon,  8 Jul 2019 08:47:40 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C2DDF3F59C;
+        Mon,  8 Jul 2019 08:47:42 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
@@ -32,53 +32,129 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
         Jim Quinlan <james.quinlan@broadcom.com>,
         Bo Zhang <bozhang.zhang@broadcom.com>,
         Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-Subject: [PATCH 00/11] firmware: arm_scmi: Add support for Rx, async commands and delayed response
-Date:   Mon,  8 Jul 2019 16:47:19 +0100
-Message-Id: <20190708154730.16643-1-sudeep.holla@arm.com>
+Subject: [PATCH 02/11] firmware: arm_scmi: Segregate tx channel handling and prepare to add rx
+Date:   Mon,  8 Jul 2019 16:47:21 +0100
+Message-Id: <20190708154730.16643-3-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190708154730.16643-1-sudeep.holla@arm.com>
+References: <20190708154730.16643-1-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The transmit(Tx) channels are specified as the first entry and the
+receive(Rx) channels are the second entry as per the device tree
+bindings. Since we currently just support Tx, index 0 is hardcoded at
+all required callsites.
 
-This patch series adds SCMI infrastructure/core support for recieve(Rx)
-channels, asynchronous commands and delayed response. It adds async
-command support for clock rate setting and sensor reading based on the
-attributes read from the firmware.
+In order to prepare for adding Rx support, let's remove those hardcoded
+index and add boolean parameter to identify Tx/Rx channels when setting
+them up.
 
-The code is rebased on the cleanup series[1] and is available @[2]
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/firmware/arm_scmi/driver.c | 33 ++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
---
-Regards,
-Sudeep
-
-[1] https://lore.kernel.org/lkml/20190708154358.16227-1-sudeep.holla@arm.com
-[2] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git scmi_updates
-
-Sudeep Holla (11):
-  firmware: arm_scmi: Reorder some functions to avoid forward declarations
-  firmware: arm_scmi: Segregate tx channel handling and prepare to add rx
-  firmware: arm_scmi: Add receive channel support for notifications
-  firmware: arm_scmi: Separate out tx buffer handling and prepare to add rx
-  firmware: arm_scmi: Add receive buffer support for notifications
-  firmware: arm_scmi: Add mechanism to unpack message headers
-  firmware: arm_scmi: Add support for asynchronous commands and delayed response
-  firmware: arm_scmi: Drop async flag in sensor_ops->reading_get
-  firmware: arm_scmi: Add asynchronous sensor read if it supports
-  firmware: arm_scmi: Drop config flag in clk_ops->rate_set
-  firmware: arm_scmi: Use asynchronous CLOCK_RATE_SET when possible
-
- drivers/clk/clk-scmi.c              |   2 +-
- drivers/firmware/arm_scmi/clock.c   |  23 +-
- drivers/firmware/arm_scmi/common.h  |   6 +-
- drivers/firmware/arm_scmi/driver.c  | 346 ++++++++++++++++++----------
- drivers/firmware/arm_scmi/sensors.c |  32 ++-
- drivers/hwmon/scmi-hwmon.c          |   2 +-
- include/linux/scmi_protocol.h       |   6 +-
- 7 files changed, 280 insertions(+), 137 deletions(-)
-
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 0bd2af0a008f..f7fb6d5bfc64 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -112,7 +112,7 @@ struct scmi_chan_info {
+  * @version: SCMI revision information containing protocol version,
+  *	implementation version and (sub-)vendor identification.
+  * @minfo: Message info
+- * @tx_idr: IDR object to map protocol id to channel info pointer
++ * @tx_idr: IDR object to map protocol id to Tx channel info pointer
+  * @protocols_imp: List of protocols implemented, currently maximum of
+  *	MAX_PROTOCOLS_IMP elements allocated by the base protocol
+  * @node: List head
+@@ -640,22 +640,26 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
+ 	return 0;
+ }
+ 
+-static int scmi_mailbox_check(struct device_node *np)
++static int scmi_mailbox_check(struct device_node *np, int idx)
+ {
+-	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, NULL);
++	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells",
++					  idx, NULL);
+ }
+ 
+-static inline int
+-scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
++static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
++				int prot_id, bool tx)
+ {
+-	int ret;
++	int ret, idx;
+ 	struct resource res;
+ 	resource_size_t size;
+ 	struct device_node *shmem, *np = dev->of_node;
+ 	struct scmi_chan_info *cinfo;
+ 	struct mbox_client *cl;
+ 
+-	if (scmi_mailbox_check(np)) {
++	/* Transmit channel is first entry i.e. index 0 */
++	idx = tx ? 0 : 1;
++
++	if (scmi_mailbox_check(np, idx)) {
+ 		cinfo = idr_find(&info->tx_idr, SCMI_PROTOCOL_BASE);
+ 		goto idr_alloc;
+ 	}
+@@ -669,11 +673,11 @@ scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
+ 	cl = &cinfo->cl;
+ 	cl->dev = dev;
+ 	cl->rx_callback = scmi_rx_callback;
+-	cl->tx_prepare = scmi_tx_prepare;
++	cl->tx_prepare = tx ? scmi_tx_prepare : NULL;
+ 	cl->tx_block = false;
+-	cl->knows_txdone = true;
++	cl->knows_txdone = tx;
+ 
+-	shmem = of_parse_phandle(np, "shmem", 0);
++	shmem = of_parse_phandle(np, "shmem", idx);
+ 	ret = of_address_to_resource(shmem, 0, &res);
+ 	of_node_put(shmem);
+ 	if (ret) {
+@@ -688,8 +692,7 @@ scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
+ 		return -EADDRNOTAVAIL;
+ 	}
+ 
+-	/* Transmit channel is first entry i.e. index 0 */
+-	cinfo->chan = mbox_request_channel(cl, 0);
++	cinfo->chan = mbox_request_channel(cl, idx);
+ 	if (IS_ERR(cinfo->chan)) {
+ 		ret = PTR_ERR(cinfo->chan);
+ 		if (ret != -EPROBE_DEFER)
+@@ -721,7 +724,7 @@ scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
+ 		return;
+ 	}
+ 
+-	if (scmi_mbox_chan_setup(info, &sdev->dev, prot_id)) {
++	if (scmi_mbox_chan_setup(info, &sdev->dev, prot_id, true)) {
+ 		dev_err(&sdev->dev, "failed to setup transport\n");
+ 		scmi_device_destroy(sdev);
+ 		return;
+@@ -741,7 +744,7 @@ static int scmi_probe(struct platform_device *pdev)
+ 	struct device_node *child, *np = dev->of_node;
+ 
+ 	/* Only mailbox method supported, check for the presence of one */
+-	if (scmi_mailbox_check(np)) {
++	if (scmi_mailbox_check(np, 0)) {
+ 		dev_err(dev, "no mailbox found in %pOF\n", np);
+ 		return -EINVAL;
+ 	}
+@@ -769,7 +772,7 @@ static int scmi_probe(struct platform_device *pdev)
+ 	handle->dev = info->dev;
+ 	handle->version = &info->version;
+ 
+-	ret = scmi_mbox_chan_setup(info, dev, SCMI_PROTOCOL_BASE);
++	ret = scmi_mbox_chan_setup(info, dev, SCMI_PROTOCOL_BASE, true);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.17.1
 
