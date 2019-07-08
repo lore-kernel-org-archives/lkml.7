@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22CBC606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81948C606C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA77D20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 569EB20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600715;
-	bh=B68yrbVy3+HwmW2J9/7x86FB8VbVZ4G8oc82CvTHK0g=;
+	s=default; t=1562600718;
+	bh=9YKzwNqaITT/3dAfxQk+d2f6hPVO62jHvjPHCwJDh/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=laNynhgfHIEQIOfDaslSnaiiLQvhLowTt44p5S94lOaybemDA0eQdN9bc44YzRO9s
-	 mJQ3gXPdQrk5zpPYJ2GxLWZ4QYHthGLPi9MoVc0oNoGSPwn+wckGA14iWgo7hbbZo4
-	 puOmDlaQe1mUxDi+DPYJDxfCRiZYwM20/SziRRgQ=
+	b=HRHp74cvsEqACuea4hqxjyW5scQwI+4vFDec1oxsOUsgPTwiFyTlzrS1sRuUC30ss
+	 iGCOdssuLreLO960gZ+/wa8mA4PZoFzfl6dBvMBPii+2sqGcnid3s1JkS37Q0JIAIu
+	 TCchZbKrdAghBoH9UyFpUF3A6NV0J878h3XnL0QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388027AbfGHPWm (ORCPT
+        id S2388008AbfGHPWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49170 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731269AbfGHPWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:34 -0400
+        id S2387995AbfGHPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7B7820665;
-        Mon,  8 Jul 2019 15:22:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C75B21738;
+        Mon,  8 Jul 2019 15:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599354;
-        bh=B68yrbVy3+HwmW2J9/7x86FB8VbVZ4G8oc82CvTHK0g=;
+        s=default; t=1562599351;
+        bh=9YKzwNqaITT/3dAfxQk+d2f6hPVO62jHvjPHCwJDh/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nsqb/FsXWr24lpqh8jheR+gQ5rYGXu3rM9YHH2WZb7hLtXByKkP27N74ZzQmGIQkQ
-         7izi5mXJwzlxUNMt7fyXGdM0zDr/7OhqBGFd7OTIe3BmQliZ5+SmvSVrwTL4fWvPG3
-         erkCQIx7mCSYMN9WJDIU6hqfFhJw6UvYG/+Du+Jc=
+        b=b2MdASjDjbpvGuilb8ZPqHrI2tX2NOY5IYPbq2iWgGSTJOjSi88jprbT851cMMZbr
+         L7YonmHZXhW1pxb7Xz5AgL0gpuXM0cabvNue0wd+g3qsqGbSbNw2N1vVqLxtiJkM+s
+         B1h8lj5YgHCLqx97zilJiO86sSHA3owrIBFFrbuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Greg Ungerer <gerg@linux-m68k.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 047/102] mm/page_idle.c: fix oops because end_pfn is larger than max_pfn
-Date:   Mon,  8 Jul 2019 17:12:40 +0200
-Message-Id: <20190708150528.868725392@linuxfoundation.org>
+Subject: [PATCH 4.9 046/102] fs/binfmt_flat.c: make load_flat_shared_library() work
+Date:   Mon,  8 Jul 2019 17:12:39 +0200
+Message-Id: <20190708150528.813960180@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -66,85 +67,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jann Horn <jannh@google.com>
 
-commit 7298e3b0a149c91323b3205d325e942c3b3b9ef6 upstream.
+commit 867bfa4a5fcee66f2b25639acae718e8b28b25a5 upstream.
 
-Currently the calcuation of end_pfn can round up the pfn number to more
-than the actual maximum number of pfns, causing an Oops.  Fix this by
-ensuring end_pfn is never more than max_pfn.
+load_flat_shared_library() is broken: It only calls load_flat_file() if
+prepare_binprm() returns zero, but prepare_binprm() returns the number of
+bytes read - so this only happens if the file is empty.
 
-This can be easily triggered when on systems where the end_pfn gets
-rounded up to more than max_pfn using the idle-page stress-ng stress test:
+Instead, call into load_flat_file() if the number of bytes read is
+non-negative. (Even if the number of bytes is zero - in that case,
+load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
 
-sudo stress-ng --idle-page 0
+In addition, remove the code related to bprm creds and stop using
+prepare_binprm() - this code is loading a library, not a main executable,
+and it only actually uses the members "buf", "file" and "filename" of the
+linux_binprm struct. Instead, call kernel_read() directly.
 
-  BUG: unable to handle kernel paging request at 00000000000020d8
-  #PF error: [normal kernel read fault]
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  CPU: 1 PID: 11039 Comm: stress-ng-idle- Not tainted 5.0.0-5-generic #6-Ubuntu
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-  RIP: 0010:page_idle_get_page+0xc8/0x1a0
-  Code: 0f b1 0a 75 7d 48 8b 03 48 89 c2 48 c1 e8 33 83 e0 07 48 c1 ea 36 48 8d 0c 40 4c 8d 24 88 49 c1 e4 07 4c 03 24 d5 00 89 c3 be <49> 8b 44 24 58 48 8d b8 80 a1 02 00 e8 07 d5 77 00 48 8b 53 08 48
-  RSP: 0018:ffffafd7c672fde8 EFLAGS: 00010202
-  RAX: 0000000000000005 RBX: ffffe36341fff700 RCX: 000000000000000f
-  RDX: 0000000000000284 RSI: 0000000000000275 RDI: 0000000001fff700
-  RBP: ffffafd7c672fe00 R08: ffffa0bc34056410 R09: 0000000000000276
-  R10: ffffa0bc754e9b40 R11: ffffa0bc330f6400 R12: 0000000000002080
-  R13: ffffe36341fff700 R14: 0000000000080000 R15: ffffa0bc330f6400
-  FS: 00007f0ec1ea5740(0000) GS:ffffa0bc7db00000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00000000000020d8 CR3: 0000000077d68000 CR4: 00000000000006e0
-  Call Trace:
-    page_idle_bitmap_write+0x8c/0x140
-    sysfs_kf_bin_write+0x5c/0x70
-    kernfs_fop_write+0x12e/0x1b0
-    __vfs_write+0x1b/0x40
-    vfs_write+0xab/0x1b0
-    ksys_write+0x55/0xc0
-    __x64_sys_write+0x1a/0x20
-    do_syscall_64+0x5a/0x110
-    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Link: http://lkml.kernel.org/r/20190618124352.28307-1-colin.king@canonical.com
-Fixes: 33c3fc71c8cf ("mm: introduce idle page tracking")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Link: http://lkml.kernel.org/r/20190524201817.16509-1-jannh@google.com
+Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
+Signed-off-by: Jann Horn <jannh@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Greg Ungerer <gerg@linux-m68k.org>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_idle.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/binfmt_flat.c |   23 +++++++----------------
+ 1 file changed, 7 insertions(+), 16 deletions(-)
 
---- a/mm/page_idle.c
-+++ b/mm/page_idle.c
-@@ -131,7 +131,7 @@ static ssize_t page_idle_bitmap_read(str
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -859,9 +859,14 @@ err:
  
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
+ static int load_flat_shared_library(int id, struct lib_info *libs)
+ {
++	/*
++	 * This is a fake bprm struct; only the members "buf", "file" and
++	 * "filename" are actually used.
++	 */
+ 	struct linux_binprm bprm;
+ 	int res;
+ 	char buf[16];
++	loff_t pos = 0;
  
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
-@@ -176,7 +176,7 @@ static ssize_t page_idle_bitmap_write(st
+ 	memset(&bprm, 0, sizeof(bprm));
  
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
+@@ -875,25 +880,11 @@ static int load_flat_shared_library(int
+ 	if (IS_ERR(bprm.file))
+ 		return res;
  
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
+-	bprm.cred = prepare_exec_creds();
+-	res = -ENOMEM;
+-	if (!bprm.cred)
+-		goto out;
+-
+-	/* We don't really care about recalculating credentials at this point
+-	 * as we're past the point of no return and are dealing with shared
+-	 * libraries.
+-	 */
+-	bprm.cred_prepared = 1;
+-
+-	res = prepare_binprm(&bprm);
++	res = kernel_read(bprm.file, pos, bprm.buf, BINPRM_BUF_SIZE);
+ 
+-	if (!res)
++	if (res >= 0)
+ 		res = load_flat_file(&bprm, libs, id, NULL);
+ 
+-	abort_creds(bprm.cred);
+-
+-out:
+ 	allow_write_access(bprm.file);
+ 	fput(bprm.file);
+ 
 
 
