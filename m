@@ -2,391 +2,107 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87273C606C5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95744C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5865C2175B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714DD2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:33:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Ms9u75JB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390987AbfGHRcp (ORCPT
+        id S2403817AbfGHRdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:32:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:56221 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfGHRcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:32:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 10:32:40 -0700
-X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
-   d="scan'208";a="155925896"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 10:32:39 -0700
-Message-ID: <6091d916590ffbacb9a641c6009bb1782d8ae615.camel@linux.intel.com>
-Subject: Re: [PATCH v1 4/6] mm: Introduce "aerated" pages
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
-        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com
-Date:   Mon, 08 Jul 2019 10:32:40 -0700
-In-Reply-To: <a147b569-9f1b-a1be-e019-0059c654892d@intel.com>
-References: <20190619222922.1231.27432.stgit@localhost.localdomain>
-         <20190619223323.1231.86906.stgit@localhost.localdomain>
-         <a147b569-9f1b-a1be-e019-0059c654892d@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 8 Jul 2019 13:33:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42262 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388422AbfGHRdr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 13:33:47 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a10so16970388wrp.9;
+        Mon, 08 Jul 2019 10:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q4VeygN0Abg7eEmu02zPFKG/LiENvzvS9nqQqihkBL4=;
+        b=Ms9u75JBvQ3ZWj+BbPa8CjoX1faSTZB5rIGp8XdgdD+Ph+4ylCuVHXHEpV83vhU0Nl
+         0g1hzGyVSMzgFBNeszzX20XxoFoIr6vaBzjTKkesBzJXV6zZUxeEAH7kMoRL39cV2U8p
+         hcqgM2xqn1LqHZly3XYgYNyxgoyvGu0dUp04G5jpcB3Icoqf7YT1nghZXcI2H0G+48/S
+         N8U2riQAIlEyNF790SnBjFDHoQ2BQ6ZLL3bjbpefR1jXwbCc9fOnh/UbFiSZFe0IB6OD
+         awZv2tPTY599CabMhLP82xSrw97aV6CgqeJex86/nMA50+nWzu3LLiSYJjxaUXOSrSOG
+         YO6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q4VeygN0Abg7eEmu02zPFKG/LiENvzvS9nqQqihkBL4=;
+        b=NqH7TOKwlQtuNsADT2K7+HBzb6MR7vJ0pBSs9DjH1R5rkm49ERTuq06ijDwioCdarz
+         l0GegfSEK3kSVi6ZXQtJRQokklx3H9hP1VlHitFDDfs6appQOLjh3YEDfGY2MH3wykxx
+         wXZ2aiP01aWdPD1emC1Yea4iq44qnwsz8gWg3OMd+zgDjar9SSoZUfnG5Np2tmQxf3wg
+         txuHd8875yMsZtyQprlfabrHtrky335UZZ5x0Q1vZW3H09w4jaC7VsA1dTiXFml4N6xE
+         cNhajKQHMeJ4Sj9cnSAmub7OTDnLwYeq9WOy8Na6e7Bx9MaNfI2+NvTZaOVVD2i5m3Sc
+         xBRg==
+X-Gm-Message-State: APjAAAX/P6DmaS0qxrRwVi0PeBgxFJFa08NdrCYT79eUZr8W3eNGq2Rh
+        W7Au0X3CUPGukqD0nL3ZE4g=
+X-Google-Smtp-Source: APXvYqzfDOsaXbuIlIodiPzCSM9B4fMT2fL+R7nHm6g6q58Rvjk/xi/cA3+25XYz89sPIVOalja1uw==
+X-Received: by 2002:a5d:46cf:: with SMTP id g15mr1029573wrs.93.1562607225190;
+        Mon, 08 Jul 2019 10:33:45 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133D62000D8A33B20A298F2F2.dip0.t-ipconnect.de. [2003:f1:33d6:2000:d8a3:3b20:a298:f2f2])
+        by smtp.googlemail.com with ESMTPSA id s3sm222975wmh.27.2019.07.08.10.33.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 10:33:44 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, jianxin.pan@amlogic.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mark.rutland@arm.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH RFC v1 0/2] Amlogic 32-bit Meson SDHC MMC controller driver
+Date:   Mon,  8 Jul 2019 19:33:28 +0200
+Message-Id: <20190708173330.13217-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-25 at 12:45 -0700, Dave Hansen wrote:
-> > +static inline void set_page_aerated(struct page *page,
-> > +				    struct zone *zone,
-> > +				    unsigned int order,
-> > +				    int migratetype)
-> > +{
-> > +#ifdef CONFIG_AERATION
-> > +	/* update areated page accounting */
-> > +	zone->free_area[order].nr_free_aerated++;
-> > +
-> > +	/* record migratetype and flag page as aerated */
-> > +	set_pcppage_migratetype(page, migratetype);
-> > +	__SetPageAerated(page);
-> > +#endif
-> > +}
-> 
-> Please don't refer to code before you introduce it, even if you #ifdef
-> it.  I went looking back in the series for the PageAerated() definition,
-> but didn't think to look forward.
+Hello,
 
-Yeah, I had split this code out from patch 5, but I realized after I
-submitted it I had a number of issues. The kconfig option also ended up in
-patch 5 instead of showing up in patch 4.
+this is RFC v1 of the attempt to upstream the driver for the "SDHC" MMC
+controller found on Meson6, Meson8, Meson8b and Meson8m2 SoCs.
 
-I'll have to work on cleaning up patches 4 and 5 so that the split between
-them is cleaner.
+The public S805 (Meson8b) datasheet has some documentation starting on
+page 74: [0]
 
-> Also, it doesn't make any sense to me that you would need to set the
-> migratetype here.  Isn't it set earlier in the allocator?  Also, when
-> can this function be called?  There's obviously some locking in place
-> because of the __Set, but what are they?
+The goal of this RFC v1 is to:
+- find out how to set up the MMC clock correctly with Jianxin's help (see
+  the description of patch #2 with questions)
+- get feedback from the MMC maintainers to see which bits need changing
 
-Generally this function is only called from inside __free_one_page so yes,
-the zone lock is expected to be held.
 
-> > +static inline void clear_page_aerated(struct page *page,
-> > +				      struct zone *zone,
-> > +				      struct free_area *area)
-> > +{
-> > +#ifdef CONFIG_AERATION
-> > +	if (likely(!PageAerated(page)))
-> > +		return;
-> 
-> Logically, why would you ever clear_page_aerated() on a page that's not
-> aerated?  Comments needed.
-> 
-> BTW, I already hate typing aerated. :)
+[0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
 
-Well I am always open to other suggestions. I could just default to
-offline which is what is used by the balloon drivers. Suggestions for a
-better name are always welcome.
 
-> > +	__ClearPageAerated(page);
-> > +	area->nr_free_aerated--;
-> > +#endif
-> > +}
-> 
-> More non-atomic flag clears.  Still no comments.
+Martin Blumenstingl (2):
+  dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
+  mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
 
-Yes. it is the same kind of deal as the function above. Basically we only
-call this just before we clear the buddy flag in the allocator so once
-again the zone lock is expected to be held at this point.
+ .../bindings/mmc/amlogic,meson-mx-sdhc.txt    |   34 +
+ drivers/mmc/host/Kconfig                      |   14 +
+ drivers/mmc/host/Makefile                     |    1 +
+ drivers/mmc/host/meson-mx-sdhc.c              | 1161 +++++++++++++++++
+ 4 files changed, 1210 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.txt
+ create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
 
-> 
-> > @@ -787,10 +790,10 @@ static inline void add_to_free_area(struct page *page, struct zone *zone,
-> >  static inline void add_to_free_area_tail(struct page *page, struct zone *zone,
-> >  					 unsigned int order, int migratetype)
-> >  {
-> > -	struct free_area *area = &zone->free_area[order];
-> > +	struct list_head *tail = aerator_get_tail(zone, order, migratetype);
-> 
-> There is no logical change in this patch from this line.  That's
-> unfortunate because I can't see the change in logic that's presumably
-> coming.  You'll presumably change aerator_get_tail(), but then I'll have
-> to remember that this line is here and come back to it from a later patch.
-> 
-> If it *doesn't* change behavior, it has no business being calle
-> aerator_...().
-> 
-> This series seems rather suboptimal for reviewing.
-
-I can move that into patch 5. That would make more sense anyway since that
-is where I introduce the change that adds the boundaries.
-
-> > -	list_add_tail(&page->lru, &area->free_list[migratetype]);
-> > -	area->nr_free++;
-> > +	list_add_tail(&page->lru, tail);
-> > +	zone->free_area[order].nr_free++;
-> >  }
-> >  
-> >  /* Used for pages which are on another list */
-> > @@ -799,6 +802,8 @@ static inline void move_to_free_area(struct page *page, struct zone *zone,
-> >  {
-> >  	struct free_area *area = &zone->free_area[order];
-> >  
-> > +	clear_page_aerated(page, zone, area);
-> > +
-> >  	list_move(&page->lru, &area->free_list[migratetype]);
-> >  }
-> 
-> It's not immediately clear to me why moving a page should clear
-> aeration.  A comment would help make it clear.
-
-I will do that. The main reason for having to do that is because when we
-move the page there is no guarantee that the boundaries will still be in
-place. As such we are pulling the page and placing it on the head of the
-free_list we are moving it to. As such in order to avoid creating an
-island of unprocessed pages we need to clear the flag and just reprocess
-it later.
-
-> > @@ -868,10 +869,11 @@ static inline struct capture_control *task_capc(struct zone *zone)
-> >  static inline void __free_one_page(struct page *page,
-> >  		unsigned long pfn,
-> >  		struct zone *zone, unsigned int order,
-> > -		int migratetype)
-> > +		int migratetype, bool aerated)
-> >  {
-> >  	struct capture_control *capc = task_capc(zone);
-> >  	unsigned long uninitialized_var(buddy_pfn);
-> > +	bool fully_aerated = aerated;
-> >  	unsigned long combined_pfn;
-> >  	unsigned int max_order;
-> >  	struct page *buddy;
-> > @@ -902,6 +904,11 @@ static inline void __free_one_page(struct page *page,
-> >  			goto done_merging;
-> >  		if (!page_is_buddy(page, buddy, order))
-> >  			goto done_merging;
-> > +
-> > +		/* assume buddy is not aerated */
-> > +		if (aerated)
-> > +			fully_aerated = false;
-> 
-> So, "full" vs. "partial" is with respect to high-order pages?  Why not
-> just check the page flag on the buddy?
-
-The buddy will never have the aerated flag set. If we are hinting on a
-given page then the assumption is it was the highest order version of the
-page available when we processed the pages in the previous pass. So if the
-buddy is available when we are returning the processed page then the buddy
-is non-aerated and will invalidate the aeration when merged with the
-aerated page. What we will then do is hint on the higher-order page that
-is created as a result of merging the two pages.
-
-I'll make the comment more robust on that.
-
-> >  		/*
-> >  		 * Our buddy is free or it is CONFIG_DEBUG_PAGEALLOC guard page,
-> >  		 * merge with it and move up one order.
-> > @@ -943,11 +950,17 @@ static inline void __free_one_page(struct page *page,
-> >  done_merging:
-> >  	set_page_order(page, order);
-> >  
-> > -	if (buddy_merge_likely(pfn, buddy_pfn, page, order) ||
-> > +	if (aerated ||
-> > +	    buddy_merge_likely(pfn, buddy_pfn, page, order) ||
-> >  	    is_shuffle_tail_page(order))
-> >  		add_to_free_area_tail(page, zone, order, migratetype);
-> >  	else
-> >  		add_to_free_area(page, zone, order, migratetype);
-> 
-> Aerated pages always go to the tail?  Ahh, so they don't get consumed
-> quickly and have to be undone?  Comments, please.
-
-Will do.
-
-> > +	if (fully_aerated)
-> > +		set_page_aerated(page, zone, order, migratetype);
-> > +	else
-> > +		aerator_notify_free(zone, order);
-> >  }
-> 
-> What is this notifying for?  It's not like this is some opaque
-> registration interface.  What does this *do*?
-
-This is updating the count of non-treated pages and comparing that to the
-high water mark. If it crosses a certain threshold it will then set the
-bits requesting the zone be processed and wake up the thread if it is not
-active.
-
-> > @@ -2127,6 +2140,77 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
-> >  	return NULL;
-> >  }
-> >  
-> > +#ifdef CONFIG_AERATION
-> > +/**
-> > + * get_aeration_page - Provide a "raw" page for aeration by the aerator
-> > + * @zone: Zone to draw pages from
-> > + * @order: Order to draw pages from
-> > + * @migratetype: Migratetype to draw pages from
-> 
-> FWIW, kerneldoc is a waste of bytes here.  Please use it sparingly.
-> 
-> > + * This function will obtain a page from above the boundary. As a result
-> > + * we can guarantee the page has not been aerated.
-> 
-> This is the first mention of a boundary.  That's not good since I have
-> no idea at this point what the boundary is for or between.
-
-Boundary doesn't get added until the next patch so this is another foul up
-with the splitting of the patches.
-
-> 
-> > + * The page will have the migrate type and order stored in the page
-> > + * metadata.
-> > + *
-> > + * Return: page pointer if raw page found, otherwise NULL
-> > + */
-> > +struct page *get_aeration_page(struct zone *zone, unsigned int order,
-> > +			       int migratetype)
-> > +{
-> > +	struct free_area *area = &(zone->free_area[order]);
-> > +	struct list_head *list = &area->free_list[migratetype];
-> > +	struct page *page;
-> > +
-> > +	/* Find a page of the appropriate size in the preferred list */
-> 
-> I don't get the size comment.  Hasn't this already been given an order?
-
-That is a hold over from a previous version of this patch. Originally this
-code was getting anything order or greater. Now it only grabs pages of a
-certain order as I had pulled some logic out of here and moved it into the
-aeration logic.
-
-> > +	page = list_last_entry(aerator_get_tail(zone, order, migratetype),
-> > +			       struct page, lru);
-> > +	list_for_each_entry_from_reverse(page, list, lru) {
-> > +		if (PageAerated(page)) {
-> > +			page = list_first_entry(list, struct page, lru);
-> > +			if (PageAerated(page))
-> > +				break;
-> > +		}
-> 
-> This confuses me.  It looks for a page, then goes to the next page and
-> checks again?  Why check twice?  Why is a function looking for an
-> aerated page that finds *two* pages returning NULL?
-> 
-> I'm stumped.
-
-So the logic here gets confusing because the boundary hasn't been defined
-yet. Specifically boundary ends up being a secondary tail that applies
-only to the non-processed pages. What we are doing is getting the last
-non-processed page, and then using the "from" version of the list iterator
-to make certain that the list isn't actually empty.
-
-From there we do a check to see if the page we are currently looking at is
-empty. If it is we return NULL. If the list is not empty we check and see
-if the page was processed, if it was we try grapping the page from the
-head of the list as we hit the bottom of the last batch we processed. If
-that is also processed then we just exit.
-
-I will try to do a better job of documenting all this. Basically I used a
-bunch of list manipulation that is hiding things too well.
-
-> > +		del_page_from_free_area(page, zone, order);
-> > +
-> > +		/* record migratetype and order within page */
-> > +		set_pcppage_migratetype(page, migratetype);
-> > +		set_page_private(page, order);
-> > +		__mod_zone_freepage_state(zone, -(1 << order), migratetype);
-> > +
-> > +		return page;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> 
-> Oh, so this is trying to find a page _for_ aerating.
-> "get_aeration_page()" does not convey that.  Can that improved?
-> get_page_for_aeration()?
-> 
-> Rather than talk about boundaries, wouldn't a better description have been:
-> 
-> 	Similar to allocation, this function removes a page from the
-> 	free lists.  However, it only removes unaerated pages.
-
-I will update the kerneldoc and comments.
-
-> > +/**
-> > + * put_aeration_page - Return a now-aerated "raw" page back where we got it
-> > + * @zone: Zone to return pages to
-> > + * @page: Previously "raw" page that can now be returned after aeration
-> > + *
-> > + * This function will pull the migratetype and order information out
-> > + * of the page and attempt to return it where it found it.
-> > + */
-> > +void put_aeration_page(struct zone *zone, struct page *page)
-> > +{
-> > +	unsigned int order, mt;
-> > +	unsigned long pfn;
-> > +
-> > +	mt = get_pcppage_migratetype(page);
-> > +	pfn = page_to_pfn(page);
-> > +
-> > +	if (unlikely(has_isolate_pageblock(zone) || is_migrate_isolate(mt)))
-> > +		mt = get_pfnblock_migratetype(page, pfn);
-> > +
-> > +	order = page_private(page);
-> > +	set_page_private(page, 0);
-> > +
-> > +	__free_one_page(page, pfn, zone, order, mt, true);
-> > +}
-> > +#endif /* CONFIG_AERATION */
-> 
-> Yikes.  This seems to have glossed over some pretty big aspects here.
-> Pages which are being aerated are not free.  Pages which are freed are
-> diverted to be aerated before becoming free.  Right?  That sounds like
-> two really important things to add to a changelog.
-
-Right. The aerated pages are not free. The go into the free_list and once
-enough pages are in there the aerator will start pulling some out and
-processing them. The idea is that any pages not being actively aerated
-will stay in the free_list so it isn't as if we are shunting them off to a
-side-queue. They are just sitting in the free_list either to be reused or
-aerated.
-
-I'll make some updates to the changelog to clarify that.
-
-> >  /*
-> >   * This array describes the order lists are fallen back to when
-> >   * the free lists for the desirable migrate type are depleted
-> > @@ -5929,9 +6013,12 @@ void __ref memmap_init_zone_device(struct zone *zone,
-> >  static void __meminit zone_init_free_lists(struct zone *zone)
-> >  {
-> >  	unsigned int order, t;
-> > -	for_each_migratetype_order(order, t) {
-> > +	for_each_migratetype_order(order, t)
-> >  		INIT_LIST_HEAD(&zone->free_area[order].free_list[t]);
-> > +
-> > +	for (order = MAX_ORDER; order--; ) {
-> >  		zone->free_area[order].nr_free = 0;
-> > +		zone->free_area[order].nr_free_aerated = 0;
-> >  	}
-> >  }
-> >  
-> > 
-
+-- 
+2.22.0
 
