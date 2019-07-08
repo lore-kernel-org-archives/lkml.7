@@ -2,158 +2,122 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDB1C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6444AC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC9320844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAEA20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EjuZ1ANb"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TcZOhZCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfGHDVV (ORCPT
+        id S1728838AbfGHDZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 23:21:21 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43017 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfGHDVV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 23:21:21 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cl9so7466897plb.10
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 20:21:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yriNKsJYe60EiNop3TWpMryY2FxcQ0ThW6Sm/XJwlR8=;
-        b=EjuZ1ANbtWBdFoLUBhJy9NtMg1EBYm4JHMHrGolEeqgphFf/tPZ52cOdUyqWITuNVo
-         SIwGW+m80mSfKEHOxu72UX1mqNLUffbdTxTux4L0WTdT6xtq+8Mso7YqAS1onxOwcrTU
-         BTxCSxzp5soMmiH+XApJ/ROmWhsX99p/B46sXTR/1SIJOYZRu0C4hQxojEm7laFCffyD
-         nCLvrrLDCza0BlqijaL2JnzpdvQGL+aAj8AdPQbo7rOs+0v9ucBbeaQsydsCGXX3lP+a
-         c4bXY0l7ULFAVwiEjbqU6Ft0u6Wg6L6VXRjiOSTsmOVejix0h4h01hqZ97SHMz3KT2+L
-         eEwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yriNKsJYe60EiNop3TWpMryY2FxcQ0ThW6Sm/XJwlR8=;
-        b=dFdBszq43hqXhDIG9pHohp6xOHfefZn1EdiLTc2Y1WqpBoVoaZnxA4eY0hReH3k1gy
-         ZqfAj+LQqWf9JxIg7JCRBDW3jymKWzlImGRQDy1jSz2z5l3qXNa64XgRRpk5NoCPJ/iV
-         +CYy669G9AsowEsVIMG7Yi82oRDa5RLLIApJRCys0ELRxWei+oq4ZV905hLBjXYi27CW
-         55kdz395LgMECvOfGXhccHobTpLREdBikiGue2ApmPHrAQ5Icx41IMJUFWDkVdTEPC10
-         xgXWcycewLcbIdPsf/mAYUd1XTLG3RC4TbN5dTPrnEL6RqUCDPvRy6bmbYVysfqez9et
-         zs5A==
-X-Gm-Message-State: APjAAAUocVWPLOZBEiiDwiqGKovQVs9cEqgUpyMrX1HV02KLy6mm1sE1
-        vmDCzrrnG+z2Q9arz3iabNTeqA==
-X-Google-Smtp-Source: APXvYqy9tBhinJ/jH5hpam8xPIBRos92/McvenDYvqMZ3bPkT9zPSd6TglCFr+WR+TOqD/5Mar2odg==
-X-Received: by 2002:a17:902:2a27:: with SMTP id i36mr21205885plb.161.1562556079749;
-        Sun, 07 Jul 2019 20:21:19 -0700 (PDT)
-Received: from google.com ([2401:fa00:fd:2:3217:6d96:9ca7:b98b])
-        by smtp.gmail.com with ESMTPSA id r1sm17346719pfq.100.2019.07.07.20.21.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 07 Jul 2019 20:21:19 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 11:21:11 +0800
-From:   Ocean Chen <oceanchen@google.com>
-To:     yuchao0@huawei.com, jaegeuk@kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] f2fs: avoid out-of-range memory access
-Message-ID: <20190708032111.GA189070@google.com>
-References: <20190702080503.175149-1-oceanchen@google.com>
- <cfcd3737-3b03-87fe-39e8-566e545cab3a@huawei.com>
- <20190703150355.GA182283@google.com>
- <65e4ad7b-ffbc-d5c9-9a0f-0532f4c4f5a9@huawei.com>
+        Sun, 7 Jul 2019 23:25:15 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41275 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbfGHDZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 23:25:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hrRr0cp5z9sN1;
+        Mon,  8 Jul 2019 13:25:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562556312;
+        bh=Uyh5Dsc98sLhIcQfuYxGIsQmOAcbJI7nGEcr3m31xLs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TcZOhZCkIs03h69c6wK4fEyTYD9oKGX3Oq/DBr/CqAQ+9D2WqAGa9/NHRvFrNM3ZD
+         xhN7d2XQPCIJlTJGOCWV3ciNXo1qM419177L1qCCk20WP2OHP59u7sDLTilWOS07kr
+         oERMgG5uL/JYaMMxvoRmjrzqkq6iwcrMa+YS3Qt2YEuK7h7CodNXAo3GU7Xvwaga6p
+         epVzB1HkLqVO9tnaQTIyegn0rPXlgy1BZxEJNp2l6VHXSS0lDJsia4JRbhEikFGs02
+         RcLnbBrCMKxSnz2fxmP8/GGMuM+r8mBfg45kFXwMTxxMu7ejU5gRQQrOSYAeUez389
+         1402mLRLMt83Q==
+Date:   Mon, 8 Jul 2019 13:25:10 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: linux-next: build warning after merge of the net-next tree
+Message-ID: <20190708132510.5e1017a7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65e4ad7b-ffbc-d5c9-9a0f-0532f4c4f5a9@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/06cUy9_t8UAQ6Ts2rE/D_Dt"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi YuChao,
+--Sig_/06cUy9_t8UAQ6Ts2rE/D_Dt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-  Yes, we got externel researcher reports this security vulnerability.
+Hi all,
 
-And dump info is better when blk_off is invalid. I'll prepare the next
-patch for it.
+After merging the net-next tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-On Thu, Jul 04, 2019 at 03:11:27PM +0800, Chao Yu wrote:
-> Hi Ocean,
-> 
-> On 2019/7/3 23:03, Ocean Chen wrote:
-> > Hi Yu Chao,
-> > 
-> > The cur_data_segno only was checked in mount process. In terms of
-> > security concern, it's better to check value before using it. I know the
-> 
-> Could you explain more about security concern.. Do you get any report from user
-> or tools that complaining f2fs issue/codes?
-> 
-> I'm not against sanity check for basic core data of filesystem in run-time, but,
-> in order to troubleshoot root cause of this issue we can trigger panic directly
-> to dump more info under F2FS_CHECK_FS macro.
-> 
-> So, maybe we can change as below?
-> 
-> blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
-> +if (blk_off > ENTRIES_IN_SUM) {
-> +	f2fs_bug_on(1);
-> +	f2fs_put_page(page, 1);
-> +	return -EFAULT;
-> +}
-> 
-> Thanks,
-> 
-> > risk is low. IMHO, it can be safer.
-> > BTW, I found we can only check blk_off before for loop instead of
-> > checking 'j' in each iteratoin.
-> > 
-> > On Wed, Jul 03, 2019 at 10:07:11AM +0800, Chao Yu wrote:
-> >> Hi Ocean,
-> >>
-> >> If filesystem is corrupted, it should fail mount due to below check in
-> >> f2fs_sanity_check_ckpt(), so we are safe in read_compacted_summaries() to access
-> >> entries[0,blk_off], right?
-> >>
-> >> 	for (i = 0; i < NR_CURSEG_DATA_TYPE; i++) {
-> >> 		if (le32_to_cpu(ckpt->cur_data_segno[i]) >= main_segs ||
-> >> 			le16_to_cpu(ckpt->cur_data_blkoff[i]) >= blocks_per_seg)
-> >> 			return 1;
-> >>
-> >> Thanks,
-> >>
-> >> On 2019/7/2 16:05, Ocean Chen wrote:
-> >>> blk_off might over 512 due to fs corrupt.
-> >>> Use ENTRIES_IN_SUM to protect invalid memory access.
-> >>>
-> >>> v2:
-> >>> - fix typo
-> >>> Signed-off-by: Ocean Chen <oceanchen@google.com>
-> >>> ---
-> >>>  fs/f2fs/segment.c | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> >>> index 8dee063c833f..a5e8af0bd62e 100644
-> >>> --- a/fs/f2fs/segment.c
-> >>> +++ b/fs/f2fs/segment.c
-> >>> @@ -3403,6 +3403,8 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
-> >>>  
-> >>>  		for (j = 0; j < blk_off; j++) {
-> >>>  			struct f2fs_summary *s;
-> >>> +			if (j >= ENTRIES_IN_SUM)
-> >>> +				return -EFAULT;
-> >>>  			s = (struct f2fs_summary *)(kaddr + offset);
-> >>>  			seg_i->sum_blk->entries[j] = *s;
-> >>>  			offset += SUMMARY_SIZE;
-> >>>
-> > .
-> > 
+In file included from include/linux/bitmap.h:9,
+                 from include/linux/cpumask.h:12,
+                 from arch/x86/include/asm/cpumask.h:5,
+                 from arch/x86/include/asm/msr.h:11,
+                 from arch/x86/include/asm/processor.h:21,
+                 from arch/x86/include/asm/cpufeature.h:5,
+                 from arch/x86/include/asm/thread_info.h:53,
+                 from include/linux/thread_info.h:38,
+                 from arch/x86/include/asm/preempt.h:7,
+                 from include/linux/preempt.h:78,
+                 from include/linux/spinlock.h:51,
+                 from include/linux/seqlock.h:36,
+                 from include/linux/time.h:6,
+                 from include/linux/ktime.h:24,
+                 from include/linux/timer.h:6,
+                 from include/linux/netdevice.h:24,
+                 from include/linux/if_vlan.h:10,
+                 from drivers/net/ethernet/mellanox/mlx5/core/en.h:35,
+                 from drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls=
+_tx.c:5:
+drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c: In function 'ml=
+x5e_ktls_tx_handle_ooo':
+include/linux/string.h:400:9: warning: 'rec_seq' may be used uninitialized =
+in this function [-Wmaybe-uninitialized]
+  return __builtin_memcmp(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:240:8: note: 're=
+c_seq' was declared here
+  char *rec_seq;
+        ^~~~~~~
+
+Introduced by commit
+
+  d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/06cUy9_t8UAQ6Ts2rE/D_Dt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0it5YACgkQAVBC80lX
+0GyoSQf+OVKBwg9oaKP28cOy3uw3bRZ/Vcq35raoJNAry/NRCi45TR06qDNniLwZ
+WRV9BhtV05j4IZNjNKvgxlK+ioMuanT7gynfXlSaEd7WNAQKz3apKcq9yPeXaeoN
+l6SDQLUmAEJtH+9t/BRwwIYFy9dMMHn0I3BeCWZlk6ka4tXTDlAFXnWRGLQXFtPV
+NgM+L1wK65/ksXiT8tlE9JuVv/ihop22NpRZ2qfupA9/0Bhtx/7BPyPKjnhaEMB/
+Sn5xd4yE5ZsNZP6W5s8Jk4OhpVFa3hZcH3PEr/fJJOljFxryY2f8hadGh1VyoYFI
+lTbu3Ku/USKSvD6Bl66TEUFh1qAvpQ==
+=cxjc
+-----END PGP SIGNATURE-----
+
+--Sig_/06cUy9_t8UAQ6Ts2rE/D_Dt--
