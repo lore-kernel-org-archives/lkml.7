@@ -2,659 +2,208 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4445DC606AA
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C3AC606A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F37E520656
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D8E20656
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oLt30Ysn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4X9uWXb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbfGHJpJ (ORCPT
+        id S1729972AbfGHJsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 05:45:09 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33848 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729936AbfGHJpJ (ORCPT
+        Mon, 8 Jul 2019 05:48:09 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44943 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728720AbfGHJsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 05:45:09 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n5so15580458otk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 02:45:07 -0700 (PDT)
+        Mon, 8 Jul 2019 05:48:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p17so5118759wrf.11;
+        Mon, 08 Jul 2019 02:48:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ONq1aOGiESkpOw8KKZA0wWCvipUgxT9YZPmKzFDcUbg=;
-        b=oLt30YsnST3uVHN3J2+6k9jsQSWRMW17LErLg01e8yXSO1cGg3Leo4wmFh5zdo8SeZ
-         PtKQYcemVCxwmOkmr6ppF549IMsJXyVNBGtRDIwrQOY3Bzo/W9HIlqWQctSY/AdFzXhx
-         u86qqZfMVAIWi8sPswrqu7QlJcVELyQhCfq85GwRFoesUkv4YBJYuHbvRp8oV9gK08U6
-         Lbc/e1azLNWh7EcpOyfhANF0tEZUc6gyN1gmTQoQVGor+vSWRALAI53+zKWiM2XVDIIG
-         Qu1qqPL/yFQfcHM3p4IByIkJdjTXRX15o9w6JE19dI0F/jfrCNntJNAGPbMi8NuhY8Gn
-         UHZw==
+         :cc;
+        bh=NwlWZnZ7zBN6lMDrY9iRaKbV18Be9yKKcDp04eaQZqw=;
+        b=L4X9uWXbU6RiKrYoUg2tgRwaWORYDiSTVLOeYpeJuxAruwz0azPyvOk8Jf4yhJqizT
+         Sjoag1bsd1lnxDMWoqWXLrdD3yVIUh57JZAPA2c3H3H2zbBYt8B67jd6Pel/2AgEa4gP
+         UaPzoeGUom5LJOBnL8pK/c/SnqUrKVpurbOn9VAskieXCXaYvjvzLjXxB8RiP3Z+TCF2
+         +S//IhKshMXkeWfHs9dFTv19u1RT3CyGreaY1P1dNUic3NzRB4JNQfiBJ+2VqzfRAsMr
+         ppKkr0g9JXj/PxeiIUrvGdln+1TpbzM9iqSsIbUChjswX3i3/1qDjh4PNGHFEs0oVxrK
+         0PxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ONq1aOGiESkpOw8KKZA0wWCvipUgxT9YZPmKzFDcUbg=;
-        b=q7oxRgthb6Q9rthIG/QMK9YH5pW/RjdJ8lrvyBdWN8660qKHlMqJHcxOaZfJXXK8XI
-         pT233Hxum7egr2tO94c3bVQBKoluD/9LNGTxdlfZxPQZhAeQHWYF5YY6iev59JpE6tqM
-         1uvBFt4eub+/ffFTibHynrYiapaI/Vjf1U7xarn6xOBCNm8dO0YvA1K7lVIKLaPmJ01p
-         u3ULBnNTckOt2dbChYRumJfheCdVDKGYtg5VWxn10RlqDIj3yJr1X38s9czxH3CrNCzQ
-         GcDfeX9kaaxbDuh/Q9Mu4BEQGjxCZ6MKmNIxOgA7VK6x1Ws9umvAfwlAdKAll6zs+1cL
-         XQvA==
-X-Gm-Message-State: APjAAAWUI+fvJFFilSZp3fudrE/c/h0J1mwACN6pP+t5wZL3N17dgbu6
-        oRbxUAq0Oozt/cxmuLYk11KlLl6bX3hmoeBOOPzKYA==
-X-Google-Smtp-Source: APXvYqyof1jsbvomWBuqYakw6QWpgZTqIMgpOsfRdDRnmnqKZCUvyTdQwDlsVeIMvFIioZTAljBNS933W5PYHJ2LzyY=
-X-Received: by 2002:a05:6830:1291:: with SMTP id z17mr14086219otp.194.1562579107299;
- Mon, 08 Jul 2019 02:45:07 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=NwlWZnZ7zBN6lMDrY9iRaKbV18Be9yKKcDp04eaQZqw=;
+        b=EXHQ+bBHIbGMhQofgKY3URGs8vyMe7T5152Tt0f7vnrrin8aXb4Ca6e2QpZ7b0oHf3
+         uODp1M5mHGFGob6HxziiEcZ7r+C1CsG1l1Y6tZkSyXvI1sYwOpvW4eBWN7hs21S5eXMB
+         2JnEnVf4d6Qdr7U3BpTS13v8EWCuAVC5f9Jga3PxLyCvV78YUKf/e7ZqmbSh+lJQDw4F
+         F5s/f5ZL1o3UgecaTTZf2XqyffBYfbFPraTPx7QnrAvL0H5NpTsH+T49loAkacY0K9Dw
+         0TjWlJjora6uBqH5mAjRcMV/7mIAX/4qv4EVyBg9FVX6mwXAe0woswjM8eWjo+7KpXwn
+         jy5Q==
+X-Gm-Message-State: APjAAAWSECR/XzS8smlkSYFIvxBw7hSF1oxU53U8vwsYPEshKCgTZvJt
+        F1ZTjDqoImPY9WU0f7xT2FSmJXemPFBFbM22L3o=
+X-Google-Smtp-Source: APXvYqxE67dD1GsBy6jRCG+SGo9SeaPdmJ0+fghvBxDKCiPovhUbI/A/avBvpADnzJyDg0CyZ7K+xQiy1/iVQCXybjo=
+X-Received: by 2002:a05:6000:1011:: with SMTP id a17mr18005281wrx.0.1562579286243;
+ Mon, 08 Jul 2019 02:48:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190705160536.12047-1-geert+renesas@glider.be>
-In-Reply-To: <20190705160536.12047-1-geert+renesas@glider.be>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 8 Jul 2019 11:44:56 +0200
-Message-ID: <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>, qemu-devel@nongnu.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190530112811.3066-1-pbonzini@redhat.com> <20190530112811.3066-3-pbonzini@redhat.com>
+In-Reply-To: <20190530112811.3066-3-pbonzini@redhat.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Mon, 8 Jul 2019 17:47:54 +0800
+Message-ID: <CACVXFVPE7vX1pEPH0G_C_eZW8eztdTEg8Xr=8+D=9-eVeMNZ_g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] virtio_scsi: implement request batching
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM General <kvm@vger.kernel.org>, jejb@linux.ibm.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> napisa=
-=C5=82(a):
+On Thu, May 30, 2019 at 7:28 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
-> GPIO controllers are exported to userspace using /dev/gpiochip*
-> character devices.  Access control to these devices is provided by
-> standard UNIX file system permissions, on an all-or-nothing basis:
-> either a GPIO controller is accessible for a user, or it is not.
-> Currently no mechanism exists to control access to individual GPIOs.
+> Adding the command and kicking the virtqueue so far was done one after
+> another.  Make the kick optional, so that we can take into account SCMD_LAST.
+> We also need a commit_rqs callback to kick the device if blk-mq aborts
+> the submission before the last request is reached.
 >
-> Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32),
-> and expose them as a new gpiochip.  This is useful for implementing
-> access control, and assigning a set of GPIOs to a specific user.
-> Furthermore, it would simplify and harden exporting GPIOs to a virtual
-> machine, as the VM can just grab the full virtual GPIO controller, and
-> no longer needs to care about which GPIOs to grab and which not,
-> reducing the attack surface.
->
-> Virtual GPIO controllers are instantiated by writing to the "new_device"
-> attribute file in sysfs:
->
->     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
->            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
->             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
->
-> Likewise, virtual GPIO controllers can be destroyed after use:
->
->     $ echo gpio-virt-agg.<N> \
->             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
-> Aggregating GPIOs and exposing them as a new gpiochip was suggested in
-> response to my proof-of-concept for GPIO virtualization with QEMU[1][2].
+>  drivers/scsi/virtio_scsi.c | 55 +++++++++++++++++++++++++++-----------
+>  1 file changed, 40 insertions(+), 15 deletions(-)
 >
-> Sample session on r8a7791/koelsch:
+> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
+> index 8af01777d09c..918c811cea95 100644
+> --- a/drivers/scsi/virtio_scsi.c
+> +++ b/drivers/scsi/virtio_scsi.c
+> @@ -375,14 +375,7 @@ static void virtscsi_event_done(struct virtqueue *vq)
+>         virtscsi_vq_done(vscsi, &vscsi->event_vq, virtscsi_complete_event);
+>  };
 >
->   - Disable the leds node in arch/arm/boot/dts/r8a7791-koelsch.dts
+> -/**
+> - * virtscsi_add_cmd - add a virtio_scsi_cmd to a virtqueue
+> - * @vq         : the struct virtqueue we're talking about
+> - * @cmd                : command structure
+> - * @req_size   : size of the request buffer
+> - * @resp_size  : size of the response buffer
+> - */
+> -static int virtscsi_add_cmd(struct virtqueue *vq,
+> +static int __virtscsi_add_cmd(struct virtqueue *vq,
+>                             struct virtio_scsi_cmd *cmd,
+>                             size_t req_size, size_t resp_size)
+>  {
+> @@ -427,17 +420,39 @@ static int virtscsi_add_cmd(struct virtqueue *vq,
+>         return virtqueue_add_sgs(vq, sgs, out_num, in_num, cmd, GFP_ATOMIC);
+>  }
 >
->   - Create virtual aggregators:
+> -static int virtscsi_kick_cmd(struct virtio_scsi_vq *vq,
+> +static void virtscsi_kick_vq(struct virtio_scsi_vq *vq)
+> +{
+> +       bool needs_kick;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&vq->vq_lock, flags);
+> +       needs_kick = virtqueue_kick_prepare(vq->vq);
+> +       spin_unlock_irqrestore(&vq->vq_lock, flags);
+> +
+> +       if (needs_kick)
+> +               virtqueue_notify(vq->vq);
+> +}
+> +
+> +/**
+> + * virtscsi_add_cmd - add a virtio_scsi_cmd to a virtqueue, optionally kick it
+> + * @vq         : the struct virtqueue we're talking about
+> + * @cmd                : command structure
+> + * @req_size   : size of the request buffer
+> + * @resp_size  : size of the response buffer
+> + * @kick       : whether to kick the virtqueue immediately
+> + */
+> +static int virtscsi_add_cmd(struct virtio_scsi_vq *vq,
+>                              struct virtio_scsi_cmd *cmd,
+> -                            size_t req_size, size_t resp_size)
+> +                            size_t req_size, size_t resp_size,
+> +                            bool kick)
+>  {
+>         unsigned long flags;
+>         int err;
+>         bool needs_kick = false;
 >
->     $ echo "e6052000.gpio 19 20" \
->             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+>         spin_lock_irqsave(&vq->vq_lock, flags);
+> -       err = virtscsi_add_cmd(vq->vq, cmd, req_size, resp_size);
+> -       if (!err)
+> +       err = __virtscsi_add_cmd(vq->vq, cmd, req_size, resp_size);
+> +       if (!err && kick)
+>                 needs_kick = virtqueue_kick_prepare(vq->vq);
 >
->     gpio-virt-agg gpio-virt-agg.0: GPIO 0 =3D> e6052000.gpio/19
->     gpio-virt-agg gpio-virt-agg.0: GPIO 1 =3D> e6052000.gpio/20
->     gpiochip_find_base: found new base at 778
->     gpio gpiochip8: (gpio-virt-agg.0): added GPIO chardev (254:8)
->     gpiochip_setup_dev: registered GPIOs 778 to 779 on device: gpiochip8 =
-(gpio-virt-agg.0)
+>         spin_unlock_irqrestore(&vq->vq_lock, flags);
+> @@ -502,6 +517,7 @@ static int virtscsi_queuecommand(struct Scsi_Host *shost,
+>         struct virtio_scsi *vscsi = shost_priv(shost);
+>         struct virtio_scsi_vq *req_vq = virtscsi_pick_vq_mq(vscsi, sc);
+>         struct virtio_scsi_cmd *cmd = scsi_cmd_priv(sc);
+> +       bool kick;
+>         unsigned long flags;
+>         int req_size;
+>         int ret;
+> @@ -531,7 +547,8 @@ static int virtscsi_queuecommand(struct Scsi_Host *shost,
+>                 req_size = sizeof(cmd->req.cmd);
+>         }
 >
->     $ echo "e6052000.gpio 21, e6050000.gpio 20 21 22" \
->             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+> -       ret = virtscsi_kick_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd));
+> +       kick = (sc->flags & SCMD_LAST) != 0;
+> +       ret = virtscsi_add_cmd(req_vq, cmd, req_size, sizeof(cmd->resp.cmd), kick);
+>         if (ret == -EIO) {
+>                 cmd->resp.cmd.response = VIRTIO_SCSI_S_BAD_TARGET;
+>                 spin_lock_irqsave(&req_vq->vq_lock, flags);
+> @@ -549,8 +566,8 @@ static int virtscsi_tmf(struct virtio_scsi *vscsi, struct virtio_scsi_cmd *cmd)
+>         int ret = FAILED;
 >
->     gpio-virt-agg gpio-virt-agg.1: GPIO 0 =3D> e6052000.gpio/21
->     gpio-virt-agg gpio-virt-agg.1: GPIO 1 =3D> e6050000.gpio/20
->     gpio-virt-agg gpio-virt-agg.1: GPIO 2 =3D> e6050000.gpio/21
->     gpio-virt-agg gpio-virt-agg.1: GPIO 3 =3D> e6050000.gpio/22
->     gpiochip_find_base: found new base at 774
->     gpio gpiochip9: (gpio-virt-agg.1): added GPIO chardev (254:9)
->     gpiochip_setup_dev: registered GPIOs 774 to 777 on device: gpiochip9 =
-(gpio-virt-agg.1)
+>         cmd->comp = &comp;
+> -       if (virtscsi_kick_cmd(&vscsi->ctrl_vq, cmd,
+> -                             sizeof cmd->req.tmf, sizeof cmd->resp.tmf) < 0)
+> +       if (virtscsi_add_cmd(&vscsi->ctrl_vq, cmd,
+> +                             sizeof cmd->req.tmf, sizeof cmd->resp.tmf, true) < 0)
+>                 goto out;
 >
->   - Adjust permissions on /dev/gpiochip[89] (optional)
+>         wait_for_completion(&comp);
+> @@ -664,6 +681,13 @@ static int virtscsi_map_queues(struct Scsi_Host *shost)
+>         return blk_mq_virtio_map_queues(qmap, vscsi->vdev, 2);
+>  }
 >
->   - Control LEDs:
->
->     $ gpioset gpiochip8 0=3D0 1=3D1 # LED6 OFF, LED7 ON
->     $ gpioset gpiochip8 0=3D1 1=3D0 # LED6 ON, LED7 OFF
->     $ gpioset gpiochip9 0=3D0     # LED8 OFF
->     $ gpioset gpiochip9 0=3D1     # LED8 ON
->
->   - Destroy virtual aggregators:
->
->     $ echo gpio-virt-agg.0 \
->             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
->     $ echo gpio-virt-agg.1 \
->             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
->
-> Thanks for your comments!
->
-
-Hi Geert,
-
-I like the general idea and the interface looks mostly fine. Since
-this is new ABI I think it needs to be documented as well.
-
-I'm having trouble building this module:
-
-  CALL    scripts/atomic/check-atomics.sh
-  CALL    scripts/checksyscalls.sh
-  CHK     include/generated/compile.h
-  Kernel: arch/arm/boot/Image is ready
-  Building modules, stage 2.
-  MODPOST 235 modules
-ERROR: "gpiod_request" [drivers/gpio/gpio-virt-agg.ko] undefined!
-ERROR: "gpiochip_get_desc" [drivers/gpio/gpio-virt-agg.ko] undefined!
-ERROR: "gpiod_free" [drivers/gpio/gpio-virt-agg.ko] undefined!
-scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-make[1]: *** [__modpost] Error 1
-Makefile:1287: recipe for target 'modules' failed
-make: *** [modules] Error 2
-make: *** Waiting for unfinished jobs....
-
-I'm not sure what the problem is.
-
-> References:
->   - [1] "[PATCH QEMU POC] Add a GPIO backend"
->         (https://lore.kernel.org/linux-renesas-soc/20181003152521.23144-1=
--geert+renesas@glider.be/)
->   - [2] "Getting To Blinky: Virt Edition / Making device pass-through
->          work on embedded ARM"
->         (https://fosdem.org/2019/schedule/event/vai_getting_to_blinky/)
-> ---
->  drivers/gpio/Kconfig         |   9 +
->  drivers/gpio/Makefile        |   1 +
->  drivers/gpio/gpio-virt-agg.c | 390 +++++++++++++++++++++++++++++++++++
->  3 files changed, 400 insertions(+)
->  create mode 100644 drivers/gpio/gpio-virt-agg.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index f1f02dac324e52b6..8aff4d9626dee110 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1475,3 +1475,12 @@ config GPIO_MOCKUP
->           it.
->
->  endif
-> +
-> +config GPIO_VIRT_AGG
-> +       tristate "GPIO Virtual Aggregator"
-> +       depends on GPIOLIB
-> +       help
-> +         This enabled the GPIO Virtual Aggregator, which provides a way =
-to
-> +         aggregate existing GPIOs into a new virtual GPIO device.
-> +         This is useful for assigning a collection of GPIOs to a user, o=
-r
-> +         exported them to a virtual machine.
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 0a494052c1e845ee..32e885b7f3aa4eee 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -152,6 +152,7 @@ obj-$(CONFIG_GPIO_UCB1400)          +=3D gpio-ucb1400=
-.o
->  obj-$(CONFIG_GPIO_UNIPHIER)            +=3D gpio-uniphier.o
->  obj-$(CONFIG_GPIO_VF610)               +=3D gpio-vf610.o
->  obj-$(CONFIG_GPIO_VIPERBOARD)          +=3D gpio-viperboard.o
-> +obj-$(CONFIG_GPIO_VIRT_AGG)            +=3D gpio-virt-agg.o
->  obj-$(CONFIG_GPIO_VR41XX)              +=3D gpio-vr41xx.o
->  obj-$(CONFIG_GPIO_VX855)               +=3D gpio-vx855.o
->  obj-$(CONFIG_GPIO_WHISKEY_COVE)                +=3D gpio-wcove.o
-> diff --git a/drivers/gpio/gpio-virt-agg.c b/drivers/gpio/gpio-virt-agg.c
-> new file mode 100644
-> index 0000000000000000..20e5f22beed9d385
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-virt-agg.c
-> @@ -0,0 +1,390 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +// GPIO Virtual Aggregator
-> +//
-> +// Copyright (C) 2019 Glider bvba
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/idr.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "gpiolib.h"
-> +
-> +#define DRV_NAME       "gpio-virt-agg"
-> +#define MAX_GPIOS      32
-
-Do we really need this limit? I see it simplifies the code, but maybe
-we can allocate the relevant arrays dynamically and not limit users?
-
-> +
-> +struct gpio_virt_agg_entry {
-> +       struct platform_device *pdev;
-> +};
-> +
-> +struct gpio_virt_agg_priv {
-> +       struct gpio_chip chip;
-> +       struct gpio_desc *desc[MAX_GPIOS];
-> +};
-> +
-> +static DEFINE_MUTEX(gpio_virt_agg_lock);       /* protects idr */
-> +static DEFINE_IDR(gpio_virt_agg_idr);
-> +
-> +static int gpio_virt_agg_get_direction(struct gpio_chip *chip,
-> +                                      unsigned int offset)
+> +static void virtscsi_commit_rqs(struct Scsi_Host *shost, u16 hwq)
 > +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
+> +       struct virtio_scsi *vscsi = shost_priv(shost);
 > +
-> +       return gpiod_get_direction(priv->desc[offset]);
+> +       virtscsi_kick_vq(&vscsi->req_vqs[hwq]);
 > +}
 > +
-> +static int gpio_virt_agg_direction_input(struct gpio_chip *chip,
-> +                                        unsigned int offset)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
-> +
-> +       return gpiod_direction_input(priv->desc[offset]);
-> +}
-> +
-> +static int gpio_virt_agg_direction_output(struct gpio_chip *chip,
-> +                                         unsigned int offset, int value)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
-> +
-> +       return gpiod_direction_output(priv->desc[offset], value);
-> +}
-> +
-> +static int gpio_virt_agg_get(struct gpio_chip *chip, unsigned int offset=
-)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
-> +
-> +       return gpiod_get_value(priv->desc[offset]);
-> +}
-> +
-> +static int gpio_virt_agg_get_multiple(struct gpio_chip *chip,
-> +                                     unsigned long *mask, unsigned long =
-*bits)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
-> +       DECLARE_BITMAP(values, MAX_GPIOS) =3D { 0 };
-> +       struct gpio_desc *desc[MAX_GPIOS];
-> +       unsigned int i, j =3D 0;
-> +       int ret;
-> +
-> +       for_each_set_bit(i, mask, priv->chip.ngpio)
-> +               desc[j++] =3D priv->desc[i];
-> +
-> +       ret =3D gpiod_get_array_value(j, desc, NULL, values);
-> +       if (ret)
-> +               return ret;
-> +
-> +       for_each_set_bit(i, mask, priv->chip.ngpio)
-> +               __assign_bit(i, bits, test_bit(j++, values));
-> +
-> +       return 0;
-> +}
-> +
-> +static void gpio_virt_agg_set(struct gpio_chip *chip, unsigned int offse=
-t,
-> +                             int value)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
-> +
-> +       gpiod_set_value(priv->desc[offset], value);
-> +}
-> +
-> +static void gpio_virt_agg_set_multiple(struct gpio_chip *chip,
-> +                                      unsigned long *mask,
-> +                                      unsigned long *bits)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
-> +       DECLARE_BITMAP(values, MAX_GPIOS);
-> +       struct gpio_desc *desc[MAX_GPIOS];
-> +       unsigned int i, j =3D 0;
-> +
-> +       for_each_set_bit(i, mask, priv->chip.ngpio) {
-> +               __assign_bit(j, values, test_bit(i, bits));
-> +               desc[j++] =3D priv->desc[i];
-> +       }
-> +
-> +       gpiod_set_array_value(j, desc, NULL, values);
-> +}
-> +
-> +static int gpio_virt_agg_set_config(struct gpio_chip *chip,
-> +                                   unsigned int offset, unsigned long co=
-nfig)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
-> +
-> +       chip =3D priv->desc[offset]->gdev->chip;
-> +       if (chip->set_config)
-> +               return chip->set_config(chip, offset, config);
-> +
-> +       // FIXME gpiod_set_transitory() expects success if not implemente=
-d
-> +       return -ENOTSUPP;
-> +}
-> +
-> +static int gpio_virt_agg_init_valid_mask(struct gpio_chip *chip)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
-> +       unsigned int i;
-> +
-> +       for (i =3D 0; i < priv->chip.ngpio; i++) {
-> +               if (gpiochip_line_is_valid(priv->desc[i]->gdev->chip,
-> +                                          gpio_chip_hwgpio(priv->desc[i]=
-)))
-> +                       set_bit(i, chip->valid_mask);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int gpiochip_match_label(struct gpio_chip *chip, void *data)
-> +{
-> +       return !strcmp(chip->label, data);
-> +}
-> +
-> +static struct gpio_chip *gpiochip_find_by_label(const char *label)
-> +{
-> +       return gpiochip_find((void *)label, gpiochip_match_label);
-> +}
-> +
-> +static ssize_t new_device_store(struct device_driver *driver, const char=
- *buf,
-> +                               size_t count)
-> +{
-> +       struct gpio_virt_agg_entry *gva;
-> +       struct platform_device *pdev;
-> +       int res, id;
-> +
-> +       gva =3D kzalloc(sizeof(*gva), GFP_KERNEL);
-> +       if (!gva)
-> +               return -ENOMEM;
-> +
-> +       mutex_lock(&gpio_virt_agg_lock);
-> +       id =3D idr_alloc(&gpio_virt_agg_idr, gva, 0, 0, GFP_KERNEL);
-> +       mutex_unlock(&gpio_virt_agg_lock);
-> +
-> +       if (id < 0) {
-> +               res =3D id;
-> +               goto free_gva;
-> +       }
-> +
-> +       /* kernfs guarantees string termination, so count + 1 is safe */
-> +       pdev =3D platform_device_register_data(NULL, DRV_NAME, id, buf,
-> +                                            count + 1);
-> +       if (IS_ERR(pdev)) {
-> +               res =3D PTR_ERR(pdev);
-> +               goto remove_idr;
-> +       }
-> +
-> +       gva->pdev =3D pdev;
-> +       return count;
-> +
-> +remove_idr:
-> +       mutex_lock(&gpio_virt_agg_lock);
-> +       idr_remove(&gpio_virt_agg_idr, id);
-> +       mutex_unlock(&gpio_virt_agg_lock);
-> +free_gva:
-> +       kfree(gva);
-> +       return res;
-> +}
-> +
-> +static DRIVER_ATTR_WO(new_device);
-> +
-> +static ssize_t delete_device_store(struct device_driver *driver,
-> +                                  const char *buf, size_t count)
-> +{
-> +       struct gpio_virt_agg_entry *gva;
-> +       int id;
-> +
-> +       if (strncmp(buf, DRV_NAME ".", strlen(DRV_NAME ".")))
-> +               return -EINVAL;
-> +
-> +       id =3D simple_strtoul(buf + strlen(DRV_NAME "."), NULL, 10);
-> +
-> +       mutex_lock(&gpio_virt_agg_lock);
-> +       gva =3D idr_remove(&gpio_virt_agg_idr, id);
-> +       mutex_unlock(&gpio_virt_agg_lock);
-> +
-> +       if (!gva) {
-> +               pr_info("Cannot find %s.%d\n", DRV_NAME, id);
-> +               return -ENOENT;
-> +       }
-> +
-> +       platform_device_unregister(gva->pdev);
-> +       kfree(gva);
-> +       return count;
-> +}
-> +static DRIVER_ATTR_WO(delete_device);
-> +
-> +static struct attribute *gpio_virt_agg_attrs[] =3D {
-> +       &driver_attr_new_device.attr,
-> +       &driver_attr_delete_device.attr,
-> +       NULL,
-> +};
-> +ATTRIBUTE_GROUPS(gpio_virt_agg);
-> +
-> +static int gpio_virt_agg_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-> +       const char *param =3D dev_get_platdata(dev);
-> +       struct gpio_virt_agg_priv *priv;
-> +       const char *label =3D NULL;
-> +       struct gpio_chip *chip;
-> +       struct gpio_desc *desc;
-> +       unsigned int offset;
-> +       int error, i;
-
-This 'i' here is reported as possibly not initialized:
-
-drivers/gpio/gpio-virt-agg.c: In function =E2=80=98gpio_virt_agg_probe=E2=
-=80=99:
-drivers/gpio/gpio-virt-agg.c:230:13: warning: =E2=80=98i=E2=80=99 may be us=
-ed
-uninitialized in this function [-Wmaybe-uninitialized]
-  int error, i;
-             ^
-
-> +       char *s;
-> +
-> +       priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv) {
-> +               error =3D -ENOMEM;
-> +               goto fail;
-> +       }
-> +
-> +       for (i =3D 0; i < MAX_GPIOS; i++) {
-> +               if (*param =3D=3D '\0' || *param =3D=3D '\n')
-> +                       break;
-> +
-> +               if (*param =3D=3D ',') {
-> +                       if (label) {
-> +                               devm_kfree(dev, label);
-> +                               label =3D NULL;
-> +                       }
-> +                       for (param++; *param =3D=3D ' '; param++) ;
-> +               }
-> +
-> +               if (!label) {
-> +                       s =3D strchr(param, ' ');
-> +                       if (!s) {
-> +                               dev_info(dev, "Missing gpiochip\n");
-> +                               error =3D -EINVAL;
-> +                               goto fail;
-> +                       }
-> +                       label =3D devm_kasprintf(dev, GFP_KERNEL, "%.*s",
-> +                                              (int)(s - param), param);
-> +                       if (!label) {
-> +                               error =3D -ENOMEM;
-> +                               goto fail;
-> +                       }
-> +
-> +                       chip =3D gpiochip_find_by_label(label);
-> +                       if (!chip) {
-> +                               dev_info(dev, "Cannot find gpiochip %s\n"=
-,
-> +                                        label);
-> +                               error =3D -ENODEV;
-> +                               goto fail;
-> +                       }
-> +
-> +                       for (param =3D s + 1; *param =3D=3D ' '; param++)=
- ;
-> +               }
-> +
-> +               offset =3D simple_strtoul(param, &s, 10);
-> +
-> +               desc =3D gpiochip_get_desc(chip, offset);
-> +               if (IS_ERR(desc)) {
-> +                       error =3D PTR_ERR(desc);
-> +                       dev_info(dev, "Cannot get GPIO %s/%u: %d\n", labe=
-l,
-> +                                offset, error);
-> +                       goto fail;
-> +               }
-> +
-> +               error =3D gpiod_request(desc, dev_name(dev));
-> +               if (error) {
-> +                       dev_info(dev, "Cannot request GPIO %s/%u: %d\n", =
-label,
-> +                                offset, error);
-> +                       goto fail;
-> +               }
-> +
-> +               dev_dbg(dev, "GPIO %u =3D> %s/%u\n", i, label, offset);
-> +               priv->desc[i] =3D desc;
-> +
-> +               if (gpiod_cansleep(desc))
-> +                       priv->chip.can_sleep =3D true;
-> +               if (desc->gdev->chip->set_config)
-> +                       priv->chip.set_config =3D gpio_virt_agg_set_confi=
-g;
-> +               if (desc->gdev->chip->need_valid_mask) {
-> +                       priv->chip.need_valid_mask =3D true;
-> +                       priv->chip.init_valid_mask =3D
-> +                               gpio_virt_agg_init_valid_mask;
-> +               }
-> +
-> +               for (param =3D s; *param =3D=3D ' '; param++) ;
-> +       }
-> +       if (i =3D=3D MAX_GPIOS)
-> +               dev_warn(&pdev->dev,
-> +                        "Too many gpios specified, truncating to %u\n",
-> +                        MAX_GPIOS);
-> +
-> +       priv->chip.label =3D dev_name(dev);
-> +       priv->chip.parent =3D dev;
-> +       priv->chip.owner =3D THIS_MODULE;
-> +       priv->chip.get_direction =3D gpio_virt_agg_get_direction;
-> +       priv->chip.direction_input =3D gpio_virt_agg_direction_input;
-> +       priv->chip.direction_output =3D gpio_virt_agg_direction_output;
-> +       priv->chip.get =3D gpio_virt_agg_get;
-> +       priv->chip.get_multiple =3D gpio_virt_agg_get_multiple;
-> +       priv->chip.set =3D gpio_virt_agg_set;
-> +       priv->chip.set_multiple =3D gpio_virt_agg_set_multiple;
-> +       priv->chip.base =3D -1;
-> +       priv->chip.ngpio =3D i;
-> +       platform_set_drvdata(pdev, priv);
-> +
-> +       error =3D gpiochip_add_data(&priv->chip, priv);
-> +       if (error)
-> +               goto fail;
-> +
-> +       return 0;
-> +
-> +fail:
-> +       while (i-- > 0)
-> +               gpiod_free(priv->desc[i]);
-> +
-> +       return error;
-> +}
-> +
-> +static int gpio_virt_agg_remove(struct platform_device *pdev)
-> +{
-> +       struct gpio_virt_agg_priv *priv =3D platform_get_drvdata(pdev);
-> +       unsigned int i;
-> +
-> +       gpiochip_remove(&priv->chip);
-> +
-> +       for (i =3D 0; i < priv->chip.ngpio; i++)
-> +               gpiod_free(priv->desc[i]);
-> +
-> +       return 0;
-> +}
-
-You shouldn't need this function at all. It's up to users to free descripto=
-rs.
-
-Best regards,
-Bartosz Golaszewski
-
-> +
-> +static struct platform_driver gpio_virt_agg_driver =3D {
-> +       .probe =3D gpio_virt_agg_probe,
-> +       .remove =3D gpio_virt_agg_remove,
-> +       .driver =3D {
-> +               .name =3D DRV_NAME,
-> +               .groups =3D gpio_virt_agg_groups,
-> +       },
-> +};
-> +
-> +static int __init gpio_virt_agg_init(void)
-> +{
-> +       return platform_driver_register(&gpio_virt_agg_driver);
-> +}
-> +module_init(gpio_virt_agg_init);
-> +
-> +static int __exit gpio_virt_agg_idr_remove(int id, void *p, void *data)
-> +{
-> +       struct gpio_virt_agg_entry *gva =3D p;
-> +
-> +       platform_device_unregister(gva->pdev);
-> +       kfree(gva);
-> +       return 0;
-> +}
-> +
-> +static void __exit gpio_virt_agg_exit(void)
-> +{
-> +       mutex_lock(&gpio_virt_agg_lock);
-> +       idr_for_each(&gpio_virt_agg_idr, gpio_virt_agg_idr_remove, NULL);
-> +       idr_destroy(&gpio_virt_agg_idr);
-> +       mutex_unlock(&gpio_virt_agg_lock);
-> +
-> +       platform_driver_unregister(&gpio_virt_agg_driver);
-> +}
-> +module_exit(gpio_virt_agg_exit);
-> +
-> +MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
-> +MODULE_DESCRIPTION("GPIO Virtual Aggregator");
-> +MODULE_LICENSE("GPL v2");
+>  /*
+>   * The host guarantees to respond to each command, although I/O
+>   * latencies might be higher than on bare metal.  Reset the timer
+> @@ -681,6 +705,7 @@ static struct scsi_host_template virtscsi_host_template = {
+>         .this_id = -1,
+>         .cmd_size = sizeof(struct virtio_scsi_cmd),
+>         .queuecommand = virtscsi_queuecommand,
+> +       .commit_rqs = virtscsi_commit_rqs,
+>         .change_queue_depth = virtscsi_change_queue_depth,
+>         .eh_abort_handler = virtscsi_abort,
+>         .eh_device_reset_handler = virtscsi_device_reset,
 > --
-> 2.17.1
+> 2.21.0
 >
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+Thanks,
+Ming Lei
