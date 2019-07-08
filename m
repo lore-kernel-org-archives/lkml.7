@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E829C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E74C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22FC1216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBB2216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599340;
-	bh=gl/oNOjwK39gihV+wxOnVsA+ocDBYadNV3JNY+DxmXk=;
+	s=default; t=1562599344;
+	bh=Nf2YQlA6/8uRbuf11XOZ+HRCsHe6fw5Z0BmejLtcxfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpfhE2Htc/mkOG05xICIuJAq5Qs/J6FO+oiIdQaEdIVeGPHuvMcX7PduLq+Tvxdlf
-	 gGrWsnaHR6pljxVGkbsrhIweqG92yLInhXLrK3LosG/tVfli2ahJJ0Jv9DmAy5k5VN
-	 eWSGpV/gCTAUg9niH8Z+lOCul8/Je05Kr7LaRK84=
+	b=fHxyYR42clOK980papBrwMsP/OiNCZXOUKvQxQ99qnVjqYnxlEi6OKPoEhCDtqt8n
+	 XfeqSYdSLGdlLqbayGjT0XMo/S2BQ4JmnbX9wUU51OsIA8MlxowLolLrqAIXZn7d2m
+	 RZAnxUL5lgI1hG3mPbDNRWDxDUHmxNILI62r+lgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbfGHPWT (ORCPT
+        id S2387941AbfGHPWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48610 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387899AbfGHPWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:16 -0400
+        id S2387541AbfGHPWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E30A721707;
-        Mon,  8 Jul 2019 15:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97547216C4;
+        Mon,  8 Jul 2019 15:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599335;
-        bh=gl/oNOjwK39gihV+wxOnVsA+ocDBYadNV3JNY+DxmXk=;
+        s=default; t=1562599338;
+        bh=Nf2YQlA6/8uRbuf11XOZ+HRCsHe6fw5Z0BmejLtcxfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7V8yrOhGbOmVhQdeNAewaLX6hRemECnmRqC7Fg054pXeQbVnG3qtKxNl7IKvgQ+X
-         JoXQjgRlO9dsyy6zyGHQ/p88Fh71jWrpMk+ynRgCFTySGIJzzzbeoItLYc4rgkDsU/
-         4XINRiDmKsLw/7hvsXVnbAuwAwogMRLTxeoM9RqI=
+        b=n3ZDQ0NF/RwvVw/wCPuINkm5H/wmyV+/SQBJMZSOFVJ7y4QE9oUyu4uXBrVO9LzGL
+         Z4OUzVp96MkwdiwgogDineyjpuSriUiZZ7p11sEpwd27bmEGalDpy8MFzboX0usWjz
+         RsOTtgtd7R62OR1SUfAZKoxW+0oTFtggehtXuISc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: [PATCH 4.9 081/102] ARC: handle gcc generated __builtin_trap for older compiler
-Date:   Mon,  8 Jul 2019 17:13:14 +0200
-Message-Id: <20190708150530.661283796@linuxfoundation.org>
+        Maxime Ripard <maxime.ripard@free-electrons.com>,
+        Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH 4.9 082/102] clk: sunxi: fix uninitialized access
+Date:   Mon,  8 Jul 2019 17:13:15 +0200
+Message-Id: <20190708150530.716651984@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -59,37 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit af1be2e21203867cb958aaceed5366e2e24b88e8 upstream.
+commit 4e903450bcb9a6bc90733b981d7cb8b3c4996a0e upstream.
 
-ARC gcc prior to GNU 2018.03 release didn't have a target specific
-__builtin_trap() implementation, generating default abort() call.
+gcc-8 reports an uninitialized variable access in a code path
+that we would see with incorrect DTB input:
 
-Implement the abort() call - emulating what newer gcc does for the same,
-as suggested by Arnd.
+drivers/clk/sunxi/clk-sun8i-bus-gates.c: In function 'sun8i_h3_bus_gates_init':
+drivers/clk/sunxi/clk-sun8i-bus-gates.c:85:27: error: 'clk_parent' may be used uninitialized in this function [-Werror=maybe-uninitialized]
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+This works around by skipping invalid input and printing a warning
+instead if it ever happens. The problem was apparently part of the
+initiali driver submission, but older compilers don't notice it.
+
+Fixes: ab6e23a4e388 ("clk: sunxi: Add H3 clocks support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/kernel/traps.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/sunxi/clk-sun8i-bus-gates.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arc/kernel/traps.c
-+++ b/arch/arc/kernel/traps.c
-@@ -155,3 +155,11 @@ void do_insterror_or_kprobe(unsigned lon
+--- a/drivers/clk/sunxi/clk-sun8i-bus-gates.c
++++ b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
+@@ -78,6 +78,10 @@ static void __init sun8i_h3_bus_gates_in
+ 			clk_parent = APB1;
+ 		else if (index >= 96 && index <= 127)
+ 			clk_parent = APB2;
++		else {
++			WARN_ON(true);
++			continue;
++		}
  
- 	insterror_is_error(address, regs);
- }
-+
-+/*
-+ * abort() call generated by older gcc for __builtin_trap()
-+ */
-+void abort(void)
-+{
-+	__asm__ __volatile__("trap_s  5\n");
-+}
+ 		clk_reg = reg + 4 * (index / 32);
+ 		clk_bit = index % 32;
 
 
