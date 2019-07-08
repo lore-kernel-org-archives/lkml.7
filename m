@@ -2,257 +2,153 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3E8C606C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9DEC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01772216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EE42086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="TZeJ/D+i"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sxOtZW76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbfGHSqY (ORCPT
+        id S2389484AbfGHSsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 14:46:24 -0400
-Received: from ucol19pa13.eemsg.mail.mil ([214.24.24.86]:16622 "EHLO
-        ucol19pa13.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbfGHSqX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 14:46:23 -0400
-X-EEMSG-check-017: 727914215|UCOL19PA13_EEMSG_MP11.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.63,466,1557187200"; 
-   d="scan'208";a="727914215"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by ucol19pa13.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 08 Jul 2019 18:46:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1562611574; x=1594147574;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=96bFs/j1tykk6zv5kGzC/jOaR4nIBLQvQjY7eMB6i98=;
-  b=TZeJ/D+iOsuw2AKT+JZh1qG24a6J00O8/aa3OVdtyERt4kloYlHjt3ck
-   QsW4EzBP7OX8EkyUc8+k4u6EL/bB2uIQzyoCcSnQb6IjtWlTOJ4GL+uid
-   Nzy5upxY8kI09OK+cg3Pckwcx+Or5a3eFOMTtTmBngHVoq1ndFSEpWBok
-   p077R0fz0wwiUBTFmCGtYyJacVwoNhQHQrnaAVaHAmGuHnePar1avo/yX
-   lVSOoGak1GC5vWIWHEc7h1MMCdJ7e0FHx4FxyXLmt5eYyL/JpxOeOpOpw
-   DGDMItr2QnzFnnJ3iPJqBUPEww4sPrrYxsbdXaGoX1jjbqqryZtz90A1/
-   A==;
-X-IronPort-AV: E=Sophos;i="5.63,466,1557187200"; 
-   d="scan'208";a="25479746"
-IronPort-PHdr: =?us-ascii?q?9a23=3AxTpC6hZFQvYoCGUV/hVeLov/LSx+4OfEezUN45?=
- =?us-ascii?q?9isYplN5qZpsqyYx7h7PlgxGXEQZ/co6odzbaP6ea8ASdZu8bJmUtBWaQEbw?=
- =?us-ascii?q?UCh8QSkl5oK+++Imq/EsTXaTcnFt9JTl5v8iLzG0FUHMHjew+a+SXqvnYdFR?=
- =?us-ascii?q?rlKAV6OPn+FJLMgMSrzeCy/IDYbxlViDanbr5+MQu6oR/eu8UKjoduN7g9xx?=
- =?us-ascii?q?jUqXZUZupawn9lK0iOlBjm/Mew+5Bj8yVUu/0/8sNLTLv3caclQ7FGFToqK2?=
- =?us-ascii?q?866tHluhnFVguP+2ATUn4KnRpSAgjK9w/1U5HsuSbnrOV92S2aPcrrTbAoXD?=
- =?us-ascii?q?mp8qlmRAP0hCoBKjU063/chNBug61HoRKhvx1/zJDSYIGJL/p1Y6fRccoHSW?=
- =?us-ascii?q?ZdQspdUipMDY2mb4sLEuEPI+BWoYfgrFcKtBeyGw2hCObpxzRVhHH5wLc63v?=
- =?us-ascii?q?w8Hw/Y0gwuH9EAvnrao9r6NqgdTe+7wbLUzTjBdf5axSvx5YbKfx0nvPqCXa?=
- =?us-ascii?q?hwcc3UyUQ3Cg3FkkufqZTlPzyL0OQGrnWV7+96WuKrj24otQFwqSWoy8c3l4?=
- =?us-ascii?q?bJnZkYykzE9CplwIY1Ise0SEhgYdG+CpdQuCaaN5VvT84kXmpmuz46x6UbtZ?=
- =?us-ascii?q?O0cyUG0pQqywPFZ/CZfIWE/AjvWPuXLDxlnnxqYqi/iAy38UW4z+38UdS730?=
- =?us-ascii?q?hSoypel9nMqmgN1xvO6sibUvd9/lmu2TKI1w3L9uFLO1o0lavGK5462LIwip?=
- =?us-ascii?q?oSvljDHi/xgkn2irOZdl449eSy7uTnY7HmqoedN49ylA7+LrwjltGwDOk3KA?=
- =?us-ascii?q?QDX3WX9f6i2LDs40H1WqhGguUzkqbDsZDaIcobprS+Aw9Qyosj8AuwDyy93d?=
- =?us-ascii?q?QEnXgIMFJFeBWdg4jvIFHBOur0Dfi4g1SyiDtr3ezJPqX9ApXRKXjOiKrufb?=
- =?us-ascii?q?Z6609S1gUzydRf54lPB7EbPv38R0/xu8bEDhMjLwO0xOPnAs1n1owCQWKPHr?=
- =?us-ascii?q?OZMKTKvF+W5+IvOe6MaZQUuTnjLfgl5uDugWU9mV8ce6mpwJQWZGq/HvR8LE?=
- =?us-ascii?q?WVe2fsgtQZG2cQogU+VPDqiEGFUTNLe3m9Rbk86S87CY+9FofMWoCtj6ac3C?=
- =?us-ascii?q?e1Gp1ZeHpGBkmQHnjybYmLR/AMaCeKKM97jjMETaShS5Mm1Ry2uw/60aRoLu?=
- =?us-ascii?q?XX+i0Yrp/j0Nl15+vOlRA9+zx0CNmd02eQQG5ugmMIRjg23KZlrUx60FeD3r?=
- =?us-ascii?q?Byg+ZEGtxL+/NJTgA6OIbaz+x7F9/yXQbBcc2SSFq8X9qmAC0+TtItw9AQZ0?=
- =?us-ascii?q?ZwANSvjx7C3yqsHrAZjaCEBJsx8qjExXj+O959y2ra1Kkml1QmWNFANXO4ia?=
- =?us-ascii?q?557AXTG47JnFucl6mwe6UQxijN+3mfzWCWpkFXTBZwUbnZXXAYfkbZsdT55l?=
- =?us-ascii?q?nDT7+1FbQnMxFOyciZJ6RRcN3ml0hGRPH9N9TEeW6xmmCwDw6SxryQdIrqZ3?=
- =?us-ascii?q?kd3CLFBUgHjQ8S/WyGNQk4BieuuGLTFyJuFV3xbEP26+V+q220TlUyzw6Ua0?=
- =?us-ascii?q?1tzb21+gQahfaEUfMcwqoEuDs9qzVzBFu929PWC9ydpwtuZalcfMg970xc2G?=
- =?us-ascii?q?LHuAxyIIagI7phhlEAaQR3uV3h1xFtBoVHi8gqo2sgzBBuJqKAzFNBazSY0I?=
- =?us-ascii?q?j0Or3WLGny4R+uZ7fN2l7AzNmW570P6PUkq1TjpQ2pE00i/Gh609lRzXSR/Y?=
- =?us-ascii?q?vKDAUMXpLrSEo39AZ1p6vcYiYj44PYz3psMbO7sjXawdImGPMlygq8f9dYKK?=
- =?us-ascii?q?6EEA7yE8sHB8mhMeAqlUOpYQ8aM+BM6qE0O9ird+WJ2KG1JuZshjGmgnpd4I?=
- =?us-ascii?q?B7zE2M8zBwSunS35YK2/uYxBeIVy/gjFe9tcD6gYREZTAUHmqixinoHZReZr?=
- =?us-ascii?q?VzfYsQF2euLNO4xs9ki57uRXFY7lijCE0C2MOzfhqSdVP91xVK1UsLuXynhT?=
- =?us-ascii?q?e4zztsnjEtr6qf2jHOwuv7eBUcPm5LQ3VtjVT3LIiqgNAVQlKoYxIqlBS7/0?=
- =?us-ascii?q?b6wbZUpKBlI2nUW0dIcDD8L3t+XauoqrqCf8lP5YsssSVWVuS8fF+bRqf+ox?=
- =?us-ascii?q?QEySPjGXVRxDQgejG0tZX2gQZ6hHieLHlttnrZf99/xRPF6NzbX/5R0WlOeC?=
- =?us-ascii?q?4tpTDJB1T0H9628NGQjN+XvuC5SG+lUoZ7ayTnzYqc8iC84DsuSQO+hfebiN?=
- =?us-ascii?q?DhEBZ81S79ysksUj/H6gv/Mafx0KHvCv5qZkllAhfH7sN+Hoxv2t8riIo4xW?=
- =?us-ascii?q?kRhpLT+2EO12j0L4MIiurFcHMRSGtTkJbu6w//1RgmdyjYyg=3D=3D?=
-X-IPAS-Result: =?us-ascii?q?A2CZAABnjiNd/wHyM5BlHAEBAQQBAQcEAQGBVgQBAQsBg?=
- =?us-ascii?q?WcFKoFuKIQckzIGgQktiVuRFAkBAQEBAQEBAQE0AQIBAYRAAoI4IzcGDgEDA?=
- =?us-ascii?q?QEBBAEBAQEEAQFsikOCOikBgmcBBSMVQRALDgoCAiYCAlcGAQwGAgEBglMMP?=
- =?us-ascii?q?4F3FKo6gTKFR4MlgUeBDCgBh22DcRd4gQeBOII9Lj6HToJYBJRmlWwJghmCH?=
- =?us-ascii?q?5FfBhuXfo0wmUsigVgrCAIYCCEPgyeCTReOPSMDMAx6AQGNaQEB?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 08 Jul 2019 18:46:13 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x68IkB5p017610;
-        Mon, 8 Jul 2019 14:46:11 -0400
-Subject: Re: [PATCH 2/9] security: Add hooks to rule on setting a watch [ver
- #5]
-To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <156173690158.15137.3985163001079120218.stgit@warthog.procyon.org.uk>
- <156173692760.15137.9636883182556029747.stgit@warthog.procyon.org.uk>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <cd657aab-e11c-c0b1-2e36-dd796ca75b75@tycho.nsa.gov>
-Date:   Mon, 8 Jul 2019 14:46:11 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <156173692760.15137.9636883182556029747.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 8 Jul 2019 14:48:22 -0400
+Received: from mail-eopbgr20073.outbound.protection.outlook.com ([40.107.2.73]:22758
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727218AbfGHSsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 14:48:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4Rw3c0lYfhYGbU92as2KehSCWfz5+bp2FLqc/x8iIhc=;
+ b=sxOtZW76JnVhrsDTviJL9R3z/aUSNNM4QVUFZhs/YOO0X6M6NX1D5pljworojarLqHloAzju43NLew3W/vuF/BiVKa3xVKKZke4FN5y9D/r2dYtwd5EXzu9rvRljdw7iTPkW5otMjT26tnul7LLRVOlgESiJ1gOSFqiljf0te9A=
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
+ VE1PR04MB6672.eurprd04.prod.outlook.com (20.179.235.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Mon, 8 Jul 2019 18:48:17 +0000
+Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::358c:d36c:4f8:db79]) by VE1PR04MB6687.eurprd04.prod.outlook.com
+ ([fe80::358c:d36c:4f8:db79%4]) with mapi id 15.20.2052.010; Mon, 8 Jul 2019
+ 18:48:17 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     Olof Johansson <olof@lixom.net>
+CC:     "arm@kernel.org" <arm@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "soc@kernel.org" <soc@kernel.org>
+Subject: RE: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
+Thread-Topic: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
+Thread-Index: AQHVJQRRM+rvlXmln0KUqEroTyzJyqaf1DJAgCFaZTA=
+Date:   Mon, 8 Jul 2019 18:48:17 +0000
+Message-ID: <VE1PR04MB668750E96558796A2E81DB678FF60@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <20190605194511.12127-1-leoyang.li@nxp.com>
+ <20190617114948.7xxtpivve52c2jnb@localhost>
+ <VE1PR04MB668773AB42154134CE18A6AB8FEB0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB668773AB42154134CE18A6AB8FEB0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b85f1e69-d2d2-450d-09b7-08d703d4d775
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6672;
+x-ms-traffictypediagnostic: VE1PR04MB6672:
+x-microsoft-antispam-prvs: <VE1PR04MB6672175C1F997916169970C88FF60@VE1PR04MB6672.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00922518D8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(376002)(346002)(136003)(13464003)(199004)(189003)(9686003)(71190400001)(6436002)(55016002)(86362001)(71200400001)(229853002)(5660300002)(76176011)(53546011)(6506007)(53936002)(26005)(6246003)(305945005)(7736002)(186003)(81156014)(8676002)(8936002)(25786009)(476003)(81166006)(486006)(11346002)(6916009)(6116002)(99286004)(446003)(4326008)(3846002)(7696005)(68736007)(102836004)(14444005)(256004)(74316002)(66446008)(64756008)(66476007)(66066001)(66556008)(66946007)(33656002)(73956011)(15650500001)(2906002)(478600001)(76116006)(316002)(14454004)(54906003)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6672;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ysCIHcd3Mg+gz9teEzJ6RHH4Qfy9AC00en/UkHDcoIN7ivTKboB7/YLgyOz6YNclMojLpDRd1H9aXVwAqmJ0SPTqfyONqjJtUhPGd1UQchnkTlPg2DxZXLPDwfypZhrzDcM0Ym1e2zoulssDnu2wKhQSB2mQzG+aqXeZ08wHwjoBI2BVIbXQFhQatfDn5qga8Fmo/tdTjMBAlpywTeFGlcLjRH/GjgnQj9fGEPjZ5VSfecA6cSlXEfqJjOBZYQestCntVOmfwVLlVtqgWE8tUi6bTjt+etWerT+id30EPef6+cPV0gzZvAevcZOZ7UK1akNnTrLHKcLDAEwxUh64dCONeYiNCTg1ZoDhoCcPZ7EmQFdLskkrnzMgfweOZohF7EKzNl5d7e4W/kKF28R1BLRrioex4BK0UaorchOghBY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b85f1e69-d2d2-450d-09b7-08d703d4d775
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 18:48:17.7477
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6672
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/19 11:48 AM, David Howells wrote:
-> Add security hooks that will allow an LSM to rule on whether or not a watch
-> may be set.  More than one hook is required as the watches watch different
-> types of object.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Casey Schaufler <casey@schaufler-ca.com>
-> cc: Stephen Smalley <sds@tycho.nsa.gov>
-> cc: linux-security-module@vger.kernel.org
-> ---
-> 
->   include/linux/lsm_hooks.h |   22 ++++++++++++++++++++++
->   include/linux/security.h  |   15 +++++++++++++++
->   security/security.c       |   13 +++++++++++++
->   3 files changed, 50 insertions(+)
-> 
-> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-> index 47f58cfb6a19..f9d31f6445e4 100644
-> --- a/include/linux/lsm_hooks.h
-> +++ b/include/linux/lsm_hooks.h
-> @@ -1413,6 +1413,20 @@
->    *	@ctx is a pointer in which to place the allocated security context.
->    *	@ctxlen points to the place to put the length of @ctx.
->    *
-> + * Security hooks for the general notification queue:
-> + *
-> + * @watch_key:
-> + *	Check to see if a process is allowed to watch for event notifications
-> + *	from a key or keyring.
-> + *	@watch: The watch object
-> + *	@key: The key to watch.
-> + *
-> + * @watch_devices:
-> + *	Check to see if a process is allowed to watch for event notifications
-> + *	from devices (as a global set).
-> + *	@watch: The watch object
 
-It is difficult to evaluate these without at least one implementation of 
-each hook.  I am unclear as to how any security module would use the 
-watch argument, since it has no security field/blob and does not appear 
-to contain any information that would be relevant to deciding whether or 
-not to permit the watch to be set.
 
-> + *
-> + *
->    * Security hooks for using the eBPF maps and programs functionalities through
->    * eBPF syscalls.
->    *
-> @@ -1688,6 +1702,10 @@ union security_list_options {
->   	int (*inode_notifysecctx)(struct inode *inode, void *ctx, u32 ctxlen);
->   	int (*inode_setsecctx)(struct dentry *dentry, void *ctx, u32 ctxlen);
->   	int (*inode_getsecctx)(struct inode *inode, void **ctx, u32 *ctxlen);
-> +#ifdef CONFIG_WATCH_QUEUE
-> +	int (*watch_key)(struct watch *watch, struct key *key);
-> +	int (*watch_devices)(struct watch *watch);
-> +#endif /* CONFIG_WATCH_QUEUE */
->   
->   #ifdef CONFIG_SECURITY_NETWORK
->   	int (*unix_stream_connect)(struct sock *sock, struct sock *other,
-> @@ -1964,6 +1982,10 @@ struct security_hook_heads {
->   	struct hlist_head inode_notifysecctx;
->   	struct hlist_head inode_setsecctx;
->   	struct hlist_head inode_getsecctx;
-> +#ifdef CONFIG_WATCH_QUEUE
-> +	struct hlist_head watch_key;
-> +	struct hlist_head watch_devices;
-> +#endif /* CONFIG_WATCH_QUEUE */
->   #ifdef CONFIG_SECURITY_NETWORK
->   	struct hlist_head unix_stream_connect;
->   	struct hlist_head unix_may_send;
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 659071c2e57c..540863678355 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -57,6 +57,7 @@ struct mm_struct;
->   struct fs_context;
->   struct fs_parameter;
->   enum fs_value_type;
-> +struct watch;
->   
->   /* Default (no) options for the capable function */
->   #define CAP_OPT_NONE 0x0
-> @@ -392,6 +393,10 @@ void security_inode_invalidate_secctx(struct inode *inode);
->   int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
->   int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
->   int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
-> +#ifdef CONFIG_WATCH_QUEUE
-> +int security_watch_key(struct watch *watch, struct key *key);
-> +int security_watch_devices(struct watch *watch);
-> +#endif /* CONFIG_WATCH_QUEUE */
->   #else /* CONFIG_SECURITY */
->   
->   static inline int call_lsm_notifier(enum lsm_event event, void *data)
-> @@ -1204,6 +1209,16 @@ static inline int security_inode_getsecctx(struct inode *inode, void **ctx, u32
->   {
->   	return -EOPNOTSUPP;
->   }
-> +#ifdef CONFIG_WATCH_QUEUE
-> +static inline int security_watch_key(struct watch *watch, struct key *key)
-> +{
-> +	return 0;
-> +}
-> +static inline int security_watch_devices(struct watch *watch)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_WATCH_QUEUE */
->   #endif	/* CONFIG_SECURITY */
->   
->   #ifdef CONFIG_SECURITY_NETWORK
-> diff --git a/security/security.c b/security/security.c
-> index 613a5c00e602..2c9919226ad1 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -1917,6 +1917,19 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
->   }
->   EXPORT_SYMBOL(security_inode_getsecctx);
->   
-> +#ifdef CONFIG_WATCH_QUEUE
-> +int security_watch_key(struct watch *watch, struct key *key)
-> +{
-> +	return call_int_hook(watch_key, 0, watch, key);
-> +}
-> +
-> +int security_watch_devices(struct watch *watch)
-> +{
-> +	return call_int_hook(watch_devices, 0, watch);
-> +}
-> +
-> +#endif /* CONFIG_WATCH_QUEUE */
-> +
->   #ifdef CONFIG_SECURITY_NETWORK
->   
->   int security_unix_stream_connect(struct sock *sock, struct sock *other, struct sock *newsk)
-> 
+> -----Original Message-----
+> From: Leo Li
+> Sent: Monday, June 17, 2019 8:29 AM
+> To: Olof Johansson <olof@lixom.net>
+> Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; shawnguo@kernel.org
+> Subject: RE: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
+>=20
+>=20
+>=20
+> > -----Original Message-----
+> > From: Olof Johansson <olof@lixom.net>
+> > Sent: Monday, June 17, 2019 6:50 AM
+> > To: Leo Li <leoyang.li@nxp.com>
+> > Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; shawnguo@kernel.org
+> > Subject: Re: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
+> >
+> > On Wed, Jun 05, 2019 at 02:45:11PM -0500, Li Yang wrote:
+> > > Hi arm-soc maintainers,
+> > >
+> > > This is a rebase of patches that missed 5.2 merge window together
+> > > with some new patches for QE.  Please help to review and merge it.
+> > > We would like this to be merged earlier because there are other
+> > > patches depending on patches in this pull request.  After this is
+> > > merged in arm-soc, we can ask other sub-system maintainers to pull
+> > > from this tag and apply additional patches.  Thanks.
+> >
+> > Li,
+> >
+> > You never followed up with a reply, or removed, the previous tag. So
+> > when we process the pull requests that come in, we've already merged it=
+.
+>=20
+> Sorry about that.  Will reply the previous pull request and remove the ol=
+d tag
+> if update is needed next time.
+>=20
+> >
+> > So, I've merged the previous version. Can you send an incremental pull
+> > request on top of that branch/tag instead of a rebase like this was, pl=
+ease?
+>=20
+> Actually the new pull request is based on the old pull request this time.=
+  I
+> sent the new one as V2 hoping that you can see this first and avoid mergi=
+ng
+> two times.  Since you have already merged the first one, you can merge th=
+e
+> second pull request as an incremental pull request directly.
 
+Hi Olof,
+
+I was on vacation for the past two weeks to follow up on this.  Hope this i=
+s not too late for this merge window.  Like I mentioned, the new tag is on =
+top of the previous tag (you merged) so that it should be able to be merged=
+ incrementally.  The only thing is that the description of the new tag also=
+ included patches you merged with old tag.  Do you want me to regenerate th=
+e tag before you can merge it?
+
+Regards,
+Leo
