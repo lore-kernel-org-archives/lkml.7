@@ -2,53 +2,54 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D671C606C2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48FDC606C6
 	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FA021783
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7DB217D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1562599215;
-	bh=fHVNVZ/yi3kAe7zp1/zq7MgpT0N4EdP/+nIB0OHB9BY=;
+	bh=F5ChGmoebv9E+y8/z1Bl6v1Dw13JI3HmgOrnE90SSAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h59x8gIatahZBwJlM6tbS1Cn44/8g5SHaQ8Gklsh0ATo84GHjWKIkhkj24axzukVw
-	 02TkiIpb02e1nvoLDbe6uIlhgxK41ZyCq+8PInXZ4q6SSIkewqm51aYzOV/nFanEu5
-	 uWjVNRWh4dqzWNlxUfVPBilb8WtHBtla326nS+9U=
+	b=ISaE/HDKhNJWMv3kTqj7eHR2/j8O9j4gHQJULZnGCjELanUg4gZ3QwZRCJ0s+VRSN
+	 Tsnhlwy9BBBcrQQexv5mLRnIoVbryBugGKaLLxEgCClrZM3AvSnVjLENgBrdzsG8pl
+	 hXUMipoqsC5xofH18/6zq4gkuyRuff0k54F0CKHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732127AbfGHPUG (ORCPT
+        id S2387552AbfGHPT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387545AbfGHPT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 11:19:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729739AbfGHPT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:19:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1142D21537;
-        Mon,  8 Jul 2019 15:19:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3AC821734;
+        Mon,  8 Jul 2019 15:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599198;
-        bh=fHVNVZ/yi3kAe7zp1/zq7MgpT0N4EdP/+nIB0OHB9BY=;
+        s=default; t=1562599195;
+        bh=F5ChGmoebv9E+y8/z1Bl6v1Dw13JI3HmgOrnE90SSAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tgWNSELKUsQinjH7Oxb29zNR1NqlKzMNmhHb1UutMWh2TKrgoYAc7g1oICYjr0msJ
-         xf378yy/zMY7n77noQqQ6OeKctBEWFz9JLkyBrBUxAhi9sg5uwleM1kYcf85QhPFiS
-         ArA26sdqGVB7rqRbkEYBi/VVw2KXriWYBUp2fl00=
+        b=EhpjXUzC6KsfKqurf2yaY1HAToVfExpDu6g5G6cHCH9ZzZNtNP7/2gukU96vdt1qN
+         gbqFW4/DCzcTerjQRHIAgXqB0lJAjfDQzsQQMTH8r2zuIBZGBKfqLW7X83r8Fy9mGf
+         SMJi0rs02t+cwBO2VMvovygFE1NxqpQL/740ZG9o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 037/102] perf ui helpline: Use strlcpy() as a shorter form of strncpy() + explicit set nul
-Date:   Mon,  8 Jul 2019 17:12:30 +0200
-Message-Id: <20190708150528.329678098@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 036/102] IB/hfi1: Avoid hardlockup with flushlist_lock
+Date:   Mon,  8 Jul 2019 17:12:29 +0200
+Message-Id: <20190708150528.272739806@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -61,49 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+commit cf131a81967583ae737df6383a0893b9fee75b4e upstream.
 
-commit 4d0f16d059ddb91424480d88473f7392f24aebdc upstream.
+Heavy contention of the sde flushlist_lock can cause hard lockups at
+extreme scale when the flushing logic is under stress.
 
-The strncpy() function may leave the destination string buffer
-unterminated, better use strlcpy() that we have a __weak fallback
-implementation for systems without it.
+Mitigate by replacing the item at a time copy to the local list with
+an O(1) list_splice_init() and using the high priority work queue to
+do the flushes.
 
-In this case we are actually setting the null byte at the right place,
-but since we pass the buffer size as the limit to strncpy() and not
-it minus one, gcc ends up warning us about that, see below. So, lets
-just switch to the shorter form provided by strlcpy().
+Ported to linux-4.9.y.
 
-This fixes this warning on an Alpine Linux Edge system with gcc 8.2:
-
-  ui/tui/helpline.c: In function 'tui_helpline__push':
-  ui/tui/helpline.c:27:2: error: 'strncpy' specified bound 512 equals destination size [-Werror=stringop-truncation]
-    strncpy(ui_helpline__current, msg, sz)[sz - 1] = '\0';
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  cc1: all warnings being treated as errors
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: e6e904687949 ("perf ui: Introduce struct ui_helpline")
-Link: https://lkml.kernel.org/n/tip-d1wz0hjjsh19xbalw69qpytj@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/tui/helpline.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/sdma.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/tools/perf/ui/tui/helpline.c
-+++ b/tools/perf/ui/tui/helpline.c
-@@ -23,7 +23,7 @@ static void tui_helpline__push(const cha
- 	SLsmg_set_color(0);
- 	SLsmg_write_nstring((char *)msg, SLtt_Screen_Cols);
- 	SLsmg_refresh();
--	strncpy(ui_helpline__current, msg, sz)[sz - 1] = '\0';
-+	strlcpy(ui_helpline__current, msg, sz);
- }
- 
- static int tui_helpline__show(const char *format, va_list ap)
+diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
+index 9cbe52d21077..76e63c88a87a 100644
+--- a/drivers/infiniband/hw/hfi1/sdma.c
++++ b/drivers/infiniband/hw/hfi1/sdma.c
+@@ -410,10 +410,7 @@ static void sdma_flush(struct sdma_engine *sde)
+ 	sdma_flush_descq(sde);
+ 	spin_lock_irqsave(&sde->flushlist_lock, flags);
+ 	/* copy flush list */
+-	list_for_each_entry_safe(txp, txp_next, &sde->flushlist, list) {
+-		list_del_init(&txp->list);
+-		list_add_tail(&txp->list, &flushlist);
+-	}
++	list_splice_init(&sde->flushlist, &flushlist);
+ 	spin_unlock_irqrestore(&sde->flushlist_lock, flags);
+ 	/* flush from flush list */
+ 	list_for_each_entry_safe(txp, txp_next, &flushlist, list)
+@@ -2406,7 +2403,7 @@ int sdma_send_txreq(struct sdma_engine *sde,
+ 		wait->tx_count++;
+ 		wait->count += tx->num_desc;
+ 	}
+-	schedule_work(&sde->flush_worker);
++	queue_work_on(sde->cpu, system_highpri_wq, &sde->flush_worker);
+ 	ret = -ECOMM;
+ 	goto unlock;
+ nodesc:
+@@ -2504,7 +2501,7 @@ int sdma_send_txlist(struct sdma_engine *sde, struct iowait *wait,
+ 		}
+ 	}
+ 	spin_unlock(&sde->flushlist_lock);
+-	schedule_work(&sde->flush_worker);
++	queue_work_on(sde->cpu, system_highpri_wq, &sde->flush_worker);
+ 	ret = -ECOMM;
+ 	goto update_tail;
+ nodesc:
+-- 
+2.20.1
+
 
 
