@@ -2,109 +2,88 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC38C606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E987FC606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73806216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6050216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntTORaKL"
+	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="H/Qz6Zl4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390578AbfGHTJf (ORCPT
+        id S2390747AbfGHTJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:09:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40056 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731340AbfGHTJf (ORCPT
+        Mon, 8 Jul 2019 15:09:49 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45260 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390590AbfGHTJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:09:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so634633wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:09:33 -0700 (PDT)
+        Mon, 8 Jul 2019 15:09:47 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m23so17028063lje.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=l+7u9g4YDBV0qSmQ+PNq9QxlNzB07gtt7XvLALkjfds=;
-        b=ntTORaKLJG/d8XA448AE1+EpfPqMxzbrGlBi8lJLzrIW6Nw98seS7mTbk1/TimIZL7
-         QmTRbcq+jHhUV57ext+KUxTl+Tsb4rm+4TZsgmC8fegHHREqd62ASkozX6RbyifS0m3K
-         rXP3t5Pmt0lxx+nuXPTsHASW+Se0CqOyrROEfvm29546/BKlBH1C44IsDtfPaO6koLe6
-         kqoY8/ddoyN49cVKTv+pef+E4SOTBza7boq8nwT8RFnG7gaJbE6U5H9Z1621HfMl8jU/
-         fxMiPaoOOMqpFBoJx5WuSfAaCbaQreTuLynDEbkx+koRyE59r7LcHoiK/1PrBGEyDvJE
-         N4yg==
+        d=eng.ucsd.edu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dA2xhiNGZ0tuWmkiPtLUTjcqW1BzzQUxradpm/yDvWk=;
+        b=H/Qz6Zl4qWwcws/K4ttAjHFj7ySNEcnvAfua+hF3xC61yiKJu8+PHKTL9/3Q79Ov0F
+         04UJsxxgK8HOgQFcL+Y995nNvXIOkKe975rJKD3bDttCNpDbpKWx3P/LaqlIuugcGT8q
+         2ZyIADyyETAdZHQUyluRBkVRjZTX98gebReZo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=l+7u9g4YDBV0qSmQ+PNq9QxlNzB07gtt7XvLALkjfds=;
-        b=ZM7bFA5akZIuxBIcHSwCPhCmcjat0Ixr8EQktz/j3jpIF0KHJDYDBd2wFrd5JwzRyg
-         sWDYjVlWXR9sd7qR8aZ8RdnWVPtmBDWcgwszn6i7b78FhGU4PJle5eMXaEjPO+8KlTVj
-         BBOt7ApQOGwQOKmaMb1EGQQN/srSbTzTtJLQE4ZqKdoaTiJKTBcEAWm3X+I+m/QXXaT9
-         Je1/8iamYYd69atxPsaRRv+tm+gBhG3M0R9XiA/JFUKf4a//XUGIlAIjsB0QpjOaz5Hd
-         RAS9DGTzZyPreZHhjtEIRyVA2pdCKlQiI+nuCu8O1uxxqpTJwW/To/4lmBtqX4uxDJmE
-         w7Gw==
-X-Gm-Message-State: APjAAAWcLzD3WG8UKjJPkr6tTTQNZ86L0LyR6LK7LvXJkyvWeIO9Mz++
-        ZHV/xOC4pg4AY0HNm+KtLlI6BTc=
-X-Google-Smtp-Source: APXvYqxygdOhpHLx5tzXF/3yWMoK0F/y9xyRu5iDwky2a0KP1f5yVHS7RUpBgCDBQs3i6zgtzAhOFg==
-X-Received: by 2002:a1c:a584:: with SMTP id o126mr18402512wme.147.1562612972910;
-        Mon, 08 Jul 2019 12:09:32 -0700 (PDT)
-Received: from avx2 ([46.53.249.188])
-        by smtp.gmail.com with ESMTPSA id t1sm21098764wra.74.2019.07.08.12.09.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 12:09:32 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 22:09:30 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     thgarnie@chromium.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 06/11] x86/CPU: Adapt assembly for PIE support
-Message-ID: <20190708190930.GA16215@avx2>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dA2xhiNGZ0tuWmkiPtLUTjcqW1BzzQUxradpm/yDvWk=;
+        b=hJNaRHzhGF5btn42vYSLqizMqGfzQ4p2LGnb9Tcjr4o2lCn8UgfBfFKB4PwSTjmqA1
+         d64Rfh7FscE+Kaaqk5c5wK7BkeeZm9fSHwzDls6nMHy1BqpqE0bO9BLMzLnmHElOvAr3
+         KykRROrpaHd3dbn+gewbi7Y+145A0L/modnbqztziNx58GBa/ehyiSbmLRgHpongJMFy
+         oJqu3cMvW+0sRY3JfVEYMJvPJ+8w0ppsetUNbMZ8buKPXVL8uekI3Dic3G+tqTwjWYh0
+         HNuj4GyjocCrFOR/sBkEUaHWBCh+3kvX9E+TN7c4Q19Mhaq0BzF4Gg8XTdITRoD6gI8M
+         g+Zw==
+X-Gm-Message-State: APjAAAURrJEKT3LFZS4FQhy3aqTVt4qUK+jqdcdLrEBC7LcSNF/Wl4XX
+        8pC9wQTpOnDwO2cx6gMd8Z+Pmw==
+X-Google-Smtp-Source: APXvYqwcb8orHaqFemykl0AZtk0WZ0DDmrGen5cKEPKeIzWzqPpyTZWQsDBi7rDXGKW6XAxiXf08jg==
+X-Received: by 2002:a2e:858b:: with SMTP id b11mr11221294lji.159.1562612985927;
+        Mon, 08 Jul 2019 12:09:45 -0700 (PDT)
+Received: from luke-XPS-13 (77-255-206-190.adsl.inetia.pl. [77.255.206.190])
+        by smtp.gmail.com with ESMTPSA id k4sm3834016ljg.59.2019.07.08.12.09.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 12:09:45 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 12:09:42 -0700
+From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/56] 4.14.133-stable review
+Message-ID: <20190708190942.GA4652@luke-XPS-13>
+References: <20190708150514.376317156@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Garnier wrote:
-> -		"pushq $1f\n\t"
-> +		"movabsq $1f, %q0\n\t"
-> +		"pushq %q0\n\t"
->  		"iretq\n\t"
->  		UNWIND_HINT_RESTORE
->  		"1:"
+On Mon, Jul 08, 2019 at 05:12:52PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.133 release.
+> There are 56 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
+> Anything received after that time might be too late.
 
-Fake PIE. True PIE looks like this:
+Hi Greg, 
 
-ffffffff81022d70 <do_sync_core>:
-ffffffff81022d70:       8c d0                   mov    eax,ss
-ffffffff81022d72:       50                      push   rax
-ffffffff81022d73:       54                      push   rsp
-ffffffff81022d74:       48 83 04 24 08          add    QWORD PTR [rsp],0x8
-ffffffff81022d79:       9c                      pushf
-ffffffff81022d7a:       8c c8                   mov    eax,cs
-ffffffff81022d7c:       50                      push   rax
-ffffffff81022d7d:  ===> 48 8d 05 03 00 00 00    lea    rax,[rip+0x3]        # ffffffff81022d87 <do_sync_core+0x17>
-ffffffff81022d84:       50                      push   rax
-ffffffff81022d85:       48 cf                   iretq
-ffffffff81022d87:       c3                      ret
+Compiled and booted on my x86_64 system. 
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -710,7 +710,8 @@ static inline void sync_core(void)
- 		"pushfq\n\t"
- 		"mov %%cs, %0\n\t"
- 		"pushq %q0\n\t"
--		"pushq $1f\n\t"
-+		"leaq 1f(%%rip), %q0\n\t"
-+		"pushq %q0\n\t"
- 		"iretq\n\t"
- 		UNWIND_HINT_RESTORE
- 		"1:"
+Thanks, 
+- Luke
