@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A0BC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF26C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC34D216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894E4216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599303;
-	bh=bHZKW6WfXp8UbgOTjFC0id34g7lNLGcNbag2Dtz+Dtk=;
+	s=default; t=1562599306;
+	bh=+erWMCoHTiSsklg2eI6FKFJT38mbys5O4ZaxKE9Ogkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=twFLaRgKQL+RkggAva4mw20B6zs+AFpehJJIeCtgrvGEb/hs6fHEGZKVx7V+bDjW9
-	 iz3FNwTYdJwThEXbjDsNC9Pjtcu1dVgocDM4V4GplPEdGFqB7WJMau25DuYeith7be
-	 74XQVrygjuNGeYNh3nyBtISElajt/OzNFgc2OTT4=
+	b=RtCl3e+AWK2SzaByYhs/nAvcFLml77w7UuvGtcJOYwt6Hv9O5k9bPm87GTahAGL+J
+	 J1msCO/NMXNzNVZjD2uX5oE00NBtBZEXLG4iPBOIV0dZwvOFW4DJQghyHHxyD85EZU
+	 w0QkPQf94TtcPh3/eM759+Wa/Stm44sg6DGlA6Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387785AbfGHPVl (ORCPT
+        id S2387798AbfGHPVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387757AbfGHPVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:40 -0400
+        id S2387757AbfGHPVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:21:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE9BD214C6;
-        Mon,  8 Jul 2019 15:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31F08214C6;
+        Mon,  8 Jul 2019 15:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599299;
-        bh=bHZKW6WfXp8UbgOTjFC0id34g7lNLGcNbag2Dtz+Dtk=;
+        s=default; t=1562599302;
+        bh=+erWMCoHTiSsklg2eI6FKFJT38mbys5O4ZaxKE9Ogkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0MXRTafycMP3C/gUfMT4jq1+SmGd6DiCcabDLMEC3QSrgsyGKzm4btyzYirxnEZy
-         IP3Hh2afiskUbLHaAXd5CmVRtTLcAHVvod9NJjOdr/9r6iF5hsrXlZj3PkvCS7zAf3
-         jkj4BmO4EOKDm+8QPQ0hqF+N/GlDBMT5KltonGrs=
+        b=q75EdKaXJnAWQlELDLaZEvoICU1KGCtXW2BgOQMbyYKBYCe60f5Sktg4F50NZkjqm
+         3H6l/edJd3bhMXly34fMDavQ7ybFlbJE+GXMKRgGPypmnGt2HpUE0/CFeN0KDhbs3L
+         LnwlLt1LlR58vFOiytuydZzp6AVAQxd5ToJNiF2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Adeodato=20Sim=C3=B3?= <dato@net.com.org.es>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 070/102] ASoC: max98090: remove 24-bit format support if RJ is 0
-Date:   Mon,  8 Jul 2019 17:13:03 +0200
-Message-Id: <20190708150530.084648148@linuxfoundation.org>
+Subject: [PATCH 4.9 044/102] net/9p: include trans_common.h to fix missing prototype warning.
+Date:   Mon,  8 Jul 2019 17:12:37 +0200
+Message-Id: <20190708150528.713266530@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,54 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5628c8979642a076f91ee86c3bae5ad251639af0 ]
+[ Upstream commit 52ad259eaac0454c1ac7123e7148cf8d6e6f5301 ]
 
-The supported formats are S16_LE and S24_LE now. However, by datasheet
-of max98090, S24_LE is only supported when it is in the right justified
-mode. We should remove 24-bit format if it is not in that mode to avoid
-triggering error.
+This silences -Wmissing-prototypes when defining p9_release_pages.
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: http://lkml.kernel.org/r/b1c4df8f21689b10d451c28fe38e860722d20e71.1542089696.git.dato@net.com.org.es
+Signed-off-by: Adeodato Simó <dato@net.com.org.es>
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/max98090.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ net/9p/trans_common.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index 3e65dc74eb33..e7aef841f87d 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1924,6 +1924,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
- 	return 0;
- }
+diff --git a/net/9p/trans_common.c b/net/9p/trans_common.c
+index 38aa6345bdfa..9c0c894b56f8 100644
+--- a/net/9p/trans_common.c
++++ b/net/9p/trans_common.c
+@@ -14,6 +14,7 @@
  
-+static int max98090_dai_startup(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
-+	unsigned int fmt = max98090->dai_fmt;
-+
-+	/* Remove 24-bit format support if it is not in right justified mode. */
-+	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
-+		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
-+	}
-+	return 0;
-+}
-+
- static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
- 				   struct snd_pcm_hw_params *params,
- 				   struct snd_soc_dai *dai)
-@@ -2331,6 +2346,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
- #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
+ #include <linux/mm.h>
+ #include <linux/module.h>
++#include "trans_common.h"
  
- static const struct snd_soc_dai_ops max98090_dai_ops = {
-+	.startup = max98090_dai_startup,
- 	.set_sysclk = max98090_dai_set_sysclk,
- 	.set_fmt = max98090_dai_set_fmt,
- 	.set_tdm_slot = max98090_set_tdm_slot,
+ /**
+  *  p9_release_req_pages - Release pages after the transaction.
 -- 
 2.20.1
 
