@@ -2,233 +2,220 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25808C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26233C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF7DB20861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58CC20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ElA/3A2J";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="DzIA+gYu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p/W7OiNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfGHLDD (ORCPT
+        id S1730328AbfGHLDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:03:03 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:39436 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725836AbfGHLDC (ORCPT
+        Mon, 8 Jul 2019 07:03:55 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46221 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727517AbfGHLDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:03:02 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68Audq5018348;
-        Mon, 8 Jul 2019 03:59:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=elXWCnMgMiRYO8iDyFCDXPZvW8NVW4OljTSmIph/Im4=;
- b=ElA/3A2J8yXeOOj/SFqdD+bihwDAV/Droe5XSDYAnkWsZXlUOVxvF4lAYw74wfGPM40r
- PILts3ZT71CLShi/0XCshML02Ku8PlPL0oBefWUXIy+FbNNPaQormb8eEw9KiUrWthKE
- 9ilRL8M2sl85Bo7vcqEbTbxLieIDuENnzeOolyg+utQZGQ5oQT+Qu9zWiljEOx52ZgSE
- SaVfdv/Cp8t++3S43tKnt71EK4Aj70LDOJt3rTTxaXnUJ4r68zmjezmCU56Nv0ZtRCgk
- EgL2FpvSNk1+dJ4HD2cT1VRH4tEXWB69CYvQhSN2WJoVVnY8/xrJetoeks4Mm8TvhO4H GA== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pawell@cadence.com
-Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2052.outbound.protection.outlook.com [104.47.34.52])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2tjr6vepk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jul 2019 03:59:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=elXWCnMgMiRYO8iDyFCDXPZvW8NVW4OljTSmIph/Im4=;
- b=DzIA+gYufo60sMwNgIc22ddYNEPzpjjEFM/611PNzmVBXIR8ZWJr+knU1ZY9hKaHo7LxNEksZW1Eh6UooWWRFQ0aAQmAmxowtWZG8EJxHU4ODoq+PLKA7267EJR/CnOjm9ZHcfUSAobhfiUJeOaK9V2LBq5R8NNLN8laRfE7Qbs=
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com (52.135.204.159) by
- BYAPR07MB5911.namprd07.prod.outlook.com (20.179.91.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Mon, 8 Jul 2019 10:59:39 +0000
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::fd8c:399c:929b:33e2]) by BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::fd8c:399c:929b:33e2%6]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
- 10:59:39 +0000
-From:   Pawel Laszczak <pawell@cadence.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel@ti.com" <jbergsagel@ti.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Thread-Topic: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Thread-Index: AQHVMyCBLRb+XoB9zUqxphM8AIPBC6a76sKAgAN7ISCAAOC4gIAAKa7g
-Date:   Mon, 8 Jul 2019 10:59:39 +0000
-Message-ID: <BYAPR07MB4709E5BA041BBDDB70E69F62DDF60@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
- <1562324238-16655-6-git-send-email-pawell@cadence.com>
- <87r274lmqk.fsf@linux.intel.com>
- <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87a7dpm442.fsf@linux.intel.com>
-In-Reply-To: <87a7dpm442.fsf@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNzcxMzA3MDAtYTE2Zi0xMWU5LTg3NDItMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XDc3MTMwNzAxLWExNmYtMTFlOS04NzQyLTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iMzI0MCIgdD0iMTMyMDcwNTcxNzMzMzExNjQ2IiBoPSJRSmxMa0lqaWFtMVM1Si92WGRKaXc2R01Wa2M9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: 
-x-originating-ip: [59.145.174.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e959a19-ceca-4d68-52d9-08d703935f86
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR07MB5911;
-x-ms-traffictypediagnostic: BYAPR07MB5911:
-x-microsoft-antispam-prvs: <BYAPR07MB59115A798E763A4120FE141ADDF60@BYAPR07MB5911.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 00922518D8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(376002)(396003)(346002)(199004)(189003)(36092001)(8936002)(2501003)(76176011)(66066001)(71190400001)(71200400001)(7736002)(81166006)(102836004)(26005)(8676002)(256004)(81156014)(74316002)(9686003)(86362001)(107886003)(55016002)(186003)(14454004)(6506007)(7696005)(99286004)(6246003)(305945005)(53936002)(25786009)(229853002)(66476007)(66556008)(64756008)(66446008)(316002)(446003)(11346002)(7416002)(68736007)(5660300002)(6436002)(6116002)(3846002)(478600001)(4326008)(33656002)(486006)(66946007)(476003)(52536014)(110136005)(73956011)(2906002)(54906003)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB5911;H:BYAPR07MB4709.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sc1DwfhDbb3RAeCJlNxO25wKBfHCjUqkZrP+1gVxJ9zd/S7hoIH7DF5SNq0es0/LUxm8zdmyoJl7O8wTKai0/f09ht4VHEA12g0kUl1561DAbY4p9+yfyfCEoFs/yryc8l3ya0czW0EEZUMfmfJGLfDG4sHRq3im2FassLKMYTLdSCZv3lkq+myba8CAvXRYNlTenfdQTpNV/WGLyR+JIqCYNL7WLeaXQ3XIoj050DrS/PiM2nH6YtBzZOgIO3OFCUrTr+jQ5hMpBrZZ7Np62xiCb9gbHF/Vh0gxxKtXwn7J5TudDzgTyRSZXGZJlsecGDwgMzZbuJhWaVNweJugeFtD4jSb2JW7YdTe8g1UDvyTB3fxgjpDmNUIgkRHp1YJqT3U4080ElIva3BMvpQDk16rKOALNGtjLSq9lI+mwvg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e959a19-ceca-4d68-52d9-08d703935f86
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 10:59:39.1270
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pawell@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5911
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=991 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907080141
+        Mon, 8 Jul 2019 07:03:54 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190708110352euoutp019187cd4457af386fa8fb5bd5a7f843cf~vabdfoRXA1228012280euoutp01T
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jul 2019 11:03:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190708110352euoutp019187cd4457af386fa8fb5bd5a7f843cf~vabdfoRXA1228012280euoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562583832;
+        bh=iJ/vgkwgHEVtdCA4ebVEDI6nMvu1XOQWTINwB5UZ21Y=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=p/W7OiNKgo0dmURd6p3j4pnJKCJsvGTOwhQY8qjyQTcAWqk0b4GYIMy8PEIB5pUdz
+         WSrGIapQc4oCR3H8UtrTg4S034/QGWszC5Shvp8EAAf0vqQM0n+0nnpRBFDI1UcWIO
+         u8UG9Ij9UTM2Ng6ULrFC9zTL3MkLLyFhsuutBRNs=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190708110351eucas1p2bde3ebc38e8c48b9413055c03c7ab96c~vabcvLjwd2083220832eucas1p2j;
+        Mon,  8 Jul 2019 11:03:51 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id F2.FD.04298.613232D5; Mon,  8
+        Jul 2019 12:03:50 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1~vabbxYcUy2519125191eucas1p1L;
+        Mon,  8 Jul 2019 11:03:50 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190708110349eusmtrp2de94694ed18e2b6000e2c0fca30ad84f~vabbjN_S43170831708eusmtrp2M;
+        Mon,  8 Jul 2019 11:03:49 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-7b-5d232316b880
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 84.EA.04140.513232D5; Mon,  8
+        Jul 2019 12:03:49 +0100 (BST)
+Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190708110349eusmtip2f28b183397c1dd08fb6127d5326a04e9~vaba1exG-1263912639eusmtip2c;
+        Mon,  8 Jul 2019 11:03:49 +0000 (GMT)
+From:   Ilya Maximets <i.maximets@samsung.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ilya Maximets <i.maximets@samsung.com>
+Subject: [PATCH bpf] xdp: fix potential deadlock on socket mutex
+Date:   Mon,  8 Jul 2019 14:03:44 +0300
+Message-Id: <20190708110344.23278-1-i.maximets@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKKsWRmVeSWpSXmKPExsWy7djP87piysqxBo9mWVh8+Xmb3eJP2wZG
+        i89HjrNZLF74jdlizvkWFosr7T/ZLY69aGGz2LVuJrPF5V1z2CxWHDoBFFsgZrG9fx+jA4/H
+        lpU3mTx2zrrL7rF4z0smj64bl5g9Nq3qZPOY3v2Q2aNvyypGj8+b5AI4orhsUlJzMstSi/Tt
+        Ergy1q3TKngjXrF/p0wDY69wFyMnh4SAicTLPRvYuxi5OIQEVjBKTGlZywjhfGGUeNk3Ecr5
+        zCgx/98mJpiWWzNfQLUsZ5TobX8OVfWDUeL5wivsIFVsAjoSp1YfYQSxRQSkJD7u2A7WwSxw
+        gFli9/F5zCAJYQEHiZeT/rOA2CwCqhJP286zgti8AtYSi6btYoNYJy+xesMBZpBmCYFudokp
+        X+4xQiRcJF7/3AxVJCzx6vgWdghbRuL/zvlQt9ZL3G95yQjR3MEoMf3QP6iEvcSW1+eAGjiA
+        TtKUWL9LHyLsKHGo8QkrSFhCgE/ixltBkDAzkDlp23RmiDCvREebEES1isTvg8uZIWwpiZvv
+        PkNd4CExf+MBsEVCArES02ZvY5/AKDcLYdcCRsZVjOKppcW56anFhnmp5XrFibnFpXnpesn5
+        uZsYgYnl9L/jn3Ywfr2UdIhRgINRiYd3g7RSrBBrYllxZe4hRgkOZiUR3sQg+Vgh3pTEyqrU
+        ovz4otKc1OJDjNIcLErivNUMD6KFBNITS1KzU1MLUotgskwcnFINjInnIpoEld5b//7503yH
+        pV+93+oTq0/lVi26bBPzT43zl7us9PVsv8DLhpJn+A0e7u9XLtuus3/hosLcS2fvWZ05ciPo
+        fJqbQdVc/X/pPrmO3WonW2sruA0XuF52W3TLNr2U+6jJPaNyvWxOuQ9JCn9tDSpXnzxkxeI+
+        aZNpG6OH30pWRgkNJZbijERDLeai4kQAvrZObygDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNLMWRmVeSWpSXmKPExsVy+t/xe7qiysqxBps3m1t8+Xmb3eJP2wZG
+        i89HjrNZLF74jdlizvkWFosr7T/ZLY69aGGz2LVuJrPF5V1z2CxWHDoBFFsgZrG9fx+jA4/H
+        lpU3mTx2zrrL7rF4z0smj64bl5g9Nq3qZPOY3v2Q2aNvyypGj8+b5AI4ovRsivJLS1IVMvKL
+        S2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQy1q3TKngjXrF/p0wDY69w
+        FyMnh4SAicStmS/Yuxi5OIQEljJKLP31kx0iISXx49cFVghbWOLPtS42iKJvjBKt3VcYQRJs
+        AjoSp1YfAbNFgBo+7tgONolZ4ASzxPdZn5lAEsICDhIvJ/1nAbFZBFQlnradB5vKK2AtsWja
+        LjaIDfISqzccYJ7AyLOAkWEVo0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYEBvO/Zzyw7GrnfB
+        hxgFOBiVeHg55JRihVgTy4orcw8xSnAwK4nwJgbJxwrxpiRWVqUW5ccXleakFh9iNAVaPpFZ
+        SjQ5HxhteSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGLUmScpt
+        2lh39vP3c40aJ7nn3+CPY/r9JfjmsatT10h2zWf0TknOdJ2+Yu3lN6W/fbV+ndi5oMU9n9dz
+        p80O1jnHhfX/L45gun9l+9UL/QwNilGHoxL3TX5vbap48Qz/hxCHJ4Fvq+/rl/5hqn54s88j
+        vOZv+8mE6QtqEzoUlqV9PzXf26j3m4sSS3FGoqEWc1FxIgDpDUB/fgIAAA==
+X-CMS-MailID: 20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1
+References: <CGME20190708110350eucas1p16357da1f812ff8309b1edc98d4cdacc1@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Felipe
+There are 2 call chains:
 
-Please look at the changes in drivers/usb/common/common.c file.=20
-I'm going to add it as next patch to next version.
-=20
+  a) xsk_bind --> xdp_umem_assign_dev
+  b) unregister_netdevice_queue --> xsk_notifier
 
->Pawel Laszczak <pawell@cadence.com> writes:
->>>> +void cdns3_role_stop(struct cdns3 *cdns)
->
->>>> +static const char *const cdns3_mode[] =3D {
->>>> +	[USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>>> +	[USB_DR_MODE_OTG]		=3D "otg",
->>>> +	[USB_DR_MODE_HOST]		=3D "host",
->>>> +	[USB_DR_MODE_PERIPHERAL]	=3D "device",
->>>> +};
->>>
->>>don't we have a generic version of this under usb/common ?
->>>
->> Yes, there is a similar array, but it is defined also as static
->> and there is no function for converting value to string.
->> There is only function for converting string to value.
->
->right. You can add the missing interface generically instead of
->duplicating the enumeration.
->
->> There is also:
->> [USB_DR_MODE_UNKNOWN]		=3D "",
->> Instead of:
->> [USB_DR_MODE_UNKNOWN]		=3D "unknown",
->>
->> So, for USB_DR_MODE_UNKNOWN user will not see anything information.
->
->But that's what "unknown" means :-) We don't know the information.
->
+with the following locking order:
 
-////// start
-commit 607754c60fabc43408f4f2de82d3560c72870787 (HEAD)
-Author: Pawel Laszczak <pawell@cadence.com>
-Date:   Mon Jul 8 12:53:47 2019 +0200
+  a) xs->mutex --> rtnl_lock
+  b) rtnl_lock --> xdp.lock --> xs->mutex
 
-    usb:common  Added usb_get_dr_mode_from_string and usb_dr_mode_to_string=
-.
+Different order of taking 'xs->mutex' and 'rtnl_lock' could produce a
+deadlock here. Fix that by moving the 'rtnl_lock' before 'xs->lock' in
+the bind call chain (a).
 
-    Patch introduces new function usb_dr_mode_to_string for converting dual=
- role
-    mod to string and removes static from usb_dr_mode_to_string definition.
+Reported-by: syzbot+bf64ec93de836d7f4c2c@syzkaller.appspotmail.com
+Fixes: 455302d1c9ae ("xdp: fix hang while unregistering device bound to xdp socket")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+---
 
-    Both changes have made to avoid duplication of code by cdns3 driver.
+This patch is a fix for patch that is not yet in mainline, but
+already in 'net' tree. I'm not sure what is the correct process
+for applying such fixes.
 
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index 18f5dcf58b0d..ab59954deff8 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -118,13 +118,20 @@ static const char *const usb_dr_modes[] =3D {
-        [USB_DR_MODE_OTG]               =3D "otg",
- };
+ net/xdp/xdp_umem.c | 16 ++++++----------
+ net/xdp/xsk.c      |  2 ++
+ 2 files changed, 8 insertions(+), 10 deletions(-)
 
--static enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
-+/**
-+ * usb_get_dr_mode_from_string - Convert string to dual role mode.
-+ * @str: Pointer to the given string
-+ *
-+ * The function gets string and returns the correspondig enum usb_dr_mode.
-+ */
-+enum usb_dr_mode usb_get_dr_mode_from_string(const char *str)
- {
-        int ret;
-
-        ret =3D match_string(usb_dr_modes, ARRAY_SIZE(usb_dr_modes), str);
-        return (ret < 0) ? USB_DR_MODE_UNKNOWN : ret;
- }
-+EXPORT_SYMBOL_GPL(usb_get_dr_mode_from_string);
-
- enum usb_dr_mode usb_get_dr_mode(struct device *dev)
- {
-@@ -139,6 +146,21 @@ enum usb_dr_mode usb_get_dr_mode(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(usb_get_dr_mode);
-
-+/**
-+ * usb_dr_mode_to_string - Convert dual role mode to stringi.
-+ * @dr_mode: Pointer to the given dual role mode
-+ *
-+ * The function gets enum usb_dr_mode, and returns the correspondig string=
-.
-+ */
-+const *char usb_dr_mode_to_string(const enum usb_dr_mode dr_mode)
-+{
-+       if (dr_mode > USB_DR_MODE_UNKNOWN || dr_mode <=3D USB_DR_MODE_PERIP=
-HERAL)
-+               return usb_dr_modes[dr_mode];
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 20c91f02d3d8..83de74ca729a 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -87,21 +87,20 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
+ 	struct netdev_bpf bpf;
+ 	int err = 0;
+ 
++	ASSERT_RTNL();
 +
-+       return usb_dr_modes[USB_DR_MODE_UNKNOWN];
-+}
-+EXPORT_SYMBOL_GPL(usb_dr_mode_to_string);
-
-///// end
-
-What do you thing about it ?
-
-Pawel
-
+ 	force_zc = flags & XDP_ZEROCOPY;
+ 	force_copy = flags & XDP_COPY;
+ 
+ 	if (force_zc && force_copy)
+ 		return -EINVAL;
+ 
+-	rtnl_lock();
+-	if (xdp_get_umem_from_qid(dev, queue_id)) {
+-		err = -EBUSY;
+-		goto out_rtnl_unlock;
+-	}
++	if (xdp_get_umem_from_qid(dev, queue_id))
++		return -EBUSY;
+ 
+ 	err = xdp_reg_umem_at_qid(dev, umem, queue_id);
+ 	if (err)
+-		goto out_rtnl_unlock;
++		return err;
+ 
+ 	umem->dev = dev;
+ 	umem->queue_id = queue_id;
+@@ -110,7 +109,7 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
+ 
+ 	if (force_copy)
+ 		/* For copy-mode, we are done. */
+-		goto out_rtnl_unlock;
++		return 0;
+ 
+ 	if (!dev->netdev_ops->ndo_bpf ||
+ 	    !dev->netdev_ops->ndo_xsk_async_xmit) {
+@@ -125,7 +124,6 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
+ 	err = dev->netdev_ops->ndo_bpf(dev, &bpf);
+ 	if (err)
+ 		goto err_unreg_umem;
+-	rtnl_unlock();
+ 
+ 	umem->zc = true;
+ 	return 0;
+@@ -135,8 +133,6 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
+ 		err = 0; /* fallback to copy mode */
+ 	if (err)
+ 		xdp_clear_umem_at_qid(dev, queue_id);
+-out_rtnl_unlock:
+-	rtnl_unlock();
+ 	return err;
+ }
+ 
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index 703cf5ea448b..2aa6072a3e55 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -416,6 +416,7 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
+ 	if (flags & ~(XDP_SHARED_UMEM | XDP_COPY | XDP_ZEROCOPY))
+ 		return -EINVAL;
+ 
++	rtnl_lock();
+ 	mutex_lock(&xs->mutex);
+ 	if (xs->state != XSK_READY) {
+ 		err = -EBUSY;
+@@ -501,6 +502,7 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
+ 		xs->state = XSK_BOUND;
+ out_release:
+ 	mutex_unlock(&xs->mutex);
++	rtnl_unlock();
+ 	return err;
+ }
+ 
+-- 
+2.17.1
 
