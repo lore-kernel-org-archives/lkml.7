@@ -2,101 +2,85 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5153BC606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4613BC606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDDF216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17285216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562626479;
+	bh=GMT7LO1iA5HqSPC6a9Jg1iRWZwvw37nJEGKXTC9wGW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2hHI2zGerh5njSo9yqckoryloO0qYer3xCWadGG5FV+IR+Y19FZCQz/M/PO/C+x4Q
+	 7UgtOVcihUPUcWW1nyR83iQbdSLRaAf4k3jgwOlsfm54EwWchzeZqmWgD3gP2EN+Zc
+	 +pLQfJMw5G+97m8gmhUjYFDfkpP9CRii+JJAEaU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfGHWyJ (ORCPT
+        id S1728422AbfGHWyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:54:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43414 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfGHWyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:54:08 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D705230820DD;
-        Mon,  8 Jul 2019 22:54:04 +0000 (UTC)
-Received: from treble (ovpn-112-43.rdu2.redhat.com [10.10.112.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D4495D9E5;
-        Mon,  8 Jul 2019 22:54:02 +0000 (UTC)
-Date:   Mon, 8 Jul 2019 17:53:59 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Song Liu <songliubraving@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kairui Song <kasong@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:x86/urgent] bpf: Fix ORC unwinding in non-JIT BPF code
-Message-ID: <20190708225359.ewk44pvrv6a4oao7@treble>
-References: <881939122b88f32be4c374d248c09d7527a87e35.1561685471.git.jpoimboe@redhat.com>
- <tip-b22cf36c189f31883ad0238a69ccf82aa1f3b16b@git.kernel.org>
- <20190706202942.GA123403@gmail.com>
- <20190707013206.don22x3tfldec4zm@treble>
- <20190707055209.xqyopsnxfurhrkxw@treble>
- <CAADnVQJqT8o=_6P6xHjwxrXqX9ToSb0cTfoOcm2Xcha3KRNNSw@mail.gmail.com>
- <20190708223834.zx7u45a4uuu2yyol@treble>
- <CAADnVQKWDvzsvyjGoFvSQV7VGr2hF2zzCsC9vnpncWMxOJWYdw@mail.gmail.com>
+        Mon, 8 Jul 2019 18:54:37 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44219 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfGHWyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 18:54:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id s7so38995366iob.11;
+        Mon, 08 Jul 2019 15:54:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ycpHL4sbweieRz87Isn9PkqL7bhl0hfDPx3yX+jjAVA=;
+        b=rJRAf35XeIjLxkuzPnG38K738pPWpsOafY2na63il/OAPLa94emDW80q6szkZjlVPp
+         HhG9TqQMTN0gIVtNztN+xtCn2Urak1WSfdtE7hUcWqmKG3fipVWl7ezRPenZdcYqLCUV
+         trcmkqPlEN/ES2BcG0eF7wcvFFmlbFZ8+69pkPuLH001afY0LgAApgu6bviAKPENRSGX
+         BORxnXB8CNy3gRl3ZyZQ3ek3X9YgkIlLGBEY3G/BRnniyOWPviUOF7Y84xZ6I/kFYWRb
+         E7gJYSpggCDJfwAC5X0+L3A7G3xleQm0Q3mbKKYmdvHruP2M9kbZO5iKCx43cY7aPA7W
+         caow==
+X-Gm-Message-State: APjAAAXMargcGxBWtsre06e2LRd+nOC7pn9uIQeOL0tCT06Xu+i1iBm1
+        hkQSRMGVRIjlAUJ1UIuuwQ==
+X-Google-Smtp-Source: APXvYqwhZ+6uIDGXwGK71Hxeb4xD4EDSKJ1wG2t6qeC7PmQXTgu9bkd/NfOlFZzmFDgL3K5q7QIbNg==
+X-Received: by 2002:a5d:96d8:: with SMTP id r24mr20869180iol.269.1562626476112;
+        Mon, 08 Jul 2019 15:54:36 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n21sm14107367ioh.30.2019.07.08.15.54.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 15:54:35 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 16:54:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mailbox: omap: Update bindings for TI
+ K3 SoCs
+Message-ID: <20190708225434.GA24701@bogus>
+References: <20190604170146.12205-1-s-anna@ti.com>
+ <20190604170146.12205-2-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAADnVQKWDvzsvyjGoFvSQV7VGr2hF2zzCsC9vnpncWMxOJWYdw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 08 Jul 2019 22:54:08 +0000 (UTC)
+In-Reply-To: <20190604170146.12205-2-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 03:49:33PM -0700, Alexei Starovoitov wrote:
-> > > Sorry for delay. I'm mostly offgrid until next week.
-> > > As far as -fno-gcse.. I don't mind as long as it doesn't hurt performance.
-> > > Which I suspect it will :(
-> > > All these indirect gotos are there for performance.
-> > > Single indirect goto and a bunch of jmp select_insn
-> > > are way slower, since there is only one instruction
-> > > for cpu branch predictor to work with.
-> > > When every insn is followed by "jmp *jumptable"
-> > > there is more room for cpu to speculate.
-> > > It's been long time, but when I wrote it the difference
-> > > between all indirect goto vs single indirect goto was almost 2x.
-> >
-> > Just to clarify, -fno-gcse doesn't get rid of any of the indirect jumps.
-> > It still has 166 indirect jumps.  It just gets rid of the second
-> > optimization, where the jumptable address is placed in a register.
+On Tue, 4 Jun 2019 12:01:45 -0500, Suman Anna wrote:
+> The TI K3 AM65x and J721E family of SoCs have a new Mailbox IP that
+> is based on the existing Mailbox IP present in OMAP architecture based
+> SoCs. Update the existing OMAP Mailbox bindings for this new IP present
+> on TI K3 AM65x and J721E SoCs. The same compatible from AM65x SoCs is
+> reused for J721E SoCs.
 > 
-> what about other functions in core.c ?
-> May be it's easier to teach objtool to recognize that pattern?
-
-The GCC man page actually recommends using -fno-gcse for computed goto
-code, for better performance.  So if that's actually true, then it would
-be win-win because objtool wouldn't need a change for it.
-
-Otherwise I can teach objtool to recognize the new pattern.
-
-> > If you have a benchmark which is relatively easy to use, I could try to
-> > run some tests.
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>  .../bindings/mailbox/omap-mailbox.txt         | 59 ++++++++++++++++---
+>  1 file changed, 50 insertions(+), 9 deletions(-)
 > 
-> modprobe test_bpf
-> selftests/bpf/test_progs
-> both print runtime.
-> Some of test_progs have high run-to-run variations though.
 
-Thanks, I'll give it a shot.
-
--- 
-Josh
+Reviewed-by: Rob Herring <robh@kernel.org>
