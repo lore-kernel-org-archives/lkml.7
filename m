@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024D9C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702DDC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF84216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E98217D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598957;
-	bh=+MHjgyeKMMqSWQ6hO2t9rmROutO9dOEEryeDaibPVls=;
+	s=default; t=1562598961;
+	bh=QJsgjTG5QCeMh/lFp+X7Adal0D8yvlkVRLCM1NVRpQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3SL8NJOT7k7/d5tFzCX6cRkYWOtW+en2KcLxFfpcxLpn3K1IXLabVavMIsOQ/hgZ
-	 qymwhYaBrdBrP3CPLmZhh2iV+ipAc09wFsEPs2VYxFfVFn2vm38MkrorLW3k+aLiAF
-	 Qmz/QHzVNV7W3oaHLXlvw3u7Tpf2gywHbrCu6fV0=
+	b=x5uZoEBn+f9GMq13E2aaSpPgONj0J8bP9EAI1snmZzK/yL50T6CpuQdXafaK6gd92
+	 2wft/OHYmcZbvucUKrmXESdu1vuvBbVNJOI2HQmIdKqVs0BFdYJ6+8PE8swLAHxSaF
+	 XA85TZUH+cUAWen2NeqKNSKKZOjvZrSIS1VIuAdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732432AbfGHPP4 (ORCPT
+        id S1732447AbfGHPQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732415AbfGHPPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:15:51 -0400
+        id S1732433AbfGHPP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:15:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 282BB216F4;
-        Mon,  8 Jul 2019 15:15:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C04A32173E;
+        Mon,  8 Jul 2019 15:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598950;
-        bh=+MHjgyeKMMqSWQ6hO2t9rmROutO9dOEEryeDaibPVls=;
+        s=default; t=1562598956;
+        bh=QJsgjTG5QCeMh/lFp+X7Adal0D8yvlkVRLCM1NVRpQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMUAwV97zrKyP4tTP51OpImJb/RjVu07wJvJvckadxSuF3aVWp4IP0KltsMAwxCyJ
-         51rvwyjdAAurLqxpvW0GipAm9fWbjlpr1Wg/tdDTPBcg+TcH1i+uwc31sZD6PKsWyp
-         pgulNhnNThTvnMN/alSbdqIOzAv4uQ1HanyQenbA=
+        b=dLUhcH/nuWCFu9OI99KfCnruExLikd2JhmAEoVg1xlMrw25KaKsoriWPrHHYCcOTH
+         H4K1FEHrQQLABridBueVNdeXJF53Z6YxIljg7waNBppnBPWuJTndtur8BygvjnAhov
+         5J7rlS7SD15bK/884+mIReu355DpM2NCmnDWZwcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.4 04/73] tracing: Silence GCC 9 array bounds warning
-Date:   Mon,  8 Jul 2019 17:12:14 +0200
-Message-Id: <20190708150518.006873744@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Jun Li <jun.li@nxp.com>, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.4 06/73] usb: chipidea: udc: workaround for endpoint conflict issue
+Date:   Mon,  8 Jul 2019 17:12:16 +0200
+Message-Id: <20190708150518.237338255@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -60,103 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit 0c97bf863efce63d6ab7971dad811601e6171d2f upstream.
+commit c19dffc0a9511a7d7493ec21019aefd97e9a111b upstream.
 
-Starting with GCC 9, -Warray-bounds detects cases when memset is called
-starting on a member of a struct but the size to be cleared ends up
-writing over further members.
+An endpoint conflict occurs when the USB is working in device mode
+during an isochronous communication. When the endpointA IN direction
+is an isochronous IN endpoint, and the host sends an IN token to
+endpointA on another device, then the OUT transaction may be missed
+regardless the OUT endpoint number. Generally, this occurs when the
+device is connected to the host through a hub and other devices are
+connected to the same hub.
 
-Such a call happens in the trace code to clear, at once, all members
-after and including `seq` on struct trace_iterator:
+The affected OUT endpoint can be either control, bulk, isochronous, or
+an interrupt endpoint. After the OUT endpoint is primed, if an IN token
+to the same endpoint number on another device is received, then the OUT
+endpoint may be unprimed (cannot be detected by software), which causes
+this endpoint to no longer respond to the host OUT token, and thus, no
+corresponding interrupt occurs.
 
-    In function 'memset',
-        inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
-    ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
-    [8505, 8560] from the object at 'iter' is out of the bounds of
-    referenced subobject 'seq' with type 'struct trace_seq' at offset
-    4368 [-Warray-bounds]
-      344 |  return __builtin_memset(p, c, size);
-          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+There is no good workaround for this issue, the only thing the software
+could do is numbering isochronous IN from the highest endpoint since we
+have observed most of device number endpoint from the lowest.
 
-In order to avoid GCC complaining about it, we compute the address
-ourselves by adding the offsetof distance instead of referring
-directly to the member.
-
-Since there are two places doing this clear (trace.c and trace_kdb.c),
-take the chance to move the workaround into a single place in
-the internal header.
-
-Link: http://lkml.kernel.org/r/20190523124535.GA12931@gmail.com
-
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-[ Removed unnecessary parenthesis around "iter" ]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: <stable@vger.kernel.org> #v3.14+
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Jun Li <jun.li@nxp.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c     |    6 +-----
- kernel/trace/trace.h     |   18 ++++++++++++++++++
- kernel/trace/trace_kdb.c |    6 +-----
- 3 files changed, 20 insertions(+), 10 deletions(-)
+ drivers/usb/chipidea/udc.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7189,12 +7189,8 @@ void ftrace_dump(enum ftrace_dump_mode o
- 
- 		cnt++;
- 
--		/* reset all but tr, trace, and overruns */
--		memset(&iter.seq, 0,
--		       sizeof(struct trace_iterator) -
--		       offsetof(struct trace_iterator, seq));
-+		trace_iterator_reset(&iter);
- 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
--		iter.pos = -1;
- 
- 		if (trace_find_next_entry_inc(&iter) != NULL) {
- 			int ret;
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1381,4 +1381,22 @@ static inline void trace_event_enum_upda
- 
- extern struct trace_iterator *tracepoint_print_iter;
- 
-+/*
-+ * Reset the state of the trace_iterator so that it can read consumed data.
-+ * Normally, the trace_iterator is used for reading the data when it is not
-+ * consumed, and must retain state.
-+ */
-+static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -1614,6 +1614,25 @@ static int ci_udc_pullup(struct usb_gadg
+ static int ci_udc_start(struct usb_gadget *gadget,
+ 			 struct usb_gadget_driver *driver);
+ static int ci_udc_stop(struct usb_gadget *gadget);
++
++/* Match ISOC IN from the highest endpoint */
++static struct usb_ep *ci_udc_match_ep(struct usb_gadget *gadget,
++			      struct usb_endpoint_descriptor *desc,
++			      struct usb_ss_ep_comp_descriptor *comp_desc)
 +{
-+	const size_t offset = offsetof(struct trace_iterator, seq);
++	struct ci_hdrc *ci = container_of(gadget, struct ci_hdrc, gadget);
++	struct usb_ep *ep;
 +
-+	/*
-+	 * Keep gcc from complaining about overwriting more than just one
-+	 * member in the structure.
-+	 */
-+	memset((char *)iter + offset, 0, sizeof(struct trace_iterator) - offset);
++	if (usb_endpoint_xfer_isoc(desc) && usb_endpoint_dir_in(desc)) {
++		list_for_each_entry_reverse(ep, &ci->gadget.ep_list, ep_list) {
++			if (ep->caps.dir_in && !ep->claimed)
++				return ep;
++		}
++	}
 +
-+	iter->pos = -1;
++	return NULL;
 +}
 +
- #endif /* _LINUX_KERNEL_TRACE_H */
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -40,12 +40,8 @@ static void ftrace_dump_buf(int skip_lin
+ /**
+  * Device operations part of the API to the USB controller hardware,
+  * which don't involve endpoints (or i/o)
+@@ -1627,6 +1646,7 @@ static const struct usb_gadget_ops usb_g
+ 	.vbus_draw	= ci_udc_vbus_draw,
+ 	.udc_start	= ci_udc_start,
+ 	.udc_stop	= ci_udc_stop,
++	.match_ep 	= ci_udc_match_ep,
+ };
  
- 	kdb_printf("Dumping ftrace buffer:\n");
- 
--	/* reset all but tr, trace, and overruns */
--	memset(&iter.seq, 0,
--		   sizeof(struct trace_iterator) -
--		   offsetof(struct trace_iterator, seq));
-+	trace_iterator_reset(&iter);
- 	iter.iter_flags |= TRACE_FILE_LAT_FMT;
--	iter.pos = -1;
- 
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
+ static int init_eps(struct ci_hdrc *ci)
 
 
