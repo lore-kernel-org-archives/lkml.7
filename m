@@ -2,152 +2,105 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5611BC606BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6ABC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B33214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC6B21670
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731600AbfGHONI (ORCPT
+        id S1731668AbfGHOPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:13:08 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59782 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbfGHONH (ORCPT
+        Mon, 8 Jul 2019 10:15:00 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39489 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728596AbfGHOO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:13:07 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id E417D804BC; Mon,  8 Jul 2019 16:12:51 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 16:13:02 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: cpufreq notifiers break suspend -- Re: suspend broken in
- next-20190704 on Thinkpad X60
-Message-ID: <20190708141302.GA7436@amd>
-References: <20190704192020.GA3771@amd>
- <CAJZ5v0gn7FWpqW+WmCzj1=K-pjY=SjRNuEsMR3bRTSO8FzFG=Q@mail.gmail.com>
- <20190705185001.GA4068@amd>
- <CAJZ5v0irbn-Xd47KExw=h7On7KShCm6rThCo0q4-zn=o_x6_HQ@mail.gmail.com>
- <20190706203032.GA26828@amd>
- <20190708030505.kvrg6sh6bd4xzzwa@vireshk-i7>
- <CAJZ5v0hTXtjkatT4wVftPac-LgL1GSAbwLZ0mMDSpFn=8k9Ssg@mail.gmail.com>
- <20190708092840.ynibtrntval6krc4@vireshk-i7>
+        Mon, 8 Jul 2019 10:14:59 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hkUPi-0001Ht-7E; Mon, 08 Jul 2019 16:14:42 +0200
+Date:   Mon, 8 Jul 2019 16:14:41 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+cc:     corbet@lwn.net, mcgrof@kernel.org,
+        Kees Cook <keescook@chromium.org>, akpm@linux-foundation.org,
+        manfred@colorfullife.com, jwilk@jwilk.net, dvyukov@google.com,
+        feng.tang@intel.com, sunilmut@microsoft.com,
+        quentin.perret@arm.com, linux@leemhuis.info, alex.popov@linux.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, tedheadster@gmail.com,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH next] softirq: enable MAX_SOFTIRQ_TIME tuning with sysctl
+ max_softirq_time_usecs
+In-Reply-To: <c1b7a345-fa22-e52a-4db8-1f1288e7ad15@huawei.com>
+Message-ID: <alpine.DEB.2.21.1907081558400.4709@nanos.tec.linutronix.de>
+References: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com> <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de> <0099726a-ead3-bdbe-4c66-c8adc9a4f11b@huawei.com> <alpine.DEB.2.21.1906241141370.32342@nanos.tec.linutronix.de>
+ <c1b7a345-fa22-e52a-4db8-1f1288e7ad15@huawei.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Content-Disposition: inline
-In-Reply-To: <20190708092840.ynibtrntval6krc4@vireshk-i7>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Zhiqiang,
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 25 Jun 2019, Zhiqiang Liu wrote:
 
-On Mon 2019-07-08 14:58:40, Viresh Kumar wrote:
-> On 08-07-19, 10:28, Rafael J. Wysocki wrote:
-> > Pavel has tested the latest version of the patch series AFAICS.
-> >=20
-> > The locking added by the commit in question to
-> > refresh_frequency_limits() requires an update of
-> > cpufreq_update_policy(), or it will deadlock in there because of the
-> > lock acquired by cpufreq_cpu_get() if I haven't missed anything.
->=20
-> Ah, looks quite straight forward.
->=20
-> @Pavel: Can you please try this diff ?
+> I have a doubt about _msecs_to_jiffies funcs, especially when input m is
+> equal to 0.
+>
+> For different HZ setttings, different _msecs_to_jiffies funcs will be
+> chosen for msecs_to_jiffies func. However, the performance of different
+> _msecs_to_jiffies is inconsistent with input m is equal to 0.
+>
+> If HZ satisfies the condition: HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC %
+> HZ), the return value of _msecs_to_jiffies func with m=0 is different
+> with different HZ setting.
 
-I tried to apply it on top of current next
-(d58b5ab90ee7528126fd5833df7fc5bda8331ce8, 20190708) and linux-pm-next
-(1e2a4c9019eb53f62790fadf86c14a54f4cf4888), but failed due to
-whitespace (?!).
+> ------------------------------------
+> | HZ |	MSEC_PER_SEC / HZ | return |
+> ------------------------------------
+> |1000|		1	  |   0	   |
+> |500 |		2	  |   1	   |
+> |200 |		5	  |   1	   |
+> |100 |		10	  |   1	   |
+> ------------------------------------
+> 
+> Why only the return value of HZ=1000 is equal to 0 with m=0 ?
 
-Yes, symptoms would be consistent with deadlock on resume.
+I don't know how you tested that, but obviously all four HZ values use
+this variant:
 
-And yes, the patch seems to fix problem for me.
+>     #if HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC % HZ)
+>     static inline unsigned long _msecs_to_jiffies(const unsigned int m)
+>     {
+>             return (m + (MSEC_PER_SEC / HZ) - 1) / (MSEC_PER_SEC / HZ);
+>     }
 
-Tested-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
+and for all four HZ values the result is 0. Why?
 
-> -------------------------8<-------------------------
->=20
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 9f68d0f306b8..4d6043ee7834 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1109,16 +1109,12 @@ void refresh_frequency_limits(struct cpufreq_poli=
-cy *policy)
->  {
->         struct cpufreq_policy new_policy;
-> =20
-> -       down_write(&policy->rwsem);
-> -
->         if (!policy_is_inactive(policy)) {
->                 new_policy =3D *policy;
->                 pr_debug("updating policy for CPU %u\n", policy->cpu);
-> =20
->                 cpufreq_set_policy(policy, &new_policy);
->         }
-> -
-> -       up_write(&policy->rwsem);
->  }
->  EXPORT_SYMBOL(refresh_frequency_limits);
-> =20
-> @@ -1128,7 +1124,9 @@ static void handle_update(struct work_struct *work)
->                 container_of(work, struct cpufreq_policy, update);
-> =20
->         pr_debug("handle_update for cpu %u called\n", policy->cpu);
-> +       down_write(&policy->rwsem);
->         refresh_frequency_limits(policy);
-> +       up_write(&policy->rwsem);
->  }
-> =20
-> -------------------------8<-------------------------
->=20
-> Though it makes me wonder why I didn't hit this thing. I was using the
-> cpu_cooling device the other day, which calls cpufreq_update_policy()
-> very frequently on heat-up. And I had a hair dryer blowing over my
-> board to heat it up. Lemme check that again :)
+For m = 0 the calculation reduces to:
 
-Can you test on some x86 ACPI? No dryers needed :-).
+      ((MSEC_PER_SEC / HZ) - 1) / (MSEC_PER_SEC / HZ)
 
-> @Rafael: You want me to send a new diff patch with Fixes tag this time
-> if this works out fine ?
+i.e.
 
+	(x - 1) / x	where x = [1, 2, 5, 10]
 
+which is guaranteed to be 0 for integer math. If not, you have a compiler
+problem.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Thanks,
 
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0jT24ACgkQMOfwapXb+vJHdwCgrvUmjj9YupNxGOvP7lJkGwE3
-gq8An0mWk7KXRuwmS4H/FqqOX3FQ4V8e
-=OO7t
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+	tglx
