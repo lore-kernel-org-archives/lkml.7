@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22439C606C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6E5C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE9A21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8335E20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599844;
-	bh=F0MLiEif0xXSL6E1WHyu/bkxCafh91cFapRm0n3w3PE=;
+	s=default; t=1562599847;
+	bh=c9X+wix+KAvIOO4t20Yh0NGUFt5F9cIwciHntpSwQH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YA/iGPsn+PpCo955uDBT0VNGrY4RafEmoV/7XqBNB+r5CCCqo8YZDgdsB8KuFu0Ju
-	 Jo8Sv1X6VSi3LORXaXAKbFH+B4PHbRgd2YPn0KbVLmAAknwOLGU7UYTTD+u5ujX5pr
-	 nMYBkqroP2ndI/1AbFYKZkHZYvx1Ohn9aSy+Dss8=
+	b=DYspIy8HRoTYoPMUOrSpAfCAzEcNps7jbpd8abbvejLFzQb6NmgGkRX+7vVo85fzl
+	 OnB3R05pN1galvpL3FO9/2F4LbGfxd5yeFi5CS5nYNCeLAylbjfEISOrigZ2wnzekP
+	 ll64C+ppKvQMpYYp8Psr7N3nK/Ns3aaWA5mew1gQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389767AbfGHPal (ORCPT
+        id S2389850AbfGHPaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59614 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389720AbfGHPag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:36 -0400
+        id S2389720AbfGHPam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 651D320665;
-        Mon,  8 Jul 2019 15:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6370B20665;
+        Mon,  8 Jul 2019 15:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599835;
-        bh=F0MLiEif0xXSL6E1WHyu/bkxCafh91cFapRm0n3w3PE=;
+        s=default; t=1562599841;
+        bh=c9X+wix+KAvIOO4t20Yh0NGUFt5F9cIwciHntpSwQH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zqDn2s5Ph79ZC4ScrilMWRz1+7Zrg/UF51dP0anvaNiOHQM4tDkaNl9X0V5AdqUiF
-         ugx7EymBd/xZZ+jz0gNzgpz/k1E4cbC223lgTRTSOy8EyJTB1paKw74hmbKvSXo4d3
-         l+xbSUIOVwEq6u1Ybizo+Me6HoDkceNQ4bmKkRSI=
+        b=oDzoFRZia3UGBQXekZoYxflpYC7Sw68mMR1xSAhDB4r/AywMOFM+fnPT7BrEAqaZP
+         pBSt4m4JgtsSC1rLXvgN6aXyMRrFokwhBPWmSxS/uBxz1Y5p5i6leVrkuhOJ7XbqKL
+         bZedfhzuGcCA5NExFsPkCAjNW4MZCgBF+RH+yDIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.19 88/90] MIPS: have "plain" make calls build dtbs for selected platforms
-Date:   Mon,  8 Jul 2019 17:13:55 +0200
-Message-Id: <20190708150526.970098760@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Gong <yibin.gong@nxp.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        Michael Olbrich <m.olbrich@pengutronix.de>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.19 90/90] dmaengine: imx-sdma: remove BD_INTR for channel0
+Date:   Mon,  8 Jul 2019 17:13:57 +0200
+Message-Id: <20190708150527.107862575@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -60,44 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-commit 637dfa0fad6d91a9a709dc70549a6d20fa77f615 upstream.
+commit 3f93a4f297961c12bb17aa16cb3a4d1291823cae upstream.
 
-scripts/package/builddeb calls "make dtbs_install" after executing
-a plain make (i.e. no build targets specified). It will fail if dtbs
-were not built beforehand. Match the arm64 architecture where DTBs get
-built by the "all" target.
+It is possible for an irq triggered by channel0 to be received later
+after clks are disabled once firmware loaded during sdma probe. If
+that happens then clearing them by writing to SDMA_H_INTR won't work
+and the kernel will hang processing infinite interrupts. Actually,
+don't need interrupt triggered on channel0 since it's pollling
+SDMA_H_STATSTOP to know channel0 done rather than interrupt in
+current code, just clear BD_INTR to disable channel0 interrupt to
+avoid the above case.
+This issue was brought by commit 1d069bfa3c78 ("dmaengine: imx-sdma:
+ack channel 0 IRQ in the interrupt handler") which didn't take care
+the above case.
 
-Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
-[paul.burton@mips.com: s/builddep/builddeb]
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.1+
+Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the interrupt handler")
+Cc: stable@vger.kernel.org #5.0+
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
+Tested-by: Sven Van Asbroeck <thesven73@gmail.com>
+Reviewed-by: Michael Olbrich <m.olbrich@pengutronix.de>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/Makefile |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/imx-sdma.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -16,6 +16,7 @@ archscripts: scripts_basic
- 	$(Q)$(MAKE) $(build)=arch/mips/boot/tools relocs
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -681,7 +681,7 @@ static int sdma_load_script(struct sdma_
+ 	spin_lock_irqsave(&sdma->channel_0_lock, flags);
  
- KBUILD_DEFCONFIG := 32r2el_defconfig
-+KBUILD_DTBS      := dtbs
+ 	bd0->mode.command = C0_SETPM;
+-	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
++	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
+ 	bd0->mode.count = size / 2;
+ 	bd0->buffer_addr = buf_phys;
+ 	bd0->ext_buffer_addr = address;
+@@ -1000,7 +1000,7 @@ static int sdma_load_context(struct sdma
+ 	context->gReg[7] = sdmac->watermark_level;
  
- #
- # Select the object file format to substitute into the linker script.
-@@ -385,7 +386,7 @@ quiet_cmd_64 = OBJCOPY $@
- vmlinux.64: vmlinux
- 	$(call cmd,64)
- 
--all:	$(all-y)
-+all:	$(all-y) $(KBUILD_DTBS)
- 
- # boot
- $(boot-y): $(vmlinux-32) FORCE
+ 	bd0->mode.command = C0_SETDM;
+-	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
++	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
+ 	bd0->mode.count = sizeof(*context) / 4;
+ 	bd0->buffer_addr = sdma->context_phys;
+ 	bd0->ext_buffer_addr = 2048 + (sizeof(*context) / 4) * channel;
 
 
