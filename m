@@ -4,90 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B90C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E4CC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0016C2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042002064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731056AbfGHMwT (ORCPT
+        id S1731062AbfGHMwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:52:19 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:34741 "EHLO
+        Mon, 8 Jul 2019 08:52:36 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:34375 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbfGHMwT (ORCPT
+        with ESMTP id S1728615AbfGHMwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:52:19 -0400
+        Mon, 8 Jul 2019 08:52:35 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MJEpp-1i3VP02DD1-00KhBy; Mon, 08 Jul 2019 14:51:37 +0200
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MALql-1hd0Lw2Uqh-00Bs63; Mon, 08 Jul 2019 14:52:19 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
+To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: add back libcrc32c Kconfig dependency
-Date:   Mon,  8 Jul 2019 14:51:29 +0200
-Message-Id: <20190708125134.3741552-1-arnd@arndb.de>
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Dennis Zhou (Facebook)" <dennisszhou@gmail.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] percpu: fix pcpu_page_first_chunk return code handling
+Date:   Mon,  8 Jul 2019 14:52:09 +0200
+Message-Id: <20190708125217.3757973-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:AWoLOmaQqVkujvlZOGfqeO7XSmN82N7FdvLMZoC0P6AUFUFZx48
- WLw5ya4uxvD4RRH6XtfdIFn0CZClvtQ6PP9bIixsrEYcn9IuAq6md22ylxX6t4ZC4A4dnEc
- 8SE9zATLkC30w5tVjHlsa8qBcXCbTRNlC19z22fsFdVr8UMMtbHqzeH95nZ5by2OhMmffGD
- HKJCWhtTExVikb3F7CM+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Q0Mbfm6OUnM=:WepD4bGaXeT2jygN77K7/e
- JtZxBq72jVyz4n3NocspMdXbdCOiDyrnzOFrT45GBFacOHN7pOMMPbMW2z2V1KIYQGr+mlmUe
- bkUg0+rgPHCDZLpF9LY8FmmEofm4Tj4NkVtvpLGXNsjiBaX8gtChAL4LNdmShZR4J2nY2OVF2
- wHm/HD4K81gvd/Df5Zb8EkmpvqBXnxAXda66FFl/m6bXa1+St1QMyEdf2l1TBL2OYlmA4T8qe
- fTsX55LGvg/4UguDYH3ixkjiuwMtXrrp3QLcLSW1hcveo+/Lsaq9h4wUkI9dRkArWaN12t/X2
- Imvt7mL5BOD+OvVtp6HQa/CSxq++5h6b08dSBI9+/LYs9WIuB2hqSfvbZ++q+L5MQU8r3W/Od
- AGwgIj8FgfBMGD02uhYHCqQ2k/nGKkYAckIn1D3KQD1xJB0eLbLbxxP1JYQLOPjF4AGibyb7N
- N6/2W1icPIrIKn1GPl1Hm06wjTVWTLyCQonTUIlASJpvyzbUT+q80w5sglcFH0y8IweN3UbAI
- 2jYleIMtFYxJvY3MoISNxEJZ2V/bYbYnh2s2PRNLKYZvloqKmU0/pm7ZNqz78SXkrPnkDtQ4F
- SM2zYC29uG4wb99GdrSU/nMZDt4UgXFO0pb4qcBLF86YX/1iUnJIXtCu8R3IiuXViPSv8Bv9K
- Ly4eiK5P1GMDn4hE5Gnu+0Y9LyIX078toPMPOq0/8fMzip/94bS+6ViIbON1maNfhn7CkmuZr
- Uk41zkVAUDjnpyv0Mzl3avcCHyR5gfpGmnf1Hw==
+X-Provags-ID: V03:K1:cJtj1haBkBbWRm+C+Iua7rdvkbZLbR4MZWZ6z3vSC1X/PXqtkAs
+ R+qNUxDsVrk6zgmmdUs6UXIxDw//8IMdKBSJyl1ZUQl9wsyHhvL31/QV8xXn9D8roifT7PY
+ GZ1A9E8jTpmXrMwd7rc7egfuxl6cmhOPGYiLqpJKpDSL/DxvxmrJsuTXEe081AhSnUqL2GX
+ Ub4oC7dZySA4sOigUqskA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ITl96BottfQ=:qqxhzos/aOanf3aqBADACV
+ JwgD/BUjtgaC1QokhGuyrwx9DsbxnL44mYL17o/rvkq300Dt+Iyleg1ZQwXxaUQ3vnRZAvEF5
+ xOEvUpaESSPGruqL33FOixV+UbWXKGDJn6tNBqOxunBZbQ2QQZT64w9L7ANwxAZwXsjrmmmT5
+ Rl1TvI0bxyEg8Bzub6PXaQL89ZLZsCW9JVrV/ShakwTiJcIusHUcNTuBSXuuNd+QlKHB+3pb7
+ PtwTXRrNEGANSh0UAi8Gw6HXax3DSOaqZcLy3nweZ2himUOJELhpVMQMPNcTypax5bEKG8TvD
+ PL4QykHTINpFOQo7eu3Oj1CTPXEVazMUBTRjsuOGTR6pbjDRXvBZdxgl2XJRYpyYprEEnVl0t
+ Ub1w5K4+yQG8XlHNCNPKUrtXz3TulnB9Wb7OSU/u4GAWRL7OEvsHHncCBgxyyta4+X3I/aPrn
+ oTa8fnO+i8VLlgUYGmkZ32uv9tMjbNn1rao1HPmzu8QJ86UUbsNgdEg8UDh1iaGf2qNUOkarZ
+ +hmD7nZH/2Y3jNzeO1gdirDawiVUBRztfjcloIbt++CucLtIuZmv3WBOK04ERzeawGNyRWyom
+ HfeJn13r1mqX56Vg8d5IdgOiUSo+0XnvSOo37Iz3A7YZWP4uTCUPhV3nIESaeQd6Ukjf8U2fP
+ Wb4ngytBXr4k5s64ogPVtk/CGed73Ns0xrh0/X2f+PCEQD0HvVVgmKCkD5A2vtFzhTfWSPrkN
+ 4R0t/U9YTMtk/TpTC68ZfJTIJDUhFNxssqnwRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While part of btrfs now uses the crypto shash interfaces
-for crc32c, we still get a build time dependency in other
-places:
+gcc complains that pcpu_page_first_chunk() might return an uninitialized
+error code when the loop is never entered:
 
-fs/btrfs/super.o: In function `btrfs_mount_root':
-super.c:(.text+0xc0d4): undefined reference to `crc32c_impl'
-fs/btrfs/super.o: In function `btrfs_print_mod_info':
-super.c:(.init.text+0x3e28): undefined reference to `crc32c_impl'
-fs/btrfs/extent-tree.o: In function `lookup_inline_extent_backref':
-extent-tree.c:(.text+0x17750): undefined reference to `crc32c'
-fs/btrfs/extent-tree.o:extent-tree.c:(.text+0x177f4): more undefined references to `crc32c' follow
+mm/percpu.c: In function 'pcpu_page_first_chunk':
+mm/percpu.c:2929:9: error: 'rc' may be used uninitialized in this function [-Werror=maybe-uninitialized]
 
-Change Kconfig to depend on both.
+Make it return zero like before the cleanup.
 
-Fixes: d5178578bcd4 ("btrfs: directly call into crypto framework for checksumming")
+Fixes: a13e0ad81216 ("percpu: Make pcpu_setup_first_chunk() void function")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/btrfs/Kconfig | 1 +
+ mm/percpu.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/Kconfig b/fs/btrfs/Kconfig
-index 2521a24f74be..aa7453d44e59 100644
---- a/fs/btrfs/Kconfig
-+++ b/fs/btrfs/Kconfig
-@@ -3,6 +3,7 @@
- config BTRFS_FS
- 	tristate "Btrfs filesystem support"
- 	select CRYPTO
-+	select LIBCRC32C
- 	select CRYPTO_CRC32C
- 	select CRYPTO_SHA256
- 	select ZLIB_INFLATE
+diff --git a/mm/percpu.c b/mm/percpu.c
+index 5a918a4b1da0..5b65f753c575 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -2917,6 +2917,7 @@ int __init pcpu_page_first_chunk(size_t reserved_size,
+ 		ai->reserved_size, ai->dyn_size);
+ 
+ 	pcpu_setup_first_chunk(ai, vm.addr);
++	rc = 0;
+ 	goto out_free_ar;
+ 
+ enomem:
 -- 
 2.20.0
 
