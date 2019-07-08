@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81EAC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8299C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4DE216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A613720665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391298AbfGHPrq (ORCPT
+        id S2391322AbfGHPrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:47:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:52340 "EHLO foss.arm.com"
+        Mon, 8 Jul 2019 11:47:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:52352 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391277AbfGHPro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:47:44 -0400
+        id S2391283AbfGHPrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:47:45 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C62471509;
-        Mon,  8 Jul 2019 08:47:43 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08E25360;
+        Mon,  8 Jul 2019 08:47:45 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C2DDF3F59C;
-        Mon,  8 Jul 2019 08:47:42 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 061383F59C;
+        Mon,  8 Jul 2019 08:47:43 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
@@ -32,9 +32,9 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
         Jim Quinlan <james.quinlan@broadcom.com>,
         Bo Zhang <bozhang.zhang@broadcom.com>,
         Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-Subject: [PATCH 02/11] firmware: arm_scmi: Segregate tx channel handling and prepare to add rx
-Date:   Mon,  8 Jul 2019 16:47:21 +0100
-Message-Id: <20190708154730.16643-3-sudeep.holla@arm.com>
+Subject: [PATCH 03/11] firmware: arm_scmi: Add receive channel support for notifications
+Date:   Mon,  8 Jul 2019 16:47:22 +0100
+Message-Id: <20190708154730.16643-4-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190708154730.16643-1-sudeep.holla@arm.com>
 References: <20190708154730.16643-1-sudeep.holla@arm.com>
@@ -43,117 +43,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The transmit(Tx) channels are specified as the first entry and the
-receive(Rx) channels are the second entry as per the device tree
-bindings. Since we currently just support Tx, index 0 is hardcoded at
-all required callsites.
+With scmi_mbox_chan_setup enabled to identify and setup both Tx and Rx,
+let's consolidate setting up of both the channels under the function
+scmi_mbox_txrx_setup.
 
-In order to prepare for adding Rx support, let's remove those hardcoded
-index and add boolean parameter to identify Tx/Rx channels when setting
-them up.
+Since some platforms may opt not to support notifications or delayed
+response, they may not need support for Rx. Hence Rx is optional and
+failure of setting one up is not considered fatal.
 
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/driver.c | 33 ++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ drivers/firmware/arm_scmi/driver.c | 30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 0bd2af0a008f..f7fb6d5bfc64 100644
+index f7fb6d5bfc64..e9b762348eff 100644
 --- a/drivers/firmware/arm_scmi/driver.c
 +++ b/drivers/firmware/arm_scmi/driver.c
-@@ -112,7 +112,7 @@ struct scmi_chan_info {
-  * @version: SCMI revision information containing protocol version,
+@@ -113,6 +113,7 @@ struct scmi_chan_info {
   *	implementation version and (sub-)vendor identification.
   * @minfo: Message info
-- * @tx_idr: IDR object to map protocol id to channel info pointer
-+ * @tx_idr: IDR object to map protocol id to Tx channel info pointer
+  * @tx_idr: IDR object to map protocol id to Tx channel info pointer
++ * @rx_idr: IDR object to map protocol id to Rx channel info pointer
   * @protocols_imp: List of protocols implemented, currently maximum of
   *	MAX_PROTOCOLS_IMP elements allocated by the base protocol
   * @node: List head
-@@ -640,22 +640,26 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
- 	return 0;
- }
- 
--static int scmi_mailbox_check(struct device_node *np)
-+static int scmi_mailbox_check(struct device_node *np, int idx)
- {
--	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, NULL);
-+	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells",
-+					  idx, NULL);
- }
- 
--static inline int
--scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
-+static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
-+				int prot_id, bool tx)
- {
--	int ret;
-+	int ret, idx;
- 	struct resource res;
- 	resource_size_t size;
+@@ -125,6 +126,7 @@ struct scmi_info {
+ 	struct scmi_handle handle;
+ 	struct scmi_xfers_info minfo;
+ 	struct idr tx_idr;
++	struct idr rx_idr;
+ 	u8 *protocols_imp;
+ 	struct list_head node;
+ 	int users;
+@@ -655,12 +657,16 @@ static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
  	struct device_node *shmem, *np = dev->of_node;
  	struct scmi_chan_info *cinfo;
  	struct mbox_client *cl;
++	struct idr *idr;
  
--	if (scmi_mailbox_check(np)) {
-+	/* Transmit channel is first entry i.e. index 0 */
-+	idx = tx ? 0 : 1;
-+
-+	if (scmi_mailbox_check(np, idx)) {
- 		cinfo = idr_find(&info->tx_idr, SCMI_PROTOCOL_BASE);
+ 	/* Transmit channel is first entry i.e. index 0 */
+ 	idx = tx ? 0 : 1;
++	idr = tx ? &info->tx_idr : &info->rx_idr;
+ 
+ 	if (scmi_mailbox_check(np, idx)) {
+-		cinfo = idr_find(&info->tx_idr, SCMI_PROTOCOL_BASE);
++		cinfo = idr_find(idr, SCMI_PROTOCOL_BASE);
++		if (unlikely(!cinfo)) /* Possible only if platform has no Rx */
++			return -EINVAL;
  		goto idr_alloc;
  	}
-@@ -669,11 +673,11 @@ scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
- 	cl = &cinfo->cl;
- 	cl->dev = dev;
- 	cl->rx_callback = scmi_rx_callback;
--	cl->tx_prepare = scmi_tx_prepare;
-+	cl->tx_prepare = tx ? scmi_tx_prepare : NULL;
- 	cl->tx_block = false;
--	cl->knows_txdone = true;
-+	cl->knows_txdone = tx;
  
--	shmem = of_parse_phandle(np, "shmem", 0);
-+	shmem = of_parse_phandle(np, "shmem", idx);
- 	ret = of_address_to_resource(shmem, 0, &res);
- 	of_node_put(shmem);
- 	if (ret) {
-@@ -688,8 +692,7 @@ scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
- 		return -EADDRNOTAVAIL;
+@@ -701,7 +707,7 @@ static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
  	}
  
--	/* Transmit channel is first entry i.e. index 0 */
--	cinfo->chan = mbox_request_channel(cl, 0);
-+	cinfo->chan = mbox_request_channel(cl, idx);
- 	if (IS_ERR(cinfo->chan)) {
- 		ret = PTR_ERR(cinfo->chan);
- 		if (ret != -EPROBE_DEFER)
-@@ -721,7 +724,7 @@ scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
+ idr_alloc:
+-	ret = idr_alloc(&info->tx_idr, cinfo, prot_id, prot_id + 1, GFP_KERNEL);
++	ret = idr_alloc(idr, cinfo, prot_id, prot_id + 1, GFP_KERNEL);
+ 	if (ret != prot_id) {
+ 		dev_err(dev, "unable to allocate SCMI idr slot err %d\n", ret);
+ 		return ret;
+@@ -711,6 +717,17 @@ static int scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev,
+ 	return 0;
+ }
+ 
++static inline int
++scmi_mbox_txrx_setup(struct scmi_info *info, struct device *dev, int prot_id)
++{
++	int ret = scmi_mbox_chan_setup(info, dev, prot_id, true);
++
++	if (!ret) /* Rx is optional, hence no error check */
++		scmi_mbox_chan_setup(info, dev, prot_id, false);
++
++	return ret;
++}
++
+ static inline void
+ scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
+ 			    int prot_id)
+@@ -724,7 +741,7 @@ scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
  		return;
  	}
  
--	if (scmi_mbox_chan_setup(info, &sdev->dev, prot_id)) {
-+	if (scmi_mbox_chan_setup(info, &sdev->dev, prot_id, true)) {
+-	if (scmi_mbox_chan_setup(info, &sdev->dev, prot_id, true)) {
++	if (scmi_mbox_txrx_setup(info, &sdev->dev, prot_id)) {
  		dev_err(&sdev->dev, "failed to setup transport\n");
  		scmi_device_destroy(sdev);
  		return;
-@@ -741,7 +744,7 @@ static int scmi_probe(struct platform_device *pdev)
- 	struct device_node *child, *np = dev->of_node;
+@@ -767,12 +784,13 @@ static int scmi_probe(struct platform_device *pdev)
  
- 	/* Only mailbox method supported, check for the presence of one */
--	if (scmi_mailbox_check(np)) {
-+	if (scmi_mailbox_check(np, 0)) {
- 		dev_err(dev, "no mailbox found in %pOF\n", np);
- 		return -EINVAL;
- 	}
-@@ -769,7 +772,7 @@ static int scmi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, info);
+ 	idr_init(&info->tx_idr);
++	idr_init(&info->rx_idr);
+ 
+ 	handle = &info->handle;
  	handle->dev = info->dev;
  	handle->version = &info->version;
  
--	ret = scmi_mbox_chan_setup(info, dev, SCMI_PROTOCOL_BASE);
-+	ret = scmi_mbox_chan_setup(info, dev, SCMI_PROTOCOL_BASE, true);
+-	ret = scmi_mbox_chan_setup(info, dev, SCMI_PROTOCOL_BASE, true);
++	ret = scmi_mbox_txrx_setup(info, dev, SCMI_PROTOCOL_BASE);
  	if (ret)
  		return ret;
+ 
+@@ -842,6 +860,10 @@ static int scmi_remove(struct platform_device *pdev)
+ 	ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
+ 	idr_destroy(&info->tx_idr);
+ 
++	idr = &info->rx_idr;
++	ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
++	idr_destroy(&info->rx_idr);
++
+ 	return ret;
+ }
  
 -- 
 2.17.1
