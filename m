@@ -2,126 +2,136 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102DBC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB54C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70D52166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047922166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIsVRnmG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Fp/JXrr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387537AbfGHQjE (ORCPT
+        id S2391544AbfGHQjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:39:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33524 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfGHQjE (ORCPT
+        Mon, 8 Jul 2019 12:39:31 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49986 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfGHQja (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:39:04 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c14so8547101plo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:39:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HANEys3LwMMarvQrMRgIUfN0qDIaxMbeh5Zb+J/99Zg=;
-        b=VIsVRnmGojer3AbNkAsEx36TTWcdbcz6fKFtvDsuT3/i99lJq5zpV4awq3pZRIjdbb
-         tArfVrO98RZEn2/OO68iwAdDwnc9PN7km3mg9d+cYHbk0KUmhhoZgfr/PqVd/KBpEs+x
-         JHUd16JMhS7QCF4dQjc3caD6anztPkYFK9mf0vs7DNJBO9EH8E8q6shaLnTIFtZPDljO
-         iHdizd1lHAVv8oJlLvdpL8PhN51v+GYMro8gM2Ax/jAbg/0uAauDtyFKFq/D5tpjN+r1
-         EMjRdElWcbc9pf+6ewrjGty08MNVW5cVFe+JaLqdoeE8HZxJrhI80i3w54z1FXWhNWb6
-         Gzug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HANEys3LwMMarvQrMRgIUfN0qDIaxMbeh5Zb+J/99Zg=;
-        b=RRDCl/05P/P/OqodkBVf77FFkCYexk1C/pRCrh+HD6NfW68vW/NpiN/EcBlgJtOqZx
-         tG5azuuZ5knPkljExbh8IkEvhOdGhR0D5U8KSAq/J1wTTclmPkVS1J+6trjFggUrhLSl
-         1VU+BVnYKM03EmMOaiPQqrvoC0fP6b+8YkbhV0Zgn6khv947eTcS48EwRS9cwTW0jXve
-         DR+KdSYK1kWYi6i9KykTt2DrffYoWSa9KoVohubPFQd+cYnmAA15asyo500s+JYTii3L
-         c9mFLJoLydzwFMzKIAA+RxSSHO7vOGcbL8P/cXtsvWX4wD71I8p5dVcfKLdHklrCALxL
-         vcVQ==
-X-Gm-Message-State: APjAAAUCbxWOQVLc+XWYVrrS1PqnHStknMi/IK+epwslQ139k5Dk59s3
-        VcdhT7U/sYukPyO2TW/iR7A=
-X-Google-Smtp-Source: APXvYqwaXNbD0uLKvspsc3YUfNdMcyiSiLnbDM+va2rxYovj0CY9KcGQ+WpAzFZRzolkYj1GBeQjiw==
-X-Received: by 2002:a17:902:d715:: with SMTP id w21mr27081665ply.261.1562603943955;
-        Mon, 08 Jul 2019 09:39:03 -0700 (PDT)
-Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
-        by smtp.gmail.com with ESMTPSA id d2sm17639026pgo.0.2019.07.08.09.39.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Jul 2019 09:39:03 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 09:39:00 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Cc:     john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] time: Validate the usec before covert to nsec in
- do_adjtimex
-Message-ID: <20190708163900.yhzb2qh7w5mlcqkc@localhost>
-References: <1562572504-142115-1-git-send-email-zhangxiaoxu5@huawei.com>
+        Mon, 8 Jul 2019 12:39:30 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68GXjUi132033;
+        Mon, 8 Jul 2019 16:38:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=IxnXRwFEVsBRcHWVY1AUPNtwkkxS39pGXrbWoyZ4Lsw=;
+ b=Fp/JXrr1F/US89eAFmDqwrjS5ytA2Bk6p9MCtg0f8xvvLnuii2vH0qVLYDh2iG1Pgsvp
+ Fhxa+zbXiqx4pVSX/XEfKdW/QnzSIGKWigQCN9GJzeZNb6UN47/xRrPf0Pv3E5uQH5QN
+ DGAd/lg2Fi1JkHfP6mH737oN8ApJAkF97iZae7Or4Ofc//AViLIGwoY6mm5g67XIqxk3
+ dupyan40rxoQuHvCz6S9fL1fTbIqEmA2uxnFGktXJbZIC9Z+Wof/QKAQyVcQdKcHxSL2
+ 9jT+IUMbvpNJ8yotyKnJN3Nty5H8nInzmilFW1bylL95WAwJjttP2LbHIk94sc9KUECN BA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2tjm9qffyr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 16:38:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68Gbb8P034884;
+        Mon, 8 Jul 2019 16:38:22 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2tjhpck953-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 08 Jul 2019 16:38:22 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x68GcMFp036252;
+        Mon, 8 Jul 2019 16:38:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tjhpck94t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jul 2019 16:38:22 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x68GcFBL000636;
+        Mon, 8 Jul 2019 16:38:15 GMT
+Received: from localhost (/10.159.211.102)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jul 2019 09:38:14 -0700
+Date:   Mon, 8 Jul 2019 12:38:11 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, Chris Mason <clm@fb.com>
+Subject: Re: [PATCH 1/1] tools/dtrace: initial implementation of DTrace
+Message-ID: <20190708163811.GB20847@oracle.com>
+References: <201907040313.x643D8Pg025951@userv0121.oracle.com>
+ <201907040314.x643EUoA017906@aserv0122.oracle.com>
+ <20190704130509.GO3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1562572504-142115-1-git-send-email-zhangxiaoxu5@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190704130509.GO3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907080206
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 03:55:04PM +0800, ZhangXiaoxu wrote:
-> When covert the usec to nsec, it will multiple 1000, it maybe
-> overflow and lead an undefined behavior.
+On Thu, Jul 04, 2019 at 03:05:09PM +0200, Peter Zijlstra wrote:
+> On Wed, Jul 03, 2019 at 08:14:30PM -0700, Kris Van Hees wrote:
+> > +int dt_bpf_attach(int event_id, int bpf_fd)
+> > +{
+> > +	int			event_fd;
+> > +	int			rc;
+> > +	struct perf_event_attr	attr = {};
+> > +
+> > +	attr.type = PERF_TYPE_TRACEPOINT;
+> > +	attr.sample_type = PERF_SAMPLE_RAW;
+> > +	attr.sample_period = 1;
+> > +	attr.wakeup_events = 1;
+> > +	attr.config = event_id;
+> > +
+> > +	/* Register the event (based on its id), and obtain a fd. */
+> > +	event_fd = perf_event_open(&attr, -1, 0, -1, 0);
+> > +	if (event_fd < 0) {
+> > +		perror("sys_perf_event_open");
+> > +		return -1;
+> > +	}
+> > +
+> > +	/* Enable the probe. */
+> > +	rc = ioctl(event_fd, PERF_EVENT_IOC_ENABLE, 0);
 > 
-> For example, users may input an negative tv_usec values when
-> call adjtimex syscall, then multiple 1000 maybe overflow it
-> to a positive and legal number.
-> 
-> So, we should validate the usec before coverted it to nsec.
-> 
-> Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-> ---
->  kernel/time/timekeeping.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index 44b726b..e5c1d00 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -1272,9 +1272,6 @@ static int timekeeping_inject_offset(const struct timespec64 *ts)
->  	struct timespec64 tmp;
->  	int ret = 0;
->  
-> -	if (ts->tv_nsec < 0 || ts->tv_nsec >= NSEC_PER_SEC)
-> -		return -EINVAL;
-> -
->  	raw_spin_lock_irqsave(&timekeeper_lock, flags);
->  	write_seqcount_begin(&tk_core.seq);
->  
-> @@ -2321,6 +2318,9 @@ int do_adjtimex(struct __kernel_timex *txc)
->  
->  	if (txc->modes & ADJ_SETOFFSET) {
->  		struct timespec64 delta;
-> +
-> +		if (txc->time.tv_usec < 0 || txc->time.tv_usec >= USEC_PER_SEC)
-> +			return -EINVAL;
+> AFAICT you didn't use attr.disabled = 1, so this IOC_ENABLE is
+> completely superfluous.
 
-This test is wrong.  If the tv_usec field is in nanoseconds, then the
-value can easily be greater than USEC_PER_SEC.
+Oh yes, good point (and the same applies to the dt_buffer.c code where I set
+up the events that own each buffer - no point in doing an explicit enable there
+eiteher).
 
->  		delta.tv_sec  = txc->time.tv_sec;
->  		delta.tv_nsec = txc->time.tv_usec;
->  		if (!(txc->modes & ADJ_NANO))
-> -- 
-> 2.7.4
-> 
+Thanks for catching this!
 
-Thanks,
-Richard
+> > +	if (rc < 0) {
+> > +		perror("PERF_EVENT_IOC_ENABLE");
+> > +		return -1;
+> > +	}
+> > +
+> > +	/* Associate the BPF program with the event. */
+> > +	rc = ioctl(event_fd, PERF_EVENT_IOC_SET_BPF, bpf_fd);
+> > +	if (rc < 0) {
+> > +		perror("PERF_EVENT_IOC_SET_BPF");
+> > +		return -1;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
