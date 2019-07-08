@@ -2,89 +2,91 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAFBC606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D93FC606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0FE221479
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:43:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MVvIJ0lM"
+	by mail.kernel.org (Postfix) with ESMTP id 60ED921479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfGHWnO (ORCPT
+        id S1728166AbfGHWri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:43:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44590 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfGHWnN (ORCPT
+        Mon, 8 Jul 2019 18:47:38 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:64027 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGHWrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:43:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=P9ZbarkRoC/k/pYpbYOrW10IaUGKSRYoo+klKaShKug=; b=MVvIJ0lMf7cHnUQYNbsF/VEmvR
-        NLtRe1c48h03TG8/yInjrRI0IzX1fnObf45rLaWtBRcdZP2pg0Mc0QBJ3mKZp2oR1xzzxymfYvmsm
-        AX2UOHJQpX7oWepvM9+QSEu9SJ30O8aL9HjYj65HRK5VJFnmchzLIzzZe07qaRrlwztD/0BzWB8uw
-        pzvWazlzhrR1hrleYsDmqITD3Iuk/dOEmnHTJaLBvNRVsOE1yLad0tGDboOgxkEMQU7qi1r/mAi5x
-        scmGgPxWAqrEakiCdXDvHlcjU+h91NoQ0Uy9E0Nejsw1VElIw+jXJyez5lJH8zhd5G0mkYoj1WtUQ
-        c54NUMqw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkcLg-0007cu-7m; Mon, 08 Jul 2019 22:43:04 +0000
-Date:   Mon, 8 Jul 2019 15:43:04 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
-Message-ID: <20190708224304.GA25838@infradead.org>
-References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
- <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
- <1562624644.11461.66.camel@linux.ibm.com>
+        Mon, 8 Jul 2019 18:47:37 -0400
+Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hkcQ3-0005v2-Rm from George_Davis@mentor.com ; Mon, 08 Jul 2019 15:47:35 -0700
+Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
+ (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Mon, 8 Jul
+ 2019 15:47:33 -0700
+Date:   Mon, 8 Jul 2019 18:47:32 -0400
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: sysctl: cleanup net_sysctl_init error exit paths
+Message-ID: <20190708224732.GA8009@mam-gdavis-lt>
+References: <1558020189-16843-1-git-send-email-george_davis@mentor.com>
+ <20190516.142744.1107545161556108780.davem@davemloft.net>
+ <20190517144345.GA16926@mam-gdavis-lt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1562624644.11461.66.camel@linux.ibm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190517144345.GA16926@mam-gdavis-lt>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 06:24:04PM -0400, Mimi Zohar wrote:
-> > static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-> > {
-> > 	int rc;
-> > 
-> > 	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
-> >      	     tpm2_get_pcr_allocation(chip) :
-> >      	     tpm1_get_pcr_allocation(chip);
-> 
-> > 
-> > 	return rc > 0 ? -ENODEV : rc;
-> > }
-> > 
-> > This addresses the issue that Stefan also pointed out. You have to
-> > deal with the TPM error codes.
-> 
-> Hm, in the past I was told by Christoph not to use the ternary
-> operator.  Have things changed?  Other than removing the comment, the
-> only other difference is the return.
+Hello David,
 
-In the end it is a matter of personal preference, but I find the
-quote version above using the ternary horribly obsfucated.
+On Fri, May 17, 2019 at 10:43:45AM -0400, George G. Davis wrote:
+> Hello David,
+> 
+> On Thu, May 16, 2019 at 02:27:44PM -0700, David Miller wrote:
+> > From: "George G. Davis" <george_davis@mentor.com>
+> > Date: Thu, 16 May 2019 11:23:08 -0400
+> > 
+> > > Unwind net_sysctl_init error exit goto spaghetti code
+> > > 
+> > > Suggested-by: Joshua Frkuska <joshua_frkuska@mentor.com>
+> > > Signed-off-by: George G. Davis <george_davis@mentor.com>
+> > 
+> > Cleanups are not appropriate until the net-next tree opens back up.
+> > 
+> > So please resubmit at that time.
+> 
+> I fear that I may be distracted by other shiny objects by then but
+> I'll make a reminder and try to resubmit during the next merge window.
+
+Since the "Linux 5.2" kernel has been released [1], I'm guessing that the
+net-next merge window is open now? If yes, the patch remains unchanged
+since my initial post. Please consider applying or let me know when to
+resubmit when the net-next merge window is again open.
+
+TIA!
+
+
+> 
+> Thanks!
+> 
+> > 
+> > Thank you.
+> 
+> -- 
+> Regards,
+> George
+
+-- 
+Regards,
+George
+[1] https://lwn.net/Articles/792995/
