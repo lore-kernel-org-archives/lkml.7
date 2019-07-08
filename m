@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B580DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F4C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8152921537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493F220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599850;
-	bh=oqJOOPIzXqtL84WhyP7K9dTw3vqk5/8dazpQ8iRpGL4=;
+	s=default; t=1562599853;
+	bh=zHBeiH5UXBieVXJ3ReP2xV67oxVWXWvFsycG/3TsF4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BK2f7Gd3qaR+oqhf+z5acLZXbeJ0L8/9WH2mJbftRwh9NOfayxEO/WQ9gPHH5yegy
-	 VjAQ9Qnnpx6qcbBnWgc/BLf+ferZg0vwGaAE4vivLuQIxVvEyuAVO0yjT2adttgXHc
-	 t4Oz+R1xHXBMlN8L8zVNMmnd7JcWwsNKH9t/NMGc=
+	b=l4i4YjDcc+3s1vUkCQ1c78SzFtM6XyJRjzJ/JId6EjNZ9IZJgmkH03Z+/r7keCAP8
+	 fJy65nihkd992ne37REULzsDOuqKXYIeabaJvzLeRHgn80M7+fH2aF65hq+fOORR99
+	 MBJd8YnZ+ZcdZ1CKWlZlxzrXbZ4a1cAdicVCbeoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389861AbfGHPat (ORCPT
+        id S2389874AbfGHPaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:30:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59850 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730174AbfGHPap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:45 -0400
+        id S2389856AbfGHPas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14FF8216C4;
-        Mon,  8 Jul 2019 15:30:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C51C21537;
+        Mon,  8 Jul 2019 15:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599844;
-        bh=oqJOOPIzXqtL84WhyP7K9dTw3vqk5/8dazpQ8iRpGL4=;
+        s=default; t=1562599848;
+        bh=zHBeiH5UXBieVXJ3ReP2xV67oxVWXWvFsycG/3TsF4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtLBaEHuX506Uwg6vmtgMB3iqJyh0Imvmt5ivP57+sSv6SM8AVRBt75SosmkVuS8A
-         yvkoxdDrX0QJD2horKqahtwsR7jx83Lnl8dOEl9SwLpYA9an42pvsVYWceQkEQdCS0
-         m//xPP1l9vEDDkW68loQHneWGauvgcTD7xG19qD0=
+        b=PsfWslLHZVEQMglFj+kUZ0hGfLRdg5xlKtS748qE6zTHoqsEMwFbNAr45l22AXV27
+         /YwFf+pNN6N/ljqWf6GMufloQ89YsJ1PSvu0WLwjIqKwr6lOwRCzjPeEuFrIjrrpO0
+         89PbPyshSG5zYo3ec+XJH2j3V/YukD42yhIJp3tU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>, ralf@linux-mips.org,
-        jhogan@kernel.org, f4bug@amsat.org, linux-mips@vger.kernel.org,
-        ysu@wavecomp.com, jcristau@debian.org
-Subject: [PATCH 4.19 86/90] MIPS: Fix bounds check virt_addr_valid
-Date:   Mon,  8 Jul 2019 17:13:53 +0200
-Message-Id: <20190708150526.824054542@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matias Karhumaa <matias.karhumaa@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 01/96] Bluetooth: Fix faulty expression for minimum encryption key size check
+Date:   Mon,  8 Jul 2019 17:12:33 +0200
+Message-Id: <20190708150526.333257976@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
-References: <20190708150521.829733162@linuxfoundation.org>
+In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
+References: <20190708150526.234572443@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,46 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hauke Mehrtens <hauke@hauke-m.de>
+From: Matias Karhumaa <matias.karhumaa@gmail.com>
 
-commit d6ed083f5cc621e15c15b56c3b585fd524dbcb0f upstream.
+commit eca94432934fe5f141d084f2e36ee2c0e614cc04 upstream.
 
-The bounds check used the uninitialized variable vaddr, it should use
-the given parameter kaddr instead. When using the uninitialized value
-the compiler assumed it to be 0 and optimized this function to just
-return 0 in all cases.
+Fix minimum encryption key size check so that HCI_MIN_ENC_KEY_SIZE is
+also allowed as stated in the comment.
 
-This should make the function check the range of the given address and
-only do the page map check in case it is in the expected range of
-virtual addresses.
+This bug caused connection problems with devices having maximum
+encryption key size of 7 octets (56-bit).
 
-Fixes: 074a1e1167af ("MIPS: Bounds check virt_addr_valid")
-Cc: stable@vger.kernel.org # v4.12+
-Cc: Paul Burton <paul.burton@mips.com>
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: f4bug@amsat.org
-Cc: linux-mips@vger.kernel.org
-Cc: ysu@wavecomp.com
-Cc: jcristau@debian.org
+Fixes: 693cd8ce3f88 ("Bluetooth: Fix regression with minimum encryption key size alignment")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203997
+Signed-off-by: Matias Karhumaa <matias.karhumaa@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/mm/mmap.c |    2 +-
+ net/bluetooth/l2cap_core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -203,7 +203,7 @@ unsigned long arch_randomize_brk(struct
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -1353,7 +1353,7 @@ static bool l2cap_check_enc_key_size(str
+ 	 * actually encrypted before enforcing a key size.
+ 	 */
+ 	return (!test_bit(HCI_CONN_ENCRYPT, &hcon->flags) ||
+-		hcon->enc_key_size > HCI_MIN_ENC_KEY_SIZE);
++		hcon->enc_key_size >= HCI_MIN_ENC_KEY_SIZE);
+ }
  
- int __virt_addr_valid(const volatile void *kaddr)
- {
--	unsigned long vaddr = (unsigned long)vaddr;
-+	unsigned long vaddr = (unsigned long)kaddr;
- 
- 	if ((vaddr < PAGE_OFFSET) || (vaddr >= MAP_BASE))
- 		return 0;
+ static void l2cap_do_start(struct l2cap_chan *chan)
 
 
