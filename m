@@ -2,52 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7EDC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15537C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55D620651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D613D20651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600385;
-	bh=GggVCx1Hlzk+MVuJdPjICVgcV5W9PyPoL0nOFalkwYM=;
+	s=default; t=1562600393;
+	bh=vbZc4uPPnLp+N+12ISZPZmUubYAfhhAjCpDjEMR9Hdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S0viFeOJVsgNunFwkkfyEyAsnRrLezwReAcWshMNWFfa6EhaxnI9aoTwZ2tyxytsM
-	 yK3HpuHP4jVoc+HVgQoplWLK3+dnROwXDL/wIAYy4LelaNeWIPWKYqXkqOJvLcTxeY
-	 BO/iomwWbG3goaTWlQQ9LMDAG6cf0YIWsPNW0nyg=
+	b=gVcf72bliBBaey052Ao/7Bwbv3hfGcmyqF/K9DMSlaX1VUeSyeVmza4xC4Hv7sJjj
+	 yTztPQC+aKBImdrheY0bqo6chaAoYWyFQTpDEBXIR96NMp/AHrHg3Wv+/3o09UtLMg
+	 PfbHkI30+riDbZWMS0jdsEXOJVuzM6hOhpTLNf+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390823AbfGHPjo (ORCPT
+        id S2389372AbfGHP2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58076 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:28:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732065AbfGHP3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:19 -0400
+        id S2389357AbfGHP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:28:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 334D4204EC;
-        Mon,  8 Jul 2019 15:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF18420645;
+        Mon,  8 Jul 2019 15:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599757;
-        bh=GggVCx1Hlzk+MVuJdPjICVgcV5W9PyPoL0nOFalkwYM=;
+        s=default; t=1562599726;
+        bh=vbZc4uPPnLp+N+12ISZPZmUubYAfhhAjCpDjEMR9Hdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fzEKKnz1ndbgMD8QtdqkWxXYXvbLY4as5M8wtHDQkRnUgBFvsqBPOEF2XdBqX/xRd
-         rRIB0D+8EGmzFt/jviy/6j19yM6Zinj5hEdqo5IlvZrvtTUd3niyc/w2zTdFteuwur
-         T+Zau/XNOYv/zH6aTAImL4sIWUG+7MwdvoHikpEA=
+        b=FdYiVsEmpYyA7yCQEn5ic2MsyCINX4YZUXBqg54nLVy+joq36Yno4ay389s1fVDb1
+         abnqQRl82yGXPcBAaQYDsMyvKSEqWlk02K3e8jcDMBEJSS8gL2vMoMr4kBM9GLbRj6
+         ABkCyW1117YrkTKDQEh8TOZ9lnE2IFRkBrFLYQjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 68/90] f2fs: dont access node/meta inode mapping after iput
-Date:   Mon,  8 Jul 2019 17:13:35 +0200
-Message-Id: <20190708150525.790996587@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Beckett <bob.beckett@collabora.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 4.19 58/90] drm/imx: notify drm core before sending event during crtc disable
+Date:   Mon,  8 Jul 2019 17:13:25 +0200
+Message-Id: <20190708150525.378226208@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -60,96 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c77bf7de1574ac7a31a2b76f4927404307d13e7 ]
+From: Robert Beckett <bob.beckett@collabora.com>
 
-This fixes wrong access of address spaces of node and meta inodes after iput.
+commit 78c68e8f5cd24bd32ba4ca1cdfb0c30cf0642685 upstream.
 
-Fixes: 60aa4d5536ab ("f2fs: fix use-after-free issue when accessing sbi->stat_info")
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Notify drm core before sending pending events during crtc disable.
+This fixes the first event after disable having an old stale timestamp
+by having drm_crtc_vblank_off update the timestamp to now.
+
+This was seen while debugging weston log message:
+Warning: computed repaint delay is insane: -8212 msec
+
+This occurred due to:
+1. driver starts up
+2. fbcon comes along and restores fbdev, enabling vblank
+3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
+seq number and time set at current value
+(some time later)
+4. weston starts and does a modeset
+5. atomic commit disables crtc while it does the modeset
+6. ipu_crtc_atomic_disable sends vblank with old seq number and time
+
+Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
+
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/debug.c | 19 ++++++++++++-------
- fs/f2fs/super.c |  5 +++++
- 2 files changed, 17 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/imx/ipuv3-crtc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
-index ebe649d9793c..bbe155465ca0 100644
---- a/fs/f2fs/debug.c
-+++ b/fs/f2fs/debug.c
-@@ -94,8 +94,10 @@ static void update_general_status(struct f2fs_sb_info *sbi)
- 	si->free_secs = free_sections(sbi);
- 	si->prefree_count = prefree_segments(sbi);
- 	si->dirty_count = dirty_segments(sbi);
--	si->node_pages = NODE_MAPPING(sbi)->nrpages;
--	si->meta_pages = META_MAPPING(sbi)->nrpages;
-+	if (sbi->node_inode)
-+		si->node_pages = NODE_MAPPING(sbi)->nrpages;
-+	if (sbi->meta_inode)
-+		si->meta_pages = META_MAPPING(sbi)->nrpages;
- 	si->nats = NM_I(sbi)->nat_cnt;
- 	si->dirty_nats = NM_I(sbi)->dirty_nat_cnt;
- 	si->sits = MAIN_SEGS(sbi);
-@@ -168,7 +170,6 @@ static void update_sit_info(struct f2fs_sb_info *sbi)
- static void update_mem_info(struct f2fs_sb_info *sbi)
- {
- 	struct f2fs_stat_info *si = F2FS_STAT(sbi);
--	unsigned npages;
- 	int i;
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -98,14 +98,14 @@ static void ipu_crtc_atomic_disable(stru
+ 	ipu_dc_disable(ipu);
+ 	ipu_prg_disable(ipu);
  
- 	if (si->base_mem)
-@@ -251,10 +252,14 @@ static void update_mem_info(struct f2fs_sb_info *sbi)
- 						sizeof(struct extent_node);
- 
- 	si->page_mem = 0;
--	npages = NODE_MAPPING(sbi)->nrpages;
--	si->page_mem += (unsigned long long)npages << PAGE_SHIFT;
--	npages = META_MAPPING(sbi)->nrpages;
--	si->page_mem += (unsigned long long)npages << PAGE_SHIFT;
-+	if (sbi->node_inode) {
-+		unsigned npages = NODE_MAPPING(sbi)->nrpages;
-+		si->page_mem += (unsigned long long)npages << PAGE_SHIFT;
-+	}
-+	if (sbi->meta_inode) {
-+		unsigned npages = META_MAPPING(sbi)->nrpages;
-+		si->page_mem += (unsigned long long)npages << PAGE_SHIFT;
-+	}
++	drm_crtc_vblank_off(crtc);
++
+ 	spin_lock_irq(&crtc->dev->event_lock);
+ 	if (crtc->state->event) {
+ 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+ 		crtc->state->event = NULL;
+ 	}
+ 	spin_unlock_irq(&crtc->dev->event_lock);
+-
+-	drm_crtc_vblank_off(crtc);
  }
  
- static int stat_show(struct seq_file *s, void *v)
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 2264f27fd26d..1871031e2d5e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1050,7 +1050,10 @@ static void f2fs_put_super(struct super_block *sb)
- 	f2fs_bug_on(sbi, sbi->fsync_node_num);
- 
- 	iput(sbi->node_inode);
-+	sbi->node_inode = NULL;
-+
- 	iput(sbi->meta_inode);
-+	sbi->meta_inode = NULL;
- 
- 	/*
- 	 * iput() can update stat information, if f2fs_write_checkpoint()
-@@ -3166,6 +3169,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	f2fs_release_ino_entry(sbi, true);
- 	truncate_inode_pages_final(NODE_MAPPING(sbi));
- 	iput(sbi->node_inode);
-+	sbi->node_inode = NULL;
- free_stats:
- 	f2fs_destroy_stats(sbi);
- free_nm:
-@@ -3178,6 +3182,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- free_meta_inode:
- 	make_bad_inode(sbi->meta_inode);
- 	iput(sbi->meta_inode);
-+	sbi->meta_inode = NULL;
- free_io_dummy:
- 	mempool_destroy(sbi->write_io_dummy);
- free_percpu:
--- 
-2.20.1
-
+ static void imx_drm_crtc_reset(struct drm_crtc *crtc)
 
 
