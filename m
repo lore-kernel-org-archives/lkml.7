@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B61C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FDEC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 391602075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85FB02053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfGHCGw (ORCPT
+        id S1728741AbfGHCHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 22:06:52 -0400
+        Sun, 7 Jul 2019 22:07:00 -0400
 Received: from mga17.intel.com ([192.55.52.151]:44745 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfGHCGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 22:06:45 -0400
+        id S1728654AbfGHCGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 22:06:39 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:45 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,464,1557212400"; 
-   d="scan'208";a="364083607"
+   d="scan'208";a="364083581"
 Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:43 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:37 -0700
 From:   Wei Wang <wei.w.wang@intel.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         pbonzini@redhat.com, ak@linux.intel.com, peterz@infradead.org
 Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
         like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
         arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v7 12/12] KVM/VMX/vPMU: support to report GLOBAL_STATUS_LBRS_FROZEN
-Date:   Mon,  8 Jul 2019 09:23:19 +0800
-Message-Id: <1562548999-37095-13-git-send-email-wei.w.wang@intel.com>
+Subject: [PATCH v7 09/12] perf/x86: save/restore LBR_SELECT on vCPU switching
+Date:   Mon,  8 Jul 2019 09:23:16 +0800
+Message-Id: <1562548999-37095-10-git-send-email-wei.w.wang@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
 References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
@@ -46,118 +46,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables the LBR related features in Arch v4 in advance,
-though the current vPMU only has v2 support. Other arch v4 related
-support will be enabled later in another series.
-
-Arch v4 supports streamlined Freeze_LBR_on_PMI. According to the SDM,
-the LBR_FRZ bit is set to global status when debugctl.freeze_lbr_on_pmi
-has been set and a PMI is generated. The CTR_FRZ bit is set when
-debugctl.freeze_perfmon_on_pmi is set and a PMI is generated.
+The vCPU lbr event relies on the host to save/restore all the lbr
+related MSRs. So add the LBR_SELECT save/restore to the related
+functions for the vCPU case.
 
 Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Kan Liang <kan.liang@intel.com>
 ---
- arch/x86/kvm/pmu.c           | 11 +++++++++--
- arch/x86/kvm/pmu.h           |  1 +
- arch/x86/kvm/vmx/pmu_intel.c | 20 ++++++++++++++++++++
- 3 files changed, 30 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/lbr.c  | 7 +++++++
+ arch/x86/events/perf_event.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 323bb45..89bff8f 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -52,6 +52,13 @@ static void kvm_pmi_trigger_fn(struct irq_work *irq_work)
- 	kvm_pmu_deliver_pmi(vcpu);
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 118764b..4861a9d 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -383,6 +383,9 @@ static void __intel_pmu_lbr_restore(struct x86_perf_task_context *task_ctx)
+ 
+ 	wrmsrl(x86_pmu.lbr_tos, tos);
+ 	task_ctx->lbr_stack_state = LBR_NONE;
++
++	if (cpuc->vcpu_lbr)
++		wrmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
  }
  
-+static void kvm_perf_set_global_status(struct kvm_pmu *pmu, u8 idx)
-+{
-+	__set_bit(idx, (unsigned long *)&pmu->global_status);
-+	if (kvm_x86_ops->pmu_ops->set_global_status)
-+		kvm_x86_ops->pmu_ops->set_global_status(pmu, idx);
-+}
-+
- static void kvm_perf_overflow(struct perf_event *perf_event,
- 			      struct perf_sample_data *data,
- 			      struct pt_regs *regs)
-@@ -61,7 +68,7 @@ static void kvm_perf_overflow(struct perf_event *perf_event,
- 
- 	if (!test_and_set_bit(pmc->idx,
- 			      (unsigned long *)&pmu->reprogram_pmi)) {
--		__set_bit(pmc->idx, (unsigned long *)&pmu->global_status);
-+		kvm_perf_set_global_status(pmu, pmc->idx);
- 		kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
+ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
+@@ -409,6 +412,10 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
+ 		if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
+ 			rdmsrl(MSR_LBR_INFO_0 + lbr_idx, task_ctx->lbr_info[i]);
  	}
- }
-@@ -75,7 +82,7 @@ static void kvm_perf_overflow_intr(struct perf_event *perf_event,
- 
- 	if (!test_and_set_bit(pmc->idx,
- 			      (unsigned long *)&pmu->reprogram_pmi)) {
--		__set_bit(pmc->idx, (unsigned long *)&pmu->global_status);
-+		kvm_perf_set_global_status(pmu, pmc->idx);
- 		kvm_make_request(KVM_REQ_PMU, pmc->vcpu);
- 
- 		/*
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index cadf91a..408ddc2 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -24,6 +24,7 @@ struct kvm_pmu_ops {
- 				    u8 unit_mask);
- 	unsigned (*find_fixed_event)(int idx);
- 	bool (*pmc_is_enabled)(struct kvm_pmc *pmc);
-+	void (*set_global_status)(struct kvm_pmu *pmu, u8 idx);
- 	struct kvm_pmc *(*pmc_idx_to_pmc)(struct kvm_pmu *pmu, int pmc_idx);
- 	struct kvm_pmc *(*msr_idx_to_pmc)(struct kvm_vcpu *vcpu, unsigned idx,
- 					  u64 *mask);
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index fd09777..6f74b69 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -413,6 +413,22 @@ static bool intel_pmu_access_lbr_msr(struct kvm_vcpu *vcpu,
- 	return ret;
- }
- 
-+static void intel_pmu_set_global_status(struct kvm_pmu *pmu, u8 idx)
-+{
-+	u64 guest_debugctl;
 +
-+	if (pmu->version >= 4) {
-+		guest_debugctl = vmcs_read64(GUEST_IA32_DEBUGCTL);
++	if (cpuc->vcpu_lbr)
++		rdmsrl(MSR_LBR_SELECT, task_ctx->lbr_sel);
 +
-+		if (guest_debugctl & DEBUGCTLMSR_FREEZE_LBRS_ON_PMI)
-+			__set_bit(GLOBAL_STATUS_LBRS_FROZEN,
-+				  (unsigned long *)&pmu->global_status);
-+		if (guest_debugctl & DEBUGCTLMSR_FREEZE_PERFMON_ON_PMI)
-+			__set_bit(GLOBAL_STATUS_COUNTERS_FROZEN,
-+				  (unsigned long *)&pmu->global_status);
-+	}
-+}
-+
- static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-@@ -597,6 +613,9 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 	pmu->global_ovf_ctrl_mask = pmu->global_ctrl_mask
- 			& ~(MSR_CORE_PERF_GLOBAL_OVF_CTRL_OVF_BUF |
- 			    MSR_CORE_PERF_GLOBAL_OVF_CTRL_COND_CHGD);
-+	if (pmu->version >= 4)
-+		pmu->global_ovf_ctrl_mask &= ~(GLOBAL_STATUS_LBRS_FROZEN |
-+					       GLOBAL_STATUS_COUNTERS_FROZEN);
- 	if (kvm_x86_ops->pt_supported())
- 		pmu->global_ovf_ctrl_mask &=
- 				~MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI;
-@@ -711,6 +730,7 @@ void intel_pmu_disable_save_guest_lbr(struct kvm_vcpu *vcpu)
- struct kvm_pmu_ops intel_pmu_ops = {
- 	.find_arch_event = intel_find_arch_event,
- 	.find_fixed_event = intel_find_fixed_event,
-+	.set_global_status = intel_pmu_set_global_status,
- 	.pmc_is_enabled = intel_pmc_is_enabled,
- 	.pmc_idx_to_pmc = intel_pmc_idx_to_pmc,
- 	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
+ 	task_ctx->valid_lbrs = i;
+ 	task_ctx->tos = tos;
+ 	task_ctx->lbr_stack_state = LBR_VALID;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 86605d1..e37ff82 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -721,6 +721,7 @@ struct x86_perf_task_context {
+ 	u64 lbr_from[MAX_LBR_ENTRIES];
+ 	u64 lbr_to[MAX_LBR_ENTRIES];
+ 	u64 lbr_info[MAX_LBR_ENTRIES];
++	u64 lbr_sel;
+ 	int tos;
+ 	int valid_lbrs;
+ 	int lbr_callstack_users;
 -- 
 2.7.4
 
