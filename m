@@ -2,74 +2,101 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C20C606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBCAC606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E10E2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662BE2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:25:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rWWOnVX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732644AbfGHVX1 (ORCPT
+        id S2405346AbfGHVZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 17:23:27 -0400
-Received: from verein.lst.de ([213.95.11.211]:37164 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732593AbfGHVX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 17:23:26 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3B5F468B05; Mon,  8 Jul 2019 23:23:25 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 23:23:25 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Guenter Roeck <linux@roeck-us.net>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Ungerer <gerg@linux-m68k.org>
-Subject: Re: [PATCH] m68k: don't select ARCH_HAS_DMA_PREP_COHERENT for
- nommu or coldfire
-Message-ID: <20190708212325.GA17641@lst.de>
-References: <20190708175101.19990-1-hch@lst.de> <CAMuHMdVrAVYWvQCh7AF1O7SRbuZb9fQp9fi0yQyZMeaOpfHyEw@mail.gmail.com>
+        Mon, 8 Jul 2019 17:25:58 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33973 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729474AbfGHVZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 17:25:57 -0400
+Received: by mail-qk1-f196.google.com with SMTP id t8so14504149qkt.1;
+        Mon, 08 Jul 2019 14:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YdeqtZytdEyqoIG26b8RfEFGIJ1HXoW9pGi40CoP3hY=;
+        b=rWWOnVX/gGIKyfUtaGpmot+HNvA3cWtH0kVO0h4nl6tXbcIquARDq4K26S34Z+yLSt
+         KEymIIbwKOsR2MSPrTptFunTkS886ieLQW8eLX4xHg4NImEfiwT9bZ/2qohqwFF/l2Lr
+         ayJvIuw6+8NpOTb6k0WbGIy/YCs/BHvl2cDlDYf9A74AylUKTwivq2or6XJpYn4UHJih
+         6qf5VXPpM9Iy8rffFKoXRWB04wHiXVNE8HC5XIlzb7ovwrP7Gjc6Sce3Z50iit7CDHVu
+         rRCyn8hXPB7LGtdY/BUIJHdfKtA31poSQtFyzaDW81y0biywXp/wAE1SLCQqu4gP9Pku
+         7Rig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YdeqtZytdEyqoIG26b8RfEFGIJ1HXoW9pGi40CoP3hY=;
+        b=scBuc1+xmHvWbbDJ/BDG6a6c/dmzdepPZHhaOXoF/t9WfI62d3bbO0VpL9y+YdNZQl
+         d0z9nYMCqWPHQ361TDps0izE53nytbLPY2gwjYZXkidVhhl8q+WM/LHwNNhbHg87r6VK
+         uQdC+GsELLpw7FpMaie8hpRSirYFT/BIN4x5ZPBaHCK0zL6zE2Kenwh2I/qwA3frdkZz
+         gwK977gmvn+4BRSNC/GfyZL/Lkgfv0d8JdLRZtV1Nsz29bzKgOzVqC6aAWj05H8TKyvP
+         QNEkBhMl6iZkJU2oa7zjnOo4D+cW9AHFCjEh8YXf2VilSARGz+C/QyGn6ZP6nJm6A5nO
+         GJxA==
+X-Gm-Message-State: APjAAAUZid8i28aEvFuSF7obdHZYDWF2BOE+5CQpf9Z4vkkTOOMRE1jW
+        9IkcYNa7g+loTTAlZkj9ZRH1vQ54hMf01Rx6dtY=
+X-Google-Smtp-Source: APXvYqwulGSqlqNeD6kh5CTROsEPVi3dGZ1cSE/R5NXoTMe6Mr8ScvM8gHkHmsWbgHbuNefYNtUh9BpV/qdomz9XXbw=
+X-Received: by 2002:ae9:de05:: with SMTP id s5mr13692127qkf.184.1562621156638;
+ Mon, 08 Jul 2019 14:25:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVrAVYWvQCh7AF1O7SRbuZb9fQp9fi0yQyZMeaOpfHyEw@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <CGME20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642@eucas1p2.samsung.com>
+ <20190704142503.23501-1-i.maximets@samsung.com> <CAJ+HfNi2EdLwtq9SfccZBymDMv_cW5+vxB-JLqxyvYS_TG3ScA@mail.gmail.com>
+In-Reply-To: <CAJ+HfNi2EdLwtq9SfccZBymDMv_cW5+vxB-JLqxyvYS_TG3ScA@mail.gmail.com>
+From:   William Tu <u9012063@gmail.com>
+Date:   Mon, 8 Jul 2019 14:25:20 -0700
+Message-ID: <CALDO+SYaR+txmTq_xhaw1cD4v7svtE7BD3mOsBx-X=MEVeZzzA@mail.gmail.com>
+Subject: Re: [PATCH bpf] xdp: fix possible cq entry leak
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Cc:     Ilya Maximets <i.maximets@samsung.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 10:39:48PM +0200, Geert Uytterhoeven wrote:
-> Hi Christoph,
-> 
-> On Mon, Jul 8, 2019 at 7:51 PM Christoph Hellwig <hch@lst.de> wrote:
+On Thu, Jul 4, 2019 at 11:49 PM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.co=
+m> wrote:
+>
+> On Thu, 4 Jul 2019 at 16:25, Ilya Maximets <i.maximets@samsung.com> wrote=
+:
 > >
-> > m68k only provides the dma_prep_coherent symbol when an mmu is enabled
-> 
-> arch_dma_prep_coherent
-> 
-> > and not on the coldfire platform.  Fix the Kconfig symbol selection
-> > up to match this.
+> > Completion queue address reservation could not be undone.
+> > In case of bad 'queue_id' or skb allocation failure, reserved entry
+> > will be leaked reducing the total capacity of completion queue.
 > >
-> > Fixes: 69878ef47562 ("m68k: Implement arch_dma_prep_coherent()")
-> 
-> Do you know the SHA1 for the other commit, that causes the issue when
-> combined with the above?
-
-I think the culprit is:
-
-commit c30700db9eaabb35e0b123301df35a6846e6b6b4
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Mon Jun 3 08:43:51 2019 +0200
-
-    dma-direct: provide generic support for uncached kernel segments
-
-
-Ad it turns out I can't just apply this fix to the dma-mapping tree
-because it doesn't have the m68k changes.  So either you'll have to
-queue it up, or I'll have to do secondary pull request to fix up
-the first one.  Maybe it is eiter if you just send it to Linus
-before I send the dma-mapping PR?
+> > Fix that by moving reservation to the point where failure is not
+> > possible. Additionally, 'queue_id' checking moved out from the loop
+> > since there is no point to check it there.
+> >
+>
+> Good catch, Ilya! Thanks for the patch!
+>
+> Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+>
+Thanks
+Tested-by: William Tu <u9012063@gmail.com>
