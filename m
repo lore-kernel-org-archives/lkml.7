@@ -2,84 +2,147 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A470C606B3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1BDC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE35D2064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9132064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="LELtTuNF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8CP2oM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731232AbfGHNFr (ORCPT
+        id S1731242AbfGHNGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:05:47 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41047 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729076AbfGHNFr (ORCPT
+        Mon, 8 Jul 2019 09:06:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37808 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731110AbfGHNGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:05:47 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 62so10879269lfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 06:05:46 -0700 (PDT)
+        Mon, 8 Jul 2019 09:06:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so5328864qto.4;
+        Mon, 08 Jul 2019 06:06:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eng.ucsd.edu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3G1xWiLRveQufUy4czQFKlLV6/S0Oxxp00Zgaxp779A=;
-        b=LELtTuNFVhVuc34C/jKXlj11scoGzAUkn7yJ5qGtaqRsSEzVvlsbLSg37OZ4KKACA/
-         cje50xyprIexkvMb7RWGLTvj7sw3OSymSOZ5e6YNjKNk9hMZYo/tvi839BSvbOhV5uIS
-         eFXwARDMSRQHrARp7Bzvfzo5ck1/jC1CBzpLw=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KoMC8LXO5EEvOm3VOqkpDs92MU/5hTNIGOWZvmPTxTU=;
+        b=V8CP2oM88CrqqxQemPWzixs304sty9d+wK6csQ+vtCaQYrekV5ZlstaBS7bOuqIr3l
+         Mwd1CG1xU3lRAuuUZa3EHYCWeVkbAX8ZkuITw4GC4NG9Xq7nzWwhPIo5xk9Nk9Q0TWik
+         Whi4alVNGxYYNv0WqGRb4kudphYuGaKL9TwzkL7Dxl5/jYZcKE0FlfmhfCKlZMKS8zco
+         r+mVEFtqAtg/X22DdLEHbMhcIVjrqFoeCT1FgpFXmitMAMmwHvZhUNlQjmYgl38jcHpX
+         RWj2en/j7DXVvckPefOzhnlgxVys2FUizC0RIliWrg/HeaUF8WoPjMcvbHf8VRfJESe4
+         Mvuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3G1xWiLRveQufUy4czQFKlLV6/S0Oxxp00Zgaxp779A=;
-        b=SCMfZd2t8hzMIqMEuFvKetwkFHVGk75W++3UipWeMtgJJ1HlC9iULgXiPGkbKjNPLJ
-         qBagAGtQRPAlIYKc5qqwCmHWw6tRyH3lfG4PNbGNwwc7gyyFIkLufkgY/CRyNQuZRrN4
-         ta3TaSJrrWPR88i0w3Rue3reHtA/N/DOfENSbeNMc5U3l1vYqw4dN0ou3KkVOGBTJzdx
-         BsFJbJaV94OTA+srvohhJZb/yzfvUS1q3Imt5//ZDUDkKLIBlE/vYTG1byj2et8/q8qo
-         hT6AmhQ2QYTp3if8LLqvp1af86kOsMbnaA8AvpOH/C9dASz6gRBEEnkp4wlTl/nCDRp7
-         N6Rw==
-X-Gm-Message-State: APjAAAWBltryj4fB3dpVQkTYnoyfi2R1bpH/exqvtAP7J9YBdm4KnpB1
-        OvsNPuPF3OLqilMs8W32Kj48OA==
-X-Google-Smtp-Source: APXvYqyu8KLlGXUs6ikA3V7LKlY+SPgLgJtLTRKkw/ZVGH2g7/mS/5KQzQQxFWnpBLpeyOYJifVEhg==
-X-Received: by 2002:a19:7f17:: with SMTP id a23mr9285124lfd.49.1562591145343;
-        Mon, 08 Jul 2019 06:05:45 -0700 (PDT)
-Received: from luke-XPS-13 (77-255-206-190.adsl.inetia.pl. [77.255.206.190])
-        by smtp.gmail.com with ESMTPSA id l25sm3640321lja.76.2019.07.08.06.05.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 06:05:44 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 06:05:42 -0700
-From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
-Subject: Re: [PATCH 3.16 000/129] 3.16.70-rc1 review
-Message-ID: <20190708130511.GA4626@luke-XPS-13>
-References: <lsq.1562518456.876074874@decadent.org.uk>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KoMC8LXO5EEvOm3VOqkpDs92MU/5hTNIGOWZvmPTxTU=;
+        b=kvpLFGQ/NX7aTMNdyRcBTvwjE589GWHXnNEI9DFY7tygACampW+P4UQihzmY0EuUEN
+         fls5KABEjGQKA0yuPGdqDErBN+6/fhSgYe3REO+iBFE7Ndo6XidYaYHf6q+A5JEs9YmA
+         9XyFXYCNuDyQZkKxt/YNSNXc5k7pOfE9XMdthrQa51+W8h0WKRfhD9ePg93X5F3b0vvA
+         nPvbKTsoWtdo5Koscx66URZXqYLGF5wNhG3yDF9RcwWS795wDS4ZyRleZgJLoxPMibm7
+         HJIkEtbCz9vCkq81lAyUfXvXB1VSrQEvQUoqjceF5qGcb9q7PmpOd91HrdTyKOeALNNY
+         4PwQ==
+X-Gm-Message-State: APjAAAXjOKTKpdL+jD5Wadt4c2MF8NrAxvmlVI+UkuJEqm6Z9iv15+tm
+        mZ+YAxSkx1RzNG1PAOWxtRXohvWb
+X-Google-Smtp-Source: APXvYqyUD6Ax2FLlVZ70ZPrHkQ+xZWbVy2xkBrPkuZCL3SJk9Jo5tvbYwmHL51eyTi7DL+N3gvHSUQ==
+X-Received: by 2002:ac8:1a9d:: with SMTP id x29mr14322373qtj.128.1562591190514;
+        Mon, 08 Jul 2019 06:06:30 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id v28sm5436669qkj.11.2019.07.08.06.06.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 06:06:29 -0700 (PDT)
+Subject: Re: [PATCH] gpio: tegra: fix debugfs compile error
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190708123843.3302581-1-arnd@arndb.de>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d30c122c-297e-3370-86d6-039388b48cea@gmail.com>
+Date:   Mon, 8 Jul 2019 16:06:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20190708123843.3302581-1-arnd@arndb.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, 
+08.07.2019 15:38, Arnd Bergmann пишет:
+> Without this header, some configurations now run into a build failure:
+> 
+> drivers/gpio/gpio-tegra.c:665:2: error: implicit declaration of function 'debugfs_create_file'
+>       [-Werror,-Wimplicit-function-declaration]
+>         debugfs_create_file("tegra_gpio", 0444, NULL, tgi,
+>         ^
+> drivers/gpio/gpio-tegra.c:665:2: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
+> drivers/gpio/gpio-tegra.c:666:9: error: use of undeclared identifier 'tegra_dbg_gpio_fops'
+> 
+> Remove the #ifdef here and let the compiler drop the unused
+> functions itself when debugfs_create_file() is an empty inline
+> function.
+> 
+> Fixes: a4de43049a1d ("gpio: tegra: Clean-up debugfs initialisation")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpio/gpio-tegra.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+> index 59b99d8c3647..dbcecbe5f52f 100644
+> --- a/drivers/gpio/gpio-tegra.c
+> +++ b/drivers/gpio/gpio-tegra.c
+> @@ -9,6 +9,7 @@
+>   *	Erik Gilling <konkers@google.com>
+>   */
+>  
+> +#include <linux/debugfs.h>
+>  #include <linux/err.h>
+>  #include <linux/init.h>
+>  #include <linux/irq.h>
+> @@ -22,6 +23,7 @@
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/pm.h>
+> +#include <linux/seq_file.h>
+>  
+>  #define GPIO_BANK(x)		((x) >> 5)
+>  #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
+> @@ -508,10 +510,6 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
+>  }
+>  #endif
+>  
+> -#ifdef CONFIG_DEBUG_FS
+> -
+> -#include <linux/debugfs.h>
+> -#include <linux/seq_file.h>
+>  
+>  static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
+>  {
+> @@ -538,7 +536,6 @@ static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
+>  }
+>  
+>  DEFINE_SHOW_ATTRIBUTE(tegra_dbg_gpio);
+> -#endif
+>  
+>  static const struct dev_pm_ops tegra_gpio_pm_ops = {
+>  	SET_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
+> 
 
-I got 1 error when applying this patch series to the latest linux-3.16.y
-stable branch
+The offending patch should be reverted already, please see [1].
 
-fs/fuse/file.c:218:3: error: implicit declaration of function ‘stream_open’
-
-Thanks, 
-- Luke
+[1] https://patchwork.ozlabs.org/patch/1128007/#2210871
