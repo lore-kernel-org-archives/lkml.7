@@ -2,118 +2,92 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DEAC606C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28879C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404B3216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E8120665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:48:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ho5fb5e9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AckAuQqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732003AbfGHOqo (ORCPT
+        id S1731868AbfGHOsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:46:44 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42515 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731924AbfGHOqn (ORCPT
+        Mon, 8 Jul 2019 10:48:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34840 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728499AbfGHOsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:46:43 -0400
-Received: by mail-ed1-f67.google.com with SMTP id v15so8170339eds.9;
-        Mon, 08 Jul 2019 07:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5eQOVvdsTaaanCiXUg5m0ecZfqkTs7/uYhCRVIzkQcY=;
-        b=ho5fb5e98j7lt1EqeRVgFK9P2ThmVuNWY/IsNL32+L6vGvmk6b6O/bdL1Yanif0Ozb
-         C+14ZlVaESAoumg1W88RpiOB+W8BfJ2H/bsHXNRP4oLpbwZzgBdgPq0Bp1hRpJv5YFT4
-         WDHyzTLj8VC4p0fVvhyzGuAsTu+ztmqL3oC2L+mhVQ+lE4l3Y0p4pN9mbV+dBye4sIjb
-         2gpvmBV2IMoHL6cl7qtkVIK/elGiX/5uPqRAU3xMsXVGRY76vEnTcLP2P1DHQ1SD2kFZ
-         ESdKiA0/5bbWCBsdv0374XyjD05TZ6hgkjvFlYOximPS0FPAfpRsfSPK3110UeYli4Vr
-         eBHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5eQOVvdsTaaanCiXUg5m0ecZfqkTs7/uYhCRVIzkQcY=;
-        b=ZKH/guiJd0QkgdpSFzp7NfU6qHTEj15DXkCFKzsEJY69BDXJpn4GFPeOOjg7bWucNg
-         eqnwr9/E2hZiexrhDb7aZfGbwn0a2oph/92DXXpEvk5+iKOaw4ITG190VC6JDREUJTGE
-         IPq7AX94y6JCy3NCJ2QpzgbcbXc9pdMC+9iVWpppRmNhOXZWjwh4zn3HCgCJz+HSNyPx
-         xIsgQF+wfLqLTQzKEeyDEpSBnQ0Mra9iegLqdQP8FKOIaClIGxx50NwBnQK3T9aaMSLS
-         EIiMCZVQnQJa6drpaJ1uJ5F+gdQRtqgndlxmkBvUnCfLD6M8G8bzvutx8SB4rmwT1ez2
-         QxIQ==
-X-Gm-Message-State: APjAAAWum3iyNSTW5HMzHGJcm0TvOi/APX4ccfeTX9wxWobGUTDDVMsE
-        Z8+vjHVZN7fK919pQzBNWpPtmhPfLuTZKA==
-X-Google-Smtp-Source: APXvYqzsH/zRjVF76SiNwOOyuGr87Edn3PdTFH2U9QMtHFyQ3k6tAFR2z82Bhu61OHAzBrKaNrhaUA==
-X-Received: by 2002:a17:906:454d:: with SMTP id s13mr17053544ejq.255.1562597201565;
-        Mon, 08 Jul 2019 07:46:41 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id j7sm5767060eda.97.2019.07.08.07.46.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 07:46:40 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 07:46:38 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Miaoqing Pan <miaoqing@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rakesh Pillai <pillair@codeaurora.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Balaji Pothunoori <bpothuno@codeaurora.org>,
-        Wen Gong <wgong@codeaurora.org>,
-        Pradeep kumar Chitrapu <pradeepc@codeaurora.org>,
-        Sriram R <srirrama@codeaurora.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] ath10k: work around uninitialized vht_pfr variable
-Message-ID: <20190708144638.GA43693@archlinux-epyc>
-References: <20190708125050.3689133-1-arnd@arndb.de>
+        Mon, 8 Jul 2019 10:48:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cANsFjm+JWIcsDzpCtNJFjF3hQ3nZakimH4VaLTVSxY=; b=AckAuQqa73H6/hQ1nzW6pLF1S
+        O33B3m8zxunnN/ELUf0QDNNrY20PtnBQvHvkueJNBK3f1w2zTqEbe4Q18NaKGXfLwfWOotNaDnWiS
+        Y3aXcbkuqjFkCFWW84s44hDJ5tE7fpIzqv3iAbYZYgNe6Ie2H/YgMlSyFnql7lufAlSy8Wiv18QS0
+        TGnNaJo2h8x+HA+XBW6guVuXK9q3KG4O7a7z8axzddzN+5srKaJWUZ7MrpmMX4d3MOgUvDNrbirBZ
+        oWXmZyqADUOBXWVyTNwZ1HURRQT2nVZDgIwvC/5KDvTeY/cWMOVCnCUlCkxtlGprWV0EaJKQ1uOZZ
+        0qPKVHRXg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkUwT-0001tT-3s; Mon, 08 Jul 2019 14:48:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6313520B31C22; Mon,  8 Jul 2019 16:48:31 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 16:48:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Wei Wang <wei.w.wang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
+        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
+        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
+Subject: Re: [PATCH v7 08/12] KVM/x86/vPMU: Add APIs to support host
+ save/restore the guest lbr stack
+Message-ID: <20190708144831.GN3402@hirez.programming.kicks-ass.net>
+References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
+ <1562548999-37095-9-git-send-email-wei.w.wang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190708125050.3689133-1-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1562548999-37095-9-git-send-email-wei.w.wang@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 02:50:06PM +0200, Arnd Bergmann wrote:
-> As clang points out, the vht_pfr is assigned to a struct member
-> without being initialized in one case:
+On Mon, Jul 08, 2019 at 09:23:15AM +0800, Wei Wang wrote:
+> From: Like Xu <like.xu@intel.com>
 > 
-> drivers/net/wireless/ath/ath10k/mac.c:7528:7: error: variable 'vht_pfr' is used uninitialized whenever 'if' condition
->       is false [-Werror,-Wsometimes-uninitialized]
->                 if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
->                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/ath/ath10k/mac.c:7551:20: note: uninitialized use occurs here
->                 arvif->vht_pfr = vht_pfr;
->                                  ^~~~~~~
-> drivers/net/wireless/ath/ath10k/mac.c:7528:3: note: remove the 'if' if its condition is always true
->                 if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
->                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/ath/ath10k/mac.c:7483:12: note: initialize the variable 'vht_pfr' to silence this warning
->         u8 vht_pfr;
+> This patch adds support to enable/disable the host side save/restore
+
+This patch should be disqualified on Changelog alone...
+
+  Documentation/process/submitting-patches.rst:instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
+
+> for the guest lbr stack on vCPU switching. To enable that, the host
+> creates a perf event for the vCPU, and the event attributes are set
+> to the user callstack mode lbr so that all the conditions are meet in
+> the host perf subsystem to save the lbr stack on task switching.
 > 
-> Add an explicit but probably incorrect initialization here.
-> I suspect we want a better fix here, but chose this approach to
-> illustrate the issue.
-
-Yup, I reached out to the maintainers when this issue first cropped up,
-should have taken your approach though.
-
-https://lore.kernel.org/lkml/20190702181837.GA118849@archlinux-epyc/
-
-Initializing to zero is better than uninitialized.
-
+> The host side lbr perf event are created only for the purpose of saving
+> and restoring the lbr stack. There is no need to enable the lbr
+> functionality for this perf event, because the feature is essentially
+> used in the vCPU. So perf_event_create is invoked with need_counter=false
+> to get no counter assigned for the perf event.
 > 
-> Fixes: 8b97b055dc9d ("ath10k: fix failure to set multiple fixed rate")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> The vcpu_lbr field is added to cpuc, to indicate if the lbr perf event is
+> used by the vCPU only for context switching. When the perf subsystem
+> handles this event (e.g. lbr enable or read lbr stack on PMI) and finds
+> it's non-zero, it simply returns.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+*WHY* does the host need to save/restore? Why not make VMENTER/VMEXIT do
+this?
+
+Many of these patches don't explain why things are done; that's a
+problem.
