@@ -2,83 +2,72 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6007C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E76C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A650F20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED51C20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbfGHHJE (ORCPT
+        id S1729356AbfGHHJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:09:04 -0400
-Received: from mga01.intel.com ([192.55.52.88]:33901 "EHLO mga01.intel.com"
+        Mon, 8 Jul 2019 03:09:08 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24913 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbfGHHJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:09:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1727481AbfGHHJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 03:09:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 00:09:02 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 00:09:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,465,1557212400"; 
-   d="scan'208";a="167593116"
-Received: from liujing-mobl.ccr.corp.intel.com (HELO [10.238.129.57]) ([10.238.129.57])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2019 00:09:01 -0700
-Subject: Re: [PATCH 5/5] KVM: cpuid: remove has_leaf_count from struct
- kvm_cpuid_param
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20190704140715.31181-1-pbonzini@redhat.com>
- <20190704140715.31181-6-pbonzini@redhat.com>
-From:   Jing Liu <jing2.liu@linux.intel.com>
-Message-ID: <bb5e81f4-bb34-2841-0fa1-63876b97e54c@linux.intel.com>
-Date:   Mon, 8 Jul 2019 15:09:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+   d="scan'208";a="248729596"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2019 00:09:00 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hkNlj-0007Il-Oj; Mon, 08 Jul 2019 15:08:59 +0800
+Date:   Mon, 8 Jul 2019 15:08:43 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Tony Xie <tony.xie@rock-chips.com>
+Cc:     kbuild-all@01.org, Lee Jones <lee.jones@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH linux-next] mfd: rk808: rk8xx_pm_ops can be static
+Message-ID: <20190708070843.GA23605@lkp-kbuild12>
+References: <201907081550.e4JO1ctY%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190704140715.31181-6-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201907081550.e4JO1ctY%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
 
-On 7/4/2019 10:07 PM, Paolo Bonzini wrote:
-> The has_leaf_count member was originally added for KVM's paravirtualization
-> CPUID leaves.  However, since then the leaf count _has_ been added to those
-> leaves as well, so we can drop that special case.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[...]
-> @@ -835,11 +834,10 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
->   	int limit, nent = 0, r = -E2BIG, i;
->   	u32 func;
->   	static const struct kvm_cpuid_param param[] = {
-> -		{ .func = 0, .has_leaf_count = true },
-> -		{ .func = 0x80000000, .has_leaf_count = true },
-> -		{ .func = 0xC0000000, .qualifier = is_centaur_cpu, .has_leaf_count = true },
-> +		{ .func = 0 },
-> +		{ .func = 0x80000000 },
-> +		{ .func = 0xC0000000, .qualifier = is_centaur_cpu },
+Fixes: 586c1b4125b3 ("mfd: rk808: Add RK817 and RK809 support")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ rk808.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->   		{ .func = KVM_CPUID_SIGNATURE },
-> -		{ .func = KVM_CPUID_FEATURES },
-
-It seems the two func are introduced by 2b5e97e, as paravirtual cpuid.
-But when searching KVM_CPUID_SIGNATURE, there seems no caller requesting
-this cpuid. Meanwhile, I felt curious if KVM_CPUID_FEATURES is still in 
-use but it seems kvm_update_cpuid() uses that. Not sure which spec 
-introduces the latest pv cpuid.
-
-Thanks,
-Jing
-
-[...]
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index 6ee1c46..52666a9 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -751,7 +751,7 @@ static int rk8xx_resume(struct device *dev)
+ 
+ 	return ret;
+ }
+-SIMPLE_DEV_PM_OPS(rk8xx_pm_ops, rk8xx_suspend, rk8xx_resume);
++static SIMPLE_DEV_PM_OPS(rk8xx_pm_ops, rk8xx_suspend, rk8xx_resume);
+ 
+ static struct i2c_driver rk808_i2c_driver = {
+ 	.driver = {
