@@ -2,150 +2,124 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ACCC5B57D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8A7C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3B320844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF6420844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:58:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="myXVVq/D"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kCkonxU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfGHI4K (ORCPT
+        id S1729104AbfGHI6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:56:10 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35236 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbfGHI4K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:56:10 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so7891653plp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=caOy47iObIWpUBNz9YBs1LqOSsSKOy2UuatZJ0Q43mo=;
-        b=myXVVq/De7PJ2z5d05SOEeW9WqlEyQ4+XK7XGpMu9Odl2pSEwuPPfvChi0jyw5HI/Y
-         xuQngalAkxwy/I+4pwJIpROTjgVrNECyKTo9JpQzuE+Fi5P2WKsW6/eGA9Awbr9WV1sl
-         SKYnJujSLhGvFnD+06SsWwRFcixnQ2wEL6xOWYiF6VyBQWrX3Hk5M/JtZia6vnYoX9/k
-         oX0O2CP1TL3Ma6mtYxuqAfS71NpdKPw3hWVN5yu0Hj+vXYAuiPwGBIn9Im3CBb26cB1d
-         eD35TTwwNZk5Sk5K0oVnz7hZCILs288rCBrPEDFZ1vQx2PDAlff0BHg5q48D66F9TkjT
-         T6ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=caOy47iObIWpUBNz9YBs1LqOSsSKOy2UuatZJ0Q43mo=;
-        b=Uo2RWGSPcK0QJUuS9K36yf2q3z180mE1Ui8EiMQnBbgPggkl0SFhctHqIODkZrL9xb
-         s/xXeikCZwiWjUusyVMrLM7hcNT5yU3BOGyV2EhvfVOMQ80iTi6rD3EHxqs6Tk6I8LXH
-         yElrzt1z1yK1eiBdFdVBZZoCj7WLGjd2i8iscoRu0QG64uPXJUNtDml7AMa4KypezRpd
-         j+eyvg/4sIQrL1v9unBRR+HLk3bLMAXusg1BN7/ODdzQWEBL12/btVp3dZdh4g5eXImS
-         jVkHO4jnQQ/+f3200G/A5KElIN+kaBF4W2CtdVCfTEimvX5GrF/s52aZJetLxo3Z5Ptm
-         m0FA==
-X-Gm-Message-State: APjAAAWYg+wVS4Pc+VwKQo008vWb5eLKq0gyuIOsQF7zjfHNMDi3c8bp
-        j+JISJHfzkcgHWtxxilY0oettQ==
-X-Google-Smtp-Source: APXvYqx9dBbfaCeSrlWG9YwA8C4t0s8GIS3+7DlJ/SNiwhtLdjCXdF/a0g0X0AN2yjaZsVJ4/G87lg==
-X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr22483969plo.290.1562576169340;
-        Mon, 08 Jul 2019 01:56:09 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id p68sm26882425pfb.80.2019.07.08.01.56.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 01:56:08 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 14:26:06 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3] cpufreq/pasemi: fix an use-after-free in
- pas_cpufreq_cpu_init()
-Message-ID: <20190708085606.tqhb3dgotj7sztyj@vireshk-i7>
-References: <1562575726-17438-1-git-send-email-wen.yang99@zte.com.cn>
+        Mon, 8 Jul 2019 04:58:24 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62390 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727384AbfGHI6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 04:58:24 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45hzr9568jz9txqj;
+        Mon,  8 Jul 2019 10:58:17 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=kCkonxU1; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ZqjmSVTnCCYU; Mon,  8 Jul 2019 10:58:17 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45hzr93xKRz9txqh;
+        Mon,  8 Jul 2019 10:58:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1562576297; bh=SEEbC4SVXv54ubiPmqZ/ohTZiQJHhOXXhOXl6IoW5uo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kCkonxU12IqU+OKoT05jmROmtyo56NkBiacWHjmlTOlOlpzmHasGBbSVt49awlH4a
+         Ohvd50OfTyqC0MMR/Y/9hwvvVqL9oAhvHf6y1Fp0jfEBkr1KgWs5ACvOxOcuJmT6Xq
+         4Vvk15dmwt8kvZk6z/25IRcXmt8UoTUKAIuyHbAQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3D1998B790;
+        Mon,  8 Jul 2019 10:58:22 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id U1bNWRlSm0cg; Mon,  8 Jul 2019 10:58:22 +0200 (CEST)
+Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1CA328B78C;
+        Mon,  8 Jul 2019 10:58:22 +0200 (CEST)
+Subject: Re: [PATCH v3 3/3] powerpc/module64: Use symbolic instructions names.
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Ulirch Weigand <Ulrich.Weigand@de.ibm.com>
+References: <298f344bdb21ab566271f5d18c6782ed20f072b7.1556865423.git.christophe.leroy@c-s.fr>
+ <6fb61d1c9104b0324d4a9c445f431c0928c7ea25.1556865423.git.christophe.leroy@c-s.fr>
+ <87bly5ibsd.fsf@concordia.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <9bc00fb4-379a-e19b-4d27-32fff8f9781b@c-s.fr>
+Date:   Mon, 8 Jul 2019 10:58:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562575726-17438-1-git-send-email-wen.yang99@zte.com.cn>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <87bly5ibsd.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-07-19, 16:48, Wen Yang wrote:
-> The cpu variable is still being used in the of_get_property() call
-> after the of_node_put() call, which may result in use-after-free.
-> 
-> Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> v3: fix a leaked reference.
-> v2: clean up the code according to the advice of viresh.
-> 
->  drivers/cpufreq/pasemi-cpufreq.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-> index 6b1e4ab..9dc5163 100644
-> --- a/drivers/cpufreq/pasemi-cpufreq.c
-> +++ b/drivers/cpufreq/pasemi-cpufreq.c
-> @@ -128,20 +128,20 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	int cur_astate, idx;
->  	struct resource res;
->  	struct device_node *cpu, *dn;
-> -	int err = -ENODEV;
-> +	int err;
->  
->  	cpu = of_get_cpu_node(policy->cpu, NULL);
-> -
-> -	of_node_put(cpu);
->  	if (!cpu)
-> -		goto out;
-> +		return -ENODEV;
->  
->  	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
->  	if (!dn)
->  		dn = of_find_compatible_node(NULL, NULL,
->  					     "pasemi,pwrficient-sdc");
-> -	if (!dn)
-> +	if (!dn) {
-> +		err = -ENODEV;
->  		goto out;
-> +	}
 
-Please restore the blank line here.
 
->  	err = of_address_to_resource(dn, 0, &res);
->  	of_node_put(dn);
->  	if (err)
-> @@ -196,6 +196,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	policy->cur = pas_freqs[cur_astate].frequency;
->  	ppc_proc_freq = policy->cur * 1000ul;
->  
-> +	of_node_put(cpu);
->  	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
->  
->  out_unmap_sdcpwr:
-> @@ -204,6 +205,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  out_unmap_sdcasr:
->  	iounmap(sdcasr_mapbase);
->  out:
-> +	of_node_put(cpu);
->  	return err;
->  }
->  
-> -- 
-> 2.9.5
+Le 08/07/2019 à 02:56, Michael Ellerman a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> To increase readability/maintainability, replace hard coded
+>> instructions values by symbolic names.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>> v3: fixed warning by adding () in an 'if' around X | Y (unlike said in v2 history, this change was forgotten in v2)
+>> v2: rearranged comments
+>>
+>>   arch/powerpc/kernel/module_64.c | 53 +++++++++++++++++++++++++++--------------
+>>   1 file changed, 35 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
+>> index c2e1b06253b8..b33a5d5e2d35 100644
+>> --- a/arch/powerpc/kernel/module_64.c
+>> +++ b/arch/powerpc/kernel/module_64.c
+>> @@ -704,18 +711,21 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+> ...
+>>   			/*
+>>   			 * If found, replace it with:
+>>   			 *	addis r2, r12, (.TOC.-func)@ha
+>>   			 *	addi r2, r12, (.TOC.-func)@l
+>>   			 */
+>> -			((uint32_t *)location)[0] = 0x3c4c0000 + PPC_HA(value);
+>> -			((uint32_t *)location)[1] = 0x38420000 + PPC_LO(value);
+>> +			((uint32_t *)location)[0] = PPC_INST_ADDIS | __PPC_RT(R2) |
+>> +						    __PPC_RA(R12) | PPC_HA(value);
+>> +			((uint32_t *)location)[1] = PPC_INST_ADDI | __PPC_RT(R2) |
+>> +						    __PPC_RA(R12) | PPC_LO(value);
+>>   			break;
+> 
+> This was crashing and it's amazing how long you can stare at a
+> disassembly and not see the difference between `r2` and `r12` :)
 
--- 
-viresh
+Argh, yes. I was misleaded by the comment I guess. Sorry for that and 
+thanks for fixing.
+
+Christophe
+
+> 
+> Fixed now.
+> 
+> cheers
+> 
