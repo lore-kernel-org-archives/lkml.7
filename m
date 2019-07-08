@@ -2,189 +2,214 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8993FC48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372CCC606A1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B7D2084A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:44:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CtdS7i61"
+	by mail.kernel.org (Postfix) with ESMTP id 10F4C2084A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbfGHIoL (ORCPT
+        id S1729581AbfGHIoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:44:11 -0400
-Received: from ozlabs.org ([203.11.71.1]:50111 "EHLO ozlabs.org"
+        Mon, 8 Jul 2019 04:44:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:41924 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729555AbfGHIoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:44:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hzWp2ps6z9sNy;
-        Mon,  8 Jul 2019 18:44:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562575446;
-        bh=9iHnAV5x+eygmg72q9V9IpKKCZ5gF1idv4hhMUU9d1w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CtdS7i61kZ2nJIP99nJ7iZcpJOgnpZR9Bn6GsDLtyE17ipw5smgUD1DBihzJuCdtV
-         hy9UI/6xHnn3W1hb9l/z4sCSTsJ3bm60M3HM4E9yAoVJ6UnI/PDJnTs4pKFdlpsHYg
-         3tu0DrihODx54qVjbAkwqeHulXYwvZ42ecaTAjKnfGHkCoEWFHhf7YEMp5g9lapOC3
-         KE2d/7KqLTl7xuGXP/syCOkvYgdcSzezHu/EEJjkUec9yNuDyVdnKghWlXV4ZktPsf
-         UIovBvUW7ZSfFcipgP3d/80eKN9iTq67AV2nawogQHW22l7+sa4yac7LApj8u6Cc0z
-         gp4OEaILS6nCA==
-Date:   Mon, 8 Jul 2019 18:44:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Trond Myklebust <trondmy@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>
-Subject: linux-next: manual merge of the driver-core tree with the nfs tree
-Message-ID: <20190708184402.4cd912ac@canb.auug.org.au>
+        id S1729564AbfGHIoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 04:44:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9EAA360;
+        Mon,  8 Jul 2019 01:44:10 -0700 (PDT)
+Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 953E23F246;
+        Mon,  8 Jul 2019 01:44:08 -0700 (PDT)
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH v11 0/5] Add utilization clamping support (CGroups API)
+Date:   Mon,  8 Jul 2019 09:43:52 +0100
+Message-Id: <20190708084357.12944-1-patrick.bellasi@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/uXRP4x1pD_=gQ7L6IDWX1GM"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uXRP4x1pD_=gQ7L6IDWX1GM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi all, this is a follow up of:
 
-Hi all,
+  https://lore.kernel.org/lkml/20190621084217.8167-1-patrick.bellasi@arm.com/
 
-Today's linux-next merge of the driver-core tree got a conflict in:
+to respin all the bits not yet queued by PeterZ and addressing all Tejun's
+requests from previous review:
 
-  net/sunrpc/debugfs.c
+ - remove checks for cpu_uclamp_{min,max}_write()s from root group
+ - remove checks on "protections" being smaller then "limits"
+ - rephrase uclamp extension description to avoid explicit
+   mentioning of the bandwidth concept
 
-between commit:
+the series is based on top of:
 
-  2f34b8bfae19 ("SUNRPC: add links for all client xprts to debugfs")
+   tj/cgroup.git	for-5.3
+   tip/tip.git		sched/core
 
-from the nfs tree and commit:
+I hope this version covers all major details about the expected behavior
+and delegation model. The code however can still benefit from a better
+review, looking forward for any additional feedback.
 
-  0a0762c6c604 ("sunrpc: no need to check return value of debugfs_create fu=
-nctions")
-
-from the driver-core tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
 Cheers,
-Stephen Rothwell
+Patrick
 
-diff --cc net/sunrpc/debugfs.c
-index 105bea190a45,707d7aab1546..000000000000
---- a/net/sunrpc/debugfs.c
-+++ b/net/sunrpc/debugfs.c
-@@@ -118,60 -117,40 +117,52 @@@ static const struct file_operations tas
-  	.release	=3D tasks_release,
-  };
- =20
- +static int do_xprt_debugfs(struct rpc_clnt *clnt, struct rpc_xprt *xprt, =
-void *numv)
- +{
- +	int len;
- +	char name[24]; /* enough for "../../rpc_xprt/ + 8 hex digits + NULL */
- +	char link[9]; /* enough for 8 hex digits + NULL */
- +	int *nump =3D numv;
- +
- +	if (IS_ERR_OR_NULL(xprt->debugfs))
- +		return 0;
- +	len =3D snprintf(name, sizeof(name), "../../rpc_xprt/%s",
- +		       xprt->debugfs->d_name.name);
- +	if (len > sizeof(name))
- +		return -1;
- +	if (*nump =3D=3D 0)
- +		strcpy(link, "xprt");
- +	else {
- +		len =3D snprintf(link, sizeof(link), "xprt%d", *nump);
- +		if (len > sizeof(link))
- +			return -1;
- +	}
-- 	if (!debugfs_create_symlink(link, clnt->cl_debugfs, name))
-- 		return -1;
-++	debugfs_create_symlink(link, clnt->cl_debugfs, name);
- +	(*nump)++;
- +	return 0;
- +}
- +
-  void
-  rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
-  {
-  	int len;
- -	char name[24]; /* enough for "../../rpc_xprt/ + 8 hex digits + NULL */
- -	struct rpc_xprt *xprt;
- +	char name[9]; /* enough for 8 hex digits + NULL */
- +	int xprtnum =3D 0;
- =20
-- 	/* Already registered? */
-- 	if (clnt->cl_debugfs || !rpc_clnt_dir)
-- 		return;
--=20
-  	len =3D snprintf(name, sizeof(name), "%x", clnt->cl_clid);
-  	if (len >=3D sizeof(name))
-  		return;
- =20
-  	/* make the per-client dir */
-  	clnt->cl_debugfs =3D debugfs_create_dir(name, rpc_clnt_dir);
-- 	if (!clnt->cl_debugfs)
-- 		return;
- =20
-  	/* make tasks file */
-- 	if (!debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs,
-- 				 clnt, &tasks_fops))
-- 		goto out_err;
-+ 	debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs, clnt,
-+ 			    &tasks_fops);
- =20
- -	rcu_read_lock();
- -	xprt =3D rcu_dereference(clnt->cl_xprt);
- -	/* no "debugfs" dentry? Don't bother with the symlink. */
- -	if (IS_ERR_OR_NULL(xprt->debugfs)) {
- -		rcu_read_unlock();
- -		return;
- -	}
- -	len =3D snprintf(name, sizeof(name), "../../rpc_xprt/%s",
- -			xprt->debugfs->d_name.name);
- -	rcu_read_unlock();
- -
- -	if (len >=3D sizeof(name))
- +	if (rpc_clnt_iterate_for_each_xprt(clnt, do_xprt_debugfs, &xprtnum) < 0)
-  		goto out_err;
- =20
- -	debugfs_create_symlink("xprt", clnt->cl_debugfs, name);
- -
-  	return;
-  out_err:
-  	debugfs_remove_recursive(clnt->cl_debugfs);
 
---Sig_/uXRP4x1pD_=gQ7L6IDWX1GM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Series Organization
+===================
 
------BEGIN PGP SIGNATURE-----
+This series contains just the remaining bits of the original posting:
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0jAlIACgkQAVBC80lX
-0Gx/hwf+OdQB9hhf8/q2PaTAveekef/bng7zIuO+8jukNi1ufafFfmBi2JzywSbI
-wSlYbT54SHDfTuUFYbKjMBsWiR/sxUJ++Kn5bWd/shhImYfZ7H6hKq0Zbifxi3w5
-bduOIJ+hH8RMUyat2XorJHIQRyzC0CGNKEjSNjnHeo3A8woQWN+jg3q++g5KhOTD
-mgPLzgDi1yvfd46/yYM0oVI7Ak08NlxL//lT76h90DI84NU9/NHaB4ea9CfUDtOL
-+u+84qPqnlHp8NlE+RRBhtkY3pZU2YRAfml6FZCc83kSPY13AjSpqDIPYC70nVKP
-q9S/lOoIXaQXvjTeEKc8K5kZR8KCfQ==
-=KalS
------END PGP SIGNATURE-----
+ - Patches [0-5]: Per task group (secondary) API
 
---Sig_/uXRP4x1pD_=gQ7L6IDWX1GM--
+and it is based on today's tj/cgroup/for-5.3 and tip/sched/core.
+
+The full tree is available here:
+
+   git://linux-arm.org/linux-pb.git   lkml/utilclamp_v11
+   http://www.linux-arm.org/git?p=linux-pb.git;a=shortlog;h=refs/heads/lkml/utilclamp_v11
+
+where you can also get the patches already queued in tip/sched/core
+
+ - Patches [01-07]: Per task (primary) API
+ - Patches [08-09]: Schedutil integration for FAIR and RT tasks
+ - Patches [10-11]: Integration with EAS's energy_compute()
+
+
+Newcomer's Short Abstract
+=========================
+
+The Linux scheduler tracks a "utilization" signal for each scheduling entity
+(SE), e.g. tasks, to know how much CPU time they use. This signal allows the
+scheduler to know how "big" a task is and, in principle, it can support
+advanced task placement strategies by selecting the best CPU to run a task.
+Some of these strategies are represented by the Energy Aware Scheduler [1].
+
+When the schedutil cpufreq governor is in use, the utilization signal allows
+the Linux scheduler to also drive frequency selection. The CPU utilization
+signal, which represents the aggregated utilization of tasks scheduled on that
+CPU, is used to select the frequency which best fits the workload generated by
+the tasks.
+
+The current translation of utilization values into a frequency selection is
+simple: we go to max for RT tasks or to the minimum frequency which can
+accommodate the utilization of DL+FAIR tasks.
+However, utilization values by themselves cannot convey the desired
+power/performance behaviors of each task as intended by user-space.
+As such they are not ideally suited for task placement decisions.
+
+Task placement and frequency selection policies in the kernel can be improved
+by taking into consideration hints coming from authorized user-space elements,
+like for example the Android middleware or more generally any "System
+Management Software" (SMS) framework.
+
+Utilization clamping is a mechanism which allows to "clamp" (i.e. filter) the
+utilization generated by RT and FAIR tasks within a range defined by user-space.
+The clamped utilization value can then be used, for example, to enforce a
+minimum and/or maximum frequency depending on which tasks are active on a CPU.
+
+The main use-cases for utilization clamping are:
+
+ - boosting: better interactive response for small tasks which
+   are affecting the user experience.
+
+   Consider for example the case of a small control thread for an external
+   accelerator (e.g. GPU, DSP, other devices). Here, from the task utilization
+   the scheduler does not have a complete view of what the task's requirements
+   are and, if it's a small utilization task, it keeps selecting a more energy
+   efficient CPU, with smaller capacity and lower frequency, thus negatively
+   impacting the overall time required to complete task activations.
+
+ - capping: increase energy efficiency for background tasks not affecting the
+   user experience.
+
+   Since running on a lower capacity CPU at a lower frequency is more energy
+   efficient, when the completion time is not a main goal, then capping the
+   utilization considered for certain (maybe big) tasks can have positive
+   effects, both on energy consumption and thermal headroom.
+   This feature allows also to make RT tasks more energy friendly on mobile
+   systems where running them on high capacity CPUs and at the maximum
+   frequency is not required.
+
+From these two use-cases, it's worth noticing that frequency selection
+biasing, introduced by patches 9 and 10 of this series, is just one possible
+usage of utilization clamping. Another compelling extension of utilization
+clamping is in helping the scheduler in making tasks placement decisions.
+
+Utilization is (also) a task specific property the scheduler uses to know
+how much CPU bandwidth a task requires, at least as long as there is idle time.
+Thus, the utilization clamp values, defined either per-task or per-task_group,
+can represent tasks to the scheduler as being bigger (or smaller) than what
+they actually are.
+
+Utilization clamping thus enables interesting additional optimizations, for
+example on asymmetric capacity systems like Arm big.LITTLE and DynamIQ CPUs,
+where:
+
+ - boosting: try to run small/foreground tasks on higher-capacity CPUs to
+   complete them faster despite being less energy efficient.
+
+ - capping: try to run big/background tasks on low-capacity CPUs to save power
+   and thermal headroom for more important tasks
+
+This series does not present this additional usage of utilization clamping but
+it's an integral part of the EAS feature set, where [2] is one of its main
+components.
+
+Android kernels use SchedTune, a solution similar to utilization clamping, to
+bias both 'frequency selection' and 'task placement'. This series provides the
+foundation to add similar features to mainline while focusing, for the
+time being, just on schedutil integration.
+
+
+References
+==========
+
+[1] Energy Aware Scheduling
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/scheduler/sched-energy.txt?h=v5.1
+
+[2] Expressing per-task/per-cgroup performance hints
+    Linux Plumbers Conference 2018
+    https://linuxplumbersconf.org/event/2/contributions/128/
+
+
+Patrick Bellasi (5):
+  sched/core: uclamp: Extend CPU's cgroup controller
+  sched/core: uclamp: Propagate parent clamps
+  sched/core: uclamp: Propagate system defaults to root group
+  sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
+  sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+
+ Documentation/admin-guide/cgroup-v2.rst |  30 +++
+ init/Kconfig                            |  22 ++
+ kernel/sched/core.c                     | 335 +++++++++++++++++++++++-
+ kernel/sched/sched.h                    |   8 +
+ 4 files changed, 392 insertions(+), 3 deletions(-)
+
+-- 
+2.21.0
+
