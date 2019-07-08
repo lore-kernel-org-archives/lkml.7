@@ -2,117 +2,75 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719D4C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41826C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5BA20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9B42086C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbfGHHOW (ORCPT
+        id S1729381AbfGHHP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:14:22 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35991 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfGHHOV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:14:21 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hkNqt-0000Xy-P7; Mon, 08 Jul 2019 09:14:19 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hkNqt-0001y2-4P; Mon, 08 Jul 2019 09:14:19 +0200
-Date:   Mon, 8 Jul 2019 09:14:19 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: nvmem creates multiple devices with the same name
-Message-ID: <20190708071419.eqhajizbipt24xl3@pengutronix.de>
-References: <20190521085641.i6g5aijwa5zbolah@pengutronix.de>
- <a9ccac90-7b2f-41da-2ca9-ca3bba52781b@linaro.org>
- <20190521092107.zpdkkhaanzruhqui@pengutronix.de>
- <20190701080642.4oxmw7c3rmwrt5ee@pengutronix.de>
- <45d0cfaf-2511-4b1e-f4da-b67fa9f9e867@linaro.org>
+        Mon, 8 Jul 2019 03:15:56 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2175 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725903AbfGHHP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 03:15:56 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F31016E94F2F6A98B60E;
+        Mon,  8 Jul 2019 15:15:52 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 8 Jul 2019
+ 15:15:46 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mdf@kernel.org>, <stillcompiling@gmail.com>, <atull@kernel.org>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] fpga-manager: altera-ps-spi: Fix build error
+Date:   Mon, 8 Jul 2019 15:13:56 +0800
+Message-ID: <20190708071356.50928-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45d0cfaf-2511-4b1e-f4da-b67fa9f9e867@linaro.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:02:28 up 13:12, 24 users,  load average: 0.18, 0.32, 0.32
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 02, 2019 at 05:54:54PM +0100, Srinivas Kandagatla wrote:
-> Hi Sascha,
-> 
-> On 01/07/2019 09:06, Sascha Hauer wrote:
-> > Hi Srinivas,
-> > 
-> > On Tue, May 21, 2019 at 11:21:07AM +0200, Sascha Hauer wrote:
-> > > On Tue, May 21, 2019 at 10:02:32AM +0100, Srinivas Kandagatla wrote:
-> > > > 
-> > > > 
-> > > > On 21/05/2019 09:56, Sascha Hauer wrote:
-> > > > > . Are there any suggestions how to register the nvmem devices
-> > > > > with a different name?
-> > > > 
-> > > > struct nvmem_config provides id field for this purpose, this will be used by
-> > > > nvmem to set the device name space along with name field.
-> > > 
-> > > There's no way for a caller to know a unique name/id combination.
-> > > The mtd layer could initialize the id field with the mtd number, but
-> > > that would still not guarantee that another caller, like an EEPROM
-> > > driver or such, doesn't use the same name/id combination.
-> > 
-> > This is still an unresolved issue. Do you have any input how we could
-> > proceed here?
-> 
-> Sorry for the delay!
-> I think simplest solution would be to check if there is already an nvmem
-> provider with the same name before assigning name to the device and then
-> append the id in case it exists.
-> 
-> Let me know if below patch helps the situation so that I can take this in
-> next cycle!
-> 
-> ----------------------------------->cut<----------------------------
->     nvmem: core: Check nvmem device name before adding the same one
-> 
->     In some usecases where nvmem names are directly derived from
->     partition names, its likely that different devices might have
->     same partition name.
->     This will be an issue as we will be creating two different
->     nvmem devices with same name and sysfs will not be very happy with that.
-> 
->     Simple solution is to check the existance of the nvmem provider with
->     same name and append an id if it exists before creating the device name.
+If BITREVERSE is m and FPGA_MGR_ALTERA_PS_SPI is y,
+build fails:
 
-This solution obviously works for me. I am not sure if that's really
-what we want as the resulting names in sysfs are not predictable in any
-way. In that case we might be better off using mtdx as Boris suggested.
+drivers/fpga/altera-ps-spi.o: In function `altera_ps_write':
+altera-ps-spi.c:(.text+0x4ec): undefined reference to `byte_rev_table'
 
-Sascha
+Select BITREVERSE to fix this.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: fcfe18f885f6 ("fpga-manager: altera-ps-spi: use bitrev8x4")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/fpga/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 474f304..cdd4f73 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -40,6 +40,7 @@ config ALTERA_PR_IP_CORE_PLAT
+ config FPGA_MGR_ALTERA_PS_SPI
+ 	tristate "Altera FPGA Passive Serial over SPI"
+ 	depends on SPI
++	select BITREVERSE
+ 	help
+ 	  FPGA manager driver support for Altera Arria/Cyclone/Stratix
+ 	  using the passive serial interface over SPI.
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.7.4
+
+
