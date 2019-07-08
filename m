@@ -2,54 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E7EC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB773C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59CD21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8114F2175B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600047;
-	bh=lpF8smmZKzXzIFKYhBNQHTJe28GZk9w9HrrXxBl46x0=;
+	s=default; t=1562600050;
+	bh=QWEh1KWjRkuEdqk4cC4/ckIcIZMQz4gyuaWKf67BMWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IVGvwnazfyj1R8ErXNBnpe+d0lvAUmfOZFocHxEpkQH4wCLMOUUo/jJZpVbCZwfiZ
-	 gPD6J5AtUzcCMRnGZ490TsuM6612mqRQ8fnM11ArCU5jX2buePmSTf85gM7EOQ3edJ
-	 XqODDjjpJgRwzrOVhbQMOQakfaVMZl0gtVAJ/hLM=
+	b=fpSpP44wmsux/T2krTfK2Bbu7TEBtFiJWMbnMv+A3nZvumuNl451v+DFAO/f4/sjt
+	 nWDUQb7abQP2x/MDAJsdy8N5X+pGTfs2+N7bIGmH0p3BBD6hKEIXKQCqOtcNRRhMCD
+	 xGe6nCIu53D3uuL7cS4M3Tqqz+6qVwqi6jHla9hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732982AbfGHPeF (ORCPT
+        id S2390483AbfGHPeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:34:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36070 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390452AbfGHPdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:33:54 -0400
+        id S2390460AbfGHPd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:33:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3273920651;
-        Mon,  8 Jul 2019 15:33:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5ECE204EC;
+        Mon,  8 Jul 2019 15:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600033;
-        bh=lpF8smmZKzXzIFKYhBNQHTJe28GZk9w9HrrXxBl46x0=;
+        s=default; t=1562600036;
+        bh=QWEh1KWjRkuEdqk4cC4/ckIcIZMQz4gyuaWKf67BMWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GVWiae7QBD6ICZw2epNC2xbpHXzv/sAA+zKPPeG0aUMGzLX383bNx5eBvcbbcS3dn
-         VsKTAI340KO32Vq9zSuDl9GlGzGPlZT5CTC2Vlk08gyxBQUlEyvXikEqEj7Brzt4ot
-         F/U2Wz8XF5lziseWWJmeE6TxDREF33ZcSajzh7Z8=
+        b=wkLuIvsBz28gVY+kq8k4/geuNvGCtJ0/ipPczI5FOdObKYSXiuCqek4HDfbefL2QO
+         K7jFth+CGi5TME8Ncn6fTif5ks1LPlSOEvW388MZRwZYPHdYeBHqJ0Z5UwY36gtLLv
+         /L1HFjuCKup9lsJaSAM/dgA1mlDB/RE5nJg0+XKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathew King <mathewk@chromium.org>,
-        Jett Rink <jettrink@chromium.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 45/96] platform/x86: intel-vbtn: Report switch events when event wakes device
-Date:   Mon,  8 Jul 2019 17:13:17 +0200
-Message-Id: <20190708150528.967156980@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 5.1 72/96] drm/i915/ringbuffer: EMIT_INVALIDATE *before* switch context
+Date:   Mon,  8 Jul 2019 17:13:44 +0200
+Message-Id: <20190708150530.343722818@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -62,61 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cb1921b17adbe6509538098ac431033378cd7165 ]
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-When a switch event, such as tablet mode/laptop mode or docked/undocked,
-wakes a device make sure that the value of the swich is reported.
-Without when a device is put in tablet mode from laptop mode when it is
-suspended or vice versa the device will wake up but mode will be
-incorrect.
+commit c84c9029d782a3a0d2a7f0522ecb907314d43e2c upstream.
 
-Tested by suspending a device in laptop mode and putting it in tablet
-mode, the device resumes and is in tablet mode. When suspending the
-device in tablet mode and putting it in laptop mode the device resumes
-and is in laptop mode.
+Despite what I think the prm recommends, commit f2253bd9859b
+("drm/i915/ringbuffer: EMIT_INVALIDATE after switch context") turned out
+to be a huge mistake when enabling Ironlake contexts as the GPU would
+hang on either a MI_FLUSH or PIPE_CONTROL immediately following the
+MI_SET_CONTEXT of an active mesa context (more vanilla contexts, e.g.
+simple rendercopies with igt, do not suffer).
 
-Signed-off-by: Mathew King <mathewk@chromium.org>
-Reviewed-by: Jett Rink <jettrink@chromium.org>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Ville found the following clue,
+
+  "[DevCTG+]: For the invalidate operation of the pipe control, the
+   following pointers are affected. The
+   invalidate operation affects the restore of these packets. If the pipe
+   control invalidate operation is completed
+   before the context save, the indirect pointers will not be restored from
+   memory.
+   1. Pipeline State Pointer
+   2. Media State Pointer
+   3. Constant Buffer Packet"
+
+which suggests by us emitting the INVALIDATE prior to the MI_SET_CONTEXT,
+we prevent the context-restore from chasing the dangling pointers within
+the image, and explains why this likely prevents the GPU hang.
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190419111749.3910-1-chris@chris-wilson.co.uk
+(cherry picked from commit 928f8f42310f244501a7c70daac82c196112c190 in drm-intel-next)
+Cc: stable@vger.kernel.org
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111014
+Fixes: f2253bd9859b ("drm/i915/ringbuffer: EMIT_INVALIDATE after switch context")
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/intel_ringbuffer.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 06cd7e818ed5..a0d0cecff55f 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	struct platform_device *device = context;
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
--	const struct key_entry *ke_rel;
-+	const struct key_entry *ke, *ke_rel;
- 	bool autorelease;
+--- a/drivers/gpu/drm/i915/intel_ringbuffer.c
++++ b/drivers/gpu/drm/i915/intel_ringbuffer.c
+@@ -1957,12 +1957,12 @@ static int ring_request_alloc(struct i91
+ 	 */
+ 	request->reserved_space += LEGACY_REQUEST_SIZE;
  
- 	if (priv->wakeup_mode) {
--		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
-+		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
-+		if (ke) {
- 			pm_wakeup_hard_event(&device->dev);
-+
-+			/*
-+			 * Switch events like tablet mode will wake the device
-+			 * and report the new switch position to the input
-+			 * subsystem.
-+			 */
-+			if (ke->type == KE_SW)
-+				sparse_keymap_report_event(priv->input_dev,
-+							   event,
-+							   val,
-+							   0);
- 			return;
- 		}
- 		goto out_unknown;
--- 
-2.20.1
-
+-	ret = switch_context(request);
++	/* Unconditionally invalidate GPU caches and TLBs. */
++	ret = request->engine->emit_flush(request, EMIT_INVALIDATE);
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Unconditionally invalidate GPU caches and TLBs. */
+-	ret = request->engine->emit_flush(request, EMIT_INVALIDATE);
++	ret = switch_context(request);
+ 	if (ret)
+ 		return ret;
+ 
 
 
