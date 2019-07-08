@@ -2,105 +2,89 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C393BC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186B4C606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3AC21852
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VF1xT7Kw"
+	by mail.kernel.org (Postfix) with ESMTP id EC71121852
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 18:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733217AbfGHS1i (ORCPT
+        id S2387770AbfGHS3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 14:27:38 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39262 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727373AbfGHS1h (ORCPT
+        Mon, 8 Jul 2019 14:29:06 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:57534 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731142AbfGHS3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 14:27:37 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so18218577wrt.6;
-        Mon, 08 Jul 2019 11:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Hlh9LRDKeGCVUQgDVMfTWim6xtUlmgbDQCaCg/jkiYk=;
-        b=VF1xT7KwCZxRMnaL+6qqKLLW7p/aZtDvikAtOa39yeM/wIg/uwc8p4j0G6VqAZ4LHj
-         1VBSM//iVF9NmbZXhACSUrvu0IV1Kcw8CKg0cOF1ut2IZHq03DyZ5X0yJ/v57LMS3vMU
-         g6YAx2adBMrmbt32FoUonOlvCIT2MgciCeujkX/do8d1tFcZmg+EDC4IOJJGQPI5o9Gs
-         b/g8F7X7716eKnasDYehjAdy57l6VbUXf1mQrkUPEhzk4e52UYHzoaJijeDkd0jR/A4u
-         q8zDEfvS//MQi+Dz4e+OuYd4X5S1Af51ISL0rNfqptiFMGE1qc4y9L8V3li2w2iOmQVi
-         NT5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hlh9LRDKeGCVUQgDVMfTWim6xtUlmgbDQCaCg/jkiYk=;
-        b=OvjcmODzVNtcJ4qoDQ8TlOzD4Bj9gqYsiMXY1Y6+v2l4BL4OhNEGRspee/+V4gFkhx
-         bMNKtG/z8o+4K/IgCXMFRlCeSZfW3MZVQOpjkSEpkUMpCKvRAHC1k9KX1poxH1ROc6hp
-         AQDkX/ytqzSkZGpqm4VsgUs6zKiVuNM2EWEWzLFkNWpIIwIwJIPjaOEN1atLFiy45lBe
-         7xLrO35ByWFqvW3bsgLT4fbRoW2LykDYWrBXAtZ27ERYxv8h/TqED4I/BRpGZphA3N4D
-         Mlkk8TLg0UeIlyqLA/8Gq9AqxVohNN9RY3UGYWEr2zmcvEbe24XmS4hEkGSZ/6zMIVtY
-         kC+Q==
-X-Gm-Message-State: APjAAAUUIIRdFVkL9Jwh2z/tjiRjIpAdNFAxXuiTsdaqnPwSNfZxdViv
-        9ylbWRrYkdn5pnlAaA/F9JSmNexQ
-X-Google-Smtp-Source: APXvYqx2WaIHYYv7USvSWcc9lx8VRffOVJTPXGQi4dzabC8TF8wp2u7RSMiclZl4bDpnZEiwPY4FfQ==
-X-Received: by 2002:a05:6000:1043:: with SMTP id c3mr10139883wrx.236.1562610455220;
-        Mon, 08 Jul 2019 11:27:35 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd6:c00:1cb7:5e0e:6ae1:8cca? (p200300EA8BD60C001CB75E0E6AE18CCA.dip0.t-ipconnect.de. [2003:ea:8bd6:c00:1cb7:5e0e:6ae1:8cca])
-        by smtp.googlemail.com with ESMTPSA id d7sm15183992wrw.0.2019.07.08.11.27.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 11:27:34 -0700 (PDT)
-Subject: Re: [PATCH] r8169: add enable_aspm parameter
-To:     AceLan Kao <acelan.kao@canonical.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190708063751.16234-1-acelan.kao@canonical.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <53f82481-ed41-abc5-2e4e-ac1026617219@gmail.com>
-Date:   Mon, 8 Jul 2019 20:27:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jul 2019 14:29:06 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 9426972CC6C;
+        Mon,  8 Jul 2019 21:29:04 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 83ECE7CCE2E; Mon,  8 Jul 2019 21:29:04 +0300 (MSK)
+Date:   Mon, 8 Jul 2019 21:29:04 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Elvira Khabirova <lineprinter@altlinux.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        kbuild test robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@01.org
+Subject: [PATCH] selftests/seccomp/seccomp_bpf: update for
+ PTRACE_GET_SYSCALL_INFO
+Message-ID: <20190708182904.GA12332@altlinux.org>
+References: <20190708090627.GO17490@shao2-debian>
 MIME-Version: 1.0
-In-Reply-To: <20190708063751.16234-1-acelan.kao@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708090627.GO17490@shao2-debian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.07.2019 08:37, AceLan Kao wrote:
-> We have many commits in the driver which enable and then disable ASPM
-> function over and over again.
->    commit b75bb8a5b755 ("r8169: disable ASPM again")
->    commit 0866cd15029b ("r8169: enable ASPM on RTL8106E")
->    commit 94235460f9ea ("r8169: Align ASPM/CLKREQ setting function with vendor driver")
->    commit aa1e7d2c31ef ("r8169: enable ASPM on RTL8168E-VL")
->    commit f37658da21aa ("r8169: align ASPM entry latency setting with vendor driver")
->    commit a99790bf5c7f ("r8169: Reinstate ASPM Support")
->    commit 671646c151d4 ("r8169: Don't disable ASPM in the driver")
->    commit 4521e1a94279 ("Revert "r8169: enable internal ASPM and clock request settings".")
->    commit d64ec841517a ("r8169: enable internal ASPM and clock request settings")
-> 
-> This function is very important for production, and if we can't come out
-> a solution to make both happy, I'd suggest we add a parameter in the
-> driver to toggle it.
-> 
-The usage of a module parameter to control ASPM is discouraged.
-There have been more such attempts in the past that have been declined.
+The syscall entry/exit is now exposed via PTRACE_GETEVENTMSG,
+update the test accordingly.
 
-Pending with the PCI maintainers is a series adding ASPM control
-via sysfs, see here: https://www.spinics.net/lists/linux-pci/msg83228.html
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+---
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Also more details than just stating "it's important for production"
-would have been appreciated in the commit message, e.g. which
-power-savings you can achieve with ASPM on which systems.
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index dc66fe852768..6ef7f16c4cf5 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -1775,13 +1775,18 @@ void tracer_ptrace(struct __test_metadata *_metadata, pid_t tracee,
+ 	unsigned long msg;
+ 	static bool entry;
+ 
+-	/* Make sure we got an empty message. */
++	/*
++	 * The traditional way to tell PTRACE_SYSCALL entry/exit
++	 * is by counting.
++	 */
++	entry = !entry;
++
++	/* Make sure we got an appropriate message. */
+ 	ret = ptrace(PTRACE_GETEVENTMSG, tracee, NULL, &msg);
+ 	EXPECT_EQ(0, ret);
+-	EXPECT_EQ(0, msg);
++	EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
++			: PTRACE_EVENTMSG_SYSCALL_EXIT, msg);
+ 
+-	/* The only way to tell PTRACE_SYSCALL entry/exit is by counting. */
+-	entry = !entry;
+ 	if (!entry)
+ 		return;
+ 
+-- 
+ldv
