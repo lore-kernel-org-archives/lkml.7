@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC88C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A5C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2719821537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A26720645
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600135;
-	bh=w8Z8cV22TAELzc0AoWADBasn7wG0myBmDUgyM4n5YNY=;
+	s=default; t=1562600140;
+	bh=iTSKftyqIVwrvdwu0ceOYFM/FFLEUplnkq6vr6rQeIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vB1r1SELaM6fQXAG4XxUMgS7+zmCWyJ9HaohfiDsmz47ROcf3JibJQya7Ao+yeMaA
-	 HgwvFMLe23V8l9XQh/WcLdpsAtheOxtc7aPuq0MmxF2rYY5HDTZD3CESQrAqpAw64L
-	 0h9OgkUU8hzJayj1fZNLsmRHW49PaW8qLLLYmdLY=
+	b=P2DLCtf8It8tVM9x6FNFpxINpweDwCqN8dRXS13AmZxJHu9mcBjnGn7BOfb1llxvG
+	 135ILdFpfecNloeqvhkZQR7aQlxBBUOleyMQyVk6+fu2Wr5neZWse0qFl6nVf54glS
+	 7lO/K7hlRGb60+bXGskuqMN261Jny7vdyJDQwGts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390612AbfGHPfY (ORCPT
+        id S2390707AbfGHPfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:35:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37894 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:35:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390926AbfGHPfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:35:20 -0400
+        id S2390911AbfGHPfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:35:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B6B20665;
-        Mon,  8 Jul 2019 15:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E1B204EC;
+        Mon,  8 Jul 2019 15:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600119;
-        bh=w8Z8cV22TAELzc0AoWADBasn7wG0myBmDUgyM4n5YNY=;
+        s=default; t=1562600113;
+        bh=iTSKftyqIVwrvdwu0ceOYFM/FFLEUplnkq6vr6rQeIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U2zHXrCMtQ7r+osY7fepAhPY1VYIgmopDV/1aRlKEU9+6I9KbyhG42C3KMJic8EEg
-         PDlfHynfszBz3SxChlIL/ML2tMMHPVswpOcM0kyEAYZuYvtbfeKURCyZQ7lL0dHTEe
-         wwlK8C2KWLQpbsJX1DweFcPuA4wKK3FW3k+Y6bFQ=
+        b=2j3SHHCutVqCrjAG5dWxn2lz8m1yYeVM0f9Lm+gnePXjF3d50Zy104alFJJoI/Im7
+         Cxs4xo2jPOvMa/pHm5EVuK011MiP0hPAimu5Dah0nyfLoE0TJC71ry9O/pVZLqPv2j
+         caH7Q20XSch7aErezxM1+L8BsM+m9F7HAzYWJFsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.1 95/96] fs: VALIDATE_FS_PARSER should default to n
-Date:   Mon,  8 Jul 2019 17:14:07 +0200
-Message-Id: <20190708150531.566385919@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Gong <yibin.gong@nxp.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        Michael Olbrich <m.olbrich@pengutronix.de>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.1 93/96] dmaengine: imx-sdma: remove BD_INTR for channel0
+Date:   Mon,  8 Jul 2019 17:14:05 +0200
+Message-Id: <20190708150531.463009320@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,34 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Robin Gong <yibin.gong@nxp.com>
 
-commit 75f2d86b20bf6aec0392d6dd2ae3ffff26d2ae0e upstream.
+commit 3f93a4f297961c12bb17aa16cb3a4d1291823cae upstream.
 
-CONFIG_VALIDATE_FS_PARSER is a debugging tool to check that the parser
-tables are vaguely sane.  It was set to default to 'Y' for the moment to
-catch errors in upcoming fs conversion development.
+It is possible for an irq triggered by channel0 to be received later
+after clks are disabled once firmware loaded during sdma probe. If
+that happens then clearing them by writing to SDMA_H_INTR won't work
+and the kernel will hang processing infinite interrupts. Actually,
+don't need interrupt triggered on channel0 since it's pollling
+SDMA_H_STATSTOP to know channel0 done rather than interrupt in
+current code, just clear BD_INTR to disable channel0 interrupt to
+avoid the above case.
+This issue was brought by commit 1d069bfa3c78 ("dmaengine: imx-sdma:
+ack channel 0 IRQ in the interrupt handler") which didn't take care
+the above case.
 
-Make sure it is not enabled by default in the final release of v5.1.
-
-Fixes: 31d921c7fb969172 ("vfs: Add configuration parser helpers")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the interrupt handler")
+Cc: stable@vger.kernel.org #5.0+
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
+Tested-by: Sven Van Asbroeck <thesven73@gmail.com>
+Reviewed-by: Michael Olbrich <m.olbrich@pengutronix.de>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/Kconfig |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/dma/imx-sdma.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -10,7 +10,6 @@ config DCACHE_WORD_ACCESS
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -703,7 +703,7 @@ static int sdma_load_script(struct sdma_
+ 	spin_lock_irqsave(&sdma->channel_0_lock, flags);
  
- config VALIDATE_FS_PARSER
- 	bool "Validate filesystem parameter description"
--	default y
- 	help
- 	  Enable this to perform validation of the parameter description for a
- 	  filesystem when it is registered.
+ 	bd0->mode.command = C0_SETPM;
+-	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
++	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
+ 	bd0->mode.count = size / 2;
+ 	bd0->buffer_addr = buf_phys;
+ 	bd0->ext_buffer_addr = address;
+@@ -1025,7 +1025,7 @@ static int sdma_load_context(struct sdma
+ 	context->gReg[7] = sdmac->watermark_level;
+ 
+ 	bd0->mode.command = C0_SETDM;
+-	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
++	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
+ 	bd0->mode.count = sizeof(*context) / 4;
+ 	bd0->buffer_addr = sdma->context_phys;
+ 	bd0->ext_buffer_addr = 2048 + (sizeof(*context) / 4) * channel;
 
 
