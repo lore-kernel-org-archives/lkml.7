@@ -2,175 +2,126 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF3FC48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F2EC48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABFC20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B98820665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:05:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cuiqTSHt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFq6tW5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbfGHDD4 (ORCPT
+        id S1728480AbfGHDFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 23:03:56 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53933 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbfGHDDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 23:03:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hqzC6mT5z9sNF;
-        Mon,  8 Jul 2019 13:03:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562555032;
-        bh=kzaW4wYJTEYFrOqTKjRKd+T9uIcp5lMpH2cp+bHLSn0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cuiqTSHtPIxSyFRQIbQsSAb4hTRRavWAaSBWNz3gSz8WuE5gTX8+ZwFMMlpEXexk+
-         e/MdSzkcpnviQj/i0kXlc+KQKHje2JW0kfa+PShFt0gupDISYkOn62eEmfWrUzatsv
-         sIe+ighO98GNTYxtDuDIs6wg7dnmyrR9dTNqtgLoNLjoIvoLRA5MDocn/ZPztO1V3Z
-         ljkt6Kpm86f4ACkM8EKBr8NBCv0xa2T9AKcTWE73z6zmNk6x3YmCsUdB5htkWmc8lw
-         Qi+897ssAtoKvDihbaTuLBhjCSY5ANEC/MP+5aFNSsQvlNEayJKDwK/V7EPXsMRwlT
-         W1yXwj5QTZ7pg==
-Date:   Mon, 8 Jul 2019 13:03:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>
-Subject: linux-next: build failure after merge of the rdma tree
-Message-ID: <20190708130351.2141a39b@canb.auug.org.au>
+        Sun, 7 Jul 2019 23:05:09 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37189 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728047AbfGHDFJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 23:05:09 -0400
+Received: by mail-pg1-f194.google.com with SMTP id g15so6896768pgi.4
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 20:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ca2tpIFl6yHQwbB5affH5Fg9gK6OeRUiXwj57Mj1vE0=;
+        b=VFq6tW5MKjQ1WiDZqY33YPW9/o5u43NaWJ6IKTbrnveSGtQoFvLT29BvqM79Pe23sV
+         RYki/wKkg1E7Y3Ph9PQGjlpn8X5BfZpG168nbD+ElpXW7bnPEBRH67FHu5YctashwgmD
+         pWq6N2lLf47ZA6dZ7VKVMtXJKgQvOdCeLzpgPf/l4A2HEgNQlCG64vxVd7ifagcD8Og2
+         uLulCQdg7Fb8Ojhe9Hn6o0CFQILq4Hv1+kTXHzzYmI+1hcZBDl71IqiSZFcP5NHG/J0U
+         kUyfaVrcL6h06TQACts7KRaaeV/FaN27IaqcKp/1IYC/43aHy37xq2rrabmK0k2V6dId
+         Tz6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ca2tpIFl6yHQwbB5affH5Fg9gK6OeRUiXwj57Mj1vE0=;
+        b=tNaoenruaQqKv8r4nYyWKfFTXZWFBpV5doD6McwiEH0HlFL05IH672ANfJPLJtnDH4
+         DOZBUx0kFCmI6+drMyaFg2nH7fbyLDZG+HXz8zgMfK8IajTXDI6AhK5V0k3b5DMSq9Bw
+         x3aCHBgtsvjUdBRZCnGO2i7mf36ntImxnpnURk7zgYw2s2QZqgQoODrvLy3C+jLKJfYJ
+         M0/1ivJXTTHKJGj7bcySTfI0hpLckNXpvdORRgeDrndmU2aj3/K2suhUAwP1l8az1uib
+         MPznNpBuhOS9hmDp3BXBnV1yeQ8LAnpp9WchQbqSIGS/nFAV9ntSBYzX0aQLuvKlxEWX
+         jDvQ==
+X-Gm-Message-State: APjAAAXoYd7utJZ7Kufm5zgnYmpKcyXf5FIwG6dX153MNzGHpmJWVT3Z
+        y/P6odUNt2Zmjcs1SSLwyvltoQ==
+X-Google-Smtp-Source: APXvYqzc1s7VmGIq2VxBLyML+3yvNdAWNOg6+sQcjG/qoVV+In5GR+guYWIUkKBapldiGjAkhDqZ0Q==
+X-Received: by 2002:a65:538d:: with SMTP id x13mr20493819pgq.190.1562555108255;
+        Sun, 07 Jul 2019 20:05:08 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id c98sm17123060pje.1.2019.07.07.20.05.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Jul 2019 20:05:07 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 08:35:05 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, mka@chromium.org,
+        ulf.hansson@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: cpufreq notifiers break suspend -- Re: suspend broken in
+ next-20190704 on Thinkpad X60
+Message-ID: <20190708030505.kvrg6sh6bd4xzzwa@vireshk-i7>
+References: <20190704192020.GA3771@amd>
+ <CAJZ5v0gn7FWpqW+WmCzj1=K-pjY=SjRNuEsMR3bRTSO8FzFG=Q@mail.gmail.com>
+ <20190705185001.GA4068@amd>
+ <CAJZ5v0irbn-Xd47KExw=h7On7KShCm6rThCo0q4-zn=o_x6_HQ@mail.gmail.com>
+ <20190706203032.GA26828@amd>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/kA.hB=1qdLs1zSTZSdnbIXv"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190706203032.GA26828@amd>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kA.hB=1qdLs1zSTZSdnbIXv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 06-07-19, 22:30, Pavel Machek wrote:
+> Hi!
+> 
+> > Anyway, if 5.2-rc7 is OK, something in this branch causes the problem
+> > to happen for you.
+> > 
+> > I would try
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=linux-next&id=f012a132824fc870b90980540f727c76fc72e244
+> > 
+> > to narrow down the scope somewhat.
 
-Hi all,
+I couldn't find the original mail, what exactly is the problem with
+suspend in your case ?
 
-After merging the rdma tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+> Bisect says:
+> 
+> 572542c81dec533b7dd3778ea9f5949a00595f68 is the first bad commit
+> Author: Viresh Kumar <viresh.kumar@linaro.org>
+> 
+>     cpufreq: Register notifiers with the PM QoS framework
+> 
+>     This registers the notifiers for min/max frequency constraints
+>     with the
+> 
+>  Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>  Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>  Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> 
+> Unfortunately, it does not revert cleanly:
 
-In file included from include/asm-generic/percpu.h:7,
-                 from arch/x86/include/asm/percpu.h:544,
-                 from arch/x86/include/asm/preempt.h:6,
-                 from include/linux/preempt.h:78,
-                 from include/linux/spinlock.h:51,
-                 from include/linux/seqlock.h:36,
-                 from include/linux/time.h:6,
-                 from include/linux/ktime.h:24,
-                 from include/linux/timer.h:6,
-                 from include/linux/netdevice.h:24,
-                 from drivers/infiniband/sw/siw/siw_main.c:8:
-include/linux/percpu-defs.h:92:33: warning: '__pcpu_unique_use_cnt' initial=
-ized and declared 'extern'
-  extern __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;  \
-                                 ^~~~~~~~~~~~~~
-include/linux/percpu-defs.h:115:2: note: in expansion of macro 'DEFINE_PER_=
-CPU_SECTION'
-  DEFINE_PER_CPU_SECTION(type, name, "")
-  ^~~~~~~~~~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_main.c:129:8: note: in expansion of macro 'DE=
-FINE_PER_CPU'
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-        ^~~~~~~~~~~~~~
-include/linux/percpu-defs.h:93:26: error: redefinition of '__pcpu_unique_us=
-e_cnt'
-  __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;   \
-                          ^~~~~~~~~~~~~~
-include/linux/percpu-defs.h:115:2: note: in expansion of macro 'DEFINE_PER_=
-CPU_SECTION'
-  DEFINE_PER_CPU_SECTION(type, name, "")
-  ^~~~~~~~~~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_main.c:129:8: note: in expansion of macro 'DE=
-FINE_PER_CPU'
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-        ^~~~~~~~~~~~~~
-include/linux/percpu-defs.h:92:33: note: previous definition of '__pcpu_uni=
-que_use_cnt' was here
-  extern __PCPU_DUMMY_ATTRS char __pcpu_unique_##name;  \
-                                 ^~~~~~~~~~~~~~
-include/linux/percpu-defs.h:115:2: note: in expansion of macro 'DEFINE_PER_=
-CPU_SECTION'
-  DEFINE_PER_CPU_SECTION(type, name, "")
-  ^~~~~~~~~~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_main.c:129:8: note: in expansion of macro 'DE=
-FINE_PER_CPU'
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-        ^~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_main.c:129:33: warning: 'use_cnt' initialized=
- and declared 'extern'
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-                                 ^~~~~~~
-include/linux/percpu-defs.h:94:44: note: in definition of macro 'DEFINE_PER=
-_CPU_SECTION'
-  extern __PCPU_ATTRS(sec) __typeof__(type) name;   \
-                                            ^~~~
-drivers/infiniband/sw/siw/siw_main.c:129:8: note: in expansion of macro 'DE=
-FINE_PER_CPU'
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-        ^~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_main.c:129:33: error: redefinition of 'use_cn=
-t'
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-                                 ^~~~~~~
-include/linux/percpu-defs.h:95:44: note: in definition of macro 'DEFINE_PER=
-_CPU_SECTION'
-  __PCPU_ATTRS(sec) __weak __typeof__(type) name
-                                            ^~~~
-drivers/infiniband/sw/siw/siw_main.c:129:8: note: in expansion of macro 'DE=
-FINE_PER_CPU'
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-        ^~~~~~~~~~~~~~
-drivers/infiniband/sw/siw/siw_main.c:129:33: note: previous definition of '=
-use_cnt' was here
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-                                 ^~~~~~~
-include/linux/percpu-defs.h:94:44: note: in definition of macro 'DEFINE_PER=
-_CPU_SECTION'
-  extern __PCPU_ATTRS(sec) __typeof__(type) name;   \
-                                            ^~~~
-drivers/infiniband/sw/siw/siw_main.c:129:8: note: in expansion of macro 'DE=
-FINE_PER_CPU'
- static DEFINE_PER_CPU(atomic_t, use_cnt =3D ATOMIC_INIT(0));
-        ^~~~~~~~~~~~~~
+I tried following on my ARM board (both single policy and multiple
+policy configurations):
 
-Caused by commit
+rtcwake --seconds 5 -v -m mem
 
-  bdcf26bf9b3a ("rdma/siw: network and RDMA core interface")
+And everything worked as expected. Please make sure the top commit of
+my series in pm/linux-next is, some issues were fixed on Friday:
 
-I have used the rdma tree from 20190628 again today.
+0a811974f3f7 cpufreq: Add QoS requests for userspace constraints
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kA.hB=1qdLs1zSTZSdnbIXv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0ispcACgkQAVBC80lX
-0Gw0cAgAkKRy9OxJPfFu0rHajKiGMPyuq+s1F8tFQU/e+EGZF0V4uee9OMtdvo3S
-EvhOAjnSiK4KjhaUomqXAozjbKfA+ltfM/NRfdM7UpXToG9KXTa3Q+05xlcEuVeK
-zKSjh6kouMuv4p+W+IBls6YaSnWTpdFLN9v5+FjpcCFGNZa8gLD7GHmEckTc3a0D
-rFUm+ht43wWWjPJN4/9g/bMTzfWwY40mT/BR7fvpBZKai5t3amfMDF6y2EqVZQv7
-l7cl+NntiNqI7zkUnDsxIfUUNo7Tc6WEsH6CmD7w62KDQvE97oh0Y2f57GfAjvlq
-5JdnLCY+GoYcgiuIioK4BJBo7l++Gg==
-=L+GM
------END PGP SIGNATURE-----
-
---Sig_/kA.hB=1qdLs1zSTZSdnbIXv--
+-- 
+viresh
