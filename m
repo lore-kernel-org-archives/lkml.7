@@ -6,80 +6,81 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53E0C606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 23:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C270C606D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 23:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD66E21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 23:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4376A216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 23:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yglw3gx7"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N66MPXc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfGHXUI (ORCPT
+        id S1727395AbfGHXVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 19:20:08 -0400
-Received: from ozlabs.org ([203.11.71.1]:37431 "EHLO ozlabs.org"
+        Mon, 8 Jul 2019 19:21:16 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46467 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfGHXUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 19:20:08 -0400
+        id S1726046AbfGHXVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 19:21:15 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jLyX5607z9sN4;
-        Tue,  9 Jul 2019 09:20:04 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jLzr20mXz9sML;
+        Tue,  9 Jul 2019 09:21:12 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562628005;
-        bh=29ZFwWy9ou/Nl3/TnDctw7MIBF9U4PbQyVC6Fyn3xpA=;
+        s=201702; t=1562628072;
+        bh=rhV1VkbbZZ9REZJVL/XyG+DliqWQyoI7D08d6+VqimM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Yglw3gx7NFcJgzBUv4c6OwWlKYpzx7sWCfEnwyxhwNNAi9vz2zWX6CUfzw33e8hnn
-         4ysE12f0xllGoWbPFOGcTa3IwTvNxHTJu1H7ZaCcFhuTgsx3raSW5OG9DONmY91FB8
-         +BTTOpVSNyv3UiLiTfhzVPUK4OmYcnEP9gxF6yAAMqc3R6s8y3vNDfTFGWjTEYzjnd
-         BunKCM/GfeRHXwjMzUG3gMb6fsC6J+cEZ2+7yQb2DIYmuSy7Zz6dNsEDrOiOZAopyk
-         2lkNCT0YVeytSf4BQiHAnCaaXgkrBW85O1YkjBiOtKPikytVP/H9iSxQsc5EVy6733
-         nOsWR3w2BTEKw==
-Date:   Tue, 9 Jul 2019 09:20:03 +1000
+        b=N66MPXc2bqWiB6iWKXIxki/j5/ITYXMp06xL9G6p8Fo4RO515UXBTGh5sO2qp6z1P
+         1OKEvGpy0gEe9MR6KRiuNJe9UZXtmO4uIOdbohh6tj0Qb0DRFUcjOo9wXJhxLB9R8t
+         cXuME+v4iWZbH0wMvgD/0cWSc6K2giutF3Okc1JyzCvfe2zmWlqjtlkVA0OY/SaGBR
+         EB3xtK18YLHVVUrbsYtjabXrMbyEf/UyERn5jy+O0mIfPXacAtb21xDJKsDat/cqeO
+         8z2hoDrV+cx9gr9UHDCJBpBFdII2pN2AbmSq5AJQRb5H7W/TJaRM/czcA5v0cd09IQ
+         01clUq8Vdfwrg==
+Date:   Tue, 9 Jul 2019 09:21:11 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Ungerer <gerg@snapgear.com>
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nadav Amit <namit@vmware.com>
-Subject: Re: linux-next: manual merge of the char-misc tree with the
- driver-core tree
-Message-ID: <20190709092003.6087a9c4@canb.auug.org.au>
-In-Reply-To: <20190613155344.64fce8b9@canb.auug.org.au>
-References: <20190613155344.64fce8b9@canb.auug.org.au>
+        Christoph Hellwig <hch@lst.de>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the
+ m68knommu tree
+Message-ID: <20190709092111.2945cb33@canb.auug.org.au>
+In-Reply-To: <20190614190606.559dc8dc@canb.auug.org.au>
+References: <20190614190606.559dc8dc@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/1e01G77HmLeK=CYrjp0RpJD"; protocol="application/pgp-signature"
+ boundary="Sig_/4SeA6DlhJNfdXbuDb=jOtwa"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1e01G77HmLeK=CYrjp0RpJD
+--Sig_/4SeA6DlhJNfdXbuDb=jOtwa
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
 Hi all,
 
-On Thu, 13 Jun 2019 15:53:44 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+On Fri, 14 Jun 2019 19:06:06 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
 wrote:
 >
-> Today's linux-next merge of the char-misc tree got a conflict in:
+> Today's linux-next merge of the akpm-current tree got a conflict in:
 >=20
->   drivers/misc/vmw_balloon.c
+>   fs/binfmt_flat.c
 >=20
 > between commit:
 >=20
->   225afca60b8a ("vmw_balloon: no need to check return value of debugfs_cr=
-eate functions")
+>   6071ecd874ac ("binfmt_flat: add endianess annotations")
 >=20
-> from the driver-core tree and commits:
+> from the m68knommu tree and commit:
 >=20
->   83a8afa72e9c ("vmw_balloon: Compaction support")
->   5d1a86ecf328 ("vmw_balloon: Add memory shrinker")
+>   db543c385059 ("fs/binfmt_flat.c: remove set but not used variable 'inod=
+e'")
 >=20
-> from the char-misc tree.
+> from the akpm-current tree.
 >=20
 > I fixed it up (see below) and can carry the fix as necessary. This
 > is now fixed as far as linux-next is concerned, but any non trivial
@@ -92,43 +93,21 @@ eate functions")
 > Cheers,
 > Stephen Rothwell
 >=20
-> diff --cc drivers/misc/vmw_balloon.c
-> index fdf5ad757226,043eed845246..000000000000
-> --- a/drivers/misc/vmw_balloon.c
-> +++ b/drivers/misc/vmw_balloon.c
-> @@@ -1553,15 -1942,26 +1932,24 @@@ static int __init vmballoon_init(void
->   	if (x86_hyper_type !=3D X86_HYPER_VMWARE)
->   		return -ENODEV;
->  =20
-> - 	for (page_size =3D VMW_BALLOON_4K_PAGE;
-> - 	     page_size <=3D VMW_BALLOON_LAST_SIZE; page_size++)
-> - 		INIT_LIST_HEAD(&balloon.page_sizes[page_size].pages);
-> -=20
-> -=20
->   	INIT_DELAYED_WORK(&balloon.dwork, vmballoon_work);
->  =20
-> + 	error =3D vmballoon_register_shrinker(&balloon);
-> + 	if (error)
-> + 		goto fail;
-> +=20
->  -	error =3D vmballoon_debugfs_init(&balloon);
->  -	if (error)
->  -		goto fail;
->  +	vmballoon_debugfs_init(&balloon);
->  =20
-> + 	/*
-> + 	 * Initialization of compaction must be done after the call to
-> + 	 * balloon_devinfo_init() .
-> + 	 */
-> + 	balloon_devinfo_init(&balloon.b_dev_info);
-> + 	error =3D vmballoon_compaction_init(&balloon);
-> + 	if (error)
-> + 		goto fail;
-> +=20
-> + 	INIT_LIST_HEAD(&balloon.huge_pages);
->   	spin_lock_init(&balloon.comm_lock);
->   	init_rwsem(&balloon.conf_sem);
->   	balloon.vmci_doorbell =3D VMCI_INVALID_HANDLE;
+> diff --cc fs/binfmt_flat.c
+> index 80d902fb46e3,7562d6aefbe4..000000000000
+> --- a/fs/binfmt_flat.c
+> +++ b/fs/binfmt_flat.c
+> @@@ -429,9 -415,7 +429,8 @@@ static int load_flat_file(struct linux_
+>   	unsigned long textpos, datapos, realdatastart;
+>   	u32 text_len, data_len, bss_len, stack_len, full_data, flags;
+>   	unsigned long len, memp, memp_size, extra, rlim;
+>  -	u32 __user *reloc, *rp;
+>  +	__be32 __user *reloc;
+>  +	u32 __user *rp;
+> - 	struct inode *inode;
+>   	int i, rev, relocs;
+>   	loff_t fpos;
+>   	unsigned long start_code, end_code;
 
 I am still getting this conflict (the commit ids may have changed).
 Just a reminder in case you think Linus may need to know.
@@ -137,20 +116,20 @@ Just a reminder in case you think Linus may need to know.
 Cheers,
 Stephen Rothwell
 
---Sig_/1e01G77HmLeK=CYrjp0RpJD
+--Sig_/4SeA6DlhJNfdXbuDb=jOtwa
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0jz6MACgkQAVBC80lX
-0Gz3Kwf+N6auBRYxel7zls7Vvoiwx41cqdla7fVdMeNYbCXvZX1+tWEQM9XKFSA+
-h8Q14dwEXl/TJBf2IWoJjqlUuY294CcgENn/rFSyHcpzu6vthOh2gzjcsXVSnLiA
-ZmeHbP9obSEaENEXxN9aZTRGemOPxV8/+X0onw8vZysfX9t8zUSv4QdgM7hHayIl
-Hst1/QXJOw+q48vUOvgv74pH4nccSubARTqo7+FlJzcpq5TMaeZ9zR1m0Xoz8FWQ
-TmKh+xPT5/Gf1ubANsbg7RB3FUr7SuMfwD9/djlMWBSRxc9xRUOxq2CoibkdIZiF
-vh2g5yjgRQ+95vU/hUqA0VJqWfansA==
-=RT3+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0jz+cACgkQAVBC80lX
+0GxO5QgAlxdqNGmXJToiL1oRKfokmNyoqu/Yj4LxK5ZGoXlAnjtB+I00z9LeVpIe
+dVnSG/v5ltOQmmtFwc2Qinb2vGKaATUsd5BXuisdUdZq3mkTMIW2zTcglU+6+0O1
+BrnRpmE7ZXPUy5J2PSYrGZ8J9xHuewuI9G/+OHle5Rt+FmNpwJBG6Qtpa0znOG8M
+28iFuj/UtFPc3Go8AZflmAE7bt+Gyq5Npv0anh0J4Q4lcDfb4vJe2h0scKk0oiUs
+YCJkp6lqS2uZ5UJNXVAjMmYfhcnUesdFwe5RbyYJn4Om/aMTg5fnPDTk8Bcyhd32
+kqUPewzWtCpcG1kX6jz0FQCdrot0Sw==
+=B7mD
 -----END PGP SIGNATURE-----
 
---Sig_/1e01G77HmLeK=CYrjp0RpJD--
+--Sig_/4SeA6DlhJNfdXbuDb=jOtwa--
