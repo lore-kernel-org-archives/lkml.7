@@ -2,98 +2,112 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402D5C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918EAC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1880420844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6475D20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uJY/jL1O"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWwOohpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731386AbfGHNnM (ORCPT
+        id S1731400AbfGHNn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:43:12 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34245 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729754AbfGHNnL (ORCPT
+        Mon, 8 Jul 2019 09:43:27 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40746 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729066AbfGHNn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:43:11 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b13so3045301pfo.1;
-        Mon, 08 Jul 2019 06:43:11 -0700 (PDT)
+        Mon, 8 Jul 2019 09:43:27 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a93so8320883pla.7;
+        Mon, 08 Jul 2019 06:43:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MuHD1no+XkJjWCRsD7dOvLKQPeDnugWNej1vA/9eJog=;
-        b=uJY/jL1Ok1daTMamg3kB1blu/qPZXPVHQjPCob/7xJagg7cqGPQbxK7QayeOkrwq1E
-         /ha250Ww+Yp8Z/D4pmw8V94vclilLq5GQ+N2l9V1UDmI2ux5PyVddXd4kCuO0E7vuDtx
-         Hwavi+YFxEwaPfuDg3vMmFwQvI3EMMjb9mqyMD8c/boAkPFzcIgMKR34ceHeTmwE/2sa
-         7ebRnnev6jZnj1ScWnm+2/7Gxggi0q5oTme2YvKg3X2v1/5X4N1hw7h11lgu6X19KmCI
-         wjHBjs1Ps5QVn3BCjpWk6mz26++55eM1x+Guu9A8VFApHBSMtcHzr100bHT063d4BBJX
-         P9Rg==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=XuKn7QldX9ga0MGEIqR1MDmcCIUcjpzwfNVtfmUSJ4w=;
+        b=uWwOohpp2nqU3NtPtZWQxFxwCSSm8ZlE19OOy4vbMIq1RF6fgtut/kIc5iouE9ONyv
+         DDRwvD7kH0cqzKbjYh6pBwotAYyfo3954KUPnpfA0+tEAJbJXyJngJWcSj/DUrFsrY4X
+         6mREzGaO206+umbYNT9ZUpYaNQ3iZ4xIzXOv7KkVt504W58WK7ouRHWY0HqqOTbLT4Tn
+         Q4HhXdHdxbv0dqgXCyf6WpDIwTdCG+wfwODsphKMKSZug+MrcS1eaffkum5PtF8cbI1y
+         3uRWttVKxGkO0i4SgenaoOzwM405HUwXjnH2Jk4P8ecMWVwyZ7fQwab+rwbP9fjHOQmz
+         RlPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MuHD1no+XkJjWCRsD7dOvLKQPeDnugWNej1vA/9eJog=;
-        b=QbWPpm3NxxCJGgtHRuZEmSlSOUkBCQXoY/HZNo0id616ebpxyR+a18oYmUmyLHsMjA
-         /NVLdDSgVEWQLk/lkp7f/l3NEYEkT9sVNCGKzJkEagfIMbmcAfbQVEoLHpj3mz0FI2LE
-         Ms9w+eAp6/xNvZQTTWDrNjPVqtV5xPfUYP7SlqtOqBOccGKswEgBJXVU+a8PAfNW+hPa
-         OZfp75a4nJCf7fomEHkQrskT07TVSYCEfLux7qQQIAI2UnM2iqTSDGaMgqMvs7lJ0PCJ
-         Ogo/V7uEWvkB8jr0W5UuJTC15QXvUYqzWZSLRkV35LqeXcMj0M16CITG8KpH9jqwg7G/
-         HN+Q==
-X-Gm-Message-State: APjAAAVmf/blnH8atGjLUfVbLprTdm59gvn73V4tvdgHXKJoeSPu8qBs
-        Y9/giVpXeq9MIofeLAoReWeBws2UUK54YQ==
-X-Google-Smtp-Source: APXvYqy3SX4qPsNChq0vnZOlyeirE4w7ZsJnU4D4zAPQsmNHXWLv/6YEkfMH9hxO4EEi1j5obKVL/g==
-X-Received: by 2002:a17:90a:246f:: with SMTP id h102mr25427228pje.126.1562593391096;
-        Mon, 08 Jul 2019 06:43:11 -0700 (PDT)
-Received: from arch ([103.85.10.69])
-        by smtp.gmail.com with ESMTPSA id i123sm23944536pfe.147.2019.07.08.06.43.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 06:43:10 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 19:13:04 +0530
-From:   Amol Surati <suratiamol@gmail.com>
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        suratiamol@gmail.com
-Subject: Re: [PATCH 3.16 000/129] 3.16.70-rc1 review
-Message-ID: <20190708134304.GA21832@arch>
-References: <lsq.1562518456.876074874@decadent.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=XuKn7QldX9ga0MGEIqR1MDmcCIUcjpzwfNVtfmUSJ4w=;
+        b=E2HsFIX2M/+4M1EipvbAJw5EDYadihVB3cYXbz2Poqb9iWUmZs3tw85whoqV8WxFY8
+         Wfidb9zTZIjHqa1GImCbQsWPUA0bUfi+RrNhaL9lJUIgtQvl919kBhrQGn8Kgf/La3RI
+         Cw2SszOr8D9KMIv2y5eSFqmHhDojNoRVTAI4ZtKJf2QQ5/3wNqwdPwn81O8hjQobNjeG
+         8NmJHsPJ2T9jWgKksZN9BGfueSmPZlsO+cTXgRNuDjXe7nXIYaLrxEgWKM2JN5desRti
+         lUG9WeDF+vS2PpHTjmvITYq3bPN9o1t2ChC5bxmn36ifGcOpBQCF3aqv2ehEr/KcxR0Q
+         odOA==
+X-Gm-Message-State: APjAAAWCFmgb3nijZY5vwxHMtJp8QFg/L1uzMX2IGm5gz1/aOUNN/ODY
+        fhfA46/CtF1Y8ocM4Vr+Ilw=
+X-Google-Smtp-Source: APXvYqxJZKLKGQL7DHLKzYDKoNJH1aiFzFzS+IvviyDVDkgXb+/bk5t9P31KksFr5hLmmWfehkMXOQ==
+X-Received: by 2002:a17:902:424:: with SMTP id 33mr25088347ple.151.1562593406398;
+        Mon, 08 Jul 2019 06:43:26 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w16sm22871212pfj.85.2019.07.08.06.43.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 06:43:25 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH -next] btrfs: Select LIBCRC32C again
+Date:   Mon,  8 Jul 2019 06:43:23 -0700
+Message-Id: <1562593403-19545-1-git-send-email-linux@roeck-us.net>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 07, 2019 at 05:54:16PM +0100, Ben Hutchings wrote:
-> This is the start of the stable review cycle for the 3.16.70 release.
-> There are 129 patches in this series, which will be posted as responses
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue Jul 09 20:00:00 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> All the patches have also been committed to the linux-3.16.y-rc branch of
-> https://git.kernel.org/pub/scm/linux/kernel/git/bwh/linux-stable-rc.git .
-> A shortlog and diffstat can be found below.
-> 
-> Ben.
+With CONFIG_BTRFS_FS=y and CONFIG_CRYPTO_CRC32C=m, we get:
 
+fs/btrfs/super.o: In function `btrfs_mount_root':
+fs/btrfs/super.c:1557: undefined reference to `crc32c_impl'
+fs/btrfs/super.o: In function `btrfs_print_mod_info':
+fs/btrfs/super.c:2348: undefined reference to `crc32c_impl'
+fs/btrfs/extent-tree.o: In function `btrfs_crc32c':
+fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
+fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
+fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
+fs/btrfs/dir-item.o: In function `btrfs_name_hash':
+fs/btrfs/ctree.h:2619: undefined reference to `crc32c'
+fs/btrfs/ctree.h:2619: undefined reference to `crc32c'
 
-x86_64 (on debian-8.11.1), compiled and booted successfully.
-No regressions (between 3.16.69 and 3.16.70-rc1).
+and more.
 
-Thanks,
--amol
+Note that the comment in the offending commit "The module dependency on
+crc32c is preserved via MODULE_SOFTDEP("pre: crc32c"), which was previously
+provided by LIBCRC32C config option doing the same." is wrong, since it
+permits CONFIG_BTRFS_FS=y in combination with CONFIG_CRYPTO_CRC32C=m.
+
+Cc: David Sterba <dsterba@suse.com>
+Fixes: d5178578bcd4 ("btrfs: directly call into crypto framework for checksumming")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ fs/btrfs/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/btrfs/Kconfig b/fs/btrfs/Kconfig
+index 212b4a854f2c..4c80c70597f9 100644
+--- a/fs/btrfs/Kconfig
++++ b/fs/btrfs/Kconfig
+@@ -2,6 +2,7 @@
+ 
+ config BTRFS_FS
+ 	tristate "Btrfs filesystem support"
++	select LIBCRC32C
+ 	select CRYPTO
+ 	select CRYPTO_CRC32C
+ 	select ZLIB_INFLATE
+-- 
+2.7.4
+
