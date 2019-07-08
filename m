@@ -2,63 +2,130 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFA3C606BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A6FC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A61821537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SuZJoN+Q"
+	by mail.kernel.org (Postfix) with ESMTP id 0695C216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbfGHOmQ (ORCPT
+        id S1726234AbfGHOmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:42:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60370 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729254AbfGHOmP (ORCPT
+        Mon, 8 Jul 2019 10:42:18 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:34651 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbfGHOmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:42:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FbVe+96SnHQdB3XrjHSvItUUD9LRS2dN3DEOjB6fZxA=; b=SuZJoN+Qoru93LMevhhWQfOim
-        V2QIOqYKMDTCKvDf7k8xEfvTXFkM6TbWL6Nbu8198IgOJ7nRhrTkjJOQXzI0qZhmE8A0bu+PMYl4M
-        8qDVIt6fbexi5k9c+Zb2MvIpDiqRWLhvMeP7MmT17s/rDXT8A+XwrI6H3dixLlucPufH6T7wCsQus
-        UfrSqqQazKVAw1K5+ggVCoXjhxdKzRda+y8LsXRTt+X4l9HgAXIIsF/FM4+6d1JjmrboRnmiggS9+
-        vlcnCwcSjPQBKQ0WLFdq/Dsnk1lRrEIlI/UB46O1KbB0UrMsBIW7PnuD5bzgYmlISbFwZOaxETeVA
-        yZaW6tR/g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkUqN-0008FF-1b; Mon, 08 Jul 2019 14:42:15 +0000
-Date:   Mon, 8 Jul 2019 07:42:14 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        will@kernel.org, peterz@infradead.org
-Subject: Re: [PATCH] mm: remove redundant assignment of entry
-Message-ID: <20190708144214.GD32320@bombadil.infradead.org>
-References: <20190708082740.21111-1-richardw.yang@linux.intel.com>
+        Mon, 8 Jul 2019 10:42:16 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MWiYo-1hzqv148xk-00X1Le; Mon, 08 Jul 2019 16:42:08 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jonathan Kim <Jonathan.Kim@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Jack Xiao <Jack.Xiao@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Rex Zhu <Rex.Zhu@amd.com>, Emily Deng <Emily.Deng@amd.com>,
+        xinhui pan <xinhui.pan@amd.com>, Evan Quan <evan.quan@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] amdgpu: make pmu support optional
+Date:   Mon,  8 Jul 2019 16:41:43 +0200
+Message-Id: <20190708144205.2770771-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708082740.21111-1-richardw.yang@linux.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:TL1q7iyD5PpIZrvVCvrRvHAEqENf6QOhISgByGYYJX9jV/rf/xg
+ M406DVe1lGcgSljrSAf61pEusIKkC3qSIQ+fLZSMbU3brdrpcG2nHgEwYkia6rDBUCq2ZdZ
+ Ag8tQzIQs5OwrZE2DI7ZuF7dvJosR20rVcUecDsFwHtc/2KjOzZCJ7I9hVY7OkhpKGBqGat
+ A1j3Rt2ErvZmbhjIQ4x+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lnFTjrpE41c=:9mQYtLxFcpzQV2qFm/8yIE
+ SoJ/ip22hyZDDdbyqQRhP1ar5J85GrRy0ziq8mkxbDL6ImsU+PRvY7t2xMVKx/rwh1XyU94de
+ jbLARyZH1ZtsMfRLZkRR5soBdlxdutLlFwwOGzoz4+dTivWjZinLfkdzHHht3wBtlG9UTL9fx
+ R+lDMHwCBjULSVCwQA8ok0YBWjywIs9uJDnrcu9k7+7JKXNWqbiTDOFgDiUYOVZ9dy8PjkVnT
+ lquSTfbKQOf4desKeysg/LijtPf6zgJgGFAj20D3FUGSKMrEt79X7YbQeYHKALF0S7i7pyMGG
+ Azboq2UifUADzZOy/SqwCm5gAZ6OnsSNxDvYvNLB9EXNH2X5TR7rHq47HecfTvRh+02LOBoaA
+ Ns6LI8KM7pnmYn2nMCATam+RFzvUbkh5VpOc874UZEvvmJ7mY/y1Yco9ZfZ4K33wIYpYdMU2Z
+ M54SC6ZNmKKtY6i6ARl1I1ahJl4jq9NoGiC9uCAN+gQK/QRvDakzR/kK/Xw2rGXOueiT3ME1H
+ maqnFEa4jdvcSoU5Ql83Y9R/HCkrRQInX2yjnb3NDPKg7yLdMCZDOuPikOO7+lJzc77BgR9/X
+ 8FFwGxKCtdu6wMVEFKVnpGq5c9/Ddi152/IFttm742ujmFIRR7sFzDTCUIvIVEaTbP/mHjpIu
+ N1BT3MKSASMJiYypWubm5ww5IKJj7yu6E6eoK4NgYLsrXiFoblrf+v2a6ToGTFzvNK/spe5hR
+ IN2J/smOH2L/OpQ/5IZ2wa98hRbURz8AeGrGpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 04:27:40PM +0800, Wei Yang wrote:
-> Since ptent will not be changed after previous assignment of entry, it
-> is not necessary to do the assignment again.
-> 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+When CONFIG_PERF_EVENTS is disabled, we cannot compile the pmu
+portion of the amdgpu driver:
 
-Acked-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:48:38: error: no member named 'hw' in 'struct perf_event'
+        struct hw_perf_event *hwc = &event->hw;
+                                     ~~~~~  ^
+drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:51:13: error: no member named 'attr' in 'struct perf_event'
+        if (event->attr.type != event->pmu->type)
+            ~~~~~  ^
+...
+
+Use conditional compilation for this file.
+
+Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/amd/amdgpu/Makefile        | 4 +++-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 6 ++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/Makefile b/drivers/gpu/drm/amd/amdgpu/Makefile
+index 3a15a46b4ecb..3f5329906fce 100644
+--- a/drivers/gpu/drm/amd/amdgpu/Makefile
++++ b/drivers/gpu/drm/amd/amdgpu/Makefile
+@@ -54,7 +54,9 @@ amdgpu-y += amdgpu_device.o amdgpu_kms.o \
+ 	amdgpu_gtt_mgr.o amdgpu_vram_mgr.o amdgpu_virt.o amdgpu_atomfirmware.o \
+ 	amdgpu_vf_error.o amdgpu_sched.o amdgpu_debugfs.o amdgpu_ids.o \
+ 	amdgpu_gmc.o amdgpu_xgmi.o amdgpu_csa.o amdgpu_ras.o amdgpu_vm_cpu.o \
+-	amdgpu_vm_sdma.o amdgpu_pmu.o amdgpu_discovery.o
++	amdgpu_vm_sdma.o amdgpu_discovery.o
++
++amdgpu-$(CONFIG_PERF_EVENTS) += amdgpu_pmu.o
+ 
+ # add asic specific block
+ amdgpu-$(CONFIG_DRM_AMDGPU_CIK)+= cik.o cik_ih.o kv_smc.o kv_dpm.o \
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 30989b455047..a02ccce7bf53 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -2816,7 +2816,8 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+ 		return r;
+ 	}
+ 
+-	r = amdgpu_pmu_init(adev);
++	if (IS_ENABLED(CONFIG_PERF_EVENTS))
++		r = amdgpu_pmu_init(adev);
+ 	if (r)
+ 		dev_err(adev->dev, "amdgpu_pmu_init failed\n");
+ 
+@@ -2888,7 +2889,8 @@ void amdgpu_device_fini(struct amdgpu_device *adev)
+ 	amdgpu_debugfs_regs_cleanup(adev);
+ 	device_remove_file(adev->dev, &dev_attr_pcie_replay_count);
+ 	amdgpu_ucode_sysfs_fini(adev);
+-	amdgpu_pmu_fini(adev);
++	if (IS_ENABLED(CONFIG_PERF_EVENTS))
++		amdgpu_pmu_fini(adev);
+ 	amdgpu_debugfs_preempt_cleanup(adev);
+ 	if (amdgpu_discovery)
+ 		amdgpu_discovery_fini(adev);
+-- 
+2.20.0
+
