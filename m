@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E16C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44529C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA90221537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13040216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599135;
-	bh=n8SLqZ+SjKSD4ewi8qVbuW4I1Ca4aNJMMEj8to09ArY=;
+	s=default; t=1562599139;
+	bh=8WFReox3sk8YgaXFZ4lhamtoghRFzlHCt7+B7fMxcok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEBBXXT9uFZ56wQw0YbKuQbsMVILd+m2zw6BbRWK/RIQvM8LbcxwRhIFPpBpVLEs5
-	 vzcp7uNO73zqgsPPmbyCYFgAdlOu6916sdZDLEN5qB98KB/AnPf4mAJbpktZD8X9HT
-	 zbLAR41+BR2Mq9dobtChVqI3aOR/kVS0t5eyI7PY=
+	b=EGziW+RQWGLwxbeRMshJV40v4GtfJc+vjxrVgoZTxuD1rBcy2uv+be7BOj13wQ44p
+	 17TzWMNt2HGxnkXUedQYn9o7z1eecThZjrG7JhonDTtSYlcnv0/WuDIH73SU6nDeDc
+	 zl2LcSbPHrWj42CvNhSR7po8wexG8BXhWRZxjsDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733140AbfGHPSy (ORCPT
+        id S1733151AbfGHPS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:18:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42832 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:18:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733128AbfGHPSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:18:52 -0400
+        id S1730690AbfGHPSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:18:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4E04216F4;
-        Mon,  8 Jul 2019 15:18:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 692B8216FD;
+        Mon,  8 Jul 2019 15:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599131;
-        bh=n8SLqZ+SjKSD4ewi8qVbuW4I1Ca4aNJMMEj8to09ArY=;
+        s=default; t=1562599133;
+        bh=8WFReox3sk8YgaXFZ4lhamtoghRFzlHCt7+B7fMxcok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T7e5CwXkV7Q8FJAJMXK1DeGYGnOhPnB3hY/2NAvtQHGczWwtZ9/Xh+rCaQOUjmGlb
-         xI5fvDhZvrDuKLy/ZGMwBWsBElbdLAAzoiErkBCUMeqxXX4CKrprTxxM7WSjismGKk
-         rqiFZkjQvDBmotiLCEQBKOWIGCnsN7V18YJAW5Rw=
+        b=YUGgrLwl34BTu+poR7OzP/rVrBHzozUNZ5/4d5yZr/OEubDJf2cCQJRupTs6MjFGl
+         nKqutudNpYAlYpjQCbKWFYDWnt7fH9/mWC4W8xtFhP+/Agb1QQlhEvMnwq132q6ASE
+         D0/vod8qqWnbMFkBtEImukI7BT1r/ayCjyHhTbis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 016/102] net: hns: Fix loopback test failed at copper ports
-Date:   Mon,  8 Jul 2019 17:12:09 +0200
-Message-Id: <20190708150526.994227008@linuxfoundation.org>
+Subject: [PATCH 4.9 017/102] sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
+Date:   Mon,  8 Jul 2019 17:12:10 +0200
+Message-Id: <20190708150527.052385847@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,43 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e1f164861e500f4e068a9d909bbd3fcc7841483 ]
+[ Upstream commit 56cd0aefa475079e9613085b14a0f05037518fed ]
 
-When doing a loopback test at copper ports, the serdes loopback
-and the phy loopback will fail, because of the adjust link had
-not finished, and phy not ready.
+The PERF_EVENT_IOC_PERIOD ioctl command can be used to change the
+sample period of a running perf_event. Consequently, when calculating
+the next event period, the new period will only be considered after the
+previous one has overflowed.
 
-Adds sleep between adjust link and test process to fix it.
+This patch changes the calculation of the remaining event ticks so that
+they are offset if the period has changed.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+See commit 3581fe0ef37c ("ARM: 7556/1: perf: fix updated event period in
+response to PERF_EVENT_IOC_PERIOD") for details.
+
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_ethtool.c | 4 ++++
+ arch/sparc/kernel/perf_event.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-index 4cd163390dcc..f38848c4f69d 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-@@ -367,6 +367,7 @@ static int __lb_setup(struct net_device *ndev,
- static int __lb_up(struct net_device *ndev,
- 		   enum hnae_loop loop_mode)
- {
-+#define NIC_LB_TEST_WAIT_PHY_LINK_TIME 300
- 	struct hns_nic_priv *priv = netdev_priv(ndev);
- 	struct hnae_handle *h = priv->ae_handle;
- 	int speed, duplex;
-@@ -393,6 +394,9 @@ static int __lb_up(struct net_device *ndev,
+diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
+index 71e7f77f6776..84a80cd004eb 100644
+--- a/arch/sparc/kernel/perf_event.c
++++ b/arch/sparc/kernel/perf_event.c
+@@ -889,6 +889,10 @@ static int sparc_perf_event_set_period(struct perf_event *event,
+ 	s64 period = hwc->sample_period;
+ 	int ret = 0;
  
- 	h->dev->ops->adjust_link(h, speed, duplex);
- 
-+	/* wait adjust link done and phy ready */
-+	msleep(NIC_LB_TEST_WAIT_PHY_LINK_TIME);
++	/* The period may have been changed by PERF_EVENT_IOC_PERIOD */
++	if (unlikely(period != hwc->last_period))
++		left = period - (hwc->last_period - left);
 +
- 	return 0;
- }
- 
+ 	if (unlikely(left <= -period)) {
+ 		left = period;
+ 		local64_set(&hwc->period_left, left);
 -- 
 2.20.1
 
