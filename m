@@ -2,113 +2,190 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF2FC606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE2CC606D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41E821707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCF321707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VrhrRyUs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cdb6f6dI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405118AbfGHUkS (ORCPT
+        id S2405136AbfGHUkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:40:18 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44906 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729212AbfGHUkS (ORCPT
+        Mon, 8 Jul 2019 16:40:40 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36334 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405121AbfGHUkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:40:18 -0400
-Received: by mail-io1-f65.google.com with SMTP id s7so38311199iob.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:40:17 -0700 (PDT)
+        Mon, 8 Jul 2019 16:40:39 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r7so8162384pfl.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=o0JMAMSSYy4GxSN2yix27wmYhn/WlIZxfCVDhGj0R7o=;
-        b=VrhrRyUspaRe/rJ+uDjJUK9XdWrRYfBMXl7rSykuozBRuSENQdCySqCjCsPiVS0W5N
-         jZwgHbF3MXLC+Q0HPRE29Ek1KI3CW+6GF3eEhj3ZZbMkwZA4MQD3DkYAzcrmZ+rwKuF1
-         DWjv+d5FZS1e7FZthcx+GNLMN7/rCN0sZV90Suux+LQJOH9zHtAg4kFXOWqDF7sQtcrC
-         AccHghWrcEcX0eYwZ0FCXZF8yaD1PmA4e9Dh+KvRaNBOxXNBG0jLoublhyNuwtTPotlp
-         pVWHjYB4Kq2kVm03vA6Dh+Shc4nhx7zJLDBFNeNUWSFpmZnkVbtH5Q+xGkTo/QWBY+eb
-         igDA==
+        bh=/EH/dsB4RqvQOyHG8BqAIo5WKk7GQxacBNIaWqTFNQk=;
+        b=Cdb6f6dII91+peQ4OxFhgsypxNIcC8Z96r5C/ePNEUz85za5Vbi9Ob9WFL7Wp+O6qA
+         s2FU4elMc5PHawGRh4mEgei2UKYeL/Om110iQOt9EZjbTGZ35yhM+QknG6GV4EILqbGV
+         fSE/mjTDSVLrTvE9E8XjufRwxMYJiGpgmnm9Gj+28y8fI57C27MrUrxnEuTgssOH22rV
+         X2wra0aYtt04uPd5Nd5e58e/ejOR/kNGkFgfkF6uBhS0Gc+UnNjzMr5rpGuXODaRO3/6
+         S/LEDw4EBPf512R+tktyLb6BY2Kbd/uedF4s+xPbNcfpXnjQo8TaENBYjaBvCticdcKk
+         s+NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=o0JMAMSSYy4GxSN2yix27wmYhn/WlIZxfCVDhGj0R7o=;
-        b=lKjvrfevCECZQjJ0xBxM1fkooyvwoMF9jJpin+KbbUImbAXrg6pU/i6riUJL5+lskC
-         LIJI51YcOJ2UEK5DSeRUDgnTY7Q8QBEvUrCBjHRaEWLQwhr/F+v3tcjpdAlwbyXRgR75
-         ISIeuynVhsV6ldGnhEQDTlCCDDKY2PKpgnJHwF7vCPHrJ4dEuqGe5UUYLNeTMTOsI8po
-         oIFvQ4627jVxyetO+mBSA8hgpuh9iZvrt9a8UIdf1AHwb9G+RwxQg55rZUF81HpHOvL9
-         I+OV9zspDiV6SgwcEZz+R7dNuvnVOpCYrgoGCCojGIOFBSbrVqT4+wczzDOnxUTH6Y0M
-         a7Hg==
-X-Gm-Message-State: APjAAAUsJztoOZSqn/rN9uJpxminB0qWYBEM64ZRsmWU8alM26+hmcSx
-        M/TE/uPVBGEE0UozzowtKpgte5dOR4EAECWJbEIMqmIV5gk=
-X-Google-Smtp-Source: APXvYqyUBwATdUOEC9GtJeUhEQhxDPI4A/ccvoj9P9fTmBcw/QOpH0M3ZWQD4kHnufBZjS94zfyblC4S5BfZWr3NM9A=
-X-Received: by 2002:a5e:8618:: with SMTP id z24mr21944628ioj.174.1562618417361;
- Mon, 08 Jul 2019 13:40:17 -0700 (PDT)
+        bh=/EH/dsB4RqvQOyHG8BqAIo5WKk7GQxacBNIaWqTFNQk=;
+        b=rE4pWT2nKemA55Uwk1aozeGPw9UFSXf2vVZyX3rvwQome4GRqvAfxQRTCMf7GobrUv
+         IBrWCLi1aU3InepScB+TQDsCU+qsWJ2jATFpQIN7K9GppcmKnbYOI+DwMXnDh8W+ZOP8
+         bh5yCIGlaQ3SUKqehjmF7G8Y/yLGA9166uvNC4cukMtCKXIx0Rovm5o4cBwfUzazMCEB
+         jsVAQxYvZU6jWNoM/WaSnIM1uOkoCqOvwOMAdM3KnVqK38isSJ5T+3T6dZVh3gFLm48O
+         Yy5hwb0MflZK23+KHcm7Uln9dOynkoaPIB6l1+fFEZjJ40mQkH45oChk/AChgEYDvfB0
+         lvYQ==
+X-Gm-Message-State: APjAAAVMzerZir1H62SHTx+8zubeKDEnrCFP0EvZd/ukeA8dgWbYxaks
+        S59O6vAhWioUUgIop3+3ifmDnFn+IpamR1YCyTij+A==
+X-Google-Smtp-Source: APXvYqxcFK88vAm0YlECpUDpB3imcSno03RwL+0jyEa5ghv7TUPzQiwa16nbo1CO7XiLvpWqedp7ntBebsLNBqTl9bk=
+X-Received: by 2002:a63:205f:: with SMTP id r31mr26169271pgm.159.1562618438201;
+ Mon, 08 Jul 2019 13:40:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190703100349.12893-1-r.czerwinski@pengutronix.de>
-In-Reply-To: <20190703100349.12893-1-r.czerwinski@pengutronix.de>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Mon, 8 Jul 2019 22:40:06 +0200
-Message-ID: <CAHUa44FU-B5FVE7_tsmuMsvN3ftrVytpijYPknX7vi-277n7ag@mail.gmail.com>
-Subject: Re: [PATCH] tee: optee: add might_sleep for RPC requests
-To:     Rouven Czerwinski <r.czerwinski@pengutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+References: <20190704003615.204860-1-brendanhiggins@google.com>
+ <20190704003615.204860-2-brendanhiggins@google.com> <20190705201505.GA19023@42.do-not-panic.com>
+ <CAFd5g45cF9rYc8YupnCgd=7xz_yW+_TMp_L+cSFUBW7d9njnVQ@mail.gmail.com>
+In-Reply-To: <CAFd5g45cF9rYc8YupnCgd=7xz_yW+_TMp_L+cSFUBW7d9njnVQ@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 8 Jul 2019 13:40:26 -0700
+Message-ID: <CAFd5g44XV0zDpNgyDPSFMq86kSvwGb_WjhxzK=AoDMjwXD5CgQ@mail.gmail.com>
+Subject: Re: [PATCH v6 01/18] kunit: test: add KUnit test runner core
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rouven,
+On Mon, Jul 8, 2019 at 11:08 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Fri, Jul 5, 2019 at 1:15 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >
+> > On Wed, Jul 03, 2019 at 05:35:58PM -0700, Brendan Higgins wrote:
+> > > Add core facilities for defining unit tests; this provides a common way
+> > > to define test cases, functions that execute code which is under test
+> > > and determine whether the code under test behaves as expected; this also
+> > > provides a way to group together related test cases in test suites (here
+> > > we call them test_modules).
+> > >
+> > > Just define test cases and how to execute them for now; setting
+> > > expectations on code will be defined later.
+> > >
+> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> >
+> > Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> >
+> > But a nitpick below, I think that can be fixed later with a follow up
+> > patch.
+> >
+> > > +/**
+> > > + * struct kunit - represents a running instance of a test.
+> > > + * @priv: for user to store arbitrary data. Commonly used to pass data created
+> > > + * in the init function (see &struct kunit_suite).
+> > > + *
+> > > + * Used to store information about the current context under which the test is
+> > > + * running. Most of this data is private and should only be accessed indirectly
+> > > + * via public functions; the one exception is @priv which can be used by the
+> > > + * test writer to store arbitrary data.
+> > > + *
+> > > + * A brief note on locking:
+> > > + *
+> > > + * First off, we need to lock because in certain cases a user may want to use an
+> > > + * expectation in a thread other than the thread that the test case is running
+> > > + * in.
+> >
+> > This as a prefix to the struct without a lock seems odd. It would be
+> > clearer I think if you'd explain here what locking mechanism we decided
+> > to use and why it suffices today.
+>
+> Whoops, sorry this should have been in the next patch. Will fix.
 
-On Wed, Jul 3, 2019 at 12:04 PM Rouven Czerwinski
-<r.czerwinski@pengutronix.de> wrote:
->
-> If the kernel is compiled with CONFIG_PREEMPT_VOLUNTARY and OP-TEE is
-> executing a long running workload, the following errors are raised:
->
-> [ 1705.971228] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> [ 1705.977195] rcu:     (detected by 0, t=2102 jiffies, g=51977, q=3)
-> [ 1705.983152] rcu: All QSes seen, last rcu_sched kthread activity 2102 (140596-138494), jiffies_till_next_fqs=1, root ->qsmask 0x0
-> [ 1705.994729] optee-xtest     R  running task        0   169    157 0x00000002
->
-> While OP-TEE is returning regulary to the kernel due to timer
-> interrrupts, the OPTEE_SMC_FUNC_FOREIGN_INTR case does not contain an
-> explicit rescheduling point. Add a might_sleep() to the RPC request case
-> to ensure that the kernel can reschedule another task if OP-TEE requests
-> RPC handling.
->
-> Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
-> ---
->  drivers/tee/optee/call.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.c
-> index aa942703ae65..13b0269a0abc 100644
-> --- a/drivers/tee/optee/call.c
-> +++ b/drivers/tee/optee/call.c
-> @@ -148,6 +148,7 @@ u32 optee_do_call_with_arg(struct tee_context *ctx, phys_addr_t parg)
->                          */
->                         optee_cq_wait_for_completion(&optee->call_queue, &w);
->                 } else if (OPTEE_SMC_RETURN_IS_RPC(res.a0)) {
-> +                       might_sleep();
->                         param.a0 = res.a0;
->                         param.a1 = res.a1;
->                         param.a2 = res.a2;
-> --
-> 2.20.1
->
+Err..no, this shouldn't be here at all. Sorry about that. I just need
+to rewrite the comment.
 
-Looks good. I'll pick this up and fix the spell errors in the commit message.
-
-Thanks,
-Jens
+> > > +/**
+> > > + * suite_test() - used to register a &struct kunit_suite with KUnit.
+> >
+> > You mean kunit_test_suite()?
+>
+> Yep, sorry about that. Will fix.
+>
+> > > + * @suite: a statically allocated &struct kunit_suite.
+> > > + *
+> > > + * Registers @suite with the test framework. See &struct kunit_suite for more
+> > > + * information.
+> > > + *
+> > > + * NOTE: Currently KUnit tests are all run as late_initcalls; this means that
+> > > + * they cannot test anything where tests must run at a different init phase. One
+> > > + * significant restriction resulting from this is that KUnit cannot reliably
+> > > + * test anything that is initialize in the late_init phase.
+> >                             initialize prior to the late init phase.
+> >
+> >
+> > That is, this is useless to test things running early.
+>
+> Yeah, I can add that phrasing in.
+>
+> > > + *
+> > > + * TODO(brendanhiggins@google.com): Don't run all KUnit tests as late_initcalls.
+> > > + * I have some future work planned to dispatch all KUnit tests from the same
+> > > + * place, and at the very least to do so after everything else is definitely
+> > > + * initialized.
+> >
+> > TODOs are odd to be adding to documentation, this is just not common
+> > place practice. The NOTE should suffice for you.
+>
+> Because it is a kernel doc? Would you usually make a separate
+> non-kernel doc comment for a TODO? I guess that makes sense.
+>
+> Thanks!
