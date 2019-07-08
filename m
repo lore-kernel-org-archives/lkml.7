@@ -2,140 +2,186 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C9DC606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37E8C606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0C7216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E7821707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DFrcOxtZ"
+	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="TSNNeF/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404900AbfGHUMS (ORCPT
+        id S2404912AbfGHUPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:12:18 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42812 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730045AbfGHUMS (ORCPT
+        Mon, 8 Jul 2019 16:15:21 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44103 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404799AbfGHUPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:12:18 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68K9QSY002867;
-        Mon, 8 Jul 2019 20:11:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=0acHncQWLgXnQHNrif/wO/N98O8sHefa/57hdRhle6Q=;
- b=DFrcOxtZ9GNbi191LnRrT7HrOyEUzZ3nzo3GgX3SaV2OqWQ9LLYVxYwPfUegliYpMeNz
- rt9BxXxNIq5xoBHnLeVZVgfYgoiqR+BAep/5nrQWdUUSkh2hBj7KSp4Nc6omZosmdmVt
- Zt2K0L2y315q5xQixTx3bChTGtHftYll/3K2JUD7f+rlocqg5jwPG3OpN7GzysiQDAem
- xWXxmYxmMm8hj+czPKA+dO32yHkHKkI9PLX6/KmAubfrjtzZ45DtL45aWz6nVXGwPngy
- WbOspL1vRg+R3wXEflxsvwUk0EpyumR0M1My1UDHHPCBO0GN0hN/VyRxSvd3NGbPtBb1 hg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tjkkpggmy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jul 2019 20:11:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x68K8EK2063661;
-        Mon, 8 Jul 2019 20:11:38 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2tjjykdbk3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Jul 2019 20:11:38 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x68KBX5r010633;
-        Mon, 8 Jul 2019 20:11:33 GMT
-Received: from [192.168.1.14] (/109.189.94.158)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jul 2019 13:11:33 -0700
-Subject: Re: [PATCH v3] RDMA/core: Fix race when resolving IP address
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Mark Bloch <markb@mellanox.com>
-Cc:     "dledford@redhat.com" <dledford@redhat.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1562584584-13132-1-git-send-email-dag.moxnes@oracle.com>
- <20190708175025.GA6976@ziepe.ca>
- <4b9ae7b8-310c-e0b6-7a8e-33e6d5bef83d@oracle.com>
- <63b9d2cb-f69c-d77c-7803-f08e2a6f755d@mellanox.com>
- <20190708193814.GF23996@ziepe.ca>
-From:   Dag Moxnes <dag.moxnes@oracle.com>
-Message-ID: <424b75d7-90ea-8d07-42b9-de9d507b0f85@oracle.com>
-Date:   Mon, 8 Jul 2019 22:11:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 8 Jul 2019 16:15:20 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r15so11795559lfm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eng.ucsd.edu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q2/rC+X6yKcx0fkaxjN7H0BsXdkViaefBc4lpUZqdtg=;
+        b=TSNNeF/SB7mryv3kPjBwLncUvhieZnXh8iFH92xhPGPysNiNQoeKJE5qj8IB7Z5BZW
+         UMby29lUeRqccPhcSnzqaoSrfZIHocEjbxdg484y3UxR57QTR6vybYFSlVA6OISOkAJf
+         XBcB2o9O7m5+vT8eP7+iT6K3smA9RqmnYVGfI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q2/rC+X6yKcx0fkaxjN7H0BsXdkViaefBc4lpUZqdtg=;
+        b=eSK8NAU4Lieq9l+lZARrprSgwSL/k/gbIQEHffaaYr7sd1T7w5SNQtzF5RjeQWwu6u
+         eASUbAbUiI+I8pFaLnjnLs+ruH/jf4/qOW6jNH5wvRoWNogHZ0A5p/tPL/aNVpBE/f1I
+         QdDRlB5t7xoihSJks4oBrry3Mhwu0L88GNV154VR9/hK7TkAIdcNd4mZESM9BM01G8gz
+         vCv/gXZQwJZp8yZGc2dPjqSOrc3cT7xRXtXh/vP/VwSvvR9PuHFyot4nzYjc3s4ZeLdV
+         qvLC/s1Ev2KaLEB0e9pWKJ2MKzf+be3VZFdR83d75zJgwJjdxebu7lcpVsQLC+RjrwEf
+         pdaw==
+X-Gm-Message-State: APjAAAUULCt3CU2aaQvHiFFj5w9otE5RVCReuGpbEvObOx9r48j6Qcx0
+        ehF5f78xscKYPJmp0yqa1X8FfQ==
+X-Google-Smtp-Source: APXvYqyVe6l6QxTV00tB/7TZDsbLAToaMqslKFjf3c5kn1KSK2kw7x2QWom//FIicKUaq+Zq8aK5Cg==
+X-Received: by 2002:a19:5044:: with SMTP id z4mr9273020lfj.80.1562616918960;
+        Mon, 08 Jul 2019 13:15:18 -0700 (PDT)
+Received: from luke-XPS-13 (77-255-206-190.adsl.inetia.pl. [77.255.206.190])
+        by smtp.gmail.com with ESMTPSA id c12sm2842062lfj.58.2019.07.08.13.15.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 13:15:18 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 13:15:10 -0700
+From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] Documentation: kvm: Convert cpuid.txt to .rst
+Message-ID: <20190708201510.GA13296@luke-XPS-13>
+References: <cover.1562448500.git.lnowakow@eng.ucsd.edu>
+ <e8cd24f40cdd23ed116679f4c3cfcf8849879bb4.1562448500.git.lnowakow@eng.ucsd.edu>
+ <20190708140022.5fa9d01f@lwn.net>
 MIME-Version: 1.0
-In-Reply-To: <20190708193814.GF23996@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907080251
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907080251
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708140022.5fa9d01f@lwn.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 08, 2019 at 02:00:22PM -0600, Jonathan Corbet wrote:
+> On Sat,  6 Jul 2019 14:38:14 -0700
+> Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu> wrote:
+> 
+> > From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+> > 
+> > Convert cpuid.txt to .rst format to be parsable by sphinx. 
+> > 
+> > Change format and spacing to make function definitions and return values
+> > much more clear. Also added a table that is parsable by sphinx and makes
+> > the information much more clean. 
+> > 
+> > Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+> > ---
+> >  Documentation/virtual/kvm/cpuid.rst | 99 +++++++++++++++++++++++++++++
+> >  Documentation/virtual/kvm/cpuid.txt | 83 ------------------------
+> >  2 files changed, 99 insertions(+), 83 deletions(-)
+> >  create mode 100644 Documentation/virtual/kvm/cpuid.rst
+> >  delete mode 100644 Documentation/virtual/kvm/cpuid.txt
+> > 
+> > diff --git a/Documentation/virtual/kvm/cpuid.rst b/Documentation/virtual/kvm/cpuid.rst
+> > new file mode 100644
+> > index 000000000000..1a03336a500e
+> > --- /dev/null
+> > +++ b/Documentation/virtual/kvm/cpuid.rst
+> > @@ -0,0 +1,99 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> 
+> Do you know that this is the appropriate license for this file?  If so, you
+> should say how you know that.  I appreciate that you thought to add the
+> SPDX line, but we have to be sure that it actually matches the intent of
+> the creator of this file.
+> 
 
+I do not know what the authors intent was. You are right. This is not my
+work after all. Ill remove it in the next version.
 
-Den 08.07.2019 21:38, skrev Jason Gunthorpe:
-> On Mon, Jul 08, 2019 at 07:22:45PM +0000, Mark Bloch wrote:
->>
->> On 7/8/19 11:47 AM, Dag Moxnes wrote:
->>> Thanks Jason,
->>>
->>> Regards,
->>> Dag
->>>
->>> Den 08.07.2019 19:50, skrev Jason Gunthorpe:
->>>> On Mon, Jul 08, 2019 at 01:16:24PM +0200, Dag Moxnes wrote:
->>>>> Use neighbour lock when copying MAC address from neighbour data struct
->>>>> in dst_fetch_ha.
->>>>>
->>>>> When not using the lock, it is possible for the function to race with
->>>>> neigh_update, causing it to copy an invalid MAC address.
->>>>>
->>>>> It is possible to provoke this error by calling rdma_resolve_addr in a
->>>>> tight loop, while deleting the corresponding ARP entry in another tight
->>>>> loop.
->>>>>
->>>>> This will cause the race shown it the following sample trace:
->>>>>
->>>>> rdma_resolve_addr()
->>>>>     rdma_resolve_ip()
->>>>>       addr_resolve()
->>>>>         addr_resolve_neigh()
->>>>>           fetch_ha()
->>>>>             dst_fetch_ha()
->>>>>               n->nud_state == NUD_VALID
->>>> It isn't nud_state that is the problem here, it is the parallel
->>>> memcpy's onto ha. I fixed the commit message
->>>>
->>>> This could also have been solved by using the ha_lock, but I don't
->>>> think we have a reason to particularly over-optimize this.
->> Sorry I'm late to the party, but why not just use: neigh_ha_snapshot()?
-> Yes, that is much better, please respin this
-OK, will do!
-Can I still post it as a v4? Or should I do it differently as you 
-already applied it?
+> > +==============
+> > +KVM CPUID bits
+> > +==============
+> > +
+> > +:Author: Glauber Costa <glommer@redhat.com>, Red Hat Inc, 2010
+> 
+> I rather suspect that email address doesn't work these days.
+> 
 
-Regards,
--Dag
+No I guess it wont :). We would still keep this correct? 
+
+> > +A guest running on a kvm host, can check some of its features using
+> > +cpuid. This is not always guaranteed to work, since userspace can
+> > +mask-out some, or even all KVM-related cpuid features before launching
+> > +a guest.
+> > +
+> > +KVM cpuid functions are:
+> > +
+> > +function: **KVM_CPUID_SIGNATURE (0x40000000)**
+> 
+> I wouldn't add the **markup** here, it doesn't really help.
+> 
+
+My intent was to make the "function" part more readable immediately
+because otherwise it sort of looks like a wall of text. I might have
+gotten a little too fancy here though. 
+
+> > +
+> > +returns::
+> > + 
+> > +   eax = 0x40000001
+> > +   ebx = 0x4b4d564b
+> > +   ecx = 0x564b4d56
+> > +   edx = 0x4d
+> > +
+> > +Note that this value in ebx, ecx and edx corresponds to the string "KVMKVMKVM".
+> > +The value in eax corresponds to the maximum cpuid function present in this leaf,
+> > +and will be updated if more functions are added in the future.
+> > +Note also that old hosts set eax value to 0x0. This should
+> > +be interpreted as if the value was 0x40000001.
+> > +This function queries the presence of KVM cpuid leafs.
+> > +
+> > +function: **define KVM_CPUID_FEATURES (0x40000001)**
+> > +
+> > +returns::
+> > +
+> > +          ebx, ecx
+> > +          eax = an OR'ed group of (1 << flag)
+> > +
+> > +where ``flag`` is defined as below:
+> > +
+> > ++--------------------------------+------------+---------------------------------+
+> > +| flag                           | value      | meaning                         |
+> > ++================================+============+=================================+
+> > +| KVM_FEATURE_CLOCKSOURCE        | 0          | kvmclock available at msrs      |
+> > +|                                |            | 0x11 and 0x12                   |
+> 
+> You might consider using the
+> 
+>     ======= ===== ======
+>     simpler table format
+>     ======= ===== ======
+> 
+> here, it might be a bit easier to read and maintain.
 >
-> Thanks,
-> Jason
 
+Understood. 
+
+> Thanks,
+> 
+> jon
+
+Thanks for the review, 
+- Luke
