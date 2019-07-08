@@ -2,103 +2,120 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3651CC5B57D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416C4C5B57D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A1720665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174AF2084A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kIYLYDh7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOMsmIgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfGHIgT (ORCPT
+        id S1729425AbfGHIgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:36:19 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48321 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729250AbfGHIgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:36:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hzLl5Df0z9sNx;
-        Mon,  8 Jul 2019 18:36:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562574976;
-        bh=Zgisn+lvV/TJcGnaVkvliEJ17h2XWEJf3MZpsmg5464=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kIYLYDh7U0a/uhDAjdkcACq81IR09/MYDiIQag5lxSKmqNpQUut8/GBNZ1msBrmVr
-         sq2aI+WiPnfETAw6eO1blWdV7Od/qofsW5PVHG8IeyZ0bbjS4bqFNcYBJApJW2SBZ0
-         EpnSJ0Qk0a6G7/MBDzNBoYrKgi0FMq+bAxEA6LMFvZaBeZGbzn001LTcQchqzZSUO9
-         hdtqEZyhcQP8QrNApsAWL3miWjg8prOPRU+9W6Y8AtGfUIQCRAOmWABtWzKxPprj/T
-         QeLqt6mHYRo3MEhAxnnYltIqSbaIAlg+ujyClcu/3hsInOLZudGj1p4WOLTDGp7VcZ
-         NesDYSZ5vA7Aw==
-Date:   Mon, 8 Jul 2019 18:36:05 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Subject: linux-next: manual merge of the driver-core tree with the vfs tree
-Message-ID: <20190708183605.2812b8fc@canb.auug.org.au>
+        Mon, 8 Jul 2019 04:36:36 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40705 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729250AbfGHIgg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 04:36:36 -0400
+Received: by mail-io1-f68.google.com with SMTP id h6so25112304iom.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5KXyzOyddJPSYupMaPtJc3n1+Qs9tx3Gcb2Q7zVo0M8=;
+        b=cOMsmIgo9no2UIxYQtl0IEhs9cOfaY/6hH+TSNYWkEVjYrtyDyiSG+Pawi7rst84iL
+         aYMFDkhVgQ713ZWq/WNdEtQUY3srXzZzw6MniZc45HgtCzqilWOYA4acWuiVnXpt6yCn
+         dYF7IAD/K7goEhoSST/5CMrxkxRbHqybP9YsubSqGJ+1GueL5Ta2hGjNUlxXwFCc1BEO
+         WZ1+QrX+fsuoq8p3EohEENriAsyZrotv0Lh+a/HQbO5y1KeHvr9lhZOUp8qSZZ5AaeL4
+         HN3Qosc6+tKtmoIL0erNdz9FKdlU/HmzbGtDN9Tbcxr+J5fBiL5lJMyfjeWH2F/YDbOz
+         ajKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5KXyzOyddJPSYupMaPtJc3n1+Qs9tx3Gcb2Q7zVo0M8=;
+        b=UiAj3z2gw+2WCH8ux/rSxqHqqEy6IeDQW0pftyII0fw/1uWtLZyJ+jjxWZFiLeADXd
+         4sZqSaOwRWF/AnVuTHPn09f6MHY3S3Q6RVvpIRiB2Zm3JR2Wubx2wd+jfmqEo1nCVc7P
+         Ajrk5gZ+fYIZBCt7FMiPnzRtfijmWspNbZxWkZn/rkz5f3WMYUiqYsuwzWj+nT/d1NP5
+         0bKnrscJq3YXDBBjMz4r2bWfGOihAQMAnyU4Jy3+Jkys53Wfmh2iHoau/51zkpqlnyN2
+         /r+e/JwtR4ZQM3FW3ZJSs5epBVRzUK9sKaRHtrv0Am/+5YYYtWum/QWW7nZFck54g2vU
+         4C+w==
+X-Gm-Message-State: APjAAAV8atoKC+/yfNmbjEPVJPHsHNRq2Q67t4gxD+wqaiKEELS7J+U6
+        hRWFSKlhDTSfAyviIzGGKKvNF0KmtNniTlSL1A==
+X-Google-Smtp-Source: APXvYqxjK31i5rr/fwm4g6B2ljMVmD03cvBH/BrY4xuXXtnM1WvV466gG06eq12moEwOXDBhPpeTUgO7m3jJQdXjkBs=
+X-Received: by 2002:a6b:6f06:: with SMTP id k6mr13682792ioc.32.1562574994974;
+ Mon, 08 Jul 2019 01:36:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/m4FHP_.pvFw_ItiVPA2/msL"; protocol="application/pgp-signature"
+References: <1562300143-11671-1-git-send-email-kernelfans@gmail.com>
+ <1562300143-11671-2-git-send-email-kernelfans@gmail.com> <alpine.DEB.2.21.1907072133310.3648@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1907072133310.3648@nanos.tec.linutronix.de>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Mon, 8 Jul 2019 16:36:23 +0800
+Message-ID: <CAFgQCTvwS+yEkAmCJnsCfnr0JS01OFtBnDg4cr41_GqU79A4Gg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/numa: instance all parsed numa node
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     x86@kernel.org, Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>,
+        Barret Rhoden <brho@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/m4FHP_.pvFw_ItiVPA2/msL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 8, 2019 at 3:44 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Fri, 5 Jul 2019, Pingfan Liu wrote:
+>
+> > I hit a bug on an AMD machine, with kexec -l nr_cpus=4 option. nr_cpus option
+> > is used to speed up kdump process, so it is not a rare case.
+>
+> But fundamentally wrong, really.
+>
+> The rest of the CPUs are in a half baken state and any broadcast event,
+> e.g. MCE or a stray IPI, will result in a undiagnosable crash.
+Very appreciate if you can pay more word on it? I tried to figure out
+your point, but fail.
 
-Hi all,
+For "a half baked state", I think you concern about LAPIC state, and I
+expand this point like the following:
 
-Today's linux-next merge of the driver-core tree got a conflict in:
+For IPI: when capture kernel BSP is up, the rest cpus are still loop
+inside crash_nmi_callback(), so there is no way to eject new IPI from
+these cpu. Also we disable_local_APIC(), which effectively prevent the
+LAPIC from responding to IPI, except NMI/INIT/SIPI, which will not
+occur in crash case.
 
-  fs/ceph/super.c
+For MCE, I am not sure whether it can broadcast or not between cpus,
+but as my understanding, it can not. Then is it a problem?
 
-between commit:
+From another view point, is there any difference between nr_cpus=1 and
+nr_cpus> 1 in crashing case? If stray IPI raises issue to nr_cpus>1,
+it does for nr_cpus=1.
 
-  108f95bfaa56 ("vfs: Convert ceph to use the new mount API")
-
-from the vfs tree and commit:
-
-  1a829ff2a6c3 ("ceph: no need to check return value of debugfs_create func=
-tions")
-
-from the driver-core tree.
-
-I fixed it up (I used the latter version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/m4FHP_.pvFw_ItiVPA2/msL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0jAHUACgkQAVBC80lX
-0GxHswf/ZCxdHFwKA8RIMD7Kk2AMkOB1iwIQK9UofB8pxU2UfnQXoa182oOdlc9R
-GC8GLQvkWRs4qZ/HYl4AREBN/HOzVDN72XcoyMk9e4NsTUXxbZgHi9tUyi7i7S5J
-BC+inijdQF+mWVxLetDRVfrPSummi71+UtsEwzp396shTYp1rIIBNFG9YTjDNl5q
-4EPmol4cfSrBPyOXq5YVep+m3fXqsfP52khSJ5bvXky4HG9/OXW22+tj3uPDbrfC
-l45LBf/o/tZqT3Esr6vMkkTDfU6ly9R3nO+15DAClVXcPnU800SuFxfyM7epkvjS
-VSMHuG36tH2fhWIh8vev1SPvewuK6g==
-=ZwYj
------END PGP SIGNATURE-----
-
---Sig_/m4FHP_.pvFw_ItiVPA2/msL--
+Thanks,
+  Pingfan
