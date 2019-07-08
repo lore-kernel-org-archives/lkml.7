@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7F4C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E4DC606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D30220665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D1821537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600185;
-	bh=KL1idasl/xFehBRaaQE9mfpe3MfJKyVEFRjSs0sXuKQ=;
+	s=default; t=1562600187;
+	bh=/FKc4kjIe82GxU9Sjc+/PTPdm3BLOpOWYvdj+AgWmkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I6vVBbUKehK/iHCh3eMgY10c9W/l/sLvbio1eZkhjwp0oba+OFbJHjjbZ5kLzEKkU
-	 b7mXG2CegYv2x9QYrgV8RHxvnPikyLZCIJQ1ZZl8rlgQGbwjw2q/2eAwagxBi3n+Vt
-	 btGKU+Q5/fypPrTP+NZdyKaARRMeGtuaTTZtwqec=
+	b=gSiIsbfs7XP7lrpCposWoQ9Bw1PfozCiXpWzR9OgNjKIlf4orZZu3gIPzUEqMPGx3
+	 8dlad89jlTSgFcn37kPXRjIQ4Z0ki1QcvHIqn66rlMt+AOkqrrygt5C++9BNM42trX
+	 +J0vlO6u+Rk+l0x+knm/G8VijoFaOKFOspit3DYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390892AbfGHPgX (ORCPT
+        id S2390451AbfGHPdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:36:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390474AbfGHPeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:05 -0400
+        id S1733027AbfGHPds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:33:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9809204EC;
-        Mon,  8 Jul 2019 15:34:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D1AE21537;
+        Mon,  8 Jul 2019 15:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600044;
-        bh=KL1idasl/xFehBRaaQE9mfpe3MfJKyVEFRjSs0sXuKQ=;
+        s=default; t=1562600027;
+        bh=/FKc4kjIe82GxU9Sjc+/PTPdm3BLOpOWYvdj+AgWmkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jHGP54spk8EQBkGLgfb4GI+bCCnSpHaSP+oscNHDk2b2NJSsQOaBm2g69JuBsLwKe
-         gJ6xXquWuf5cEjSiVkEKZDO3L2gpSlY2rO9D3gWY2b19TXHT0mBFKxCKCCyJfQPqGI
-         ZhjsIpOOAmUPPcfeMTnz+9Dx3xrXDJLbVI3O0Wv8=
+        b=c0FDfSDdzF4y1LiM1F8pLxDydfOoxoSPedo87IMbjJwppTN/vXXriyR8kRhD3UHEx
+         erSvKB0YBIRldD+kD/Wk9WErESU+C6qyZtywaRarQkcgqRUE38vGlY9xuGpw1geYAX
+         4rfj4tcKXAb3/k1mb63JhLhZzm0tSj7mrfLZksCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Huang Rui <ray.huang@amd.com>
-Subject: [PATCH 5.1 75/96] drm/amdgpu/gfx9: use reset default for PA_SC_FIFO_SIZE
-Date:   Mon,  8 Jul 2019 17:13:47 +0200
-Message-Id: <20190708150530.510384942@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Joshua Scott <joshua.scott@alliedtelesis.co.nz>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH 5.1 70/96] ARM: dts: armada-xp-98dx3236: Switch to armada-38x-uart serial node
+Date:   Mon,  8 Jul 2019 17:13:42 +0200
+Message-Id: <20190708150530.239267964@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,48 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Joshua Scott <joshua.scott@alliedtelesis.co.nz>
 
-commit 25f09f858835b0e9a06213811031190a17d8ab78 upstream.
+commit 80031361747aec92163464f2ee08870fec33bcb0 upstream.
 
-Recommended by the hw team.
+Switch to the "marvell,armada-38x-uart" driver variant to empty
+the UART buffer before writing to the UART_LCR register.
 
-Reviewed-and-Tested-by: Huang Rui <ray.huang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Joshua Scott <joshua.scott@alliedtelesis.co.nz>
+Tested-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>.
 Cc: stable@vger.kernel.org
+Fixes: 43e28ba87708 ("ARM: dts: Use armada-370-xp as a base for armada-xp-98dx3236")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |   19 -------------------
- 1 file changed, 19 deletions(-)
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -1899,25 +1899,6 @@ static void gfx_v9_0_constants_init(stru
- 	mutex_unlock(&adev->srbm_mutex);
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -336,3 +336,11 @@
+ 	status = "disabled";
+ };
  
- 	gfx_v9_0_init_compute_vmid(adev);
--
--	mutex_lock(&adev->grbm_idx_mutex);
--	/*
--	 * making sure that the following register writes will be broadcasted
--	 * to all the shaders
--	 */
--	gfx_v9_0_select_se_sh(adev, 0xffffffff, 0xffffffff, 0xffffffff);
--
--	WREG32_SOC15(GC, 0, mmPA_SC_FIFO_SIZE,
--		   (adev->gfx.config.sc_prim_fifo_size_frontend <<
--			PA_SC_FIFO_SIZE__SC_FRONTEND_PRIM_FIFO_SIZE__SHIFT) |
--		   (adev->gfx.config.sc_prim_fifo_size_backend <<
--			PA_SC_FIFO_SIZE__SC_BACKEND_PRIM_FIFO_SIZE__SHIFT) |
--		   (adev->gfx.config.sc_hiz_tile_fifo_size <<
--			PA_SC_FIFO_SIZE__SC_HIZ_TILE_FIFO_SIZE__SHIFT) |
--		   (adev->gfx.config.sc_earlyz_tile_fifo_size <<
--			PA_SC_FIFO_SIZE__SC_EARLYZ_TILE_FIFO_SIZE__SHIFT));
--	mutex_unlock(&adev->grbm_idx_mutex);
--
- }
- 
- static void gfx_v9_0_wait_for_rlc_serdes(struct amdgpu_device *adev)
++&uart0 {
++	compatible = "marvell,armada-38x-uart";
++};
++
++&uart1 {
++	compatible = "marvell,armada-38x-uart";
++};
++
 
 
