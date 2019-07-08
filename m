@@ -2,365 +2,204 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EF0C5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63B2C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A09820665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:25:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GLZQCoJE"
+	by mail.kernel.org (Postfix) with ESMTP id 812462084A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfGHIZ0 (ORCPT
+        id S1728874AbfGHI0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:25:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55697 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfGHIZZ (ORCPT
+        Mon, 8 Jul 2019 04:26:36 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35216 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfGHI0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:25:25 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a15so14770287wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Oik9uNkr8AfKLvu3XAcx1FCs1T7U54UyCxWESLnO8SI=;
-        b=GLZQCoJEgWNINCuzz5U8QF1AGQnPJFkWYRVXIRiSN7GO8RFMhWlR+8k3qPPvmfD7wH
-         PuSwu2vbNt6El4uWOlvWl0KYOeXnk6wVThn4kkN5ntiIwCs/BLyRfIn2FCKTxGAEqZZD
-         b3j9ZXRmX++tJ3+BqSJ6FuF6CtTYCDGBRns31WejC2T6Gfl6Yai2Hr00YvKZbfJLqZkQ
-         c8YsQCglEunODQC17ev57e6fBk6TWbYqFtExf7V9K1J0vSAt2bqn1pD60AV2ovTX2HyI
-         853NCyxB6K9CeVvEDFgeSIGQupJmDBMwppCFkWo5ikQtdLpn7Q++64qv+tgNifXncq5a
-         fYVA==
+        Mon, 8 Jul 2019 04:26:36 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so8232161ljh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:26:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Oik9uNkr8AfKLvu3XAcx1FCs1T7U54UyCxWESLnO8SI=;
-        b=ryklR7jG8eq0NPsrEZv5Ye0M/lglkmncDtmagc+5YFsVGWeVXDj3V/zFG+Rn3Njtf6
-         NMFfCNgbM0k3wcirTDjA82EIAwszaIsqK0V980QGhn1im61ZLqPhnLprbyEywUi0S8Wd
-         16Ixxw9q2tNv1RDvZtzXMkRaVkIC1qrvi1Qo78fan+FQ02CZVTRNudcl6Xen7thEU4RD
-         FhtW3eLZzRM0hhjixsIrXRWAZaRC1CTDi3kKsbHF81RRtr5u3a4AdPQYRDwPEwi+JOV8
-         G7FCndkNVN/RqAvkNEb7ZP81xCj3w8NM+9WBItHkOJ//1NHXEWAIFTObVuvNLXFx4oZF
-         GQ9Q==
-X-Gm-Message-State: APjAAAVNbcEr124jkHwcubc+PSSMNmW/DJ7KDjC+WWVdKDyVTm0Fu4Ql
-        z8kw5uVy2te999vjhPRzc+FeRw==
-X-Google-Smtp-Source: APXvYqxTylCwoFePpM4qogcV8aCGWpXi32xWBaxaPRM5VsjNoubYhODcw+j8zEGsQpI5VtKAjI3mbg==
-X-Received: by 2002:a7b:cc04:: with SMTP id f4mr15988295wmh.125.1562574322389;
-        Mon, 08 Jul 2019 01:25:22 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id 91sm17530952wrp.3.2019.07.08.01.25.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 01:25:21 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Claus H . Stovgaard" <cst@phaseone.com>
-Subject: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
-Date:   Mon,  8 Jul 2019 10:23:43 +0200
-Message-Id: <20190708082343.30726-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=H9Jhir71IPIyzQGq+vtRBmdG8XRrnz6d01HWPy/tDXY=;
+        b=bVmFwMFE71OX2qrdS1VnIm9/kkZhAfPZOIGOrpOMqk3GybFUH0gHRxBopPOLzxcHdD
+         98ZxfYivR+cvk618lP7G9gZM9TYrvteCyBf2cf52UAHryRb+ul7eKqIRQ3jaThSOQeMZ
+         E6dnPy14YUDGVhCI1jCzY/zRElCEGJw9m0Rf30sRI/a0DG23QNeuaNO6hDqvvkoiTG4P
+         /uJzRdEDpxbC0HF9RiK4rbp3RzCJOk3Xi4ilxKIcoVVCWY2EjAbZXRLkSLDoQngzBUK2
+         qxQpLx7ISI/1RK0WyyfDAXY2D1neHAZtTtgHVkCDunYnaabjo36i93VupPSKFlWysbEB
+         nLsA==
+X-Gm-Message-State: APjAAAWdqRtubFSuBCMYkUeLNUKqfeg2WAlR0f19su1WxoOx/hyf46TZ
+        v+TxkSYdoBV5hPIwZ9+5AlVNTw==
+X-Google-Smtp-Source: APXvYqxXI/Ygue1Ac50jCKVSmx6Cuo5Nc2NT6pzqbq/Iw8sN98mexSHmndyMkZYR9vs57B/cyO2EhQ==
+X-Received: by 2002:a2e:80c8:: with SMTP id r8mr9586901ljg.168.1562574394354;
+        Mon, 08 Jul 2019 01:26:34 -0700 (PDT)
+Received: from localhost ([134.17.27.127])
+        by smtp.gmail.com with ESMTPSA id b27sm1558817ljb.11.2019.07.08.01.26.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 01:26:33 -0700 (PDT)
+Date:   Mon, 08 Jul 2019 01:26:33 -0700 (PDT)
+X-Google-Original-Date: Mon, 08 Jul 2019 01:23:27 PDT (-0700)
+Subject:     Re: [PATCH 16/17] riscv: clear the instruction cache and all registers when booting
+In-Reply-To: <78919862d11f6d56446f8fffd8a1a8c601ea5c32.camel@wdc.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>, linux-mm@kvack.org,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-3f43f4b8-473d-429d-9a09-12d3542e33bc@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, 01 Jul 2019 14:26:18 PDT (-0700), Atish Patra wrote:
+> On Mon, 2019-06-24 at 07:43 +0200, Christoph Hellwig wrote:
+>> When we get booted we want a clear slate without any leaks from
+>> previous
+>> supervisors or the firmware.  Flush the instruction cache and then
+>> clear
+>> all registers to known good values.  This is really important for the
+>> upcoming nommu support that runs on M-mode, but can't really harm
+>> when
+>> running in S-mode either.
+> 
+> That means it should be done for S-mode as well. Right ?
+> I see the reset code is enabled only for M-mode only.
+> 
+>>   Vaguely based on the concepts from opensbi.
+>> 
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> ---
+>>  arch/riscv/kernel/head.S | 85
+>> ++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 85 insertions(+)
+>> 
+>> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+>> index a4c170e41a34..74feb17737b4 100644
+>> --- a/arch/riscv/kernel/head.S
+>> +++ b/arch/riscv/kernel/head.S
+>> @@ -11,6 +11,7 @@
+>>  #include <asm/thread_info.h>
+>>  #include <asm/page.h>
+>>  #include <asm/csr.h>
+>> +#include <asm/hwcap.h>
+>>  
+>>  __INIT
+>>  ENTRY(_start)
+>> @@ -19,6 +20,12 @@ ENTRY(_start)
+>>  	csrw CSR_XIP, zero
+>>  
+>>  #ifdef CONFIG_M_MODE
+>> +	/* flush the instruction cache */
+>> +	fence.i
+>> +
+>> +	/* Reset all registers except ra, a0, a1 */
+>> +	call reset_regs
+>> +
+>>  	/*
+>>  	 * The hartid in a0 is expected later on, and we have no
+>> firmware
+>>  	 * to hand it to us.
+>> @@ -168,6 +175,84 @@ relocate:
+>>  	j .Lsecondary_park
+>>  END(_start)
+>>  
+>> +#ifdef CONFIG_M_MODE
+>> +ENTRY(reset_regs)
+>> +	li	sp, 0
+>> +	li	gp, 0
+>> +	li	tp, 0
+>> +	li	t0, 0
+>> +	li	t1, 0
+>> +	li	t2, 0
+>> +	li	s0, 0
+>> +	li	s1, 0
+>> +	li	a2, 0
+>> +	li	a3, 0
+>> +	li	a4, 0
+>> +	li	a5, 0
+>> +	li	a6, 0
+>> +	li	a7, 0
+>> +	li	s2, 0
+>> +	li	s3, 0
+>> +	li	s4, 0
+>> +	li	s5, 0
+>> +	li	s6, 0
+>> +	li	s7, 0
+>> +	li	s8, 0
+>> +	li	s9, 0
+>> +	li	s10, 0
+>> +	li	s11, 0
+>> +	li	t3, 0
+>> +	li	t4, 0
+>> +	li	t5, 0
+>> +	li	t6, 0
+>> +	csrw	sscratch, 0
+>> +
+>> +#ifdef CONFIG_FPU
+>> +	csrr	t0, misa
+>> +	andi	t0, t0, (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D)
+>> +	bnez	t0, .Lreset_regs_done
+>> +
+>> +	li	t1, SR_FS
+>> +	csrs	sstatus, t1
 
-If gpiolib is disabled, we use the inline stubs from gpio/consumer.h
-instead of regular definitions of GPIO API. The stubs for 'optional'
-variants of gpiod_get routines return NULL in this case as if the
-relevant GPIO wasn't found. This is correct so far.
+You need to check that the write stuck and branch around the FP instructions.
+Specifically, CONFIG_FPU means there may be an FPU, not there's definately an
+FPU.  You should also turn the FPU back off after zeroing the state.
 
-Calling other (non-gpio_get) stubs from this header triggers a warning
-because the GPIO descriptor couldn't have been requested. The warning
-however is unconditional (WARN_ON(1)) and is emitted even if the passed
-descriptor pointer is NULL.
-
-We don't want to force the users of 'optional' gpio_get to check the
-returned pointer before calling e.g. gpiod_set_value() so let's only
-WARN on non-NULL descriptors.
-
-Reported-by: Claus H. Stovgaard <cst@phaseone.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- include/linux/gpio/consumer.h | 64 +++++++++++++++++------------------
- 1 file changed, 32 insertions(+), 32 deletions(-)
-
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 9ddcf50a3c59..a7f08fb0f865 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -247,7 +247,7 @@ static inline void gpiod_put(struct gpio_desc *desc)
- 	might_sleep();
- 
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- }
- 
- static inline void devm_gpiod_unhinge(struct device *dev,
-@@ -256,7 +256,7 @@ static inline void devm_gpiod_unhinge(struct device *dev,
- 	might_sleep();
- 
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- }
- 
- static inline void gpiod_put_array(struct gpio_descs *descs)
-@@ -264,7 +264,7 @@ static inline void gpiod_put_array(struct gpio_descs *descs)
- 	might_sleep();
- 
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(descs);
- }
- 
- static inline struct gpio_desc *__must_check
-@@ -317,7 +317,7 @@ static inline void devm_gpiod_put(struct device *dev, struct gpio_desc *desc)
- 	might_sleep();
- 
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- }
- 
- static inline void devm_gpiod_put_array(struct device *dev,
-@@ -326,32 +326,32 @@ static inline void devm_gpiod_put_array(struct device *dev,
- 	might_sleep();
- 
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(descs);
- }
- 
- 
- static inline int gpiod_get_direction(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -ENOSYS;
- }
- static inline int gpiod_direction_input(struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -ENOSYS;
- }
- static inline int gpiod_direction_output(struct gpio_desc *desc, int value)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -ENOSYS;
- }
- static inline int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -ENOSYS;
- }
- 
-@@ -359,7 +359,7 @@ static inline int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
- static inline int gpiod_get_value(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return 0;
- }
- static inline int gpiod_get_array_value(unsigned int array_size,
-@@ -368,13 +368,13 @@ static inline int gpiod_get_array_value(unsigned int array_size,
- 					unsigned long *value_bitmap)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc_array);
- 	return 0;
- }
- static inline void gpiod_set_value(struct gpio_desc *desc, int value)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- }
- static inline int gpiod_set_array_value(unsigned int array_size,
- 					struct gpio_desc **desc_array,
-@@ -382,13 +382,13 @@ static inline int gpiod_set_array_value(unsigned int array_size,
- 					unsigned long *value_bitmap)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc_array);
- 	return 0;
- }
- static inline int gpiod_get_raw_value(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return 0;
- }
- static inline int gpiod_get_raw_array_value(unsigned int array_size,
-@@ -397,13 +397,13 @@ static inline int gpiod_get_raw_array_value(unsigned int array_size,
- 					    unsigned long *value_bitmap)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc_array);
- 	return 0;
- }
- static inline void gpiod_set_raw_value(struct gpio_desc *desc, int value)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- }
- static inline int gpiod_set_raw_array_value(unsigned int array_size,
- 					    struct gpio_desc **desc_array,
-@@ -411,14 +411,14 @@ static inline int gpiod_set_raw_array_value(unsigned int array_size,
- 					    unsigned long *value_bitmap)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc_array);
- 	return 0;
- }
- 
- static inline int gpiod_get_value_cansleep(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return 0;
- }
- static inline int gpiod_get_array_value_cansleep(unsigned int array_size,
-@@ -427,13 +427,13 @@ static inline int gpiod_get_array_value_cansleep(unsigned int array_size,
- 				     unsigned long *value_bitmap)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc_array);
- 	return 0;
- }
- static inline void gpiod_set_value_cansleep(struct gpio_desc *desc, int value)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- }
- static inline int gpiod_set_array_value_cansleep(unsigned int array_size,
- 					    struct gpio_desc **desc_array,
-@@ -441,13 +441,13 @@ static inline int gpiod_set_array_value_cansleep(unsigned int array_size,
- 					    unsigned long *value_bitmap)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc_array);
- 	return 0;
- }
- static inline int gpiod_get_raw_value_cansleep(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return 0;
- }
- static inline int gpiod_get_raw_array_value_cansleep(unsigned int array_size,
-@@ -456,14 +456,14 @@ static inline int gpiod_get_raw_array_value_cansleep(unsigned int array_size,
- 					       unsigned long *value_bitmap)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc_array);
- 	return 0;
- }
- static inline void gpiod_set_raw_value_cansleep(struct gpio_desc *desc,
- 						int value)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- }
- static inline int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
- 						struct gpio_desc **desc_array,
-@@ -471,41 +471,41 @@ static inline int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
- 						unsigned long *value_bitmap)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc_array);
- 	return 0;
- }
- 
- static inline int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -ENOSYS;
- }
- 
- static inline int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -ENOSYS;
- }
- 
- static inline int gpiod_is_active_low(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return 0;
- }
- static inline int gpiod_cansleep(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return 0;
- }
- 
- static inline int gpiod_to_irq(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -EINVAL;
- }
- 
-@@ -513,7 +513,7 @@ static inline int gpiod_set_consumer_name(struct gpio_desc *desc,
- 					  const char *name)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -EINVAL;
- }
- 
-@@ -525,7 +525,7 @@ static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
- static inline int desc_to_gpio(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--	WARN_ON(1);
-+	WARN_ON(desc);
- 	return -EINVAL;
- }
- 
--- 
-2.21.0
-
+>> +	fmv.s.x	f0, zero
+>> +	fmv.s.x	f1, zero
+>> +	fmv.s.x	f2, zero
+>> +	fmv.s.x	f3, zero
+>> +	fmv.s.x	f4, zero
+>> +	fmv.s.x	f5, zero
+>> +	fmv.s.x	f6, zero
+>> +	fmv.s.x	f7, zero
+>> +	fmv.s.x	f8, zero
+>> +	fmv.s.x	f9, zero
+>> +	fmv.s.x	f10, zero
+>> +	fmv.s.x	f11, zero
+>> +	fmv.s.x	f12, zero
+>> +	fmv.s.x	f13, zero
+>> +	fmv.s.x	f14, zero
+>> +	fmv.s.x	f15, zero
+>> +	fmv.s.x	f16, zero
+>> +	fmv.s.x	f17, zero
+>> +	fmv.s.x	f18, zero
+>> +	fmv.s.x	f19, zero
+>> +	fmv.s.x	f20, zero
+>> +	fmv.s.x	f21, zero
+>> +	fmv.s.x	f22, zero
+>> +	fmv.s.x	f23, zero
+>> +	fmv.s.x	f24, zero
+>> +	fmv.s.x	f25, zero
+>> +	fmv.s.x	f26, zero
+>> +	fmv.s.x	f27, zero
+>> +	fmv.s.x	f28, zero
+>> +	fmv.s.x	f29, zero
+>> +	fmv.s.x	f30, zero
+>> +	fmv.s.x	f31, zero
+>> +	csrw	fcsr, 0
+>> +#endif /* CONFIG_FPU */
+>> +.Lreset_regs_done:
+>> +	ret
+>> +END(reset_regs)
+>> +#endif /* CONFIG_M_MODE */
+>> +
+>>  __PAGE_ALIGNED_BSS
+>>  	/* Empty zero page */
+>>  	.balign PAGE_SIZE
+> 
+> -- 
+> Regards,
+> Atish
