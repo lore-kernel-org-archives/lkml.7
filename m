@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504C4C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E44C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2921C216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFC721738
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598916;
-	bh=pACI6D3myO5JNSRbPWXUf6hK64xGN3l01pdmArsudig=;
+	s=default; t=1562598919;
+	bh=6IS7yag5Kq91JMu5mditVnadffV0jOGNuCoFUBSN9Cs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BL6gp7BvpGyZiMcEquz8fLl7uAjDhYgpBbW3/1R1lHiVc0J7JRVwof1TB8IlY+eTW
-	 oE3XqVICQILZAZ8BbzS7PI4Jw2yEmr2Vyl6/GLUMq60A1XgVEGWSBMnI/aIeRdeJKA
-	 qZcbvq3o5/4fjDXGu0BrEiTwtJCR5Of4w+mNpCiI=
+	b=qo7aDcvraPVxlyGj49x6et+AvTcI/2L8aw8fapx3IkmCEhdodoeJvMfup6jC62srd
+	 CUZGTtSrlkqHui6CbP0JV7vQ0ugfIMlUqSn7qNAUT0S3CcW9ak6ZdraPGlzFjZeSMZ
+	 7YREMx4lZg0g0ukms3bR9p+rQmqDvvAdo6Myb9Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732294AbfGHPPP (ORCPT
+        id S1732306AbfGHPPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37590 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732279AbfGHPPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:15:12 -0400
+        id S1732293AbfGHPPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:15:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 916BC216F4;
-        Mon,  8 Jul 2019 15:15:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FD2B21707;
+        Mon,  8 Jul 2019 15:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598912;
-        bh=pACI6D3myO5JNSRbPWXUf6hK64xGN3l01pdmArsudig=;
+        s=default; t=1562598914;
+        bh=6IS7yag5Kq91JMu5mditVnadffV0jOGNuCoFUBSN9Cs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AcXr3cpNqmdckFmtK2+3Dd9AakjArKTmCi1/GPNfAlOn7EuUaDmH2NwpXkAK4IM7x
-         q5je9sLUnMkvjiA/HE6tpq+gsUkc/O0lL9KVSFQAPEP/Zzf4w8fWQ3Zp1boMun12jA
-         bz6YAM2nR6g6dCGS4GO7NwUpofu42hNxIrVDnJ2g=
+        b=LzVWp3WhPvBDP1qfQGRVaHbie4C8CcH5xA634vPcnpBmwBEPX+h+3CwjeebapN+4Z
+         V4tgp45RWhOzXczJWnPm1o1XA1RG106BFdvRuRBFSUuRpXGocAAZngWRqcE9wJllhX
+         wATkYThPs/x/lZSm9A4DhBwRwjT5cyjGchugDOqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "George G. Davis" <george_davis@mentor.com>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 15/73] scripts/checkstack.pl: Fix arm64 wrong or unknown architecture
-Date:   Mon,  8 Jul 2019 17:12:25 +0200
-Message-Id: <20190708150520.057563862@linuxfoundation.org>
+Subject: [PATCH 4.4 16/73] scsi: ufs: Check that space was properly alloced in copy_query_response
+Date:   Mon,  8 Jul 2019 17:12:26 +0200
+Message-Id: <20190708150520.208278905@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -61,40 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4f45d62a52297b10ded963412a158685647ecdec ]
+[ Upstream commit 1c90836f70f9a8ef7b7ad9e1fdd8961903e6ced6 ]
 
-The following error occurs for the `make ARCH=arm64 checkstack` case:
+struct ufs_dev_cmd is the main container that supports device management
+commands. In the case of a read descriptor request, we assume that the
+proper space was allocated in dev_cmd to hold the returning descriptor.
 
-aarch64-linux-gnu-objdump -d vmlinux $(find . -name '*.ko') | \
-perl ./scripts/checkstack.pl arm64
-wrong or unknown architecture "arm64"
+This is no longer true, as there are flows that doesn't use dev_cmd for
+device management requests, and was wrong in the first place.
 
-As suggested by Masahiro Yamada, fix the above error using regular
-expressions in the same way it was fixed for the `ARCH=x86` case via
-commit fda9f9903be6 ("scripts/checkstack.pl: automatically handle
-32-bit and 64-bit mode for ARCH=x86").
-
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: d44a5f98bb49 (ufs: query descriptor API)
+Signed-off-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Acked-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/checkstack.pl | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
-index 12a6940741fe..b8f616545277 100755
---- a/scripts/checkstack.pl
-+++ b/scripts/checkstack.pl
-@@ -45,7 +45,7 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
- 	$x	= "[0-9a-f]";	# hex character
- 	$xs	= "[0-9a-f ]";	# hex character or space
- 	$funcre = qr/^$x* <(.*)>:$/;
--	if ($arch eq 'aarch64') {
-+	if ($arch =~ '^(aarch|arm)64$') {
- 		#ffffffc0006325cc:       a9bb7bfd        stp     x29, x30, [sp, #-80]!
- 		$re = qr/^.*stp.*sp, \#-([0-9]{1,8})\]\!/o;
- 	} elsif ($arch eq 'arm') {
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 7322a17660d1..b140e81c4f7d 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -853,7 +853,8 @@ int ufshcd_copy_query_response(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ 	memcpy(&query_res->upiu_res, &lrbp->ucd_rsp_ptr->qr, QUERY_OSF_SIZE);
+ 
+ 	/* Get the descriptor */
+-	if (lrbp->ucd_rsp_ptr->qr.opcode == UPIU_QUERY_OPCODE_READ_DESC) {
++	if (hba->dev_cmd.query.descriptor &&
++	    lrbp->ucd_rsp_ptr->qr.opcode == UPIU_QUERY_OPCODE_READ_DESC) {
+ 		u8 *descp = (u8 *)lrbp->ucd_rsp_ptr +
+ 				GENERAL_UPIU_REQUEST_SIZE;
+ 		u16 resp_len;
 -- 
 2.20.1
 
