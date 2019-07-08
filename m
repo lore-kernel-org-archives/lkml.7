@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A30C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15314C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A71216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09C920665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599706;
-	bh=VH1TYRstC5ShWk42dKKa0fzC4vYZr7ryq5lXB8Azkk0=;
+	s=default; t=1562599709;
+	bh=II54N9oyz9p4+uMfs8XurpWIeyvXpBd2PwxshOEByrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y/fR4blutiNzeERxEDdNCCgz5MSrQ+xtCeUDZ249n5LqqWgzIkvyHU9CyWwCjzumW
-	 1pGEGyvpQGNV8c/oED9l1gZTvufyZuUWrX3yYsBSC0dsVEbxyhJCYs823rdzQeX8vA
-	 7pPEtnTswBoQeztA8109+KyU3Fqq/eW0UEI1M7gk=
+	b=HjTwdNB8d5JnugUzMKhqAJtkvyAsPdFBO2dl+1/0sQmPmjICHI8sf50y+LLtact4v
+	 HT+vLxyka+w1S4WyK0k2f+xIxPIIeOoW/z/h59/5+GrDP9HiutZv9hy8/mViyTycdJ
+	 2G5dKIexfxHLKJdsyKCj1beJLCJ7k5vjilerYRUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389285AbfGHP2Y (ORCPT
+        id S2389298AbfGHP21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:28:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56836 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:28:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389261AbfGHP2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:28:22 -0400
+        id S2389277AbfGHP2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:28:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A77A4204EC;
-        Mon,  8 Jul 2019 15:28:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5533A21537;
+        Mon,  8 Jul 2019 15:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599701;
-        bh=VH1TYRstC5ShWk42dKKa0fzC4vYZr7ryq5lXB8Azkk0=;
+        s=default; t=1562599703;
+        bh=II54N9oyz9p4+uMfs8XurpWIeyvXpBd2PwxshOEByrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0jh+HJtdT0yCuM0mwRVW+H6nI8V564HDYr561IYjofiS09rsanM9ufQ6+hbhMS3Mu
-         pNJPt/mZ00Y06DrV4bAf/9pwW+sKpc/kJTUO1aAq6iHrtyLRYMWaOiG7VHfodPXmAW
-         TWBBqfKXYtdyehNuE+o2r4x5w+eFagTj0zM5I+I4=
+        b=C5qixreJixuIZ6SD0u+EUOYlla5g70gB//JeAgvFv8E0UGKCDVOHHCnpDZ95QfdQJ
+         ivADcdXrj5PX4njU66MtvFqP3e+/2Gqi0avFkST/r1gRw3xMvAdZRUc4WKQM1GOhr8
+         CD9NzHpi5QaSJaggEzE9HqsqnUXBlsSs/LwpvbV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dennis Wassenberg <dennis.wassenberg@secunet.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 49/90] ALSA: hda/realtek - Change front mic location for Lenovo M710q
-Date:   Mon,  8 Jul 2019 17:13:16 +0200
-Message-Id: <20190708150525.029445260@linuxfoundation.org>
+        syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH 4.19 50/90] lib/mpi: Fix karactx leak in mpi_powm
+Date:   Mon,  8 Jul 2019 17:13:17 +0200
+Message-Id: <20190708150525.072211436@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -60,31 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dennis Wassenberg <dennis.wassenberg@secunet.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit bef33e19203dde434bcdf21c449e3fb4f06c2618 upstream.
+commit c8ea9fce2baf7b643384f36f29e4194fa40d33a6 upstream.
 
-On M710q Lenovo ThinkCentre machine, there are two front mics,
-we change the location for one of them to avoid conflicts.
+Sometimes mpi_powm will leak karactx because a memory allocation
+failure causes a bail-out that skips the freeing of karactx.  This
+patch moves the freeing of karactx to the end of the function like
+everything else so that it can't be skipped.
 
-Signed-off-by: Dennis Wassenberg <dennis.wassenberg@secunet.com>
+Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
+Fixes: cdec9cb5167a ("crypto: GnuPG based MPI lib - source files...")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ lib/mpi/mpi-pow.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6939,6 +6939,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
- 	SND_PCI_QUIRK(0x17aa, 0x310c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
-+	SND_PCI_QUIRK(0x17aa, 0x3111, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
- 	SND_PCI_QUIRK(0x17aa, 0x312a, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
- 	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
- 	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
+--- a/lib/mpi/mpi-pow.c
++++ b/lib/mpi/mpi-pow.c
+@@ -37,6 +37,7 @@
+ int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
+ {
+ 	mpi_ptr_t mp_marker = NULL, bp_marker = NULL, ep_marker = NULL;
++	struct karatsuba_ctx karactx = {};
+ 	mpi_ptr_t xp_marker = NULL;
+ 	mpi_ptr_t tspace = NULL;
+ 	mpi_ptr_t rp, ep, mp, bp;
+@@ -163,13 +164,11 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ 		int c;
+ 		mpi_limb_t e;
+ 		mpi_limb_t carry_limb;
+-		struct karatsuba_ctx karactx;
+ 
+ 		xp = xp_marker = mpi_alloc_limb_space(2 * (msize + 1));
+ 		if (!xp)
+ 			goto enomem;
+ 
+-		memset(&karactx, 0, sizeof karactx);
+ 		negative_result = (ep[0] & 1) && base->sign;
+ 
+ 		i = esize - 1;
+@@ -294,8 +293,6 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ 		if (mod_shift_cnt)
+ 			mpihelp_rshift(rp, rp, rsize, mod_shift_cnt);
+ 		MPN_NORMALIZE(rp, rsize);
+-
+-		mpihelp_release_karatsuba_ctx(&karactx);
+ 	}
+ 
+ 	if (negative_result && rsize) {
+@@ -312,6 +309,7 @@ int mpi_powm(MPI res, MPI base, MPI exp,
+ leave:
+ 	rc = 0;
+ enomem:
++	mpihelp_release_karatsuba_ctx(&karactx);
+ 	if (assign_rp)
+ 		mpi_assign_limb_space(res, rp, size);
+ 	if (mp_marker)
 
 
