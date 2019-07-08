@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29DFC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA23FC606C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E9E21743
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B1821479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="AwysrBJC"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="TV2o9ftD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391081AbfGHQb6 (ORCPT
+        id S2403941AbfGHQcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:31:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35047 "EHLO
+        Mon, 8 Jul 2019 12:32:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53210 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388799AbfGHQbv (ORCPT
+        with ESMTP id S2391335AbfGHQcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:31:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so186000wmg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:31:50 -0700 (PDT)
+        Mon, 8 Jul 2019 12:32:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s3so155519wms.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:32:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yfapiFsE4OmxP9vMHIQmElH3PTxTJhdK3T96JsR6xmY=;
-        b=AwysrBJC39iPhW8fSEU+3huktCPgPvzlgzNdwOdQrw+V5E8uP/wIg/Q0wCJVSkrQUJ
-         Y12gYUKKE5NakL3+MVgJ2Fsu1guDhor2brgYw+CkRNveotznlgGG4HBX8Dk9thPw/Y5A
-         6Xk42e56KAaitNCqYeA68tZW2ACB2UxzsxWm8=
+        bh=/djGN8HAFa0Qe2S92JYcPQLF+TKLfL6yZ4KqqnYg5ZY=;
+        b=TV2o9ftDatxvZ1Naqph4aaWZ/G4ATmwqdVK/1bl8m5hVjBsVKTvm03MfKGpIA6FXkq
+         ueOGpwc3RH2T1ckfwS4DEDJxqcXvzsj+3MEBikwAawCJMO4rNLdOCba0OmUyFuaQ5tWK
+         thP7y3FyV/myim4Cr6LkzEynPAn/hitx9veU0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yfapiFsE4OmxP9vMHIQmElH3PTxTJhdK3T96JsR6xmY=;
-        b=fBhMsDfGzl6exE+iYimCMdSXoR40ga9PlwaMtlYhA+bZoB3GL3FIDbej3sn9YG6G6s
-         U5n3Xo1Ltkylxd1eWdEyrXLIKzDp3P4Ed3vSN+hNANL6IyVf7fUXFUry1BPAifgC7jef
-         t4cZg1czFqt91rOXJ0VHK4N4ee8OzlNIiYWbzCm45vOuNwb53C4YuD+kcwwj/UXHt5fS
-         iPns7qYYVk0ACvOHOgYkeSgtCm+bvzS/YAyz9ByAKd1CqC61Qf1Ikl7tSxxuw9uBrk1b
-         /1OXKvTOwi6fuNUsYKYwCnKhwIiHQGnvfdJr18bzc95CvVTft5lJitSzBPPKkwAa+i4p
-         Q9Xw==
-X-Gm-Message-State: APjAAAXpIpeg2HeHOGw/pZQ1AeBcOc25XLf9iUi7xQgaZjyUHnX4dcTk
-        3w2wgt3pDqPSgUBx5jQ+u5LMiE9a9zpM7g==
-X-Google-Smtp-Source: APXvYqy4tMsGFA84bjXV72y0LxdF54qkE5Rr12cM5BrQCv2eDz3tBHn7eYNxh9WEPMBYW/RPdWOQtg==
-X-Received: by 2002:a1c:544d:: with SMTP id p13mr18325919wmi.78.1562603510047;
-        Mon, 08 Jul 2019 09:31:50 -0700 (PDT)
+        bh=/djGN8HAFa0Qe2S92JYcPQLF+TKLfL6yZ4KqqnYg5ZY=;
+        b=nbeBesbOkc4NBbNYqhAtz/AkpqsKkwskaOTbn3agDyc4tHUdRUAxqnHCqV1gf0Oagr
+         +HAUnOL0diac6PFQeOwwDq3hJrjxXYhsJEjyZrOnaHkMnM76qbVU/ApjRcaRHUBnFoGj
+         hKVlGCWZxXvzQoxUbDvPpcDAxFKEMPKCWf3pPLxtbvFp7GfmbBIlbKYqy1nQQPrFZU6/
+         BbAdnfM/s+1+f1NyAOA1Ee7WoFjnLWAFXg3sCZXv0lEf6f/KBPQzV9qaPUCdL1lqfc2E
+         NF1yyDfLRuwob0vfEkAcE8AyFWu6dohnmYVv+03ehTH+cgLbTk3HsWkMIo0y7NrcnFka
+         ZjjA==
+X-Gm-Message-State: APjAAAVJpQNgFmnIUgoCAkQPfhkGblKmD6eGF7JTLeFZ2QelibUdWsl7
+        OkXvNlPJpJGKhUbj4JzI5i18YZIyp9I=
+X-Google-Smtp-Source: APXvYqygSV8fYEBriB90aid/dziVjejXmPEUn++Hsvpp+mxZfwRWeb0Mn/9waunu837TVcLxeDLq8A==
+X-Received: by 2002:a1c:a942:: with SMTP id s63mr17505499wme.76.1562603520152;
+        Mon, 08 Jul 2019 09:32:00 -0700 (PDT)
 Received: from localhost.localdomain (ip5f5aedbe.dynamic.kabel-deutschland.de. [95.90.237.190])
-        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.48
+        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.59
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:31:49 -0700 (PDT)
+        Mon, 08 Jul 2019 09:31:59 -0700 (PDT)
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alban Crequy <alban@kinvolk.io>,
@@ -68,9 +68,9 @@ Cc:     Alban Crequy <alban@kinvolk.io>,
         Stanislav Fomichev <sdf@google.com>, netdev@vger.kernel.org,
         bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
         Krzesimir Nowak <krzesimir@kinvolk.io>
-Subject: [bpf-next v3 03/12] selftests/bpf: Avoid another case of errno clobbering
-Date:   Mon,  8 Jul 2019 18:31:12 +0200
-Message-Id: <20190708163121.18477-4-krzesimir@kinvolk.io>
+Subject: [bpf-next v3 11/12] selftests/bpf: Add tests for bpf_prog_test_run for perf events progs
+Date:   Mon,  8 Jul 2019 18:31:20 +0200
+Message-Id: <20190708163121.18477-12-krzesimir@kinvolk.io>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190708163121.18477-1-krzesimir@kinvolk.io>
 References: <20190708163121.18477-1-krzesimir@kinvolk.io>
@@ -81,51 +81,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8184d44c9a57 ("selftests/bpf: skip verifier tests for
-unsupported program types") added a check for an unsupported program
-type. The function doing it changes errno, so test_verifier should
-save it before calling it if test_verifier wants to print a reason why
-verifying a BPF program of a supported type failed.
+The tests check if ctx and data are correctly prepared from ctx_in and
+data_in, so accessing the ctx and using the bpf_perf_prog_read_value
+work as expected.
 
-Changes since v2:
-- Move the declaration to fit the reverse christmas tree style.
-
-Fixes: 8184d44c9a57 ("selftests/bpf: skip verifier tests for unsupported program types")
-Cc: Stanislav Fomichev <sdf@google.com>
 Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 ---
- tools/testing/selftests/bpf/test_verifier.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_verifier.c   | 48 ++++++++++
+ .../selftests/bpf/verifier/perf_event_run.c   | 96 +++++++++++++++++++
+ 2 files changed, 144 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/verifier/perf_event_run.c
 
 diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 3fe126e0083b..c7541f572932 100644
+index 6f124cc4ee34..484ea8842b06 100644
 --- a/tools/testing/selftests/bpf/test_verifier.c
 +++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -864,6 +864,7 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 	int run_errs, run_successes;
- 	int map_fds[MAX_NR_MAPS];
- 	const char *expected_err;
-+	int saved_errno;
- 	int fixup_skips;
- 	__u32 pflags;
- 	int i, err;
-@@ -894,6 +895,7 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 		pflags |= BPF_F_ANY_ALIGNMENT;
- 	fd_prog = bpf_verify_program(prog_type, prog, prog_len, pflags,
- 				     "GPL", 0, bpf_vlog, sizeof(bpf_vlog), 4);
-+	saved_errno = errno;
- 	if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
- 		printf("SKIP (unsupported program type %d)\n", prog_type);
- 		skips++;
-@@ -910,7 +912,7 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 	if (expected_ret == ACCEPT) {
- 		if (fd_prog < 0) {
- 			printf("FAIL\nFailed to load prog '%s'!\n",
--			       strerror(errno));
-+			       strerror(saved_errno));
- 			goto fail_log;
- 		}
- #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+@@ -295,6 +295,54 @@ static void bpf_fill_scale(struct bpf_test *self)
+ 	}
+ }
+ 
++static void bpf_fill_perf_event_test_run_check(struct bpf_test *self)
++{
++	compiletime_assert(
++		sizeof(struct bpf_perf_event_data) <= TEST_CTX_LEN,
++		"buffer for ctx is too short to fit struct bpf_perf_event_data");
++	compiletime_assert(
++		sizeof(struct bpf_perf_event_value) <= TEST_DATA_LEN,
++		"buffer for data is too short to fit struct bpf_perf_event_value");
++
++	struct bpf_perf_event_data ctx = {
++		.regs = (bpf_user_pt_regs_t) {
++			.r15 = 1,
++			.r14 = 2,
++			.r13 = 3,
++			.r12 = 4,
++			.rbp = 5,
++			.rbx = 6,
++			.r11 = 7,
++			.r10 = 8,
++			.r9 = 9,
++			.r8 = 10,
++			.rax = 11,
++			.rcx = 12,
++			.rdx = 13,
++			.rsi = 14,
++			.rdi = 15,
++			.orig_rax = 16,
++			.rip = 17,
++			.cs = 18,
++			.eflags = 19,
++			.rsp = 20,
++			.ss = 21,
++		},
++		.sample_period = 1,
++		.addr = 2,
++	};
++	struct bpf_perf_event_value data = {
++		.counter = 1,
++		.enabled = 2,
++		.running = 3,
++	};
++
++	memcpy(self->ctx, &ctx, sizeof(ctx));
++	memcpy(self->data, &data, sizeof(data));
++	free(self->fill_insns);
++	self->fill_insns = NULL;
++}
++
+ /* BPF_SK_LOOKUP contains 13 instructions, if you need to fix up maps */
+ #define BPF_SK_LOOKUP(func)						\
+ 	/* struct bpf_sock_tuple tuple = {} */				\
+diff --git a/tools/testing/selftests/bpf/verifier/perf_event_run.c b/tools/testing/selftests/bpf/verifier/perf_event_run.c
+new file mode 100644
+index 000000000000..3f877458a7f8
+--- /dev/null
++++ b/tools/testing/selftests/bpf/verifier/perf_event_run.c
+@@ -0,0 +1,96 @@
++#define PER_LOAD_AND_CHECK_PTREG(PT_REG_FIELD, VALUE)			\
++	PER_LOAD_AND_CHECK_CTX(offsetof(bpf_user_pt_regs_t, PT_REG_FIELD), VALUE)
++#define PER_LOAD_AND_CHECK_EVENT(PED_FIELD, VALUE)			\
++	PER_LOAD_AND_CHECK_CTX(offsetof(struct bpf_perf_event_data, PED_FIELD), VALUE)
++#define PER_LOAD_AND_CHECK_CTX(OFFSET, VALUE)				\
++	PER_LOAD_AND_CHECK_64(BPF_REG_4, BPF_REG_1, OFFSET, VALUE)
++#define PER_LOAD_AND_CHECK_VALUE(PEV_FIELD, VALUE)			\
++	PER_LOAD_AND_CHECK_64(BPF_REG_7, BPF_REG_6, offsetof(struct bpf_perf_event_value, PEV_FIELD), VALUE)
++#define PER_LOAD_AND_CHECK_64(DST, SRC, OFFSET, VALUE)			\
++	BPF_LDX_MEM(BPF_DW, DST, SRC, OFFSET),				\
++	BPF_JMP_IMM(BPF_JEQ, DST, VALUE, 2),				\
++	BPF_MOV64_IMM(BPF_REG_0, VALUE),				\
++	BPF_EXIT_INSN()
++
++{
++	"check if regs contain expected values",
++	.insns = {
++	PER_LOAD_AND_CHECK_PTREG(r15, 1),
++	PER_LOAD_AND_CHECK_PTREG(r14, 2),
++	PER_LOAD_AND_CHECK_PTREG(r13, 3),
++	PER_LOAD_AND_CHECK_PTREG(r12, 4),
++	PER_LOAD_AND_CHECK_PTREG(rbp, 5),
++	PER_LOAD_AND_CHECK_PTREG(rbx, 6),
++	PER_LOAD_AND_CHECK_PTREG(r11, 7),
++	PER_LOAD_AND_CHECK_PTREG(r10, 8),
++	PER_LOAD_AND_CHECK_PTREG(r9, 9),
++	PER_LOAD_AND_CHECK_PTREG(r8, 10),
++	PER_LOAD_AND_CHECK_PTREG(rax, 11),
++	PER_LOAD_AND_CHECK_PTREG(rcx, 12),
++	PER_LOAD_AND_CHECK_PTREG(rdx, 13),
++	PER_LOAD_AND_CHECK_PTREG(rsi, 14),
++	PER_LOAD_AND_CHECK_PTREG(rdi, 15),
++	PER_LOAD_AND_CHECK_PTREG(orig_rax, 16),
++	PER_LOAD_AND_CHECK_PTREG(rip, 17),
++	PER_LOAD_AND_CHECK_PTREG(cs, 18),
++	PER_LOAD_AND_CHECK_PTREG(eflags, 19),
++	PER_LOAD_AND_CHECK_PTREG(rsp, 20),
++	PER_LOAD_AND_CHECK_PTREG(ss, 21),
++	BPF_MOV64_IMM(BPF_REG_0, 0),
++	BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
++	.ctx_len = sizeof(struct bpf_perf_event_data),
++	.data_len = sizeof(struct bpf_perf_event_value),
++	.fill_helper = bpf_fill_perf_event_test_run_check,
++	.override_data_out_len = true,
++},
++{
++	"check if sample period and addr contain expected values",
++	.insns = {
++	PER_LOAD_AND_CHECK_EVENT(sample_period, 1),
++	PER_LOAD_AND_CHECK_EVENT(addr, 2),
++	BPF_MOV64_IMM(BPF_REG_0, 0),
++	BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
++	.ctx_len = sizeof(struct bpf_perf_event_data),
++	.data_len = sizeof(struct bpf_perf_event_value),
++	.fill_helper = bpf_fill_perf_event_test_run_check,
++	.override_data_out_len = true,
++},
++{
++	"check if bpf_perf_prog_read_value returns expected data",
++	.insns = {
++	// allocate space for a struct bpf_perf_event_value
++	BPF_MOV64_REG(BPF_REG_6, BPF_REG_10),
++	BPF_ALU64_IMM(BPF_ADD, BPF_REG_6, -(int)sizeof(struct bpf_perf_event_value)),
++	// prepare parameters for bpf_perf_prog_read_value(ctx, struct bpf_perf_event_value*, u32)
++	// BPF_REG_1 already contains the context
++	BPF_MOV64_REG(BPF_REG_2, BPF_REG_6),
++	BPF_MOV64_IMM(BPF_REG_3, sizeof(struct bpf_perf_event_value)),
++	BPF_EMIT_CALL(BPF_FUNC_perf_prog_read_value),
++	// check the return value
++	BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, 0, 1),
++	BPF_EXIT_INSN(),
++	// check if the fields match the expected values
++	PER_LOAD_AND_CHECK_VALUE(counter, 1),
++	PER_LOAD_AND_CHECK_VALUE(enabled, 2),
++	PER_LOAD_AND_CHECK_VALUE(running, 3),
++	BPF_MOV64_IMM(BPF_REG_0, 0),
++	BPF_EXIT_INSN(),
++	},
++	.result = ACCEPT,
++	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
++	.ctx_len = sizeof(struct bpf_perf_event_data),
++	.data_len = sizeof(struct bpf_perf_event_value),
++	.fill_helper = bpf_fill_perf_event_test_run_check,
++	.override_data_out_len = true,
++},
++#undef PER_LOAD_AND_CHECK_64
++#undef PER_LOAD_AND_CHECK_VALUE
++#undef PER_LOAD_AND_CHECK_CTX
++#undef PER_LOAD_AND_CHECK_EVENT
++#undef PER_LOAD_AND_CHECK_PTREG
 -- 
 2.20.1
 
