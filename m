@@ -2,148 +2,136 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E82C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66855C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55F720844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B8C20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:45:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dancer-es.20150623.gappssmtp.com header.i=@dancer-es.20150623.gappssmtp.com header.b="pIRJbQFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbfGHNn7 (ORCPT
+        id S1731422AbfGHNpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:43:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39417 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbfGHNn7 (ORCPT
+        Mon, 8 Jul 2019 09:45:49 -0400
+Received: from mail-yb1-f173.google.com ([209.85.219.173]:39177 "EHLO
+        mail-yb1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729756AbfGHNpt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:43:59 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hkTvv-0000r7-Vv; Mon, 08 Jul 2019 15:43:56 +0200
-Date:   Mon, 8 Jul 2019 15:43:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-cc:     Ingo Molnar <mingo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, Nadav Amit <namit@vmware.com>,
-        paulmck <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH V2] cpu/hotplug: Cache number of online CPUs
-In-Reply-To: <alpine.DEB.2.21.1907052256490.3648@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1907081531560.4709@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907042237010.1802@nanos.tec.linutronix.de> <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907042302570.1802@nanos.tec.linutronix.de> <1623929363.5480.1562277655641.JavaMail.zimbra@efficios.com>
- <alpine.DEB.2.21.1907050024270.1802@nanos.tec.linutronix.de> <611100399.5550.1562283294601.JavaMail.zimbra@efficios.com> <20190705084910.GA6592@gmail.com> <824482130.8027.1562341133252.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907052246220.3648@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907052256490.3648@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 8 Jul 2019 09:45:49 -0400
+Received: by mail-yb1-f173.google.com with SMTP id u9so4723562ybu.6
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 06:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dancer-es.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=b6Yj5h+3IsVQ18bhf9sXOFecVAcErsPfHOLYMmegy60=;
+        b=pIRJbQFeE+0ZOAxaZErUqzu6QzU/Mup+HORtT3lnYT0auZlgy1/Qpoc5nQoX6R3Om1
+         4odkYQ3ceEQyFDQVNGy160ACz6NF1q6+zWgIKKhAQNgTRNiTbfWMH66dRPS4cSEStb/S
+         wepq7Jg+/2p8fbUy651TAdbssmhIFAhtgZ/aZnDoiAImRLks0a2jVLodJZ3TU9in1XOB
+         PVXenhIRMp+u1mtSxRYIdrDhRAKPR6rqfioIU94DrAaDUb22nKp2FKwBVpI8IrcApQeC
+         moj9dVFyVA1gUzfQYn1rAkNh4jWNOh2hxJH7ZPSCk/Tz6KXa06v0coAgayaegfYA72ut
+         tRDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=b6Yj5h+3IsVQ18bhf9sXOFecVAcErsPfHOLYMmegy60=;
+        b=OybmGVUKO8lNnrrF7hx1h9zGo718fH5/VMj7LaO3faGLHnSkMSOggDOmtNxNsCprAc
+         RTkoB5BpoyIKYnDKcZjgYjPF24ztc8jIzWdKC8ceD9cx7zMdjj4JiybjfXDQWwde21Jj
+         tgkaX4J4MBt24nARLnEO9fL52onMUopdNuBoTOTWLXZtIMQ0ZKrsfuSzZUBB4f9QVQro
+         9EYy7qFTLn7BTeWLHf2cxtofA8LrZvGbODNrRqDohQ6xqzoXHo7c184NAT1X98rY1wf7
+         1XJ5qSmOcDjVQlZkFzRQOg5IPdeqyK8hZ2vSpHtZwZ0CeQIQhEQSqG9YjSElxHnlKsMP
+         vItQ==
+X-Gm-Message-State: APjAAAXrz5aU9lwKbAqna42ve/4mjmb4Ls26q72Tl4lTfseanLp7UCKh
+        onmiO7pfWdKATtEJnh0XZOTbpkclYXSxQqr8Tj+rtQ==
+X-Google-Smtp-Source: APXvYqz3ndSGiFSbSJKXCtaMbNyLmLsyHwsjvnjTlzsFbg2idtCMF1txFC5dUkwMbdjYkxN//h0mQAA50lXoxV7aibg=
+X-Received: by 2002:a25:5a88:: with SMTP id o130mr10963597ybb.69.1562593548302;
+ Mon, 08 Jul 2019 06:45:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From:   Liam Shepherd <liam@dancer.es>
+Date:   Mon, 8 Jul 2019 14:45:37 +0100
+Message-ID: <CAB8B+d3QEJ4kqzXnT7xaE26F8qqREeNm2M2=DKv+2vUsTSu4sQ@mail.gmail.com>
+Subject: Cannot build 5.2.0 with gold linker
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        keescook@chromium.org
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Revaluating the bitmap wheight of the online cpus bitmap in every
-invocation of num_online_cpus() over and over is a pretty useless
-exercise. Especially when num_online_cpus() is used in code pathes like the
-IPI delivery of x86 or the membarrier code.
+Hi,
 
-Cache the number of online CPUs in the core and just return the cached
-variable.
+It results in this error:
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
-V2: Use READ/WRITE_ONCE() and add comment what it actually achieves. Remove
-    the bogus lockdep assert in the write path as the caller cannot hold the
-    lock. It's a task on the plugged CPU which is not the controlling task.
----
- include/linux/cpumask.h |   26 +++++++++++++++++---------
- kernel/cpu.c            |   22 ++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 9 deletions(-)
+Invalid absolute R_X86_64_32S relocation: _etext
+make[2]: *** [arch/x86/boot/compressed/Makefile:130:
+arch/x86/boot/compressed/vmlinux.relocs] Error 1
+make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
+make[2]: *** Waiting for unfinished jobs....
+  CC      arch/x86/boot/compressed/cpuflags.o
+make[1]: *** [arch/x86/boot/Makefile:112:
+arch/x86/boot/compressed/vmlinux] Error 2
+make: *** [arch/x86/Makefile:283: bzImage] Error 2
 
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -95,8 +95,23 @@ extern struct cpumask __cpu_active_mask;
- #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
- #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
- 
-+extern unsigned int __num_online_cpus;
-+
- #if NR_CPUS > 1
--#define num_online_cpus()	cpumask_weight(cpu_online_mask)
-+/**
-+ * num_online_cpus() - Read the number of online CPUs
-+ *
-+ * READ_ONCE() protects against theoretical load tearing and prevents
-+ * the compiler from reloading the value in a function or loop.
-+ *
-+ * Even with that, this interface gives only a momentary snapshot and is
-+ * not protected against concurrent CPU hotplug operations unless invoked
-+ * from a cpuhp_lock held region.
-+ */
-+static inline unsigned int num_online_cpus(void)
-+{
-+	return READ_ONCE(__num_online_cpus);
-+}
- #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
- #define num_present_cpus()	cpumask_weight(cpu_present_mask)
- #define num_active_cpus()	cpumask_weight(cpu_active_mask)
-@@ -805,14 +820,7 @@ set_cpu_present(unsigned int cpu, bool p
- 		cpumask_clear_cpu(cpu, &__cpu_present_mask);
- }
- 
--static inline void
--set_cpu_online(unsigned int cpu, bool online)
--{
--	if (online)
--		cpumask_set_cpu(cpu, &__cpu_online_mask);
--	else
--		cpumask_clear_cpu(cpu, &__cpu_online_mask);
--}
-+void set_cpu_online(unsigned int cpu, bool online);
- 
- static inline void
- set_cpu_active(unsigned int cpu, bool active)
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2288,6 +2288,9 @@ EXPORT_SYMBOL(__cpu_present_mask);
- struct cpumask __cpu_active_mask __read_mostly;
- EXPORT_SYMBOL(__cpu_active_mask);
- 
-+unsigned int __num_online_cpus __read_mostly;
-+EXPORT_SYMBOL(__num_online_cpus);
-+
- void init_cpu_present(const struct cpumask *src)
- {
- 	cpumask_copy(&__cpu_present_mask, src);
-@@ -2303,6 +2306,25 @@ void init_cpu_online(const struct cpumas
- 	cpumask_copy(&__cpu_online_mask, src);
- }
- 
-+void set_cpu_online(unsigned int cpu, bool online)
-+{
-+	int adj = 0;
-+
-+	if (online) {
-+		if (!cpumask_test_and_set_cpu(cpu, &__cpu_online_mask))
-+			adj = 1;
-+	} else {
-+		if (cpumask_test_and_clear_cpu(cpu, &__cpu_online_mask))
-+			adj = -1;
-+	}
-+	/*
-+	 * WRITE_ONCE() protects only against the theoretical stupidity of
-+	 * a compiler to tear the store, but won't protect readers which
-+	 * are not serialized against concurrent hotplug operations.
-+	 */
-+	WRITE_ONCE(__num_online_cpus, __num_online_cpus + adj);
-+}
-+
- /*
-  * Activate the first processor.
-  */
+This was introduced under this commit:
+
+392bef709659abea614abfe53cf228e7a59876a4: x86/build: Move _etext to
+actual end of .text
+
+The commit was reverted on 5.18 by Greg...
+
+commit 474ec2dcfbcf268a4124145b5e08847595f67a4c
+Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Wed Jun 5 20:40:30 2019 +0200
+
+    Revert "x86/build: Move _etext to actual end of .text"
+
+    This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
+
+    It seems to cause lots of problems when using the gold linker, and no
+    one really needs this at the moment, so just revert it from the stable
+    trees.
+
+However it's still present with 5.2.0. Is this intentional?
+
+In case it's helpful:
+
+# gcc -v
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with:
+/var/tmp/portage/sys-devel/gcc-8.3.0-r1/work/gcc-8.3.0/configure
+--host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr
+--bindir=/usr/x86_64-pc-linux-gnu/gcc-bin/8.3.0
+--includedir=/usr/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include
+--datadir=/usr/share/gcc-data/x86_64-pc-linux-gnu/8.3.0
+--mandir=/usr/share/gcc-data/x86_64-pc-linux-gnu/8.3.0/man
+--infodir=/usr/share/gcc-data/x86_64-pc-linux-gnu/8.3.0/info
+--with-gxx-include-dir=/usr/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/g++-v8
+--with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/8.3.0/python
+--enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt
+--disable-werror --with-system-zlib --enable-nls
+--without-included-gettext --enable-checking=release
+--with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo
+8.3.0-r1 p1.1' --disable-esp --enable-libstdcxx-time --enable-shared
+--enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu
+--enable-multilib --with-multilib-list=m32,m64 --disable-altivec
+--disable-fixed-point --enable-targets=all --enable-libgomp
+--disable-libmudflap --disable-libssp --enable-libmpx
+--disable-systemtap --enable-vtable-verify --enable-lto --with-isl
+--disable-isl-version-check --enable-default-pie --enable-default-ssp
+Thread model: posix
+gcc version 8.3.0 (Gentoo 8.3.0-r1 p1.1)
+
+# ld -v
+GNU gold (Gentoo 2.32 p2 2.32.0) 1.16
+
+Thanks,
+Liam
