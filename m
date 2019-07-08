@@ -2,99 +2,136 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52943C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F186EC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3303D21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5DB20693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:09:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="n0JiqngR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391499AbfGHQIk (ORCPT
+        id S2391509AbfGHQJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:08:40 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39136 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729062AbfGHQIk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:08:40 -0400
-Received: by mail-qk1-f195.google.com with SMTP id w190so1201443qkc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:08:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AIRM9fJTuV02DInLnXfPQr/Kf49I2+6ORUwr6RxGn7I=;
-        b=rmt7xCqIN9Mj9fIjyScbxvzsh320zvMKDn+CEfch4TUP1tlXFgqJBOhmqDBuSKDaPO
-         5KcP/SHuzm2InTbOvleNxjPyEcbQIT5LoidBsyZh5zKE1a31zPUjyemdHEf7pupMnDNb
-         imcsCEo8E0IpJOwjZ93a8UJ2q3S6rFcA8iWWluQ5stDUGxArTZAdSgcLBmouihB8NgrM
-         dn5uhzrSCOsPL/nNhfkdwBZYHt8eh1VECSWU9z/Y4SEZiuLeBdHGTACgcfB6vvd6tuh+
-         SxXIlv35p4D4b2i9g8/snKelbPqYM4yDHLdqjeRMkFTn9kS0GjP0mpxHTen/sKeYW5RS
-         xFwQ==
-X-Gm-Message-State: APjAAAW+70iAMhLj1Uqtn1AKi9TH96WiZ7VoDDYdljrshKjpWNc7z3rr
-        bAJY1mgzQBte5U/yrb7ShdfLhBXW+jTVajgrHOM=
-X-Google-Smtp-Source: APXvYqxEteI4pKZ99QH7i/UIVpoxSSPej/jTeoSq5Gb18AgTvCR6/QaNyJI3G6p/aYnV/vglL8CaZcuN2VjZYVTutxc=
-X-Received: by 2002:a05:620a:b:: with SMTP id j11mr11264883qki.352.1562602119294;
- Mon, 08 Jul 2019 09:08:39 -0700 (PDT)
+        Mon, 8 Jul 2019 12:09:08 -0400
+Received: from mail-eopbgr130079.outbound.protection.outlook.com ([40.107.13.79]:23910
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729062AbfGHQJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:09:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Et7pwJyRWqYJ5CEjQoBXXF01Y0fuJFtFXwGpth3tND4=;
+ b=n0JiqngRF/OmUAYT/JKcV0etP7CE2BmqObVVgApCErhcIhHh06kAkGv7PRbg/5DDUm7eNI3Sx6KZheHu84cDzWJHugNd7g2xZ1rFDpnV7BXS29o5EkRQH+0F3qPTz3dDzJYEvHyfCaxc18hCAwiZvebjIcqLRqxhO/we48qi0Wc=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6061.eurprd05.prod.outlook.com (20.178.204.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Mon, 8 Jul 2019 16:09:03 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
+ 16:09:03 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the mlx5-next tree with the rdma tree
+Thread-Topic: linux-next: manual merge of the mlx5-next tree with the rdma
+ tree
+Thread-Index: AQHVMhLbwhSrvM/Tf0CjT+DAZZSBmqbAFk+AgADUcAA=
+Date:   Mon, 8 Jul 2019 16:09:03 +0000
+Message-ID: <20190708160858.GI23966@mellanox.com>
+References: <20190704124738.1e88cb69@canb.auug.org.au>
+ <20190708132837.5ccb36ed@canb.auug.org.au>
+In-Reply-To: <20190708132837.5ccb36ed@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0063.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:1::40) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8e4cd52c-0d9d-4218-a2bc-08d703be9865
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6061;
+x-ms-traffictypediagnostic: VI1PR05MB6061:
+x-microsoft-antispam-prvs: <VI1PR05MB606176D0A80635B04900A619CFF60@VI1PR05MB6061.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 00922518D8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(53754006)(199004)(189003)(43544003)(4326008)(5660300002)(476003)(33656002)(102836004)(478600001)(99286004)(66066001)(25786009)(68736007)(6436002)(229853002)(6486002)(6116002)(186003)(6512007)(52116002)(54906003)(3846002)(446003)(66446008)(64756008)(66556008)(66476007)(11346002)(26005)(305945005)(73956011)(66946007)(6506007)(7736002)(76176011)(6916009)(386003)(86362001)(36756003)(316002)(8936002)(256004)(486006)(14454004)(71190400001)(71200400001)(1076003)(81156014)(53936002)(81166006)(2906002)(2616005)(6246003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6061;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PVlAFGBhyHpAejxwVOw6dZwotDxViEgt09wRmIOpfzZi60yAy+Ud9Van2nW25qYPyalMrbbgDYPLU/fpOKcjRocDJsKTPmXNP/aX7jam5hORPGIVGg3dsZAzTA3LEhmT2O8D4DgiTp+uSCrPO8hjAdp/CooOa2aNpYvSC4yhLbJa6fEMOcluTGELhc1fLzJUIY2TlWC0ENkHUb6ESjuAjpd47Nk0TsOKUNQUyj5GzNvdoC0gF83VFRARL8me08WCKyZ3VzgZKQ1VRUi8n7xO2oJLNWbZgvctiJMvbwTZBGqBFUTLHcqoxE1nxdyUE6cLTLwoa/UVpcaK7TDOM61JUsTewohgE/zD1cnWzM0aX8uIQUA0U07m3nzkSuV3f29jN1COMJraAraIkb+fnZgNFp8h18cLSVq7Y7r7WROXF8E=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F041F5A654C82B408AAFE3221C2B5B14@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190708144205.2770771-1-arnd@arndb.de> <20190708144205.2770771-2-arnd@arndb.de>
- <CADnq5_MFi1cGxo-AGMcGzY4nW8HAuX8SiPfAD=eRrdo0w-aoJQ@mail.gmail.com>
-In-Reply-To: <CADnq5_MFi1cGxo-AGMcGzY4nW8HAuX8SiPfAD=eRrdo0w-aoJQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 8 Jul 2019 18:08:21 +0200
-Message-ID: <CAK8P3a1m-aDAsiVFYyQcoq0a=Y8rA5R3P5TSuBfmK2Gync-8eQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] amdgpu: make SOC15/navi support conditional
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Philip Yang <Philip.Yang@amd.com>,
-        Jack Xiao <Jack.Xiao@amd.com>, Evan Quan <evan.quan@amd.com>,
-        Yong Zhao <Yong.Zhao@amd.com>, Amber Lin <Amber.Lin@amd.com>,
-        Feifei Xu <Feifei.Xu@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        xinhui pan <xinhui.pan@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Emily Deng <Emily.Deng@amd.com>, Huang Rui <ray.huang@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, Rex Zhu <Rex.Zhu@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Shaoyun Liu <Shaoyun.Liu@amd.com>, Oak Zeng <Oak.Zeng@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e4cd52c-0d9d-4218-a2bc-08d703be9865
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 16:09:03.3900
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 4:46 PM Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> On Mon, Jul 8, 2019 at 10:42 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, Jul 08, 2019 at 01:28:37PM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> On Thu, 4 Jul 2019 12:47:38 +1000 Stephen Rothwell <sfr@canb.auug.org.au>=
+ wrote:
 > >
-> > Enabling amdgpu but not CONFIG_DRM_AMD_DC leads to a warning:
-> >
-> > drivers/gpu/drm/amd/amdgpu/nv.c: In function 'nv_set_ip_blocks':
-> > drivers/gpu/drm/amd/amdgpu/nv.c:400:3: error: #warning "Enable CONFIG_DRM_AMD_DC for display support on navi." [-Werror=cpp]
-> >  # warning "Enable CONFIG_DRM_AMD_DC for display support on navi."
-> >    ^~~~~~~
-> > drivers/gpu/drm/amd/amdgpu/soc15.c: In function 'soc15_set_ip_blocks':
-> > drivers/gpu/drm/amd/amdgpu/soc15.c:653:3: error: #warning "Enable CONFIG_DRM_AMD_DC for display support on SOC15." [-Werror=cpp]
-> >
-> > However, CONFIG_DRM_AMD_DC can only be enabled on x86, so we
-> > cannot do that when building for other architectures.
->
-> DC is not limited to x86.
+> > Hi all,
+> >=20
+> > Today's linux-next merge of the mlx5-next tree got a conflict in:
+> >=20
+> >   drivers/infiniband/hw/mlx5/cq.c
+> >=20
+> > between commit:
+> >=20
+> >   e39afe3d6dbd ("RDMA: Convert CQ allocations to be under core responsi=
+bility")
+> >=20
+> > from the rdma tree and commit:
+> >=20
+> >   38164b771947 ("net/mlx5: mlx5_core_create_cq() enhancements")
+> >=20
+> > from the mlx5-next tree.
+> >=20
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tre=
+e
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularl=
+y
+> > complex conflicts.
+> >=20
+>=20
+> This is now a conflict between the net-next tree and the rdma tree.
 
-Ah, right, only DRM_AMD_DC_DCN1_0 is x86-only.
+You'll see the mlx5-next merge with rdma tomorrow that will take care
+of this
 
->  I can drop the warning if that is the concern.
-
-That would be great, yes.
-
-      Arnd
+Thanks,
+Jason
