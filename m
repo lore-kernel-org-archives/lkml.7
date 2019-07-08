@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8672C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE314C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B638620651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73427204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600122;
-	bh=1KK2po7NyTP55ixosEs7UwaF4RaRt3CEIpQlKBVWY3E=;
+	s=default; t=1562600127;
+	bh=aNaYjnq15d5e7OzdjIviYRdikdrCKjgey/wUG1Q66SA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FjucgaENSs6NYBIsfx5aaVymeeQCWVZ5CMkMD380qqFRL3KrmCYNXy1Myi+ERHOTs
-	 tFiZAvaWSHDBDMKjkfYuRpWI6qnlXeCq3PeDg6ZwGcr4DzjmY2DrqkJni4oMMtaTH6
-	 8NHAUylxB2ts6e8mzYK5WU4L3cQHaTcGeRmMfg0w=
+	b=HZwxELuYLDo3Zm9RtyDy5ukqFalpzyK4ZiQBvhfmvdZfiH7YmryZd9andxNS/kM6y
+	 Y5rANCdugVvmiQAq8NqUhOGjVyxvmSScYj8ix+gDn4Sfz/0fbnoy4xXAC/CDL6Cpyg
+	 mR6PfNVRjLVBS+bV+EokmKUkPVWnIPTDzriToz5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390935AbfGHPfV (ORCPT
+        id S2390941AbfGHPf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:35:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37824 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:35:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390924AbfGHPfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:35:18 -0400
+        id S2390631AbfGHPfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:35:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D069C204EC;
-        Mon,  8 Jul 2019 15:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7861204EC;
+        Mon,  8 Jul 2019 15:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600117;
-        bh=1KK2po7NyTP55ixosEs7UwaF4RaRt3CEIpQlKBVWY3E=;
+        s=default; t=1562600123;
+        bh=aNaYjnq15d5e7OzdjIviYRdikdrCKjgey/wUG1Q66SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tkr91wV55GBi3f9MdqkULAEhCF5Og4ludnenYjEYObnPFYQn5QIJGKJUS2qcA8BBH
-         VJfSw6rT38ENPFjuyyLctsKjznwLuAm5QTg5HCTcmUj9fLelG7Ye7nKg1OS70rabcJ
-         JAKj5+I8ZED1H1yFzfzMMB54MH4FeXEkyFOlvxnk=
+        b=OL1Sw7/MO55X878KuvUaYh8Dt5WPxCFMzwiBMTCatm8KtRpRdlVeBGZcjlB0ABNr+
+         /yXwx19nVEJdUE0tzgkLqc6sNV8IOnV2ZqKQJnqOZZSv2OggjNIahIh+YljeRcTT6E
+         iKDAq7IOdnVsmkHdaK2jQHPqFliy6c8yXv8skpls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.1 94/96] dmaengine: jz4780: Fix an endian bug in IRQ handler
-Date:   Mon,  8 Jul 2019 17:14:06 +0200
-Message-Id: <20190708150531.511815773@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Bolshakov <r.bolshakov@yadro.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.1 96/96] scsi: target/iblock: Fix overrun in WRITE SAME emulation
+Date:   Mon,  8 Jul 2019 17:14:08 +0200
+Message-Id: <20190708150531.612248263@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,40 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-commit 4c89cc73d1da42ae48b5c5dfbfd12304d0b86786 upstream.
+commit 5676234f20fef02f6ca9bd66c63a8860fce62645 upstream.
 
-The "pending" variable was a u32 but we cast it to an unsigned long
-pointer when we do the for_each_set_bit() loop.  The problem is that on
-big endian 64bit systems that results in an out of bounds read.
+WRITE SAME corrupts data on the block device behind iblock if the command
+is emulated. The emulation code issues (M - 1) * N times more bios than
+requested, where M is the number of 512 blocks per real block size and N is
+the NUMBER OF LOGICAL BLOCKS specified in WRITE SAME command. So, for a
+device with 4k blocks, 7 * N more LBAs gets written after the requested
+range.
 
-Fixes: 4e4106f5e942 ("dmaengine: jz4780: Fix transfers being ACKed too soon")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The issue happens because the number of 512 byte sectors to be written is
+decreased one by one while the real bios are typically from 1 to 8 512 byte
+sectors per bio.
+
+Fixes: c66ac9db8d4a ("[SCSI] target: Add LIO target core v4.0.0-rc6")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/dma-jz4780.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/target/target_core_iblock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -722,12 +722,13 @@ static irqreturn_t jz4780_dma_irq_handle
- {
- 	struct jz4780_dma_dev *jzdma = data;
- 	unsigned int nb_channels = jzdma->soc_data->nb_channels;
--	uint32_t pending, dmac;
-+	unsigned long pending;
-+	uint32_t dmac;
- 	int i;
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -515,7 +515,7 @@ iblock_execute_write_same(struct se_cmd
  
- 	pending = jz4780_dma_ctrl_readl(jzdma, JZ_DMA_REG_DIRQP);
- 
--	for_each_set_bit(i, (unsigned long *)&pending, nb_channels) {
-+	for_each_set_bit(i, &pending, nb_channels) {
- 		if (jz4780_dma_chan_irq(jzdma, &jzdma->chan[i]))
- 			pending &= ~BIT(i);
+ 		/* Always in 512 byte units for Linux/Block */
+ 		block_lba += sg->length >> SECTOR_SHIFT;
+-		sectors -= 1;
++		sectors -= sg->length >> SECTOR_SHIFT;
  	}
+ 
+ 	iblock_submit_bios(&list);
 
 
