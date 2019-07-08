@@ -2,107 +2,150 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFCBC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC95DC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F79620693
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863A320693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LkaE0H8X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8s8BDKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732552AbfGHQVZ (ORCPT
+        id S1733150AbfGHQV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:21:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57146 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728118AbfGHQVY (ORCPT
+        Mon, 8 Jul 2019 12:21:29 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46960 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730848AbfGHQVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:21:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZwYfPk5d/Yy55T7nPWB9w4EAXddoKhF7sDVLRypzsWg=; b=LkaE0H8XqZ6iaM3BHzbgbkaYk
-        ONscP2cE2Om1tnwVQtCK/Ktz5rj/oiCz3MXVt2KB/Qk89l3FWS9hcRxYdrACzOEHrvLZf8FkrOZYG
-        O8TQsLUVsyVf3y/zO8MAqFrwekkrweFTbyEpe9QrpW0d50Wxs7QvcbMCYklkgoPRWvtyt1Oj51Iso
-        ZxJV8rbTgO8DnAOAqyZ+ZrRylDWmu91AiltqimLr/a/rREICp474u/lfdCuIxmC5eCTgBUSy5+MRS
-        LTIU+MPk2cb8qsFv17V0RQVYppgyFqUrG1SH8ba1wnRT0SyXqvzqmeKYZz0d1sxXEd6Ag4imHUUHE
-        rJrpqvl4A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkWOE-0000bG-Bp; Mon, 08 Jul 2019 16:21:19 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E461A20976D60; Mon,  8 Jul 2019 18:21:15 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 18:21:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 2/7] perf/cgroup: order events in RB tree by cgroup id
-Message-ID: <20190708162115.GF3419@hirez.programming.kicks-ass.net>
-References: <20190702065955.165738-1-irogers@google.com>
- <20190702065955.165738-3-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190702065955.165738-3-irogers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 8 Jul 2019 12:21:25 -0400
+Received: by mail-io1-f65.google.com with SMTP id i10so36501177iol.13;
+        Mon, 08 Jul 2019 09:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:message-id:in-reply-to:references:subject:mime-version
+         :content-transfer-encoding;
+        bh=SmN5EFIMBB9EcBNdZWlkN540cp3oExz4pb0qA9L1qq0=;
+        b=C8s8BDKlkCJFkRR5YpKL5tKi67LYuNipSHTx3qPwA1l1k/ZvVkNibT8UrpI3XNyNo/
+         CluZ44BMK/ziV5W7KzBNH0NXzmoX2Jq6jeIyEm4qaJAbwonTJu9c0JLcDxIOyeqqLKAj
+         mACxKh062/YsxNYiByf54n9NWqIxfJGoCu2X+yE3DqP4XOmSEbCnqADGtU/ydWJK+naG
+         4CNjv13KimDZJwuQ9Q4cNsNaQHJwuximAIrITUj0tZQRk4RV7Vc9/OY4F6nZ4zDre93Y
+         vjhd/EoSWSIv2CBNs7UuMO1Ueo7nEe3xUJyu3RisUWi92iFMOXGeGgC4SP9PXFXUfBDe
+         sqdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
+         :subject:mime-version:content-transfer-encoding;
+        bh=SmN5EFIMBB9EcBNdZWlkN540cp3oExz4pb0qA9L1qq0=;
+        b=gXamSzP3aN7DT2nSKOzN1nx8Qs5XWv83vMxXh8i26LI6641kQo5+ycg37oD7mSSIkl
+         wM60akWDNOQQib4GQazh4KNsRk+41nMA7mpmfFBayQqaNam1nia+ua3sK5oJKyT0qLAu
+         u+NEBYE4ZiddUYgOmD7xoF8NxTybFMhroq0LSXCLDzyiEf4excif1ddwZtmY18nU0tv1
+         qhfd0o+TExCzW2cZnTIrX/oHHDv1pvqHyZpyeCmv3x37UqeG238+0z6LEddAlVMjHKV3
+         d4qtFW97CcxvdrF6FJD2oP8lh7vl0YKyg6bQVRbWaiEDp1nb2v2HTozGttg+sluTZ695
+         ciNQ==
+X-Gm-Message-State: APjAAAVmWeB62vCExQJQ/QKvmJ/4bt3hZYf52+HY7YEXOQQ1tyJuUSea
+        5b7yJ2xttAfNCcvYhhjD+kQ=
+X-Google-Smtp-Source: APXvYqzxYEml55UqQKfbWptdyh8ixilXO5dGlZCem+0W98DhejyZCoJ3/cmypwI1xnh3L3ZN/AdIyQ==
+X-Received: by 2002:a6b:7b07:: with SMTP id l7mr15646304iop.225.1562602884883;
+        Mon, 08 Jul 2019 09:21:24 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id d25sm16525839iom.52.2019.07.08.09.21.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 09:21:24 -0700 (PDT)
+Date:   Mon, 08 Jul 2019 09:21:17 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>,
+        bpf@vger.kernel.org, ebiggers@kernel.org, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Message-ID: <5d236d7dc1db6_75f52af7c83505bcc3@john-XPS-13-9370.notmuch>
+In-Reply-To: <0000000000007eb42d058c9836ac@google.com>
+References: <5d199ad457036_1dd62b219ced25b86e@john-XPS-13-9370.notmuch>
+ <0000000000007eb42d058c9836ac@google.com>
+Subject: Re: WARNING in mark_lock
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 11:59:50PM -0700, Ian Rogers wrote:
-> +#ifndef CONFIG_CGROUP_PERF
-> +	/*
-> +	 * Without cgroups, with a task context, iterate over per-CPU and any
-> +	 * CPU events.
-> +	 */
-> +	const int max_itrs = 2;
-> +#else
-> +	/*
-> +	 * The depth of cgroups is limited by MAX_PATH. It is unlikely that this
-> +	 * many parent-child related cgroups will have perf events
-> +	 * monitored. Limit the number of cgroup iterators to 16.
-> +	 */
-> +	const int max_cgroups_with_events_depth = 16;
-> +	/*
-> +	 * With cgroups we either iterate for a task context (per-CPU or any CPU
-> +	 * events) or for per CPU the global and per cgroup events.
-> +	 */
-> +	const int max_itrs = max(2, 1 + max_cgroups_with_events_depth);
+syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer still triggered  
+> crash:
+> KASAN: use-after-free Read in class_equal
+> 
+> ==================================================================
+> BUG: KASAN: use-after-free in class_equal+0x40/0x50  
+> kernel/locking/lockdep.c:1527
+> Read of size 8 at addr ffff88808a268ba0 by task syz-executor.1/9270
+> 
+> CPU: 0 PID: 9270 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+> 
+> Allocated by task 2647419968:
+> BUG: unable to handle page fault for address: ffffffff8c00b020
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 8a70067 P4D 8a70067 PUD 8a71063 PMD 0
+> Thread overran stack, or stack corrupted
+> Oops: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 9270 Comm: syz-executor.1 Not tainted 5.2.0-rc3+ #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> RIP: 0010:stack_depot_fetch+0x10/0x30 lib/stackdepot.c:203
+> Code: e9 7b fd ff ff 4c 89 ff e8 8d b4 62 fe e9 e6 fd ff ff 90 90 90 90 90  
+> 90 90 90 89 f8 c1 ef 11 25 ff ff 1f 00 81 e7 f0 3f 00 00 <48> 03 3c c5 20  
+> 6c 04 8b 48 8d 47 18 48 89 06 8b 47 0c c3 0f 1f 00
+> RSP: 0018:ffff88808a2688e8 EFLAGS: 00010006
+> RAX: 00000000001f8880 RBX: ffff88808a269304 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffff88808a2688f0 RDI: 0000000000003ff0
+> RBP: ffff88808a268908 R08: 0000000000000020 R09: ffffed1015d044fa
+> R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffea0002289a00
+> R13: ffff88808a268ba0 R14: ffff8880aa58ec40 R15: ffff88808a269300
+> FS:  00005555570ba940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffff8c00b020 CR3: 000000008dd00000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+> Modules linked in:
+> CR2: ffffffff8c00b020
+> ---[ end trace 4acfe4b59fbc9cdb ]---
+> RIP: 0010:stack_depot_fetch+0x10/0x30 lib/stackdepot.c:203
+> Code: e9 7b fd ff ff 4c 89 ff e8 8d b4 62 fe e9 e6 fd ff ff 90 90 90 90 90  
+> 90 90 90 89 f8 c1 ef 11 25 ff ff 1f 00 81 e7 f0 3f 00 00 <48> 03 3c c5 20  
+> 6c 04 8b 48 8d 47 18 48 89 06 8b 47 0c c3 0f 1f 00
+> RSP: 0018:ffff88808a2688e8 EFLAGS: 00010006
+> RAX: 00000000001f8880 RBX: ffff88808a269304 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffff88808a2688f0 RDI: 0000000000003ff0
+> RBP: ffff88808a268908 R08: 0000000000000020 R09: ffffed1015d044fa
+> R10: ffffed1015d044f9 R11: ffff8880ae8227cf R12: ffffea0002289a00
+> R13: ffff88808a268ba0 R14: ffff8880aa58ec40 R15: ffff88808a269300
+> FS:  00005555570ba940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffff8c00b020 CR3: 000000008dd00000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> Tested on:
+> 
+> commit:         0b58d013 bpf: tls, implement unhash to avoid transition ou..
+> git tree:       git://github.com/cilium/linux ktls-unhash
+> console output: https://syzkaller.appspot.com/x/log.txt?x=153368a3a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2cc918d28ebd06b4
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
 
-That seems like a very complicated way to write 17.
-
-> +#endif
-> +	/* The number of iterators in use. */
-> +	int num_itrs;
-> +	/*
-> +	 * A set of iterators, the iterator for the visit is chosen by the
-> +	 * group_index.
-> +	 */
-> +	struct perf_event *itrs[max_itrs];
-
-And that is 136 bytes of stack. Which I suppose is just about
-acceptible.
-
-But why not something like:
-
-	struct perf_event *iters[IS_ENABLED(CONFIG_CGROUP_PERF) ? 17 : 2];
-
-	iters[i++] = foo;
-	WARN_ON_ONCE(i >= ARRAY_SIZE(iters));
-
-?
+#syz test: git://github.com/cilium/linux fix-unhash
