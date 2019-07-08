@@ -2,268 +2,138 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DDAC606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2278C606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0CC2086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C136F2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:26:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BkK5QJIK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LwQ+7zDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404181AbfGHT0S (ORCPT
+        id S2404197AbfGHT0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:26:18 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34162 "EHLO
+        Mon, 8 Jul 2019 15:26:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38044 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404164AbfGHT0Q (ORCPT
+        with ESMTP id S1726762AbfGHTZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:26:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so3469141pfo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:26:15 -0700 (PDT)
+        Mon, 8 Jul 2019 15:25:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y15so8071825pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HxfZuw01tuRQlI3u5x7pWAP9zYOxJGJcmWPvFAPk6as=;
-        b=BkK5QJIKT0J2d2OkK0pM+sLi0kUL/QZVjVWzmRavRYnqNFJ/hkUf18htyGDJnHzTGc
-         eAKYdfsit4sS+aYHPLTCt9MUtCLY+x3SsQoLoN7Gdv25yzh/++ugk+Z4V5/3cTfcjRKh
-         NVRZgCLjgf2K0MYUrt5CcHKsdAt7j2Z4eDkMpuxNKFsewo4rdOgWIYkkNp9+GLVV4Jk4
-         O7otQyEmxC22qw9ITvLwRU/y1L0IzZp/i0Xb9vCHxi2qFiks+t2tECGeIUrR6hMyqdWU
-         mZcQGaijGsyDT7WXQqrZmK+zzDwIb/5JD5nYfqcydGXYIfEiycdQD7BmhuRSmo0kmfZc
-         t7ZA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MaGzZisdYBBgFX/QuRcqVi/VI5GsRgwFYphjBCtTHs0=;
+        b=LwQ+7zDaMDpO5piJbvIq8JbtbV72vHpBAwq3IFau8WlEoUnxJ+WP7+9VrBVGl+5uN4
+         J+Ar+i53NQMiECyGyGjjJI35+J4wzNYAmWEhijO3gZurm/2WvoDHY0H8W1OIEOXs0/OI
+         bI5bj6duTAH31k3iVODuW8sPlqBdnfdadfG5Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HxfZuw01tuRQlI3u5x7pWAP9zYOxJGJcmWPvFAPk6as=;
-        b=V+bPsZDe7kAfLFxYkOJPkOtpPx2ES5HiGy5vBeUEa1sDuZkwlxFDNY1k2NNQlpXwFC
-         JiJigNRI3CscScJp3Bu09+1MkR7ad/w0iCY3Eann3NKraFawj4H1chaAVFUGimkrNqH3
-         MlIgMJ7PRH8L1ouXwQxJnUy85jLw6cqpu8uh2857Z7YyVZIP/dha0Ql3udmvsd3kXyuN
-         m2PGm07L44tjD+9bxxoKpbbIkw2DbyBluH2JhLUMZFOZjb9yi/om9v5FwdEXdn52eegJ
-         AdlX7NfyDpScw4fRhnjiKUYVz7W4x2Vn5R8sseyBEOtHnhtziubp2WvCXwJIhuDNn4cG
-         xT1g==
-X-Gm-Message-State: APjAAAV4hKhZ/JYkZ0qzsBkEYWTkIbHwZhcDs80VSZgSJevAieVnM9g8
-        +5wwLTPNGH3RrTsMbOc+0jKLqg==
-X-Google-Smtp-Source: APXvYqw+pAcqr/xA1niNx2ZJZRMX6HHEsJq5NJaAqjp7dEa1Zr3sTl6gVBuGUSL7HUilkdcVkKIlNg==
-X-Received: by 2002:a63:18d:: with SMTP id 135mr25833845pgb.62.1562613975220;
-        Mon, 08 Jul 2019 12:26:15 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f88sm309324pjg.5.2019.07.08.12.26.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 12:26:14 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 12:26:12 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: interconnect: Add Qualcomm QCS404 DT
- bindings
-Message-ID: <20190708192612.GE30636@minitux>
-References: <20190613151323.10850-1-georgi.djakov@linaro.org>
- <20190613151323.10850-2-georgi.djakov@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MaGzZisdYBBgFX/QuRcqVi/VI5GsRgwFYphjBCtTHs0=;
+        b=el6Zx2aBaZVMriiNG0I+PI9X6ALL45v3XhJX+yzqdzAKZURGLcy1tbysp9rb6wINsp
+         jXHYxiDVWZRXCLx7TuJHZcxXBjPKvHsmWqHcMN1BEjcgHnIvA9rHAV+x9+1HAn/8sP76
+         2Xl5dTajqBHD4EUY58cI5Ulkpk/vSOd5j2bvASLn0SzQyf+ZtZgpsIft/cdyYJrditK0
+         +/KG0+rLOgxeIl14jAIzOdv1Crx17mYXkiEgzGIjVtLU9RaO9CW2kSiD3UlOtuLwj9w4
+         0mKqIKUKRAXTB4kcxBzxrXtJOijnSCWvjOFWpe6jrlL+/MrfMXm39HEVN7F/iDcSiDvF
+         AKNA==
+X-Gm-Message-State: APjAAAWLAHODAgtlICDQ224bPm4vn70Gsif5N3+opvrs9GREAaBgyXKS
+        8MK3/cexEYnA32ZEwAJ2Czkoww==
+X-Google-Smtp-Source: APXvYqxcCcLYcn/x8D50rn/vmkXY7YFkvL0a3L/ogSHSleiZNJEF9oD7to8kU4B1bDy6uEs49/LGuA==
+X-Received: by 2002:a63:f4e:: with SMTP id 14mr26032375pgp.58.1562613911655;
+        Mon, 08 Jul 2019 12:25:11 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id v184sm19032424pfb.82.2019.07.08.12.25.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 12:25:11 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v3 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+Date:   Mon,  8 Jul 2019 12:24:53 -0700
+Message-Id: <20190708192459.187984-2-mka@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+In-Reply-To: <20190708192459.187984-1-mka@chromium.org>
+References: <20190708192459.187984-1-mka@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613151323.10850-2-georgi.djakov@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13 Jun 08:13 PDT 2019, Georgi Djakov wrote:
+Add the 'realtek,eee-led-mode-disable' property to disable EEE
+LED mode on Realtek PHYs that support it.
 
-> The Qualcomm QCS404 platform has several buses that could be controlled
-> and tuned according to the bandwidth demand.
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> 
-> v4:
-> - Add the DT header into this patch.
-> - Pick Bjorn's r-b.
-> 
-> v3:
-> - Add a reg property and move the interconnect nodes under the "soc" node.
-> 
-> v2:
-> - No changes.
-> 
->  .../bindings/interconnect/qcom,qcs404.txt     | 46 ++++++++++
->  .../dt-bindings/interconnect/qcom,qcs404.h    | 88 +++++++++++++++++++
->  2 files changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
->  create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> new file mode 100644
-> index 000000000000..14a827268dda
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
-> @@ -0,0 +1,46 @@
-> +Qualcomm QCS404 Network-On-Chip interconnect driver binding
-> +-----------------------------------------------------------
-> +
-> +Required properties :
-> +- compatible : shall contain only one of the following:
-> +			"qcom,qcs404-bimc"
-> +			"qcom,qcs404-pcnoc"
-> +			"qcom,qcs404-snoc"
-> +- #interconnect-cells : should contain 1
-> +
-> +Optional properties :
-> +reg : specifies the physical base address and size of registers
-> +clocks : list of phandles and specifiers to all interconnect bus clocks
-> +clock-names : clock names should include both "bus_clk" and "bus_a_clk"
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+TODO: adapt PHY core to deal with optional compatible strings
 
-Spoke to Rob about this patch, and I don't think these properties should
-not be described as optional.
+Changes in v3:
+- added entry for compatible string
+- added compatible string to example
+- mention that the new property is only available for RTL8211E
 
-The reg isn't used unless we're implementing support for QoS, but let's
-include them in the binding as required anyways.
+Changes in v2:
+- document 'realtek,eee-led-mode-disable' instead of
+  'realtek,enable-ssc' in the initial version
+---
+ .../devicetree/bindings/net/realtek.txt       | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/realtek.txt
 
-Iirc the two clocks are required with the current implementation, but
-shouldn't there be an iface clock as well, for accessing the QoS
-register space?
+diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
+new file mode 100644
+index 000000000000..db0333f23fec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/realtek.txt
+@@ -0,0 +1,31 @@
++Realtek PHY properties.
++
++This document describes properties of Realtek PHYs.
++
++Optional properties:
++- compatible: should be one of the following:
++  "realtek,rtl8201cp", "realtek,rtl8201f", "realtek,rtl8211",
++  "realtek,rtl8211b", "realtek,rtl8211c", "realtek,rtl8211dn",
++  "realtek,rtl8211e", "realtek,rtl8211f", "rtl8366rb"
++
++  the property is required if any of the properties are specified that
++  are only supported for certain Realtek PHYs.
++
++- realtek,eee-led-mode-disable: Disable EEE LED mode on this port.
++
++  Only supported for "realtek,rtl8211e".
++
++
++Example:
++
++mdio0 {
++	compatible = "snps,dwmac-mdio";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	ethphy: ethernet-phy@1 {
++		compatible = "realtek,rtl8211e";
++		reg = <1>;
++		realtek,eee-led-mode-disable;
++	};
++};
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-
-PS. As I read this again, please drop _clk from the two clocks names -
-we know they are clocks...
-
-Regards,
-Bjorn
-
-> +
-> +Example:
-> +
-> +soc {
-> +	...
-> +	bimc: interconnect@400000 {
-> +		reg = <0x00400000 0x80000>;
-> +		compatible = "qcom,qcs404-bimc";
-> +		#interconnect-cells = <1>;
-> +		clock-names = "bus_clk", "bus_a_clk";
-> +		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-> +			<&rpmcc RPM_SMD_BIMC_A_CLK>;
-> +	};
-> +
-> +	pnoc: interconnect@500000 {
-> +		reg = <0x00500000 0x15080>;
-> +		compatible = "qcom,qcs404-pcnoc";
-> +		#interconnect-cells = <1>;
-> +		clock-names = "bus_clk", "bus_a_clk";
-> +		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
-> +			<&rpmcc RPM_SMD_PNOC_A_CLK>;
-> +	};
-> +
-> +	snoc: interconnect@580000 {
-> +		reg = <0x00580000 0x23080>;
-> +		compatible = "qcom,qcs404-snoc";
-> +		#interconnect-cells = <1>;
-> +		clock-names = "bus_clk", "bus_a_clk";
-> +		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-> +			<&rpmcc RPM_SMD_SNOC_A_CLK>;
-> +	};
-> +};
-> diff --git a/include/dt-bindings/interconnect/qcom,qcs404.h b/include/dt-bindings/interconnect/qcom,qcs404.h
-> new file mode 100644
-> index 000000000000..960f6e39c5f2
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,qcs404.h
-> @@ -0,0 +1,88 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Qualcomm interconnect IDs
-> + *
-> + * Copyright (c) 2019, Linaro Ltd.
-> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
-> +
-> +#define MASTER_AMPSS_M0			0
-> +#define MASTER_OXILI			1
-> +#define MASTER_MDP_PORT0		2
-> +#define MASTER_SNOC_BIMC_1		3
-> +#define MASTER_TCU_0			4
-> +#define SLAVE_EBI_CH0			5
-> +#define SLAVE_BIMC_SNOC			6
-> +
-> +#define MASTER_SPDM			0
-> +#define MASTER_BLSP_1			1
-> +#define MASTER_BLSP_2			2
-> +#define MASTER_XI_USB_HS1		3
-> +#define MASTER_CRYPT0			4
-> +#define MASTER_SDCC_1			5
-> +#define MASTER_SDCC_2			6
-> +#define MASTER_SNOC_PCNOC		7
-> +#define MASTER_QPIC			8
-> +#define PCNOC_INT_0			9
-> +#define PCNOC_INT_2			10
-> +#define PCNOC_INT_3			11
-> +#define PCNOC_S_0			12
-> +#define PCNOC_S_1			13
-> +#define PCNOC_S_2			14
-> +#define PCNOC_S_3			15
-> +#define PCNOC_S_4			16
-> +#define PCNOC_S_6			17
-> +#define PCNOC_S_7			18
-> +#define PCNOC_S_8			19
-> +#define PCNOC_S_9			20
-> +#define PCNOC_S_10			21
-> +#define PCNOC_S_11			22
-> +#define SLAVE_SPDM			23
-> +#define SLAVE_PDM			24
-> +#define SLAVE_PRNG			25
-> +#define SLAVE_TCSR			26
-> +#define SLAVE_SNOC_CFG			27
-> +#define SLAVE_MESSAGE_RAM		28
-> +#define SLAVE_DISP_SS_CFG		29
-> +#define SLAVE_GPU_CFG			30
-> +#define SLAVE_BLSP_1			31
-> +#define SLAVE_BLSP_2			32
-> +#define SLAVE_TLMM_NORTH		33
-> +#define SLAVE_PCIE			34
-> +#define SLAVE_ETHERNET			35
-> +#define SLAVE_TLMM_EAST			36
-> +#define SLAVE_TCU			37
-> +#define SLAVE_PMIC_ARB			38
-> +#define SLAVE_SDCC_1			39
-> +#define SLAVE_SDCC_2			40
-> +#define SLAVE_TLMM_SOUTH		41
-> +#define SLAVE_USB_HS			42
-> +#define SLAVE_USB3			43
-> +#define SLAVE_CRYPTO_0_CFG		44
-> +#define SLAVE_PCNOC_SNOC		45
-> +
-> +#define MASTER_QDSS_BAM			0
-> +#define MASTER_BIMC_SNOC		1
-> +#define MASTER_PCNOC_SNOC		2
-> +#define MASTER_QDSS_ETR			3
-> +#define MASTER_EMAC			4
-> +#define MASTER_PCIE			5
-> +#define MASTER_USB3			6
-> +#define QDSS_INT			7
-> +#define SNOC_INT_0			8
-> +#define SNOC_INT_1			9
-> +#define SNOC_INT_2			10
-> +#define SLAVE_KPSS_AHB			11
-> +#define SLAVE_WCSS			12
-> +#define SLAVE_SNOC_BIMC_1		13
-> +#define SLAVE_IMEM			14
-> +#define SLAVE_SNOC_PCNOC		15
-> +#define SLAVE_QDSS_STM			16
-> +#define SLAVE_CATS_0			17
-> +#define SLAVE_CATS_1			18
-> +#define SLAVE_LPASS			19
-> +
-> +#endif
