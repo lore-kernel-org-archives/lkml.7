@@ -2,90 +2,85 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA005C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4E2C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE792166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562604167;
-	bh=H3loWROGOpRaopLSXQJbi1uAhbvoe1Ab5OkuYOSoD+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0cG9xxKpPFJvlzhNiaQp/VoUPZGq0+d6BsJMbz4J1tB2hkuu7kA5JMujOSS0cOoh/
-	 dkGRLvnXyzGz1EfQCPB0j0K5FkbvsbTlLJJO8CcaZAvENJfuXpexLThkdpaI8XpAqc
-	 BF7OuZzMPAqdA0NDqp3I97/tqy9x6LAfS28TiFdI=
+	by mail.kernel.org (Postfix) with ESMTP id AD150216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403985AbfGHQmq (ORCPT
+        id S2391557AbfGHQnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:42:46 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43106 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729501AbfGHQmq (ORCPT
+        Mon, 8 Jul 2019 12:43:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43216 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729501AbfGHQnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:42:46 -0400
-Received: by mail-qt1-f194.google.com with SMTP id w17so15536758qto.10;
-        Mon, 08 Jul 2019 09:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8IxAaS8HkYeCdm6ofdJNfkVr0RYEAJ+U8cg6TKAE1aA=;
-        b=L4VgEUxFKymN8SdwCiz5jn/rBEPjrGbx7eFnC/6wSUv7PRduz3U9K5Wb58pE9nCwOh
-         K4B+yYRyrknRJhYhK5GxOAr8okc1478Hpn7cwz/VKt0SCzvrBwHR/NOc9+F67juzgoUl
-         TlucAUvTpmHDN6YI/nfX0Cv+I3FnSvxeTZbthwIBDS/D5/643uM+t1caAPoJBE3QKINO
-         hkjzqay4+jr7+ZiC4mBgaYshjyViUjma8mTmO9MpWs5vwFYwofGWzCwYgk9D7k/ajgk/
-         0RpyJHJRof2GfzuXUrUDsf76MOC/CVeHbyq6lFHXgsRZhHhALQFMfMuY+g/Evqa19ZPf
-         upmA==
+        Mon, 8 Jul 2019 12:43:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so17872022wru.10;
+        Mon, 08 Jul 2019 09:43:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8IxAaS8HkYeCdm6ofdJNfkVr0RYEAJ+U8cg6TKAE1aA=;
-        b=h7vsA4/009uCoTiU7rnU+ZgLpGRAwol2QCfpv4MkxyIOmD/8B9BstXrx6rrI2kGVBV
-         vZ8SCH9soz8XVtx+jkBL0l+FepQQLCl711+gqzoA25pfX9/m9lbwu8voKs/ha40SubYJ
-         BKd2ju/JO1D4mErMe7xyABgmx0Z9t/lwNwdO3BKra7z2mqsKfIALfS+90uev57NjXjko
-         eViyQG+RjpJ8KHjQShDwIlrXwJCamqY/2GIIAP2+eH15CGb4ypTq4M2tN1EblDo2euDQ
-         3EHI8UxJroBMANAw35RciqmBHKeQVHQBubMoWuKItCGjv9qgdA8bCtyGhK/+sLONr9UG
-         IocQ==
-X-Gm-Message-State: APjAAAWY0f0zvd0tdsVJ/yBIEeIbae/CQfVgc9gpJr6wYUgZqjZAw9nI
-        pOW6CaujoWSfh9AlcHw1dvYhFaNlAwE=
-X-Google-Smtp-Source: APXvYqwOFtpEKmE0vYok9cs+Q6wE0KUH3YBAjuKmXTpvOHBb8y0HkU2ai1QhoHte1/udNlbR+UNmJw==
-X-Received: by 2002:a0c:95c6:: with SMTP id t6mr16273425qvt.134.1562604165035;
-        Mon, 08 Jul 2019 09:42:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:fa50])
-        by smtp.gmail.com with ESMTPSA id y42sm10823867qtc.66.2019.07.08.09.42.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 09:42:44 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 09:42:43 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Peng Wang <rocking@whu.edu.cn>
-Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cgroup: minor tweak for logic to get cgroup css
-Message-ID: <20190708164243.GE657710@devbig004.ftw2.facebook.com>
-References: <20190703020749.22988-1-rocking@whu.edu.cn>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=55n7G117BbTzggJy8syt05qoj/N3+eOU6IXg7pRzqlo=;
+        b=BKcBrw2+l9iWlUgCXrLJHpbZYdhOFxN3xPX42z3HozjLUFun9y/QBcXsoDKmoFy1u9
+         fams8XC4zQU5aw4cH5N/n6oJUzj8XM+/NQ1+GyHwiYWjAAmo0W96YLI6mFtXIPddDezc
+         OQA0lFCao3Wzzzlp/ecE8q+Tc99I0B6VcUB215fAeR0RweIVjICmK7V6iYZ9RJfpnu0y
+         CpeGTVVgY653NBxDfI7KAitB1qSjzsYAiMBVmUiTlZXHifO41Z8/ub08dVSi9D1fZ2wf
+         hp9ai54lSam0obb3+g7M0LNOwC/8Lc2f+E74CFgcSVYhgnSfsHyk5Ilr+MTaQUXuKU1z
+         SXAw==
+X-Gm-Message-State: APjAAAXJGqWr3XM4ooaKRpY+kFz11AZpveQIbNvGNbYGwwzZITrO8SkK
+        mr0vFNLjyXpmw0QACC1Lezs=
+X-Google-Smtp-Source: APXvYqxctTfQvixNbyMXLQSrlWoZEJrhJKEa1O4GxKAwi4a2ab5A+EjIv/dBF5FDgdU54tlHJY1TxA==
+X-Received: by 2002:adf:ce8d:: with SMTP id r13mr5113159wrn.37.1562604227213;
+        Mon, 08 Jul 2019 09:43:47 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id x24sm147920wmh.5.2019.07.08.09.43.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 09:43:46 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: libsas: remove the exporting of sas_wait_eh
+Date:   Mon,  8 Jul 2019 19:43:39 +0300
+Message-Id: <20190708164339.14465-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190703020749.22988-1-rocking@whu.edu.cn>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 03, 2019 at 10:07:49AM +0800, Peng Wang wrote:
-> We could only handle the case that css exists
-> and css_try_get_online() fails.
+The function sas_wait_eh is declared static and marked
+EXPORT_SYMBOL, which is at best an odd combination. Because the
+function is not used outside of the drivers/scsi/libsas/sas_scsi_host.c
+file it is defined in, this commit removes the EXPORT_SYMBOL() marking.
 
-As css_tryget_online() can't handle NULL input, this is a bug fix.
-Can you please clarify that in the description?
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/scsi/libsas/sas_scsi_host.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks.
-
+diff --git a/drivers/scsi/libsas/sas_scsi_host.c b/drivers/scsi/libsas/sas_scsi_host.c
+index ede0674d8399..5564d3f1243a 100644
+--- a/drivers/scsi/libsas/sas_scsi_host.c
++++ b/drivers/scsi/libsas/sas_scsi_host.c
+@@ -414,7 +414,6 @@ static void sas_wait_eh(struct domain_device *dev)
+ 		goto retry;
+ 	}
+ }
+-EXPORT_SYMBOL(sas_wait_eh);
+ 
+ static int sas_queue_reset(struct domain_device *dev, int reset_type,
+ 			   u64 lun, int wait)
 -- 
-tejun
+2.21.0
+
