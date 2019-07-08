@@ -2,88 +2,67 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C76C606BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B580DC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13E421537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DF121537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbfGHOoa (ORCPT
+        id S1731937AbfGHOqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:44:30 -0400
-Received: from mga06.intel.com ([134.134.136.31]:44328 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726580AbfGHOoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:44:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 07:44:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
-   d="scan'208";a="167695137"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jul 2019 07:44:26 -0700
-Message-ID: <de67f9ec37843f6ad92db37c4f5e53e45e3dd69a.camel@linux.intel.com>
-Subject: Re: [PATCH v2] tpm: Fix null pointer dereference on chip register
- error path
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Milan Broz <gmazyland@gmail.com>
-Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de,
-        gregkh@linuxfoundation.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Date:   Mon, 08 Jul 2019 17:44:28 +0300
-In-Reply-To: <58070e5ee4e64b10df063b61612b021c23f0fc14.camel@linux.intel.com>
-References: <20190703230125.aynx4ianvqqjt5d7@linux.intel.com>
-         <20190704072615.31143-1-gmazyland@gmail.com>
-         <58070e5ee4e64b10df063b61612b021c23f0fc14.camel@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Mon, 8 Jul 2019 10:46:17 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:20929 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfGHOqR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 10:46:17 -0400
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2AyOEF/R66y"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
+        with ESMTPSA id V09459v68Ek6X7D
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 8 Jul 2019 16:46:06 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     letux-kernel@openphoenux.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 0/2] DTS: ARM: some minor updates and fixes for GTA04
+Date:   Mon,  8 Jul 2019 16:46:03 +0200
+Message-Id: <cover.1562597164.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-08 at 17:34 +0300, Jarkko Sakkinen wrote:
-> On Thu, 2019-07-04 at 09:26 +0200, Milan Broz wrote:
-> > If clk_enable is not defined and chip initialization
-> > is canceled code hits null dereference.
-> > 
-> > Easily reproducible with vTPM init fail:
-> >   swtpm chardev --tpmstate dir=nonexistent_dir --tpm2 --vtpm-proxy
-> > 
-> > BUG: kernel NULL pointer dereference, address: 00000000
-> > ...
-> > Call Trace:
-> >  tpm_chip_start+0x9d/0xa0 [tpm]
-> >  tpm_chip_register+0x10/0x1a0 [tpm]
-> >  vtpm_proxy_work+0x11/0x30 [tpm_vtpm_proxy]
-> >  process_one_work+0x214/0x5a0
-> >  worker_thread+0x134/0x3e0
-> >  ? process_one_work+0x5a0/0x5a0
-> >  kthread+0xd4/0x100
-> >  ? process_one_work+0x5a0/0x5a0
-> >  ? kthread_park+0x90/0x90
-> >  ret_from_fork+0x19/0x24
-> > 
-> > Fixes: 719b7d81f204 ("tpm: introduce tpm_chip_start() and tpm_chip_stop()")
-> > Cc: stable@vger.kernel.org # v5.1+
-> > Signed-off-by: Milan Broz <gmazyland@gmail.com>
-> 
-> Looks legit.
-> 
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+We define define chosen/stdout-path chosen to remove the
+console= entry in the kernel command line.
 
-Please check master and next branches from
+And we fix the SPI definition to make the LCD panel work
+again.
 
-  git://git.infradead.org/users/jjs/linux-tpmdd.git
+H. Nikolaus Schaller (2):
+  DTS: ARM: gta04: define chosen/stdout-path
+  DTS: ARM: gta04: introduce legacy spi-cs-high to make display work
+    again
 
-/Jarkko
+ Documentation/devicetree/bindings/spi/spi-bus.txt | 6 ++++++
+ arch/arm/boot/dts/omap3-gta04.dtsi                | 5 +++++
+ 2 files changed, 11 insertions(+)
+
+-- 
+2.19.1
 
