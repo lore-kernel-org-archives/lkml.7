@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED79C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4515C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B717B216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887B6216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599801;
-	bh=1TCbOetnLwdX5sAbswf+rlA3lUUKHP7GvOSM7jw5LRM=;
+	s=default; t=1562599803;
+	bh=5Bi1ejuRESz61bUYqPNkEyic9P7oSHxXtmSYp6EISkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZJLb66ifKL8n8PxVCQAw33T1fU87WSA0cxaW1EqTZdaB40j9t/Yr3xDhxFOVxzTZ4
-	 50PzhHlx53e5mvjduEnSjKf1FMBbimJDU+WitvXxwyycgSkQXU2OWoFI4lTiyLGV8i
-	 1lW4aMqch+fUOopSqs7GUAnm9LqMwI6ao46mCoAo=
+	b=YqBjK09xupQtdnjSzwiTx9etjzeHpFc+qcl7+9FRsxa6pft969fzTQ5LePu+V570I
+	 8SX1Yd9cw/zolewRxN0s88NLvHbFDTbBceaCMEIELzQiR3SQ0Ae0iBJ1g4nP3FKwPb
+	 OAaqs3j5/N4884pTYgfNjl2BtXRn0OlECQABFjaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387907AbfGHPaA (ORCPT
+        id S2389793AbfGHPaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58598 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389540AbfGHP3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:29:42 -0400
+        id S2389585AbfGHP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:29:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A01321537;
-        Mon,  8 Jul 2019 15:29:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE61216F4;
+        Mon,  8 Jul 2019 15:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599781;
-        bh=1TCbOetnLwdX5sAbswf+rlA3lUUKHP7GvOSM7jw5LRM=;
+        s=default; t=1562599784;
+        bh=5Bi1ejuRESz61bUYqPNkEyic9P7oSHxXtmSYp6EISkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K8qrLV4mzLzeABDz3AIJHlOtl+ld3x8W79wzLXCk52TMA8zmFZY/Ff463K6JHki9H
-         i8gUueZNTHGQWo2sD5yXuRj1wFe74siGYtklRrkbM+xaZOgW9NPOZ3piZrG1fiLWFS
-         WGWYnZsJSGe7iSt2ZakGlbdTMAU1HnIHR9JBJe6o=
+        b=LAAviDeTVHrn7RqMCi4WqO0YcMzEm3ut+rgXAtNdJJhr+LD1KLF5DeGNnpnnmWezo
+         C4cWpPdbb9JYG8nAzChqnOPbqYoLnneSvvFaNpZW51Pfj5BjH4P2kRGY+GOj+AMgJZ
+         1FQYdwIrpqcmR9w4KVrOaJg5SoQ4BCclZxtC8YfQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Stefan Bader <stefan.bader@canonical.com>,
-        Peter Oskolkov <posk@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 76/90] ip6: fix skb leak in ip6frag_expire_frag_queue()
-Date:   Mon,  8 Jul 2019 17:13:43 +0200
-Message-Id: <20190708150526.177660229@linuxfoundation.org>
+Subject: [PATCH 4.19 77/90] netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments
+Date:   Mon,  8 Jul 2019 17:13:44 +0200
+Message-Id: <20190708150526.237087551@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -63,57 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 47d3d7fdb10a21c223036b58bd70ffdc24a472c4 ]
+[ Upstream commit a0d56cb911ca301de81735f1d73c2aab424654ba ]
 
-Since ip6frag_expire_frag_queue() now pulls the head skb
-from frag queue, we should no longer use skb_get(), since
-this leads to an skb leak.
+With commit 997dd9647164 ("net: IP6 defrag: use rbtrees in
+nf_conntrack_reasm.c"), nf_ct_frag6_reasm() is now called from
+nf_ct_frag6_queue(). With this change, nf_ct_frag6_queue() can fail
+after the skb has been added to the fragment queue and
+nf_ct_frag6_gather() was adapted to handle this case.
 
-Stefan Bader initially reported a problem in 4.4.stable [1] caused
-by the skb_get(), so this patch should also fix this issue.
+But nf_ct_frag6_queue() can still fail before the fragment has been
+queued. nf_ct_frag6_gather() can't handle this case anymore, because it
+has no way to know if nf_ct_frag6_queue() queued the fragment before
+failing. If it didn't, the skb is lost as the error code is overwritten
+with -EINPROGRESS.
 
-296583.091021] kernel BUG at /build/linux-6VmqmP/linux-4.4.0/net/core/skbuff.c:1207!
-[296583.091734] Call Trace:
-[296583.091749]  [<ffffffff81740e50>] __pskb_pull_tail+0x50/0x350
-[296583.091764]  [<ffffffff8183939a>] _decode_session6+0x26a/0x400
-[296583.091779]  [<ffffffff817ec719>] __xfrm_decode_session+0x39/0x50
-[296583.091795]  [<ffffffff818239d0>] icmpv6_route_lookup+0xf0/0x1c0
-[296583.091809]  [<ffffffff81824421>] icmp6_send+0x5e1/0x940
-[296583.091823]  [<ffffffff81753238>] ? __netif_receive_skb+0x18/0x60
-[296583.091838]  [<ffffffff817532b2>] ? netif_receive_skb_internal+0x32/0xa0
-[296583.091858]  [<ffffffffc0199f74>] ? ixgbe_clean_rx_irq+0x594/0xac0 [ixgbe]
-[296583.091876]  [<ffffffffc04eb260>] ? nf_ct_net_exit+0x50/0x50 [nf_defrag_ipv6]
-[296583.091893]  [<ffffffff8183d431>] icmpv6_send+0x21/0x30
-[296583.091906]  [<ffffffff8182b500>] ip6_expire_frag_queue+0xe0/0x120
-[296583.091921]  [<ffffffffc04eb27f>] nf_ct_frag6_expire+0x1f/0x30 [nf_defrag_ipv6]
-[296583.091938]  [<ffffffff810f3b57>] call_timer_fn+0x37/0x140
-[296583.091951]  [<ffffffffc04eb260>] ? nf_ct_net_exit+0x50/0x50 [nf_defrag_ipv6]
-[296583.091968]  [<ffffffff810f5464>] run_timer_softirq+0x234/0x330
-[296583.091982]  [<ffffffff8108a339>] __do_softirq+0x109/0x2b0
+Fix this by setting -EINPROGRESS directly in nf_ct_frag6_queue(), so
+that nf_ct_frag6_gather() can propagate the error as is.
 
-Fixes: d4289fcc9b16 ("net: IP6 defrag: use rbtrees for IPv6 defrag")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Stefan Bader <stefan.bader@canonical.com>
-Cc: Peter Oskolkov <posk@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 997dd9647164 ("net: IP6 defrag: use rbtrees in nf_conntrack_reasm.c")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ipv6_frag.h | 1 -
- 1 file changed, 1 deletion(-)
+ net/ipv6/netfilter/nf_conntrack_reasm.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/include/net/ipv6_frag.h b/include/net/ipv6_frag.h
-index 28aa9b30aece..1f77fb4dc79d 100644
---- a/include/net/ipv6_frag.h
-+++ b/include/net/ipv6_frag.h
-@@ -94,7 +94,6 @@ ip6frag_expire_frag_queue(struct net *net, struct frag_queue *fq)
- 		goto out;
+diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
+index cb1b4772dac0..73c29ddcfb95 100644
+--- a/net/ipv6/netfilter/nf_conntrack_reasm.c
++++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
+@@ -293,7 +293,11 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
+ 		skb->_skb_refdst = 0UL;
+ 		err = nf_ct_frag6_reasm(fq, skb, prev, dev);
+ 		skb->_skb_refdst = orefdst;
+-		return err;
++
++		/* After queue has assumed skb ownership, only 0 or
++		 * -EINPROGRESS must be returned.
++		 */
++		return err ? -EINPROGRESS : 0;
+ 	}
  
- 	head->dev = dev;
--	skb_get(head);
- 	spin_unlock(&fq->q.lock);
+ 	skb_dst_drop(skb);
+@@ -481,12 +485,6 @@ int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user)
+ 		ret = 0;
+ 	}
  
- 	icmpv6_send(head, ICMPV6_TIME_EXCEED, ICMPV6_EXC_FRAGTIME, 0);
+-	/* after queue has assumed skb ownership, only 0 or -EINPROGRESS
+-	 * must be returned.
+-	 */
+-	if (ret)
+-		ret = -EINPROGRESS;
+-
+ 	spin_unlock_bh(&fq->q.lock);
+ 	inet_frag_put(&fq->q);
+ 	return ret;
 -- 
 2.20.1
 
