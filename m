@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FB3C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7F4C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE8720665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D30220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600179;
-	bh=Ksua/iMAduhWu+zLOlCp9/5YnnI7hgB2q1RZ0J0XCFk=;
+	s=default; t=1562600185;
+	bh=KL1idasl/xFehBRaaQE9mfpe3MfJKyVEFRjSs0sXuKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LF/s8j5AdS55YPohAvNahs6zglTTjBbcTw2tZuhIqvo2lYBhvXhupxUr0egee9EE6
-	 QxICBz4Ov/5Vib3B+PvF+Fp+8etBC4cxEF6JFVajhkjSHNCbk7/oDPJ/bIwb+Yikpf
-	 J6cATw/bODJ5XuW6SbEYPurniL1iMJOukgQ/a4uk=
+	b=I6vVBbUKehK/iHCh3eMgY10c9W/l/sLvbio1eZkhjwp0oba+OFbJHjjbZ5kLzEKkU
+	 b7mXG2CegYv2x9QYrgV8RHxvnPikyLZCIJQ1ZZl8rlgQGbwjw2q/2eAwagxBi3n+Vt
+	 btGKU+Q5/fypPrTP+NZdyKaARRMeGtuaTTZtwqec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390835AbfGHPgS (ORCPT
+        id S2390892AbfGHPgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390485AbfGHPeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:10 -0400
+        id S2390474AbfGHPeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F33821537;
-        Mon,  8 Jul 2019 15:34:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9809204EC;
+        Mon,  8 Jul 2019 15:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600049;
-        bh=Ksua/iMAduhWu+zLOlCp9/5YnnI7hgB2q1RZ0J0XCFk=;
+        s=default; t=1562600044;
+        bh=KL1idasl/xFehBRaaQE9mfpe3MfJKyVEFRjSs0sXuKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjBjtte0w3snKjqdw3TP3VU6RW0mX5sidP/1GkK1kmRJKNiT4QXJnb/ysx2ZC3MBF
-         I9I5ZybjgfamdTnGQVnaaYSo+FhScqyinsYiUcEcfGxI1TLzaWTd7FZzDneb6qy2Wd
-         y/u2V8tYmQXPqUP1IhW1zfL8BkeEH94A11glh1CM=
+        b=jHGP54spk8EQBkGLgfb4GI+bCCnSpHaSP+oscNHDk2b2NJSsQOaBm2g69JuBsLwKe
+         gJ6xXquWuf5cEjSiVkEKZDO3L2gpSlY2rO9D3gWY2b19TXHT0mBFKxCKCCyJfQPqGI
+         ZhjsIpOOAmUPPcfeMTnz+9Dx3xrXDJLbVI3O0Wv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5.1 77/96] drm/etnaviv: add missing failure path to destroy suballoc
-Date:   Mon,  8 Jul 2019 17:13:49 +0200
-Message-Id: <20190708150530.622307378@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Huang Rui <ray.huang@amd.com>
+Subject: [PATCH 5.1 75/96] drm/amdgpu/gfx9: use reset default for PA_SC_FIFO_SIZE
+Date:   Mon,  8 Jul 2019 17:13:47 +0200
+Message-Id: <20190708150530.510384942@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -59,52 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit be132e1375c1fffe48801296279079f8a59a9ed3 upstream.
+commit 25f09f858835b0e9a06213811031190a17d8ab78 upstream.
 
-When something goes wrong in the GPU init after the cmdbuf suballocator
-has been constructed, we fail to destroy it properly. This causes havok
-later when the GPU is unbound due to a module unload or similar.
+Recommended by the hw team.
 
-Fixes: e66774dd6f6a (drm/etnaviv: add cmdbuf suballocator)
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-and-Tested-by: Huang Rui <ray.huang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |   19 -------------------
+ 1 file changed, 19 deletions(-)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -762,7 +762,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu
- 	if (IS_ERR(gpu->cmdbuf_suballoc)) {
- 		dev_err(gpu->dev, "Failed to create cmdbuf suballocator\n");
- 		ret = PTR_ERR(gpu->cmdbuf_suballoc);
--		goto fail;
-+		goto destroy_iommu;
- 	}
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -1899,25 +1899,6 @@ static void gfx_v9_0_constants_init(stru
+ 	mutex_unlock(&adev->srbm_mutex);
  
- 	/* Create buffer: */
-@@ -770,7 +770,7 @@ int etnaviv_gpu_init(struct etnaviv_gpu
- 				  PAGE_SIZE);
- 	if (ret) {
- 		dev_err(gpu->dev, "could not create command buffer\n");
--		goto destroy_iommu;
-+		goto destroy_suballoc;
- 	}
+ 	gfx_v9_0_init_compute_vmid(adev);
+-
+-	mutex_lock(&adev->grbm_idx_mutex);
+-	/*
+-	 * making sure that the following register writes will be broadcasted
+-	 * to all the shaders
+-	 */
+-	gfx_v9_0_select_se_sh(adev, 0xffffffff, 0xffffffff, 0xffffffff);
+-
+-	WREG32_SOC15(GC, 0, mmPA_SC_FIFO_SIZE,
+-		   (adev->gfx.config.sc_prim_fifo_size_frontend <<
+-			PA_SC_FIFO_SIZE__SC_FRONTEND_PRIM_FIFO_SIZE__SHIFT) |
+-		   (adev->gfx.config.sc_prim_fifo_size_backend <<
+-			PA_SC_FIFO_SIZE__SC_BACKEND_PRIM_FIFO_SIZE__SHIFT) |
+-		   (adev->gfx.config.sc_hiz_tile_fifo_size <<
+-			PA_SC_FIFO_SIZE__SC_HIZ_TILE_FIFO_SIZE__SHIFT) |
+-		   (adev->gfx.config.sc_earlyz_tile_fifo_size <<
+-			PA_SC_FIFO_SIZE__SC_EARLYZ_TILE_FIFO_SIZE__SHIFT));
+-	mutex_unlock(&adev->grbm_idx_mutex);
+-
+ }
  
- 	if (gpu->mmu->version == ETNAVIV_IOMMU_V1 &&
-@@ -802,6 +802,9 @@ int etnaviv_gpu_init(struct etnaviv_gpu
- free_buffer:
- 	etnaviv_cmdbuf_free(&gpu->buffer);
- 	gpu->buffer.suballoc = NULL;
-+destroy_suballoc:
-+	etnaviv_cmdbuf_suballoc_destroy(gpu->cmdbuf_suballoc);
-+	gpu->cmdbuf_suballoc = NULL;
- destroy_iommu:
- 	etnaviv_iommu_destroy(gpu->mmu);
- 	gpu->mmu = NULL;
+ static void gfx_v9_0_wait_for_rlc_serdes(struct amdgpu_device *adev)
 
 
