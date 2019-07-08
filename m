@@ -2,67 +2,108 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE72C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3ADC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA9121707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6278220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562599674;
+	bh=Jf1+iatCgaO6rrc3+qO2ZmSaM2eKhCmZ7LKlJBJ7WLs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bP41uCtnI/3vy6Xz+ldEAB27bOSdYV8qCTv6PJqnUHp7qhIrhYVIJsXyFUALDAi5l
+	 pYGsFShpcLXhZ/v544HwgXwYtPP/TMIqMC0S81mM07TBLQKgL49yWKJm3mypXYlwQ3
+	 zxWjQN0x8UzBpZsuKd3YQc54+hZTYaxi8geypTQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfGHP1u (ORCPT
+        id S2389169AbfGHP1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:27:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2353 "EHLO mga01.intel.com"
+        Mon, 8 Jul 2019 11:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389130AbfGHP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:27:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 08:27:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
-   d="scan'208";a="363835568"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jul 2019 08:27:42 -0700
-Message-ID: <47219a790c2c5b5a3ec0a331ece8956f9a82f45b.camel@linux.intel.com>
-Subject: Re: [PATCH] tpm: Document UEFI event log quirks
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jordan Hand <jorhand@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     tweek@google.com, matthewgarrett@google.com,
-        Jonathan Corbet <corbet@lwn.net>
-Date:   Mon, 08 Jul 2019 18:27:45 +0300
-In-Reply-To: <33ff21e2-1e27-cc85-0ea3-5127cb2598ba@linux.microsoft.com>
-References: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
-         <dacf145d-49e0-16e5-5963-415bab1884e1@linux.microsoft.com>
-         <fcf497b7aa95cd6915986bc4581f10814c4d5341.camel@linux.intel.com>
-         <33ff21e2-1e27-cc85-0ea3-5127cb2598ba@linux.microsoft.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S2389143AbfGHP1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:27:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F96C20665;
+        Mon,  8 Jul 2019 15:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599666;
+        bh=Jf1+iatCgaO6rrc3+qO2ZmSaM2eKhCmZ7LKlJBJ7WLs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WEXRm7fsp0XQXt+k5rX9ybSVihBA9OXmQRRjLhCYULGfTrN3eoSwoJz/JmqQeW6ef
+         hjLyjJ0bmm4BYw2ZH3Nc7xGV3cx1lPb0fVccDzPfYZmvFWWWN/5Fe+vEdBxJ5RO40S
+         LWv6ZCGy8ITFUCpcXmyJXsUptUjvpqVuxfYu+uzQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Manuel Traut <manut@linutronix.de>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 35/90] scripts/decode_stacktrace.sh: prefix addr2line with $CROSS_COMPILE
+Date:   Mon,  8 Jul 2019 17:13:02 +0200
+Message-Id: <20190708150524.378282364@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
+References: <20190708150521.829733162@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-07-07 at 21:10 -0700, Jordan Hand wrote:
-> > "Thus, it nees to save the final events table size at the time to the
-> > custom configuration table so that the TPM driver can later on skip the
-> > events generated during the preboot time."
-> > 
-> Yes, that sounds more clear to me.
-> 
-> Thanks,
-> Jordan
+[ Upstream commit c04e32e911653442fc834be6e92e072aeebe01a1 ]
 
-Awesome, thank you.
+At least for ARM64 kernels compiled with the crosstoolchain from
+Debian/stretch or with the toolchain from kernel.org the line number is
+not decoded correctly by 'decode_stacktrace.sh':
 
-/Jarkko
+  $ echo "[  136.513051]  f1+0x0/0xc [kcrash]" | \
+    CROSS_COMPILE=/opt/gcc-8.1.0-nolibc/aarch64-linux/bin/aarch64-linux- \
+   ./scripts/decode_stacktrace.sh /scratch/linux-arm64/vmlinux \
+                                  /scratch/linux-arm64 \
+                                  /nfs/debian/lib/modules/4.20.0-devel
+  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:68) kcrash
+
+If addr2line from the toolchain is used the decoded line number is correct:
+
+  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:57) kcrash
+
+Link: http://lkml.kernel.org/r/20190527083425.3763-1-manut@linutronix.de
+Signed-off-by: Manuel Traut <manut@linutronix.de>
+Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/decode_stacktrace.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 98a7d63a723e..c4a9ddb174bc 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -66,7 +66,7 @@ parse_symbol() {
+ 	if [[ "${cache[$module,$address]+isset}" == "isset" ]]; then
+ 		local code=${cache[$module,$address]}
+ 	else
+-		local code=$(addr2line -i -e "$objfile" "$address")
++		local code=$(${CROSS_COMPILE}addr2line -i -e "$objfile" "$address")
+ 		cache[$module,$address]=$code
+ 	fi
+ 
+-- 
+2.20.1
+
+
 
