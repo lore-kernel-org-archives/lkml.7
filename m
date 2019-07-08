@@ -2,128 +2,124 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8B3C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC4DC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7754E20693
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:10:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CfLjv4t9"
+	by mail.kernel.org (Postfix) with ESMTP id 732CD21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391515AbfGHQKb (ORCPT
+        id S2391516AbfGHQLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:10:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34342 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729062AbfGHQKa (ORCPT
+        Mon, 8 Jul 2019 12:11:00 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37494 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728082AbfGHQK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:10:30 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so8528296plt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fDCoSY5K0ITJqQYvscwo5UxJiyuZc3RyIH7jJSLU88U=;
-        b=CfLjv4t9r4Kg2mSofS2nlQZMto3UY4mstJJjBcy91IFpxTd6+xOv3VwdVLcgFVUdVW
-         j5PVsTuIkjKvjex7sWx70GltkB3B71Am79TnP0MeO+ihAkpGOpOQDafpfMi9i7wnEUUH
-         3OHP5VEf+64cy0LL8hikc/pn1wZ/KR2jge1woKA5a6tL1EGf27T4yOG48LdVyh8xewdi
-         4/+ddMjgJKskc5Ivy46J/G5z+QyT2ZWcf3TxK2wuJqimj0xykazxXmlcv65ZFjE1aIJl
-         TYa/I2day1zmNig/jiZU9ScLfIp2yEcPl0pav2+YEs06oGpQ0n42my45uw5pfHQBvory
-         TtXA==
+        Mon, 8 Jul 2019 12:10:59 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so6001453qto.4;
+        Mon, 08 Jul 2019 09:10:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fDCoSY5K0ITJqQYvscwo5UxJiyuZc3RyIH7jJSLU88U=;
-        b=I7khg/GI/UATsDsH6/K6O76bSW4qAVrIJNO67SrPyEdCT5XGPkiNAiow8vYojAxnXJ
-         qO5BArPFqyYrcgBGtwG3GB2yfufcOgExSieF+QULikAACC/F9y5Yzz5/pK84KCx9NQTE
-         641W/AcZtbt15e24FTP3lxvDde5HrtqgK6jltAOKKt2zOoV6NdjZrh9kgigWVi0KwGCI
-         Oq1C4smCAa8fWEuV1saOkSp7DAET4KQMpmivrKmTuWTZ0m/8A3tUIdeRYMVJI/vnvYbN
-         90DDMjRkuWthkbuYGcWdUAGlw4ZHLrqViJZ+59BV7d75FnDkrRXfeL1n14a2XZjR5dSo
-         TW9A==
-X-Gm-Message-State: APjAAAXgfOkIS/kVlICRhuF9A60yndEXS2jHiaM1svoCLsolsjdqnpXC
-        nGUb6Awh/lAvc7dO3iUoigm/1g==
-X-Google-Smtp-Source: APXvYqzD1aivQBDf69llf3avbBHNfxtRkZ9eXNatyrc78REwbz16rreOTstsv5QqjSoYFjtGpjbuhQ==
-X-Received: by 2002:a17:902:4623:: with SMTP id o32mr25633974pld.112.1562602229878;
-        Mon, 08 Jul 2019 09:10:29 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j20sm5476488pfr.113.2019.07.08.09.10.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Jul 2019 09:10:29 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 09:10:26 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/msm/mdp5: Find correct node for creating gem
- address space
-Message-ID: <20190708161026.GB27383@builder>
-References: <20190708151224.22555-1-jeffrey.l.hugo@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jh0oOry33evDCob3/YqLaYbNG4TIUCz5wsbv0do5P2w=;
+        b=o7CzYH5vJ2cQkP1HRxkor1wrQwSukCQqGhU/EkdhIe0lrOesO0rhMYJH4uQsLIH95B
+         2aonHfEVFYfzk3B+uAmksG1dOvsumq03tor8c5NWfIZSdQ0E2xtwRcheC+E5+509MbZF
+         HG6c626n6aE7vDXYZxviTOyDVXz1OEWk3b6RUWxvwdG/ttRrGM2H7g2omCoT+Dq7bUpE
+         dCbHanAqYHNp55UJ/iYuAqAv18/0RGBtsaG0J6TxDj1HmGGejSbWo55+XNbLIX/KSBge
+         DFKM95ehtupl8fQAp+4aHPISOMWBP5j0Q/Hruzem81ZgLeeKu27RuvH1ePPZ6Goefdf7
+         61CA==
+X-Gm-Message-State: APjAAAWPiNxTUmaanWZbQei3UmMWyGP16IOeWk62QlZJKgxj6L9ANQCs
+        qyLmLuyK/klE/IkPxFjS1iRjxKuoQhajBJWyJoc=
+X-Google-Smtp-Source: APXvYqyUVlqAlYEFg1FiYPVuvS6vybH5FVE/+B+9DSKZt9RHUYdBNACismBwlh/kyryGPOKmOUdWAvsI1rvyHn+Ipoc=
+X-Received: by 2002:ac8:5311:: with SMTP id t17mr14543108qtn.304.1562602258765;
+ Mon, 08 Jul 2019 09:10:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708151224.22555-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+References: <20190708124227.3422311-1-arnd@arndb.de> <e752a638c0bde6893adf805322f73de5bd459dbc.camel@fi.rohmeurope.com>
+In-Reply-To: <e752a638c0bde6893adf805322f73de5bd459dbc.camel@fi.rohmeurope.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 8 Jul 2019 18:10:42 +0200
+Message-ID: <CAK8P3a1HNnstePcreH-ZLyiJi3tNcCNJ=VozZUMnp-VLvYLSaA@mail.gmail.com>
+Subject: Re: [PATCH] rtc: bd70528: fix link error
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 08 Jul 08:12 PDT 2019, Jeffrey Hugo wrote:
+On Mon, Jul 8, 2019 at 3:24 PM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
 
-> Creating the msm gem address space requires a reference to the dev where
-> the iommu is located.  The driver currently assumes this is the same as
-> the platform device, which breaks when the iommu is outside of the
-> platform device (ie in the parent).  Default to using the platform device,
-> but check to see if that has an iommu reference, and if not, use the parent
-> device instead.  This should handle all the various iommu designs for
-> mdp5 supported systems.
-> 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> On Mon, 2019-07-08 at 14:41 +0200, Arnd Bergmann wrote:
+> > With CONFIG_BD70528_WATCHDOG=m, a built-in rtc driver cannot call
+> > into the low-level functions that are part of the watchdog module:
+> >
+> > drivers/rtc/rtc-bd70528.o: In function `bd70528_set_time':
+> > rtc-bd70528.c:(.text+0x22c): undefined reference to
+> > `bd70528_wdt_lock'
+> > rtc-bd70528.c:(.text+0x2a8): undefined reference to
+> > `bd70528_wdt_unlock'
+> > drivers/rtc/rtc-bd70528.o: In function
+> > `bd70528_set_rtc_based_timers':
+> > rtc-bd70528.c:(.text+0x50c): undefined reference to `bd70528_wdt_set'
+> >
+> > Add a Kconfig dependency on this driver, but still allow compile-
+> > testing
+> > without it.
+> >
+> > Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528
+> > RTC")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/rtc/Kconfig | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > index 3bfc04a86529..7b071cc74422 100644
+> > --- a/drivers/rtc/Kconfig
+> > +++ b/drivers/rtc/Kconfig
+> > @@ -498,8 +498,10 @@ config RTC_DRV_M41T80_WDT
+> >       help
+> >         If you say Y here you will get support for the
+> >         watchdog timer in the ST M41T60 and M41T80 RTC chips series.
+> > +
+> >  config RTC_DRV_BD70528
+> >       tristate "ROHM BD70528 PMIC RTC"
+> > +     depends on BD70528_WATCHDOG || (COMPILE_TEST &&
+> > !BD70528_WATCHDOG)
+>
+> I am not fan of this. There may well be use-cases where it is desirable
+> to leave the watchdog out but still compile in the RTC. This is why we
+> have static inline stubs in the header for cases where WDG is not
+> compiled in. (RTC does not need to stop WDG if WDG driver is not
+> included)
+>
+> Adding dependency from RTC to MFD for BD70528 should be done - this
+> will avoid most of the issues (And there has been few patches sent for
+> this already). But that's still not complete solution because
+> configuring RTC and MFD to be built in-kernel and WDG as a module will
+> cause errors again.
+>
+> Is there a way to force WDG in-kernel if RTC is in-kernel? (Or
+> disallow configuring RTC in-kernel if WDG is a module - while still
+> allow RTC to be built without WDG?
 
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+We could make this
 
-> ---
-> 
-> v2: It turns out there isn't a universal way to get the iommu device, so 
-> check to see if its in the current node or parent
-> 
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> index 4a60f5fca6b0..02dc7d426cb0 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> @@ -663,6 +663,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
->  	struct msm_kms *kms;
->  	struct msm_gem_address_space *aspace;
->  	int irq, i, ret;
-> +	struct device *iommu_dev;
->  
->  	/* priv->kms would have been populated by the MDP5 driver */
->  	kms = priv->kms;
-> @@ -702,7 +703,11 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
->  	mdelay(16);
->  
->  	if (config->platform.iommu) {
-> -		aspace = msm_gem_address_space_create(&pdev->dev,
-> +		iommu_dev = &pdev->dev;
-> +		if (!iommu_dev->iommu_fwspec)
-> +			iommu_dev = iommu_dev->parent;
-> +
-> +		aspace = msm_gem_address_space_create(iommu_dev,
->  				config->platform.iommu, "mdp5");
->  		if (IS_ERR(aspace)) {
->  			ret = PTR_ERR(aspace);
-> -- 
-> 2.17.1
-> 
+        depends on BD70528_WATCHDOG || !BD70528_WATCHDOG
+
+which would allow building with or without watchdog, even when not
+compile-testing, but still disallow the combination of
+BD70528_WATCHDOG=m with RTC_DRV_BD70528=y.
+
+       Arnd
