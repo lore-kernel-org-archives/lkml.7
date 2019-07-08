@@ -2,125 +2,123 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2454C606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557D2C606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5DFD20656
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4CD216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 22:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfGHWcd (ORCPT
+        id S1727230AbfGHWe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 18:32:33 -0400
-Received: from mga11.intel.com ([192.55.52.93]:14342 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726371AbfGHWcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 18:32:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 15:32:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,468,1557212400"; 
-   d="scan'208";a="192474660"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Jul 2019 15:32:32 -0700
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     subhra mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, mgorman@techsingularity.net,
-        Paul Turner <pjt@google.com>, riel@surriel.com,
-        morten.rasmussen@arm.com, Aubrey Li <aubrey.li@linux.intel.com>
-References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
- <20190701090204.GQ3402@hirez.programming.kicks-ass.net>
- <20190701135552.kb4os6bxxhh2lyw6@e110439-lin>
- <20190701140434.GW3402@hirez.programming.kicks-ass.net>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Subject: Re: [RESEND PATCH v3 0/7] Improve scheduler scalability for fast path
-Message-ID: <58617a6e-2ed7-ed02-5c41-0b8dd2c4b066@linux.intel.com>
-Date:   Mon, 8 Jul 2019 15:32:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 8 Jul 2019 18:34:29 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:25640 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726105AbfGHWe3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 18:34:29 -0400
+X-UUID: 9746c81f570443e392cef4f8b2837654-20190709
+X-UUID: 9746c81f570443e392cef4f8b2837654-20190709
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 335479482; Tue, 09 Jul 2019 06:34:22 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 9 Jul 2019 06:34:21 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 9 Jul 2019 06:34:20 +0800
+From:   <yongqiang.niu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH v4, 00/33] add drm support for MT8183
+Date:   Tue, 9 Jul 2019 06:33:40 +0800
+Message-ID: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <20190701140434.GW3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/1/19 7:04 AM, Peter Zijlstra wrote:
-> On Mon, Jul 01, 2019 at 02:55:52PM +0100, Patrick Bellasi wrote:
->> On 01-Jul 11:02, Peter Zijlstra wrote:
-> 
->>> Some of the things we could tie to this would be:
->>>
->>>   - select_idle_siblings; -nice would scan more than +nice,
->>
->> Just to be sure, you are not proposing to use the nice value we
->> already have, i.e.
->>   p->{static,normal}_prio
->> but instead a new similar concept, right?
-> 
-> Correct; a new sched_attr::sched_latency_nice value, which is like
-> sched_nice, but controls a different dimmension of behaviour.
-> 
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-I think the sched_latency_nice value could be also useful for AVX512 for x86.
-Running an AVX512 task could drop frequency of the cpu, including the sibling
-hardware thread.  So scheduling task that don't mind latency on the
-sibling while an AVX512 task runs will make sense.
+This series are based on 5.2-rc1 and provid 27 patch
+to support mediatek SOC MT8183
 
-Tim
+Change since v3
+- fix reviewed issue in v3
+- fix type error in v3
+- fix conflict with iommu patch
+
+Yongqiang Niu (33):
+  dt-bindings: mediatek: add binding for mt8183 display
+  dt-bindings: mediatek: add ovl_2l description for mt8183 display
+  dt-bindings: mediatek: add ccorr description for mt8183 display
+  dt-bindings: mediatek: add dither description for mt8183 display
+  dt-bindings: mediatek: add RDMA1 description for mt8183 display
+  dt-bindings: mediatek: add mutex description for mt8183 display
+  arm64: dts: add display nodes for mt8183
+  drm/mediatek: add mutex mod into ddp private data
+  drm/mediatek: add mutex mod register offset into ddp private data
+  drm/mediatek: add mutex sof into ddp private data
+  drm/mediatek: add mutex sof register offset into ddp private data
+  drm/mediatek: split DISP_REG_CONFIG_DSI_SEL setting into another use
+    case
+  drm/mediatek: add mmsys private data for ddp path config
+  drm/mediatek: move rdma sout from mtk_ddp_mout_en into
+    mtk_ddp_sout_sel
+  drm/mediatek: add ddp component CCORR
+  drm/mediatek: add commponent OVL_2L0
+  drm/mediatek: add component OVL_2L1
+  drm/mediatek: add component DITHER
+  drm/mediatek: add gmc_bits for ovl private data
+  drm/medaitek: add layer_nr for ovl private data
+  drm/mediatek: add function to background color input select for
+    ovl/ovl_2l direct link
+  drm/mediatek: add background color input select function for
+    ovl/ovl_2l
+  drm/mediatek: add ovl0/ovl_2l0 usecase
+  drm/mediatek: distinguish ovl and ovl_2l by layer_nr
+  drm/mediatek: add clock property check before get it
+  drm/mediatek: add connection from OVL0 to OVL_2L0
+  drm/mediatek: add connection from RDMA0 to COLOR0
+  drm/mediatek: add connection from RDMA1 to DSI0
+  drm/mediatek: add connection from OVL_2L0 to RDMA0
+  drm/mediatek: add connection from OVL_2L1 to RDMA1
+  drm/mediatek: add connection from DITHER0 to DSI0
+  drm/mediatek: add connection from RDMA0 to DSI0
+  drm/mediatek: add support for mediatek SOC MT8183
+
+ .../bindings/display/mediatek/mediatek,disp.txt    |  31 +-
+ .../bindings/display/mediatek/mediatek,display.txt |  21 ++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           | 109 ++++++
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  79 +++-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  12 +
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 ++-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 410 ++++++++++++++++-----
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |   6 +
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |  67 ++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  21 ++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  50 +++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   3 +
+ 12 files changed, 730 insertions(+), 121 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,display.txt
+
+-- 
+1.8.1.1.dirty
+
