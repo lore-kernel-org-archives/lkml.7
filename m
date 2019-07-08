@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B590C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A0BC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1422F21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC34D216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599300;
-	bh=UqYaX4fyRfNX1yoi0yvqj0iqzoEcaynzbhGcyc602uk=;
+	s=default; t=1562599303;
+	bh=bHZKW6WfXp8UbgOTjFC0id34g7lNLGcNbag2Dtz+Dtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zfv7RK/KYq+9spdUPuR250ZJvts374C6id2VtZdKWssMZjkPeKG2cEyCm0wbu2Lde
-	 TH7mjTbG4JSJGntxCVEYh3JaIF7uLhj3j1y9xlBvgdzNhzrX251X15JiONTNtWQ/Mu
-	 p9G8IA+71BdhWk2TynEDi1V8G+qGzvNp/XGrBpj0=
+	b=twFLaRgKQL+RkggAva4mw20B6zs+AFpehJJIeCtgrvGEb/hs6fHEGZKVx7V+bDjW9
+	 iz3FNwTYdJwThEXbjDsNC9Pjtcu1dVgocDM4V4GplPEdGFqB7WJMau25DuYeith7be
+	 74XQVrygjuNGeYNh3nyBtISElajt/OzNFgc2OTT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387444AbfGHPVi (ORCPT
+        id S2387785AbfGHPVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47424 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387757AbfGHPVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:34 -0400
+        id S2387757AbfGHPVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:21:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E09D2216E3;
-        Mon,  8 Jul 2019 15:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE9BD214C6;
+        Mon,  8 Jul 2019 15:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599293;
-        bh=UqYaX4fyRfNX1yoi0yvqj0iqzoEcaynzbhGcyc602uk=;
+        s=default; t=1562599299;
+        bh=bHZKW6WfXp8UbgOTjFC0id34g7lNLGcNbag2Dtz+Dtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JuEIyF0KctulsjWnQrmvLl8p4EmbAL/HCAavb/afvovwyC8lkK+U+4otI8gxBOk/n
-         n9vnlC+uyOGXC5uuNi1oqUiXXTQuFuWwD3kmacCfNXj36I8qcgmesU+euPIplmrZKt
-         u0aJ6LnaGNFq/2iLy8rHIW3oDfGE7eZSMahPvxNI=
+        b=J0MXRTafycMP3C/gUfMT4jq1+SmGd6DiCcabDLMEC3QSrgsyGKzm4btyzYirxnEZy
+         IP3Hh2afiskUbLHaAXd5CmVRtTLcAHVvod9NJjOdr/9r6iF5hsrXlZj3PkvCS7zAf3
+         jkj4BmO4EOKDm+8QPQ0hqF+N/GlDBMT5KltonGrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
+        stable@vger.kernel.org, Yu-Hsuan Hsu <yuhsuan@chromium.org>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 068/102] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-Date:   Mon,  8 Jul 2019 17:13:01 +0200
-Message-Id: <20190708150529.976019125@linuxfoundation.org>
+Subject: [PATCH 4.9 070/102] ASoC: max98090: remove 24-bit format support if RJ is 0
+Date:   Mon,  8 Jul 2019 17:13:03 +0200
+Message-Id: <20190708150530.084648148@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -64,84 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 ]
+[ Upstream commit 5628c8979642a076f91ee86c3bae5ad251639af0 ]
 
-If spi_register_master fails in spi_bitbang_start
-because device_add failure, We should return the
-error code other than 0, otherwise calling
-spi_bitbang_stop may trigger NULL pointer dereference
-like this:
+The supported formats are S16_LE and S24_LE now. However, by datasheet
+of max98090, S24_LE is only supported when it is in the right justified
+mode. We should remove 24-bit format if it is not in that mode to avoid
+triggering error.
 
-BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
-Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
-
-CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- dump_stack+0xa9/0x10e
- ? __list_del_entry_valid+0x45/0xd0
- ? __list_del_entry_valid+0x45/0xd0
- __kasan_report+0x171/0x18d
- ? __list_del_entry_valid+0x45/0xd0
- kasan_report+0xe/0x20
- __list_del_entry_valid+0x45/0xd0
- spi_unregister_controller+0x99/0x1b0
- spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
- ? 0xffffffffc1128000
- ? klist_next+0x131/0x1e0
- ? driver_detach+0x40/0x40 [parport]
- port_check+0x3b/0x50 [parport]
- bus_for_each_dev+0x115/0x180
- ? subsys_dev_iter_exit+0x20/0x20
- __parport_register_driver+0x1f0/0x210 [parport]
- ? 0xffffffffc1150000
- do_one_initcall+0xb9/0x3b5
- ? perf_trace_initcall_level+0x270/0x270
- ? kasan_unpoison_shadow+0x30/0x40
- ? kasan_unpoison_shadow+0x30/0x40
- do_init_module+0xe0/0x330
- load_module+0x38eb/0x4270
- ? module_frob_arch_sections+0x20/0x20
- ? kernel_read_file+0x188/0x3f0
- ? find_held_lock+0x6d/0xd0
- ? fput_many+0x1a/0xe0
- ? __do_sys_finit_module+0x162/0x190
- __do_sys_finit_module+0x162/0x190
- ? __ia32_sys_init_module+0x40/0x40
- ? __mutex_unlock_slowpath+0xb4/0x3f0
- ? wait_for_completion+0x240/0x240
- ? vfs_write+0x160/0x2a0
- ? lockdep_hardirqs_off+0xb5/0x100
- ? mark_held_locks+0x1a/0x90
- ? do_syscall_64+0x14/0x2a0
- do_syscall_64+0x72/0x2a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bitbang.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/max98090.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
-index 3aa9e6e3dac8..4ef54436b9d4 100644
---- a/drivers/spi/spi-bitbang.c
-+++ b/drivers/spi/spi-bitbang.c
-@@ -392,7 +392,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
- 	if (ret)
- 		spi_master_put(master);
- 
--	return 0;
-+	return ret;
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index 3e65dc74eb33..e7aef841f87d 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1924,6 +1924,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(spi_bitbang_start);
  
++static int max98090_dai_startup(struct snd_pcm_substream *substream,
++				struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
++	unsigned int fmt = max98090->dai_fmt;
++
++	/* Remove 24-bit format support if it is not in right justified mode. */
++	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
++		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
++		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
++	}
++	return 0;
++}
++
+ static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params,
+ 				   struct snd_soc_dai *dai)
+@@ -2331,6 +2346,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
+ #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
+ 
+ static const struct snd_soc_dai_ops max98090_dai_ops = {
++	.startup = max98090_dai_startup,
+ 	.set_sysclk = max98090_dai_set_sysclk,
+ 	.set_fmt = max98090_dai_set_fmt,
+ 	.set_tdm_slot = max98090_set_tdm_slot,
 -- 
 2.20.1
 
