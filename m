@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35F1C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682B9C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9838B20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41329214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599390;
-	bh=7i5TIOHDCJrnRJK3is1Oicb1skMDjv9yLBrDM4cBtmo=;
+	s=default; t=1562599394;
+	bh=N+UVgD7OA5w7i4Zf1c+vj6sMbNBUCNtULkD6pkUw0ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AS9Z0C5hC36l+c+8R/lkwyaKcHXdJz8n+8WAX1SvTMHrn5SrcgHMnE7SeQNEvz0jB
-	 Hzt5fxsYid9CoZ0ehh+Acnpsx1YkG2ekFinvPiTkottQy+BoVfxW4stw0slztmbXpJ
-	 YZGhoHmHlS9fLvtugZCmCeOwJM9DyObLJ7CVkVNQ=
+	b=0Y83Pcsq6eXj0GMquAXkAg2VqZYf2T1DU82SoqWji/lsuyBNF7hI303MctzHZ7jrC
+	 gJ0NiEf4nvsf7tLLKoBddjT4Ac5M5Sf9HRQ/myVPTSd7ewDGiwNDlxFOTiKCeN6E+L
+	 EjD8eoHfwlIJBzhkl6qQbqgLEoEQWf25cNcYyljM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388138AbfGHPXJ (ORCPT
+        id S2388154AbfGHPXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49938 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:23:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388116AbfGHPXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:23:05 -0400
+        id S2388134AbfGHPXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:23:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43BE12166E;
-        Mon,  8 Jul 2019 15:23:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D958E204EC;
+        Mon,  8 Jul 2019 15:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599384;
-        bh=7i5TIOHDCJrnRJK3is1Oicb1skMDjv9yLBrDM4cBtmo=;
+        s=default; t=1562599388;
+        bh=N+UVgD7OA5w7i4Zf1c+vj6sMbNBUCNtULkD6pkUw0ws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjdMmEvckIPWquGud1AJPqL/YZL9yrbkH7COrRZLXezIHPOBLMNFljxNweR2NkqfC
-         k8wyLZmomjqLuoSa4E3NZWyw1y7WdQv4wNlMGZF5CqlSbFiY3iTTZdvKVja1Cp2mAi
-         9njb1w8KaUSl+qoMacabYbs0CeOkI0vdwjVNsGhE=
+        b=xojPNPSwViqvhqS/AWJkLO6l7Lr3/qj1C5vtEDrBcm0LUp2pv9r0gLx5hhZQ/CmC5
+         GRFDeIvWk4MmIUKvfnHsO+g68cXaWvZ/iUP30NzP/7zg8EWaVG4Tzmup/IeOUSDPsd
+         E6GXmehiLDzU/K1sSkzPBjyL+50s7tywWO143HPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Gong <yibin.gong@nxp.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Michael Olbrich <m.olbrich@pengutronix.de>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.9 101/102] dmaengine: imx-sdma: remove BD_INTR for channel0
-Date:   Mon,  8 Jul 2019 17:13:34 +0200
-Message-Id: <20190708150531.704945047@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.9 102/102] arm64: kaslr: keep modules inside module region when KASAN is enabled
+Date:   Mon,  8 Jul 2019 17:13:35 +0200
+Message-Id: <20190708150531.760421168@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -61,54 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 3f93a4f297961c12bb17aa16cb3a4d1291823cae upstream.
+commit 6f496a555d93db7a11d4860b9220d904822f586a upstream.
 
-It is possible for an irq triggered by channel0 to be received later
-after clks are disabled once firmware loaded during sdma probe. If
-that happens then clearing them by writing to SDMA_H_INTR won't work
-and the kernel will hang processing infinite interrupts. Actually,
-don't need interrupt triggered on channel0 since it's pollling
-SDMA_H_STATSTOP to know channel0 done rather than interrupt in
-current code, just clear BD_INTR to disable channel0 interrupt to
-avoid the above case.
-This issue was brought by commit 1d069bfa3c78 ("dmaengine: imx-sdma:
-ack channel 0 IRQ in the interrupt handler") which didn't take care
-the above case.
+When KASLR and KASAN are both enabled, we keep the modules where they
+are, and randomize the placement of the kernel so it is within 2 GB
+of the module region. The reason for this is that putting modules in
+the vmalloc region (like we normally do when KASLR is enabled) is not
+possible in this case, given that the entire vmalloc region is already
+backed by KASAN zero shadow pages, and so allocating dedicated KASAN
+shadow space as required by loaded modules is not possible.
 
-Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the interrupt handler")
-Cc: stable@vger.kernel.org #5.0+
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
-Tested-by: Sven Van Asbroeck <thesven73@gmail.com>
-Reviewed-by: Michael Olbrich <m.olbrich@pengutronix.de>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The default module allocation window is set to [_etext - 128MB, _etext]
+in kaslr.c, which is appropriate for KASLR kernels booted without a
+seed or with 'nokaslr' on the command line. However, as it turns out,
+it is not quite correct for the KASAN case, since it still intersects
+the vmalloc region at the top, where attempts to allocate shadow pages
+will collide with the KASAN zero shadow pages, causing a WARN() and all
+kinds of other trouble. So cap the top end to MODULES_END explicitly
+when running with KASAN.
+
+Cc: <stable@vger.kernel.org> # 4.9+
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Tested-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+[will: backport to 4.9.y]
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/dma/imx-sdma.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/module.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -632,7 +632,7 @@ static int sdma_load_script(struct sdma_
- 	spin_lock_irqsave(&sdma->channel_0_lock, flags);
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -33,10 +33,14 @@
+ void *module_alloc(unsigned long size)
+ {
+ 	void *p;
++	u64 module_alloc_end = module_alloc_base + MODULES_VSIZE;
++
++	if (IS_ENABLED(CONFIG_KASAN))
++		/* don't exceed the static module region - see below */
++		module_alloc_end = MODULES_END;
  
- 	bd0->mode.command = C0_SETPM;
--	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
-+	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
- 	bd0->mode.count = size / 2;
- 	bd0->buffer_addr = buf_phys;
- 	bd0->ext_buffer_addr = address;
-@@ -909,7 +909,7 @@ static int sdma_load_context(struct sdma
- 	context->gReg[7] = sdmac->watermark_level;
+ 	p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
+-				module_alloc_base + MODULES_VSIZE,
+-				GFP_KERNEL, PAGE_KERNEL_EXEC, 0,
++				module_alloc_end, GFP_KERNEL, PAGE_KERNEL_EXEC, 0,
+ 				NUMA_NO_NODE, __builtin_return_address(0));
  
- 	bd0->mode.command = C0_SETDM;
--	bd0->mode.status = BD_DONE | BD_INTR | BD_WRAP | BD_EXTD;
-+	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
- 	bd0->mode.count = sizeof(*context) / 4;
- 	bd0->buffer_addr = sdma->context_phys;
- 	bd0->ext_buffer_addr = 2048 + (sizeof(*context) / 4) * channel;
+ 	if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
 
 
