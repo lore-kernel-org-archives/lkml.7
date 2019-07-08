@@ -2,128 +2,153 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2230C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787F8C606AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52AB20861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5AA2086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562588544;
-	bh=rmj4Kcw5KJGSf/36jDqVGHHdIxE5tFDdlCQXgMyEd/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tz/LaZOH4UJNy0Zqe2/BiIGyFOuuznqkiM9DPkEpgRufBvG3W3fDZsNfHS3eSXKSE
-	 W0plY6JARjMQooWQofHJyAnHadIff4hRBKIbd62qGGObkBuJ6zi3XUGJ5U7r0XEeXi
-	 ZBS0usANjN4yDZrBd73y5owHhahaA6gCtnibTXwc=
+	s=default; t=1562588576;
+	bh=uI08iN9onlzZE+3rVqxnipjDz+/V2QQY0umjPFwDvb0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Yyn+gOmUEQIWYsBiKZGBGeR0k9fL3yVZVeybGQ0FeBj16AkZPjFY6uClg0Y10LiE+
+	 vm6aPbCFXmXPyNgm31mpF8vSgmPJheUTrEr2nEB+5dVjzkDAIvdJnpE0YPmQbKwaix
+	 QbnbukScQwwbsCJb8KSoa+zJYALQDvGcaXvBDoyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfGHMVG (ORCPT
+        id S1729564AbfGHMWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56278 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbfGHMVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:21:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F8B02064A;
-        Mon,  8 Jul 2019 12:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562588465;
-        bh=rmj4Kcw5KJGSf/36jDqVGHHdIxE5tFDdlCQXgMyEd/8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kuh0PlvMhBmJd0NrleW7WHsMkRaCnlWFxK58OoErrMJt6pqGxr794Rkedi0INgdkP
-         6+JeBgcQ8tfApIMDsa3cgLGeB+a6e0d18M+QS+t1Cym1imuq627rG2B9SoLP2yJSld
-         W+w0JxOaW0iLM2zPDOvTsiWT4YWajfFrw61UD+30=
-Date:   Mon, 8 Jul 2019 14:21:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Omer Shpigelman <oshpigelman@habana.ai>,
-        Tomer Tayar <ttayar@habana.ai>
-Subject: Re: [PATCH] habanalabs: use correct variable to show fd open counter
-Message-ID: <20190708122103.GB19624@kroah.com>
-References: <20190708104355.32569-1-oded.gabbay@gmail.com>
- <20190708112136.GA13795@kroah.com>
- <CAFCwf11XN_stq3HHVGqD4_LKG8W3uFiYarfbwP50hw58Hi10Sw@mail.gmail.com>
- <CAFCwf10Siysrdd61itf0stM_8S8UXmzROtAZmV1eJzfC3p7UXg@mail.gmail.com>
+        Mon, 8 Jul 2019 08:22:52 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33379 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728964AbfGHMWw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 08:22:52 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so16890107wru.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 05:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=VSHgprMF/xNOhzhA/x3mx1w+pNXUwZlVxxYysZPa1LA=;
+        b=UiLXJGon6Iue2YzyIVBALec7w7YYTYg+Tkmcr91NyaQHdM9aSo/ti7UBlyurp6mL0/
+         G0HeIFIvFEfxOo4qH6rjM99v4PPlhhtfoh4NKeAuM6Q2n/NDqjVBvChCdCxy7aEQMGyj
+         8z8LYptMKZjXcvCvsuR25e8HxjpiFhXAbfKCKnR0Gma76ZrdiBoSRbo7wJbZ7vANbKdN
+         Ipti60KHZQyXgF63llPoR0msMZOy5gLPhD1S+gHb2+0OGooXVZDkENVVXKgb8O4DLONv
+         bUln8Wg0EZYsGzm/hov5jx8Nh7Z+2gq+vVQW96l/yNti2M/23wzn2gUs1Jr55bcJ/q91
+         /dLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=VSHgprMF/xNOhzhA/x3mx1w+pNXUwZlVxxYysZPa1LA=;
+        b=Mh+A9P/JRkQrpQQSyaT7vtgoEYMn+uiFjx6nSEQLAVw0/qu7DKgN4HlPQvh61xB0dn
+         KmssW087M26xBEPLtunIRfmKi7a+AW4Eb4TqrWE+hXmEOhubb6gZ9mDlQLfJS55+FHsB
+         irgwCIr0R3J63GAceh0JF0DiXqVIWeJkZbbrKpzemA/LdZidNBYZzT2Y98ufUqwBLL4Y
+         76yY09NzXtFT80sA5ojZ+Nn8ZY11yb7jYj5YNTKaaFtE3tiNN4So1Nek0230dX0q3nVj
+         sAYUaKt7bvQB2rWRvIuYmEjZw+hs2hTNMckH7e+WmBKv+sPrkDXn95Ot/ZdPlB+VPQQ1
+         1MMA==
+X-Gm-Message-State: APjAAAVYNGL/4nuRIcOLV477qPotRm0gFck3o/wFSdhDFJJwgWqrfju3
+        wuiC8lxUJyxTddZpUFKEalk=
+X-Google-Smtp-Source: APXvYqzbbY7c1ZfaLPHI8lr4FFL63fuNGvVFT/ww5hdbOZRGva+LdhWvT/zRIf53uvSjA0cw3zwPQQ==
+X-Received: by 2002:a5d:4309:: with SMTP id h9mr18230200wrq.221.1562588569853;
+        Mon, 08 Jul 2019 05:22:49 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id f17sm12699580wmf.27.2019.07.08.05.22.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 05:22:49 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 14:22:47 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/asm changes for v5.3
+Message-ID: <20190708122247.GA57237@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFCwf10Siysrdd61itf0stM_8S8UXmzROtAZmV1eJzfC3p7UXg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 02:37:45PM +0300, Oded Gabbay wrote:
-> On Mon, Jul 8, 2019 at 2:30 PM Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> >
-> > On Mon, Jul 8, 2019 at 2:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, Jul 08, 2019 at 01:43:55PM +0300, Oded Gabbay wrote:
-> > > > The current code checks if the user context pointer is NULL or not to
-> > > > display the number of open file descriptors of a device. However, that
-> > > > variable (user_ctx) will eventually go away as the driver will support
-> > > > multiple processes. Instead, the driver can use the atomic counter of
-> > > > the open file descriptors which the driver already maintains.
-> > > >
-> > > > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-> > > > ---
-> > > >  drivers/misc/habanalabs/sysfs.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/misc/habanalabs/sysfs.c b/drivers/misc/habanalabs/sysfs.c
-> > > > index 25eb46d29d88..881be19b5fad 100644
-> > > > --- a/drivers/misc/habanalabs/sysfs.c
-> > > > +++ b/drivers/misc/habanalabs/sysfs.c
-> > > > @@ -356,7 +356,7 @@ static ssize_t write_open_cnt_show(struct device *dev,
-> > > >  {
-> > > >       struct hl_device *hdev = dev_get_drvdata(dev);
-> > > >
-> > > > -     return sprintf(buf, "%d\n", hdev->user_ctx ? 1 : 0);
-> > > > +     return sprintf(buf, "%d\n", atomic_read(&hdev->fd_open_cnt));
-> > > >  }
-> > >
-> > > Odds are, this means nothing, as it doesn't get touched if the file
-> > > descriptor is duped or sent to another process.
-> > >
-> > > Why do you care about the number of open files?  Whenever someone tries
-> > > to do this type of logic, it is almost always wrong, just let userspace
-> > > do what it wants to do, and if wants to open something twice, then it
-> > > gets to keep the pieces when things break.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > I care about the number of open file descriptors because I can't let
-> > multiple processes run simultaneously on my device, as we still don't
-> > have the code to do proper isolation between the processes, in regard
-> > of memory accesses on our device memory and by using our DMA engine.
-> > Basically, it's a security hole. If you want, I can explain more in
-> > length on this issue.
-> >
-> > We have the H/W infrastructure for that, using MMU and multiple
-> > address space IDs (ASID), but we didn't write the code yet in the
-> > driver, as that is a BIG feature but it wasn't requested by anyone
-> > yet.
-> Let me amend the above statement:
-> We have the H/W infrastructure for that in GOYA. In GAUDI (I don't
-> know if you saw the press release), we don't have it, as the use-case
-> of that asic (training) doesn't require multiple processes support.
-> Therefore, when I will upstream that ASIC code, I will have to always
-> prevent multiple processes from opening file descriptors at the same
-> time, due to the above security concerns.
+Linus,
 
-Again, let userspace/LSM enforce those policies, you can't do it in your
-driver successfully at all.
+Please pull the latest x86-asm-for-linus git tree from:
 
-thanks,
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-asm-for-linus
 
-greg k-h
+   # HEAD: 7457c0da024b181a9143988d740001f9bc98698d x86/alternatives: Add int3_emulate_call() selftest
+
+Most of the changes relate to Peter Zijlstra's cleanup of ptregs 
+handling, in particular the i386 part is now much simplified and 
+standardized - no more partial ptregs stack frames via the esp/ss oddity. 
+This simplifies ftrace, kprobes, the unwinder, ptrace, kdump and kgdb.
+
+There's also a CR4 hardening enhancements by Kees Cook, to make the 
+generic platform functions such as native_write_cr4() less useful as ROP 
+gadgets that disable SMEP/SMAP. Also protect the WP bit of CR0 against 
+similar attacks.
+
+The rest is smaller cleanups/fixes.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Ira Weiny (1):
+      Documentation/x86: Fix path to entry_32.S
+
+Kees Cook (2):
+      x86/asm: Pin sensitive CR4 bits
+      x86/asm: Pin sensitive CR0 bits
+
+Peter Zijlstra (7):
+      x86/entry/32: Clean up return from interrupt preemption path
+      x86/stackframe: Move ENCODE_FRAME_POINTER to asm/frame.h
+      x86/stackframe, x86/kprobes: Fix frame pointer annotations
+      x86/stackframe, x86/ftrace: Add pt_regs frame annotations
+      x86/stackframe/32: Provide consistent pt_regs
+      x86/stackframe/32: Allow int3_emulate_push()
+      x86/alternatives: Add int3_emulate_call() selftest
+
+Steven Rostedt (VMware) (1):
+      x86/asm: Remove unused TASK_TI_flags from asm-offsets.c
+
+
+ Documentation/x86/exception-tables.rst |   2 +-
+ arch/x86/entry/calling.h               |  15 ----
+ arch/x86/entry/entry_32.S              | 145 ++++++++++++++++++++++++---------
+ arch/x86/include/asm/frame.h           |  49 +++++++++++
+ arch/x86/include/asm/kexec.h           |  17 ----
+ arch/x86/include/asm/ptrace.h          |  17 +---
+ arch/x86/include/asm/special_insns.h   |  37 ++++++++-
+ arch/x86/include/asm/stacktrace.h      |   2 +-
+ arch/x86/include/asm/text-patching.h   |   2 -
+ arch/x86/kernel/alternative.c          |  81 +++++++++++++++++-
+ arch/x86/kernel/asm-offsets.c          |   1 -
+ arch/x86/kernel/cpu/common.c           |  20 +++++
+ arch/x86/kernel/crash.c                |   8 --
+ arch/x86/kernel/ftrace.c               |   7 --
+ arch/x86/kernel/ftrace_32.S            |  78 ++++++++++--------
+ arch/x86/kernel/ftrace_64.S            |   3 +
+ arch/x86/kernel/kgdb.c                 |   8 --
+ arch/x86/kernel/kprobes/common.h       |  28 +++----
+ arch/x86/kernel/kprobes/core.c         |  29 +++----
+ arch/x86/kernel/kprobes/opt.c          |  20 +++--
+ arch/x86/kernel/process_32.c           |  16 ++--
+ arch/x86/kernel/ptrace.c               |  29 -------
+ arch/x86/kernel/smpboot.c              |   8 +-
+ arch/x86/kernel/time.c                 |   3 +-
+ arch/x86/kernel/unwind_frame.c         |  32 +-------
+ arch/x86/kernel/unwind_orc.c           |   2 +-
+ 26 files changed, 394 insertions(+), 265 deletions(-)
+
