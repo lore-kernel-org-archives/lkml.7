@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7EDC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E652C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBC621537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F8920651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600298;
-	bh=TSKGw1r5dLtQbJRCdmKWf5HSmP9FklzelECTG9HgAjA=;
+	s=default; t=1562600305;
+	bh=BesVByDq8mCJjgxBxvP/tGyTuLfvKdH/Hlzf+VbiDIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mnPh3Wu+30DORYDWqjzn0vLE3/wQnG5aHqexNKsMzySsT/8LdktRIorESHzIEA37Z
-	 cP71fd60CodVRTYSYkoTPSJJope7qy62BVvA/K5XLCgO2Itqc3Hr2eu72xUDCi+5Cw
-	 LuE4nZxO4NztjoUG37fQGAVjTMbrmw4fNNX8IPFk=
+	b=qD/qZRt75qsqe1x1B++kmFnCVCLqArNufVnLZUKN7afSkr9i53Np4VIk++0/xvYH7
+	 wF1KjW5bMgqXrD0Y0psMseezIDBCapFbupl0t63MD9pkjx3zjtNqPDweuDg0Z5ImX4
+	 9cQuDd92i2PYaEh9PT9TrsVnrykg52S8kpbE8eGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388229AbfGHPiR (ORCPT
+        id S2390043AbfGHPiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:38:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59666 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389649AbfGHPaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:39 -0400
+        id S1732058AbfGHPaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F90521537;
-        Mon,  8 Jul 2019 15:30:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B8D320645;
+        Mon,  8 Jul 2019 15:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599838;
-        bh=TSKGw1r5dLtQbJRCdmKWf5HSmP9FklzelECTG9HgAjA=;
+        s=default; t=1562599823;
+        bh=BesVByDq8mCJjgxBxvP/tGyTuLfvKdH/Hlzf+VbiDIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qgZfkfXY0XbGKfxsXZnwLi8u9lwUgkygkjSfepjCkZGOk0Lb9oX1J+jJvio0c6NI1
-         dbVjjTlyrEMWR51kbGdUz2oF+OPP/HdcjK72zqoNTXom4BJlIN5FzPPFv6FS/aI+YO
-         63vYKFpyTHo7fCnfEctPpWvejY3SePzjyRiwLdPM=
+        b=ep2ookHjOxPH+6p3GHkYvTTfNRHl2hkOTM5BkC30YDdfgModp+/sajEGDVISJZFmk
+         eb10m+7FWGtQ6eSQLNSfS9keVZ7kItgzrIvIrPelHbrJPe5jgbMTHdpV9du5XU1xQT
+         iTr35qcxuvbubIq40DNS0AUHZLymO+JTOdViwzTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Sricharan R <sricharan@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.19 89/90] dmaengine: qcom: bam_dma: Fix completed descriptors count
-Date:   Mon,  8 Jul 2019 17:13:56 +0200
-Message-Id: <20190708150527.042392553@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 47/90] ALSA: usb-audio: fix sign unintended sign extension on left shifts
+Date:   Mon,  8 Jul 2019 17:13:14 +0200
+Message-Id: <20190708150524.941227552@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -61,39 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sricharan R <sricharan@codeaurora.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit f6034225442c4a87906d36e975fd9e99a8f95487 upstream.
+commit 2acf5a3e6e9371e63c9e4ff54d84d08f630467a0 upstream.
 
-One space is left unused in circular FIFO to differentiate
-'full' and 'empty' cases. So take that in to account while
-counting for the descriptors completed.
+There are a couple of left shifts of unsigned 8 bit values that
+first get promoted to signed ints and hence get sign extended
+on the shift if the top bit of the 8 bit values are set. Fix
+this by casting the 8 bit values to unsigned ints to stop the
+unintentional sign extension.
 
-Fixes the issue reported here,
-	https://lkml.org/lkml/2019/6/18/669
-
-Cc: stable@vger.kernel.org
-Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Addresses-Coverity: ("Unintended sign extension")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/qcom/bam_dma.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/usb/mixer_quirks.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -808,6 +808,9 @@ static u32 process_channel_irqs(struct b
- 		/* Number of bytes available to read */
- 		avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -753,7 +753,7 @@ static int snd_ni_control_init_val(struc
+ 		return err;
+ 	}
  
-+		if (offset < bchan->head)
-+			avail--;
-+
- 		list_for_each_entry_safe(async_desc, tmp,
- 					 &bchan->desc_list, desc_node) {
- 			/* Not enough data to read */
+-	kctl->private_value |= (value << 24);
++	kctl->private_value |= ((unsigned int)value << 24);
+ 	return 0;
+ }
+ 
+@@ -914,7 +914,7 @@ static int snd_ftu_eff_switch_init(struc
+ 	if (err < 0)
+ 		return err;
+ 
+-	kctl->private_value |= value[0] << 24;
++	kctl->private_value |= (unsigned int)value[0] << 24;
+ 	return 0;
+ }
+ 
 
 
