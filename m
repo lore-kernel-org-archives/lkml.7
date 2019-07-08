@@ -2,105 +2,99 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A67C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7A7C606BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A616920844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4600A20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731505AbfGHNuB (ORCPT
+        id S1731493AbfGHNvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:50:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:48442 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbfGHNuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:50:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A456E2B;
-        Mon,  8 Jul 2019 06:50:00 -0700 (PDT)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D4FA3F738;
-        Mon,  8 Jul 2019 06:49:59 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        quentin.perret@arm.com, dietmar.eggemann@arm.com
-References: <20190627171603.14767-1-douglas.raillard@arm.com>
- <20190702154422.GV3436@hirez.programming.kicks-ass.net>
- <590e3dd9-ea4e-5230-d12c-d04bb3916e89@arm.com>
- <20190708111348.o6o63jisbukuk64d@e110439-lin>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <13a596f8-1c9c-f1da-f26e-d832fccbf563@arm.com>
-Date:   Mon, 8 Jul 2019 14:49:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jul 2019 09:51:46 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:60287 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfGHNvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:51:45 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MVaQW-1huLvS0AkO-00RbTc; Mon, 08 Jul 2019 15:51:38 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Philip Yang <Philip.Yang@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amdgpu: fix building without CONFIG_HMM_MIRROR
+Date:   Mon,  8 Jul 2019 15:51:24 +0200
+Message-Id: <20190708135135.610355-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190708111348.o6o63jisbukuk64d@e110439-lin>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB-large
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Try8nevSfQ6LJLOsIb7LCr5neA+PjlmdVukydwRVE7Gsov5fADa
+ rW7QTzw6r1z5vpwJBY1rwNpqk5oevj8duGKPxzodhe7pnj94XxCMw8VtkWCHXQ8AeQo4cw+
+ jGQLE+Qin3wqheYAl5VpnCH6JOMHyE21JSOrSco7yP/tUhiWrOgJz5dcHHWu1dYyV5Kxvmv
+ iCd3NniMc510079Mss/Vw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LWYpwebFz1I=:G1x40m2rbJewCi8eDhXMRA
+ TCM8b4h0pb+bOFNOYud9CwhQSArN3pKViWO3/FomWzVjqvf66+dEfBq5SAyKrFdJ4FALT1Nz9
+ NHuKQFQTz8+XPMZjAkXpILgIPXkfWLk2MF3XEHnTfJQTGDbFfqNG+kKB6Ix4ZMORaBPXE2hQZ
+ iPEDQp9r8aD6qvzFTXky2wIdUOP4hHHb65rJIO9+79etNmX7ItGOhHI/wB0MxyHsnCC6ng0dZ
+ N+A5Cx/wuikkXyaDuzHrpMnG6gy9bnmjtsi+S8ubc0Z7CGl6YKizQpo5a8bax+YJooCoo9pWV
+ ye+5nIom0Ckx/y3tsGSI973jBPtMkMg7Zzjg7kjlX0jmXiXV7QAXNn7lGY0XyIfZm8ssUaspa
+ 0WEX45aYFYqpod6YXeGBZop3+n2xIV6zNtVPofhp7ut5KD/eXUBi37Xy9Wvi7sQmSsolABjhG
+ pq54VzAAlmrg8Q3I+Cd/l/y+2nd65CWBvmN8na3oxfd1by/BjjQISuWqZiVjNwknDIMu0Ulfm
+ W8yrdIMOp3ub8pOwIpjrP25tm6MjO9rShUeLYul2v3nTcxI47ihp5YoQNDIandjoKk43Mf2Zn
+ nNlxJThDHIoe6La8U3ay+g8KZS5HKHqervgh/UFvLY7LsSFVtafLjA1RrBmfMymu3wKvePT2k
+ L92VYYRTamBbfwNSb9W0S2h2khRtGQpFnqVlkHuJbWuV310w0+KCX6cBTzbdpLlpnIkHqr+2i
+ LtO/MZt6THXQPsYCU1K+9VxOizsIZPPo1jLTtg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+'struct hmm_mirror' is not defined without the Kconfig option set,
+so we cannot include it within another struct:
 
+In file included from drivers/gpu/drm/amd/amdgpu/../amdgpu/amdgpu.h:72:
+drivers/gpu/drm/amd/amdgpu/../amdgpu/amdgpu_mn.h:69:20: error: field has incomplete type 'struct hmm_mirror'
+        struct hmm_mirror       mirror;
+                                ^
+drivers/gpu/drm/amd/amdgpu/../amdgpu/amdgpu_mn.h:69:9: note: forward declaration of 'struct hmm_mirror'
+        struct hmm_mirror       mirror;
 
-On 7/8/19 12:13 PM, Patrick Bellasi wrote:
-> On 03-Jul 14:38, Douglas Raillard wrote:
->> Hi Peter,
->>
->> On 7/2/19 4:44 PM, Peter Zijlstra wrote:
->>> On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
->>>> Make schedutil cpufreq governor energy-aware.
->>>>
->>>> - patch 1 introduces a function to retrieve a frequency given a base
->>>>     frequency and an energy cost margin.
->>>> - patch 2 links Energy Model perf_domain to sugov_policy.
->>>> - patch 3 updates get_next_freq() to make use of the Energy Model.
->>>
->>>>
->>>> 1) Selecting the highest possible frequency for a given cost. Some
->>>>      platforms can have lower frequencies that are less efficient than
->>>>      higher ones, in which case they should be skipped for most purposes.
->>>>      They can still be useful to give more freedom to thermal throttling
->>>>      mechanisms, but not under normal circumstances.
->>>>      note: the EM framework will warn about such OPPs "hertz/watts ratio
->>>>      non-monotonically decreasing"
->>>
->>> Humm, for some reason I was thinking we explicitly skipped those OPPs
->>> and they already weren't used.
->>>
->>> This isn't in fact so, and these first few patches make it so?
->>
->> That's correct, the cost information about each OPP has been introduced recently in mainline
->> by the energy model series. Without that info, the only way to skip them that comes to my
->> mind is to set a policy min frequency, since these inefficient OPPs are usually located
->> at the lower end.
-> 
-> Perhaps it's also worth to point out that the alternative approach you
-> point out above is a system wide solution.
-> 
-> While, the ramp_boost thingy you propose, it's a more fine grained
-> mechanisms which could be extended in the future to have a per-task
-> side. IOW, it could contribute to have better user-space hints, for
-> example to ramp_boost more certain tasks and not others.
+Add the #ifdef around it that is also used for all functions operating
+on it.
 
-ramp_boost and the situation you describe are more what solves point 2) (which has been cut out in that answer),
-this point "1)" is really just about avoiding selection of some OPPs, regardless of task util. IOW, it's better to
-skip the OPPs we talk about here, and race to idle at a higher OPP regardless of what the task need.
+Fixes: 7590f6d211ec ("drm/amdgpu: Prepare for hmm_range_register API change")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
+index 281fd9fef662..b8ed68943625 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
+@@ -65,8 +65,10 @@ struct amdgpu_mn {
+ 	struct rw_semaphore	lock;
+ 	struct rb_root_cached	objects;
+ 
++#ifdef CONFIG_HMM_MIRROR
+ 	/* HMM mirror */
+ 	struct hmm_mirror	mirror;
++#endif
+ };
+ 
+ #if defined(CONFIG_HMM_MIRROR)
+-- 
+2.20.0
 
-> Best,
-> Patrick
-> 
-
-Cheers,
-Douglas
