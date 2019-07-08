@@ -7,80 +7,86 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30688C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A971C606B2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D1D214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041F220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:56:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PvlU5vz7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n2aOuh4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730709AbfGHL4m (ORCPT
+        id S1730655AbfGHL43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:56:42 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:32865 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730682AbfGHL4j (ORCPT
+        Mon, 8 Jul 2019 07:56:29 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:36744 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730628AbfGHL4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:56:39 -0400
-Received: by mail-vs1-f65.google.com with SMTP id m8so7995695vsj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:56:39 -0700 (PDT)
+        Mon, 8 Jul 2019 07:56:25 -0400
+Received: by mail-vs1-f66.google.com with SMTP id y16so4355395vsc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:56:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=B0N2o6vb53INmsDRg0vvoXHm5GyPTVSZcycR7PVLISU=;
-        b=PvlU5vz7XoPZUwIvygXmPcP5QfufMINmsJEA7E6WNSLKKplD/mSsZUWag6tko+vG5x
-         XhtSx4FHOo6+nMJ0HrtqzjOliGarGG8Qp5ulq4ym4Kbi/Cw//tCLhRkEdTCJUC+kSCMa
-         NX5lcpTu11Vh/MglPgWVWg7gRus8cgDxQ688ZKq7L823/gfYF6IDsTOxYvoUOn9QnJo+
-         2FSycF8LeDN6Qd3cSu1UXRzF3Ia7nxFLFkXnVtv8m9watIfHrMAtWHcDT4KDevlhpLPh
-         MucM1y0V40Df/oSHl4aXhjyKWggA+uISfJ/U0HDz74oQFLiO/XZx4lhRUWoyGWPAavF8
-         764w==
+        bh=INqtaKqgJbsCXfOBlyhjMGZiHQUnucRAJNFBEd5g9d0=;
+        b=n2aOuh4+2HfLrrQ/AerkGk8nPcV0a9lHD1biMG5L8xAvYkxmgeLA8NS7F25S5q3m4/
+         PCxVdgp2Jf8w+c1ts10xe7qmXFh+7oane/qyxsSzTyhYVjYlUWbx7mj0ICC6+bojcHJI
+         0SINwngWRJuBqkIGoFi8LSLM9AAf4cWCut+tz8LeJrgv1RvYMMYGzCJDEIEEotA8Lx4T
+         ExMvH2gvUGRMH8HhXJ4gQBnh9YRG72rx3rbZCAk4XKuIF2dvHFVtWbEZbGdLt8u1/62E
+         wvQoT932jJjfBcNytTV6L5O68aaoqrXemfhwy6DrUlk5jFD5bypBb8QcMyuWa0IaOma9
+         Ed1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=B0N2o6vb53INmsDRg0vvoXHm5GyPTVSZcycR7PVLISU=;
-        b=gyOtm3yfl5L1m8UE/xrjWqZgBl/rfiRln/4sjKrAUchZjcSBZXP7+ZGXxrFoVXTTaF
-         CEt9FXqsBchGsVCY5ncO2dWK86JicXuSFJHLCAnVOcUYspueFRbEW9PNkoCmlcfTmQOA
-         gxOcvvwUABMccJTVTD8IIi0jf44g4WVIjW6D6PQCeg+QOPHftSo7Fyo089MyimSC9M4i
-         ZTY3ENuFMuSW9PawtjjyWCkgPIyzkpK3ZhvafX5R7XVD7KN2VuhhaIkXipte5wnMOaSq
-         BAxE2WslEBB6e76Y7mOmGn7EuZCMXtY46xH+Lt/WT75E5aWRJFg8jlznAawn6tfODQMt
-         7/fg==
-X-Gm-Message-State: APjAAAWltP0z1wgSRD6TeuGWscXlr5Edz8aXdSnueomx0ss0uKonNuA9
-        2qq6jJmC4FzyJ77ElWgHzsrpUU6yEOu71UIsc/nZ+w==
-X-Google-Smtp-Source: APXvYqwyuPgEkSrZremYSuowjEnjBh5G+SBxTju74mqujXxMD4n9mlArpncHihuukVZeUm+rYjRxRxKjUErClPTQcEk=
-X-Received: by 2002:a67:e454:: with SMTP id n20mr8380623vsm.34.1562586998946;
- Mon, 08 Jul 2019 04:56:38 -0700 (PDT)
+        bh=INqtaKqgJbsCXfOBlyhjMGZiHQUnucRAJNFBEd5g9d0=;
+        b=SVum7hL5jm76uyaGIhv99Z/MhpOTodkHm3sgg/Po3MayUp6+2Iqsnq2GJebTUDO0YT
+         4HbM5v5IjACsaSk19AgW05uSogtVHBF+8Lg+cl9pGxqG/fhdMaZSl0EmYNrorhv6RdcW
+         Kn/XAsBIzgJsC7XV9oUe6J66TNa4sVIWWXeLGL/O7RC7N/17EX0yT8Bcmdz3ySvANGPY
+         n05O5bkasW4Wb0ci+0UnTHJmaZXwzMgQHl00SotdHv7RKdILyO/stnluV3c+Ipql/Gd+
+         x6ESbo3zb/C2HESijors0b1FUmokS4IDIYuEHYAPQ3OpF5dXo4rlqpuDllfVZtprINtI
+         MxkA==
+X-Gm-Message-State: APjAAAVLGpcU6/X2HfaZImK7U0doknICYwA6I3hSBctNfOhrOFWsEJPH
+        sfIMvjeENGJOsB32zJD5Bb2mg/V68TlGmQvgbuEf9Q==
+X-Google-Smtp-Source: APXvYqzuMQxu5Q5w1+tmz7XnrX4NkraXYwW+cB7xG+jvVxMPoX8GHek6Jxl9SAJweTu5ja02CrA++IPVX9ipqF+7hMA=
+X-Received: by 2002:a67:ee5b:: with SMTP id g27mr9881440vsp.165.1562586984367;
+ Mon, 08 Jul 2019 04:56:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702133631.47760-1-yuehaibing@huawei.com>
-In-Reply-To: <20190702133631.47760-1-yuehaibing@huawei.com>
+References: <20190625092042.19320-1-hch@lst.de> <20190625092042.19320-2-hch@lst.de>
+In-Reply-To: <20190625092042.19320-2-hch@lst.de>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 8 Jul 2019 13:56:03 +0200
-Message-ID: <CAPDyKFrfAD8_-s+uCeA=XYO5+YM7bPwfK0geNBLQ1gB80G6jbg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci_am654: Add dependency on MMC_SDHCI_AM654
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Date:   Mon, 8 Jul 2019 13:55:48 +0200
+Message-ID: <CAPDyKFotnDCpt9k-r3D2uYRAzpFVA3woRQENLcNcDY0q8+8SVg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mmc: let the dma map ops handle bouncing
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jul 2019 at 15:36, YueHaibing <yuehaibing@huawei.com> wrote:
+On Tue, 25 Jun 2019 at 11:21, Christoph Hellwig <hch@lst.de> wrote:
 >
-> Fix build error:
+> Just like we do for all other block drivers.  Especially as the limit
+> imposed at the moment might be way to pessimistic for iommus.
 >
-> drivers/mmc/host/sdhci_am654.o: In function `sdhci_am654_probe':
-> drivers/mmc/host/sdhci_am654.c:464: undefined reference to `__devm_regmap_init_mmio_clk'
-> drivers/mmc/host/sdhci_am654.o:(.debug_addr+0x3f8): undefined reference to `__devm_regmap_init_mmio_clk'
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: aff88ff23512 ("mmc: sdhci_am654: Add Initial Support for AM654 SDHCI driver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+From your earlier reply, I decided to fold in the following
+information to the changelog, as to clarify things a bit:
+
+"This also means we are not going to set a bounce limit for the queue, in
+case we have a dma mask. On most architectures it was never needed, the
+major hold out was x86-32 with PAE, but that has been fixed by now."
+
+Please tell, if you want me to change something.
 
 Applied for next, thanks!
 
@@ -89,23 +95,34 @@ Uffe
 
 
 > ---
->  drivers/mmc/host/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/mmc/core/queue.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 >
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 931770f..14d89a1 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -996,7 +996,7 @@ config MMC_SDHCI_OMAP
+> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+> index 3557d5c51141..e327f80ebe70 100644
+> --- a/drivers/mmc/core/queue.c
+> +++ b/drivers/mmc/core/queue.c
+> @@ -350,18 +350,15 @@ static const struct blk_mq_ops mmc_mq_ops = {
+>  static void mmc_setup_queue(struct mmc_queue *mq, struct mmc_card *card)
+>  {
+>         struct mmc_host *host = card->host;
+> -       u64 limit = BLK_BOUNCE_HIGH;
+>         unsigned block_size = 512;
 >
->  config MMC_SDHCI_AM654
->         tristate "Support for the SDHCI Controller in TI's AM654 SOCs"
-> -       depends on MMC_SDHCI_PLTFM && OF
-> +       depends on MMC_SDHCI_PLTFM && OF && REGMAP_MMIO
->         select MMC_SDHCI_IO_ACCESSORS
->         help
->           This selects the Secure Digital Host Controller Interface (SDHCI)
+> -       if (mmc_dev(host)->dma_mask && *mmc_dev(host)->dma_mask)
+> -               limit = (u64)dma_max_pfn(mmc_dev(host)) << PAGE_SHIFT;
+> -
+>         blk_queue_flag_set(QUEUE_FLAG_NONROT, mq->queue);
+>         blk_queue_flag_clear(QUEUE_FLAG_ADD_RANDOM, mq->queue);
+>         if (mmc_can_erase(card))
+>                 mmc_queue_setup_discard(mq->queue, card);
+>
+> -       blk_queue_bounce_limit(mq->queue, limit);
+> +       if (!mmc_dev(host)->dma_mask || !*mmc_dev(host)->dma_mask)
+> +               blk_queue_bounce_limit(mq->queue, BLK_BOUNCE_HIGH);
+>         blk_queue_max_hw_sectors(mq->queue,
+>                 min(host->max_blk_count, host->max_req_size / 512));
+>         blk_queue_max_segments(mq->queue, host->max_segs);
 > --
-> 2.7.4
->
+> 2.20.1
 >
