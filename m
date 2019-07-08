@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE10C606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52333C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F042216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D3E216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598939;
-	bh=okyOBT5ELOJB0plyytjTCGl9+FCxWoDkx2tkGuR3290=;
+	s=default; t=1562598943;
+	bh=gecknaLnpxJAkcz09//PUVx/i0m8/5EUXaITOfUOD1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fUvgl59qvsUpVTREjkKOCcGLIPDaGg0/PRQUIuXkoafD7sMY1Je7rFRdZedpVEoSK
-	 sA5asHGND4GvDMZDZRFtN9WOWJkpRAi09rOxHIPW/aaUgC4cHLZ+9eyil4TpmGyJCV
-	 OgKYa/LOrN+iEl0ZDoMLxLnl3Bf3Cx3pYSpYQSos=
+	b=xgnPsxye/smryml+grvphJMBGTx+V9bh+kURhcaKZSBCGJJ69c6MwIkxFfkYS6TXy
+	 stqtELmYP8ROEXW+u22wFDcIJ1NlflS3s7NLxljuo2xsyVJoWv56pokHoCh9DxatcI
+	 JsXJSh8rKicY1LETeOjLkvYCqFNK4gdBBhuao8AI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbfGHPPh (ORCPT
+        id S1732386AbfGHPPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38052 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732346AbfGHPPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:15:30 -0400
+        id S1732370AbfGHPPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:15:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9977021707;
-        Mon,  8 Jul 2019 15:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADAC4216E3;
+        Mon,  8 Jul 2019 15:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598930;
-        bh=okyOBT5ELOJB0plyytjTCGl9+FCxWoDkx2tkGuR3290=;
+        s=default; t=1562598936;
+        bh=gecknaLnpxJAkcz09//PUVx/i0m8/5EUXaITOfUOD1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M4rQZY1Ytov9/hvpfHGFfYhix9LiDHzy2qp5Fb3HYY3unec0BgohEsYBDcOmKYaI/
-         syE4s+ZyJQhgUSs06TAp0ghah2fZ49MD0OeqD2z0Q24qFCSjGKjPL89yV1ysppNevM
-         u+ojAzsvYjeinYwBEk5kNSY6FhdWrOlNy11+2rNk=
+        b=nUbuHdEqul2Ayrn57K1uUUGbv8TftxwrD0w71YO1qNQg5vCyzPKvSIz1bxXHJDeVS
+         gXlUimtWtWuD9NYjB4zkvApTDtFM/iVhNpPmCwVAqV8QmC2laSW1a9Ycfu/o0aiRQs
+         BD4qlVPCxYfjSuB1KGbbEshIj4bJnZ09ZTXG4lnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.4 20/73] btrfs: start readahead also in seed devices
-Date:   Mon,  8 Jul 2019 17:12:30 +0200
-Message-Id: <20190708150521.015528717@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a90604060cb40f5bdd16@syzkaller.appspotmail.com,
+        Willem de Bruijn <willemb@google.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.4 22/73] can: purge socket error queue on sock destruct
+Date:   Mon,  8 Jul 2019 17:12:32 +0200
+Message-Id: <20190708150521.526939612@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -60,49 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naohiro Aota <naohiro.aota@wdc.com>
+From: Willem de Bruijn <willemb@google.com>
 
-commit c4e0540d0ad49c8ceab06cceed1de27c4fe29f6e upstream.
+commit fd704bd5ee749d560e86c4f1fd2ef486d8abf7cf upstream.
 
-Currently, btrfs does not consult seed devices to start readahead. As a
-result, if readahead zone is added to the seed devices, btrfs_reada_wait()
-indefinitely wait for the reada_ctl to finish.
+CAN supports software tx timestamps as of the below commit. Purge
+any queued timestamp packets on socket destroy.
 
-You can reproduce the hung by modifying btrfs/163 to have larger initial
-file size (e.g. xfs_io pwrite 4M instead of current 256K).
-
-Fixes: 7414a03fbf9e ("btrfs: initial readahead code and prototypes")
-Cc: stable@vger.kernel.org # 3.2+: ce7791ffee1e: Btrfs: fix race between readahead and device replace/removal
-Cc: stable@vger.kernel.org # 3.2+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 51f31cabe3ce ("ip: support for TX timestamps on UDP and RAW sockets")
+Reported-by: syzbot+a90604060cb40f5bdd16@syzkaller.appspotmail.com
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/reada.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ net/can/af_can.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/reada.c
-+++ b/fs/btrfs/reada.c
-@@ -762,6 +762,7 @@ static void __reada_start_machine(struct
- 	u64 total = 0;
- 	int i;
+--- a/net/can/af_can.c
++++ b/net/can/af_can.c
+@@ -113,6 +113,7 @@ EXPORT_SYMBOL(can_ioctl);
+ static void can_sock_destruct(struct sock *sk)
+ {
+ 	skb_queue_purge(&sk->sk_receive_queue);
++	skb_queue_purge(&sk->sk_error_queue);
+ }
  
-+again:
- 	do {
- 		enqueued = 0;
- 		mutex_lock(&fs_devices->device_list_mutex);
-@@ -774,6 +775,10 @@ static void __reada_start_machine(struct
- 		mutex_unlock(&fs_devices->device_list_mutex);
- 		total += enqueued;
- 	} while (enqueued && total < 10000);
-+	if (fs_devices->seed) {
-+		fs_devices = fs_devices->seed;
-+		goto again;
-+	}
- 
- 	if (enqueued == 0)
- 		return;
+ static const struct can_proto *can_get_proto(int protocol)
 
 
