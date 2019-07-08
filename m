@@ -2,127 +2,141 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DB2C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655D4C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9E1216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADF3216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:58:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OXbjFpWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388848AbfGHP6f (ORCPT
+        id S2388947AbfGHP6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:58:35 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37636 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728581AbfGHP6e (ORCPT
+        Mon, 8 Jul 2019 11:58:54 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40389 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388088AbfGHP6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:58:34 -0400
-Received: by mail-qk1-f193.google.com with SMTP id d15so13694165qkl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:58:34 -0700 (PDT)
+        Mon, 8 Jul 2019 11:58:53 -0400
+Received: by mail-io1-f65.google.com with SMTP id h6so28173351iom.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tMCiFsRLDuW6geBulr3EjyW7t17T9yVxinnBG4xjmyE=;
+        b=OXbjFpWmkvpDp2y6eTwPwQeZzYHFJ41RVnrCR/bBnbn3zmrcjD44kQV6AOejyYbCET
+         Xw1BD5zUF87gnasL9QHVthJWk8/FVdH2b4ELdIR34m4lfjlZPKmCl70qe5p2QRmHi8nA
+         uP0SYDtYKhdyMH1ZypI3iFmOV4Bcv5ysoSlXw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AH8IJJmjzkjZq3idsVNsmCIYsGxgWPVTHtDYl5lUZWE=;
-        b=TSGWpyUBoGoWLd7VgC/BYT8lSGWeSRphO+U3q9YNcfSbaIShvDOWMi/eXNd0x79+M+
-         r/8kwYeBIcIflaeQ455w/xB3UE2YRNsrOnE3TG+t2YUNLWQDxGWaNCincxQR8ktVF2IE
-         /zD9EEZK2g+xKiYT8myCHwW+Qkt5WDjk5TAGuz/94+q83M4OIeizP32o4tvu9UTZfoyK
-         1I4pcPng2eJpF9QkVel8KlQNg55HaTzLDS6NUaBBusfMID5J9HrZoCLoyvs6XF+j4b5Q
-         8WxNK5RclA5rX1fHdkrHSIyQnxJKy8EEZsp31Bmyd4dnNEJpEEoWDUZL2CLee6zb/TdX
-         PEeA==
-X-Gm-Message-State: APjAAAUtmdtq+SeaX3ZGmAIxf0QAi4bV3xBz9bWRqa25xJzhGFsswbGH
-        qotPTsIKu8Y/KzMHjcS/SIJB2B8ax/dWsN5/s2g=
-X-Google-Smtp-Source: APXvYqyrehAlYB2c3pyV+TDqOm5ybWzhOFmyqN8lX/9ZlBxoclluL6OWTXGUf+q3JxWAQFBJc7yWpEfbsvvmTUDGKHs=
-X-Received: by 2002:a05:620a:b:: with SMTP id j11mr11219309qki.352.1562601513594;
- Mon, 08 Jul 2019 08:58:33 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tMCiFsRLDuW6geBulr3EjyW7t17T9yVxinnBG4xjmyE=;
+        b=sMf9gwyG/3kQW1imAHCCZ+3VqJZbWRyy6ghAfAt1qGPdN15GgFFnmJwmK4R4T57YCm
+         B/UOUDMo4geIvK3dS+lkl1HqoFVBTYN3m7K6ll88sp/SHXC+6998VyYWNqDMaucMHGFg
+         KSXLkD9gLeaHnEHljhls4qW8wY0OhUP2SSQ5k/rcao684NugGN8GsC8iRUuUrjUKbtMl
+         V1I45lSAw6vIh6CGsu6kB+wPqwqXgi5H3s8lcHHNM2dYI2UxZ8J607YfN/HRyu3Bvg24
+         J+/inesvFHXOgm03Os3+RLOSXX8Dt5yKO0v1qvZF3dtxRUI2qvr2Hz9PCPEiedklmwxH
+         L4CA==
+X-Gm-Message-State: APjAAAUm+Wm1/41yQq+0CSnALc7LyJuA7MoECkjMF0dpUyOc+5Lvfkdn
+        VbPcY1DJHljUqsXkDWGLz1QLNSqilJc=
+X-Google-Smtp-Source: APXvYqwBcxsZu1ODp6oLFBr6/t3E5EzNQPV4H7G1tmn+HtLLXdJhwjeEGnRhEXT+kFU7K5jn2UVZfA==
+X-Received: by 2002:a6b:8e82:: with SMTP id q124mr11725976iod.68.1562601532081;
+        Mon, 08 Jul 2019 08:58:52 -0700 (PDT)
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com. [209.85.166.49])
+        by smtp.gmail.com with ESMTPSA id j14sm14898788ioa.78.2019.07.08.08.58.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 08:58:50 -0700 (PDT)
+Received: by mail-io1-f49.google.com with SMTP id j6so36415294ioa.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 08:58:49 -0700 (PDT)
+X-Received: by 2002:a5e:8f08:: with SMTP id c8mr20045788iok.52.1562601529525;
+ Mon, 08 Jul 2019 08:58:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708140816.1334640-1-arnd@arndb.de> <20190708150255.GA32266@archlinux-epyc>
-In-Reply-To: <20190708150255.GA32266@archlinux-epyc>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 8 Jul 2019 17:58:15 +0200
-Message-ID: <CAK8P3a0hR2+g+vxKqm=a8DgPcNrBaqa3sbuEHuVzaw9Fryd4Zg@mail.gmail.com>
-Subject: Re: [1/2] drm/amd/powerplay: smu_v11_0: fix uninitialized variable use
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+References: <20190401171724.215780-1-dianders@chromium.org>
+ <CAD=FV=Vi2C7s2oWBDD0n+HK=_SuBYhRM9saMK-y6Qa0+k-g17w@mail.gmail.com>
+ <20190628171342.GA2238@ravnborg.org> <2169143.hEFa8b2HQR@diego>
+In-Reply-To: <2169143.hEFa8b2HQR@diego>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 8 Jul 2019 08:58:41 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U3Wj8vaZcQLmkfX6zgjVFEra+GrHMH3OCs5QQ_-tM4hw@mail.gmail.com>
+Message-ID: <CAD=FV=U3Wj8vaZcQLmkfX6zgjVFEra+GrHMH3OCs5QQ_-tM4hw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
+To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chengming Gui <Jack.Gui@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, Huang Rui <ray.huang@amd.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Likun Gao <Likun.Gao@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 5:02 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
-> On Mon, Jul 08, 2019 at 04:07:58PM +0200, Arnd Bergmann wrote:
-> >       /* if don't has GetDpmClockFreq Message, try get current clock by SmuMetrics_t */
-> > -     if (smu_msg_get_index(smu, SMU_MSG_GetDpmClockFreq) == 0)
-> > +     if (smu_msg_get_index(smu, SMU_MSG_GetDpmClockFreq) == 0) {
-> >               ret =  smu_get_current_clk_freq_by_table(smu, clk_id, &freq);
-> > -     else {
-> > +             if (ret)
-> > +                     return ret;
+Hi Sam,
+
+On Sat, Jun 29, 2019 at 7:09 AM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
 >
-> I am kind of surprised that this fixes the warning. If I am interpreting
-> the warning correctly, it is complaining that the member
-> get_current_clk_freq_by_table could be NULL and not be called to
-> initialize freq and that entire statement will become 0. If that is the
-> case, it seems like this added error handling won't fix that problem,
-> right?
+> Hi Sam,
+>
+> Am Freitag, 28. Juni 2019, 19:13:42 CEST schrieb Sam Ravnborg:
+> > Hi Doug.
+> >
+> > > Sam: Oh!  I hadn't noticed that you've been added as a panel
+> > > maintainer in commit ef0db94f94a0 ("MAINTAINERS: Add Sam as reviewer
+> > > for drm/panel").  Does that mean you are able to provide some advice
+> > > for how to land this series?
+> > Reviewer only, not maintainer....
+> >
+> > It is on my TODO list for the weekend to go through the patch set in
+> > details and provide feedback. I have read them before, but I miss to do
+> > a more detailed read through.
+> >
+> > But I cannot apply this unless Thierry or one of the DRM maintainers
+> > ack it.
+> > We simply need someone with a better general knowledge of DRM to ack it
+> > than I have.
+>
+> So Thierry was able to look at the patches yesterday it seems and has Ack=
+ed
+> all the relevant ones. As a drm-misc-contributor I could also apply them
+> myself, but now don't want to preempt any additional comments you might
+> have ;-) . So I guess my question would be if you still want to do a revi=
+ew
+> or if I should apply them.
 
-No, I'm fairly sure this is the right fix. Looking at the whole function:
+Hopefully you saw, but I responded to all of your review feedback.  In
+the end, I thought it'd be OK to land the series as-is and I can fix
+up nits in a follow-up series, though I'm waiting for your responses
+to a couple questions first.
 
-| static int smu_v11_0_get_current_clk_freq(struct smu_context *smu,
-|                                          enum smu_clk_type clk_id,
-|                                          uint32_t *value)
-|{
-|        int ret = 0;
-|        uint32_t freq;
-|
-|        if (clk_id >= SMU_CLK_COUNT || !value)
-|                return -EINVAL;
-|
-|        /* if don't has GetDpmClockFreq Message, try get current
-clock by SmuMetrics_t */
-|        if (smu_msg_get_index(smu, SMU_MSG_GetDpmClockFreq) == 0) {
-|                ret =  smu_get_current_clk_freq_by_table(smu, clk_id, &freq);
+It would be ideal if you could confirm that you're OK with this plan
+even if you don't have time to respond in detail to my emails yet.  I
+think Heiko can land them all through the appropriate channels since
+the patches have all the proper Acks.
 
-Here &freq may or may not get initialized
+Thanks!
 
-|        } else {
-|                ret = smu_send_smc_msg_with_param(smu, SMU_MSG_GetDpmClockFreq,
-|
-(smu_clk_get_index(smu, clk_id) << 16));
-|                if (ret)
-|                        return ret;
-|
-|               ret = smu_read_smc_arg(smu, &freq);
-|                if (ret)
-|                        return ret;
-
-Same here, but if it's not initialized, we bail out
-
-|        }
-|
-|       freq *= 100;
-|        *value = freq;
-
-And here it gets assigned to *value
-
-|        return ret;
-|}
-
-    Arnd
+-Doug
