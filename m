@@ -2,123 +2,110 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40C5C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8C0C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8818218A0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44152189F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:50:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OZ5opmc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404059AbfGHRuQ (ORCPT
+        id S2404066AbfGHRu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:50:16 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:41184 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730936AbfGHRuP (ORCPT
+        Mon, 8 Jul 2019 13:50:27 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35210 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729038AbfGHRu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:50:15 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 6F4BD80636;
-        Mon,  8 Jul 2019 19:50:09 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 19:50:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Enric =?iso-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>,
-        =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override
- typical timing
-Message-ID: <20190708175007.GA3511@ravnborg.org>
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-3-dianders@chromium.org>
- <20190630202246.GB15102@ravnborg.org>
- <CAD=FV=V_wTD1xpkXRe-z2HsZ8QXKq7jmq8CsfhMnFxi-5XDJjw@mail.gmail.com>
+        Mon, 8 Jul 2019 13:50:27 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d23so18940570qto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yL5BRmtaPbPkgux2h8HVt6KP5oApfrPeQ3tBLfzIdSU=;
+        b=OZ5opmc6L7elFVmJBDlWcGFG6GY0fE1yQP+zwuSbeqLjB1kHLXdsmV8DcALWFrfzzQ
+         hdQgY1/aHqJ5eESq5nOmZC2NjQ07Lc56IqoVFws+4z3rCrCC2ihceYwIR4FepwxfO9+H
+         xdq3qtqBwjGp+/Hwrzn4UKWeJ+zwS3cN8dQyU8r3s1f3bAzUX/yOahA1k7dsezmxitjY
+         8co8wChHtFo1MwvxewyiQyjGGpUuRgXO5yt7kSv0D8i8YDJtY6Tk2nJxBQK7N1G8EfjI
+         sOR0uH6Bs192pfn6afB1ikq2npEt3ts7J1TovO03hujpILG51zqoSlyY/ox8tCW2QUhm
+         a5sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yL5BRmtaPbPkgux2h8HVt6KP5oApfrPeQ3tBLfzIdSU=;
+        b=g5+/16gRugCY8C6G6jKkPnJHj6F1Vh5rSCYKvTE3QTlwPDy85eVZ3lLTej/x9obMIN
+         zuahen1z2Jkf7ltESgCCtcDw2WoKy2g5QEPXLeLArkS+j6ZR+bXI4ok7uYAzNQspbbvD
+         pId4IwlWCW5HdgcNnad4v8U8TzASaW4bEtdkAttWYJIZEmx0DbhdvA2oAJX/DndDC60Z
+         tCEbs7V4GRvBv3NNScW93KKxTOYLlN289/xaGPO4795oiICAQttusRTVfTZDMdw9oPqZ
+         5oYtShrGvyJ3ia5gxV/hVxCBFb1ioMGOqLYUD2wqv3E+oK+zbVpEaPCATMj6ihN5iGcP
+         yMDg==
+X-Gm-Message-State: APjAAAW6SkIdEh2CM6KI9a09sUqrYyGujTrNniIiAGCO0CswN64U1y3m
+        +DTzGdf08zy3jX2MtMmFnURBLHJ5CHTMLg==
+X-Google-Smtp-Source: APXvYqzyRwj+FvFh3OAmcgN2w65t+gP7/eJLQtjFQNIbuzr4Uzj62KUE+402oSxbzV2SqfCGQ1kPgA==
+X-Received: by 2002:ac8:c0e:: with SMTP id k14mr15091775qti.72.1562608226174;
+        Mon, 08 Jul 2019 10:50:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id p4sm8298394qkb.84.2019.07.08.10.50.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jul 2019 10:50:25 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hkXmT-0001pJ-Ca; Mon, 08 Jul 2019 14:50:25 -0300
+Date:   Mon, 8 Jul 2019 14:50:25 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dag Moxnes <dag.moxnes@oracle.com>
+Cc:     dledford@redhat.com, leon@kernel.org, parav@mellanox.com,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] RDMA/core: Fix race when resolving IP address
+Message-ID: <20190708175025.GA6976@ziepe.ca>
+References: <1562584584-13132-1-git-send-email-dag.moxnes@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=V_wTD1xpkXRe-z2HsZ8QXKq7jmq8CsfhMnFxi-5XDJjw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=AWgJsaMlI6ysr0MxQJMA:9 a=0846P8UFn4bgp1PN:21 a=puqGkp3IltQWEqwz:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <1562584584-13132-1-git-send-email-dag.moxnes@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dough.
+On Mon, Jul 08, 2019 at 01:16:24PM +0200, Dag Moxnes wrote:
+> Use neighbour lock when copying MAC address from neighbour data struct
+> in dst_fetch_ha.
+> 
+> When not using the lock, it is possible for the function to race with
+> neigh_update, causing it to copy an invalid MAC address.
+> 
+> It is possible to provoke this error by calling rdma_resolve_addr in a
+> tight loop, while deleting the corresponding ARP entry in another tight
+> loop.
+> 
+> This will cause the race shown it the following sample trace:
+> 
+> rdma_resolve_addr()
+>   rdma_resolve_ip()
+>     addr_resolve()
+>       addr_resolve_neigh()
+>         fetch_ha()
+>           dst_fetch_ha()
+>             n->nud_state == NUD_VALID
 
-On Mon, Jul 01, 2019 at 09:39:24AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Sun, Jun 30, 2019 at 1:22 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > > @@ -91,6 +92,8 @@ struct panel_simple {
-> > >       struct i2c_adapter *ddc;
-> > >
-> > >       struct gpio_desc *enable_gpio;
-> > > +
-> > > +     struct drm_display_mode override_mode;
-> > I fail to see where this poiter is assigned.
-> 
-> In panel_simple_parse_override_mode().  Specifically:
-> 
-> drm_display_mode_from_videomode(&vm, &panel->override_mode);
+It isn't nud_state that is the problem here, it is the parallel
+memcpy's onto ha. I fixed the commit message
 
-The above code-snippet is only called in the panel has specified display
-timings using display_timings - it is not called when display_mode is
-used.
-So override_mode is only assigned in some cases and not all cases.
-This needs to be fixed so we do not reference override_mode unless
-it is set.
+This could also have been solved by using the ha_lock, but I don't
+think we have a reason to particularly over-optimize this.
 
-> 
-> 
-> > @@ -152,6 +162,44 @@ static int panel_simple_get_fixed_modes(struct panel_simple *panel)
-> > >               num++;
-> > >       }
-> > >
-> > > +     return num;
-> > > +}
-> > > +
-> > > +static int panel_simple_get_non_edid_modes(struct panel_simple *panel)
-> > > +{
-> > > +     struct drm_connector *connector = panel->base.connector;
-> > > +     struct drm_device *drm = panel->base.drm;
-> > > +     struct drm_display_mode *mode;
-> > > +     bool has_override = panel->override_mode.type;
-> > This looks suspicious.
-> > panel->override_mode.type is an unsigned int that may have a number of
-> > bits set.
-> > So the above code implicitly convert a .type != 0 to a true.
-> > This can be expressed in a much more reader friendly way.
-> 
-> You would suggest that I add a boolean field to a structure to
-> indicate whether an override mode is present?
-A simple  bool has_override = panel->override_mode.type != 0;
-would do the trick here.
-Then there is no hidden conversion from int to a bool.
+>  drivers/infiniband/core/addr.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 
-But as override_mode can be NULL something more needs to be done.
+Applied to for-next, thanks
 
-	Sam
+Jason
