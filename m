@@ -2,87 +2,98 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966A2C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402D5C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8FF20844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1880420844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uJY/jL1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbfGHNmf convert rfc822-to-8bit (ORCPT
+        id S1731386AbfGHNnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:42:35 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:32592 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729758AbfGHNmf (ORCPT
+        Mon, 8 Jul 2019 09:43:12 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34245 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729754AbfGHNnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:42:35 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-222-uhSA7YLRORSo_gbkd03xIg-1; Mon, 08 Jul 2019 14:42:31 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
- 8 Jul 2019 14:42:30 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 8 Jul 2019 14:42:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Andy Shevchenko' <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mans Rullgard <mans@mansr.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 2/2] auxdisplay: charlcd: Deduplicate simple_strtoul()
-Thread-Topic: [PATCH v3 2/2] auxdisplay: charlcd: Deduplicate simple_strtoul()
-Thread-Index: AQHVNZIQJ0L6vr820kiLy31xXvYoWKbAuXow
-Date:   Mon, 8 Jul 2019 13:42:30 +0000
-Message-ID: <17f403303bfc4f6b90573858ae966cb7@AcuMS.aculab.com>
-References: <20190704115532.15679-1-andriy.shevchenko@linux.intel.com>
- <20190704115532.15679-2-andriy.shevchenko@linux.intel.com>
- <20190708131652.s3gdoieixgyekued@pathway.suse.cz>
- <20190708133534.GO9224@smile.fi.intel.com>
-In-Reply-To: <20190708133534.GO9224@smile.fi.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 8 Jul 2019 09:43:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b13so3045301pfo.1;
+        Mon, 08 Jul 2019 06:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MuHD1no+XkJjWCRsD7dOvLKQPeDnugWNej1vA/9eJog=;
+        b=uJY/jL1Ok1daTMamg3kB1blu/qPZXPVHQjPCob/7xJagg7cqGPQbxK7QayeOkrwq1E
+         /ha250Ww+Yp8Z/D4pmw8V94vclilLq5GQ+N2l9V1UDmI2ux5PyVddXd4kCuO0E7vuDtx
+         Hwavi+YFxEwaPfuDg3vMmFwQvI3EMMjb9mqyMD8c/boAkPFzcIgMKR34ceHeTmwE/2sa
+         7ebRnnev6jZnj1ScWnm+2/7Gxggi0q5oTme2YvKg3X2v1/5X4N1hw7h11lgu6X19KmCI
+         wjHBjs1Ps5QVn3BCjpWk6mz26++55eM1x+Guu9A8VFApHBSMtcHzr100bHT063d4BBJX
+         P9Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MuHD1no+XkJjWCRsD7dOvLKQPeDnugWNej1vA/9eJog=;
+        b=QbWPpm3NxxCJGgtHRuZEmSlSOUkBCQXoY/HZNo0id616ebpxyR+a18oYmUmyLHsMjA
+         /NVLdDSgVEWQLk/lkp7f/l3NEYEkT9sVNCGKzJkEagfIMbmcAfbQVEoLHpj3mz0FI2LE
+         Ms9w+eAp6/xNvZQTTWDrNjPVqtV5xPfUYP7SlqtOqBOccGKswEgBJXVU+a8PAfNW+hPa
+         OZfp75a4nJCf7fomEHkQrskT07TVSYCEfLux7qQQIAI2UnM2iqTSDGaMgqMvs7lJ0PCJ
+         Ogo/V7uEWvkB8jr0W5UuJTC15QXvUYqzWZSLRkV35LqeXcMj0M16CITG8KpH9jqwg7G/
+         HN+Q==
+X-Gm-Message-State: APjAAAVmf/blnH8atGjLUfVbLprTdm59gvn73V4tvdgHXKJoeSPu8qBs
+        Y9/giVpXeq9MIofeLAoReWeBws2UUK54YQ==
+X-Google-Smtp-Source: APXvYqy3SX4qPsNChq0vnZOlyeirE4w7ZsJnU4D4zAPQsmNHXWLv/6YEkfMH9hxO4EEi1j5obKVL/g==
+X-Received: by 2002:a17:90a:246f:: with SMTP id h102mr25427228pje.126.1562593391096;
+        Mon, 08 Jul 2019 06:43:11 -0700 (PDT)
+Received: from arch ([103.85.10.69])
+        by smtp.gmail.com with ESMTPSA id i123sm23944536pfe.147.2019.07.08.06.43.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 06:43:10 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 19:13:04 +0530
+From:   Amol Surati <suratiamol@gmail.com>
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
+        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        suratiamol@gmail.com
+Subject: Re: [PATCH 3.16 000/129] 3.16.70-rc1 review
+Message-ID: <20190708134304.GA21832@arch>
+References: <lsq.1562518456.876074874@decadent.org.uk>
 MIME-Version: 1.0
-X-MC-Unique: uhSA7YLRORSo_gbkd03xIg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <lsq.1562518456.876074874@decadent.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > simple_strtoul() tries to detect the base even when it has been
-> > explicitely specified.
+On Sun, Jul 07, 2019 at 05:54:16PM +0100, Ben Hutchings wrote:
+> This is the start of the stable review cycle for the 3.16.70 release.
+> There are 129 patches in this series, which will be posted as responses
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I can't see it from the code. Can you point out to this drastic bug that has to
-> be fixed?
+> Responses should be made by Tue Jul 09 20:00:00 UTC 2019.
+> Anything received after that time might be too late.
 > 
-> > I am afraid that it might cause some
-> > regressions.
-> >
-> > For example, the following input is strange but it is valid:
-> >
-> >     x0x10;  new code would return (16, <orig_y>) instead of (10, <orig_y>)
-> >     x010;   new code would return (8, <orig_y>) instead of (10, <orig_y>)
+> All the patches have also been committed to the linux-3.16.y-rc branch of
+> https://git.kernel.org/pub/scm/linux/kernel/git/bwh/linux-stable-rc.git .
+> A shortlog and diffstat can be found below.
+> 
+> Ben.
 
-While having simple_stroul("0x10", 10) use base 16 is possibly not unreasonable,
-using base 8 for simple_strtoul("010", 10) is just plain wrong.
 
-	David
+x86_64 (on debian-8.11.1), compiled and booted successfully.
+No regressions (between 3.16.69 and 3.16.70-rc1).
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Thanks,
+-amol
