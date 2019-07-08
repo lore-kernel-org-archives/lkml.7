@@ -2,120 +2,118 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA97C606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCAEC606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686892086D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="SY10zG29"
+	by mail.kernel.org (Postfix) with ESMTP id 7CF59217F9
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562613879;
+	bh=nfuCbuGXKpK0NuYpq9EY7a/0AlwUFIIV3Vwh4oAVKY0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Jxl75rQTkxdig5xITEaipUuXoX+u00S+K2q/04YVjW2VWaI8gsUcuOvtF/64C4zcv
+	 y+t+y3MjiR6+2PO85JrNQ+zyIAuMTa5Vb3s9n3D45FtkdC4TLTHBmc5/EBYGoBBMJF
+	 /9HUyY8Ss5EoAtAMh/DvESCUc/0a+ZVAUyHxfeac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391641AbfGHTWu (ORCPT
+        id S2391656AbfGHTYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:22:50 -0400
-Received: from mail-eopbgr10051.outbound.protection.outlook.com ([40.107.1.51]:29622
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728461AbfGHTWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:22:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tg6GpmkeZIf0u6HOUf+Pfae/xW1hegSbChLY+D4SdrI=;
- b=SY10zG29dyEhTVoEC4Y5N21a+BlxocZyx9YLosEjCf/8rV01j0scPAQAbJj7DtEMZAnMVQf2CuPzW6Sdg7Po3CHOHj/jAE3gee1Fg7RwMzVnBsiG5ASTpL/WPIpq5U7MHJAaSUGnh7OHJTIzNzCEJU3ALTxpRTChj6lfGBd8PUA=
-Received: from AM0PR05MB4403.eurprd05.prod.outlook.com (52.134.125.139) by
- AM0PR05MB5347.eurprd05.prod.outlook.com (20.178.20.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Mon, 8 Jul 2019 19:22:45 +0000
-Received: from AM0PR05MB4403.eurprd05.prod.outlook.com
- ([fe80::1016:2c86:974b:abf1]) by AM0PR05MB4403.eurprd05.prod.outlook.com
- ([fe80::1016:2c86:974b:abf1%4]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
- 19:22:45 +0000
-From:   Mark Bloch <markb@mellanox.com>
-To:     Dag Moxnes <dag.moxnes@oracle.com>, Jason Gunthorpe <jgg@ziepe.ca>
-CC:     "dledford@redhat.com" <dledford@redhat.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] RDMA/core: Fix race when resolving IP address
-Thread-Topic: [PATCH v3] RDMA/core: Fix race when resolving IP address
-Thread-Index: AQHVNX63z9a/mwC5LEKB5/+LX+ELSqbBAECAgAAP/ACAAAnHgA==
-Date:   Mon, 8 Jul 2019 19:22:45 +0000
-Message-ID: <63b9d2cb-f69c-d77c-7803-f08e2a6f755d@mellanox.com>
-References: <1562584584-13132-1-git-send-email-dag.moxnes@oracle.com>
- <20190708175025.GA6976@ziepe.ca>
- <4b9ae7b8-310c-e0b6-7a8e-33e6d5bef83d@oracle.com>
-In-Reply-To: <4b9ae7b8-310c-e0b6-7a8e-33e6d5bef83d@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BY5PR17CA0004.namprd17.prod.outlook.com
- (2603:10b6:a03:1b8::17) To AM0PR05MB4403.eurprd05.prod.outlook.com
- (2603:10a6:208:65::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=markb@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [208.186.24.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0ef328da-c5d3-4e59-f80e-08d703d9a7b0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5347;
-x-ms-traffictypediagnostic: AM0PR05MB5347:
-x-microsoft-antispam-prvs: <AM0PR05MB534788E9B25D39042660640FD2F60@AM0PR05MB5347.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 00922518D8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(478600001)(186003)(86362001)(4326008)(6246003)(316002)(31696002)(25786009)(11346002)(2906002)(486006)(476003)(110136005)(54906003)(68736007)(2616005)(446003)(31686004)(14454004)(26005)(36756003)(71200400001)(71190400001)(6512007)(53936002)(6436002)(6486002)(305945005)(6116002)(3846002)(229853002)(99286004)(66066001)(8676002)(256004)(14444005)(55236004)(76176011)(5660300002)(81166006)(81156014)(66946007)(52116002)(386003)(6506007)(66476007)(8936002)(53546011)(66446008)(64756008)(7736002)(66556008)(102836004)(73956011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5347;H:AM0PR05MB4403.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ofSpCV0CVG3tUuV3UfyycpSf4cbAL+UBkm6JVzazJYJMIaXvnhrsaQfh7jyeFp/uPkTMf7RSskSoNj7zp30/fs2SDuCa9ob12sgWHNzU3BgNg9Snv2pah+9bbOCnEQw02MG9QT6sB6rxzPLxWtJEz5pFOcRK5YYTpTIY78aZBzDjqa0d7owXNtOXznQ2iO6VGF45GyMdi/AOMVIMbZA1B/uxtE5EzQUrCPELlbZ7yxxfpXnbrXfTkWstg7MtMFZeVy9WsB1CajGveml8JJO1jwjKAg4sk1H/qu1np02jrNpwjhAjwZ6Bu4HKb8fO2rz4WjKiHYA/bEKtMydCUDEFi90PryFix+XJQ7RR/3XbxVLUTwLLz09kzTpqL9V6kxGZUZl7gngPxDoD+gq4TIa/xLl5dtTUk0tw7jxr2Sk5uqo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1571C690966D18479A9602A0FCA74178@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 8 Jul 2019 15:24:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43718 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728615AbfGHTYi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 15:24:38 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 16so17060955ljv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:24:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/YMFfKrvW6F5kcUFdwQ5Pz7KLZ0LRlO+3PUvO+U5Yf4=;
+        b=P0EOQkfRfUTEkqGcIM1NlWskwhbGhI1oH5Xgxripnmv2ciZfyvhk5lBJr0FCIQQa8l
+         cTH2Apkj6rw8JEw4xSGtiJGGl+7fbuZ0YCTP2VVJuI9sCVUUfsStJVCwbFSlLqumvv3y
+         aEza6T8vMijG6BL/3etICYfAALdjbx7iGE7YM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/YMFfKrvW6F5kcUFdwQ5Pz7KLZ0LRlO+3PUvO+U5Yf4=;
+        b=nX1v/FL+EiPNtDckT69JbImcdJVABKlhXHl+vI9DC3zLZQreebTC6lz+zPN1rJJMgH
+         MHdvTajkOleE7d0dWajZERz9JoqOXG0V45hy/8AQ6ITZUSTQf0MytTXJdkELeZyP9zwr
+         kedC5Tt4vz67Ir1xsaTq1cueXFrSty2MEW3ITPE3OLWkMlkvrBh/H7KCRvDsAunVpTO+
+         lGVcR+9UbeSca4cuBhc7iMbMUMyv7DWBtTkEKMYIKPk9srNgXxL+UlQkQGBaxBedUskw
+         wDSDexQoKerirZ2/IJu6IfcUBYxyxB48Ihz/k9OUFKvYYGqPzcxja6opCCG/NY5BnvOv
+         rwOw==
+X-Gm-Message-State: APjAAAUIT4aWY4gyRTSZjZKBj/cpjD5HkwTKuWWyus//ksWw4w9455Ho
+        f9JBl2kOZA+G91p1yCXMgIjWvHdC2bA=
+X-Google-Smtp-Source: APXvYqy3V+u0oyUUEtpXw12D4cgBMoV7j6ubf4GABTc3O6FuVMddAjtXry7otpHrSjaNFQhi4CrLwg==
+X-Received: by 2002:a2e:50e:: with SMTP id 14mr11541254ljf.5.1562613875335;
+        Mon, 08 Jul 2019 12:24:35 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id t63sm3820148lje.65.2019.07.08.12.24.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 12:24:34 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id u10so11689671lfm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:24:34 -0700 (PDT)
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr9656408lfp.61.1562613874094;
+ Mon, 08 Jul 2019 12:24:34 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ef328da-c5d3-4e59-f80e-08d703d9a7b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 19:22:45.4402
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: markb@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5347
+References: <156257673794.14831.1593297636367057887.tglx@nanos.tec.linutronix.de>
+ <156257673796.14831.2572103765106531133.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <156257673796.14831.2572103765106531133.tglx@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 8 Jul 2019 12:24:18 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whhq5RQYNKzHOLqC+gzSjmcEGNJjbC=Psc_vQaCx4TCKg@mail.gmail.com>
+Message-ID: <CAHk-=whhq5RQYNKzHOLqC+gzSjmcEGNJjbC=Psc_vQaCx4TCKg@mail.gmail.com>
+Subject: Re: [GIT pull] x86/pti for 5.3-rc1
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDcvOC8xOSAxMTo0NyBBTSwgRGFnIE1veG5lcyB3cm90ZToNCj4gVGhhbmtzIEphc29u
-LA0KPiANCj4gUmVnYXJkcywNCj4gRGFnDQo+IA0KPiBEZW4gMDguMDcuMjAxOSAxOTo1MCwgc2ty
-ZXYgSmFzb24gR3VudGhvcnBlOg0KPj4gT24gTW9uLCBKdWwgMDgsIDIwMTkgYXQgMDE6MTY6MjRQ
-TSArMDIwMCwgRGFnIE1veG5lcyB3cm90ZToNCj4+PiBVc2UgbmVpZ2hib3VyIGxvY2sgd2hlbiBj
-b3B5aW5nIE1BQyBhZGRyZXNzIGZyb20gbmVpZ2hib3VyIGRhdGEgc3RydWN0DQo+Pj4gaW4gZHN0
-X2ZldGNoX2hhLg0KPj4+DQo+Pj4gV2hlbiBub3QgdXNpbmcgdGhlIGxvY2ssIGl0IGlzIHBvc3Np
-YmxlIGZvciB0aGUgZnVuY3Rpb24gdG8gcmFjZSB3aXRoDQo+Pj4gbmVpZ2hfdXBkYXRlLCBjYXVz
-aW5nIGl0IHRvIGNvcHkgYW4gaW52YWxpZCBNQUMgYWRkcmVzcy4NCj4+Pg0KPj4+IEl0IGlzIHBv
-c3NpYmxlIHRvIHByb3Zva2UgdGhpcyBlcnJvciBieSBjYWxsaW5nIHJkbWFfcmVzb2x2ZV9hZGRy
-IGluIGENCj4+PiB0aWdodCBsb29wLCB3aGlsZSBkZWxldGluZyB0aGUgY29ycmVzcG9uZGluZyBB
-UlAgZW50cnkgaW4gYW5vdGhlciB0aWdodA0KPj4+IGxvb3AuDQo+Pj4NCj4+PiBUaGlzIHdpbGwg
-Y2F1c2UgdGhlIHJhY2Ugc2hvd24gaXQgdGhlIGZvbGxvd2luZyBzYW1wbGUgdHJhY2U6DQo+Pj4N
-Cj4+PiByZG1hX3Jlc29sdmVfYWRkcigpDQo+Pj4gwqDCoCByZG1hX3Jlc29sdmVfaXAoKQ0KPj4+
-IMKgwqDCoMKgIGFkZHJfcmVzb2x2ZSgpDQo+Pj4gwqDCoMKgwqDCoMKgIGFkZHJfcmVzb2x2ZV9u
-ZWlnaCgpDQo+Pj4gwqDCoMKgwqDCoMKgwqDCoCBmZXRjaF9oYSgpDQo+Pj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgZHN0X2ZldGNoX2hhKCkNCj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbi0+
-bnVkX3N0YXRlID09IE5VRF9WQUxJRA0KPj4gSXQgaXNuJ3QgbnVkX3N0YXRlIHRoYXQgaXMgdGhl
-IHByb2JsZW0gaGVyZSwgaXQgaXMgdGhlIHBhcmFsbGVsDQo+PiBtZW1jcHkncyBvbnRvIGhhLiBJ
-IGZpeGVkIHRoZSBjb21taXQgbWVzc2FnZQ0KPj4NCj4+IFRoaXMgY291bGQgYWxzbyBoYXZlIGJl
-ZW4gc29sdmVkIGJ5IHVzaW5nIHRoZSBoYV9sb2NrLCBidXQgSSBkb24ndA0KPj4gdGhpbmsgd2Ug
-aGF2ZSBhIHJlYXNvbiB0byBwYXJ0aWN1bGFybHkgb3Zlci1vcHRpbWl6ZSB0aGlzLg0KDQpTb3Jy
-eSBJJ20gbGF0ZSB0byB0aGUgcGFydHksIGJ1dCB3aHkgbm90IGp1c3QgdXNlOiBuZWlnaF9oYV9z
-bmFwc2hvdCgpPw0KDQo+Pg0KPj4+IMKgIGRyaXZlcnMvaW5maW5pYmFuZC9jb3JlL2FkZHIuYyB8
-IDkgKysrKysrLS0tDQo+Pj4gwqAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMyBk
-ZWxldGlvbnMoLSkNCj4+IEFwcGxpZWQgdG8gZm9yLW5leHQsIHRoYW5rcw0KPj4NCj4+IEphc29u
-DQo+IA0KDQpNYXJrDQo=
+On Mon, Jul 8, 2019 at 2:22 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> @@ -643,9 +644,11 @@ static unsigned long ptrace_get_debugreg(struct task_struct *tsk, int n)
+>  {
+>         struct thread_struct *thread = &tsk->thread;
+>         unsigned long val = 0;
+> +       int index = n;
+>
+>         if (n < HBP_NUM) {
+> -               struct perf_event *bp = thread->ptrace_bps[n];
+> +               index = array_index_nospec(index, HBP_NUM);
+> +               struct perf_event *bp = thread->ptrace_bps[index];
+
+This causes a new warning:
+
+   warning: ISO C90 forbids mixed declarations and code
+
+and I'm fixing it up in the merge as follows:
+
+@@@ -633,9 -644,11 +634,10 @@@ static unsigned long ptrace_get_debugre
+  {
+        struct thread_struct *thread = &tsk->thread;
+        unsigned long val = 0;
+ -      int index = n;
+
+        if (n < HBP_NUM) {
+-               struct perf_event *bp = thread->ptrace_bps[n];
+ -              index = array_index_nospec(index, HBP_NUM);
+++              int index = array_index_nospec(n, HBP_NUM);
++               struct perf_event *bp = thread->ptrace_bps[index];
+
+                if (bp)
+                        val = bp->hw.info.address;
+
+Holler if I did something stupid.
+
+                Linus
