@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB773C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE83C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8114F2175B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7B0216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600050;
-	bh=QWEh1KWjRkuEdqk4cC4/ckIcIZMQz4gyuaWKf67BMWM=;
+	s=default; t=1562600066;
+	bh=V836edaPtW1AbGnQQ629cXtx0K4VHQBNzBFbKxzKsws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fpSpP44wmsux/T2krTfK2Bbu7TEBtFiJWMbnMv+A3nZvumuNl451v+DFAO/f4/sjt
-	 nWDUQb7abQP2x/MDAJsdy8N5X+pGTfs2+N7bIGmH0p3BBD6hKEIXKQCqOtcNRRhMCD
-	 xGe6nCIu53D3uuL7cS4M3Tqqz+6qVwqi6jHla9hM=
+	b=kkYDWp2+1TkyUxa7dErXNbP5GVgSgaH3K8IYJ+Oxu89ovmTQ9eniwQeTFLC8TUc0B
+	 qlfyrdFGw4p1t8bLAinePVD8TXEQyVbPZ9Dx0pMmA/UqF39C67iARtospEYErq2KQs
+	 UNeveun5fps7pCw64Aqt1EQ4786sd90DRQ0VQtJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390483AbfGHPeJ (ORCPT
+        id S2390538AbfGHPeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:34:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390460AbfGHPd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:33:57 -0400
+        id S2390506AbfGHPeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5ECE204EC;
-        Mon,  8 Jul 2019 15:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3770320651;
+        Mon,  8 Jul 2019 15:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600036;
-        bh=QWEh1KWjRkuEdqk4cC4/ckIcIZMQz4gyuaWKf67BMWM=;
+        s=default; t=1562600055;
+        bh=V836edaPtW1AbGnQQ629cXtx0K4VHQBNzBFbKxzKsws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wkLuIvsBz28gVY+kq8k4/geuNvGCtJ0/ipPczI5FOdObKYSXiuCqek4HDfbefL2QO
-         K7jFth+CGi5TME8Ncn6fTif5ks1LPlSOEvW388MZRwZYPHdYeBHqJ0Z5UwY36gtLLv
-         /L1HFjuCKup9lsJaSAM/dgA1mlDB/RE5nJg0+XKw=
+        b=k2KgCNZsOuxDVQd3TVQLf1V8U4KNgOPAihot+sVW5is6nX6t3TB3OFu9Ej4irAxYm
+         w70QsRXRWzjbjFS0meBiftvTS0VFXArVVRaxSyjr1yi6TaX1OQAY7C5zT3Rw90dCXq
+         rVr+LeholNhdtULju1HcKEN4Frn2LRh4eHH2p3CM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 5.1 72/96] drm/i915/ringbuffer: EMIT_INVALIDATE *before* switch context
-Date:   Mon,  8 Jul 2019 17:13:44 +0200
-Message-Id: <20190708150530.343722818@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Beckett <bob.beckett@collabora.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 5.1 79/96] drm/imx: only send event on crtc disable if kept disabled
+Date:   Mon,  8 Jul 2019 17:13:51 +0200
+Message-Id: <20190708150530.733276041@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,64 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Robert Beckett <bob.beckett@collabora.com>
 
-commit c84c9029d782a3a0d2a7f0522ecb907314d43e2c upstream.
+commit 5aeab2bfc9ffa72d3ca73416635cb3785dfc076f upstream.
 
-Despite what I think the prm recommends, commit f2253bd9859b
-("drm/i915/ringbuffer: EMIT_INVALIDATE after switch context") turned out
-to be a huge mistake when enabling Ironlake contexts as the GPU would
-hang on either a MI_FLUSH or PIPE_CONTROL immediately following the
-MI_SET_CONTEXT of an active mesa context (more vanilla contexts, e.g.
-simple rendercopies with igt, do not suffer).
+The event will be sent as part of the vblank enable during the modeset
+if the crtc is not being kept disabled.
 
-Ville found the following clue,
+Fixes: 5f2f911578fb ("drm/imx: atomic phase 3 step 1: Use atomic configuration")
 
-  "[DevCTG+]: For the invalidate operation of the pipe control, the
-   following pointers are affected. The
-   invalidate operation affects the restore of these packets. If the pipe
-   control invalidate operation is completed
-   before the context save, the indirect pointers will not be restored from
-   memory.
-   1. Pipeline State Pointer
-   2. Media State Pointer
-   3. Constant Buffer Packet"
-
-which suggests by us emitting the INVALIDATE prior to the MI_SET_CONTEXT,
-we prevent the context-restore from chasing the dangling pointers within
-the image, and explains why this likely prevents the GPU hang.
-
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190419111749.3910-1-chris@chris-wilson.co.uk
-(cherry picked from commit 928f8f42310f244501a7c70daac82c196112c190 in drm-intel-next)
-Cc: stable@vger.kernel.org
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111014
-Fixes: f2253bd9859b ("drm/i915/ringbuffer: EMIT_INVALIDATE after switch context")
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/intel_ringbuffer.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/imx/ipuv3-crtc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/intel_ringbuffer.c
-+++ b/drivers/gpu/drm/i915/intel_ringbuffer.c
-@@ -1957,12 +1957,12 @@ static int ring_request_alloc(struct i91
- 	 */
- 	request->reserved_space += LEGACY_REQUEST_SIZE;
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -94,7 +94,7 @@ static void ipu_crtc_atomic_disable(stru
+ 	drm_crtc_vblank_off(crtc);
  
--	ret = switch_context(request);
-+	/* Unconditionally invalidate GPU caches and TLBs. */
-+	ret = request->engine->emit_flush(request, EMIT_INVALIDATE);
- 	if (ret)
- 		return ret;
- 
--	/* Unconditionally invalidate GPU caches and TLBs. */
--	ret = request->engine->emit_flush(request, EMIT_INVALIDATE);
-+	ret = switch_context(request);
- 	if (ret)
- 		return ret;
- 
+ 	spin_lock_irq(&crtc->dev->event_lock);
+-	if (crtc->state->event) {
++	if (crtc->state->event && !crtc->state->active) {
+ 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+ 		crtc->state->event = NULL;
+ 	}
 
 
