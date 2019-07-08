@@ -2,148 +2,177 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43596C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E887C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1410F20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:29:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ez8MWVdv"
+	by mail.kernel.org (Postfix) with ESMTP id 083D720659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 03:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbfGHD3D (ORCPT
+        id S1728876AbfGHDc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 23:29:03 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36283 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728855AbfGHD3D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 23:29:03 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z4so13232875qtc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jul 2019 20:29:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AK79VDL+Vgenq/SIz4Re5O9aUU8flN86KP1/GJSoiLE=;
-        b=ez8MWVdvAiNAzrPrfFi/OIQyqlh22yAZ/zH+VWz8JN6ZEaGDfCi2GG42eDqeMtgSkh
-         1sqvjYom7xaqRKO9p7Q7pFOSyV5DgCWI6XAyo4PPH5AQXeGYTykL5UWwgdYYa1z5adoB
-         KoeneGqzCXCplkbOtzanZacHSkKv1pX/0vonQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AK79VDL+Vgenq/SIz4Re5O9aUU8flN86KP1/GJSoiLE=;
-        b=JjXyq5ZqTeUw2nfQBDqQtTDpXciFIJ+hs/Rv0jqPx3jwn7pNPlJKZlqQoamh3Khocx
-         X/akmlm+v+O74mxfC4gziW4FLLP2C+ez5Lbei8vBhfqCVvPwJuSDDv3/H5yDZ9qfKYi7
-         5XSd2/J+D3cu9t+n7vvfWjlXmjwn7F3Ci4hropIrpvjR2hEz6UDDMt3l4culgnovXaJH
-         ATNBbts1zy0Fl71/3y1WMnXGeyI8c4VPI7bsA6Jok5nKwIUxRPVCyiyRh6Gfozkl4jkA
-         fh+rhLSoheLC/Gaa21dVlfV8d4LqXYXrftehi5oaaR1neCdY+wal+1kz+VLuTR+fmRi3
-         GWCA==
-X-Gm-Message-State: APjAAAXg1ZX0iF0Xon+AANfsGi0zdhCHEIhzWpKYzJ1pTg0w1yVWYvJt
-        KCHh7eKZFdTlHGqkJdPqswDNgC6MBBHzAUEUFr8Y/Q==
-X-Google-Smtp-Source: APXvYqwS+agaC1kW4fS2QvA9PLe7B8m9Obzbo4GMUG8V7F6612I0p2pqiO5MLu/JXxuE3ADTeouCu6Uj8N29MxKn+jU=
-X-Received: by 2002:a0c:baa1:: with SMTP id x33mr13371081qvf.200.1562556542563;
- Sun, 07 Jul 2019 20:29:02 -0700 (PDT)
+        Sun, 7 Jul 2019 23:32:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:36452 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727451AbfGHDc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 23:32:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B57842B;
+        Sun,  7 Jul 2019 20:32:56 -0700 (PDT)
+Received: from [10.162.43.130] (p8cg001049571a15.blr.arm.com [10.162.43.130])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A45B13F738;
+        Sun,  7 Jul 2019 20:32:43 -0700 (PDT)
+Subject: Re: [PATCH] mm/kprobes: Add generic kprobe_fault_handler() fallback
+ definition
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-mm@kvack.org, Vineet Gupta <vgupta@synopsys.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org
+References: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
+ <20190705193028.f9e08fe9cf1ee86bc5c0bb82@kernel.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <3aee1f30-241c-d1c2-2ff5-ff521db47755@arm.com>
+Date:   Mon, 8 Jul 2019 09:03:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190328152822.532-1-sibis@codeaurora.org> <20190328152822.532-3-sibis@codeaurora.org>
-In-Reply-To: <20190328152822.532-3-sibis@codeaurora.org>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Mon, 8 Jul 2019 11:28:36 +0800
-Message-ID: <CAJMQK-gcBC=ZyscuHzOe4t6xQzviTYo9W9_DSsppoaTZuiEOcw@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/9] OPP: Export a number of helpers to prevent code duplication
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, andy.gross@linaro.org,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-pm@vger.kernel.org, evgreen@chromium.org,
-        daidavid1@codeaurora.org, dianders@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190705193028.f9e08fe9cf1ee86bc5c0bb82@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 3:28 PM Sibi Sankar <sibis@codeaurora.org> wrote:
-
-> +
-> +/* The caller must call dev_pm_opp_put() after the OPP is used */
-> +struct dev_pm_opp *dev_pm_opp_find_opp_of_np(struct opp_table *opp_table,
-> +                                            struct device_node *opp_np)
-> +{
-> +       return _find_opp_of_np(opp_table, opp_np);
-> +}
-Hi Sibi,
-
-Though this is not the latest version, we've seen following issue:
-
-We would get lockdep warnings on this:
-[   79.068957] Call trace:
-[   79.071396]  _find_opp_of_np+0xa0/0xa8
-[   79.075136]  dev_pm_opp_find_opp_of_np+0x24/0x30
-[   79.079744]  devfreq_passive_event_handler+0x304/0x51c
-[   79.084872]  devfreq_add_device+0x368/0x434
-[   79.089046]  devm_devfreq_add_device+0x68/0xb0
-[   79.093480]  mtk_cci_devfreq_probe+0x108/0x158
-[   79.097915]  platform_drv_probe+0x80/0xb0
-[   79.101915]  really_probe+0x1b4/0x28c
-[   79.105568]  driver_probe_device+0x64/0xfc
-[   79.109655]  __driver_attach+0x94/0xcc
-[   79.113395]  bus_for_each_dev+0x84/0xcc
-[   79.117221]  driver_attach+0x2c/0x38
-[   79.120788]  bus_add_driver+0x120/0x1f4
-[   79.124614]  driver_register+0x64/0xf8
-[   79.128355]  __platform_driver_register+0x4c/0x58
-[   79.133049]  mtk_cci_devfreq_init+0x1c/0x24
-[   79.137224]  do_one_initcall+0x1c0/0x3e0
-[   79.141138]  do_initcall_level+0x1f4/0x224
-[   79.145225]  do_basic_setup+0x34/0x4c
-[   79.148878]  kernel_init_freeable+0x10c/0x194
-[   79.153225]  kernel_init+0x14/0x100
-[   79.156705]  ret_from_fork+0x10/0x18
-[   79.160270] irq event stamp: 238006
-[   79.163750] hardirqs last  enabled at (238005):
-[<ffffffa71fdea0a4>] _raw_spin_unlock_irqrestore+0x40/0x84
-[   79.173391] hardirqs last disabled at (238006):
-[<ffffffa71f480e78>] do_debug_exception+0x70/0x198
-[   79.182337] softirqs last  enabled at (237998):
-[<ffffffa71f48165c>] __do_softirq+0x45c/0x4a4
-[   79.190850] softirqs last disabled at (237987):
-[<ffffffa71f4bc0d4>] irq_exit+0xd8/0xf8
-[   79.198842] ---[ end trace 0e66a55077a0abab ]---
-
-In _find_opp_of_np()[1], there's
-lockdep_assert_held(&opp_table_lock);
-
-[1] https://elixir.bootlin.com/linux/latest/source/drivers/opp/of.c#L75
-
-But in governor passive.c#cpufreq_passive_register(), it call
-dev_pm_opp_find_opp_of_np() directly, so it wouldn't access
-opp_table_lock lock.
-
-Another similar place is in dev_pm_opp_of_add_table(), most devfreq
-would call this to get opp table.
-dev_pm_opp_of_add_table
- -->   _opp_add_static_v2
-    -->    _of_opp_alloc_required_opps  // would goes here if opp
-table contains "required-opps" property.
-        -->    _find_opp_of_np
-cpufreq-map governor needs devfreq to have "required-opps" property.
-So it would also trigger above lockdep warning.
 
 
-The question is: Is lockdep_assert_held(&opp_table_lock); needed in
-above use cases? Since they don't need to modify device and opp lists.
+On 07/05/2019 04:00 PM, Masami Hiramatsu wrote:
+> Hi Anshuman,
 
-Thanks
+
+Hello Masami,
+
+> 
+> On Fri,  5 Jul 2019 11:00:29 +0530
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>> Architectures like parisc enable CONFIG_KROBES without having a definition
+>> for kprobe_fault_handler() which results in a build failure.
+> 
+> Hmm, as far as I can see, kprobe_fault_handler() is closed inside each arch
+> specific code. The reason why include/linux/kprobes.h defines
+> dummy inline function is only for !CONFIG_KPROBES case.
+
+IIRC Andrew mentioned [1] that we should remove this stub from the generic kprobes
+header because this is very much architecture specific. As we see in this proposed
+patch, except x86 there is no other current user which actually calls this from
+some where when CONFIG_KPROBES is not enabled.
+
+[1] https://www.spinics.net/lists/linux-mm/msg182649.html
+> 
+>> Arch needs to
+>> provide kprobe_fault_handler() as it is platform specific and cannot have
+>> a generic working alternative. But in the event when platform lacks such a
+>> definition there needs to be a fallback.
+> 
+> Wait, indeed that each arch need to implement it, but that is for calling
+> kprobe->fault_handler() as user expected.
+> Hmm, why not fixing those architecture implementations?
+
+After the recent change which introduced a generic kprobe_page_fault() every
+architecture enabling CONFIG_KPROBES must have a kprobe_fault_handler() which
+was not the case earlier. Architectures like parisc which does enable KPROBES but
+never used (kprobe_page_fault or kprobe->fault_handler) kprobe_fault_handler() now
+needs one as well. I am not sure and will probably require inputs from arch parsic
+folks whether it at all needs one. We dont have a stub or fallback definition for
+kprobe_fault_handler() when CONFIG_KPROBES is enabled just to prevent a build
+failure in such cases.
+
+In such a situation it might be better defining a stub symbol fallback than to try
+to implement one definition which the architecture previously never needed or used.
+AFAICS there is no generic MM callers for kprobe_fault_handler() as well which would
+have made it mandatory for parisc to define a real one.
+
+> 
+>> This adds a stub kprobe_fault_handler() definition which not only prevents
+>> a build failure but also makes sure that kprobe_page_fault() if called will
+>> always return negative in absence of a sane platform specific alternative.
+> 
+> I don't like introducing this complicated macro only for avoiding (not fixing)
+> build error. To fix that, kprobes on parisc should implement kprobe_fault_handler
+> correctly (and call kprobe->fault_handler).
+
+As I mentioned before parsic might not need a real one. But you are right this
+complicated (if perceived as such) change can be just avoided at least for the
+build failure problem by just defining a stub definition kprobe_fault_handler()
+for arch parsic when CONFIG_KPROBES is enabled. But this patch does some more
+and solves the kprobe_fault_handler() symbol dependency in a more generic way and
+forces kprobe_page_fault() to fail in absence a real arch kprobe_fault_handler().
+Is not it worth solving in this way ?
+
+> 
+> BTW, even if you need such generic stub, please use a weak function instead
+> of macros for every arch headers.
+
+There is a bit problem with that. The existing definitions are with different
+signatures and an weak function will need them to be exact same for override
+requiring more code changes. Hence choose to go with a macro in each header.
+
+arch/arc/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, unsigned long cause);
+arch/arm/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+arch/arm64/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+arch/ia64/include/asm/kprobes.h:extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+arch/powerpc/include/asm/kprobes.h:extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+arch/s390/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+arch/sh/include/asm/kprobes.h:extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+arch/sparc/include/asm/kprobes.h:int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+arch/x86/include/asm/kprobes.h:extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+
+> 
+>> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
+>> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
+>> just be dropped. Only on x86 it needs to be added back locally as it gets
+>> used in a !CONFIG_KPROBES function do_general_protection().
+> 
+> If you want to remove kprobes_built_in(), you should replace it with
+> IS_ENABLED(CONFIG_KPROBES), instead of this...
+
+Apart from kprobes_built_in() the intent was to remove !CONFIG_KPROBES
+stub for kprobe_fault_handler() as well which required making generic
+kprobe_page_fault() to be empty in such case.
