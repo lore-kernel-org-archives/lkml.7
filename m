@@ -2,52 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622E8C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0782C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3634321743
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A8221707
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599466;
-	bh=w/C1KY7DwgILP0qzGNFTrFsId6j3M+yqpLgt9370w2M=;
+	s=default; t=1562599469;
+	bh=DS4k/28IlLaFYt9GbiZOqgQw5cQBJh4xa+XDZaWXaQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWGVrnRYIY9iWdnUAOUATIslhmTVkgIAHb5TQEL5tjWjE3Ovryfg3W+DR2wFMsACV
-	 DdA+shdU/MkYstLnY+9zaU8M//wAqspkyNVoNzSQmzmOBULwT8QxJLqV76YPLsoMf/
-	 RBmkpvRFN0+P4/t6EBvHn4eH7Jduv46fleRt8vMM=
+	b=ym11F61E8yD8hfWsFeO4i7MoTB+Miz7RT91YMNixIxIYhJy25RIpnnW5TApXEOWbW
+	 r2ZICNsebZSMreCMEcii9mAdzdzN9Vdl4xrVCXfs/KFP5NU8xlvL3deZwSMrntlW/N
+	 9x3gw6b+OpMlhRHy+6wh9J8EwcBzrW+3NNM79BdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfGHPYZ (ORCPT
+        id S1731406AbfGHPY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:24:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51596 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:24:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731376AbfGHPYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:20 -0400
+        id S2388335AbfGHPYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:24:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F4121738;
-        Mon,  8 Jul 2019 15:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3B6521738;
+        Mon,  8 Jul 2019 15:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599460;
-        bh=w/C1KY7DwgILP0qzGNFTrFsId6j3M+yqpLgt9370w2M=;
+        s=default; t=1562599457;
+        bh=DS4k/28IlLaFYt9GbiZOqgQw5cQBJh4xa+XDZaWXaQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lge/ErUNje40tVHmOjidFQL45t26g5CiegUDOYrAEaE67GTpQ6jmbWRvKUg9dXQiv
-         fPsBuCABmmSjTPlADSZrfk+3P4Kf/wuqwu37x/0xwcBPiBo4DLPy6LH0YppNjSJTrX
-         NaiX/qkKpN0SjzYUoAdP6akEAAsIsKIYtS5c5QQc=
+        b=HHyHM6EfPqnf8cxyt1Nu9AUc2yA1ueSZL/6bUi+WrG4l9SDPX8CyYETuYTZru/KZH
+         smgGTNTXG0D3G56FQnnVau+eqHLHciEJmdXFiza5p4i8B6qpB2p6yNXgDpqbrP5xyj
+         EnKMVC2rfubds5xrYTU2su0qbAfiAMPbLeBuo7yo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 23/56] ptrace: Fix ->ptracer_cred handling for PTRACE_TRACEME
-Date:   Mon,  8 Jul 2019 17:13:15 +0200
-Message-Id: <20190708150521.427133141@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 22/56] drm/i915/dmc: protect against reading random memory
+Date:   Mon,  8 Jul 2019 17:13:14 +0200
+Message-Id: <20190708150521.041295238@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -60,57 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+commit bc7b488b1d1c71dc4c5182206911127bc6c410d6 upstream.
 
-commit 6994eefb0053799d2e07cd140df6c2ea106c41ee upstream.
+While loading the DMC firmware we were double checking the headers made
+sense, but in no place we checked that we were actually reading memory
+we were supposed to. This could be wrong in case the firmware file is
+truncated or malformed.
 
-Fix two issues:
+Before this patch:
+	# ls -l /lib/firmware/i915/icl_dmc_ver1_07.bin
+	-rw-r--r-- 1 root root  25716 Feb  1 12:26 icl_dmc_ver1_07.bin
+	# truncate -s 25700 /lib/firmware/i915/icl_dmc_ver1_07.bin
+	# modprobe i915
+	# dmesg| grep -i dmc
+	[drm:intel_csr_ucode_init [i915]] Loading i915/icl_dmc_ver1_07.bin
+	[drm] Finished loading DMC firmware i915/icl_dmc_ver1_07.bin (v1.7)
 
-When called for PTRACE_TRACEME, ptrace_link() would obtain an RCU
-reference to the parent's objective credentials, then give that pointer
-to get_cred().  However, the object lifetime rules for things like
-struct cred do not permit unconditionally turning an RCU reference into
-a stable reference.
+i.e. it loads random data. Now it fails like below:
+	[drm:intel_csr_ucode_init [i915]] Loading i915/icl_dmc_ver1_07.bin
+	[drm:csr_load_work_fn [i915]] *ERROR* Truncated DMC firmware, rejecting.
+	i915 0000:00:02.0: Failed to load DMC firmware i915/icl_dmc_ver1_07.bin. Disabling runtime power management.
+	i915 0000:00:02.0: DMC firmware homepage: https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/i915
 
-PTRACE_TRACEME records the parent's credentials as if the parent was
-acting as the subject, but that's not the case.  If a malicious
-unprivileged child uses PTRACE_TRACEME and the parent is privileged, and
-at a later point, the parent process becomes attacker-controlled
-(because it drops privileges and calls execve()), the attacker ends up
-with control over two processes with a privileged ptrace relationship,
-which can be abused to ptrace a suid binary and obtain root privileges.
+Before reading any part of the firmware file, validate the input first.
 
-Fix both of these by always recording the credentials of the process
-that is requesting the creation of the ptrace relationship:
-current_cred() can't change under us, and current is the proper subject
-for access control.
-
-This change is theoretically userspace-visible, but I am not aware of
-any code that it will actually break.
-
-Fixes: 64b875f7ac8a ("ptrace: Capture the ptracer's creds not PT_PTRACE_CAP")
-Signed-off-by: Jann Horn <jannh@google.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: eb805623d8b1 ("drm/i915/skl: Add support to load SKL CSR firmware.")
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190605235535.17791-1-lucas.demarchi@intel.com
+(cherry picked from commit bc7b488b1d1c71dc4c5182206911127bc6c410d6)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+[ Lucas: backported to 4.9+ adjusting the context ]
+Cc: stable@vger.kernel.org # v4.9+
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/ptrace.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpu/drm/i915/intel_csr.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -78,9 +78,7 @@ void __ptrace_link(struct task_struct *c
-  */
- static void ptrace_link(struct task_struct *child, struct task_struct *new_parent)
- {
--	rcu_read_lock();
--	__ptrace_link(child, new_parent, __task_cred(new_parent));
--	rcu_read_unlock();
-+	__ptrace_link(child, new_parent, current_cred());
+diff --git a/drivers/gpu/drm/i915/intel_csr.c b/drivers/gpu/drm/i915/intel_csr.c
+index 92c1f8e166dc..0bdbbd4027fe 100644
+--- a/drivers/gpu/drm/i915/intel_csr.c
++++ b/drivers/gpu/drm/i915/intel_csr.c
+@@ -277,10 +277,17 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
+ 	uint32_t i;
+ 	uint32_t *dmc_payload;
+ 	uint32_t required_version;
++	size_t fsize;
+ 
+ 	if (!fw)
+ 		return NULL;
+ 
++	fsize = sizeof(struct intel_css_header) +
++		sizeof(struct intel_package_header) +
++		sizeof(struct intel_dmc_header);
++	if (fsize > fw->size)
++		goto error_truncated;
++
+ 	/* Extract CSS Header information*/
+ 	css_header = (struct intel_css_header *)fw->data;
+ 	if (sizeof(struct intel_css_header) !=
+@@ -350,6 +357,9 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
+ 		return NULL;
+ 	}
+ 	readcount += dmc_offset;
++	fsize += dmc_offset;
++	if (fsize > fw->size)
++		goto error_truncated;
+ 
+ 	/* Extract dmc_header information. */
+ 	dmc_header = (struct intel_dmc_header *)&fw->data[readcount];
+@@ -380,6 +390,10 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
+ 
+ 	/* fw_size is in dwords, so multiplied by 4 to convert into bytes. */
+ 	nbytes = dmc_header->fw_size * 4;
++	fsize += nbytes;
++	if (fsize > fw->size)
++		goto error_truncated;
++
+ 	if (nbytes > CSR_MAX_FW_SIZE) {
+ 		DRM_ERROR("CSR firmware too big (%u) bytes\n", nbytes);
+ 		return NULL;
+@@ -393,6 +407,10 @@ static uint32_t *parse_csr_fw(struct drm_i915_private *dev_priv,
+ 	}
+ 
+ 	return memcpy(dmc_payload, &fw->data[readcount], nbytes);
++
++error_truncated:
++	DRM_ERROR("Truncated DMC firmware, rejecting.\n");
++	return NULL;
  }
  
- /**
+ static void csr_load_work_fn(struct work_struct *work)
+-- 
+2.20.1
+
 
 
