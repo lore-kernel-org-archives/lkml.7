@@ -2,125 +2,251 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654E5C606C5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D40C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3E020644
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:39:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g4m7gvOw"
+	by mail.kernel.org (Postfix) with ESMTP id 1EB99217D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388923AbfGHRjA (ORCPT
+        id S2387931AbfGHRkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:39:00 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43169 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGHRjA (ORCPT
+        Mon, 8 Jul 2019 13:40:32 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:48333 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729517AbfGHRkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:39:00 -0400
-Received: by mail-io1-f65.google.com with SMTP id k20so37095734ios.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zbi2cNv/TpuGlJ+YwPJTmlkeVMXSjEZ67mVfSwn9d+Y=;
-        b=g4m7gvOwoL8Ba1jns6Vi7Q0m7sKlLgR0n7bYq20Z6JRByef52LeaAH9UNBZVxMyR2Y
-         kSFxaR2KvLg7WW02N7GBW5BEgQMpFC/6tr94/kgULAkrwJDGfW5XMzq0pNpGNdX3mbHY
-         jn3m7Vp1rWq9E/OmIRAm0gw9aNdNXR0H3WzctXiWac6JFF/2/D2UcDoaJ0BH+tSjoeBZ
-         NlzonlxwJGzqmTc/QtIbrfDZpOzzfRItibON733/czW7HyXutsq79w32S2LzRDCr2boI
-         Q8uyho1YPz5O5JkMA7+EMMlH7Ivkm+Poch85s58zIS41MTAaCL0zX4K8PmnKds9Wnjgz
-         8Q2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zbi2cNv/TpuGlJ+YwPJTmlkeVMXSjEZ67mVfSwn9d+Y=;
-        b=CAIRwDCjRcWvbN8fQP2nRwxkSu5p+Z7T9KOYBXJslGa5yOBnu7gSsODDWaQi6uqfmW
-         0JQ/rQfAuUTiHTh3zkposSyh6OGnHAYmSZ5iMBJfVpaCyqPJtfiwCnRyMFxGf3b33QaN
-         K65i7FHUA7MsmA6bz4a3Wsu9JqyJ7YpbGiqIv6xMEZK3fGkHYkou1ApUuON7VCTwYdoe
-         h5oCaecpIrT5XT94lJKS8IdX3IsP3RTXdcsEieJthSps3zw4O5vrDJD8exJ/SJBBcykd
-         50Jd6yZsViqzxo/cXNRiZVvbbQ0gLOjdrf9GjfJBG6zVTIQvRkExxtVi6H2+X1Rh1hdg
-         XlpA==
-X-Gm-Message-State: APjAAAVg6qvmwiqUKhLVxbYJlBZYIhcg7FCVmPfNRPLk9iISSJR8CevW
-        GRpqTNT+q6KVwY58IMCIHtbFWoKV3QWdoKmNEBVknw==
-X-Google-Smtp-Source: APXvYqxPB5rd83qO7WjtBsChtu5/pgbFbGNDXikxw3NiTLQIaHzZaXtQcaTt7ebej7HCBTiHTBW7E6PNgxgW9KMJQZg=
-X-Received: by 2002:a5d:9dc7:: with SMTP id 7mr20717541ioo.237.1562607539359;
- Mon, 08 Jul 2019 10:38:59 -0700 (PDT)
+        Mon, 8 Jul 2019 13:40:31 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hkXcq-0003nl-RL; Mon, 08 Jul 2019 11:40:28 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hkXcp-0003jJ-P0; Mon, 08 Jul 2019 11:40:28 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     <linux-kernel@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+        <linux-arch@vger.kernel.org>
+Date:   Mon, 08 Jul 2019 12:40:05 -0500
+Message-ID: <87v9wcl91m.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20190708143937.7722-1-leo.yan@linaro.org> <20190708143937.7722-5-leo.yan@linaro.org>
-In-Reply-To: <20190708143937.7722-5-leo.yan@linaro.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 8 Jul 2019 11:38:48 -0600
-Message-ID: <CANLsYkwHMfVf-FUQ+wBkDfq9GnCihimFAhd+ybCsxMAt8d3HcA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] perf cs-etm: Smatch: Fix potential NULL pointer dereference
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1hkXcp-0003jJ-P0;;;mid=<87v9wcl91m.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+ep3e4WNamFJQGEhYFLaK+V+CRG6aa5Ps=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [GIT PULL] signal: Removing the task parameter from force_sig
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 08:40, Leo Yan <leo.yan@linaro.org> wrote:
->
-> Based on the following report from Smatch, fix the potential
-> NULL pointer dereference check.
->
->   tools/perf/util/cs-etm.c:2545
->   cs_etm__process_auxtrace_info() error: we previously assumed
->   'session->itrace_synth_opts' could be null (see line 2541)
->
-> tools/perf/util/cs-etm.c
-> 2541         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-> 2542                 etm->synth_opts = *session->itrace_synth_opts;
-> 2543         } else {
-> 2544                 itrace_synth_opts__set_default(&etm->synth_opts,
-> 2545                                 session->itrace_synth_opts->default_no_sample);
->                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 2546                 etm->synth_opts.callchain = false;
-> 2547         }
->
-> 'session->itrace_synth_opts' is impossible to be a NULL pointer in
-> cs_etm__process_auxtrace_info(), thus this patch removes the NULL
-> test for 'session->itrace_synth_opts'.
->
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/util/cs-etm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index ad43a6e31827..ab578a06a790 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -2537,7 +2537,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->                 return 0;
->         }
->
-> -       if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-> +       if (session->itrace_synth_opts->set) {
->                 etm->synth_opts = *session->itrace_synth_opts;
->         } else {
->                 itrace_synth_opts__set_default(&etm->synth_opts,
 
-This is in accordance with what was previously discussed.
+Linus,
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Please pull the siginfo-linus branch from the git tree:
 
-> --
-> 2.17.1
->
+   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git siginfo-linus
+
+   HEAD: 318759b4737c3b3789e2fd64d539f437d52386f5 signal/x86: Move tsk inside of CONFIG_MEMORY_FAILURE in do_sigbus
+
+A source of error over the years has been that force_sig has taken a
+task parameter when it is only safe to use force_sig with the current
+task. The force_sig function is built for delivering synchronous signals
+such as SIGSEGV where the userspace application caused a synchronous
+fault (such as a page fault) and the kernel responded with a signal.
+
+Because the name force_sig does not make this clear, and because the
+force_sig takes a task parameter the function force_sig has been
+abused for sending other kinds of signals over the years.  Slowly those
+have been fixed when the oopses have been tracked down.
+
+This set of changes fixes the remaining abusers of force_sig and
+carefully rips out the task parameter from force_sig and friends making
+this kind of error almost impossible in the future.
+
+Eric W. Biederman (27):
+      signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
+      signal: Correct namespace fixups of si_pid and si_uid
+      signal/arm64: Use force_sig not force_sig_fault for SIGKILL
+      signal/drbd: Use send_sig not force_sig
+      signal/bpfilter: Fix bpfilter_kernl to use send_sig not force_sig
+      signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
+      signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
+      signal: Remove task parameter from force_sigsegv
+      signal: Remove task parameter from force_sig
+      signal: Remove task parameter from force_sig_mceerr
+      signal/x86: Remove task parameter from send_sigtrap
+      signal/um: Remove task parameter from send_sigtrap
+      signal/sh: Remove tsk parameter from force_sig_info_fault
+      signal/riscv: Remove tsk parameter from do_trap
+      signal/nds32: Remove tsk parameter from send_sigtrap
+      signal/arm: Remove tsk parameter from ptrace_break
+      signal/arm: Remove tsk parameter from __do_user_fault
+      signal/unicore32: Remove tsk parameter from __do_user_fault
+      signal: Explicitly call force_sig_fault on current
+      signal: Use force_sig_fault_to_task for the two calls that don't deliver to current
+      signal: Remove the task parameter from force_sig_fault
+      signal: Properly set TRACE_SIGNAL_LOSE_INFO in __send_signal
+      signal: Move the computation of force into send_signal and correct it.
+      signal: Generate the siginfo in force_sig
+      signal: Factor force_sig_info_to_task out of force_sig_info
+      signal: Remove the signal number and task parameters from force_sig_info
+      signal/x86: Move tsk inside of CONFIG_MEMORY_FAILURE in do_sigbus
+
+ arch/alpha/kernel/signal.c                |   4 +-
+ arch/alpha/kernel/traps.c                 |   2 +-
+ arch/alpha/mm/fault.c                     |   4 +-
+ arch/arc/kernel/process.c                 |   4 +-
+ arch/arc/kernel/signal.c                  |   2 +-
+ arch/arc/kernel/traps.c                   |   2 +-
+ arch/arc/mm/fault.c                       |   4 +-
+ arch/arm/include/asm/traps.h              |   2 +-
+ arch/arm/kernel/ptrace.c                  |   6 +-
+ arch/arm/kernel/signal.c                  |   4 +-
+ arch/arm/kernel/traps.c                   |   4 +-
+ arch/arm/mm/alignment.c                   |   2 +-
+ arch/arm/mm/fault.c                       |  13 +-
+ arch/arm64/kernel/traps.c                 |   7 +-
+ arch/c6x/kernel/signal.c                  |   2 +-
+ arch/c6x/kernel/traps.c                   |   2 +-
+ arch/csky/abiv1/alignment.c               |   2 +-
+ arch/csky/abiv2/fpu.c                     |   2 +-
+ arch/csky/kernel/signal.c                 |   4 +-
+ arch/csky/kernel/traps.c                  |   2 +-
+ arch/csky/mm/fault.c                      |   4 +-
+ arch/h8300/kernel/ptrace_h.c              |   4 +-
+ arch/h8300/kernel/ptrace_s.c              |   2 +-
+ arch/h8300/kernel/signal.c                |   2 +-
+ arch/hexagon/kernel/signal.c              |   2 +-
+ arch/hexagon/kernel/traps.c               |  12 +-
+ arch/hexagon/mm/vm_fault.c                |   4 +-
+ arch/ia64/kernel/brl_emu.c                |   6 +-
+ arch/ia64/kernel/signal.c                 |   8 +-
+ arch/ia64/kernel/traps.c                  |  24 +--
+ arch/ia64/kernel/unaligned.c              |   2 +-
+ arch/ia64/mm/fault.c                      |   2 +-
+ arch/m68k/kernel/signal.c                 |   4 +-
+ arch/m68k/kernel/traps.c                  |  20 +--
+ arch/m68k/mm/fault.c                      |   4 +-
+ arch/microblaze/kernel/exceptions.c       |   2 +-
+ arch/microblaze/kernel/signal.c           |   2 +-
+ arch/microblaze/mm/fault.c                |   2 +-
+ arch/mips/kernel/branch.c                 |  18 +--
+ arch/mips/kernel/kprobes.c                |   2 +-
+ arch/mips/kernel/signal.c                 |   8 +-
+ arch/mips/kernel/signal_n32.c             |   4 +-
+ arch/mips/kernel/signal_o32.c             |   8 +-
+ arch/mips/kernel/traps.c                  |  50 +++---
+ arch/mips/kernel/unaligned.c              |  20 +--
+ arch/mips/mm/fault.c                      |   4 +-
+ arch/mips/sgi-ip22/ip22-berr.c            |   2 +-
+ arch/mips/sgi-ip22/ip28-berr.c            |   2 +-
+ arch/mips/sgi-ip27/ip27-berr.c            |   2 +-
+ arch/mips/sgi-ip32/ip32-berr.c            |   2 +-
+ arch/nds32/kernel/fpu.c                   |   2 +-
+ arch/nds32/kernel/signal.c                |   2 +-
+ arch/nds32/kernel/traps.c                 |  17 +-
+ arch/nds32/mm/fault.c                     |   4 +-
+ arch/nios2/kernel/signal.c                |   4 +-
+ arch/nios2/kernel/traps.c                 |   2 +-
+ arch/openrisc/kernel/signal.c             |   2 +-
+ arch/openrisc/kernel/traps.c              |  12 +-
+ arch/openrisc/mm/fault.c                  |   4 +-
+ arch/parisc/kernel/ptrace.c               |   6 +-
+ arch/parisc/kernel/signal.c               |   2 +-
+ arch/parisc/kernel/traps.c                |  14 +-
+ arch/parisc/kernel/unaligned.c            |   4 +-
+ arch/parisc/math-emu/driver.c             |   2 +-
+ arch/parisc/mm/fault.c                    |   4 +-
+ arch/powerpc/kernel/process.c             |   2 +-
+ arch/powerpc/kernel/signal_32.c           |   6 +-
+ arch/powerpc/kernel/signal_64.c           |   2 +-
+ arch/powerpc/kernel/traps.c               |   4 +-
+ arch/powerpc/mm/fault.c                   |   5 +-
+ arch/powerpc/platforms/cell/spufs/fault.c |   9 +-
+ arch/powerpc/platforms/cell/spufs/run.c   |   2 +-
+ arch/riscv/include/asm/bug.h              |   2 +-
+ arch/riscv/kernel/signal.c                |   2 +-
+ arch/riscv/kernel/traps.c                 |  11 +-
+ arch/riscv/mm/fault.c                     |   6 +-
+ arch/s390/kernel/compat_signal.c          |   4 +-
+ arch/s390/kernel/signal.c                 |   4 +-
+ arch/s390/kernel/traps.c                  |   6 +-
+ arch/s390/mm/fault.c                      |   6 +-
+ arch/sh/kernel/cpu/sh2a/fpu.c             |   2 +-
+ arch/sh/kernel/cpu/sh4/fpu.c              |   2 +-
+ arch/sh/kernel/cpu/sh5/fpu.c              |   4 +-
+ arch/sh/kernel/hw_breakpoint.c            |   2 +-
+ arch/sh/kernel/ptrace_64.c                |   4 +-
+ arch/sh/kernel/signal_32.c                |   4 +-
+ arch/sh/kernel/signal_64.c                |   4 +-
+ arch/sh/kernel/traps.c                    |   4 +-
+ arch/sh/kernel/traps_32.c                 |  12 +-
+ arch/sh/kernel/traps_64.c                 |   2 +-
+ arch/sh/math-emu/math.c                   |   2 +-
+ arch/sh/mm/fault.c                        |  11 +-
+ arch/sparc/kernel/process_64.c            |   4 +-
+ arch/sparc/kernel/signal32.c              |   8 +-
+ arch/sparc/kernel/signal_32.c             |   4 +-
+ arch/sparc/kernel/signal_64.c             |   8 +-
+ arch/sparc/kernel/sys_sparc_32.c          |   2 +-
+ arch/sparc/kernel/sys_sparc_64.c          |   2 +-
+ arch/sparc/kernel/traps_32.c              |   4 +-
+ arch/sparc/kernel/traps_64.c              |  41 +++--
+ arch/sparc/mm/fault_32.c                  |   4 +-
+ arch/sparc/mm/fault_64.c                  |   2 +-
+ arch/um/kernel/exec.c                     |   2 +-
+ arch/um/kernel/ptrace.c                   |   7 +-
+ arch/um/kernel/skas/mmu.c                 |   2 +-
+ arch/um/kernel/tlb.c                      |   4 +-
+ arch/um/kernel/trap.c                     |  16 +-
+ arch/unicore32/kernel/signal.c            |   4 +-
+ arch/unicore32/kernel/traps.c             |   2 +-
+ arch/unicore32/mm/fault.c                 |  13 +-
+ arch/x86/entry/vsyscall/vsyscall_64.c     |   4 +-
+ arch/x86/include/asm/ptrace.h             |   3 +-
+ arch/x86/kernel/cpu/mce/core.c            |   2 +-
+ arch/x86/kernel/ptrace.c                  |   9 +-
+ arch/x86/kernel/signal.c                  |   2 +-
+ arch/x86/kernel/traps.c                   |  10 +-
+ arch/x86/kernel/umip.c                    |   2 +-
+ arch/x86/kernel/uprobes.c                 |   2 +-
+ arch/x86/kernel/vm86_32.c                 |   2 +-
+ arch/x86/mm/fault.c                       |  12 +-
+ arch/x86/mm/mpx.c                         |   2 +-
+ arch/x86/um/signal.c                      |   4 +-
+ arch/xtensa/kernel/signal.c               |   2 +-
+ arch/xtensa/kernel/traps.c                |   8 +-
+ arch/xtensa/mm/fault.c                    |   4 +-
+ drivers/block/drbd/drbd_int.h             |   2 +-
+ drivers/block/drbd/drbd_main.c            |   2 +-
+ drivers/block/drbd/drbd_nl.c              |   2 +-
+ drivers/misc/lkdtm/bugs.c                 |   2 +-
+ drivers/usb/core/devio.c                  |  48 +++---
+ fs/cifs/connect.c                         |   2 +-
+ fs/exec.c                                 |   2 +-
+ include/linux/ptrace.h                    |   2 +-
+ include/linux/sched/signal.h              |  15 +-
+ include/linux/syscalls.h                  |   2 +-
+ kernel/events/uprobes.c                   |   4 +-
+ kernel/pid_namespace.c                    |   2 +-
+ kernel/rseq.c                             |   4 +-
+ kernel/seccomp.c                          |   2 +-
+ kernel/signal.c                           | 249 +++++++++++++++++++++---------
+ mm/memory-failure.c                       |   2 +-
+ net/bpfilter/bpfilter_kern.c              |   2 +-
+ security/safesetid/lsm.c                  |   4 +-
+ 143 files changed, 569 insertions(+), 483 deletions(-)
+
+Eric
