@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA860C606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23A2C606CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2481217D6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC08217D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562614230;
-	bh=6tb7g2ly9Cs4WJD28I1TUA90kUuVTe7fy/aHg8D3ETE=;
+	s=default; t=1562614232;
+	bh=sSfsqHf0xfTnHlVWxKL5frdAgG9edIqYGGtXKtf9NqI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=W/Qar+0A5dio/JqF6KDaBcNLQNSYay8uxMrRK+r5JN+q5vx86m9EXET47Wv/INhcX
-	 YMG3fkwMMKTcNKwS3HUPNaqRmgssr5PDUDEIq+iz2Gr0me5wrNlHvWTpLwwVIUVIVV
-	 J3fK0ocSsDAM67IdYtIdyK/i9wclWAwu7obK8It8=
+	b=Jdf7SfVlB5RIxDYC9qY4PRNtHOGanvDItF1h7FKU4ZBUzKmakN8wBcp2Lq1sFLAIq
+	 y7OaNpdBJ1JrEMq/gqE1gysS6FKWIGxe6c3Rdqtfn1t3Bdo30TF6q30+wIh21Nw3ps
+	 O32laGX5OpdB4xYwThdMaRHt/ml52rw0tIvOCB6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404652AbfGHTa3 (ORCPT
+        id S2404664AbfGHTab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36994 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 15:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404589AbfGHTaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:30:11 -0400
-Subject: Re: [GIT pull] x86/pti for 5.3-rc1
+        id S2404585AbfGHTaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 15:30:10 -0400
+Subject: Re: [GIT pull] smp/hotplug for 5.3-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562614211;
-        bh=6tb7g2ly9Cs4WJD28I1TUA90kUuVTe7fy/aHg8D3ETE=;
+        s=default; t=1562614210;
+        bh=sSfsqHf0xfTnHlVWxKL5frdAgG9edIqYGGtXKtf9NqI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qB17kyF+0d6drb9cte0UwQXpCPFbBwHsCECk4Q2sgxdk9u6fgp6REjhsaipo5vSM5
-         YVADey7ToYIOo7OvF8pwqqWfhPwbQgVYxq/3bE66J1dcRRyVJA61dzRThjLpjwYFj/
-         XXVYXIQnhNZJ31QwtI7Kyc1i6B9zaR0Te3+o2wtE=
+        b=PaGzDcT0kBkGxt59ONbEJBmEBaKfKInCxib29zovOkcxbTQp5573xzSyIZsxwYBMu
+         zFs5NF8miY3K/bLoouoNuOZW/jWsbJfFkahMw/fUyTACoEL/vePItI2BccqkbrEXks
+         UW/2Fy6qxu/53BOeB7bDCDSdBNb1mvoZMtCzdxNY=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <156257673796.14831.2572103765106531133.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <156257673794.14831.7846075415358186761.tglx@nanos.tec.linutronix.de>
 References: <156257673794.14831.1593297636367057887.tglx@nanos.tec.linutronix.de>
- <156257673796.14831.2572103765106531133.tglx@nanos.tec.linutronix.de>
+ <156257673794.14831.7846075415358186761.tglx@nanos.tec.linutronix.de>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <156257673796.14831.2572103765106531133.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-pti-for-linus
-X-PR-Tracked-Commit-Id: 993773d11d45c90cb1c6481c2638c3d9f092ea5b
+X-PR-Tracked-Message-Id: <156257673794.14831.7846075415358186761.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ smp-hotplug-for-linus
+X-PR-Tracked-Commit-Id: caa759323c73676b3e48c8d9c86093c88b4aba97
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 223cea6a4f0552b86fb25e3b8bbd00469816cd7a
-Message-Id: <156261421095.31351.1721467204330588762.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: e0e86b111bca6bbf746c03ec5cf3e6a61fa3f8e9
+Message-Id: <156261421019.31351.13189072693399103199.pr-tracker-bot@kernel.org>
 Date:   Mon, 08 Jul 2019 19:30:10 +0000
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -57,10 +58,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The pull request you sent on Mon, 08 Jul 2019 09:05:37 -0000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-pti-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp-hotplug-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/223cea6a4f0552b86fb25e3b8bbd00469816cd7a
+https://git.kernel.org/torvalds/c/e0e86b111bca6bbf746c03ec5cf3e6a61fa3f8e9
 
 Thank you!
 
