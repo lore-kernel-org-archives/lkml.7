@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B53C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFA9C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE9C2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB80B2173C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599510;
-	bh=pPvXy1dg4w7R9+7wjQwCiC2XVNsumn72yQ7jifnr8r8=;
+	s=default; t=1562599515;
+	bh=HbzPCNYKJNEmuStyNKDuP2sfqXfGfr0uZb8hnURvQ3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cXMao+grpwxsMot/124zQPzU4U6Sy5LdpwECjTQqMrfaOTATt4XVLtV7JKwtWhU0Y
-	 PxH1Ix82DcYIVi3+SshIejpsFgyb8yhXLf3eaFnXaHqayjbFph+5Q5lhg1rTaPg0+7
-	 G3emfKwHdG+Ypc4H17yiErlJxkYPT6W3NgDPdg4E=
+	b=jvFh9Nkw7gaty2scNuL1/0YQ7zJmCnof9ZL1lcMnSV6VwIVMG9c1P/ZDRR22pntPw
+	 wFlS35Gke3td08NQ/DVNNZLYJP7mCo9aUOnj8OUU+42nwWkJuMLi49ycHBuAF8EEE9
+	 huZDvc+XnKYI5yLWuOq/j8zbRHkg2Qoe/YwFeecc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388438AbfGHPZJ (ORCPT
+        id S2388488AbfGHPZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52436 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388543AbfGHPZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:04 -0400
+        id S2388417AbfGHPZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73C14204EC;
-        Mon,  8 Jul 2019 15:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D14521707;
+        Mon,  8 Jul 2019 15:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599503;
-        bh=pPvXy1dg4w7R9+7wjQwCiC2XVNsumn72yQ7jifnr8r8=;
+        s=default; t=1562599506;
+        bh=HbzPCNYKJNEmuStyNKDuP2sfqXfGfr0uZb8hnURvQ3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Him/r2HsdoSrrp3T6ruIjV38vZkl8RqtyXUsH4ObErqBkDNywW2Pe1v8o3TJWqgH3
-         6MONPYsGo6g0pSQlcLTu6T7oSSCFpYlNpoi8tswv2CdrMxKKXQ4JxrQJthtY8FySQj
-         ol5/J/0Eh1Zv8rpQa6ZYifF39VEq2+jjIqHBtEaI=
+        b=GV9BbBhe8gTe0GWGzWg/MWt16PlgjHNgcbFXlHoa7ZNGYuIs7lSODI8Sj3/Poy4vc
+         4HZFqd52V3vEk+d09hQdPG2lC+CEYESg+W3qaMfl7AmX1gvc//yskkXzoLjHUlkrRS
+         jBcHusCDBMBbdk0LmQ/SUCwScqoXdwJRrvm4LM1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Robert Beckett <bob.beckett@collabora.com>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 4.14 36/56] drm/imx: notify drm core before sending event during crtc disable
-Date:   Mon,  8 Jul 2019 17:13:28 +0200
-Message-Id: <20190708150523.216561571@linuxfoundation.org>
+Subject: [PATCH 4.14 37/56] drm/imx: only send event on crtc disable if kept disabled
+Date:   Mon,  8 Jul 2019 17:13:29 +0200
+Message-Id: <20190708150523.270391645@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -62,26 +62,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robert Beckett <bob.beckett@collabora.com>
 
-commit 78c68e8f5cd24bd32ba4ca1cdfb0c30cf0642685 upstream.
+commit 5aeab2bfc9ffa72d3ca73416635cb3785dfc076f upstream.
 
-Notify drm core before sending pending events during crtc disable.
-This fixes the first event after disable having an old stale timestamp
-by having drm_crtc_vblank_off update the timestamp to now.
+The event will be sent as part of the vblank enable during the modeset
+if the crtc is not being kept disabled.
 
-This was seen while debugging weston log message:
-Warning: computed repaint delay is insane: -8212 msec
-
-This occurred due to:
-1. driver starts up
-2. fbcon comes along and restores fbdev, enabling vblank
-3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
-seq number and time set at current value
-(some time later)
-4. weston starts and does a modeset
-5. atomic commit disables crtc while it does the modeset
-6. ipu_crtc_atomic_disable sends vblank with old seq number and time
-
-Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
+Fixes: 5f2f911578fb ("drm/imx: atomic phase 3 step 1: Use atomic configuration")
 
 Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
 Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
@@ -89,27 +75,19 @@ Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/imx/ipuv3-crtc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/imx/ipuv3-crtc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/drivers/gpu/drm/imx/ipuv3-crtc.c
 +++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-@@ -99,14 +99,14 @@ static void ipu_crtc_atomic_disable(stru
- 	ipu_dc_disable(ipu);
- 	ipu_prg_disable(ipu);
+@@ -102,7 +102,7 @@ static void ipu_crtc_atomic_disable(stru
+ 	drm_crtc_vblank_off(crtc);
  
-+	drm_crtc_vblank_off(crtc);
-+
  	spin_lock_irq(&crtc->dev->event_lock);
- 	if (crtc->state->event) {
+-	if (crtc->state->event) {
++	if (crtc->state->event && !crtc->state->active) {
  		drm_crtc_send_vblank_event(crtc, crtc->state->event);
  		crtc->state->event = NULL;
  	}
- 	spin_unlock_irq(&crtc->dev->event_lock);
--
--	drm_crtc_vblank_off(crtc);
- }
- 
- static void imx_drm_crtc_reset(struct drm_crtc *crtc)
 
 
