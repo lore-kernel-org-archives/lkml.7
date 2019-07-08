@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1162C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38A1C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790972166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27E220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599481;
-	bh=vVFyYXwho3zCgkOD0rbDcYE6AzYSHyuG8zbWWEKW4J4=;
+	s=default; t=1562599485;
+	bh=nBB6RH8DlhwgZizyYTe+f/eNVq+Li7TO2zarQoSczqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NgtZHC5eMJFHKuiSdOVwjFxo8qPYVtlmYwvDtBua+2dI7C5REcJMedlG+c8LhwBmJ
-	 It0U5apaeZgcJ/gh+n7/+INijkaZaQF+FFuPMvzSkEwYCgo5U8JWxDXOb7kugQAwFE
-	 +LZ3NdauqE5G85yztdaaZYCbpA/3GkoQgrAhxceg=
+	b=PrRh0oS4EDOTK0360wrBuy12ArKy2SyYduRLsLmS7qGL6Kvc+n31MWq7EINyEzXnG
+	 cIjOciNqaGe05vkdQ7VMHc0lG4AR5oJHMErXbiaxoGxRGS2WU6eTQd+tkTqsWaLoO0
+	 xlmUGIhONNqisRgdMZvoYM6mHL32TLJ0OaQpxu2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbfGHPYk (ORCPT
+        id S2388394AbfGHPYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51932 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388377AbfGHPYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:37 -0400
+        id S2388389AbfGHPYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:24:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43D50216C4;
-        Mon,  8 Jul 2019 15:24:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A0E1204EC;
+        Mon,  8 Jul 2019 15:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599476;
-        bh=vVFyYXwho3zCgkOD0rbDcYE6AzYSHyuG8zbWWEKW4J4=;
+        s=default; t=1562599480;
+        bh=nBB6RH8DlhwgZizyYTe+f/eNVq+Li7TO2zarQoSczqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NvtpDwNPfb/Kc0l7l3Sa9IwB0jBm3jWi7nwIzWJTYvfgGUVt+4lfLJJNSIrKgYIbH
-         Hzxk6Vef2/HoY07PT4YqVOS9EC4vuRQzts5iKPRR795T5wqJ/V5mYmtXIIEzBXVL6X
-         97ldzaBwQTp1pkmhdcZp619Vb+hakPF+/y3PLuRk=
+        b=K+S2sUw03hT/umG/hYJG0LUKTkel2aFn6TayDRM1rU6r3NvcGKdZP29iowmpsVTL0
+         hoiOPSs2FjIoaAwxqbXGk50VMVKiro5YPUhNYgNMs+UmuUREHDqRDEaX6sF29fZJOu
+         2IrksMwkf6KCougdDFAQlm3P4q6ZgePSiTnW3Gtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+219f00fb49874dcaea17@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 28/56] ALSA: line6: Fix write on zero-sized buffer
-Date:   Mon,  8 Jul 2019 17:13:20 +0200
-Message-Id: <20190708150522.453606217@linuxfoundation.org>
+Subject: [PATCH 4.14 29/56] ALSA: usb-audio: fix sign unintended sign extension on left shifts
+Date:   Mon,  8 Jul 2019 17:13:21 +0200
+Message-Id: <20190708150522.585884964@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -60,41 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 3450121997ce872eb7f1248417225827ea249710 upstream.
+commit 2acf5a3e6e9371e63c9e4ff54d84d08f630467a0 upstream.
 
-LINE6 drivers allocate the buffers based on the value returned from
-usb_maxpacket() calls.  The manipulated device may return zero for
-this, and this results in the kmalloc() with zero size (and it may
-succeed) while the other part of the driver code writes the packet
-data with the fixed size -- which eventually overwrites.
+There are a couple of left shifts of unsigned 8 bit values that
+first get promoted to signed ints and hence get sign extended
+on the shift if the top bit of the 8 bit values are set. Fix
+this by casting the 8 bit values to unsigned ints to stop the
+unintentional sign extension.
 
-This patch adds a simple sanity check for the invalid buffer size for
-avoiding that problem.
-
-Reported-by: syzbot+219f00fb49874dcaea17@syzkaller.appspotmail.com
+Addresses-Coverity: ("Unintended sign extension")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/pcm.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/usb/mixer_quirks.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/usb/line6/pcm.c
-+++ b/sound/usb/line6/pcm.c
-@@ -558,6 +558,11 @@ int line6_init_pcm(struct usb_line6 *lin
- 	line6pcm->max_packet_size_out =
- 		usb_maxpacket(line6->usbdev,
- 			usb_sndisocpipe(line6->usbdev, ep_write), 1);
-+	if (!line6pcm->max_packet_size_in || !line6pcm->max_packet_size_out) {
-+		dev_err(line6pcm->line6->ifcdev,
-+			"cannot get proper max packet size\n");
-+		return -EINVAL;
-+	}
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -754,7 +754,7 @@ static int snd_ni_control_init_val(struc
+ 		return err;
+ 	}
  
- 	spin_lock_init(&line6pcm->out.lock);
- 	spin_lock_init(&line6pcm->in.lock);
+-	kctl->private_value |= (value << 24);
++	kctl->private_value |= ((unsigned int)value << 24);
+ 	return 0;
+ }
+ 
+@@ -915,7 +915,7 @@ static int snd_ftu_eff_switch_init(struc
+ 	if (err < 0)
+ 		return err;
+ 
+-	kctl->private_value |= value[0] << 24;
++	kctl->private_value |= (unsigned int)value[0] << 24;
+ 	return 0;
+ }
+ 
 
 
