@@ -2,94 +2,72 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D5FC606CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326E9C606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5205217D6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0781B217D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:46:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ikEvL6Yw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404700AbfGHTpu (ORCPT
+        id S2404712AbfGHTqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:45:50 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:39079 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729234AbfGHTpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:45:50 -0400
-Received: from [192.168.1.110] ([95.117.164.184]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MPooN-1i5nb70MGR-00Mtsx; Mon, 08 Jul 2019 21:45:46 +0200
-Subject: Re: [PATCH 0/3] Update pcengines-apuv2 platform device
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Florian Eckert <fe@dev.tdt.de>
-Cc:     Eckert.Florian@googlemail.com,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190704090205.19400-1-fe@dev.tdt.de>
- <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <4b43316c-3e05-0ce9-3ada-db22996205b9@metux.net>
-Date:   Mon, 8 Jul 2019 21:45:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 8 Jul 2019 15:46:25 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33172 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbfGHTqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 15:46:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=7uzdZ/IK3FH7mAIp0p/NryfuhGgzACHzKLTL6ohKmwk=; b=ikEvL6YwY3XHO++2Fxo3voV2lk
+        RwN645AfLfAirXvn9mhWF6kSeCbf0lAML7Juf/sQODcI/f12ZY+WbJp5l3/UfAsqtEz5BQnreFkQz
+        BVvlmR2xxcBBg4jBgHUS8CagXtMM2d3XTHLGzwqiOsHXMzn8Sj2BKdhaePd54FV8ETqY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hkZaZ-0004Yg-Tk; Mon, 08 Jul 2019 21:46:15 +0200
+Date:   Mon, 8 Jul 2019 21:46:15 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: net: Add bindings for Realtek PHYs
+Message-ID: <20190708194615.GH9027@lunn.ch>
+References: <20190708192459.187984-1-mka@chromium.org>
+ <20190708192459.187984-2-mka@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:SX0Kvt3nfm4cb+ofxX5Erb1XGfX3CX714EhQ9i3q8ACyJqZYvxe
- F96ZI6Y3dqRsTuXFfw4cpQb7UVyox4c8c+/XszL3fkE5wMLtazOXyLlY86+FF9nGKZiAPDK
- mvN2DioWM3Yr9pdQVyDuj/L3Mn9/SJ1d9kQ/vPnuUtJg7wCJzJ4ziX1/CZJV3sp8zHboA+9
- h6JLFbdT1qkP5mMB/CNTQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VIqJ3hSv9bM=:SGGvPSlbO/qebn98kaD65f
- vBJnq6tmbicJDehzT29nuYXGa/E/Vp//6KQ7gt+LYZVrsw/iohsZ1D1ka3ALU61iJcQ7ndlCl
- wNCuCA+7L/t1sZcMvig5zBOU7mZu6FK0OtlmUleNbCEdJSmbn67M36/MqkR95a9jgmEmHOtE/
- pfog87N8/m+quJGkugM/0L5owaTCDf+BQUeKxQO9yurwuu1aDz5EFmrne1jkEBn5fFlzwCtIi
- t2PEEB6MyEIlEZmgJnCjvqvxheyl49dXdFAbDh7kWs2RwgoMW9B+j1cAwdU/hbPSyRKmMXcS/
- /S53Jz9UzqVjow2H2fIXgMb8JDfVID+pb7KH6R9XtyUwzp/f6O5Rd/KJdZ9F70f6TnUcW173B
- jGPOF7rv8BE+bRGn26TPIucKZ+SBgVSRuq1vFVHP0QOW+Xr473NZBKMguQhB6nOKIJ3Rt6m1b
- GM2dyUbzFCYJcux3DxKn72Vj8y8cMTkt4eLgaLrJ8+ed+286AbofVcYC+SK6ogyVApCGauwK2
- t9TNW+jS4DTpqqM39aI1J5wz2gyfKUCgAYth8j+eVddXJcWlHqHAsvYXotasb9EkI7LgD+tVD
- uJa1YSLqLiJGSAwchFoOCTtIEzWZCJfwOsrp3RPoi09TMeuNNky1PGwX64mUrJZOCVsR1SLXZ
- 4M1VG/53D6MGNO5/qyM32zlUWdVmNo2b8afED+b5MbWu172LlXbfbVDd5i/GLXOYvnDOcP2fK
- WHAWdqh13F/1j5V+gamIxW18tDre3z7izWWmoFbJ8U+Ef2FLp8058xpzfU1sBrIq6V+aVFq3O
- Xa6W3yx1Sqds/F/hQeRPNO7KiQwg3LFsJ4dZ+SAujTFrjPTmzqbv5RZEK6YkLkYKm5eDYMt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708192459.187984-2-mka@chromium.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.07.19 15:39, Andy Shevchenko wrote:
-> On Thu, Jul 4, 2019 at 12:02 PM Florian Eckert <fe@dev.tdt.de> wrote:
->>
->> This patchset adds the following changes to this pcengines-apuv2
->> platform device.
->>
+On Mon, Jul 08, 2019 at 12:24:53PM -0700, Matthias Kaehlcke wrote:
+> Add the 'realtek,eee-led-mode-disable' property to disable EEE
+> LED mode on Realtek PHYs that support it.
 > 
-> Before doing anything to this driver, what is the plan for previously
-> upstreamed:
-> 
-> drivers/leds/leds-apu.c
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> TODO: adapt PHY core to deal with optional compatible strings
 
-Only supports the three front LEDs, nothing else. (we've got more gpios
-that are not LEDs, eg. the front button, simsw, ...)
+Yes. Does this even work at the moment? I would expect
+of_mdiobus_child_is_phy() to return false, indicating the device is
+not actually a PHY.
 
-> arch/x86/platform/geode/alix.c
-
-completely unrelated - very different chipset.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+    Andrew
