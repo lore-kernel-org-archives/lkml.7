@@ -2,281 +2,97 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2358C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ABCC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B7A20693
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C3220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfGHCHU (ORCPT
+        id S1727491AbfGHCVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 22:07:20 -0400
-Received: from mga17.intel.com ([192.55.52.151]:44745 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728537AbfGHCG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 22:06:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,464,1557212400"; 
-   d="scan'208";a="364083537"
-Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:26 -0700
-From:   Wei Wang <wei.w.wang@intel.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, ak@linux.intel.com, peterz@infradead.org
-Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
-        like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
-        arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v7 04/12] KVM/x86: intel_pmu_lbr_enable
-Date:   Mon,  8 Jul 2019 09:23:11 +0800
-Message-Id: <1562548999-37095-5-git-send-email-wei.w.wang@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
-References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
+        Sun, 7 Jul 2019 22:21:41 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:35115 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726105AbfGHCVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 22:21:41 -0400
+X-IronPort-AV: E=Sophos;i="5.63,464,1557158400"; 
+   d="scan'208";a="70900599"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 08 Jul 2019 10:21:36 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id E6D914CDDD5C;
+        Mon,  8 Jul 2019 10:21:37 +0800 (CST)
+Received: from [10.167.226.33] (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Mon, 8 Jul 2019 10:21:42 +0800
+Subject: Re: [Problem]testOpenUpgradeLock test failed in nfsv4.0 in 5.2.0-rc7
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+To:     <ffilzlnx@mindspring.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <a4ff6e56-09d6-1943-8d71-91eaa418bd1e@cn.fujitsu.com>
+Message-ID: <f105f5a8-d38f-a58a-38d1-6b7a4df4dc9d@cn.fujitsu.com>
+Date:   Mon, 8 Jul 2019 10:20:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <a4ff6e56-09d6-1943-8d71-91eaa418bd1e@cn.fujitsu.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: E6D914CDDD5C.AD7B1
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lbr stack is architecturally specific, for example, SKX has 32 lbr
-stack entries while HSW has 16 entries, so a HSW guest running on a SKX
-machine may not get accurate perf results. Currently, we forbid the
-guest lbr enabling when the guest and host see different lbr stack
-entries or the host and guest see different lbr stack msr indices.
+Ang ping?
 
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- arch/x86/kvm/pmu.c           |   8 +++
- arch/x86/kvm/pmu.h           |   2 +
- arch/x86/kvm/vmx/pmu_intel.c | 136 +++++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/x86.c           |   3 +-
- 4 files changed, 147 insertions(+), 2 deletions(-)
+在 2019/7/3 9:34, Su Yanjun 写道:
+> Hi Frank
+>
+> We tested the pynfs of NFSv4.0 on the latest version of the kernel 
+> (5.2.0-rc7).
+> I encountered a problem while testing st_lock.testOpenUpgradeLock. The 
+> problem is now as follows:
+> **************************************************
+> LOCK24 st_lock.testOpenUpgradeLock : FAILURE
+>            OP_LOCK should return NFS4_OK, instead got
+>            NFS4ERR_BAD_SEQID
+> **************************************************
+> Is this normal?
+>
+> The case is as follows:
+> Def testOpenUpgradeLock(t, env):
+>     """Try open, lock, open, downgrade, close
+>
+>     FLAGS: all lock
+>     CODE: LOCK24
+>     """
+>     c= env.c1
+>     C.init_connection()
+>     Os = open_sequence(c, t.code, lockowner="lockowner_LOCK24")
+>     Os.open(OPEN4_SHARE_ACCESS_READ)
+>     Os.lock(READ_LT)
+>     Os.open(OPEN4_SHARE_ACCESS_WRITE)
+>     Os.unlock()
+>     Os.downgrade(OPEN4_SHARE_ACCESS_WRITE)
+>     Os.lock(WRITE_LT)
+>     Os.close()
+>
+> After investigation, there was an error in unlock->lock. When 
+> unlocking, the lockowner of the file was not released, causing an 
+> error when locking again.
+> Will nfs4.0 support 1) open-> 2) lock-> 3) unlock-> 4) lock this 
+> function?
+>
+>
+>
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 132d149..7d7ac18 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -296,6 +296,14 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
- 	return 0;
- }
- 
-+bool kvm_pmu_lbr_enable(struct kvm_vcpu *vcpu)
-+{
-+	if (kvm_x86_ops->pmu_ops->lbr_enable)
-+		return kvm_x86_ops->pmu_ops->lbr_enable(vcpu);
-+
-+	return false;
-+}
-+
- void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
- {
- 	if (lapic_in_kernel(vcpu))
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 22dff66..c099b4b 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -29,6 +29,7 @@ struct kvm_pmu_ops {
- 					  u64 *mask);
- 	int (*is_valid_msr_idx)(struct kvm_vcpu *vcpu, unsigned idx);
- 	bool (*is_valid_msr)(struct kvm_vcpu *vcpu, u32 msr);
-+	bool (*lbr_enable)(struct kvm_vcpu *vcpu);
- 	int (*get_msr)(struct kvm_vcpu *vcpu, u32 msr, u64 *data);
- 	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
- 	void (*refresh)(struct kvm_vcpu *vcpu);
-@@ -107,6 +108,7 @@ void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
- void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
- void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
- 
-+bool kvm_pmu_lbr_enable(struct kvm_vcpu *vcpu);
- void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu);
- void kvm_pmu_handle_event(struct kvm_vcpu *vcpu);
- int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned pmc, u64 *data);
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 68d231d..ef8ebd4 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -12,6 +12,7 @@
- #include <linux/kvm_host.h>
- #include <linux/perf_event.h>
- #include <asm/perf_event.h>
-+#include <asm/intel-family.h>
- #include "x86.h"
- #include "cpuid.h"
- #include "lapic.h"
-@@ -162,6 +163,140 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- 	return ret;
- }
- 
-+static bool intel_pmu_lbr_enable(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm *kvm = vcpu->kvm;
-+	u8 vcpu_model = guest_cpuid_model(vcpu);
-+	unsigned int vcpu_lbr_from, vcpu_lbr_nr;
-+
-+	if (x86_perf_get_lbr_stack(&kvm->arch.lbr_stack))
-+		return false;
-+
-+	if (guest_cpuid_family(vcpu) != boot_cpu_data.x86)
-+		return false;
-+
-+	/*
-+	 * It could be possible that people have vcpus of old model run on
-+	 * physcal cpus of newer model, for example a BDW guest on a SKX
-+	 * machine (but not possible to be the other way around).
-+	 * The BDW guest may not get accurate results on a SKX machine as it
-+	 * only reads 16 entries of the lbr stack while there are 32 entries
-+	 * of recordings. We currently forbid the lbr enabling when the vcpu
-+	 * and physical cpu see different lbr stack entries or the guest lbr
-+	 * msr indices are not compatible with the host.
-+	 */
-+	switch (vcpu_model) {
-+	case INTEL_FAM6_CORE2_MEROM:
-+	case INTEL_FAM6_CORE2_MEROM_L:
-+	case INTEL_FAM6_CORE2_PENRYN:
-+	case INTEL_FAM6_CORE2_DUNNINGTON:
-+		/* intel_pmu_lbr_init_core() */
-+		vcpu_lbr_nr = 4;
-+		vcpu_lbr_from = MSR_LBR_CORE_FROM;
-+		break;
-+	case INTEL_FAM6_NEHALEM:
-+	case INTEL_FAM6_NEHALEM_EP:
-+	case INTEL_FAM6_NEHALEM_EX:
-+		/* intel_pmu_lbr_init_nhm() */
-+		vcpu_lbr_nr = 16;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_ATOM_BONNELL:
-+	case INTEL_FAM6_ATOM_BONNELL_MID:
-+	case INTEL_FAM6_ATOM_SALTWELL:
-+	case INTEL_FAM6_ATOM_SALTWELL_MID:
-+	case INTEL_FAM6_ATOM_SALTWELL_TABLET:
-+		/* intel_pmu_lbr_init_atom() */
-+		vcpu_lbr_nr = 8;
-+		vcpu_lbr_from = MSR_LBR_CORE_FROM;
-+		break;
-+	case INTEL_FAM6_ATOM_SILVERMONT:
-+	case INTEL_FAM6_ATOM_SILVERMONT_X:
-+	case INTEL_FAM6_ATOM_SILVERMONT_MID:
-+	case INTEL_FAM6_ATOM_AIRMONT:
-+	case INTEL_FAM6_ATOM_AIRMONT_MID:
-+		/* intel_pmu_lbr_init_slm() */
-+		vcpu_lbr_nr = 8;
-+		vcpu_lbr_from = MSR_LBR_CORE_FROM;
-+		break;
-+	case INTEL_FAM6_ATOM_GOLDMONT:
-+	case INTEL_FAM6_ATOM_GOLDMONT_X:
-+		/* intel_pmu_lbr_init_skl(); */
-+		vcpu_lbr_nr = 32;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
-+		/* intel_pmu_lbr_init_skl()*/
-+		vcpu_lbr_nr = 32;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_WESTMERE:
-+	case INTEL_FAM6_WESTMERE_EP:
-+	case INTEL_FAM6_WESTMERE_EX:
-+		/* intel_pmu_lbr_init_nhm() */
-+		vcpu_lbr_nr = 16;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_SANDYBRIDGE:
-+	case INTEL_FAM6_SANDYBRIDGE_X:
-+		/* intel_pmu_lbr_init_snb() */
-+		vcpu_lbr_nr = 16;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_IVYBRIDGE:
-+	case INTEL_FAM6_IVYBRIDGE_X:
-+		/* intel_pmu_lbr_init_snb() */
-+		vcpu_lbr_nr = 16;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_HASWELL_CORE:
-+	case INTEL_FAM6_HASWELL_X:
-+	case INTEL_FAM6_HASWELL_ULT:
-+	case INTEL_FAM6_HASWELL_GT3E:
-+		/* intel_pmu_lbr_init_hsw() */
-+		vcpu_lbr_nr = 16;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_BROADWELL_CORE:
-+	case INTEL_FAM6_BROADWELL_XEON_D:
-+	case INTEL_FAM6_BROADWELL_GT3E:
-+	case INTEL_FAM6_BROADWELL_X:
-+		/* intel_pmu_lbr_init_hsw() */
-+		vcpu_lbr_nr = 16;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_XEON_PHI_KNL:
-+	case INTEL_FAM6_XEON_PHI_KNM:
-+		/* intel_pmu_lbr_init_knl() */
-+		vcpu_lbr_nr = 8;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	case INTEL_FAM6_SKYLAKE_MOBILE:
-+	case INTEL_FAM6_SKYLAKE_DESKTOP:
-+	case INTEL_FAM6_SKYLAKE_X:
-+	case INTEL_FAM6_KABYLAKE_MOBILE:
-+	case INTEL_FAM6_KABYLAKE_DESKTOP:
-+		/* intel_pmu_lbr_init_skl() */
-+		vcpu_lbr_nr = 32;
-+		vcpu_lbr_from = MSR_LBR_NHM_FROM;
-+		break;
-+	default:
-+		vcpu_lbr_nr = 0;
-+		vcpu_lbr_from = 0;
-+		pr_warn("%s: vcpu model not supported %d\n", __func__,
-+			vcpu_model);
-+	}
-+
-+	if (vcpu_lbr_nr != kvm->arch.lbr_stack.nr ||
-+	    vcpu_lbr_from != kvm->arch.lbr_stack.from) {
-+		pr_warn("%s: vcpu model %x incompatible to pcpu %x\n",
-+			__func__, vcpu_model, boot_cpu_data.x86_model);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
- {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-@@ -361,6 +496,7 @@ struct kvm_pmu_ops intel_pmu_ops = {
- 	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
- 	.is_valid_msr_idx = intel_is_valid_msr_idx,
- 	.is_valid_msr = intel_is_valid_msr,
-+	.lbr_enable = intel_pmu_lbr_enable,
- 	.get_msr = intel_pmu_get_msr,
- 	.set_msr = intel_pmu_set_msr,
- 	.refresh = intel_pmu_refresh,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b35a118..5ba4e3b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4625,8 +4625,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		break;
- 	case KVM_CAP_X86_GUEST_LBR:
- 		r = -EINVAL;
--		if (cap->args[0] &&
--		    x86_perf_get_lbr_stack(&kvm->arch.lbr_stack))
-+		if (cap->args[0] && !kvm_pmu_lbr_enable(kvm->vcpus[0]))
- 			break;
- 
- 		if (copy_to_user((void __user *)cap->args[1],
--- 
-2.7.4
 
