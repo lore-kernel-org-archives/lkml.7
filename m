@@ -2,99 +2,104 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60ECC606B3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777DBC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6B92064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XEJR8GzP"
+	by mail.kernel.org (Postfix) with ESMTP id 44B872064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbfGHNCA (ORCPT
+        id S1731190AbfGHNCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:02:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45467 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbfGHNB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:01:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45j5FJ17pWz9sPS;
-        Mon,  8 Jul 2019 23:01:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562590916;
-        bh=fDdW9Uz06uv2LB2MnViQhqTxBldx8MhBuwEGu6tQKXM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XEJR8GzP8Nm2T1VRFZ1zd8Y/kD6TiwRaC9QcpquP0mNw1gbZxv3yy1jJ61HCG6UPW
-         aEC8Tm4yN/jfOXPRvtDsjgHDK6oLW+F3U4kY/J1yJNTjVJh6hUr2DQ+zNkbqS4GO0x
-         HZsFPPbc5lV6RVr9hoNAAntl2FqK0knjxFxoe9h+LyTxXIfxvPZwi1Kw5loxam8Qc1
-         5QehsIqeBHFaNRLEKMEKdnKGslyo69CIXM4v4AUmzHStel2M0pZf3j+3P+JWxSqaHK
-         cOSgaElEF6ALldO2X79AT1MIjIYWTEEbg+mwgSnr5jdkfx35oIO6Fy4fJ2lLHDNnyF
-         eUnacoxUlKPpA==
-Date:   Mon, 8 Jul 2019 23:01:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: linux-next: Fixes tag needs some work in the mmc tree
-Message-ID: <20190708230154.0a7bda9c@canb.auug.org.au>
+        Mon, 8 Jul 2019 09:02:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50744 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727601AbfGHNCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:02:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5D13BAFC4;
+        Mon,  8 Jul 2019 13:02:00 +0000 (UTC)
+Date:   Mon, 8 Jul 2019 15:01:59 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mans Rullgard <mans@mansr.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] kernel.h: Update comment about
+ simple_strto<foo>() functions
+Message-ID: <20190708130159.whefdhz4d65exdns@pathway.suse.cz>
+References: <20190704115532.15679-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/+yYUygsZOBBze3RBnQ3lPqr"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190704115532.15679-1-andriy.shevchenko@linux.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+yYUygsZOBBze3RBnQ3lPqr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu 2019-07-04 14:55:31, Andy Shevchenko wrote:
+> There were discussions in the past about use cases for
+> simple_strto<foo>() functions and, in some rare cases,
+> they have a benefit over kstrto<foo>() ones.
+> 
+> Update a comment to reduce confusion about special use cases.
+> 
+> Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> - update comment based on Geert's input
+>  include/linux/kernel.h | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 0c9bc231107f..63663c44933d 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -332,8 +332,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+>   * @res: Where to write the result of the conversion on success.
+>   *
+>   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+> - * Used as a replacement for the obsolete simple_strtoull. Return code must
+> - * be checked.
+> + * Used as a replacement for the simple_strtoull. Return code must be checked.
+>  */
+>  static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+>  {
+> @@ -361,8 +360,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
+>   * @res: Where to write the result of the conversion on success.
+>   *
+>   * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
+> - * Used as a replacement for the obsolete simple_strtoull. Return code must
+> - * be checked.
+> + * Used as a replacement for the simple_strtoull. Return code must be checked.
+>   */
+>  static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+>  {
+> @@ -438,7 +436,16 @@ static inline int __must_check kstrtos32_from_user(const char __user *s, size_t
+>  	return kstrtoint_from_user(s, count, base, res);
+>  }
+>  
+> -/* Obsolete, do not use.  Use kstrto<foo> instead */
+> +/*
+> + * Use kstrto<foo> instead.
+> + *
+> + * NOTE: The simple_strto<foo> does not check for overflow and,
+> + *	 depending on the input, may give interesting results.
 
-Hi all,
+I am a bit confused whether the interesting results are caused
+by the buffer overflow or if there is another reason.
 
-In commit
+If it is because of the overflow, I would remove the 2nd line. I guess
+that anyone knows what a buffer overflow might cause.
 
-  adca963337c7 ("mmc: sdhci_am654: Add dependency on MMC_SDHCI_AM654")
+Otherwise the patch looks fine to me.
 
-Fixes tag
-
-  Fixes: aff88ff23512 ("mmc: sdhci_am654: Add Initial Support for AM654 SDH=
-CI driver")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Did you mean
-
-Fixes: 41fd4caeb00b ("mmc: sdhci_am654: Add Initial Support for AM654 SDHCI=
- driver")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+yYUygsZOBBze3RBnQ3lPqr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0jPsIACgkQAVBC80lX
-0GyXdAf/dAMfqT7kIHMq7LgopHzpQfmjY/SfBJ1BdLa1/K/67Z27uZEWgXvYhRw2
-cB+i9x9fmqpE1cuctQwxWxE0ojMzBkpOgzzOq2T9gU/4fzMCFTLECe19BsSe9NfD
-ImF1ToPE5sSrfqZu0NsIXeGibjDr9aFDKJ4Y54F3hbsA2EiD1Ov8rV1rO5+Q5vXz
-Yys9o3JfNC1jW6+WQrNXwjp7sPzeLVu1vqN/JmS4LGS/zSZ3B6QkQHRYZVosNBYA
-+Tb/re6/inD2pfIqZKdj2WBH080vlRFdQ9pTBcqMzXAyx9xg2Trv8Fh0esG5FGpk
-Oe7twMKN0ZGHQjkOxNAKJqhEw+e1tg==
-=mTDN
------END PGP SIGNATURE-----
-
---Sig_/+yYUygsZOBBze3RBnQ3lPqr--
+Best Regards,
+Petr
