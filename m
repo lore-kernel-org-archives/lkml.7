@@ -6,100 +6,114 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B568C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B602C5B578
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4A420844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E76A20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 06:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbfGHGVS (ORCPT
+        id S1729094AbfGHGVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 02:21:18 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:24398 "EHLO mxhk.zte.com.cn"
+        Mon, 8 Jul 2019 02:21:23 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:33566 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727218AbfGHGVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 02:21:17 -0400
+        id S1727218AbfGHGVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 02:21:21 -0400
 Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 1146F7C42D795FFB758E;
+        by Forcepoint Email with ESMTPS id 1553A895BBB8E99657FC;
         Mon,  8 Jul 2019 14:21:16 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x686KmPG049233;
-        Mon, 8 Jul 2019 14:20:48 +0800 (GMT-8)
+        by mse-fl2.zte.com.cn with ESMTP id x686Klnf049223;
+        Mon, 8 Jul 2019 14:20:47 +0800 (GMT-8)
         (envelope-from wen.yang99@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070814205197-2164427 ;
+          with ESMTP id 2019070814205103-2164426 ;
           Mon, 8 Jul 2019 14:20:51 +0800 
 From:   Wen Yang <wen.yang99@zte.com.cn>
 To:     linux-kernel@vger.kernel.org
 Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
         cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH] crypto: crypto4xx: fix a potential double free in ppc4xx_trng_probe
-Date:   Mon, 8 Jul 2019 14:19:03 +0800
-Message-Id: <1562566745-7447-2-git-send-email-wen.yang99@zte.com.cn>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
+Subject: [PATCH] cpufreq/pasemi: fix an use-after-free in pas_cpufreq_cpu_init()
+Date:   Mon, 8 Jul 2019 14:19:02 +0800
+Message-Id: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
-References: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-08 14:20:52,
+ 21, 2013) at 2019-07-08 14:20:51,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-08 14:20:49,
-        Serialize complete at 2019-07-08 14:20:49
-X-MAIL: mse-fl2.zte.com.cn x686KmPG049233
+ 2019-07-08 14:20:48,
+        Serialize complete at 2019-07-08 14:20:48
+X-MAIL: mse-fl2.zte.com.cn x686Klnf049223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a possible double free issue in ppc4xx_trng_probe():
+The cpu variable is still being used in the of_get_property() call
+after the of_node_put() call, which may result in use-after-free.
 
-85:	dev->trng_base = of_iomap(trng, 0);
-86:	of_node_put(trng);          ---> released here
-87:	if (!dev->trng_base)
-88:		goto err_out;
-...
-110:	ierr_out:
-111:		of_node_put(trng);  ---> double released here
-...
-
-This issue was detected by using the Coccinelle software.
-We fix it by removing the unnecessary of_node_put().
-
-Fixes: 5343e674f32 ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
+Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Armijn Hemel <armijn@tjaldur.nl>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: linux-crypto@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/crypto/amcc/crypto4xx_trng.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/cpufreq/pasemi-cpufreq.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
-index 02a6bed3..f10a87e 100644
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -108,7 +108,6 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
- 	return;
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index 6b1e4ab..d2dd47b 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -132,7 +132,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
  
- err_out:
--	of_node_put(trng);
- 	iounmap(dev->trng_base);
- 	kfree(rng);
- 	dev->trng_base = NULL;
+ 	cpu = of_get_cpu_node(policy->cpu, NULL);
+ 
+-	of_node_put(cpu);
+ 	if (!cpu)
+ 		goto out;
+ 
+@@ -141,15 +140,15 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 		dn = of_find_compatible_node(NULL, NULL,
+ 					     "pasemi,pwrficient-sdc");
+ 	if (!dn)
+-		goto out;
++		goto out_put_cpu_node;
+ 	err = of_address_to_resource(dn, 0, &res);
+ 	of_node_put(dn);
+ 	if (err)
+-		goto out;
++		goto out_put_cpu_node;
+ 	sdcasr_mapbase = ioremap(res.start + SDCASR_OFFSET, 0x2000);
+ 	if (!sdcasr_mapbase) {
+ 		err = -EINVAL;
+-		goto out;
++		goto out_put_cpu_node;
+ 	}
+ 
+ 	dn = of_find_compatible_node(NULL, NULL, "1682m-gizmo");
+@@ -177,6 +176,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 		err = -EINVAL;
+ 		goto out_unmap_sdcpwr;
+ 	}
++	of_node_put(cpu);
+ 
+ 	/* we need the freq in kHz */
+ 	max_freq = *max_freqp / 1000;
+@@ -203,6 +203,8 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 
+ out_unmap_sdcasr:
+ 	iounmap(sdcasr_mapbase);
++out_put_cpu_node:
++	of_node_put(cpu);
+ out:
+ 	return err;
+ }
 -- 
 2.9.5
 
