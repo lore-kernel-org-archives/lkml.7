@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14620C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5B9C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9EB21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D89204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599561;
-	bh=cYOXeoA13hecNXNXy0cMxkKIJAkMczHPDQI3mHpfdkM=;
+	s=default; t=1562599564;
+	bh=849QI4FgZ5IFRTyySZdZyjabtM3ze9NF08JsXOOQ4q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eupREa2pXDoYm++u06qzYUqnw5nsHtJfWo0bxs+V6RCjlbmOyZBapznTUpmNdoY6g
-	 EfxjCjpGfx0L/GaAI/mMlFOLAc7mOvfkyjQ6ovapCGdDQ6TAByDri8qVNdfuMICwlR
-	 iSNoJ7LbB9DaJjVWtDAEYPYZQjrziKEg/dNdll6c=
+	b=PUYvsmoly/121vviuFrLJQZeDoCzwGKge0LOrZQgsELeRmCsLQOkQVkW3ej6c1dMg
+	 R5+glmUkfspl7B5tE1c6w1jmYB7pFY5B8f9QfI0ENEmtTf7QypdRl5kZD9k8pSdKTN
+	 5JxVHLmu8E805ovXDhntkSaNHxoGwe0bV/vQKWY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388726AbfGHP0A (ORCPT
+        id S2388737AbfGHP0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:26:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53482 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:26:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388698AbfGHPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:55 -0400
+        id S2388722AbfGHP0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:26:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA21620665;
-        Mon,  8 Jul 2019 15:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F1EB20665;
+        Mon,  8 Jul 2019 15:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599554;
-        bh=cYOXeoA13hecNXNXy0cMxkKIJAkMczHPDQI3mHpfdkM=;
+        s=default; t=1562599559;
+        bh=849QI4FgZ5IFRTyySZdZyjabtM3ze9NF08JsXOOQ4q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kJskHaMpUF64dSkfcz5t9Upc8PC4u89N/40c6eIip5skyqHeV07r3vShilCTeL5ut
-         SQWoIF2a5qep3vkSC+xh/NMbMk/+n9l7txT3QOpJmGxQKtxmbIsQku6QML79i5VbXw
-         vzYiCrp5bNvhkEZf9+G4qo/jFnP4un12FV78NCBE=
+        b=M4IYFhlOc5zt7Y5h17qKmQ+NJQgQDy0E7ssqdePwgzVbBM3gK/JxNE46rfc/PsCGI
+         jrFKJp64hiOsxpE1fh4FdhOw8M09LtCVoN0Jw1wkDBRj/bsDjOpOo/WBZrraFA8vBw
+         8tSfSyNq8pFXYPD7jT2p4hLxAfFtjwZiX4nl7NnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        James Grant <jamesg@zaltys.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org,
+        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Matt Perricone <matt.perricone@microsemi.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/56] usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
-Date:   Mon,  8 Jul 2019 17:13:04 +0200
-Message-Id: <20190708150519.367952815@linuxfoundation.org>
+Subject: [PATCH 4.14 14/56] scsi: hpsa: correct ioaccel2 chaining
+Date:   Mon,  8 Jul 2019 17:13:06 +0200
+Message-Id: <20190708150519.519975443@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -62,37 +64,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fbc318afadd6e7ae2252d6158cf7d0c5a2132f7d ]
+[ Upstream commit 625d7d3518875c4d303c652a198feaa13d9f52d9 ]
 
-Gadget drivers may queue request in interrupt context. This would lead to
-a descriptor allocation in that context. In that case we would hit
-BUG_ON(in_interrupt()) in __get_vm_area_node.
+- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_LAST_SG for
+  the last s/g element.
 
-Also remove the unnecessary cast.
+- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_CHAIN when
+  chaining.
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Tested-by: James Grant <jamesg@zaltys.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Matt Perricone <matt.perricone@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/lpc32xx_udc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/hpsa.c     | 7 ++++++-
+ drivers/scsi/hpsa_cmd.h | 1 +
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-index 8f32b5ee7734..6df1aded4503 100644
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -935,8 +935,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(struct lpc32xx_udc *udc)
- 	dma_addr_t			dma;
- 	struct lpc32xx_usbd_dd_gad	*dd;
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 5b4b7f9be2d7..6d520e8945f7 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -4800,7 +4800,7 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
+ 			curr_sg->reserved[0] = 0;
+ 			curr_sg->reserved[1] = 0;
+ 			curr_sg->reserved[2] = 0;
+-			curr_sg->chain_indicator = 0x80;
++			curr_sg->chain_indicator = IOACCEL2_CHAIN;
  
--	dd = (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
--			udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
-+	dd = dma_pool_alloc(udc->dd_cache, GFP_ATOMIC | GFP_DMA, &dma);
- 	if (dd)
- 		dd->this_dma = dma;
+ 			curr_sg = h->ioaccel2_cmd_sg_list[c->cmdindex];
+ 		}
+@@ -4817,6 +4817,11 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
+ 			curr_sg++;
+ 		}
  
++		/*
++		 * Set the last s/g element bit
++		 */
++		(curr_sg - 1)->chain_indicator = IOACCEL2_LAST_SG;
++
+ 		switch (cmd->sc_data_direction) {
+ 		case DMA_TO_DEVICE:
+ 			cp->direction &= ~IOACCEL2_DIRECTION_MASK;
+diff --git a/drivers/scsi/hpsa_cmd.h b/drivers/scsi/hpsa_cmd.h
+index 078afe448115..ecf15344b55d 100644
+--- a/drivers/scsi/hpsa_cmd.h
++++ b/drivers/scsi/hpsa_cmd.h
+@@ -516,6 +516,7 @@ struct ioaccel2_sg_element {
+ 	u8 reserved[3];
+ 	u8 chain_indicator;
+ #define IOACCEL2_CHAIN 0x80
++#define IOACCEL2_LAST_SG 0x40
+ };
+ 
+ /*
 -- 
 2.20.1
 
