@@ -2,136 +2,128 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F186EC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8B3C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5DB20693
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7754E20693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="n0JiqngR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CfLjv4t9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391509AbfGHQJI (ORCPT
+        id S2391515AbfGHQKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:09:08 -0400
-Received: from mail-eopbgr130079.outbound.protection.outlook.com ([40.107.13.79]:23910
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729062AbfGHQJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:09:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Et7pwJyRWqYJ5CEjQoBXXF01Y0fuJFtFXwGpth3tND4=;
- b=n0JiqngRF/OmUAYT/JKcV0etP7CE2BmqObVVgApCErhcIhHh06kAkGv7PRbg/5DDUm7eNI3Sx6KZheHu84cDzWJHugNd7g2xZ1rFDpnV7BXS29o5EkRQH+0F3qPTz3dDzJYEvHyfCaxc18hCAwiZvebjIcqLRqxhO/we48qi0Wc=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6061.eurprd05.prod.outlook.com (20.178.204.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Mon, 8 Jul 2019 16:09:03 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
- 16:09:03 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the mlx5-next tree with the rdma tree
-Thread-Topic: linux-next: manual merge of the mlx5-next tree with the rdma
- tree
-Thread-Index: AQHVMhLbwhSrvM/Tf0CjT+DAZZSBmqbAFk+AgADUcAA=
-Date:   Mon, 8 Jul 2019 16:09:03 +0000
-Message-ID: <20190708160858.GI23966@mellanox.com>
-References: <20190704124738.1e88cb69@canb.auug.org.au>
- <20190708132837.5ccb36ed@canb.auug.org.au>
-In-Reply-To: <20190708132837.5ccb36ed@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQBPR0101CA0063.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:1::40) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8e4cd52c-0d9d-4218-a2bc-08d703be9865
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6061;
-x-ms-traffictypediagnostic: VI1PR05MB6061:
-x-microsoft-antispam-prvs: <VI1PR05MB606176D0A80635B04900A619CFF60@VI1PR05MB6061.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00922518D8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(53754006)(199004)(189003)(43544003)(4326008)(5660300002)(476003)(33656002)(102836004)(478600001)(99286004)(66066001)(25786009)(68736007)(6436002)(229853002)(6486002)(6116002)(186003)(6512007)(52116002)(54906003)(3846002)(446003)(66446008)(64756008)(66556008)(66476007)(11346002)(26005)(305945005)(73956011)(66946007)(6506007)(7736002)(76176011)(6916009)(386003)(86362001)(36756003)(316002)(8936002)(256004)(486006)(14454004)(71190400001)(71200400001)(1076003)(81156014)(53936002)(81166006)(2906002)(2616005)(6246003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6061;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PVlAFGBhyHpAejxwVOw6dZwotDxViEgt09wRmIOpfzZi60yAy+Ud9Van2nW25qYPyalMrbbgDYPLU/fpOKcjRocDJsKTPmXNP/aX7jam5hORPGIVGg3dsZAzTA3LEhmT2O8D4DgiTp+uSCrPO8hjAdp/CooOa2aNpYvSC4yhLbJa6fEMOcluTGELhc1fLzJUIY2TlWC0ENkHUb6ESjuAjpd47Nk0TsOKUNQUyj5GzNvdoC0gF83VFRARL8me08WCKyZ3VzgZKQ1VRUi8n7xO2oJLNWbZgvctiJMvbwTZBGqBFUTLHcqoxE1nxdyUE6cLTLwoa/UVpcaK7TDOM61JUsTewohgE/zD1cnWzM0aX8uIQUA0U07m3nzkSuV3f29jN1COMJraAraIkb+fnZgNFp8h18cLSVq7Y7r7WROXF8E=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F041F5A654C82B408AAFE3221C2B5B14@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Jul 2019 12:10:31 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34342 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729062AbfGHQKa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:10:30 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so8528296plt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fDCoSY5K0ITJqQYvscwo5UxJiyuZc3RyIH7jJSLU88U=;
+        b=CfLjv4t9r4Kg2mSofS2nlQZMto3UY4mstJJjBcy91IFpxTd6+xOv3VwdVLcgFVUdVW
+         j5PVsTuIkjKvjex7sWx70GltkB3B71Am79TnP0MeO+ihAkpGOpOQDafpfMi9i7wnEUUH
+         3OHP5VEf+64cy0LL8hikc/pn1wZ/KR2jge1woKA5a6tL1EGf27T4yOG48LdVyh8xewdi
+         4/+ddMjgJKskc5Ivy46J/G5z+QyT2ZWcf3TxK2wuJqimj0xykazxXmlcv65ZFjE1aIJl
+         TYa/I2day1zmNig/jiZU9ScLfIp2yEcPl0pav2+YEs06oGpQ0n42my45uw5pfHQBvory
+         TtXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fDCoSY5K0ITJqQYvscwo5UxJiyuZc3RyIH7jJSLU88U=;
+        b=I7khg/GI/UATsDsH6/K6O76bSW4qAVrIJNO67SrPyEdCT5XGPkiNAiow8vYojAxnXJ
+         qO5BArPFqyYrcgBGtwG3GB2yfufcOgExSieF+QULikAACC/F9y5Yzz5/pK84KCx9NQTE
+         641W/AcZtbt15e24FTP3lxvDde5HrtqgK6jltAOKKt2zOoV6NdjZrh9kgigWVi0KwGCI
+         Oq1C4smCAa8fWEuV1saOkSp7DAET4KQMpmivrKmTuWTZ0m/8A3tUIdeRYMVJI/vnvYbN
+         90DDMjRkuWthkbuYGcWdUAGlw4ZHLrqViJZ+59BV7d75FnDkrRXfeL1n14a2XZjR5dSo
+         TW9A==
+X-Gm-Message-State: APjAAAXgfOkIS/kVlICRhuF9A60yndEXS2jHiaM1svoCLsolsjdqnpXC
+        nGUb6Awh/lAvc7dO3iUoigm/1g==
+X-Google-Smtp-Source: APXvYqzD1aivQBDf69llf3avbBHNfxtRkZ9eXNatyrc78REwbz16rreOTstsv5QqjSoYFjtGpjbuhQ==
+X-Received: by 2002:a17:902:4623:: with SMTP id o32mr25633974pld.112.1562602229878;
+        Mon, 08 Jul 2019 09:10:29 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j20sm5476488pfr.113.2019.07.08.09.10.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jul 2019 09:10:29 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 09:10:26 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/msm/mdp5: Find correct node for creating gem
+ address space
+Message-ID: <20190708161026.GB27383@builder>
+References: <20190708151224.22555-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e4cd52c-0d9d-4218-a2bc-08d703be9865
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 16:09:03.3900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6061
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708151224.22555-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 01:28:37PM +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> On Thu, 4 Jul 2019 12:47:38 +1000 Stephen Rothwell <sfr@canb.auug.org.au>=
- wrote:
-> >
-> > Hi all,
-> >=20
-> > Today's linux-next merge of the mlx5-next tree got a conflict in:
-> >=20
-> >   drivers/infiniband/hw/mlx5/cq.c
-> >=20
-> > between commit:
-> >=20
-> >   e39afe3d6dbd ("RDMA: Convert CQ allocations to be under core responsi=
-bility")
-> >=20
-> > from the rdma tree and commit:
-> >=20
-> >   38164b771947 ("net/mlx5: mlx5_core_create_cq() enhancements")
-> >=20
-> > from the mlx5-next tree.
-> >=20
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tre=
-e
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularl=
-y
-> > complex conflicts.
-> >=20
->=20
-> This is now a conflict between the net-next tree and the rdma tree.
+On Mon 08 Jul 08:12 PDT 2019, Jeffrey Hugo wrote:
 
-You'll see the mlx5-next merge with rdma tomorrow that will take care
-of this
+> Creating the msm gem address space requires a reference to the dev where
+> the iommu is located.  The driver currently assumes this is the same as
+> the platform device, which breaks when the iommu is outside of the
+> platform device (ie in the parent).  Default to using the platform device,
+> but check to see if that has an iommu reference, and if not, use the parent
+> device instead.  This should handle all the various iommu designs for
+> mdp5 supported systems.
+> 
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-Thanks,
-Jason
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> ---
+> 
+> v2: It turns out there isn't a universal way to get the iommu device, so 
+> check to see if its in the current node or parent
+> 
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> index 4a60f5fca6b0..02dc7d426cb0 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> @@ -663,6 +663,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+>  	struct msm_kms *kms;
+>  	struct msm_gem_address_space *aspace;
+>  	int irq, i, ret;
+> +	struct device *iommu_dev;
+>  
+>  	/* priv->kms would have been populated by the MDP5 driver */
+>  	kms = priv->kms;
+> @@ -702,7 +703,11 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+>  	mdelay(16);
+>  
+>  	if (config->platform.iommu) {
+> -		aspace = msm_gem_address_space_create(&pdev->dev,
+> +		iommu_dev = &pdev->dev;
+> +		if (!iommu_dev->iommu_fwspec)
+> +			iommu_dev = iommu_dev->parent;
+> +
+> +		aspace = msm_gem_address_space_create(iommu_dev,
+>  				config->platform.iommu, "mdp5");
+>  		if (IS_ERR(aspace)) {
+>  			ret = PTR_ERR(aspace);
+> -- 
+> 2.17.1
+> 
