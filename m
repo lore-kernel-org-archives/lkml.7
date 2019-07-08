@@ -2,53 +2,54 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C3BC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4A9C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA6321738
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25302166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599538;
-	bh=iBOC9dvPBYWGAoKwG89YY6adm4gY1wvKQMBrGA/bDF8=;
+	s=default; t=1562599543;
+	bh=RQlXnzawyAM0Ymk4SmrNvx0u3Rgqb3w5rE3zGbGCebo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UHWYyWsBHSwRA4qjegd9uHWvrSnvcjFPTyzHgPwLax7xMKg8nRceC9QK7srwMMTUn
-	 W8SNd6np50tv3FWF+2MByfezSzPxhkoFffRb1+vF72R/i0hBBQ+YNW7YL0LCF3mhOv
-	 MZGh2PekRiLpsofw/TxHA3CbMjIV4W3hcTJmCp9Q=
+	b=mtWnmQ9uLuE15jXvpCzbia838svZTM4vs3HE3axdR83ZsINBex8dPbHoaZ7pwKSGH
+	 tF1WTdKfzpQSd5Cb49MgI3NXkhoQxKKmY1/jiqXNRz7FgPNhG0UqwoU72lOEddUtUH
+	 xRUtBAi4pa9SjZSjFS+Sgm5ZeIJOW6nyyecQ9Nss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbfGHPZg (ORCPT
+        id S2388657AbfGHPZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52996 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388611AbfGHPZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:32 -0400
+        id S2388633AbfGHPZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 004F9204EC;
-        Mon,  8 Jul 2019 15:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1FC921537;
+        Mon,  8 Jul 2019 15:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599531;
-        bh=iBOC9dvPBYWGAoKwG89YY6adm4gY1wvKQMBrGA/bDF8=;
+        s=default; t=1562599537;
+        bh=RQlXnzawyAM0Ymk4SmrNvx0u3Rgqb3w5rE3zGbGCebo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYQ23Sy8S0sgNwN5kzMS4+TD6EPFOqcJBBMymAOaKhWyn23oGVn+GvdabGwJeSPnm
-         eVJnddvlpwiPPICSbUc2ptbPzMjWlbkHiEJFpgO7/dHNe2fJ1GZaea05TxK/uaFKR2
-         Fhue66E0ZIUc77V321NkLJt9Vpn3wmD0wugUZI0U=
+        b=vykdINJlQahSquoOspvoQHvwveJbibTxcYyXp2EUQAmSkpeTmuoiyXz3nzuONDpvY
+         JmkNzjPu2rcvoLuOC5TsTywJu2MxIl1rVfmtfaUVjpSlrivrzTk5cgOktVNdyvLOu9
+         uCrw0lOQ9oqUqe9oFL3VIPechcKGjynPxpi9gSUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcus Cooper <codekipper@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/56] ASoC: sun4i-i2s: Add offset to RX channel select
-Date:   Mon,  8 Jul 2019 17:13:02 +0200
-Message-Id: <20190708150518.948056826@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Balbir Singh <sblbir@amzn.com>
+Subject: [PATCH 4.14 47/56] vhost: scsi: add weight support
+Date:   Mon,  8 Jul 2019 17:13:39 +0200
+Message-Id: <20190708150523.895837718@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
 References: <20190708150514.376317156@linuxfoundation.org>
@@ -61,39 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f9927000cb35f250051f0f1878db12ee2626eea1 ]
+From: Jason Wang <jasowang@redhat.com>
 
-Whilst testing the capture functionality of the i2s on the newer
-SoCs it was noticed that the recording was somewhat distorted.
-This was due to the offset not being set correctly on the receiver
-side.
+commit c1ea02f15ab5efb3e93fc3144d895410bf79fcf2 upstream.
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch will check the weight and exit the loop if we exceeds the
+weight. This is useful for preventing scsi kthread from hogging cpu
+which is guest triggerable.
+
+This addresses CVE-2019-3900.
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Fixes: 057cbf49a1f0 ("tcm_vhost: Initial merge for vhost level target fabric driver")
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Balbir Singh <sblbir@amzn.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/sunxi/sun4i-i2s.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/vhost/scsi.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index a10913f8293f..da0a2083e12a 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -442,6 +442,10 @@ static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
- 				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
- 				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
-+
-+		regmap_update_bits(i2s->regmap, SUN8I_I2S_RX_CHAN_SEL_REG,
-+				   SUN8I_I2S_TX_CHAN_OFFSET_MASK,
-+				   SUN8I_I2S_TX_CHAN_OFFSET(offset));
- 	}
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -846,7 +846,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
+ 	u64 tag;
+ 	u32 exp_data_len, data_direction;
+ 	unsigned int out = 0, in = 0;
+-	int head, ret, prot_bytes;
++	int head, ret, prot_bytes, c = 0;
+ 	size_t req_size, rsp_size = sizeof(struct virtio_scsi_cmd_resp);
+ 	size_t out_size, in_size;
+ 	u16 lun;
+@@ -865,7 +865,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
  
- 	regmap_field_write(i2s->field_fmt_mode, val);
--- 
-2.20.1
-
+ 	vhost_disable_notify(&vs->dev, vq);
+ 
+-	for (;;) {
++	do {
+ 		head = vhost_get_vq_desc(vq, vq->iov,
+ 					 ARRAY_SIZE(vq->iov), &out, &in,
+ 					 NULL, NULL);
+@@ -1080,7 +1080,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *
+ 		 */
+ 		INIT_WORK(&cmd->work, vhost_scsi_submission_work);
+ 		queue_work(vhost_scsi_workqueue, &cmd->work);
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++c, 0)));
+ out:
+ 	mutex_unlock(&vq->mutex);
+ }
 
 
