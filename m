@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28171C606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1BFC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01153216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7739F216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600800;
-	bh=YLcbfUXBUozGKSMWDKztSglmTCsQ+7TKQNM5VEuVoY0=;
+	s=default; t=1562600806;
+	bh=M3ZuKp0XDdst9JplQL3gyct4VtflnifobcVwFZFGdug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q4k6voK5ZLn/xNnq6xi3cGNOA0E9CKk/zD+Skfy/9rfupY1fW42jYdXPeI4fhR62l
-	 2xjSJvcSTaI0o46RWp51n6rJfuFwo9P5p6UH3zrBgJRFalMwZDDD+3z/ecYb/8swf7
-	 byFO5uuEhZpT9TxxJSfDDcA2Ldv7+xU8xMx8kthw=
+	b=ohQODHv6NxsPJmbb4xtxJbInpAMzGF9NrxDlwHnF6767wc/Jwa/AQRL7UgFcYIPzc
+	 j8datPoXkOKvLLiIGpHawuL6/kGPFglWC/5Y9MUPYErS6cb0F20IHk56I8SBR+6D/l
+	 6DOW/wrISX3n8bV/CEpEwrnit+EYiiLepCtz+bFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391313AbfGHPqi (ORCPT
+        id S2391345AbfGHPqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:46:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46206 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387662AbfGHPUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:20:54 -0400
+        id S1730899AbfGHPUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:20:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31EEF216E3;
-        Mon,  8 Jul 2019 15:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39FBD216C4;
+        Mon,  8 Jul 2019 15:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599253;
-        bh=YLcbfUXBUozGKSMWDKztSglmTCsQ+7TKQNM5VEuVoY0=;
+        s=default; t=1562599247;
+        bh=M3ZuKp0XDdst9JplQL3gyct4VtflnifobcVwFZFGdug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J1oY5/3r+jZ/INsEHEXhu/G34/buqLxbqcSWIBm/RWm2xVoaSgCAJLBgD+SxEDzc2
-         j8PT3LDmHaOXIuU0P816Ohyd1HVy/Lx+GDkhAA4Xeppj7jxLx/O5U57qKrumA6x3x5
-         JciSK7Dkg7nzPt0AOFm6n/f0hGr+lNXtwD6vRxzA=
+        b=Q/M7+Cph+QBT+BoM6X802weX+v1U1/itqaS47xnce4ylFQnnCobWWq49SiaEZVZs4
+         1rv/nX1nltGU+LLdVrQga+XTJindWAX6E+AFtfQ54X2atyHL/JKk3a0hYTlvi5Xvh7
+         3b9GP8QneC/73QrlyM2b4gRYZefejK/XrHbGFTeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
+        stable@vger.kernel.org,
+        Roland Hii <roland.king.guan.hii@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 055/102] tipc: change to use register_pernet_device
-Date:   Mon,  8 Jul 2019 17:12:48 +0200
-Message-Id: <20190708150529.302275727@linuxfoundation.org>
+Subject: [PATCH 4.9 053/102] net: stmmac: fixed new system time seconds value calculation
+Date:   Mon,  8 Jul 2019 17:12:46 +0200
+Message-Id: <20190708150529.189410547@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -61,100 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Roland Hii <roland.king.guan.hii@intel.com>
 
-[ Upstream commit c492d4c74dd3f87559883ffa0f94a8f1ae3fe5f5 ]
+[ Upstream commit a1e5388b4d5fc78688e5e9ee6641f779721d6291 ]
 
-This patch is to fix a dst defcnt leak, which can be reproduced by doing:
+When ADDSUB bit is set, the system time seconds field is calculated as
+the complement of the seconds part of the update value.
 
-  # ip net a c; ip net a s; modprobe tipc
-  # ip net e s ip l a n eth1 type veth peer n eth1 netns c
-  # ip net e c ip l s lo up; ip net e c ip l s eth1 up
-  # ip net e s ip l s lo up; ip net e s ip l s eth1 up
-  # ip net e c ip a a 1.1.1.2/8 dev eth1
-  # ip net e s ip a a 1.1.1.1/8 dev eth1
-  # ip net e c tipc b e m udp n u1 localip 1.1.1.2
-  # ip net e s tipc b e m udp n u1 localip 1.1.1.1
-  # ip net d c; ip net d s; rmmod tipc
+For example, if 3.000000001 seconds need to be subtracted from the
+system time, this field is calculated as
+2^32 - 3 = 4294967296 - 3 = 0x100000000 - 3 = 0xFFFFFFFD
 
-and it will get stuck and keep logging the error:
+Previously, the 0x100000000 is mistakenly written as 100000000.
 
-  unregister_netdevice: waiting for lo to become free. Usage count = 1
+This is further simplified from
+  sec = (0x100000000ULL - sec);
+to
+  sec = -sec;
 
-The cause is that a dst is held by the udp sock's sk_rx_dst set on udp rx
-path with udp_early_demux == 1, and this dst (eventually holding lo dev)
-can't be released as bearer's removal in tipc pernet .exit happens after
-lo dev's removal, default_device pernet .exit.
-
- "There are two distinct types of pernet_operations recognized: subsys and
-  device.  At creation all subsys init functions are called before device
-  init functions, and at destruction all device exit functions are called
-  before subsys exit function."
-
-So by calling register_pernet_device instead to register tipc_net_ops, the
-pernet .exit() will be invoked earlier than loopback dev's removal when a
-netns is being destroyed, as fou/gue does.
-
-Note that vxlan and geneve udp tunnels don't have this issue, as the udp
-sock is released in their device ndo_stop().
-
-This fix is also necessary for tipc dst_cache, which will hold dsts on tx
-path and I will introduce in my next patch.
-
-Reported-by: Li Shuang <shuali@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Fixes: ba1ffd74df74 ("stmmac: fix PTP support for GMAC4")
+Signed-off-by: Roland Hii <roland.king.guan.hii@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/core.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/tipc/core.c
-+++ b/net/tipc/core.c
-@@ -128,7 +128,7 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_sysctl;
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -125,7 +125,7 @@ static int stmmac_adjust_systime(void __
+ 		 * programmed with (2^32 – <new_sec_value>)
+ 		 */
+ 		if (gmac4)
+-			sec = (100000000ULL - sec);
++			sec = -sec;
  
--	err = register_pernet_subsys(&tipc_net_ops);
-+	err = register_pernet_device(&tipc_net_ops);
- 	if (err)
- 		goto out_pernet;
- 
-@@ -136,7 +136,7 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_socket;
- 
--	err = register_pernet_subsys(&tipc_topsrv_net_ops);
-+	err = register_pernet_device(&tipc_topsrv_net_ops);
- 	if (err)
- 		goto out_pernet_topsrv;
- 
-@@ -147,11 +147,11 @@ static int __init tipc_init(void)
- 	pr_info("Started in single node mode\n");
- 	return 0;
- out_bearer:
--	unregister_pernet_subsys(&tipc_topsrv_net_ops);
-+	unregister_pernet_device(&tipc_topsrv_net_ops);
- out_pernet_topsrv:
- 	tipc_socket_stop();
- out_socket:
--	unregister_pernet_subsys(&tipc_net_ops);
-+	unregister_pernet_device(&tipc_net_ops);
- out_pernet:
- 	tipc_unregister_sysctl();
- out_sysctl:
-@@ -166,9 +166,9 @@ out_netlink:
- static void __exit tipc_exit(void)
- {
- 	tipc_bearer_cleanup();
--	unregister_pernet_subsys(&tipc_topsrv_net_ops);
-+	unregister_pernet_device(&tipc_topsrv_net_ops);
- 	tipc_socket_stop();
--	unregister_pernet_subsys(&tipc_net_ops);
-+	unregister_pernet_device(&tipc_net_ops);
- 	tipc_netlink_stop();
- 	tipc_netlink_compat_stop();
- 	tipc_unregister_sysctl();
+ 		value = readl(ioaddr + PTP_TCR);
+ 		if (value & PTP_TCR_TSCTRLSSR)
 
 
