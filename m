@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E44C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14826C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFC721738
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BC42171F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562598919;
-	bh=6IS7yag5Kq91JMu5mditVnadffV0jOGNuCoFUBSN9Cs=;
+	s=default; t=1562598925;
+	bh=VdeoSkUQVyzlg01CMf1lQWjgV+CndOIEMUt54TeKw7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qo7aDcvraPVxlyGj49x6et+AvTcI/2L8aw8fapx3IkmCEhdodoeJvMfup6jC62srd
-	 CUZGTtSrlkqHui6CbP0JV7vQ0ugfIMlUqSn7qNAUT0S3CcW9ak6ZdraPGlzFjZeSMZ
-	 7YREMx4lZg0g0ukms3bR9p+rQmqDvvAdo6Myb9Gg=
+	b=0ghOyPgJjyAgbMLLTVgbHU+0WaSYCx1qQ/fNfp0k9msTxzT9gnYGdVhv83LDq44eX
+	 AlkiC0725yR0t4COYKRgR17mgRknVgn7L4UcJMLZgRkkN6CoCYdjU1evgXEcyA1EVJ
+	 LxzZdbfB4V8DHBfQj6R9/YxchMGQDojkjkqwQA0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732306AbfGHPPS (ORCPT
+        id S1732329AbfGHPPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732293AbfGHPPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:15:15 -0400
+        id S1732314AbfGHPPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:15:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FD2B21707;
-        Mon,  8 Jul 2019 15:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AF23216F4;
+        Mon,  8 Jul 2019 15:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562598914;
-        bh=6IS7yag5Kq91JMu5mditVnadffV0jOGNuCoFUBSN9Cs=;
+        s=default; t=1562598920;
+        bh=VdeoSkUQVyzlg01CMf1lQWjgV+CndOIEMUt54TeKw7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzVWp3WhPvBDP1qfQGRVaHbie4C8CcH5xA634vPcnpBmwBEPX+h+3CwjeebapN+4Z
-         V4tgp45RWhOzXczJWnPm1o1XA1RG106BFdvRuRBFSUuRpXGocAAZngWRqcE9wJllhX
-         wATkYThPs/x/lZSm9A4DhBwRwjT5cyjGchugDOqk=
+        b=QvwPqQndhbTGecFpqP6MBg4ATuk5HFpXTEMQfCFGt2NBltMkI61alGEKRBBrIsSQq
+         FlnsKKnm1l7ob7JQYDsOZ19DDPVauVh1YjcaLb252ScevBpB6smpb7Eg8mTPhbj/vf
+         SpvE9NW0hoXu/yAJuX9hDy8Bd8HZG4tTYmsZ0QWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 16/73] scsi: ufs: Check that space was properly alloced in copy_query_response
-Date:   Mon,  8 Jul 2019 17:12:26 +0200
-Message-Id: <20190708150520.208278905@linuxfoundation.org>
+Subject: [PATCH 4.4 18/73] hwmon: (pmbus/core) Treat parameters as paged if on multiple pages
+Date:   Mon,  8 Jul 2019 17:12:28 +0200
+Message-Id: <20190708150520.579047707@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -62,39 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1c90836f70f9a8ef7b7ad9e1fdd8961903e6ced6 ]
+[ Upstream commit 4a60570dce658e3f8885bbcf852430b99f65aca5 ]
 
-struct ufs_dev_cmd is the main container that supports device management
-commands. In the case of a read descriptor request, we assume that the
-proper space was allocated in dev_cmd to hold the returning descriptor.
+Some chips have attributes which exist on more than one page but the
+attribute is not presently marked as paged. This causes the attributes
+to be generated with the same label, which makes it impossible for
+userspace to tell them apart.
 
-This is no longer true, as there are flows that doesn't use dev_cmd for
-device management requests, and was wrong in the first place.
+Marking all such attributes as paged would result in the page suffix
+being added regardless of whether they were present on more than one
+page or not, which might break existing setups. Therefore, we add a
+second check which treats the attribute as paged, even if not marked as
+such, if it is present on multiple pages.
 
-Fixes: d44a5f98bb49 (ufs: query descriptor API)
-Signed-off-by: Avri Altman <avri.altman@wdc.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Acked-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: b4ce237b7f7d ("hwmon: (pmbus) Introduce infrastructure to detect sensors and limit registers")
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwmon/pmbus/pmbus_core.c | 34 ++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 7322a17660d1..b140e81c4f7d 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -853,7 +853,8 @@ int ufshcd_copy_query_response(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 	memcpy(&query_res->upiu_res, &lrbp->ucd_rsp_ptr->qr, QUERY_OSF_SIZE);
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index c00bad02761a..0d75bc7b5065 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -1028,14 +1028,15 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
+ 				      const struct pmbus_driver_info *info,
+ 				      const char *name,
+ 				      int index, int page,
+-				      const struct pmbus_sensor_attr *attr)
++				      const struct pmbus_sensor_attr *attr,
++				      bool paged)
+ {
+ 	struct pmbus_sensor *base;
+ 	int ret;
  
- 	/* Get the descriptor */
--	if (lrbp->ucd_rsp_ptr->qr.opcode == UPIU_QUERY_OPCODE_READ_DESC) {
-+	if (hba->dev_cmd.query.descriptor &&
-+	    lrbp->ucd_rsp_ptr->qr.opcode == UPIU_QUERY_OPCODE_READ_DESC) {
- 		u8 *descp = (u8 *)lrbp->ucd_rsp_ptr +
- 				GENERAL_UPIU_REQUEST_SIZE;
- 		u16 resp_len;
+ 	if (attr->label) {
+ 		ret = pmbus_add_label(data, name, index, attr->label,
+-				      attr->paged ? page + 1 : 0);
++				      paged ? page + 1 : 0);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -1067,6 +1068,30 @@ static int pmbus_add_sensor_attrs_one(struct i2c_client *client,
+ 	return 0;
+ }
+ 
++static bool pmbus_sensor_is_paged(const struct pmbus_driver_info *info,
++				  const struct pmbus_sensor_attr *attr)
++{
++	int p;
++
++	if (attr->paged)
++		return true;
++
++	/*
++	 * Some attributes may be present on more than one page despite
++	 * not being marked with the paged attribute. If that is the case,
++	 * then treat the sensor as being paged and add the page suffix to the
++	 * attribute name.
++	 * We don't just add the paged attribute to all such attributes, in
++	 * order to maintain the un-suffixed labels in the case where the
++	 * attribute is only on page 0.
++	 */
++	for (p = 1; p < info->pages; p++) {
++		if (info->func[p] & attr->func)
++			return true;
++	}
++	return false;
++}
++
+ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+ 				  struct pmbus_data *data,
+ 				  const char *name,
+@@ -1080,14 +1105,15 @@ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+ 	index = 1;
+ 	for (i = 0; i < nattrs; i++) {
+ 		int page, pages;
++		bool paged = pmbus_sensor_is_paged(info, attrs);
+ 
+-		pages = attrs->paged ? info->pages : 1;
++		pages = paged ? info->pages : 1;
+ 		for (page = 0; page < pages; page++) {
+ 			if (!(info->func[page] & attrs->func))
+ 				continue;
+ 			ret = pmbus_add_sensor_attrs_one(client, data, info,
+ 							 name, index, page,
+-							 attrs);
++							 attrs, paged);
+ 			if (ret)
+ 				return ret;
+ 			index++;
 -- 
 2.20.1
 
