@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C0CC606A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703FFC606A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB992064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21AFF20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 09:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbfGHJWw (ORCPT
+        id S1729882AbfGHJWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 05:22:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38844 "EHLO
+        Mon, 8 Jul 2019 05:22:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38865 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbfGHJWq (ORCPT
+        with ESMTP id S1729808AbfGHJWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 05:22:46 -0400
+        Mon, 8 Jul 2019 05:22:48 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hkPr4-0004pG-Fw; Mon, 08 Jul 2019 11:22:38 +0200
+        id 1hkPr8-0004po-0y; Mon, 08 Jul 2019 11:22:42 +0200
 Date:   Mon, 08 Jul 2019 09:05:37 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86/apic for 5.3-rc1
+Subject: [GIT pull] x86/timers for 5.3-rc1
 References: <156257673794.14831.1593297636367057887.tglx@nanos.tec.linutronix.de>
-Message-ID: <156257673796.14831.16250211652466679867.tglx@nanos.tec.linutronix.de>
+Message-ID: <156257673796.14831.2745414267646810295.tglx@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -38,1087 +38,1519 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest x86-apic-for-linus git tree from:
+please pull the latest x86-timers-for-linus git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-apic-for-linus
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-timers-for-linus
 
-up to:  f8a8fe61fec8: x86/irq: Seperate unused system vectors from spurious entry again
+up to:  e44252f4fe79: x86/hpet: Use channel for legacy clockevent storage
 
-Updates for the x86 APIC interrupt handling and APIC timer:
+A rather large series consolidating the HPET code, which was triggered by
+the attempt to bolt HPET NMI watchdog support on to the existing maze with
+the usual duct tape and super glue approach.
 
-  - Fix a long standing issue with spurious interrupts which was caused by
-    the big vector management rework a few years ago. Robert Hodaszi
-    provided finally enough debug data and an excellent initial failure
-    analysis which allowed to understand the underlying issues.
-
-    This contains a change to the core interrupt management code which is
-    required to handle this correctly for the APIC/IO_APIC. The core
-    changes are NOOPs for most architectures except ARM64. ARM64 is not
-    impacted by the change as confirmed by Marc Zyngier.
-
-  - Newer systems allow to disable the PIT clock for power saving causing
-    panic in the timer interrupt delivery check of the IO/APIC when the
-    HPET timer is not enabled either. While the clock could be turned
-    on this would cause an endless whack a mole game to chase the proper
-    register in each affected chipset.
-
-    These systems provide the relevant frequencies for TSC, CPU and the
-    local APIC timer via CPUID and/or MSRs, which allows to avoid the
-    PIT/HPET based calibration.  As the calibration code is the only usage
-    of the legacy timers on modern systems and is skipped anyway when the
-    frequencies are known already, there is no point in setting up the PIT
-    and actually checking for the interrupt delivery via IO/APIC.
-
-    To achieve this on a wide variety of platforms, the CPUID/MSR based
-    frequency readout has been made more robust, which also allowed to
-    remove quite some workarounds which turned out to be not longer
-    required. Thanks to Daniel Drake for analysis, patches and verification.
+This mainly removes two separate partially redundant storage layers and
+consolidates them into a single one which provides a consistent view of the
+different HPET channels and their usage and allows to integrate HPET NMI
+watchdog support (if it turns out to be feasible) in a non intrusive way.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Daniel Drake (3):
-      x86/tsc: Use CPUID.0x16 to calculate missing crystal frequency
-      x86/apic: Rename 'lapic_timer_frequency' to 'lapic_timer_period'
-      x86/tsc: Set LAPIC timer period to crystal clock frequency
+Ingo Molnar (5):
+      x86/hpet: Remove not required includes
+      x86/hpet: Make naming consistent
+      x86/hpet: Clean up comments
+      x86/hpet: Coding style cleanup
+      x86/hpet: Rename variables to prepare for switching to channels
 
-Nadav Amit (1):
-      x86/apic: Use non-atomic operations when possible
+Thomas Gleixner (24):
+      x86/hpet: Simplify CPU online code
+      x86/hpet: Replace printk(KERN...) with pr_...()
+      x86/hpet: Restructure init code
+      x86/hpet: Remove pointless x86-64 specific #include
+      x86/hpet: Remove unused parameter from hpet_next_event()
+      x86/hpet: Remove the unused hpet_msi_read() function
+      x86/hpet: Mark init functions __init
+      x86/hpet: Sanitize stub functions
+      x86/hpet: Move static and global variables to one place
+      x86/hpet: Shuffle code around for readability sake
+      x86/hpet: Separate counter check out of clocksource register code
+      x86/hpet: Simplify counter validation
+      x86/hpet: Decapitalize and rename EVT_TO_HPET_DEV
+      x86/hpet: Introduce struct hpet_base and struct hpet_channel
+      x86/hpet: Use cached channel data
+      x86/hpet: Add mode information to struct hpet_channel
+      x86/hpet: Add function to select a /dev/hpet channel
+      x86/hpet: Move clockevents into channels
+      x86/hpet: Use cached info instead of extra flags
+      x86/hpet: Wrap legacy clockevent in hpet_channel
+      x86/hpet: Consolidate clockevent functions
+      x86/hpet: Carve out shareable parts of init_one_hpet_msi_clockevent()
+      x86/hpet: Use common init for legacy clockevent
+      x86/hpet: Use channel for legacy clockevent storage
 
-Thomas Gleixner (8):
-      x86/apic: Make apic_bsp_setup() static
-      x86/timer: Skip PIT initialization on modern chipsets
-      genirq: Delay deactivation in free_irq()
-      genirq: Fix misleading synchronize_irq() documentation
-      genirq: Add optional hardware synchronization for shutdown
-      x86/ioapic: Implement irq_get_irqchip_state() callback
-      x86/irq: Handle spurious interrupt after shutdown gracefully
-      x86/irq: Seperate unused system vectors from spurious entry again
 
+ arch/x86/include/asm/hpet.h |   7 +-
+ arch/x86/kernel/apic/msi.c  |   4 +-
+ arch/x86/kernel/hpet.c      | 935 ++++++++++++++++++++------------------------
+ 3 files changed, 427 insertions(+), 519 deletions(-)
 
- arch/x86/entry/entry_32.S             | 24 ++++++++++
- arch/x86/entry/entry_64.S             | 30 ++++++++++--
- arch/x86/include/asm/apic.h           |  5 +-
- arch/x86/include/asm/hw_irq.h         |  5 +-
- arch/x86/include/asm/time.h           |  1 +
- arch/x86/kernel/apic/apic.c           | 87 +++++++++++++++++++++++----------
- arch/x86/kernel/apic/apic_flat_64.c   |  4 +-
- arch/x86/kernel/apic/io_apic.c        | 50 +++++++++++++++++++
- arch/x86/kernel/apic/vector.c         |  4 +-
- arch/x86/kernel/apic/x2apic_cluster.c |  2 +-
- arch/x86/kernel/cpu/mshyperv.c        |  4 +-
- arch/x86/kernel/cpu/vmware.c          |  2 +-
- arch/x86/kernel/i8253.c               | 25 +++++++++-
- arch/x86/kernel/idt.c                 |  3 +-
- arch/x86/kernel/irq.c                 |  2 +-
- arch/x86/kernel/jailhouse.c           |  2 +-
- arch/x86/kernel/smp.c                 |  2 +-
- arch/x86/kernel/time.c                |  7 ++-
- arch/x86/kernel/tsc.c                 | 57 ++++++++++++++--------
- arch/x86/kernel/tsc_msr.c             |  4 +-
- kernel/irq/autoprobe.c                |  6 +--
- kernel/irq/chip.c                     |  6 +++
- kernel/irq/cpuhotplug.c               |  2 +-
- kernel/irq/internals.h                |  5 ++
- kernel/irq/manage.c                   | 90 +++++++++++++++++++++++++++--------
- 25 files changed, 335 insertions(+), 94 deletions(-)
-
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 7b23431be5cb..44c6e6f54bf7 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1104,6 +1104,30 @@ ENTRY(irq_entries_start)
-     .endr
- END(irq_entries_start)
+diff --git a/arch/x86/include/asm/hpet.h b/arch/x86/include/asm/hpet.h
+index 67385d56d4f4..6352dee37cda 100644
+--- a/arch/x86/include/asm/hpet.h
++++ b/arch/x86/include/asm/hpet.h
+@@ -75,16 +75,15 @@ extern unsigned int hpet_readl(unsigned int a);
+ extern void force_hpet_resume(void);
  
-+#ifdef CONFIG_X86_LOCAL_APIC
-+	.align 8
-+ENTRY(spurious_entries_start)
-+    vector=FIRST_SYSTEM_VECTOR
-+    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
-+	pushl	$(~vector+0x80)			/* Note: always in signed byte range */
-+    vector=vector+1
-+	jmp	common_spurious
-+	.align	8
-+    .endr
-+END(spurious_entries_start)
-+
-+common_spurious:
-+	ASM_CLAC
-+	addl	$-0x80, (%esp)			/* Adjust vector into the [-256, -1] range */
-+	SAVE_ALL switch_stacks=1
-+	ENCODE_FRAME_POINTER
-+	TRACE_IRQS_OFF
-+	movl	%esp, %eax
-+	call	smp_spurious_interrupt
-+	jmp	ret_from_intr
-+ENDPROC(common_interrupt)
-+#endif
-+
- /*
-  * the CPU automatically disables interrupts when executing an IRQ vector,
-  * so IRQ-flags tracing has to follow that:
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 20e45d9b4e15..6d835991bb23 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -375,6 +375,18 @@ ENTRY(irq_entries_start)
-     .endr
- END(irq_entries_start)
+ struct irq_data;
+-struct hpet_dev;
++struct hpet_channel;
+ struct irq_domain;
  
-+	.align 8
-+ENTRY(spurious_entries_start)
-+    vector=FIRST_SYSTEM_VECTOR
-+    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
-+	UNWIND_HINT_IRET_REGS
-+	pushq	$(~vector+0x80)			/* Note: always in signed byte range */
-+	jmp	common_spurious
-+	.align	8
-+	vector=vector+1
-+    .endr
-+END(spurious_entries_start)
-+
- .macro DEBUG_ENTRY_ASSERT_IRQS_OFF
- #ifdef CONFIG_DEBUG_ENTRY
- 	pushq %rax
-@@ -571,10 +583,20 @@ _ASM_NOKPROBE(interrupt_entry)
+ extern void hpet_msi_unmask(struct irq_data *data);
+ extern void hpet_msi_mask(struct irq_data *data);
+-extern void hpet_msi_write(struct hpet_dev *hdev, struct msi_msg *msg);
+-extern void hpet_msi_read(struct hpet_dev *hdev, struct msi_msg *msg);
++extern void hpet_msi_write(struct hpet_channel *hc, struct msi_msg *msg);
+ extern struct irq_domain *hpet_create_irq_domain(int hpet_id);
+ extern int hpet_assign_irq(struct irq_domain *domain,
+-			   struct hpet_dev *dev, int dev_num);
++			   struct hpet_channel *hc, int dev_num);
  
- /* Interrupt entry/exit. */
+ #ifdef CONFIG_HPET_EMULATE_RTC
  
--	/*
--	 * The interrupt stubs push (~vector+0x80) onto the stack and
--	 * then jump to common_interrupt.
--	 */
-+/*
-+ * The interrupt stubs push (~vector+0x80) onto the stack and
-+ * then jump to common_spurious/interrupt.
-+ */
-+common_spurious:
-+	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
-+	call	interrupt_entry
-+	UNWIND_HINT_REGS indirect=1
-+	call	smp_spurious_interrupt		/* rdi points to pt_regs */
-+	jmp	ret_from_intr
-+END(common_spurious)
-+_ASM_NOKPROBE(common_spurious)
-+
-+/* common_interrupt is a hotpath. Align it */
- 	.p2align CONFIG_X86_L1_CACHE_SHIFT
- common_interrupt:
- 	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 130e81e10fc7..693a0ad56019 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -52,7 +52,7 @@ extern unsigned int apic_verbosity;
- extern int local_apic_timer_c2_ok;
- 
- extern int disable_apic;
--extern unsigned int lapic_timer_frequency;
-+extern unsigned int lapic_timer_period;
- 
- extern enum apic_intr_mode_id apic_intr_mode;
- enum apic_intr_mode_id {
-@@ -154,7 +154,6 @@ static inline int apic_force_enable(unsigned long addr)
- extern int apic_force_enable(unsigned long addr);
- #endif
- 
--extern void apic_bsp_setup(bool upmode);
- extern void apic_ap_setup(void);
- 
- /*
-@@ -174,6 +173,7 @@ extern void lapic_assign_system_vectors(void);
- extern void lapic_assign_legacy_vector(unsigned int isairq, bool replace);
- extern void lapic_online(void);
- extern void lapic_offline(void);
-+extern bool apic_needs_pit(void);
- 
- #else /* !CONFIG_X86_LOCAL_APIC */
- static inline void lapic_shutdown(void) { }
-@@ -187,6 +187,7 @@ static inline void init_bsp_APIC(void) { }
- static inline void apic_intr_mode_init(void) { }
- static inline void lapic_assign_system_vectors(void) { }
- static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
-+static inline bool apic_needs_pit(void) { return true; }
- #endif /* !CONFIG_X86_LOCAL_APIC */
- 
- #ifdef CONFIG_X86_X2APIC
-diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
-index 32e666e1231e..cbd97e22d2f3 100644
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -150,8 +150,11 @@ extern char irq_entries_start[];
- #define trace_irq_entries_start irq_entries_start
- #endif
- 
-+extern char spurious_entries_start[];
-+
- #define VECTOR_UNUSED		NULL
--#define VECTOR_RETRIGGERED	((void *)~0UL)
-+#define VECTOR_SHUTDOWN		((void *)~0UL)
-+#define VECTOR_RETRIGGERED	((void *)~1UL)
- 
- typedef struct irq_desc* vector_irq_t[NR_VECTORS];
- DECLARE_PER_CPU(vector_irq_t, vector_irq);
-diff --git a/arch/x86/include/asm/time.h b/arch/x86/include/asm/time.h
-index cef818b16045..8ac563abb567 100644
---- a/arch/x86/include/asm/time.h
-+++ b/arch/x86/include/asm/time.h
-@@ -7,6 +7,7 @@
- 
- extern void hpet_time_init(void);
- extern void time_init(void);
-+extern bool pit_timer_init(void);
- 
- extern struct clock_event_device *global_clock_event;
- 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index ab6af775f06c..a5241b209ea5 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -194,7 +194,7 @@ static struct resource lapic_resource = {
- 	.flags = IORESOURCE_MEM | IORESOURCE_BUSY,
- };
- 
--unsigned int lapic_timer_frequency = 0;
-+unsigned int lapic_timer_period = 0;
- 
- static void apic_pm_activate(void);
- 
-@@ -500,7 +500,7 @@ lapic_timer_set_periodic_oneshot(struct clock_event_device *evt, bool oneshot)
- 	if (evt->features & CLOCK_EVT_FEAT_DUMMY)
- 		return 0;
- 
--	__setup_APIC_LVTT(lapic_timer_frequency, oneshot, 1);
-+	__setup_APIC_LVTT(lapic_timer_period, oneshot, 1);
- 	return 0;
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index dad0dd759de2..7f7533462474 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -370,14 +370,14 @@ struct irq_domain *hpet_create_irq_domain(int hpet_id)
+ 	return d;
  }
  
-@@ -804,11 +804,11 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
- 
- static int __init lapic_init_clockevent(void)
+-int hpet_assign_irq(struct irq_domain *domain, struct hpet_dev *dev,
++int hpet_assign_irq(struct irq_domain *domain, struct hpet_channel *hc,
+ 		    int dev_num)
  {
--	if (!lapic_timer_frequency)
-+	if (!lapic_timer_period)
- 		return -1;
+ 	struct irq_alloc_info info;
  
- 	/* Calculate the scaled math multiplication factor */
--	lapic_clockevent.mult = div_sc(lapic_timer_frequency/APIC_DIVISOR,
-+	lapic_clockevent.mult = div_sc(lapic_timer_period/APIC_DIVISOR,
- 					TICK_NSEC, lapic_clockevent.shift);
- 	lapic_clockevent.max_delta_ns =
- 		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
-@@ -820,6 +820,33 @@ static int __init lapic_init_clockevent(void)
- 	return 0;
- }
+ 	init_irq_alloc_info(&info, NULL);
+ 	info.type = X86_IRQ_ALLOC_TYPE_HPET;
+-	info.hpet_data = dev;
++	info.hpet_data = hc;
+ 	info.hpet_id = hpet_dev_id(domain);
+ 	info.hpet_index = dev_num;
  
-+bool __init apic_needs_pit(void)
-+{
-+	/*
-+	 * If the frequencies are not known, PIT is required for both TSC
-+	 * and apic timer calibration.
-+	 */
-+	if (!tsc_khz || !cpu_khz)
-+		return true;
-+
-+	/* Is there an APIC at all? */
-+	if (!boot_cpu_has(X86_FEATURE_APIC))
-+		return true;
-+
-+	/* Deadline timer is based on TSC so no further PIT action required */
-+	if (boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return false;
-+
-+	/* APIC timer disabled? */
-+	if (disable_apic_timer)
-+		return true;
-+	/*
-+	 * The APIC timer frequency is known already, no PIT calibration
-+	 * required. If unknown, let the PIT be initialized.
-+	 */
-+	return lapic_timer_period == 0;
-+}
-+
- static int __init calibrate_APIC_clock(void)
- {
- 	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
-@@ -838,7 +865,7 @@ static int __init calibrate_APIC_clock(void)
- 	 */
- 	if (!lapic_init_clockevent()) {
- 		apic_printk(APIC_VERBOSE, "lapic timer already calibrated %d\n",
--			    lapic_timer_frequency);
-+			    lapic_timer_period);
- 		/*
- 		 * Direct calibration methods must have an always running
- 		 * local APIC timer, no need for broadcast timer.
-@@ -883,13 +910,13 @@ static int __init calibrate_APIC_clock(void)
- 	pm_referenced = !calibrate_by_pmtimer(lapic_cal_pm2 - lapic_cal_pm1,
- 					&delta, &deltatsc);
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index a0573f2e7763..c43e96a938d0 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -1,32 +1,44 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-#include <linux/clocksource.h>
+ #include <linux/clockchips.h>
+ #include <linux/interrupt.h>
+-#include <linux/irq.h>
+ #include <linux/export.h>
+ #include <linux/delay.h>
+-#include <linux/errno.h>
+-#include <linux/i8253.h>
+-#include <linux/slab.h>
+ #include <linux/hpet.h>
+-#include <linux/init.h>
+ #include <linux/cpu.h>
+-#include <linux/pm.h>
+-#include <linux/io.h>
++#include <linux/irq.h>
  
--	lapic_timer_frequency = (delta * APIC_DIVISOR) / LAPIC_CAL_LOOPS;
-+	lapic_timer_period = (delta * APIC_DIVISOR) / LAPIC_CAL_LOOPS;
- 	lapic_init_clockevent();
- 
- 	apic_printk(APIC_VERBOSE, "..... delta %ld\n", delta);
- 	apic_printk(APIC_VERBOSE, "..... mult: %u\n", lapic_clockevent.mult);
- 	apic_printk(APIC_VERBOSE, "..... calibration result: %u\n",
--		    lapic_timer_frequency);
-+		    lapic_timer_period);
- 
- 	if (boot_cpu_has(X86_FEATURE_TSC)) {
- 		apic_printk(APIC_VERBOSE, "..... CPU clock speed is "
-@@ -900,13 +927,13 @@ static int __init calibrate_APIC_clock(void)
- 
- 	apic_printk(APIC_VERBOSE, "..... host bus clock speed is "
- 		    "%u.%04u MHz.\n",
--		    lapic_timer_frequency / (1000000 / HZ),
--		    lapic_timer_frequency % (1000000 / HZ));
-+		    lapic_timer_period / (1000000 / HZ),
-+		    lapic_timer_period % (1000000 / HZ));
- 
- 	/*
- 	 * Do a sanity check on the APIC calibration result
- 	 */
--	if (lapic_timer_frequency < (1000000 / HZ)) {
-+	if (lapic_timer_period < (1000000 / HZ)) {
- 		local_irq_enable();
- 		pr_warning("APIC frequency too slow, disabling apic timer\n");
- 		return -1;
-@@ -1350,6 +1377,8 @@ void __init init_bsp_APIC(void)
- 	apic_write(APIC_LVT1, value);
- }
- 
-+static void __init apic_bsp_setup(bool upmode);
-+
- /* Init the interrupt delivery mode for the BSP */
- void __init apic_intr_mode_init(void)
- {
-@@ -2039,21 +2068,32 @@ __visible void __irq_entry smp_spurious_interrupt(struct pt_regs *regs)
- 	entering_irq();
- 	trace_spurious_apic_entry(vector);
- 
-+	inc_irq_stat(irq_spurious_count);
-+
-+	/*
-+	 * If this is a spurious interrupt then do not acknowledge
-+	 */
-+	if (vector == SPURIOUS_APIC_VECTOR) {
-+		/* See SDM vol 3 */
-+		pr_info("Spurious APIC interrupt (vector 0xFF) on CPU#%d, should never happen.\n",
-+			smp_processor_id());
-+		goto out;
-+	}
-+
- 	/*
--	 * Check if this really is a spurious interrupt and ACK it
--	 * if it is a vectored one.  Just in case...
--	 * Spurious interrupts should not be ACKed.
-+	 * If it is a vectored one, verify it's set in the ISR. If set,
-+	 * acknowledge it.
- 	 */
- 	v = apic_read(APIC_ISR + ((vector & ~0x1f) >> 1));
--	if (v & (1 << (vector & 0x1f)))
-+	if (v & (1 << (vector & 0x1f))) {
-+		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Acked\n",
-+			vector, smp_processor_id());
- 		ack_APIC_irq();
--
--	inc_irq_stat(irq_spurious_count);
--
--	/* see sw-dev-man vol 3, chapter 7.4.13.5 */
--	pr_info("spurious APIC interrupt through vector %02x on CPU#%d, "
--		"should never happen.\n", vector, smp_processor_id());
--
-+	} else {
-+		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Not pending!\n",
-+			vector, smp_processor_id());
-+	}
-+out:
- 	trace_spurious_apic_exit(vector);
- 	exiting_irq();
- }
-@@ -2414,11 +2454,8 @@ static void __init apic_bsp_up_setup(void)
- /**
-  * apic_bsp_setup - Setup function for local apic and io-apic
-  * @upmode:		Force UP mode (for APIC_init_uniprocessor)
-- *
-- * Returns:
-- * apic_id of BSP APIC
-  */
--void __init apic_bsp_setup(bool upmode)
-+static void __init apic_bsp_setup(bool upmode)
- {
- 	connect_bsp_APIC();
- 	if (upmode)
-diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
-index 0005c284a5c5..65072858f553 100644
---- a/arch/x86/kernel/apic/apic_flat_64.c
-+++ b/arch/x86/kernel/apic/apic_flat_64.c
-@@ -78,7 +78,7 @@ flat_send_IPI_mask_allbutself(const struct cpumask *cpumask, int vector)
- 	int cpu = smp_processor_id();
- 
- 	if (cpu < BITS_PER_LONG)
--		clear_bit(cpu, &mask);
-+		__clear_bit(cpu, &mask);
- 
- 	_flat_send_IPI_mask(mask, vector);
- }
-@@ -92,7 +92,7 @@ static void flat_send_IPI_allbutself(int vector)
- 			unsigned long mask = cpumask_bits(cpu_online_mask)[0];
- 
- 			if (cpu < BITS_PER_LONG)
--				clear_bit(cpu, &mask);
-+				__clear_bit(cpu, &mask);
- 
- 			_flat_send_IPI_mask(mask, vector);
- 		}
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 53aa234a6803..c7bb6c69f21c 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -58,6 +58,7 @@
- #include <asm/acpi.h>
- #include <asm/dma.h>
- #include <asm/timer.h>
-+#include <asm/time.h>
- #include <asm/i8259.h>
- #include <asm/setup.h>
- #include <asm/irq_remapping.h>
-@@ -1893,6 +1894,50 @@ static int ioapic_set_affinity(struct irq_data *irq_data,
- 	return ret;
- }
- 
-+/*
-+ * Interrupt shutdown masks the ioapic pin, but the interrupt might already
-+ * be in flight, but not yet serviced by the target CPU. That means
-+ * __synchronize_hardirq() would return and claim that everything is calmed
-+ * down. So free_irq() would proceed and deactivate the interrupt and free
-+ * resources.
-+ *
-+ * Once the target CPU comes around to service it it will find a cleared
-+ * vector and complain. While the spurious interrupt is harmless, the full
-+ * release of resources might prevent the interrupt from being acknowledged
-+ * which keeps the hardware in a weird state.
-+ *
-+ * Verify that the corresponding Remote-IRR bits are clear.
-+ */
-+static int ioapic_irq_get_chip_state(struct irq_data *irqd,
-+				   enum irqchip_irq_state which,
-+				   bool *state)
-+{
-+	struct mp_chip_data *mcd = irqd->chip_data;
-+	struct IO_APIC_route_entry rentry;
-+	struct irq_pin_list *p;
-+
-+	if (which != IRQCHIP_STATE_ACTIVE)
-+		return -EINVAL;
-+
-+	*state = false;
-+	raw_spin_lock(&ioapic_lock);
-+	for_each_irq_pin(p, mcd->irq_2_pin) {
-+		rentry = __ioapic_read_entry(p->apic, p->pin);
-+		/*
-+		 * The remote IRR is only valid in level trigger mode. It's
-+		 * meaning is undefined for edge triggered interrupts and
-+		 * irrelevant because the IO-APIC treats them as fire and
-+		 * forget.
-+		 */
-+		if (rentry.irr && rentry.trigger) {
-+			*state = true;
-+			break;
-+		}
-+	}
-+	raw_spin_unlock(&ioapic_lock);
-+	return 0;
-+}
-+
- static struct irq_chip ioapic_chip __read_mostly = {
- 	.name			= "IO-APIC",
- 	.irq_startup		= startup_ioapic_irq,
-@@ -1902,6 +1947,7 @@ static struct irq_chip ioapic_chip __read_mostly = {
- 	.irq_eoi		= ioapic_ack_level,
- 	.irq_set_affinity	= ioapic_set_affinity,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
- 
-@@ -1914,6 +1960,7 @@ static struct irq_chip ioapic_ir_chip __read_mostly = {
- 	.irq_eoi		= ioapic_ir_ack_level,
- 	.irq_set_affinity	= ioapic_set_affinity,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
- 
-@@ -2083,6 +2130,9 @@ static inline void __init check_timer(void)
- 	unsigned long flags;
- 	int no_pin1 = 0;
- 
-+	if (!global_clock_event)
-+		return;
-+
- 	local_irq_save(flags);
- 
- 	/*
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index 3173e07d3791..1c6d1d5f28d3 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -343,7 +343,7 @@ static void clear_irq_vector(struct irq_data *irqd)
- 	trace_vector_clear(irqd->irq, vector, apicd->cpu, apicd->prev_vector,
- 			   apicd->prev_cpu);
- 
--	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_UNUSED;
-+	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_SHUTDOWN;
- 	irq_matrix_free(vector_matrix, apicd->cpu, vector, managed);
- 	apicd->vector = 0;
- 
-@@ -352,7 +352,7 @@ static void clear_irq_vector(struct irq_data *irqd)
- 	if (!vector)
- 		return;
- 
--	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_UNUSED;
-+	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_SHUTDOWN;
- 	irq_matrix_free(vector_matrix, apicd->prev_cpu, vector, managed);
- 	apicd->prev_vector = 0;
- 	apicd->move_in_progress = 0;
-diff --git a/arch/x86/kernel/apic/x2apic_cluster.c b/arch/x86/kernel/apic/x2apic_cluster.c
-index 7685444a106b..609e499387a1 100644
---- a/arch/x86/kernel/apic/x2apic_cluster.c
-+++ b/arch/x86/kernel/apic/x2apic_cluster.c
-@@ -50,7 +50,7 @@ __x2apic_send_IPI_mask(const struct cpumask *mask, int vector, int apic_dest)
- 	cpumask_copy(tmpmsk, mask);
- 	/* If IPI should not be sent to self, clear current CPU */
- 	if (apic_dest != APIC_DEST_ALLINC)
--		cpumask_clear_cpu(smp_processor_id(), tmpmsk);
-+		__cpumask_clear_cpu(smp_processor_id(), tmpmsk);
- 
- 	/* Collapse cpus in a cluster so a single IPI per cluster is sent */
- 	for_each_cpu(cpu, tmpmsk) {
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 3fa238a137d2..faae6115ddef 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -270,9 +270,9 @@ static void __init ms_hyperv_init_platform(void)
- 
- 		rdmsrl(HV_X64_MSR_APIC_FREQUENCY, hv_lapic_frequency);
- 		hv_lapic_frequency = div_u64(hv_lapic_frequency, HZ);
--		lapic_timer_frequency = hv_lapic_frequency;
-+		lapic_timer_period = hv_lapic_frequency;
- 		pr_info("Hyper-V: LAPIC Timer Frequency: %#x\n",
--			lapic_timer_frequency);
-+			lapic_timer_period);
- 	}
- 
- 	register_nmi_handler(NMI_UNKNOWN, hv_nmi_unknown, NMI_FLAG_FIRST,
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 0eda91f8eeac..3c648476d4fb 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -157,7 +157,7 @@ static void __init vmware_platform_setup(void)
- 
- #ifdef CONFIG_X86_LOCAL_APIC
- 		/* Skip lapic calibration since we know the bus frequency. */
--		lapic_timer_frequency = ecx / HZ;
-+		lapic_timer_period = ecx / HZ;
- 		pr_info("Host bus clock speed read from hypervisor : %u Hz\n",
- 			ecx);
- #endif
-diff --git a/arch/x86/kernel/i8253.c b/arch/x86/kernel/i8253.c
-index 0d307a657abb..2b7999a1a50a 100644
---- a/arch/x86/kernel/i8253.c
-+++ b/arch/x86/kernel/i8253.c
-@@ -8,6 +8,7 @@
- #include <linux/timex.h>
- #include <linux/i8253.h>
- 
-+#include <asm/apic.h>
+-#include <asm/cpufeature.h>
+-#include <asm/irqdomain.h>
+-#include <asm/fixmap.h>
  #include <asm/hpet.h>
  #include <asm/time.h>
- #include <asm/smp.h>
-@@ -18,10 +19,32 @@
-  */
- struct clock_event_device *global_clock_event;
  
--void __init setup_pit_timer(void)
-+/*
-+ * Modern chipsets can disable the PIT clock which makes it unusable. It
-+ * would be possible to enable the clock but the registers are chipset
-+ * specific and not discoverable. Avoid the whack a mole game.
-+ *
-+ * These platforms have discoverable TSC/CPU frequencies but this also
-+ * requires to know the local APIC timer frequency as it normally is
-+ * calibrated against the PIT interrupt.
-+ */
-+static bool __init use_pit(void)
-+{
-+	if (!IS_ENABLED(CONFIG_X86_TSC) || !boot_cpu_has(X86_FEATURE_TSC))
-+		return true;
-+
-+	/* This also returns true when APIC is disabled */
-+	return apic_needs_pit();
-+}
-+
-+bool __init pit_timer_init(void)
- {
-+	if (!use_pit())
-+		return false;
-+
- 	clockevent_i8253_init(true);
- 	global_clock_event = &i8253_clockevent;
-+	return true;
- }
+-#define HPET_MASK			CLOCKSOURCE_MASK(32)
++#undef  pr_fmt
++#define pr_fmt(fmt) "hpet: " fmt
  
- #ifndef CONFIG_X86_64
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 6d8917875f44..cc4444cb3898 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -320,7 +320,8 @@ void __init idt_setup_apic_and_irq_gates(void)
- #ifdef CONFIG_X86_LOCAL_APIC
- 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
- 		set_bit(i, system_vectors);
--		set_intr_gate(i, spurious_interrupt);
-+		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
-+		set_intr_gate(i, entry);
- 	}
+-#define HPET_DEV_USED_BIT		2
+-#define HPET_DEV_USED			(1 << HPET_DEV_USED_BIT)
+-#define HPET_DEV_VALID			0x8
+-#define HPET_DEV_FSB_CAP		0x1000
+-#define HPET_DEV_PERI_CAP		0x2000
++enum hpet_mode {
++	HPET_MODE_UNUSED,
++	HPET_MODE_LEGACY,
++	HPET_MODE_CLOCKEVT,
++	HPET_MODE_DEVICE,
++};
++
++struct hpet_channel {
++	struct clock_event_device	evt;
++	unsigned int			num;
++	unsigned int			cpu;
++	unsigned int			irq;
++	unsigned int			in_use;
++	enum hpet_mode			mode;
++	unsigned int			boot_cfg;
++	char				name[10];
++};
++
++struct hpet_base {
++	unsigned int			nr_channels;
++	unsigned int			nr_clockevents;
++	unsigned int			boot_cfg;
++	struct hpet_channel		*channels;
++};
++
++#define HPET_MASK			CLOCKSOURCE_MASK(32)
+ 
+ #define HPET_MIN_CYCLES			128
+ #define HPET_MIN_PROG_DELTA		(HPET_MIN_CYCLES + (HPET_MIN_CYCLES >> 1))
+@@ -39,22 +51,25 @@ u8					hpet_blockid; /* OS timer block num */
+ bool					hpet_msi_disable;
+ 
+ #ifdef CONFIG_PCI_MSI
+-static unsigned int			hpet_num_timers;
++static DEFINE_PER_CPU(struct hpet_channel *, cpu_hpet_channel);
++static struct irq_domain		*hpet_domain;
  #endif
- }
-diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-index 59b5f2ea7c2f..a975246074b5 100644
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -246,7 +246,7 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
- 	if (!handle_irq(desc, regs)) {
- 		ack_APIC_irq();
++
+ static void __iomem			*hpet_virt_address;
  
--		if (desc != VECTOR_RETRIGGERED) {
-+		if (desc != VECTOR_RETRIGGERED && desc != VECTOR_SHUTDOWN) {
- 			pr_emerg_ratelimited("%s: %d.%d No irq handler for vector\n",
- 					     __func__, smp_processor_id(),
- 					     vector);
-diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-index 1b2ee55a2dfb..ba95bc70460d 100644
---- a/arch/x86/kernel/jailhouse.c
-+++ b/arch/x86/kernel/jailhouse.c
-@@ -45,7 +45,7 @@ static void jailhouse_get_wallclock(struct timespec64 *now)
+-struct hpet_dev {
+-	struct clock_event_device	evt;
+-	unsigned int			num;
+-	int				cpu;
+-	unsigned int			irq;
+-	unsigned int			flags;
+-	char				name[10];
+-};
++static struct hpet_base			hpet_base;
++
++static bool				hpet_legacy_int_enabled;
++static unsigned long			hpet_freq;
  
- static void __init jailhouse_timer_init(void)
+-static inline struct hpet_dev *EVT_TO_HPET_DEV(struct clock_event_device *evtdev)
++bool					boot_hpet_disable;
++bool					hpet_force_user;
++static bool				hpet_verbose;
++
++static inline
++struct hpet_channel *clockevent_to_channel(struct clock_event_device *evt)
  {
--	lapic_timer_frequency = setup_data.apic_khz * (1000 / HZ);
-+	lapic_timer_period = setup_data.apic_khz * (1000 / HZ);
+-	return container_of(evtdev, struct hpet_dev, evt);
++	return container_of(evt, struct hpet_channel, evt);
  }
  
- static unsigned long jailhouse_get_tsc(void)
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index 04adc8d60aed..acddd988602d 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -146,7 +146,7 @@ void native_send_call_func_ipi(const struct cpumask *mask)
+ inline unsigned int hpet_readl(unsigned int a)
+@@ -67,10 +82,6 @@ static inline void hpet_writel(unsigned int d, unsigned int a)
+ 	writel(d, hpet_virt_address + a);
+ }
+ 
+-#ifdef CONFIG_X86_64
+-#include <asm/pgtable.h>
+-#endif
+-
+ static inline void hpet_set_mapping(void)
+ {
+ 	hpet_virt_address = ioremap_nocache(hpet_address, HPET_MMAP_SIZE);
+@@ -85,10 +96,6 @@ static inline void hpet_clear_mapping(void)
+ /*
+  * HPET command line enable / disable
+  */
+-bool boot_hpet_disable;
+-bool hpet_force_user;
+-static bool hpet_verbose;
+-
+ static int __init hpet_setup(char *str)
+ {
+ 	while (str) {
+@@ -120,13 +127,8 @@ static inline int is_hpet_capable(void)
+ 	return !boot_hpet_disable && hpet_address;
+ }
+ 
+-/*
+- * HPET timer interrupt enable / disable
+- */
+-static bool hpet_legacy_int_enabled;
+-
+ /**
+- * is_hpet_enabled - check whether the hpet timer interrupt is enabled
++ * is_hpet_enabled - Check whether the legacy HPET timer interrupt is enabled
+  */
+ int is_hpet_enabled(void)
+ {
+@@ -136,32 +138,36 @@ EXPORT_SYMBOL_GPL(is_hpet_enabled);
+ 
+ static void _hpet_print_config(const char *function, int line)
+ {
+-	u32 i, timers, l, h;
+-	printk(KERN_INFO "hpet: %s(%d):\n", function, line);
+-	l = hpet_readl(HPET_ID);
+-	h = hpet_readl(HPET_PERIOD);
+-	timers = ((l & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
+-	printk(KERN_INFO "hpet: ID: 0x%x, PERIOD: 0x%x\n", l, h);
+-	l = hpet_readl(HPET_CFG);
+-	h = hpet_readl(HPET_STATUS);
+-	printk(KERN_INFO "hpet: CFG: 0x%x, STATUS: 0x%x\n", l, h);
++	u32 i, id, period, cfg, status, channels, l, h;
++
++	pr_info("%s(%d):\n", function, line);
++
++	id = hpet_readl(HPET_ID);
++	period = hpet_readl(HPET_PERIOD);
++	pr_info("ID: 0x%x, PERIOD: 0x%x\n", id, period);
++
++	cfg = hpet_readl(HPET_CFG);
++	status = hpet_readl(HPET_STATUS);
++	pr_info("CFG: 0x%x, STATUS: 0x%x\n", cfg, status);
++
+ 	l = hpet_readl(HPET_COUNTER);
+ 	h = hpet_readl(HPET_COUNTER+4);
+-	printk(KERN_INFO "hpet: COUNTER_l: 0x%x, COUNTER_h: 0x%x\n", l, h);
++	pr_info("COUNTER_l: 0x%x, COUNTER_h: 0x%x\n", l, h);
++
++	channels = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
+ 
+-	for (i = 0; i < timers; i++) {
++	for (i = 0; i < channels; i++) {
+ 		l = hpet_readl(HPET_Tn_CFG(i));
+ 		h = hpet_readl(HPET_Tn_CFG(i)+4);
+-		printk(KERN_INFO "hpet: T%d: CFG_l: 0x%x, CFG_h: 0x%x\n",
+-		       i, l, h);
++		pr_info("T%d: CFG_l: 0x%x, CFG_h: 0x%x\n", i, l, h);
++
+ 		l = hpet_readl(HPET_Tn_CMP(i));
+ 		h = hpet_readl(HPET_Tn_CMP(i)+4);
+-		printk(KERN_INFO "hpet: T%d: CMP_l: 0x%x, CMP_h: 0x%x\n",
+-		       i, l, h);
++		pr_info("T%d: CMP_l: 0x%x, CMP_h: 0x%x\n", i, l, h);
++
+ 		l = hpet_readl(HPET_Tn_ROUTE(i));
+ 		h = hpet_readl(HPET_Tn_ROUTE(i)+4);
+-		printk(KERN_INFO "hpet: T%d ROUTE_l: 0x%x, ROUTE_h: 0x%x\n",
+-		       i, l, h);
++		pr_info("T%d ROUTE_l: 0x%x, ROUTE_h: 0x%x\n", i, l, h);
+ 	}
+ }
+ 
+@@ -172,31 +178,20 @@ do {								\
+ } while (0)
+ 
+ /*
+- * When the hpet driver (/dev/hpet) is enabled, we need to reserve
++ * When the HPET driver (/dev/hpet) is enabled, we need to reserve
+  * timer 0 and timer 1 in case of RTC emulation.
+  */
+ #ifdef CONFIG_HPET
+ 
+-static void hpet_reserve_msi_timers(struct hpet_data *hd);
+-
+-static void hpet_reserve_platform_timers(unsigned int id)
++static void __init hpet_reserve_platform_timers(void)
+ {
+-	struct hpet __iomem *hpet = hpet_virt_address;
+-	struct hpet_timer __iomem *timer = &hpet->hpet_timers[2];
+-	unsigned int nrtimers, i;
+ 	struct hpet_data hd;
+-
+-	nrtimers = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
++	unsigned int i;
+ 
+ 	memset(&hd, 0, sizeof(hd));
+ 	hd.hd_phys_address	= hpet_address;
+-	hd.hd_address		= hpet;
+-	hd.hd_nirqs		= nrtimers;
+-	hpet_reserve_timer(&hd, 0);
+-
+-#ifdef CONFIG_HPET_EMULATE_RTC
+-	hpet_reserve_timer(&hd, 1);
+-#endif
++	hd.hd_address		= hpet_virt_address;
++	hd.hd_nirqs		= hpet_base.nr_channels;
+ 
+ 	/*
+ 	 * NOTE that hd_irq[] reflects IOAPIC input pins (LEGACY_8254
+@@ -206,30 +201,52 @@ static void hpet_reserve_platform_timers(unsigned int id)
+ 	hd.hd_irq[0] = HPET_LEGACY_8254;
+ 	hd.hd_irq[1] = HPET_LEGACY_RTC;
+ 
+-	for (i = 2; i < nrtimers; timer++, i++) {
+-		hd.hd_irq[i] = (readl(&timer->hpet_config) &
+-			Tn_INT_ROUTE_CNF_MASK) >> Tn_INT_ROUTE_CNF_SHIFT;
+-	}
++	for (i = 0; i < hpet_base.nr_channels; i++) {
++		struct hpet_channel *hc = hpet_base.channels + i;
++
++		if (i >= 2)
++			hd.hd_irq[i] = hc->irq;
+ 
+-	hpet_reserve_msi_timers(&hd);
++		switch (hc->mode) {
++		case HPET_MODE_UNUSED:
++		case HPET_MODE_DEVICE:
++			hc->mode = HPET_MODE_DEVICE;
++			break;
++		case HPET_MODE_CLOCKEVT:
++		case HPET_MODE_LEGACY:
++			hpet_reserve_timer(&hd, hc->num);
++			break;
++		}
++	}
+ 
+ 	hpet_alloc(&hd);
++}
+ 
++static void __init hpet_select_device_channel(void)
++{
++	int i;
++
++	for (i = 0; i < hpet_base.nr_channels; i++) {
++		struct hpet_channel *hc = hpet_base.channels + i;
++
++		/* Associate the first unused channel to /dev/hpet */
++		if (hc->mode == HPET_MODE_UNUSED) {
++			hc->mode = HPET_MODE_DEVICE;
++			return;
++		}
++	}
+ }
++
+ #else
+-static void hpet_reserve_platform_timers(unsigned int id) { }
++static inline void hpet_reserve_platform_timers(void) { }
++static inline void hpet_select_device_channel(void) {}
+ #endif
+ 
+-/*
+- * Common hpet info
+- */
+-static unsigned long hpet_freq;
+-
+-static struct clock_event_device hpet_clockevent;
+-
++/* Common HPET functions */
+ static void hpet_stop_counter(void)
+ {
+ 	u32 cfg = hpet_readl(HPET_CFG);
++
+ 	cfg &= ~HPET_CFG_ENABLE;
+ 	hpet_writel(cfg, HPET_CFG);
+ }
+@@ -243,6 +260,7 @@ static void hpet_reset_counter(void)
+ static void hpet_start_counter(void)
+ {
+ 	unsigned int cfg = hpet_readl(HPET_CFG);
++
+ 	cfg |= HPET_CFG_ENABLE;
+ 	hpet_writel(cfg, HPET_CFG);
+ }
+@@ -274,24 +292,9 @@ static void hpet_enable_legacy_int(void)
+ 	hpet_legacy_int_enabled = true;
+ }
+ 
+-static void hpet_legacy_clockevent_register(void)
+-{
+-	/* Start HPET legacy interrupts */
+-	hpet_enable_legacy_int();
+-
+-	/*
+-	 * Start hpet with the boot cpu mask and make it
+-	 * global after the IO_APIC has been initialized.
+-	 */
+-	hpet_clockevent.cpumask = cpumask_of(boot_cpu_data.cpu_index);
+-	clockevents_config_and_register(&hpet_clockevent, hpet_freq,
+-					HPET_MIN_PROG_DELTA, 0x7FFFFFFF);
+-	global_clock_event = &hpet_clockevent;
+-	printk(KERN_DEBUG "hpet clockevent registered\n");
+-}
+-
+-static int hpet_set_periodic(struct clock_event_device *evt, int timer)
++static int hpet_clkevt_set_state_periodic(struct clock_event_device *evt)
+ {
++	unsigned int channel = clockevent_to_channel(evt)->num;
+ 	unsigned int cfg, cmp, now;
+ 	uint64_t delta;
+ 
+@@ -300,11 +303,11 @@ static int hpet_set_periodic(struct clock_event_device *evt, int timer)
+ 	delta >>= evt->shift;
+ 	now = hpet_readl(HPET_COUNTER);
+ 	cmp = now + (unsigned int)delta;
+-	cfg = hpet_readl(HPET_Tn_CFG(timer));
++	cfg = hpet_readl(HPET_Tn_CFG(channel));
+ 	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL |
+ 	       HPET_TN_32BIT;
+-	hpet_writel(cfg, HPET_Tn_CFG(timer));
+-	hpet_writel(cmp, HPET_Tn_CMP(timer));
++	hpet_writel(cfg, HPET_Tn_CFG(channel));
++	hpet_writel(cmp, HPET_Tn_CMP(channel));
+ 	udelay(1);
+ 	/*
+ 	 * HPET on AMD 81xx needs a second write (with HPET_TN_SETVAL
+@@ -313,52 +316,55 @@ static int hpet_set_periodic(struct clock_event_device *evt, int timer)
+ 	 * (See AMD-8111 HyperTransport I/O Hub Data Sheet,
+ 	 * Publication # 24674)
+ 	 */
+-	hpet_writel((unsigned int)delta, HPET_Tn_CMP(timer));
++	hpet_writel((unsigned int)delta, HPET_Tn_CMP(channel));
+ 	hpet_start_counter();
+ 	hpet_print_config();
+ 
+ 	return 0;
+ }
+ 
+-static int hpet_set_oneshot(struct clock_event_device *evt, int timer)
++static int hpet_clkevt_set_state_oneshot(struct clock_event_device *evt)
+ {
++	unsigned int channel = clockevent_to_channel(evt)->num;
+ 	unsigned int cfg;
+ 
+-	cfg = hpet_readl(HPET_Tn_CFG(timer));
++	cfg = hpet_readl(HPET_Tn_CFG(channel));
+ 	cfg &= ~HPET_TN_PERIODIC;
+ 	cfg |= HPET_TN_ENABLE | HPET_TN_32BIT;
+-	hpet_writel(cfg, HPET_Tn_CFG(timer));
++	hpet_writel(cfg, HPET_Tn_CFG(channel));
+ 
+ 	return 0;
+ }
+ 
+-static int hpet_shutdown(struct clock_event_device *evt, int timer)
++static int hpet_clkevt_set_state_shutdown(struct clock_event_device *evt)
+ {
++	unsigned int channel = clockevent_to_channel(evt)->num;
+ 	unsigned int cfg;
+ 
+-	cfg = hpet_readl(HPET_Tn_CFG(timer));
++	cfg = hpet_readl(HPET_Tn_CFG(channel));
+ 	cfg &= ~HPET_TN_ENABLE;
+-	hpet_writel(cfg, HPET_Tn_CFG(timer));
++	hpet_writel(cfg, HPET_Tn_CFG(channel));
+ 
+ 	return 0;
+ }
+ 
+-static int hpet_resume(struct clock_event_device *evt)
++static int hpet_clkevt_legacy_resume(struct clock_event_device *evt)
+ {
+ 	hpet_enable_legacy_int();
+ 	hpet_print_config();
+ 	return 0;
+ }
+ 
+-static int hpet_next_event(unsigned long delta,
+-			   struct clock_event_device *evt, int timer)
++static int
++hpet_clkevt_set_next_event(unsigned long delta, struct clock_event_device *evt)
+ {
++	unsigned int channel = clockevent_to_channel(evt)->num;
+ 	u32 cnt;
+ 	s32 res;
+ 
+ 	cnt = hpet_readl(HPET_COUNTER);
+ 	cnt += (u32) delta;
+-	hpet_writel(cnt, HPET_Tn_CMP(timer));
++	hpet_writel(cnt, HPET_Tn_CMP(channel));
+ 
+ 	/*
+ 	 * HPETs are a complete disaster. The compare register is
+@@ -387,360 +393,250 @@ static int hpet_next_event(unsigned long delta,
+ 	return res < HPET_MIN_CYCLES ? -ETIME : 0;
+ }
+ 
+-static int hpet_legacy_shutdown(struct clock_event_device *evt)
++static void hpet_init_clockevent(struct hpet_channel *hc, unsigned int rating)
+ {
+-	return hpet_shutdown(evt, 0);
+-}
++	struct clock_event_device *evt = &hc->evt;
+ 
+-static int hpet_legacy_set_oneshot(struct clock_event_device *evt)
+-{
+-	return hpet_set_oneshot(evt, 0);
+-}
++	evt->rating		= rating;
++	evt->irq		= hc->irq;
++	evt->name		= hc->name;
++	evt->cpumask		= cpumask_of(hc->cpu);
++	evt->set_state_oneshot	= hpet_clkevt_set_state_oneshot;
++	evt->set_next_event	= hpet_clkevt_set_next_event;
++	evt->set_state_shutdown	= hpet_clkevt_set_state_shutdown;
+ 
+-static int hpet_legacy_set_periodic(struct clock_event_device *evt)
+-{
+-	return hpet_set_periodic(evt, 0);
++	evt->features = CLOCK_EVT_FEAT_ONESHOT;
++	if (hc->boot_cfg & HPET_TN_PERIODIC) {
++		evt->features		|= CLOCK_EVT_FEAT_PERIODIC;
++		evt->set_state_periodic	= hpet_clkevt_set_state_periodic;
++	}
+ }
+ 
+-static int hpet_legacy_resume(struct clock_event_device *evt)
++static void __init hpet_legacy_clockevent_register(struct hpet_channel *hc)
+ {
+-	return hpet_resume(evt);
+-}
++	/*
++	 * Start HPET with the boot CPU's cpumask and make it global after
++	 * the IO_APIC has been initialized.
++	 */
++	hc->cpu = boot_cpu_data.cpu_index;
++	strncpy(hc->name, "hpet", sizeof(hc->name));
++	hpet_init_clockevent(hc, 50);
+ 
+-static int hpet_legacy_next_event(unsigned long delta,
+-			struct clock_event_device *evt)
+-{
+-	return hpet_next_event(delta, evt, 0);
+-}
++	hc->evt.tick_resume	= hpet_clkevt_legacy_resume;
+ 
+-/*
+- * The hpet clock event device
+- */
+-static struct clock_event_device hpet_clockevent = {
+-	.name			= "hpet",
+-	.features		= CLOCK_EVT_FEAT_PERIODIC |
+-				  CLOCK_EVT_FEAT_ONESHOT,
+-	.set_state_periodic	= hpet_legacy_set_periodic,
+-	.set_state_oneshot	= hpet_legacy_set_oneshot,
+-	.set_state_shutdown	= hpet_legacy_shutdown,
+-	.tick_resume		= hpet_legacy_resume,
+-	.set_next_event		= hpet_legacy_next_event,
+-	.irq			= 0,
+-	.rating			= 50,
+-};
++	/*
++	 * Legacy horrors and sins from the past. HPET used periodic mode
++	 * unconditionally forever on the legacy channel 0. Removing the
++	 * below hack and using the conditional in hpet_init_clockevent()
++	 * makes at least Qemu and one hardware machine fail to boot.
++	 * There are two issues which cause the boot failure:
++	 *
++	 * #1 After the timer delivery test in IOAPIC and the IOAPIC setup
++	 *    the next interrupt is not delivered despite the HPET channel
++	 *    being programmed correctly. Reprogramming the HPET after
++	 *    switching to IOAPIC makes it work again. After fixing this,
++	 *    the next issue surfaces:
++	 *
++	 * #2 Due to the unconditional periodic mode availability the Local
++	 *    APIC timer calibration can hijack the global clockevents
++	 *    event handler without causing damage. Using oneshot at this
++	 *    stage makes if hang because the HPET does not get
++	 *    reprogrammed due to the handler hijacking. Duh, stupid me!
++	 *
++	 * Both issues require major surgery and especially the kick HPET
++	 * again after enabling IOAPIC results in really nasty hackery.
++	 * This 'assume periodic works' magic has survived since HPET
++	 * support got added, so it's questionable whether this should be
++	 * fixed. Both Qemu and the failing hardware machine support
++	 * periodic mode despite the fact that both don't advertise it in
++	 * the configuration register and both need that extra kick after
++	 * switching to IOAPIC. Seems to be a feature...
++	 */
++	hc->evt.features		|= CLOCK_EVT_FEAT_PERIODIC;
++	hc->evt.set_state_periodic	= hpet_clkevt_set_state_periodic;
++
++	/* Start HPET legacy interrupts */
++	hpet_enable_legacy_int();
++
++	clockevents_config_and_register(&hc->evt, hpet_freq,
++					HPET_MIN_PROG_DELTA, 0x7FFFFFFF);
++	global_clock_event = &hc->evt;
++	pr_debug("Clockevent registered\n");
++}
+ 
+ /*
+  * HPET MSI Support
+  */
+ #ifdef CONFIG_PCI_MSI
+ 
+-static DEFINE_PER_CPU(struct hpet_dev *, cpu_hpet_dev);
+-static struct hpet_dev	*hpet_devs;
+-static struct irq_domain *hpet_domain;
+-
+ void hpet_msi_unmask(struct irq_data *data)
+ {
+-	struct hpet_dev *hdev = irq_data_get_irq_handler_data(data);
++	struct hpet_channel *hc = irq_data_get_irq_handler_data(data);
+ 	unsigned int cfg;
+ 
+-	/* unmask it */
+-	cfg = hpet_readl(HPET_Tn_CFG(hdev->num));
++	cfg = hpet_readl(HPET_Tn_CFG(hc->num));
+ 	cfg |= HPET_TN_ENABLE | HPET_TN_FSB;
+-	hpet_writel(cfg, HPET_Tn_CFG(hdev->num));
++	hpet_writel(cfg, HPET_Tn_CFG(hc->num));
+ }
+ 
+ void hpet_msi_mask(struct irq_data *data)
+ {
+-	struct hpet_dev *hdev = irq_data_get_irq_handler_data(data);
++	struct hpet_channel *hc = irq_data_get_irq_handler_data(data);
+ 	unsigned int cfg;
+ 
+-	/* mask it */
+-	cfg = hpet_readl(HPET_Tn_CFG(hdev->num));
++	cfg = hpet_readl(HPET_Tn_CFG(hc->num));
+ 	cfg &= ~(HPET_TN_ENABLE | HPET_TN_FSB);
+-	hpet_writel(cfg, HPET_Tn_CFG(hdev->num));
+-}
+-
+-void hpet_msi_write(struct hpet_dev *hdev, struct msi_msg *msg)
+-{
+-	hpet_writel(msg->data, HPET_Tn_ROUTE(hdev->num));
+-	hpet_writel(msg->address_lo, HPET_Tn_ROUTE(hdev->num) + 4);
++	hpet_writel(cfg, HPET_Tn_CFG(hc->num));
+ }
+ 
+-void hpet_msi_read(struct hpet_dev *hdev, struct msi_msg *msg)
++void hpet_msi_write(struct hpet_channel *hc, struct msi_msg *msg)
+ {
+-	msg->data = hpet_readl(HPET_Tn_ROUTE(hdev->num));
+-	msg->address_lo = hpet_readl(HPET_Tn_ROUTE(hdev->num) + 4);
+-	msg->address_hi = 0;
++	hpet_writel(msg->data, HPET_Tn_ROUTE(hc->num));
++	hpet_writel(msg->address_lo, HPET_Tn_ROUTE(hc->num) + 4);
+ }
+ 
+-static int hpet_msi_shutdown(struct clock_event_device *evt)
++static int hpet_clkevt_msi_resume(struct clock_event_device *evt)
+ {
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-
+-	return hpet_shutdown(evt, hdev->num);
+-}
+-
+-static int hpet_msi_set_oneshot(struct clock_event_device *evt)
+-{
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-
+-	return hpet_set_oneshot(evt, hdev->num);
+-}
+-
+-static int hpet_msi_set_periodic(struct clock_event_device *evt)
+-{
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-
+-	return hpet_set_periodic(evt, hdev->num);
+-}
+-
+-static int hpet_msi_resume(struct clock_event_device *evt)
+-{
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-	struct irq_data *data = irq_get_irq_data(hdev->irq);
++	struct hpet_channel *hc = clockevent_to_channel(evt);
++	struct irq_data *data = irq_get_irq_data(hc->irq);
+ 	struct msi_msg msg;
+ 
+ 	/* Restore the MSI msg and unmask the interrupt */
+ 	irq_chip_compose_msi_msg(data, &msg);
+-	hpet_msi_write(hdev, &msg);
++	hpet_msi_write(hc, &msg);
+ 	hpet_msi_unmask(data);
+ 	return 0;
+ }
+ 
+-static int hpet_msi_next_event(unsigned long delta,
+-				struct clock_event_device *evt)
+-{
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-	return hpet_next_event(delta, evt, hdev->num);
+-}
+-
+-static irqreturn_t hpet_interrupt_handler(int irq, void *data)
++static irqreturn_t hpet_msi_interrupt_handler(int irq, void *data)
+ {
+-	struct hpet_dev *dev = (struct hpet_dev *)data;
+-	struct clock_event_device *hevt = &dev->evt;
++	struct hpet_channel *hc = data;
++	struct clock_event_device *evt = &hc->evt;
+ 
+-	if (!hevt->event_handler) {
+-		printk(KERN_INFO "Spurious HPET timer interrupt on HPET timer %d\n",
+-				dev->num);
++	if (!evt->event_handler) {
++		pr_info("Spurious interrupt HPET channel %d\n", hc->num);
+ 		return IRQ_HANDLED;
  	}
  
- 	cpumask_copy(allbutself, cpu_online_mask);
--	cpumask_clear_cpu(smp_processor_id(), allbutself);
-+	__cpumask_clear_cpu(smp_processor_id(), allbutself);
+-	hevt->event_handler(hevt);
++	evt->event_handler(evt);
+ 	return IRQ_HANDLED;
+ }
  
- 	if (cpumask_equal(mask, allbutself) &&
- 	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
-diff --git a/arch/x86/kernel/time.c b/arch/x86/kernel/time.c
-index 0e14f6c0d35e..07c0e960b3f3 100644
---- a/arch/x86/kernel/time.c
-+++ b/arch/x86/kernel/time.c
-@@ -82,8 +82,11 @@ static void __init setup_default_timer_irq(void)
- /* Default timer init function */
- void __init hpet_time_init(void)
+-static int hpet_setup_irq(struct hpet_dev *dev)
++static int hpet_setup_msi_irq(struct hpet_channel *hc)
  {
--	if (!hpet_enable())
--		setup_pit_timer();
-+	if (!hpet_enable()) {
-+		if (!pit_timer_init())
-+			return;
+-
+-	if (request_irq(dev->irq, hpet_interrupt_handler,
++	if (request_irq(hc->irq, hpet_msi_interrupt_handler,
+ 			IRQF_TIMER | IRQF_NOBALANCING,
+-			dev->name, dev))
++			hc->name, hc))
+ 		return -1;
+ 
+-	disable_irq(dev->irq);
+-	irq_set_affinity(dev->irq, cpumask_of(dev->cpu));
+-	enable_irq(dev->irq);
++	disable_irq(hc->irq);
++	irq_set_affinity(hc->irq, cpumask_of(hc->cpu));
++	enable_irq(hc->irq);
+ 
+-	printk(KERN_DEBUG "hpet: %s irq %d for MSI\n",
+-			 dev->name, dev->irq);
++	pr_debug("%s irq %u for MSI\n", hc->name, hc->irq);
+ 
+ 	return 0;
+ }
+ 
+-/* This should be called in specific @cpu */
+-static void init_one_hpet_msi_clockevent(struct hpet_dev *hdev, int cpu)
++/* Invoked from the hotplug callback on @cpu */
++static void init_one_hpet_msi_clockevent(struct hpet_channel *hc, int cpu)
+ {
+-	struct clock_event_device *evt = &hdev->evt;
+-
+-	WARN_ON(cpu != smp_processor_id());
+-	if (!(hdev->flags & HPET_DEV_VALID))
+-		return;
+-
+-	hdev->cpu = cpu;
+-	per_cpu(cpu_hpet_dev, cpu) = hdev;
+-	evt->name = hdev->name;
+-	hpet_setup_irq(hdev);
+-	evt->irq = hdev->irq;
++	struct clock_event_device *evt = &hc->evt;
+ 
+-	evt->rating = 110;
+-	evt->features = CLOCK_EVT_FEAT_ONESHOT;
+-	if (hdev->flags & HPET_DEV_PERI_CAP) {
+-		evt->features |= CLOCK_EVT_FEAT_PERIODIC;
+-		evt->set_state_periodic = hpet_msi_set_periodic;
+-	}
++	hc->cpu = cpu;
++	per_cpu(cpu_hpet_channel, cpu) = hc;
++	hpet_setup_msi_irq(hc);
+ 
+-	evt->set_state_shutdown = hpet_msi_shutdown;
+-	evt->set_state_oneshot = hpet_msi_set_oneshot;
+-	evt->tick_resume = hpet_msi_resume;
+-	evt->set_next_event = hpet_msi_next_event;
+-	evt->cpumask = cpumask_of(hdev->cpu);
++	hpet_init_clockevent(hc, 110);
++	evt->tick_resume = hpet_clkevt_msi_resume;
+ 
+ 	clockevents_config_and_register(evt, hpet_freq, HPET_MIN_PROG_DELTA,
+ 					0x7FFFFFFF);
+ }
+ 
+-#ifdef CONFIG_HPET
+-/* Reserve at least one timer for userspace (/dev/hpet) */
+-#define RESERVE_TIMERS 1
+-#else
+-#define RESERVE_TIMERS 0
+-#endif
+-
+-static void hpet_msi_capability_lookup(unsigned int start_timer)
++static struct hpet_channel *hpet_get_unused_clockevent(void)
+ {
+-	unsigned int id;
+-	unsigned int num_timers;
+-	unsigned int num_timers_used = 0;
+-	int i, irq;
+-
+-	if (hpet_msi_disable)
+-		return;
+-
+-	if (boot_cpu_has(X86_FEATURE_ARAT))
+-		return;
+-	id = hpet_readl(HPET_ID);
+-
+-	num_timers = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT);
+-	num_timers++; /* Value read out starts from 0 */
+-	hpet_print_config();
+-
+-	hpet_domain = hpet_create_irq_domain(hpet_blockid);
+-	if (!hpet_domain)
+-		return;
+-
+-	hpet_devs = kcalloc(num_timers, sizeof(struct hpet_dev), GFP_KERNEL);
+-	if (!hpet_devs)
+-		return;
+-
+-	hpet_num_timers = num_timers;
+-
+-	for (i = start_timer; i < num_timers - RESERVE_TIMERS; i++) {
+-		struct hpet_dev *hdev = &hpet_devs[num_timers_used];
+-		unsigned int cfg = hpet_readl(HPET_Tn_CFG(i));
+-
+-		/* Only consider HPET timer with MSI support */
+-		if (!(cfg & HPET_TN_FSB_CAP))
+-			continue;
++	int i;
+ 
+-		hdev->flags = 0;
+-		if (cfg & HPET_TN_PERIODIC_CAP)
+-			hdev->flags |= HPET_DEV_PERI_CAP;
+-		sprintf(hdev->name, "hpet%d", i);
+-		hdev->num = i;
++	for (i = 0; i < hpet_base.nr_channels; i++) {
++		struct hpet_channel *hc = hpet_base.channels + i;
+ 
+-		irq = hpet_assign_irq(hpet_domain, hdev, hdev->num);
+-		if (irq <= 0)
++		if (hc->mode != HPET_MODE_CLOCKEVT || hc->in_use)
+ 			continue;
+-
+-		hdev->irq = irq;
+-		hdev->flags |= HPET_DEV_FSB_CAP;
+-		hdev->flags |= HPET_DEV_VALID;
+-		num_timers_used++;
+-		if (num_timers_used == num_possible_cpus())
+-			break;
++		hc->in_use = 1;
++		return hc;
+ 	}
+-
+-	printk(KERN_INFO "HPET: %d timers in total, %d timers will be used for per-cpu timer\n",
+-		num_timers, num_timers_used);
++	return NULL;
+ }
+ 
+-#ifdef CONFIG_HPET
+-static void hpet_reserve_msi_timers(struct hpet_data *hd)
++static int hpet_cpuhp_online(unsigned int cpu)
+ {
+-	int i;
+-
+-	if (!hpet_devs)
+-		return;
++	struct hpet_channel *hc = hpet_get_unused_clockevent();
+ 
+-	for (i = 0; i < hpet_num_timers; i++) {
+-		struct hpet_dev *hdev = &hpet_devs[i];
++	if (hc)
++		init_one_hpet_msi_clockevent(hc, cpu);
++	return 0;
++}
+ 
+-		if (!(hdev->flags & HPET_DEV_VALID))
+-			continue;
++static int hpet_cpuhp_dead(unsigned int cpu)
++{
++	struct hpet_channel *hc = per_cpu(cpu_hpet_channel, cpu);
+ 
+-		hd->hd_irq[hdev->num] = hdev->irq;
+-		hpet_reserve_timer(hd, hdev->num);
+-	}
++	if (!hc)
++		return 0;
++	free_irq(hc->irq, hc);
++	hc->in_use = 0;
++	per_cpu(cpu_hpet_channel, cpu) = NULL;
++	return 0;
+ }
+-#endif
+ 
+-static struct hpet_dev *hpet_get_unused_timer(void)
++static void __init hpet_select_clockevents(void)
+ {
+-	int i;
++	unsigned int i;
+ 
+-	if (!hpet_devs)
+-		return NULL;
++	hpet_base.nr_clockevents = 0;
+ 
+-	for (i = 0; i < hpet_num_timers; i++) {
+-		struct hpet_dev *hdev = &hpet_devs[i];
++	/* No point if MSI is disabled or CPU has an Always Runing APIC Timer */
++	if (hpet_msi_disable || boot_cpu_has(X86_FEATURE_ARAT))
++		return;
+ 
+-		if (!(hdev->flags & HPET_DEV_VALID))
+-			continue;
+-		if (test_and_set_bit(HPET_DEV_USED_BIT,
+-			(unsigned long *)&hdev->flags))
+-			continue;
+-		return hdev;
+-	}
+-	return NULL;
+-}
++	hpet_print_config();
+ 
+-struct hpet_work_struct {
+-	struct delayed_work work;
+-	struct completion complete;
+-};
++	hpet_domain = hpet_create_irq_domain(hpet_blockid);
++	if (!hpet_domain)
++		return;
+ 
+-static void hpet_work(struct work_struct *w)
+-{
+-	struct hpet_dev *hdev;
+-	int cpu = smp_processor_id();
+-	struct hpet_work_struct *hpet_work;
++	for (i = 0; i < hpet_base.nr_channels; i++) {
++		struct hpet_channel *hc = hpet_base.channels + i;
++		int irq;
+ 
+-	hpet_work = container_of(w, struct hpet_work_struct, work.work);
++		if (hc->mode != HPET_MODE_UNUSED)
++			continue;
+ 
+-	hdev = hpet_get_unused_timer();
+-	if (hdev)
+-		init_one_hpet_msi_clockevent(hdev, cpu);
++		/* Only consider HPET channel with MSI support */
++		if (!(hc->boot_cfg & HPET_TN_FSB_CAP))
++			continue;
+ 
+-	complete(&hpet_work->complete);
+-}
++		sprintf(hc->name, "hpet%d", i);
+ 
+-static int hpet_cpuhp_online(unsigned int cpu)
+-{
+-	struct hpet_work_struct work;
+-
+-	INIT_DELAYED_WORK_ONSTACK(&work.work, hpet_work);
+-	init_completion(&work.complete);
+-	/* FIXME: add schedule_work_on() */
+-	schedule_delayed_work_on(cpu, &work.work, 0);
+-	wait_for_completion(&work.complete);
+-	destroy_delayed_work_on_stack(&work.work);
+-	return 0;
+-}
++		irq = hpet_assign_irq(hpet_domain, hc, hc->num);
++		if (irq <= 0)
++			continue;
+ 
+-static int hpet_cpuhp_dead(unsigned int cpu)
+-{
+-	struct hpet_dev *hdev = per_cpu(cpu_hpet_dev, cpu);
++		hc->irq = irq;
++		hc->mode = HPET_MODE_CLOCKEVT;
+ 
+-	if (!hdev)
+-		return 0;
+-	free_irq(hdev->irq, hdev);
+-	hdev->flags &= ~HPET_DEV_USED;
+-	per_cpu(cpu_hpet_dev, cpu) = NULL;
+-	return 0;
+-}
+-#else
++		if (++hpet_base.nr_clockevents == num_possible_cpus())
++			break;
++	}
+ 
+-static void hpet_msi_capability_lookup(unsigned int start_timer)
+-{
+-	return;
++	pr_info("%d channels of %d reserved for per-cpu timers\n",
++		hpet_base.nr_channels, hpet_base.nr_clockevents);
+ }
+ 
+-#ifdef CONFIG_HPET
+-static void hpet_reserve_msi_timers(struct hpet_data *hd)
+-{
+-	return;
+-}
+-#endif
++#else
++
++static inline void hpet_select_clockevents(void) { }
+ 
+ #define hpet_cpuhp_online	NULL
+ #define hpet_cpuhp_dead		NULL
+@@ -754,10 +650,10 @@ static void hpet_reserve_msi_timers(struct hpet_data *hd)
+ /*
+  * Reading the HPET counter is a very slow operation. If a large number of
+  * CPUs are trying to access the HPET counter simultaneously, it can cause
+- * massive delay and slow down system performance dramatically. This may
++ * massive delays and slow down system performance dramatically. This may
+  * happen when HPET is the default clock source instead of TSC. For a
+  * really large system with hundreds of CPUs, the slowdown may be so
+- * severe that it may actually crash the system because of a NMI watchdog
++ * severe, that it can actually crash the system because of a NMI watchdog
+  * soft lockup, for example.
+  *
+  * If multiple CPUs are trying to access the HPET counter at the same time,
+@@ -766,10 +662,9 @@ static void hpet_reserve_msi_timers(struct hpet_data *hd)
+  *
+  * This special feature is only enabled on x86-64 systems. It is unlikely
+  * that 32-bit x86 systems will have enough CPUs to require this feature
+- * with its associated locking overhead. And we also need 64-bit atomic
+- * read.
++ * with its associated locking overhead. We also need 64-bit atomic read.
+  *
+- * The lock and the hpet value are stored together and can be read in a
++ * The lock and the HPET value are stored together and can be read in a
+  * single atomic 64-bit read. It is explicitly assumed that arch_spinlock_t
+  * is 32 bits in size.
+  */
+@@ -858,15 +753,40 @@ static struct clocksource clocksource_hpet = {
+ 	.resume		= hpet_resume_counter,
+ };
+ 
+-static int hpet_clocksource_register(void)
++/*
++ * AMD SB700 based systems with spread spectrum enabled use a SMM based
++ * HPET emulation to provide proper frequency setting.
++ *
++ * On such systems the SMM code is initialized with the first HPET register
++ * access and takes some time to complete. During this time the config
++ * register reads 0xffffffff. We check for max 1000 loops whether the
++ * config register reads a non-0xffffffff value to make sure that the
++ * HPET is up and running before we proceed any further.
++ *
++ * A counting loop is safe, as the HPET access takes thousands of CPU cycles.
++ *
++ * On non-SB700 based machines this check is only done once and has no
++ * side effects.
++ */
++static bool __init hpet_cfg_working(void)
+ {
+-	u64 start, now;
+-	u64 t1;
++	int i;
++
++	for (i = 0; i < 1000; i++) {
++		if (hpet_readl(HPET_CFG) != 0xFFFFFFFF)
++			return true;
 +	}
 +
- 	setup_default_timer_irq();
++	pr_warn("Config register invalid. Disabling HPET\n");
++	return false;
++}
++
++static bool __init hpet_counting(void)
++{
++	u64 start, now, t1;
+ 
+-	/* Start the counter */
+ 	hpet_restart_counter();
+ 
+-	/* Verify whether hpet counter works */
+ 	t1 = hpet_readl(HPET_COUNTER);
+ 	start = rdtsc();
+ 
+@@ -877,30 +797,24 @@ static int hpet_clocksource_register(void)
+ 	 * 1 GHz == 200us
+ 	 */
+ 	do {
+-		rep_nop();
++		if (t1 != hpet_readl(HPET_COUNTER))
++			return true;
+ 		now = rdtsc();
+ 	} while ((now - start) < 200000UL);
+ 
+-	if (t1 == hpet_readl(HPET_COUNTER)) {
+-		printk(KERN_WARNING
+-		       "HPET counter not counting. HPET disabled\n");
+-		return -ENODEV;
+-	}
+-
+-	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
+-	return 0;
++	pr_warn("Counter not counting. HPET disabled\n");
++	return false;
  }
  
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 15b5e98a86f9..8f47c4862c56 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -631,31 +631,38 @@ unsigned long native_calibrate_tsc(void)
+-static u32 *hpet_boot_cfg;
+-
+ /**
+  * hpet_enable - Try to setup the HPET timer. Returns 1 on success.
+  */
+ int __init hpet_enable(void)
+ {
+-	u32 hpet_period, cfg, id;
++	u32 hpet_period, cfg, id, irq;
++	unsigned int i, channels;
++	struct hpet_channel *hc;
+ 	u64 freq;
+-	unsigned int i, last;
  
- 	crystal_khz = ecx_hz / 1000;
+ 	if (!is_hpet_capable())
+ 		return 0;
+@@ -909,40 +823,22 @@ int __init hpet_enable(void)
+ 	if (!hpet_virt_address)
+ 		return 0;
  
--	if (crystal_khz == 0) {
--		switch (boot_cpu_data.x86_model) {
--		case INTEL_FAM6_SKYLAKE_MOBILE:
--		case INTEL_FAM6_SKYLAKE_DESKTOP:
--		case INTEL_FAM6_KABYLAKE_MOBILE:
--		case INTEL_FAM6_KABYLAKE_DESKTOP:
--			crystal_khz = 24000;	/* 24.0 MHz */
--			break;
--		case INTEL_FAM6_ATOM_GOLDMONT_X:
--			crystal_khz = 25000;	/* 25.0 MHz */
--			break;
--		case INTEL_FAM6_ATOM_GOLDMONT:
--			crystal_khz = 19200;	/* 19.2 MHz */
--			break;
++	/* Validate that the config register is working */
++	if (!hpet_cfg_working())
++		goto out_nohpet;
++
++	/* Validate that the counter is counting */
++	if (!hpet_counting())
++		goto out_nohpet;
++
+ 	/*
+ 	 * Read the period and check for a sane value:
+ 	 */
+ 	hpet_period = hpet_readl(HPET_PERIOD);
+-
+-	/*
+-	 * AMD SB700 based systems with spread spectrum enabled use a
+-	 * SMM based HPET emulation to provide proper frequency
+-	 * setting. The SMM code is initialized with the first HPET
+-	 * register access and takes some time to complete. During
+-	 * this time the config register reads 0xffffffff. We check
+-	 * for max. 1000 loops whether the config register reads a non
+-	 * 0xffffffff value to make sure that HPET is up and running
+-	 * before we go further. A counting loop is safe, as the HPET
+-	 * access takes thousands of CPU cycles. On non SB700 based
+-	 * machines this check is only done once and has no side
+-	 * effects.
+-	 */
+-	for (i = 0; hpet_readl(HPET_CFG) == 0xFFFFFFFF; i++) {
+-		if (i == 1000) {
+-			printk(KERN_WARNING
+-			       "HPET config register value = 0xFFFFFFFF. "
+-			       "Disabling HPET\n");
+-			goto out_nohpet;
 -		}
 -	}
-+	/*
-+	 * Denverton SoCs don't report crystal clock, and also don't support
-+	 * CPUID.0x16 for the calculation below, so hardcode the 25MHz crystal
-+	 * clock.
-+	 */
-+	if (crystal_khz == 0 &&
-+			boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT_X)
-+		crystal_khz = 25000;
- 
--	if (crystal_khz == 0)
--		return 0;
- 	/*
--	 * TSC frequency determined by CPUID is a "hardware reported"
-+	 * TSC frequency reported directly by CPUID is a "hardware reported"
- 	 * frequency and is the most accurate one so far we have. This
- 	 * is considered a known frequency.
- 	 */
--	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-+	if (crystal_khz != 0)
-+		setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
-+
-+	/*
-+	 * Some Intel SoCs like Skylake and Kabylake don't report the crystal
-+	 * clock, but we can easily calculate it to a high degree of accuracy
-+	 * by considering the crystal ratio and the CPU speed.
-+	 */
-+	if (crystal_khz == 0 && boot_cpu_data.cpuid_level >= 0x16) {
-+		unsigned int eax_base_mhz, ebx, ecx, edx;
-+
-+		cpuid(0x16, &eax_base_mhz, &ebx, &ecx, &edx);
-+		crystal_khz = eax_base_mhz * 1000 *
-+			eax_denominator / ebx_numerator;
-+	}
-+
-+	if (crystal_khz == 0)
-+		return 0;
- 
- 	/*
- 	 * For Atom SoCs TSC is the only reliable clocksource.
-@@ -664,6 +671,16 @@ unsigned long native_calibrate_tsc(void)
- 	if (boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT)
- 		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
- 
-+#ifdef CONFIG_X86_LOCAL_APIC
-+	/*
-+	 * The local APIC appears to be fed by the core crystal clock
-+	 * (which sounds entirely sensible). We can set the global
-+	 * lapic_timer_period here to avoid having to calibrate the APIC
-+	 * timer later.
-+	 */
-+	lapic_timer_period = crystal_khz * 1000 / HZ;
-+#endif
-+
- 	return crystal_khz * ebx_numerator / eax_denominator;
- }
- 
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index 3d0e9aeea7c8..067858fe4db8 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -71,7 +71,7 @@ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
- /*
-  * MSR-based CPU/TSC frequency discovery for certain CPUs.
-  *
-- * Set global "lapic_timer_frequency" to bus_clock_cycles/jiffy
-+ * Set global "lapic_timer_period" to bus_clock_cycles/jiffy
-  * Return processor base frequency in KHz, or 0 on failure.
-  */
- unsigned long cpu_khz_from_msr(void)
-@@ -104,7 +104,7 @@ unsigned long cpu_khz_from_msr(void)
- 	res = freq * ratio;
- 
- #ifdef CONFIG_X86_LOCAL_APIC
--	lapic_timer_frequency = (freq * 1000) / HZ;
-+	lapic_timer_period = (freq * 1000) / HZ;
- #endif
- 
- 	/*
-diff --git a/kernel/irq/autoprobe.c b/kernel/irq/autoprobe.c
-index 16cbf6beb276..ae60cae24e9a 100644
---- a/kernel/irq/autoprobe.c
-+++ b/kernel/irq/autoprobe.c
-@@ -90,7 +90,7 @@ unsigned long probe_irq_on(void)
- 			/* It triggered already - consider it spurious. */
- 			if (!(desc->istate & IRQS_WAITING)) {
- 				desc->istate &= ~IRQS_AUTODETECT;
--				irq_shutdown(desc);
-+				irq_shutdown_and_deactivate(desc);
- 			} else
- 				if (i < 32)
- 					mask |= 1 << i;
-@@ -127,7 +127,7 @@ unsigned int probe_irq_mask(unsigned long val)
- 				mask |= 1 << i;
- 
- 			desc->istate &= ~IRQS_AUTODETECT;
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 		}
- 		raw_spin_unlock_irq(&desc->lock);
- 	}
-@@ -169,7 +169,7 @@ int probe_irq_off(unsigned long val)
- 				nr_of_irqs++;
- 			}
- 			desc->istate &= ~IRQS_AUTODETECT;
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 		}
- 		raw_spin_unlock_irq(&desc->lock);
- 	}
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 51128bea3846..04fe4f989bd8 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -314,6 +314,12 @@ void irq_shutdown(struct irq_desc *desc)
- 		}
- 		irq_state_clr_started(desc);
- 	}
-+}
-+
-+
-+void irq_shutdown_and_deactivate(struct irq_desc *desc)
-+{
-+	irq_shutdown(desc);
- 	/*
- 	 * This must be called even if the interrupt was never started up,
- 	 * because the activation can happen before the interrupt is
-diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
-index 5b1072e394b2..6c7ca2e983a5 100644
---- a/kernel/irq/cpuhotplug.c
-+++ b/kernel/irq/cpuhotplug.c
-@@ -116,7 +116,7 @@ static bool migrate_one_irq(struct irq_desc *desc)
- 		 */
- 		if (irqd_affinity_is_managed(d)) {
- 			irqd_set_managed_shutdown(d);
--			irq_shutdown(desc);
-+			irq_shutdown_and_deactivate(desc);
- 			return false;
- 		}
- 		affinity = cpu_online_mask;
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 70c3053bc1f6..3a948f41ab00 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -82,6 +82,7 @@ extern int irq_activate_and_startup(struct irq_desc *desc, bool resend);
- extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
- 
- extern void irq_shutdown(struct irq_desc *desc);
-+extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
- extern void irq_enable(struct irq_desc *desc);
- extern void irq_disable(struct irq_desc *desc);
- extern void irq_percpu_enable(struct irq_desc *desc, unsigned int cpu);
-@@ -96,6 +97,10 @@ static inline void irq_mark_irq(unsigned int irq) { }
- extern void irq_mark_irq(unsigned int irq);
- #endif
- 
-+extern int __irq_get_irqchip_state(struct irq_data *data,
-+				   enum irqchip_irq_state which,
-+				   bool *state);
-+
- extern void init_kstat_irqs(struct irq_desc *desc, int node, int nr);
- 
- irqreturn_t __handle_irq_event_percpu(struct irq_desc *desc, unsigned int *flags);
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 53a081392115..fad61986f35c 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/random.h>
- #include <linux/interrupt.h>
-+#include <linux/irqdomain.h>
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/rt.h>
-@@ -34,8 +35,9 @@ static int __init setup_forced_irqthreads(char *arg)
- early_param("threadirqs", setup_forced_irqthreads);
- #endif
- 
--static void __synchronize_hardirq(struct irq_desc *desc)
-+static void __synchronize_hardirq(struct irq_desc *desc, bool sync_chip)
- {
-+	struct irq_data *irqd = irq_desc_get_irq_data(desc);
- 	bool inprogress;
- 
- 	do {
-@@ -51,6 +53,20 @@ static void __synchronize_hardirq(struct irq_desc *desc)
- 		/* Ok, that indicated we're done: double-check carefully. */
- 		raw_spin_lock_irqsave(&desc->lock, flags);
- 		inprogress = irqd_irq_inprogress(&desc->irq_data);
-+
-+		/*
-+		 * If requested and supported, check at the chip whether it
-+		 * is in flight at the hardware level, i.e. already pending
-+		 * in a CPU and waiting for service and acknowledge.
-+		 */
-+		if (!inprogress && sync_chip) {
-+			/*
-+			 * Ignore the return code. inprogress is only updated
-+			 * when the chip supports it.
-+			 */
-+			__irq_get_irqchip_state(irqd, IRQCHIP_STATE_ACTIVE,
-+						&inprogress);
-+		}
- 		raw_spin_unlock_irqrestore(&desc->lock, flags);
- 
- 		/* Oops, that failed? */
-@@ -73,13 +89,18 @@ static void __synchronize_hardirq(struct irq_desc *desc)
-  *	Returns: false if a threaded handler is active.
-  *
-  *	This function may be called - with care - from IRQ context.
-+ *
-+ *	It does not check whether there is an interrupt in flight at the
-+ *	hardware level, but not serviced yet, as this might deadlock when
-+ *	called with interrupts disabled and the target CPU of the interrupt
-+ *	is the current CPU.
-  */
- bool synchronize_hardirq(unsigned int irq)
- {
- 	struct irq_desc *desc = irq_to_desc(irq);
- 
- 	if (desc) {
--		__synchronize_hardirq(desc);
-+		__synchronize_hardirq(desc, false);
- 		return !atomic_read(&desc->threads_active);
- 	}
- 
-@@ -95,14 +116,19 @@ EXPORT_SYMBOL(synchronize_hardirq);
-  *	to complete before returning. If you use this function while
-  *	holding a resource the IRQ handler may need you will deadlock.
-  *
-- *	This function may be called - with care - from IRQ context.
-+ *	Can only be called from preemptible code as it might sleep when
-+ *	an interrupt thread is associated to @irq.
-+ *
-+ *	It optionally makes sure (when the irq chip supports that method)
-+ *	that the interrupt is not pending in any CPU and waiting for
-+ *	service.
-  */
- void synchronize_irq(unsigned int irq)
- {
- 	struct irq_desc *desc = irq_to_desc(irq);
- 
- 	if (desc) {
--		__synchronize_hardirq(desc);
-+		__synchronize_hardirq(desc, true);
- 		/*
- 		 * We made sure that no hardirq handler is
- 		 * running. Now verify that no threaded handlers are
-@@ -1699,6 +1725,7 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 	/* If this was the last handler, shut down the IRQ line: */
- 	if (!desc->action) {
- 		irq_settings_clr_disable_unlazy(desc);
-+		/* Only shutdown. Deactivate after synchronize_hardirq() */
- 		irq_shutdown(desc);
- 	}
- 
-@@ -1727,8 +1754,12 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 
- 	unregister_handler_proc(irq, action);
- 
--	/* Make sure it's not being used on another CPU: */
--	synchronize_hardirq(irq);
-+	/*
-+	 * Make sure it's not being used on another CPU and if the chip
-+	 * supports it also make sure that there is no (not yet serviced)
-+	 * interrupt in flight at the hardware level.
-+	 */
-+	__synchronize_hardirq(desc, true);
- 
- #ifdef CONFIG_DEBUG_SHIRQ
- 	/*
-@@ -1768,6 +1799,14 @@ static struct irqaction *__free_irq(struct irq_desc *desc, void *dev_id)
- 		 * require it to deallocate resources over the slow bus.
- 		 */
- 		chip_bus_lock(desc);
-+		/*
-+		 * There is no interrupt on the fly anymore. Deactivate it
-+		 * completely.
-+		 */
-+		raw_spin_lock_irqsave(&desc->lock, flags);
-+		irq_domain_deactivate_irq(&desc->irq_data);
-+		raw_spin_unlock_irqrestore(&desc->lock, flags);
-+
- 		irq_release_resources(desc);
- 		chip_bus_sync_unlock(desc);
- 		irq_remove_timings(desc);
-@@ -1855,7 +1894,7 @@ static const void *__cleanup_nmi(unsigned int irq, struct irq_desc *desc)
- 	}
- 
- 	irq_settings_clr_disable_unlazy(desc);
--	irq_shutdown(desc);
-+	irq_shutdown_and_deactivate(desc);
- 
- 	irq_release_resources(desc);
- 
-@@ -2578,6 +2617,28 @@ void teardown_percpu_nmi(unsigned int irq)
- 	irq_put_desc_unlock(desc, flags);
- }
- 
-+int __irq_get_irqchip_state(struct irq_data *data, enum irqchip_irq_state which,
-+			    bool *state)
-+{
-+	struct irq_chip *chip;
-+	int err = -EINVAL;
-+
-+	do {
-+		chip = irq_data_get_irq_chip(data);
-+		if (chip->irq_get_irqchip_state)
-+			break;
-+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-+		data = data->parent_data;
-+#else
-+		data = NULL;
-+#endif
-+	} while (data);
-+
-+	if (data)
-+		err = chip->irq_get_irqchip_state(data, which, state);
-+	return err;
-+}
-+
- /**
-  *	irq_get_irqchip_state - returns the irqchip state of a interrupt.
-  *	@irq: Interrupt line that is forwarded to a VM
-@@ -2596,7 +2657,6 @@ int irq_get_irqchip_state(unsigned int irq, enum irqchip_irq_state which,
- {
- 	struct irq_desc *desc;
- 	struct irq_data *data;
--	struct irq_chip *chip;
- 	unsigned long flags;
- 	int err = -EINVAL;
- 
-@@ -2606,19 +2666,7 @@ int irq_get_irqchip_state(unsigned int irq, enum irqchip_irq_state which,
- 
- 	data = irq_desc_get_irq_data(desc);
- 
--	do {
--		chip = irq_data_get_irq_chip(data);
--		if (chip->irq_get_irqchip_state)
--			break;
--#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
--		data = data->parent_data;
--#else
--		data = NULL;
--#endif
--	} while (data);
 -
--	if (data)
--		err = chip->irq_get_irqchip_state(data, which, state);
-+	err = __irq_get_irqchip_state(data, which, state);
+ 	if (hpet_period < HPET_MIN_PERIOD || hpet_period > HPET_MAX_PERIOD)
+ 		goto out_nohpet;
  
- 	irq_put_desc_busunlock(desc, flags);
- 	return err;
+-	/*
+-	 * The period is a femto seconds value. Convert it to a
+-	 * frequency.
+-	 */
++	/* The period is a femtoseconds value. Convert it to a frequency. */
+ 	freq = FSEC_PER_SEC;
+ 	do_div(freq, hpet_period);
+ 	hpet_freq = freq;
+@@ -954,72 +850,90 @@ int __init hpet_enable(void)
+ 	id = hpet_readl(HPET_ID);
+ 	hpet_print_config();
+ 
+-	last = (id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT;
++	/* This is the HPET channel number which is zero based */
++	channels = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
+ 
+-#ifdef CONFIG_HPET_EMULATE_RTC
+ 	/*
+ 	 * The legacy routing mode needs at least two channels, tick timer
+ 	 * and the rtc emulation channel.
+ 	 */
+-	if (!last)
++	if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC) && channels < 2)
+ 		goto out_nohpet;
+-#endif
+ 
++	hc = kcalloc(channels, sizeof(*hc), GFP_KERNEL);
++	if (!hc) {
++		pr_warn("Disabling HPET.\n");
++		goto out_nohpet;
++	}
++	hpet_base.channels = hc;
++	hpet_base.nr_channels = channels;
++
++	/* Read, store and sanitize the global configuration */
+ 	cfg = hpet_readl(HPET_CFG);
+-	hpet_boot_cfg = kmalloc_array(last + 2, sizeof(*hpet_boot_cfg),
+-				      GFP_KERNEL);
+-	if (hpet_boot_cfg)
+-		*hpet_boot_cfg = cfg;
+-	else
+-		pr_warn("HPET initial state will not be saved\n");
++	hpet_base.boot_cfg = cfg;
+ 	cfg &= ~(HPET_CFG_ENABLE | HPET_CFG_LEGACY);
+ 	hpet_writel(cfg, HPET_CFG);
+ 	if (cfg)
+-		pr_warn("Unrecognized bits %#x set in global cfg\n", cfg);
++		pr_warn("Global config: Unknown bits %#x\n", cfg);
++
++	/* Read, store and sanitize the per channel configuration */
++	for (i = 0; i < channels; i++, hc++) {
++		hc->num = i;
+ 
+-	for (i = 0; i <= last; ++i) {
+ 		cfg = hpet_readl(HPET_Tn_CFG(i));
+-		if (hpet_boot_cfg)
+-			hpet_boot_cfg[i + 1] = cfg;
++		hc->boot_cfg = cfg;
++		irq = (cfg & Tn_INT_ROUTE_CNF_MASK) >> Tn_INT_ROUTE_CNF_SHIFT;
++		hc->irq = irq;
++
+ 		cfg &= ~(HPET_TN_ENABLE | HPET_TN_LEVEL | HPET_TN_FSB);
+ 		hpet_writel(cfg, HPET_Tn_CFG(i));
++
+ 		cfg &= ~(HPET_TN_PERIODIC | HPET_TN_PERIODIC_CAP
+ 			 | HPET_TN_64BIT_CAP | HPET_TN_32BIT | HPET_TN_ROUTE
+ 			 | HPET_TN_FSB | HPET_TN_FSB_CAP);
+ 		if (cfg)
+-			pr_warn("Unrecognized bits %#x set in cfg#%u\n",
+-				cfg, i);
++			pr_warn("Channel #%u config: Unknown bits %#x\n", i, cfg);
+ 	}
+ 	hpet_print_config();
+ 
+-	if (hpet_clocksource_register())
+-		goto out_nohpet;
++	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
+ 
+ 	if (id & HPET_ID_LEGSUP) {
+-		hpet_legacy_clockevent_register();
++		hpet_legacy_clockevent_register(&hpet_base.channels[0]);
++		hpet_base.channels[0].mode = HPET_MODE_LEGACY;
++		if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
++			hpet_base.channels[1].mode = HPET_MODE_LEGACY;
+ 		return 1;
+ 	}
+ 	return 0;
+ 
+ out_nohpet:
++	kfree(hpet_base.channels);
++	hpet_base.channels = NULL;
++	hpet_base.nr_channels = 0;
+ 	hpet_clear_mapping();
+ 	hpet_address = 0;
+ 	return 0;
+ }
+ 
+ /*
+- * Needs to be late, as the reserve_timer code calls kalloc !
++ * The late initialization runs after the PCI quirks have been invoked
++ * which might have detected a system on which the HPET can be enforced.
++ *
++ * Also, the MSI machinery is not working yet when the HPET is initialized
++ * early.
+  *
+- * Not a problem on i386 as hpet_enable is called from late_time_init,
+- * but on x86_64 it is necessary !
++ * If the HPET is enabled, then:
++ *
++ *  1) Reserve one channel for /dev/hpet if CONFIG_HPET=y
++ *  2) Reserve up to num_possible_cpus() channels as per CPU clockevents
++ *  3) Setup /dev/hpet if CONFIG_HPET=y
++ *  4) Register hotplug callbacks when clockevents are available
+  */
+ static __init int hpet_late_init(void)
+ {
+ 	int ret;
+ 
+-	if (boot_hpet_disable)
+-		return -ENODEV;
+-
+ 	if (!hpet_address) {
+ 		if (!force_hpet_address)
+ 			return -ENODEV;
+@@ -1031,21 +945,14 @@ static __init int hpet_late_init(void)
+ 	if (!hpet_virt_address)
+ 		return -ENODEV;
+ 
+-	if (hpet_readl(HPET_ID) & HPET_ID_LEGSUP)
+-		hpet_msi_capability_lookup(2);
+-	else
+-		hpet_msi_capability_lookup(0);
+-
+-	hpet_reserve_platform_timers(hpet_readl(HPET_ID));
++	hpet_select_device_channel();
++	hpet_select_clockevents();
++	hpet_reserve_platform_timers();
+ 	hpet_print_config();
+ 
+-	if (hpet_msi_disable)
++	if (!hpet_base.nr_clockevents)
+ 		return 0;
+ 
+-	if (boot_cpu_has(X86_FEATURE_ARAT))
+-		return 0;
+-
+-	/* This notifier should be called after workqueue is ready */
+ 	ret = cpuhp_setup_state(CPUHP_AP_X86_HPET_ONLINE, "x86/hpet:online",
+ 				hpet_cpuhp_online, NULL);
+ 	if (ret)
+@@ -1064,47 +971,47 @@ fs_initcall(hpet_late_init);
+ 
+ void hpet_disable(void)
+ {
+-	if (is_hpet_capable() && hpet_virt_address) {
+-		unsigned int cfg = hpet_readl(HPET_CFG), id, last;
+-
+-		if (hpet_boot_cfg)
+-			cfg = *hpet_boot_cfg;
+-		else if (hpet_legacy_int_enabled) {
+-			cfg &= ~HPET_CFG_LEGACY;
+-			hpet_legacy_int_enabled = false;
+-		}
+-		cfg &= ~HPET_CFG_ENABLE;
+-		hpet_writel(cfg, HPET_CFG);
++	unsigned int i;
++	u32 cfg;
+ 
+-		if (!hpet_boot_cfg)
+-			return;
++	if (!is_hpet_capable() || !hpet_virt_address)
++		return;
+ 
+-		id = hpet_readl(HPET_ID);
+-		last = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT);
++	/* Restore boot configuration with the enable bit cleared */
++	cfg = hpet_base.boot_cfg;
++	cfg &= ~HPET_CFG_ENABLE;
++	hpet_writel(cfg, HPET_CFG);
+ 
+-		for (id = 0; id <= last; ++id)
+-			hpet_writel(hpet_boot_cfg[id + 1], HPET_Tn_CFG(id));
++	/* Restore the channel boot configuration */
++	for (i = 0; i < hpet_base.nr_channels; i++)
++		hpet_writel(hpet_base.channels[i].boot_cfg, HPET_Tn_CFG(i));
+ 
+-		if (*hpet_boot_cfg & HPET_CFG_ENABLE)
+-			hpet_writel(*hpet_boot_cfg, HPET_CFG);
+-	}
++	/* If the HPET was enabled at boot time, reenable it */
++	if (hpet_base.boot_cfg & HPET_CFG_ENABLE)
++		hpet_writel(hpet_base.boot_cfg, HPET_CFG);
+ }
+ 
+ #ifdef CONFIG_HPET_EMULATE_RTC
+ 
+-/* HPET in LegacyReplacement Mode eats up RTC interrupt line. When, HPET
++/*
++ * HPET in LegacyReplacement mode eats up the RTC interrupt line. When HPET
+  * is enabled, we support RTC interrupt functionality in software.
++ *
+  * RTC has 3 kinds of interrupts:
+- * 1) Update Interrupt - generate an interrupt, every sec, when RTC clock
+- *    is updated
+- * 2) Alarm Interrupt - generate an interrupt at a specific time of day
+- * 3) Periodic Interrupt - generate periodic interrupt, with frequencies
+- *    2Hz-8192Hz (2Hz-64Hz for non-root user) (all freqs in powers of 2)
+- * (1) and (2) above are implemented using polling at a frequency of
+- * 64 Hz. The exact frequency is a tradeoff between accuracy and interrupt
+- * overhead. (DEFAULT_RTC_INT_FREQ)
+- * For (3), we use interrupts at 64Hz or user specified periodic
+- * frequency, whichever is higher.
++ *
++ *  1) Update Interrupt - generate an interrupt, every second, when the
++ *     RTC clock is updated
++ *  2) Alarm Interrupt - generate an interrupt at a specific time of day
++ *  3) Periodic Interrupt - generate periodic interrupt, with frequencies
++ *     2Hz-8192Hz (2Hz-64Hz for non-root user) (all frequencies in powers of 2)
++ *
++ * (1) and (2) above are implemented using polling at a frequency of 64 Hz:
++ * DEFAULT_RTC_INT_FREQ.
++ *
++ * The exact frequency is a tradeoff between accuracy and interrupt overhead.
++ *
++ * For (3), we use interrupts at 64 Hz, or the user specified periodic frequency,
++ * if it's higher.
+  */
+ #include <linux/mc146818rtc.h>
+ #include <linux/rtc.h>
+@@ -1125,7 +1032,7 @@ static unsigned long hpet_pie_limit;
+ static rtc_irq_handler irq_handler;
+ 
+ /*
+- * Check that the hpet counter c1 is ahead of the c2
++ * Check that the HPET counter c1 is ahead of c2
+  */
+ static inline int hpet_cnt_ahead(u32 c1, u32 c2)
+ {
+@@ -1163,8 +1070,8 @@ void hpet_unregister_irq_handler(rtc_irq_handler handler)
+ EXPORT_SYMBOL_GPL(hpet_unregister_irq_handler);
+ 
+ /*
+- * Timer 1 for RTC emulation. We use one shot mode, as periodic mode
+- * is not supported by all HPET implementations for timer 1.
++ * Channel 1 for RTC emulation. We use one shot mode, as periodic mode
++ * is not supported by all HPET implementations for channel 1.
+  *
+  * hpet_rtc_timer_init() is called when the rtc is initialized.
+  */
+@@ -1177,10 +1084,11 @@ int hpet_rtc_timer_init(void)
+ 		return 0;
+ 
+ 	if (!hpet_default_delta) {
++		struct clock_event_device *evt = &hpet_base.channels[0].evt;
+ 		uint64_t clc;
+ 
+-		clc = (uint64_t) hpet_clockevent.mult * NSEC_PER_SEC;
+-		clc >>= hpet_clockevent.shift + DEFAULT_RTC_SHIFT;
++		clc = (uint64_t) evt->mult * NSEC_PER_SEC;
++		clc >>= evt->shift + DEFAULT_RTC_SHIFT;
+ 		hpet_default_delta = clc;
+ 	}
+ 
+@@ -1209,6 +1117,7 @@ EXPORT_SYMBOL_GPL(hpet_rtc_timer_init);
+ static void hpet_disable_rtc_channel(void)
+ {
+ 	u32 cfg = hpet_readl(HPET_T1_CFG);
++
+ 	cfg &= ~HPET_TN_ENABLE;
+ 	hpet_writel(cfg, HPET_T1_CFG);
+ }
+@@ -1250,8 +1159,7 @@ int hpet_set_rtc_irq_bit(unsigned long bit_mask)
+ }
+ EXPORT_SYMBOL_GPL(hpet_set_rtc_irq_bit);
+ 
+-int hpet_set_alarm_time(unsigned char hrs, unsigned char min,
+-			unsigned char sec)
++int hpet_set_alarm_time(unsigned char hrs, unsigned char min, unsigned char sec)
+ {
+ 	if (!is_hpet_enabled())
+ 		return 0;
+@@ -1271,15 +1179,18 @@ int hpet_set_periodic_freq(unsigned long freq)
+ 	if (!is_hpet_enabled())
+ 		return 0;
+ 
+-	if (freq <= DEFAULT_RTC_INT_FREQ)
++	if (freq <= DEFAULT_RTC_INT_FREQ) {
+ 		hpet_pie_limit = DEFAULT_RTC_INT_FREQ / freq;
+-	else {
+-		clc = (uint64_t) hpet_clockevent.mult * NSEC_PER_SEC;
++	} else {
++		struct clock_event_device *evt = &hpet_base.channels[0].evt;
++
++		clc = (uint64_t) evt->mult * NSEC_PER_SEC;
+ 		do_div(clc, freq);
+-		clc >>= hpet_clockevent.shift;
++		clc >>= evt->shift;
+ 		hpet_pie_delta = clc;
+ 		hpet_pie_limit = 0;
+ 	}
++
+ 	return 1;
+ }
+ EXPORT_SYMBOL_GPL(hpet_set_periodic_freq);
+@@ -1317,8 +1228,7 @@ static void hpet_rtc_timer_reinit(void)
+ 		if (hpet_rtc_flags & RTC_PIE)
+ 			hpet_pie_count += lost_ints;
+ 		if (printk_ratelimit())
+-			printk(KERN_WARNING "hpet1: lost %d rtc interrupts\n",
+-				lost_ints);
++			pr_warn("Lost %d RTC interrupts\n", lost_ints);
+ 	}
+ }
+ 
+@@ -1340,8 +1250,7 @@ irqreturn_t hpet_rtc_interrupt(int irq, void *dev_id)
+ 		hpet_prev_update_sec = curr_time.tm_sec;
+ 	}
+ 
+-	if (hpet_rtc_flags & RTC_PIE &&
+-	    ++hpet_pie_count >= hpet_pie_limit) {
++	if (hpet_rtc_flags & RTC_PIE && ++hpet_pie_count >= hpet_pie_limit) {
+ 		rtc_int_flag |= RTC_PF;
+ 		hpet_pie_count = 0;
+ 	}
+@@ -1350,7 +1259,7 @@ irqreturn_t hpet_rtc_interrupt(int irq, void *dev_id)
+ 	    (curr_time.tm_sec == hpet_alarm_time.tm_sec) &&
+ 	    (curr_time.tm_min == hpet_alarm_time.tm_min) &&
+ 	    (curr_time.tm_hour == hpet_alarm_time.tm_hour))
+-			rtc_int_flag |= RTC_AF;
++		rtc_int_flag |= RTC_AF;
+ 
+ 	if (rtc_int_flag) {
+ 		rtc_int_flag |= (RTC_IRQF | (RTC_NUM_INTS << 8));
 
