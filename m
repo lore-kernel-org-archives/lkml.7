@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B01DC606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A514C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F300216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0EF216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599314;
-	bh=gYcXM05QtzrEOYFiNrsKVH+kE7kFAlgHouyFt0d7yuM=;
+	s=default; t=1562599318;
+	bh=0RIOlx2U3c5EgnleulBBnftrjNRWicugfxkVK6M3y8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FOJdV9A5m03Mb01hVGgEoqXWF2xkRj9WbS/eQlIteuEMP586vnIoF1/Es07WbWeI7
-	 tAaxr4BrVJ+PSQscOpHAd/r6xzwck0n7ZhM34PRpZRHhd/cH/D7DuvHswgAYZbXydZ
-	 0bxcbdwK2TSaxnT/VPNGgHAQ3dnbTxUvTNpffKyA=
+	b=KOBtpDC9pEr3QMsB3iJ1ocO/bwunrl5eG7m6j1oAKu3kLaNM9Tyz0kf9c0aCZvRo3
+	 ZzqPA80CndWnzRqGkJ9DqtuimIQ73AR/EW1bFDq9w4j1pcrDx8wN64Uj+qiEVehTPM
+	 27jy9nb3Cflz12X+8VQqMVLOYfujshvYospkcyJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfGHPVx (ORCPT
+        id S2387849AbfGHPV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:21:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47862 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730872AbfGHPVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:51 -0400
+        id S1730872AbfGHPVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:21:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42658214C6;
-        Mon,  8 Jul 2019 15:21:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06A5F216F4;
+        Mon,  8 Jul 2019 15:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599310;
-        bh=gYcXM05QtzrEOYFiNrsKVH+kE7kFAlgHouyFt0d7yuM=;
+        s=default; t=1562599313;
+        bh=0RIOlx2U3c5EgnleulBBnftrjNRWicugfxkVK6M3y8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/c0gKh0bnKWcfrj3gFpK+GoWZZuVzedwMHJdx9NFuiL6POd5W51L7Am4qwxCKGZx
-         fyocvd5MQ+V3TozuiYp57znbU7MjKSWY58tJKbjcGgGmvtuHCqO3smSB5sDIoAEQbv
-         HfrogWqiEo8CY8iSI3KZXumFBnRP47hLoJ2VUBhc=
+        b=j89n20fWNlj/wU9F9QivpkZcCDdH93Lu8zJPewpcIskkA/sjdglXcI03yA2vto1hF
+         UqlrOnqRM1BmmFQLvV24tECFp/kNz5cXPclXWRVpT9wlnCjsTsJap9aUU6xbTNHJuz
+         z85k49k9jfQrAixFEqVU+xvnBQvsRXBnQA9Wi1fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Matt Perricone <matt.perricone@microsemi.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Manuel Traut <manut@linutronix.de>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 073/102] scsi: hpsa: correct ioaccel2 chaining
-Date:   Mon,  8 Jul 2019 17:13:06 +0200
-Message-Id: <20190708150530.233613827@linuxfoundation.org>
+Subject: [PATCH 4.9 074/102] scripts/decode_stacktrace.sh: prefix addr2line with $CROSS_COMPILE
+Date:   Mon,  8 Jul 2019 17:13:07 +0200
+Message-Id: <20190708150530.282079176@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -64,62 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 625d7d3518875c4d303c652a198feaa13d9f52d9 ]
+[ Upstream commit c04e32e911653442fc834be6e92e072aeebe01a1 ]
 
-- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_LAST_SG for
-  the last s/g element.
+At least for ARM64 kernels compiled with the crosstoolchain from
+Debian/stretch or with the toolchain from kernel.org the line number is
+not decoded correctly by 'decode_stacktrace.sh':
 
-- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_CHAIN when
-  chaining.
+  $ echo "[  136.513051]  f1+0x0/0xc [kcrash]" | \
+    CROSS_COMPILE=/opt/gcc-8.1.0-nolibc/aarch64-linux/bin/aarch64-linux- \
+   ./scripts/decode_stacktrace.sh /scratch/linux-arm64/vmlinux \
+                                  /scratch/linux-arm64 \
+                                  /nfs/debian/lib/modules/4.20.0-devel
+  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:68) kcrash
 
-Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Reviewed-by: Matt Perricone <matt.perricone@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+If addr2line from the toolchain is used the decoded line number is correct:
+
+  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:57) kcrash
+
+Link: http://lkml.kernel.org/r/20190527083425.3763-1-manut@linutronix.de
+Signed-off-by: Manuel Traut <manut@linutronix.de>
+Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hpsa.c     | 7 ++++++-
- drivers/scsi/hpsa_cmd.h | 1 +
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ scripts/decode_stacktrace.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 0b8db8a74d50..9f98c7211ec2 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -4815,7 +4815,7 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
- 			curr_sg->reserved[0] = 0;
- 			curr_sg->reserved[1] = 0;
- 			curr_sg->reserved[2] = 0;
--			curr_sg->chain_indicator = 0x80;
-+			curr_sg->chain_indicator = IOACCEL2_CHAIN;
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index edde8250195c..381acfc4c59d 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -65,7 +65,7 @@ parse_symbol() {
+ 	if [[ "${cache[$module,$address]+isset}" == "isset" ]]; then
+ 		local code=${cache[$module,$address]}
+ 	else
+-		local code=$(addr2line -i -e "$objfile" "$address")
++		local code=$(${CROSS_COMPILE}addr2line -i -e "$objfile" "$address")
+ 		cache[$module,$address]=$code
+ 	fi
  
- 			curr_sg = h->ioaccel2_cmd_sg_list[c->cmdindex];
- 		}
-@@ -4832,6 +4832,11 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
- 			curr_sg++;
- 		}
- 
-+		/*
-+		 * Set the last s/g element bit
-+		 */
-+		(curr_sg - 1)->chain_indicator = IOACCEL2_LAST_SG;
-+
- 		switch (cmd->sc_data_direction) {
- 		case DMA_TO_DEVICE:
- 			cp->direction &= ~IOACCEL2_DIRECTION_MASK;
-diff --git a/drivers/scsi/hpsa_cmd.h b/drivers/scsi/hpsa_cmd.h
-index 5961705eef76..39bcbec93c60 100644
---- a/drivers/scsi/hpsa_cmd.h
-+++ b/drivers/scsi/hpsa_cmd.h
-@@ -516,6 +516,7 @@ struct ioaccel2_sg_element {
- 	u8 reserved[3];
- 	u8 chain_indicator;
- #define IOACCEL2_CHAIN 0x80
-+#define IOACCEL2_LAST_SG 0x40
- };
- 
- /*
 -- 
 2.20.1
 
