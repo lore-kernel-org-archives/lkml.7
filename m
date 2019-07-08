@@ -3,146 +3,148 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7626C48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D104C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE572084A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503AE2084A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g19Wg0xg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SBKlIJU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbfGHIy0 (ORCPT
+        id S1729151AbfGHIyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 04:54:26 -0400
-Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:8679
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727636AbfGHIyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 04:54:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IcNlbZo/PmBMhKNMU2vkni64ggmauEBrCouHRhzqkS8=;
- b=g19Wg0xgTBWjazM9GlyiY6M8P78AQN8D/g2dgpi1b/MfQP8XYVEPHlc3UH0FV1OU2zXUfi+SRXh7ezwUL+ma3fw7oUEHBp8yN3OUFB+wuwQ3+4lMZywitKwOb3q5LFCpum5hNNoDp+3t7CVibXFWawwzryXc7HMT7si2R92wvOg=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3756.eurprd04.prod.outlook.com (52.134.73.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Mon, 8 Jul 2019 08:54:19 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
- 08:54:19 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     Leonard Crestez <leonard.crestez@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
-Thread-Topic: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend
- opp
-Thread-Index: AQHVMjD62bccyXxndUyDszIpSDkBnabAaO+AgAACe/CAAARwgIAAADZQ
-Date:   Mon, 8 Jul 2019 08:54:19 +0000
-Message-ID: <DB3PR0402MB39164E2F386181255ED37F45F5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190704061403.8249-1-Anson.Huang@nxp.com>
- <20190704061403.8249-2-Anson.Huang@nxp.com>
- <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
- <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
- <DB3PR0402MB391622133CD116FDE26A4F9AF5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190708084957.waiwdun327pgvfv4@vireshk-i7>
-In-Reply-To: <20190708084957.waiwdun327pgvfv4@vireshk-i7>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9fe22632-f024-41fc-58de-08d70381dd2f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3756;
-x-ms-traffictypediagnostic: DB3PR0402MB3756:
-x-microsoft-antispam-prvs: <DB3PR0402MB375670A7E32EBD3CD424F656F5F60@DB3PR0402MB3756.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 00922518D8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(376002)(346002)(136003)(396003)(199004)(189003)(102836004)(3846002)(76116006)(66946007)(11346002)(6116002)(73956011)(68736007)(81156014)(26005)(2906002)(71190400001)(81166006)(8676002)(66556008)(66476007)(44832011)(15650500001)(54906003)(64756008)(14454004)(66446008)(446003)(52536014)(71200400001)(186003)(486006)(8936002)(66066001)(476003)(6916009)(7416002)(478600001)(256004)(7696005)(86362001)(316002)(53936002)(14444005)(7736002)(99286004)(74316002)(6436002)(5660300002)(6246003)(55016002)(305945005)(25786009)(9686003)(229853002)(4326008)(33656002)(76176011)(6506007)(53546011)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3756;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: uDpyWP9lwNJsxGDH0PD5HdEXSqM6Qibt+w3utjtHcBnaXJf9s44t6d3JF3bzGm3WbcmQwMnkASD6DYFFT3xyzRJjkr9jBe0vpE5feUF9x5PKOWIfLS3IdwF3+xArZwFtYTTEPTTDAWI5ad7iHRFW1C0QSBVFZktvqwtW/gwBrAdeqfmCoMlu85AxlnGcle3dZf92NIeXYJ6Cwikmi4Jn0RC7k3YT7B1k9C6czgphiK5QR4pWevqZzSd21197GXJIOcuaVWMTndE5PRF5Sc7mtNUHh+q1TvyYukuguZMHFWblrS5ez8Qhyxe09AW84eYJVmOKYkp+xV4Uof1hQInNVGtBvFKFhWN4x0hPZ1uCftkt1xTu0ABlHNiy2XdBu3AV19AjCEaQ4W9tPcliwl1+Y1R5colHm2yE9ELT7OjshXA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 8 Jul 2019 04:54:46 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46537 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727636AbfGHIyp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 04:54:45 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z23so15376708ote.13
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 01:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=efd+BnPGvehL2A2UX02caz/Y1NvKnWaen2fuHX7MRzE=;
+        b=SBKlIJU/kRPxduwNsmhn4tfli4XHsNgkuvfs0vrliM2bO588TzaFFyJH5mpAvTSpyE
+         vMNX4Bd77Rl3/PaXl+2+z4JVB7NPoSm4GhlWUjVRlavKIQpL2Cxrd/FBWWa1j55aw4da
+         /QaiPrUGXrShadGQrBe86H0v+jTxpYgYb6ccgPiEacmVlt5b1e8v9q9rKiRW0dUtPMwT
+         0+XtYxiegFoER2tF+EwxhAwN0zyalL9YZrWD3dxmWJEgF864gq1gMwcHWrRSXfR1rdDs
+         GAgOGW8Zf5t8AedaZCgZCJOOkkpuaUfNlSBafi8WRxtyWJjnJiKk2YQymWEe/jUuSyjM
+         3EVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=efd+BnPGvehL2A2UX02caz/Y1NvKnWaen2fuHX7MRzE=;
+        b=Gi7crQYUdPhJOiWDlzbKm4amliMYrU4nU2sxw+nGw+5Xkf/ugXL3dd+JoA1/xBSRiL
+         O5wBNwHnaDr3Rt/htOUI61B8gK6VVFvbEYJ/N34+HI+keU3Inw6V9iCkQ9YzPOknwZA2
+         Rg/uPt7GlPR8/y3vvUXGaaD3vQCtEyRjdd9WNikmKI+IO+qr29068Y7CUuJR1BBeaQo8
+         4GTXEOLfjXtR/xy9dslZxlsHbpd7SKHN0EDA0bTPPDVOl6ogNKRU4Dgxzw+hOujB8ctI
+         flgw9aW6WVwCuS8rOtPw+Mm2WGg2e2C07WiGWXYMBQi+kFjR0+F4h5lksJYOGImSlkYa
+         t+bw==
+X-Gm-Message-State: APjAAAWnaECIZjzx+YPHqoJHzl9+5sDdvKLMcrhxTljFMnrh47mXiOhb
+        QTxYswdXgP/n0hvl3FnZcMGWHZVuO0Wf7D1Zt0Rtkg==
+X-Google-Smtp-Source: APXvYqwNmok92+w9MyPlUpAdoQ0jznixJXwNaN4TFLNBf7nxlThGFjRAFzCSBqIuTyVm+vHd/Yc8XBJSCd7lJMaOlJQ=
+X-Received: by 2002:a05:6830:1681:: with SMTP id k1mr13388848otr.256.1562576084924;
+ Mon, 08 Jul 2019 01:54:44 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fe22632-f024-41fc-58de-08d70381dd2f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 08:54:19.1857
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3756
+References: <20190708052308.27802-1-michael.wu@vatics.com>
+In-Reply-To: <20190708052308.27802-1-michael.wu@vatics.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 8 Jul 2019 10:54:34 +0200
+Message-ID: <CAMpxmJXZskz-cnqXVMRnUqxHjbQLwWZzQFrDc4eyGmronATCpg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: fix incorrect IRQ requesting of an active-low lineevent
+To:     Michael Wu <michael.wu@vatics.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, morgan.chang@vatics.com,
+        "Stable # 4 . 20+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFZpcmVzaA0KDQo+IE9uIDA4LTA3LTE5LCAwODo0MywgQW5zb24gSHVhbmcgd3JvdGU6DQo+
-ID4gSGksIFZpcmVzaA0KPiA+DQo+ID4gPiBPbiAwNC0wNy0xOSwgMDc6NDksIExlb25hcmQgQ3Jl
-c3RleiB3cm90ZToNCj4gPiA+ID4gT24gNy80LzIwMTkgOToyMyBBTSwgQW5zb24uSHVhbmdAbnhw
-LmNvbSB3cm90ZToNCj4gPiA+ID4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhw
-LmNvbT4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEFzc2lnbiBoaWdoZXN0IE9QUCBhcyBzdXNwZW5k
-IE9QUCB0byByZWR1Y2Ugc3VzcGVuZC9yZXN1bWUNCj4gPiA+ID4gPiBsYXRlbmN5IG9uIGkuTVg4
-TU0uDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5z
-b24uSHVhbmdAbnhwLmNvbT4NCj4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiAgIGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpIHwgMSArDQo+ID4gPiA+ID4gICAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaQ0KPiA+ID4gPiA+IGIv
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4gPiA+ID4gPiBpbmRl
-eCBiMTFmYzVlLi4zYTYyNDA3IDEwMDY0NA0KPiA+ID4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpDQo+ID4gPiA+ID4gKysrIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvaW14OG1tLmR0c2kNCj4gPiA+ID4gPiBAQCAtMTM2LDYgKzEzNiw3
-IEBADQo+ID4gPiA+ID4gICAJCQlvcHAtbWljcm92b2x0ID0gPDEwMDAwMDA+Ow0KPiA+ID4gPiA+
-ICAgCQkJb3BwLXN1cHBvcnRlZC1odyA9IDwweDg+LCA8MHgzPjsNCj4gPiA+ID4gPiAgIAkJCWNs
-b2NrLWxhdGVuY3ktbnMgPSA8MTUwMDAwPjsNCj4gPiA+ID4gPiArCQkJb3BwLXN1c3BlbmQ7DQo+
-ID4gPiA+ID4gICAJCX07DQo+ID4gPiA+ID4gICAJfTsNCj4gPiA+ID4NCj4gPiA+ID4gV2hhdCBp
-ZiB0aGUgaGlnaGVzdCBPUFAgaXMgdW5hdmFpbGFibGUgZHVlIHRvIHNwZWVkIGdyYWRpbmc/DQo+
-ID4gPg0KPiA+ID4gV2hhdCBkb2VzIHRoaXMgZXhhY3RseSBtZWFuID8gSG93IGlzIHRoZSBPUFAg
-bWFkZSB1bmF2YWlsYWJsZSBpbg0KPiA+ID4geW91ciBjYXNlID8NCj4gPg0KPiA+IFRoYXQgaXMg
-YmVjYXVzZSBpbiBpLk1YOE0gc2VyaWVzIFNvQ3MsIHRoZSBzcGVlZCBncmFkaW5nIGFuZCBtYXJr
-ZXQNCj4gPiBzZWdtZW50IGZ1c2VzIHNldHRpbmdzIGNvdWxkIGFmZmVjdCB0aGUgT1BQIGRlZmlu
-ZWQgaW4gRFQsIGluIGEgd29yZCwNCj4gPiBhbGwgcG9zc2libGUgT1BQcyBhcmUgZGVmaW5lZCBp
-biBEVCwgYnV0IGVhY2ggcGFydHMgY291bGQgT05MWSBzZWxlY3QNCj4gPiBzb21lIG9mIHRoZW0g
-dG8gYmUgd29ya2luZyBPUFBzLCBzbyBpZiB0aGUgIm9wcC1zdXNwZW5kIiBpcyBhZGRlZCBmb3IN
-Cj4gPiAxIE9QUCBpbiBEVCwgaWYgdGhlIHBhcnQncyBzcGVlZCBncmFkaW5nIG9yIG1hcmtldCBz
-ZWdtZW50IGZ1c2Ugc2V0dGluZ3MNCj4gbWFrZSB0aGF0IE9QUCBhcyB1bmF2YWlsYWJsZSwgIHRo
-ZW4gdGhhdCAib3BwLXN1c3BlbmQiDQo+ID4gaXMgTk9UIHdvcmtpbmcgYXQgYWxsLg0KPiANCj4g
-SG93IGlzIHRoaXMgc2VsZWN0aW9uIGRvbmUgPyBZb3UgdXNpbmcgc29tZSBPUFAgaGVscGVyIG9y
-IHNvbWV0aGluZyBlbHNlID8NCg0KRWFjaCBPUFAgaGFzICJvcHAtc3VwcG9ydGVkLWh3IiBwcm9w
-ZXJ0eSBhcyBiZWxvdywgdGhlIGZpcnN0IHZhbHVlIG5lZWRzIHRvIGJlDQpjaGVja2VkIHdpdGgg
-c3BlZWQgZ3JhZGluZyBmdXNlLCBhbmQgdGhlIHNlY29uZCBvbmUgbmVlZHMgdG8gYmUgY2hlY2tl
-ZCB3aXRoDQptYXJrZXQgc2VnbWVudCBmdXNlLCBPTkxZIGJvdGggb2YgdGhlbSBwYXNzZWQsIHRo
-ZW4gdGhpcyBPUFAgaXMgc3VwcG9ydGVkLiBJdA0KY2FsbHMgZGV2X3BtX29wcF9zZXRfc3VwcG9y
-dGVkX2h3KCkgdG8gdGVsbCBPUFAgZnJhbWV3b3JrIHRvIHBhcnNlIHRoZSBPUFANCnRhYmxlLCB0
-aGlzIGlzIG15IHVuZGVyc3RhbmRpbmcuDQoNCm9wcC1zdXBwb3J0ZWQtaHcgPSA8MHg4PiwgPDB4
-Mz47DQoNCnRoYW5rcywNCkFuc29uDQoNCg==
+pon., 8 lip 2019 o 07:23 Michael Wu <michael.wu@vatics.com> napisa=C5=82(a)=
+:
+>
+> When a pin is active-low, logical trigger edge should be inverted to matc=
+h
+> the same interrupt opportunity.
+>
+> For example, a button pushed triggers falling edge in ACTIVE_HIGH case; i=
+n
+> ACTIVE_LOW case, the button pushed triggers rising edge. For user space t=
+he
+> IRQ requesting doesn't need to do any modification except to configuring
+> GPIOHANDLE_REQUEST_ACTIVE_LOW.
+>
+> For example, we want to catch the event when the button is pushed. The
+> button on the original board drives level to be low when it is pushed, an=
+d
+> drives level to be high when it is released.
+>
+> In user space we can do:
+>
+>         req.handleflags =3D GPIOHANDLE_REQUEST_INPUT;
+>         req.eventflags =3D GPIOEVENT_REQUEST_FALLING_EDGE;
+>
+>         while (1) {
+>                 read(fd, &dat, sizeof(dat));
+>                 if (dat.id =3D=3D GPIOEVENT_EVENT_FALLING_EDGE)
+>                         printf("button pushed\n");
+>         }
+>
+> Run the same logic on another board which the polarity of the button is
+> inverted; it drives level to be high when pushed, and level to be low whe=
+n
+> released. For this inversion we add flag GPIOHANDLE_REQUEST_ACTIVE_LOW:
+>
+>         req.handleflags =3D GPIOHANDLE_REQUEST_INPUT |
+>                 GPIOHANDLE_REQUEST_ACTIVE_LOW;
+>         req.eventflags =3D GPIOEVENT_REQUEST_FALLING_EDGE;
+>
+> At the result, there are no any events caught when the button is pushed.
+> By the way, button releasing will emit a "falling" event. The timing of
+> "falling" catching is not expected.
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Michael Wu <michael.wu@vatics.com>
+> ---
+> Changes from v1:
+> - Correct undeclared 'IRQ_TRIGGER_RISING'
+> - Add an example to descibe the issue
+> ---
+>  drivers/gpio/gpiolib.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index e013d417a936..9c9597f929d7 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -956,9 +956,11 @@ static int lineevent_create(struct gpio_device *gdev=
+, void __user *ip)
+>         }
+>
+>         if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
+> -               irqflags |=3D IRQF_TRIGGER_RISING;
+> +               irqflags |=3D test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
+> +                       IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
+>         if (eflags & GPIOEVENT_REQUEST_FALLING_EDGE)
+> -               irqflags |=3D IRQF_TRIGGER_FALLING;
+> +               irqflags |=3D test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
+> +                       IRQF_TRIGGER_RISING : IRQF_TRIGGER_FALLING;
+>         irqflags |=3D IRQF_ONESHOT;
+>
+>         INIT_KFIFO(le->events);
+> --
+> 2.17.1
+>
+
+Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
