@@ -2,190 +2,86 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8AFC5B57D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D43BC48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2712C20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562559654;
-	bh=3wZD58tp9mnWfaLtCngO7bIDdHwZX+UzA+iianPh1Oc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MkpqZ4fQWaxS/gG2SI8PyyVLxnt8YkMvy5ru5cGIZQBYQkGNUoq4b4oget3eSiBiN
-	 qeqsX9fJrw80Vt6IfR5G1UuhOYzzkPAmwjLVbkbhU66sI/fOG0zONEJthzhUD3mamH
-	 Pz6ca8y1AmsU+8MG/zZJ1tEVFilSqW5eKv7GEqAI=
+	by mail.kernel.org (Postfix) with ESMTP id 691B720665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 04:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfGHEUx (ORCPT
+        id S1727907AbfGHEZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 00:20:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33412 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 00:25:53 -0400
+Received: from mga09.intel.com ([134.134.136.24]:10931 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfGHEUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 00:20:52 -0400
-Received: from localhost (unknown [49.207.58.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F84420659;
-        Mon,  8 Jul 2019 04:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562559652;
-        bh=3wZD58tp9mnWfaLtCngO7bIDdHwZX+UzA+iianPh1Oc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T0hseX16jvVjtegeR6Rdz8wsWyEs7Dza6o9rVzqdlGvZqyeb/rTQiBLIjuHC6iMcK
-         X7/Xsg0FIfQgBNV98CuAv/BAmfeSoT+6cs5c1/LL6KS95CXLVnTgqk6vZ4mIcYeN4P
-         4EmvoOgBZEiTZSRlVZprQk3LzVDMiLGDLDPSBpHU=
-Date:   Mon, 8 Jul 2019 09:47:28 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        John Garry <john.garry@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Angelo Dureghello <angelo@sysam.it>
-Subject: Re: linux-next: build failure after merge of the slave-dma tree
-Message-ID: <20190708041728.GK2911@vkoul-mobl>
-References: <20190704173108.0646eef8@canb.auug.org.au>
- <VE1PR04MB6638080C43EC68EFF9F7B38A89F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <58c9b815-9bfc-449c-6017-c6da582dffc5@linaro.org>
+        id S1725836AbfGHEZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 00:25:52 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 21:25:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,465,1557212400"; 
+   d="scan'208";a="155760951"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 07 Jul 2019 21:25:50 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hkLDq-0004gP-DF; Mon, 08 Jul 2019 12:25:50 +0800
+Date:   Mon, 8 Jul 2019 12:25:48 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Matti Vaittinen <mazziesaccount@gmail.com>
+Cc:     kbuild-all@01.org, Lee Jones <lee.jones@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH linux-next] mfd: bd70528: bit0_offsets[] can be static
+Message-ID: <20190708042548.GA30795@lkp-kbuild12>
+References: <201907081224.B6QvwFVw%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <58c9b815-9bfc-449c-6017-c6da582dffc5@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <201907081224.B6QvwFVw%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-07-19, 11:06, zhangfei wrote:
-> Hi, Robin
-> 
-> On 2019/7/8 上午9:22, Robin Gong wrote:
-> > Hi Stephen,
-> > 	That's caused by 'of_irq_count' NOT export to global symbol, and I'm curious why it has been
-> > here for so long since Zhangfei found it in 2015. https://patchwork.kernel.org/patch/7404681/
-> > Hi Rob,
-> > 	Is there something I miss so that Zhangfei's patch not accepted finally?
-> > 
-> > 
-> 
-> I remembered Rob suggested us not using of_irq_count and use
-> platform_get_irq etc.
-> https://lkml.org/lkml/2015/11/18/466
 
-The explanation looks sane to me, so it makes sense to revert the commit
-for now. Reverted now
-
--- >8 --
-
-From 5c274ca4cfb22a455e880f61536b1894fa29fd17 Mon Sep 17 00:00:00 2001
-From: Vinod Koul <vkoul@kernel.org>
-Date: Mon, 8 Jul 2019 09:42:55 +0530
-Subject: [PATCH] dmaengine: Revert "dmaengine: fsl-edma: add i.mx7ulp edma2
- version support"
-
-This reverts commit 7144afd025b2 ("dmaengine: fsl-edma: add i.mx7ulp
-edma2 version support") as this fails to build with module option due to
-usage of of_irq_count() which is not an exported symbol as kernel
-drivers are *not* expected to use it (rightly so).
-
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 21b7c58fc194 ("mfd: bd70528: Support ROHM bd70528 PMIC core")
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
- drivers/dma/fsl-edma-common.c | 18 +---------
- drivers/dma/fsl-edma-common.h |  4 ---
- drivers/dma/fsl-edma.c        | 66 -----------------------------------
- 3 files changed, 1 insertion(+), 87 deletions(-)
+ rohm-bd70528.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 6d6d8a4e8e38..44d92c34dec3 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -90,19 +90,6 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
- 	iowrite8(val8, addr + off);
- }
+diff --git a/drivers/mfd/rohm-bd70528.c b/drivers/mfd/rohm-bd70528.c
+index 55599d5..43c859f 100644
+--- a/drivers/mfd/rohm-bd70528.c
++++ b/drivers/mfd/rohm-bd70528.c
+@@ -106,14 +106,14 @@ static struct regmap_config bd70528_regmap = {
+  */
  
--void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
--		     u32 off, u32 slot, bool enable)
--{
--	u32 val;
--
--	if (enable)
--		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
--	else
--		val = EDMAMUX_CHCFG_DIS;
--
--	iowrite32(val, addr + off * 4);
--}
--
- void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 			unsigned int slot, bool enable)
- {
-@@ -116,10 +103,7 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
+ /* bit [0] - Shutdown register */
+-unsigned int bit0_offsets[] = {0};	/* Shutdown register */
+-unsigned int bit1_offsets[] = {1};	/* Power failure register */
+-unsigned int bit2_offsets[] = {2};	/* VR FAULT register */
+-unsigned int bit3_offsets[] = {3};	/* PMU register interrupts */
+-unsigned int bit4_offsets[] = {4, 5};	/* Charger 1 and Charger 2 registers */
+-unsigned int bit5_offsets[] = {6};	/* RTC register */
+-unsigned int bit6_offsets[] = {7};	/* GPIO register */
+-unsigned int bit7_offsets[] = {8};	/* Invalid operation register */
++static unsigned int bit0_offsets[] = {0};	/* Shutdown register */
++static unsigned int bit1_offsets[] = {1};	/* Power failure register */
++static unsigned int bit2_offsets[] = {2};	/* VR FAULT register */
++static unsigned int bit3_offsets[] = {3};	/* PMU register interrupts */
++static unsigned int bit4_offsets[] = {4, 5};	/* Charger 1 and Charger 2 registers */
++static unsigned int bit5_offsets[] = {6};	/* RTC register */
++static unsigned int bit6_offsets[] = {7};	/* GPIO register */
++static unsigned int bit7_offsets[] = {8};	/* Invalid operation register */
  
--	if (fsl_chan->edma->drvdata->version == v3)
--		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
--	else
--		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
-+	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
- }
- EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
- 
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 5eaa2902ed39..4e175560292c 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -125,7 +125,6 @@ struct fsl_edma_chan {
- 	dma_addr_t			dma_dev_addr;
- 	u32				dma_dev_size;
- 	enum dma_data_direction		dma_dir;
--	char				chan_name[16];
- };
- 
- struct fsl_edma_desc {
-@@ -140,13 +139,11 @@ struct fsl_edma_desc {
- enum edma_version {
- 	v1, /* 32ch, Vybrid, mpc57x, etc */
- 	v2, /* 64ch Coldfire */
--	v3, /* 32ch, i.mx7ulp */
- };
- 
- struct fsl_edma_drvdata {
- 	enum edma_version	version;
- 	u32			dmamuxs;
--	bool			has_dmaclk;
- 	int			(*setup_irq)(struct platform_device *pdev,
- 					     struct fsl_edma_engine *fsl_edma);
- };
-@@ -156,7 +153,6 @@ struct fsl_edma_engine {
- 	void __iomem		*membase;
- 	void __iomem		*muxbase[DMAMUX_NR];
- 	struct clk		*muxclk[DMAMUX_NR];
--	struct clk		*dmaclk;
- 	struct mutex		fsl_edma_mutex;
- 	const struct fsl_edma_drvdata *drvdata;
- 	u32			n_chans;
-diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
-index 50fe196b0c73..e616425acd5f 100644
---- a/drivers/dma/fsl-edma.c
-+++ b/drivers/dma/fsl-edma.c
-@@ -166,50 +166,6 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
- 	return 0;
- }
- 
--static int
--fsl_edma2_irq_init(struct platform_device *pdev,
--		   struct fsl_edma_engine *fsl_edma)
--{
-
--- 
-~Vinod
+ static struct regmap_irq_sub_irq_map bd70528_sub_irq_offsets[] = {
+ 	REGMAP_IRQ_MAIN_REG_OFFSET(bit0_offsets),
