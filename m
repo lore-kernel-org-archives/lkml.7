@@ -2,56 +2,56 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4CAC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E99FC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B260520665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F7420665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600468;
-	bh=XP/wjr61UkwKqFacjGA1z8OfOfSKKAteAPObbnI2bmo=;
+	s=default; t=1562600470;
+	bh=v9BMaOIELmYetsorbCPRZDv9T7/WaBkmSBJB9i2b5Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u4/SafuCJI9M+Em55w4qjmtzKbz9KYQ7GjPlYj2rAFqHJNtnzoWnx9QhT7LSIM0eK
-	 xYbjE6D+hEQBoOr2THrvbc0vBabV1vrgGnfgMnM+X3C003C3ZE2grYuiPCLXwCJk2s
-	 mjHCIQDBgeAl4vj3ShHBwT9KB2HbPH5SFlg+18mM=
+	b=oUEAifKysYPCZqYPRH6C+mjx68QQEPK+/kCQOZP51EMzhpB0wps56QbsNAwXfRO5H
+	 JTeCScDwIOsPkv0HOd3BMjnE2zsdMCSCX9EYinqly0GfTd/7mG57zz6jj6k7s/LVx5
+	 IEBVVXu6331pUJBogRziGItboZoCVDn64djjN3E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfGHP0x (ORCPT
+        id S2391015AbfGHPlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52130 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:41:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729901AbfGHPYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:24:46 -0400
+        id S1729691AbfGHP0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:26:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0891204EC;
-        Mon,  8 Jul 2019 15:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D02204EC;
+        Mon,  8 Jul 2019 15:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599486;
-        bh=XP/wjr61UkwKqFacjGA1z8OfOfSKKAteAPObbnI2bmo=;
+        s=default; t=1562599614;
+        bh=v9BMaOIELmYetsorbCPRZDv9T7/WaBkmSBJB9i2b5Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VkSkVeoNFtPPMlojpSnRiOnh/+jJ634jJXQ3nWX1n1ruo0MVel0lOLg6qRlDawgqx
-         sP4T4285vPk5ch5kfFXPh7TKTDUGs6vhU8HGSV2DVtY6Z4ymAbvsnGHlsiJBCXjjdi
-         yX6PY+Eo+ALuNUpyB5OktnIB7olrNYhQk7otxhQo=
+        b=XZMAXxh5Q1j3V2Px+J9jNxw8/XK0oudZMlz+P9DIBRZEtAJSHGFG3BiIdAT/sNjtC
+         8obYFzlAhXfMi1faBd1RWZDTVCax5NubSVR/rd5aeOVkCLEOcCldKPcnNZz83cGIs1
+         7mr8eG7dXM3q3rR0a4zypsqIsybsJLhoV9UsCIYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH 4.14 31/56] lib/mpi: Fix karactx leak in mpi_powm
-Date:   Mon,  8 Jul 2019 17:13:23 +0200
-Message-Id: <20190708150522.786651247@linuxfoundation.org>
+        stable@vger.kernel.org, Marcus Cooper <codekipper@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 19/90] ASoC: sun4i-i2s: Fix sun8i tx channel offset mask
+Date:   Mon,  8 Jul 2019 17:12:46 +0200
+Message-Id: <20190708150523.605680253@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
-References: <20190708150514.376317156@linuxfoundation.org>
+In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
+References: <20190708150521.829733162@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,67 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+[ Upstream commit 7e46169a5f35762f335898a75d1b8a242f2ae0f5 ]
 
-commit c8ea9fce2baf7b643384f36f29e4194fa40d33a6 upstream.
+Although not causing any noticeable issues, the mask for the
+channel offset is covering too many bits.
 
-Sometimes mpi_powm will leak karactx because a memory allocation
-failure causes a bail-out that skips the freeing of karactx.  This
-patch moves the freeing of karactx to the end of the function like
-everything else so that it can't be skipped.
-
-Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
-Fixes: cdec9cb5167a ("crypto: GnuPG based MPI lib - source files...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/mpi/mpi-pow.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/lib/mpi/mpi-pow.c
-+++ b/lib/mpi/mpi-pow.c
-@@ -37,6 +37,7 @@
- int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
- {
- 	mpi_ptr_t mp_marker = NULL, bp_marker = NULL, ep_marker = NULL;
-+	struct karatsuba_ctx karactx = {};
- 	mpi_ptr_t xp_marker = NULL;
- 	mpi_ptr_t tspace = NULL;
- 	mpi_ptr_t rp, ep, mp, bp;
-@@ -164,13 +165,11 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- 		int c;
- 		mpi_limb_t e;
- 		mpi_limb_t carry_limb;
--		struct karatsuba_ctx karactx;
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index a4aa931ebfae..5750738b6ac0 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -110,7 +110,7 @@
  
- 		xp = xp_marker = mpi_alloc_limb_space(2 * (msize + 1));
- 		if (!xp)
- 			goto enomem;
- 
--		memset(&karactx, 0, sizeof karactx);
- 		negative_result = (ep[0] & 1) && base->sign;
- 
- 		i = esize - 1;
-@@ -295,8 +294,6 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- 		if (mod_shift_cnt)
- 			mpihelp_rshift(rp, rp, rsize, mod_shift_cnt);
- 		MPN_NORMALIZE(rp, rsize);
--
--		mpihelp_release_karatsuba_ctx(&karactx);
- 	}
- 
- 	if (negative_result && rsize) {
-@@ -313,6 +310,7 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- leave:
- 	rc = 0;
- enomem:
-+	mpihelp_release_karatsuba_ctx(&karactx);
- 	if (assign_rp)
- 		mpi_assign_limb_space(res, rp, size);
- 	if (mp_marker)
+ #define SUN8I_I2S_TX_CHAN_MAP_REG	0x44
+ #define SUN8I_I2S_TX_CHAN_SEL_REG	0x34
+-#define SUN8I_I2S_TX_CHAN_OFFSET_MASK		GENMASK(13, 11)
++#define SUN8I_I2S_TX_CHAN_OFFSET_MASK		GENMASK(13, 12)
+ #define SUN8I_I2S_TX_CHAN_OFFSET(offset)	(offset << 12)
+ #define SUN8I_I2S_TX_CHAN_EN_MASK		GENMASK(11, 4)
+ #define SUN8I_I2S_TX_CHAN_EN(num_chan)		(((1 << num_chan) - 1) << 4)
+-- 
+2.20.1
+
 
 
