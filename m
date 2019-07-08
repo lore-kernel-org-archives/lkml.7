@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81948C606C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD18C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569EB20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA4620665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600718;
-	bh=9YKzwNqaITT/3dAfxQk+d2f6hPVO62jHvjPHCwJDh/k=;
+	s=default; t=1562600725;
+	bh=AWJ23jwBSxiKwBy12/lKgZfKk5wUHXCa/NwUSw44VtI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HRHp74cvsEqACuea4hqxjyW5scQwI+4vFDec1oxsOUsgPTwiFyTlzrS1sRuUC30ss
-	 iGCOdssuLreLO960gZ+/wa8mA4PZoFzfl6dBvMBPii+2sqGcnid3s1JkS37Q0JIAIu
-	 TCchZbKrdAghBoH9UyFpUF3A6NV0J878h3XnL0QQ=
+	b=Am/80FiaVxbEwnRcM2RZ1YiliS6IcR9BNliJFJA1ioRsBqEC2LjxzQKb49qe2/Are
+	 gQRRqt/yGBc2WGco2sEl8OKlGQovw+JNnzBCFbrMIaFlx5/d9odCcwnoPM8m8hEeDw
+	 3hjIHRe5RJjcBdMtyhbgU7rRqw0U0EI7JgiFgbeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388008AbfGHPWj (ORCPT
+        id S2387974AbfGHPW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387995AbfGHPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:33 -0400
+        id S2387935AbfGHPWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C75B21738;
-        Mon,  8 Jul 2019 15:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4966F2182B;
+        Mon,  8 Jul 2019 15:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599351;
-        bh=9YKzwNqaITT/3dAfxQk+d2f6hPVO62jHvjPHCwJDh/k=;
+        s=default; t=1562599340;
+        bh=AWJ23jwBSxiKwBy12/lKgZfKk5wUHXCa/NwUSw44VtI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2MdASjDjbpvGuilb8ZPqHrI2tX2NOY5IYPbq2iWgGSTJOjSi88jprbT851cMMZbr
-         L7YonmHZXhW1pxb7Xz5AgL0gpuXM0cabvNue0wd+g3qsqGbSbNw2N1vVqLxtiJkM+s
-         B1h8lj5YgHCLqx97zilJiO86sSHA3owrIBFFrbuY=
+        b=rtvcKWbduDeI1d3eryD9Wo5JZiCVX/PiWS9fP2mjbf2Kv8/g7cC+F50iIx8mAB7hO
+         q+lRL5q/rbq70pkuo7DjdctwBQutMTsszuBCKxIcDOY80rVL/zOUj6VfNw/5riWHW1
+         Hf015TUVHo8u0E4G2BNrY/0t/fpAxj4u2cdfOeOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 046/102] fs/binfmt_flat.c: make load_flat_shared_library() work
-Date:   Mon,  8 Jul 2019 17:12:39 +0200
-Message-Id: <20190708150528.813960180@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com,
+        Alexander Potapenko <glider@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 083/102] KVM: x86: degrade WARN to pr_warn_ratelimited
+Date:   Mon,  8 Jul 2019 17:13:16 +0200
+Message-Id: <20190708150530.766568321@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -67,86 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 867bfa4a5fcee66f2b25639acae718e8b28b25a5 upstream.
+commit 3f16a5c318392cbb5a0c7a3d19dff8c8ef3c38ee upstream.
 
-load_flat_shared_library() is broken: It only calls load_flat_file() if
-prepare_binprm() returns zero, but prepare_binprm() returns the number of
-bytes read - so this only happens if the file is empty.
+This warning can be triggered easily by userspace, so it should certainly not
+cause a panic if panic_on_warn is set.
 
-Instead, call into load_flat_file() if the number of bytes read is
-non-negative. (Even if the number of bytes is zero - in that case,
-load_flat_file() will see nullbytes and return a nice -ENOEXEC.)
-
-In addition, remove the code related to bprm creds and stop using
-prepare_binprm() - this code is loading a library, not a main executable,
-and it only actually uses the members "buf", "file" and "filename" of the
-linux_binprm struct. Instead, call kernel_read() directly.
-
-Link: http://lkml.kernel.org/r/20190524201817.16509-1-jannh@google.com
-Fixes: 287980e49ffc ("remove lots of IS_ERR_VALUE abuses")
-Signed-off-by: Jann Horn <jannh@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Greg Ungerer <gerg@linux-m68k.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com
+Suggested-by: Alexander Potapenko <glider@google.com>
+Acked-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/binfmt_flat.c |   23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ arch/x86/kvm/x86.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -859,9 +859,14 @@ err:
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1365,7 +1365,7 @@ static int set_tsc_khz(struct kvm_vcpu *
+ 			vcpu->arch.tsc_always_catchup = 1;
+ 			return 0;
+ 		} else {
+-			WARN(1, "user requested TSC rate below hardware speed\n");
++			pr_warn_ratelimited("user requested TSC rate below hardware speed\n");
+ 			return -1;
+ 		}
+ 	}
+@@ -1375,8 +1375,8 @@ static int set_tsc_khz(struct kvm_vcpu *
+ 				user_tsc_khz, tsc_khz);
  
- static int load_flat_shared_library(int id, struct lib_info *libs)
- {
-+	/*
-+	 * This is a fake bprm struct; only the members "buf", "file" and
-+	 * "filename" are actually used.
-+	 */
- 	struct linux_binprm bprm;
- 	int res;
- 	char buf[16];
-+	loff_t pos = 0;
- 
- 	memset(&bprm, 0, sizeof(bprm));
- 
-@@ -875,25 +880,11 @@ static int load_flat_shared_library(int
- 	if (IS_ERR(bprm.file))
- 		return res;
- 
--	bprm.cred = prepare_exec_creds();
--	res = -ENOMEM;
--	if (!bprm.cred)
--		goto out;
--
--	/* We don't really care about recalculating credentials at this point
--	 * as we're past the point of no return and are dealing with shared
--	 * libraries.
--	 */
--	bprm.cred_prepared = 1;
--
--	res = prepare_binprm(&bprm);
-+	res = kernel_read(bprm.file, pos, bprm.buf, BINPRM_BUF_SIZE);
- 
--	if (!res)
-+	if (res >= 0)
- 		res = load_flat_file(&bprm, libs, id, NULL);
- 
--	abort_creds(bprm.cred);
--
--out:
- 	allow_write_access(bprm.file);
- 	fput(bprm.file);
+ 	if (ratio == 0 || ratio >= kvm_max_tsc_scaling_ratio) {
+-		WARN_ONCE(1, "Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
+-			  user_tsc_khz);
++		pr_warn_ratelimited("Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
++			            user_tsc_khz);
+ 		return -1;
+ 	}
  
 
 
