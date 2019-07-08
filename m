@@ -2,170 +2,180 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E75C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8099C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36FF421479
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="h+vDB2Gh"
+	by mail.kernel.org (Postfix) with ESMTP id 9FEFE21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbfGHQdC (ORCPT
+        id S1730424AbfGHQdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:33:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35945 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728834AbfGHQbs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:31:48 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so17883841wrs.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kinvolk.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3v7kORJZf9psv+vA5sP8DDz4yEImqLDpanBLVAEtpNU=;
-        b=h+vDB2GhO2QOH0ZIG4dCQmb5vRQ9v6u24r5+jkrep/I+SiggmwNdaTIVIz3NzF9zl7
-         FsijVoW+As30PTmh3MEDhrWRipHg2nqc7cnPc+bilJDRsdyBubyYW9eS3A0zbnJmqp7s
-         tGv3zVBa7/+8fJYPnzcxoqEoZ9OJRRINNVzC8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3v7kORJZf9psv+vA5sP8DDz4yEImqLDpanBLVAEtpNU=;
-        b=PZF5b2WulTveu3mLKLTYuHpvv/F3boNVltYNmRM6iX6u7eJl7fArsMYusbQ0uhiIDs
-         2nnqNxfM8ENCEBjg8y48sgpTRe9dx9jqkh7RoOKTa3Exo+uZ0UjBM17dZ4YhdxgovhDX
-         UnwMbBchvci52SvHc6TkZtt9NiMGwiDrgSTTyXMMAKjviYLCRybKMAwyBLabcXXjNmkB
-         9H63VA0UGIUOyyr8ZtiNMQwv1Krb/jDkTM749ntnW3j2sf6GZT/rs74lFvrOclCgXZDP
-         KAnrnZqy5QZEdDkmycufxKdxsmHXzutFIRzK4zpvyaRVjnjoLc4+gadJNSD1qzGpFLFt
-         8Awg==
-X-Gm-Message-State: APjAAAUgF+bevfY8ehn1+K1394HYFMuMARXn1Qn/O3pRFUH8fvcXmlOJ
-        BSBGzywossDTOope7S2Sy91tb/bBwpk=
-X-Google-Smtp-Source: APXvYqwP59KT50EM58K8Q4RqceI+LJyhV6rCtNfYHeHIqZFRu9Qe+ZURKr4E35fmQBJc7F8zSo4sQA==
-X-Received: by 2002:a5d:53c2:: with SMTP id a2mr18587648wrw.8.1562603506249;
-        Mon, 08 Jul 2019 09:31:46 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5aedbe.dynamic.kabel-deutschland.de. [95.90.237.190])
-        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:31:45 -0700 (PDT)
-From:   Krzesimir Nowak <krzesimir@kinvolk.io>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        Krzesimir Nowak <krzesimir@kinvolk.io>
-Subject: [bpf-next v3 00/12] Test the 32bit narrow reads
-Date:   Mon,  8 Jul 2019 18:31:09 +0200
-Message-Id: <20190708163121.18477-1-krzesimir@kinvolk.io>
-X-Mailer: git-send-email 2.20.1
+        Mon, 8 Jul 2019 12:33:53 -0400
+Received: from relay.sw.ru ([185.231.240.75]:58336 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbfGHQdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:33:53 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hkWa8-00028e-L6; Mon, 08 Jul 2019 19:33:36 +0300
+Subject: Re: [PATCH v3] kasan: add memory corruption identification for
+ software tag-based mode
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
+ <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
+ <1560447999.15814.15.camel@mtksdccf07> <1560479520.15814.34.camel@mtksdccf07>
+ <1560744017.15814.49.camel@mtksdccf07>
+ <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
+ <1560774735.15814.54.camel@mtksdccf07> <1561974995.18866.1.camel@mtksdccf07>
+ <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
+Date:   Mon, 8 Jul 2019 19:33:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches try to test the fix made in commit e2f7fc0ac695 ("bpf:
-fix undefined behavior in narrow load handling"). The problem existed
-in the generated BPF bytecode that was doing a 32bit narrow read of a
-64bit field, so to test it the code would need to be executed.
-Currently the only such field exists in BPF_PROG_TYPE_PERF_EVENT,
-which was not supported by bpf_prog_test_run().
-
-I'm sending these patches to bpf-next now as they introduce a new
-feature. But maybe some of those patches could go to the bpf branch?
 
 
-There is a bit of yak shaving to do for the test to be run:
+On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
+> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+>>>>>>>>> This patch adds memory corruption identification at bug report for
+>>>>>>>>> software tag-based mode, the report show whether it is "use-after-free"
+>>>>>>>>> or "out-of-bound" error instead of "invalid-access" error.This will make
+>>>>>>>>> it easier for programmers to see the memory corruption problem.
+>>>>>>>>>
+>>>>>>>>> Now we extend the quarantine to support both generic and tag-based kasan.
+>>>>>>>>> For tag-based kasan, the quarantine stores only freed object information
+>>>>>>>>> to check if an object is freed recently. When tag-based kasan reports an
+>>>>>>>>> error, we can check if the tagged addr is in the quarantine and make a
+>>>>>>>>> good guess if the object is more like "use-after-free" or "out-of-bound".
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> We already have all the information and don't need the quarantine to make such guess.
+>>>>>>>> Basically if shadow of the first byte of object has the same tag as tag in pointer than it's out-of-bounds,
+>>>>>>>> otherwise it's use-after-free.
+>>>>>>>>
+>>>>>>>> In pseudo-code it's something like this:
+>>>>>>>>
+>>>>>>>> u8 object_tag = *(u8 *)kasan_mem_to_shadow(nearest_object(cacche, page, access_addr));
+>>>>>>>>
+>>>>>>>> if (access_addr_tag == object_tag && object_tag != KASAN_TAG_INVALID)
+>>>>>>>>   // out-of-bounds
+>>>>>>>> else
+>>>>>>>>   // use-after-free
+>>>>>>>
+>>>>>>> Thanks your explanation.
+>>>>>>> I see, we can use it to decide corruption type.
+>>>>>>> But some use-after-free issues, it may not have accurate free-backtrace.
+>>>>>>> Unfortunately in that situation, free-backtrace is the most important.
+>>>>>>> please see below example
+>>>>>>>
+>>>>>>> In generic KASAN, it gets accurate free-backrace(ptr1).
+>>>>>>> In tag-based KASAN, it gets wrong free-backtrace(ptr2). It will make
+>>>>>>> programmer misjudge, so they may not believe tag-based KASAN.
+>>>>>>> So We provide this patch, we hope tag-based KASAN bug report is the same
+>>>>>>> accurate with generic KASAN.
+>>>>>>>
+>>>>>>> ---
+>>>>>>>     ptr1 = kmalloc(size, GFP_KERNEL);
+>>>>>>>     ptr1_free(ptr1);
+>>>>>>>
+>>>>>>>     ptr2 = kmalloc(size, GFP_KERNEL);
+>>>>>>>     ptr2_free(ptr2);
+>>>>>>>
+>>>>>>>     ptr1[size] = 'x';  //corruption here
+>>>>>>>
+>>>>>>>
+>>>>>>> static noinline void ptr1_free(char* ptr)
+>>>>>>> {
+>>>>>>>     kfree(ptr);
+>>>>>>> }
+>>>>>>> static noinline void ptr2_free(char* ptr)
+>>>>>>> {
+>>>>>>>     kfree(ptr);
+>>>>>>> }
+>>>>>>> ---
+>>>>>>>
+>>>>>> We think of another question about deciding by that shadow of the first
+>>>>>> byte.
+>>>>>> In tag-based KASAN, it is immediately released after calling kfree(), so
+>>>>>> the slub is easy to be used by another pointer, then it will change
+>>>>>> shadow memory to the tag of new pointer, it will not be the
+>>>>>> KASAN_TAG_INVALID, so there are many false negative cases, especially in
+>>>>>> small size allocation.
+>>>>>>
+>>>>>> Our patch is to solve those problems. so please consider it, thanks.
+>>>>>>
+>>>>> Hi, Andrey and Dmitry,
+>>>>>
+>>>>> I am sorry to bother you.
+>>>>> Would you tell me what you think about this patch?
+>>>>> We want to use tag-based KASAN, so we hope its bug report is clear and
+>>>>> correct as generic KASAN.
+>>>>>
+>>>>> Thanks your review.
+>>>>> Walter
+>>>>
+>>>> Hi Walter,
+>>>>
+>>>> I will probably be busy till the next week. Sorry for delays.
+>>>
+>>> It's ok. Thanks your kindly help.
+>>> I hope I can contribute to tag-based KASAN. It is a very important tool
+>>> for us.
+>>
+>> Hi, Dmitry,
+>>
+>> Would you have free time to discuss this patch together?
+>> Thanks.
+> 
+> Sorry for delays. I am overwhelm by some urgent work. I afraid to
+> promise any dates because the next week I am on a conference, then
+> again a backlog and an intern starting...
+> 
+> Andrey, do you still have concerns re this patch? This change allows
+> to print the free stack.
 
-1. Print why the program could not be run (patch 1).
+I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
+If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
+Same for previously used tags for better use-after-free identification.
 
-2. Some fixes for errno clobbering (patches 2 and 3).
-
-3. Using bpf_prog_test_run_xattr, so I can pass ctx_in stuff too
-   (patch 4).
-
-4. Adding ctx stuff and data out size override to struct bpf_test, and
-   use them for the perf event tests (patches 5 and 6).
-
-5. Some tools headers syncing (patches 7 and 8).
-
-6. Split out some useful functions for bpf_prog_test_run
-   implementation out of the net/bpf/test_run.c (patch 9)
-
-7. Implement bpf_prog_test_run for perf event programs and test it
-   (patches 10 and 11).
-
-
-The last point is where I'm least sure how things should be done
-properly:
-
-1. There is a bunch of stuff to prepare for the
-   bpf_perf_prog_read_value to work, and that stuff is very hacky. I
-   would welcome some hints about how to set up the perf_event and
-   perf_sample_data structs in a way that is a bit more future-proof
-   than just setting some fields in a specific way, so some other code
-   won't use some other fields (like setting event.oncpu to -1 to
-   avoid event.pmu to be used for reading the value of the event).
-
-2. The tests try to see if the test run for perf event sets up the
-   context properly, so they verify the struct pt_regs contents. They
-   way it is currently written Works For Me, but surely it won't work
-   on other arch. So what would be the way forward? Just put the test
-   case inside #ifdef __x86_64__?
-
-3. Another thing in tests - I'm trying to make sure that the
-   bpf_perf_prog_read_value helper works as it seems to be the only
-   bpf perf helper that takes the ctx as a parameter. Is that enough
-   or I should test other helpers too?
-
-
-About the test itself - I'm not sure if it will work on a big endian
-machine. I think it should, but I don't have anything handy here to
-verify it.
-
-Krzesimir Nowak (12):
-  selftests/bpf: Print a message when tester could not run a program
-  selftests/bpf: Avoid a clobbering of errno
-  selftests/bpf: Avoid another case of errno clobbering
-  selftests/bpf: Use bpf_prog_test_run_xattr
-  selftests/bpf: Allow passing more information to BPF prog test run
-  selftests/bpf: Make sure that preexisting tests for perf event work
-  tools headers: Adopt compiletime_assert from kernel sources
-  tools headers: Sync struct bpf_perf_event_data
-  bpf: Split out some helper functions
-  bpf: Implement bpf_prog_test_run for perf event programs
-  selftests/bpf: Add tests for bpf_prog_test_run for perf events progs
-  selftests/bpf: Test correctness of narrow 32bit read on 64bit field
-
- include/linux/bpf.h                           |  28 ++
- kernel/bpf/Makefile                           |   1 +
- kernel/bpf/test_run.c                         | 212 ++++++++++++++
- kernel/trace/bpf_trace.c                      |  60 ++++
- net/bpf/test_run.c                            | 263 +++++-------------
- tools/include/linux/compiler.h                |  28 ++
- tools/include/uapi/linux/bpf_perf_event.h     |   1 +
- tools/testing/selftests/bpf/test_verifier.c   | 197 ++++++++++++-
- .../selftests/bpf/verifier/perf_event_run.c   |  96 +++++++
- .../bpf/verifier/perf_event_sample_period.c   |   4 +
- .../testing/selftests/bpf/verifier/var_off.c  |  21 ++
- 11 files changed, 700 insertions(+), 211 deletions(-)
- create mode 100644 kernel/bpf/test_run.c
- create mode 100644 tools/testing/selftests/bpf/verifier/perf_event_run.c
-
--- 
-2.20.1
-
+> We also have a quarantine for hwasan in user-space. Though it works a
+> bit differently then the normal asan quarantine. We keep a per-thread
+> fixed-size ring-buffer of recent allocations:
+> https://github.com/llvm-mirror/compiler-rt/blob/master/lib/hwasan/hwasan_report.cpp#L274-L284
+> and scan these ring buffers during reports.
+> 
