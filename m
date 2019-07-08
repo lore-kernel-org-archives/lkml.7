@@ -2,110 +2,72 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A8AC606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF6DC606CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0471217D6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA6F217D6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0KoAoNTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404714AbfGHTr6 (ORCPT
+        id S2404732AbfGHTsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:47:58 -0400
-Received: from ms.lwn.net ([45.79.88.28]:53154 "EHLO ms.lwn.net"
+        Mon, 8 Jul 2019 15:48:40 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33190 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbfGHTr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:47:57 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 3A87A2B8;
-        Mon,  8 Jul 2019 19:47:57 +0000 (UTC)
-Date:   Mon, 8 Jul 2019 13:47:56 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Shobhit Kukreti <shobhitkukreti@gmail.com>
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: filesystems:
- Convert jfs.txt to reStructedText format.
-Message-ID: <20190708134756.1025c940@lwn.net>
-In-Reply-To: <20190706232236.GA24717@t-1000>
-References: <20190706232236.GA24717@t-1000>
-Organization: LWN.net
+        id S1727163AbfGHTsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 15:48:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=sGbPfoaC6Sqy+fAOtotKG4RG4E/xEK5XD4Zeoq9Oa4g=; b=0KoAoNTMKAdwOtdRPJQCvsTS1O
+        CCz05sOmiHQIlODseSvjYwap+NReQO0CUO93/Tsjqr3M/ewRdOz9lMP5ImcSLdHe3FoG675HVw/Gb
+        8AgJgN6SQXE7Cv7yyZ5zz5WMoSnDyV0nETa5gGqEf+AbSZHxDy9R9UDQPPticWD8tIjY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hkZco-0004bw-EL; Mon, 08 Jul 2019 21:48:34 +0200
+Date:   Mon, 8 Jul 2019 21:48:34 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 6/7] dt-bindings: net: realtek: Add property to
+ configure LED mode
+Message-ID: <20190708194834.GI9027@lunn.ch>
+References: <20190708192459.187984-1-mka@chromium.org>
+ <20190708192459.187984-7-mka@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708192459.187984-7-mka@chromium.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 6 Jul 2019 16:22:39 -0700
-Shobhit Kukreti <shobhitkukreti@gmail.com> wrote:
-
-> This converts the plain text documentation of jfs.txt to reStructuredText format.
-> Added to documentation build process and verified with make htmldocs
+On Mon, Jul 08, 2019 at 12:24:58PM -0700, Matthias Kaehlcke wrote:
+> The LED behavior of some Realtek PHYs is configurable. Add the
+> property 'realtek,led-modes' to specify the configuration of the
+> LEDs.
 > 
-> Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-Thanks for working to make the kernel documentation better.  That said, I
-do have a request...
+Hi Matthias
 
+Humm. I thought you were going to drop this and the next patch?
 
-> ---
->  Documentation/filesystems/index.rst |  1 +
->  Documentation/filesystems/jfs.rst   | 74 +++++++++++++++++++++++++++++++++++++
->  Documentation/filesystems/jfs.txt   | 52 --------------------------
->  3 files changed, 75 insertions(+), 52 deletions(-)
->  create mode 100644 Documentation/filesystems/jfs.rst
->  delete mode 100644 Documentation/filesystems/jfs.txt
-> 
-> diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-> index 1131c34..d700330 100644
-> --- a/Documentation/filesystems/index.rst
-> +++ b/Documentation/filesystems/index.rst
-> @@ -41,3 +41,4 @@ Documentation for individual filesystem types can be found here.
->     :maxdepth: 2
->  
->     binderfs.rst
-> +   jfs
-> diff --git a/Documentation/filesystems/jfs.rst b/Documentation/filesystems/jfs.rst
-> new file mode 100644
-> index 0000000..bfb6110
-> --- /dev/null
-> +++ b/Documentation/filesystems/jfs.rst
-> @@ -0,0 +1,74 @@
-> +===========================================
-> +IBM's Journaled File System (JFS) for Linux
-> +===========================================
-> +
-> +JFS Homepage:  http://jfs.sourceforge.net/
-> +
-> +Following Mount Options are Supported
-> +
-> +(*) == default
-> + .. tabularcolumns:: |p{1.3cm}|p{1.3cm}|p{8.0cm}|
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table::   
-> +  :header-rows:  0
-> +  :stub-columns: 0
-
-Please don't use flat-table unless you really need to.  It makes the
-documents harder to read in plain-text form, which is something we want to
-avoid whenever possible.  A simple definition list seems more appropriate
-for this information.
-
-(I should really update the documentation to discourage use of flat-table).
-
-Note that the merge window is open, so expect me to be even slower than
-usual to respond to things for the next couple of weeks.
-
-Thanks,
-
-jon
+      Andrew
