@@ -6,35 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE40BC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD77AC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB1C20665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D50220665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391336AbfGHPrw (ORCPT
+        id S2391361AbfGHPrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:47:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:52386 "EHLO foss.arm.com"
+        Mon, 8 Jul 2019 11:47:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:52400 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391308AbfGHPrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:47:49 -0400
+        id S2391330AbfGHPrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:47:52 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABE591509;
-        Mon,  8 Jul 2019 08:47:48 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BF301516;
+        Mon,  8 Jul 2019 08:47:51 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A948A3F59C;
-        Mon,  8 Jul 2019 08:47:47 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 22E9F3F59C;
+        Mon,  8 Jul 2019 08:47:50 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
         Peng Fan <peng.fan@nxp.com>,
         Jim Quinlan <james.quinlan@broadcom.com>,
         Bo Zhang <bozhang.zhang@broadcom.com>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-Subject: [PATCH 06/11] firmware: arm_scmi: Add mechanism to unpack message headers
-Date:   Mon,  8 Jul 2019 16:47:25 +0100
-Message-Id: <20190708154730.16643-7-sudeep.holla@arm.com>
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Subject: [PATCH 08/11] firmware: arm_scmi: Drop async flag in sensor_ops->reading_get
+Date:   Mon,  8 Jul 2019 16:47:27 +0100
+Message-Id: <20190708154730.16643-9-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190708154730.16643-1-sudeep.holla@arm.com>
 References: <20190708154730.16643-1-sudeep.holla@arm.com>
@@ -43,53 +44,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to identify the message type when a response arrives, we need
-a mechanism to unpack the message header similar to packing. Let's
-add one.
+SENSOR_DESCRIPTION_GET provides attributes to indicate if the sensor
+supports asynchronous read. Ideally we should be able to read that flag
+and use asynchronous reads for any sensors with that attribute set.
 
+In order to add that support, let's drop the async flag passed to
+sensor_ops->reading_get and dynamically switch between sync and async
+flags based on the attributes as provided by the firmware.
+
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/driver.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/firmware/arm_scmi/sensors.c | 4 ++--
+ drivers/hwmon/scmi-hwmon.c          | 2 +-
+ include/linux/scmi_protocol.h       | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index eb5a2f271806..b384c818d8dd 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -30,8 +30,14 @@
- #include "common.h"
- 
- #define MSG_ID_MASK		GENMASK(7, 0)
-+#define MSG_XTRACT_ID(hdr)	FIELD_GET(MSG_ID_MASK, (hdr))
- #define MSG_TYPE_MASK		GENMASK(9, 8)
-+#define MSG_XTRACT_TYPE(hdr)	FIELD_GET(MSG_TYPE_MASK, (hdr))
-+#define MSG_TYPE_COMMAND	0
-+#define MSG_TYPE_DELAYED_RESP	2
-+#define MSG_TYPE_NOTIFICATION	3
- #define MSG_PROTOCOL_ID_MASK	GENMASK(17, 10)
-+#define MSG_XTRACT_PROT_ID(hdr)	FIELD_GET(MSG_PROTOCOL_ID_MASK, (hdr))
- #define MSG_TOKEN_ID_MASK	GENMASK(27, 18)
- #define MSG_XTRACT_TOKEN(hdr)	FIELD_GET(MSG_TOKEN_ID_MASK, (hdr))
- #define MSG_TOKEN_MAX		(MSG_XTRACT_TOKEN(MSG_TOKEN_ID_MASK) + 1)
-@@ -216,6 +222,18 @@ static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
- 		FIELD_PREP(MSG_PROTOCOL_ID_MASK, hdr->protocol_id);
+diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
+index 17dbabd8a94a..1b5757c77a35 100644
+--- a/drivers/firmware/arm_scmi/sensors.c
++++ b/drivers/firmware/arm_scmi/sensors.c
+@@ -211,7 +211,7 @@ scmi_sensor_trip_point_config(const struct scmi_handle *handle, u32 sensor_id,
  }
  
-+/**
-+ * unpack_scmi_header() - unpacks and records message and protocol id
-+ *
-+ * @msg_hdr: 32-bit packed message header sent from the platform
-+ * @hdr: pointer to header to fetch message and protocol id.
-+ */
-+static inline void unpack_scmi_header(u32 msg_hdr, struct scmi_msg_hdr *hdr)
-+{
-+	hdr->id = MSG_XTRACT_ID(msg_hdr);
-+	hdr->protocol_id = MSG_XTRACT_PROT_ID(msg_hdr);
-+}
-+
+ static int scmi_sensor_reading_get(const struct scmi_handle *handle,
+-				   u32 sensor_id, bool async, u64 *value)
++				   u32 sensor_id, u64 *value)
+ {
+ 	int ret;
+ 	struct scmi_xfer *t;
+@@ -225,7 +225,7 @@ static int scmi_sensor_reading_get(const struct scmi_handle *handle,
+ 
+ 	sensor = t->tx.buf;
+ 	sensor->id = cpu_to_le32(sensor_id);
+-	sensor->flags = cpu_to_le32(async ? SENSOR_READ_ASYNC : 0);
++	sensor->flags = cpu_to_le32(0);
+ 
+ 	ret = scmi_do_xfer(handle, t);
+ 	if (!ret) {
+diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+index 0c93fc5ca762..8a7732c0bef3 100644
+--- a/drivers/hwmon/scmi-hwmon.c
++++ b/drivers/hwmon/scmi-hwmon.c
+@@ -72,7 +72,7 @@ static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 	const struct scmi_handle *h = scmi_sensors->handle;
+ 
+ 	sensor = *(scmi_sensors->info[type] + channel);
+-	ret = h->sensor_ops->reading_get(h, sensor->id, false, &value);
++	ret = h->sensor_ops->reading_get(h, sensor->id, &value);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index ea6b72018752..697e30fb9004 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -182,7 +182,7 @@ struct scmi_sensor_ops {
+ 	int (*trip_point_config)(const struct scmi_handle *handle,
+ 				 u32 sensor_id, u8 trip_id, u64 trip_value);
+ 	int (*reading_get)(const struct scmi_handle *handle, u32 sensor_id,
+-			   bool async, u64 *value);
++			   u64 *value);
+ };
+ 
  /**
-  * scmi_tx_prepare() - mailbox client callback to prepare for the transfer
-  *
 -- 
 2.17.1
 
