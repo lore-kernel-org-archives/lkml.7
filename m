@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89588C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28171C606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535BC216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01153216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600797;
-	bh=zHS/CCT2LAkhzzLb1t0XxX1FKvl/34Y1ilrbmnjMyvo=;
+	s=default; t=1562600800;
+	bh=YLcbfUXBUozGKSMWDKztSglmTCsQ+7TKQNM5VEuVoY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1WinsCMndkYAn7qXQaZJCQVVNU/lBBr92NEx4GEhMqxkJCGJv9A8ahG3lQT6cPRBS
-	 nMJp6h1vhlwOx3N88NoJjDCYAorx6iUR12T/AJdQVvnZe6E7lzb4ik2jjuDdKykUXV
-	 fxndL7hG5XKtuG3pRWRAZbteQ7shJzc+rqkYAbQg=
+	b=q4k6voK5ZLn/xNnq6xi3cGNOA0E9CKk/zD+Skfy/9rfupY1fW42jYdXPeI4fhR62l
+	 2xjSJvcSTaI0o46RWp51n6rJfuFwo9P5p6UH3zrBgJRFalMwZDDD+3z/ecYb/8swf7
+	 byFO5uuEhZpT9TxxJSfDDcA2Ldv7+xU8xMx8kthw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbfGHPUy (ORCPT
+        id S2391313AbfGHPqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:20:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44226 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733300AbfGHPTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:19:44 -0400
+        id S2387662AbfGHPUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:20:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98BB4216C4;
-        Mon,  8 Jul 2019 15:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31EEF216E3;
+        Mon,  8 Jul 2019 15:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599184;
-        bh=zHS/CCT2LAkhzzLb1t0XxX1FKvl/34Y1ilrbmnjMyvo=;
+        s=default; t=1562599253;
+        bh=YLcbfUXBUozGKSMWDKztSglmTCsQ+7TKQNM5VEuVoY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m1LB64nmoyL8ZbjEbVt+7+iL8B+kXmbA8q7yYVKAWoElr8ccQlfrwntgUmbZbxU1w
-         djxgHQ9dkLYxx4OOzPLREtnhP/xbkacS1s/JVqQZIsr0XoHtcG7Mu8rxyfEkilYiVX
-         SCnatIMDMqe1/O4sQEmVn4P2WGUaUuZzX//zAJbw=
+        b=J1oY5/3r+jZ/INsEHEXhu/G34/buqLxbqcSWIBm/RWm2xVoaSgCAJLBgD+SxEDzc2
+         j8PT3LDmHaOXIuU0P816Ohyd1HVy/Lx+GDkhAA4Xeppj7jxLx/O5U57qKrumA6x3x5
+         JciSK7Dkg7nzPt0AOFm6n/f0hGr+lNXtwD6vRxzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 032/102] Bluetooth: Fix regression with minimum encryption key size alignment
-Date:   Mon,  8 Jul 2019 17:12:25 +0200
-Message-Id: <20190708150528.021249328@linuxfoundation.org>
+        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 055/102] tipc: change to use register_pernet_device
+Date:   Mon,  8 Jul 2019 17:12:48 +0200
+Message-Id: <20190708150529.302275727@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -59,148 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 693cd8ce3f882524a5d06f7800dd8492411877b3 upstream.
+[ Upstream commit c492d4c74dd3f87559883ffa0f94a8f1ae3fe5f5 ]
 
-When trying to align the minimum encryption key size requirement for
-Bluetooth connections, it turns out doing this in a central location in
-the HCI connection handling code is not possible.
+This patch is to fix a dst defcnt leak, which can be reproduced by doing:
 
-Original Bluetooth version up to 2.0 used a security model where the
-L2CAP service would enforce authentication and encryption.  Starting
-with Bluetooth 2.1 and Secure Simple Pairing that model has changed into
-that the connection initiator is responsible for providing an encrypted
-ACL link before any L2CAP communication can happen.
+  # ip net a c; ip net a s; modprobe tipc
+  # ip net e s ip l a n eth1 type veth peer n eth1 netns c
+  # ip net e c ip l s lo up; ip net e c ip l s eth1 up
+  # ip net e s ip l s lo up; ip net e s ip l s eth1 up
+  # ip net e c ip a a 1.1.1.2/8 dev eth1
+  # ip net e s ip a a 1.1.1.1/8 dev eth1
+  # ip net e c tipc b e m udp n u1 localip 1.1.1.2
+  # ip net e s tipc b e m udp n u1 localip 1.1.1.1
+  # ip net d c; ip net d s; rmmod tipc
 
-Now connecting Bluetooth 2.1 or later devices with Bluetooth 2.0 and
-before devices are causing a regression.  The encryption key size check
-needs to be moved out of the HCI connection handling into the L2CAP
-channel setup.
+and it will get stuck and keep logging the error:
 
-To achieve this, the current check inside hci_conn_security() has been
-moved into l2cap_check_enc_key_size() helper function and then called
-from four decisions point inside L2CAP to cover all combinations of
-Secure Simple Pairing enabled devices and device using legacy pairing
-and legacy service security model.
+  unregister_netdevice: waiting for lo to become free. Usage count = 1
 
-Fixes: d5bb334a8e17 ("Bluetooth: Align minimum encryption key size for LE and BR/EDR connections")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203643
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The cause is that a dst is held by the udp sock's sk_rx_dst set on udp rx
+path with udp_early_demux == 1, and this dst (eventually holding lo dev)
+can't be released as bearer's removal in tipc pernet .exit happens after
+lo dev's removal, default_device pernet .exit.
+
+ "There are two distinct types of pernet_operations recognized: subsys and
+  device.  At creation all subsys init functions are called before device
+  init functions, and at destruction all device exit functions are called
+  before subsys exit function."
+
+So by calling register_pernet_device instead to register tipc_net_ops, the
+pernet .exit() will be invoked earlier than loopback dev's removal when a
+netns is being destroyed, as fou/gue does.
+
+Note that vxlan and geneve udp tunnels don't have this issue, as the udp
+sock is released in their device ndo_stop().
+
+This fix is also necessary for tipc dst_cache, which will hold dsts on tx
+path and I will introduce in my next patch.
+
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/bluetooth/hci_conn.c   |   18 +++++++++---------
- net/bluetooth/l2cap_core.c |   33 ++++++++++++++++++++++++++++-----
- 2 files changed, 37 insertions(+), 14 deletions(-)
+ net/tipc/core.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1165,14 +1165,6 @@ int hci_conn_check_link_mode(struct hci_
- 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
- 		return 0;
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -128,7 +128,7 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_sysctl;
  
--	/* The minimum encryption key size needs to be enforced by the
--	 * host stack before establishing any L2CAP connections. The
--	 * specification in theory allows a minimum of 1, but to align
--	 * BR/EDR and LE transports, a minimum of 7 is chosen.
--	 */
--	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
--		return 0;
--
- 	return 1;
- }
+-	err = register_pernet_subsys(&tipc_net_ops);
++	err = register_pernet_device(&tipc_net_ops);
+ 	if (err)
+ 		goto out_pernet;
  
-@@ -1289,8 +1281,16 @@ auth:
- 		return 0;
+@@ -136,7 +136,7 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_socket;
  
- encrypt:
--	if (test_bit(HCI_CONN_ENCRYPT, &conn->flags))
-+	if (test_bit(HCI_CONN_ENCRYPT, &conn->flags)) {
-+		/* Ensure that the encryption key size has been read,
-+		 * otherwise stall the upper layer responses.
-+		 */
-+		if (!conn->enc_key_size)
-+			return 0;
-+
-+		/* Nothing else needed, all requirements are met */
- 		return 1;
-+	}
+-	err = register_pernet_subsys(&tipc_topsrv_net_ops);
++	err = register_pernet_device(&tipc_topsrv_net_ops);
+ 	if (err)
+ 		goto out_pernet_topsrv;
  
- 	hci_conn_encrypt(conn);
+@@ -147,11 +147,11 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
  	return 0;
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -1340,6 +1340,21 @@ static void l2cap_request_info(struct l2
- 		       sizeof(req), &req);
- }
- 
-+static bool l2cap_check_enc_key_size(struct hci_conn *hcon)
-+{
-+	/* The minimum encryption key size needs to be enforced by the
-+	 * host stack before establishing any L2CAP connections. The
-+	 * specification in theory allows a minimum of 1, but to align
-+	 * BR/EDR and LE transports, a minimum of 7 is chosen.
-+	 *
-+	 * This check might also be called for unencrypted connections
-+	 * that have no key size requirements. Ensure that the link is
-+	 * actually encrypted before enforcing a key size.
-+	 */
-+	return (!test_bit(HCI_CONN_ENCRYPT, &hcon->flags) ||
-+		hcon->enc_key_size > HCI_MIN_ENC_KEY_SIZE);
-+}
-+
- static void l2cap_do_start(struct l2cap_chan *chan)
+ out_bearer:
+-	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++	unregister_pernet_device(&tipc_topsrv_net_ops);
+ out_pernet_topsrv:
+ 	tipc_socket_stop();
+ out_socket:
+-	unregister_pernet_subsys(&tipc_net_ops);
++	unregister_pernet_device(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+ out_sysctl:
+@@ -166,9 +166,9 @@ out_netlink:
+ static void __exit tipc_exit(void)
  {
- 	struct l2cap_conn *conn = chan->conn;
-@@ -1357,9 +1372,14 @@ static void l2cap_do_start(struct l2cap_
- 	if (!(conn->info_state & L2CAP_INFO_FEAT_MASK_REQ_DONE))
- 		return;
- 
--	if (l2cap_chan_check_security(chan, true) &&
--	    __l2cap_no_conn_pending(chan))
-+	if (!l2cap_chan_check_security(chan, true) ||
-+	    !__l2cap_no_conn_pending(chan))
-+		return;
-+
-+	if (l2cap_check_enc_key_size(conn->hcon))
- 		l2cap_start_connection(chan);
-+	else
-+		__set_chan_timer(chan, L2CAP_DISC_TIMEOUT);
- }
- 
- static inline int l2cap_mode_supported(__u8 mode, __u32 feat_mask)
-@@ -1438,7 +1458,10 @@ static void l2cap_conn_start(struct l2ca
- 				continue;
- 			}
- 
--			l2cap_start_connection(chan);
-+			if (l2cap_check_enc_key_size(conn->hcon))
-+				l2cap_start_connection(chan);
-+			else
-+				l2cap_chan_close(chan, ECONNREFUSED);
- 
- 		} else if (chan->state == BT_CONNECT2) {
- 			struct l2cap_conn_rsp rsp;
-@@ -7447,7 +7470,7 @@ static void l2cap_security_cfm(struct hc
- 		}
- 
- 		if (chan->state == BT_CONNECT) {
--			if (!status)
-+			if (!status && l2cap_check_enc_key_size(hcon))
- 				l2cap_start_connection(chan);
- 			else
- 				__set_chan_timer(chan, L2CAP_DISC_TIMEOUT);
-@@ -7456,7 +7479,7 @@ static void l2cap_security_cfm(struct hc
- 			struct l2cap_conn_rsp rsp;
- 			__u16 res, stat;
- 
--			if (!status) {
-+			if (!status && l2cap_check_enc_key_size(hcon)) {
- 				if (test_bit(FLAG_DEFER_SETUP, &chan->flags)) {
- 					res = L2CAP_CR_PEND;
- 					stat = L2CAP_CS_AUTHOR_PEND;
+ 	tipc_bearer_cleanup();
+-	unregister_pernet_subsys(&tipc_topsrv_net_ops);
++	unregister_pernet_device(&tipc_topsrv_net_ops);
+ 	tipc_socket_stop();
+-	unregister_pernet_subsys(&tipc_net_ops);
++	unregister_pernet_device(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
+ 	tipc_unregister_sysctl();
 
 
