@@ -2,136 +2,147 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66855C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E661BC606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B8C20844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:45:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dancer-es.20150623.gappssmtp.com header.i=@dancer-es.20150623.gappssmtp.com header.b="pIRJbQFe"
+	by mail.kernel.org (Postfix) with ESMTP id C110E20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 13:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbfGHNpt (ORCPT
+        id S1731437AbfGHNqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 09:45:49 -0400
-Received: from mail-yb1-f173.google.com ([209.85.219.173]:39177 "EHLO
-        mail-yb1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729756AbfGHNpt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 09:45:49 -0400
-Received: by mail-yb1-f173.google.com with SMTP id u9so4723562ybu.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 06:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dancer-es.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=b6Yj5h+3IsVQ18bhf9sXOFecVAcErsPfHOLYMmegy60=;
-        b=pIRJbQFeE+0ZOAxaZErUqzu6QzU/Mup+HORtT3lnYT0auZlgy1/Qpoc5nQoX6R3Om1
-         4odkYQ3ceEQyFDQVNGy160ACz6NF1q6+zWgIKKhAQNgTRNiTbfWMH66dRPS4cSEStb/S
-         wepq7Jg+/2p8fbUy651TAdbssmhIFAhtgZ/aZnDoiAImRLks0a2jVLodJZ3TU9in1XOB
-         PVXenhIRMp+u1mtSxRYIdrDhRAKPR6rqfioIU94DrAaDUb22nKp2FKwBVpI8IrcApQeC
-         moj9dVFyVA1gUzfQYn1rAkNh4jWNOh2hxJH7ZPSCk/Tz6KXa06v0coAgayaegfYA72ut
-         tRDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=b6Yj5h+3IsVQ18bhf9sXOFecVAcErsPfHOLYMmegy60=;
-        b=OybmGVUKO8lNnrrF7hx1h9zGo718fH5/VMj7LaO3faGLHnSkMSOggDOmtNxNsCprAc
-         RTkoB5BpoyIKYnDKcZjgYjPF24ztc8jIzWdKC8ceD9cx7zMdjj4JiybjfXDQWwde21Jj
-         tgkaX4J4MBt24nARLnEO9fL52onMUopdNuBoTOTWLXZtIMQ0ZKrsfuSzZUBB4f9QVQro
-         9EYy7qFTLn7BTeWLHf2cxtofA8LrZvGbODNrRqDohQ6xqzoXHo7c184NAT1X98rY1wf7
-         1XJ5qSmOcDjVQlZkFzRQOg5IPdeqyK8hZ2vSpHtZwZ0CeQIQhEQSqG9YjSElxHnlKsMP
-         vItQ==
-X-Gm-Message-State: APjAAAXrz5aU9lwKbAqna42ve/4mjmb4Ls26q72Tl4lTfseanLp7UCKh
-        onmiO7pfWdKATtEJnh0XZOTbpkclYXSxQqr8Tj+rtQ==
-X-Google-Smtp-Source: APXvYqz3ndSGiFSbSJKXCtaMbNyLmLsyHwsjvnjTlzsFbg2idtCMF1txFC5dUkwMbdjYkxN//h0mQAA50lXoxV7aibg=
-X-Received: by 2002:a25:5a88:: with SMTP id o130mr10963597ybb.69.1562593548302;
- Mon, 08 Jul 2019 06:45:48 -0700 (PDT)
+        Mon, 8 Jul 2019 09:46:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:48350 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729756AbfGHNqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 09:46:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D36DE2B;
+        Mon,  8 Jul 2019 06:46:09 -0700 (PDT)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EA783F738;
+        Mon,  8 Jul 2019 06:46:08 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com
+References: <20190627171603.14767-1-douglas.raillard@arm.com>
+ <20190702155115.GW3436@hirez.programming.kicks-ass.net>
+ <5198292b-1874-9ff4-6a9f-826a5ea00466@arm.com>
+ <20190708110904.ecrlr4p77n4r6qzk@e110439-lin>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <b35c2281-4d91-2164-65f9-9ef3a28c35d0@arm.com>
+Date:   Mon, 8 Jul 2019 14:46:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-From:   Liam Shepherd <liam@dancer.es>
-Date:   Mon, 8 Jul 2019 14:45:37 +0100
-Message-ID: <CAB8B+d3QEJ4kqzXnT7xaE26F8qqREeNm2M2=DKv+2vUsTSu4sQ@mail.gmail.com>
-Subject: Cannot build 5.2.0 with gold linker
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        keescook@chromium.org
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190708110904.ecrlr4p77n4r6qzk@e110439-lin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Patrick,
 
-It results in this error:
+On 7/8/19 12:09 PM, Patrick Bellasi wrote:
+> On 03-Jul 17:36, Douglas Raillard wrote:
+>> On 7/2/19 4:51 PM, Peter Zijlstra wrote:
+>>> On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
+> 
+> [...]
+> 
+>>> I'm not immediately seeing how it is transient; that is, PELT has a
+>>> wobble in it's steady state, is that accounted for?
+>>>
+>>
+>> The transient-ness of the ramp boost I'm introducing comes from the fact that for a
+>> periodic task at steady state, task_ue.enqueued <= task_u when the task is executing.
+>                  ^^^^^^^^^^^^^^^
+> 
+> I find your above "at steady state" a bit confusing.
+> 
+> The condition "task_ue.enqueue <= task_u" is true only for the first
+> task's big activation after a series of small activations, e.g. a task
+> switching from 20% to 70%.
 
-Invalid absolute R_X86_64_32S relocation: _etext
-make[2]: *** [arch/x86/boot/compressed/Makefile:130:
-arch/x86/boot/compressed/vmlinux.relocs] Error 1
-make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
-make[2]: *** Waiting for unfinished jobs....
-  CC      arch/x86/boot/compressed/cpuflags.o
-make[1]: *** [arch/x86/boot/Makefile:112:
-arch/x86/boot/compressed/vmlinux] Error 2
-make: *** [arch/x86/Makefile:283: bzImage] Error 2
+I actually made a typo and meant "task_u <= task_ue.enqueue". The rest of the paragraph
+is aligned with that condition, sorry for the confusion.
 
-This was introduced under this commit:
 
-392bef709659abea614abfe53cf228e7a59876a4: x86/build: Move _etext to
-actual end of .text
+> That's the transient stat you refer to, isn't it?
+> 
+>> That is because task_ue.enqueued is sampled at dequeue time, precisely at the moment
+>> at which task_u is reaching its max for that task.
+> 
+> Right, so in the example above we will have enqueued=20% while task_u
+> is going above to converge towards 70%
+> 
+>> Since we only take into account positive boosts, ramp boost will
+>> only have an impact in the "increase transients".
+> 
+> Right.
+> 
+> I think Peter was referring to the smallish wobbles we see when the
+> task already converged to 70%. If that's the case I would say they are
+> already fully covered also by the current util_est.
 
-The commit was reverted on 5.18 by Greg...
+Yes, that's covered by the "task_u <= task_ue.enqueue" condition, with task_ue.enqueued
+not having any of these "mid freq" content that we call wobble here.
 
-commit 474ec2dcfbcf268a4124145b5e08847595f67a4c
-Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Wed Jun 5 20:40:30 2019 +0200
+Util est enqueued acts as an adaptive filter that kills frequencies higher than 1/task_period,
+task_period being the delta between the two previous "enqueue events". All what's (mostly) remaining
+after that is util variation of larger periods, with a positive shift that increases with
+the task period (mean(enqueued) = mean(util_avg) + f(task_period)).
 
-    Revert "x86/build: Move _etext to actual end of .text"
 
-    This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
+> You are also correct in pointing out that in the steady state
+> ramp_boost will not be triggered in that steady state.
+> 
+> IMU, that's for two main reasons:
+>   a) it's very likely that enqueued <= util_avg
+>   b) even in case enqueued should turn out to be _slightly_ bigger then
+>      util_avg, the corresponding (proportional) ramp_boost would be so
+>      tiny to not have any noticeable effect on OPP selection.
+> 
+> Am I correct on point b) above?
 
-    It seems to cause lots of problems when using the gold linker, and no
-    one really needs this at the moment, so just revert it from the stable
-    trees.
+Assuming you meant "util_avg slightly bigger than enqueued" (which is when boosting triggers),
+then yes since ramp_boost effect is proportional to "task_ue.enqueue - task_u". It makes it robust
+against that.
 
-However it's still present with 5.2.0. Is this intentional?
+> 
+> Could you maybe come up with some experimental numbers related to that
+> case specifically?
 
-In case it's helpful:
+With:
+* an rt-app task ramping up from 5% to 75% util in one big step. The whole cycle is 0.6s long
+  (0.3s at 5% followed by 0.3s at 75%). This cycle is repeated 20 times and the average of
+  boosting is taken.
 
-# gcc -v
-Using built-in specs.
-COLLECT_GCC=gcc
-COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-pc-linux-gnu/8.3.0/lto-wrapper
-Target: x86_64-pc-linux-gnu
-Configured with:
-/var/tmp/portage/sys-devel/gcc-8.3.0-r1/work/gcc-8.3.0/configure
---host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr
---bindir=/usr/x86_64-pc-linux-gnu/gcc-bin/8.3.0
---includedir=/usr/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include
---datadir=/usr/share/gcc-data/x86_64-pc-linux-gnu/8.3.0
---mandir=/usr/share/gcc-data/x86_64-pc-linux-gnu/8.3.0/man
---infodir=/usr/share/gcc-data/x86_64-pc-linux-gnu/8.3.0/info
---with-gxx-include-dir=/usr/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/g++-v8
---with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/8.3.0/python
---enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt
---disable-werror --with-system-zlib --enable-nls
---without-included-gettext --enable-checking=release
---with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo
-8.3.0-r1 p1.1' --disable-esp --enable-libstdcxx-time --enable-shared
---enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu
---enable-multilib --with-multilib-list=m32,m64 --disable-altivec
---disable-fixed-point --enable-targets=all --enable-libgomp
---disable-libmudflap --disable-libssp --enable-libmpx
---disable-systemtap --enable-vtable-verify --enable-lto --with-isl
---disable-isl-version-check --enable-default-pie --enable-default-ssp
-Thread model: posix
-gcc version 8.3.0 (Gentoo 8.3.0-r1 p1.1)
+* a hikey 960 (this impact the frequency at which the test runs at the beginning of 75% phase,
+   which impacts the number of missed activations before the util ramped up).
 
-# ld -v
-GNU gold (Gentoo 2.32 p2 2.32.0) 1.16
+* assuming an OPP exists for each util value (i.e. 1024 OPPs, so the effect
+   of boost on consumption is not impacted by OPP capacities granularity)
 
-Thanks,
-Liam
+Then the boosting feature would increase the average power consumption by 3.1%, out of which 0.12% can
+be considered "spurious boosting" due to the util taking some time to really converge to its
+steady state value. In practice, the impact of small boosts will be even lower since they will less likely
+trigger the selection of a high OPP due to OPP capacity granularity > 1 util unit.
+
+> 
+> Best,
+> Patrick
+> 
+
+Best regards,
+Douglas
