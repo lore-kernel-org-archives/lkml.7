@@ -2,52 +2,51 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB000C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4946CC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A401320665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19863216F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599943;
-	bh=/v6DFyjTK8RJrPmYZ86thafzpngkndlV4QIRFrJJiMQ=;
+	s=default; t=1562599948;
+	bh=bnBg8bSk1oBoZuw31yBBPLVRo5aAPKtDhkgR04AM0/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lIy8fbgEhQHmCGkkAhhQqB7tTobjzO0WnZ8HdHeN8Z26xLO6RRbPa89ihkYB4PXR1
-	 y/2XrJ53YlcTHnIsuAYCcvsSUIwwldGv2vr1UnkQH48XSl2JF+ztkIAKpQDYul8DAM
-	 C4AG0e6zPJO3tTSj+qLwKNIA52r/0eUNBpxS0J6A=
+	b=gzvayQio6SP/o2WFKynQg/mMbnXUsaj4yp7GbGrxtgrQckdGPjqoqyZ0DoAxGztsD
+	 P9GJyP5QypgSzXtyG1vfYBdIqNQrAuQ96H/s28+Y1a2dQEQHHQjG71cIQZWxteS3w1
+	 +roppaihLo31jBE6lw2jRIScEed6hZygrBdEmgyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390114AbfGHPcW (ORCPT
+        id S2390137AbfGHPc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33984 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389559AbfGHPcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:32:19 -0400
+        id S2390088AbfGHPcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:32:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1806D216C4;
-        Mon,  8 Jul 2019 15:32:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A33B7204EC;
+        Mon,  8 Jul 2019 15:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599939;
-        bh=/v6DFyjTK8RJrPmYZ86thafzpngkndlV4QIRFrJJiMQ=;
+        s=default; t=1562599942;
+        bh=bnBg8bSk1oBoZuw31yBBPLVRo5aAPKtDhkgR04AM0/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vUg8uPYAKTQfLQnpLZxR2/NuACObIUKTg2C8K2CPLeFMe3mPhL7jQR+I6rUl0Cnr7
-         FMuamdFcfhmU3GAqq8C7i7fizge6+YBP69b5Yey9zqTBl055pqFzn+t6LqFxxQprPL
-         8Pr682pXe+Ov5iG9GQybeVmchwfYVJW9UefbdoiY=
+        b=jDvJrhUVvU4mXDsOvEZZ3M5nwi6rhUoPqujkLqKv6FSqn+My/nfcAWcsYtQ0HFUqp
+         b0OhaqIK9UGtM7ZNohNgzMW1fgppJnESzOiFwSmC6JHd+o/py61/Gidjvw6flPAL6r
+         DiMW0A5Jm0xFeb2Eud1NeEvKjnK31P4zz1lk7BVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 39/96] gpio: pca953x: hack to fix 24 bit gpio expanders
-Date:   Mon,  8 Jul 2019 17:13:11 +0200
-Message-Id: <20190708150528.673731294@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.1 04/96] netfilter: nft_flow_offload: set liberal tracking mode for tcp
+Date:   Mon,  8 Jul 2019 17:12:36 +0200
+Message-Id: <20190708150526.513518129@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -60,56 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b00691cc46a4089368a008b30655a8343411715 ]
+From: Florian Westphal <fw@strlen.de>
 
-24 bit expanders use REG_ADDR_AI in combination with register addressing. This
-conflicts with regmap which takes this bit as part of the register number,
-i.e. a second cache entry is defined for accessed with REG_ADDR_AI being
-set although on the chip it is the same register as with REG_ADDR_AI being
-cleared.
+commit 8437a6209f76f85a2db1abb12a9bde2170801617 upstream.
 
-The problem was introduced by
+Without it, whenever a packet has to be pushed up the stack (e.g. because
+of mtu mismatch), then conntrack will flag packets as invalid, which in
+turn breaks NAT.
 
-	commit b32cecb46bdc ("gpio: pca953x: Extract the register address mangling to single function")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-but only became visible by
-
-	commit 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
-
-because before, the regmap size was effectively ignored and
-pca953x_writeable_register() did know to ignore REG_ADDR_AI. Still, there
-were two separate cache entries created.
-
-Since the use of REG_ADDR_AI seems to be static we can work around this
-issue by simply increasing the size of the regmap to cover the "virtual"
-registers with REG_ADDR_AI being set. This only means that half of the
-regmap buffer will be unused.
-
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-pca953x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/netfilter/nft_flow_offload.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 7e76830b3368..b6f10e56dfa0 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -306,7 +306,8 @@ static const struct regmap_config pca953x_i2c_regmap = {
- 	.volatile_reg = pca953x_volatile_register,
+--- a/net/netfilter/nft_flow_offload.c
++++ b/net/netfilter/nft_flow_offload.c
+@@ -72,6 +72,7 @@ static void nft_flow_offload_eval(const
+ 	struct nf_flow_route route;
+ 	struct flow_offload *flow;
+ 	enum ip_conntrack_dir dir;
++	bool is_tcp = false;
+ 	struct nf_conn *ct;
+ 	int ret;
  
- 	.cache_type = REGCACHE_RBTREE,
--	.max_register = 0x7f,
-+	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
-+	.max_register = 0xff,
- };
+@@ -84,6 +85,8 @@ static void nft_flow_offload_eval(const
  
- static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
--- 
-2.20.1
-
+ 	switch (ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple.dst.protonum) {
+ 	case IPPROTO_TCP:
++		is_tcp = true;
++		break;
+ 	case IPPROTO_UDP:
+ 		break;
+ 	default:
+@@ -109,6 +112,11 @@ static void nft_flow_offload_eval(const
+ 	if (!flow)
+ 		goto err_flow_alloc;
+ 
++	if (is_tcp) {
++		ct->proto.tcp.seen[0].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
++		ct->proto.tcp.seen[1].flags |= IP_CT_TCP_FLAG_BE_LIBERAL;
++	}
++
+ 	ret = flow_offload_add(flowtable, flow);
+ 	if (ret < 0)
+ 		goto err_flow_add;
 
 
