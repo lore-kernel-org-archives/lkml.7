@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5278C606C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1553CC606C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DAC218A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D4C218A0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BNCUGiWX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XsOl+a4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390949AbfGHRtl (ORCPT
+        id S2391208AbfGHRtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:49:41 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38711 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390267AbfGHRtg (ORCPT
+        Mon, 8 Jul 2019 13:49:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37162 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390873AbfGHRtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:49:36 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z75so8056635pgz.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:49:35 -0700 (PDT)
+        Mon, 8 Jul 2019 13:49:41 -0400
+Received: by mail-pg1-f196.google.com with SMTP id g15so8061815pgi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OoW2qUxF2Y13G8sy4evp2ekSnjnyuxDpMJJ26amqb7M=;
-        b=BNCUGiWXuQ8qN+niQV/uh0ftqGzahTn53WVCXKLQ7j3/UygHUpJNdM1dz3w0hUR9V9
-         3/HTRrHFz27ciHAqn+eej0H+MN7JSSyl9ZHtRUnlgHj1BwgG3ICdq1xpj6Bn5VYDBAUq
-         mOamx9j7XPuTvZ7+3bO+ZNE5xM1++o+Pceiv4=
+        bh=zk4/OPGo86ftMBdGr+5okqxNxr1xkvSdReLqcT2u18A=;
+        b=XsOl+a4RAnXCWhNEVRPeVMhX4ouKgXngCNqnfUxMciMui+pL4rHn4H1iwCHUjJmJIC
+         2ElaPOflyt6/Xi//KGH/Fy7duud9Gy23ek+J89nJPK8tVN1aiJv5zeg2ri/hk0NA12K1
+         l48hzBjCqkjo8vewPUND3AMeDcQR6+1oul5jU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OoW2qUxF2Y13G8sy4evp2ekSnjnyuxDpMJJ26amqb7M=;
-        b=spuuUJaa+S/vEGtd5ATAhMT7lVldLFmuO3wENCymamXNtbG8cijEaZrvtlcax2is9r
-         0onf9YAk9mp6M15iH/5vRMHoh1ZxZcWbasjfLvisCT4NZn3lgT9gif7XUVgBEVPvdPwl
-         PYErSQY3hP10S4yYbCTyExV0ExWi9tCAcA/F6jF9+rA4BfqwXAHAH8uLjIuq4rZyp9NO
-         uRujbsOl2RiS1/Dm9J3AcKJz0frPeQi2siGkAvvAQOMZo7B76dn3PNe57fg8t3o5VY/N
-         inNT0A1O+FITSbDM09Ds24cx1YaNPotPZEIwVgOZrV9xpWy++F+6Ybcuvl36omx4nNsp
-         VazA==
-X-Gm-Message-State: APjAAAWPGslAFKtVtTFv9U9zvu7d0xZ0zv+DJEvPWKxp4ZReLCnNJDkH
-        S44d0a5SCFV2fYHvNoFaO86Riw==
-X-Google-Smtp-Source: APXvYqw279fFsYnSHVmw/+KLDHUbYaOUU+X8mJqY8GWz4AaJjrinbltbShvM9qQHBj13cCc5O+8nig==
-X-Received: by 2002:a17:90a:5288:: with SMTP id w8mr27583562pjh.61.1562608175528;
-        Mon, 08 Jul 2019 10:49:35 -0700 (PDT)
+        bh=zk4/OPGo86ftMBdGr+5okqxNxr1xkvSdReLqcT2u18A=;
+        b=H7h7V/nWzTRzK7Raq77kSb2tTyVNmiSt1uhfnz3SMClXP2YGlum/1ihV1ElSw36jDm
+         KVLSZDuO4G1a8AATaCE/VJfQwthsXdPxNeq02LbE5LBtGufj+lGxiqeQfW7B64SYfPAX
+         tPfddo3CebZbHI1veuVFVwC7XeYyYoiHLCv6rmwzDAgtMJYQcIrgXAHqcIKkLWGfTz5E
+         tznGlcrrY37EcTYQhxzWbXit1bgT0gRnlGdNetLKyfyQRT3p2tSAFxKUFG+JfzTv8y5c
+         FvRDcqyV4zXNuAGv0YI7Ex0BECQNm9o8Dd7+VJNePlf9hZPcMUbPWn9ajpvbseNM/AZ+
+         oBZQ==
+X-Gm-Message-State: APjAAAXvYu505/glfoOWBj72QfKfQ3NB2cgHycD9r3j4zFnSpgrLjNXT
+        e8dzTcF+MBJMWoEnsNinbzMbuQ==
+X-Google-Smtp-Source: APXvYqwGon64A3Eg43O0xpcjziuFJrMuP/ARJjBIDsIb1lPDikUr28nYvEkK1nyoH64klte1o9Y66Q==
+X-Received: by 2002:a63:7e1d:: with SMTP id z29mr25328202pgc.346.1562608180745;
+        Mon, 08 Jul 2019 10:49:40 -0700 (PDT)
 Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id j1sm20151686pfe.101.2019.07.08.10.49.34
+        by smtp.gmail.com with ESMTPSA id j1sm20151686pfe.101.2019.07.08.10.49.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 10:49:35 -0700 (PDT)
+        Mon, 08 Jul 2019 10:49:40 -0700 (PDT)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Garnier <thgarnie@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Alok Kataria <akataria@vmware.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Len Brown <len.brown@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 06/11] x86/CPU: Adapt assembly for PIE support
-Date:   Mon,  8 Jul 2019 10:48:59 -0700
-Message-Id: <20190708174913.123308-7-thgarnie@chromium.org>
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 10/11] x86/paravirt: Adapt assembly for PIE support
+Date:   Mon,  8 Jul 2019 10:49:03 -0700
+Message-Id: <20190708174913.123308-11-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 In-Reply-To: <20190708174913.123308-1-thgarnie@chromium.org>
 References: <20190708174913.123308-1-thgarnie@chromium.org>
@@ -77,38 +77,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the assembly code to use only relative references of symbols for the
-kernel to be PIE compatible. Use the new _ASM_MOVABS macro instead of
-the 'mov $symbol, %dst' construct.
+if PIE is enabled, switch the paravirt assembly constraints to be
+compatible. The %c/i constrains generate smaller code so is kept by
+default.
 
 Position Independent Executable (PIE) support will allow to extend the
 KASLR randomization range below 0xffffffff80000000.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
+Acked-by: Juergen Gross <jgross@suse.com>
 ---
- arch/x86/include/asm/processor.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/paravirt_types.h | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 3eab6ece52b4..3e2154b0e09f 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -713,11 +713,13 @@ static inline void sync_core(void)
- 		"pushfq\n\t"
- 		"mov %%cs, %0\n\t"
- 		"pushq %q0\n\t"
--		"pushq $1f\n\t"
-+		"movabsq $1f, %q0\n\t"
-+		"pushq %q0\n\t"
- 		"iretq\n\t"
- 		UNWIND_HINT_RESTORE
- 		"1:"
--		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
-+		: "=&r" (tmp), ASM_CALL_CONSTRAINT
-+		: : "cc", "memory");
- #endif
- }
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index 946f8f1f1efc..5ec59abc5cb5 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -343,9 +343,25 @@ extern struct paravirt_patch_template pv_ops;
+ #define PARAVIRT_PATCH(x)					\
+ 	(offsetof(struct paravirt_patch_template, x) / sizeof(void *))
  
++#ifdef CONFIG_X86_PIE
++#define paravirt_opptr_call "a"
++#define paravirt_opptr_type "p"
++
++/*
++ * Alternative patching requires a maximum of 7 bytes but the relative call is
++ * only 6 bytes. If PIE is enabled, add an additional nop to the call
++ * instruction to ensure patching is possible.
++ * */
++#define PARAVIRT_CALL_POST  "nop;"
++#else
++#define paravirt_opptr_call "c"
++#define paravirt_opptr_type "i"
++#define PARAVIRT_CALL_POST  ""
++#endif
++
+ #define paravirt_type(op)				\
+ 	[paravirt_typenum] "i" (PARAVIRT_PATCH(op)),	\
+-	[paravirt_opptr] "i" (&(pv_ops.op))
++	[paravirt_opptr] paravirt_opptr_type (&(pv_ops.op))
+ #define paravirt_clobber(clobber)		\
+ 	[paravirt_clobber] "i" (clobber)
+ 
+@@ -384,9 +400,10 @@ int paravirt_disable_iospace(void);
+  * offset into the paravirt_patch_template structure, and can therefore be
+  * freely converted back into a structure offset.
+  */
+-#define PARAVIRT_CALL					\
+-	ANNOTATE_RETPOLINE_SAFE				\
+-	"call *%c[paravirt_opptr];"
++#define PARAVIRT_CALL						\
++	ANNOTATE_RETPOLINE_SAFE					\
++	"call *%" paravirt_opptr_call "[paravirt_opptr];"	\
++	PARAVIRT_CALL_POST
+ 
+ /*
+  * These macros are intended to wrap calls through one of the paravirt
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
