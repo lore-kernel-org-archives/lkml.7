@@ -2,53 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61BDC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2777DC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75ADD216F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F052621738
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599271;
-	bh=uJ9cKZvs83i2eyJqGCstzudXWkkAG38PjVk7XRlvJAQ=;
+	s=default; t=1562599275;
+	bh=OyvPrMEsL5zESbuuUbF6mok4H+383Nhd1CEAyymND5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3tb5fl+nnsQ8xeYSz6lXdxo4jOPIy+nAx2DM5mD7Bxa0GiF6vFe79E3d0XtvOc4u
-	 LEAIL4Q0QegwLrtqzNqMb2za5EJY8FX0RQRLUT+jRW6B8vtNTEKupj/05942VAXC/g
-	 H1t7k7sJBQWECQAECIkHES/643vMFMyd4XJhgHKw=
+	b=rgqZSLSfCdftexBxfJ2hR3PsU4oQp06YiJCrag1R+DVZeGXkM/+asbz7rvXi+V738
+	 yskFh/zlYAfoNbkijLt+Mpm/EeISBaw6H09akgY+x4HA5AaBlxdx2hGdZwYcWR3uvy
+	 9wv5BV0Mxi02I9NRzqZSXAag6HgRS5/6dW83wBbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfGHPVK (ORCPT
+        id S2387470AbfGHPVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:21:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46542 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387709AbfGHPVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:21:06 -0400
+        id S1728264AbfGHPVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:21:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28B7B21734;
-        Mon,  8 Jul 2019 15:21:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7F42216E3;
+        Mon,  8 Jul 2019 15:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599265;
-        bh=uJ9cKZvs83i2eyJqGCstzudXWkkAG38PjVk7XRlvJAQ=;
+        s=default; t=1562599268;
+        bh=OyvPrMEsL5zESbuuUbF6mok4H+383Nhd1CEAyymND5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hb6YpDBpAQ481LCq18gdJBvo6K4aOcrCInrwF2IXYCFWBTQi8HzacI15974MyqahR
-         JSJzE5L7a7rFWiGBthX4FEeKgVpoQJADjoAFyamqLichTyYZxHBQtvfF0vMs12hdiy
-         wj1kEz2GWumrECi2HZ5uNVXb+jgLFeOLku547EwI=
+        b=HScheexg3J8PHfJdGCEJdNc+tIT9gGXi3Po60k8KIaD4osYrIvXrHt4Q37FJNdVqc
+         FK4zOHpGLpIBIRJ2gPz0auILwSCZzLzx0MHQe6j8bVlHpS9TpczpqShjpw5BXJQ4Ae
+         ZN7bjvVmv6s/wug2sisKovUpA5cBaaA9HuteMQ50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 059/102] bonding: Always enable vlan tx offload
-Date:   Mon,  8 Jul 2019 17:12:52 +0200
-Message-Id: <20190708150529.518123433@linuxfoundation.org>
+Subject: [PATCH 4.9 060/102] ipv4: Use return value of inet_iif() for __raw_v4_lookup in the while loop
+Date:   Mon,  8 Jul 2019 17:12:53 +0200
+Message-Id: <20190708150529.566741992@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -61,50 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Stephen Suryaputra <ssuryaextr@gmail.com>
 
-[ Upstream commit 30d8177e8ac776d89d387fad547af6a0f599210e ]
+[ Upstream commit 38c73529de13e1e10914de7030b659a2f8b01c3b ]
 
-We build vlan on top of bonding interface, which vlan offload
-is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
-BOND_XMIT_POLICY_ENCAP34.
+In commit 19e4e768064a8 ("ipv4: Fix raw socket lookup for local
+traffic"), the dif argument to __raw_v4_lookup() is coming from the
+returned value of inet_iif() but the change was done only for the first
+lookup. Subsequent lookups in the while loop still use skb->dev->ifIndex.
 
-Because vlan tx offload is off, vlan tci is cleared and skb push
-the vlan header in validate_xmit_vlan() while sending from vlan
-devices. Then in bond_xmit_hash, __skb_flow_dissect() fails to
-get information from protocol headers encapsulated within vlan,
-because 'nhoff' is points to IP header, so bond hashing is based
-on layer 2 info, which fails to distribute packets across slaves.
-
-This patch always enable bonding's vlan tx offload, pass the vlan
-packets to the slave devices with vlan tci, let them to handle
-vlan implementation.
-
-Fixes: 278339a42a1b ("bonding: propogate vlan_features to bonding master")
-Suggested-by: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 19e4e768064a8 ("ipv4: Fix raw socket lookup for local traffic")
+Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c |    2 +-
+ net/ipv4/raw.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4241,12 +4241,12 @@ void bond_setup(struct net_device *bond_
- 	bond_dev->features |= NETIF_F_NETNS_LOCAL;
- 
- 	bond_dev->hw_features = BOND_VLAN_FEATURES |
--				NETIF_F_HW_VLAN_CTAG_TX |
- 				NETIF_F_HW_VLAN_CTAG_RX |
- 				NETIF_F_HW_VLAN_CTAG_FILTER;
- 
- 	bond_dev->hw_features |= NETIF_F_GSO_ENCAP_ALL;
- 	bond_dev->features |= bond_dev->hw_features;
-+	bond_dev->features |= NETIF_F_HW_VLAN_CTAG_TX;
- }
- 
- /* Destroy a bonding device.
+--- a/net/ipv4/raw.c
++++ b/net/ipv4/raw.c
+@@ -197,7 +197,7 @@ static int raw_v4_input(struct sk_buff *
+ 		}
+ 		sk = __raw_v4_lookup(net, sk_next(sk), iph->protocol,
+ 				     iph->saddr, iph->daddr,
+-				     skb->dev->ifindex);
++				     dif);
+ 	}
+ out:
+ 	read_unlock(&raw_v4_hashinfo.lock);
 
 
