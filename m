@@ -2,52 +2,52 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8F9C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A8AC606C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A9F2171F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBA92173E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599370;
-	bh=lf+l3YWiXvNSLX6ulPo57HYWr8ukOed4LDD+Tb8RjGw=;
+	s=default; t=1562599372;
+	bh=2bcg2DM1IE8ugKmuof6Mw84sS9E6si19t81ORiMJElU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHdN8B7syPNfMOTr0QwL8dgZ/tY9drF6fr9DxmmAIPf/0pG1/jJoGcMO2e2V7Vo4r
-	 wT6G0QXng+VnlF2DlZYkAHjUdXbRHQd3cMwKi/WU1/FHPqkArtRTpUarAOZBUnEzNH
-	 Q+Havqbbxewg1ZY7EdDt7neCqkUPOKlogkAp1igg=
+	b=H0YZyZOI4MKeA7m696Vuy0R6QSoWBWOATe8ra+Gsfr88TpBxRWcydDpJax2ifYDxn
+	 MlpWiVLn7F1vjZqTYMMkLUqCkP6aRZaciQS5Ew9pWryHfpNNKdJfkJXGm310EYeral
+	 ffa3oUJzoZfLMzgb52GF2NvSMTB0ccreJqMZuu+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388056AbfGHPWt (ORCPT
+        id S2388069AbfGHPWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49436 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731270AbfGHPWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:22:44 -0400
+        id S2388042AbfGHPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:22:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 412E4216E3;
-        Mon,  8 Jul 2019 15:22:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7130214C6;
+        Mon,  8 Jul 2019 15:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599363;
-        bh=lf+l3YWiXvNSLX6ulPo57HYWr8ukOed4LDD+Tb8RjGw=;
+        s=default; t=1562599366;
+        bh=2bcg2DM1IE8ugKmuof6Mw84sS9E6si19t81ORiMJElU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FFUwdfduPEiGvH23rfAaMyExgLm6e8TPvlyZVEuoCIk9KyTlUnGzT5y1XV7dnwOvH
-         ac0jGLDQzE+LEYC5nEA6uUU2OFKt1DUgn0yIelQkANQeivIGMwyyhBf7oE5w5MRFXS
-         5Remmr5hBUxQBea5/3VRxJHiEfgCNgt7v8POYq6Q=
+        b=OIaZKJ/KsZTePPXol/VE6P3gnY6dOMUQ6RDfdvZjJpGBsYdgWXj2sGpcnUJ/ypiZx
+         H8XumY54iyTUp5Q6KreILhkEL9AUcd0b0U1kIXT/IzbK8wLcX0xkqHBVntRn0K3eeM
+         m+nh/gZ3gf7nhDJmDnwtcuu03PLuloFJwdZ6fIrQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.9 050/102] NFS/flexfiles: Use the correct TCP timeout for flexfiles I/O
-Date:   Mon,  8 Jul 2019 17:12:43 +0200
-Message-Id: <20190708150529.028262811@linuxfoundation.org>
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 041/102] 9p: acl: fix uninitialized iattr access
+Date:   Mon,  8 Jul 2019 17:12:34 +0200
+Message-Id: <20190708150528.542270211@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
 References: <20190708150525.973820964@linuxfoundation.org>
@@ -60,33 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+[ Upstream commit e02a53d92e197706cad1627bd84705d4aa20a145 ]
 
-commit 68f461593f76bd5f17e87cdd0bea28f4278c7268 upstream.
+iattr is passed to v9fs_vfs_setattr_dotl which does send various
+values from iattr over the wire, even if it tells the server to
+only look at iattr.ia_valid fields this could leak some stack data.
 
-Fix a typo where we're confusing the default TCP retrans value
-(NFS_DEF_TCP_RETRANS) for the default TCP timeout value.
-
-Fixes: 15d03055cf39f ("pNFS/flexfiles: Set reasonable default ...")
-Cc: stable@vger.kernel.org # 4.8+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/1536339057-21974-2-git-send-email-asmadeus@codewreck.org
+Addresses-Coverity-ID: 1195601 ("Uninitalized scalar variable")
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayoutdev.c |    2 +-
+ fs/9p/acl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -17,7 +17,7 @@
+diff --git a/fs/9p/acl.c b/fs/9p/acl.c
+index 082d227fa56b..6261719f6f2a 100644
+--- a/fs/9p/acl.c
++++ b/fs/9p/acl.c
+@@ -276,7 +276,7 @@ static int v9fs_xattr_set_acl(const struct xattr_handler *handler,
+ 	switch (handler->flags) {
+ 	case ACL_TYPE_ACCESS:
+ 		if (acl) {
+-			struct iattr iattr;
++			struct iattr iattr = { 0 };
+ 			struct posix_acl *old_acl = acl;
  
- #define NFSDBG_FACILITY		NFSDBG_PNFS_LD
- 
--static unsigned int dataserver_timeo = NFS_DEF_TCP_RETRANS;
-+static unsigned int dataserver_timeo = NFS_DEF_TCP_TIMEO;
- static unsigned int dataserver_retrans;
- 
- void nfs4_ff_layout_put_deviceid(struct nfs4_ff_layout_ds *mirror_ds)
+ 			retval = posix_acl_update_mode(inode, &iattr.ia_mode, &acl);
+-- 
+2.20.1
+
 
 
