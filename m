@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33918C606AC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836F2C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B8320861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D1D20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oq23msEj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbiuTy4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730714AbfGHMdX (ORCPT
+        id S1730728AbfGHMdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:33:23 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41990 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727373AbfGHMdX (ORCPT
+        Mon, 8 Jul 2019 08:33:32 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33868 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfGHMdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:33:23 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay6so8202056plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 05:33:22 -0700 (PDT)
+        Mon, 8 Jul 2019 08:33:32 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so8218054plt.1;
+        Mon, 08 Jul 2019 05:33:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=cnpaUYY7PfsaPEiNSsa/HFMftAhnh6cWuyIN2oyHtQI=;
-        b=oq23msEjxcp/YyvSg1o4afYr5Q8Sb2xtGTbtsbrLoZz1W5PzO5QhZmHvBqXz/kE0hJ
-         dk6DJM0VLA3Kdr+aMUDHu3MU3d5cn8/1InYpj6Nseky2nJGFt7LX+ds0YBE+mI27/qiQ
-         DT7bde2LtthGa0IgVWpWisyzpcHir8bFypHN+w4GfpfFhssCWKTTytBQubgvCEP0lMyi
-         lbU/71Lm3LCCLvllIgEN+ifjZe5cNAjVczwL6Engpe+0K/f3wnuPumPGCKKANQYhI6V6
-         MCoWFOSWje6xxISlSgoCAKTQOrsc1kmos6qF7wFtNWBLUQNR5kx3b7XxfmM6FjxstBtc
-         FTcA==
+        bh=KBezzKXC+quBmYtuOLs/KQOhhcAej9/sFp0EhMpVed4=;
+        b=lbiuTy4NTNKv7+lo/RiO5xjrasMyJSle7JXu4HwcBCnmxVuYZm1ZKinniHnW7atbW/
+         F4go8xH1I+droR2rm3k4ju1BcKA10vQxv23tCsaBNROc6sjh0Qa6grNQe5sBhO+p87pX
+         4Fgtxg4RXC5sTlTyPpSd09lGUcY9ebXKXpO8PzCNUiQWpkh9jVB71kfNSQoEUi7UxZ4f
+         e7UG0BJpIQdE/Ix2ghhZ+EoIIqWmxVVtNbNhqaeLpkqP3kMq4QicPL5K0Kuh8TvyQlbH
+         FGSuXotNb2lUABwbMEPSWhp474/U5pzXb4ehG7oyrSvvYFDvvkRHQLGtjgPwU6N++5aH
+         y37w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cnpaUYY7PfsaPEiNSsa/HFMftAhnh6cWuyIN2oyHtQI=;
-        b=U9BeUQXdRE9Gz8cFFl4+PcCcjqTze62DusVqnwG9CaIW64Kyj+BVPGIvelkXZLMT0N
-         J1v8ZP2mpAHz9GDp9fmSSXsX+bTR5lO2qtCUfHbOh1CfcxDcM6NLepE2GAiUznebJhjo
-         2yy3gwOkD+L9rXy+ydDUBxVw17IbqbpAymxXRP7dwfzoyUW4ZFW1vFo9oy+Ka/LYP8ma
-         yAYzjgm+9ziEzJBodc40ZlcCEXIb1mfMx/j+uJbh/048Mn6tQ2x5XqajHmSjW5Pp3Bza
-         450LhZ/2zxUIi4MnDZAs+awg38g0JNZMcBdfGdU2MJpPZ9R5VW8bae4wL5aDy57XFuJw
-         NupA==
-X-Gm-Message-State: APjAAAXnwh4Y7p3bWqYLzV0ghZcD9pIJ63NSiP9jMx/3jiGNoUplkWm4
-        t1tca6ampzfGcEgA0IawJeE=
-X-Google-Smtp-Source: APXvYqw5PgsxhbaI8eUmPiNT21zGE7yXFZ6cMZ56ySR8GcW2gXlNXBV2MFZVeGhPWAum1yV27k5+pA==
-X-Received: by 2002:a17:902:6b02:: with SMTP id o2mr22656033plk.99.1562589202713;
-        Mon, 08 Jul 2019 05:33:22 -0700 (PDT)
+        bh=KBezzKXC+quBmYtuOLs/KQOhhcAej9/sFp0EhMpVed4=;
+        b=mmFRkMvll1dWzjbQ3+wKjQRcloNiLisxD92ulyJIz2CUzSj6hxEOrI/4iD5BvJ8Nbh
+         A9Udqx8VAsD7Hl6qC+u/oGHdUHaV8tcW/RPE0rv+/ZC/h9UYBZG1lrszTsfo4JYLXLxw
+         lJhewPMkEUm0fQPBBX8MRDsV8h21ieOuLlnjE/IoYpcj3LLUhmXtl/d7tUPt8VLY7CVV
+         nZ0Kr0r3xx+EQR9gCwMEF9nXC+/bO0jdjqLAhRoAzlOrPHRUxWMB340y7ROIYYDaV8/k
+         t8ADNztnM8RhXRAEWhmKJNS1zutpi2dO/ETnELCO54FaKASe/rNfqzKMrVOrB/46Hfp7
+         /Sbg==
+X-Gm-Message-State: APjAAAVXSgB8PB4ydidN5jmOn41XCJREMcCESIz5u98CpiEZwAGDnlqq
+        9bhtHx3wsEix+4ykeoo7b7U=
+X-Google-Smtp-Source: APXvYqwAEbLV7qkevKSnyycTL/ijhsv7uxN4JSwyzV/xBJqGacY6oo2Q77Q4VJoUtYtJbIWmT/pp9A==
+X-Received: by 2002:a17:902:e2:: with SMTP id a89mr24664291pla.210.1562589211477;
+        Mon, 08 Jul 2019 05:33:31 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id j24sm23386297pgg.86.2019.07.08.05.33.20
+        by smtp.googlemail.com with ESMTPSA id t10sm17102282pjr.13.2019.07.08.05.33.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 05:33:22 -0700 (PDT)
+        Mon, 08 Jul 2019 05:33:31 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 06/14] drm/i2c: tda9950: Replace devm_add_action() followed by failure action with devm_add_action_or_reset()
-Date:   Mon,  8 Jul 2019 20:33:15 +0800
-Message-Id: <20190708123315.11897-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 07/14] Input: cyapa - Replace devm_add_action() followed by failure action with devm_add_action_or_reset()
+Date:   Mon,  8 Jul 2019 20:33:23 +0800
+Message-Id: <20190708123323.11943-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,24 +77,58 @@ and reduce the likelyhood of bugs.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/gpu/drm/i2c/tda9950.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/input/mouse/cyapa.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/i2c/tda9950.c b/drivers/gpu/drm/i2c/tda9950.c
-index 8039fc0d83db..042f6487e6fb 100644
---- a/drivers/gpu/drm/i2c/tda9950.c
-+++ b/drivers/gpu/drm/i2c/tda9950.c
-@@ -361,9 +361,7 @@ static int tda9950_devm_glue_init(struct device *dev, struct tda9950_glue *glue)
- 			return ret;
+diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
+index dfd3873513e4..e1d9ab558ecf 100644
+--- a/drivers/input/mouse/cyapa.c
++++ b/drivers/input/mouse/cyapa.c
+@@ -840,10 +840,9 @@ static int cyapa_prepare_wakeup_controls(struct cyapa *cyapa)
+ 			return error;
+ 		}
+ 
+-		error = devm_add_action(dev,
++		error = devm_add_action_or_reset(dev,
+ 				cyapa_remove_power_wakeup_group, cyapa);
+ 		if (error) {
+-			cyapa_remove_power_wakeup_group(cyapa);
+ 			dev_err(dev, "failed to add power cleanup action: %d\n",
+ 				error);
+ 			return error;
+@@ -957,9 +956,8 @@ static int cyapa_start_runtime(struct cyapa *cyapa)
+ 		return error;
  	}
  
--	ret = devm_add_action(dev, tda9950_devm_glue_exit, glue);
--	if (ret)
--		tda9950_devm_glue_exit(glue);
-+	ret = devm_add_action_or_reset(dev, tda9950_devm_glue_exit, glue);
+-	error = devm_add_action(dev, cyapa_remove_power_runtime_group, cyapa);
++	error = devm_add_action_or_reset(dev, cyapa_remove_power_runtime_group, cyapa);
+ 	if (error) {
+-		cyapa_remove_power_runtime_group(cyapa);
+ 		dev_err(dev,
+ 			"failed to add power runtime cleanup action: %d\n",
+ 			error);
+@@ -1298,9 +1296,8 @@ static int cyapa_probe(struct i2c_client *client,
+ 		return error;
+ 	}
  
- 	return ret;
- }
+-	error = devm_add_action(dev, cyapa_disable_regulator, cyapa);
++	error = devm_add_action_or_reset(dev, cyapa_disable_regulator, cyapa);
+ 	if (error) {
+-		cyapa_disable_regulator(cyapa);
+ 		dev_err(dev, "failed to add disable regulator action: %d\n",
+ 			error);
+ 		return error;
+@@ -1318,9 +1315,8 @@ static int cyapa_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
+-	error = devm_add_action(dev, cyapa_remove_sysfs_group, cyapa);
++	error = devm_add_action_or_reset(dev, cyapa_remove_sysfs_group, cyapa);
+ 	if (error) {
+-		cyapa_remove_sysfs_group(cyapa);
+ 		dev_err(dev, "failed to add sysfs cleanup action: %d\n", error);
+ 		return error;
+ 	}
 -- 
 2.11.0
 
