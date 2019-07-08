@@ -2,122 +2,164 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461F7C606D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47365C606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 268482166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7E1216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 21:34:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T8pbps6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405354AbfGHVbg (ORCPT
+        id S2404127AbfGHVei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 17:31:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56022 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729474AbfGHVbf (ORCPT
+        Mon, 8 Jul 2019 17:34:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38385 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729474AbfGHVei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 17:31:35 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hkbET-0006LV-6P; Mon, 08 Jul 2019 21:31:33 +0000
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-To:     David Howells <dhowells@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        ceph-devel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: bug report: re: vfs: Convert ceph to use the new mount API
-Message-ID: <2b919604-282e-85d6-b9d8-827beefdcb0d@canonical.com>
-Date:   Mon, 8 Jul 2019 22:31:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Jul 2019 17:34:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r9so17431801ljg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 14:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/jUllDDZ3b7We2EmtZhggvnRSS7NBu/TTaz5tD6/PUc=;
+        b=T8pbps6CRd0YYwTNpgOwCFTwOOC7K3bS+QLebfKLWanCnY22hZ2/Fzlhoz21wi9btl
+         qeHAu27UExxlUyTgdNIVzORsRVkvD3PDhUCD7Z2LQRxS0R9ofH1QhUxQRs6Te1v6eGyZ
+         LG1uW2nD+Ayo0T1reG8dFirp5xGI/MbJiyeG0tO5JKRgedhe7zP2ba2fOODu1NV0RFZq
+         0j5U87HXsJ1iFXKpPtbeK9jKHLRN2vUICPWz3OSNeWLZZ1zqhrrdqHV2PEiI7IG2DrQV
+         4/303OFQ65FkDNFHHdYHF81pcV4rhG06bASB5InaH3MQxmxx2WsbbMPYxSAN/o98cxgp
+         NwQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/jUllDDZ3b7We2EmtZhggvnRSS7NBu/TTaz5tD6/PUc=;
+        b=VNaSu5eU4fSZphLVT+6va6ur/1DzOgco5OCphIYjko75xDUoXQbcwG4ZbQgjIuQKyu
+         yiSYOo2MGAGxPDF8CpnoqXIpUkCfDAXLgwtRYZdjxUQ8vtvPh+jlQx4opdnzD41IgEPP
+         pRMAb9voMi74IfYFwLjMkZBRxebNBIYjiBVwk6TrUo637LNUFx0kD6FDCkT8nAl8zKV/
+         s/sqrhjcRGSdo6vBYZ/ql/BabEfUaE+STBeeti2Ncd0s/xvzkKerDiZs5xeauZpty+lJ
+         FNlKtbHjHtI+FJx1hpDlPuod3nIhKFkjhh69x0d3cn1CjmNa0KVNmYFt4Bz3JblVTUfc
+         8D6Q==
+X-Gm-Message-State: APjAAAUhExtTjh0pCMSKwVVK5yrd2r+galudOImXXQo850AVa4qg4ciw
+        Tyka7ZZ6mzvH5DB6gCW0lTl959CDukQ=
+X-Google-Smtp-Source: APXvYqyanSllvP+L4q7Yp4S2QCZWO8l25caUDQzKE7LWtFwOxuNGkd5k/wLMnr72X/k+Tk3RffI2HA==
+X-Received: by 2002:a2e:1459:: with SMTP id 25mr8862117lju.153.1562621676013;
+        Mon, 08 Jul 2019 14:34:36 -0700 (PDT)
+Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id o24sm3883096ljg.6.2019.07.08.14.34.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 14:34:35 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
+Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v9 net-next 0/5] net: ethernet: ti: cpsw: Add XDP support
+Date:   Tue,  9 Jul 2019 00:34:27 +0300
+Message-Id: <20190708213432.8525-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patchset adds XDP support for TI cpsw driver and base it on
+page_pool allocator. It was verified on af_xdp socket drop,
+af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
 
-Static analysis with Coverity on linux-next has detected an
-uninitialized variable error in the following commit:
+It was verified with following configs enabled:
+CONFIG_JIT=y
+CONFIG_BPFILTER=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_XDP_SOCKETS=y
+CONFIG_BPF_EVENTS=y
+CONFIG_HAVE_EBPF_JIT=y
+CONFIG_BPF_JIT=y
+CONFIG_CGROUP_BPF=y
 
-commit 108f95bfaa5665724159e66e4a26206b5589f126
-Author: David Howells <dhowells@redhat.com>
-Date:   Mon Mar 25 16:38:32 2019 +0000
+Link on previous v7:
+https://lkml.org/lkml/2019/7/4/715
 
-    vfs: Convert ceph to use the new mount API
+Also regular tests with iperf2 were done in order to verify impact on
+regular netstack performance, compared with base commit:
+https://pastebin.com/JSMT0iZ4
+
+v8..v9:
+- fix warnings on arm64 caused by typos in type casting
+
+v7..v8:
+- corrected dma calculation based on headroom instead of hard start
+- minor comment changes
+
+v6..v7:
+- rolled back to v4 solution but with small modification
+- picked up patch:
+  https://www.spinics.net/lists/netdev/msg583145.html
+- added changes related to netsec fix and cpsw
 
 
-Specifically, in fs/ceph/super.c in function ceph_real_mount, variable
-err is not initialized, and when the if (!fsc->sb->s_root) code block is
-not executed then err is never assigned and an uninitialized value is
-returned:
+v5..v6:
+- do changes that is rx_dev while redirect/flush cycle is kept the same
+- dropped net: ethernet: ti: davinci_cpdma: return handler status
+- other changes desc in patches
 
- 884        mutex_unlock(&fsc->client->mount_mutex);
+v4..v5:
+- added two plreliminary patches:
+  net: ethernet: ti: davinci_cpdma: allow desc split while down
+  net: ethernet: ti: cpsw_ethtool: allow res split while down
+- added xdp alocator refcnt on xdp level, avoiding page pool refcnt
+- moved flush status as separate argument for cpdma_chan_process
+- reworked cpsw code according to last changes to allocator
+- added missed statistic counter
 
-Uninitialized scalar variable (UNINIT)
-uninit_use: Using uninitialized value err.
+v3..v4:
+- added page pool user counter
+- use same pool for ndevs in dual mac
+- restructured page pool create/destroy according to the last changes in API
 
- 885        return err;
- 886
- 887 out:
- 888        mutex_unlock(&fsc->client->mount_mutex);
- 889        return err;
- 890 }
+v2..v3:
+- each rxq and ndev has its own page pool
 
-Not sure what err should be returning, so I'm reporting this a as bug.
+v1..v2:
+- combined xdp_xmit functions
+- used page allocation w/o refcnt juggle
+- unmapped page for skb netstack
+- moved rxq/page pool allocation to open/close pair
+- added several preliminary patches:
+  net: page_pool: add helper function to retrieve dma addresses
+  net: page_pool: add helper function to unmap dma addresses
+  net: ethernet: ti: cpsw: use cpsw as drv data
+  net: ethernet: ti: cpsw_ethtool: simplify slave loops
 
-Colin
+Ivan Khoronzhuk (5):
+  net: core: page_pool: add user refcnt and reintroduce
+    page_pool_destroy
+  net: ethernet: ti: davinci_cpdma: add dma mapped submit
+  net: ethernet: ti: davinci_cpdma: allow desc split while down
+  net: ethernet: ti: cpsw_ethtool: allow res split while down
+  net: ethernet: ti: cpsw: add XDP support
+
+ .../net/ethernet/mellanox/mlx5/core/en_main.c |   4 +-
+ drivers/net/ethernet/socionext/netsec.c       |   8 +-
+ drivers/net/ethernet/ti/Kconfig               |   1 +
+ drivers/net/ethernet/ti/cpsw.c                | 502 ++++++++++++++++--
+ drivers/net/ethernet/ti/cpsw_ethtool.c        |  57 +-
+ drivers/net/ethernet/ti/cpsw_priv.h           |   7 +
+ drivers/net/ethernet/ti/davinci_cpdma.c       | 106 +++-
+ drivers/net/ethernet/ti/davinci_cpdma.h       |   7 +-
+ include/net/page_pool.h                       |  25 +
+ net/core/page_pool.c                          |   8 +
+ net/core/xdp.c                                |   3 +
+ 11 files changed, 640 insertions(+), 88 deletions(-)
+
+-- 
+2.17.1
+
