@@ -2,155 +2,195 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7713C606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7290C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0B520844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDDA20844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:11:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IEWOQH9V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yg1gpVNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732128AbfGHPJ3 (ORCPT
+        id S1732143AbfGHPLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:09:29 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41862 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfGHPJ3 (ORCPT
+        Mon, 8 Jul 2019 11:11:37 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:44342 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfGHPLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:09:29 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x68F9EU8058607;
-        Mon, 8 Jul 2019 10:09:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562598554;
-        bh=5itJGPGTzjx5419mSRNNOzdOyOTaElCYDDdWPsFfInc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IEWOQH9VYiXdMKHlLPjKOLMOwZkbsesU7Ny8wLWX8bUmLUEL1yjbBcKwv9OHDzNt1
-         ZWraRmqbh3643ufE+py+AsfHeTkDbxgocVcZwVdKTIO1Syi/P3Rl2MAK8Sl8RmBiCS
-         +7UVTUK0ukceHKNRXzvZ+JaUP3xv4vFxW3QWTj0k=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x68F9ESO029329
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jul 2019 10:09:14 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 8 Jul
- 2019 10:09:13 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 8 Jul 2019 10:09:13 -0500
-Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x68F9Afu033254;
-        Mon, 8 Jul 2019 10:09:11 -0500
-Subject: Re: linux-next: build failure after merge of the usb and usb-gadget
- trees
-To:     Felipe Balbi <balbi@kernel.org>,
-        Pawel Laszczak <pawell@cadence.com>, Greg KH <greg@kroah.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Nishanth Menon <nm@ti.com>
-References: <20190704163458.63ed69d2@canb.auug.org.au>
- <20190704065949.GA32707@kroah.com>
- <CAH8TKc_4ggxOPgii8gLGo2d7nvx08cbTk8_xDUQfA2Ckcxb_Aw@mail.gmail.com>
- <BYAPR07MB470946609232100714B3EA29DDFA0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87imsiyzo3.fsf@linux.intel.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <22eca6b8-253d-3502-ca70-0089d0984abb@ti.com>
-Date:   Mon, 8 Jul 2019 20:39:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jul 2019 11:11:36 -0400
+Received: by mail-vs1-f68.google.com with SMTP id v129so8427569vsb.11;
+        Mon, 08 Jul 2019 08:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qSkBAdk5oddBWH4Q77bK0k0/VBqaR/5vSGHDXEvy3Mg=;
+        b=Yg1gpVNhkSvcLwybUOoLKF2S1WwFjaI6l060S2PdgedWdRlwmh9jgvrggY7u7mrqeo
+         Wx8+0gjT0IhrC2qM1HkVy7Ma7fdnAUbqNJeyizySg3SETmjiPK30ZiC9bMUkMD3URzE7
+         oiICrfiI1SL+ZbLKh7MVUV8asbLVPQKCHnDHmXTgV0da458kGp+26T843jIJ4vKCv6JO
+         F7ASYTSgPSUPVYBlk4w9f8lX2ooXvwcbcE9q8HWgflyS81NZDzjWGdhW8cyNGdl5XPJl
+         mjK4UDRbc2ZKzyBva7WSvAhDs3ZEvDQb3PUeJ0XwuBfUnWt4rj815FTI9lMIUC6162kh
+         rh7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qSkBAdk5oddBWH4Q77bK0k0/VBqaR/5vSGHDXEvy3Mg=;
+        b=RDaCqm0J+R5V5G7br8Vl4ghq8y3OX115J039bHb8kkDPQKMLgYJ0lk3R0ELDjmLY0w
+         PuKNp5NSvQi4G4fbyMTNQdVFXZO3wQ+D4UUVIsxQERuzHWn6cN9uwWvbIb2Oi+gpcQdv
+         MC0+S82USK8wPk+pDlhxa+ppPpa4xijXVXMS+aj3S8ugtUzTgGT1Ky0WBrgRRWV5Nisn
+         8xUTCEMYujiV5H4NagjcmWoERjyG8Q29WnUq35ifd3SHN6wV3BeSv51T3UqKpLueX29X
+         VyEb2YqwOlORAeHk/OyqxmkGYwWcC8Frw5yRlt6Dea7Fp5vdR7iBXMSTqZhKgREGByYH
+         VeQA==
+X-Gm-Message-State: APjAAAWAygnbaOcazXQhgKHKqHcPknImc5gbSEhqCUNZI8bAJ3eg8U1L
+        DJnhNbAwN1VQNkBk8+kv729A22zKPlxCGgvejeKgpodxhU4=
+X-Google-Smtp-Source: APXvYqwPepGr97TYpU7TehuCAXGqVyYS9jfuD56GdqWIPRKMWtFRb+MQrh6kmqt0fCsCpeDiPaMSdk/Dr8YGUwvNJZI=
+X-Received: by 2002:a67:f7c6:: with SMTP id a6mr10651087vsp.120.1562598695231;
+ Mon, 08 Jul 2019 08:11:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87imsiyzo3.fsf@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1562359091.git.a.s.protopopov@gmail.com>
+ <e183c0af99056f8ea4de06acb358ace7f3a3d6ae.1562359091.git.a.s.protopopov@gmail.com>
+ <734dd45a-95b0-a7fd-9e1d-0535ef4d3e12@iogearbox.net>
+In-Reply-To: <734dd45a-95b0-a7fd-9e1d-0535ef4d3e12@iogearbox.net>
+From:   Anton Protopopov <a.s.protopopov@gmail.com>
+Date:   Mon, 8 Jul 2019 11:11:24 -0400
+Message-ID: <CAGn_itzJkW8uR-y92oU+jKKLRsAfsHcqJ+Cm0+KRZxJ-zaqMNA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf, libbpf: add a new API bpf_object__reuse_maps()
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriin@fb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/07/19 1:55 PM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> Pawel Laszczak <pawell@cadence.com> writes:
-> 
->>>
->>> Hi,
->>>
->>> On Thu, Jul 4, 2019 at 9:59 AM Greg KH <greg@kroah.com> wrote:
->>>>
->>>> On Thu, Jul 04, 2019 at 04:34:58PM +1000, Stephen Rothwell wrote:
->>>>> Hi all,
->>>>>
->>>>> After merging the usb tree, today's linux-next build (arm
->>>>> multi_v7_defconfig) failed like this:
->>>>>
->>>>> arm-linux-gnueabi-ld: drivers/usb/dwc3/trace.o: in function `trace_raw_output_dwc3_log_ctrl':
->>>>> trace.c:(.text+0x119c): undefined reference to `usb_decode_ctrl'
->>>>>
->>>>> Caused by commit
->>>>>
->>>>>   3db1b636c07e ("usb:gadget Separated decoding functions from dwc3 driver.")
->>>>>
->>>>> I have used the usb tree from next-20190703 for today.
->>>>>
->>>>> This also occurs in the usb-gadget tree so I have used the version of
->>>>> that from next-20190703 as well.
->>>>
->>>> Odd, I thought I pulled the usb-gadget tree into mine.  Felipe, can you
->>>> take a look at this to see if I messed something up?
->>>
->>> This looks like it was caused by Pawel's patches.
->>>
->>> I'll try to reproduce here and see what's causing it.
->>
->> Problem is in my Patch. I reproduced it, but I don't understand why compiler 
->> complains about usb_decode_ctrl. It's compiled into libcomposite.ko and
->> declaration is in drivers/usb/gadget.h. 
-> 
-> That's because in multi_v7_defconfig dwc3 is built-in while libcomposite
-> is a module:
-> 
-> CONFIG_USB_DWC3=y
-> CONFIG_USB_LIBCOMPOSITE=m
-> 
-> 
-> I remember that when you were doing this work, I asked you to move
-> functions to usb/common. Why did you deviate from that suggestion? It's
-> clear that decoding a ctrl request can be used by peripheral and host
-> and we wouldn't have to deal with this problem if you had just followed
-> the suggestion.
-> 
-> Now we have to come up with a way to fix this that doesn't involve
-> reverting my part2 tag in its entirety because there are other important
-> things there.
-> 
-> This is what I get for trusting people to do their part. I couldn't even
-> compile test this since I don't have ARM compilers anymore (actually,
-> just installed to test). Your customer, however, uses ARM cores so I
-> would expect you to have at least compile tested this on ARM. How come
-> this wasn't verified by anybody at TI?
-> 
-> TI used to have automated testing for many of the important defconfigs,
-> is that completely gone? Are you guys relying entirely on linux-next?
+=D0=BF=D1=82, 5 =D0=B8=D1=8E=D0=BB. 2019 =D0=B3. =D0=B2 17:44, Daniel Borkm=
+ann <daniel@iogearbox.net>:
+>
+> On 07/05/2019 10:44 PM, Anton Protopopov wrote:
+> > Add a new API bpf_object__reuse_maps() which can be used to replace all=
+ maps in
+> > an object by maps pinned to a directory provided in the path argument. =
+ Namely,
+> > each map M in the object will be replaced by a map pinned to path/M.nam=
+e.
+> >
+> > Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+> > ---
+> >  tools/lib/bpf/libbpf.c   | 34 ++++++++++++++++++++++++++++++++++
+> >  tools/lib/bpf/libbpf.h   |  2 ++
+> >  tools/lib/bpf/libbpf.map |  1 +
+> >  3 files changed, 37 insertions(+)
+> >
+> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > index 4907997289e9..84c9e8f7bfd3 100644
+> > --- a/tools/lib/bpf/libbpf.c
+> > +++ b/tools/lib/bpf/libbpf.c
+> > @@ -3144,6 +3144,40 @@ int bpf_object__unpin_maps(struct bpf_object *ob=
+j, const char *path)
+> >       return 0;
+> >  }
+> >
+> > +int bpf_object__reuse_maps(struct bpf_object *obj, const char *path)
+> > +{
+> > +     struct bpf_map *map;
+> > +
+> > +     if (!obj)
+> > +             return -ENOENT;
+> > +
+> > +     if (!path)
+> > +             return -EINVAL;
+> > +
+> > +     bpf_object__for_each_map(map, obj) {
+> > +             int len, err;
+> > +             int pinned_map_fd;
+> > +             char buf[PATH_MAX];
+>
+> We'd need to skip the case of bpf_map__is_internal(map) since they are al=
+ways
+> recreated for the given object.
+>
+> > +             len =3D snprintf(buf, PATH_MAX, "%s/%s", path, bpf_map__n=
+ame(map));
+> > +             if (len < 0) {
+> > +                     return -EINVAL;
+> > +             } else if (len >=3D PATH_MAX) {
+> > +                     return -ENAMETOOLONG;
+> > +             }
+> > +
+> > +             pinned_map_fd =3D bpf_obj_get(buf);
+> > +             if (pinned_map_fd < 0)
+> > +                     return pinned_map_fd;
+>
+> Should we rather have a new map definition attribute that tells to reuse
+> the map if it's pinned in bpf fs, and if not, we create it and later on
+> pin it? This is what iproute2 is doing and which we're making use of heav=
+ily.
 
-I just checked back to see what happened here. In our product kernel
-(which does undergo build test with multiple defconfigs), we are using
-v6 of these patches which did not have this issue.
+What do you think about adding a new generic field, say load_flags,
+to the bpf_map_def structure and a particular flag, say LOAD_F_STICKY
+for this purpose? And it will be cleared for internal maps, so we will skip
+them as well.
 
-I think 0-day kbuild tester could have caught the issue as well. Within
-boundaries of existing infrastructure, that probably was the best bet
-here. Not sure why that did not happen (probably just build scheduling).
+> In bpf_object__reuse_maps() bailing out if bpf_obj_get() fails is perhaps
+> too limiting for a generic API as new version of an object file may conta=
+in
+> new maps which are not yet present in bpf fs at that point.
 
-Thanks,
-Sekhar
+How permissive should it be? Is it ok to just print a warning on any
+bpf_obj_get()
+failure? Or does it make sense to skip some specific error (ENOENT) and rej=
+ect
+on other errors?
+
+>
+> > +             err =3D bpf_map__reuse_fd(map, pinned_map_fd);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  int bpf_object__pin_programs(struct bpf_object *obj, const char *path)
+> >  {
+> >       struct bpf_program *prog;
+> > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> > index d639f47e3110..7fe465a1be76 100644
+> > --- a/tools/lib/bpf/libbpf.h
+> > +++ b/tools/lib/bpf/libbpf.h
+> > @@ -82,6 +82,8 @@ int bpf_object__variable_offset(const struct bpf_obje=
+ct *obj, const char *name,
+> >  LIBBPF_API int bpf_object__pin_maps(struct bpf_object *obj, const char=
+ *path);
+> >  LIBBPF_API int bpf_object__unpin_maps(struct bpf_object *obj,
+> >                                     const char *path);
+> > +LIBBPF_API int bpf_object__reuse_maps(struct bpf_object *obj,
+> > +                                   const char *path);
+> >  LIBBPF_API int bpf_object__pin_programs(struct bpf_object *obj,
+> >                                       const char *path);
+> >  LIBBPF_API int bpf_object__unpin_programs(struct bpf_object *obj,
+> > diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+> > index 2c6d835620d2..66a30be6696c 100644
+> > --- a/tools/lib/bpf/libbpf.map
+> > +++ b/tools/lib/bpf/libbpf.map
+> > @@ -172,5 +172,6 @@ LIBBPF_0.0.4 {
+> >               btf_dump__new;
+> >               btf__parse_elf;
+> >               bpf_object__load_xattr;
+> > +             bpf_object__reuse_maps;
+> >               libbpf_num_possible_cpus;
+> >  } LIBBPF_0.0.3;
+> >
+>
