@@ -2,42 +2,42 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DCFC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA8FC0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603052053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18DC020693
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfGHCGg (ORCPT
+        id S1728573AbfGHCGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 22:06:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:44745 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728556AbfGHCGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 22:06:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:44741 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727718AbfGHCGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 22:06:24 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:32 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jul 2019 19:06:24 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,464,1557212400"; 
-   d="scan'208";a="364083555"
+   d="scan'208";a="364083518"
 Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:30 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jul 2019 19:06:22 -0700
 From:   Wei Wang <wei.w.wang@intel.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         pbonzini@redhat.com, ak@linux.intel.com, peterz@infradead.org
 Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
         like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
         arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v7 06/12] KVM/x86: expose MSR_IA32_PERF_CAPABILITIES to the guest
-Date:   Mon,  8 Jul 2019 09:23:13 +0800
-Message-Id: <1562548999-37095-7-git-send-email-wei.w.wang@intel.com>
+Subject: [PATCH v7 02/12] perf/x86: add a function to get the lbr stack
+Date:   Mon,  8 Jul 2019 09:23:09 +0800
+Message-Id: <1562548999-37095-3-git-send-email-wei.w.wang@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
 References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
@@ -46,86 +46,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bits [0, 5] of MSR_IA32_PERF_CAPABILITIES tell about the format of
-the addresses stored in the LBR stack. Expose those bits to the guest
-when the guest lbr feature is enabled.
+The LBR stack MSRs are architecturally specific. The perf subsystem has
+already assigned the abstracted MSR values based on the CPU architecture.
+
+This patch enables a caller outside the perf subsystem to get the LBR
+stack info. This is useful for hyperviosrs to prepare the lbr feature
+for the guest.
 
 Signed-off-by: Wei Wang <wei.w.wang@intel.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/x86/include/asm/perf_event.h |  2 ++
- arch/x86/kvm/cpuid.c              |  2 +-
- arch/x86/kvm/vmx/pmu_intel.c      | 16 ++++++++++++++++
- 3 files changed, 19 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/lbr.c       | 23 +++++++++++++++++++++++
+ arch/x86/include/asm/perf_event.h | 14 ++++++++++++++
+ 2 files changed, 37 insertions(+)
 
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 6f814a2..784642a 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1311,3 +1311,26 @@ void intel_pmu_lbr_init_knl(void)
+ 	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_LIP)
+ 		x86_pmu.intel_cap.lbr_format = LBR_FORMAT_EIP_FLAGS;
+ }
++
++/**
++ * x86_perf_get_lbr_stack - get the lbr stack related MSRs
++ *
++ * @stack: the caller's memory to get the lbr stack
++ *
++ * Returns: 0 indicates that the lbr stack has been successfully obtained.
++ */
++int x86_perf_get_lbr_stack(struct x86_perf_lbr_stack *stack)
++{
++	stack->nr = x86_pmu.lbr_nr;
++	stack->tos = x86_pmu.lbr_tos;
++	stack->from = x86_pmu.lbr_from;
++	stack->to = x86_pmu.lbr_to;
++
++	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO)
++		stack->info = MSR_LBR_INFO_0;
++	else
++		stack->info = 0;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(x86_perf_get_lbr_stack);
 diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 2606100..aa77da2 100644
+index 1392d5e..2606100 100644
 --- a/arch/x86/include/asm/perf_event.h
 +++ b/arch/x86/include/asm/perf_event.h
-@@ -95,6 +95,8 @@
- #define PEBS_DATACFG_LBRS	BIT_ULL(3)
- #define PEBS_DATACFG_LBR_SHIFT	24
+@@ -318,7 +318,16 @@ struct perf_guest_switch_msr {
+ 	u64 host, guest;
+ };
  
-+#define X86_PERF_CAP_MASK_LBR_FMT			0x3f
++struct x86_perf_lbr_stack {
++	unsigned int	nr;
++	unsigned int	tos;
++	unsigned int	from;
++	unsigned int	to;
++	unsigned int	info;
++};
 +
- /*
-  * Intel "Architectural Performance Monitoring" CPUID
-  * detection/enumeration details:
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 4992e7c..4b9e713 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -361,7 +361,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
- 		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
- 		0 /* DS-CPL, VMX, SMX, EST */ |
- 		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
--		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
-+		F(FMA) | F(CX16) | 0 /* xTPR Update*/ | F(PDCM) |
- 		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
- 		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
- 		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 1e19b01..09ae6ff 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -151,6 +151,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- 	case MSR_CORE_PERF_GLOBAL_STATUS:
- 	case MSR_CORE_PERF_GLOBAL_CTRL:
- 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
-+	case MSR_IA32_PERF_CAPABILITIES:
- 		ret = pmu->version > 1;
- 		break;
- 	default:
-@@ -316,6 +317,19 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
- 		msr_info->data = pmu->global_ovf_ctrl;
- 		return 0;
-+	case MSR_IA32_PERF_CAPABILITIES: {
-+		u64 data;
+ extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr);
++extern int x86_perf_get_lbr_stack(struct x86_perf_lbr_stack *stack);
+ extern void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap);
+ extern void perf_check_microcode(void);
+ extern int x86_perf_rdpmc_index(struct perf_event *event);
+@@ -329,6 +338,11 @@ static inline struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
+ 	return NULL;
+ }
+ 
++static inline int x86_perf_get_lbr_stack(struct x86_perf_lbr_stack *stack)
++{
++	return -1;
++}
 +
-+		if (!boot_cpu_has(X86_FEATURE_PDCM) ||
-+		    (!msr_info->host_initiated &&
-+		     !guest_cpuid_has(vcpu, X86_FEATURE_PDCM)))
-+			return 1;
-+		data = native_read_msr(MSR_IA32_PERF_CAPABILITIES);
-+		msr_info->data = 0;
-+		if (vcpu->kvm->arch.lbr_in_guest)
-+			msr_info->data |= (data & X86_PERF_CAP_MASK_LBR_FMT);
-+		return 0;
-+	}
- 	default:
- 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
- 			u64 val = pmc_read_counter(pmc);
-@@ -374,6 +388,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 0;
- 		}
- 		break;
-+	case MSR_IA32_PERF_CAPABILITIES:
-+		return 1; /* RO MSR */
- 	default:
- 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
- 			if (msr_info->host_initiated)
+ static inline void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
+ {
+ 	memset(cap, 0, sizeof(*cap));
 -- 
 2.7.4
 
