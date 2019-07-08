@@ -2,52 +2,53 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E702C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD19C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4800E21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2DE20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599965;
-	bh=sRzUo8N2c4jO93+r4ZILDbdApJGAD7zCtHKnqBowNh0=;
+	s=default; t=1562599967;
+	bh=FDnHQTevr7vqhEdskbc9vF0K1odOlL91XgZCILAUHiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jdGZRPZ4VCXhre0DazExKAD5sUy1sxifWmEWREEPBzTvNLmrRmXuU4OzkoOXkgjrh
-	 6+owQjF6uyvoZ2F34L1dGmmMRpqhwwU/BQtaIyjl3qNymkYxbzngDZKHb7+/oinXQj
-	 Tsmw8wBrm6kDItdI/5v31fSsTmsYfS4wPJKF1c24=
+	b=XHSkffkuCHGtl5Zq1XpY2BP2wST/0xhL8NvX2RfBOYDyVH17wZmLHQZ4ugswq++mI
+	 Z2HA0t6mKaIvkdrbe1UYc0cwiORc2p1Y5bPMx1msdFr76WcqvfBulfH7zRLpedVB3J
+	 lfL0Xjyx+vipdlWYJDzctBs95sgqDTAWdBBG9UCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390193AbfGHPco (ORCPT
+        id S1732653AbfGHPcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:32:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34460 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:32:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390180AbfGHPcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:32:41 -0400
+        id S2390192AbfGHPco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:32:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECCB6216F4;
-        Mon,  8 Jul 2019 15:32:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3815220665;
+        Mon,  8 Jul 2019 15:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599960;
-        bh=sRzUo8N2c4jO93+r4ZILDbdApJGAD7zCtHKnqBowNh0=;
+        s=default; t=1562599963;
+        bh=FDnHQTevr7vqhEdskbc9vF0K1odOlL91XgZCILAUHiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m56xAybMYGowi3C3GgsIcC3FjDGXr4vziJJvsFkaCGKsjAXcEYezeeqhQzO+PspVb
-         F78FcdAKJSSaxTU6Kr3gXbRxP9G7fPekUbzrzC1v9QNyN+z93O+miH/VDPMBudc8bh
-         OCEcTngsIj71aO5OwUBtA3U0ohXSu4UEQZQXEPsI=
+        b=s8gooeUifV2TsppkIDdgnQ1Sxbq38P4iwTPODf/Ej3cLkzdfqaDfIHboufzWI+wtv
+         j+uWD1QTTKCsJ5WHbjXWMNBPn4yBP5mWMZnfUdGQO3eJDtRbKe99LCdrQ1yy/uSK7Z
+         Lta0yZV3HDwNnkvYQPM/ZbcrRQhifYL+caHrcpcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 08/96] HID: i2c-hid: add iBall Aer3 to descriptor override
-Date:   Mon,  8 Jul 2019 17:12:40 +0200
-Message-Id: <20190708150526.772295121@linuxfoundation.org>
+        stable@vger.kernel.org, Matt Flax <flatmax@flatmax.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 09/96] ASoC : cs4265 : readable register too low
+Date:   Mon,  8 Jul 2019 17:12:41 +0200
+Message-Id: <20190708150526.830296634@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -60,39 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eb6964fa6509b4f1152313f1e0bb67f0c54a6046 ]
+[ Upstream commit f3df05c805983427319eddc2411a2105ee1757cf ]
 
-This device uses the SIPODEV SP1064 touchpad, which does not
-supply descriptors, so it has to be added to the override
-list.
+The cs4265_readable_register function stopped short of the maximum
+register.
 
-BugLink: https://bugs.launchpad.net/bugs/1825718
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+An example bug is taken from :
+https://github.com/Audio-Injector/Ultra/issues/25
+
+Where alsactl store fails with :
+Cannot read control '2,0,0,C Data Buffer,0': Input/output error
+
+This patch fixes the bug by setting the cs4265 to have readable
+registers up to the maximum hardware register CS4265_MAX_REGISTER.
+
+Signed-off-by: Matt Flax <flatmax@flatmax.org>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/codecs/cs4265.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-index fd1b6eea6d2f..75078c83be1a 100644
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -354,6 +354,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "iBall Aer3",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "iBall"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Aer3"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{ }	/* Terminate list */
- };
- 
+diff --git a/sound/soc/codecs/cs4265.c b/sound/soc/codecs/cs4265.c
+index ab27d2b94d02..c0190ec59e74 100644
+--- a/sound/soc/codecs/cs4265.c
++++ b/sound/soc/codecs/cs4265.c
+@@ -60,7 +60,7 @@ static const struct reg_default cs4265_reg_defaults[] = {
+ static bool cs4265_readable_register(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
+-	case CS4265_CHIP_ID ... CS4265_SPDIF_CTL2:
++	case CS4265_CHIP_ID ... CS4265_MAX_REGISTER:
+ 		return true;
+ 	default:
+ 		return false;
 -- 
 2.20.1
 
