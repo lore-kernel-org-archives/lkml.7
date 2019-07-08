@@ -2,142 +2,113 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E931C606AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EF2C606AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF6520861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:38:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+5yRMQd"
+	by mail.kernel.org (Postfix) with ESMTP id 40CEF20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 11:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfGHLiL (ORCPT
+        id S1730517AbfGHLl6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 07:38:11 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:46728 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728643AbfGHLiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 07:38:11 -0400
-Received: by mail-ua1-f68.google.com with SMTP id o19so4799880uap.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 04:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d5E4n9npTainsgeWeHKIO7haRg//t83t7wpBcjKc1EI=;
-        b=a+5yRMQdCp05W5lQBi+Nsf82gIKYBxx2kTLEWwFGjS6NDssWPIX/iG6X7h7Pie8lqK
-         NmeC14C5LYqj+AF4nFJDrgkbdi/C1EXP3W0RkQNxsIqL4yTOE+t+2RbGKhG0S6RHNiK8
-         CDayMvFBdNofZvDLVXHCwYX1i75FElfuCS8h0cS1ZP6fhzIrLbyicgRPQXvCcYe0abUP
-         KxY6jZoL0QdOezI4/yNbQ4vXWb5m5QMva33Jxi60/T3ElnvdIIrOM/rrDoPDlW3fQ8PI
-         UV3NyIdQpi72J16ajxdTxfeoh+Od4P/m24WfrvF1HGx99rPV0EpY6fh6AMWeSJkf15rL
-         IuPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d5E4n9npTainsgeWeHKIO7haRg//t83t7wpBcjKc1EI=;
-        b=TTXyNxcBYGzR7yA+kUsvHGU/Pc+j3vrnb/7qIXd6tGyQla7/jRcC0beuzKXMAPxpmB
-         9mob8nVKVe9oIhLsdrIe5Hq8tu/voMHb1d4VAFPiN54dmGc4DpVE2mMS7c1J34/mAIuO
-         WGoSLKJcfJPATcHIgZCEtpizcndc3O/3Te3vtw0Q2DR8ZPLunejfJ25M0FHsPFyVfbCm
-         iPLKdhTbgltZrfZnSiiw+VIOFHMsTbq233elnWuOIvPAxToytEC82yEBo9fUVMfw+rq1
-         pGY+78cl5JzjGfB1abw4Q5njxaRI5UdDn6ECP5sk57gsNDCcTHAIYADe0YVgYQ6K07cS
-         MokA==
-X-Gm-Message-State: APjAAAUXzFRi4ClRca6U9Yb3OxPKvOFhWfma96bhZK+R4rQTSQOIHKsb
-        3Xej3hoXwoKQvjhbeStw8y2hbXXzAdTfDdCGLj6ylQ==
-X-Google-Smtp-Source: APXvYqyG9rxgsBkPO3Q/qWYU94JZ8SBCOSSIrg6QYN7bP31CsSyQ/lc/BEjb2W/8RV1j0w6RgNy5y8HYv3vu5lOUoP8=
-X-Received: by 2002:ab0:20cc:: with SMTP id z12mr9138611ual.32.1562585890288;
- Mon, 08 Jul 2019 04:38:10 -0700 (PDT)
+        Mon, 8 Jul 2019 07:41:58 -0400
+Received: from mail-oln040092071017.outbound.protection.outlook.com ([40.92.71.17]:18247
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727973AbfGHLl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 07:41:58 -0400
+Received: from VE1EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (10.152.18.51) by VE1EUR03HT191.eop-EUR03.prod.protection.outlook.com
+ (10.152.19.121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2052.18; Mon, 8 Jul
+ 2019 11:41:54 +0000
+Received: from VI1PR0601MB2111.eurprd06.prod.outlook.com (10.152.18.57) by
+ VE1EUR03FT057.mail.protection.outlook.com (10.152.19.123) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2052.18 via Frontend Transport; Mon, 8 Jul 2019 11:41:54 +0000
+Received: from VI1PR0601MB2111.eurprd06.prod.outlook.com
+ ([fe80::acdd:656f:33be:2163]) by VI1PR0601MB2111.eurprd06.prod.outlook.com
+ ([fe80::acdd:656f:33be:2163%5]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
+ 11:41:54 +0000
+From:   morten petersen <morten_bp@live.dk>
+To:     "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     morten petersen <morten_bp@live.dk>
+Subject: [PATCH] mailbox: handle failed named mailbox channel request
+Thread-Topic: [PATCH] mailbox: handle failed named mailbox channel request
+Thread-Index: AQHVNYIkY1kb4XuU6Ue+u5b+Elm7ww==
+Date:   Mon, 8 Jul 2019 11:41:54 +0000
+Message-ID: <VI1PR0601MB211187A233E3185D228F5BDC8FF60@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+Accept-Language: da-DK, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1P190CA0017.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:bc::27)
+ To VI1PR0601MB2111.eurprd06.prod.outlook.com (2603:10a6:800:2d::26)
+x-incomingtopheadermarker: OriginalChecksum:DCC705C3B25B64136DD5D7D8D60EFC9FF39F0D2DD636C05E48CD499EA0094527;UpperCasedChecksum:28E56C009B079D34ADA5F20B7FD13A59EB3F3EBF4EEF74E9A7B0743F4AB8C35C;SizeAsReceived:7424;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-tmn:  [s8F56BQcmBqrVsG2M1ZY4B9EnWSnXARv]
+x-microsoft-original-message-id: <1562586063-30142-1-git-send-email-morten_bp@live.dk>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:VE1EUR03HT191;
+x-ms-traffictypediagnostic: VE1EUR03HT191:
+x-microsoft-antispam-message-info: vld7J3C1U+1UhiXxKAEAKXIS9Z9GJtMC1cnulmobh7k2643gog5kbjpBDmoP2zc+qlwDpH7bW/AXed94JKknLgiwAqKZe6I/dghq2pPy9fmh0xhdUY6nrViDKHf8kWJtD2Bmnj2US1Nrvk6nwRcyLi9bO0RUpzPVkxR0O5mqN0PSsZXcX7i4NsL2VvpC4L8l
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190708104355.32569-1-oded.gabbay@gmail.com> <20190708112136.GA13795@kroah.com>
- <CAFCwf11XN_stq3HHVGqD4_LKG8W3uFiYarfbwP50hw58Hi10Sw@mail.gmail.com>
-In-Reply-To: <CAFCwf11XN_stq3HHVGqD4_LKG8W3uFiYarfbwP50hw58Hi10Sw@mail.gmail.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Mon, 8 Jul 2019 14:37:45 +0300
-Message-ID: <CAFCwf10Siysrdd61itf0stM_8S8UXmzROtAZmV1eJzfC3p7UXg@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: use correct variable to show fd open counter
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Omer Shpigelman <oshpigelman@habana.ai>,
-        Tomer Tayar <ttayar@habana.ai>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3455b65-45ff-4b9c-c3e8-08d70399468e
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 11:41:54.8328
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR03HT191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 2:30 PM Oded Gabbay <oded.gabbay@gmail.com> wrote:
->
-> On Mon, Jul 8, 2019 at 2:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jul 08, 2019 at 01:43:55PM +0300, Oded Gabbay wrote:
-> > > The current code checks if the user context pointer is NULL or not to
-> > > display the number of open file descriptors of a device. However, that
-> > > variable (user_ctx) will eventually go away as the driver will support
-> > > multiple processes. Instead, the driver can use the atomic counter of
-> > > the open file descriptors which the driver already maintains.
-> > >
-> > > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-> > > ---
-> > >  drivers/misc/habanalabs/sysfs.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/misc/habanalabs/sysfs.c b/drivers/misc/habanalabs/sysfs.c
-> > > index 25eb46d29d88..881be19b5fad 100644
-> > > --- a/drivers/misc/habanalabs/sysfs.c
-> > > +++ b/drivers/misc/habanalabs/sysfs.c
-> > > @@ -356,7 +356,7 @@ static ssize_t write_open_cnt_show(struct device *dev,
-> > >  {
-> > >       struct hl_device *hdev = dev_get_drvdata(dev);
-> > >
-> > > -     return sprintf(buf, "%d\n", hdev->user_ctx ? 1 : 0);
-> > > +     return sprintf(buf, "%d\n", atomic_read(&hdev->fd_open_cnt));
-> > >  }
-> >
-> > Odds are, this means nothing, as it doesn't get touched if the file
-> > descriptor is duped or sent to another process.
-> >
-> > Why do you care about the number of open files?  Whenever someone tries
-> > to do this type of logic, it is almost always wrong, just let userspace
-> > do what it wants to do, and if wants to open something twice, then it
-> > gets to keep the pieces when things break.
-> >
-> > thanks,
-> >
-> > greg k-h
->
-> I care about the number of open file descriptors because I can't let
-> multiple processes run simultaneously on my device, as we still don't
-> have the code to do proper isolation between the processes, in regard
-> of memory accesses on our device memory and by using our DMA engine.
-> Basically, it's a security hole. If you want, I can explain more in
-> length on this issue.
->
-> We have the H/W infrastructure for that, using MMU and multiple
-> address space IDs (ASID), but we didn't write the code yet in the
-> driver, as that is a BIG feature but it wasn't requested by anyone
-> yet.
-Let me amend the above statement:
-We have the H/W infrastructure for that in GOYA. In GAUDI (I don't
-know if you saw the press release), we don't have it, as the use-case
-of that asic (training) doesn't require multiple processes support.
-Therefore, when I will upstream that ASIC code, I will have to always
-prevent multiple processes from opening file descriptors at the same
-time, due to the above security concerns.
+Previously, if mbox_request_channel_byname was used with a name
+which did not exist in the "mbox-names" property of a mailbox
+client, the mailbox corresponding to the last entry in the
+"mbox-names" list would be incorrectly selected.
+With this patch, -EINVAL is returned if the named mailbox is
+not found.
 
-Oded
+Signed-off-by: Morten Borup Petersen <morten_bp@live.dk>
+---
+ drivers/mailbox/mailbox.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
->
-> So the current solution is to block the ability to open multiple file
-> descriptors.
->
-> Regarding this specific sysfs property, I don't really care about it.
-> I simply saw that it is shown in other drivers and I thought it may be
-> nice for a system admin utility to show it.
->
-> Thanks,
-> Oded
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index f4b1950..c823fd6 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -418,11 +418,13 @@ struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
+ 
+ 	of_property_for_each_string(np, "mbox-names", prop, mbox_name) {
+ 		if (!strncmp(name, mbox_name, strlen(name)))
+-			break;
++			return mbox_request_channel(cl, index);
+ 		index++;
+ 	}
+ 
+-	return mbox_request_channel(cl, index);
++	dev_err(cl->dev, "%s() could not locate mailbox named \"%s\"\n",
++		__func__, name);
++	return ERR_PTR(-EINVAL);
+ }
+ EXPORT_SYMBOL_GPL(mbox_request_channel_byname);
+ 
+-- 
+2.7.4
+
