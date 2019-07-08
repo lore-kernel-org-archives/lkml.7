@@ -6,65 +6,84 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9F3C0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 01:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC567C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 01:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB6E204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 01:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B39204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 01:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfGHBTl (ORCPT
+        id S1728134AbfGHBTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 21:19:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:57457 "EHLO ozlabs.org"
+        Sun, 7 Jul 2019 21:19:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35115 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbfGHBTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728042AbfGHBTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jul 2019 21:19:35 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 45hnfs4k9gz9sNs; Mon,  8 Jul 2019 11:19:33 +1000 (AEST)
+        id 45hnfs0rpPz9sP6; Mon,  8 Jul 2019 11:19:32 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 6d3ca7e73642ce17398f4cd5df1780da4a1ccdaf
-In-Reply-To: <1558444404-12254-1-git-send-email-yamada.masahiro@socionext.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linuxppc-dev@lists.ozlabs.org
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+X-powerpc-patch-commit: 22e9c88d486a0536d337d6e0973968be0a4cd4b2
+In-Reply-To: <d6f628ffdeb9c7863da722a8f6ef2949e57bb360.1557824379.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH v2] powerpc/mm: mark more tlb functions as __always_inline
-Message-Id: <45hnfs4k9gz9sNs@ozlabs.org>
-Date:   Mon,  8 Jul 2019 11:19:33 +1000 (AEST)
+        Oliver O'Halloran <oohall@gmail.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] powerpc/64: reuse PPC32 static inline flush_dcache_range()
+Message-Id: <45hnfs0rpPz9sP6@ozlabs.org>
+Date:   Mon,  8 Jul 2019 11:19:32 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-05-21 at 13:13:24 UTC, Masahiro Yamada wrote:
-> With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
-> with gcc 9.1.1:
+On Tue, 2019-05-14 at 09:05:16 UTC, Christophe Leroy wrote:
+> This patch drops the assembly PPC64 version of flush_dcache_range()
+> and re-uses the PPC32 static inline version.
 > 
->   arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
->   arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
->     104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
->         |  ^~~
->   arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
+> With GCC 8.1, the following code is generated:
 > 
-> Fixing _tlbiel_pid() is enough to address the warning above, but I
-> inlined more functions to fix all potential issues.
+> void flush_test(unsigned long start, unsigned long stop)
+> {
+> 	flush_dcache_range(start, stop);
+> }
 > 
-> To meet the "i" (immediate) constraint for the asm operands, functions
-> propagating "ric" must be always inlined.
+> 0000000000000130 <.flush_test>:
+>  130:	3d 22 00 00 	addis   r9,r2,0
+> 			132: R_PPC64_TOC16_HA	.data+0x8
+>  134:	81 09 00 00 	lwz     r8,0(r9)
+> 			136: R_PPC64_TOC16_LO	.data+0x8
+>  138:	3d 22 00 00 	addis   r9,r2,0
+> 			13a: R_PPC64_TOC16_HA	.data+0xc
+>  13c:	80 e9 00 00 	lwz     r7,0(r9)
+> 			13e: R_PPC64_TOC16_LO	.data+0xc
+>  140:	7d 48 00 d0 	neg     r10,r8
+>  144:	7d 43 18 38 	and     r3,r10,r3
+>  148:	7c 00 04 ac 	hwsync
+>  14c:	4c 00 01 2c 	isync
+>  150:	39 28 ff ff 	addi    r9,r8,-1
+>  154:	7c 89 22 14 	add     r4,r9,r4
+>  158:	7c 83 20 50 	subf    r4,r3,r4
+>  15c:	7c 89 3c 37 	srd.    r9,r4,r7
+>  160:	41 82 00 1c 	beq     17c <.flush_test+0x4c>
+>  164:	7d 29 03 a6 	mtctr   r9
+>  168:	60 00 00 00 	nop
+>  16c:	60 00 00 00 	nop
+>  170:	7c 00 18 ac 	dcbf    0,r3
+>  174:	7c 63 42 14 	add     r3,r3,r8
+>  178:	42 00 ff f8 	bdnz    170 <.flush_test+0x40>
+>  17c:	7c 00 04 ac 	hwsync
+>  180:	4c 00 01 2c 	isync
+>  184:	4e 80 00 20 	blr
+>  188:	60 00 00 00 	nop
+>  18c:	60 00 00 00 	nop
 > 
-> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-> Reported-by: Laura Abbott <labbott@redhat.com>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/6d3ca7e73642ce17398f4cd5df1780da4a1ccdaf
+https://git.kernel.org/powerpc/c/22e9c88d486a0536d337d6e0973968be0a4cd4b2
 
 cheers
