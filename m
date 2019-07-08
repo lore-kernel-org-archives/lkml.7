@@ -5,69 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD195C606C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B14C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFB92189F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B492218A0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 17:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aETGtYD3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fa2IMYp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404042AbfGHRuC (ORCPT
+        id S2404052AbfGHRuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 13:50:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42296 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390390AbfGHRth (ORCPT
+        Mon, 8 Jul 2019 13:50:07 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46025 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389898AbfGHRtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 13:49:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so7947805pff.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:49:36 -0700 (PDT)
+        Mon, 8 Jul 2019 13:49:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so3933345plr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 10:49:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ALQ7xiIfUEWAkaO0QCgTelMKlNIBn53AhhYdy27sZMs=;
-        b=aETGtYD3Xt88gXrWEnP+2irAuq2y1fIEjPVspj518Mj7Dcsy9uhdfK4ymYEMlSrYGL
-         bCAj5UmBvU++WCaprKwHz5M6OLj9hSv0Ulm4Xpn8obeHD09OKcz7Vuwn62PQxDxvIc0M
-         jtR6Z5PocfF+7vkm0UBjtt1TqCI77oqrBgKvw=
+        bh=KxfvBRXNL2lxAGR+5TYPhVFxu0m9HvU5t0GmP1NzevA=;
+        b=fa2IMYp5yxmb0mlrjbAugQfJQs7wOZE68qWJlUaWJbES77G4ch8hkfqoU7d3UuMROT
+         miKgo0y2jPB8lvjuBXfFCgUyDKKKj0ty13J70cwhBpbZ7rgFyu6qjJWJwYvFI5KKEjHo
+         0NTiwMOBldPc7y1fEm3F73rASqMQHrgQtOHaY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ALQ7xiIfUEWAkaO0QCgTelMKlNIBn53AhhYdy27sZMs=;
-        b=eHlyOMx0nknB7Ulk8BAGMG+ecIDZ0rOaIsNsg7HHMtsdBkgdF3lx7VX4Evk8a36AOI
-         3mvkhPwe4j+AlnGxNr/NV1Ha8mYQPnSsnAumY9X+/nSctnWQVqAC85PEUWXCwQ1OIrYJ
-         6/3MWDED6V1cHZjeu6KEbaQi5zGlMTMqM65TYnIr+E9IgwxOx51/rzjLuNOokWvWFa9u
-         xrBxurwwR7dLqrg4EFVz42pWhf+eidHeH45kUsgkg/6StXy1rvO67bezS2MmtgBFTJq/
-         02b4iliaZbf7klt0QqbQ9SzeYxR2PgaKHIwxBTiZNA5mwJsg6perDJcMyOQEz/PmkBZo
-         d2mg==
-X-Gm-Message-State: APjAAAVWqPAIDbMhJHHD6lRLbQWJ2Sez6fwZb0yZ2HhFAZGNmhpsA/lc
-        cmzmma8e9SqhNRju1anL0YM6VQ==
-X-Google-Smtp-Source: APXvYqx3dVXfvHBooaxAprdB1WDpLargxi1K8L90RVkcv8mbIWfrC+4ozdkMLguK62YY52k7nFnbwQ==
-X-Received: by 2002:a17:90a:7787:: with SMTP id v7mr27317571pjk.143.1562608176510;
-        Mon, 08 Jul 2019 10:49:36 -0700 (PDT)
+        bh=KxfvBRXNL2lxAGR+5TYPhVFxu0m9HvU5t0GmP1NzevA=;
+        b=ilFbPnT8BW5AvNlrakN1UAz/cO7Hszjstdsdn20T5ic3tSN8mWIX2dKVfK9KcsAlRV
+         oocFsryrDoJ1jF8AHWhHg31NbI0P7YTlc8klCPF+T8UN/rwhsjOb90jlbnP4bBp+LPhd
+         KqxwGwFIHtTfFrOdGBhCD2fBkQbPIAYGrAkAlUajT7rwgtk3/vQfy+2PElasHMpivd/k
+         Ian025WAcJKX0ZvwnidCLCkl/9/ITFJRSsYDsWTzeOe51sBbe9qdGibhlTMo0QUKPUMm
+         uE08cA6XPwNjUDIDiGHZvQZioqVNMUVR6NxDsDA+IAR5oqNICBrBImN8o6PtXOOzUgft
+         KSog==
+X-Gm-Message-State: APjAAAWtki6G1IcCYNxhEQ90lxnQoLKTdENccBmSIsApairSDa1wZR4m
+        Oc4SfUfnHF4uTBuPYR95lTl5ow==
+X-Google-Smtp-Source: APXvYqwHxN5CAV58byDjy1sz6I4FOZx29YlNCGS4HMqwy+D7g8iqgYoEjOJKr1IsZSeU5GI09ezrQg==
+X-Received: by 2002:a17:902:424:: with SMTP id 33mr26686735ple.151.1562608171183;
+        Mon, 08 Jul 2019 10:49:31 -0700 (PDT)
 Received: from skynet.sea.corp.google.com ([2620:0:1008:1100:c4b5:ec23:d87b:d6d3])
-        by smtp.gmail.com with ESMTPSA id j1sm20151686pfe.101.2019.07.08.10.49.35
+        by smtp.gmail.com with ESMTPSA id j1sm20151686pfe.101.2019.07.08.10.49.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 10:49:36 -0700 (PDT)
+        Mon, 08 Jul 2019 10:49:30 -0700 (PDT)
 From:   Thomas Garnier <thgarnie@chromium.org>
 To:     kernel-hardening@lists.openwall.com
 Cc:     kristen@linux.intel.com, keescook@chromium.org,
         Thomas Garnier <thgarnie@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 07/11] x86/acpi: Adapt assembly for PIE support
-Date:   Mon,  8 Jul 2019 10:49:00 -0700
-Message-Id: <20190708174913.123308-8-thgarnie@chromium.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 04/11] x86/entry/64: Adapt assembly for PIE support
+Date:   Mon,  8 Jul 2019 10:48:57 -0700
+Message-Id: <20190708174913.123308-5-thgarnie@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 In-Reply-To: <20190708174913.123308-1-thgarnie@chromium.org>
 References: <20190708174913.123308-1-thgarnie@chromium.org>
@@ -85,86 +82,61 @@ Position Independent Executable (PIE) support will allow to extend the
 KASLR randomization range below 0xffffffff80000000.
 
 Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/kernel/acpi/wakeup_64.S | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ arch/x86/entry/entry_64.S | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
-index b0715c3ac18d..3ec6c1b74ad4 100644
---- a/arch/x86/kernel/acpi/wakeup_64.S
-+++ b/arch/x86/kernel/acpi/wakeup_64.S
-@@ -15,7 +15,7 @@
- 	 * Hooray, we are in Long 64-bit mode (but still running in low memory)
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 0ea4831a72a4..9f55a359c896 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1309,7 +1309,8 @@ ENTRY(error_entry)
+ 	movl	%ecx, %eax			/* zero extend */
+ 	cmpq	%rax, RIP+8(%rsp)
+ 	je	.Lbstep_iret
+-	cmpq	$.Lgs_change, RIP+8(%rsp)
++	leaq	.Lgs_change(%rip), %rcx
++	cmpq	%rcx, RIP+8(%rsp)
+ 	jne	.Lerror_entry_done
+ 
+ 	/*
+@@ -1506,10 +1507,10 @@ ENTRY(nmi)
+ 	 * resume the outer NMI.
  	 */
- ENTRY(wakeup_long64)
--	movq	saved_magic, %rax
-+	movq	saved_magic(%rip), %rax
- 	movq	$0x123456789abcdef0, %rdx
- 	cmpq	%rdx, %rax
- 	jne	bogus_64_magic
-@@ -26,14 +26,14 @@ ENTRY(wakeup_long64)
- 	movw	%ax, %es
- 	movw	%ax, %fs
- 	movw	%ax, %gs
--	movq	saved_rsp, %rsp
-+	movq	saved_rsp(%rip), %rsp
  
--	movq	saved_rbx, %rbx
--	movq	saved_rdi, %rdi
--	movq	saved_rsi, %rsi
--	movq	saved_rbp, %rbp
-+	movq	saved_rbx(%rip), %rbx
-+	movq	saved_rdi(%rip), %rdi
-+	movq	saved_rsi(%rip), %rsi
-+	movq	saved_rbp(%rip), %rbp
- 
--	movq	saved_rip, %rax
-+	movq	saved_rip(%rip), %rax
- 	jmp	*%rax
- ENDPROC(wakeup_long64)
- 
-@@ -46,7 +46,7 @@ ENTRY(do_suspend_lowlevel)
- 	xorl	%eax, %eax
- 	call	save_processor_state
- 
--	movq	$saved_context, %rax
-+	leaq	saved_context(%rip), %rax
- 	movq	%rsp, pt_regs_sp(%rax)
- 	movq	%rbp, pt_regs_bp(%rax)
- 	movq	%rsi, pt_regs_si(%rax)
-@@ -65,13 +65,14 @@ ENTRY(do_suspend_lowlevel)
+-	movq	$repeat_nmi, %rdx
++	leaq	repeat_nmi(%rip), %rdx
+ 	cmpq	8(%rsp), %rdx
+ 	ja	1f
+-	movq	$end_repeat_nmi, %rdx
++	leaq	end_repeat_nmi(%rip), %rdx
+ 	cmpq	8(%rsp), %rdx
+ 	ja	nested_nmi_out
+ 1:
+@@ -1563,7 +1564,8 @@ nested_nmi:
+ 	pushq	%rdx
  	pushfq
- 	popq	pt_regs_flags(%rax)
+ 	pushq	$__KERNEL_CS
+-	pushq	$repeat_nmi
++	leaq	repeat_nmi(%rip), %rdx
++	pushq	%rdx
  
--	movq	$.Lresume_point, saved_rip(%rip)
-+	leaq	.Lresume_point(%rip), %rax
-+	movq	%rax, saved_rip(%rip)
- 
--	movq	%rsp, saved_rsp
--	movq	%rbp, saved_rbp
--	movq	%rbx, saved_rbx
--	movq	%rdi, saved_rdi
--	movq	%rsi, saved_rsi
-+	movq	%rsp, saved_rsp(%rip)
-+	movq	%rbp, saved_rbp(%rip)
-+	movq	%rbx, saved_rbx(%rip)
-+	movq	%rdi, saved_rdi(%rip)
-+	movq	%rsi, saved_rsi(%rip)
- 
- 	addq	$8, %rsp
- 	movl	$3, %edi
-@@ -83,7 +84,7 @@ ENTRY(do_suspend_lowlevel)
- 	.align 4
- .Lresume_point:
- 	/* We don't restore %rax, it must be 0 anyway */
--	movq	$saved_context, %rax
-+	leaq	saved_context(%rip), %rax
- 	movq	saved_context_cr4(%rax), %rbx
- 	movq	%rbx, %cr4
- 	movq	saved_context_cr3(%rax), %rbx
+ 	/* Put stack back */
+ 	addq	$(6*8), %rsp
+@@ -1602,7 +1604,11 @@ first_nmi:
+ 	addq	$8, (%rsp)	/* Fix up RSP */
+ 	pushfq			/* RFLAGS */
+ 	pushq	$__KERNEL_CS	/* CS */
+-	pushq	$1f		/* RIP */
++	pushq	$0		/* Future return address */
++	pushq	%rax		/* Save RAX */
++	leaq	1f(%rip), %rax	/* RIP */
++	movq    %rax, 8(%rsp)   /* Put 1f on return address */
++	popq	%rax		/* Restore RAX */
+ 	iretq			/* continues at repeat_nmi below */
+ 	UNWIND_HINT_IRET_REGS
+ 1:
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
