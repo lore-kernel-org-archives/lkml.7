@@ -2,89 +2,63 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6574DC606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFA3C606BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CFD21537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562596886;
-	bh=15DVfiiRPhsrAKbr8qjH3noHLTISJ5m0P1BCX0k9llA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VggrzBvbY3giSHWMGsJmnfcYBhna/R2QfUwq7PtxVzYJHh1I9Yuwwlurc6qdqUheT
-	 wZtrYyiuO3Zt8LcDJYg/t3b/QiJH2/wqJXcsuhbtH/TAcjMg/7sLamSzHz5n70zH20
-	 cm5qXYWT7s8a9OHsyfBh4aH+sVGcw2jmJ6a8deUU=
+	by mail.kernel.org (Postfix) with ESMTP id 6A61821537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:42:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SuZJoN+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbfGHOlZ (ORCPT
+        id S1729282AbfGHOmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:41:25 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]:38094 "EHLO
-        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbfGHOlY (ORCPT
+        Mon, 8 Jul 2019 10:42:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60370 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729254AbfGHOmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:41:24 -0400
-Received: by mail-qt1-f172.google.com with SMTP id n11so18231019qtl.5;
-        Mon, 08 Jul 2019 07:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kXUN90sDFULd4qRU/R3KEOn/usuVWjJoGJ35nR0nQ18=;
-        b=Xl9uEj6Og+rO1HLpisU7MOQS4uv+UWSEBNNTBNCnDepQBNXTF8mBQpk9jo/3wdKibZ
-         CtZ5kQkMen21+OKQuJ+PCew8yXZuL5r+BgvKpLxdZM9mmLPQ+IYG6A+qUCJCGIEZ8tnH
-         reW7Nkw1QthoOFm1CoYBce4mMtko7w8uWB1P05mMGNTOsZXKHk1cluXKkadnDTJGwCBm
-         IGzeblqdEzm5X4MFpL3O715NYXJ49/og3rViPEBVtXDCIra2D+aJBBXOv9Wf8sSq/MwJ
-         Z+c7nb/En3PazH06XUDEysCWZsK/YpFDRy6/xAUpmjPARQnRlTG5Jc/8fnHOcuzk4zWR
-         REOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kXUN90sDFULd4qRU/R3KEOn/usuVWjJoGJ35nR0nQ18=;
-        b=k+0pISdu7F130TrTO4mCoz5vkU3z7TH7JDaABJEHfm7Kok9vMYBBX91Rrpy9IY65dq
-         meUM13XhZMBJ/lcu4GAKCHBD7/QsBEqXb9n2TTxeZX0lvQfOg/vqP0YUcFPvyCb7wwn8
-         0Vll0p7bKo4Nhe4WguZstmCy1tw+tHv4JqX+3fhLwN940v/xs+XhlBNOZDI6muFVTTuB
-         zLYQoTIb6zcVQN1pOuamZi4GYHrCDhXJCYYWpUKfv/OZ8420uremGNztC7JM5GbQTyQA
-         CIOwVQl2ltGQ28Rt7Ca8t9sRHP6WbZ9vJU6GYmxn6LKVGMT8AjdJHP6CnO3cHHfyxtwG
-         XQbg==
-X-Gm-Message-State: APjAAAVsLA31yXLimn7rAcA3CEE1PAJSmIkHoDoVYT7SxzOLtsIgBxSj
-        K8iDcrxMbcvjyWve7VgpK1U=
-X-Google-Smtp-Source: APXvYqzWtXVq70kcEBCAF1m2IUspOBnTrPdr4XPMk3W1jFGF8Wj2K0zHDvWCYUCXGwEsoLQ0eBJRtA==
-X-Received: by 2002:ac8:3449:: with SMTP id v9mr10281942qtb.163.1562596883530;
-        Mon, 08 Jul 2019 07:41:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:fa50])
-        by smtp.gmail.com with ESMTPSA id g3sm7342207qkk.125.2019.07.08.07.41.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 07:41:22 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 07:41:21 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Peng Wang <rocking@whu.edu.cn>
-Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cgroup: simplify code for cgroup_subtree_control_write()
-Message-ID: <20190708144121.GA657710@devbig004.ftw2.facebook.com>
-References: <20190708130132.5582-1-rocking@whu.edu.cn>
+        Mon, 8 Jul 2019 10:42:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FbVe+96SnHQdB3XrjHSvItUUD9LRS2dN3DEOjB6fZxA=; b=SuZJoN+Qoru93LMevhhWQfOim
+        V2QIOqYKMDTCKvDf7k8xEfvTXFkM6TbWL6Nbu8198IgOJ7nRhrTkjJOQXzI0qZhmE8A0bu+PMYl4M
+        8qDVIt6fbexi5k9c+Zb2MvIpDiqRWLhvMeP7MmT17s/rDXT8A+XwrI6H3dixLlucPufH6T7wCsQus
+        UfrSqqQazKVAw1K5+ggVCoXjhxdKzRda+y8LsXRTt+X4l9HgAXIIsF/FM4+6d1JjmrboRnmiggS9+
+        vlcnCwcSjPQBKQ0WLFdq/Dsnk1lRrEIlI/UB46O1KbB0UrMsBIW7PnuD5bzgYmlISbFwZOaxETeVA
+        yZaW6tR/g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkUqN-0008FF-1b; Mon, 08 Jul 2019 14:42:15 +0000
+Date:   Mon, 8 Jul 2019 07:42:14 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        will@kernel.org, peterz@infradead.org
+Subject: Re: [PATCH] mm: remove redundant assignment of entry
+Message-ID: <20190708144214.GD32320@bombadil.infradead.org>
+References: <20190708082740.21111-1-richardw.yang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190708130132.5582-1-rocking@whu.edu.cn>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190708082740.21111-1-richardw.yang@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 09:01:32PM +0800, Peng Wang wrote:
-> Process "enable" and "disable" earlier to simplify code.
+On Mon, Jul 08, 2019 at 04:27:40PM +0800, Wei Yang wrote:
+> Since ptent will not be changed after previous assignment of entry, it
+> is not necessary to do the assignment again.
+> 
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 
-I don't think this is correct and even if it were the value of this
-change is close to none, so nack on this one.
-
-Thanks.
-
--- 
-tejun
+Acked-by: Matthew Wilcox (Oracle) <willy@infradead.org>
