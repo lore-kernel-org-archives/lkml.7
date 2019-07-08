@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E652C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACB1C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F8920651
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA67920665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600305;
-	bh=BesVByDq8mCJjgxBxvP/tGyTuLfvKdH/Hlzf+VbiDIE=;
+	s=default; t=1562600313;
+	bh=h/g+fnyqelDIBef6lZ+o2cuNEp5nnEToVRY3PLkrDnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qD/qZRt75qsqe1x1B++kmFnCVCLqArNufVnLZUKN7afSkr9i53Np4VIk++0/xvYH7
-	 wF1KjW5bMgqXrD0Y0psMseezIDBCapFbupl0t63MD9pkjx3zjtNqPDweuDg0Z5ImX4
-	 9cQuDd92i2PYaEh9PT9TrsVnrykg52S8kpbE8eGI=
+	b=sjE4msaq1U52w4MBoyTLmDLcogQw1LQTp/9ougGLsw5xhADKO6+pLtp45uwLF4PaR
+	 TVusKYIyn4lvQhqH646vRsToffQ6rnlXBsTB0YsaPMtDYDbmONXkwvHwoSMhI5A+r9
+	 +KJWODdcmuwgLAxjMTGlPG+S5D8pjFsyYqyTCTBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390043AbfGHPiY (ORCPT
+        id S2389822AbfGHPaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:38:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59370 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:30:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732058AbfGHPaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:30:24 -0400
+        id S1728167AbfGHPaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:30:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B8D320645;
-        Mon,  8 Jul 2019 15:30:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BE4F20645;
+        Mon,  8 Jul 2019 15:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599823;
-        bh=BesVByDq8mCJjgxBxvP/tGyTuLfvKdH/Hlzf+VbiDIE=;
+        s=default; t=1562599801;
+        bh=h/g+fnyqelDIBef6lZ+o2cuNEp5nnEToVRY3PLkrDnc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ep2ookHjOxPH+6p3GHkYvTTfNRHl2hkOTM5BkC30YDdfgModp+/sajEGDVISJZFmk
-         eb10m+7FWGtQ6eSQLNSfS9keVZ7kItgzrIvIrPelHbrJPe5jgbMTHdpV9du5XU1xQT
-         iTr35qcxuvbubIq40DNS0AUHZLymO+JTOdViwzTc=
+        b=1wXTDn/4x8odbEdu1cd0cOqflBHrt9PsRD/Ivu2nOdhTHYCxXHKtKQc3g6IDW3MR6
+         DLnujIMJUJZY2OEOqTuYIr9LysO+69eBb5g9LQrnBMMz+YVl6yjpTV2oJFLUdBbs4B
+         02Z5DbtdtI7VPpkD5xSqXU5OmyGimblljI3w5pgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 47/90] ALSA: usb-audio: fix sign unintended sign extension on left shifts
-Date:   Mon,  8 Jul 2019 17:13:14 +0200
-Message-Id: <20190708150524.941227552@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com,
+        Alexander Potapenko <glider@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 82/90] KVM: x86: degrade WARN to pr_warn_ratelimited
+Date:   Mon,  8 Jul 2019 17:13:49 +0200
+Message-Id: <20190708150526.553674137@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 References: <20190708150521.829733162@linuxfoundation.org>
@@ -59,45 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 2acf5a3e6e9371e63c9e4ff54d84d08f630467a0 upstream.
+commit 3f16a5c318392cbb5a0c7a3d19dff8c8ef3c38ee upstream.
 
-There are a couple of left shifts of unsigned 8 bit values that
-first get promoted to signed ints and hence get sign extended
-on the shift if the top bit of the 8 bit values are set. Fix
-this by casting the 8 bit values to unsigned ints to stop the
-unintentional sign extension.
+This warning can be triggered easily by userspace, so it should certainly not
+cause a panic if panic_on_warn is set.
 
-Addresses-Coverity: ("Unintended sign extension")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com
+Suggested-by: Alexander Potapenko <glider@google.com>
+Acked-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer_quirks.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -753,7 +753,7 @@ static int snd_ni_control_init_val(struc
- 		return err;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1447,7 +1447,7 @@ static int set_tsc_khz(struct kvm_vcpu *
+ 			vcpu->arch.tsc_always_catchup = 1;
+ 			return 0;
+ 		} else {
+-			WARN(1, "user requested TSC rate below hardware speed\n");
++			pr_warn_ratelimited("user requested TSC rate below hardware speed\n");
+ 			return -1;
+ 		}
  	}
+@@ -1457,8 +1457,8 @@ static int set_tsc_khz(struct kvm_vcpu *
+ 				user_tsc_khz, tsc_khz);
  
--	kctl->private_value |= (value << 24);
-+	kctl->private_value |= ((unsigned int)value << 24);
- 	return 0;
- }
- 
-@@ -914,7 +914,7 @@ static int snd_ftu_eff_switch_init(struc
- 	if (err < 0)
- 		return err;
- 
--	kctl->private_value |= value[0] << 24;
-+	kctl->private_value |= (unsigned int)value[0] << 24;
- 	return 0;
- }
+ 	if (ratio == 0 || ratio >= kvm_max_tsc_scaling_ratio) {
+-		WARN_ONCE(1, "Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
+-			  user_tsc_khz);
++		pr_warn_ratelimited("Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
++			            user_tsc_khz);
+ 		return -1;
+ 	}
  
 
 
