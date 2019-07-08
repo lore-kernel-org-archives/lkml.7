@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E4DC606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7DCC606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D1821537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B2320651
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600187;
-	bh=/FKc4kjIe82GxU9Sjc+/PTPdm3BLOpOWYvdj+AgWmkk=;
+	s=default; t=1562600191;
+	bh=MyymLWxB7oI6HyWoFiUfm3IGCoALyYheBe2ypwBZcOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSiIsbfs7XP7lrpCposWoQ9Bw1PfozCiXpWzR9OgNjKIlf4orZZu3gIPzUEqMPGx3
-	 8dlad89jlTSgFcn37kPXRjIQ4Z0ki1QcvHIqn66rlMt+AOkqrrygt5C++9BNM42trX
-	 +J0vlO6u+Rk+l0x+knm/G8VijoFaOKFOspit3DYM=
+	b=kiPn7FpQIAS7IhU1gFvo3jeOmBq/BJWAJJbkyjciXgvbn1v9PJmbc3gtCQnbgOcqR
+	 kN2xiJ9Hi6AwEyrOHBtSSwJ6SYrFz9MDxtHxn1sgeW9hS3pCEN11XLS+HxE1WFtp4F
+	 rzdmCLF8ypVEeMmomMkvkpJyjcFazcvOUQuANMoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390451AbfGHPdx (ORCPT
+        id S2390944AbfGHPga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:33:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35974 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:36:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733027AbfGHPds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:33:48 -0400
+        id S2390398AbfGHPdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:33:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D1AE21537;
-        Mon,  8 Jul 2019 15:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E9821743;
+        Mon,  8 Jul 2019 15:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600027;
-        bh=/FKc4kjIe82GxU9Sjc+/PTPdm3BLOpOWYvdj+AgWmkk=;
+        s=default; t=1562600024;
+        bh=MyymLWxB7oI6HyWoFiUfm3IGCoALyYheBe2ypwBZcOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c0FDfSDdzF4y1LiM1F8pLxDydfOoxoSPedo87IMbjJwppTN/vXXriyR8kRhD3UHEx
-         erSvKB0YBIRldD+kD/Wk9WErESU+C6qyZtywaRarQkcgqRUE38vGlY9xuGpw1geYAX
-         4rfj4tcKXAb3/k1mb63JhLhZzm0tSj7mrfLZksCg=
+        b=OFbXvIYVRDCVdKCV06lePkOXk7p+fj5qZFYte/CtYdDMfhXYcWJQp8CF9iqmOgSS8
+         IGn8aAAo7TZY4spi4u+FcKPCWtoNTYHyLSGZcRmeBOlDAlV3VVz0+ZnIBn2ltIU6V6
+         TwF/F/Xa2E0w2Z3p8XB8fgv75Wu/Cfe+rFBAKsdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Joshua Scott <joshua.scott@alliedtelesis.co.nz>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH 5.1 70/96] ARM: dts: armada-xp-98dx3236: Switch to armada-38x-uart serial node
-Date:   Mon,  8 Jul 2019 17:13:42 +0200
-Message-Id: <20190708150530.239267964@linuxfoundation.org>
+        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.1 69/96] tracing/snapshot: Resize spare buffer if size changed
+Date:   Mon,  8 Jul 2019 17:13:41 +0200
+Message-Id: <20190708150530.189892715@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -61,38 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joshua Scott <joshua.scott@alliedtelesis.co.nz>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-commit 80031361747aec92163464f2ee08870fec33bcb0 upstream.
+commit 46cc0b44428d0f0e81f11ea98217fc0edfbeab07 upstream.
 
-Switch to the "marvell,armada-38x-uart" driver variant to empty
-the UART buffer before writing to the UART_LCR register.
+Current snapshot implementation swaps two ring_buffers even though their
+sizes are different from each other, that can cause an inconsistency
+between the contents of buffer_size_kb file and the current buffer size.
 
-Signed-off-by: Joshua Scott <joshua.scott@alliedtelesis.co.nz>
-Tested-by: Andrew Lunn <andrew@lunn.ch>
-Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>.
+For example:
+
+  # cat buffer_size_kb
+  7 (expanded: 1408)
+  # echo 1 > events/enable
+  # grep bytes per_cpu/cpu0/stats
+  bytes: 1441020
+  # echo 1 > snapshot             // current:1408, spare:1408
+  # echo 123 > buffer_size_kb     // current:123,  spare:1408
+  # echo 1 > snapshot             // current:1408, spare:123
+  # grep bytes per_cpu/cpu0/stats
+  bytes: 1443700
+  # cat buffer_size_kb
+  123                             // != current:1408
+
+And also, a similar per-cpu case hits the following WARNING:
+
+Reproducer:
+
+  # echo 1 > per_cpu/cpu0/snapshot
+  # echo 123 > buffer_size_kb
+  # echo 1 > per_cpu/cpu0/snapshot
+
+WARNING:
+
+  WARNING: CPU: 0 PID: 1946 at kernel/trace/trace.c:1607 update_max_tr_single.part.0+0x2b8/0x380
+  Modules linked in:
+  CPU: 0 PID: 1946 Comm: bash Not tainted 5.2.0-rc6 #20
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+  RIP: 0010:update_max_tr_single.part.0+0x2b8/0x380
+  Code: ff e8 dc da f9 ff 0f 0b e9 88 fe ff ff e8 d0 da f9 ff 44 89 ee bf f5 ff ff ff e8 33 dc f9 ff 41 83 fd f5 74 96 e8 b8 da f9 ff <0f> 0b eb 8d e8 af da f9 ff 0f 0b e9 bf fd ff ff e8 a3 da f9 ff 48
+  RSP: 0018:ffff888063e4fca0 EFLAGS: 00010093
+  RAX: ffff888066214380 RBX: ffffffff99850fe0 RCX: ffffffff964298a8
+  RDX: 0000000000000000 RSI: 00000000fffffff5 RDI: 0000000000000005
+  RBP: 1ffff1100c7c9f96 R08: ffff888066214380 R09: ffffed100c7c9f9b
+  R10: ffffed100c7c9f9a R11: 0000000000000003 R12: 0000000000000000
+  R13: 00000000ffffffea R14: ffff888066214380 R15: ffffffff99851060
+  FS:  00007f9f8173c700(0000) GS:ffff88806d000000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000714dc0 CR3: 0000000066fa6000 CR4: 00000000000006f0
+  Call Trace:
+   ? trace_array_printk_buf+0x140/0x140
+   ? __mutex_lock_slowpath+0x10/0x10
+   tracing_snapshot_write+0x4c8/0x7f0
+   ? trace_printk_init_buffers+0x60/0x60
+   ? selinux_file_permission+0x3b/0x540
+   ? tracer_preempt_off+0x38/0x506
+   ? trace_printk_init_buffers+0x60/0x60
+   __vfs_write+0x81/0x100
+   vfs_write+0x1e1/0x560
+   ksys_write+0x126/0x250
+   ? __ia32_sys_read+0xb0/0xb0
+   ? do_syscall_64+0x1f/0x390
+   do_syscall_64+0xc1/0x390
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+This patch adds resize_buffer_duplicate_size() to check if there is a
+difference between current/spare buffer sizes and resize a spare buffer
+if necessary.
+
+Link: http://lkml.kernel.org/r/20190625012910.13109-1-devel@etsukata.com
+
 Cc: stable@vger.kernel.org
-Fixes: 43e28ba87708 ("ARM: dts: Use armada-370-xp as a base for armada-xp-98dx3236")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: ad909e21bbe69 ("tracing: Add internal tracing_snapshot() functions")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/trace/trace.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -336,3 +336,11 @@
- 	status = "disabled";
- };
- 
-+&uart0 {
-+	compatible = "marvell,armada-38x-uart";
-+};
-+
-+&uart1 {
-+	compatible = "marvell,armada-38x-uart";
-+};
-+
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6696,11 +6696,13 @@ tracing_snapshot_write(struct file *filp
+ 			break;
+ 		}
+ #endif
+-		if (!tr->allocated_snapshot) {
++		if (tr->allocated_snapshot)
++			ret = resize_buffer_duplicate_size(&tr->max_buffer,
++					&tr->trace_buffer, iter->cpu_file);
++		else
+ 			ret = tracing_alloc_snapshot_instance(tr);
+-			if (ret < 0)
+-				break;
+-		}
++		if (ret < 0)
++			break;
+ 		local_irq_disable();
+ 		/* Now, we're going to swap */
+ 		if (iter->cpu_file == RING_BUFFER_ALL_CPUS)
 
 
