@@ -2,120 +2,152 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FACC606C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23D4C606CE
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57BB20861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EE02086D
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404217AbfGHTyH (ORCPT
+        id S2404147AbfGHTzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:54:07 -0400
-Received: from ms.lwn.net ([45.79.88.28]:53198 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbfGHTyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:54:06 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id EDECC2B8;
-        Mon,  8 Jul 2019 19:54:05 +0000 (UTC)
-Date:   Mon, 8 Jul 2019 13:54:04 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Documentation: virtual: Add toctree hooks
-Message-ID: <20190708135404.3eeed68f@lwn.net>
-In-Reply-To: <ef1edb15bd6a6ef87abf4fef7636cd9213450e3c.1562448500.git.lnowakow@eng.ucsd.edu>
-References: <cover.1562448500.git.lnowakow@eng.ucsd.edu>
-        <ef1edb15bd6a6ef87abf4fef7636cd9213450e3c.1562448500.git.lnowakow@eng.ucsd.edu>
-Organization: LWN.net
+        Mon, 8 Jul 2019 15:55:46 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54335 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbfGHTzp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 15:55:45 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=elm)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1hkZjd-0008Dn-Ik; Mon, 08 Jul 2019 19:55:37 +0000
+Date:   Mon, 8 Jul 2019 14:55:32 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     jarkko.sakkinen@linux.intel.com, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
+        nayna@linux.vnet.ibm.com, silviu.vlasceanu@huawei.com
+Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
+ deactivated
+Message-ID: <20190708195532.GB5292@elm>
+References: <20190705163735.11539-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705163735.11539-1-roberto.sassu@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  6 Jul 2019 14:38:13 -0700
-Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu> wrote:
-
-> From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+On 2019-07-05 18:37:35, Roberto Sassu wrote:
+> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize w/o a
+> TPM") allows the trusted module to be loaded even a TPM is not found to
+> avoid module dependency problems.
 > 
-> Added toctree hooks for indexing. Hooks added only for newly added files
-> or already existing files. 
+> Unfortunately, this does not completely solve the issue, as there could be
+> a case where a TPM is found but is not functional (the TPM commands return
+> an error). Specifically, after the tpm_chip structure is returned by
+> tpm_default_chip() in init_trusted(), the execution terminates after
+> init_digests() returns -EFAULT (due to the fact that tpm_get_random()
+> returns a positive value, but less than TPM_MAX_DIGEST_SIZE).
 > 
-> The hook for the top of the tree will be added in a later patch series
-> when a few more substantial changes have been added. 
+> This patch fixes the issue by ignoring the TPM_ERR_DEACTIVATED and
+> TPM_ERR_DISABLED errors.
 > 
-> Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 > ---
->  Documentation/virtual/index.rst     | 18 ++++++++++++++++++
->  Documentation/virtual/kvm/index.rst | 12 ++++++++++++
->  2 files changed, 30 insertions(+)
->  create mode 100644 Documentation/virtual/index.rst
->  create mode 100644 Documentation/virtual/kvm/index.rst
+>  drivers/char/tpm/tpm.h  | 2 --
+>  include/linux/tpm.h     | 3 +++
+>  security/keys/trusted.c | 6 +++++-
+>  3 files changed, 8 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/virtual/index.rst b/Documentation/virtual/index.rst
-> new file mode 100644
-> index 000000000000..19c9fa2266f4
-> --- /dev/null
-> +++ b/Documentation/virtual/index.rst
-> @@ -0,0 +1,18 @@
-> +.. SPDX-License-Identifier: GPL-2.0
+> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+> index e503ffc3aa39..a216ac396711 100644
+> --- a/drivers/char/tpm/tpm.h
+> +++ b/drivers/char/tpm/tpm.h
+> @@ -54,8 +54,6 @@ enum tpm_addr {
+>  
+>  #define TPM_WARN_RETRY          0x800
+>  #define TPM_WARN_DOING_SELFTEST 0x802
+> -#define TPM_ERR_DEACTIVATED     0x6
+> -#define TPM_ERR_DISABLED        0x7
+>  #define TPM_ERR_INVALID_POSTINIT 38
+>  
+>  #define TPM_HEADER_SIZE		10
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index 53c0ea9ec9df..efd3ccbb6aee 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -26,6 +26,9 @@
+>  #define TPM_DIGEST_SIZE 20	/* Max TPM v1.2 PCR size */
+>  #define TPM_MAX_DIGEST_SIZE SHA512_DIGEST_SIZE
+>  
+> +#define TPM_ERR_DEACTIVATED     0x6
+> +#define TPM_ERR_DISABLED        0x7
 > +
-> +===========================
-> +Linux Virtual Documentation
-> +===========================
+>  struct tpm_chip;
+>  struct trusted_key_payload;
+>  struct trusted_key_options;
+> diff --git a/security/keys/trusted.c b/security/keys/trusted.c
+> index 9a94672e7adc..430d85090b3b 100644
+> --- a/security/keys/trusted.c
+> +++ b/security/keys/trusted.c
+> @@ -389,6 +389,10 @@ static int pcrlock(const int pcrnum)
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EPERM;
+>  
+> +	/* This can happen if the TPM is inactive. */
+> +	if (!digests)
+> +		return -EINVAL;
 > +
-> +.. toctree::
-> +   :maxdepth: 2
-> +
-> +   kvm/index
-> +   paravirt_ops
-> +
-> +.. only:: html and subproject
-> +
-> +   Indices
-> +   =======
-> +
-> +   * :ref:`genindex`
-> diff --git a/Documentation/virtual/kvm/index.rst b/Documentation/virtual/kvm/index.rst
-> new file mode 100644
-> index 000000000000..ada224a511fe
-> --- /dev/null
-> +++ b/Documentation/virtual/kvm/index.rst
-> @@ -0,0 +1,12 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===
-> +KVM
-> +===
-> +
-> +.. toctree::
-> +   :maxdepth: 2
-> +
-> +   amd-memory-encryption
-> +   cpuid
-> +   vcpu-requests
+>  	return tpm_pcr_extend(chip, pcrnum, digests) ? -EINVAL : 0;
+>  }
+>  
+> @@ -1233,7 +1237,7 @@ static int __init init_digests(void)
+>  	int i;
+>  
+>  	ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
+> -	if (ret < 0)
+> +	if (ret < 0 || ret == TPM_ERR_DEACTIVATED || ret == TPM_ERR_DISABLED)
+>  		return ret;
 
-At this point in the patch series, the above-mentioned RST files don't
-exist.  So if somebody tries to build the docs here, the build will fail.
-I suspect that it's pretty rare for people to use bisection with docs
-builds, but it's still proper practice to ensure that things work at every
-step in your series.  So the above entries should be added in the patches
-that convert the files.
+As someone who hasn't looked at much of the TPM code, I would have
+expected tpm_get_random() to return a positive value that only ever
+indicates the number of random bytes saved to the buffer. From the
+function documentation:
 
-Also, vcpu-requests.txt is never touched in this patch series, which
-suggests that you didn't build the docs even at the end of it.
+  Return: number of random bytes read or a negative error value.
 
-Thanks,
+Despite the function documentation and as your patch suggests, I can
+see that it is possible for tpm_transmit_cmd() to return
+a positive value that's also returned by tpm_get_random() even though it
+may not have filled the buffer when the TPM is in an
+inactive/deactivated state.
 
-jon
+I think there are other callers which are not prepared for positive
+return values that indicate a failure to fill the buffer with random
+data. For instance, the way that tpm_hwrng_read() is calling
+tpm_get_random() looks a little worrisome.
+
+This patch would likely fix the bug reported against eCryptfs
+(https://bugzilla.kernel.org/show_bug.cgi?id=203953) but I can't help to
+think that callers of tpm_get_random() would benefit from a more
+consolidated approach of handling TPM_ERR_* return values rather than
+handling them at this single call site.
+
+Tyler
+
+>  	if (ret < TPM_MAX_DIGEST_SIZE)
+>  		return -EFAULT;
+> -- 
+> 2.17.1
+> 
