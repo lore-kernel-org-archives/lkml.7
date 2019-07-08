@@ -2,52 +2,54 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570A0C606BD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E7EC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A8D204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59CD21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600041;
-	bh=+LiCpwHsjJSrbJyVIAOZQxJz3K+eHJCNVBkQ9T3ckGk=;
+	s=default; t=1562600047;
+	bh=lpF8smmZKzXzIFKYhBNQHTJe28GZk9w9HrrXxBl46x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j7p9XwQEtBz/0LGzdE2HE5g+2eo4aeL+ZiF6Sj3A6qnPcH785wN08NZzUeWBqvGe2
-	 HOvSnwUIDyF8AC0ceAdCU8Fs2yO4ZWppgtW+ebn9Ajcu0ZHZWQB66OMmNj3H34TI21
-	 CtDbxBuKq58lo3dL/2/NS+AVLosQIttIFdUEKfPQ=
+	b=IVGvwnazfyj1R8ErXNBnpe+d0lvAUmfOZFocHxEpkQH4wCLMOUUo/jJZpVbCZwfiZ
+	 gPD6J5AtUzcCMRnGZ490TsuM6612mqRQ8fnM11ArCU5jX2buePmSTf85gM7EOQ3edJ
+	 XqODDjjpJgRwzrOVhbQMOQakfaVMZl0gtVAJ/hLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390468AbfGHPd7 (ORCPT
+        id S1732982AbfGHPeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:33:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36042 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390445AbfGHPdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:33:51 -0400
+        id S2390452AbfGHPdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:33:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BF1A204EC;
-        Mon,  8 Jul 2019 15:33:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3273920651;
+        Mon,  8 Jul 2019 15:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600031;
-        bh=+LiCpwHsjJSrbJyVIAOZQxJz3K+eHJCNVBkQ9T3ckGk=;
+        s=default; t=1562600033;
+        bh=lpF8smmZKzXzIFKYhBNQHTJe28GZk9w9HrrXxBl46x0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d2N5ux5tl/IkTXD2oXWDwkoXjch0hPjQ11AVCtE9ge+jB4PUthKoJbRZ1M+i0Tj6J
-         Wk51etbcjE1wDOliudRVVF2PVVSOCnyHcRKrCuULUhwzY9XjzXPp2PcNX1ZyGvAT9G
-         agxZeWRRY5hhYzDvet1XNoDXvBc6K5UdBgSVYzgE=
+        b=GVWiae7QBD6ICZw2epNC2xbpHXzv/sAA+zKPPeG0aUMGzLX383bNx5eBvcbbcS3dn
+         VsKTAI340KO32Vq9zSuDl9GlGzGPlZT5CTC2Vlk08gyxBQUlEyvXikEqEj7Brzt4ot
+         F/U2Wz8XF5lziseWWJmeE6TxDREF33ZcSajzh7Z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.1 71/96] arm64: kaslr: keep modules inside module region when KASAN is enabled
-Date:   Mon,  8 Jul 2019 17:13:43 +0200
-Message-Id: <20190708150530.287560004@linuxfoundation.org>
+        stable@vger.kernel.org, Mathew King <mathewk@chromium.org>,
+        Jett Rink <jettrink@chromium.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 45/96] platform/x86: intel-vbtn: Report switch events when event wakes device
+Date:   Mon,  8 Jul 2019 17:13:17 +0200
+Message-Id: <20190708150528.967156980@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -60,62 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+[ Upstream commit cb1921b17adbe6509538098ac431033378cd7165 ]
 
-commit 6f496a555d93db7a11d4860b9220d904822f586a upstream.
+When a switch event, such as tablet mode/laptop mode or docked/undocked,
+wakes a device make sure that the value of the swich is reported.
+Without when a device is put in tablet mode from laptop mode when it is
+suspended or vice versa the device will wake up but mode will be
+incorrect.
 
-When KASLR and KASAN are both enabled, we keep the modules where they
-are, and randomize the placement of the kernel so it is within 2 GB
-of the module region. The reason for this is that putting modules in
-the vmalloc region (like we normally do when KASLR is enabled) is not
-possible in this case, given that the entire vmalloc region is already
-backed by KASAN zero shadow pages, and so allocating dedicated KASAN
-shadow space as required by loaded modules is not possible.
+Tested by suspending a device in laptop mode and putting it in tablet
+mode, the device resumes and is in tablet mode. When suspending the
+device in tablet mode and putting it in laptop mode the device resumes
+and is in laptop mode.
 
-The default module allocation window is set to [_etext - 128MB, _etext]
-in kaslr.c, which is appropriate for KASLR kernels booted without a
-seed or with 'nokaslr' on the command line. However, as it turns out,
-it is not quite correct for the KASAN case, since it still intersects
-the vmalloc region at the top, where attempts to allocate shadow pages
-will collide with the KASAN zero shadow pages, causing a WARN() and all
-kinds of other trouble. So cap the top end to MODULES_END explicitly
-when running with KASAN.
-
-Cc: <stable@vger.kernel.org> # 4.9+
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mathew King <mathewk@chromium.org>
+Reviewed-by: Jett Rink <jettrink@chromium.org>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/module.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -32,6 +32,7 @@
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 06cd7e818ed5..a0d0cecff55f 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	struct platform_device *device = context;
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
+-	const struct key_entry *ke_rel;
++	const struct key_entry *ke, *ke_rel;
+ 	bool autorelease;
  
- void *module_alloc(unsigned long size)
- {
-+	u64 module_alloc_end = module_alloc_base + MODULES_VSIZE;
- 	gfp_t gfp_mask = GFP_KERNEL;
- 	void *p;
- 
-@@ -39,9 +40,12 @@ void *module_alloc(unsigned long size)
- 	if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
- 		gfp_mask |= __GFP_NOWARN;
- 
-+	if (IS_ENABLED(CONFIG_KASAN))
-+		/* don't exceed the static module region - see below */
-+		module_alloc_end = MODULES_END;
+ 	if (priv->wakeup_mode) {
+-		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
++		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
++		if (ke) {
+ 			pm_wakeup_hard_event(&device->dev);
 +
- 	p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
--				module_alloc_base + MODULES_VSIZE,
--				gfp_mask, PAGE_KERNEL_EXEC, 0,
-+				module_alloc_end, gfp_mask, PAGE_KERNEL_EXEC, 0,
- 				NUMA_NO_NODE, __builtin_return_address(0));
- 
- 	if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
++			/*
++			 * Switch events like tablet mode will wake the device
++			 * and report the new switch position to the input
++			 * subsystem.
++			 */
++			if (ke->type == KE_SW)
++				sparse_keymap_report_event(priv->input_dev,
++							   event,
++							   val,
++							   0);
+ 			return;
+ 		}
+ 		goto out_unknown;
+-- 
+2.20.1
+
 
 
