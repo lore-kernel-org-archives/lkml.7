@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A547FC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6A4C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D962216E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCE32166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599079;
-	bh=XP/wjr61UkwKqFacjGA1z8OfOfSKKAteAPObbnI2bmo=;
+	s=default; t=1562599082;
+	bh=gl/oNOjwK39gihV+wxOnVsA+ocDBYadNV3JNY+DxmXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h5nYeZLCqp08wKD0qR0z4k781Z5yuE35RjxfTpNE0UFwZia8WCq9h4WUYLV0/YGog
-	 4kkewgNNE7UM/DfCVJLdcZyYAtF8Sm96sdOJS9wNlMFMwkUra3xie3Ta7zFoo/7IZE
-	 ot4d5fZZ761Lbjwhce0B3iqm7dFLTptw2JkMIPMU=
+	b=r4+7Ankf/ya4EtBVTISHPKBBOYcec5q8O4JPi8Cwe5ulTohwDbUGWbdNX699Lq1Ow
+	 Lv1aEwq0nHh9q7mixeowcu3GvRjge3VyUHGa0UFIJaZKKmyW1tTpq/fxDAHHrK4zfP
+	 N3vFxv8hposro4O1ZnlCzwyEY81lMlJTfQh/kazQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732935AbfGHPR6 (ORCPT
+        id S1732947AbfGHPSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732895AbfGHPRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:17:50 -0400
+        id S1730545AbfGHPR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:17:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5446216E3;
-        Mon,  8 Jul 2019 15:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96EC5216C4;
+        Mon,  8 Jul 2019 15:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599070;
-        bh=XP/wjr61UkwKqFacjGA1z8OfOfSKKAteAPObbnI2bmo=;
+        s=default; t=1562599079;
+        bh=gl/oNOjwK39gihV+wxOnVsA+ocDBYadNV3JNY+DxmXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lcqHqrws4HO19Zd4iG9Bu+/w4aMV0GQwqNSmwSuMbpSm1VcIj4DILHWUkXJmogsvV
-         IEQz+NNDsTTSS4R2KYRswNqDpt7EZpqqG5D4/upGP9wXFdIP3tJ5Vy2DGFDuYpf3PA
-         7n36KOoo8TwN85WzZtERYoBBLSFoiPBMvYgk2f6A=
+        b=E7nsqeMBW9S6M/GH0CR5jSfeEqRKDyx5bRxbxZ/jJEnaWfZfzukTn7xGw7D2JabpJ
+         FOsbfJKdfTuJDuDvwyVASMrv+MCXStaUqto+mZUcEc8dJwpFGFYXnPE4ACPy3pW7NT
+         FiueMnrnSDASrqdINLYbCqtQOt+Tw0DiBNA2ikNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH 4.4 67/73] lib/mpi: Fix karactx leak in mpi_powm
-Date:   Mon,  8 Jul 2019 17:13:17 +0200
-Message-Id: <20190708150524.807209089@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.4 70/73] ARC: handle gcc generated __builtin_trap for older compiler
+Date:   Mon,  8 Jul 2019 17:13:20 +0200
+Message-Id: <20190708150524.946909595@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
 References: <20190708150513.136580595@linuxfoundation.org>
@@ -61,67 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-commit c8ea9fce2baf7b643384f36f29e4194fa40d33a6 upstream.
+commit af1be2e21203867cb958aaceed5366e2e24b88e8 upstream.
 
-Sometimes mpi_powm will leak karactx because a memory allocation
-failure causes a bail-out that skips the freeing of karactx.  This
-patch moves the freeing of karactx to the end of the function like
-everything else so that it can't be skipped.
+ARC gcc prior to GNU 2018.03 release didn't have a target specific
+__builtin_trap() implementation, generating default abort() call.
 
-Reported-by: syzbot+f7baccc38dcc1e094e77@syzkaller.appspotmail.com
-Fixes: cdec9cb5167a ("crypto: GnuPG based MPI lib - source files...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Implement the abort() call - emulating what newer gcc does for the same,
+as suggested by Arnd.
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/mpi/mpi-pow.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arc/kernel/traps.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/lib/mpi/mpi-pow.c
-+++ b/lib/mpi/mpi-pow.c
-@@ -37,6 +37,7 @@
- int mpi_powm(MPI res, MPI base, MPI exp, MPI mod)
- {
- 	mpi_ptr_t mp_marker = NULL, bp_marker = NULL, ep_marker = NULL;
-+	struct karatsuba_ctx karactx = {};
- 	mpi_ptr_t xp_marker = NULL;
- 	mpi_ptr_t tspace = NULL;
- 	mpi_ptr_t rp, ep, mp, bp;
-@@ -164,13 +165,11 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- 		int c;
- 		mpi_limb_t e;
- 		mpi_limb_t carry_limb;
--		struct karatsuba_ctx karactx;
+--- a/arch/arc/kernel/traps.c
++++ b/arch/arc/kernel/traps.c
+@@ -155,3 +155,11 @@ void do_insterror_or_kprobe(unsigned lon
  
- 		xp = xp_marker = mpi_alloc_limb_space(2 * (msize + 1));
- 		if (!xp)
- 			goto enomem;
- 
--		memset(&karactx, 0, sizeof karactx);
- 		negative_result = (ep[0] & 1) && base->sign;
- 
- 		i = esize - 1;
-@@ -295,8 +294,6 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- 		if (mod_shift_cnt)
- 			mpihelp_rshift(rp, rp, rsize, mod_shift_cnt);
- 		MPN_NORMALIZE(rp, rsize);
--
--		mpihelp_release_karatsuba_ctx(&karactx);
- 	}
- 
- 	if (negative_result && rsize) {
-@@ -313,6 +310,7 @@ int mpi_powm(MPI res, MPI base, MPI exp,
- leave:
- 	rc = 0;
- enomem:
-+	mpihelp_release_karatsuba_ctx(&karactx);
- 	if (assign_rp)
- 		mpi_assign_limb_space(res, rp, size);
- 	if (mp_marker)
+ 	insterror_is_error(address, regs);
+ }
++
++/*
++ * abort() call generated by older gcc for __builtin_trap()
++ */
++void abort(void)
++{
++	__asm__ __volatile__("trap_s  5\n");
++}
 
 
