@@ -6,81 +6,82 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C270C606D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 23:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DCFC606B0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 23:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4376A216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 23:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D0C21537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 23:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N66MPXc2"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HOGXHeRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfGHXVQ (ORCPT
+        id S1727464AbfGHXWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 19:21:16 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46467 "EHLO ozlabs.org"
+        Mon, 8 Jul 2019 19:22:39 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49865 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfGHXVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 19:21:15 -0400
+        id S1726046AbfGHXWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 19:22:39 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jLzr20mXz9sML;
-        Tue,  9 Jul 2019 09:21:12 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jM1R6c9vz9sML;
+        Tue,  9 Jul 2019 09:22:35 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562628072;
-        bh=rhV1VkbbZZ9REZJVL/XyG+DliqWQyoI7D08d6+VqimM=;
+        s=201702; t=1562628156;
+        bh=Latj9njcdJh3FNw/1kej7sCyOLfShGPGCmLRVURZe4k=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N66MPXc2bqWiB6iWKXIxki/j5/ITYXMp06xL9G6p8Fo4RO515UXBTGh5sO2qp6z1P
-         1OKEvGpy0gEe9MR6KRiuNJe9UZXtmO4uIOdbohh6tj0Qb0DRFUcjOo9wXJhxLB9R8t
-         cXuME+v4iWZbH0wMvgD/0cWSc6K2giutF3Okc1JyzCvfe2zmWlqjtlkVA0OY/SaGBR
-         EB3xtK18YLHVVUrbsYtjabXrMbyEf/UyERn5jy+O0mIfPXacAtb21xDJKsDat/cqeO
-         8z2hoDrV+cx9gr9UHDCJBpBFdII2pN2AbmSq5AJQRb5H7W/TJaRM/czcA5v0cd09IQ
-         01clUq8Vdfwrg==
-Date:   Tue, 9 Jul 2019 09:21:11 +1000
+        b=HOGXHeREjN+hvQpTZB1aafTKdtsWVjKh36MKyrI5MjelOvIz4uup/WiQlmj/qTPl9
+         2tTIcu5BqbyUs/Il1lZQgq8j/b+O38/myLyHzeN1CH6/ZZgWHIPLwXIUWznxtU8jX5
+         jMM+G6Of4pZjyqOG7o3+XRWy3pJdJrek7EhwkqioQVkMQC6hNdYgTbnHdDZoIM4vcE
+         jMVEM013BAV5ERqo7iNkvQ/s49lFEl1VKTyQEj5J+eomZTQlLcrPdOoUO6ZSaPOCza
+         gHKA7Q7UD7OydnKvlh0VpSaRmCRhy9JCiroM7jnpqX1tRGQ/95cuR879bDB+4Jpi3O
+         0cgqzcn2Jx1cg==
+Date:   Tue, 9 Jul 2019 09:22:35 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Ungerer <gerg@snapgear.com>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- m68knommu tree
-Message-ID: <20190709092111.2945cb33@canb.auug.org.au>
-In-Reply-To: <20190614190606.559dc8dc@canb.auug.org.au>
-References: <20190614190606.559dc8dc@canb.auug.org.au>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>
+Subject: Re: linux-next: manual merge of the net-next tree with the sh tree
+Message-ID: <20190709092235.671e6745@canb.auug.org.au>
+In-Reply-To: <20190617114011.4159295e@canb.auug.org.au>
+References: <20190617114011.4159295e@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/4SeA6DlhJNfdXbuDb=jOtwa"; protocol="application/pgp-signature"
+ boundary="Sig_/vHXT0b_flgz=HENPSHn1jVH"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4SeA6DlhJNfdXbuDb=jOtwa
+--Sig_/vHXT0b_flgz=HENPSHn1jVH
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
 Hi all,
 
-On Fri, 14 Jun 2019 19:06:06 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+On Mon, 17 Jun 2019 11:40:11 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
 wrote:
 >
-> Today's linux-next merge of the akpm-current tree got a conflict in:
+> Today's linux-next merge of the net-next tree got conflicts in:
 >=20
->   fs/binfmt_flat.c
+>   arch/sh/configs/se7712_defconfig
+>   arch/sh/configs/se7721_defconfig
+>   arch/sh/configs/titan_defconfig
 >=20
 > between commit:
 >=20
->   6071ecd874ac ("binfmt_flat: add endianess annotations")
+>   7c04efc8d2ef ("sh: configs: Remove useless UEVENT_HELPER_PATH")
 >=20
-> from the m68knommu tree and commit:
+> from the sh tree and commit:
 >=20
->   db543c385059 ("fs/binfmt_flat.c: remove set but not used variable 'inod=
-e'")
+>   a51486266c3b ("net: sched: remove NET_CLS_IND config option")
 >=20
-> from the akpm-current tree.
+> from the net-next tree.
 >=20
 > I fixed it up (see below) and can carry the fix as necessary. This
 > is now fixed as far as linux-next is concerned, but any non trivial
@@ -93,21 +94,45 @@ e'")
 > Cheers,
 > Stephen Rothwell
 >=20
-> diff --cc fs/binfmt_flat.c
-> index 80d902fb46e3,7562d6aefbe4..000000000000
-> --- a/fs/binfmt_flat.c
-> +++ b/fs/binfmt_flat.c
-> @@@ -429,9 -415,7 +429,8 @@@ static int load_flat_file(struct linux_
->   	unsigned long textpos, datapos, realdatastart;
->   	u32 text_len, data_len, bss_len, stack_len, full_data, flags;
->   	unsigned long len, memp, memp_size, extra, rlim;
->  -	u32 __user *reloc, *rp;
->  +	__be32 __user *reloc;
->  +	u32 __user *rp;
-> - 	struct inode *inode;
->   	int i, rev, relocs;
->   	loff_t fpos;
->   	unsigned long start_code, end_code;
+> diff --cc arch/sh/configs/se7712_defconfig
+> index 6ac7d362e106,1e116529735f..000000000000
+> --- a/arch/sh/configs/se7712_defconfig
+> +++ b/arch/sh/configs/se7712_defconfig
+> @@@ -63,7 -63,7 +63,6 @@@ CONFIG_NET_SCH_NETEM=3D
+>   CONFIG_NET_CLS_TCINDEX=3Dy
+>   CONFIG_NET_CLS_ROUTE4=3Dy
+>   CONFIG_NET_CLS_FW=3Dy
+> - CONFIG_NET_CLS_IND=3Dy
+>  -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+>   CONFIG_MTD=3Dy
+>   CONFIG_MTD_BLOCK=3Dy
+>   CONFIG_MTD_CFI=3Dy
+> diff --cc arch/sh/configs/se7721_defconfig
+> index ffd15acc2a04,c66e512719ab..000000000000
+> --- a/arch/sh/configs/se7721_defconfig
+> +++ b/arch/sh/configs/se7721_defconfig
+> @@@ -62,7 -62,7 +62,6 @@@ CONFIG_NET_SCH_NETEM=3D
+>   CONFIG_NET_CLS_TCINDEX=3Dy
+>   CONFIG_NET_CLS_ROUTE4=3Dy
+>   CONFIG_NET_CLS_FW=3Dy
+> - CONFIG_NET_CLS_IND=3Dy
+>  -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+>   CONFIG_MTD=3Dy
+>   CONFIG_MTD_BLOCK=3Dy
+>   CONFIG_MTD_CFI=3Dy
+> diff --cc arch/sh/configs/titan_defconfig
+> index 1c1c78e74fbb,171ab05ce4fc..000000000000
+> --- a/arch/sh/configs/titan_defconfig
+> +++ b/arch/sh/configs/titan_defconfig
+> @@@ -142,7 -142,7 +142,6 @@@ CONFIG_GACT_PROB=3D
+>   CONFIG_NET_ACT_MIRRED=3Dm
+>   CONFIG_NET_ACT_IPT=3Dm
+>   CONFIG_NET_ACT_PEDIT=3Dm
+> - CONFIG_NET_CLS_IND=3Dy
+>  -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+>   CONFIG_FW_LOADER=3Dm
+>   CONFIG_CONNECTOR=3Dm
+>   CONFIG_MTD=3Dm
 
 I am still getting this conflict (the commit ids may have changed).
 Just a reminder in case you think Linus may need to know.
@@ -116,20 +141,20 @@ Just a reminder in case you think Linus may need to know.
 Cheers,
 Stephen Rothwell
 
---Sig_/4SeA6DlhJNfdXbuDb=jOtwa
+--Sig_/vHXT0b_flgz=HENPSHn1jVH
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0jz+cACgkQAVBC80lX
-0GxO5QgAlxdqNGmXJToiL1oRKfokmNyoqu/Yj4LxK5ZGoXlAnjtB+I00z9LeVpIe
-dVnSG/v5ltOQmmtFwc2Qinb2vGKaATUsd5BXuisdUdZq3mkTMIW2zTcglU+6+0O1
-BrnRpmE7ZXPUy5J2PSYrGZ8J9xHuewuI9G/+OHle5Rt+FmNpwJBG6Qtpa0znOG8M
-28iFuj/UtFPc3Go8AZflmAE7bt+Gyq5Npv0anh0J4Q4lcDfb4vJe2h0scKk0oiUs
-YCJkp6lqS2uZ5UJNXVAjMmYfhcnUesdFwe5RbyYJn4Om/aMTg5fnPDTk8Bcyhd32
-kqUPewzWtCpcG1kX6jz0FQCdrot0Sw==
-=B7mD
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0j0DsACgkQAVBC80lX
+0GzB2Qf/Zem9lhZhLEC3gfRrMyR8748rdZO3VwLXGl9DYxFiaTOfH8lBGUAhObnq
+0IAzqgFAgTve2iALOmmAmkepHAYjn1D+jL1Ng2giJmDclbClKA4Nb8WvVU7KKM6n
+GJY7KzEgYXmgjVxVw04ket39tTXN7eiQAwJFPP4JjhE+USdUa0zm75c1SJtmWY+m
+Ss1K1pK5XjNZTJ6uBS59a2cKswYgXBo3AoFmc9XlF6i/vFQUa6eg1A6e31EFKSck
+AURmrmG3mYvXk+Mfj5SpwI9jKwzIr5bsL3VIxt2+gPbydR0KaNx+Wh/uCCKzUmbl
+9HfEbKSa7q/m6nzc3wDpH5XFzadntA==
+=X7vc
 -----END PGP SIGNATURE-----
 
---Sig_/4SeA6DlhJNfdXbuDb=jOtwa--
+--Sig_/vHXT0b_flgz=HENPSHn1jVH--
