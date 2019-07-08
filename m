@@ -2,139 +2,76 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D185C606CD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1921AC606C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA4620861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D817D20861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 19:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gNmioWhm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yvr2PMV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404701AbfGHT4V (ORCPT
+        id S2404752AbfGHT5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 15:56:21 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39685 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729760AbfGHT4U (ORCPT
+        Mon, 8 Jul 2019 15:57:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39268 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729760AbfGHT5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:56:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so7726771pgi.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 12:56:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WObWYhhWlfWVBGeUnBqR5A/L2O8ETbPGrJcR8O8Db+c=;
-        b=gNmioWhmY2wZycPdn5yPVxFNf4/YAXjwTI9s4RDYwu2xnnlj/3goSphgltDej0PS17
-         DC+0ihNLMIIzIMopYL+xn0JNO/PA4Fw9/bp2vL0D8nElqL5DNQ4TfWHa5xnu700NLV10
-         gKr3iSyypDw7cCTFJSCs7W4lZhzX8ls4q4IUE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WObWYhhWlfWVBGeUnBqR5A/L2O8ETbPGrJcR8O8Db+c=;
-        b=lOYeOY1ium4OvwYM87qBFwijYeClQxmry6W8Q7lkOked0JZjcZte7GBSw4+PfDsI0z
-         WFO+5JyBKXrL9eZqMM419VcTxeCqgmOQc68mcpImw/WJt4wfYoVBCELa7/IJrsvNbb2x
-         XV9IsVzOZW2/tO0OB6IClkqpiGawAQ96nLFUiU316mO3uta9usGsklAwdOiBgY1oLpk1
-         VX3oW3CgJQjde5WZZVbFT512/F8NhtY+EjTt4KS+8cPFRHTYDv2glSWUZWrqx71fN3D8
-         o5/UZtM4V9JbVEYyAuJthErW+RIuIVGNXCgkQNTgRMt1QEYcUIYPJi3pq/lZq51NT65m
-         7UTg==
-X-Gm-Message-State: APjAAAWiAUOaUc6D3v2Rz1qFaZf2Wmw796pAu00n10ZCdk6zDCBf08Hi
-        tT+o12mTqAMdA5KccGPo4irKGg==
-X-Google-Smtp-Source: APXvYqx0vPrcrmzmPc2DLYJb81E8l+aNgHwjY9pCxax4+LIpY8c/9QsUPLKt9oRE2ZQV2Jvf9k9JCA==
-X-Received: by 2002:a17:90a:bd8c:: with SMTP id z12mr28068802pjr.60.1562615780074;
-        Mon, 08 Jul 2019 12:56:20 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id v185sm23322644pfb.14.2019.07.08.12.56.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 12:56:19 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Jaehoon Chung <jh80.chung@samsung.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-samsung-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, briannorris@chromium.org,
-        mka@chromium.org, groeck@chromium.org, sonnyrao@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Alim Akhtar <alim.akhtar@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: dw_mmc: Fix occasional hang after tuning on eMMC
-Date:   Mon,  8 Jul 2019 12:56:13 -0700
-Message-Id: <20190708195613.205729-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Mon, 8 Jul 2019 15:57:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tyIU8Xl8fLThIKAr6zqxMx7FOywQgDqCMdJ/sBnvBco=; b=Yvr2PMV3+PME9ZodMlr+o2tDL
+        smW8WnTyJtbru4ahuLbmqiEebKvVAD6dzv988MYeTHrvJKbjMCueRAJo5OoX5dBjUWdGO5HH8Riry
+        mtMQeMuzPwvuzg5xbJA9bHkclUUfGnzzN2AXS+/N6bWAJG/jKcUuq8izSn3IREEauJqkRCvRNbxxe
+        AL8kBCM3WFVgZmMYZpB3pOVgicpc9nmVe33xLWUwkxX3JNoKVhWp+40LGWA14goWIMBqM/vBigR1J
+        tNdURDFD73hWudGIXawMv6/9tW03IDAyf5Fte3wt1ZJn9Rq5BA35UpHkx6SMuIwgMUPaPD00qUGFm
+        2ZDhcpS2Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkZlF-0001lt-OK; Mon, 08 Jul 2019 19:57:17 +0000
+Date:   Mon, 8 Jul 2019 12:57:17 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Shobhit Kukreti <shobhitkukreti@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: filesystems:
+ Convert jfs.txt to reStructedText format.
+Message-ID: <20190708195717.GG32320@bombadil.infradead.org>
+References: <20190706232236.GA24717@t-1000>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190706232236.GA24717@t-1000>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after
-response errors.") we fixed a tuning-induced hang that I saw when
-stress testing tuning on certain SD cards.  I won't re-hash that whole
-commit, but the summary is that as a normal part of tuning you need to
-deal with transfer errors and there were cases where these transfer
-errors was putting my system into a bad state causing all future
-transfers to fail.  That commit fixed handling of the transfer errors
-for me.
+On Sat, Jul 06, 2019 at 04:22:39PM -0700, Shobhit Kukreti wrote:
+> +++ b/Documentation/filesystems/index.rst
+> @@ -41,3 +41,4 @@ Documentation for individual filesystem types can be found here.
+>     :maxdepth: 2
+>  
+>     binderfs.rst
+> +   jfs
 
-In downstream Chrome OS my fix landed and had the same behavior for
-all SD/MMC commands.  However, it looks like when the commit landed
-upstream we limited it to only SD tuning commands.  Presumably this
-was to try to get around problems that Alim Akhtar reported on exynos
-[1].
+This is the wrong place for this file.  See earlier conversation with
+Sheriff Esseson, and the patch from me to move binderfs.
 
-Unfortunately while stress testing reboots (and suspend/resume) on
-some rk3288-based Chromebooks I found the same problem on the eMMC on
-some of my Chromebooks (the ones with Hynix eMMC).  Since the eMMC
-tuning command is different (MMC_SEND_TUNING_BLOCK_HS200
-vs. MMC_SEND_TUNING_BLOCK) we were basically getting back into the
-same situation.
+> diff --git a/Documentation/filesystems/jfs.rst b/Documentation/filesystems/jfs.rst
+> new file mode 100644
+> index 0000000..bfb6110
+> --- /dev/null
+> +++ b/Documentation/filesystems/jfs.rst
 
-I'm hoping that whatever problems exynos was having in the past are
-somehow magically fixed now and we can make the behavior the same for
-all commands.
-
-[1] https://lkml.kernel.org/r/CAGOxZ53WfNbaMe0_AM0qBqU47kAfgmPBVZC8K8Y-_J3mDMqW4A@mail.gmail.com
-
-Fixes: 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after response errors.")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Alim Akhtar <alim.akhtar@gmail.com>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-Marek (or anyone else using exynos): is it easy for you to test this
-and check if things are still broken when we land this patch?  If so,
-I guess we could have a quirk to have different behavior for just
-Rockchip SoCs but I'd rather avoid that if possible.
-
-NOTE: I'm not hoping totally in vain here.  It is possible that some
-of the CTO/DTO timers that landed could be the magic that would get
-exynos unstuck.
-
- drivers/mmc/host/dw_mmc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index b53b6b7d4dd4..60c3a06e3469 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -2034,8 +2034,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
- 				 * delayed. Allowing the transfer to take place
- 				 * avoids races and keeps things simple.
- 				 */
--				if ((err != -ETIMEDOUT) &&
--				    (cmd->opcode == MMC_SEND_TUNING_BLOCK)) {
-+				if (err != -ETIMEDOUT) {
- 					state = STATE_SENDING_DATA;
- 					continue;
- 				}
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Why is git not detecting this as (mostly) a rename?
 
