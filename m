@@ -2,150 +2,195 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DC3C606B2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD7BC606B2
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6A320861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B759120861
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 12:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Kj3vmYt5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uDA+n1wS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbfGHM0u (ORCPT
+        id S1729327AbfGHMcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 08:26:50 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:41274 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727189AbfGHM0t (ORCPT
+        Mon, 8 Jul 2019 08:32:43 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44780 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfGHMcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 08:26:49 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BCBBAC2A26;
-        Mon,  8 Jul 2019 12:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562588809; bh=fLTBqcsohGmf5D926y4k3Ho/rhwsBNGOM4Be4eDgqSY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Kj3vmYt5roxkJWh4kP6YOgxjZo1VxdExS15uQaIqjfQYpJXi9hAXvG3OZ/h5BcdnZ
-         jP0uR7F5Zz3LwNRW8vaxFt1nuKjVVQVoE90xuZQhxK8AmrY/CeGvYFKemo5dbaKsfX
-         1Pi3fY+EkRfOQGSM1qAJ/c3OLlsDAmbOuM8+zANx8FlrX9JkRCPL+IVjJ1VIvb97NY
-         VzrdQOsQ9yWm123SixWprUW/PRrq075VMMPhgVaE5gdlhAjE1dJl9pITfLDycZxw9r
-         f6ZgGeuvhnJXyBilUu6QHRBRRtQXhQzBDo0dK2767y/b6yqUvaS7BkpqaxG8dUvDD9
-         tTar5NLiXNtTw==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 14A83A005D;
-        Mon,  8 Jul 2019 12:26:39 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id AFC2D7131;
-        Mon,  8 Jul 2019 14:26:39 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH net] net: stmmac: Re-work the queue selection for TSO packets
-Date:   Mon,  8 Jul 2019 14:26:28 +0200
-Message-Id: <36018491f47206728e04d67a9e6263635e64f721.1562588640.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 8 Jul 2019 08:32:43 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so7535411pfe.11;
+        Mon, 08 Jul 2019 05:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RxpMPcHTrGFGjqWq8f7HzjYVE09n8MPxeOpsNwbmg9k=;
+        b=uDA+n1wSK/U5d0fPnWt6hjBiwZg6BHH1kVxd3zGI6SskDlhU3p/vRYyOuaP+lTphmp
+         nWQFsEBWdFrDe9cmcZ2r1SCS72Z44qclUBtiI8wYpkaaY5hyjMdKe147rZEUgL0dypNB
+         Rux9sy/0aB6nFmvqWQvVqN2PGhczXZa8nKBQbUVKIOXXqj6zTT6jdms1x0GQ6UIPgD70
+         SPOx33Lr0mw7pd6x7mZjWahovDL4EukIy4FR4xzLyVMDqYFH7IVb3+vTwLyxkkhCh03h
+         TfB0RXuFQeR2S6LKQ/5WIUf84XoxyqLwabbxmq6uS5iwUZjUMrFXrb+65MIRLLaN/HDp
+         57Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RxpMPcHTrGFGjqWq8f7HzjYVE09n8MPxeOpsNwbmg9k=;
+        b=BTCgFRsrdCspqXNfRAzHMogF2DqmYfqgzlTuf223lrplfq1uTbDZMfklKUY1sWgydg
+         QUHmEuYoaE2vu7FUl6Cv7YxPJq20CC5HrvDN+IInROPZwzvThhEUARoXi55z8L4xVfm0
+         t19Pr1vLCsr83iHLZryoQA2GQ59YW1V0BW7CcaFOrA9QcL/lPUzZe56/jhjFTXF0F8QC
+         bx8KSDe7Awb1+HHLolR8u4ash2M40VtFqpemEk+R/NLpyVQBOpq7j1ruRUgusExGp1xN
+         ZcE/LFO/KCRRVY/F6QiYx6dkEfwt82vAgRtCKmifLzMZ8BzKlhwobbLoGxfDadITQQQA
+         BUhA==
+X-Gm-Message-State: APjAAAWgWwsH7qRlfyyarPOO8zJE4WW9Qc7VIscd8HweyQaIv8Hjm0QF
+        FiSDJQF/NrjtoibaQ1rjTsA=
+X-Google-Smtp-Source: APXvYqw6bMGg8DJmMiXI2XCG7/UTSEzIlMrMTLiYGyYa7buh41RtB660m1E3FrMdiPP3rx02sqf19Q==
+X-Received: by 2002:a63:89c2:: with SMTP id v185mr23237667pgd.241.1562589162230;
+        Mon, 08 Jul 2019 05:32:42 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id q1sm30813710pfn.178.2019.07.08.05.32.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 05:32:41 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH 01/14] iio: adc: sc27xx: Introduce local variable 'struct device *dev'
+Date:   Mon,  8 Jul 2019 20:32:21 +0800
+Message-Id: <20190708123221.11658-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ben Hutchings says:
-	"This is the wrong place to change the queue mapping.
-	stmmac_xmit() is called with a specific TX queue locked,
-	and accessing a different TX queue results in a data race
-	for all of that queue's state.
+Introduce local variable 'struct device *dev' and use it instead of
+dereferencing it repeatly.
 
-	I think this commit should be reverted upstream and in all
-	stable branches.  Instead, the driver should implement the
-	ndo_select_queue operation and override the queue mapping there."
-
-Fixes: c5acdbee22a1 ("net: stmmac: Send TSO packets always from Queue 0")
-Suggested-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 28 +++++++++++++++--------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ drivers/iio/adc/sc27xx_adc.c | 41 +++++++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 06358fe5b245..11b6feb33b54 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3045,17 +3045,8 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+index f7f7a18904b4..ec86f640e963 100644
+--- a/drivers/iio/adc/sc27xx_adc.c
++++ b/drivers/iio/adc/sc27xx_adc.c
+@@ -504,88 +504,89 @@ static void sc27xx_adc_free_hwlock(void *_data)
  
- 	/* Manage oversized TCP frames for GMAC4 device */
- 	if (skb_is_gso(skb) && priv->tso) {
--		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
--			/*
--			 * There is no way to determine the number of TSO
--			 * capable Queues. Let's use always the Queue 0
--			 * because if TSO is supported then at least this
--			 * one will be capable.
--			 */
--			skb_set_queue_mapping(skb, 0);
--
-+		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6))
- 			return stmmac_tso_xmit(skb, dev);
--		}
- 	}
- 
- 	if (unlikely(stmmac_tx_avail(priv, queue) < nfrags + 1)) {
-@@ -3872,6 +3863,22 @@ static int stmmac_setup_tc(struct net_device *ndev, enum tc_setup_type type,
- 	}
- }
- 
-+static u16 stmmac_select_queue(struct net_device *dev, struct sk_buff *skb,
-+			       struct net_device *sb_dev)
-+{
-+	if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
-+		/*
-+		 * There is no way to determine the number of TSO
-+		 * capable Queues. Let's use always the Queue 0
-+		 * because if TSO is supported then at least this
-+		 * one will be capable.
-+		 */
-+		return 0;
-+	}
-+
-+	return netdev_pick_tx(dev, skb, NULL) % dev->real_num_tx_queues;
-+}
-+
- static int stmmac_set_mac_address(struct net_device *ndev, void *addr)
+ static int sc27xx_adc_probe(struct platform_device *pdev)
  {
- 	struct stmmac_priv *priv = netdev_priv(ndev);
-@@ -4088,6 +4095,7 @@ static const struct net_device_ops stmmac_netdev_ops = {
- 	.ndo_tx_timeout = stmmac_tx_timeout,
- 	.ndo_do_ioctl = stmmac_ioctl,
- 	.ndo_setup_tc = stmmac_setup_tc,
-+	.ndo_select_queue = stmmac_select_queue,
- #ifdef CONFIG_NET_POLL_CONTROLLER
- 	.ndo_poll_controller = stmmac_poll_controller,
- #endif
+-	struct device_node *np = pdev->dev.of_node;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	struct sc27xx_adc_data *sc27xx_data;
+ 	struct iio_dev *indio_dev;
+ 	int ret;
+ 
+-	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*sc27xx_data));
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*sc27xx_data));
+ 	if (!indio_dev)
+ 		return -ENOMEM;
+ 
+ 	sc27xx_data = iio_priv(indio_dev);
+ 
+-	sc27xx_data->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	sc27xx_data->regmap = dev_get_regmap(dev->parent, NULL);
+ 	if (!sc27xx_data->regmap) {
+-		dev_err(&pdev->dev, "failed to get ADC regmap\n");
++		dev_err(dev, "failed to get ADC regmap\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	ret = of_property_read_u32(np, "reg", &sc27xx_data->base);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed to get ADC base address\n");
++		dev_err(dev, "failed to get ADC base address\n");
+ 		return ret;
+ 	}
+ 
+ 	sc27xx_data->irq = platform_get_irq(pdev, 0);
+ 	if (sc27xx_data->irq < 0) {
+-		dev_err(&pdev->dev, "failed to get ADC irq number\n");
++		dev_err(dev, "failed to get ADC irq number\n");
+ 		return sc27xx_data->irq;
+ 	}
+ 
+ 	ret = of_hwspin_lock_get_id(np, 0);
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "failed to get hwspinlock id\n");
++		dev_err(dev, "failed to get hwspinlock id\n");
+ 		return ret;
+ 	}
+ 
+ 	sc27xx_data->hwlock = hwspin_lock_request_specific(ret);
+ 	if (!sc27xx_data->hwlock) {
+-		dev_err(&pdev->dev, "failed to request hwspinlock\n");
++		dev_err(dev, "failed to request hwspinlock\n");
+ 		return -ENXIO;
+ 	}
+ 
+-	ret = devm_add_action(&pdev->dev, sc27xx_adc_free_hwlock,
++	ret = devm_add_action(dev, sc27xx_adc_free_hwlock,
+ 			      sc27xx_data->hwlock);
+ 	if (ret) {
+ 		sc27xx_adc_free_hwlock(sc27xx_data->hwlock);
+-		dev_err(&pdev->dev, "failed to add hwspinlock action\n");
++		dev_err(dev, "failed to add hwspinlock action\n");
+ 		return ret;
+ 	}
+ 
+ 	init_completion(&sc27xx_data->completion);
+-	sc27xx_data->dev = &pdev->dev;
++	sc27xx_data->dev = dev;
+ 
+ 	ret = sc27xx_adc_enable(sc27xx_data);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed to enable ADC module\n");
++		dev_err(dev, "failed to enable ADC module\n");
+ 		return ret;
+ 	}
+ 
+-	ret = devm_add_action(&pdev->dev, sc27xx_adc_disable, sc27xx_data);
++	ret = devm_add_action(dev, sc27xx_adc_disable, sc27xx_data);
+ 	if (ret) {
+ 		sc27xx_adc_disable(sc27xx_data);
+-		dev_err(&pdev->dev, "failed to add ADC disable action\n");
++		dev_err(dev, "failed to add ADC disable action\n");
+ 		return ret;
+ 	}
+ 
+-	ret = devm_request_threaded_irq(&pdev->dev, sc27xx_data->irq, NULL,
++	ret = devm_request_threaded_irq(dev, sc27xx_data->irq, NULL,
+ 					sc27xx_adc_isr, IRQF_ONESHOT,
+ 					pdev->name, sc27xx_data);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed to request ADC irq\n");
++		dev_err(dev, "failed to request ADC irq\n");
+ 		return ret;
+ 	}
+ 
+-	indio_dev->dev.parent = &pdev->dev;
+-	indio_dev->name = dev_name(&pdev->dev);
++	indio_dev->dev.parent = dev;
++	indio_dev->name = dev_name(dev);
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->info = &sc27xx_info;
+ 	indio_dev->channels = sc27xx_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(sc27xx_channels);
+-	ret = devm_iio_device_register(&pdev->dev, indio_dev);
++	ret = devm_iio_device_register(dev, indio_dev);
+ 	if (ret)
+-		dev_err(&pdev->dev, "could not register iio (ADC)");
++		dev_err(dev, "could not register iio (ADC)");
+ 
+ 	return ret;
+ }
 -- 
-2.7.4
+2.11.0
 
