@@ -2,171 +2,243 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFF2C606CF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D045C606CF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41C7216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560C5216FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 20:35:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=joaomoreno-com.20150623.gappssmtp.com header.i=@joaomoreno-com.20150623.gappssmtp.com header.b="SV9RDrTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405060AbfGHUfM (ORCPT
+        id S2405073AbfGHUfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 16:35:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63236 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731973AbfGHUfL (ORCPT
+        Mon, 8 Jul 2019 16:35:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39949 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405062AbfGHUfR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 16:35:11 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68KWx4E088164;
-        Mon, 8 Jul 2019 16:35:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmbrstc21-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jul 2019 16:35:05 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x68KYIkn091227;
-        Mon, 8 Jul 2019 16:35:04 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmbrstc1d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jul 2019 16:35:04 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x68KTa9c006946;
-        Mon, 8 Jul 2019 20:35:03 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2tjk970jbr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jul 2019 20:35:03 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x68KZ3nc38666656
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jul 2019 20:35:03 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCE7E112063;
-        Mon,  8 Jul 2019 20:35:02 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 622D2112061;
-        Mon,  8 Jul 2019 20:35:00 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.176.217])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Jul 2019 20:35:00 +0000 (GMT)
-Message-ID: <1562618099.20748.13.camel@linux.ibm.com>
-Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
- deactivated
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        jarkko.sakkinen@linux.intel.com, zohar@linux.ibm.com, jgg@ziepe.ca
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, crazyt2019+lml@gmail.com,
-        tyhicks@canonical.com, nayna@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com
-Date:   Mon, 08 Jul 2019 13:34:59 -0700
-In-Reply-To: <20190705163735.11539-1-roberto.sassu@huawei.com>
-References: <20190705163735.11539-1-roberto.sassu@huawei.com>
+        Mon, 8 Jul 2019 16:35:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so847241wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 13:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joaomoreno-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UuwCEqDKtFNaxLgpfGBTzCIagX0sLcEdRYJOztRbLvI=;
+        b=SV9RDrTexrJPqnpIhsttuUGYNlRae4HSdIDRfIAKXbk2G4xNrnWzH5HUyDmd+K1EPP
+         QWsmjEqM+vCPc+CUm5F4n1LUqLMGWAejLBbDn1pSh0jSTQO7fDDUSOYL8b2H/ULWjlAF
+         Pi1Vv2OwnewEY2EVekqfy91E6YfDadXEN1Bvhz0dP7clSbwegkVKf+IRUZyLbPuhtRBZ
+         uSRT8jJdOPMH9RgD85x1us5uuX5B+ZV3P6rGtC8ZxmIF2mWN7owcs48xiP0r4OasH2md
+         QWIkB8dVNSIxGEL3jfUQGktgfVvpgA/BycajGr3eLSP5q4il72ZplwNGHLdMvk88kY7C
+         1s7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UuwCEqDKtFNaxLgpfGBTzCIagX0sLcEdRYJOztRbLvI=;
+        b=E547TgGqCKFgIDovV5DErQOmmiI7wXti39tk4QQXdL44sYHS51+Om6Kt1Lq7JP0D7c
+         r+ps3/6Gc66w74u06iqte9UxfkH9CEygRiH7pyW3EoyTjf4xBq6p2U7wbYUiFjKzhqU2
+         7s1WnlC52QUFIyPTkgKB4YSfmm+wPC1H3kpZW9Sd4SNFGoJBGsoyhGtjMNhS672fFpYi
+         tGuOmSL7mI49C9Xz+b7o8/ZtFm41hUl/SbCeJdGvZhqfIQzvLDU23yUz1vFZLsxUGkC9
+         mVlzIITlXNieqTVMNudRl/g5WID31tt6FsuHFxCs148V56u7D5I6Ws8G4E7Yh6YeRyKH
+         IrKg==
+X-Gm-Message-State: APjAAAWS2zRPajv5nIS/m7hgvxM1imRsfRtPyTD5bMFrlBNN1Nnko+A6
+        h/kB/wnSShIo9bfMFswFARnsDL3F4kt2ljrToel6FA==
+X-Google-Smtp-Source: APXvYqzq8LNRu78ZuIsVr8TOU5x9QMidvYaMJ0m8eLnZk/XPkGLmOSnGrxcnTKAUfzugpNkc9p9RvzmeHvd47d2ZbYA=
+X-Received: by 2002:a1c:f70c:: with SMTP id v12mr18080402wmh.42.1562618115193;
+ Mon, 08 Jul 2019 13:35:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190610213106.19342-1-mail@joaomoreno.com> <CAHxFc3QC147B6j4pBztjK7stLgCveeYhJWojai_SbKNbnpC9yw@mail.gmail.com>
+ <CAO-hwJ+1FyaXj0iuCjvc5R-Kqdh6PNB7Un0ko1F_NV7-f5GMdw@mail.gmail.com>
+In-Reply-To: <CAO-hwJ+1FyaXj0iuCjvc5R-Kqdh6PNB7Un0ko1F_NV7-f5GMdw@mail.gmail.com>
+From:   =?UTF-8?B?Sm/Do28gTW9yZW5v?= <mail@joaomoreno.com>
+Date:   Mon, 8 Jul 2019 22:35:04 +0200
+Message-ID: <CAHxFc3QJ1Xkgckt1BPptXT5S1xkROVdJzHTYT=GAcHXgm5UGqg@mail.gmail.com>
+Subject: Re: [PATCH] HID: apple: Fix stuck function keys when using FN
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907080256
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-05 at 18:37 +0200, Roberto Sassu wrote:
-> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize
-> w/o a
-> TPM") allows the trusted module to be loaded even a TPM is not found
-> to
-> avoid module dependency problems.
-> 
-> Unfortunately, this does not completely solve the issue, as there
-> could be
-> a case where a TPM is found but is not functional (the TPM commands
-> return
-> an error). Specifically, after the tpm_chip structure is returned by
-> tpm_default_chip() in init_trusted(), the execution terminates after
-> init_digests() returns -EFAULT (due to the fact that tpm_get_random()
-> returns a positive value, but less than TPM_MAX_DIGEST_SIZE).
-> 
-> This patch fixes the issue by ignoring the TPM_ERR_DEACTIVATED and
-> TPM_ERR_DISABLED errors.
-> 
-> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip
-> structure...")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->  drivers/char/tpm/tpm.h  | 2 --
->  include/linux/tpm.h     | 3 +++
->  security/keys/trusted.c | 6 +++++-
->  3 files changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-> index e503ffc3aa39..a216ac396711 100644
-> --- a/drivers/char/tpm/tpm.h
-> +++ b/drivers/char/tpm/tpm.h
-> @@ -54,8 +54,6 @@ enum tpm_addr {
->  
->  #define TPM_WARN_RETRY          0x800
->  #define TPM_WARN_DOING_SELFTEST 0x802
-> -#define TPM_ERR_DEACTIVATED     0x6
-> -#define TPM_ERR_DISABLED        0x7
->  #define TPM_ERR_INVALID_POSTINIT 38
->  
->  #define TPM_HEADER_SIZE		10
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 53c0ea9ec9df..efd3ccbb6aee 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -26,6 +26,9 @@
->  #define TPM_DIGEST_SIZE 20	/* Max TPM v1.2 PCR size */
->  #define TPM_MAX_DIGEST_SIZE SHA512_DIGEST_SIZE
->  
-> +#define TPM_ERR_DEACTIVATED     0x6
-> +#define TPM_ERR_DISABLED        0x7
-> +
->  struct tpm_chip;
->  struct trusted_key_payload;
->  struct trusted_key_options;
-> diff --git a/security/keys/trusted.c b/security/keys/trusted.c
-> index 9a94672e7adc..430d85090b3b 100644
-> --- a/security/keys/trusted.c
-> +++ b/security/keys/trusted.c
-> @@ -389,6 +389,10 @@ static int pcrlock(const int pcrnum)
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
-> +	/* This can happen if the TPM is inactive. */
-> +	if (!digests)
-> +		return -EINVAL;
-> +
->  	return tpm_pcr_extend(chip, pcrnum, digests) ? -EINVAL : 0;
->  }
->  
-> @@ -1233,7 +1237,7 @@ static int __init init_digests(void)
->  	int i;
->  
->  	ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
+Hi Benjamin,
 
-Not a criticism of your patch, but can we please stop doing this. 
-Single random number sources are horrendously bad practice because it
-gives an attacker a single target to subvert.  We should ensure the TPM
-is plugged into the kernel RNG as a source and then take randomness
-from the mixed pool so it's harder for an attacker because they have to
-subvert all our sources to predict what came out.
+No worries, also pretty busy over here. Didn't mean to press.
 
-James
+On Mon, 1 Jul 2019 at 10:32, Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> Hi Jo=C3=A3o,
+>
+> On Sun, Jun 30, 2019 at 10:15 PM Jo=C3=A3o Moreno <mail@joaomoreno.com> w=
+rote:
+> >
+> > Hi Jiri & Benjamin,
+> >
+> > Let me know if you need something else to get this patch moving forward=
+. This
+> > fixes an issue I hit daily, it would be great to get it fixed.
+>
+> Sorry for the delay, I am very busy with internal corporate stuff, and
+> I tried setting up a new CI system at home, and instead of spending a
+> couple of ours, I am down to 2 weeks of hard work, without possibility
+> to switch to the new right now :(
+> Anyway.
+>
+> >
+> > Thanks.
+> >
+> > On Mon, 10 Jun 2019 at 23:31, Joao Moreno <mail@joaomoreno.com> wrote:
+> > >
+> > > This fixes an issue in which key down events for function keys would =
+be
+> > > repeatedly emitted even after the user has raised the physical key. F=
+or
+> > > example, the driver fails to emit the F5 key up event when going thro=
+ugh
+> > > the following steps:
+> > > - fnmode=3D1: hold FN, hold F5, release FN, release F5
+> > > - fnmode=3D2: hold F5, hold FN, release F5, release FN
+>
+> Ouch :/
+>
 
+Right?!
+
+> > >
+> > > The repeated F5 key down events can be easily verified using xev.
+> > >
+> > > Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+> > > ---
+> > >  drivers/hid/hid-apple.c | 21 +++++++++++----------
+> > >  1 file changed, 11 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+> > > index 1cb41992aaa1..81867a6fa047 100644
+> > > --- a/drivers/hid/hid-apple.c
+> > > +++ b/drivers/hid/hid-apple.c
+> > > @@ -205,20 +205,21 @@ static int hidinput_apple_event(struct hid_devi=
+ce *hid, struct input_dev *input,
+> > >                 trans =3D apple_find_translation (table, usage->code)=
+;
+> > >
+> > >                 if (trans) {
+> > > -                       if (test_bit(usage->code, asc->pressed_fn))
+> > > -                               do_translate =3D 1;
+> > > -                       else if (trans->flags & APPLE_FLAG_FKEY)
+> > > -                               do_translate =3D (fnmode =3D=3D 2 && =
+asc->fn_on) ||
+> > > -                                       (fnmode =3D=3D 1 && !asc->fn_=
+on);
+> > > +                       int fn_on =3D value ? asc->fn_on :
+> > > +                               test_bit(usage->code, asc->pressed_fn=
+);
+> > > +
+> > > +                       if (!value)
+> > > +                               clear_bit(usage->code, asc->pressed_f=
+n);
+> > > +                       else if (asc->fn_on)
+> > > +                               set_bit(usage->code, asc->pressed_fn)=
+;
+>
+> I have the feeling that this is not the correct fix here.
+>
+> I might be wrong, but the following sequence might also mess up the
+> driver state, depending on how the reports are emitted:
+> - hold FN, hold F4, hold F5, release F4, release FN, release F5
+>
+
+I believe this should be fine. Following the code:
+
+- hold FN, sets asc->fn_on to true
+- hold F4, in the trans block fn_on will be true and we'll set the F4
+bit in the bitmap
+- hold F5, in the trans block fn_on will be true and we'll set the F5 bit
+- release F4, in the trans block fn_on will be true (because of the bitmap)=
+ and
+we'll clear the F4 bit
+- release FN, asc->fn_on will be false, but it doesn't matter since...
+- release F5, in the trans block we'll look into the bitmap (instead
+of asc->fn_on),
+so fn_on will be true and we'll clear the F5 bit
+
+I tested it in practice using my changes:
+
+Interestingly the Apple keyboard doesn't seem to emit an even for F5 when F=
+4 is
+pressed, seems like a hardware limitation. But F6 does work. So, when I exe=
+cute
+these events in that order, everything works as it should: xev reports
+the following:
+
+KeyPress F4
+KeyPress F6
+KeyRelease F4
+KeyRelease F6
+
+> The reason is that the driver only considers you have one key pressed
+> with the modifier, and as the code changed its state based on the last
+> value.
+>
+
+I believe the bitmap takes care of storing the FN state per key press. The
+trick I did was to check on the global `asc->fn_on` state only when a key
+is pressed, but check on the bitmap instead when it's released.
+
+Let me know what you think. Am I missing something here?
+
+Cheers,
+Jo=C3=A3o.
+
+> IMO a better fix would:
+>
+> - keep the existing `trans` mapping lookout
+> - whenever a `trans` mapping gets found:
+>   * get both translated and non-translated currently reported values
+> (`test_bit(keycode, input_dev->key)`)
+>   * if one of them is set to true, then consider the keycode to be the
+> one of the key (no matter fn_on)
+>     -> deal with `value` with the corrected keycode
+>   * if the key was not pressed:
+>     -> chose the keycode based on `fn_on` and `fnmode` states
+>     and report the key press event
+>
+> This should remove the nasty pressed_fn state which depends on the
+> other pressed keys.
+>
+> Cheers,
+> Benjamin
+>
+> > > +
+> > > +                       if (trans->flags & APPLE_FLAG_FKEY)
+> > > +                               do_translate =3D (fnmode =3D=3D 2 && =
+fn_on) ||
+> > > +                                       (fnmode =3D=3D 1 && !fn_on);
+> > >                         else
+> > >                                 do_translate =3D asc->fn_on;
+> > >
+> > >                         if (do_translate) {
+> > > -                               if (value)
+> > > -                                       set_bit(usage->code, asc->pre=
+ssed_fn);
+> > > -                               else
+> > > -                                       clear_bit(usage->code, asc->p=
+ressed_fn);
+> > > -
+> > >                                 input_event(input, usage->type, trans=
+->to,
+> > >                                                 value);
+> > >
+> > > --
+> > > 2.19.1
+> > >
