@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECCCC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200F5C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59AC420665
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E495320665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562600170;
-	bh=9LTkTlrEPx+icuSnurgRW/8LUYCz+J/9PSzI9KCInCY=;
+	s=default; t=1562600173;
+	bh=aXj3z6IfKKrCdHytfIuFAzc+6Ul5/4UgWYTW5tMWF8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pKxk4pnTyKp5RutJWcxDFD65fDsb0fWscUCCrSTawvpBg4l1mug406/VEOdV6aWMl
-	 LlU4wT8dJVCYIZJIz4xM/07aLXoIrqa1WmixmwJcn2hYfv/H1PXRsAyfC7cAZxru7M
-	 s4i+chR5Ci2++imIliKvl3nV+2S/u0o2wdEwZrGc=
+	b=BgCgYLeQ+7vhOYzZyU3l4cxuu4i2f+XOEsi/UFej+XhT4x6eBW38EVbvSh4lRHp9X
+	 9bc32RcpYK5GuygVRaigmFXoEA53EWMXpflPPpLfF5zdWtbhl7kDu7FELOZIYUUS6h
+	 SB4ecakxl7QCwPCWbqNXZFHnhusVQTjy17i4nyIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390826AbfGHPgJ (ORCPT
+        id S2390514AbfGHPeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:36:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36554 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390513AbfGHPeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:34:19 -0400
+        id S2390480AbfGHPeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:34:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC00E21537;
-        Mon,  8 Jul 2019 15:34:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F592204EC;
+        Mon,  8 Jul 2019 15:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562600058;
-        bh=9LTkTlrEPx+icuSnurgRW/8LUYCz+J/9PSzI9KCInCY=;
+        s=default; t=1562600046;
+        bh=aXj3z6IfKKrCdHytfIuFAzc+6Ul5/4UgWYTW5tMWF8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mgfv/L7JqB3UqLA39m+j4YSep0dby3uT4DfmYk/CuRrM/ZxtZPdA9DD/5qszlOatM
-         Kj8WnA5Z4bLcwIZxo/ltbRLNRyvWAFXjQAjykWYJMrvmcEQfFAg9v1DIOzpHr90mIN
-         7qri0L36mwarm19xUX4tolkSXEXjuJN8qkXZ5pSw=
+        b=TN0TPdX3j7TiAwwXypVnY2D7ZP5bcZ2cOzekpF1NC39AkfWa0bSzSO+uVzmQ4gmyG
+         vg+435yiYh07WcxXfkKe3tC8W2LL0ZBW8KgNFt5FSc8UfpBT8/j7sUGzG9PsDzpqXx
+         m7aEIBxkro7MWMrCcDv+sLhfV7X8B1nI/GEzyKOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.1 80/96] ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()
-Date:   Mon,  8 Jul 2019 17:13:52 +0200
-Message-Id: <20190708150530.779800560@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH 5.1 76/96] drm/virtio: move drm_connector_update_edid_property() call
+Date:   Mon,  8 Jul 2019 17:13:48 +0200
+Message-Id: <20190708150530.567539195@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -62,184 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-commit d5b844a2cf507fc7642c9ae80a9d585db3065c28 upstream.
+commit 41de4be6f6efa4132b29af51158cd672d93f2543 upstream.
 
-The commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text
-permissions race") causes a possible deadlock between register_kprobe()
-and ftrace_run_update_code() when ftrace is using stop_machine().
+drm_connector_update_edid_property can sleep, we must not
+call it while holding a spinlock.  Move the callsite.
 
-The existing dependency chain (in reverse order) is:
-
--> #1 (text_mutex){+.+.}:
-       validate_chain.isra.21+0xb32/0xd70
-       __lock_acquire+0x4b8/0x928
-       lock_acquire+0x102/0x230
-       __mutex_lock+0x88/0x908
-       mutex_lock_nested+0x32/0x40
-       register_kprobe+0x254/0x658
-       init_kprobes+0x11a/0x168
-       do_one_initcall+0x70/0x318
-       kernel_init_freeable+0x456/0x508
-       kernel_init+0x22/0x150
-       ret_from_fork+0x30/0x34
-       kernel_thread_starter+0x0/0xc
-
--> #0 (cpu_hotplug_lock.rw_sem){++++}:
-       check_prev_add+0x90c/0xde0
-       validate_chain.isra.21+0xb32/0xd70
-       __lock_acquire+0x4b8/0x928
-       lock_acquire+0x102/0x230
-       cpus_read_lock+0x62/0xd0
-       stop_machine+0x2e/0x60
-       arch_ftrace_update_code+0x2e/0x40
-       ftrace_run_update_code+0x40/0xa0
-       ftrace_startup+0xb2/0x168
-       register_ftrace_function+0x64/0x88
-       klp_patch_object+0x1a2/0x290
-       klp_enable_patch+0x554/0x980
-       do_one_initcall+0x70/0x318
-       do_init_module+0x6e/0x250
-       load_module+0x1782/0x1990
-       __s390x_sys_finit_module+0xaa/0xf0
-       system_call+0xd8/0x2d0
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(text_mutex);
-                               lock(cpu_hotplug_lock.rw_sem);
-                               lock(text_mutex);
-  lock(cpu_hotplug_lock.rw_sem);
-
-It is similar problem that has been solved by the commit 2d1e38f56622b9b
-("kprobes: Cure hotplug lock ordering issues"). Many locks are involved.
-To be on the safe side, text_mutex must become a low level lock taken
-after cpu_hotplug_lock.rw_sem.
-
-This can't be achieved easily with the current ftrace design.
-For example, arm calls set_all_modules_text_rw() already in
-ftrace_arch_code_modify_prepare(), see arch/arm/kernel/ftrace.c.
-This functions is called:
-
-  + outside stop_machine() from ftrace_run_update_code()
-  + without stop_machine() from ftrace_module_enable()
-
-Fortunately, the problematic fix is needed only on x86_64. It is
-the only architecture that calls set_all_modules_text_rw()
-in ftrace path and supports livepatching at the same time.
-
-Therefore it is enough to move text_mutex handling from the generic
-kernel/trace/ftrace.c into arch/x86/kernel/ftrace.c:
-
-   ftrace_arch_code_modify_prepare()
-   ftrace_arch_code_modify_post_process()
-
-This patch basically reverts the ftrace part of the problematic
-commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module
-text permissions race"). And provides x86_64 specific-fix.
-
-Some refactoring of the ftrace code will be needed when livepatching
-is implemented for arm or nds32. These architectures call
-set_all_modules_text_rw() and use stop_machine() at the same time.
-
-Link: http://lkml.kernel.org/r/20190627081334.12793-1-pmladek@suse.com
-
-Fixes: 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text permissions race")
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-[
-  As reviewed by Miroslav Benes <mbenes@suse.cz>, removed return value of
-  ftrace_run_update_code() as it is a void function.
-]
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: b4b01b4995fb ("drm/virtio: add edid support")
+Reported-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Tested-by: Max Filippov <jcmvbkbc@gmail.com>
+Tested-by: Cornelia Huck <cohuck@redhat.com>
+Acked-by: Cornelia Huck <cohuck@redhat.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190405044602.2334-1-kraxel@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/ftrace.c |    3 +++
- kernel/trace/ftrace.c    |   10 +---------
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_vq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -22,6 +22,7 @@
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/memory.h>
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -620,11 +620,11 @@ static void virtio_gpu_cmd_get_edid_cb(s
+ 	output = vgdev->outputs + scanout;
  
- #include <trace/syscall.h>
+ 	new_edid = drm_do_get_edid(&output->conn, virtio_get_edid_block, resp);
++	drm_connector_update_edid_property(&output->conn, new_edid);
  
-@@ -35,6 +36,7 @@
+ 	spin_lock(&vgdev->display_info_lock);
+ 	old_edid = output->edid;
+ 	output->edid = new_edid;
+-	drm_connector_update_edid_property(&output->conn, output->edid);
+ 	spin_unlock(&vgdev->display_info_lock);
  
- int ftrace_arch_code_modify_prepare(void)
- {
-+	mutex_lock(&text_mutex);
- 	set_kernel_text_rw();
- 	set_all_modules_text_rw();
- 	return 0;
-@@ -44,6 +46,7 @@ int ftrace_arch_code_modify_post_process
- {
- 	set_all_modules_text_ro();
- 	set_kernel_text_ro();
-+	mutex_unlock(&text_mutex);
- 	return 0;
- }
- 
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -34,7 +34,6 @@
- #include <linux/hash.h>
- #include <linux/rcupdate.h>
- #include <linux/kprobes.h>
--#include <linux/memory.h>
- 
- #include <trace/events/sched.h>
- 
-@@ -2615,12 +2614,10 @@ static void ftrace_run_update_code(int c
- {
- 	int ret;
- 
--	mutex_lock(&text_mutex);
--
- 	ret = ftrace_arch_code_modify_prepare();
- 	FTRACE_WARN_ON(ret);
- 	if (ret)
--		goto out_unlock;
-+		return;
- 
- 	/*
- 	 * By default we use stop_machine() to modify the code.
-@@ -2632,9 +2629,6 @@ static void ftrace_run_update_code(int c
- 
- 	ret = ftrace_arch_code_modify_post_process();
- 	FTRACE_WARN_ON(ret);
--
--out_unlock:
--	mutex_unlock(&text_mutex);
- }
- 
- static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
-@@ -5788,7 +5782,6 @@ void ftrace_module_enable(struct module
- 	struct ftrace_page *pg;
- 
- 	mutex_lock(&ftrace_lock);
--	mutex_lock(&text_mutex);
- 
- 	if (ftrace_disabled)
- 		goto out_unlock;
-@@ -5850,7 +5843,6 @@ void ftrace_module_enable(struct module
- 		ftrace_arch_code_modify_post_process();
- 
-  out_unlock:
--	mutex_unlock(&text_mutex);
- 	mutex_unlock(&ftrace_lock);
- 
- 	process_cached_mods(mod->name);
+ 	kfree(old_edid);
 
 
