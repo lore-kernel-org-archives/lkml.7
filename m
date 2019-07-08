@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5E6C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCA2C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE4C21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B8821479
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:32:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="SJBZLbfj"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="f3sofSU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403952AbfGHQcI (ORCPT
+        id S2403804AbfGHQcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:32:08 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:40933 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403831AbfGHQcD (ORCPT
+        Mon, 8 Jul 2019 12:32:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54387 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389421AbfGHQb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:32:03 -0400
-Received: by mail-wm1-f53.google.com with SMTP id v19so147147wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:32:02 -0700 (PDT)
+        Mon, 8 Jul 2019 12:31:57 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so145994wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:31:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sQGKbunRlrvdVKbp02vEGwvG8+xrq5xUVQ5fY/+t4TE=;
-        b=SJBZLbfj73WvztsTVCyOaGzkao16f0cK4Qd3O7+93OdYSwxGMZrFSA+QNEXHIq4q52
-         QTqMGAMrkclA3q+GV20vV9rDe5T7Aq+vjBeSxnO4sxrsd425CRXW6cWA9wOzNeN23mBb
-         DH4d4tYhyv4Fh9Zq0DD9xa42KhSbQp1I9es+s=
+        bh=Z2q/9DY/eMlLakYA2goJPIRtdbZUH+0KxlPnLmYNTOY=;
+        b=f3sofSU/bXru9qax++aOgBk+uAlSYw6diTvQz4Zb6xU+ePOE1k+PF6XybmrF8zA8Lm
+         cxUhOmVfIKOmnI0trsImIeXpuUUW+sKjTOhPWo3MCCGcHCf+iQIseb8AfeR7KKbyPnKH
+         4z9UWgWFHpp2PrqssJUgvo0yyedi5hHUcIboQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sQGKbunRlrvdVKbp02vEGwvG8+xrq5xUVQ5fY/+t4TE=;
-        b=Dmci1x2avNKmMKrcUoUAZ+R8VmJnGCG2lsJeRuS8GWrViQFxW7QYaIcG1cRCIWNpOp
-         ZQlnfpl3p+D1nvoiOhfRhyXfQQ4XxSO+qDhXKyjJEFdod8iqoRDknwCKRe7f6mLWI28Q
-         XHfXoTZhVkqQ6aH4nfUNxPP11nEnfo0sB5LzwWBbB2Vus3M9qOuGcfCTH0pNvewGaUvt
-         4ET7cI1eFmc0hT2YMEaVJeQlUaCNxVqDijZv6oeKNMIEDB4jlwryMzGKyIToFikyXV7t
-         olydqnwg89SXZVwy+rnsljO00/RCxLASP2+7FKSs4FjO+nLCbwk/APvu6ECyE3VTD0/M
-         AtdA==
-X-Gm-Message-State: APjAAAWa147+mhyjHaLvbqbGEgBPZ+tXR7owO7xbQxLeCgU3WXJmq5bU
-        +g3b3QX8oJvRUOs2E6V8c1PSNj28lyg=
-X-Google-Smtp-Source: APXvYqzZGSWnfDDVHTzxD8mRM5nAtI2EXCovxJ1DXmzY0w4uYyNkN/nErPCAqTn8joiAXOQfOGRdWg==
-X-Received: by 2002:a1c:cc0d:: with SMTP id h13mr17034505wmb.119.1562603521360;
-        Mon, 08 Jul 2019 09:32:01 -0700 (PDT)
+        bh=Z2q/9DY/eMlLakYA2goJPIRtdbZUH+0KxlPnLmYNTOY=;
+        b=KWA1ayTb905HzzxTGrfJo4hohC//uMc5uVvCOxzfHLNZ4o4zP1YqKAtwGCAXxJT1PQ
+         KEkkXo5vc+VEa+BL7oaMvbI/RVdmbIDyNLiGnKKxTd2rOQ4qoc6pUsQhHqYkIPqwlJ4E
+         vxAbAXAh7d6MjyV4f4aAFA/+YoqbPNVIYGNzaYZfXd2ssfb092h+Ikr1UJpMyCNYcC6r
+         GwBYbX4yopuYyh/mC1ib+6sKqXmwFQP2BLJV83ilhzcGUeA7upOJ2MP/iMH021kdbl+1
+         KeFSZPWYNRgOqEDUP4AryS+H+q4ACallxwq9Uc9Od5V2nFEQN5LZG5uNarxB6l6V7WoJ
+         sX4A==
+X-Gm-Message-State: APjAAAWePJOmEMOa16JR83EBvoK98+qfH2xyvYNwZWbVwGmykgiup7n9
+        boorWymwrQQhlmDo8z1xgfwYYYVykd146g==
+X-Google-Smtp-Source: APXvYqwgF4eK6PEywYbJMZghzfU39cx60C67Re6v5ey3Aa4/20vDkjnYdTfyPjo4Ljm9od9zONwd/g==
+X-Received: by 2002:a1c:2314:: with SMTP id j20mr17401953wmj.152.1562603514984;
+        Mon, 08 Jul 2019 09:31:54 -0700 (PDT)
 Received: from localhost.localdomain (ip5f5aedbe.dynamic.kabel-deutschland.de. [95.90.237.190])
-        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.32.00
+        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.53
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:32:00 -0700 (PDT)
+        Mon, 08 Jul 2019 09:31:54 -0700 (PDT)
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alban Crequy <alban@kinvolk.io>,
@@ -68,9 +68,9 @@ Cc:     Alban Crequy <alban@kinvolk.io>,
         Stanislav Fomichev <sdf@google.com>, netdev@vger.kernel.org,
         bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
         Krzesimir Nowak <krzesimir@kinvolk.io>
-Subject: [bpf-next v3 12/12] selftests/bpf: Test correctness of narrow 32bit read on 64bit field
-Date:   Mon,  8 Jul 2019 18:31:21 +0200
-Message-Id: <20190708163121.18477-13-krzesimir@kinvolk.io>
+Subject: [bpf-next v3 07/12] tools headers: Adopt compiletime_assert from kernel sources
+Date:   Mon,  8 Jul 2019 18:31:16 +0200
+Message-Id: <20190708163121.18477-8-krzesimir@kinvolk.io>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190708163121.18477-1-krzesimir@kinvolk.io>
 References: <20190708163121.18477-1-krzesimir@kinvolk.io>
@@ -81,95 +81,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test the correctness of the 32bit narrow reads by reading both halves
-of the 64 bit field and doing a binary or on them to see if we get the
-original value.
-
-It succeeds as it should, but with the commit e2f7fc0ac695 ("bpf: fix
-undefined behavior in narrow load handling") reverted, the test fails
-with a following message:
-
-> $ sudo ./test_verifier
-> ...
-> #967/p 32bit loads of a 64bit field (both least and most significant words) FAIL retval -1985229329 != 0
-> verification time 17 usec
-> stack depth 0
-> processed 8 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-> ...
-> Summary: 1519 PASSED, 0 SKIPPED, 1 FAILED
+This will come in handy to verify that the hardcoded size of the
+context data in bpf_test struct is high enough to hold some struct.
 
 Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 ---
- tools/testing/selftests/bpf/test_verifier.c   | 19 +++++++++++++++++
- .../testing/selftests/bpf/verifier/var_off.c  | 21 +++++++++++++++++++
- 2 files changed, 40 insertions(+)
+ tools/include/linux/compiler.h | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 484ea8842b06..2a20280a4a44 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -24,6 +24,7 @@
+diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
+index 1827c2f973f9..b4e97751000a 100644
+--- a/tools/include/linux/compiler.h
++++ b/tools/include/linux/compiler.h
+@@ -172,4 +172,32 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
+ # define __fallthrough
+ #endif
  
- #include <sys/capability.h>
- 
-+#include <linux/compiler.h>
- #include <linux/unistd.h>
- #include <linux/filter.h>
- #include <linux/bpf_perf_event.h>
-@@ -343,6 +344,24 @@ static void bpf_fill_perf_event_test_run_check(struct bpf_test *self)
- 	self->fill_insns = NULL;
- }
- 
-+static void bpf_fill_32bit_loads(struct bpf_test *self)
-+{
-+	compiletime_assert(
-+		sizeof(struct bpf_perf_event_data) <= TEST_CTX_LEN,
-+		"buffer for ctx is too short to fit struct bpf_perf_event_data");
-+	compiletime_assert(
-+		sizeof(struct bpf_perf_event_value) <= TEST_DATA_LEN,
-+		"buffer for data is too short to fit struct bpf_perf_event_value");
 +
-+	struct bpf_perf_event_data ctx = {
-+		.sample_period = 0x0123456789abcdef,
-+	};
++#ifdef __OPTIMIZE__
++# define __compiletime_assert(condition, msg, prefix, suffix)		\
++	do {								\
++		extern void prefix ## suffix(void) __compiletime_error(msg); \
++		if (!(condition))					\
++			prefix ## suffix();				\
++	} while (0)
++#else
++# define __compiletime_assert(condition, msg, prefix, suffix) do { } while (0)
++#endif
 +
-+	memcpy(self->ctx, &ctx, sizeof(ctx));
-+	free(self->fill_insns);
-+	self->fill_insns = NULL;
-+}
++#define _compiletime_assert(condition, msg, prefix, suffix) \
++	__compiletime_assert(condition, msg, prefix, suffix)
 +
- /* BPF_SK_LOOKUP contains 13 instructions, if you need to fix up maps */
- #define BPF_SK_LOOKUP(func)						\
- 	/* struct bpf_sock_tuple tuple = {} */				\
-diff --git a/tools/testing/selftests/bpf/verifier/var_off.c b/tools/testing/selftests/bpf/verifier/var_off.c
-index 8504ac937809..3f8bee0a50ef 100644
---- a/tools/testing/selftests/bpf/verifier/var_off.c
-+++ b/tools/testing/selftests/bpf/verifier/var_off.c
-@@ -246,3 +246,24 @@
- 	.result = ACCEPT,
- 	.prog_type = BPF_PROG_TYPE_LWT_IN,
- },
-+{
-+	"32bit loads of a 64bit field (both least and most significant words)",
-+	.insns = {
-+	BPF_LDX_MEM(BPF_W, BPF_REG_4, BPF_REG_1, offsetof(struct bpf_perf_event_data, sample_period)),
-+	BPF_LDX_MEM(BPF_W, BPF_REG_5, BPF_REG_1, offsetof(struct bpf_perf_event_data, sample_period) + 4),
-+	BPF_LDX_MEM(BPF_DW, BPF_REG_6, BPF_REG_1, offsetof(struct bpf_perf_event_data, sample_period)),
-+	BPF_ALU64_IMM(BPF_LSH, BPF_REG_5, 32),
-+	BPF_ALU64_REG(BPF_OR, BPF_REG_4, BPF_REG_5),
-+	BPF_ALU64_REG(BPF_XOR, BPF_REG_4, BPF_REG_6),
-+	BPF_MOV64_REG(BPF_REG_0, BPF_REG_4),
-+	BPF_EXIT_INSN(),
-+	},
-+	.result = ACCEPT,
-+	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
-+	.ctx = { 0, },
-+	.ctx_len = sizeof(struct bpf_perf_event_data),
-+	.data = { 0, },
-+	.data_len = sizeof(struct bpf_perf_event_value),
-+	.fill_helper = bpf_fill_32bit_loads,
-+	.override_data_out_len = true,
-+},
++/**
++ * compiletime_assert - break build and emit msg if condition is false
++ * @condition: a compile-time constant condition to check
++ * @msg:       a message to emit if condition is false
++ *
++ * In tradition of POSIX assert, this macro will break the build if the
++ * supplied condition is *false*, emitting the supplied error message if the
++ * compiler has support to do so.
++ */
++#define compiletime_assert(condition, msg) \
++	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
++
++
+ #endif /* _TOOLS_LINUX_COMPILER_H */
 -- 
 2.20.1
 
