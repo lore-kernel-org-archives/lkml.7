@@ -2,149 +2,156 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDEBC48BE7
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DE0C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120BB20844
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFE320844
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jrhAt7QH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KlQ9rDMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfGHHoh (ORCPT
+        id S1729494AbfGHHtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:44:37 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39771 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbfGHHog (ORCPT
+        Mon, 8 Jul 2019 03:49:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39582 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfGHHtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:44:36 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u17so6732558pgi.6
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 00:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6yYLvyLEBI35unTfoBpTYZgBgYmEeKFbJbiIi6+Pm18=;
-        b=jrhAt7QHn1hfUTP3COeeH51Er61boYoW+oDIVMrr9COFzd9Upo4q27t48s4EWqhesa
-         KU35Ls9UQB0G45UVMerTSq1UJtXZFQ0YLdfSQ85nM3K3OTu4UzbX3fAjwNHPwxiF6i22
-         VWG+UdqpRCKTCF9pdkdySwfX2u8PuvZQNWb46wVpftzUmWNaBcyYsyf345kYKJBb/m28
-         FzLoPFg2ZkEOGzujoHE7dbijdRbLwq5RDamzdQv7GxV1z1Bbw2MxdeLiX9zp2SJpSxb+
-         1rNtxFARtLOqF4CLByMmOpiZIC/Ax2w4yn8VwnjE6QtO5m/DWsujGLML9vga4AY+jYyd
-         YXxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6yYLvyLEBI35unTfoBpTYZgBgYmEeKFbJbiIi6+Pm18=;
-        b=roH9HnWXq4me7meAidSKGIJtru8B3XClE5ipxHEVsBMRtKjiUOuFJw2jhz6qLE1dLj
-         DMJ5m71wombyhLMoGAfPadHUO+Mo3IItvSqO1hwlhUGLSTFmVG52OGm/wUNCJAe0Cqkn
-         wI8qz0Dx2kqAWGxvlJ/OR2c86uVe1XK5N9ONK4V//1I6L6QIDn0JFyBpnljRG563TesF
-         Sk1QFCYEi3Afga3uhw+HmfHRpyZMkK8NMIbHKBlycWLNSNGNtWep33JKxfD+a+NaKGuU
-         wzU8sdc6nEGpfFDuXnpy5B/usrDPGVPRj0xNYRYtv/JeRBvKFP5tLH5J62p3SlBRYBja
-         Qz7A==
-X-Gm-Message-State: APjAAAVl3qZbzFKktcj7nFG5yiq7dUoyetNt85KO4Pw27tbDLnVVUJl8
-        GmUvSVgaeI5D87M7Cg8FuvDloA==
-X-Google-Smtp-Source: APXvYqwZWf9LLc+ir3bbSRqwnYrobSk3zS9QKp8UXA6ZaA547Hc+q9BjEik4iR2j0FZUtVmgXY79Og==
-X-Received: by 2002:a65:42c3:: with SMTP id l3mr21652248pgp.372.1562571875771;
-        Mon, 08 Jul 2019 00:44:35 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id p13sm46332015pjb.30.2019.07.08.00.44.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 00:44:34 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 13:14:32 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] cpufreq/pasemi: fix an use-after-free in
- pas_cpufreq_cpu_init()
-Message-ID: <20190708074432.56q2e3ig5ehiee5f@vireshk-i7>
-References: <1562570393-8684-1-git-send-email-wen.yang99@zte.com.cn>
+        Mon, 8 Jul 2019 03:49:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZtdcoTJjChZhuPwlagtEicRdXE6fEWR8USCQzYBj3As=; b=KlQ9rDMj5O2oKgRR1ZVrSXvUR
+        XU7cMcDvPgTu4Yb6UzfhpJCk5+aWfMLToecJ23SOGlfDKIOqnrOtuz7PcZjuUBRqtfhv8VPXrS4mW
+        FLU+w0npjYzog8aSpyh2PTF19VyckbJ8hmWZnQ9bouqs/o88uTq705C1YmRkTSGmLDHfSvgOUIukx
+        kBFyXGgzzrlNp58xqEeoOt+P7huHAt/5cvsm7c2WwzJyn9eCzYL0IexGYXChiD+G4QflroGJcBZgc
+        0uQtSudvMHBuf0lfLQ0PGqaAbqwKEV7Go/1EXK2KIw+SFchsSFFDSRivCL4vS8KXNMUW3QUgUH3LD
+        bUpVnwxgA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkONt-0002mS-Qu; Mon, 08 Jul 2019 07:48:26 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5BAD420AA5C74; Mon,  8 Jul 2019 09:48:23 +0200 (CEST)
+Date:   Mon, 8 Jul 2019 09:48:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v2 5/7] x86/mm, tracing: Fix CR2 corruption
+Message-ID: <20190708074823.GV3402@hirez.programming.kicks-ass.net>
+References: <20190704195555.580363209@infradead.org>
+ <20190704200050.534802824@infradead.org>
+ <CAHk-=wiJ4no+TW-8KTfpO-Q5+aaTGVoBJzrnFTvj_zGpVbrGfA@mail.gmail.com>
+ <a4a50e28-d972-3cef-b668-1e49d5b5496f@etsukata.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1562570393-8684-1-git-send-email-wen.yang99@zte.com.cn>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <a4a50e28-d972-3cef-b668-1e49d5b5496f@etsukata.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-07-19, 15:19, Wen Yang wrote:
-> The cpu variable is still being used in the of_get_property() call
-> after the of_node_put() call, which may result in use-after-free.
+On Sat, Jul 06, 2019 at 08:07:22PM +0900, Eiichi Tsukata wrote:
 > 
-> Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> v2: clean up the code according to the advice of viresh.
 > 
->  drivers/cpufreq/pasemi-cpufreq.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+> On 2019/07/05 11:18, Linus Torvalds wrote:
+> > On Fri, Jul 5, 2019 at 5:03 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >>
+> >> Despire the current efforts to read CR2 before tracing happens there
+> >> still exist a number of possible holes:
+> > 
+> > So this whole series disturbs me for the simple reason that I thought
+> > tracing was supposed to save/restore cr2 and make it unnecessary to
+> > worry about this in non-tracing code.
+> > 
+> > That is very much what the NMI code explicitly does. Why shouldn't all
+> > the other tracing code do the same thing in case they can take page
+> > faults?
+> > 
+> > So I don't think the patches are wrong per se, but this seems to solve
+> > it at the wrong level.
+
+This solves it all at one site. If we're going to sprinkle CR2
+save/restore over 'all' sites we're bound to miss some and we'll be
+playing catch-up forever :/
+
+> Steven previously tried to fix it by saving CR2 in TRACE_IRQS_OFF:
+> https://lore.kernel.org/lkml/20190320221534.165ab87b@oasis.local.home/
+
+That misses the context tracking tracepoint, which is also before we
+load CR2.
+
+> To prevent userstack trace code from reading user stack before it becomes ready,
+> checking current->in_execve in stack_trace_save_user() can help Steven's approach,
+> though trace_sched_process_exec() is called before current->in_execve = 0 so it changes
+> current behavior.
 > 
-> diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-> index 6b1e4ab..c6d464b 100644
-> --- a/drivers/cpufreq/pasemi-cpufreq.c
-> +++ b/drivers/cpufreq/pasemi-cpufreq.c
-> @@ -128,20 +128,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	int cur_astate, idx;
->  	struct resource res;
->  	struct device_node *cpu, *dn;
-> -	int err = -ENODEV;
-> +	int err;
+> The PoC code is as follows:
+> 
+> diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+> index 2abf27d7df6b..30fa6e1b7a87 100644
+> --- a/arch/x86/kernel/stacktrace.c
+> +++ b/arch/x86/kernel/stacktrace.c
+> @@ -116,10 +116,12 @@ void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
+>                           const struct pt_regs *regs)
+>  {
+>         const void __user *fp = (const void __user *)regs->bp;
+> +       unsigned long address;
 >  
->  	cpu = of_get_cpu_node(policy->cpu, NULL);
-> -
-> -	of_node_put(cpu);
->  	if (!cpu)
-> -		goto out;
-> +		return -ENODEV;
+>         if (!consume_entry(cookie, regs->ip, false))
+>                 return;
 >  
-
-
->  	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
->  	if (!dn)
->  		dn = of_find_compatible_node(NULL, NULL,
->  					     "pasemi,pwrficient-sdc");
->  	if (!dn)
-> -		goto out;
-> +		return -ENODEV;
-
-This change looks incorrect. You still need to drop reference to cpu ?
-
->  	err = of_address_to_resource(dn, 0, &res);
->  	of_node_put(dn);
->  	if (err)
-> @@ -196,6 +194,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	policy->cur = pas_freqs[cur_astate].frequency;
->  	ppc_proc_freq = policy->cur * 1000ul;
+> +       address = read_cr2();
+>         while (1) {
+>                 struct stack_frame_user frame;
 >  
-> +	of_node_put(cpu);
->  	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
->  
->  out_unmap_sdcpwr:
-> @@ -204,6 +203,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  out_unmap_sdcasr:
->  	iounmap(sdcasr_mapbase);
->  out:
-> +	of_node_put(cpu);
->  	return err;
+> @@ -131,11 +133,14 @@ void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
+>                         break;
+>                 if (frame.ret_addr) {
+>                         if (!consume_entry(cookie, frame.ret_addr, false))
+> -                               return;
+> +                               break;
+>                 }
+>                 if (fp == frame.next_fp)
+>                         break;
+>                 fp = frame.next_fp;
+>         }
+> +
+> +       if (address != read_cr2())
+> +               write_cr2(address);
 >  }
 >  
-> -- 
-> 2.9.5
 
--- 
-viresh
+And this misses the perf unwinder, which we can reach if we attach perf
+to the tracepoint. We can most likely also do user accesses from
+kprobes, which we can similarly attach to tracepoints, and there's eBPF,
+and who knows what else...
+
+Do we really want to go put CR2 save/restore around every single thing
+that can cause a fault (any fault) and is reachable from a tracepoint?
+That's going to be a long list of things ... :/
+
+Or are we going to put the CR2 save/restore on every single tracepoint?
+But then we also need it on the mcount/fentry stubs and we again have
+multiple places.
+
+Whereas if we stick it in the entry path, like I proposed, we fix it in
+one location and we're done.
