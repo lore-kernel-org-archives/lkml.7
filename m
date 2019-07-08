@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6B0C606C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7BAC606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FA821537
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4E6216E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 14:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731949AbfGHOqS (ORCPT
+        id S1731962AbfGHOqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 10:46:18 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:32980 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfGHOqR (ORCPT
+        Mon, 8 Jul 2019 10:46:21 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:34781 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfGHOqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 10:46:17 -0400
+        Mon, 8 Jul 2019 10:46:20 -0400
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2AyOEF/R66y"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
-        with ESMTPSA id V09459v68Ek7X7F
+        with ESMTPSA id V09459v68Ek7X7H
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
         Mon, 8 Jul 2019 16:46:07 +0200 (CEST)
@@ -36,10 +36,10 @@ To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
 Cc:     letux-kernel@openphoenux.org, linux-spi@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-omap@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 1/2] DTS: ARM: gta04: define chosen/stdout-path
-Date:   Mon,  8 Jul 2019 16:46:04 +0200
-Message-Id: <21ed570c5920346bf9dc1284c8dfee2e6ef79a51.1562597164.git.hns@goldelico.com>
+        "H. Nikolaus Schaller" <hns@goldelico.com>, stable@vger.kernel.org
+Subject: [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+Date:   Mon,  8 Jul 2019 16:46:05 +0200
+Message-Id: <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <cover.1562597164.git.hns@goldelico.com>
 References: <cover.1562597164.git.hns@goldelico.com>
@@ -50,28 +50,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to remove the console= entry in the kernel command line.
+commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
 
+did introduce logic to centrally handle the legacy spi-cs-high property
+in combination with cs-gpios. This assumes that the polarity
+of the CS has to be inverted if spi-cs-high is missing, even
+and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
+
+The DTS for the GTA04 was orginally introduced under the assumption
+that there is no need for spi-cs-high if the gpio is defined with
+proper polarity GPIO_ACTIVE_HIGH.
+
+This was not a problem until gpiolib changed the interpretation of
+GPIO_ACTIVE_HIGH and missing spi-cs-high.
+
+The effect is that the missing spi-cs-high is now interpreted as CS being
+low (despite GPIO_ACTIVE_HIGH) which turns off the SPI interface when the
+panel is to be programmed by the panel driver.
+
+Therefore, we have to add the redundant and legacy spi-cs-high property
+to properly pass through the legacy handler.
+
+Since this is nowhere documented in the bindings, we add some words of
+WARNING.
+
+Cc: stable@vger.kernel.org
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/spi/spi-bus.txt | 6 ++++++
+ arch/arm/boot/dts/omap3-gta04.dtsi                | 1 +
+ 2 files changed, 7 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index 1f6e86f787ef..982aa590058b 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -47,6 +47,10 @@ cs1 : native
+ cs2 : &gpio1 1 0
+ cs3 : &gpio1 2 0
+ 
++WARNING: the polarity of cs-gpios may be inverted in some cases compared
++to what is specified in the third parameter. In that case the spi-cs-high
++property must be defined for slave nodes.
++
+ 
+ SPI slave nodes must be children of the SPI controller node.
+ 
+@@ -69,6 +73,8 @@ All slave nodes can contain the following optional properties:
+ 		    phase (CPHA) mode.
+ - spi-cs-high     - Empty property indicating device requires chip select
+ 		    active high.
++                   WARNING: this is especially required even if the cs-gpios
++		    define the gpio as GPIO_ACTIVE_HIGH
+ - spi-3wire       - Empty property indicating device requires 3-wire mode.
+ - spi-lsb-first   - Empty property indicating device requires LSB first mode.
+ - spi-tx-bus-width - The bus width (number of data wires) that is used for MOSI.
 diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 6473d8dfadc0..9a9a29fe88ec 100644
+index 9a9a29fe88ec..47bab8e1040e 100644
 --- a/arch/arm/boot/dts/omap3-gta04.dtsi
 +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -24,6 +24,10 @@
- 		reg = <0x80000000 0x20000000>; /* 512 MB */
- 	};
+@@ -124,6 +124,7 @@
+ 			spi-max-frequency = <100000>;
+ 			spi-cpol;
+ 			spi-cpha;
++			spi-cs-high;
  
-+	chosen {
-+		stdout-path = &uart3;
-+	};
-+
- 	aliases {
- 		display0 = &lcd;
- 		display1 = &tv0;
+ 			backlight= <&backlight>;
+ 			label = "lcd";
 -- 
 2.19.1
 
