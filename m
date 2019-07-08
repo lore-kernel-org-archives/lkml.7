@@ -2,185 +2,109 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA6FC0650E
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04423C0650E
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D848420659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18E120665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 02:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="hukWQOml"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TbZlXwgh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfGHCtg (ORCPT
+        id S1727900AbfGHC5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jul 2019 22:49:36 -0400
-Received: from mout.gmx.net ([212.227.17.21]:50211 "EHLO mout.gmx.net"
+        Sun, 7 Jul 2019 22:57:30 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36605 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbfGHCtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jul 2019 22:49:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1562554169;
-        bh=ZtGBScPjCu9HZHQ98skuGByJ/vmdQxhdFquScTVHRFc=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=hukWQOmlJpWSu0+y3BB2ntttZa4WUoDttsOrxT+yE0eUtEvjG9fZgA69VSCe8erj7
-         tGUdj49kyxWXLKs3dWKIbktfJV2lcW8V9ZHc6+OTOPOKsroRVmrux0U/c6+XIWhr/4
-         IAoSCytnOXGLPzRNEs7CEC/nHqRRGsVQqDq4XYuM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from b450.lan ([79.213.219.209]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0M1zFf-1icxVL3CuZ-00txWx; Mon, 08
- Jul 2019 04:49:28 +0200
-From:   Tim Schumacher <timschumi@gmx.de>
-To:     linux-input@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, timschumi@gmx.de
-Subject: [PATCH] Input: iforce - Remove empty multiline comments
-Date:   Mon,  8 Jul 2019 04:50:10 +0200
-Message-Id: <20190708025010.9318-1-timschumi@gmx.de>
-X-Mailer: git-send-email 2.22.0
+        id S1726105AbfGHC53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jul 2019 22:57:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45hqqp0gjmz9sNC;
+        Mon,  8 Jul 2019 12:57:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562554646;
+        bh=VFMvekxiALG5/T3w/s22q5Spces/S/G1tm9jk6S5Ia8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TbZlXwghZ0pglE1yKKcLXI8E6jaP9LAExweQlJwrN0pGBJVMkrjW3HuJmIbP6VdZs
+         P3t3oRkCqEwSj1XW8wVh5BU59PA9ZwSbuzM9w+Op0lJp7HmJTkEoREciybkvLxdNcP
+         86R/N7P5JsupgKxz3OKcvl6hg81dy9b1HDY+pdHi1ohVnJreZbQjfYdO5W5vBDCPUb
+         aj5QryyxjvTw0RRD5H/bKW6hMTOL45WIaWQttPfvSpNtHy8Zg4MfPn/ATFy50lp1aO
+         C/vtgrVfSVXm0wdXy9xS49nO6Ys5CzN/JlOHLE2rIMMHjGigHSIRQO5HNYMMncuX7K
+         tjEQsUqp+xBgw==
+Date:   Mon, 8 Jul 2019 12:57:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kamenee Arumugam <kamenee.arumugam@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: linux-next: build failure after merge of the rdma tree
+Message-ID: <20190708125725.25c38fa7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:p2GCja4Y0AryXGAGDE44xvtP/xyumAVh6rZRPOF7GZ3j8BAd2Ll
- M1N1hHZ4X+ZVX0P+bL4xXY+fotzTV87BHy9Ke3tYV6o1tmOlEK4zMpL7RusMcPrhLsX2CIe
- /EThCdc/HRb6CH0DgSrbK6+mkD2Nd7zEHAFQN3mSuKTPlO9a5xOfQSchOG1+GKNqCXc+HC8
- wJKS025JBKnW47RKsH4fA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wwBnvjGwdnA=:NnAWSEOSq8siykEELUDl1k
- pTAPJt3dGYH4EugPFqndD4xWnJi35JWVxd9ypjnvlnZon3Iwxoj7n5STba2Li8Vv+/iQjwtZp
- 69syOMjYPbZ7QU0+VHUOcZTns/WjpuMUGFyUUuW5gBfskTJxn4meiLrw3rLUc6tWkg1IbjwQx
- JPgKl3fZvYNRQ14Pr2iZDNTKQwtoNjAQtBNreRhthakqHiZiTQLUUMUd/AEKwlUtki4gMHUuN
- O1O1qV+jWFNqnW/EbirmqKqK4ttCYsUu2bBJQ8R9/AqP9tURgbEVkdrAsKtuHZyJKE3D9AGZA
- gTdDZ2YCz8zq/LmUCCqCEc//GIlJ4k2A1TihcpolDyeKv2Y3eAaq6RlMypm7tII49yc95GHpf
- Zl3mGhdVC6n82hXcz0vLIigo54vFL0BESnP0hdA3IhHNhZP6tT5K9R5/1FPTNe4zdj7mwsaZJ
- LFctVgcYJO1jR00w+YZ5NFaIK19MwaWgpl3aJ7DlbLA8He3lvjA+6CqhaJrkyH47UZ/fMakeR
- 4Ftcq8SoKIclKQXcpoYOSeQcqlfPgGN2Ftvn1nIXBspZCpcbGNkbvSla4bqJm1UY/AB5tN/bX
- h8bJJgCZk1c9Kx096fE2iH0krSNSoZ7mTnu0dWq/pibhcAbJ0DPleeJXhLDgLbz6dhWy3xzQI
- jPy9V7IATo+tCynZKFJbIoSv/AFbI+iAiZ6AKT5usNh01KnF1/+6p+PEimBO9fYF+EKcLZFNg
- 9eWNStn2v6KNKh3uDIs4J4OtxGMXrX8WlyHYRGo46y+MAVSAS1J0bxAwO1fsWr/tU07aLVnIS
- O9/seyOp3oHhyEGhzSUe2zg6i+ErSunWv7fc1p+aTscjWup6IfIM2hjGwgINwbGJqKHx0IUXs
- nA49NCe1S7/GFHyf6SoxXJlfvrlvytjf4yV1B8pWIbxr1Jh/3dg78g9zMdL0auTTrmCGoeVsM
- T6SMNDqYW/SJ+xrWqusAOVJVyEmwxfCGN6X8IELEMCLsCMEPdoH+kKeVzek84T/Wk+0y0bfy8
- jvSU4NaKwpKO9161eB24/+kWGX/iFpHK2g6MX6dJrmR6vt09njSV8rtYKbcBalEYrCNb5SBx9
- /R2v0u2GfmdFts=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/XLgGCQZ6W/s0w.HJzRujD_g"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Those are remnants of the SPDX identifier migration, which haven't been
-removed properly.
+--Sig_/XLgGCQZ6W/s0w.HJzRujD_g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-=2D--
-This is probably the highest level of cosmetic-only that a patch
-can achieve, sorry for the noise.
+Hi all,
 
-CCing Thomas Gleixner, since the tool (is it a tool?) that makes
-those SPDX changes would have room for improvement in that regard.
-It seems to expect that all of the license information is contained
-within the same comment block, which wasn't the case for the iforce
-driver.
-=2D--
- drivers/input/joystick/iforce/iforce-ff.c      | 3 ---
- drivers/input/joystick/iforce/iforce-main.c    | 3 ---
- drivers/input/joystick/iforce/iforce-packets.c | 3 ---
- drivers/input/joystick/iforce/iforce-serio.c   | 3 ---
- drivers/input/joystick/iforce/iforce-usb.c     | 3 ---
- drivers/input/joystick/iforce/iforce.h         | 3 ---
- 6 files changed, 18 deletions(-)
+After merging the rdma tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-diff --git a/drivers/input/joystick/iforce/iforce-ff.c b/drivers/input/joy=
-stick/iforce/iforce-ff.c
-index 2ed7da7d1f3e..4350927f7781 100644
-=2D-- a/drivers/input/joystick/iforce/iforce-ff.c
-+++ b/drivers/input/joystick/iforce/iforce-ff.c
-@@ -6,9 +6,6 @@
-  *  USB/RS232 I-Force joysticks and wheels.
-  */
+In file included from <command-line>:32:
+./usr/include/rdma/rvt-abi.h:13:10: fatal error: rdma/ib_verbs.h: No such f=
+ile or directory
+ #include <rdma/ib_verbs.h>
+          ^~~~~~~~~~~~~~~~~
 
--/*
-- */
--
- #include "iforce.h"
+Caused by commits
 
- /*
-diff --git a/drivers/input/joystick/iforce/iforce-main.c b/drivers/input/j=
-oystick/iforce/iforce-main.c
-index 55f5b7bb4cac..8c2ffa43ce89 100644
-=2D-- a/drivers/input/joystick/iforce/iforce-main.c
-+++ b/drivers/input/joystick/iforce/iforce-main.c
-@@ -6,9 +6,6 @@
-  *  USB/RS232 I-Force joysticks and wheels.
-  */
+  dabac6e460ce ("IB/hfi1: Move receive work queue struct into uapi director=
+y")
 
--/*
-- */
--
- #include "iforce.h"
+interacting with commit
 
- MODULE_AUTHOR("Vojtech Pavlik <vojtech@ucw.cz>, Johann Deneux <johann.den=
-eux@gmail.com>");
-diff --git a/drivers/input/joystick/iforce/iforce-packets.c b/drivers/inpu=
-t/joystick/iforce/iforce-packets.c
-index 42cd9730e4cc..677a7773059d 100644
-=2D-- a/drivers/input/joystick/iforce/iforce-packets.c
-+++ b/drivers/input/joystick/iforce/iforce-packets.c
-@@ -6,9 +6,6 @@
-  *  USB/RS232 I-Force joysticks and wheels.
-  */
+  0c422a3d4e1b ("kbuild: compile-test exported headers to ensure they are s=
+elf-contained")
 
--/*
-- */
--
- #include "iforce.h"
+from the kbuild tree.
 
- static struct {
-diff --git a/drivers/input/joystick/iforce/iforce-serio.c b/drivers/input/=
-joystick/iforce/iforce-serio.c
-index 65a4fe26324f..b3fff64d92dd 100644
-=2D-- a/drivers/input/joystick/iforce/iforce-serio.c
-+++ b/drivers/input/joystick/iforce/iforce-serio.c
-@@ -6,9 +6,6 @@
-  *  USB/RS232 I-Force joysticks and wheels.
-  */
+You can't reference the include/linux headers from uapi headers ...
 
--/*
-- */
--
- #include "iforce.h"
+I have used the rmda tree from 20190628 again today (given the previous
+errors).
+--=20
+Cheers,
+Stephen Rothwell
 
- void iforce_serial_xmit(struct iforce *iforce)
-diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/jo=
-ystick/iforce/iforce-usb.c
-index f1569ae8381b..ec5058e05317 100644
-=2D-- a/drivers/input/joystick/iforce/iforce-usb.c
-+++ b/drivers/input/joystick/iforce/iforce-usb.c
-@@ -6,9 +6,6 @@
-  *  USB/RS232 I-Force joysticks and wheels.
-  */
+--Sig_/XLgGCQZ6W/s0w.HJzRujD_g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--/*
-- */
--
- #include "iforce.h"
+-----BEGIN PGP SIGNATURE-----
 
- void iforce_usb_xmit(struct iforce *iforce)
-diff --git a/drivers/input/joystick/iforce/iforce.h b/drivers/input/joysti=
-ck/iforce/iforce.h
-index f1681706f526..32e91baf63f5 100644
-=2D-- a/drivers/input/joystick/iforce/iforce.h
-+++ b/drivers/input/joystick/iforce/iforce.h
-@@ -6,9 +6,6 @@
-  *  USB/RS232 I-Force joysticks and wheels.
-  */
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0isRUACgkQAVBC80lX
+0Gzswwf+PwNBgvj9IuYO+/veo1nviKwhkdPSFbCMesZiaO24KSyoAiRI0p8/X30/
+ufIK4+HM/iJ2oGev/BbnoyP6Daveg2ycq8atSDV/pXQi+Hvlb82qyu2drOIJDerM
+eKPILbsGJmhftzj8GBbQzEdTcCTpjHCInS+OPqs6r5iHasWkkxoGpknnViVhTDVM
+j/DfUaxTxv/AP3EWNHC6jRRo5KmuqiQKxsQ2ziURCivFWOaWmBNsxg1Bq+vGjdIm
+3uWJOtV6dGvFev9596t54IOvUxNTkCTtRMOJaQLi/vCM8UktApWEahZ65JvGR2U+
+dkb0yR+POQx7x2Xsfa1R+mQ/9UBZ9A==
+=kVX7
+-----END PGP SIGNATURE-----
 
--/*
-- */
--
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/input.h>
-=2D-
-2.22.0
-
+--Sig_/XLgGCQZ6W/s0w.HJzRujD_g--
