@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A18FC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4142C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D13216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C93021738
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562599870;
-	bh=NYGGn8dknusu/JQ9RSlFcIFe7sjPRuZd6lPiMeQH28M=;
+	s=default; t=1562599873;
+	bh=wkFPMCnEbNe5WVo0k2tyO9Ryx+myHPq/TVf8+9JKxpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Ku8OTZJlupqnczLGuNhc85p9qEc2zGvNtXO62F8XhmcFq+E2d2WT0fWOmzwrkwtZ
-	 idR2G4Vam9vXQzcOrXB3nYoIhC2Hng0ub8qvgNWskJlx0C71NeV0xvMXTgOzNvA2bu
-	 Dqo+NXidBG2uAT51dOaaHjzv42LtYtnT/b8gfvuE=
+	b=ZcyyFej3qrLdh0Wl7RzEGiHruf3/NEbTc9UJWn2jUWfkU1N9b2HvsU3npMtV7lvQk
+	 wBoazwidnMrc0rtjaOrwvhuyC3rcQN6s8sOajGVUQHQt3duTW021q3hWeN7AePV8KZ
+	 KMJtnggTHaraa43nVCUThl+g3shN663Q603WvA2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389656AbfGHPbI (ORCPT
+        id S2389676AbfGHPbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:31:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60418 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 11:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732189AbfGHPbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:31:07 -0400
+        id S1732189AbfGHPbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:31:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B76D9217D8;
-        Mon,  8 Jul 2019 15:31:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C6DB21707;
+        Mon,  8 Jul 2019 15:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562599867;
-        bh=NYGGn8dknusu/JQ9RSlFcIFe7sjPRuZd6lPiMeQH28M=;
+        s=default; t=1562599869;
+        bh=wkFPMCnEbNe5WVo0k2tyO9Ryx+myHPq/TVf8+9JKxpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xr17glqpHR5J1cgd2g1MzqaYcEJZllooH6Uo4UdkRrDvdxvc7QKU5pvjnEL5NQmvs
-         c8uwHclXZyHKbvVdav1It2UueCoD2EEDuvaV0K0MoFCRGmOBjB+M7ywzOrRrk4dks2
-         nrUZbApkvhkRvn3kDQGyoQ0o31/L+VNANDaURSY0=
+        b=Wco/olYiMht774yTRRjnmCzB5PYWolnIDyLWCPK1obJiiDrXVgPP5P5Lh/r31xCqf
+         Ay+J0MAw7fvQr7uKKYBqSlOUYioC1WKbWl9urig7EzUJz9gILf7hE0g5Y3lLw1boJq
+         FEJlMQ7Qb4T2ZRPNpEeOb77ccNh5rjUWXaWCa4kM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?B=C5=82a=C5=BCej=20Szczygie=C5=82?= <spaz16@wp.pl>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 16/96] HID: a4tech: fix horizontal scrolling
-Date:   Mon,  8 Jul 2019 17:12:48 +0200
-Message-Id: <20190708150527.286207032@linuxfoundation.org>
+        =?UTF-8?q?Kov=C3=A1cs=20Tam=C3=A1s?= <kepszlok@zohomail.eu>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 17/96] ASoC: Intel: Baytrail: add quirk for Aegex 10 (RU2) tablet
+Date:   Mon,  8 Jul 2019 17:12:49 +0200
+Message-Id: <20190708150527.350638787@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
 References: <20190708150526.234572443@linuxfoundation.org>
@@ -60,65 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit abf82e8f7e9af40a49e3d905187c662a43c96c8f ]
+[ Upstream commit 3e951e7914408aee196db77a5cb377801c85692a ]
 
-Since recent high resolution scrolling changes the A4Tech driver must
-check for the "REL_WHEEL_HI_RES" usage code.
+This tablet has an incorrect acpi identifier just like
+Thinkpad10 tablet, which is why it is trying to load the RT5640 driver
+instead of the RT5762 driver. The RT5640 driver, on the other hand, checks
+the hardware ID, so no driver are loaded during boot. This fix resolves to
+load the RT5672 driver on this tablet during boot. It also provides the
+correct IO configuration, like the jack detect mode 3, for 1.8V pullup. I
+would like to thank Pierre-Louis Bossart for helping with this patch.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203369
-Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e ("HID: input: use the Resolution Multiplier for high-resolution scrolling")
-Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Kovács Tamás <kepszlok@zohomail.eu>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-a4tech.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ sound/soc/codecs/rt5670.c                       | 12 ++++++++++++
+ .../soc/intel/common/soc-acpi-intel-byt-match.c | 17 +++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
-index 9428ea7cdf8a..c3a6ce3613fe 100644
---- a/drivers/hid/hid-a4tech.c
-+++ b/drivers/hid/hid-a4tech.c
-@@ -38,8 +38,10 @@ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+diff --git a/sound/soc/codecs/rt5670.c b/sound/soc/codecs/rt5670.c
+index 9a037108b1ae..a746e11ccfe3 100644
+--- a/sound/soc/codecs/rt5670.c
++++ b/sound/soc/codecs/rt5670.c
+@@ -2882,6 +2882,18 @@ static const struct dmi_system_id dmi_platform_intel_quirks[] = {
+ 						 RT5670_DEV_GPIO |
+ 						 RT5670_JD_MODE3),
+ 	},
++	{
++		.callback = rt5670_quirk_cb,
++		.ident = "Aegex 10 tablet (RU2)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "AEGEX"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "RU2"),
++		},
++		.driver_data = (unsigned long *)(RT5670_DMIC_EN |
++						 RT5670_DMIC2_INR |
++						 RT5670_DEV_GPIO |
++						 RT5670_JD_MODE3),
++	},
+ 	{}
+ };
+ 
+diff --git a/sound/soc/intel/common/soc-acpi-intel-byt-match.c b/sound/soc/intel/common/soc-acpi-intel-byt-match.c
+index fe812a909db4..3a37f4eca437 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-byt-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-byt-match.c
+@@ -22,6 +22,7 @@ static unsigned long byt_machine_id;
+ 
+ #define BYT_THINKPAD_10  1
+ #define BYT_POV_P1006W   2
++#define BYT_AEGEX_10     3
+ 
+ static int byt_thinkpad10_quirk_cb(const struct dmi_system_id *id)
  {
- 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+@@ -35,6 +36,12 @@ static int byt_pov_p1006w_quirk_cb(const struct dmi_system_id *id)
+ 	return 1;
+ }
  
--	if (usage->type == EV_REL && usage->code == REL_WHEEL)
-+	if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
- 		set_bit(REL_HWHEEL, *bit);
-+		set_bit(REL_HWHEEL_HI_RES, *bit);
-+	}
++static int byt_aegex10_quirk_cb(const struct dmi_system_id *id)
++{
++	byt_machine_id = BYT_AEGEX_10;
++	return 1;
++}
++
+ static const struct dmi_system_id byt_table[] = {
+ 	{
+ 		.callback = byt_thinkpad10_quirk_cb,
+@@ -75,9 +82,18 @@ static const struct dmi_system_id byt_table[] = {
+ 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
+ 		},
+ 	},
++	{
++		/* Aegex 10 tablet (RU2) */
++		.callback = byt_aegex10_quirk_cb,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "AEGEX"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "RU2"),
++		},
++	},
+ 	{ }
+ };
  
- 	if ((a4->quirks & A4_2WHEEL_MOUSE_HACK_7) && usage->hid == 0x00090007)
- 		return -1;
-@@ -60,7 +62,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
- 	input = field->hidinput->input;
++/* The Thinkapd 10 and Aegex 10 tablets have the same ID problem */
+ static struct snd_soc_acpi_mach byt_thinkpad_10 = {
+ 	.id = "10EC5640",
+ 	.drv_name = "cht-bsw-rt5672",
+@@ -104,6 +120,7 @@ static struct snd_soc_acpi_mach *byt_quirk(void *arg)
  
- 	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8) {
--		if (usage->type == EV_REL && usage->code == REL_WHEEL) {
-+		if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
- 			a4->delayed_value = value;
- 			return 1;
- 		}
-@@ -68,6 +70,8 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
- 		if (usage->hid == 0x000100b8) {
- 			input_event(input, EV_REL, value ? REL_HWHEEL :
- 					REL_WHEEL, a4->delayed_value);
-+			input_event(input, EV_REL, value ? REL_HWHEEL_HI_RES :
-+					REL_WHEEL_HI_RES, a4->delayed_value * 120);
- 			return 1;
- 		}
- 	}
-@@ -77,8 +81,9 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
- 		return 1;
- 	}
- 
--	if (usage->code == REL_WHEEL && a4->hw_wheel) {
-+	if (usage->code == REL_WHEEL_HI_RES && a4->hw_wheel) {
- 		input_event(input, usage->type, REL_HWHEEL, value);
-+		input_event(input, usage->type, REL_HWHEEL_HI_RES, value * 120);
- 		return 1;
- 	}
- 
+ 	switch (byt_machine_id) {
+ 	case BYT_THINKPAD_10:
++	case BYT_AEGEX_10:
+ 		return &byt_thinkpad_10;
+ 	case BYT_POV_P1006W:
+ 		return &byt_pov_p1006w;
 -- 
 2.20.1
 
