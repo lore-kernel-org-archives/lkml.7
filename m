@@ -2,89 +2,364 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADECC606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFE5C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E45D216FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8A4216C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QjhYy+eC"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="IvFIKtCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389576AbfGHQvc (ORCPT
+        id S2403997AbfGHQvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:51:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51558 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbfGHQvb (ORCPT
+        Mon, 8 Jul 2019 12:51:52 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:32836 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390072AbfGHQvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:51:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=m36oMpQbJ+bpnpx4ZpFk0wXnI2X5g1zDr4Ut8k/z+Hw=; b=QjhYy+eCulA+L7qs9NzBmWbGC
-        dG7aEQ+seYLswy/Q44jOF5h6z8leFZVcArBoTScXvqXQnBrbvdR2ufBlMhUz6cOV+IgHjA2YUswhK
-        UlvFrD28jNI6mT6o3SAEUH2o8Gp8MdlyJ7jwWxSA5au2SyBhIYzyan6w3qFy9b+8FfIKcfWydkbM0
-        MCNJaUZK6kXI7BE37oh2w0pEgBFtdHruuxCvfgEJzR9gea2YbSUPwN2V+SKVHIxhylGTLwfM3LMeP
-        khfw/wz0Bb0Ud7rJ3gVSJH2jrByQ4ke0eQmlznYX7uPhKhMI2SYEV/Ltkeef3wjIIcCtLLMzaltjK
-        bij8letPg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkWrQ-0006zF-6w; Mon, 08 Jul 2019 16:51:28 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9E7A020976EFA; Mon,  8 Jul 2019 18:51:26 +0200 (CEST)
-Date:   Mon, 8 Jul 2019 18:51:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 5/7] perf: cache perf_event_groups_first for cgroups
-Message-ID: <20190708165126.GJ3463@hirez.programming.kicks-ass.net>
-References: <20190702065955.165738-1-irogers@google.com>
- <20190702065955.165738-6-irogers@google.com>
- <20190708165034.GI3419@hirez.programming.kicks-ass.net>
+        Mon, 8 Jul 2019 12:51:51 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h10so16645963ljg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:51:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kinvolk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JiyfBxDrUpJwKDj5qRxHMNcBMneqQ8dyhv4/1WSz/nM=;
+        b=IvFIKtChvtNohLTnMgGzxoRkIk+WcVdktFHEk4p20NBTSlwCluMT2Rg8RV1y5cfgKC
+         9F77cauh2pamKTgc+4qnvO5FE/9K9JuiJ70HP4vepUvSpemgQtlNIiT5WYkuY+ZGKgj5
+         U4KBeOYrlbAFPAHcM1nfSm7ICNujoPJyL32us=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JiyfBxDrUpJwKDj5qRxHMNcBMneqQ8dyhv4/1WSz/nM=;
+        b=R0axs3ynKyHo9Y+YrONwy4dN6rMHPI2oOW4rv5jDMgp7mNsbhdOVkTXbPLClCgnGM7
+         aEk+X7bkwSjg3cRH8c0Lw5B8WKeIixxasq+W0mPOW7Og5pXuZNvRlH519f8hC9Ugxm/+
+         4qYjAjkCoI36Z4Vy3G5TK17Zi95Ex4s2kRPfCDEWMmbIvM3OXlBMJ+Og+yj7E1MK+N4s
+         51Y3dPauNYgWMe7Fa5+fb5dZuI9N1uKII9Vi1p8ZuGh3tKI0IbmV0A+GNbgKfB/oPvZz
+         3Ig6mzXU8NMzMCBR6Uo30jfLrMMbPE+90wrPAiB29SDYiSLDRqIiRVq2Laj/LeMyY87G
+         2TPA==
+X-Gm-Message-State: APjAAAWHY3RCY1lm2BNqDkqDLxNwHBMP4ettCUcbA2gDw2O9Vks8FpOX
+        Xr/nvJy/U3QOcko2L10BM9wK73FFJxyERXPY2oSmTg==
+X-Google-Smtp-Source: APXvYqyjUhCe+SlbocNI+sCV28D/05h38efmPoCXwgGs4skkGvEhFtgWw6YEi51RuUhiIliigG6xljsuTmDeiRubFCk=
+X-Received: by 2002:a2e:9754:: with SMTP id f20mr10715874ljj.151.1562604708948;
+ Mon, 08 Jul 2019 09:51:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708165034.GI3419@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190625194215.14927-1-krzesimir@kinvolk.io> <20190625194215.14927-9-krzesimir@kinvolk.io>
+ <20190625201220.GC10487@mini-arch> <CAGGp+cE3m1+ZWFBmjTgKFEHYVJ-L1dE=+iVUXvXCxWAxRG9YTA@mail.gmail.com>
+ <20190626161231.GA4866@mini-arch>
+In-Reply-To: <20190626161231.GA4866@mini-arch>
+From:   Krzesimir Nowak <krzesimir@kinvolk.io>
+Date:   Mon, 8 Jul 2019 18:51:38 +0200
+Message-ID: <CAGGp+cGXaOAYNgz4VPbNwaVf3ZBHJ3XaOn=rN9hMdcAAPDY7bQ@mail.gmail.com>
+Subject: Re: [bpf-next v2 08/10] bpf: Implement bpf_prog_test_run for perf
+ event programs
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     netdev@vger.kernel.org, Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 06:50:34PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 01, 2019 at 11:59:53PM -0700, Ian Rogers wrote:
-> > @@ -3511,7 +3550,12 @@ static int visit_groups_merge(struct perf_event_context *ctx,
-> >  	min_heapify_all(&heap);
-> >  
-> >  	while (heap.num_elements > 0) {
-> > -		ret = func(ctx, cpuctx, heap.storage[0], data);
-> > +		if (is_pinned)
-> > +			ret = pinned_sched_in(ctx, cpuctx, heap.storage[0]);
-> > +		else
-> > +			ret = flexible_sched_in(ctx, cpuctx, heap.storage[0],
-> > +						data);
-> > +
-> >  		if (ret)
-> >  			return ret;
-> >  
-> 
-> You can actually merge those two functions; see merge_sched_in() in the
-> below patch:
-> 
-> https://lkml.kernel.org/r/20181010104559.GO5728@hirez.programming.kicks-ass.net
+On Wed, Jun 26, 2019 at 6:12 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
+>
+> On 06/26, Krzesimir Nowak wrote:
+> > On Tue, Jun 25, 2019 at 10:12 PM Stanislav Fomichev <sdf@fomichev.me> w=
+rote:
+> > >
+> > > On 06/25, Krzesimir Nowak wrote:
+> > > > As an input, test run for perf event program takes struct
+> > > > bpf_perf_event_data as ctx_in and struct bpf_perf_event_value as
+> > > > data_in. For an output, it basically ignores ctx_out and data_out.
+> > > >
+> > > > The implementation sets an instance of struct bpf_perf_event_data_k=
+ern
+> > > > in such a way that the BPF program reading data from context will
+> > > > receive what we passed to the bpf prog test run in ctx_in. Also BPF
+> > > > program can call bpf_perf_prog_read_value to receive what was passe=
+d
+> > > > in data_in.
+> > > >
+> > > > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+> > > > ---
+> > > >  kernel/trace/bpf_trace.c                      | 107 ++++++++++++++=
+++++
+> > > >  .../bpf/verifier/perf_event_sample_period.c   |   8 ++
+> > > >  2 files changed, 115 insertions(+)
+> > > >
+> > > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > > > index c102c240bb0b..2fa49ea8a475 100644
+> > > > --- a/kernel/trace/bpf_trace.c
+> > > > +++ b/kernel/trace/bpf_trace.c
+> > > > @@ -16,6 +16,8 @@
+> > > >
+> > > >  #include <asm/tlb.h>
+> > > >
+> > > > +#include <trace/events/bpf_test_run.h>
+> > > > +
+> > > >  #include "trace_probe.h"
+> > > >  #include "trace.h"
+> > > >
+> > > > @@ -1160,7 +1162,112 @@ const struct bpf_verifier_ops perf_event_ve=
+rifier_ops =3D {
+> > > >       .convert_ctx_access     =3D pe_prog_convert_ctx_access,
+> > > >  };
+> > > >
+> > > > +static int pe_prog_test_run(struct bpf_prog *prog,
+> > > > +                         const union bpf_attr *kattr,
+> > > > +                         union bpf_attr __user *uattr)
+> > > > +{
+> > > > +     void __user *ctx_in =3D u64_to_user_ptr(kattr->test.ctx_in);
+> > > > +     void __user *data_in =3D u64_to_user_ptr(kattr->test.data_in)=
+;
+> > > > +     u32 data_size_in =3D kattr->test.data_size_in;
+> > > > +     u32 ctx_size_in =3D kattr->test.ctx_size_in;
+> > > > +     u32 repeat =3D kattr->test.repeat;
+> > > > +     u32 retval =3D 0, duration =3D 0;
+> > > > +     int err =3D -EINVAL;
+> > > > +     u64 time_start, time_spent =3D 0;
+> > > > +     int i;
+> > > > +     struct perf_sample_data sample_data =3D {0, };
+> > > > +     struct perf_event event =3D {0, };
+> > > > +     struct bpf_perf_event_data_kern real_ctx =3D {0, };
+> > > > +     struct bpf_perf_event_data fake_ctx =3D {0, };
+> > > > +     struct bpf_perf_event_value value =3D {0, };
+> > > > +
+> > > > +     if (ctx_size_in !=3D sizeof(fake_ctx))
+> > > > +             goto out;
+> > > > +     if (data_size_in !=3D sizeof(value))
+> > > > +             goto out;
+> > > > +
+> > > > +     if (copy_from_user(&fake_ctx, ctx_in, ctx_size_in)) {
+> > > > +             err =3D -EFAULT;
+> > > > +             goto out;
+> > > > +     }
+> > > Move this to net/bpf/test_run.c? I have a bpf_ctx_init helper to deal
+> > > with ctx input, might save you some code above wrt ctx size/etc.
+> >
+> > My impression about net/bpf/test_run.c was that it was a collection of
+> > helpers for test runs of the network-related BPF programs, because
+> > they are so similar to each other. So kernel/trace/bpf_trace.c looked
+> > like an obvious place for the test_run implementation since other perf
+> > trace BPF stuff was already there.
+> Maybe net/bpf/test_run.c should be renamed to kernel/bpf/test_run.c?
 
-And this change is again unrelated to the one the Changelog mentions.
+Just sent another version of this patch series. I went with slightly
+different approach - moved some functions to kernel/bpf/test_run.c and
+left the network specific stuff in net/bpf/test_run.c.
+
+>
+> > And about bpf_ctx_init - looks useful as it seems to me that it
+> > handles the scenario where the size of the ctx struct grows, but still
+> > allows passing older version of the struct (thus smaller) from
+> > userspace for compatibility. Maybe that checking and copying part of
+> > the function could be moved into some non-static helper function, so I
+> > could use it and still skip the need for allocating memory for the
+> > context?
+> You can always make bpf_ctx_init non-static and export it.
+> But, again, consider adding your stuff to the net/bpf/test_run.c
+> and exporting only pe_prog_test_run. That way you can reuse
+> bpf_ctx_init and bpf_test_run.
+>
+> Why do you care about memory allocation though? It's a one time
+> operation and doesn't affect the performance measurements.
+>
+> > > > +     if (copy_from_user(&value, data_in, data_size_in)) {
+> > > > +             err =3D -EFAULT;
+> > > > +             goto out;
+> > > > +     }
+> > > > +
+> > > > +     real_ctx.regs =3D &fake_ctx.regs;
+> > > > +     real_ctx.data =3D &sample_data;
+> > > > +     real_ctx.event =3D &event;
+> > > > +     perf_sample_data_init(&sample_data, fake_ctx.addr,
+> > > > +                           fake_ctx.sample_period);
+> > > > +     event.cpu =3D smp_processor_id();
+> > > > +     event.oncpu =3D -1;
+> > > > +     event.state =3D PERF_EVENT_STATE_OFF;
+> > > > +     local64_set(&event.count, value.counter);
+> > > > +     event.total_time_enabled =3D value.enabled;
+> > > > +     event.total_time_running =3D value.running;
+> > > > +     /* make self as a leader - it is used only for checking the
+> > > > +      * state field
+> > > > +      */
+> > > > +     event.group_leader =3D &event;
+> > > > +
+> > > > +     /* slightly changed copy pasta from bpf_test_run() in
+> > > > +      * net/bpf/test_run.c
+> > > > +      */
+> > > > +     if (!repeat)
+> > > > +             repeat =3D 1;
+> > > > +
+> > > > +     rcu_read_lock();
+> > > > +     preempt_disable();
+> > > > +     time_start =3D ktime_get_ns();
+> > > > +     for (i =3D 0; i < repeat; i++) {
+> > > Any reason for not using bpf_test_run?
+> >
+> > Two, mostly. One was that it is a static function and my code was
+> > elsewhere. Second was that it does some cgroup storage setup and I'm
+> > not sure if the perf event BPF program needs that.
+> You can always make it non-static.
+>
+> Regarding cgroup storage: do we care? If you can see it affecting
+> your performance numbers, then yes, but you can try to measure to see
+> if it gives you any noticeable overhead. Maybe add an argument to
+> bpf_test_run to skip cgroup storage stuff?
+>
+> > > > +             retval =3D BPF_PROG_RUN(prog, &real_ctx);
+> > > > +
+> > > > +             if (signal_pending(current)) {
+> > > > +                     err =3D -EINTR;
+> > > > +                     preempt_enable();
+> > > > +                     rcu_read_unlock();
+> > > > +                     goto out;
+> > > > +             }
+> > > > +
+> > > > +             if (need_resched()) {
+> > > > +                     time_spent +=3D ktime_get_ns() - time_start;
+> > > > +                     preempt_enable();
+> > > > +                     rcu_read_unlock();
+> > > > +
+> > > > +                     cond_resched();
+> > > > +
+> > > > +                     rcu_read_lock();
+> > > > +                     preempt_disable();
+> > > > +                     time_start =3D ktime_get_ns();
+> > > > +             }
+> > > > +     }
+> > > > +     time_spent +=3D ktime_get_ns() - time_start;
+> > > > +     preempt_enable();
+> > > > +     rcu_read_unlock();
+> > > > +
+> > > > +     do_div(time_spent, repeat);
+> > > > +     duration =3D time_spent > U32_MAX ? U32_MAX : (u32)time_spent=
+;
+> > > > +     /* end of slightly changed copy pasta from bpf_test_run() in
+> > > > +      * net/bpf/test_run.c
+> > > > +      */
+> > > > +
+> > > > +     if (copy_to_user(&uattr->test.retval, &retval, sizeof(retval)=
+)) {
+> > > > +             err =3D -EFAULT;
+> > > > +             goto out;
+> > > > +     }
+> > > > +     if (copy_to_user(&uattr->test.duration, &duration, sizeof(dur=
+ation))) {
+> > > > +             err =3D -EFAULT;
+> > > > +             goto out;
+> > > > +     }
+> > > Can BPF program modify fake_ctx? Do we need/want to copy it back?
+> >
+> > Reading the pe_prog_is_valid_access function tells me that it's not
+> > possible - the only type of valid access is read. So maybe I should be
+> > stricter about the requirements for the data_out and ctx_out sizes
+> > (should be zero or return -EINVAL).
+> Yes, better to explicitly prohibit anything that we don't support.
+>
+> > > > +     err =3D 0;
+> > > > +out:
+> > > > +     trace_bpf_test_finish(&err);
+> > > > +     return err;
+> > > > +}
+> > > > +
+> > > >  const struct bpf_prog_ops perf_event_prog_ops =3D {
+> > > > +     .test_run       =3D pe_prog_test_run,
+> > > >  };
+> > > >
+> > > >  static DEFINE_MUTEX(bpf_event_mutex);
+> > > > diff --git a/tools/testing/selftests/bpf/verifier/perf_event_sample=
+_period.c b/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c
+> > > > index 471c1a5950d8..16e9e5824d14 100644
+> > > > --- a/tools/testing/selftests/bpf/verifier/perf_event_sample_period=
+.c
+> > > > +++ b/tools/testing/selftests/bpf/verifier/perf_event_sample_period=
+.c
+> > > This should probably go in another patch.
+> >
+> > Yeah, I was wondering about it. These changes are here to avoid
+> > breaking the tests, since perf event program can actually be run now
+> > and the test_run for perf event required certain sizes for ctx and
+> > data.
+> You need to make sure the context is optional, that way you don't break
+> any existing tests out in the wild and can move those changes to
+> another patch.
+>
+> > So, I will either move them to a separate patch or rework the test_run
+> > for perf event to accept the size between 0 and sizeof(struct
+> > something), so the changes in tests maybe will not be necessary.
+> >
+> > >
+> > > > @@ -13,6 +13,8 @@
+> > > >       },
+> > > >       .result =3D ACCEPT,
+> > > >       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
+> > > > +     .ctx_len =3D sizeof(struct bpf_perf_event_data),
+> > > > +     .data_len =3D sizeof(struct bpf_perf_event_value),
+> > > >  },
+> > > >  {
+> > > >       "check bpf_perf_event_data->sample_period half load permitted=
+",
+> > > > @@ -29,6 +31,8 @@
+> > > >       },
+> > > >       .result =3D ACCEPT,
+> > > >       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
+> > > > +     .ctx_len =3D sizeof(struct bpf_perf_event_data),
+> > > > +     .data_len =3D sizeof(struct bpf_perf_event_value),
+> > > >  },
+> > > >  {
+> > > >       "check bpf_perf_event_data->sample_period word load permitted=
+",
+> > > > @@ -45,6 +49,8 @@
+> > > >       },
+> > > >       .result =3D ACCEPT,
+> > > >       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
+> > > > +     .ctx_len =3D sizeof(struct bpf_perf_event_data),
+> > > > +     .data_len =3D sizeof(struct bpf_perf_event_value),
+> > > >  },
+> > > >  {
+> > > >       "check bpf_perf_event_data->sample_period dword load permitte=
+d",
+> > > > @@ -56,4 +62,6 @@
+> > > >       },
+> > > >       .result =3D ACCEPT,
+> > > >       .prog_type =3D BPF_PROG_TYPE_PERF_EVENT,
+> > > > +     .ctx_len =3D sizeof(struct bpf_perf_event_data),
+> > > > +     .data_len =3D sizeof(struct bpf_perf_event_value),
+> > > >  },
+> > > > --
+> > > > 2.20.1
+> > > >
+> >
+> >
+> >
+> > --
+> > Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
+> > Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iag=
+o L=C3=B3pez Galeiras
+> > Registergericht/Court of registration: Amtsgericht Charlottenburg
+> > Registernummer/Registration number: HRB 171414 B
+> > Ust-ID-Nummer/VAT ID number: DE302207000
+
+
+
+--=20
+Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
+Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago L=
+=C3=B3pez Galeiras
+Registergericht/Court of registration: Amtsgericht Charlottenburg
+Registernummer/Registration number: HRB 171414 B
+Ust-ID-Nummer/VAT ID number: DE302207000
