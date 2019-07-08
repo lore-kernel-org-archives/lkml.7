@@ -2,93 +2,94 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201D1C606C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AF6C606C1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C752173C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC9F20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 15:25:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562599550;
+	bh=64V9h1K9sOO1/vFNR+nqekbcBPvH68uwg+pEVDOf8Yc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UYQ41c0A9uHvZCivZIk8gBjFKJBLYu7f06mlBRGiwOQ30EkalH73GcXijxX19cejB
+	 nw/8akNMLlVBzdLceacvfnW8kMdBuKtfpdAArnTjNS7G5vE9F20fP4EImMY2H4yaVJ
+	 an0eNRvfbuUuOAWRBuKh19U7CR/zs8QFGS2mT/qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388668AbfGHPZq (ORCPT
+        id S2388680AbfGHPZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 11:25:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:18169 "EHLO mga07.intel.com"
+        Mon, 8 Jul 2019 11:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388641AbfGHPZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:25:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 08:25:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
-   d="scan'208";a="363835132"
-Received: from jsakkine-mobl1.tm.intel.com ([10.237.50.189])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jul 2019 08:25:35 -0700
-Message-ID: <846cacae8cede764a2e84f628f539d94582fdbe0.camel@linux.intel.com>
-Subject: Re: [PATCH] tpm: Document UEFI event log quirks
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     tweek@google.com, matthewgarrett@google.com,
-        Jonathan Corbet <corbet@lwn.net>
-Date:   Mon, 08 Jul 2019 18:25:38 +0300
-In-Reply-To: <ec274596-6bc8-07a0-d09b-1d191646c5cd@infradead.org>
-References: <20190703161109.22935-1-jarkko.sakkinen@linux.intel.com>
-         <6acf78df-b168-14d3-fea4-9a9d2945e77f@infradead.org>
-         <a8ee93721a674434e22d31fd1d10bf9472c1c739.camel@linux.intel.com>
-         <ec274596-6bc8-07a0-d09b-1d191646c5cd@infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S2388649AbfGHPZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 11:25:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71B3A20665;
+        Mon,  8 Jul 2019 15:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562599540;
+        bh=64V9h1K9sOO1/vFNR+nqekbcBPvH68uwg+pEVDOf8Yc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cPKvA7nf1nLXFV8mRgNeUarJZ/0aleZka6iOwuej5FtH7Z9WbohroRIMTIwgxrrNH
+         1JXIp2rh5CCNyQrpDRgK0fbvOs1318j5wCdL6TctpRava+I/REkhHJfvpOBeC9n5lO
+         Ry9pvr7m1qaVs7wzifXoZb8HEZpuqqUPEjh2zXLA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 48/56] tty: rocket: fix incorrect forward declaration of rp_init()
+Date:   Mon,  8 Jul 2019 17:13:40 +0200
+Message-Id: <20190708150523.944446224@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
+References: <20190708150514.376317156@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-07-07 at 12:33 -0700, Randy Dunlap wrote:
-> On 7/5/19 3:15 AM, Jarkko Sakkinen wrote:
-> > On Wed, 2019-07-03 at 09:45 -0700, Randy Dunlap wrote:
-> > > > +This introduces another problem: nothing guarantees that it is not
-> > > > +called before the stub gets to run. Thus, it needs to copy the final
-> > > > +events table preboot size to the custom configuration table so that
-> > > > +kernel offset it later on.
-> 
->      (so that)
->      the kernel can use that final table preboot size as an events table
->      offset later on.
-> 
-> > > ?  kernel can offset it later on.
-> > 
-> > EFI stub calculates the total size of the events in the final events
-> > table at the time.
-> > 
-> > Later on, TPM driver uses this offset to copy only the events that
-> > were actually generated after ExitBootServices():
-> > 
-> > /*
-> >  * Copy any of the final events log that didn't also end up in the
-> >  * main log. Events can be logged in both if events are generated
-> >  * between GetEventLog() and ExitBootServices().
-> >  */
-> > memcpy((void *)log->bios_event_log + log_size,
-> >        final_tbl->events + log_tbl->final_events_preboot_size,
-> >        efi_tpm_final_log_size);
-> > 
-> > What would be a better way to describe this?
-> 
-> Yeah, I think I see what it's doing, how it's using that.
-> See above.
-> 
-> OK?
+[ Upstream commit 423ea3255424b954947d167681b71ded1b8fca53 ]
 
-Your propsal looks legit, thank you. I'll send an update that
-tries to address yours and Jordan's feedback.
+Make the forward declaration actually match the real function
+definition, something that previous versions of gcc had just ignored.
 
-/Jarkko 
+This is another patch to fix new warnings from gcc-9 before I start the
+merge window pulls.  I don't want to miss legitimate new warnings just
+because my system update brought a new compiler with new warnings.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/rocket.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/rocket.c b/drivers/tty/rocket.c
+index 070733ca94d5..32943afacffd 100644
+--- a/drivers/tty/rocket.c
++++ b/drivers/tty/rocket.c
+@@ -279,7 +279,7 @@ MODULE_PARM_DESC(pc104_3, "set interface types for ISA(PC104) board #3 (e.g. pc1
+ module_param_array(pc104_4, ulong, NULL, 0);
+ MODULE_PARM_DESC(pc104_4, "set interface types for ISA(PC104) board #4 (e.g. pc104_4=232,232,485,485,...");
+ 
+-static int rp_init(void);
++static int __init rp_init(void);
+ static void rp_cleanup_module(void);
+ 
+ module_init(rp_init);
+-- 
+2.20.1
+
+
 
