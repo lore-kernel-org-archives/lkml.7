@@ -2,123 +2,127 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3CDC606C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42A9C606BD
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0AB20693
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A4621537
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 16:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jg78YVBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390512AbfGHQPw (ORCPT
+        id S2390786AbfGHQQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 12:15:52 -0400
-Received: from mga12.intel.com ([192.55.52.136]:23211 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727592AbfGHQPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 12:15:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 09:15:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,466,1557212400"; 
-   d="scan'208";a="363849116"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jul 2019 09:15:51 -0700
-Date:   Mon, 8 Jul 2019 09:15:51 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: [GIT PULL] EDAC driver changes for v5.3
-Message-ID: <20190708161550.GA23045@agluck-desk2.amr.corp.intel.com>
+        Mon, 8 Jul 2019 12:16:43 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40393 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbfGHQQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 12:16:42 -0400
+Received: by mail-io1-f66.google.com with SMTP id h6so28313875iom.7
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 09:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7tw0R1rFMCD1i4r7LuNeYKjhPcjJjHVgqiG2ggUkFmA=;
+        b=Jg78YVBBeZqrqneqx3nONAoF4GkNLjxyjwwf8AjCFQUdlWP1dNKhAJXiF22a3KzwIw
+         4N8ABLfR99iGqrDfd1NKQk8xrJFFzfLXSw+ZctmwpQ4vxIAtOCtNda+BNpflXcmmz+yA
+         teOMSe/4fKptDXUxzoPdAcJIXJzqnNUYTAvW6F90CtVGStIBFvvNUQ3rcUpbhff2G1TW
+         9qUuD/Det7AQKuh4COh7xnRrG/gm+vY1og269gZmuYtcT+G0zYI4yi7e+aNS3P1iDJa9
+         MNrZAbSSbvP7LPxqHipt4w6Qi1GCKZCIPa5C7y/AYPR0btMvq8womaaTesgPAsJgFd+B
+         egFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7tw0R1rFMCD1i4r7LuNeYKjhPcjJjHVgqiG2ggUkFmA=;
+        b=Q7Qp7xPlaem0qQQEvEejq09EPRlhnf9Md2w3UPBwESFAo681KbxU5QfNsaDm8Jh1je
+         LBo0BQNQAhL0fzQHt+2r2FI5mTaKKkvpaRnUDpQgmThTz+bjihRadkR3HWrc3KHoRCV0
+         B6C23jajb4oga/KYU361yzsT+K8EoUeyBO4fDTmcD/aGb3EUTLj7nwgIfTnSFVAtwcRm
+         L1U5gafc9LULi+qx1Gzawx1TXC1qZEz1gxGnVZ7Q/cj5NQ0zo4Rv/mP+w1ot+NwEw9cy
+         zzbsxgstHkwEEsI953kqchY9MKsvx/YtainLc4fN8I/uUUO3mQ5HBk02lLExBvVLTmsi
+         NGWw==
+X-Gm-Message-State: APjAAAXAO0FpJujz30FXOqXZKVEyIzRdrBCdDvMFeoXdFIXrvEnxde8L
+        CzhFrnXsHWK/y5h90iVWheSO7571LlU1snsmKGg43XFL34c=
+X-Google-Smtp-Source: APXvYqzMhreahvLSaTzvfscpJMJE88pqa13LJ/bcpTvySglD81gzHf0MAYFs52rE/Xn4yIJlW15bP7pWQwhONzedP/k=
+X-Received: by 2002:a02:b609:: with SMTP id h9mr15223976jam.36.1562602601187;
+ Mon, 08 Jul 2019 09:16:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <172e04b2-65a5-4007-8464-cc7701e76e36@web.de>
+In-Reply-To: <172e04b2-65a5-4007-8464-cc7701e76e36@web.de>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 8 Jul 2019 10:16:30 -0600
+Message-ID: <CANLsYkxxe58r10aodp+Cdi8MBbidk_UDgFEbuO3WVZCu8k9uNQ@mail.gmail.com>
+Subject: Re: [PATCH] coresight: etm4x: Two function calls less
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 9e0babf2c06c73cda2c0cd37a1653d823adb40ec:
+On Fri, 5 Jul 2019 at 11:40, Markus Elfring <Markus.Elfring@web.de> wrote:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 5 Jul 2019 19:33:26 +0200
+>
+> Avoid an extra function call in two function implementations
+> by using a ternary operator instead of a conditional statement.
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/hwtracing/coresight/coresight-etm4x-sysfs.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+> index a0365e23678e..219c10eb752c 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+> @@ -296,11 +296,8 @@ static ssize_t mode_store(struct device *dev,
+>
+>         spin_lock(&drvdata->spinlock);
+>         config->mode = val & ETMv4_MODE_ALL;
+> -
+> -       if (config->mode & ETM_MODE_EXCLUDE)
+> -               etm4_set_mode_exclude(drvdata, true);
+> -       else
+> -               etm4_set_mode_exclude(drvdata, false);
+> +       etm4_set_mode_exclude(drvdata,
+> +                             config->mode & ETM_MODE_EXCLUDE ? true : false);
+>
+>         if (drvdata->instrp0 == true) {
+>                 /* start by clearing instruction P0 field */
+> @@ -999,10 +996,8 @@ static ssize_t addr_range_store(struct device *dev,
+>          * Program include or exclude control bits for vinst or vdata
+>          * whenever we change addr comparators to ETM_ADDR_TYPE_RANGE
+>          */
+> -       if (config->mode & ETM_MODE_EXCLUDE)
+> -               etm4_set_mode_exclude(drvdata, true);
+> -       else
+> -               etm4_set_mode_exclude(drvdata, false);
+> +       etm4_set_mode_exclude(drvdata,
+> +                             config->mode & ETM_MODE_EXCLUDE ? true : false);
 
-  Linux 5.2-rc5 (2019-06-16 08:49:45 -1000)
+Looks good to me - I will add this to my next branch when we have a new 5.3-rc1.
 
-are available in the Git repository at:
+Thanks,
+Mathieu
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/please-pull-for_5.3
-
-for you to fetch changes up to d8655e7630dafa88bc37f101640e39c736399771:
-
-  EDAC: Fix global-out-of-bounds write when setting edac_mc_poll_msec (2019-06-27 10:24:47 -0700)
-
-
-All the bits that Boris had queued in his tree plus four patches
-to add support for Intel Icelake Xeon and then fix a few corner
-cases.
-
-----------------------------------------------------------------
-EDAC changes for v5.3
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      EDAC/sb_edac: Remove redundant update of tad_base
-
-Eiichi Tsukata (1):
-      EDAC: Fix global-out-of-bounds write when setting edac_mc_poll_msec
-
-Greg KH (1):
-      EDAC/sysfs: Drop device references properly
-
-Greg Kroah-Hartman (1):
-      EDAC: Make edac_debugfs_create_x*() return void
-
-Marco Elver (2):
-      EDAC/ie31200: Add Intel Coffee Lake CPU support
-      EDAC/ie31200: Reformat PCI device table
-
-Pan Bian (1):
-      EDAC/sysfs: Fix memory leak when creating a csrow object
-
-Qiuxu Zhuo (3):
-      EDAC, i10nm: Add Intel additional Ice-Lake support
-      EDAC, i10nm: Check ECC enabling status per channel
-      EDAC, skx, i10nm: Fix source ID register offset
-
-Thor Thayer (4):
-      EDAC/altera: Add Stratix10 OCRAM ECC support
-      arm64: dts: stratix10: Add OCRAM EDAC node
-      EDAC/altera: Add Stratix10 SDMMC support
-      arm64: dts: stratix10: Add SDMMC EDAC node
-
-Yash Shah (1):
-      EDAC/sifive: Add EDAC platform driver for SiFive SoCs
-
-YueHaibing (1):
-      EDAC/aspeed: Remove set but not used variable 'np'
-
- MAINTAINERS                                        |   6 ++
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   8 ++
- .../boot/dts/altera/socfpga_stratix10_socdk.dts    |  11 ++
- arch/riscv/Kconfig                                 |   1 +
- drivers/edac/Kconfig                               |   6 ++
- drivers/edac/Makefile                              |   1 +
- drivers/edac/altera_edac.c                         |  43 +++++++-
- drivers/edac/aspeed_edac.c                         |   4 -
- drivers/edac/debugfs.c                             |  12 +--
- drivers/edac/edac_mc_sysfs.c                       |  34 +++---
- drivers/edac/edac_module.h                         |  20 ++--
- drivers/edac/i10nm_base.c                          |  10 +-
- drivers/edac/ie31200_edac.c                        |  78 ++++++++------
- drivers/edac/sb_edac.c                             |   1 -
- drivers/edac/sifive_edac.c                         | 119 +++++++++++++++++++++
- drivers/edac/skx_base.c                            |   2 +-
- drivers/edac/skx_common.c                          |   4 +-
- drivers/edac/skx_common.h                          |   2 +-
- 18 files changed, 284 insertions(+), 78 deletions(-)
- create mode 100644 drivers/edac/sifive_edac.c
+>
+>         spin_unlock(&drvdata->spinlock);
+>         return size;
+> --
+> 2.22.0
+>
