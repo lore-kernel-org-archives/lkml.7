@@ -2,103 +2,103 @@ Return-Path: <SRS0=4ODY=VF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F3BC5B578
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96812C48BE7
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176F320861
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 07:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B4E20665
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jul 2019 08:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfGHH6l (ORCPT
+        id S1728330AbfGHIAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 03:58:41 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33899 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfGHH6j (ORCPT
+        Mon, 8 Jul 2019 04:00:12 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:48920 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfGHIAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 03:58:39 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n5so15293207otk.1;
-        Mon, 08 Jul 2019 00:58:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=StnBZ5X9IU3YfBiysdeAUKuuUOczu/xn5Tp1Ip5xjbA=;
-        b=hpAyFmuJunqfuuxjK/crmrEZIjoht/cOoswSDwolGMNwu6KQTRzcQCR+7V/KPPP3px
-         qpE6Mf4GYoXVh3z3CU5Rrd4Twr1NvHHIGrO0bIG5qXn5K7dowdk4l67CcNpecRIWwWWL
-         ppMOk+bl6pL95Kx6x7CUAvHt/0pjN+FBLk9JjzHIUN4DkUBxcS+z/uLESBN7P+LnvqrN
-         u427DsGjW7HEgAHqsphKQkHuSTIwFyMgImLjbKRnkDhaK1KubWtgIN3PcE+/izi1QykI
-         xsWhfx2YOi7ht1sEU3lZeUVwHf4gFnqn01G8wbuVKR7Q0IBNtblEliTK5eDEd0e7j7ip
-         hj0Q==
-X-Gm-Message-State: APjAAAU52DMG/CCw2uyMNwEtcYG2gIqOA7BATkxdNNetH3uFUF9Jb9dA
-        dNeqBE2ZnVvGLfjq+G29UwSF5iFqs50FHiVkfdQ=
-X-Google-Smtp-Source: APXvYqzUPRCgrUBw97eCjHFCwkgqypz9WTte0c3NlDtkB2BijxQNV9v4lF/EwkMmVsOxNeMUvOg3BbZciubIJ9wch0I=
-X-Received: by 2002:a9d:7a90:: with SMTP id l16mr1458564otn.297.1562572719133;
- Mon, 08 Jul 2019 00:58:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org> <20190706140746.29132-2-jacopo+renesas@jmondi.org>
-In-Reply-To: <20190706140746.29132-2-jacopo+renesas@jmondi.org>
+        Mon, 8 Jul 2019 04:00:11 -0400
+Received: from ramsan ([84.194.98.4])
+        by baptiste.telenet-ops.be with bizsmtp
+        id a8092000905gfCL01809mD; Mon, 08 Jul 2019 10:00:09 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hkOZG-0005UX-2Y; Mon, 08 Jul 2019 10:00:10 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hkOZG-0005wb-01; Mon, 08 Jul 2019 10:00:10 +0200
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jul 2019 09:58:27 +0200
-Message-ID: <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [git pull] m68k updates for 5.3
+Date:   Mon,  8 Jul 2019 10:00:05 +0200
+Message-Id: <20190708080005.22806-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+	Hi Linus,
 
-On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Add device tree bindings documentation for the Renesas R-Car Display
-> Unit Color Management Module.
->
-> CMM is the image enhancement module available on each R-Car DU video
-> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Thanks for your patch!
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> @@ -0,0 +1,25 @@
-> +* Renesas R-Car Color Management Module (CMM)
-> +
-> +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> +
-> +Required properties:
-> + - compatible: shall be one of:
-> +   - "renesas,rcar-gen3-cmm"
-> +   - "renesas,rcar-gen2-cmm"
+are available in the Git repository at:
 
-Why do you think you do not need SoC-specific compatible values?
-What if you discover a different across the R-Car Gen3 line tomorrow?
-Does the IP block have a version register?
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.3-tag1
+
+for you to fetch changes up to 69878ef47562f32e02d0b7975c990e1c0339320d:
+
+  m68k: Implement arch_dma_prep_coherent() (2019-07-01 11:17:00 +0200)
+
+----------------------------------------------------------------
+m68k updates for v5.3
+
+  - Switch to using the generic remapping DMA allocator,
+  - Defconfig updates.
+
+----------------------------------------------------------------
+Christoph Hellwig (2):
+      m68k: Use the generic dma coherent remap allocator
+      m68k: Implement arch_dma_prep_coherent()
+
+Geert Uytterhoeven (1):
+      m68k: defconfig: Update defconfigs for v5.2-rc1
+
+ arch/m68k/Kconfig                    |  3 ++
+ arch/m68k/configs/amiga_defconfig    | 17 +++++------
+ arch/m68k/configs/apollo_defconfig   | 17 +++++------
+ arch/m68k/configs/atari_defconfig    | 17 +++++------
+ arch/m68k/configs/bvme6000_defconfig | 17 +++++------
+ arch/m68k/configs/hp300_defconfig    | 17 +++++------
+ arch/m68k/configs/mac_defconfig      | 17 +++++------
+ arch/m68k/configs/multi_defconfig    | 17 +++++------
+ arch/m68k/configs/mvme147_defconfig  | 17 +++++------
+ arch/m68k/configs/mvme16x_defconfig  | 17 +++++------
+ arch/m68k/configs/q40_defconfig      | 17 +++++------
+ arch/m68k/configs/sun3_defconfig     | 17 +++++------
+ arch/m68k/configs/sun3x_defconfig    | 17 +++++------
+ arch/m68k/kernel/dma.c               | 57 +++++++-----------------------------
+ 14 files changed, 98 insertions(+), 166 deletions(-)
+
+Thanks for pulling!
 
 Gr{oetje,eeting}s,
 
-                        Geert
+						Geert
 
--- 
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+							    -- Linus Torvalds
