@@ -2,304 +2,118 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEBCC73C55
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32D6C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1F821670
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93CF21670
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:34:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVh3b0bB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfGIPbr (ORCPT
+        id S1726401AbfGIPeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 11:31:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:46138 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbfGIPbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 11:31:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD0DF2B;
-        Tue,  9 Jul 2019 08:31:45 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3389F3F246;
-        Tue,  9 Jul 2019 08:31:43 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 16:31:38 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/18] drivers: firmware: psci: Add hierarchical domain
- idle states converter
-Message-ID: <20190709153138.GA22871@e121166-lin.cambridge.arm.com>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-11-ulf.hansson@linaro.org>
+        Tue, 9 Jul 2019 11:34:25 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45239 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfGIPeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 11:34:24 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u10so13716557lfm.12;
+        Tue, 09 Jul 2019 08:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XldrumkAgmzEzxgr2Bcv/W7MnrtFEO21Trg6QIY5k84=;
+        b=BVh3b0bBJ8vh+cbfAE1PPxlD2zb/+DWuI9G4Wtyh3ITaGL2D9FqMGozHfb1aaI02WV
+         ZTlXfMRbRIaF9f3x4uz3kUZHECth7ftSAK7Jrerx5Psp6tVSStd+0UCW41LnbUREBKxt
+         vAhywaDHaaHaItpu7fXme4HVUKJtcQz2fS0CmcRab8SfYlBpHCejckEK0GeSFZgasyQQ
+         CYyZoLpkS4Fn93kNK4uw7bxmnbbkpLAl99vL2A3vkrh5cQbCjK6iI0RicvAie7ayQJKY
+         EywTtOe5759BFFnumbj2P+z7DQYnU2QfTF/wqyJjbEDl1b0gsje/3phHX/QKj6QugLwA
+         FZ+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XldrumkAgmzEzxgr2Bcv/W7MnrtFEO21Trg6QIY5k84=;
+        b=cgmvdi0OO7tCcVOHicu0WvZADhDtZ5ld8O8MvoJcxzPTs1u1gm5riYY0S3LjsGk4i4
+         4g0Bo2ILNkN58wZIIydrH1JSBjQ49y7qMUACqmSWk9Qy7kMxN9Cm9GPhuZOVi+3OXUaO
+         Iwu1VP7dz8SoBgGw+J4UjP10mBhAeJ2xBvOZFogsL25SFIg3JU9zTg2fQ0ayFTXYEupz
+         kNgacxO6WrAV28iUg/5xZndlceB3GD436Nw5b3MnkAoFS8Ce7+KrWEM2U8S9Drnh7IZv
+         vnao1ijSOV6UPpI47fxfJa6R4I7E1HY4Df3OGFmJFhLWyHChPQeZQd6OGT/mvFg6DPrZ
+         nu0g==
+X-Gm-Message-State: APjAAAXfaPoXg4S3IuUC/Ieo7nNoHTBZnj6iIugwLHSJJhhBvIJLlQkX
+        /B7wYflJM8l4BJLxPqrnWkGuyc1jHrCxvYr+UrM=
+X-Google-Smtp-Source: APXvYqzRxvwVIQVCdYryBBCbyZSV+GA8BjIWzect/o4kWLCLUJtoHLajB5JkQJAcIVflMA6QTClU8Xt3pMYR+CHnCbo=
+X-Received: by 2002:a19:6b0e:: with SMTP id d14mr11779539lfa.174.1562686462634;
+ Tue, 09 Jul 2019 08:34:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513192300.653-11-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190703170118.196552-1-brianvv@google.com> <20190703170118.196552-3-brianvv@google.com>
+ <CAH3MdRU505Er44m460c7y5nxtZxmDmVY4jDrWOYt2=OdP2d5Ow@mail.gmail.com>
+In-Reply-To: <CAH3MdRU505Er44m460c7y5nxtZxmDmVY4jDrWOYt2=OdP2d5Ow@mail.gmail.com>
+From:   Brian Vazquez <brianvv.kernel@gmail.com>
+Date:   Tue, 9 Jul 2019 08:34:11 -0700
+Message-ID: <CABCgpaU=H+qOUAx+yRHJjBMqmeAtp5iQL_yv9cXB6HTqB0jXcA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next RFC v3 2/6] bpf: add BPF_MAP_DUMP command to dump
+ more than one entry per call
+To:     Y Song <ys114321@gmail.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:22:52PM +0200, Ulf Hansson wrote:
-> If the hierarchical CPU topology is used, but the OS initiated mode isn't
-> supported, we need to rely solely on the regular cpuidle framework to
-> manage the idle state selection, rather than using genpd and its governor.
-> 
-> For this reason, introduce a new PSCI DT helper function,
-> psci_dt_pm_domains_parse_states(), which parses and converts the
-> hierarchically described domain idle states from DT, into regular flattened
-> cpuidle states. The converted states are added to the existing cpuidle
-> driver's array of idle states, which make them available for cpuidle.
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
-> 
-> Changes:
-> 	- Some simplification of the code.
-> 
-> ---
->  drivers/firmware/psci/psci.h           |   5 ++
->  drivers/firmware/psci/psci_pm_domain.c | 118 +++++++++++++++++++++++++
->  2 files changed, 123 insertions(+)
-> 
-> diff --git a/drivers/firmware/psci/psci.h b/drivers/firmware/psci/psci.h
-> index 00d2e3dcef49..c36e0e6649e9 100644
-> --- a/drivers/firmware/psci/psci.h
-> +++ b/drivers/firmware/psci/psci.h
-> @@ -3,6 +3,7 @@
->  #ifndef __PSCI_H
->  #define __PSCI_H
->  
-> +struct cpuidle_driver;
->  struct device_node;
->  
->  int psci_set_osi_mode(void);
-> @@ -13,8 +14,12 @@ void psci_set_domain_state(u32 state);
->  int psci_dt_parse_state_node(struct device_node *np, u32 *state);
->  #ifdef CONFIG_PM_GENERIC_DOMAINS_OF
->  int psci_dt_init_pm_domains(struct device_node *np);
-> +int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
-> +		struct device_node *cpu_node, u32 *psci_states);
->  #else
->  static inline int psci_dt_init_pm_domains(struct device_node *np) { return 0; }
-> +static inline int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
-> +		struct device_node *cpu_node, u32 *psci_states) { return 0; }
->  #endif
->  #endif
->  
-> diff --git a/drivers/firmware/psci/psci_pm_domain.c b/drivers/firmware/psci/psci_pm_domain.c
-> index 3c6ca846caf4..3aa645dba81b 100644
-> --- a/drivers/firmware/psci/psci_pm_domain.c
-> +++ b/drivers/firmware/psci/psci_pm_domain.c
-> @@ -14,6 +14,10 @@
->  #include <linux/pm_domain.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
-> +#include <linux/cpuidle.h>
-> +#include <linux/cpu_pm.h>
-> +
-> +#include <asm/cpuidle.h>
->  
->  #include "psci.h"
->  
-> @@ -104,6 +108,53 @@ static void psci_pd_free_states(struct genpd_power_state *states,
->  	kfree(states);
->  }
->  
-> +static int psci_pd_enter_pc(struct cpuidle_device *dev,
-> +			struct cpuidle_driver *drv, int idx)
-> +{
-> +	return CPU_PM_CPU_IDLE_ENTER(arm_cpuidle_suspend, idx);
-> +}
-> +
-> +static void psci_pd_enter_s2idle_pc(struct cpuidle_device *dev,
-> +			struct cpuidle_driver *drv, int idx)
-> +{
-> +	psci_pd_enter_pc(dev, drv, idx);
-> +}
-> +
-> +static void psci_pd_convert_states(struct cpuidle_state *idle_state,
-> +			u32 *psci_state, struct genpd_power_state *state)
-> +{
-> +	u32 *state_data = state->data;
-> +	u64 target_residency_us = state->residency_ns;
-> +	u64 exit_latency_us = state->power_on_latency_ns +
-> +			state->power_off_latency_ns;
-> +
-> +	*psci_state = *state_data;
-> +	do_div(target_residency_us, 1000);
-> +	idle_state->target_residency = target_residency_us;
-> +	do_div(exit_latency_us, 1000);
-> +	idle_state->exit_latency = exit_latency_us;
-> +	idle_state->enter = &psci_pd_enter_pc;
-> +	idle_state->enter_s2idle = &psci_pd_enter_s2idle_pc;
-> +	idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> Maybe you can swap map_fd and flags?
+> This way, you won't have hole right after map_fd?
 
-This is arbitrary and not necessarily true.
+Makes sense.
 
-I think that this patch is useful to represent my reservations about the
-current approach. As a matter of fact, idle state entry will always be a
-CPUidle decision.
+> > +       attr->flags = 0;
+> Why do you want attr->flags? This is to modify anonumous struct used by
+> BPF_MAP_*_ELEM commands.
 
-You only need PM domain information to understand when all CPUs
-in a power domain are actually idle but that's all genPD can do
-in this respect.
+Nice catch! This was a mistake I forgot to delete that line.
 
-I think this patchset would be much simpler if both CPUidle and
-genPD governor would work on *one* set of idle states, globally
-indexed (and that would be true for PSCI suspend parameters too).
+> In bcc, we have use cases like this. At a certain time interval (e.g.,
+> every 2 seconds),
+> we get all key/value pairs for a map, we format and print out map
+> key/values on the screen,
+> and then delete all key/value pairs we retrieved earlier.
+>
+> Currently, bpf_get_next_key() is used to get all key/value pairs, and
+> deletion also happened
+> at each key level.
+>
+> Your batch dump command should help retrieving map key/value pairs.
+> What do you think deletions of those just retrieved map entries?
+> With an additional flag and fold into BPF_MAP_DUMP?
+> or implement a new BPF_MAP_DUMP_AND_DELETE?
+>
+> I mentioned this so that we can start discussion now.
+> You do not need to implement batch deletion part, but let us
+> have a design extensible for that.
+>
+> Thanks.
 
-To work with a unified set of idle states between CPUidle and genPD
-(tossing some ideas around):
+With a additional flag, code could be racy where you copy an old value
+and delete the newest one.
+So maybe we could implement BPF_MAP_DUMP_AND_DELETE as a wrapper of
+map_get_next_key + map_lookup_and_delete_elem. Last function already
+exists but it has not been implemented for maps other than stack and
+queue.
 
-- We can implement a genPD CPUidle governor that in its select method
-  takes into account genPD information (for instance by avoiding
-  selection of idle states that require multiple cpus to be in idle
-  to be effectively active)
-- We can use genPD to enable/disable CPUidle states through runtime
-  PM information
-
-There may be other ways. My point is that current code, with two (or
-more if the hierarchy grows) sets of idle states across two subsystems
-(CPUidle and genPD) is not very well defined and honestly very hard to
-grasp and prone to errors.
-
-> +
-> +	strncpy(idle_state->name, to_of_node(state->fwnode)->name,
-> +		CPUIDLE_NAME_LEN - 1);
-> +	strncpy(idle_state->desc, to_of_node(state->fwnode)->name,
-> +		CPUIDLE_NAME_LEN - 1);
-> +}
-> +
-> +static bool psci_pd_is_provider(struct device_node *np)
-> +{
-> +	struct psci_pd_provider *pd_prov, *it;
-> +
-> +	list_for_each_entry_safe(pd_prov, it, &psci_pd_providers, link) {
-> +		if (pd_prov->node == np)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static int psci_pd_init(struct device_node *np)
->  {
->  	struct generic_pm_domain *pd;
-> @@ -265,4 +316,71 @@ int psci_dt_init_pm_domains(struct device_node *np)
->  	pr_err("failed to create CPU PM domains ret=%d\n", ret);
->  	return ret;
->  }
-> +
-> +int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
-> +			struct device_node *cpu_node, u32 *psci_states)
-> +{
-> +	struct genpd_power_state *pd_states;
-> +	struct of_phandle_args args;
-> +	int ret, pd_state_count, i, state_idx, psci_idx;
-> +	u32 cpu_psci_state = psci_states[drv->state_count - 2];
-
-This (-2) is very dodgy and I doubt it would work on hierarchies going
-above "cluster" level.
-
-As I say above, I think we should work towards a single array of
-idle states to be selected by a CPUidle governor using genPD
-runtime information to bias the results according to the number
-of CPUs in a genPD that entered/exit idle.
-
-To be more precise, all idles states should be "domain-idle-state"
-compatible, even the CPU ones, the distinction between what CPUidle
-and genPD manage is a bit stretched IMO in this patchset.
-
-We will have a chance to talk about this but I thought I would
-comment publically if anyone else is willing to chime in, this
-is not a PSCI problem at all, it is a CPUidle/genPD coexistence
-design problem which is much broader.
-
-Lorenzo
-
-> +	struct device_node *np = of_node_get(cpu_node);
-> +
-> +
-> +	/* Walk the CPU topology to find compatible domain idle states. */
-> +	while (np) {
-> +		ret = of_parse_phandle_with_args(np, "power-domains",
-> +					"#power-domain-cells", 0, &args);
-> +		of_node_put(np);
-> +		if (ret)
-> +			return 0;
-> +
-> +		np = args.np;
-> +
-> +		/* Verify that the node represents a psci pd provider. */
-> +		if (!psci_pd_is_provider(np)) {
-> +			of_node_put(np);
-> +			return 0;
-> +		}
-> +
-> +		/* Parse for compatible domain idle states. */
-> +		ret = psci_pd_parse_states(np, &pd_states, &pd_state_count);
-> +		if (ret) {
-> +			of_node_put(np);
-> +			return ret;
-> +		}
-> +
-> +		i = 0;
-> +		while (i < pd_state_count) {
-> +
-> +			state_idx = drv->state_count;
-> +			if (state_idx >= CPUIDLE_STATE_MAX) {
-> +				pr_warn("exceeding max cpuidle states\n");
-> +				of_node_put(np);
-> +				return 0;
-> +			}
-> +
-> +			/* WFI state is not part of psci_states. */
-> +			psci_idx = state_idx - 1 + i;
-> +			psci_pd_convert_states(&drv->states[state_idx + i],
-> +					&psci_states[psci_idx], &pd_states[i]);
-> +
-> +			/*
-> +			 * In the hierarchical CPU topology the master PM domain
-> +			 * idle state's DT property, "arm,psci-suspend-param",
-> +			 * don't contain the bits for the idle state of the CPU,
-> +			 * let's add those here.
-> +			 */
-> +			psci_states[psci_idx] |= cpu_psci_state;
-> +			pr_debug("psci-power-state %#x index %d\n",
-> +				psci_states[psci_idx], psci_idx);
-> +
-> +			drv->state_count++;
-> +			i++;
-> +		}
-> +		psci_pd_free_states(pd_states, pd_state_count);
-> +	}
-> +
-> +	return 0;
-> +}
->  #endif
-> -- 
-> 2.17.1
-> 
+Thanks for reviewing it!
