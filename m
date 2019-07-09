@@ -2,105 +2,143 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF587C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB54FC73C5C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4DCE20693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562710311;
-	bh=1ihsbbNRibSWGnE8NEk8ow5w3DfKsIq3mbkUuoo43r0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DsqF5F4Zl0Y/SQlYEc3Z2mvp8pobYXQWnCgh1uEwksfDk5Ahr2U9P0gRsInj2edQE
-	 ek6QtBL4kcvB5MFfjUjYeOv0bR3rZluiq9XLz+ILK6qqAGlMBOK2cvlrWESWO3mgwT
-	 msJ2hR29TqWx+6vreMWYA/xY6PyvQ9nIeIaohVXg=
+	by mail.kernel.org (Postfix) with ESMTP id 85E2420844
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:13:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NhWK3RQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfGIWLu (ORCPT
+        id S1726496AbfGIWNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 18:11:50 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36243 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfGIWLu (ORCPT
+        Tue, 9 Jul 2019 18:13:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43410 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfGIWNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 18:11:50 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z4so305566qtc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 15:11:49 -0700 (PDT)
+        Tue, 9 Jul 2019 18:13:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p13so376458wru.10;
+        Tue, 09 Jul 2019 15:13:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hrdm/9H2N9NgzYgLhRIWmHIl9eGkKEmVCjuvL3vRSXE=;
-        b=k97Qg2S85sMGpcqqru1ysXJl+qv2+XunuM/nlkAlv+IwCjpEXTqdCEpndxn3vBED6n
-         iomUnC48MMAOffbGcHHW9R8xUZY9Mooj7yN81DrddmkbJfRWZkEis7Z367s+f5W1fzLl
-         wsgoMbNVnO8ZTfjZeMQ952/lAE4PLlbZyoVuLqa42DT+fi3ydjP6ll/rxR0SkkMDJt7x
-         p+Suv+l6YWHMeTnZ8epOSKriuJ25o4YwTR6qZXpI1In6g358zleB+RVvvluV6fdxtAMO
-         Q4jQ1DMuBqp4RCiBmx4uxHSd+tQHvc5cOBCCumqi8Ncbv4v75BAjsBdatlQ8HYgPjiDW
-         N/Fg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qFvDzlxiFD6DDZKfIlqp1XR84wt2H+iEO1EU/utM7ok=;
+        b=NhWK3RQHETf/QaeVtOQQeGPxiWXIRlWK9GlmEbc9kCQTYfmTxL9k/5WnzEOQSmoust
+         i06Ncbo+LwREnCrn7iwGdnUfXfB00AXy5LsKYTyMUehkxiehTHOBktTfx6w0SmhLtVbn
+         yH5x1vaby5TYWXbfSQvbKVFZYoC6LPmFg0bItiRNGHsottgaeMWtFwGQRlDbGhNfLd66
+         NDS1vFah4pafXjwmAx6hD17M1HAwp4t605yPiPLvjf73C70Fe8P+B9ZEtji85z3Egj3X
+         TEHIQocyJH+lJyLZEozeJoRRHxAFAIuENcpNBsUhAcziNYnnQ2hTkZGFAFarJSJJj4A5
+         XIEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hrdm/9H2N9NgzYgLhRIWmHIl9eGkKEmVCjuvL3vRSXE=;
-        b=qWatW/OcV1caSYczXu1bWuT+6+/S9xBRo0WRQ69ULtH9EAthtTF9W+WlWLir4UrN2D
-         U7fajOnSJwUkD7ci+E3vMl2FEzrmEnt84qTe8YJUVCX4KbOS0fODpB2VrQi1eYGX37zH
-         ssEkrE0jzCaKgj82etOYDHhTWXTJt+YnDmzz/e41WoWE2mylkN737ORdP0i/8ZkqZTns
-         Y61d1rrvijzJXrgM0r1yDMosqDwJgEwBgFdP+7/42fOahSsWq6U8oSD7zAxt20a9cdn4
-         mFv5W30kCTSjvaRSyUwnXy0kWU620QQ4n+q3Sx5CCE/Buv8FOitosUrOUAvfOEKcvEDI
-         /2fg==
-X-Gm-Message-State: APjAAAXHTGuBCxqYo0ImPJUL7q1koDXCMDBNzl6HuDqVGSd5goDRABlH
-        9lE1jiKQV1bo7OxpuG2oBaI=
-X-Google-Smtp-Source: APXvYqx7FCjpDnPyrZoIsonoGb8u75NTaRsidhm0/XijaZ7yZU3MOCx0NM++7Lg3x/nxK4rYLEdBSQ==
-X-Received: by 2002:a0c:8a23:: with SMTP id 32mr22012221qvt.231.1562710309253;
-        Tue, 09 Jul 2019 15:11:49 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:fa50])
-        by smtp.gmail.com with ESMTPSA id k2sm29808qtq.87.2019.07.09.15.11.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 15:11:48 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 15:11:47 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Corey Minyard <minyard@acm.org>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] ipmi_si_intf: use usleep_range() instead of busy looping
-Message-ID: <20190709221147.GM657710@devbig004.ftw2.facebook.com>
-References: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
- <20190709214602.GD19430@minyard.net>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qFvDzlxiFD6DDZKfIlqp1XR84wt2H+iEO1EU/utM7ok=;
+        b=tEqjmf2UxjtvB2MQcxBe0wkfpvs1/dmvmgjdBPQmrEAmCXplS/4PZyM4NZE0yTglID
+         t1OEgg7t+g5RsxWFXzfIo60bx6oAc/dTkfwLWCYh8pB+LUfkrkLtPpo7YQoSUWF1Gw8u
+         RQKXOD/oJM3gWSpOb7J+jScELnUpoiCCBH1H71kW69EkIEyejSZ9bBV7ip+UQO2N66Ur
+         uGlbrQQJsQBRJdD8NGSrLOp3GE8MRKDvopzOMWs4i1jaGGr/L4ZuIbN1w/Oc2Ba08z1z
+         INavroL241mHrabxqOdNM5UbvunWx8oagn+OtylPT6A6AuIIkifh+hwshtWwE3gSDgmi
+         Bv2g==
+X-Gm-Message-State: APjAAAWAJpEsH+Z2DwsAntxyufwnPzcKVysWCrDpVYPnbPsrDDXvr5gs
+        yFRW7n6p2lq9rbzOR228BZ0=
+X-Google-Smtp-Source: APXvYqw7UqVFmBGFIMkjrblY90I3+y3Lqh2r976LXSkatfh1QjD6z91brm36mJ935w9lFickK6l0gQ==
+X-Received: by 2002:adf:f646:: with SMTP id x6mr22912454wrp.18.1562710426876;
+        Tue, 09 Jul 2019 15:13:46 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id t6sm258623wmb.29.2019.07.09.15.13.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 15:13:46 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Kamenee Arumugam <kamenee.arumugam@intel.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] IB/rdmavt: Remove err declaration in if statement in rvt_create_cq
+Date:   Tue,  9 Jul 2019 15:13:12 -0700
+Message-Id: <20190709221312.7089-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709214602.GD19430@minyard.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 04:46:02PM -0500, Corey Minyard wrote:
-> On Tue, Jul 09, 2019 at 02:06:43PM -0700, Tejun Heo wrote:
-> > ipmi_thread() uses back-to-back schedule() to poll for command
-> > completion which, on some machines, can push up CPU consumption and
-> > heavily tax the scheduler locks leading to noticeable overall
-> > performance degradation.
-> > 
-> > This patch replaces schedule() with usleep_range(100, 200).  This
-> > allows the sensor readings to finish resonably fast and the cpu
-> > consumption of the kthread is kept under several percents of a core.
-> 
-> The IPMI thread was not really designed for sensor reading, it was
-> designed so that firmware updates would happen in a reasonable time
-> on systems without an interrupt on the IPMI interface.  This change
-> will degrade performance for that function.  IIRC correctly the
-> people who did the patch tried this and it slowed things down too
-> much.
+clang warns:
 
-Also, can you point me to the exact patch?  I'm kinda curious what
-kind of timning they used.
+drivers/infiniband/sw/rdmavt/cq.c:260:7: warning: variable 'err' is used
+uninitialized whenever 'if' condition is true
+[-Wsometimes-uninitialized]
+                if (err)
+                    ^~~
+drivers/infiniband/sw/rdmavt/cq.c:310:9: note: uninitialized use occurs
+here
+        return err;
+               ^~~
+drivers/infiniband/sw/rdmavt/cq.c:260:3: note: remove the 'if' if its
+condition is always false
+                if (err)
+                ^~~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:253:7: warning: variable 'err' is used
+uninitialized whenever 'if' condition is true
+[-Wsometimes-uninitialized]
+                if (!cq->ip) {
+                    ^~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:310:9: note: uninitialized use occurs
+here
+        return err;
+               ^~~
+drivers/infiniband/sw/rdmavt/cq.c:253:3: note: remove the 'if' if its
+condition is always false
+                if (!cq->ip) {
+                ^~~~~~~~~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:211:9: note: initialize the variable
+'err' to silence this warning
+        int err;
+               ^
+                = 0
+2 warnings generated.
 
-Thanks.
+There are two err declarations in this function: at the top and within
+an if statement; clang warns because the assignments to err in the if
+statement are local to the if statement so err will be used
+uninitialized if this error handling is used. Remove the if statement's
+err declaration so that everything works properly.
 
+Fixes: 239b0e52d8aa ("IB/hfi1: Move rvt_cq_wc struct into uapi directory")
+Link: https://github.com/ClangBuiltLinux/linux/issues/594
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/infiniband/sw/rdmavt/cq.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
+index fac87b13329d..a85571a4cf57 100644
+--- a/drivers/infiniband/sw/rdmavt/cq.c
++++ b/drivers/infiniband/sw/rdmavt/cq.c
+@@ -247,8 +247,6 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	 * See rvt_mmap() for details.
+ 	 */
+ 	if (udata && udata->outlen >= sizeof(__u64)) {
+-		int err;
+-
+ 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
+ 		if (!cq->ip) {
+ 			err = -ENOMEM;
 -- 
-tejun
+2.22.0
+
