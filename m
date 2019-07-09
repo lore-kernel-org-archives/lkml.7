@@ -2,79 +2,75 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B7C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E616CC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D1A2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C153E216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfGICgr (ORCPT
+        id S1727307AbfGICgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:36:47 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:10001 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726394AbfGICgo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:36:44 -0400
-X-UUID: 40d671520f5b410e8d94f18279514482-20190709
-X-UUID: 40d671520f5b410e8d94f18279514482-20190709
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 851567057; Tue, 09 Jul 2019 10:36:36 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 9 Jul 2019 10:36:34 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 9 Jul 2019 10:36:34 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     <davem@davemloft.net>, Jose Abreu <joabreu@synopsys.com>,
-        <andrew@lunn.ch>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>,
-        <boon.leong.ong@intel.com>
-Subject: [PATCH 0/2 net-next] fix out-of-boundary issue and add taller hash table support
-Date:   Tue, 9 Jul 2019 10:36:21 +0800
-Message-ID: <20190709023623.8358-1-biao.huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 8 Jul 2019 22:36:51 -0400
+Received: from fieldses.org ([173.255.197.46]:38288 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726394AbfGICgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 22:36:50 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 2298A893; Mon,  8 Jul 2019 22:36:49 -0400 (EDT)
+Date:   Mon, 8 Jul 2019 22:36:49 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: linux-next: manual merge of the vfs tree with the nfsd tree
+Message-ID: <20190709023649.GC14439@fieldses.org>
+References: <20190708110633.6e491989@canb.auug.org.au>
+ <20190708124510.GB7625@fieldses.org>
+ <20190709001531.09b535d3@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709001531.09b535d3@canb.auug.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix mac address out-of-boundary issue in net-next tree.
-and resend the patch which was discussed in
-https://lore.kernel.org/patchwork/patch/1082117
-but with no further progress.
+On Tue, Jul 09, 2019 at 12:15:31AM +1000, Stephen Rothwell wrote:
+> Hi,
+> 
+> On Mon, 8 Jul 2019 08:45:10 -0400 "J. Bruce Fields" <bfields@fieldses.org> wrote:
+> >
+> > I did a fetch of
+> > 
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> > 
+> > and looked at the "master" branch and couldn't find that vfs commit.  Am
+> > I looking in the wrong place?
+> 
+> Maybe you were just a little early, I only finished linux-next today a
+> few minutes before you sent this email.
 
-Biao Huang (2):
-  net: stmmac: dwmac4: mac address array boudary violation issue
-  net: stmmac: add support for hash table size 128/256 in dwmac4
+Indeed, I see the merge now (ecd27e0ab735: Merge remote-tracking branch
+'vfs/for-next').  Thanks!
 
- drivers/net/ethernet/stmicro/stmmac/common.h  |  7 +--
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  4 +-
- .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 51 +++++++++++--------
- .../net/ethernet/stmicro/stmmac/dwmac4_dma.c  |  1 +
- .../net/ethernet/stmicro/stmmac/stmmac_main.c |  6 +++
- 5 files changed, 43 insertions(+), 26 deletions(-)
+--b.
 
--- 
-2.18.0
+> 
+> > (I'm sure your resolution is fine, I just thought to be careful it might
+> > be nice to run some tests on the merge.)
+> 
+> Thanks.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
 
