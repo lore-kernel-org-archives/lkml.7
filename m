@@ -2,112 +2,102 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A49CC606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFCCC606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D3920693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF231216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfGIAby (ORCPT
+        id S1726762AbfGIAhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 20:31:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfGIAby (ORCPT
+        Mon, 8 Jul 2019 20:37:52 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:50282 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726089AbfGIAhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 20:31:54 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x690VSKv146348
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 20:31:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmemeb4y7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 20:31:52 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 9 Jul 2019 01:31:50 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 9 Jul 2019 01:31:48 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x690VlBu55967862
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jul 2019 00:31:47 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6A2A0A4057;
-        Tue,  9 Jul 2019 00:31:47 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 763DCA404D;
-        Tue,  9 Jul 2019 00:31:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.58])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Jul 2019 00:31:46 +0000 (GMT)
-Subject: Re: linux-next: manual merge of the keys tree with the integrity
- tree
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 08 Jul 2019 20:31:35 -0400
-In-Reply-To: <20190709101107.0754b26c@canb.auug.org.au>
-References: <20190626143333.7ee527ca@canb.auug.org.au>
-         <20190709101107.0754b26c@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+        Mon, 8 Jul 2019 20:37:52 -0400
+Received: from mr1.cc.vt.edu (mr1.cc.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x690boMw011201
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 20:37:50 -0400
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x690bjXi008278
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 20:37:50 -0400
+Received: by mail-qk1-f199.google.com with SMTP id d9so10617991qko.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 17:37:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version
+         :content-transfer-encoding:date:message-id;
+        bh=OjZRbgABpZBvMDOAUmYBmnCF4ZS/G+yWz40tVt9zM7o=;
+        b=QWOWs7WpVOOlZREdQm7FWNMZRqQLVtBKnAdshLkVRVZvIN/w1kmFxR5Rv63OY3rxU7
+         yd2xW8ERr82NoM79Ymg9QhyaiNfc7rpvOqDcDJZZVCRufD+KALwUR3/8wd2mPODm3Bn+
+         U2evvM88yscGMPtwC92RcqpekpXbsJz9Rnr6GrJS+pv4NgkV4PAEvPHLl2l1b0P5RpEA
+         efQ+0GmCj9Sr0zbs2E/5J9d4oX8QuhawzCFy0DCviA9lwfp/E1uirbikUVbbIBLLseLe
+         aUzQODNxIQqKK8PmxJn+tMC61iy6ddYj13rEiPXitUAP3lsvpOKYfx4msx/rMEZmOIDZ
+         YHKA==
+X-Gm-Message-State: APjAAAUjjkbeWz0mSPtkmqWzqAEd1OIAWQD7sBhDkuMagIlFmFa54R8J
+        eqYgh4gmPs0+5OpNBKPmCGtJQ/pPhDY19z4g9keLBj7kpbktjCGLPgHc3v0q4VlDt3dGQgD8u6s
+        75TfM+N979grkueHvTYVKIvkAD5Tms8y0YLw=
+X-Received: by 2002:a37:6813:: with SMTP id d19mr16780989qkc.454.1562632665372;
+        Mon, 08 Jul 2019 17:37:45 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzbFEeUXsRnbhMMEq2850586hL282ux6U2bioRM0L8JU0Om9HCOlfHqXfOGUn65sn/AuySwJA==
+X-Received: by 2002:a37:6813:: with SMTP id d19mr16780979qkc.454.1562632665165;
+        Mon, 08 Jul 2019 17:37:45 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::7ca])
+        by smtp.gmail.com with ESMTPSA id z33sm6958980qtc.56.2019.07.08.17.37.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 17:37:43 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Procedure questions - new filesystem driver..
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070900-0016-0000-0000-000002906DAB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070900-0017-0000-0000-000032EE1DA9
-Message-Id: <1562632295.11461.73.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907090005
+Content-Type: multipart/signed; boundary="==_Exmh_1562632662_2389P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 08 Jul 2019 20:37:42 -0400
+Message-ID: <21080.1562632662@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+--==_Exmh_1562632662_2389P
+Content-Type: text/plain; charset=us-ascii
 
-On Tue, 2019-07-09 at 10:11 +1000, Stephen Rothwell wrote:
-> > diff --cc security/integrity/digsig.c
-> > index 868ade3e8970,e432900c00b9..000000000000
-> > --- a/security/integrity/digsig.c
-> > +++ b/security/integrity/digsig.c
-> > @@@ -69,9 -70,8 +70,9 @@@ int integrity_digsig_verify(const unsig
-> >   	return -EOPNOTSUPP;
-> >   }
-> >   
-> >  -static int __integrity_init_keyring(const unsigned int id, struct key_acl *acl,
-> >  -				    struct key_restriction *restriction)
-> >  +static int __init __integrity_init_keyring(const unsigned int id,
-> > - 					   key_perm_t perm,
-> > ++					   struct key_acl *acl,
-> >  +					   struct key_restriction *restriction)
-> >   {
-> >   	const struct cred *cred = current_cred();
-> >   	int err = 0;
-> 
-> I am still getting this conflict (the commit ids may have changed).
-> Just a reminder in case you think Linus may need to know.
+I have an out-of-tree driver for the exfat file system that I beaten into shape
+for upstreaming. The driver works, and passes sparse and checkpatch (except
+for a number of line-too-long complaints).
 
-Thank you for carrying the patch!  I did remember to mention it in the
-pull request.  :)
+Do you want this taken straight to the fs/ tree, or through drivers/staging?
 
-Mimi
+--==_Exmh_1562632662_2389P
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXSPh1gdmEQWDXROgAQJUtQ/+NuCpOp32phoMWYvnTb21fwNfIzCEPXBH
+RSyAHXRkx17XhCx4jgTbz6FN95SGVNdlTuMF0GJPwHthtfdmHLql1QB2ROHELCjY
+faIk6BGAuTnHlAExeC4VgMBUA+SBgfMwaVTs9d4i4yQ6+Uy8whEPcdgeuKecctFi
+jt76tj+gRgpRIhTTAKq+DlpaIu/tpORttvGv23x/a8txU2Y0EaBRkcWbUVXWYI8G
+IQ4Sk1J6T1J/n8trp/nHdG3vriAv/w+iUcjVFSDikSrp2tVG4OdbFUzsFC4P+wR4
+7cuBLC4cgYZCX2tj45Tc9qTd6SpvdEozR/SQfW1r4lL1j0N05TZpcsYKzLibIegi
+xWHpAMqSkhwfC2mF8c9ZCvq1wakHaTLN18OxKM/dPUKUxrSPPnvYiLoQsORH9pUK
+JLXY2YlEwdY6SroUfZMBssL8MgGBx+dDcfimyJ1D6oZx1ss4wPRccuk6BmQYBzyH
+hyYbNiKcPGimgZEwg2tVnn86X7FCcAhFza+UuzqJ37c0g4ldr/CYa2C0RXsPHn2x
+eiKlV99LYR0SDugx8rs74s+bSi41Qi1GvSPy4zDWhBsCwwqxo1xFVAcndAk9NIVL
+pKkzVh/nJIoAq724EW2C9dOtasEJx1ogOSUH48hNigytNyLhmOK/gVb9LO8A0vSn
+fKUr0veoCZo=
+=cgVZ
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1562632662_2389P--
