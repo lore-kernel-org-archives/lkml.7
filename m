@@ -2,121 +2,91 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A14C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A67C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C9C21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:17:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azlj9K+Y"
+	by mail.kernel.org (Postfix) with ESMTP id CF2FA2173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562638676;
+	bh=nU9muHSuWYyBsOKKNcHBd5IDPxbezJzG15IB/eAeQIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lcxWU20kfsmeHJn1eBd83ModAd86BfOiZgVEY3NCl7P+EhYpPKrJ/22EeywsG+/be
+	 IzDICGkreqF67oZFZUwKjZjJAXqY5OWmL6mC7ZtoArccF4myqIL/+HNoamadvO56eg
+	 FEMCmQnpiQbk36z1aNaHWrnWAsAYjxdZe+/OiO7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfGICRd (ORCPT
+        id S1727303AbfGICR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:17:33 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46398 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfGICRc (ORCPT
+        Mon, 8 Jul 2019 22:17:56 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44333 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGICRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:17:32 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z23so18282978ote.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 19:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lH9b4/aCMkNsnZ4BuxomBwO3b4FG8IrZIJyykUqzUl0=;
-        b=azlj9K+YPc5o/9vggqyDJGvx8R+QnbmJ0fFuzzX1/odUJJYP+e9D58POKq6gSrbrCc
-         sR7etj1bz1taiuANg7sESLf2zYP5pyrh8VNwKHGJKXTVZKrbghNO5vijlB1MTfXpeUAH
-         pjkRydhv1LuYGeIJZ/EdewfnI21ZrS6xaMGyVzkY8o05x5NFMqEhF6HDns1yP50TQZ86
-         3KtXUd6sUBSbOns6CX5IZRUPF/ClI78yG0BzFLniw/imhpotGsWt7tQT2XaOO+uTbZcV
-         drfqyIPebRE2MuEfZl98FgQC1KQkrTzZ2CB8TAMDGfymUjnFWAVrhAy7KpS3BBrtrz8m
-         lTCQ==
+        Mon, 8 Jul 2019 22:17:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so39781024iob.11;
+        Mon, 08 Jul 2019 19:17:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lH9b4/aCMkNsnZ4BuxomBwO3b4FG8IrZIJyykUqzUl0=;
-        b=dNvZxuG42SNQuqQ2OggRykqUTMkWhgVzBwx2SQotlodQo3eF34FWrJeXvSt0rcpEB6
-         0FLVWkUoo4QIk6eYYbQZXX28J/Yn2qWYTEczI7tKmp96r5LrvghM+I+yW2HffkCH9jjD
-         qFTWQ/5Ph5v3d6k+gRT/FTmdn6suqCY3KtoOARtKlRWAG8QsrCg5iHs6ISg9ZUFc+H2e
-         lFiljiJnG/bREfCxQ/+PMeXRu4XG1hiUszuaNqAxHZM/KT2f5PJTOlS7oTZJrOrqnJSr
-         Q+nsZr8Eg7GWLI02Yj+Fdvbd5TrQhoDEwumsAVsBWf3RA3O9JTF9n88ynVWpfCWApjCw
-         AbPQ==
-X-Gm-Message-State: APjAAAVDVMbV41J2D+X6YgMPQdk7WDHNftHjRRxlvrN+QZ5sVMHhGkHS
-        RXtPh5ogD9Pdzo0We5bFT9EEvmBXg3DfiYC874c=
-X-Google-Smtp-Source: APXvYqwiiFEVBl/Qmj+dGzMC28G6+Tk7OEcQdxkc+Zb3SHNJFFGUuqmK8FKFz/TRcVQsPVrGL2bT7WA6PEoEgKXwG7c=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr2390158otk.56.1562638652111;
- Mon, 08 Jul 2019 19:17:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YjoGM7Wxe563lt2QEMzedfEv/oSE8kILweoYwhow1Iw=;
+        b=cdYu33aCcEFvOlz9LtCEyc+0YfKwXyeAOHKB6EgmMcLHti1T+juraNUaUMFdLrQO0i
+         UqKYLSOmHLSazuKr3QYTQSilsWb+ySrBewj+N+8BBcfrOWbmowluKw3xGbN9I8/fEADL
+         Mhbc09P4qSJv5xUrO4etftB6n28IVpudDjrLrwR6q4j8Na3/PBJAc236Hcil7DS0YZtg
+         jMZHzn5zAKJRlD1nOUqhr//iIkB0+QSilRHJPW5BzcfUXfoRA3y84oBmCTFPl7x0IWz+
+         On7fm6hg2IhU1QLMqpvFoiZ8WyWldA7HwosmHr2G/iKL1r8paiaXOlVqlpMIWVv/Q2W5
+         uT3A==
+X-Gm-Message-State: APjAAAWgFpq2d+EImPq9s5YmqcUvfsnqF7XwPSkiBxCcQOWCuX9HPSDf
+        JRM6wivWCkbXPjRRIa4rkg==
+X-Google-Smtp-Source: APXvYqw2MSMSTPDKr0hezGEPUjDdJtsCKqWkhfbqCfu9I/mUn4AvK/Y9H6kSLF5ZreFy1Ml/afZiGg==
+X-Received: by 2002:a02:ac09:: with SMTP id a9mr11371164jao.48.1562638674579;
+        Mon, 08 Jul 2019 19:17:54 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id e26sm16401377iod.10.2019.07.08.19.17.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 19:17:53 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 20:17:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     yibin.gong@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
+        festevam@gmail.com, vkoul@kernel.org, dan.j.williams@intel.com,
+        u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com,
+        l.stach@pengutronix.de, will.deacon@arm.com,
+        linux-spi@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 08/15] spi: imx: add new i.mx6ul compatible name in
+ binding doc
+Message-ID: <20190709021753.GA8533@bogus>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+ <20190610081753.11422-9-yibin.gong@nxp.com>
 MIME-Version: 1.0
-References: <1561983877-4727-1-git-send-email-wanpengli@tencent.com> <20190709013914.GA23714@lenoir>
-In-Reply-To: <20190709013914.GA23714@lenoir>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 9 Jul 2019 10:17:19 +0800
-Message-ID: <CANRm+CzokVgwLAaYCb_=9+0mUAvTb=8b3MbRNjuFjukdtmO_sQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/core: Cache timer busy housekeeping target
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610081753.11422-9-yibin.gong@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jul 2019 at 09:39, Frederic Weisbecker <frederic@kernel.org> wrote:
->
-> On Mon, Jul 01, 2019 at 08:24:37PM +0800, Wanpeng Li wrote:
-> > diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-> > index 41dfff2..0d49bef 100644
-> > --- a/kernel/time/hrtimer.c
-> > +++ b/kernel/time/hrtimer.c
-> > @@ -195,8 +195,10 @@ struct hrtimer_cpu_base *get_target_base(struct hrtimer_cpu_base *base,
-> >                                        int pinned)
-> >  {
-> >  #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
-> > -     if (static_branch_likely(&timers_migration_enabled) && !pinned)
-> > -             return &per_cpu(hrtimer_bases, get_nohz_timer_target());
-> > +     if (static_branch_likely(&timers_migration_enabled) && !pinned) {
-> > +             base->last_target_cpu = get_nohz_timer_target(base->last_target_cpu);
-> > +             return &per_cpu(hrtimer_bases, base->last_target_cpu);
->
->
-> I'm not sure this is exactly what we intend to cache here.
->
-> This doesn't return the last CPU for a given timer
-> (that would be timer->flags & TIMER_CPUMASK) but the last CPU that
-> was returned when "base" was passed.
->
-> First of all, it's always initialized to CPU 0, which is perhaps
-> not exactly what we want.
->
-> Also the result can be very stale and awkward. If for some reason we have:
->
->         base(CPU 5)->last_target_cpu = 255
->
-> then later a timer is enqueued to CPU 5, the next time we re-enqueue that
-> timer will be to CPU 255, then the second re-enqueue will be to whatever
-> value we have in base(CPU 255)->last_target_cpu, etc...
->
-> For example imagine that:
->
->         base(CPU 255)->last_target_cpu = 5
->
-> the timer will bounce between those two very distant CPU 5 and 255. So I think
-> you rather want "timer->flags & TIMER_CPUMASK". But note that those flags
-> can also be initialized to zero and therefore CPU 0, while we actually want
-> the CPU of the timer enqueuer for a first use. And I can't think of a
-> simple solution to solve that :-(  Perhaps keeping the enqueuer CPU as the
-> first choice (as we do upstream) is still the best thing we have.
+On Mon, 10 Jun 2019 16:17:46 +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> ERR009165 fixed from i.mx6ul, add its compatible name in binding
+> doc.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Got it, thanks for pointing out this.
-
-Wanpeng
+Reviewed-by: Rob Herring <robh@kernel.org>
