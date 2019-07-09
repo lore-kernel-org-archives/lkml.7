@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5596C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7061CC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986C021707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DC021707
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HekhdKDx"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="uX7zdjII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfGIE0J (ORCPT
+        id S1727582AbfGIE0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 00:26:09 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:42175 "EHLO
+        Tue, 9 Jul 2019 00:26:12 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:42157 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfGIEZm (ORCPT
+        with ESMTP id S1727065AbfGIEZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jul 2019 00:25:42 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x694OqVk009969;
-        Tue, 9 Jul 2019 13:24:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x694OqVk009969
+        by conuserg-09.nifty.com with ESMTP id x694OqVu009969;
+        Tue, 9 Jul 2019 13:25:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x694OqVu009969
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562646294;
-        bh=iBlTAZJuJJ6+50j0WGjD4LyvREzE6vt9HBWQ8mbamWM=;
+        s=dec2015msa; t=1562646302;
+        bh=RaJaeLmuuIEfd1ef6k7J45/hiRecyMkN2GAogQXZ22k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HekhdKDxoDJEqpBGRw/bM/WReVW8JEMj5vTDoxmIOmauxgkb9SRw3YCaUUh528FGx
-         PmzO8bd2BmeBP/DqTG45W/lG6AyLq2y7601d2ogLbhZuR29UQ8w3CFB4RlwFudfDYa
-         okg6ukaV7SeSvkuGLlxM5Rh2yGSzUR9xlsM76E6qUK0ixai2aSWpDSdoS5be9TUi3W
-         BdbQxVkm0w9x5ttJyvgipizBQBNpqvQMsU5pDPs0yfKU5y/VMML9l9BkAqxFphKKWK
-         zJ2nVCvhi24btSI8bfRMTQIVEzYmWqoHorMqegak9tb/exc9Xje2uEaDHLUS5uADJ7
-         OnjQMbpWcUPZw==
+        b=uX7zdjII0oCqxZzVB7KNqMSkUpgWJcg2+oGORop6+ZNSxaG2CYCOqh/GOR8icFu3Q
+         CfiIsKHyRYYQu1fBH4ij4Te9U443p9CU77yeyG9VM29BMrhDBg7n81ewSihoBeAyFe
+         4U5zMONyEdv7cUg5/U6ehb9rwOypgnO+0H6ZNjqtDUMzuQLMvb78wqKD2w57Jgn7rb
+         Q8WdH+Wmsq91Fc096FnuQ56/TDWP2UHmcVlXm+gRvSAFA2sGux17CyoZcHc3MxcZN5
+         YllouM6hj9oUsrjVuION2dLviX8+NEgx/CpHmhz8baLZrcGtvsQ16g+AOjdKGqxguZ
+         W/D3cS1Q0Rf8g==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -44,9 +44,9 @@ Cc:     Nicolas Pitre <nico@fluxnic.net>, Sam Ravnborg <sam@ravnborg.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 01/11] kbuild: do not create empty modules.order in the prepare stage
-Date:   Tue,  9 Jul 2019 13:24:05 +0900
-Message-Id: <20190709042416.27554-2-yamada.masahiro@socionext.com>
+Subject: [PATCH 11/11] kbuild: split out *.mod out of {single,multi}-used-m rules
+Date:   Tue,  9 Jul 2019 13:24:15 +0900
+Message-Id: <20190709042416.27554-12-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190709042416.27554-1-yamada.masahiro@socionext.com>
 References: <20190709042416.27554-1-yamada.masahiro@socionext.com>
@@ -55,58 +55,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, $(objtree)/modules.order is touched in two places.
+Currently, *.mod is created as a side-effect of obj-m.
 
-In the 'prepare0' rule, scripts/Makefile.build creates an empty
-modules.order while processing 'obj=.'
+Split out *.mod as a dedicated build rule, which allows to
+unify the %.c -> %.o rule, and remove the single-used-m rule.
 
-In the 'modules' rule, the top-level Makefile overwrites it with
-the correct list of modules.
-
-It might be a good side-effect that modules.order is made empty
-every time (probably this is not intended functionality), but I
-personally do not like this behavior.
-
-Kbuild descends into some directories in the preparation stage,
-where created modules.order files may be broken.
-
-Export 'preparing' while running the 'prepare' target, and when it
-is defined, do not touch modules.order at all.
+This also makes the incremental build of allmodconfig faster because
+it saves $(NM) invocation when there is no change in the module.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Makefile               | 1 +
- scripts/Makefile.build | 2 ++
- 2 files changed, 3 insertions(+)
+ scripts/Makefile.build | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 5c75ea7177f6..a31b672d512b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1000,6 +1000,7 @@ ifdef CONFIG_STACK_VALIDATION
- endif
- 
- PHONY += prepare0
-+prepare: export preparing=1
- 
- ifeq ($(KBUILD_EXTMOD),)
- core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
 diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 776842b7e6a3..93c20664bcbb 100644
+index f34f941c3b9b..00bd3bc1d6ba 100644
 --- a/scripts/Makefile.build
 +++ b/scripts/Makefile.build
-@@ -64,8 +64,10 @@ builtin-target := $(obj)/built-in.a
+@@ -69,8 +69,10 @@ modorder-target := $(obj)/modules.order
+ endif
  endif
  
- ifdef CONFIG_MODULES
-+ifndef preparing
- modorder-target := $(obj)/modules.order
++mod-targets := $(patsubst %.o, %.mod, $(obj-m))
++
+ __build: $(if $(KBUILD_BUILTIN),$(builtin-target) $(lib-target) $(extra-y)) \
+-	 $(if $(KBUILD_MODULES),$(obj-m) $(modorder-target)) \
++	 $(if $(KBUILD_MODULES),$(obj-m) $(mod-targets) $(modorder-target)) \
+ 	 $(subdir-ym) $(always)
+ 	@:
+ 
+@@ -268,7 +270,7 @@ endef
+ 
+ # List module undefined symbols (or empty line if not enabled)
+ ifdef CONFIG_TRIM_UNUSED_KSYMS
+-cmd_undef_syms = $(NM) $@ | sed -n 's/^  *U //p' | xargs echo
++cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | xargs echo
+ else
+ cmd_undef_syms = echo
  endif
-+endif
+@@ -278,11 +280,15 @@ $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+ 	$(call cmd,force_checksrc)
+ 	$(call if_changed_rule,cc_o_c)
  
- # We keep a list of all modules in $(MODVERDIR)
+-$(single-used-m): $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+-	$(call cmd,force_checksrc)
+-	$(call if_changed_rule,cc_o_c)
+-	@{ echo $@; \
+-	   $(cmd_undef_syms); } > $(patsubst %.o,%.mod,$@)
++cmd_mod = { \
++	echo $(if $($*-objs)$($*-y)$($*-m), $(addprefix $(obj)/, $($*-objs) $($*-y) $($*-m)), $(@:.mod=.o)); \
++	$(cmd_undef_syms); \
++	} > $@
++
++$(obj)/%.mod: $(obj)/%.o FORCE
++	$(call if_changed,mod)
++
++targets += $(mod-targets)
  
+ quiet_cmd_cc_lst_c = MKLST   $@
+       cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
+@@ -463,8 +469,6 @@ cmd_link_multi-m = $(LD) $(ld_flags) -r -o $@ $(filter %.o,$^) $(cmd_secanalysis
+ 
+ $(multi-used-m): FORCE
+ 	$(call if_changed,link_multi-m)
+-	@{ echo $(filter %.o,$^); \
+-	   $(cmd_undef_syms); } > $(patsubst %.o,%.mod,$@)
+ $(call multi_depend, $(multi-used-m), .o, -objs -y -m)
+ 
+ targets += $(multi-used-m)
 -- 
 2.17.1
 
