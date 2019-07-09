@@ -2,89 +2,86 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB93BC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09010C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47B42166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562639649;
-	bh=FtmyP2O9zhpnhnmny9EKhzsQgZ9sgXmhJF3r9tR+zL4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dkLe3l/CWdadSaQ5mF6jPJsZ2ChpjEL+GngGxj3Xt71kiTbUYOeqHCa+Nmk1TrELs
-	 HjHB1MfXG633nNNrfKi5uQgz0YJT/mtB+L3XrdA6dGKsayqmhSYBGOcxN/s5GkUPOL
-	 09wx8GBr13Z3Hp1NDCY4YavfGZvpX1uYukX8ccgM=
+	by mail.kernel.org (Postfix) with ESMTP id CE5092166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfGICeI (ORCPT
+        id S1727070AbfGICgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:34:08 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43213 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfGICeH (ORCPT
+        Mon, 8 Jul 2019 22:36:44 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:12602 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725886AbfGICgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:34:07 -0400
-Received: by mail-io1-f66.google.com with SMTP id k20so39820722ios.10;
-        Mon, 08 Jul 2019 19:34:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jmvcnf17SdTOjp+JcKTP5mZou8gtz+qNNgynsKTEhKQ=;
-        b=hJh3VjNDzn51SHg0FYqM3cqxezUHWsAtDraigfNejobzgTQhLRTz3GUymELPG+v1g/
-         2mGrekHuL3xQoDaQs3SYjUo+GAb2E2d96KbAe/AfIIZ+YwYRkC9OdhKqz7TUurTfhfJs
-         gaXwYJQubQVxWJwm49im0RJfHBU4n5TmZfe+qo+N+qqS/DwGXvhjr1xWpOBrDAku1m33
-         tNo6T4jc03rYt/5ZtaALgXve+BLMV7B8ZmrUaf/fdYEiw1u9phF7BPeDk6k85pZIlThK
-         CNByGM7SYS2Nvm8qedBC/69BRO1Xc7jBNA3hOBN75hN7ds3egvEDE4snB/QSJHFiJ9O+
-         tlQg==
-X-Gm-Message-State: APjAAAVfTsE0R83IHGGyeUOq+njCFYUb4H3vrUuvbL8iwEcTTDpFfSYK
-        lmOmhaVtFuKD6fFMz/sd7g==
-X-Google-Smtp-Source: APXvYqz69JDID2fJqVQHBsqpbzGdCfYQdFAvvCP76K5lkHq5ZezS4qwxqyj5D6GYBOIopNPx1thdQA==
-X-Received: by 2002:a6b:c38b:: with SMTP id t133mr22538567iof.162.1562639646373;
-        Mon, 08 Jul 2019 19:34:06 -0700 (PDT)
-Received: from localhost ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n7sm14884828ioo.79.2019.07.08.19.34.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 19:34:05 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 20:34:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1
- bindings
-Message-ID: <20190709023404.GA6500@bogus>
-References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1560258401-9517-6-git-send-email-fabrizio.castro@bp.renesas.com>
+        Mon, 8 Jul 2019 22:36:44 -0400
+X-UUID: 1d77772b16c348e28179721787fd1af7-20190709
+X-UUID: 1d77772b16c348e28179721787fd1af7-20190709
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2044741967; Tue, 09 Jul 2019 10:36:36 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 9 Jul 2019 10:36:35 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 9 Jul 2019 10:36:35 +0800
+From:   Biao Huang <biao.huang@mediatek.com>
+To:     <davem@davemloft.net>, Jose Abreu <joabreu@synopsys.com>,
+        <andrew@lunn.ch>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>,
+        <boon.leong.ong@intel.com>
+Subject: [PATCH 1/2 net-next] net: stmmac: dwmac4: mac address array boudary violation issue
+Date:   Tue, 9 Jul 2019 10:36:22 +0800
+Message-ID: <20190709023623.8358-2-biao.huang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190709023623.8358-1-biao.huang@mediatek.com>
+References: <20190709023623.8358-1-biao.huang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560258401-9517-6-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 14:06:40 +0100, Fabrizio Castro wrote:
-> Document RZ/G2M (R8A774A1) SoC in the Renesas TMU bindings.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/timer/renesas,tmu.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+The mac address array size is GMAC_MAX_PERFECT_ADDRESSES,
+so the 'reg' should be less than it, or will affect other registers.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 8d9f6cda4012..776077ec1a23 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -454,7 +454,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 			reg++;
+ 		}
+ 
+-		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
++		while (reg < GMAC_MAX_PERFECT_ADDRESSES) {
+ 			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
+ 			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
+ 			reg++;
+-- 
+2.18.0
+
