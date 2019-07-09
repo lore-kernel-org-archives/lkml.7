@@ -2,87 +2,135 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EDDC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA1EC73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB512087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="doczlQu2";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="PNauBWhF"
+	by mail.kernel.org (Postfix) with ESMTP id 068282087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbfGITnb (ORCPT
+        id S1729127AbfGITnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:43:31 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:52296 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726358AbfGITna (ORCPT
+        Tue, 9 Jul 2019 15:43:41 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45376 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfGITnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 15:43:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 3FDD98EE247;
-        Tue,  9 Jul 2019 12:43:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562701410;
-        bh=hPYD4bTdBFS+CEAiXuozREJ/sQr+8Csj4u3v9sBOl5Q=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=doczlQu2zOx7D4gL80vcI3RWLK/K7o+vbLbpDMjm2lV30tY1r4JW+od6J3mkvUxKQ
-         +5/uqgGqKJc1Oyuyg2bHd53+pU198wtVbIsBdbmLte7ektjCuf2ahjgPKWpOYsixge
-         Qdo9ssdxUtlXAhT/3sRZhtuVdwNlklCEhgJcwH50=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id BK1nIjpso9V5; Tue,  9 Jul 2019 12:43:29 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 568778EE15F;
-        Tue,  9 Jul 2019 12:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562701408;
-        bh=hPYD4bTdBFS+CEAiXuozREJ/sQr+8Csj4u3v9sBOl5Q=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PNauBWhF1AvBF7wWb9WFdO8qEg3ktS/NTkBycA62sZ8kShlfZ7QSuV+NH7Cf5OEb8
-         s2v+NkXncuJXHKjxfbf4EQotLfPQMnFed5BdogLlPCjZ2rSYbUD9khvpIBZJLHmbIi
-         JkGe+VSVF5lFWIigILPqwNvkyLJg1SlXfV4xuM5s=
-Message-ID: <1562701406.3362.105.camel@HansenPartnership.com>
-Subject: Re: [GIT PULL] first round of SCSI updates for the 5.2+ merge window
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Tue, 09 Jul 2019 12:43:26 -0700
-In-Reply-To: <yq1lfx7c80r.fsf@oracle.com>
-References: <1562699693.3362.93.camel@HansenPartnership.com>
-         <yq1lfx7c80r.fsf@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 9 Jul 2019 15:43:41 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 4786F28AFAE
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, skhan@linuxfoundation.org,
+        Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH 1/2] media: Revert "media: vimc: Remove or modify stream checks"
+Date:   Tue,  9 Jul 2019 16:43:26 -0300
+Message-Id: <e144e6f5aae4e3d932e464fbf741d7cbaaf55980.1562701396.git.helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-09 at 15:39 -0400, Martin K. Petersen wrote:
-> James,
-> 
-> > This is mostly update of the usual drivers: qla2xxx, hpsa, lpfc,
-> > ufs, mpt3sas, ibmvscsi, megaraid_sas, bnx2fc and hisi_sas as well
-> > as the removal of the osst driver (I heard from Willem privately
-> > that he would like the driver removed because all his test hardware
-> > has failed).  Plus number of minor changes, spelling fixes and
-> > other trivia.
-> 
-> Looks like you forgot to pull in the scatterlist topic branch.
+This reverts commit 3c1b9ac753e99005d7ee0a883d6e5b577ba32aa9.
 
-Actually, I was planning a second pull request for that one.  I presume
-you think it's ready to go?
+Required to Revert "media: vimc: propagate pixel format in the stream"
+which introduced the stream object in the vimc_ent_device struct.
 
-James
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+---
+ drivers/media/platform/vimc/vimc-debayer.c | 5 ++++-
+ drivers/media/platform/vimc/vimc-scaler.c  | 7 +++++--
+ drivers/media/platform/vimc/vimc-sensor.c  | 6 +++++-
+ 3 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+index 00598fbf3cba..72adba6cf892 100644
+--- a/drivers/media/platform/vimc/vimc-debayer.c
++++ b/drivers/media/platform/vimc/vimc-debayer.c
+@@ -262,7 +262,7 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
+ 
+ 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+ 		/* Do not change the format while stream is on */
+-		if (vdeb->ved.stream)
++		if (vdeb->src_frame)
+ 			return -EBUSY;
+ 
+ 		sink_fmt = &vdeb->sink_fmt;
+@@ -329,6 +329,9 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+ 		const struct v4l2_format_info *pix_info;
+ 		unsigned int frame_size;
+ 
++		if (vdeb->src_frame)
++			return 0;
++
+ 		/* We only support translating bayer to RGB24 */
+ 		if (src_pixelformat != V4L2_PIX_FMT_RGB24) {
+ 			dev_err(vdeb->dev,
+diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+index c7123a45c55b..5f31c1e351a3 100644
+--- a/drivers/media/platform/vimc/vimc-scaler.c
++++ b/drivers/media/platform/vimc/vimc-scaler.c
+@@ -148,7 +148,7 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
+ 
+ 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+ 		/* Do not change the format while stream is on */
+-		if (vsca->ved.stream)
++		if (vsca->src_frame)
+ 			return -EBUSY;
+ 
+ 		sink_fmt = &vsca->sink_fmt;
+@@ -203,6 +203,9 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+ 		const struct v4l2_format_info *pix_info;
+ 		unsigned int frame_size;
+ 
++		if (vsca->src_frame)
++			return 0;
++
+ 		if (!vimc_sca_is_pixfmt_supported(pixelformat)) {
+ 			dev_err(vsca->dev, "pixfmt (0x%08x) is not supported\n",
+ 				pixelformat);
+@@ -324,7 +327,7 @@ static void *vimc_sca_process_frame(struct vimc_ent_device *ved,
+ 						    ved);
+ 
+ 	/* If the stream in this node is not active, just return */
+-	if (!ved->stream)
++	if (!vsca->src_frame)
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	vimc_sca_fill_src_frame(vsca, sink_frame);
+diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+index 51359472eef2..c47454cc7f70 100644
+--- a/drivers/media/platform/vimc/vimc-sensor.c
++++ b/drivers/media/platform/vimc/vimc-sensor.c
+@@ -131,7 +131,7 @@ static int vimc_sen_set_fmt(struct v4l2_subdev *sd,
+ 
+ 	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+ 		/* Do not change the format while stream is on */
+-		if (vsen->ved.stream)
++		if (vsen->frame)
+ 			return -EBUSY;
+ 
+ 		mf = &vsen->mbus_format;
+@@ -187,6 +187,10 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+ 		const struct v4l2_format_info *pix_info;
+ 		unsigned int frame_size;
+ 
++		if (vsen->kthread_sen)
++			/* tpg is already executing */
++			return 0;
++
+ 		/* Calculate the frame size */
+ 		pix_info = v4l2_format_info(pixelformat);
+ 		frame_size = vsen->mbus_format.width * pix_info->bpp[0] *
+-- 
+2.20.1
 
