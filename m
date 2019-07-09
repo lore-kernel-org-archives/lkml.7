@@ -2,150 +2,93 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2221EC606D6
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F501C606D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEEE2216FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:43:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562654632;
-	bh=bpaoLc7Aubq+GHHtWfTPdoDmyYcmyMeIRmhPLjxgnvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TPC2YXL5qBoXKSsjBxAUJ/0DhEkqvmRoi9r0eUWBDaXNwRlCsnd4FBE6F5v1P8scB
-	 pA+gORV79AsuQzrTOt9kz0Y/vkbHO6hXs8+EbfO8Y8QQizWW3tIzJ9d3xh8H6JwO//
-	 C7l4It6esTj+WO6yiAE5CS+S+EWLcO/lH7nCxgA0=
+	by mail.kernel.org (Postfix) with ESMTP id E68D5216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726057AbfGIGnu (ORCPT
+        id S1726122AbfGIGq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 02:43:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfGIGnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 02:43:50 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E926D216C4;
-        Tue,  9 Jul 2019 06:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562654629;
-        bh=bpaoLc7Aubq+GHHtWfTPdoDmyYcmyMeIRmhPLjxgnvQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XLCPPnoxmA+d5SIZX4KLYprsvOfn+M5RbeeQ0JhL5lVKTZdO7Gq3gpBSJVyPjarT2
-         3AF50kLJ1mmYraXLzptZPTNxpXit1FKMbEd22q4eU54v80g+cttOhBSusdLQRSevWj
-         wZ8NBEGqV0IYVgpcNgbdJ4YelQg898+AFMKb++JQ=
-Date:   Tue, 9 Jul 2019 09:43:46 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190709064346.GF7034@mtr-leonro.mtl.com>
-References: <20190709135636.4d36e19f@canb.auug.org.au>
+        Tue, 9 Jul 2019 02:46:27 -0400
+Received: from lgeamrelo13.lge.com ([156.147.23.53]:57850 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725832AbfGIGq0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 02:46:26 -0400
+Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
+        by 156.147.23.53 with ESMTP; 9 Jul 2019 15:46:24 +0900
+X-Original-SENDERIP: 156.147.1.125
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.125 with ESMTP; 9 Jul 2019 15:46:24 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Tue, 9 Jul 2019 15:45:31 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Message-ID: <20190709064531.GA15734@X58A-UD3R>
+References: <1562565609-12482-1-git-send-email-byungchul.park@lge.com>
+ <20190708125013.GG26519@linux.ibm.com>
+ <20190708130359.GA42888@google.com>
+ <20190709055815.GA19459@X58A-UD3R>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190709135636.4d36e19f@canb.auug.org.au>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190709055815.GA19459@X58A-UD3R>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 01:56:36PM +1000, Stephen Rothwell wrote:
-> Hi all,
->
-> After merging the net-next tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> drivers/infiniband/sw/siw/siw_cm.c: In function 'siw_create_listen':
-> drivers/infiniband/sw/siw/siw_cm.c:1978:3: error: implicit declaration of=
- function 'for_ifa'; did you mean 'fork_idle'? [-Werror=3Dimplicit-function=
--declaration]
->    for_ifa(in_dev)
->    ^~~~~~~
->    fork_idle
-> drivers/infiniband/sw/siw/siw_cm.c:1978:18: error: expected ';' before '{=
-' token
->    for_ifa(in_dev)
->                   ^
->                   ;
->    {
->    ~
->
-> Caused by commit
->
->   6c52fdc244b5 ("rdma/siw: connection management")
->
-> from the rdma tree.  I don't know why this didn't fail after I mereged
-> that tree.
+On Tue, Jul 09, 2019 at 02:58:16PM +0900, Byungchul Park wrote:
+> On Mon, Jul 08, 2019 at 09:03:59AM -0400, Joel Fernandes wrote:
+> > > Actually, the intent was to only allow this to be changed at boot time.
+> > > Of course, if there is now a good reason to adjust it, it needs
+> > > to be adjustable.  So what situation is making you want to change
+> > > jiffies_till_sched_qs at runtime?  To what values is it proving useful
+> > > to adjust it?  What (if any) relationships between this timeout and the
+> > > various other RCU timeouts need to be maintained?  What changes to
+> > > rcutorture should be applied in order to test the ability to change
+> > > this at runtime?
+> > 
+> > I am also interested in the context, are you changing it at runtime for
+> > experimentation? I recently was doing some performance experiments and it is
+> > quite interesting how reducing this value can shorten grace period times :)
+> 
+> Hi Joel,
+> 
+> I've read a thread talking about your experiment to see how the grace
+> periods change depending on the tunnable variables which was interesting
+> to me. While reading it, I found out jiffies_till_sched_qs is not
+> tunnable at runtime unlike jiffies_till_{first,next}_fqs which looks
+> like non-sense to me that's why I tried this patch. :)
+> 
+> Hi Paul,
+> 
+> IMHO, as much as we want to tune the time for fqs to be initiated, we
+> can also want to tune the time for the help from scheduler to start.
 
-I had the same question, because I have this fix for a couple of days alrea=
-dy.
+Let me mention one more thing here...
 
-=46rom 56c9e15ec670af580daa8c3ffde9503af3042d67 Mon Sep 17 00:00:00 2001
-=46rom: Leon Romanovsky <leonro@mellanox.com>
-Date: Sun, 7 Jul 2019 10:43:42 +0300
-Subject: [PATCH] Fixup to build SIW issue
+This is about jiffies_till_sched_qs, I think, used to directly set
+jiffies_to_sched_qs.
 
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
----
- drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> I thought only difference between them is a level of urgency.
 
-diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw=
-/siw_cm.c
-index 8e618cb7261f..c883bf514341 100644
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1954,6 +1954,7 @@ static void siw_drop_listeners(struct iw_cm_id *id)
- int siw_create_listen(struct iw_cm_id *id, int backlog)
- {
- 	struct net_device *dev =3D to_siw_dev(id->device)->netdev;
-+	const struct in_ifaddr *ifa;
- 	int rv =3D 0, listeners =3D 0;
+Of course, they are coupled in case jiffies_to_sched_qs is calculated
+from jiffies_till_{first,next}_fqs though, I'm just talking about its
+original motivation or concept.
 
- 	siw_dbg(id->device, "id 0x%p: backlog %d\n", id, backlog);
-@@ -1975,8 +1976,7 @@ int siw_create_listen(struct iw_cm_id *id, int backlo=
-g)
- 			id, &s_laddr.sin_addr, ntohs(s_laddr.sin_port),
- 			&s_raddr->sin_addr, ntohs(s_raddr->sin_port));
-
--		for_ifa(in_dev)
--		{
-+		in_dev_for_each_ifa_rcu(ifa, in_dev) {
- 			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
- 			    s_laddr.sin_addr.s_addr =3D=3D ifa->ifa_address) {
- 				s_laddr.sin_addr.s_addr =3D ifa->ifa_address;
-@@ -1988,7 +1988,6 @@ int siw_create_listen(struct iw_cm_id *id, int backlo=
-g)
- 					listeners++;
- 			}
- 		}
--		endfor_ifa(in_dev);
- 		in_dev_put(in_dev);
- 	} else if (id->local_addr.ss_family =3D=3D AF_INET6) {
- 		struct inet6_dev *in6_dev =3D in6_dev_get(dev);
---
-2.21.0
-
-
->
-> I have marked that driver as depending on BROKEN for today.
->
-> --
-> Cheers,
-> Stephen Rothwell
-
-
+Thanks,
+Byungchul
