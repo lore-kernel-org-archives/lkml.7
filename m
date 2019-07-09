@@ -2,126 +2,141 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EADFC73C59
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9578C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27DF2082A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562699718;
-	bh=Xa0ZWuyarGQ9jfbFZDvYzj8QRTx+PiAs5JnSBFhpMeQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=SVGzH0pV1T73gemMGkfIpXDC8KwfzsfWQgfGaqDK3iPb9CXWJ1J94W4iPZoRe27id
-	 /W99WtttM355XdN1tN7mSQafPExnpONyDc8p6U7zrMmXUMhBSdDVt97LAv7jrhffTh
-	 6iOJTyQnDtXp/okvHSfVQGA3pgmiZ6JTaYwzxrOk=
+	by mail.kernel.org (Postfix) with ESMTP id B39482073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfGITPR (ORCPT
+        id S1727353AbfGITR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 15:17:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56670 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727608AbfGITPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 15:15:16 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726133AbfGITR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 15:17:56 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A0042073D;
-        Tue,  9 Jul 2019 19:15:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562699715;
-        bh=Xa0ZWuyarGQ9jfbFZDvYzj8QRTx+PiAs5JnSBFhpMeQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qBl041Zkp5u6G9BjLV8K0Ja95s/vjISPq+Ay3RjQdZCWx0GuYC96eHdKghBLGhXaa
-         0zSyHAJANX3yeV0jQD/G7mP9zVx3Q91QqXg3GjDWA/nBqNYdGP3DYTT0jqq5gddPry
-         CzDFKr/n0xmiPDSA4Z0e2+0MiyymW89Hl0EosFug=
-Date:   Tue, 9 Jul 2019 12:15:12 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 2 open syzbot bugs in "security/integrity" subsystem
-Message-ID: <20190709191512.GE641@sol.localdomain>
-Mail-Followup-To: linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+        by mx1.redhat.com (Postfix) with ESMTPS id A952E30821AE;
+        Tue,  9 Jul 2019 19:17:55 +0000 (UTC)
+Received: from treble (ovpn-112-43.rdu2.redhat.com [10.10.112.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9CFD15F9A6;
+        Tue,  9 Jul 2019 19:17:53 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 14:17:51 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kairui Song <kasong@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Subject: Re: [tip:x86/urgent] bpf: Fix ORC unwinding in non-JIT BPF code
+Message-ID: <20190709191751.24eq5zx2c7hoqot6@treble>
+References: <20190707013206.don22x3tfldec4zm@treble>
+ <20190707055209.xqyopsnxfurhrkxw@treble>
+ <CAADnVQJqT8o=_6P6xHjwxrXqX9ToSb0cTfoOcm2Xcha3KRNNSw@mail.gmail.com>
+ <20190708223834.zx7u45a4uuu2yyol@treble>
+ <CAADnVQKWDvzsvyjGoFvSQV7VGr2hF2zzCsC9vnpncWMxOJWYdw@mail.gmail.com>
+ <20190708225359.ewk44pvrv6a4oao7@treble>
+ <20190708230201.mol27wzansuy3n2v@treble>
+ <CAADnVQ+imsK-reGBiSzY02e+KdyGYZxm1su7T1bWvti=YmSV-Q@mail.gmail.com>
+ <20190709174744.dtbjm72cbu5fepar@treble>
+ <CAADnVQJ+iCZ8g38XJkOiawS=p1mZU5XBqaBWc8_zCKVe8hMxTQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAADnVQJ+iCZ8g38XJkOiawS=p1mZU5XBqaBWc8_zCKVe8hMxTQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 09 Jul 2019 19:17:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+On Tue, Jul 09, 2019 at 11:02:40AM -0700, Alexei Starovoitov wrote:
+> On Tue, Jul 9, 2019 at 10:48 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Mon, Jul 08, 2019 at 04:16:25PM -0700, Alexei Starovoitov wrote:
+> > > total time is hard to compare.
+> > > Could you compare few tests?
+> > > like two that are called "tcpdump *"
+> > >
+> > > I think small regression is ok.
+> > > Folks that care about performance should be using JIT.
+> >
+> > I did each test 20 times and computed the averages:
+> >
+> > "tcpdump port 22":
+> >  default:       0.00743175s
+> >  -fno-gcse:     0.00709920s (~4.5% speedup)
+> >
+> > "tcpdump complex":
+> >  default:       0.00876715s
+> >  -fno-gcse:     0.00854895s (~2.5% speedup)
+> >
+> > So there does seem to be a small performance gain by disabling this
+> > optimization.
+> 
+> great. thanks for checking.
+> 
+> > We could change it for the whole file, by adjusting CFLAGS_core.o in the
+> > BPF makefile, or we could change it for the function only with something
+> > like the below patch.
+> >
+> > Thoughts?
+> >
+> > diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+> > index e8579412ad21..d7ee4c6bad48 100644
+> > --- a/include/linux/compiler-gcc.h
+> > +++ b/include/linux/compiler-gcc.h
+> > @@ -170,3 +170,5 @@
+> >  #else
+> >  #define __diag_GCC_8(s)
+> >  #endif
+> > +
+> > +#define __no_fgcse __attribute__((optimize("-fno-gcse")))
+> > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> > index 095d55c3834d..599c27b56c29 100644
+> > --- a/include/linux/compiler_types.h
+> > +++ b/include/linux/compiler_types.h
+> > @@ -189,6 +189,10 @@ struct ftrace_likely_data {
+> >  #define asm_volatile_goto(x...) asm goto(x)
+> >  #endif
+> >
+> > +#ifndef __no_fgcse
+> > +# define __no_fgcse
+> > +#endif
+> > +
+> >  /* Are two types/vars the same type (ignoring qualifiers)? */
+> >  #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+> >
+> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> > index 7e98f36a14e2..8191a7db2777 100644
+> > --- a/kernel/bpf/core.c
+> > +++ b/kernel/bpf/core.c
+> > @@ -1295,7 +1295,7 @@ bool bpf_opcode_in_insntable(u8 code)
+> >   *
+> >   * Decode and execute eBPF instructions.
+> >   */
+> > -static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> > +static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> 
+> I prefer per-function flag.
+> If you want to route it via tip:
+> Acked-by: Alexei Starovoitov <ast@kerrnel.org>
+> 
+> or Daniel can take it into bpf tree while I'm traveling.
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 2 of them as possibly being bugs in the "security/integrity" subsystem. 
-I've listed these reports below, sorted by an algorithm that tries to list first
-the reports most likely to be still valid, important, and actionable.
+Thanks!  I''ll probably send it through the tip tree, along with an
+objtool fix for the other optimization.
 
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the "security/integrity" subsystem,
-please let me know, and if possible forward the report to the correct people or
-mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in process_measurement
-Last occurred:      34 days ago
-Reported:           267 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=aad04cfa9fddcc5588f8b28ddf739f9a3ebf5874
-Original thread:    https://lkml.kernel.org/lkml/0000000000003302870578477029@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+5ab61747675a87ea359d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003302870578477029@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in process_measurement
-Last occurred:      118 days ago
-Reported:           281 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=623c2e176b9d80b1872e7559e5b823b1ec4911b6
-Original thread:    https://lkml.kernel.org/lkml/00000000000033ebee0577262a98@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 1 reply, 106 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+cdc562bc26a2b2b0a94f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000033ebee0577262a98@google.com
-
+-- 
+Josh
