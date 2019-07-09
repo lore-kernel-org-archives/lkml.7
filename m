@@ -2,88 +2,63 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A1CC73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C537C73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E2A20861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A8220861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CYpemY3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfGIN7M (ORCPT
+        id S1726951AbfGIOFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:59:12 -0400
-Received: from bastet.se.axis.com ([195.60.68.11]:33439 "EHLO
-        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfGIN7M (ORCPT
+        Tue, 9 Jul 2019 10:05:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58562 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGIOFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:59:12 -0400
-X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jul 2019 09:59:11 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by bastet.se.axis.com (Postfix) with ESMTP id 11FD618383;
-        Tue,  9 Jul 2019 15:54:07 +0200 (CEST)
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id QvO7OHhFl5QD; Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
-Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
-        by bastet.se.axis.com (Postfix) with ESMTPS id 656A718485;
-        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5471F1A06F;
-        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
-Received: from boulder02.se.axis.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4915E1A065;
-        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
-Received: from seth.se.axis.com (unknown [10.0.2.172])
-        by boulder02.se.axis.com (Postfix) with ESMTP;
-        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
-Received: from pc32929-1845.se.axis.com (pc32929-1845.se.axis.com [10.88.129.17])
-        by seth.se.axis.com (Postfix) with ESMTP id 3CF0C2262;
-        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
-Received: by pc32929-1845.se.axis.com (Postfix, from userid 20456)
-        id 3950E40B30; Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
-From:   Lars Persson <lars.persson@axis.com>
-To:     linux-mmc@vger.kernel.org, ulf.hansson@linaro.org
-Cc:     jespern@axis.com, linux-kernel@vger.kernel.org,
-        Lars Persson <larper@axis.com>
-Subject: [PATCH] mmc: usdhi6rol0: Add maintainers
-Date:   Tue,  9 Jul 2019 15:53:51 +0200
-Message-Id: <20190709135351.25628-1-larper@axis.com>
-X-Mailer: git-send-email 2.11.0
-X-TM-AS-GCONF: 00
+        Tue, 9 Jul 2019 10:05:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=A0ccmHFKAAaiA1+Y+eCDLJWvS9OEhV/u6H9iE/GlQqM=; b=CYpemY3niCxoBnErA3IHfJvT6
+        a5647ukYl45yoqDLPlByZdvDPFKMvbBLr9jDOEL3gQ0zZ/q1C3FtwQTTp6ie72pOB9cbTVD81bxPT
+        tC5sT7HDHzSGAzo6sIabv7CnIvY4q4bN4DzPhKXFhmEdLis92ozBxtUKlBXnc0mWNaqw/6h9FdaA7
+        /I6Wm3R23hUvu31aLxlr6cZ1EcamTNIKXTykUCWPrKG59DaRuck+zNxeTvPNhoOkgL8cJwT9iIUAo
+        LP1s7078kJ9G3ORPUnIrNV7rW8qKwh6Mkkli0Db8jJ9H04yFdLo+WqKM+mSNOH7RN0tNF6KTM/GXA
+        Af+1dIN3g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkqkW-0004ec-Jv; Tue, 09 Jul 2019 14:05:40 +0000
+Date:   Tue, 9 Jul 2019 07:05:40 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sheriff Esseson <sheriffesseson@gmail.com>
+Cc:     skhan@linuxfoundation.org, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [linux-kernel-mentees] [PATCH v6] Doc : fs : convert xfs.txt to
+ ReST
+Message-ID: <20190709140540.GA13183@infradead.org>
+References: <20190709124859.GA21503@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709124859.GA21503@localhost>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usdhi6rol0 driver is exclusively used for the ARTPEC family of
-SoCs. Other SoCs with the same IP of Panasonic origin use the tmio_mmc
-driver. Therefore we assigner maintainer responsibility to us at Axis
-until the two drivers become unified.
+On Tue, Jul 09, 2019 at 01:48:59PM +0100, Sheriff Esseson wrote:
+> Convert xfs.txt to ReST, rename and fix broken references, consequently.
 
-Change-Id: I38b6fd0addc1d93ae172332b67e6eb71c0871508
-Signed-off-by: Lars Persson <larper@axis.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 677ef41cb012..a91d04e5c084 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1432,6 +1432,7 @@ F:	arch/arm/mach-artpec
- F:	arch/arm/boot/dts/artpec6*
- F:	drivers/clk/axis
- F:	drivers/crypto/axis
-+F:	drivers/mmc/host/usdhi6rol0.c
- F:	drivers/pinctrl/pinctrl-artpec*
- F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
- 
--- 
-2.11.0
-
+The subject line still uses completely b0rked naming conventions.
