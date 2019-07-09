@@ -2,89 +2,157 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CABCC73C60
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8208C73C61
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6028720693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562713330;
-	bh=WkLclu3GwJzv/4uUiuBZkPxsxtwql5ymXJGAdRJkjUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vQAx7gauKMy+y7FVUADkGOCEQF3GUfU91fulU5+eOevn+Lh0Wizo+/yGuM7XU/1OD
-	 dwJ7FatyMssQQwwNpFTvtxWvIQTR12Tv7dgWFqrl+lo+AH8o6sTVWFJfIdzE73QTq4
-	 fIZQ/ctpk7hf7wvfxNsUHA2YMz9xcXWnqbhJJw0k=
+	by mail.kernel.org (Postfix) with ESMTP id 9F20E20693
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:06:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZi9H8tH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfGIXCJ (ORCPT
+        id S1727094AbfGIXGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 19:02:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41555 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfGIXCJ (ORCPT
+        Tue, 9 Jul 2019 19:06:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54800 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfGIXGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 19:02:09 -0400
-Received: by mail-io1-f68.google.com with SMTP id j5so561055ioj.8;
-        Tue, 09 Jul 2019 16:02:08 -0700 (PDT)
+        Tue, 9 Jul 2019 19:06:17 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p74so394698wme.4;
+        Tue, 09 Jul 2019 16:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=91fUQHii/1a1YDS2AGu/3oAuTobJa0WG8gMeTg5poT8=;
+        b=vZi9H8tH8nR9vvCDEekIlj/01cwlJ0kraz+7vy+ML1+9tmYud/qEx35ME368EoEAjb
+         5f5QtfSTXSHYJZ+4YFlIFldVjcs7oSKLsn9yhzKdPYHlbdfs+SDR4RW3a3q8Dc866Lht
+         lzd3DQ9rH8zj4iLb78mmCS9jYLvBCMnaU9NOBmbtXH7MOt3HDJR87N9JI19MSnmG7fYk
+         avhjmgymtnaueG+he/kscSzUsKvgSubX4Pw9OGq2uI4PGrC2hQGGyGDXViJFSUUcIirZ
+         /vD7OD3pTzeSRlAKQorB6KoBX2aHTmBuS208J9OUPWt0EBejTBlnUG/2GwSOJiY52SdR
+         RHHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pcfzVHuGTYaM+j7i87z+SeIwIRADA9ILTB1ox662dYs=;
-        b=t3i3tja4EcN7SbpClNw8QJ56hNls3RysUjYx2lcgg9JJxOv+h6YReFQdIZ97TQvlbf
-         baEJ8ry5Z0H7TYAXGlQPO3/AOLFr39I/ue+EEUIu2ePia7agXm6ajdEgXOOpZPwZ77Ve
-         oBvz8WPqZK+hpMoxQdYznmnwq6krg5v10hvIl1ZsYmjZmiAQuHVOeMIIyv353NJEGDGO
-         Ki8bBd+b7Yj0EWVP749zqy4+XMUOVDzGmOGaGCMTiaYFBlgzK2ZwC/uvTa2LpoArcspv
-         rEMvSXAbaFehM/KNOODTzjhaIWonjx1Cv0xuRIMejsGDk40QEiQcMiOATraeq4t3UX1p
-         /pbA==
-X-Gm-Message-State: APjAAAXUsurDeCwpvtLZSskRkFAo9lTBOXMvPCXylccJIVsXPpb3790A
-        mGEFZRUTK4zswoW70E6R4A==
-X-Google-Smtp-Source: APXvYqxr8IaXXWQHna/ksmbbhy36DTh6Ah1Gj4ZIqx5lFEKgGrqa4E+x4KguEAntWpLEUg1eJJrSsA==
-X-Received: by 2002:a6b:1604:: with SMTP id 4mr27029736iow.245.1562713327886;
-        Tue, 09 Jul 2019 16:02:07 -0700 (PDT)
-Received: from localhost ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id b14sm362851iod.33.2019.07.09.16.02.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=91fUQHii/1a1YDS2AGu/3oAuTobJa0WG8gMeTg5poT8=;
+        b=mo/TgIVePIz7UMABTSPB5JFAFPJGY8UKmhDZPsmX5Fs+nC2F1BTLFWbS+RNkP7cwpi
+         s34Oet2dB99BIfzsOsAukOQRLHOL3yE8z+NeKqZzhe9LkbPu8ZzK0qqyoI1GGsHvKBik
+         ULleXCZETdL5KpJ+3CALxXwOCxj37SH1tYC1dCT9SL96Om6NdwlSXTuWcvN9HIiutNvx
+         jBT/RmoOJ716S6NYxl/ywT8j9q+m5hzS3HLrlFPaosBu/cB2E16i8NcujcugwO3HwHk5
+         qJFvZYGgWi5Q3JtnUN/X7U7Y2LVGLU5oQjnwI5/bMukD3/YETQRu7qdRK6jQteAKosim
+         Byfg==
+X-Gm-Message-State: APjAAAXZvnPZ88vuN4TCiSFTCyp81u8YtjNQuJ1dChXsXg0FBQGKTkIf
+        voBG59HTVGk3a+ZlLLFyyNE=
+X-Google-Smtp-Source: APXvYqzaIhdE758hZ2TcqMB8pD8H7OLoUuHWVpS23UvCFQ1IxVHbOs6dDuJgpv4ItB+QO6TB4ouQ4g==
+X-Received: by 2002:a1c:3:: with SMTP id 3mr1750202wma.6.1562713574894;
+        Tue, 09 Jul 2019 16:06:14 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id s18sm518142wra.47.2019.07.09.16.06.14
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 16:02:06 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 17:02:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] media: dt: bindings: tegra-vde: Document new optional
- IOMMU property
-Message-ID: <20190709230205.GA1040@bogus>
-References: <20190623170730.5095-1-digetx@gmail.com>
- <20190623170730.5095-4-digetx@gmail.com>
+        Tue, 09 Jul 2019 16:06:14 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Kamenee Arumugam <kamenee.arumugam@intel.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH v2] IB/rdmavt: Fix variable shadowing issue in rvt_create_cq
+Date:   Tue,  9 Jul 2019 16:05:53 -0700
+Message-Id: <20190709230552.61842-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190709221312.7089-1-natechancellor@gmail.com>
+References: <20190709221312.7089-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190623170730.5095-4-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Jun 2019 20:07:26 +0300, Dmitry Osipenko wrote:
-> All NVIDIA Tegra SoC generations provide IOMMU support for the video
-> decoder engine. Document new optional device-tree property that connects
-> VDE with the IOMMU provider.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
-> 
-> No changes since v1.
-> 
->  Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+clang warns:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+drivers/infiniband/sw/rdmavt/cq.c:260:7: warning: variable 'err' is used
+uninitialized whenever 'if' condition is true
+[-Wsometimes-uninitialized]
+                if (err)
+                    ^~~
+drivers/infiniband/sw/rdmavt/cq.c:310:9: note: uninitialized use occurs
+here
+        return err;
+               ^~~
+drivers/infiniband/sw/rdmavt/cq.c:260:3: note: remove the 'if' if its
+condition is always false
+                if (err)
+                ^~~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:253:7: warning: variable 'err' is used
+uninitialized whenever 'if' condition is true
+[-Wsometimes-uninitialized]
+                if (!cq->ip) {
+                    ^~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:310:9: note: uninitialized use occurs
+here
+        return err;
+               ^~~
+drivers/infiniband/sw/rdmavt/cq.c:253:3: note: remove the 'if' if its
+condition is always false
+                if (!cq->ip) {
+                ^~~~~~~~~~~~~~
+drivers/infiniband/sw/rdmavt/cq.c:211:9: note: initialize the variable
+'err' to silence this warning
+        int err;
+               ^
+                = 0
+2 warnings generated.
+
+The function scoped err variable is uninitialized when the flow jumps
+into the if statement. The if scoped err variable shadows the function
+scoped err variable, preventing the err assignments within the if
+statement to be reflected at the function level, which will cause
+uninitialized use when the goto statements are taken.
+
+Just remove the if scoped err declaration so that there is only one
+copy of the err variable for this function.
+
+Fixes: 239b0e52d8aa ("IB/hfi1: Move rvt_cq_wc struct into uapi directory")
+Link: https://github.com/ClangBuiltLinux/linux/issues/594
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+v1 -> v2:
+
+* Updated the wording of the commit message to use proper terms like
+  scoping and shadowing, thanks to review from Nick (let me know if the
+  wording isn't up to snuff).
+
+ drivers/infiniband/sw/rdmavt/cq.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/infiniband/sw/rdmavt/cq.c b/drivers/infiniband/sw/rdmavt/cq.c
+index fac87b13329d..a85571a4cf57 100644
+--- a/drivers/infiniband/sw/rdmavt/cq.c
++++ b/drivers/infiniband/sw/rdmavt/cq.c
+@@ -247,8 +247,6 @@ int rvt_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
+ 	 * See rvt_mmap() for details.
+ 	 */
+ 	if (udata && udata->outlen >= sizeof(__u64)) {
+-		int err;
+-
+ 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
+ 		if (!cq->ip) {
+ 			err = -ENOMEM;
+-- 
+2.22.0
+
