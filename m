@@ -2,151 +2,124 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D79CC004EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A62DC48BE7
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8DD21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFED4214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:39:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aZUoCYjX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfGILia (ORCPT
+        id S1726491AbfGILjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 07:38:30 -0400
-Received: from mga09.intel.com ([134.134.136.24]:54615 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfGILi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 07:38:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 04:38:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
-   d="scan'208";a="340729765"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by orsmga005.jf.intel.com with ESMTP; 09 Jul 2019 04:38:25 -0700
-Subject: Re: [PATCH v2 3/4] perf intel-pt: Smatch: Fix potential NULL pointer
- dereference
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190708143937.7722-1-leo.yan@linaro.org>
- <20190708143937.7722-4-leo.yan@linaro.org> <20190708215940.GD7455@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <13c2a09d-3031-56ea-1c71-39dd8a3c74e8@intel.com>
-Date:   Tue, 9 Jul 2019 14:37:14 +0300
+        Tue, 9 Jul 2019 07:39:41 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55779 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfGILjl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 07:39:41 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a15so2707092wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 04:39:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=YOQ/GCG+KtmJJJYXPhN1+uZC1uWfh6rqg2OW3RNJhCw=;
+        b=aZUoCYjX0qi8OOGD3u8+SDakOXfcad8NlncaVfoEEOqLArMvCAYmlTfjxE4mPvMF9w
+         GKlbTmoFa+qhb9+ELukjgtoCkGPi4i3n1VRohpkj8J/27yqjrjUpQNyrNGjlxwKZLtPn
+         qJeykCTTqmjShYi4GpWTXIGYBnvCyiOiWYSj7VNMPOoykVgq2d2pmMoqAFXotLlh7MsU
+         jEQdBnT8WrL1CyMbw021aAGw++5y6q6OOcKeHkwWCXe8rmWsFwnOLRzDis7KZs9VQ+K9
+         JqJd258BQJEKlkqWxtTkDM9ofFg/FC3+QAswkzoEW9M3JjnhQXQUfCEe8sqjk8G9FTR6
+         Q7Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YOQ/GCG+KtmJJJYXPhN1+uZC1uWfh6rqg2OW3RNJhCw=;
+        b=ARfTLaLezIP8rMmc3B1aKeSZD42uXB+Lq+zFWnGBKCre3I5diQVtBN0Jwy6X8V4Sge
+         O8ZxEp0Tzfrfcb9r7UHKmW/x/8eFtj3/YHARAVTv2qyp7rwspIi/iFBlMXH1s2WU/fpx
+         vTzdFa5WV46n3KTc3DN65FLClaQv2Eb91Bv6SHdmk7b48mwA4hVZSuqVYubD0NNfMFPu
+         whAr4910gKwKo/umkXnfj4bdhtRuzB0U59HL/pnmKj/Mr9eXHgHRkkzOddObu8QZIiqP
+         8sq9DqxPY/sDNJlxhw1HKGrF2Mqd6OOZdIGbbZYMo67/SqZ2Y20JlIEiLk6dUa2ivsNN
+         8fcQ==
+X-Gm-Message-State: APjAAAVM3fBSUAAGIrFJG7wpWfR7C1olqDZo0PsCLvM9CRxc92/nOOMS
+        hS9iuVqaasl5UIUE/uB47GwA7Ln3
+X-Google-Smtp-Source: APXvYqyIVhRDopuKuELtqj+8M9R85MTDQRcrlwvad9E56bNgUYGbOMHvsYixS/tKsEvtyy6548wwxA==
+X-Received: by 2002:a05:600c:114f:: with SMTP id z15mr22003774wmz.131.1562672379314;
+        Tue, 09 Jul 2019 04:39:39 -0700 (PDT)
+Received: from [192.168.1.20] ([213.122.212.45])
+        by smtp.googlemail.com with ESMTPSA id v204sm2610612wma.20.2019.07.09.04.39.38
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 04:39:38 -0700 (PDT)
+Subject: Re: Warnings whilst building 5.2.0+
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <df7c7cfc-25cf-5b92-91ab-ac355b660233@googlemail.com>
+ <d5f09396-a562-7989-8e5b-8337c9c9a036@metux.net>
+From:   Chris Clayton <chris2553@googlemail.com>
+Message-ID: <5276d608-e781-6190-e7df-bc22152b71c1@googlemail.com>
+Date:   Tue, 9 Jul 2019 12:39:34 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190708215940.GD7455@kernel.org>
+In-Reply-To: <d5f09396-a562-7989-8e5b-8337c9c9a036@metux.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/07/19 12:59 AM, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jul 08, 2019 at 10:39:36PM +0800, Leo Yan escreveu:
->> Based on the following report from Smatch, fix the potential
->> NULL pointer dereference check.
+
+
+On 09/07/2019 11:37, Enrico Weigelt, metux IT consult wrote:
+> On 09.07.19 08:06, Chris Clayton wrote:
 > 
-> Adrian, are you ok now with these two for pt and bts? Can I have your
-> acked-by?
-
-Yes they are good. For both:
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
+> Hi,
 > 
-> - Arnaldo
->  
->>   tools/perf/util/intel-pt.c:3200
->>   intel_pt_process_auxtrace_info() error: we previously assumed
->>   'session->itrace_synth_opts' could be null (see line 3196)
->>
->>   tools/perf/util/intel-pt.c:3206
->>   intel_pt_process_auxtrace_info() warn: variable dereferenced before
->>   check 'session->itrace_synth_opts' (see line 3200)
->>
->> tools/perf/util/intel-pt.c
->> 3196         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
->> 3197                 pt->synth_opts = *session->itrace_synth_opts;
->> 3198         } else {
->> 3199                 itrace_synth_opts__set_default(&pt->synth_opts,
->> 3200                                 session->itrace_synth_opts->default_no_sample);
->>                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
->> 3201                 if (!session->itrace_synth_opts->default_no_sample &&
->> 3202                     !session->itrace_synth_opts->inject) {
->> 3203                         pt->synth_opts.branches = false;
->> 3204                         pt->synth_opts.callchain = true;
->> 3205                 }
->> 3206                 if (session->itrace_synth_opts)
->>                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
->> 3207                         pt->synth_opts.thread_stack =
->> 3208                                 session->itrace_synth_opts->thread_stack;
->> 3209         }
->>
->> 'session->itrace_synth_opts' is impossible to be a NULL pointer in
->> intel_pt_process_auxtrace_info(), thus this patch removes the NULL
->> test for 'session->itrace_synth_opts'.
->>
->> Signed-off-by: Leo Yan <leo.yan@linaro.org>
->> ---
->>  tools/perf/util/intel-pt.c | 13 +++++--------
->>  1 file changed, 5 insertions(+), 8 deletions(-)
->>
->> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
->> index c76a96f777fb..df061599fef4 100644
->> --- a/tools/perf/util/intel-pt.c
->> +++ b/tools/perf/util/intel-pt.c
->> @@ -3210,7 +3210,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
->>  		goto err_delete_thread;
->>  	}
->>  
->> -	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
->> +	if (session->itrace_synth_opts->set) {
->>  		pt->synth_opts = *session->itrace_synth_opts;
->>  	} else {
->>  		itrace_synth_opts__set_default(&pt->synth_opts,
->> @@ -3220,8 +3220,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
->>  			pt->synth_opts.branches = false;
->>  			pt->synth_opts.callchain = true;
->>  		}
->> -		if (session->itrace_synth_opts)
->> -			pt->synth_opts.thread_stack =
->> +		pt->synth_opts.thread_stack =
->>  				session->itrace_synth_opts->thread_stack;
->>  	}
->>  
->> @@ -3241,11 +3240,9 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
->>  		pt->cbr2khz = tsc_freq / pt->max_non_turbo_ratio / 1000;
->>  	}
->>  
->> -	if (session->itrace_synth_opts) {
->> -		err = intel_pt_setup_time_ranges(pt, session->itrace_synth_opts);
->> -		if (err)
->> -			goto err_delete_thread;
->> -	}
->> +	err = intel_pt_setup_time_ranges(pt, session->itrace_synth_opts);
->> +	if (err)
->> +		goto err_delete_thread;
->>  
->>  	if (pt->synth_opts.calls)
->>  		pt->branches_filter |= PERF_IP_FLAG_CALL | PERF_IP_FLAG_ASYNC |
->> -- 
->> 2.17.1
+>> I've pulled Linus' tree this morning and, after running 'make oldconfig', tried a build. During that build I got the
+>> following warnings, which look to me like they should be fixed. 'git describe' shows v5.2-915-g5ad18b2e60b7 and my
+>> compiler is the 20190706 snapshot of gcc 9.
+> 
+> Thanks for the report. I'm rebuilding right know anyways, so I'll look
+> out for it.
+
+Thanks for the reply.
+
+>> In file included from arch/x86/kernel/head64.c:35:
+>> In function 'sanitize_boot_params',
+>>     inlined from 'copy_bootdata' at arch/x86/kernel/head64.c:391:2:
+>> ./arch/x86/include/asm/bootparam_utils.h:40:3: warning: 'memset' offset [197, 448] from the object at 'boot_params' is
+>> out of the bounds of referenced subobject 'ext_ramdisk_image' with type 'unsigned int' at offset 192 [-Warray-bounds]
+>>    40 |   memset(&boot_params->ext_ramdisk_image, 0,
+>>       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>    41 |          (char *)&boot_params->efi_info -
+>>       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>    42 |    (char *)&boot_params->ext_ramdisk_image);
+>>       |    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> ./arch/x86/include/asm/bootparam_utils.h:43:3: warning: 'memset' offset [493, 497] from the object at 'boot_params' is
+>> out of the bounds of referenced subobject 'kbd_status' with type 'unsigned char' at offset 491 [-Warray-bounds]
+>>    43 |   memset(&boot_params->kbd_status, 0,
+>>       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>    44 |          (char *)&boot_params->hdr -
+>>       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>    45 |          (char *)&boot_params->kbd_status);
+>>       |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Can you check older versions, too ? Maybe also trying older gcc ?
 > 
 
+I see the same warnings building linux-5.2.0 with gcc9. However, I don't see the warnings building linux-5.2.0 with the
+the 20190705 of gcc8. So the warnings could result from an improvement (i.e. the problem was in the kernel, but
+undiscovered by gcc8) or from a regression in gcc9.
+
+> 
+> --mtx
+> 
