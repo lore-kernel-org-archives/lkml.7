@@ -2,110 +2,87 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F43CC606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58987C606D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB27216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:06:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kfr1/PGa"
+	by mail.kernel.org (Postfix) with ESMTP id 3208821537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562638034;
+	bh=15iGFwnQCrkr+HfB1iCtV5ou4BMBOYj9Su3u85Bbw/Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hR+q1wkheHjp5Y6NnFHBFGriRToXWWyoXiR9mc+r6V7cL2R76F0PQYguC2vdo3yL/
+	 SaRZZWoEk/JiW/JesQrkwfxR+PXWLqZh7fagw4vC33BVKFJYeaiEBk1ex4e59yqFYE
+	 oWUvyepOiIbQfhqMJNUFZKxn/DWLEnokbCvaYgoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfGICGX (ORCPT
+        id S1727077AbfGICHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:06:23 -0400
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:42359 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfGICGX (ORCPT
+        Mon, 8 Jul 2019 22:07:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44246 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfGICHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:06:23 -0400
-Received: by mail-ot1-f46.google.com with SMTP id l15so18274513otn.9;
-        Mon, 08 Jul 2019 19:06:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eYj1Urt4ysIwReYjMONvvY2aZqx7qW5Uw8WC3wX0qTM=;
-        b=Kfr1/PGaDTHZN+rc71J4dPZNBWAv4j4riuKHstTdGOUsVcFydKW0hO0SoalCguALTJ
-         d1cMyr9glOWx3Ol2ooCuBlqbk3DkWf86IdkZcOkMDiJPPT13HKh0I7Syx1E30SeSxT7g
-         J4v03dIzz/P8o9pOJOe5bUjRdpnPGcWC9Mga+h/6L/iiVL60ci1KZbBfwEF571y5+IOi
-         Y+RggHRAdUk1Y5uYJ//1b0SRgAkZKVUcI3mjVrqWqO0TInjS+wY252phx6ZyJH09U4r2
-         jWP96H7vtBlFcV3uXTJ/fotr2Gkqsnv2jACBEMrr931A0hK34o1/Vt0jAUTlTA7fIoXC
-         LtyQ==
+        Mon, 8 Jul 2019 22:07:12 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so39741743iob.11;
+        Mon, 08 Jul 2019 19:07:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eYj1Urt4ysIwReYjMONvvY2aZqx7qW5Uw8WC3wX0qTM=;
-        b=XvIqI7ufGlV7s6hnpBrG4M8v5zFrX7EmVq8T/IgtMrLEInar+0Rgh/W2kiS59JPU89
-         ejUE7HD3X7vai5e5+csN3nMlYMKwy65LOSgS9BfP4QD38eZJ/n0ZFbU2sBdkc88ri4ua
-         IlSJUfv3OEWOde+L+XCq4ezy7MtBxEv535jaGms5xyClYPzP9k1TRoLanN6fHhKQYPn0
-         vM/+3IGzh0eQ9akhNH1W27HDz4MgOYrU9AmeMyyhWpkIMRWBMQT8V6L7ptwj0ze3ynun
-         76R7RwrGvVLqIMdzzNi8u8jVQGqNah5DWaGP/yA2xyJ+7koOoBPXNWTKhf60HAngnV0Y
-         Vffg==
-X-Gm-Message-State: APjAAAUDGjte5a4ybB4rI9wZ75zNIuBmrhLjhpa724AAJfZVnI+5Szeo
-        HaGNr1igDG6+F/6xlZEMev7Cq/rx1aENFI/QrCI=
-X-Google-Smtp-Source: APXvYqwZZGXm4qZQ5vlJLgNOFcE9Od7u3DJSijuuWu8K/Rkg/4jLqywIFFvortUDZfDdG6JgF5cm/7G/iQCxw1EIPng=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr2358135otk.56.1562637982324;
- Mon, 08 Jul 2019 19:06:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nvxsvabibeqxj9WUVv6Z6wvH54INJItCE0z4PDaTAJQ=;
+        b=inUnYnMgwQ4FdxY/gYW365CzMraj015L/4Roy4UA6bBrJHv5956my6iQQtd89KLHpp
+         jyQ3QYQ2nY3q+sflpiB2Gw9ctD9zfCXsyiZ4av0sHVkw8YXGxwWCZ3PNtEY4uOq1RfTg
+         E1RAowPjWQtMzOFrnrmN6KafCsYkdlimCbA4VHXCa/UH2Zyqjf9QydcuwTLiwW9wY1BW
+         wrgLgNzn2gTIc25dwbm/VnBUcBJPC26tz8TZnlhzaT3C94TV8sUTYBvskmAR2aFTrAzs
+         +OZoxQWLdR3mwtQu/JH9Me7XQsGwFfuof9k/eoEm+eSBrT824eHdUgr6jV1MGLPKYDWf
+         9ZUQ==
+X-Gm-Message-State: APjAAAUa6nf6F4VBjOT1jNcLd+WBt3Ie/B6r9Ce4+H9rR0SIlHJyWeF1
+        F81zjmLKlZCZoE+vog4t9g==
+X-Google-Smtp-Source: APXvYqwfzxJ6xSu2EIIO/95/HygSxORJzSJG1gfO/d33GQTG9fARJwluwHZxXHyRGhhSvqjfx0NCRQ==
+X-Received: by 2002:a02:c487:: with SMTP id t7mr22907623jam.99.1562638031844;
+        Mon, 08 Jul 2019 19:07:11 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id f20sm17526029ioh.17.2019.07.08.19.07.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 19:07:11 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 20:07:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kevin Hilman <khilman@kernel.org>
+Cc:     linux-rtc@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/2] dt-bindings: rtc: new binding for Amlogic VRTC
+Message-ID: <20190709020709.GA20395@bogus>
+References: <20190607194343.18359-1-khilman@kernel.org>
 MIME-Version: 1.0
-References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
- <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
- <20190626145413.GE6753@char.us.oracle.com> <1561575536.25880.10.camel@amazon.de>
- <alpine.DEB.2.21.1906262119430.32342@nanos.tec.linutronix.de> <7f721d94-aa19-20a4-6930-9ed4d1cd4834@oracle.com>
-In-Reply-To: <7f721d94-aa19-20a4-6930-9ed4d1cd4834@oracle.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 9 Jul 2019 10:06:09 +0800
-Message-ID: <CANRm+CyCwz7V3fvx48FXiSXkDer1B6bMGwzvoA9vgccxK6gqZw@mail.gmail.com>
-Subject: Re: cputime takes cstate into consideration
-To:     Ankur Arora <ankur.a.arora@oracle.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Raslan, KarimAllah" <karahmed@amazon.de>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607194343.18359-1-khilman@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-also Cc Frederic,
-On Tue, 9 Jul 2019 at 10:00, Ankur Arora <ankur.a.arora@oracle.com> wrote:
->
-> On 2019-06-26 12:23 p.m., Thomas Gleixner wrote:
-> > On Wed, 26 Jun 2019, Raslan, KarimAllah wrote:
-> >> On Wed, 2019-06-26 at 10:54 -0400, Konrad Rzeszutek Wilk wrote:
-> >>> There were some ideas that Ankur (CC-ed) mentioned to me of using the perf
-> >>> counters (in the host) to sample the guest and construct a better
-> >>> accounting idea of what the guest does. That way the dashboard
-> >>> from the host would not show 100% CPU utilization.
-> >>
-> >> You can either use the UNHALTED cycles perf-counter or you can use MPERF/APERF
-> >> MSRs for that. (sorry I got distracted and forgot to send the patch)
-> >
-> > Sure, but then you conflict with the other people who fight tooth and nail
-> > over every single performance counter.
-> How about using Intel PT PwrEvt extensions? This should allow us to
-> precisely track idle residency via just MWAIT and TSC packets. Should
-> be pretty cheap too. It's post Cascade Lake though.
->
-> Ankur
->
-> >
-> > Thanks,
-> >
-> >       tglx
-> >
->
+On Fri,  7 Jun 2019 12:43:42 -0700, Kevin Hilman wrote:
+> From: Kevin Hilman <khilman@baylibre.com>
+> 
+> Add binding fo the new VRTC driver for Amlogic SoCs.  The 64-bit
+> family of SoCs only has an RTC managed by firmware, and this VRTC
+> driver provides the simple, one-register firmware interface.
+> 
+> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> ---
+>  .../devicetree/bindings/rtc/rtc-meson-vrtc.txt   | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-meson-vrtc.txt
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
