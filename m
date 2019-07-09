@@ -2,102 +2,165 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC00CC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644BBC73C50
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA8820844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4055F20844
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfGIOXR (ORCPT
+        id S1726623AbfGIOXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:23:17 -0400
-Received: from mga18.intel.com ([134.134.136.126]:44877 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfGIOXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:23:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 07:23:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
-   d="scan'208";a="159463566"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by orsmga008.jf.intel.com with ESMTP; 09 Jul 2019 07:23:16 -0700
-Date:   Tue, 9 Jul 2019 07:23:16 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
-Subject: Re: [PATCH] kvm: x86: Fix -Wmissing-prototypes warnings
-Message-ID: <20190709142316.GB25369@linux.intel.com>
-References: <1562401790-49030-1-git-send-email-wang.yi59@zte.com.cn>
+        Tue, 9 Jul 2019 10:23:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45365 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGIOXr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 10:23:47 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hkr1w-0008Fa-NE; Tue, 09 Jul 2019 16:23:40 +0200
+Date:   Tue, 9 Jul 2019 16:23:40 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH V3] cpu/hotplug: Cache number of online CPUs
+In-Reply-To: <alpine.DEB.2.21.1907081618270.4709@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de>
+References: <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907042302570.1802@nanos.tec.linutronix.de> <1623929363.5480.1562277655641.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907050024270.1802@nanos.tec.linutronix.de>
+ <611100399.5550.1562283294601.JavaMail.zimbra@efficios.com> <20190705084910.GA6592@gmail.com> <824482130.8027.1562341133252.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907052246220.3648@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907052256490.3648@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907081531560.4709@nanos.tec.linutronix.de> <20190708140732.GI26519@linux.ibm.com> <alpine.DEB.2.21.1907081618270.4709@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1562401790-49030-1-git-send-email-wang.yi59@zte.com.cn>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 06, 2019 at 04:29:50PM +0800, Yi Wang wrote:
-> We get a warning when build kernel W=1:
-> 
-> arch/x86/kvm/../../../virt/kvm/eventfd.c:48:1: warning: no previous prototype for ‘kvm_arch_irqfd_allowed’ [-Wmissing-prototypes]
->  kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
->  ^
-> 
-> The reason is kvm_arch_irqfd_allowed is declared in arch/x86/kvm/irq.h,
-> which is not included by eventfd.c. Remove the declaration to kvm_host.h
-> can fix this.
+Re-evaluating the bitmap wheight of the online cpus bitmap in every
+invocation of num_online_cpus() over and over is a pretty useless
+exercise. Especially when num_online_cpus() is used in code paths
+like the IPI delivery of x86 or the membarrier code.
 
-It'd be nice to note in the changelog that kvm_arch_irqfd_allowed() is a
-weakly defined function in eventfd.c.  Without that info, one might wonder
-why it's ok to move a function declaration from x86 code to generic code.
+Cache the number of online CPUs in the core and just return the cached
+variable. The accessor function provides only a snapshot when used without
+protection against concurrent CPU hotplug.
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+The storage needs to use an atomic_t because the kexec and reboot code
+(ab)use set_cpu_online() in their 'shutdown' handlers without any form of
+serialization as pointed out by Mathieu. Regular CPU hotplug usage is
+properly serialized.
 
-> 
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-> ---
->  arch/x86/kvm/irq.h       | 1 -
->  include/linux/kvm_host.h | 1 +
->  2 files changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-> index d6519a3..7c6233d 100644
-> --- a/arch/x86/kvm/irq.h
-> +++ b/arch/x86/kvm/irq.h
-> @@ -102,7 +102,6 @@ static inline int irqchip_in_kernel(struct kvm *kvm)
->  	return mode != KVM_IRQCHIP_NONE;
->  }
->  
-> -bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
->  void kvm_inject_pending_timer_irqs(struct kvm_vcpu *vcpu);
->  void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu);
->  void kvm_apic_nmi_wd_deliver(struct kvm_vcpu *vcpu);
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index d1ad38a..5f04005 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -990,6 +990,7 @@ void kvm_unregister_irq_ack_notifier(struct kvm *kvm,
->  				   struct kvm_irq_ack_notifier *kian);
->  int kvm_request_irq_source_id(struct kvm *kvm);
->  void kvm_free_irq_source_id(struct kvm *kvm, int irq_source_id);
-> +bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
->  
->  /*
->   * search_memslots() and __gfn_to_memslot() are here because they are
-> -- 
-> 1.8.3.1
-> 
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+V3: Make __num_online_cpus an atomic_t because the kexec and reboot code
+    (ab)use set_cpu_online() in their 'shutdown' handlers.
+
+V2: Use READ/WRITE_ONCE() and add comment what it actually achieves. Remove
+    the bogus lockdep assert in the write path as the caller cannot hold the
+    lock. It's a task on the plugged CPU which is not the controlling task.
+---
+ include/linux/cpumask.h |   25 ++++++++++++++++---------
+ kernel/cpu.c            |   24 ++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+), 9 deletions(-)
+
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/threads.h>
+ #include <linux/bitmap.h>
++#include <linux/atomic.h>
+ #include <linux/bug.h>
+ 
+ /* Don't assign or return these: may not be this big! */
+@@ -95,8 +96,21 @@ extern struct cpumask __cpu_active_mask;
+ #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
+ #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
+ 
++extern atomic_t __num_online_cpus;
++
+ #if NR_CPUS > 1
+-#define num_online_cpus()	cpumask_weight(cpu_online_mask)
++/**
++ * num_online_cpus() - Read the number of online CPUs
++ *
++ * Despite the fact that __num_online_cpus is of type atomic_t, this
++ * interface gives only a momentary snapshot and is not protected against
++ * concurrent CPU hotplug operations unless invoked from a cpuhp_lock held
++ * region.
++ */
++static inline unsigned int num_online_cpus(void)
++{
++	return atomic_read(&__num_online_cpus);
++}
+ #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
+ #define num_present_cpus()	cpumask_weight(cpu_present_mask)
+ #define num_active_cpus()	cpumask_weight(cpu_active_mask)
+@@ -805,14 +819,7 @@ set_cpu_present(unsigned int cpu, bool p
+ 		cpumask_clear_cpu(cpu, &__cpu_present_mask);
+ }
+ 
+-static inline void
+-set_cpu_online(unsigned int cpu, bool online)
+-{
+-	if (online)
+-		cpumask_set_cpu(cpu, &__cpu_online_mask);
+-	else
+-		cpumask_clear_cpu(cpu, &__cpu_online_mask);
+-}
++void set_cpu_online(unsigned int cpu, bool online);
+ 
+ static inline void
+ set_cpu_active(unsigned int cpu, bool active)
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2295,6 +2295,9 @@ EXPORT_SYMBOL(__cpu_present_mask);
+ struct cpumask __cpu_active_mask __read_mostly;
+ EXPORT_SYMBOL(__cpu_active_mask);
+ 
++atomic_t __num_online_cpus __read_mostly;
++EXPORT_SYMBOL(__num_online_cpus);
++
+ void init_cpu_present(const struct cpumask *src)
+ {
+ 	cpumask_copy(&__cpu_present_mask, src);
+@@ -2310,6 +2313,27 @@ void init_cpu_online(const struct cpumas
+ 	cpumask_copy(&__cpu_online_mask, src);
+ }
+ 
++void set_cpu_online(unsigned int cpu, bool online)
++{
++	/*
++	 * atomic_inc/dec() is required to handle the horrid abuse of this
++	 * function by the reboot and kexec code which invokes it from
++	 * IPI/NMI broadcasts when shutting down CPUs. Inocation from
++	 * regular CPU hotplug is properly serialized.
++	 *
++	 * Note, that the fact that __num_online_cpus is of type atomic_t
++	 * does not protect readers which are not serialized against
++	 * concurrent hotplug operations.
++	 */
++	if (online) {
++		if (!cpumask_test_and_set_cpu(cpu, &__cpu_online_mask))
++			atomic_inc(&__num_online_cpus);
++	} else {
++		if (cpumask_test_and_clear_cpu(cpu, &__cpu_online_mask))
++			atomic_dec(&__num_online_cpus);
++	}
++}
++
+ /*
+  * Activate the first processor.
+  */
