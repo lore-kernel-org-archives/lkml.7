@@ -2,114 +2,133 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9152CC606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72744C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6408F21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMGu7W8A"
+	by mail.kernel.org (Postfix) with ESMTP id 3FED22166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562638985;
+	bh=o5PSncln/gogTg+VDaiJOFZ9SDu4CtH4MR77spV0nYk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z9y0FhQhUC9Lo9BGk+zIavENFYUJ4/cEFY7FEitiebBJU+UUB8VoZrF9l9mu0tSXx
+	 DPr4fgEErqzsUrpJRe1jkWcveyfIBr11w38NcvqgcKPg3qf3SByJRG1OSmhJlJ9pzk
+	 U6hoLw8tmMXVGOh5cNkcC9WrHPYuAFvxY3gVAM0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfGICUZ (ORCPT
+        id S1726936AbfGICXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:20:25 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46662 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfGICUY (ORCPT
+        Mon, 8 Jul 2019 22:23:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39022 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfGICXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:20:24 -0400
-Received: by mail-io1-f67.google.com with SMTP id i10so39750820iol.13
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 19:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PqqLzTYgfQxqS7WeMJ8j0MU1nn2fiHKsb4BBFyiKEmI=;
-        b=OMGu7W8ASNA2F50nIS4M1xfIwcL/esB9I9lXSnfIXcIbD874tTTaEF1ABDM8SALR6I
-         n4S1WMnJCTe3/W6z9o8Lx7wq1YFF65hvl68HKz1nvhu5cygsDrkUVtXB+EksGde1w1mR
-         rwC7HnmzOfAJfnECJ7lsdg+9CFA3OV601tC5q9MNIwItgRxOX+WafU/xHe6rGzCdl9ds
-         FOHOQGhVTdyhq3RFBTvV1asJ7PQD+ajEoGch0X06+xtwe9svY1vXfyBC+1W3Qv7SB+EH
-         T+1fJs8HsgLu+yOZkjJJ26e7x3HqY+fNFKD6CCOSlqCOksT9F5CIYwRpiovXz0oPELzQ
-         YY1A==
+        Mon, 8 Jul 2019 22:23:03 -0400
+Received: by mail-io1-f65.google.com with SMTP id f4so24329429ioh.6;
+        Mon, 08 Jul 2019 19:23:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PqqLzTYgfQxqS7WeMJ8j0MU1nn2fiHKsb4BBFyiKEmI=;
-        b=I8J4eFeyzroTCW7uB7YZU5VImY80wA1idoUkmQcErNUurgE4vaDxcQKXZyf8sfKags
-         h84rzykS13RKXQDBiH9DpOlTFS/fWVW28nkYs9jl6OygtXd8kt0Sw83FFeIWkGUrZqNc
-         KEDe1ok1uM0dYR2SfgQCnkH00j/1RXJ6q+Vcz1QA4CKn9TvrJgBbpAPYm179UV/Oj4HO
-         q/7d8hiZkMuGRy8XPn8AswcAto2tHNSmb+7EA/vCxXnHPfvosbaaxWOoddAobMHlMBIC
-         8LjeNFhr2Ui2pwsxhnRYUxeVrSIQJfGCcW1bVsTsZxYgyBNKTuwVBG4GDTb9twoyAVJd
-         U/gg==
-X-Gm-Message-State: APjAAAUf1kyaXTMY6KLE5Xlv6h9fe+vjiQ+n5PzpTPYbDSQoJ5pAcEtx
-        UZvq5SyrDUaeVCNtINouMPcx5rFFEdKZQJ2Hmao=
-X-Google-Smtp-Source: APXvYqzwwSPcBygzgpPc++VFRInbOx3Vxz9b08adPYXTcT1Fz+zr8amDiOvv+RltV/YRKkW51A1K3UDPLktZFZDjEIU=
-X-Received: by 2002:a5d:8497:: with SMTP id t23mr2052187iom.298.1562638823991;
- Mon, 08 Jul 2019 19:20:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R3JPnhBHfFb9OzH6lZUtQSvRm4JihrB2GE869N3xz5E=;
+        b=oi96BbFpsiOUnyL+wVC4Y6roxpY3TysWrAwnv04fBPnBS1yXfvUZN6rWjiSIKkCHUl
+         OkuxBit4tQlDG3N94Tl8Z1TVFkyP2D1ynec1uwXCCNi0cR2v0sMBs4l0YOSylpyLfS1V
+         4gmS76MLvERWL/Cq1lT9fD+hOA7p1iw44NJFftAky+GFyJody4gmj9ORBaHqmdlrYqa9
+         wdDy7iU2FkZn/Iz7uUq7iAsGw+e119J9X3rJYLSwBUWKV9F7e57aoJ8dfrAIBzlhUgQB
+         mY6VZ00N65zCfMQbZr3FXdfZ5sNolChgBT3IXx6TWGN3GyJCJjIupZogds+75GxdP1GQ
+         ktdA==
+X-Gm-Message-State: APjAAAVrT1hKRlX9a0nYSYwTTNjTskkNRGpIgyl99tguNt9QHzj1U2GO
+        APr/JOY/NKYz/ZVlhx3SCQ==
+X-Google-Smtp-Source: APXvYqxsIgOj/ZdGtWYV2BO0Gbl8kvdqQXFDzvnk6/W6LBdKDVVo9KM+Yn4hSrmBpblij3eaznvGHQ==
+X-Received: by 2002:a02:3b62:: with SMTP id i34mr25538320jaf.91.1562638982759;
+        Mon, 08 Jul 2019 19:23:02 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b3sm15095394iot.23.2019.07.08.19.23.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 19:23:02 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 20:23:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     nicolas.ferre@microchip.com, jason@lakedaemon.net,
+        marc.zyngier@arm.com, mark.rutland@arm.com,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        shawn.lin@rock-chips.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com,
+        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: interrupt-controller: Amazon's
+ Annapurna Labs FIC
+Message-ID: <20190709022301.GA8734@bogus>
+References: <1560155683-29584-1-git-send-email-talel@amazon.com>
+ <1560155683-29584-2-git-send-email-talel@amazon.com>
 MIME-Version: 1.0
-References: <239d1c8f15b8bedc161a234f9f1a22a07160dbdf.1557824379.git.christophe.leroy@c-s.fr>
- <d6f628ffdeb9c7863da722a8f6ef2949e57bb360.1557824379.git.christophe.leroy@c-s.fr>
- <87y318d2th.fsf@linux.ibm.com>
-In-Reply-To: <87y318d2th.fsf@linux.ibm.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Tue, 9 Jul 2019 12:20:12 +1000
-Message-ID: <CAOSf1CG-oxpSDsAPw8xHV5367MrMn2Ty_yDpPY9TvA6wMrMZHA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] powerpc/64: reuse PPC32 static inline flush_dcache_range()
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560155683-29584-2-git-send-email-talel@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 12:22 AM Aneesh Kumar K.V
-<aneesh.kumar@linux.ibm.com> wrote:
->
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->
-> > *snip*
-> > +     if (IS_ENABLED(CONFIG_PPC64))
-> > +             isync();
-> >  }
->
->
-> Was checking with Michael about why we need that extra isync. Michael
-> pointed this came via
->
-> https://github.com/mpe/linux-fullhistory/commit/faa5ee3743ff9b6df9f9a03600e34fdae596cfb2#diff-67c7ffa8e420c7d4206cae4a9e888e14
->
-> for 970 which doesn't have coherent icache. So possibly isync there is
-> to flush the prefetch instructions? But even so we would need an icbi
-> there before that isync.
+On Mon, Jun 10, 2019 at 11:34:42AM +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Fabric Interrupt Controller SoC binding.
+> 
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
+> ---
+>  .../interrupt-controller/amazon,al-fic.txt         | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> new file mode 100644
+> index 0000000..4e82fd5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+> @@ -0,0 +1,29 @@
+> +Amazon's Annapurna Labs Fabric Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible: should be "amazon,al-fic"
+> +- reg: physical base address and size of the registers
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: must be 2.
+> +  First cell defines the index of the interrupt within the controller.
+> +  Second cell is used to specify the trigger type and must be one of the
+> +  following:
+> +    - bits[3:0] trigger type and level flags
+> +	1 = low-to-high edge triggered
+> +	4 = active high level-sensitive
 
-I don't think it's that, there's some magic in flush_icache_range() to
-handle dropping prefetched instructions on 970.
+No need to define this here. Reference the standard definition.
 
-> So overall wondering why we need that extra barriers there.
+> +- interrupt-parent: specifies the parent interrupt controller.
 
-I think the isync is needed there because the architecture only
-requires sync to provide ordering. A sync alone doesn't guarantee the
-dcbfs have actually completed so the isync is necessary to ensure the
-flushed cache lines are back in memory. That said, as far as I know
-all the IBM book3s chips from power4 onwards will wait for pending
-dcbfs when they hit a sync, but that might change in the future.
+Drop this. It is implied and could be in the parent.
 
-If it's a problem we could add a cpu-feature section around the isync
-to no-op it in the common case. However, when I had a look with perf
-it always showed that the sync was the hotspot so I don't think it'll
-help much.
+> +- interrupts: describes which input line in the interrupt parent, this
+> +  fic's output is connected to. This field property depends on the parent's
+> +  binding
+> +
+> +Example:
+> +
+> +amazon_fic: interrupt-controller@0xfd8a8500 {
 
-Oliver
+Drop the '0x'
+
+> +	compatible = "amazon,al-fic";
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	reg = <0x0 0xfd8a8500 0x0 0x1000>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <GIC_SPI 0x0 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> -- 
+> 2.7.4
+> 
