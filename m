@@ -2,94 +2,108 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFCCC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2832C606D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9AB216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:17:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XCSM7hgf"
+	by mail.kernel.org (Postfix) with ESMTP id 8C6DB216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562660337;
+	bh=yETm1R+/AwGgj3mNw3qdDl8zb6tTuboYTUS5fHpgITY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eH4afyvNckoUhuaE4L1OD7uUgRXTF34Phvzt4q682xwydgjetAI2izu9S9hNyZDaH
+	 muOCY0Mcbgg9DvI8xE+kQmw19kAIT+8XLXt8aVekEoGaQqd9Hqu5bs0dPY7ERL8TQo
+	 /lMI8F4XoHIzRyEp9/JjhkDXeQX9YU5llyewtJQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbfGIIRc (ORCPT
+        id S1726501AbfGIIS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:17:32 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:44757 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfGIIRc (ORCPT
+        Tue, 9 Jul 2019 04:18:56 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44779 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGIIS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:17:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1562660251; x=1594196251;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=G+5thZQW+z+i9GKZkumZ9p7t1EroWVUVq0owQCtkCPI=;
-  b=XCSM7hgfEDJ1cuX97mh5zB7PuqUlCnme9tYvGdOi/qgHyxhG7ucqxbmI
-   tLPqsqhFs09zJzR17KjFA1IXgwwwtPZDkWsmELlVBo8a35Xld1rH5Z0BX
-   7/YBhChjvgZPg+1ONQ7f98cHsvjFpYV0zifRGRLdBhcGs4qkr4hk0DQnA
-   E=;
-X-IronPort-AV: E=Sophos;i="5.62,469,1554768000"; 
-   d="scan'208";a="404138398"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Jul 2019 08:17:28 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id D9579A2309;
-        Tue,  9 Jul 2019 08:17:27 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 9 Jul 2019 08:17:27 +0000
-Received: from [10.85.103.206] (10.43.160.65) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 9 Jul
- 2019 08:17:18 +0000
-Subject: Re: [PATCH v4 1/2] dt-bindings: interrupt-controller: Amazon's
- Annapurna Labs FIC
-To:     Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh@kernel.org>
-CC:     <nicolas.ferre@microchip.com>, <jason@lakedaemon.net>,
-        <mark.rutland@arm.com>, <mchehab+samsung@kernel.org>,
-        <davem@davemloft.net>, <shawn.lin@rock-chips.com>,
-        <tglx@linutronix.de>, <devicetree@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <jonnyc@amazon.com>, <hhhawa@amazon.com>, <ronenk@amazon.com>,
-        <hanochu@amazon.com>, <barakw@amazon.com>
-References: <1560155683-29584-1-git-send-email-talel@amazon.com>
- <1560155683-29584-2-git-send-email-talel@amazon.com>
- <20190709022301.GA8734@bogus>
- <f1fd393d-0b8c-16f1-9ac2-0589e9cb9ea7@amazon.com>
- <ff3794af-cd5a-5331-fca0-30280530670e@arm.com>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <d9dbe06b-534a-4610-397b-4b241329dde9@amazon.com>
-Date:   Tue, 9 Jul 2019 11:17:13 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 9 Jul 2019 04:18:56 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b7so19017882otl.11;
+        Tue, 09 Jul 2019 01:18:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tbzistLccCjhRUbVguErBlGFRjJHeoe5cXWmH1bR0NI=;
+        b=qy9/17YQq2oH39jVwUWi2mtoA+fK35CiCphlgRCaOCWHQUegmjK9qBcu4ZoiDq9qWl
+         IEtvvymIRjxDIrFTLnWzgE9esBH9R5TpqjBKymVI1kXcjvz7lkiNKKuyUIR89ngq2CCu
+         Wo0dFf7mkKlURTcJkPozj3463gg/hp95Ww+Smaj+32HinCKX4HT2XH2op50pTwTQcnlp
+         cqGFsRSvITIwnqmwkyG+7P1/mYUjoTn/P2ErdEGdzCc2WdqfS7uj+WolsjXZTlwBswZG
+         ryeo+mvwDhUi1jwWExYQu9sgpMtS4LJze2CVtXObu7gS0xkp1zy+Cr7Wak1XDjlwV1fq
+         biIw==
+X-Gm-Message-State: APjAAAWWdP5IyPx6Vvty+sKfi52XJKNRq4yjYJwNpVJ7JMVKqmsv2HoT
+        BFX4Wuw035t5bE4uimTzHcRGCKQyPwBDGuz9d1U=
+X-Google-Smtp-Source: APXvYqxEEyCFSpF7JA4EpZYh/eKtKlRvpiQwISy5x0/RiximZPGzhceoUn4kcqYIYlIjwB8Rje3GQ2fLOegT458kOsU=
+X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr16536792otn.266.1562660335425;
+ Tue, 09 Jul 2019 01:18:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ff3794af-cd5a-5331-fca0-30280530670e@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13d09UWC002.ant.amazon.com (10.43.162.102) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com> <20190705095800.43534-9-mika.westerberg@linux.intel.com>
+In-Reply-To: <20190705095800.43534-9-mika.westerberg@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 9 Jul 2019 10:18:44 +0200
+Message-ID: <CAJZ5v0g1JKQxw=Rr-BYE6hgcbBXat24tK8s78k+ghmBhr=avLg@mail.gmail.com>
+Subject: Re: [PATCH 8/8] ACPI / property: Add two new Thunderbolt property
+ GUIDs to the list
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks, will do.
+On Fri, Jul 5, 2019 at 11:58 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> Ice Lake Thunderbolt controller includes two new device property
+> compatible properties that we need to be able to extract in the driver
+> so add them to the growing array of GUIDs.
+>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/acpi/property.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index da3ced297f19..07cbacbab861 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -39,6 +39,12 @@ static const guid_t prp_guids[] = {
+>         /* External facing port GUID: efcc06cc-73ac-4bc3-bff0-76143807c389 */
+>         GUID_INIT(0xefcc06cc, 0x73ac, 0x4bc3,
+>                   0xbf, 0xf0, 0x76, 0x14, 0x38, 0x07, 0xc3, 0x89),
+> +       /* TBT GUID for IMR_VALID: c44d002f-69f9-4e7d-a904-a7baabdf43f7 */
 
-On 7/9/2019 11:15 AM, Marc Zyngier wrote:
-> On 09/07/2019 06:59, Shenhar, Talel wrote:
->> Marc, should I publish those fixes as new patch that updates the
->> dt-bindings or new patchset to this list?
+I'd prefer Thunderbolt to be spelled in full here (and below).
+
+LGTM otherwise.
+
+> +       GUID_INIT(0xc44d002f, 0x69f9, 0x4e7d,
+> +                 0xa9, 0x04, 0xa7, 0xba, 0xab, 0xdf, 0x43, 0xf7),
+> +       /* TBT GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
+> +       GUID_INIT(0x6c501103, 0xc189, 0x4296,
+> +                 0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
+>  };
 >
-> If you are going to update the binding, please submit a patch on top of
-> mainline, as it's been merged already.
+>  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
+> --
+> 2.20.1
 >
-> Thanks,
->
-> 	M.
