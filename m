@@ -2,165 +2,163 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAA6C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247B9C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548522166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cNb/XsZZ"
+	by mail.kernel.org (Postfix) with ESMTP id F2E322166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfGIF64 (ORCPT
+        id S1727329AbfGIF7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:58:56 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41290 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfGIF6y (ORCPT
+        Tue, 9 Jul 2019 01:59:12 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:49028 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfGIF7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:58:54 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 62so12522560lfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 22:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qkH82jEVCc2YvBDQT3QhNyCJ4U0glGemvghHKQeB0QY=;
-        b=cNb/XsZZMssiXnqsdsYslGZZnpEl+wF7SO6km6xBmQ9FrCo6pXwKlIBoQQ23cHkgkE
-         Vya6eho3ITk4fQeXF0IjryWNuzDi3ruR7OAFGUujEhs5E3AAYxWCaqi3aMTUGCNb5h90
-         aDZ3DLdJ9IDzhrnmiohsrcPr8jiwlDuJldbIDdqPqQ0YkJP4KDnGVHBpds4JDKxWHX+u
-         CMXbxUILRJaIoz49mwulwBwgXABcUp18u/YllLuEwq225M/hoMOD0EPXivSpyWx31Flj
-         vQEk6t3rpgumzW/o7x3htGjjIXSId18CYEQGh38yMMzTYO4nGeDRGNN3uiVxy7e+Wuw0
-         TlHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qkH82jEVCc2YvBDQT3QhNyCJ4U0glGemvghHKQeB0QY=;
-        b=QFwiqZTDVtafg/H3/cK4Ch/vKvrEokq5RmGgMJQtdbj+YeAubHXt6IXNFXs6QNXS4y
-         5c2v9TPkd9E5b05+MpK7JVb3aD5gimWURIwF+VpOdjf934YFbWR35OZzKLyEr5u9ZP2S
-         nBsTSRMDJKjZyK9ysfLFgifhqOOLxTZA5tWn/CXQLKN9bVAh+C9USMIK+AtiSUNv04Mj
-         DCYKRgHxQWFvq8L9W8JucP4Cu99VkqdBrAGjjJTmg9AcZr+6hqekVy0mZtCjGEpn8kNC
-         tIvPgmcMCT9/JtdwD6RP0rGMfqtnTkqCaGwqUtI8oC/Lnb1K8ahIiOror0dlBV21Euuh
-         rF5A==
-X-Gm-Message-State: APjAAAVkvGC1IulGM6ZHubu+6lGIxyokgA/Jqv6WqNEA0+7sdRfwi5qs
-        QH18eb4cN4tA4m4KwMUh/JiJjSeu2tiI5hLMe31TMw==
-X-Google-Smtp-Source: APXvYqx39kKCkmeiwsnYwL4Q6V2zqXobDhEMh1U3Qo1MZfJGNYbLOD7APTlz9j9E0uKTM/cQCPkVL3vExCIu1uSwzS4=
-X-Received: by 2002:ac2:44c5:: with SMTP id d5mr10800149lfm.134.1562651931884;
- Mon, 08 Jul 2019 22:58:51 -0700 (PDT)
+        Tue, 9 Jul 2019 01:59:12 -0400
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+        by 156.147.23.51 with ESMTP; 9 Jul 2019 14:59:09 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.121 with ESMTP; 9 Jul 2019 14:59:09 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Tue, 9 Jul 2019 14:58:16 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Message-ID: <20190709055815.GA19459@X58A-UD3R>
+References: <1562565609-12482-1-git-send-email-byungchul.park@lge.com>
+ <20190708125013.GG26519@linux.ibm.com>
+ <20190708130359.GA42888@google.com>
 MIME-Version: 1.0
-References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
- <CAFA6WYPn3HB6BRocKmKTR+ZPE=Fav5w1TUdRgmLp-NkYobp3rw@mail.gmail.com> <20190708163140.GB28253@jax>
-In-Reply-To: <20190708163140.GB28253@jax>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 9 Jul 2019 11:28:40 +0530
-Message-ID: <CAFA6WYO0QmCVup6kEhodrf2+WS8p_iaLsb-CLPMaMbnPjapa2Q@mail.gmail.com>
-Subject: Re: [RFC 0/7] Introduce TEE based Trusted Keys support
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     corbet@lwn.net, dhowells@redhat.com, jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org,
-        serge@hallyn.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708130359.GA42888@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 22:01, Jens Wiklander <jens.wiklander@linaro.org> wrote:
->
-> Hi Sumit,
->
-> On Mon, Jul 08, 2019 at 06:11:39PM +0530, Sumit Garg wrote:
-> > Hi Jens,
-> >
-> > On Thu, 13 Jun 2019 at 16:01, Sumit Garg <sumit.garg@linaro.org> wrote:
-> > >
-> > > Add support for TEE based trusted keys where TEE provides the functionality
-> > > to seal and unseal trusted keys using hardware unique key. Also, this is
-> > > an alternative in case platform doesn't possess a TPM device.
-> > >
-> > > This series also adds some TEE features like:
-> > >
-> > > Patch #1, #2 enables support for registered kernel shared memory with TEE.
-> > >
-> >
-> > Would you like to pick up Patch #1, #2 separately? I think both these
-> > patches add independent functionality and also got reviewed-by tags
-> > too.
->
-> I think it makes more sense to keep them together in the same patch
-> series or could end up with dependencies between trees.
->
+On Mon, Jul 08, 2019 at 09:03:59AM -0400, Joel Fernandes wrote:
+> > Actually, the intent was to only allow this to be changed at boot time.
+> > Of course, if there is now a good reason to adjust it, it needs
+> > to be adjustable.  So what situation is making you want to change
+> > jiffies_till_sched_qs at runtime?  To what values is it proving useful
+> > to adjust it?  What (if any) relationships between this timeout and the
+> > various other RCU timeouts need to be maintained?  What changes to
+> > rcutorture should be applied in order to test the ability to change
+> > this at runtime?
+> 
+> I am also interested in the context, are you changing it at runtime for
+> experimentation? I recently was doing some performance experiments and it is
+> quite interesting how reducing this value can shorten grace period times :)
 
-I understand your point. Let me keep this patch-set together to avoid
-any dependencies.
+Hi Joel,
 
--Sumit
+I've read a thread talking about your experiment to see how the grace
+periods change depending on the tunnable variables which was interesting
+to me. While reading it, I found out jiffies_till_sched_qs is not
+tunnable at runtime unlike jiffies_till_{first,next}_fqs which looks
+like non-sense to me that's why I tried this patch. :)
 
-> If you don't think dependencies will be an issue then I don't mind
-> picking them up, in that case they'd likely sit in an arm-soc branch
-> until next merge window. However, I think that #3 (support for private
-> kernel login method) should be included too and that one isn't ready
-> yet.
->
-> Thanks,
-> Jens
->
-> >
-> >
-> > -Sumit
-> >
-> > > Patch #3 enables support for private kernel login method required for
-> > > cases like trusted keys where we don't wan't user-space to directly access
-> > > TEE service to retrieve trusted key contents.
-> > >
-> > > Rest of the patches from #4 to #7 adds support for TEE based trusted keys.
-> > >
-> > > This patch-set has been tested with OP-TEE based pseudo TA which can be
-> > > found here [1].
-> > >
-> > > Looking forward to your valuable feedback/suggestions.
-> > >
-> > > [1] https://github.com/OP-TEE/optee_os/pull/3082
-> > >
-> > > Sumit Garg (7):
-> > >   tee: optee: allow kernel pages to register as shm
-> > >   tee: enable support to register kernel memory
-> > >   tee: add private login method for kernel clients
-> > >   KEYS: trusted: Introduce TEE based Trusted Keys
-> > >   KEYS: encrypted: Allow TEE based trusted master keys
-> > >   doc: keys: Document usage of TEE based Trusted Keys
-> > >   MAINTAINERS: Add entry for TEE based Trusted Keys
-> > >
-> > >  Documentation/security/keys/tee-trusted.rst      |  93 +++++
-> > >  MAINTAINERS                                      |   9 +
-> > >  drivers/tee/optee/call.c                         |   7 +
-> > >  drivers/tee/tee_core.c                           |   6 +
-> > >  drivers/tee/tee_shm.c                            |  16 +-
-> > >  include/keys/tee_trusted.h                       |  84 ++++
-> > >  include/keys/trusted-type.h                      |   1 +
-> > >  include/linux/tee_drv.h                          |   1 +
-> > >  include/uapi/linux/tee.h                         |   2 +
-> > >  security/keys/Kconfig                            |   3 +
-> > >  security/keys/Makefile                           |   3 +
-> > >  security/keys/encrypted-keys/masterkey_trusted.c |  10 +-
-> > >  security/keys/tee_trusted.c                      | 506 +++++++++++++++++++++++
-> > >  13 files changed, 737 insertions(+), 4 deletions(-)
-> > >  create mode 100644 Documentation/security/keys/tee-trusted.rst
-> > >  create mode 100644 include/keys/tee_trusted.h
-> > >  create mode 100644 security/keys/tee_trusted.c
-> > >
-> > > --
-> > > 2.7.4
-> > >
+Hi Paul,
+
+IMHO, as much as we want to tune the time for fqs to be initiated, we
+can also want to tune the time for the help from scheduler to start.
+I thought only difference between them is a level of urgency. I might be
+wrong. It would be appreciated if you let me know if I miss something.
+
+And it's ok even if the patch is turned down based on your criteria. :)
+
+Thanks,
+Byungchul
+
+> Joel
+> 
+> 
+> > 							Thanx, Paul
+> > 
+> > > The function for setting jiffies_to_sched_qs,
+> > > adjust_jiffies_till_sched_qs() will be called only if
+> > > the value from sysfs != ULONG_MAX. And the value won't be adjusted
+> > > unlike first/next fqs jiffies.
+> > > 
+> > > While at it, changed the positions of two module_param()s downward.
+> > > 
+> > > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
+> > > ---
+> > >  kernel/rcu/tree.c | 22 ++++++++++++++++++++--
+> > >  1 file changed, 20 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index a2f8ba2..a28e2fe 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -422,9 +422,7 @@ static int rcu_is_cpu_rrupt_from_idle(void)
+> > >   * quiescent-state help from rcu_note_context_switch().
+> > >   */
+> > >  static ulong jiffies_till_sched_qs = ULONG_MAX;
+> > > -module_param(jiffies_till_sched_qs, ulong, 0444);
+> > >  static ulong jiffies_to_sched_qs; /* See adjust_jiffies_till_sched_qs(). */
+> > > -module_param(jiffies_to_sched_qs, ulong, 0444); /* Display only! */
+> > >  
+> > >  /*
+> > >   * Make sure that we give the grace-period kthread time to detect any
+> > > @@ -450,6 +448,18 @@ static void adjust_jiffies_till_sched_qs(void)
+> > >  	WRITE_ONCE(jiffies_to_sched_qs, j);
+> > >  }
+> > >  
+> > > +static int param_set_sched_qs_jiffies(const char *val, const struct kernel_param *kp)
+> > > +{
+> > > +	ulong j;
+> > > +	int ret = kstrtoul(val, 0, &j);
+> > > +
+> > > +	if (!ret && j != ULONG_MAX) {
+> > > +		WRITE_ONCE(*(ulong *)kp->arg, j);
+> > > +		adjust_jiffies_till_sched_qs();
+> > > +	}
+> > > +	return ret;
+> > > +}
+> > > +
+> > >  static int param_set_first_fqs_jiffies(const char *val, const struct kernel_param *kp)
+> > >  {
+> > >  	ulong j;
+> > > @@ -474,6 +484,11 @@ static int param_set_next_fqs_jiffies(const char *val, const struct kernel_param
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +static struct kernel_param_ops sched_qs_jiffies_ops = {
+> > > +	.set = param_set_sched_qs_jiffies,
+> > > +	.get = param_get_ulong,
+> > > +};
+> > > +
+> > >  static struct kernel_param_ops first_fqs_jiffies_ops = {
+> > >  	.set = param_set_first_fqs_jiffies,
+> > >  	.get = param_get_ulong,
+> > > @@ -484,8 +499,11 @@ static int param_set_next_fqs_jiffies(const char *val, const struct kernel_param
+> > >  	.get = param_get_ulong,
+> > >  };
+> > >  
+> > > +module_param_cb(jiffies_till_sched_qs, &sched_qs_jiffies_ops, &jiffies_till_sched_qs, 0644);
+> > >  module_param_cb(jiffies_till_first_fqs, &first_fqs_jiffies_ops, &jiffies_till_first_fqs, 0644);
+> > >  module_param_cb(jiffies_till_next_fqs, &next_fqs_jiffies_ops, &jiffies_till_next_fqs, 0644);
+> > > +
+> > > +module_param(jiffies_to_sched_qs, ulong, 0444); /* Display only! */
+> > >  module_param(rcu_kick_kthreads, bool, 0644);
+> > >  
+> > >  static void force_qs_rnp(int (*f)(struct rcu_data *rdp));
+> > > -- 
+> > > 1.9.1
+> > > 
+> > 
