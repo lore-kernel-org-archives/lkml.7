@@ -2,128 +2,243 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB269C606D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A884DC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE75C214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E34214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:55:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eBa+8nqg"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XhtqQP9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfGIHyR (ORCPT
+        id S1726411AbfGIHzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:54:17 -0400
-Received: from mail-eopbgr50089.outbound.protection.outlook.com ([40.107.5.89]:1413
+        Tue, 9 Jul 2019 03:55:40 -0400
+Received: from mail-eopbgr50079.outbound.protection.outlook.com ([40.107.5.79]:42887
         "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfGIHyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:54:17 -0400
+        id S1725911AbfGIHzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 03:55:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=11+mE3LekTYOs6mgEEZcV/Nsgm9Uc/puEf/EYqi1M1Q=;
- b=eBa+8nqgWv3hyQzSQPvEvE6v8Igkl4FAABq02zmdldMb6PIprEgg/ARUrIayl2psUyJaf5rutyGsHtnOs+yww3tWOISzyMRq8eMbDJRojGu8geMgPjDNQho8b5jHu+e/wOzYv5HjX3+RZuFSuSIZAEbGgQ716R9Vh0g7apKP+pU=
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com (52.133.30.10) by
- AM6PR0402MB3829.eurprd04.prod.outlook.com (52.133.29.140) with Microsoft SMTP
+ bh=l7JOqoZNLF1ch2AXaETC6HGqHaRuhuy6+juS3/DgGdc=;
+ b=XhtqQP9aiQyyWmUlJ2fsn6lQ9DnHBOi9cR0RE8+Ur4APKHlRTp4wQrmsXq+pqUslTWWmWwKmKpvzRSnjUMha01K+66Wixt0NejRapsc9M8iTwJvdRQ0XHPXhJ/iscCK8OUA846b6M/Jt+js67ZvZalaNhjZySGaGmk+k6Ge6y74=
+Received: from VE1PR04MB6655.eurprd04.prod.outlook.com (20.179.235.94) by
+ VE1PR04MB6735.eurprd04.prod.outlook.com (20.179.235.212) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Tue, 9 Jul 2019 07:54:12 +0000
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::d5e6:6a87:7e6:95a]) by AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::d5e6:6a87:7e6:95a%5]) with mapi id 15.20.2052.020; Tue, 9 Jul 2019
- 07:54:12 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "vireshk@kernel.org" <vireshk@kernel.org>, "nm@ti.com" <nm@ti.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+ 15.20.2052.19; Tue, 9 Jul 2019 07:55:31 +0000
+Received: from VE1PR04MB6655.eurprd04.prod.outlook.com
+ ([fe80::846e:134d:2731:fcd]) by VE1PR04MB6655.eurprd04.prod.outlook.com
+ ([fe80::846e:134d:2731:fcd%7]) with mapi id 15.20.2052.020; Tue, 9 Jul 2019
+ 07:55:31 +0000
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/3] opp: of: Support multiple suspend OPPs defined in DT
-Thread-Topic: [PATCH 1/3] opp: of: Support multiple suspend OPPs defined in DT
-Thread-Index: AQHVNibFv2pnbMa9dEaxk1dFwsj7f6bB6eKAgAAAi1A=
-Date:   Tue, 9 Jul 2019 07:54:12 +0000
-Message-ID: <AM6PR0402MB3911CB4D54A71EB69E8E7544F5F10@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <20190709071056.26361-1-Anson.Huang@nxp.com>
- <20190709075119.rg6ktsg7nwdadsmd@vireshk-i7>
-In-Reply-To: <20190709075119.rg6ktsg7nwdadsmd@vireshk-i7>
+        Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
+Thread-Topic: [PATCH] usb: dwc3: Enable the USB snooping
+Thread-Index: AQHTXdpMV/QBUrO8J0eNmcCmR0ATg6MVIlkAgAAD6zCAABVWgINueaJwgAAMz4CAAwpoAIAF38DwgBavPgCACkIu0IAASk0AgBejzDA=
+Date:   Tue, 9 Jul 2019 07:55:30 +0000
+Message-ID: <VE1PR04MB6655D052B076C52F7F24A387F1F10@VE1PR04MB6655.eurprd04.prod.outlook.com>
+References: <20171115060459.45375-1-ran.wang_1@nxp.com>
+ <87ineb9b5v.fsf@linux.intel.com>
+ <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
+ <87shdfet90.fsf@linux.intel.com>
+ <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <87k1eaanjw.fsf@linux.intel.com>
+ <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+ <87o92wgyqj.fsf@linux.intel.com>
+ <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
+ <87v9wvsex3.fsf@linux.intel.com>
+In-Reply-To: <87v9wvsex3.fsf@linux.intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
+ smtp.mailfrom=ran.wang_1@nxp.com; 
+x-originating-ip: [92.121.36.197]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ac5f6b97-4a1b-420e-c6b5-08d70442a20c
+x-ms-office365-filtering-correlation-id: c9c4a4c7-3feb-476e-7082-08d70442d097
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR0402MB3829;
-x-ms-traffictypediagnostic: AM6PR0402MB3829:
-x-microsoft-antispam-prvs: <AM6PR0402MB3829838EB6426CA5BE249A20F5F10@AM6PR0402MB3829.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6735;
+x-ms-traffictypediagnostic: VE1PR04MB6735:
+x-microsoft-antispam-prvs: <VE1PR04MB6735CFA97D7A01FA7A5ADF27F1F10@VE1PR04MB6735.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(396003)(346002)(39860400002)(189003)(199004)(14444005)(14454004)(25786009)(4326008)(15650500001)(229853002)(81166006)(102836004)(6436002)(74316002)(446003)(11346002)(305945005)(486006)(476003)(53936002)(81156014)(8676002)(7736002)(3846002)(6116002)(8936002)(68736007)(54906003)(99286004)(478600001)(76176011)(6246003)(7696005)(53546011)(6506007)(256004)(2906002)(26005)(186003)(73956011)(66066001)(52536014)(86362001)(76116006)(33656002)(66946007)(66476007)(66556008)(64756008)(66446008)(71190400001)(71200400001)(9686003)(6916009)(316002)(5660300002)(55016002)(44832011)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3829;H:AM6PR0402MB3911.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(189003)(199004)(504964003)(3846002)(7696005)(186003)(6116002)(74316002)(6246003)(102836004)(6506007)(26005)(53546011)(76176011)(52536014)(86362001)(229853002)(33656002)(486006)(8676002)(81166006)(81156014)(5660300002)(2906002)(446003)(8936002)(316002)(9686003)(25786009)(14454004)(76116006)(73956011)(55016002)(478600001)(4326008)(476003)(71190400001)(54906003)(99286004)(71200400001)(110136005)(305945005)(68736007)(66446008)(64756008)(66556008)(66946007)(66476007)(7736002)(53936002)(256004)(14444005)(66066001)(6436002)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6735;H:VE1PR04MB6655.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fdQdyEtUMHL7YTLMHNCIqtjqzMf5ksmmS86p4mE66X+k2ZGjNgpdHM+QvCs/mJIIO3UY2qAKCVrjs6XGcF1dAAYKtEurWbPhkYkxo6RemPQvf2VLJSiUh1WOfzAfODR+rjGZ0JCjD1MV9hgukpTHHeZoKPdHw0P/ksc02qNKo/Chlr38Bd8BATt0EwSlYCb3zIn+SLnpMTA0WSXirW9kuZVQHULze78VHGj1+Xma/NKdm7j4e8uRbozsPaU93hmm9TeWpS9CC0wAjPra5pyXQLi2W0nG/Ns0AvZXtj+oE7E0E6oBobQJ4OE3wilibLF6/B6Qyqurj923liUOY7LWV+h2B1OkDVOAX3n3DgtEVwVzSgmlwFgtIRW9iBr1KYE4ZTN3Y/sO63YUmh8WRdLylKK0q7qVO20KvQOEh0eqLz8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: /LBlbvyE4InEq3vOIdp05vwA/+sTkagOMRYEP8wQNKiN0N8MN6MBVh0DM2P2AJ+Me5NKpXA7HLzfc3/a0HCjuErNQiYpz/mf4TW3UCLOsrRzd41lctK+GvJu+KattMuWG+mPbXs8jrCUseoi/g/S3f66jc1VBLoDVmjnN2NsESakVXl8w+ZgQOqt8XlMdXILEFVGwvYNRKU0neyjOLCztSr8bBxgw1Oa2kpSDzFZMf3WK9O9FsW5KayQJeSTTKYTT62TPPXzVFvO0OEYRZMrViVbJ9CWD+ANSmTeE4cIRnH22H68/3Ae9ueaFxRNO+12o9LJztw/SrrglINeKz7cEgmel7U4VrUsDVoJOdoV5PNvCfo5OiayI878z0COKmw+ySduzWQngKuZnghEr9celEtSepvQpORfMdZg8CBb5SE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac5f6b97-4a1b-420e-c6b5-08d70442a20c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 07:54:12.8154
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9c4a4c7-3feb-476e-7082-08d70442d097
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 07:55:30.8443
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3829
+X-MS-Exchange-CrossTenant-userprincipalname: ran.wang_1@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFZpcmVzaA0KDQo+IE9uIDA5LTA3LTE5LCAxNToxMCwgQW5zb24uSHVhbmdAbnhwLmNvbSB3
-cm90ZToNCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPg0K
-PiA+IFdpdGggcHJvcGVydHkgIm9wcC1zdXBwb3J0ZWQtaHciIGludHJvZHVjZWQsIHRoZSBPUFAg
-dGFibGUgaW4gRFQgY291bGQNCj4gPiBiZSBhIGxhcmdlIE9QUCB0YWJsZSBhbmQgT05MWSBhIHN1
-YnNldCBvZiBPUFBzIGFyZSBhdmFpbGFibGUsIGJhc2VkIG9uDQo+ID4gdGhlIHZlcnNpb24gb2Yg
-dGhlIGhhcmR3YXJlIHJ1bm5pbmcgb24uIFRoYXQgaW50cm9kdWNlcyByZXN0cmljdGlvbiBvZg0K
-PiA+IHVzaW5nICJvcHAtc3VzcGVuZCINCj4gPiBwcm9wZXJ0eSB0byBkZWZpbmUgdGhlIHN1c3Bl
-bmQgT1BQLCBhcyB3ZSBhcmUgTk9UIHN1cmUgaWYgdGhlIE9QUA0KPiA+IGNvbnRhaW5pbmcgIm9w
-cC1zdXNwZW5kIiBwcm9wZXJ0eSBpcyBhdmFpbGFibGUgZm9yIHRoZSBoYXJkd2FyZQ0KPiA+IHJ1
-bm5pbmcgb24sIGFuZCB0aGUgb2Ygb3BwIGNvcmUgZG9lcyBOT1QgYWxsb3cgbXVsdGlwbGUgc3Vz
-cGVuZCBPUFBzDQo+ID4gZGVmaW5lZCBpbiBEVCBPUFAgdGFibGUuDQo+ID4NCj4gPiBUbyBlbGlt
-aW5hdGUgdGhpcyByZXN0cml0aW9uLCBtYWtlIG9mIG9wcCBjb3JlIGFsbG93IG11bHRpcGxlIHN1
-c3BlbmQNCj4gPiBPUFBzIGRlZmluZWQgaW4gRFQsIGFuZCBwaWNrIHRoZSBPUFAgd2l0aCBoaWdo
-ZXN0IHJhdGUgYW5kIHdpdGgNCj4gPiAib3BwLXN1c3BlbmQiIHByb3BlcnR5IHByZXNlbnQgdG8g
-YmUgc3VzcGVuZCBPUFAsIGl0IGNhbiBzcGVlZCB1cCB0aGUNCj4gPiBzdXNwZW5kL3Jlc3VtZSBw
-cm9jZXNzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5n
-QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvb3BwL29mLmMgfCA5ICsrKysrKy0tLQ0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiAN
-Cj4gUGxlYXNlIHVwZGF0ZSB0aGUgRFQgYmluZGluZ3MgZmlyc3QuDQoNCk9LLCB3aWxsIHNlbmQg
-YSBWMiBjb250YWluaW5nIERUIGJpbmRpbmcgY2hhbmdlcy4NCg0KPiANCj4gRldJVywgYWxsIHRo
-cmVlIHBhdGNoZXMgbG9vayBmaW5lIG90aGVyd2lzZS4NCg0KVGhhbmsgeW91IQ0KDQpBbnNvbi4N
-Cg==
+Hi Felipe,
+
+On Monday, June 24, 2019 13:58, Felipe Balbi wrote:
+>=20
+> Hi,
+>=20
+> Ran Wang <ran.wang_1@nxp.com> writes:
+> >> >> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
+> >> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
+> >> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
+> >> >> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
+> >> >> > >> >> >   * 	3	- Reserved
+> >> >> > >> >> >   * @imod_interval: set the interrupt moderation interval=
+ in
+> 250ns
+> >> >> > >> >> >   *                 increments or 0 to disable.
+> >> >> > >> >> > + * @dma_coherent: set if enable dma-coherent.
+> >> >> > >> >>
+> >> >> > >> >> you're not enabling dma coherency, you're enabling cache
+> snooping.
+> >> >> > >> >> And this property should describe that. Also, keep in mind
+> >> >> > >> >> that different devices may want different cache types for
+> >> >> > >> >> each of those fields, so your property would have to be a
+> >> >> > >> >> lot more complex. Something
+> >> >> > like:
+> >> >> > >> >>
+> >> >> > >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable"=
+>, ...
+> >> >> > >> >>
+> >> >> > >> >> Then driver would have to parse this properly to setup GSBU=
+SCFG0.
+> >> >> > >
+> >> >> > > According to the DesignWare Cores SuperSpeed USB 3.0
+> >> >> > > Controller Databook (v2.60a), it has described Type Bit
+> >> >> > > Assignments for all supported
+> >> >> > master bus type:
+> >> >> > > AHB, AXI3, AXI4 and Native. I found the bit definition are
+> >> >> > > different among
+> >> >> > them.
+> >> >> > > So, for the example you gave above, feel a little bit confused.
+> >> >> > > Did you mean:
+> >> >> > >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
+> >> >> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read
+> >> >> > > allocate">
+> >> >> >
+> >> >> > yeah, something like that.
+> >> >>
+> >> >> I think DATA_RD  should be a macro, right? So, where I can put its =
+define?
+> >> >> Create a dwc3.h in include/dt-bindings/usb/ ?
+> >> >
+> >> > Could you please give me some advice here? I'd like to prepare next
+> >> > version patch after getting this settled.
+> >> >
+> >> >> Another question about this remain open is: DWC3 data book's Table
+> >> >> 6-5 Cache Type Bit Assignments show that bits definition will
+> >> >> differ per MBUS_TYPEs as
+> >> >> below:
+> >> >> ----------------------------------------------------------------
+> >> >>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+> >> >>  ----------------------------------------------------------------
+> >> >>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
+> >> >>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+> >> >>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+> >> >>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+> >> >>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+> >> >>  ----------------------------------------------------------------
+> >> >>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names
+> >> >> for certain  signals, which have the same meaning:
+> >> >>    Bufferable =3D Posted
+> >> >>    Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
+> >> >>
+> >> >> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to
+> >> >> use snps,cache-type =3D <DATA_RD  "write allocate">, to cover all
+> MBUS_TYPE?
+> >> >> (you can notice that AHB and AXI3's cacheable are on different
+> >> >> bit) Or I just need to handle AXI3 case?
+> >> >
+> >> > Also on this open. Thank you in advance.
+> >>
+> >> You could pass two strings and let the driver process them. Something
+> >> like:
+> >>
+> >> 	snps,cache_type =3D <"data_wr" "write allocate">, <"desc_rd"
+> >> "cacheable">...
+> >>
+> >> And so on. The only thing missing is for the mbus_type to be known by =
+the
+> driver.
+> >> Is that something we can figure out on any of the HWPARAMS registers
+> >> or does it have to be told explicitly?
+> >
+> > I have checked Layerscape Reference manual, HWPARAMS0~8 doesn't
+> > contain mbus_type Info, and I didn't know where have declared it explic=
+itly.
+> >
+> >> Another option would be to pass a string followed by one hex digit for=
+ the
+> bits:
+> >>
+> >> 	snps,cache_type =3D <"data_wr" 0x8>, <"desc_rd" 0x2>...;
+> >>
+> >> Then we don't need to describe mbus_type since the bits are what matte=
+rs.
+
+For this option, looks like DTC doesn't allow form of <"data_wr" 0x8>, <"de=
+sc_rd" 0x2>...=20
+It will report error when compiling:
+
+DTC     arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dtb
+Error: arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi:383.23-24 syntax erro=
+r
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:294: recipe for target 'arch/arm64/boot/dts/freescale/=
+fsl-ls1088a-qds.dtb' failed
+make[2]: *** [arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+Error: arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi:383.23-24 syntax erro=
+r
+FATAL ERROR: Unable to parse input tree
+
+One of the solution I can figure out is to use macro to replace "data_wr", =
+like below:
+<DATA_WR 0x8>, <DESC_RD 0x2>...
+
+However, it will require creating file in include/dt-bindings/usb/dwc3.h to
+place macro definitions.
+
+Or may I use:  "data_wr", <0x8>,  "desc_rd",  <0x2>... ?
+
+Thanks & Regards,
+Ran
+
+> > Yes, it's also what we prefer to use, it will be more flexible, I can
+> > add above Table
+> > 6-5 Cache Type Bit Assignments in binding to help user decide which
+> > value they would use.
+> >
+> > I would submit another version of patch for further review, thank you v=
+ery
+> much.
+>=20
+> cool, thanks
+>=20
+> --
+> balbi
