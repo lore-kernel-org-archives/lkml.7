@@ -2,115 +2,82 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18072C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1112C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B79216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:18:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FAKYRBQO"
+	by mail.kernel.org (Postfix) with ESMTP id D4F30216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727343AbfGIDSh (ORCPT
+        id S1727465AbfGIDSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:18:37 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:48852 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfGIDSg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 23:18:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1562642313; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pzy3NwVjkusfZHFaTz046qoprbVpGHFFowMHni2vKtY=;
-        b=FAKYRBQOCMleXkDI4SHI3KoMWnQ0xln8qD1jRqi8ki6Grz/6w0gtIXbzMqQs75W46LVFid
-        f/YIylx7EA97zTZvDMndKAP0Audad4Ic7N2eOK87xraEVSBW5jIzlI46JyRis7eLd/emjV
-        YqXSYYUHp7i8WAhgzPFpOuk5RqfpX8g=
-Date:   Mon, 08 Jul 2019 23:18:19 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1562642299.1834.0@crapouillou.net>
-In-Reply-To: <20190709020425.GA7984@bogus>
-References: <20190607154410.10633-1-paul@crapouillou.net>
-        <20190607154410.10633-2-paul@crapouillou.net> <20190709020425.GA7984@bogus>
+        Mon, 8 Jul 2019 23:18:41 -0400
+Received: from mga06.intel.com ([134.134.136.31]:27127 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbfGIDSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 23:18:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 20:18:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
+   d="scan'208";a="156048700"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by orsmga007.jf.intel.com with ESMTP; 08 Jul 2019 20:18:37 -0700
+Message-ID: <5D2408D7.3000002@intel.com>
+Date:   Tue, 09 Jul 2019 11:24:07 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
+        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
+        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
+Subject: Re: [PATCH v7 12/12] KVM/VMX/vPMU: support to report GLOBAL_STATUS_LBRS_FROZEN
+References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com> <1562548999-37095-13-git-send-email-wei.w.wang@intel.com> <20190708150909.GP3402@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190708150909.GP3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/08/2019 11:09 PM, Peter Zijlstra wrote:
+> On Mon, Jul 08, 2019 at 09:23:19AM +0800, Wei Wang wrote:
+>> This patch enables the LBR related features in Arch v4 in advance,
+>> though the current vPMU only has v2 support. Other arch v4 related
+>> support will be enabled later in another series.
+>>
+>> Arch v4 supports streamlined Freeze_LBR_on_PMI. According to the SDM,
+>> the LBR_FRZ bit is set to global status when debugctl.freeze_lbr_on_pmi
+>> has been set and a PMI is generated. The CTR_FRZ bit is set when
+>> debugctl.freeze_perfmon_on_pmi is set and a PMI is generated.
+> (that's still a misnomer; it is: freeze_perfmon_on_overflow)
+
+OK. (but that was directly copied from the sdm 18.2.4.1)
 
 
-Le lun. 8 juil. 2019 =E0 22:04, Rob Herring <robh@kernel.org> a =E9crit :
-> On Fri, Jun 07, 2019 at 05:44:05PM +0200, Paul Cercueil wrote:
->>  Right now none of the Ingenic-based boards probe this driver from
->>  devicetree. This driver defined three compatible strings for the=20
->> exact
->>  same behaviour. Before these strings are used, we can remove two of
->>  them.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>=20
->>  Notes:
->>      v2: Rebase on v5.2-rc3
->>=20
->>   Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5=20
->> +----
->>   1 file changed, 1 insertion(+), 4 deletions(-)
->>=20
->>  diff --git=20
->> a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt=20
->> b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
->>  index 7d9d3f90641b..493bec80d59b 100644
->>  --- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
->>  +++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
->>  @@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
->>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
->>=20
->>   Required properties:
->>  -- compatible: One of:
->>  -  * "ingenic,jz4740-pwm"
->>  -  * "ingenic,jz4770-pwm"
->>  -  * "ingenic,jz4780-pwm"
->>  +- compatible: Should be "ingenic,jz4740-pwm"
->=20
-> Are you sure all 3 chips are exactly the same features and bugs?
+> Why?
+>
+> Who uses that v4 crud?
 
-The hardware on these chips have tiny differences, but the current
-driver code works on all the SoCs.
+I saw the native perf driver has been updated to v4.
+After the vPMU gets updated to v4, the guest perf would use that.
+
+If you prefer to hold on this patch until vPMU v4 support,
+we could do that as well.
 
 
-> The correct thing to do here generally is the 4770 and 4780 would also
-> have ingenic,jz4740-pwm as a fallback compatible. Then the driver can
-> match on that until you find some difference and can use the more
-> specific compatible.
+> It's broken. It looses events between overflow
+> and PMI.
 
-Why not just update the devicetree with the new compatible string when
-a difference is found?
+Do you mean it's a v4 hardware issue?
 
-
->>   - #pwm-cells: Should be 3. See pwm.txt in this directory for a=20
->> description
->>     of the cells format.
->>   - clocks : phandle to the external clock.
->>  --
->>  2.21.0.593.g511ec345e18
->>=20
-
-=
-
+Best,
+Wei
