@@ -2,184 +2,181 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D470C73C44
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555F2C73C42
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA92820861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C98220861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="cLZe3Oqc"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="z34+6aMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfGIMPa (ORCPT
+        id S1726580AbfGIMPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:15:30 -0400
-Received: from mout.web.de ([212.227.17.12]:47991 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfGIMPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:15:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1562674493;
-        bh=J1W6SrxrLl8yeccTu58UEmdLYAzUxbW3tx7ueplROWQ=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=cLZe3Oqc3JxrQJ8lxiY+SYBEMBF/Esrre87QLFEjGwaQLKOW2vE5tEblwR/TgUUm0
-         PCeMYfBaYsdl4ZhLEHcNsmfrWhVFZH4phoMAwLA8qaTTfJ0uGBunPxy89EIs6illOt
-         wNQT/ITDvC4WJfmiWqQ4nJX+86p5N/A7Q4wtaqbY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.179.96]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M9XQB-1hdzFa2GGV-00CyKK; Tue, 09
- Jul 2019 14:14:53 +0200
-Cc:     Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Xue Zhihong <xue.zhihong@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>, linux-crypto@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1562566745-7447-2-git-send-email-wen.yang99@zte.com.cn>
-Subject: Re: Coccinelle: Checking the deletion of duplicate of_node_put()
- calls with SmPL
-To:     Wen Yang <wen.yang99@zte.com.cn>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Coccinelle <cocci@systeme.lip6.fr>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1c215500-b599-8b2f-61ea-a6f418ab4905@web.de>
-Date:   Tue, 9 Jul 2019 14:14:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 9 Jul 2019 08:15:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39917 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfGIMPj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 08:15:39 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b7so10013208pls.6
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 05:15:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fossix-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6CiyFds2hmkTbH+nO+gDQbhe1+19pa5STQeUbUtVu+Y=;
+        b=z34+6aMU6kAL7ftCPWUj4flw52zEEIL+4QGDgaUv98VOTAH7ebxgjGLh7eP4X1gpo0
+         wdv5vu3dZpA3y/Xz/xgzx1FaNF7px/HMktc6YzYotVpesEXXMZ9PSs07OPGCphkxbV4f
+         p69VTcOfvje60p2InPsiCus1wDyWhaYhCVjcej0p4Yqj+MEBgu2bSDudvW3dQDghvvP2
+         LpuvGb1LOQgfSgTMdYcr9W2NhO1LhrT+iqU7v7n50acezAA+k7egbUfECEd0mFg8OU2+
+         V7MjTs0dGiB+JiGdSdrVwhrYhD29uAwRPh3dXb6yFzgsLm6T9B9DlnWzA6B7i/+YKvdE
+         PDlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6CiyFds2hmkTbH+nO+gDQbhe1+19pa5STQeUbUtVu+Y=;
+        b=Q1u2o9oOSds2zQqbY4svi20S+1UgesoPMPc6EDonx3yITmWkTAfggeRzkNly0sW55v
+         xTF5e1cWvfUFxemWrEVpJIYgIs2du2lJjH2GpmsdF5ROCH71WOUgBu5+6FhrV5sgH+Wv
+         i+KrDdNxV/FtacbcHDPDUAYutdfEMPUDrJOC/dOO5aWHL2rHUsJ/6gyUaTu+ch7PHfxg
+         Ndr768uNpmeP+0sU2IVoI1gMBwxsRHWFe79+21muhPrfnO+MZfsRO6K1JSFNcJLLaBaZ
+         fRJwhrvfygICYBr+unFXwJVnSDdLMspQYMCZqv+SwBA2gVaQ6nNHYa627rjI3mW/u/CZ
+         3HGQ==
+X-Gm-Message-State: APjAAAXNtfsgQfENghAce2rUbLF2u0rEBGpL6yNAaXRRhl0nfzehmMlu
+        e1Guflq2WEqq/nNzNCbXZJFxSA==
+X-Google-Smtp-Source: APXvYqwyWnQx3ImF1JepzrC2O9Edmipx1Q/+uASotfUSlMPkMi2n4qQWbRGa0ZCmxZAdzpnv7lekUQ==
+X-Received: by 2002:a17:902:7d86:: with SMTP id a6mr31550953plm.199.1562674538321;
+        Tue, 09 Jul 2019 05:15:38 -0700 (PDT)
+Received: from santosiv.in.ibm.com ([223.186.121.175])
+        by smtp.gmail.com with ESMTPSA id o15sm21243933pgj.18.2019.07.09.05.15.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 05:15:36 -0700 (PDT)
+From:   Santosh Sivaraj <santosh@fossix.org>
+To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-kernel@vger.kernel.org
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        christophe leroy <christophe.leroy@c-s.fr>
+Subject: [v5 0/6] powerpc: implement machine check safe memcpy
+Date:   Tue,  9 Jul 2019 17:45:18 +0530
+Message-Id: <20190709121524.18762-1-santosh@fossix.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1562566745-7447-2-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mjZt4du5a81zOteXo1CzYRKx+ufI90+1ifPjvzr5kQ7nnfAcAhC
- UOidXa/z250xX3Cwny3DW50JEtVFhLqcBcKjX6kjTUnpoE26n9y8DErmNoXxS0P6xcTfTxk
- fceKP/nN8ZcuGSrR8PuCJ8TUOf/TEp2iRkmxznpeSHJ39KJc71R4ow+/crYpe4bVOYqZCC8
- TO9IIWQTnXoovi/WujowQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Pgijroxvakk=:QbuqYPIs7U1TD4HvEGqqai
- QdsYZxniU8iHAv388G1qO23NnZp+BDzdkWXMtxM2xgpPXI2/snb2QRi7sxTdYdBsOEFKkuNSt
- +JAwsnbAWt9NCTEWWPLrUsjdxeT0TO6tff2Vfu66t2SERC31HaZkDaYTXAQ1nxIjTszO8ePc8
- 5WO1OxwrRXRXfCZvjVTu1k2D5vh4xJBq1sT6ZpoRZXnMBNnezqeuhdJtK2X6/od0pArSoKiIX
- gtiUGRsvmtM51JpfhmS87ihhZJtNdtSJdWCU7FV0m9XNLQ5XVgNjhIdLKmk4A5g5r8Axfw8P9
- wbPvD4pXaMFBlC4T8/S8X8d7GysVsrpt7MfsRfFBEXMPYRbnsAuJOvn6Np+a08OsK3UvrWfGV
- WBv3IDX/oLWrPZQVmj3Mp7sb/h5moSEqFs3KJyhe0WQQpqh0veqIcQxquX/CW28xdy8JB66Mh
- ECpqabbqdJxEOPw/KLxpm/SwQOm/HiX+F8RU3jKPlIMyldkKmfW+MuRwpClqxoxh2V1CHu+rH
- IgiLtmPXDpy58Onzwtu0YrldJ5HekOdNcvaOWMGKx0nGUSmyCjY2Up1UZuANZ7U+LlvF1FPMr
- DMpXtmxNtZUF+eJCFKm/Zfv1iX+pGeE8DpOBo8EFmDtILD4lnUviz9+ri9Q2JkxXhpvY7a3Jp
- JgUvsc2sisOdp45oTWa67D1i3Yqh3ZoqK6cRV3cgevT4ZNrrFOacvDUkVdFbzZZGH/mcWuAv+
- PhCwFXiuGkbiWrclofT4LulsBk0eJGVNyZIJgjYHjr4l2G//MO4KiMADqLLp+TlQUHQ+jQrP5
- mtd2p7DvZb4QMrSzl8ZUH71BA+hDE5kIDvMNMDBVmp7l3ZJKFRLN0+hZa+Tu/ycVOGb/ByMIH
- jpfPp6bRw63wMFUZlpy1Gn8WhKBhpwq1RfPTEFHhq+lvanO30EzVMYraHzW4n3K5lVesakGtP
- tYB+6eZM4iP+f0r4mnq7LX1w9udb+j2Ti3Z+sGPH7CcjifVSAiArubkCpUf4Yg30fomH9WAVZ
- WZP42BIf7ZR46qg8y/XJlvyGOMuti0FDZePxCzU9tuidTHJAA3QhEcofJvM8FZJqDtb+5cXgY
- C/ODOtS5TDS575xPD/ge4m4OrVGJF3lHVVA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 110:	ierr_out:
+During a memcpy from a pmem device, if a machine check exception is
+generated we end up in a panic. In case of fsdax read, this should
+only result in a -EIO. Avoid MCE by implementing memcpy_mcsafe.
 
-> 111:		of_node_put(trng);  ---> double released here
+Before this patch series:
 
-> ...
+```
+bash-4.4# mount -o dax /dev/pmem0 /mnt/pmem/
+[ 7621.714094] Disabling lock debugging due to kernel taint
+[ 7621.714099] MCE: CPU0: machine check (Severe) Host UE Load/Store [Not recovered]
+[ 7621.714104] MCE: CPU0: NIP: [c000000000088978] memcpy_power7+0x418/0x7e0
+[ 7621.714107] MCE: CPU0: Hardware error
+[ 7621.714112] opal: Hardware platform error: Unrecoverable Machine Check exception
+[ 7621.714118] CPU: 0 PID: 1368 Comm: mount Tainted: G   M              5.2.0-rc5-00239-g241e39004581 #50
+[ 7621.714123] NIP:  c000000000088978 LR: c0000000008e16f8 CTR: 00000000000001de
+[ 7621.714129] REGS: c0000000fffbfd70 TRAP: 0200   Tainted: G   M               (5.2.0-rc5-00239-g241e39004581)
+[ 7621.714131] MSR:  9000000002209033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 24428840  XER: 00040000
+[ 7621.714160] CFAR: c0000000000889a8 DAR: deadbeefdeadbeef DSISR: 00008000 IRQMASK: 0
+[ 7621.714171] GPR00: 000000000e000000 c0000000f0b8b1e0 c0000000012cf100 c0000000ed8e1100 
+[ 7621.714186] GPR04: c000020000001100 0000000000010000 0000000000000200 03fffffff1272000 
+[ 7621.714201] GPR08: 0000000080000000 0000000000000010 0000000000000020 0000000000000030 
+[ 7621.714216] GPR12: 0000000000000040 00007fffb8c6d390 0000000000000050 0000000000000060 
+[ 7621.714232] GPR16: 0000000000000070 0000000000000000 0000000000000001 c0000000f0b8b960 
+[ 7621.714247] GPR20: 0000000000000001 c0000000f0b8b940 0000000000000001 0000000000010000 
+[ 7621.714262] GPR24: c000000001382560 c00c0000003b6380 c00c0000003b6380 0000000000010000 
+[ 7621.714277] GPR28: 0000000000000000 0000000000010000 c000020000000000 0000000000010000 
+[ 7621.714294] NIP [c000000000088978] memcpy_power7+0x418/0x7e0
+[ 7621.714298] LR [c0000000008e16f8] pmem_do_bvec+0xf8/0x430
+... <snip> ...
+```
 
+After this patch series:
 
->
-> This issue was detected by using the Coccinelle software.
+```
+bash-4.4# mount -o dax /dev/pmem0 /mnt/pmem/
+[25302.883978] Buffer I/O error on dev pmem0, logical block 0, async page read
+[25303.020816] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25303.021236] EXT4-fs (pmem0): Can't read superblock on 2nd try
+[25303.152515] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25303.284031] EXT4-fs (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+[25304.084100] UDF-fs: bad mount option "dax" or missing value
+mount: /mnt/pmem: wrong fs type, bad option, bad superblock on /dev/pmem0, missing codepage or helper program, or other error.
+```
 
-Such a detection of a questionable source code place can be nice and helpf=
-ul.
+MCE is injected on a pmem address using mambo. The last patch which adds a nop
+is only for testing on mambo, where r13 is not restored upon hitting vector 200.
 
-I constructed another script variant for the semantic patch language.
+The memcpy code can be optimised by adding VMX optimizations and GAS macros can
+be used to enable code reusablity, which I will send as another series.
 
-@deletion@
-expression x;
-identifier target;
-@@
- of_node_put(x);
- if (...)
-    goto target;
- ... when any
- target:
--of_node_put(x);
+---
+Change-log:
 
+v5:
+* Don't use search_exception_tables since it searches for module exception tables
+  also [Nicholas]
+* Fix commit message for patch 2 [Nicholas]
 
-I observe then that this adjustment approach can generate the desired patc=
-h
-for a source code extract.
+v4:
+* Squash return remaining bytes patch to memcpy_mcsafe implemtation patch [christophe]
+* Access ok should be checked for copy_to_user_mcsafe() [christophe]
 
-elfring@Sonne:~/Projekte/Coccinelle/Probe> spatch ../janitor/delete_duplic=
-ate_of_node_put1.cocci crypto4xx_trng-excerpt1.c
+v3:
+* Drop patch which enables DR/IR for external modules
+* Drop notifier call chain, we don't want to do that in real mode
+* Return remaining bytes from memcpy_mcsafe correctly
+* We no longer restore r13 for simulator tests, rather use a nop at 
+  vector 0x200 [workaround for simulator; not to be merged]
 
-=E2=80=A6
--	of_node_put(trng);
+v2:
+* Don't set RI bit explicitly [mahesh]
+* Re-ordered series to get r13 workaround as the last patch
 
-=E2=80=A6
+---
+Balbir Singh (2):
+  powerpc/mce: Fix MCE handling for huge pages
+  powerpc/memcpy: Add memcpy_mcsafe for pmem
 
+Reza Arbab (1):
+  powerpc/mce: Make machine_check_ue_event() static
 
-But I wonder at the moment why it does not work (as expected) for the orig=
-inal
-complete source file.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/crypto/amcc/crypto4xx_trng.c?id=3D5ad18b2e60b75c7297a998dea702451d33=
-a052ed#n71
-https://elixir.bootlin.com/linux/v5.2/source/drivers/crypto/amcc/crypto4xx=
-_trng.c#L71
+Santosh Sivaraj (3):
+  extable: Add function to search only kernel exception table
+  powerpc/mce: Handle UE event for memcpy_mcsafe
+  powerpc: add machine check safe copy_to_user
 
-I am curious on further software development ideas.
+ arch/powerpc/Kconfig                 |   1 +
+ arch/powerpc/include/asm/mce.h       |   7 +-
+ arch/powerpc/include/asm/string.h    |   2 +
+ arch/powerpc/include/asm/uaccess.h   |  14 ++
+ arch/powerpc/kernel/mce.c            |  16 +-
+ arch/powerpc/kernel/mce_power.c      |  41 +++--
+ arch/powerpc/lib/Makefile            |   2 +-
+ arch/powerpc/lib/memcpy_mcsafe_64.S  | 239 +++++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/ras.c |   6 +-
+ include/linux/extable.h              |   2 +
+ kernel/extable.c                     |  16 +-
+ 11 files changed, 323 insertions(+), 23 deletions(-)
+ create mode 100644 arch/powerpc/lib/memcpy_mcsafe_64.S
 
-Regards,
-Markus
+-- 
+2.20.1
+
