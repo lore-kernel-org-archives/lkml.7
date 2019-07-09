@@ -2,93 +2,124 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0620C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C85C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804612080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:58:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="kfW+XmWb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YDtptrF0"
+	by mail.kernel.org (Postfix) with ESMTP id 10F352080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562702486;
+	bh=jU8PW0JFUxmdDCKOx2RsfFHhcoZLsoWMJQWls7GACs8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bwBWIZHZcmOIqVjOgnohwFYjj96LmM4+yW1XRLPXPQzEnHFrLrq6G4E4KAvDYLCXU
+	 KQjZL+h5+75vGcHEWZHr21+DLTnDG3H6T/52uirlb132IuRmL9l5ZRnBN6gefYmlwj
+	 Q5gZZVgdDOqyFXsDetbwpWxa/W9BrarRSK8j9/QE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbfGIT6b (ORCPT
+        id S1729528AbfGIUBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:58:31 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:52579 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727241AbfGIT6b (ORCPT
+        Tue, 9 Jul 2019 16:01:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46135 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728959AbfGIUBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 15:58:31 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id DD50E3F6;
-        Tue,  9 Jul 2019 15:58:29 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Tue, 09 Jul 2019 15:58:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=fsqWyM6YhlhAXYPqBQyUXCJTMDX
-        TpKqxVi866VXhPnE=; b=kfW+XmWbaNGEjYAXRAAb/GnZ6Yfx3/ZARsI/ggNkhHw
-        ypEHqQ/V9npek1BZZST5YjrGAMFepBzJQtuH3NeRriXIx/6CETyfOuOR47jJDGD/
-        mGniE0YgUOH9pv0U1cplo/x18qcyi0zfgC3D4+9cfRJmHJ3Zc/gfZ7yAdzeMekE5
-        K/eGF0fl60EQOcF0uchNBS9xtywViN00m7cMJxTtH76R1sV8wxf6Hu7EELwrihno
-        KE/iKQBNFqF/pTd/tmpYxCBH/SIt2Qj2XZ/DUKEI/5yXYPVd93UoQlOkKlIpNj+5
-        tn/U0oJfHS8HIJlzs5J8i1BvxNIaDThirB/IcW66/Tg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fsqWyM
-        6YhlhAXYPqBQyUXCJTMDXTpKqxVi866VXhPnE=; b=YDtptrF073gLAaqgUvkICH
-        N6U+V7At/d2lxMpJaPJKkDRO/J5HRt8KgWcv/G0Si/n4zHSu6IucDcwmVDa8igNm
-        LtOsCz6D06EPvwGb5lepD+5a8m9mAKZjQPgOfwmMzk8dsriJULeoMnXjYm4BGWjk
-        /zLWXMoX9PDLebFy1XntiWpFrZ7Ukq+wCpndn5BVzTy2it+gHtr0PN5B1gY5lxGt
-        1AMGhlwGU0aPAv3X9M3Ru/NCFgE3xPmmatC33wcFnB1ZgADGA/3parmOY1haCaTj
-        lVWcUXbp8xrQPHKPZW4n0E0R/EibwDlWK5V87wDg2sPYUbZMeyvNDRtS/QexjsSg
-        ==
-X-ME-Sender: <xms:5fEkXf0bh6E7q9z3kKk5yutlNMsTBicc-C7knzxLv9w-HEUyMwJu7A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeefgddtkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesthdtre
-    dttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhhomhepgh
-    hrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgepud
-X-ME-Proxy: <xmx:5fEkXSUuDf7KrrOKHDw592-JxhNssNw0ydlBN94AcHsmPVdheJpd9A>
-    <xmx:5fEkXa7Q2GQvaJ8h0mDRj5_2x8ug1gD4ppVeKbSU1hHgP1ZI-e4iIg>
-    <xmx:5fEkXZI3NA-zqltj6goauiAc-l2b2cC2RPE2Yw_C0EpnHRP_JRgn4A>
-    <xmx:5fEkXXIuGQ_DT_ije-gs_GBbSnpjSIdX4AogCZQM_wxU1XXmRFNuaQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9212C380076;
-        Tue,  9 Jul 2019 15:58:28 -0400 (EDT)
-Date:   Tue, 9 Jul 2019 21:58:26 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Muni Sekhar <munisekharrms@gmail.com>
-Cc:     kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: CONFIG_CC_STACKPROTECTOR_STRONG
-Message-ID: <20190709195826.GA22280@kroah.com>
-References: <CAHhAz+hVweYwjxFuwMw2Hsb74trWiwacH3Qdk=5c78e01==drw@mail.gmail.com>
+        Tue, 9 Jul 2019 16:01:24 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so45785550iol.13;
+        Tue, 09 Jul 2019 13:01:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B7/QcW7r5MQOGhPEoQO1LbngGWl8Cp/c3zBrZbGmskM=;
+        b=BmL8bFLtY/b8HJ9LNKgDW7qtyOkGvfYPL/II1VC9Nkfmp8Zha17QGZo1/+lsGjY5XV
+         6XxAgxiy6Ga13SLci+cfWWHjNJ0DFhB6syC/iljDLbF7CESedfTP/vOtQGTxwXdyKe8d
+         gNRMjmOelzMFxEYOvgZzRp46mxeyD8qzp/+BwwZe53WSKqzB4Tapkfn+Ys0w4oOsy+7P
+         sgfLlKy9Al4LOGqliPr+MymPiv5MadGV/f11MwPiYqoJ7JVcw1sFJKd5C8ZZmPcqneBB
+         7ELPZMFbyS2ORPHF17vsDUmwDg5ypC74HQFpRUNIHctrWskP6OMreSSDmVx/DOzvKuOq
+         jX/g==
+X-Gm-Message-State: APjAAAViEZmOg+qY47hTM+8j3b56rowlYUOxPHr0Yx7iymi7XtHplNoj
+        pXCGdyTlF8g+bp2gglhOGQ==
+X-Google-Smtp-Source: APXvYqytSsRPVq3GTbSVDnVsku/qIgTDId3MOrt1dloK9TJz1SnYYCUTN2WCuwk38In8AaLhppOnLQ==
+X-Received: by 2002:a02:7f15:: with SMTP id r21mr31288185jac.120.1562702483721;
+        Tue, 09 Jul 2019 13:01:23 -0700 (PDT)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id s2sm15525321ioj.8.2019.07.09.13.01.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 13:01:23 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 14:01:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        linux-media@vger.kernel.org, alsa-devel@alsa-project.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 5/7] ASoC: rockchip: rockchip-max98090: Add node for HDMI
+Message-ID: <20190709200121.GA19118@bogus>
+References: <20190603043251.226549-1-cychiang@chromium.org>
+ <20190603043251.226549-6-cychiang@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHhAz+hVweYwjxFuwMw2Hsb74trWiwacH3Qdk=5c78e01==drw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190603043251.226549-6-cychiang@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 10:54:27PM +0530, Muni Sekhar wrote:
-> We use out-of-tree kernel modules in our project and I need to measure the
-> performance of it by using a bit older gcc version 4.8.5.
+On Mon, Jun 03, 2019 at 12:32:49PM +0800, Cheng-Yi Chiang wrote:
+> Let user specify HDMI node so machine driver can use it to let codec
+> driver register callback on correct hdmi-notifier.
+> 
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/sound/rockchip-max98090.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> index a805aa99ad75..dae57c14864e 100644
+> --- a/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> +++ b/Documentation/devicetree/bindings/sound/rockchip-max98090.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>    connected to the CODEC
+>  - rockchip,audio-codec: The phandle of the MAX98090 audio codec
+>  - rockchip,headset-codec: The phandle of Ext chip for jack detection
+> +- rockchip,hdmi: The phandle of HDMI node for HDMI jack detection
+>  
+>  Example:
+>  
+> @@ -16,4 +17,5 @@ sound {
+>  	rockchip,i2s-controller = <&i2s>;
+>  	rockchip,audio-codec = <&max98090>;
+>  	rockchip,headset-codec = <&headsetcodec>;
+> +	rockchip,hdmi= <&hdmi>;
 
-You are really on your own here, sorry.  Please use a modern version of
-gcc, and then go complain to the vendor that forces you to use
-out-of-tree kernel modules, as they are the only ones that can support
-you with them :(
+space                ^
 
-Best of luck!
+With that,
 
-greg k-h
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  };
+> -- 
+> 2.22.0.rc1.257.g3120a18244-goog
+> 
