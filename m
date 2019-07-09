@@ -2,116 +2,197 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DF2C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A4AC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3484520645
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33B920645
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:22:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="S6x8jcHv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbfGIKVK (ORCPT
+        id S1726525AbfGIKWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 06:21:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44704 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfGIKVK (ORCPT
+        Tue, 9 Jul 2019 06:22:06 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37206 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfGIKWF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 06:21:10 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hknF8-0004PR-S0; Tue, 09 Jul 2019 12:21:02 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH POC] printk_ringbuffer: Alternative implementation of lockless printk ringbuffer
-References: <20190621140516.h36g4in26pe3rmly@pathway.suse.cz>
-        <20190704103321.10022-1-pmladek@suse.com>
-        <20190704103321.10022-1-pmladek@suse.com>
-        <87r275j15h.fsf@linutronix.de>
-        <20190708152311.7u6hs453phhjif3q@pathway.suse.cz>
-        <20190708152311.7u6hs453phhjif3q@pathway.suse.cz>
-        <874l3wng7g.fsf@linutronix.de>
-        <20190709090609.shx7j2mst7wlkbqm@pathway.suse.cz>
-Date:   Tue, 09 Jul 2019 12:21:01 +0200
-In-Reply-To: <20190709090609.shx7j2mst7wlkbqm@pathway.suse.cz> (Petr Mladek's
-        message of "Tue, 9 Jul 2019 11:06:09 +0200")
-Message-ID: <87tvbv33w2.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Tue, 9 Jul 2019 06:22:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so9079547pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 03:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LHn7sh6ZYwvh5+D/h2PrSTgVx9fde1Yu4h3Dr05pCsY=;
+        b=S6x8jcHvKJGfpw+Yld/kbXFq1TShqWb7H9Z+ZjTW7WXiQJY0xIFNau7xT+ZDdNqeNe
+         07H063fJx/xr2fqRFg+7gKq6ZfH9r1EzHTVrgJYwTZnQ79yv+mWP9P6vK2Dso8w9j+Fv
+         nP3mNJa/v/zaokDhy4yTfby3sgmKvu0R4hb0tMTPB8iG678pMO1ypho2UPvDZM4aPtac
+         YXZntBd9k5dQwwmnjHbpIFGowGjkhYiS8pzutGE9v6WXFeBwteBRmXrOdJYRQNEEkUl4
+         r73M7fho8QHRPAUrbSuG0UVKeYRPvS6adMCzBnDyqbCDRNdBfNZDeJK2j3LhcxaJmM+m
+         3Biw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LHn7sh6ZYwvh5+D/h2PrSTgVx9fde1Yu4h3Dr05pCsY=;
+        b=pISTfEU4MNugL0JSAEK5S7Kqh8w5w7aEnXbliTlyqsyz6FotUDxiwOF14YosMS/4mv
+         GBKpUmoI4qsbQC6d0iNn3XbS2xgqYUE/GDFnRG8g8vWRpozEYTlLCrDGoQVO11C2fOL8
+         0SuhEwTKDBIEbQHEAst7Arv6S8iH5tj8nvrWvHRTBA8z/VHDvIAH+yfpeWdGs0sJim07
+         BGX2mWlO05+WSw78xz6fi3nyh9HwUNo54+mBvedoYXh88fO+TIq27DXBr9FpaPfB9nks
+         +G56KVy6I0cPe6MFk7XF6OGYKSxreh79yzAzx8OUI8JXcD+QSbQaM/6VhylZYZmz5oF0
+         ZZTw==
+X-Gm-Message-State: APjAAAWZwfzwEydNb/DAaPpp1tcYNlTPSRtzl/QENsSzbfoTRX+yvU6c
+        8LPOePxsZUiNkcYo3ROZIaplLg==
+X-Google-Smtp-Source: APXvYqz2/A/8B3slXasDnqD46Tev0tlgqKN64vJiTn2jpY0EC4bOeSPI7mVKDxxtvIet/NlRgbVpyQ==
+X-Received: by 2002:a17:90a:2228:: with SMTP id c37mr32162607pje.9.1562667724503;
+        Tue, 09 Jul 2019 03:22:04 -0700 (PDT)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id j1sm40161849pgl.12.2019.07.09.03.22.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 03:22:03 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        David Laight <David.Laight@aculab.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Daniel Drake <drake@endlessm.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>, stable@vger.kernel.org
+Subject: [PATCH v2 1/2] rtw88: pci: Rearrange the memory usage for skb in RX ISR
+Date:   Tue,  9 Jul 2019 18:20:59 +0800
+Message-Id: <20190709102059.7036-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190708063252.4756-1-jian-hong@endlessm.com>
+References: <20190708063252.4756-1-jian-hong@endlessm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-09, Petr Mladek <pmladek@suse.com> wrote:
->>>> 1. The code claims that the cmpxchg(seq_newest) in
->>>> prb_reserve_desc() guarantees that "The descriptor is ours until
->>>> the COMMITTED bit is set."  This is not true if in that wind
->>>> seq_newest wraps, allowing another writer to gain ownership of the
->>>> same descriptor. For small descriptor arrays (such as in my test
->>>> module), this situation is quite easy to reproduce.
->>>
->> Let me inline the function are talking about and add commentary to
->> illustrate what I am saying:
->> 
->> static int prb_reserve_desc(struct prb_reserved_entry *entry)
->> {
->> 	unsigned long seq, seq_newest, seq_prev_wrap;
->> 	struct printk_ringbuffer *rb = entry->rb;
->> 	struct prb_desc *desc;
->> 	int err;
->> 
->> 	/* Get descriptor for the next sequence number. */
->> 	do {
->> 		seq_newest = READ_ONCE(rb->seq_newest);
->> 		seq = (seq_newest + 1) & PRB_SEQ_MASK;
->> 		seq_prev_wrap = (seq - PRB_DESC_SIZE(rb)) & PRB_SEQ_MASK;
->> 
->> 		/*
->> 		 * Remove conflicting descriptor from the previous wrap
->> 		 * if ever used. It might fail when the related data
->> 		 * have not been committed yet.
->> 		 */
->> 		if (seq_prev_wrap == READ_ONCE(rb->seq_oldest)) {
->> 			err = prb_remove_desc_oldest(rb, seq_prev_wrap);
->> 			if (err)
->> 				return err;
->> 		}
->> 	} while (cmpxchg(&rb->seq_newest, seq_newest, seq) != seq_newest);
->> 
->> I am referring to this point in the code, after the
->> cmpxchg(). seq_newest has been incremented but the descriptor is
->> still in the unused state and seq is still 1 wrap behind. If an NMI
->> occurs here and the NMI (or some other CPU) inserts enough entries to
->> wrap the descriptor array, this descriptor will be reserved again,
->> even though it has already been reserved.
->
-> Not really, the NMI will not reach the cmpxchg() in this case.
-> prb_remove_desc_oldest() will return error.
+Testing with RTL8822BE hardware, when available memory is low, we
+frequently see a kernel panic and system freeze.
 
-Why will prb_remove_desc_oldest() fail? IIUC, it will return success
-because the descriptor is in the desc_miss state.
+First, rtw_pci_rx_isr encounters a memory allocation failure (trimmed):
 
-> It will not be able to remove the conflicting descriptor because
-> it will still be occupied by a two-wraps-old descriptor.
+rx routine starvation
+WARNING: CPU: 7 PID: 9871 at drivers/net/wireless/realtek/rtw88/pci.c:822 rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
+[ 2356.580313] RIP: 0010:rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
 
-Please explain why with more details. Perhaps providing a function call
-chain?  Sorry if I'm missing the obvious here.
+Then we see a variety of different error conditions and kernel panics,
+such as this one (trimmed):
 
-This is really the critical point that drove me to use lists: multiple
-writers expiring and reserving the same descriptors.
+rtw_pci 0000:02:00.0: pci bus timeout, check dma status
+skbuff: skb_over_panic: text:00000000091b6e66 len:415 put:415 head:00000000d2880c6f data:000000007a02b1ea tail:0x1df end:0xc0 dev:<NULL>
+------------[ cut here ]------------
+kernel BUG at net/core/skbuff.c:105!
+invalid opcode: 0000 [#1] SMP NOPTI
+RIP: 0010:skb_panic+0x43/0x45
 
-John Ogness
+When skb allocation fails and the "rx routine starvation" is hit, the
+function returns immediately without updating the RX ring. At this
+point, the RX ring may continue referencing an old skb which was already
+handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
+bad things happen.
+
+This patch allocates a new, data-sized skb first in RX ISR. After
+copying the data in, we pass it to the upper layers. However, if skb
+allocation fails, we effectively drop the frame. In both cases, the
+original, full size ring skb is reused.
+
+In addition, to fixing the kernel crash, the RX routine should now
+generally behave better under low memory conditions.
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204053
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+---
+ drivers/net/wireless/realtek/rtw88/pci.c | 49 +++++++++++-------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index cfe05ba7280d..e9fe3ad896c8 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -763,6 +763,7 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
+ 	u32 pkt_offset;
+ 	u32 pkt_desc_sz = chip->rx_pkt_desc_sz;
+ 	u32 buf_desc_sz = chip->rx_buf_desc_sz;
++	u32 new_len;
+ 	u8 *rx_desc;
+ 	dma_addr_t dma;
+ 
+@@ -790,40 +791,34 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
+ 		pkt_offset = pkt_desc_sz + pkt_stat.drv_info_sz +
+ 			     pkt_stat.shift;
+ 
+-		if (pkt_stat.is_c2h) {
+-			/* keep rx_desc, halmac needs it */
+-			skb_put(skb, pkt_stat.pkt_len + pkt_offset);
++		/* discard current skb if the new skb cannot be allocated as a
++		 * new one in rx ring later
++		 */
++		new_len = pkt_stat.pkt_len + pkt_offset;
++		new = dev_alloc_skb(new_len);
++		if (WARN_ONCE(!new, "rx routine starvation\n"))
++			goto next_rp;
++
++		/* put the DMA data including rx_desc from phy to new skb */
++		skb_put_data(new, skb->data, new_len);
+ 
+-			/* pass offset for further operation */
+-			*((u32 *)skb->cb) = pkt_offset;
+-			skb_queue_tail(&rtwdev->c2h_queue, skb);
++		if (pkt_stat.is_c2h) {
++			 /* pass rx_desc & offset for further operation */
++			*((u32 *)new->cb) = pkt_offset;
++			skb_queue_tail(&rtwdev->c2h_queue, new);
+ 			ieee80211_queue_work(rtwdev->hw, &rtwdev->c2h_work);
+ 		} else {
+-			/* remove rx_desc, maybe use skb_pull? */
+-			skb_put(skb, pkt_stat.pkt_len);
+-			skb_reserve(skb, pkt_offset);
+-
+-			/* alloc a smaller skb to mac80211 */
+-			new = dev_alloc_skb(pkt_stat.pkt_len);
+-			if (!new) {
+-				new = skb;
+-			} else {
+-				skb_put_data(new, skb->data, skb->len);
+-				dev_kfree_skb_any(skb);
+-			}
+-			/* TODO: merge into rx.c */
+-			rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
++			/* remove rx_desc */
++			skb_pull(new, pkt_offset);
++
++			rtw_rx_stats(rtwdev, pkt_stat.vif, new);
+ 			memcpy(new->cb, &rx_status, sizeof(rx_status));
+ 			ieee80211_rx_irqsafe(rtwdev->hw, new);
+ 		}
+ 
+-		/* skb delivered to mac80211, alloc a new one in rx ring */
+-		new = dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+-		if (WARN(!new, "rx routine starvation\n"))
+-			return;
+-
+-		ring->buf[cur_rp] = new;
+-		rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc_sz);
++next_rp:
++		/* new skb delivered to mac80211, re-enable original skb DMA */
++		rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc_sz);
+ 
+ 		/* host read next element in ring */
+ 		if (++cur_rp >= ring->r.len)
+-- 
+2.22.0
+
