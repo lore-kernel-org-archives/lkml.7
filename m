@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5810BC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E44C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A865216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C6B216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:46:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="EbYqBGmg"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="KUpNEaDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfGIGqk (ORCPT
+        id S1726394AbfGIGqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 02:46:40 -0400
-Received: from first.geanix.com ([116.203.34.67]:46414 "EHLO first.geanix.com"
+        Tue, 9 Jul 2019 02:46:43 -0400
+Received: from first.geanix.com ([116.203.34.67]:46422 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfGIGqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 02:46:40 -0400
+        id S1725832AbfGIGql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 02:46:41 -0400
 Received: from zen.localdomain (unknown [85.184.140.241])
-        by first.geanix.com (Postfix) with ESMTPSA id AB0B51837;
-        Tue,  9 Jul 2019 06:45:09 +0000 (UTC)
+        by first.geanix.com (Postfix) with ESMTPSA id CEEF3A742;
+        Tue,  9 Jul 2019 06:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1562654709; bh=PdgqI8646iXntCvCsjL6ENComOD8XeuUgfwk7P2Wtu4=;
-        h=From:To:Cc:Subject:Date;
-        b=EbYqBGmgGKCdqKz1VJ8ZvxNucjZV4N+Iis77cFZIqBYfTXt8C9uZxpDMRx3m7tQ67
-         BiPUlnzYpzOViDZryydi03AAGcZTAxc3/FOyBOsMMwAO5EDRz68N+dIikKO9Wf9KmO
-         17bA8yYUltokaV4qOwLmEj2PplMPFrQfpV8Kz+bYCFeITJrpapJclEdZctX75WYrCx
-         cBi/H884MuY/mfkaleyW3K/vPAtu6M1uRCY90SFlTbN9ann769phSmSjo55AysX2h7
-         xvl/dS8x561BvQHAHsdYOxOpjrb7auQmDVv6NdfMB4s+fXJCM+0ivdX9e/C2bItDRp
-         OUbBj22vraYwQ==
+        t=1562654711; bh=hbPCQQVPqZIoYMntGiWvEsOQTkIuxWitxVSaU5o6y+I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=KUpNEaDSPXmNH1CzA0gdqYA+cT66lUyO/dbzLmMMM78ikYhxrLKp8aEoM+42TKc0Q
+         Xl87yZs8SoRz1geIBYXlECkS2zmU4+kqy5l1egdSqJOYmaonsKPSZe+RzhFZoX7U/g
+         FFoJY9lxdOSbhM/TRG3ZBrWYShCBS8Mib8k8ANOPBApdrhN38VMQ+Q00u1tVUSfc5l
+         sD7KbzrVZ9IFhj/uRHzWLNrzViFjK4pKGPEKuuj6FPgi9qQeytKMgR76NwGfkh7bK2
+         0qYt6V4Yt6pzFOUW4rrRIyyTOA4NthsnWi+JL3viP0g6EJgrxSFbCa3yq1Yq/Sjjh5
+         dLUdiJ/h0Pj9w==
 From:   =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
         =?UTF-8?q?Sean=20Nyekj=C3=A6r?= <sean@geanix.com>,
         Esben Haabendal <esben@geanix.com>
-Subject: [PATCHv2 1/4] tty: n_gsm: remove obsolete mknod doc example
-Date:   Tue,  9 Jul 2019 08:46:30 +0200
-Message-Id: <20190709064633.45411-1-martin@geanix.com>
+Subject: [PATCHv2 2/4] tty: n_gsm: update doc example to use header for N_GSM0710 define
+Date:   Tue,  9 Jul 2019 08:46:31 +0200
+Message-Id: <20190709064633.45411-2-martin@geanix.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190709064633.45411-1-martin@geanix.com>
+References: <20190709064633.45411-1-martin@geanix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -52,49 +54,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The n_gsm driver handles registration of /dev/gsmttyX nodes, so there's
-no need to do mknod manually.
+There is no reason to gues the line discipline number when it is
+available from tty.h
 
 Signed-off-by: Martin Hundebøll <martin@geanix.com>
 ---
-
-Changes since v1:
- * updated bullet numbering
-
- Documentation/serial/n_gsm.rst | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ Documentation/serial/n_gsm.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Documentation/serial/n_gsm.rst b/Documentation/serial/n_gsm.rst
-index f3ad9fd26408..4f37198423f7 100644
+index 4f37198423f7..0ba731ab00b2 100644
 --- a/Documentation/serial/n_gsm.rst
 +++ b/Documentation/serial/n_gsm.rst
-@@ -63,24 +63,14 @@ Major parts of the initialization program :
- 	daemon(0,0);
- 	pause();
+@@ -23,7 +23,7 @@ Major parts of the initialization program :
+ (a good starting point is util-linux-ng/sys-utils/ldattach.c)::
  
--4. create the devices corresponding to the "virtual" serial ports (take care,
--   each modem has its configuration and some DLC have dedicated functions,
--   for example GPS), starting with minor 1 (DLC0 is reserved for the management
--   of the mux)::
--
--     MAJOR=`cat /proc/devices |grep gsmtty | awk '{print $1}`
--     for i in `seq 1 4`; do
--	mknod /dev/ttygsm$i c $MAJOR $i
--     done
--
--5. use these devices as plain serial ports.
-+4. use these devices as plain serial ports.
+   #include <linux/gsmmux.h>
+-  #define N_GSM0710	21	/* GSM 0710 Mux */
++  #include <linux/tty.h>
+   #define DEFAULT_SPEED	B115200
+   #define SERIAL_PORT	/dev/ttyS0
  
-    for example, it's possible:
- 
-    - and to use gnokii to send / receive SMS on ttygsm1
-    - to use ppp to establish a datalink on ttygsm2
- 
--6. first close all virtual ports before closing the physical port.
-+5. first close all virtual ports before closing the physical port.
- 
-    Note that after closing the physical port the modem is still in multiplexing
-    mode. This may prevent a successful re-opening of the port later. To avoid
 -- 
 2.22.0
 
