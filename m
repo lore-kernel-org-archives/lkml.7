@@ -2,145 +2,92 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF57C73C60
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D5EC73C60
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2BFC20861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562713235;
-	bh=mqZhnQlsfaKKtYTzAc3OH9DchjWPLQmojcR0X/Nieqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LCnMV4XkbpzbY8WH2O+49xXMe7lI5LmImbOVSILZ9MvHCrfl/+Y4ueu0w/jHl7dMM
-	 j97FFGfuzps7IbW2S37Fe04jrAvx4jkh3CFBy9yfUIU8d8n3vkj7Gx3WFqTVwfpfZB
-	 GNHDJYD1jSZ/yd1khAnWaq0V02nPmmdTFlvvTraE=
+	by mail.kernel.org (Postfix) with ESMTP id 8879220844
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfGIXAd (ORCPT
+        id S1727116AbfGIXAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 19:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfGIXAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 19:00:32 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1F720693;
-        Tue,  9 Jul 2019 23:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562713231;
-        bh=mqZhnQlsfaKKtYTzAc3OH9DchjWPLQmojcR0X/Nieqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vzXUz2HIFKteVEHxqti9rKG3oLGZG2C694w3R4hypaFOd0SA9dbT32K+xTO1i2Dh8
-         3nluBJ2isuTx2QR8wY5M52xwivDW/IP6fpTNGDAactYWvX4Pd/XRDyt4WT909VmEBB
-         eB+Pw1bv/Q7NxX+QXpDoscKHvxGzJdwHqU2Fkowk=
-Date:   Tue, 9 Jul 2019 16:00:29 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfs: fsmount: add missing mntget()
-Message-ID: <20190709230029.GO641@sol.localdomain>
-Mail-Followup-To: Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20190610183031.GE63833@gmail.com>
- <20190612184313.143456-1-ebiggers@kernel.org>
- <20190613084728.GA32129@miu.piliscsaba.redhat.com>
+        Tue, 9 Jul 2019 19:00:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46435 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfGIXAl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 19:00:41 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hkz69-0007ym-0U; Wed, 10 Jul 2019 01:00:33 +0200
+Date:   Wed, 10 Jul 2019 01:00:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Ingo Molnar <mingo@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Jiri Kosina <jkosina@suse.cz>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+In-Reply-To: <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>
+References: <20190708162756.GA69120@gmail.com> <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com> <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com> <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+ <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com> <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613084728.GA32129@miu.piliscsaba.redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:47:28AM +0200, Miklos Szeredi wrote:
-> On Wed, Jun 12, 2019 at 11:43:13AM -0700, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > sys_fsmount() needs to take a reference to the new mount when adding it
-> > to the anonymous mount namespace.  Otherwise the filesystem can be
-> > unmounted while it's still in use, as found by syzkaller.
+On Wed, 10 Jul 2019, Thomas Gleixner wrote:
+> On Tue, 9 Jul 2019, Linus Torvalds wrote:
+> > I also don't have any logs, because the boot never gets far enough. I
+> > assume that there was a problem bringing up a non-boot CPU, and the
+> > eventual hang ends up being due to that.
 > 
-> So it needs one count for the file (which dentry_open() obtains) and one for the
-> attachment into the anonymous namespace.  The latter one is dropped at cleanup
-> time, so your patch appears to be correct at getting that ref.
+> Hrm. I just build the tip of your tree and bootet it. It hangs at:
 > 
-> I wonder why such a blatant use-after-free was missed in normal testing.  RCU
-> delayed freeing, I guess?
+> [    4.788678] ACPI: 4 ACPI AML tables successfully acquired and loaded
+> [    4.793860] ACPI: [Firmware Bug]: BIOS _OSI(Linux) query ignored
+> [    4.821476] ACPI: Dynamic OEM Table Load:
 > 
-> How about this additional sanity checking patch?
-> 
-> Thanks,
-> Miklos
-> 
-> 
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index b26778bdc236..c638f220805a 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -153,10 +153,10 @@ static inline void mnt_add_count(struct mount *mnt, int n)
->  /*
->   * vfsmount lock must be held for write
->   */
-> -unsigned int mnt_get_count(struct mount *mnt)
-> +int mnt_get_count(struct mount *mnt)
->  {
->  #ifdef CONFIG_SMP
-> -	unsigned int count = 0;
-> +	int count = 0;
->  	int cpu;
->  
->  	for_each_possible_cpu(cpu) {
-> @@ -1140,6 +1140,8 @@ static DECLARE_DELAYED_WORK(delayed_mntput_work, delayed_mntput);
->  
->  static void mntput_no_expire(struct mount *mnt)
->  {
-> +	int count;
-> +
->  	rcu_read_lock();
->  	if (likely(READ_ONCE(mnt->mnt_ns))) {
->  		/*
-> @@ -1162,11 +1164,13 @@ static void mntput_no_expire(struct mount *mnt)
->  	 */
->  	smp_mb();
->  	mnt_add_count(mnt, -1);
-> -	if (mnt_get_count(mnt)) {
-> +	count = mnt_get_count(mnt);
-> +	if (count > 0) {
->  		rcu_read_unlock();
->  		unlock_mount_hash();
->  		return;
->  	}
-> +	WARN_ON(count < 0);
->  	if (unlikely(mnt->mnt.mnt_flags & MNT_DOOMED)) {
->  		rcu_read_unlock();
->  		unlock_mount_hash();
-> diff --git a/fs/pnode.h b/fs/pnode.h
-> index 49a058c73e4c..26f74e092bd9 100644
-> --- a/fs/pnode.h
-> +++ b/fs/pnode.h
-> @@ -44,7 +44,7 @@ int propagate_mount_busy(struct mount *, int);
->  void propagate_mount_unlock(struct mount *);
->  void mnt_release_group_id(struct mount *);
->  int get_dominating_id(struct mount *mnt, const struct path *root);
-> -unsigned int mnt_get_count(struct mount *mnt);
-> +int mnt_get_count(struct mount *mnt);
->  void mnt_set_mountpoint(struct mount *, struct mountpoint *,
->  			struct mount *);
->  void mnt_change_mountpoint(struct mount *parent, struct mountpoint *mp,
+> That's way after the secondary CPUs have been brought up. tip/master boots
+> without problems with the same config. Let me try x86/asm alone and also a
+> revert of the CR4/CR0 stuff.
 
-Miklos, are you planning to send this as a formal patch?
+x86/asm works alone
 
-- Eric
+revert of cr4/0 pinning on top of your tree gets stuck as well
+
+> And while writing this the softlockup detector muttered:
+
+Have not yet fully bisected it, but Jiri did and he ended up with
+
+  c522ad0637ca ("ACPICA: Update table load object initialization")
+
+Reverting that on top of your tree makes it work again. Tony has the same
+issue.
+
+That still does not explain the cr4/0 issue you have. Can you send me your
+.config please?
+
+Thanks,
+
+	tglx
+
+
+
