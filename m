@@ -2,100 +2,108 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9F3C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0888C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF13421670
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:08:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k1UqVGLr"
+	by mail.kernel.org (Postfix) with ESMTP id D0317214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfGISIE (ORCPT
+        id S1728677AbfGISJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:08:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40511 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbfGISID (ORCPT
+        Tue, 9 Jul 2019 14:09:54 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:47080 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728659AbfGISJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:08:03 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so10498397pla.7
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:08:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4VnM6ZlllgNz4Bft5zni4R6FgT6ay2Y8xF5/yfmghTI=;
-        b=k1UqVGLrSihIVQimPXEKlmuN+hrCN4IyhUHR9Fc2BrtPuGA4K1lDaJve2L7nZWShFj
-         pXTnSFcp7hOR/NjcVZ7hLGMwcvPLnFAyLMVICq26GwX74+CKkt6C8dlX2q2jKzysD4At
-         0gr2QTrYD9Y4O3iMw0rCt1MKzEmlSX/0EYDYPw/Np9QBvIZDrbZ12jPl0HmmF0AoujtT
-         QHEQrX3O7oO+p2Z+4g9aBgjpXj1iQlT3KufRJiEFxxJMs6SQddk/LOmdglmSJ8lqRrfL
-         Rf+q0NLsh7OEwzPcohGlEdewMz5YSmsa9aS9425y8a3wmdmIDMEaG5je3VfVcCVvlnqI
-         gTGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4VnM6ZlllgNz4Bft5zni4R6FgT6ay2Y8xF5/yfmghTI=;
-        b=sp6yag6jwqwg/FykNZsS7tDRk8cmB/60xA4euwp2+WbPT/MEuo3OfhKmdYI8wWXuzv
-         Xe/Tl8THfABNImF9TUPHX9hznpSh2oYXJp6HmWwwfpbU72SI6m/661ybc8BCeX6mKRfP
-         P0p+iqL+QuEVBd5VDSrO9gTykfQnx/Px64rve3zKj8ZAFE46+7kmufzfpDjhX19TT7Jn
-         tjauPNVq7f6Db0VAWbQIGLVQp9l8wxnJgNPL8ek7NLg9X+dMa0Xw2wuJAUn1ol1k3QpD
-         Gtj/SJ4+vPf0dEZHA+16cj1uR1ipGSh384o3D6U1ca5ekTydRywEOx/bd7D/kVqwaY0C
-         hPvQ==
-X-Gm-Message-State: APjAAAV33TkHjGT76SUHNrtbdTt9HV3vH7cC7RV1OguUiZJ3REo1WolC
-        9pokJ7bDzmZ/lQGAxC4Q57wR32Qx1bcmoZ6jhMxROm3v0vg=
-X-Google-Smtp-Source: APXvYqx1ptPXEPdEdPRwy/Tqbw5gbLHRGF9Q/hr413p0p9p3VdirFiKOQZVLoQgffgDFpLTaNPPUt7eqGiZ9CWp98oA=
-X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr33372838plq.223.1562695682401;
- Tue, 09 Jul 2019 11:08:02 -0700 (PDT)
+        Tue, 9 Jul 2019 14:09:53 -0400
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hkuYp-0006OU-O7; Tue, 09 Jul 2019 19:09:51 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hkuYp-0002t6-6c; Tue, 09 Jul 2019 19:09:51 +0100
+Message-ID: <a799791de346cdb6c19984e88ffe2fa57283476a.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 000/129] 3.16.70-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Tue, 09 Jul 2019 19:09:50 +0100
+In-Reply-To: <20190709180714.GA635@roeck-us.net>
+References: <lsq.1562518456.876074874@decadent.org.uk>
+         <20190709180714.GA635@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-rHITFnvIzEzDmVRalmbx"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-References: <20190708203049.3484750-1-arnd@arndb.de> <CACRpkdY1JzUZKgmXbObb6hqFcLFygAj2NuMgPMj=8tCp9U2C1A@mail.gmail.com>
-In-Reply-To: <CACRpkdY1JzUZKgmXbObb6hqFcLFygAj2NuMgPMj=8tCp9U2C1A@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 9 Jul 2019 11:07:51 -0700
-Message-ID: <CAKwvOdnm6rd4pOJvRbAghLxfd2QL5VJ+ODiMyRh1ri3pmmz0yg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: mtd-xip: work around clang/llvm bug
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 1:41 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Jul 8, 2019 at 10:31 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> > llvm gets confused by inline asm with .rep directives,
->
-> Are the LLVM developers aware of the bug?
-> It seems like something we can work around but should
-> eventually be fixed properly in LLVM, right?
 
-Arnd filed the bug yesterday.  I looked at it; so someone working on
-LLVM is aware of it.  The kernel is definitely exercising weak points
-in our inline assembly support.
+--=-rHITFnvIzEzDmVRalmbx
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > Link: https://bugs.llvm.org/show_bug.cgi?id=42539
+On Tue, 2019-07-09 at 11:07 -0700, Guenter Roeck wrote:
+> On Sun, Jul 07, 2019 at 05:54:16PM +0100, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.70 release.
+> > There are 129 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Tue Jul 09 20:00:00 UTC 2019.
+> > Anything received after that time might be too late.
+> >=20
+>=20
+> For 3.16.69-129-g91dfb9bc310a:
+>=20
+> Build results:
+> 	total: 136 pass: 136 fail: 0
+> Qemu test results:
+> 	total: 231 pass: 231 fail: 0
 
-> I guess this brings up the old question whether the compiler should
-> be worked around or just considered immature, but as it happens this
+Great, thanks for checking again.
 
-Definitely a balancing act; we prioritize work based on what's
-feasible to work around vs must be implemented.  A lot of my time is
-going into validation of asm goto right now, but others are ramping up
-on the integrated assembler (clang itself can be invoked as a
-substitute for GNU AS; but there's not enough support to do `make
-AS=clang` for the kernel just yet).
--- 
-Thanks,
-~Nick Desaulniers
+Ben.
+
+--=20
+Ben Hutchings
+The Peter principle: In a hierarchy, every employee tends to rise to
+their level of incompetence.
+
+
+
+--=-rHITFnvIzEzDmVRalmbx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl0k2G4ACgkQ57/I7JWG
+EQm9jBAAstP+bAJdl9wPrLSaLxhmtGDOTwYReHiebVEiGNhBY/tHQg0RA/bYpKz8
+9ZZTS0bF+Bfzi3fedKnAVzzF5R65zo70rsHFOvk+eyUXLDGyH9VhapGp9tlP3sCX
+qNnqm+DnsCfhfR/lMMwdKNGHILM1fHLGTxwdL6NRF1VoQjJN4BN+1iwBVXJTHur5
+LN0O0OzmnyF0MhVK8QNJrBve5MYEgVx8wH9W9RXcUGJ87Nau8Xb/2fBng8cbdghj
+kvdw9xo+XUhOTMSyizRpyWGjJ4FzTlvzUZopKJ5vYTnYVz70C0dLj2+KHKbbglTk
+FqwDqcdlM1NKPlBOEQsmGAhzpdV4f7AONfKRQvxrGfcxaKF5usj8x/Z24Fkmmn8l
+m6V+v2V2HDlWVYBrxjAUM1J3u3Juzar7eSjDevW5OSNmADVq6DbDdlHxFLpHGeiv
+pkkpL6DleRCCI9wggsUMUyDZDmC5MWWVLpcmt9QwBqjGumtIopIOQOkgAGGxMXeu
+hfF4F/v42ipxZGQsSid31xZCr8OuYWbqiY1Jss+eRkUoHa/3fTOjjAZDLyBFtdti
+c8NQLAIyOG1gsHRoNpLN/buoQDbKpweZPQBy/IrXdSf1V7fclxdIUrkRqmgCsG5m
+FJ1tBTHvK5UV0SWmi4sZmk8aMN6JwgcLCO+OOiF0x1NQ/S5PLXw=
+=XeM5
+-----END PGP SIGNATURE-----
+
+--=-rHITFnvIzEzDmVRalmbx--
