@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6071FC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98ACC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1792177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF01520656
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562697196;
-	bh=rmMeP9jdmvBC3BSIzK+VFeBtg04e2doVgFNy8JolSCA=;
+	s=default; t=1562697202;
+	bh=fDZbMwjg6rYu7jprZLww4XnXl8EckXxuaj91Q1Y8GPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0kaEfx3J9j2TIXBJJiytOykdtAF5RA8pk5Nlt79xRk8leL3mruWveZ7Qkae6RrS1
-	 OfzgBVqZQG17U1CA2IfPDoow2yjv8DGMbRsoRrO5BtvOL9yBjniFLRlTfW35I7DivR
-	 OnM3IekN8MpWpUl8xCyfoiV0zoFiY4FSqMWIwL9w=
+	b=x9U/R+ReRt+A/d5CZEZ2fWr4h6e3V01jwoZvlT7aMAw371ow/KXJo3VZ8fGCzAdQI
+	 UX0RDgahtv7O/Sjy/egtq9szc1J7ShmJ4F3IGy5b6wod7Ur97jwFwFu6tkQ3HZ0OcI
+	 1TpnTAoPTuwU/9mDehUXn+eOLhY5LdVuZtcT86Cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbfGISdP (ORCPT
+        id S1729328AbfGISdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 14:33:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729288AbfGISdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:33:12 -0400
+        id S1729311AbfGISdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:33:19 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD5F92087F;
-        Tue,  9 Jul 2019 18:33:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D61214AF;
+        Tue,  9 Jul 2019 18:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562697192;
-        bh=rmMeP9jdmvBC3BSIzK+VFeBtg04e2doVgFNy8JolSCA=;
+        s=default; t=1562697198;
+        bh=fDZbMwjg6rYu7jprZLww4XnXl8EckXxuaj91Q1Y8GPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ft43xKrcMHaR3eeew5ccuFnPrOvzHlEoOhGG0cknw7xiHJjq4yuryZvvHvGte+x4P
-         oNafc9yJwjgNGn6rrp3/qT/UZGjOZgCOzNl0rkIAu0yXELEafh7MjdXJgLIFc29+cG
-         3zgvAc56z63oGiFF9Z3jGEArQO6aR52vJlJ97AgI=
+        b=K9X4rWoIN+uCWiLqIF7tBW1wfjBtBr/6c+awV07N+HzTY405keS4mJTIFGE2u90C4
+         cA4DyOx3fqgC8XoBkxF2lWshtX6g43bE8GWtbIQrYMxgG2Y0Hdq2XYxYA/Xt4ptccG
+         xzBH1ZhBQLLEO6smVAsNNkKI7j7rq6HT8X77I7/A=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 21/25] perf scripts python: export-to-postgresql.py: Fix DROP VIEW power_events_view
-Date:   Tue,  9 Jul 2019 15:31:22 -0300
-Message-Id: <20190709183126.30257-22-acme@kernel.org>
+        Song Liu <songliubraving@fb.com>,
+        David Carrillo Cisneros <davidca@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>, kernel-team@fb.com,
+        stable@vger.kernel.org
+Subject: [PATCH 23/25] perf script: Assume native_arch for pipe mode
+Date:   Tue,  9 Jul 2019 15:31:24 -0300
+Message-Id: <20190709183126.30257-24-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190709183126.30257-1-acme@kernel.org>
 References: <20190709183126.30257-1-acme@kernel.org>
@@ -61,41 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Song Liu <songliubraving@fb.com>
 
-PostgreSQL can error if power_events_view is not dropped before its
-dependent tables e.g.
+In pipe mode, session->header.env.arch is not populated until the events
+are processed. Therefore, the following command crashes:
 
-  Exception: Query failed: ERROR:  cannot drop table mwait because other
-  objects depend on it
-  DETAIL:  view power_events_view depends on table mwait
+   perf record -o - | perf script
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Fixes: aba44287a224 ("perf scripts python: export-to-postgresql.py: Export Intel PT power and ptwrite events")
-Link: http://lkml.kernel.org/r/20190708055232.5032-2-adrian.hunter@intel.com
+(gdb) bt
+
+It fails when we try to compare env.arch against uts.machine:
+
+        if (!strcmp(uts.machine, session->header.env.arch) ||
+            (!strcmp(uts.machine, "x86_64") &&
+             !strcmp(session->header.env.arch, "i386")))
+                native_arch = true;
+
+In pipe mode, it is tricky to find env.arch at this stage. To keep it
+simple, let's just assume native_arch is always true for pipe mode.
+
+Reported-by: David Carrillo Cisneros <davidca@fb.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: kernel-team@fb.com
+Cc: stable@vger.kernel.org #v5.1+
+Fixes: 3ab481a1cfe1 ("perf script: Support insn output for normal samples")
+Link: http://lkml.kernel.org/r/20190621014438.810342-1-songliubraving@fb.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-postgresql.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-script.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-index 4447f0d7c754..92713d93e956 100644
---- a/tools/perf/scripts/python/export-to-postgresql.py
-+++ b/tools/perf/scripts/python/export-to-postgresql.py
-@@ -898,11 +898,11 @@ def trace_end():
- 	if is_table_empty("ptwrite"):
- 		drop("ptwrite")
- 	if is_table_empty("mwait") and is_table_empty("pwre") and is_table_empty("exstop") and is_table_empty("pwrx"):
-+		do_query(query, 'DROP VIEW power_events_view');
- 		drop("mwait")
- 		drop("pwre")
- 		drop("exstop")
- 		drop("pwrx")
--		do_query(query, 'DROP VIEW power_events_view');
- 		if is_table_empty("cbr"):
- 			drop("cbr")
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index b3536820f9a8..79367087bd18 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3752,7 +3752,8 @@ int cmd_script(int argc, const char **argv)
+ 		goto out_delete;
  
+ 	uname(&uts);
+-	if (!strcmp(uts.machine, session->header.env.arch) ||
++	if (data.is_pipe ||  /* assume pipe_mode indicates native_arch */
++	    !strcmp(uts.machine, session->header.env.arch) ||
+ 	    (!strcmp(uts.machine, "x86_64") &&
+ 	     !strcmp(session->header.env.arch, "i386")))
+ 		native_arch = true;
 -- 
 2.21.0
 
