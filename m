@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255E1C73C42
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AE7C73C41
 	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB071216FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232F121707
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="WOizcZs9"
+	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="Y/8+Bkta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfGIMPp (ORCPT
+        id S1726767AbfGIMPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:15:45 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39621 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfGIMPp (ORCPT
+        Tue, 9 Jul 2019 08:15:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33109 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfGIMPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:15:45 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u17so8871279pgi.6
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 05:15:44 -0700 (PDT)
+        Tue, 9 Jul 2019 08:15:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so4424295pfq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 05:15:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fossix-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QEGm5RO370+1d5IRbqWLncN9g8dMNoXOhptUJSSSVGY=;
-        b=WOizcZs9v6vfzMjSAwsxUTZr8HRQuZkMIXs35U6NVDapUVL1hscQFMSZl0VemXWbwQ
-         wPtTNPuEckt0rmSIp5VkYT8DBlzwnNAwJwXpsLocRULPPjrlCuX6lmudgxDJW5PfFAco
-         lNMFE8wDqvByBx27hTYwxihYQDpj9KpSF8GERrmg+6metVI5zjjFLIv3AvPzTf+GjEWW
-         Ayh9CuWVlHutAMuZtbNO/eHjDAw2llAzK0bL+kfLPlzAxDF9lTCQmiAsR9o2i5MVDtmq
-         M4Q0IyDODehuc038NLwnyNfomepPCoHYc776YVtx2kO9pS1nV+Cg08ByHtdJDYFf+szs
-         TjSA==
+        bh=MJzVf8ePz92EuVzLMfLPbljGXsEH0ENJuGJ8qCk3dtg=;
+        b=Y/8+BktagPsVjEodnOtdSnVQBboOpWy8Ukuc4xnOew3GCDUrIqFAa+v2DGPzMYPLTr
+         DIyUThl4ySWwluFZI2ifBCtAS+y2cT0ntV6hdqO1OfSLVParmN5hhgkxPc563fOXUta4
+         upQJjhoDg2VFKse4TgeyuEPWcbzTS+n5vAUo9hYwSeAkhUDFZuVIpxc+XE71Ex5Iq8oT
+         /FOb6oYWfKAweWNYgh85PLGsy1LqdmUMRsOwheS9lMhImozk5CJOsvhiMbxlF0v3LzQg
+         3c3d9bV5Rq1tzI+okjNqdnwabz68G3fUuS44arIRhSA7IWty3OIYhQnNAcVojEvM7sga
+         5I7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QEGm5RO370+1d5IRbqWLncN9g8dMNoXOhptUJSSSVGY=;
-        b=PanL1vvZ/390NCesz6Ig8m6S1s1khfpMedDOGmzP+KoEFmMv5ziXH1AHhFF1m73sV7
-         RJbpID749TGMG9hMq6TJrqFFRB2i9KzfOgiOMmdSE9iwEUDpPx2oaE8PtF5YjzuRxRXF
-         DwoYsu1kR5OyC/e1ttHKJ6YQHUDJ09Uo6YfVh/dyEVK+v2nECpgvvN6M1Fbb2ORcJz9E
-         VhCeTz/LAlcDhlbEaC6SSU1+CDTIsKKsJt+3T0fPX0awtZ3AOCioEjKCIB5UgYbiITpa
-         QUgAO17Yi8knU1VEAx/P9AMgBPItfWrlJUW2Jmb2sgZOZcMhkN0lTi+RUVDmseZ03ptl
-         ShLg==
-X-Gm-Message-State: APjAAAUvP1kzljHCtxBfuErChp1a47vyUEXpoO2pyPmcXbMiGty4b8DK
-        0lJrODwIiaY1CHubopM0kRR3ng==
-X-Google-Smtp-Source: APXvYqwgynr3BUnrTGLgu4deUSaQXIo1BtFn5NAG/AplpsZcUMvzgFzdvi1iY5oZukQevHnvTZh0rQ==
-X-Received: by 2002:a17:90a:8d0c:: with SMTP id c12mr31348441pjo.140.1562674544487;
-        Tue, 09 Jul 2019 05:15:44 -0700 (PDT)
+        bh=MJzVf8ePz92EuVzLMfLPbljGXsEH0ENJuGJ8qCk3dtg=;
+        b=WccvH5f5TsVOoOqhuX5D6woboguo2EPFVTr5Gkf6DqmFRHuT1Iw/Z+zWlvzphNDGWV
+         PPBoKSoB2lvbJ38WhrEZNnmnDYRlV6BPYC5ZyoHH3rZSXpbn7IcOuHwFVfW01HkI/5BE
+         X6LoDTujsiltRg//aRSpO9to5lB2NVPU2OfU32+Bii098DEilg8Wwh32TNZPqD6HEpUi
+         NXJyk0u2u6wXelXknwGr7LXwRE0ghX/NiaoqfhJHijnRqQUXwE49vb5b7dfWGC5g77nG
+         vRiI3ljb7cnKGCpwgMtyGEEX8V0pgIXcLkHmeINRJbuu4SXt/Pf9cWu399UDBD+Tnt8s
+         qu+Q==
+X-Gm-Message-State: APjAAAVctXLYtEyrjOx/kVWDk5utrN42N5/TLqrhiUByqMsTnJ+rzscP
+        RQbxJHdhu0FF44cx473oMy/Lcw==
+X-Google-Smtp-Source: APXvYqznakK/ppI4kgBJucoH/5l1KUpuuI6JglAn8z1HDKR3+4eXRffTRdSHVsigXE4ao1gi4cFlcg==
+X-Received: by 2002:a63:d944:: with SMTP id e4mr29885876pgj.261.1562674551130;
+        Tue, 09 Jul 2019 05:15:51 -0700 (PDT)
 Received: from santosiv.in.ibm.com ([223.186.121.175])
-        by smtp.gmail.com with ESMTPSA id o15sm21243933pgj.18.2019.07.09.05.15.38
+        by smtp.gmail.com with ESMTPSA id o15sm21243933pgj.18.2019.07.09.05.15.45
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 05:15:43 -0700 (PDT)
+        Tue, 09 Jul 2019 05:15:50 -0700 (PDT)
 From:   Santosh Sivaraj <santosh@fossix.org>
 To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-kernel@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
         christophe leroy <christophe.leroy@c-s.fr>
-Subject: [v5 1/6] powerpc/mce: Make machine_check_ue_event() static
-Date:   Tue,  9 Jul 2019 17:45:19 +0530
-Message-Id: <20190709121524.18762-2-santosh@fossix.org>
+Subject: [v5 2/6] powerpc/mce: Fix MCE handling for huge pages
+Date:   Tue,  9 Jul 2019 17:45:20 +0530
+Message-Id: <20190709121524.18762-3-santosh@fossix.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190709121524.18762-1-santosh@fossix.org>
 References: <20190709121524.18762-1-santosh@fossix.org>
@@ -80,39 +80,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reza Arbab <arbab@linux.ibm.com>
+From: Balbir Singh <bsingharora@gmail.com>
 
-The function doesn't get used outside this file, so make it static.
+The current code would fail on huge pages addresses, since the shift
+would be incorrect. Use the correct page shift value returned by
+__find_linux_pte() to get the correct pfn. The code is more generic
+and can handle both regular and compound pages.
 
+Fixes: ba41e1e1ccb9 ("powerpc/mce: Hookup derror (load/store) UE errors")
+
+Signed-off-by: Balbir Singh <bsingharora@gmail.com>
+[arbab@linux.ibm.com: Fixup pseries_do_memory_failure()]
 Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
 Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/powerpc/kernel/mce.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/mce.h       |  3 ++-
+ arch/powerpc/kernel/mce_power.c      | 26 ++++++++++++++++----------
+ arch/powerpc/platforms/pseries/ras.c |  6 ++++--
+ 3 files changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/kernel/mce.c b/arch/powerpc/kernel/mce.c
-index b18df633eae9..e78c4f18ea0a 100644
---- a/arch/powerpc/kernel/mce.c
-+++ b/arch/powerpc/kernel/mce.c
-@@ -33,7 +33,7 @@ static DEFINE_PER_CPU(struct machine_check_event[MAX_MC_EVT],
- 					mce_ue_event_queue);
- 
- static void machine_check_process_queued_event(struct irq_work *work);
--void machine_check_ue_event(struct machine_check_event *evt);
-+static void machine_check_ue_event(struct machine_check_event *evt);
- static void machine_process_ue_event(struct work_struct *work);
- 
- static struct irq_work mce_event_process_work = {
-@@ -203,7 +203,7 @@ void release_mce_event(void)
- /*
-  * Queue up the MCE event which then can be handled later.
+diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mce.h
+index a4c6a74ad2fb..94888a7025b3 100644
+--- a/arch/powerpc/include/asm/mce.h
++++ b/arch/powerpc/include/asm/mce.h
+@@ -209,7 +209,8 @@ extern void release_mce_event(void);
+ extern void machine_check_queue_event(void);
+ extern void machine_check_print_event_info(struct machine_check_event *evt,
+ 					   bool user_mode, bool in_guest);
+-unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr);
++unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr,
++			  unsigned int *shift);
+ #ifdef CONFIG_PPC_BOOK3S_64
+ void flush_and_reload_slb(void);
+ #endif /* CONFIG_PPC_BOOK3S_64 */
+diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
+index e39536aad30d..04666c0b40a8 100644
+--- a/arch/powerpc/kernel/mce_power.c
++++ b/arch/powerpc/kernel/mce_power.c
+@@ -23,7 +23,8 @@
+  * Convert an address related to an mm to a PFN. NOTE: we are in real
+  * mode, we could potentially race with page table updates.
   */
--void machine_check_ue_event(struct machine_check_event *evt)
-+static void machine_check_ue_event(struct machine_check_event *evt)
+-unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
++unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr,
++			  unsigned int *shift)
  {
- 	int index;
+ 	pte_t *ptep;
+ 	unsigned long flags;
+@@ -36,13 +37,15 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
  
+ 	local_irq_save(flags);
+ 	if (mm == current->mm)
+-		ptep = find_current_mm_pte(mm->pgd, addr, NULL, NULL);
++		ptep = find_current_mm_pte(mm->pgd, addr, NULL, shift);
+ 	else
+-		ptep = find_init_mm_pte(addr, NULL);
++		ptep = find_init_mm_pte(addr, shift);
+ 	local_irq_restore(flags);
+ 	if (!ptep || pte_special(*ptep))
+ 		return ULONG_MAX;
+-	return pte_pfn(*ptep);
++	if (!*shift)
++		*shift = PAGE_SHIFT;
++	return (pte_val(*ptep) & PTE_RPN_MASK) >> *shift;
+ }
+ 
+ /* flush SLBs and reload */
+@@ -358,15 +361,16 @@ static int mce_find_instr_ea_and_pfn(struct pt_regs *regs, uint64_t *addr,
+ 	unsigned long pfn, instr_addr;
+ 	struct instruction_op op;
+ 	struct pt_regs tmp = *regs;
++	unsigned int shift;
+ 
+-	pfn = addr_to_pfn(regs, regs->nip);
++	pfn = addr_to_pfn(regs, regs->nip, &shift);
+ 	if (pfn != ULONG_MAX) {
+-		instr_addr = (pfn << PAGE_SHIFT) + (regs->nip & ~PAGE_MASK);
++		instr_addr = (pfn << shift) + (regs->nip & ((1 << shift) - 1));
+ 		instr = *(unsigned int *)(instr_addr);
+ 		if (!analyse_instr(&op, &tmp, instr)) {
+-			pfn = addr_to_pfn(regs, op.ea);
++			pfn = addr_to_pfn(regs, op.ea, &shift);
+ 			*addr = op.ea;
+-			*phys_addr = (pfn << PAGE_SHIFT);
++			*phys_addr = (pfn << shift);
+ 			return 0;
+ 		}
+ 		/*
+@@ -442,12 +446,14 @@ static int mce_handle_ierror(struct pt_regs *regs,
+ 			if (mce_err->sync_error &&
+ 				table[i].error_type == MCE_ERROR_TYPE_UE) {
+ 				unsigned long pfn;
++				unsigned int shift;
+ 
+ 				if (get_paca()->in_mce < MAX_MCE_DEPTH) {
+-					pfn = addr_to_pfn(regs, regs->nip);
++					pfn = addr_to_pfn(regs, regs->nip,
++							  &shift);
+ 					if (pfn != ULONG_MAX) {
+ 						*phys_addr =
+-							(pfn << PAGE_SHIFT);
++							(pfn << shift);
+ 					}
+ 				}
+ 			}
+diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
+index f16fdd0f71f7..5e43283d3300 100644
+--- a/arch/powerpc/platforms/pseries/ras.c
++++ b/arch/powerpc/platforms/pseries/ras.c
+@@ -740,12 +740,14 @@ static void pseries_do_memory_failure(struct pt_regs *regs,
+ 		paddr = be64_to_cpu(mce_log->logical_address);
+ 	} else if (mce_log->sub_err_type & UE_EFFECTIVE_ADDR_PROVIDED) {
+ 		unsigned long pfn;
++		unsigned int shift;
+ 
+ 		pfn = addr_to_pfn(regs,
+-				  be64_to_cpu(mce_log->effective_address));
++				  be64_to_cpu(mce_log->effective_address),
++				  &shift);
+ 		if (pfn == ULONG_MAX)
+ 			return;
+-		paddr = pfn << PAGE_SHIFT;
++		paddr = pfn << shift;
+ 	} else {
+ 		return;
+ 	}
 -- 
 2.20.1
 
