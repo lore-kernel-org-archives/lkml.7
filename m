@@ -2,102 +2,107 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C26C606D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FDEC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3489D216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBE4216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9zLoQTk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FDJIw/XX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbfGIHWv (ORCPT
+        id S1726435AbfGIHYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:22:51 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36780 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfGIHWv (ORCPT
+        Tue, 9 Jul 2019 03:24:02 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50953 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGIHYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:22:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so19802819wrs.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:22:50 -0700 (PDT)
+        Tue, 9 Jul 2019 03:24:02 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v15so1927075wml.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:24:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=eTTGtdAf9D8hMWA6RdwU6DYctiL/OmG776vwkKDwCdY=;
-        b=D9zLoQTk2FJgkaohPSj2m1p1zwZI89NM//MF5PYnexgpgf4SiMH++rB5G5zVRxXhKr
-         kYMteY2oyg2s8jY63/dsh9yMpX9CH7oYiLuARTVAqyvfM6mPxUEMXqwp6gJcF5qkCL1M
-         1uCTJTTO+JhaYlbZ3q1P641qfafCLT3h+eVzHQkSA0iib/gyjCM884tf0Lp+lMFILUg4
-         2ktc9iGkbEddgkAadHYi4SXOYsJOY2Jsh029gb4Ngmj8WpSmj+J69E2/ZuauZirjIO4t
-         4ZqbT+H3xpjVasdiStsr8xD/UOZZKphkpHkshKaRkYKSC1l/3jT3N5m7Q7QMTM7l/c1v
-         lVww==
+        bh=03TkoezjgkAZL2YmFuoEqna7NSM8InGqJI+3ARKjL1o=;
+        b=FDJIw/XXd8rciEohBUKmddB8phPThT/PekIFiIN1cV+l66VsdC0Itam9we2NMoOqYP
+         zBHeqKlzeTGyY3g/sM4yKyKMITVauqjdMGiSqi7Qe4u+ideDdLeEycXFIt1qMs8O091N
+         IeEHWcipFxAp5FvVKok6cqbLm6foJ2Zf78DS35yfTVQp2IRNPHG4wJGKr5BCgRYX1fsC
+         Gal52Dc2u9+vN7WHfgRi/AJPwy43zH8kL5FeQ6phfuf96q/RVuy7h5wgcKb5pNvQxq19
+         j822OniI4eL5t2RDAoE5UHnZycbkUczRRXkOvxqbuVFHb0Bmuj/7/zlTbr6HBedkBEHo
+         b7uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eTTGtdAf9D8hMWA6RdwU6DYctiL/OmG776vwkKDwCdY=;
-        b=OJBRogSrZJmRriBhDbtqro/mG3Ay6F6+WjZ5+aslAaSQ5xBSk8Fi4Fh0gwK0NW6En3
-         9g0GcOGSK5SDcBmYOsU1nDpJc7f7jhDnkZXutXxNhA8iFJHtfTiVgI1qBtCGHyzrZec+
-         B+wEP8XWM/84JcuNdkX9IMi0RImjGCSYc52T+0DO/7g2LZjucvWLnFWUDXe/v57Ruv+W
-         fKDZJxpkizyNiwR0EJPYs0iJZ3bboQ7gRviM+t4v3z2HApOIIBCKHFgcXlr/le0NDzh7
-         OxVeiKYlsfsmW+7GwaPuK3snsOn5EH+JwchK09+oT0Wc5TVif0K6dmLb9ULyX76Fld6t
-         y6gw==
-X-Gm-Message-State: APjAAAUAeJ5EPqwo1Be6GM5spIXZvYMHOPSuE5nr8+zne9/VF0bAsbTK
-        sTSD/WxEVHEabWyIdxlRaxHcZ92bDc7qkw==
-X-Google-Smtp-Source: APXvYqwpHuI9CWOWbco5N6jY+5LAeHjro1s1YTciZRy3YWL+F5Pp3hdmj4NAX2bBfyJX0mNGYk9vdQ==
-X-Received: by 2002:adf:e28a:: with SMTP id v10mr23876027wri.178.1562656969476;
-        Tue, 09 Jul 2019 00:22:49 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id l8sm32824144wrg.40.2019.07.09.00.22.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 00:22:48 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 00:22:47 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, Rex Zhu <rex.zhu@amd.com>,
-        Evan Quan <evan.quan@amd.com>, David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        clang-built-linux@googlegroups.com,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH 0/7] amdgpu clang warning fixes on next-20190703
-Message-ID: <20190709072247.GA92551@archlinux-threadripper>
-References: <20190704055217.45860-1-natechancellor@gmail.com>
- <CADnq5_MGzLLMNPSQXpdxwrBpvsp7Fd1KdExS-K4yNeDBQYEGMg@mail.gmail.com>
+        bh=03TkoezjgkAZL2YmFuoEqna7NSM8InGqJI+3ARKjL1o=;
+        b=NfgmsQsopWcNlOWQf7Rz9uoS1oKHEt/cvi59X64/ESM8WCevqYpLqhJTzFFt3J3jh0
+         6kb/qaxnCiHRJGpxAP5UzQfyvXsJoToyUxdcTxzhDc2bw3rdck0fEP8LremgayNDTZ2N
+         b+0w8SbyBBz235ZeeLFhpQ+Gr+vR58vPxbzHAeXwDAk7MlpnyVgoL62KFz7RUOIY+icm
+         QSee7r+B2XcB1NUo4uyLZplKWJFPzSBU5sKaJQRyKxcHCM7remfRc5w9IMK62ShcwIgT
+         a7vXab09ygi+IXS5m7zqg6Q8SXObMF1GZ0gnbcytj7EaybtO4USCSJkYq9xa6rDlfZjT
+         lbcA==
+X-Gm-Message-State: APjAAAVS64rZLOv5Ww1XFV+VxOEf0dnS9MVa28ZrUntUb7uldcEaK8mF
+        MhIXwmzN7PqohN4RofD1JqWQ4g==
+X-Google-Smtp-Source: APXvYqwV3mcuJnhnz6QQouw2JqDfmNZCuA8kTITJotydtLJak8JAyntXVQPkwnHos7Fs8wIPg2lpNg==
+X-Received: by 2002:a7b:cae9:: with SMTP id t9mr20552772wml.126.1562657039819;
+        Tue, 09 Jul 2019 00:23:59 -0700 (PDT)
+Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
+        by smtp.gmail.com with ESMTPSA id v67sm2225652wme.24.2019.07.09.00.23.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 00:23:59 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 10:23:56 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     Jose.Abreu@synopsys.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com, brouer@redhat.com,
+        arnd@arndb.de
+Subject: Re: [PATCH net-next v3 3/3] net: stmmac: Introducing support for
+ Page Pool
+Message-ID: <20190709072356.GA4599@apalos>
+References: <BN8PR12MB32666359FABD7D7E55FE4761D3F50@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190705152453.GA24683@apalos>
+ <BN8PR12MB32667BCA58B617432CACE677D3F60@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190708.141515.1767939731073284700.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADnq5_MGzLLMNPSQXpdxwrBpvsp7Fd1KdExS-K4yNeDBQYEGMg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190708.141515.1767939731073284700.davem@davemloft.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 11:55:50AM -0400, Alex Deucher wrote:
-> Applied the series.  thanks!
+Hello, 
+
+> From: Jose Abreu <Jose.Abreu@synopsys.com>
+> Date: Mon, 8 Jul 2019 16:08:07 +0000
 > 
-> Alex
+> > From: Ilias Apalodimas <ilias.apalodimas@linaro.org> | Date: Fri, Jul 
+> > 05, 2019 at 16:24:53
+> > 
+> >> Well ideally we'd like to get the change in before the merge window ourselves,
+> >> since we dont want to remove->re-add the same function in stable kernels. If
+> >> that doesn't go in i am fine fixing it in the next merge window i guess, since
+> >> it offers substantial speedups
+> > 
+> > I think the series is marked as "Changes Requested" in patchwork. What's 
+> > the status of this ?
+> 
+> That means I expect a respin based upon feedback or similar.  If Ilias and
+> you agreed to put this series in as-is, my apologies and just resend the
+> series with appropriate ACK and Review tags added.
 
-Thank you :)
+The patch from Ivan did get merged, can you change the free call to
+page_pool_destroy and re-spin? You can add my acked-by
 
-I don't see the enum conversion ones in your current tree. If they
-indeed caused issues, could you guys please look into fixing the
-warnings properly yourselves (maybe something like Arnd's patch?)
-or let me know how you would like them fixed (explicit casts, changing
-type to int, etc)?
-
-https://patchwork.freedesktop.org/patch/316466/
-
-Cheers,
-Nathan
+Thanks
+/Ilias
