@@ -2,87 +2,97 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00CDC73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EA1C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976CB2173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04605214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562697142;
+	bh=1fBop64o/FMXZjQOW6QlBFcRFBQuKQQI+pbsa0mhF0s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ahC+7k33BVZ9oOkaEt81CqEjJ3oYvuwqC9MiPntpmsIb5zaNakc2mRp8dFqjhXj0/
+	 pOI5c/3aaZnVGuJoxLVzfIIgrOvsvv58XHQ+k0MRlPgNFL4/BHJKpEn5D13JnCduXW
+	 t7FahAatAQ7UCI5Q555ZwmH8KTTPR86xsJNpnBoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbfGIScS (ORCPT
+        id S1729112AbfGIScU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:32:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:53537 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfGIScS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:32:18 -0400
-Received: from localhost ([62.96.34.174]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MfbwW-1iQYBn3fGi-00fx9T; Tue, 09 Jul 2019 20:32:11 +0200
-Date:   Tue, 9 Jul 2019 20:32:11 +0200
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     linux-omap@vger.kernel.org
-Cc:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: am335x-wega.dtsi: fix wrong card detect pin level
-Message-ID: <20190709183209.y64keopah5rkismc@arbad>
+        Tue, 9 Jul 2019 14:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726592AbfGIScT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:32:19 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8780321670;
+        Tue,  9 Jul 2019 18:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562697139;
+        bh=1fBop64o/FMXZjQOW6QlBFcRFBQuKQQI+pbsa0mhF0s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xYubdSB8ADpG/lEuXVrf9u7wJ1OilXumYbGJYARJy2bw4tRHrzXklw/8fvDQqIX6L
+         CbFOQy9nFXmALv4cSpbh6QUeFP9EARV6TSIp0nQr5B4KusujDZ/taWuVLsoxP6QRl/
+         sUOVcdIkwcYpslRjVGDMS5s0UilS+TEfK+PznnAo=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH 07/25] perf inject: The tool->read() call may pass a NULL evsel, handle it
+Date:   Tue,  9 Jul 2019 15:31:08 -0300
+Message-Id: <20190709183126.30257-8-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190709183126.30257-1-acme@kernel.org>
+References: <20190709183126.30257-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:mLpKUvjdvDUhw3C0lESUlBgRztaW463jyV9JDLd5qtkB543lknY
- rIBnmPz36XRigau/3NKaC3TAsaxMDXC4NaCyqjPC8RcEXKdxhvin7U01RAqOctwMD9YZ7qa
- BSTsrY6woa0Eds6yU4hxhleCtR/u9XWRT+qJO4aa7/ugO4oBIVAe2qk+Eu0E2glhAM//uXE
- GnpmYk7Jji1o0VIr/WT5g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SKpnKGbIXBI=:rcghbSGCxoLumohil+yF4H
- 8lyqKSiqeOgBB8F2doLaLc/kBrfRbzdHHjTQsPpEewP+DzGYTFkKqcE8EiDpTVBZ4yiBOocXk
- wjnbiJbN1l6jEqX2vvdlhUbkQ6KCSZIaZGK0WyBcvpP7/B5O98E6ZrsT8CmtHeZnuuteGdDaW
- oT5ptLr5Aq7z6CAqHMF5HUwRzOvAy7pWyv9oGTInD2yOJWk4kJxv1cHZ+UGGPqDNiIrPjQlLH
- 9tLta9HsQ9cg1gVa2k9P1+0BXh9eILXsOuMGJ5Y35R4XfAV3PNaeGI3nqyoMkJOwHBAhqkwHM
- 4nxBnYv+QS/GA1M2ow1nPG11SYyRcUxyJl9GwHb/i57qaTo8+zbUJ07cTv8Tv3dXciedTyGEU
- 5o5ibZzwKVPnQZuhZw7lXkUPFUGqVNhDSlBPTaNyrXpGULxxU2RY0rb5xcrElXUA4p0xSQAKJ
- qAwDVg61fQOXvrRlKNZp8v4ZTuXKmNd1buEVt3zLoGDnn6+4AX1eJsjm+f2LsOEVZClP8VbhI
- YIK9H4FBe4XgoMjPy1PAL/bwyS8DrvwmTf6wpJUz9RuPu/z+DfbWTM2VP5cbYAGKReEetqfS0
- 8++qHzVBO3Nfh1XXJyR344Asf4dD4P07lIQOkTnv5rCFLYdyzEp8vz14BlF98vyUWGImOMetU
- GCulqD45dpCA7/5i9NO5WexlyX6O6R9C1Kes+LibxHO3mDvGYhZDWcEAppkns7oMyhk6Y9OW0
- dm421jvAkvj59UgWcSyx2mCPnNxHkZeS8YhnaQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mmc cards on mmc1 are not detected because of wrong card detect (cd) level.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Change cd from GPIO_ACTIVE_HIGH to GPIO_ACTIVE_LOW.
+Check first, as machines__deliver_event() may have
+perf_evlist__id2evsel() returning NULL.
 
-This is necessary because of commit e63201f19438 ("mmc: omap_hsmmc:
-Delete platform data GPIO CD and WP")
+This was found while checking a report from Leo Yan that used the smatch
+tool to find places where a pointer is checked before use and then,
+later in the same function gets used without checking.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-muvb8xqyh0gysgfjfq35w642@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/arm/boot/dts/am335x-wega.dtsi | 2 +-
+ tools/perf/builtin-inject.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
-index b7d28a20341f..84581fed3d06 100644
---- a/arch/arm/boot/dts/am335x-wega.dtsi
-+++ b/arch/arm/boot/dts/am335x-wega.dtsi
-@@ -157,7 +157,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 8e0e06d3edfc..f4591a1438b4 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -224,7 +224,7 @@ static int perf_event__repipe_sample(struct perf_tool *tool,
+ 				     struct perf_evsel *evsel,
+ 				     struct machine *machine)
+ {
+-	if (evsel->handler) {
++	if (evsel && evsel->handler) {
+ 		inject_handler f = evsel->handler;
+ 		return f(tool, event, sample, evsel, machine);
+ 	}
 -- 
-2.11.0
+2.21.0
 
-
--- 
