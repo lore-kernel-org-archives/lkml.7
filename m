@@ -2,143 +2,73 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0A1C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED69C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B78214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573AD20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfGIS0F (ORCPT
+        id S1727696AbfGIS1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:26:05 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:52184 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726318AbfGIS0F (ORCPT
+        Tue, 9 Jul 2019 14:27:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46049 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGIS1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:26:05 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 08634634C7B;
-        Tue,  9 Jul 2019 21:25:01 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hkunU-000294-9D; Tue, 09 Jul 2019 21:25:00 +0300
-Date:   Tue, 9 Jul 2019 21:25:00 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Cc:     "mchehab@kernel.org" <mchehab@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
-Subject: Re: [v4 1/6] dt-bindings: media: Document bindings for DW MIPI CSI-2
- Host
-Message-ID: <20190709182500.3x544axnrgy72aje@valkosipuli.retiisi.org.uk>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-2-git-send-email-luis.oliveira@synopsys.com>
- <20190628141326.swgl3kg4fj5pmlqx@valkosipuli.retiisi.org.uk>
- <MN2PR12MB37109D7AADCE4823CB458CB9CBF60@MN2PR12MB3710.namprd12.prod.outlook.com>
+        Tue, 9 Jul 2019 14:27:18 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hkupf-0003fC-5y; Tue, 09 Jul 2019 20:27:15 +0200
+Date:   Tue, 9 Jul 2019 20:27:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+cc:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Subject: Re: [PATCH v2 1/7] rslib: Add tests for the encoder and decoder
+In-Reply-To: <CAMuHMdV96dj7=b9NTLua=-_kr18yQxjZhuiOFAEA8m22rSobNw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907092025530.1758@nanos.tec.linutronix.de>
+References: <20190620141039.9874-1-ferdinand.blomqvist@gmail.com> <20190620141039.9874-2-ferdinand.blomqvist@gmail.com> <CAMuHMdV96dj7=b9NTLua=-_kr18yQxjZhuiOFAEA8m22rSobNw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN2PR12MB37109D7AADCE4823CB458CB9CBF60@MN2PR12MB3710.namprd12.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+On Tue, 9 Jul 2019, Geert Uytterhoeven wrote:
 
-On Mon, Jul 08, 2019 at 03:21:50PM +0000, Luis de Oliveira wrote:
-> Hi Sakari,
+> Hi Ferdinand,
 > 
-> Thank you for your feedback.
-> I have my comments inline.
+> On Thu, Jun 20, 2019 at 4:13 PM Ferdinand Blomqvist
+> <ferdinand.blomqvist@gmail.com> wrote:
+> > A Reed-Solomon code with minimum distance d can correct any error and
+> > erasure pattern that satisfies 2 * #error + #erasures < d. If the
+> > error correction capacity is exceeded, then correct decoding cannot be
+> > guaranteed. The decoder must, however, return a valid codeword or report
+> > failure.
 > 
-> From: Sakari Ailus <sakari.ailus@iki.fi>
-> Date: Fri, Jun 28, 2019 at 15:13:26
+> > Note that the tests take a couple of minutes to complete.
 > 
-> > Hi Luis,
-> > 
-> > Thank you for the patchset.
-> > 
-> > On Tue, Jun 11, 2019 at 09:20:50PM +0200, Luis Oliveira wrote:
-> > > From: Luis Oliveira <lolivei@synopsys.com>
-> > > 
-> > > Add bindings for Synopsys DesignWare MIPI CSI-2 host.
-> > > 
-> > > Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> > > ---
-> > > Changelog
-> > > v3-v4
-> > > - remove "plat" from the block name @rob @laurent
-> > > - remove "phy-names" when single-entry @rob
-> > > - remove "snps,output-type" -> went to the driver config @laurent
-> > > 
-> > >  .../devicetree/bindings/media/snps,dw-csi.txt      | 41 ++++++++++++++++++++++
-> > >  1 file changed, 41 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi.txt b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> > > new file mode 100644
-> > > index 0000000..613b7f9
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/snps,dw-csi.txt
-> > > @@ -0,0 +1,41 @@
-> > > +Synopsys DesignWare CSI-2 Host controller
-> > > +
-> > > +Description
-> > > +-----------
-> > > +
-> > > +This HW block is used to receive image coming from an MIPI CSI-2 compatible
-> > > +camera.
-> > > +
-> > > +Required properties:
-> > > +- compatible		: shall be "snps,dw-csi"
-> > > +- reg			: physical base address and size of the device memory
-> > > +			  mapped registers;
-> > > +- interrupts		: DW CSI-2 Host interrupts
-> > > +- phys			: List of one PHY specifier (as defined in
-> > > +			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
-> > > +			  This PHY is a MIPI DPHY working in RX mode.
-> > > +- resets		: Reference to a reset controller (optional)
-> > > +
-> > > +The per-board settings:
-> > > + - port sub-node describing a single endpoint connected to the camera as
-> > > +   described in video-interfaces.txt[1].
-> > 
-> > Which endpoint properties in video-interfaces.txt are relevant for the
-> > hardware? Which values may they have?
-> > 
+> On which hardware? ;-)
 > 
-> Currently I'm using only two properties "data-lanes" and "bus-width", but 
-> I have plans to add blanking info also.
-> I will add more info.
+> JFTR, the test succeeded on m68k, after 6 hours and 12 minutes of runtime
+> on an emulated Atari Falcon (ARAnyM hosted by an i7-4770).
+> So far I have no plans to run it on bare metal.
 
-Isn't blanking defined by what the transmitter seneds? Or do you have
-hardware limitations on the receiver side?
+It took about 4 minutes on a 10 year old lame desktop and was way faster on
+one of the big irons.
 
-I've only heard of one such case before, and it was a very old parallel
-receiver.
+Thanks,
 
-If you have a CSI-2 receiver, bus-width isn't relevant --- it's for paralle
-interfaces only. Please add data-lanes to required endpoint properties.
-
--- 
-Regards,
-
-Sakari Ailus
+	tglx
