@@ -2,210 +2,149 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625CAC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DCCC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3864321537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73AC21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfGIFdZ (ORCPT
+        id S1726229AbfGIFfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:33:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43680 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbfGIFdY (ORCPT
+        Tue, 9 Jul 2019 01:35:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50210 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfGIFfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:33:24 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x695XGdW162122
-        for <linux-kernel@vger.kernel.org>; Tue, 9 Jul 2019 01:33:23 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tmk9vjx3f-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 01:33:20 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Tue, 9 Jul 2019 06:33:03 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 9 Jul 2019 06:32:59 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x695WwWw57212984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jul 2019 05:32:58 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 478B34C040;
-        Tue,  9 Jul 2019 05:32:58 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 138C04C044;
-        Tue,  9 Jul 2019 05:32:53 +0000 (GMT)
-Received: from oc0383214508.ibm.com (unknown [9.102.2.29])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Jul 2019 05:32:52 +0000 (GMT)
-Subject: Re: [PATCH v3 1/3] cpuidle-powernv : forced wakeup for stop states
-To:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, rjw@rjwysocki.net
-References: <20190704091827.19555-1-huntbag@linux.vnet.ibm.com>
- <20190704091827.19555-2-huntbag@linux.vnet.ibm.com>
- <1562493994.wseoth6w1s.astroid@bobo.none>
-From:   Abhishek <huntbag@linux.vnet.ibm.com>
-Date:   Tue, 9 Jul 2019 11:02:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 9 Jul 2019 01:35:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v15so1677352wml.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 22:35:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=V5gJWPHe+ON2iDj7iWFxs2l0G5bn1wyiP+yzEtHEr2g=;
+        b=FClI9IcThvfxcq0xjsySjFPLtwbrAhZDyylKa3vCOumsBVvReaz7VDrIytBXxMc/MH
+         KooUHPuMGFnNiPPDjoRwi9bGEyFEFMYfGp5TIO8PG4ZpIb5856nM/poXBxw0Rukivjr/
+         jdz2NKOwK1tC9sGkIks/U4KrZzszBg/mDcumofbP7xRd4bmjOOIyoNadDJEUfTlWL+WQ
+         5tTFwy4fkbJfeLniZF9mn3aN3PG4NKTSFd/UZxP4ONjlS+IotjOSnCxF6f5knXxmitsU
+         fuDLsj08Mytb4lyjMp7HO1k6hED0+n2FtrZd8c6tCxhSxipH54mLZiebZIBUF2mGI3kl
+         f5Lw==
+X-Gm-Message-State: APjAAAUAM3E0zm+vUVqd/UjNCYmlPAvYBWAfbxM/7Uuova2Ydrvji93R
+        J9s1w8kRB/XDdb1CJM9BDsgoZ+pg
+X-Google-Smtp-Source: APXvYqy0zFjN/YMKJGbmIkikjaYLtKo7swIgg66I3tGV7JyNKo2gQ2elkhMY0S8AdNU8znqpkr7OAg==
+X-Received: by 2002:a1c:a514:: with SMTP id o20mr20574269wme.149.1562650537043;
+        Mon, 08 Jul 2019 22:35:37 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id x24sm1740609wmh.5.2019.07.08.22.35.35
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 22:35:36 -0700 (PDT)
+Subject: Re: [PATCH 4/4] tty: n_gsm: add ioctl to map serial device to mux'ed
+ tty
+To:     =?UTF-8?Q?Martin_Hundeb=c3=b8ll?= <martin@geanix.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Esben Haabendal <esben@geanix.com>,
+        =?UTF-8?Q?Sean_Nyekj=c3=a6r?= <sean@geanix.com>
+References: <20190708190252.24628-1-martin@geanix.com>
+ <20190708190252.24628-4-martin@geanix.com>
+From:   Jiri Slaby <jslaby@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <15a4b2ad-cdb9-a679-156d-62aa6fddb85a@suse.com>
+Date:   Tue, 9 Jul 2019 07:35:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <1562493994.wseoth6w1s.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19070905-4275-0000-0000-0000034A6987
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070905-4276-0000-0000-0000385A9281
-Message-Id: <bf598a94-cf36-3a5d-6b7f-0de8fa43ff74@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907090067
+In-Reply-To: <20190708190252.24628-4-martin@geanix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+On 08. 07. 19, 21:02, Martin Hundebøll  wrote:
+> Guessing the base tty for a gsm0710 multiplexed serial device is not
+> currently possible, which makes it racy to use with multiple modems.
+> 
+> Add a way to map the physical serial tty to its related mux devices
+> using a ioctl.
+...
+> --- a/Documentation/serial/n_gsm.rst
+> +++ b/Documentation/serial/n_gsm.rst
+...
+> @@ -58,6 +61,11 @@ Major parts of the initialization program :
+>  	c.mtu = 127;
+>  	/* set the new configuration */
+>  	ioctl(fd, GSMIOC_SETCONF, &c);
+> +	/* get and print base gsmtty device node */
+> +	ioctl(fd, GSMIOC_GETBASE, &base);
+> +	/* the base node is used for mux control by the driver */
+> +	printf(first muxed line: /dev/gsmtty%i\n", base + 1);
 
-Will post next version with the changes you have suggested.
-There is a comment below.
+Missing " there.
 
-On 07/07/2019 03:43 PM, Nicholas Piggin wrote:
-> Abhishek Goel's on July 4, 2019 7:18 pm:
->> Currently, the cpuidle governors determine what idle state a idling CPU
->> should enter into based on heuristics that depend on the idle history on
->> that CPU. Given that no predictive heuristic is perfect, there are cases
->> where the governor predicts a shallow idle state, hoping that the CPU will
->> be busy soon. However, if no new workload is scheduled on that CPU in the
->> near future, the CPU may end up in the shallow state.
->>
->> This is problematic, when the predicted state in the aforementioned
->> scenario is a shallow stop state on a tickless system. As we might get
->> stuck into shallow states for hours, in absence of ticks or interrupts.
->>
->> To address this, We forcefully wakeup the cpu by setting the
->> decrementer. The decrementer is set to a value that corresponds with the
->> residency of the next available state. Thus firing up a timer that will
->> forcefully wakeup the cpu. Few such iterations will essentially train the
->> governor to select a deeper state for that cpu, as the timer here
->> corresponds to the next available cpuidle state residency. Thus, cpu will
->> eventually end up in the deepest possible state.
->>
->> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
->> ---
->>
->> Auto-promotion
->>   v1 : started as auto promotion logic for cpuidle states in generic
->> driver
->>   v2 : Removed timeout_needed and rebased the code to upstream kernel
->> Forced-wakeup
->>   v1 : New patch with name of forced wakeup started
->>   v2 : Extending the forced wakeup logic for all states. Setting the
->> decrementer instead of queuing up a hrtimer to implement the logic.
->>   v3 : Cleanly handle setting/resetting of decrementer so as to not break
->> irq work
->>
->>   arch/powerpc/include/asm/time.h   |  2 ++
->>   arch/powerpc/kernel/time.c        | 40 +++++++++++++++++++++++++++++++
->>   drivers/cpuidle/cpuidle-powernv.c | 32 +++++++++++++++++++++++++
->>   3 files changed, 74 insertions(+)
->>
->> diff --git a/arch/powerpc/include/asm/time.h b/arch/powerpc/include/asm/time.h
->> index 54f4ec1f9..a3bd4f3c0 100644
->> --- a/arch/powerpc/include/asm/time.h
->> +++ b/arch/powerpc/include/asm/time.h
->> @@ -188,6 +188,8 @@ static inline unsigned long tb_ticks_since(unsigned long tstamp)
->>   extern u64 mulhdu(u64, u64);
->>   #endif
->>   
->> +extern int set_dec_before_idle(u64 timeout);
->> +extern void reset_dec_after_idle(void);
->>   extern void div128_by_32(u64 dividend_high, u64 dividend_low,
->>   			 unsigned divisor, struct div_result *dr);
->>   
->> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
->> index 694522308..814de3469 100644
->> --- a/arch/powerpc/kernel/time.c
->> +++ b/arch/powerpc/kernel/time.c
->> @@ -576,6 +576,46 @@ void arch_irq_work_raise(void)
->>   
->>   #endif /* CONFIG_IRQ_WORK */
->>   
->> +/*
->> + * Returns 1 if we have reprogrammed the decrementer for idle.
->> + * Returns 0 if the decrementer is unchanged.
->> + */
->> +int set_dec_before_idle(u64 timeout)
->> +{
->> +	u64 *next_tb = this_cpu_ptr(&decrementers_next_tb);
->> +	u64 now = get_tb_or_rtc();
->> +
->> +	/*
->> +	 * Ensure that the timeout is at least one microsecond
->> +	 * before the current decrement value. Else, we will
->> +	 * unnecesarily wakeup again within a microsecond.
->> +	 */
->> +	if (now + timeout + 512 > *next_tb)
-> I would pass this 512 in as a parameter and put the comment in the
-> idle code. Timer code does not know/care.
->
-> Maybe return bool and call it try_set_dec_before_idle.
->> +		return 0;
->> +
->> +	set_dec(timeout);
-> This needs to have
->
->    if (test_irq_work_pending())
->        set_dec(1);
->
-> here AFAIKS
->
->> +
->> +	return 1;
->> +}
->> +
->> +void reset_dec_after_idle(void)
->> +{
->> +	u64 now;
->> +	u64 *next_tb;
->> +
->> +	if (test_irq_work_pending())
->> +		return;
->> +
->> +	now = get_tb_or_rtc();
->> +	next_tb = this_cpu_ptr(&decrementers_next_tb);
->> +	if (now >= *next_tb)
->> +		return;
-> Are you sure it's okay to escape early in this case?
+> --- a/drivers/tty/n_gsm.c
+> +++ b/drivers/tty/n_gsm.c
+...
+> @@ -2623,6 +2624,11 @@ static int gsmld_ioctl(struct tty_struct *tty, struct file *file,
+>  		if (copy_from_user(&c, (void *)arg, sizeof(c)))
+>  			return -EFAULT;
+>  		return gsm_config(gsm, &c);
+> +	case GSMIOC_GETBASE:
+> +		base = mux_num_to_base(gsm);
+> +		if (copy_to_user((void *)arg, &base, sizeof(base)))
 
-Yeah, It looks safe. In power9_idle_type, we call irq_set_pending_from_srr1
-which sets the irq_happened. If reason is IRQ_DEC, in __check_irq_replay,
-decrementer_check_overflow will be called which will set dec to a positive
-valid value.
-Also, we typically disable MSR EE before entering stop. And if a decrementer
-wakes us up, before we enable EE, check for pending interrupt will be done.
-And we finally reset dec to a positive value before we set EE=1.
-> Thanks,
-> Nick
->
+put_user would be more appropriate (and easier) for an int here.
 
-Thanks,
-Abhishek
-
+thanks,
+-- 
+js
+suse labs
