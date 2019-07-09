@@ -2,124 +2,265 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4781CC73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE50DC73C47
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C04E2171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UoJ33hjw"
+	by mail.kernel.org (Postfix) with ESMTP id C6A632173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfGINIw (ORCPT
+        id S1726990AbfGINJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:08:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55060 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfGINIw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:08:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p74so3028213wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 06:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5zNw7yOYRGRe3lmbESQC+BIywwsER5mP5dHtawRmtUg=;
-        b=UoJ33hjw2DBUdQFoWS7L44YXRtnxWNnY7mi1ulDEHyxW3pYDsBu0z1m2o30P0n3fee
-         kcoCCUI+RMcB1s2PORs1EB0sZRFPwv2hOCw+PSg/Qw29A/9+kELX6c5HVVMLkWS24w8d
-         ImGM5PQX3xf52ZwWewIuxDpxOP0qya5ynIMcFDu5C7bDbabKNN5L9zX0JSw6HG+9NmP+
-         Uqmkq1tQdlNz+DmfJEia90+qVAXC3h3ycmM0eu/Lvf4enGxKHRZH2/FH7z4EleDVulOf
-         J83tBVT481Sc0wf+cguIss4ZeDPmHV4wWUgebavf/DPyEI23lDPaNyaoJ+AXodcgUMRH
-         NQgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5zNw7yOYRGRe3lmbESQC+BIywwsER5mP5dHtawRmtUg=;
-        b=t4p1zzpl67KsAEAWAR/9ZxgeSVnHAOttrBtGB4OPEvoDTLYOHkWD6nAwbKWKiA22ZD
-         ktOpN1qv/nAE1JPjRWRBvcVcD2/bl8c9cBKJ5GnMJyr0ZVw0qjjQ6qhdhYOfmzSrZj/t
-         lHhZyto4YZb5rLp/mf5GAWpnOBjeJfx4NmlLItZaCdXTBNxj3PF8orfrgFmYIufHwy8O
-         BS8bH2FobOt2eFwPV4dDRP2GcpyEHm4hFnfm29jIMSpv0hlU3nb9Q0x+mQgp6QtgUFY0
-         OgU9d6faRbaY9gl/YfyZ58fnlFMA7aVN3AliqQPdBmjXKXBwmfc4W0Z3B2bVylR2zGPS
-         6VGw==
-X-Gm-Message-State: APjAAAUxR/nbRWiyTSfuNd1AJxA5MkbHOfCiX112xp+yqKU1CXQt+2TE
-        yXQPt96auOZcdLRV7LxTotvC9tmW/Ks7P38FcJw=
-X-Google-Smtp-Source: APXvYqyqC0d9hRgfT+ZieDiI7TjJUankW7mnEizvkt8y5jvweTTMyCC91zHfJhxUqmmygj4YFXdcPTHW4axFKWce+jU=
-X-Received: by 2002:a1c:9e90:: with SMTP id h138mr23670087wme.67.1562677729889;
- Tue, 09 Jul 2019 06:08:49 -0700 (PDT)
+        Tue, 9 Jul 2019 09:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfGINJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:09:21 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C42214AF;
+        Tue,  9 Jul 2019 13:09:19 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 09:09:17 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josef Bacik <jbacik@fb.com>
+Cc:     <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
+Subject: Re: [PATCH 04/11] trace-cmd: add global functions for live tracing
+Message-ID: <20190709090917.7705c1da@gandalf.local.home>
+In-Reply-To: <1448053053-24188-5-git-send-email-jbacik@fb.com>
+References: <1448053053-24188-1-git-send-email-jbacik@fb.com>
+        <1448053053-24188-5-git-send-email-jbacik@fb.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190709091048.35260-1-yuehaibing@huawei.com>
-In-Reply-To: <20190709091048.35260-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 9 Jul 2019 09:08:38 -0400
-Message-ID: <CADnq5_OTri_FzBHUSzKDPrMMAx2fDj8Mx67qHSofo+Hx7Q+60Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: Fix build without CONFIG_HMM_MIRROR
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Yang, Philip" <Philip.Yang@amd.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 8:55 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> If CONFIG_HMM_MIRROR is not set, building may fails:
->
-> In file included from drivers/gpu/drm/amd/amdgpu/amdgpu.h:72:0,
->                  from drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:40:
-> drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h:69:20: error: field mirror has incomplete type
->   struct hmm_mirror mirror;
->
-> Fixes: 7590f6d211ec ("drm/amdgpu: Prepare for hmm_range_register API change")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Fri, 20 Nov 2015 15:57:26 -0500
+Josef Bacik <jbacik@fb.com> wrote:
 
-I already applied a similar patch from Arnd.
+> We need a few functions to disable/enable tracing as well as add events to be
+> enabled on the first instance, this patch turns a couple of these local
+> functions into library functions.  Thanks,
 
-Thanks,
+Hi Josef,
 
-Alex
+Not sure you still use this, as it's not really a library function
+anymore. But we are currently cleaning up the trace-cmd code to create
+a real library, and doing it in baby steps. The
+tracecmd_enable_events() function is causing some issues and it was
+added by you. Are you OK if we remove it. At least temporarily until we
+separate out the "enabling" part into the library?
 
+Thanks!
+
+-- Steve
+
+
+> 
+> Signed-off-by: Josef Bacik <jbacik@fb.com>
 > ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
-> index 281fd9f..b14f175 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
-> @@ -65,8 +65,10 @@ struct amdgpu_mn {
->         struct rw_semaphore     lock;
->         struct rb_root_cached   objects;
->
-> +#if defined(CONFIG_HMM_MIRROR)
->         /* HMM mirror */
->         struct hmm_mirror       mirror;
-> +#endif
->  };
->
->  #if defined(CONFIG_HMM_MIRROR)
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>  trace-cmd.h    |  5 +++++
+>  trace-record.c | 45 +++++++++++++++++++++++++++------------------
+>  2 files changed, 32 insertions(+), 18 deletions(-)
+> 
+> diff --git a/trace-cmd.h b/trace-cmd.h
+> index b4fa7fd..9a9ca30 100644
+> --- a/trace-cmd.h
+> +++ b/trace-cmd.h
+> @@ -268,6 +268,11 @@ int tracecmd_start_recording(struct tracecmd_recorder *recorder, unsigned long s
+>  void tracecmd_stop_recording(struct tracecmd_recorder *recorder);
+>  void tracecmd_stat_cpu(struct trace_seq *s, int cpu);
+>  long tracecmd_flush_recording(struct tracecmd_recorder *recorder);
+> +int tracecmd_add_event(const char *event_str, int stack);
+> +void tracecmd_enable_events(void);
+> +void tracecmd_disable_all_tracing(int disable_tracer);
+> +void tracecmd_disable_tracing(void);
+> +void tracecmd_enable_tracing(void);
+>  
+>  /* --- Plugin handling --- */
+>  extern struct pevent_plugin_option trace_ftrace_options[];
+> diff --git a/trace-record.c b/trace-record.c
+> index 417b701..7c471ab 100644
+> --- a/trace-record.c
+> +++ b/trace-record.c
+> @@ -841,7 +841,6 @@ static void update_ftrace_pids(int reset)
+>  
+>  static void update_event_filters(struct buffer_instance *instance);
+>  static void update_pid_event_filters(struct buffer_instance *instance);
+> -static void enable_tracing(void);
+>  
+>  /**
+>   * make_pid_filter - create a filter string to all pids against @field
+> @@ -1106,7 +1105,7 @@ static void run_cmd(enum trace_type type, int argc, char **argv)
+>  	if (!pid) {
+>  		/* child */
+>  		update_task_filter();
+> -		enable_tracing();
+> +		tracecmd_enable_tracing();
+>  		enable_ptrace();
+>  		/*
+>  		 * If we are using stderr for stdout, switch
+> @@ -1795,7 +1794,7 @@ static int read_tracing_on(struct buffer_instance *instance)
+>  	return ret;
+>  }
+>  
+> -static void enable_tracing(void)
+> +void tracecmd_enable_tracing(void)
+>  {
+>  	struct buffer_instance *instance;
+>  
+> @@ -1808,7 +1807,7 @@ static void enable_tracing(void)
+>  		reset_max_latency();
+>  }
+>  
+> -static void disable_tracing(void)
+> +void tracecmd_disable_tracing(void)
+>  {
+>  	struct buffer_instance *instance;
+>  
+> @@ -1816,9 +1815,9 @@ static void disable_tracing(void)
+>  		write_tracing_on(instance, 0);
+>  }
+>  
+> -static void disable_all(int disable_tracer)
+> +void tracecmd_disable_all_tracing(int disable_tracer)
+>  {
+> -	disable_tracing();
+> +	tracecmd_disable_tracing();
+>  
+>  	if (disable_tracer) {
+>  		disable_func_stack_trace();
+> @@ -1991,6 +1990,11 @@ static void enable_events(struct buffer_instance *instance)
+>  	}
+>  }
+>  
+> +void tracecmd_enable_events(void)
+> +{
+> +	enable_events(first_instance);
+> +}
+> +
+>  static void set_clock(struct buffer_instance *instance)
+>  {
+>  	char *path;
+> @@ -3074,15 +3078,15 @@ static char *get_date_to_ts(void)
+>  	}
+>  
+>  	for (i = 0; i < date2ts_tries; i++) {
+> -		disable_tracing();
+> +		tracecmd_disable_tracing();
+>  		clear_trace();
+> -		enable_tracing();
+> +		tracecmd_enable_tracing();
+>  
+>  		gettimeofday(&start, NULL);
+>  		write(tfd, STAMP, 5);
+>  		gettimeofday(&end, NULL);
+>  
+> -		disable_tracing();
+> +		tracecmd_disable_tracing();
+>  		ts = find_time_stamp(pevent);
+>  		if (!ts)
+>  			continue;
+> @@ -3699,6 +3703,11 @@ profile_add_event(struct buffer_instance *instance, const char *event_str, int s
+>  	return 0;
+>  }
+>  
+> +int tracecmd_add_event(const char *event_str, int stack)
+> +{
+> +	return profile_add_event(first_instance, event_str, stack);
+> +}
+> +
+>  static void enable_profile(struct buffer_instance *instance)
+>  {
+>  	int stacktrace = 0;
+> @@ -3891,7 +3900,7 @@ void trace_record (int argc, char **argv)
+>  
+>  		}
+>  		update_first_instance(instance, topt);
+> -		disable_tracing();
+> +		tracecmd_disable_tracing();
+>  		exit(0);
+>  	} else if (strcmp(argv[1], "restart") == 0) {
+>  		for (;;) {
+> @@ -3922,7 +3931,7 @@ void trace_record (int argc, char **argv)
+>  
+>  		}
+>  		update_first_instance(instance, topt);
+> -		enable_tracing();
+> +		tracecmd_enable_tracing();
+>  		exit(0);
+>  	} else if (strcmp(argv[1], "reset") == 0) {
+>  		/* if last arg is -a, then -b and -d apply to all instances */
+> @@ -3984,7 +3993,7 @@ void trace_record (int argc, char **argv)
+>  			}
+>  		}
+>  		update_first_instance(instance, topt);
+> -		disable_all(1);
+> +		tracecmd_disable_all_tracing(1);
+>  		set_buffer_size();
+>  		clear_filters();
+>  		clear_triggers();
+> @@ -4314,7 +4323,7 @@ void trace_record (int argc, char **argv)
+>  
+>  	if (!extract) {
+>  		fset = set_ftrace(!disable, total_disable);
+> -		disable_all(1);
+> +		tracecmd_disable_all_tracing(1);
+>  
+>  		for_all_instances(instance)
+>  			set_clock(instance);
+> @@ -4365,7 +4374,7 @@ void trace_record (int argc, char **argv)
+>  	} else {
+>  		if (!(type & (TRACE_TYPE_RECORD | TRACE_TYPE_STREAM))) {
+>  			update_task_filter();
+> -			enable_tracing();
+> +			tracecmd_enable_tracing();
+>  			exit(0);
+>  		}
+>  
+> @@ -4373,7 +4382,7 @@ void trace_record (int argc, char **argv)
+>  			run_cmd(type, (argc - optind) - 1, &argv[optind + 1]);
+>  		else {
+>  			update_task_filter();
+> -			enable_tracing();
+> +			tracecmd_enable_tracing();
+>  			/* We don't ptrace ourself */
+>  			if (do_ptrace && filter_pid >= 0)
+>  				ptrace_attach(filter_pid);
+> @@ -4383,7 +4392,7 @@ void trace_record (int argc, char **argv)
+>  				trace_or_sleep(type);
+>  		}
+>  
+> -		disable_tracing();
+> +		tracecmd_disable_tracing();
+>  		if (!latency)
+>  			stop_threads(type);
+>  	}
+> @@ -4391,7 +4400,7 @@ void trace_record (int argc, char **argv)
+>  	record_stats();
+>  
+>  	if (!keep)
+> -		disable_all(0);
+> +		tracecmd_disable_all_tracing(0);
+>  
+>  	/* extract records the date after extraction */
+>  	if (extract && date) {
+> @@ -4399,7 +4408,7 @@ void trace_record (int argc, char **argv)
+>  		 * We need to start tracing, don't let other traces
+>  		 * screw with our trace_marker.
+>  		 */
+> -		disable_all(1);
+> +		tracecmd_disable_all_tracing(1);
+>  		date2ts = get_date_to_ts();
+>  	}
+>  
+
