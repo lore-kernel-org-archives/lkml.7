@@ -6,60 +6,78 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77FEC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A73C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3A021743
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3D821670
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562687212;
-	bh=4f3MOO8zcd+5CtA6PP6zPt3BLYAEsqlHl7hOpTexx+I=;
+	s=default; t=1562687310;
+	bh=8uRt2LckP8V6eOMg2L1MMuumGINZ1eU0bTBj8g3A81c=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qv+URtwrPbjghkM7KTPKkLaBAj9ZRhI6u5j5pe9aLGTXU9HLZ/aZ4k6TAST/p47xA
-	 M6s5+24/RQ7+Sq4gVsuOwp/aRvGfKXQXacuAJtVp0CuJ4gqgqwR8yO67PVBOANemw2
-	 0jRqoUTMaDK6HD8EzbiU0EzrvbXpz2zdW3MESAYc=
+	b=a30JDmoRXv3s+xOCfYoni50UiVkUpG63oua9JQbKK/7wm16DHaDXtG8ngf0ylHhnx
+	 SzIr3fsVXskO9tvGunYz22h8mGEUfk3T4VB8Y0+MG+GDvaPrUc2BKvvUjBzAZkz/uH
+	 sld4pOLBgrUp9R7PZsYZ0WdAegz17OU1sf1aFwmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfGIPqv (ORCPT
+        id S1726375AbfGIPs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 11:46:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39488 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 11:48:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfGIPqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 11:46:51 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        id S1726060AbfGIPs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 11:48:28 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A9CD21707;
-        Tue,  9 Jul 2019 15:46:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3E7721743;
+        Tue,  9 Jul 2019 15:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562687210;
-        bh=4f3MOO8zcd+5CtA6PP6zPt3BLYAEsqlHl7hOpTexx+I=;
+        s=default; t=1562687306;
+        bh=8uRt2LckP8V6eOMg2L1MMuumGINZ1eU0bTBj8g3A81c=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Nu/W7DL+FL92KLTyNHww2Nb1KodWLchrMgI7cuVRB4QWi+/Uhhg4t8tzDx/Ifitsv
-         gnYak4Ph65a5Z0KFTMtOJvcHHQYCHe2sfvLFYEeIIXrtTNBdTfmDicDsfBjhUzzXcr
-         TfNjRvgu0nsTE8b0Ko/P7Rskv1ehTYAw1zRqkpmU=
-Received: by mail-qt1-f180.google.com with SMTP id d17so20677431qtj.8;
-        Tue, 09 Jul 2019 08:46:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAXI++Q+XHWFpelfswKXSQJTX+4t7ZpFQhWDSm75xdWyz79aIhtI
-        iqJ7AuK8M0AiN2OVl8qt5JcBaIlF56FV5Yc/RQ==
-X-Google-Smtp-Source: APXvYqydRCRswf88vjxavUG/qgoU+4yXgYQVD+q2t75PqwMNmeOfzwJzAfkQW1pTkrQVapqMI74TYwhjY2kifHq7aDs=
-X-Received: by 2002:aed:3f10:: with SMTP id p16mr19409167qtf.110.1562687209443;
- Tue, 09 Jul 2019 08:46:49 -0700 (PDT)
+        b=KON4ngr4Z1oJj/l8kSJhRwNeUk2R1NwwJID4TkmcPIl+MyUHNX7S9wJWmLi5kcXKR
+         9yQxDgx12Pr9RsOFxewTO1k23CslxM8Urly5NjQV84pjT6TLgiu+KpOv98L6F8TVW0
+         OXrssDvfqBv5JToN0eDMoLBPFu4Trx+79enV2b4E=
+Received: by mail-qt1-f169.google.com with SMTP id h18so14673216qtm.9;
+        Tue, 09 Jul 2019 08:48:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAUBtqYLDPGN0x+RA9MmxX6sGsFbECumxVvTNbQEZvJTMgaDU/n7
+        spKsZz3u9SM/9FbyWgBKX43YQ61fZd4CvDhPeA==
+X-Google-Smtp-Source: APXvYqwUwZzNp9+krU8sgcmMHMgX3VqOxwtH/223QreLrdzSam3oenUJ5tLIk/dBBxOlEo8N5HAE7gFB0xXhMGeAItk=
+X-Received: by 2002:ac8:3908:: with SMTP id s8mr19233318qtb.224.1562687305930;
+ Tue, 09 Jul 2019 08:48:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190607154410.10633-1-paul@crapouillou.net> <20190607154410.10633-2-paul@crapouillou.net>
- <20190709020425.GA7984@bogus> <1562642299.1834.0@crapouillou.net>
-In-Reply-To: <1562642299.1834.0@crapouillou.net>
+References: <20190605141253.38554-1-ghung.quanta@gmail.com>
+ <20190605141253.38554-2-ghung.quanta@gmail.com> <20190709014058.GA30269@bogus>
+ <0c90f9376c0e425c9a226379f7e5bfad@quantatw.com>
+In-Reply-To: <0c90f9376c0e425c9a226379f7e5bfad@quantatw.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 9 Jul 2019 09:46:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJKqhnt1a7vhF+4RA53dSNUaB==8Tmcida3z63nDSZGKA@mail.gmail.com>
-Message-ID: <CAL_JsqJKqhnt1a7vhF+4RA53dSNUaB==8Tmcida3z63nDSZGKA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 9 Jul 2019 09:48:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKf+Z9XJJvqcOw-0L-BLCt_Yv-qv-eu+zhoNFnk8rH8Og@mail.gmail.com>
+Message-ID: <CAL_JsqKf+Z9XJJvqcOw-0L-BLCt_Yv-qv-eu+zhoNFnk8rH8Og@mail.gmail.com>
+Subject: Re: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
+To:     =?UTF-8?B?R2VvcmdlIEh1bmcgKOa0quW/oOaVrCk=?= 
+        <George.Hung@quantatw.com>
+Cc:     George Hung <ghung.quanta@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tali Perry <tali.perry1@gmail.com>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "wak@google.com" <wak@google.com>,
+        "benjaminfair@google.com" <benjaminfair@google.com>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        "tomer.maimon@nuvoton.com" <tomer.maimon@nuvoton.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "Avi.Fishman@nuvoton.com" <Avi.Fishman@nuvoton.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Patrick Venture <venture@google.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,63 +85,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 9:18 PM Paul Cercueil <paul@crapouillou.net> wrote:
+On Tue, Jul 9, 2019 at 3:50 AM George Hung (=E6=B4=AA=E5=BF=A0=E6=95=AC)
+<George.Hung@quantatw.com> wrote:
+>
+> Hi Rob,
 >
 >
->
-> Le lun. 8 juil. 2019 =C3=A0 22:04, Rob Herring <robh@kernel.org> a =C3=A9=
-crit :
-> > On Fri, Jun 07, 2019 at 05:44:05PM +0200, Paul Cercueil wrote:
-> >>  Right now none of the Ingenic-based boards probe this driver from
-> >>  devicetree. This driver defined three compatible strings for the
-> >> exact
-> >>  same behaviour. Before these strings are used, we can remove two of
-> >>  them.
-> >>
-> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  ---
-> >>
-> >>  Notes:
-> >>      v2: Rebase on v5.2-rc3
-> >>
-> >>   Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5
-> >> +----
-> >>   1 file changed, 1 insertion(+), 4 deletions(-)
-> >>
-> >>  diff --git
-> >> a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> >> b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> >>  index 7d9d3f90641b..493bec80d59b 100644
-> >>  --- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> >>  +++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> >>  @@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
-> >>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >>   Required properties:
-> >>  -- compatible: One of:
-> >>  -  * "ingenic,jz4740-pwm"
-> >>  -  * "ingenic,jz4770-pwm"
-> >>  -  * "ingenic,jz4780-pwm"
-> >>  +- compatible: Should be "ingenic,jz4740-pwm"
+> > -----Original Message-----
+> > From: openbmc
+> > [mailto:openbmc-bounces+george.hung=3Dquantatw.com@lists.ozlabs.org] On
+> > Behalf Of Rob Herring
+> > Sent: Tuesday, July 09, 2019 9:41 AM
+> > To: George Hung
+> > Cc: Mark Rutland; Linus Walleij; Tali Perry; paulmck@linux.ibm.com;
+> > wak@google.com; benjaminfair@google.com; openbmc@lists.ozlabs.org;
+> > tomer.maimon@nuvoton.com; devicetree@vger.kernel.org; Borislav Petkov;
+> > Avi.Fishman@nuvoton.com; Jonathan Cameron; Mauro Carvalho Chehab;
+> > linux-edac; Patrick Venture; Nicolas Ferre; linux-kernel; James Morse; =
+Greg
+> > Kroah-Hartman; davem@davemloft.net
+> > Subject: Re: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC
+> > documentation
 > >
-> > Are you sure all 3 chips are exactly the same features and bugs?
+> > On Wed, Jun 05, 2019 at 10:12:53PM +0800, George Hung wrote:
+> > > Add device tree documentation for Nuvoton BMC ECC
+> > >
+> > > Signed-off-by: George Hung <ghung.quanta@gmail.com>
+> > > ---
+> > >  .../bindings/edac/npcm7xx-sdram-edac.txt        | 17
+> > +++++++++++++++++
+> > >  1 file changed, 17 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> > > b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> > > new file mode 100644
+> > > index 000000000000..dd4dac59a5bd
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/edac/npcm7xx-sdram-edac.txt
+> > > @@ -0,0 +1,17 @@
+> > > +Nuvoton NPCM7xx SoC EDAC device driver
+> > > +
+> > > +The Nuvoton NPCM7xx SoC supports DDR4 memory with/without ECC and
+> > the
+> > > +driver uses the EDAC framework to implement the ECC detection and
+> > corrtection.
+> > > +
+> > > +Required properties:
+> > > +- compatible:      should be "nuvoton,npcm7xx-sdram-edac"
+> >
+> > Is this for the whole SDRAM controller or just ECC related registers?
+> > In the former case, the naming should just reflect the block name and n=
+ot a
+> > Linux term.
 >
-> The hardware on these chips have tiny differences, but the current
-> driver code works on all the SoCs.
->
->
-> > The correct thing to do here generally is the 4770 and 4780 would also
-> > have ingenic,jz4740-pwm as a fallback compatible. Then the driver can
-> > match on that until you find some difference and can use the more
-> > specific compatible.
->
-> Why not just update the devicetree with the new compatible string when
-> a difference is found?
+> Sorry for confused naming, the address space is for the whole memory cont=
+roller registers indeed,
+> but the driver only uses the ECC related registers.
+> Should I change the name to "nuvoton,npcm7xx-edac" ?
 
-Because dtb's should be part of the firmware/bootloader and can be
-updated independently. Maybe you don't care on your platform, but
-that's the preferred model for DT and what we follow. DTs live in the
-kernel tree for convenience, but are independent from the kernel.
+No, you should drop the 'edac' part. The DT describes the h/w, not
+what one driver (currently) uses.
 
 Rob
