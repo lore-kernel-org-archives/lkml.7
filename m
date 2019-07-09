@@ -2,108 +2,140 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2832C606D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4193C606D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6DB216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562660337;
-	bh=yETm1R+/AwGgj3mNw3qdDl8zb6tTuboYTUS5fHpgITY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eH4afyvNckoUhuaE4L1OD7uUgRXTF34Phvzt4q682xwydgjetAI2izu9S9hNyZDaH
-	 muOCY0Mcbgg9DvI8xE+kQmw19kAIT+8XLXt8aVekEoGaQqd9Hqu5bs0dPY7ERL8TQo
-	 /lMI8F4XoHIzRyEp9/JjhkDXeQX9YU5llyewtJQE=
+	by mail.kernel.org (Postfix) with ESMTP id AD80221537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WZknx/Sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfGIIS4 (ORCPT
+        id S1726055AbfGIIWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:18:56 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44779 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfGIIS4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:18:56 -0400
-Received: by mail-ot1-f67.google.com with SMTP id b7so19017882otl.11;
-        Tue, 09 Jul 2019 01:18:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tbzistLccCjhRUbVguErBlGFRjJHeoe5cXWmH1bR0NI=;
-        b=qy9/17YQq2oH39jVwUWi2mtoA+fK35CiCphlgRCaOCWHQUegmjK9qBcu4ZoiDq9qWl
-         IEtvvymIRjxDIrFTLnWzgE9esBH9R5TpqjBKymVI1kXcjvz7lkiNKKuyUIR89ngq2CCu
-         Wo0dFf7mkKlURTcJkPozj3463gg/hp95Ww+Smaj+32HinCKX4HT2XH2op50pTwTQcnlp
-         cqGFsRSvITIwnqmwkyG+7P1/mYUjoTn/P2ErdEGdzCc2WdqfS7uj+WolsjXZTlwBswZG
-         ryeo+mvwDhUi1jwWExYQu9sgpMtS4LJze2CVtXObu7gS0xkp1zy+Cr7Wak1XDjlwV1fq
-         biIw==
-X-Gm-Message-State: APjAAAWWdP5IyPx6Vvty+sKfi52XJKNRq4yjYJwNpVJ7JMVKqmsv2HoT
-        BFX4Wuw035t5bE4uimTzHcRGCKQyPwBDGuz9d1U=
-X-Google-Smtp-Source: APXvYqxEEyCFSpF7JA4EpZYh/eKtKlRvpiQwISy5x0/RiximZPGzhceoUn4kcqYIYlIjwB8Rje3GQ2fLOegT458kOsU=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr16536792otn.266.1562660335425;
- Tue, 09 Jul 2019 01:18:55 -0700 (PDT)
+        Tue, 9 Jul 2019 04:22:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40715 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbfGIIWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 04:22:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jZzz5zb8z9sN1;
+        Tue,  9 Jul 2019 18:22:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562660529;
+        bh=0E4mbQbXSeBh+V/gm/m6xxRJWGDNOPL5eLSQYqqllzA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WZknx/SrW2PSNbeKjCs/cc1gz3yjJ67iwppccmqrxniqn7XUSOAV/5wOIbF4TRSZN
+         gF9zL+aPVQ6+yeDX48WLHG17zlafSg6PX6aMKB+w7tket/hjYhNJpFC+L5ymzaNac6
+         FWrBINwmDTixQfjzjRvq3W7QgXuPlGBK/y4tUDBYKiYXUMYOE5YAdD11ao+Dd/gsej
+         WBOVZoUsIL4Y01BdjeCcv3iK6hxC2zJ02FZyhLg/senddC89iDH+QeCyb744kVJI1E
+         UJ25v+9XY9Os4OIjjMwFvAL+Qzua6DSi2kv9AqyrNssgO/1w5LnEvxTlVmaqGGWJaL
+         4fj+hSaAN35Jw==
+Date:   Tue, 9 Jul 2019 18:21:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+        Wim Van Sebroeck <wim@iguana.be>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: linux-next: manual merge of the char-misc tree with the watchdog
+ tree
+Message-ID: <20190709182153.4ee49f62@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com> <20190705095800.43534-9-mika.westerberg@linux.intel.com>
-In-Reply-To: <20190705095800.43534-9-mika.westerberg@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 9 Jul 2019 10:18:44 +0200
-Message-ID: <CAJZ5v0g1JKQxw=Rr-BYE6hgcbBXat24tK8s78k+ghmBhr=avLg@mail.gmail.com>
-Subject: Re: [PATCH 8/8] ACPI / property: Add two new Thunderbolt property
- GUIDs to the list
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/RbsQDjixmUr_A0ZOBpiPoum"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 11:58 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> Ice Lake Thunderbolt controller includes two new device property
-> compatible properties that we need to be able to extract in the driver
-> so add them to the growing array of GUIDs.
->
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/acpi/property.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index da3ced297f19..07cbacbab861 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -39,6 +39,12 @@ static const guid_t prp_guids[] = {
->         /* External facing port GUID: efcc06cc-73ac-4bc3-bff0-76143807c389 */
->         GUID_INIT(0xefcc06cc, 0x73ac, 0x4bc3,
->                   0xbf, 0xf0, 0x76, 0x14, 0x38, 0x07, 0xc3, 0x89),
-> +       /* TBT GUID for IMR_VALID: c44d002f-69f9-4e7d-a904-a7baabdf43f7 */
+--Sig_/RbsQDjixmUr_A0ZOBpiPoum
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'd prefer Thunderbolt to be spelled in full here (and below).
+Hi all,
 
-LGTM otherwise.
+Today's linux-next merge of the char-misc tree got a conflict in:
 
-> +       GUID_INIT(0xc44d002f, 0x69f9, 0x4e7d,
-> +                 0xa9, 0x04, 0xa7, 0xba, 0xab, 0xdf, 0x43, 0xf7),
-> +       /* TBT GUID for WAKE_SUPPORTED: 6c501103-c189-4296-ba72-9bf5a26ebe5d */
-> +       GUID_INIT(0x6c501103, 0xc189, 0x4296,
-> +                 0xba, 0x72, 0x9b, 0xf5, 0xa2, 0x6e, 0xbe, 0x5d),
->  };
->
->  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
-> --
-> 2.20.1
->
+  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+
+between commit:
+
+  8c21ead3ea5d ("dt-bindings: watchdog: move i.MX system controller watchdo=
+g binding to SCU")
+
+from the watchdog tree and commit:
+
+  c2a6ea23a401 ("dt-bindings: fsl: scu: add ocotp binding")
+
+from the char-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 1b56557df521,f378922906f6..000000000000
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@@ -133,16 -133,18 +133,28 @@@ RTC bindings based on SCU Message Proto
+  Required properties:
+  - compatible: should be "fsl,imx8qxp-sc-rtc";
+ =20
+ +Watchdog bindings based on SCU Message Protocol
+ +------------------------------------------------------------
+ +
+ +Required properties:
+ +- compatible: should be:
+ +              "fsl,imx8qxp-sc-wdt"
+ +              followed by "fsl,imx-sc-wdt";
+ +Optional properties:
+ +- timeout-sec: contains the watchdog timeout in seconds.
+ +
++ OCOTP bindings based on SCU Message Protocol
++ ------------------------------------------------------------
++ Required properties:
++ - compatible:		Should be "fsl,imx8qxp-scu-ocotp"
++ - #address-cells:	Must be 1. Contains byte index
++ - #size-cells:		Must be 1. Contains byte length
++=20
++ Optional Child nodes:
++=20
++ - Data cells of ocotp:
++   Detailed bindings are described in bindings/nvmem/nvmem.txt
++=20
+  Example (imx8qxp):
+  -------------
+  aliases {
+
+--Sig_/RbsQDjixmUr_A0ZOBpiPoum
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0kTqEACgkQAVBC80lX
+0GzMiQf+L6LmHyXul5iEqcecvgRhkKD7R6qABepAqQOIwGLck9KI1lCX0dT/dg3H
+OTK75OYa5LViz1739eYPfqVhnS0WM3KEqhFqD4TY1QiNUQ6Et0ZXqB2t2zKGbxnl
+e7iIHV1QQT8sWtw5yIc29AVbrfIfsndN6Fp5gMg7RRf3JTnVxtFLgj34bCAf8gBG
+mlbwZC/5oAOb22MPTUp6QjbooI7ouBgGfWMblN9bsz9EiZ++9nwQCP1rY9Y1Lt7w
+nwiOHlqQe3hyofQjSFAojOkxYBDM+Voa5G0ixBuMeV9FaezqmkFo44OT6ye0mvbo
+tuEAu88qtnndlxA5OKwyczX+hvW83Q==
+=JcnW
+-----END PGP SIGNATURE-----
+
+--Sig_/RbsQDjixmUr_A0ZOBpiPoum--
