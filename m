@@ -2,91 +2,71 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C2FC606D4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C58C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885742166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A692175B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562636680;
-	bh=U4cd/9T09Y4fMiBDTG5wta0ThpVi/JiVzM5ijhif+d4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fmy8ZRn+mKRuAEHHclDZvI5yXGoD/nCh5EL13N/iU1J3QEsxarDmYkh4qi5tcJwkB
-	 N7i4eAb2OU4NUsQrJiBxVHr5iHAV2ijvfimwRR/k9qTSnqgT78pgS4CcC1Uwsb1oBP
-	 tkcjVygj0CMdj/WtzfQhhJknUceoFx4CwdD41oa4=
+	s=default; t=1562636707;
+	bh=9dnZe8B6ETsByMn8FwMwKQLPb8ixnu6zmvgbX3adLpo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=0kuI+58sYEtN1hF2424sh/wYDq+TWcXnNAvdnBS3jw3XxPQ6kkCs9hHOW1Cs+WZy2
+	 PrtCSpGLS24CfHNoMk5lXo79BIDJZdBeDaR6VqUvv11tJGulEUdYXUvpFA+a9jfrX0
+	 9sJJRvkiMdAbBbme4gsq5MFEMAgPczDR0Kqg+t90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfGIBoj (ORCPT
+        id S1726984AbfGIBpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:44:39 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46188 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfGIBoj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:44:39 -0400
-Received: by mail-io1-f66.google.com with SMTP id i10so39615931iol.13;
-        Mon, 08 Jul 2019 18:44:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kd+R8U7AeHQK+dVVAxxx/vKyVP0OoTL7mSnz079YKZg=;
-        b=dn9OahJKlFcsiA3jGkmkYcKpKDnDkMvKLYlpSYEpv3TtHv0CSSOgyAD5OLNGAbJZ8B
-         FgzLGGq5IC7y1mV2YpeeHTWG+mOENhtnoY/XNRX11He/UG4Ya9PSFT6Pze57DfA81LF5
-         BHjxaBpf3cZu9pnkXWVgszeaYmsTbVVWC9w9bvT08HjS/zSRAkb59dFX4eYnThOwfhDG
-         SNw70NHJLjDf3cFFmFztgOcQZB9L7CR0pOozFuMKErRF0JV6B2i6yI/H7/zIPYBirUJh
-         2jwL9r2Gcs43LojXymmXbikkEglKio32c1Qq5fG9FgxfT4jMcg49pJTaaMMdE1a6ZaK6
-         hb7A==
-X-Gm-Message-State: APjAAAVJWsEDG0Ho4Q4+mUyiukYwbpTmn7CWJqlVi7QEn7CYxinc5iP0
-        u1V7+TTMWzjWCSEclU+GoXovf4c=
-X-Google-Smtp-Source: APXvYqwUZNHjJqnSaa51TzsLuv0W/Pd+sulwtIXpORaf4ssy3jNRBSvXFrt+gjlJKE0rUraKSVmSEw==
-X-Received: by 2002:a6b:8bcb:: with SMTP id n194mr17670842iod.194.1562636677804;
-        Mon, 08 Jul 2019 18:44:37 -0700 (PDT)
-Received: from localhost ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id m4sm31452340iok.68.2019.07.08.18.44.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 18:44:37 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 19:44:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sricharan R <sricharan@codeaurora.org>
-Cc:     sboyd@kernel.org, linus.walleij@linaro.org, agross@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/6] pinctrl: qcom: Add ipq6018 pinctrl driver
-Message-ID: <20190709014436.GA9055@bogus>
-References: <1559755738-28643-1-git-send-email-sricharan@codeaurora.org>
- <1559755738-28643-2-git-send-email-sricharan@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559755738-28643-2-git-send-email-sricharan@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 8 Jul 2019 21:45:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbfGIBpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:45:06 -0400
+Subject: Re: [GIT PULL] RCU changes for v5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562636705;
+        bh=9dnZe8B6ETsByMn8FwMwKQLPb8ixnu6zmvgbX3adLpo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=HOdCrsRIabmMHVLr4vjf7ZVPm03RJ+q5P7VgtBQR+WAo/YlWQdn+mnfvqAoEysgQO
+         0NEsevxV1e/qIwW/2iy1TLgXQCdNR8oanXM+mRIR0heYwKtpIahNzYIhY1IqiO3L/z
+         DH38QIyYsWoUtDpNJJE17wRA72IPxLeMtQurwTEE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190708090920.GA16500@gmail.com>
+References: <20190708090920.GA16500@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190708090920.GA16500@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-rcu-for-linus
+X-PR-Tracked-Commit-Id: 83086d654dd08c0f57381522e6819f421677706e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 46f1ec23a46940846f86a91c46f7119d8a8b5de1
+Message-Id: <156263670533.17382.16954149676496564516.pr-tracker-bot@kernel.org>
+Date:   Tue, 09 Jul 2019 01:45:05 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@us.ibm.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 10:58:53PM +0530, Sricharan R wrote:
-> Add initial pinctrl driver to support pin configuration with
-> pinctrl framework for ipq6018.
-> 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-> Signed-off-by: speriaka <speriaka@codeaurora.org>
-> ---
->  .../bindings/pinctrl/qcom,ipq6018-pinctrl.txt      |  186 +++
+The pull request you sent on Mon, 8 Jul 2019 11:09:20 +0200:
 
-Please split bindings to separate patch. Using DT schema would be nice.
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-rcu-for-linus
 
->  drivers/pinctrl/qcom/Kconfig                       |   10 +
->  drivers/pinctrl/qcom/Makefile                      |    1 +
->  drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1183 ++++++++++++++++++++
->  4 files changed, 1380 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.txt
->  create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/46f1ec23a46940846f86a91c46f7119d8a8b5de1
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
