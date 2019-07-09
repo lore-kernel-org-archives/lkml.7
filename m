@@ -2,103 +2,121 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6522CC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A497EC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423472082A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562699193;
-	bh=fE70n4kR+uCMC58qv7QUmipRJhcIVWrEqYIhm4DJJqM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=jV9rXC/nYKZE0MLPrhZoaRl3UCHeO9LYYYkDgoQFWL97qUgA6kPzs1dNMvL+egBK6
-	 C70IJMFD6lOJWO3tvIe1LFOGQvXi8oWx77xMnHD4h4XPvUp4NpyoAmalb9emfeU68v
-	 Rn3p5gzU5///DgIqHZtNkGlasdhRkoAJb7xZb7t8=
+	by mail.kernel.org (Postfix) with ESMTP id 894BC2082A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfGITGc (ORCPT
+        id S1729056AbfGITGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbfGITGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 15:06:31 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CAF82082A;
-        Tue,  9 Jul 2019 19:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562699190;
-        bh=fE70n4kR+uCMC58qv7QUmipRJhcIVWrEqYIhm4DJJqM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=wcNJBs+S6fsc/60xBzsXftUJBn1tOziTsryYBRqOm9Q4SQtBmc1aOI9aDQ7PGmx8p
-         /ktLxJoCsn1CMldVbHchSGIQDeMjJa6XxdXHlnV3WBtNfzXx2w1Q38rIkxZM2mtMaH
-         WfWHNj/2A5+6eVSXG7nD2XyS4vFedJ2AYqxKgaxs=
-Date:   Tue, 9 Jul 2019 12:06:28 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 1 open syzbot bug in "android/ashmem" subsystem
-Message-ID: <20190709190628.GB641@sol.localdomain>
-Mail-Followup-To: devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        Tue, 9 Jul 2019 15:06:52 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43108 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfGITGv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 15:06:51 -0400
+Received: by mail-qt1-f194.google.com with SMTP id w17so19628310qto.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 12:06:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5BEQLx/j9iUYUUOthHrxVyxhb7oPlthNbHALl7L1pMQ=;
+        b=MxGwWARuu7Xzi0zD6240qbGirpR/R9x9J7o5YM5P6dGmTgfrfBDaIBP2nG9TNaeC0N
+         kid5FaOTkLp2xTaMqagYqysd52QEAWfGWu1NYTRR1HPStXqfNz4JWAkn4Nljmw7EbbAI
+         BkhWVB07SaaUreaKpVX0YKP2m7iwEmhnP7C4Or9eSdX7lKPeOwD1KfUU6IjlaXgU1A4k
+         C2hqkFaArB9vW9UilX9S54ILV0eMhe33Ps8YBgPjL75nGF4OtX/KcKm48sslaeDQ86qd
+         OpHQ2e0885CaJbb82KyoSpu40S5pOD3ez3rBuxgf5JEXGaSZq/8s+yqnjgvC0FAWK6kl
+         Qmww==
+X-Gm-Message-State: APjAAAV9bxq0oiDpN1tSGqf/2WMwTq+WmBwNPbnQXb4UZes0Flfdtba8
+        QBsOCRfArv8iIuJfBQoouUzh19wKuN0=
+X-Google-Smtp-Source: APXvYqwNn/o8ArAnGAByvJh0ou5Guy+O49yI3g7QKjHuYiSmHDeAPIPt47grBQnEP3jq1ND1AtAHzw==
+X-Received: by 2002:a0c:8a43:: with SMTP id 3mr21585759qvu.138.1562699210756;
+        Tue, 09 Jul 2019 12:06:50 -0700 (PDT)
+Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id m10sm6759642qka.43.2019.07.09.12.06.49
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 12:06:50 -0700 (PDT)
+Subject: Re: [PATCH] arm64/sve: fix genksyms generation
+To:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julien Grall <julien.grall@arm.com>,
+        Alan Hayward <alan.hayward@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        =?UTF-8?Q?Alex_Benn=c3=a9e?= <alex.bennee@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190617104237.2082388-1-arnd@arndb.de>
+ <20190617112652.GB30800@fuggles.cambridge.arm.com>
+ <CAK8P3a2aJNiLTyfRDqazJa2sAc-Jf-QShSZ7+4-whHSxKbLUVQ@mail.gmail.com>
+ <20190617161330.GD30800@fuggles.cambridge.arm.com>
+ <CAKv+Gu9Fh3anh6-TeDWZ+pL7rs7EBWZqvLXASRNjicGu7k+WKw@mail.gmail.com>
+ <20190617164553.GI30800@fuggles.cambridge.arm.com>
+ <20190618120259.GA31041@fuggles.cambridge.arm.com>
+ <CAK8P3a2NQSm3sPcJq=6=Espa5da_L+2RNtyS=jkkzD3tx-4ehA@mail.gmail.com>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <95d721d1-2ccc-321c-f688-15e5bb53c30b@redhat.com>
+Date:   Tue, 9 Jul 2019 15:06:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAK8P3a2NQSm3sPcJq=6=Espa5da_L+2RNtyS=jkkzD3tx-4ehA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+On 6/18/19 10:15 AM, Arnd Bergmann wrote:
+> On Tue, Jun 18, 2019 at 2:03 PM Will Deacon <will.deacon@arm.com> wrote:
+>>
+>>  From 6e004b8824d4eb6a4e61cd794fbc3a761b50135b Mon Sep 17 00:00:00 2001
+>> From: Will Deacon <will.deacon@arm.com>
+>> Date: Tue, 18 Jun 2019 12:56:49 +0100
+>> Subject: [PATCH] genksyms: Teach parse about __uint128_t built-in type
+>>
+>> __uint128_t crops up in a few files that export symbols to modules, so
+>> teach genksyms about it so that we don't end up skipping the CRC
+>> generation for some symbols due to the parser failing to spot them:
+>>
+>>    | WARNING: EXPORT symbol "kernel_neon_begin" [vmlinux] version
+>>    |          generation failed, symbol will not be versioned.
+>>    | ld: arch/arm64/kernel/fpsimd.o: relocation R_AARCH64_ABS32 against
+>>    |     `__crc_kernel_neon_begin' can not be used when making a shared
+>>    |     object
+>>    | ld: arch/arm64/kernel/fpsimd.o:(.data+0x0): dangerous relocation:
+>>    |     unsupported relocation
+>>
+>> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> Reported-by: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> 
+> Looks good to me,
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> I've added this to my randconfig build setup, replacing my earlier
+> patch, and will let you know if any problems with it remain.
+> 
+>           Arnd
+> 
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 1 of them as possibly being a bug in the "android/ashmem" subsystem.
+I just hit this on 5ad18b2e60b75c7297a998dea702451d33a052ed on Linus'
+branch. The fix works for me (feel free to add Tested-by). Is this
+already queued up for Linus?
 
-If you believe this bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed this bug to the "android/ashmem" subsystem,
-please let me know, and if possible forward the report to the correct people or
-mailing list.
-
-Here is the bug:
-
---------------------------------------------------------------------------------
-Title:              WARNING in __vm_enough_memory
-Last occurred:      77 days ago
-Reported:           539 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=52304f8f4b4e28508d52875f95df5e30417eff1b
-Original thread:    https://lkml.kernel.org/lkml/001a1144593661efb50562d9624f@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 1 reply, 539 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+cc298e15b6a571ba0c55@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/001a1144593661efb50562d9624f@google.com
-
+Thanks,
+Laura
