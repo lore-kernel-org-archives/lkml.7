@@ -7,55 +7,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2474BC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F12CC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D5B216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF4B20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562697105;
-	bh=H1lXyVSrJdlhwUe6Wi6nEcC6iJYeflbVrs5S8NzVf6M=;
+	s=default; t=1562697110;
+	bh=aVZ0iIxfrqicomtqFbAEDq8CdAhVe14Oy+wL/zknopw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WoCsYCDnH3o/bCGd2NnkRfzqk6EtXDpgOCvit/JlXoeO6+AP9mEDStSVTMV1J8MhW
-	 JKYV7m8N75G/8Z15gPNgtvLcLZxfLSA57Oq0BBvbKGXzqZ6Ldbrch73dVwXiwb0JYG
-	 juFJaMzXV9FBB8OsNz7HKne2SuS/wmz9Pg1EL51c=
+	b=rsLeLjdf9hA8DZi6rJ0K9XL9ypSZjSZD9NlFoEyBi6aA6OPSWETAl90EuL45ESXyQ
+	 33hZjl+3OUDcaSXlEViDC5KHWBe304LOxs9UGwZN/4mN5XCuXu/yihlNcjMYVskNEu
+	 ASGMcOKDkqu9L/z1abeywnlvjL2QdApc2yUj/uYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbfGISbo (ORCPT
+        id S1729042AbfGISbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:31:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52830 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 14:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbfGISbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:31:42 -0400
+        id S1726881AbfGISbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:31:48 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76D9621537;
-        Tue,  9 Jul 2019 18:31:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A82CA214AF;
+        Tue,  9 Jul 2019 18:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562697101;
-        bh=H1lXyVSrJdlhwUe6Wi6nEcC6iJYeflbVrs5S8NzVf6M=;
+        s=default; t=1562697107;
+        bh=aVZ0iIxfrqicomtqFbAEDq8CdAhVe14Oy+wL/zknopw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IYHeEhDVFRs2Nc1Mjt1rT8J/gRuLTqT+ug6vDRKCjWPyDqtTEaWlo/jyQc6h/076N
-         Rgfxd1DgkKR9FD2XmzO4Qs64TEB6EErESzBbHb5KXeUXllCyDu2i5irh4Yk4k7tPXk
-         N52GX2j2ubk5bNkna30/8PZiyQCalOwvFAnCImJc=
+        b=F2bTdox0H8xFhe/mRht+zvTN+TcE0KZL6eOYL7Iz06XZSNfhoYDeICfpNcc8HlFmh
+         qffXnJhZjtN1ZwyWplr3H34bUl2VVKmNx01Fi5UBTmfdAgHzKSBsOg0I94n/LbQfqd
+         jSkDNMv8Doc+kAOxjTV9cmEcolzf/VhAHmMpoSGY=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Drayton <mbd@fb.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-arm-kernel@lists.infradead.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 01/25] perf test mmap-thread-lookup: Initialize variable to suppress memory sanitizer warning
-Date:   Tue,  9 Jul 2019 15:31:02 -0300
-Message-Id: <20190709183126.30257-2-acme@kernel.org>
+Subject: [PATCH 02/25] perf stat: Fix use-after-freed pointer detected by the smatch tool
+Date:   Tue,  9 Jul 2019 15:31:03 -0300
+Message-Id: <20190709183126.30257-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190709183126.30257-1-acme@kernel.org>
 References: <20190709183126.30257-1-acme@kernel.org>
@@ -66,50 +78,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Numfor Mbiziwo-Tiapo <nums@google.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-Running the 'perf test' command after building perf with a memory
-sanitizer causes a warning that says:
+Based on the following report from Smatch, fix the use-after-freed
+pointer.
 
-  WARNING: MemorySanitizer: use-of-uninitialized-value... in mmap-thread-lookup.c
+  tools/perf/builtin-stat.c:1353
+  add_default_attributes() warn: passing freed memory 'str'.
 
-Initializing the go variable to 0 silences this harmless warning.
+The pointer 'str' has been freed but later it is still passed into the
+function parse_events_print_error().  This patch fixes this
+use-after-freed issue.
 
-Committer warning:
-
-This was harmless, just a simple test writing whatever was at that
-sizeof(int) memory area just to signal another thread blocked reading
-that file created with pipe(). Initialize it tho so that we don't get
-this warning.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Changbin Du <changbin.du@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190702173716.181223-1-nums@google.com
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Link: http://lkml.kernel.org/r/20190702103420.27540-3-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/mmap-thread-lookup.c | 2 +-
+ tools/perf/builtin-stat.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index ba87e6e8d18c..0a4301a5155c 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -53,7 +53,7 @@ static void *thread_fn(void *arg)
- {
- 	struct thread_data *td = arg;
- 	ssize_t ret;
--	int go;
-+	int go = 0;
- 
- 	if (thread_init(td))
- 		return NULL;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index e5e19b461061..b81f7b197d24 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1349,8 +1349,8 @@ static int add_default_attributes(void)
+ 				fprintf(stderr,
+ 					"Cannot set up top down events %s: %d\n",
+ 					str, err);
+-				free(str);
+ 				parse_events_print_error(&errinfo, str);
++				free(str);
+ 				return -1;
+ 			}
+ 		} else {
 -- 
 2.21.0
 
