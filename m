@@ -2,103 +2,131 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0E9C73C5C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EDCC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE9820656
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562708763;
-	bh=D33/BjQSH7r/O4onNmNNj4oFVAorE+aRUj4WCXmZtE0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A2hu0S8lE7pCzbrGf/erk1fdrJgL0KqJqqc358qsCdzfDzC9PY6RxGlgAmZ0bOiqA
-	 ENZMucOH8lz/KUgLwEYnSWmUNzd+FVhI2dUDMnecIEzEwTXfhNgWLRgheTAZ/EO1aX
-	 OveTDIwTpzHOTapP6+/e+CJ3DspkgPSxLHJ0ZGn8=
+	by mail.kernel.org (Postfix) with ESMTP id 4DD7720656
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:46:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grVm2WAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbfGIVqC (ORCPT
+        id S1729618AbfGIVqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:46:02 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44768 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfGIVqB (ORCPT
+        Tue, 9 Jul 2019 17:46:06 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36060 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGIVqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:46:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k18so21032127ljc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 14:46:00 -0700 (PDT)
+        Tue, 9 Jul 2019 17:46:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so41938oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 14:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5Iag3LSwtxbGH/6JXykV0X2cYRNwhwRjefA47JZ1iyg=;
-        b=HxwB0twpmxNCaV1pxwV8vfkgNh1oFJQAhGF6eY25qjofRadbo+wwDsJ+ySl+oAzjh9
-         PTL+wrSTjcrHQjvYntl/xpsqXOxQCq95sJVDTEmke1HpziwTIRDLj+9ejhDDBTjUNi7t
-         wBDoSkn/dtcxI97Nifc2jlmWj4Pv3k7Ay3vjQ=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MYX+bKitIKuhlu8Fk10A4x6cbLxiCn6+G+7FkkYZdXE=;
+        b=grVm2WAKocF8t+tmT/HihvCR2t3lAwyANm/vTKQtwHLAeF76RNsARgiGzwCP59QOLu
+         PaGfbNymbTKDco5C5xg1Vng2+3SgRTxr2dVfLP9VtbcbzCjv8IdRu/ks6lN5+WnRXaKK
+         BbWo05mX8glK1+OiwlrlsI0cnjIKa3TtlHoEY/L8mmmFE9BLQ0BAezo7o5GPlvCsTqwZ
+         29TMFerSGEKQh+hJgatVzTDIN7UHNomMY2uRYeHUGgl99SqwErY57qp8u1ZlJL6JXXqr
+         RccJ94fKzBKPIkAivdiAkd17FIkFYEOx4XUrKUYKnd4imOU+IwKOCaGJlxggSis/qozm
+         tpIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Iag3LSwtxbGH/6JXykV0X2cYRNwhwRjefA47JZ1iyg=;
-        b=OIvVX3EILc4W+Nb3julyaIF4Vgq6eiWixZQOePPQuoRIwV93mjma+ohFGXrQcvPQyG
-         XLk2Ly109oUPhr3YwrrGIYC5nJshGjEqO548eSznM+xxfjRs20dF4KY9mlXDMES/OPXR
-         jrNN/XvYYp5jnDZcbfMrnhDWV1bxJlmkGLpYhDadMos3RwJVPIU45pritZZli3Pj23kA
-         OwKq+Q0tp7jxQfElE09D0S4S2laT3aZ+Ae1KOSduz9fuyIhOXqhfH7LUI25KwF47tsql
-         TFEC5ni+owhwjvPPET7OKKmXdX1B0VlUWNJxnrsDrPzkmLhn1goIWerscaW4MVugkDsC
-         D5NQ==
-X-Gm-Message-State: APjAAAUiGe7ll3qeuMbjhonY3mDriEBhGnR0sVfoN9Kox/xmfZotuIWz
-        fVV+fn9A3oc81n2/73bEb5SQeX1J41M=
-X-Google-Smtp-Source: APXvYqzv2Zyngqu7fFXqiI3mDyOsQQ07ONdD9iEQECEzAk7K7BBO3xuz7WEFbZFvxly3rWFJoSveGw==
-X-Received: by 2002:a2e:9a87:: with SMTP id p7mr15114127lji.133.1562708759073;
-        Tue, 09 Jul 2019 14:45:59 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id w6sm18056lff.80.2019.07.09.14.45.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 14:45:58 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id s19so80267lfb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 14:45:58 -0700 (PDT)
-X-Received: by 2002:ac2:4565:: with SMTP id k5mr12824867lfm.170.1562708757887;
- Tue, 09 Jul 2019 14:45:57 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=MYX+bKitIKuhlu8Fk10A4x6cbLxiCn6+G+7FkkYZdXE=;
+        b=F4XG2U/ThO479htHDv/eiXXDFg6+Xx1eB//AAJQB7kutiu7hxDYccRXIpCOC4myZ4r
+         OEHJJwWUQaFwQV87klvTUAASncR1Tw9wX1bG/9tY1B0uSz5U1zlw2apuFLNQlhRuXRll
+         /oYjIyso0HDS7CHPDPlLgmeJnjPBp0NtOvxMppJRQ4HuIY1GhXQXoaV5BPlBLIaE0Tbv
+         Tt82PG78KdnKBuGcxMdMLDhaKcKv3e/XaLi1ve8oCPuuTT8VtL/hWgAEVTKkrteFRD+f
+         Y2OVEfQL2Z2yUTcU78oEJoZ8E4vtWU8TtEo04iX+iWVSPWTMZHm6pvaOzLcSEHkPYs52
+         6jSw==
+X-Gm-Message-State: APjAAAWNRwOu8LybPojJHnYvqk6al8iGdLtw6e/FjLW7qpmLe0RlCqCK
+        +781/8bsvDhLHg2oXuG8Dg==
+X-Google-Smtp-Source: APXvYqzCdHFAKERg88yoYs2ZV/Vft2Jyh4mrZ1K3HM3dLPrEuiGyLvxGpSX8zPOMSRpPSLk1Nap9lw==
+X-Received: by 2002:a9d:6853:: with SMTP id c19mr20299107oto.213.1562708765032;
+        Tue, 09 Jul 2019 14:46:05 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.134.43])
+        by smtp.gmail.com with ESMTPSA id l5sm124032otf.53.2019.07.09.14.46.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 14:46:04 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:6c89:b9b3:d6b4:3203])
+        by serve.minyard.net (Postfix) with ESMTPSA id 179C81805A4;
+        Tue,  9 Jul 2019 21:46:04 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 16:46:02 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] ipmi_si_intf: use usleep_range() instead of busy looping
+Message-ID: <20190709214602.GD19430@minyard.net>
+Reply-To: minyard@acm.org
+References: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-References: <20190708162756.GA69120@gmail.com> <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com>
- <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 9 Jul 2019 14:45:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
-Message-ID: <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/topology changes for v5.3
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 2:26 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> but still bisecting to pinpoint the exact thing.
+On Tue, Jul 09, 2019 at 02:06:43PM -0700, Tejun Heo wrote:
+> ipmi_thread() uses back-to-back schedule() to poll for command
+> completion which, on some machines, can push up CPU consumption and
+> heavily tax the scheduler locks leading to noticeable overall
+> performance degradation.
+> 
+> This patch replaces schedule() with usleep_range(100, 200).  This
+> allows the sensor readings to finish resonably fast and the cpu
+> consumption of the kthread is kept under several percents of a core.
 
-One of:
+The IPMI thread was not really designed for sensor reading, it was
+designed so that firmware updates would happen in a reasonable time
+on systems without an interrupt on the IPMI interface.  This change
+will degrade performance for that function.  IIRC correctly the
+people who did the patch tried this and it slowed things down too
+much.
 
-  c21ac93288f0 (refs/bisect/bad) Merge tag 'v5.2-rc6' into x86/asm, to
-refresh the branch
-  8dbec27a242c x86/asm: Pin sensitive CR0 bits
-  873d50d58f67 x86/asm: Pin sensitive CR4 bits
-  7b347ad4938d (HEAD) Merge tag 'v5.2-rc5' into x86/asm, to refresh the branch
-  9db9b76767f1 Documentation/x86: Fix path to entry_32.S
-  7231d0165df3 x86/asm: Remove unused TASK_TI_flags from asm-offsets.c
+I'm also a little confused because the CPU in question shouldn't
+be doing anything else if the schedule() immediately returns here,
+so it's not wasting CPU that could be used on another process.  Or
+is it lock contention that is causing an issue on other CPUs?
 
-and I suspect it's the sensitive bit pinning. But I'll delve all the way.
+IMHO, this whole thing is stupid; if you design hardware with
+stupid interfaces (byte at a time, no interrupts) you should
+expect to get bad performance.  But I can't control what the
+hardware vendors do.  This whole thing is a carefully tuned
+compromise.
 
-                Linus
+So I can't really take this as-is.
+
+-corey
+
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> ---
+>  drivers/char/ipmi/ipmi_si_intf.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+> index f124a2d2bb9f..2143e3c10623 100644
+> --- a/drivers/char/ipmi/ipmi_si_intf.c
+> +++ b/drivers/char/ipmi/ipmi_si_intf.c
+> @@ -1010,7 +1010,7 @@ static int ipmi_thread(void *data)
+>  		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
+>  			; /* do nothing */
+>  		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
+> -			schedule();
+> +			usleep_range(100, 200);
+>  		else if (smi_result == SI_SM_IDLE) {
+>  			if (atomic_read(&smi_info->need_watch)) {
+>  				schedule_timeout_interruptible(100);
