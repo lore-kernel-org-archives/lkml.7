@@ -2,97 +2,146 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9B9C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D54C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F572166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D003A2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KrdmdLub"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AUWGCqdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfGIAJU (ORCPT
+        id S1726970AbfGIAJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 20:09:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34946 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfGIAJU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 20:09:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6908Vfr068374;
-        Tue, 9 Jul 2019 00:08:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=EyhI2SGXqBWf0uwma9BuLGltYhuzLwYJcUaoP1McYqc=;
- b=KrdmdLubkfVXtIz1koe2WpIL/995GfgDfzv96B9yGzgQ4MPsszpkodh3LwYK9SB1ShWC
- K5vF1XCHwYFdw69MKMLZ+5OFYbWeeyyXTWJb0wkvTjSMdRrEztRhl2X0nnEqEQH7xIMU
- 7cp3padi+QzsN2JGpHaw5tV2obpz30fWiQa4WYUqrMSaBG5+oeeKFSQr58zgACJwSXKI
- ogjnBBYExwrWier2uUgBh4BkszKWFInbcAkpOS+eyuPO5OItjpcLyiq9u/YZ/USf9wLZ
- cp66QpwTMMWk/rNFepJuuctEiGsfMzJZvLDtDmCJvgOhyndjJrjOkR0AT2/Gc+6hLayg GQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2tjk2th8p2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 00:08:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6908MTc043766;
-        Tue, 9 Jul 2019 00:08:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2tjgrtsg7x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 00:08:30 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6908RHn023985;
-        Tue, 9 Jul 2019 00:08:28 GMT
-Received: from Subhras-MacBook-Pro.local (/103.217.243.93)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 08 Jul 2019 17:08:26 -0700
-Subject: Re: [RFC 0/2] Optimize the idle CPU search
-To:     Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org
-References: <20190708045432.18774-1-parth@linux.ibm.com>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <839c6cc8-b550-3066-d856-3c8a919cc318@oracle.com>
-Date:   Tue, 9 Jul 2019 05:38:10 +0530
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Mon, 8 Jul 2019 20:09:56 -0400
+Received: from ozlabs.org ([203.11.71.1]:49405 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbfGIAJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 20:09:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jN3z64BRz9sN4;
+        Tue,  9 Jul 2019 10:09:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562630993;
+        bh=xPxcJ6P8tH+jIDo5QQqs5SnjvwOcFQh+59wbcITTAo4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AUWGCqdKj+yAIR/UDkXE08ZG8Oc6Xf8XGav5V6fKXtDhAYma1jgwbNMj/Dp0TByx6
+         QYAqYCLstk+wCUVwnT43LOAkAJVbdQT8Dinvr+9bNw9TALU28N82cKiRHS+LyIKqE5
+         4twmFJgRaCqxkFB5B8rDB8DXSBiZJjCsR++CZ4Dec15e4B2mTA2M62pxLNsdF3/Y4N
+         +d3/jwOuF1G+BccqHwaFTvQAwdRjAgRbLXlvMcbCsaFsEiIW5VlPqABAJD+CYDwNJr
+         9CiIEnLGnDJ+SmJAbhozAeRIbyQevYPJTZs6nKmF/iG1kaP937DLNhSbBp4dd1nn6+
+         oCGGjmLq0A4Jg==
+Date:   Tue, 9 Jul 2019 10:09:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20190709100951.38b3402e@canb.auug.org.au>
+In-Reply-To: <20190625160432.533aa140@canb.auug.org.au>
+References: <20190625160432.533aa140@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190708045432.18774-1-parth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=883
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907090000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=939 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907090000
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/_s7id3wA3S_Z2qmdsjD1SRW"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/_s7id3wA3S_Z2qmdsjD1SRW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/8/19 10:24 AM, Parth Shah wrote:
-> When searching for an idle_sibling, scheduler first iterates to search for
-> an idle core and then for an idle CPU. By maintaining the idle CPU mask
-> while iterating through idle cores, we can mark non-idle CPUs for which
-> idle CPU search would not have to iterate through again. This is especially
-> true in a moderately load system
+Hi all,
+
+On Tue, 25 Jun 2019 16:04:32 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> Optimize idle CPUs search by marking already found non idle CPUs during
-> idle core search. This reduces iteration count when searching for idle
-> CPUs, resulting in lower iteration count.
->
-I believe this can co-exist with latency-nice? We can derive the 'nr' in
-select_idle_cpu from latency-nice and use the new mask to iterate.
+> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+>=20
+> drivers/net/wireless/intersil/p54/txrx.c: In function 'p54_rx_data':
+> drivers/net/wireless/intersil/p54/txrx.c:386:28: error: implicit declarat=
+ion of function 'ktime_get_boot_ns'; did you mean 'ktime_get_raw_ns'? [-Wer=
+ror=3Dimplicit-function-declaration]
+>    rx_status->boottime_ns =3D ktime_get_boot_ns();
+>                             ^~~~~~~~~~~~~~~~~
+>                             ktime_get_raw_ns
+>=20
+> Caused by commit
+>=20
+>   c11c75ec784e ("p54: Support boottime in scan results")
+>=20
+> from the wireless-drivers-next tree interacting with commit
+>=20
+>   9285ec4c8b61 ("timekeeping: Use proper clock specifier names in functio=
+ns")
+>=20
+> from the tip tree.
+>=20
+> I have added the following merge fix patch:
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 25 Jun 2019 15:55:36 +1000
+> Subject: [PATCH] p54: fix up for ktime_get_boot_ns() name change
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/net/wireless/intersil/p54/txrx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/wireless/intersil/p54/txrx.c b/drivers/net/wirel=
+ess/intersil/p54/txrx.c
+> index be6968454282..873fea59894f 100644
+> --- a/drivers/net/wireless/intersil/p54/txrx.c
+> +++ b/drivers/net/wireless/intersil/p54/txrx.c
+> @@ -383,7 +383,7 @@ static int p54_rx_data(struct p54_common *priv, struc=
+t sk_buff *skb)
+> =20
+>  	fc =3D ((struct ieee80211_hdr *)skb->data)->frame_control;
+>  	if (ieee80211_is_probe_resp(fc) || ieee80211_is_beacon(fc))
+> -		rx_status->boottime_ns =3D ktime_get_boot_ns();
+> +		rx_status->boottime_ns =3D ktime_get_boottime_ns();
+> =20
+>  	if (unlikely(priv->hw->conf.flags & IEEE80211_CONF_PS))
+>  		p54_pspoll_workaround(priv, skb);
+> --=20
+> 2.20.1
+
+I am still getting this conflict (the commit ids may have changed).
+Just a reminder in case you think Linus may need to know.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_s7id3wA3S_Z2qmdsjD1SRW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0j208ACgkQAVBC80lX
+0Gw7ZQf+KEDciOXpR5S/in68ldPfTLfZlj77Ng5gIcSC63tKqknTJ19RIFi65bKi
+cwI9Jrg3f//cnwv7ZS2c/jPkQhJm+A2imbXovB4SAxiviNRnNROIFXFsjzK5CWLH
+1sNpFYj3FhW1cVCw8Z8hW0c9d9ztTwsR4Bm0eOex7QxoZXsmutI8Ke9HHE0Mv3Kx
+PDtSWz9/OHoDO91C3WXXUEoWCRcT3fnwYm+Z5UxkhDq3VD2Vni6iyDLulvXpLX+q
+7xas7YnR0zJN8DDiNNgWHavdVoU2Xg0/t1h55Oqyp+qEKJWxWb8ibNMVJ9Mqox31
+p772Anjel8BIM6YH/iWZkKLmP8mD6w==
+=eSGL
+-----END PGP SIGNATURE-----
+
+--Sig_/_s7id3wA3S_Z2qmdsjD1SRW--
