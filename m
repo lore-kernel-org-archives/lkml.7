@@ -2,104 +2,276 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27435C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE762C73C54
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F233421537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FBF21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en9sy9Bo"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sITepeWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfGIOzq (ORCPT
+        id S1726496AbfGIO7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:55:46 -0400
-Received: from mail-io1-f48.google.com ([209.85.166.48]:44433 "EHLO
-        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfGIOzq (ORCPT
+        Tue, 9 Jul 2019 10:59:01 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46674 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGIO7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:55:46 -0400
-Received: by mail-io1-f48.google.com with SMTP id s7so43742263iob.11;
-        Tue, 09 Jul 2019 07:55:46 -0700 (PDT)
+        Tue, 9 Jul 2019 10:59:01 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 65so15543663oid.13
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 07:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9KMd9yknkR/+c86sYJxaacnce7lwo4HnwkWIRsstIvc=;
-        b=en9sy9BoC7AQ5xWdOXvEGc7M1sc8G+FncI3Wyf8tSliOeOv9I0QKLXudMJBeKS5bgC
-         Lve6jVlSQ5y277mYdGTyzFuO2Gz9bmHjn898R/i6KNFCn2sx4Co0Y+Yqv+EE275ZcXH6
-         iK0rGJn/cLWvFdxk8SXTbetAYu/5je58SOkP94dzw29sNTGpKCgqyIpTtsYIzq5c4qs2
-         ic0lV+wFjB9uqcy9MeXAS5nsZndMEoD03Y7UgTDIZjfUac8QvU0xCnO7De+ZXxwPMzkF
-         SS4q/fPVKymRKFsqg4zifJvvrxAuK5JiMkU7pY6LkMo29hGmbMzL41H4iEayvHbHW73B
-         zKqQ==
+         :cc:content-transfer-encoding;
+        bh=pzCb+Di/c9ZWTKEmAt46a9ynFYRh/T3Fr01SSbk8A/w=;
+        b=sITepeWjRPevQm0BsKHCBzgNsIV/6+j349u/RLUlrHVpKZ6WQTBiV8xqZRUtlr6oM7
+         uX9+KEbwvwEZ4gfs+BaSmuvm5AegKonbf2TPNwG4OgxDjnSRrTI3moW3A77EH+/PGL0i
+         gcIDPN4fJj6Mue6fk+LogZRrzPxkonUexTrfQagtsleWGr/+OaYifVvKs7hmAdoFAb4n
+         tKdfDvzN+yaH6ZPkOqZPg0GrlAvdcn9p+u0GRHaLrmnNzq1sn1xx2uWlZI9JIMUhPukO
+         JM0Fl7fpD52byEmmX3wBVeqyd2ukPVlF0FcRrMFElUlMc2oClC5wPSJ+YK2vmyEAxzP5
+         Xtbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9KMd9yknkR/+c86sYJxaacnce7lwo4HnwkWIRsstIvc=;
-        b=aZMKERySd/i3jU2Z3izPJo07gPm73PPpjfjDXoNTQgjIY2lmgdLQWYLxh5+uda+oa7
-         kqrhXg4mwzXRn/O3HhJsbiw8kkCdSNZgUvPvFZP1QMYNxHN5b4V8ZbnIh4qM+MZfmk/s
-         qAeTY6hvrhuJs75ovzDOKDS1dDajDalWZy59n64bDgCaE2Wk5zaMCzb4cTS4chaIbFIp
-         szJ5UjCL8nvnj1evcYoI/W7yJ6jtKG+OgPYGxAmPmkm9sqHus7sedxrSo/ndx61xEnMz
-         wrLf8NXPv3yqlzRazvK0UBeI22B3HGnJMG9vU2mE96+475MFbqBhe9pU+3ZEZVUdT6pb
-         giuQ==
-X-Gm-Message-State: APjAAAXP1SP3q7f6rJ8zQTc32/ef0nIal0LmZnTgMgiEJI6yveTFBWcQ
-        +GzA1vFMXo6PDLK8Kzs3yaUTELiZxaEaBefbdC+EPKQ=
-X-Google-Smtp-Source: APXvYqwDxozVdqx2YUjLNkgpJjIKpdsN6GzZLTkWR9W7hcYndFmMhOnt4/nJgTTsxkPIdoGLLKL1prXG/lBM8MLRZKs=
-X-Received: by 2002:a5d:8404:: with SMTP id i4mr11903742ion.146.1562684145110;
- Tue, 09 Jul 2019 07:55:45 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pzCb+Di/c9ZWTKEmAt46a9ynFYRh/T3Fr01SSbk8A/w=;
+        b=FYxsGuAM17ukfEqiD7qVN8xlS4d7FrbKRF9dNLbNoiRghul7aD2v1aMyuRoR3MoXMV
+         BOPOwZcvguD0NJo9DsULwMrsbYM7kvUzz4+DZV4aRlCiEq3CD/2QgWWqOkj68XJ4SWap
+         JhMo7YzGL9w2INMs8sK8ETlDcVep3diyPpZ1Lv15krzUSfYPWgkeToM+oqZ0DeB7kDln
+         2XPaAojdiRhaAdtMuEG++ZvtG75zM2o/qD+cChUJS4t4Gc5duR17w54Pf/KKiHdoMOYG
+         tgABLzDPNtoxs7wWxLqctBznzewJkTfOrC/EHIrsQuV92DCwToCV6huY6cw6nQW40EGs
+         Nmqg==
+X-Gm-Message-State: APjAAAXk4sIJpoaMpZRrss3PHW9aeHnVEx3/r72zIjBrIYl3oa21wDu9
+        2E/4lZwGXNVliBBJvpnqOwdxrg9g3895oxGQUgLYUA==
+X-Google-Smtp-Source: APXvYqzvy5+qSnT0FsNiIa1hh9LJ5dmCzod4D0X30hjj68Evdb6Y1I3rj58R5mzNDeY7yv1uOu8i5mT7qmTvogCGwww=
+X-Received: by 2002:aca:b58b:: with SMTP id e133mr234611oif.147.1562684339714;
+ Tue, 09 Jul 2019 07:58:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708072858.566aa564@canb.auug.org.au> <CAABAsM7jKzWPNoe63LU33tVfn7a88ZP9yzp4Bb1BN2TDWMxgjQ@mail.gmail.com>
- <ed6656ad172920882862e5571b6c237a31974bc3.camel@netapp.com>
-In-Reply-To: <ed6656ad172920882862e5571b6c237a31974bc3.camel@netapp.com>
-From:   Trond Myklebust <trondmy@gmail.com>
-Date:   Tue, 9 Jul 2019 10:55:34 -0400
-Message-ID: <CAABAsM4GzOXHrv1JLC3KRpdA=+7jiFF2tGL5=5PKYbV_Qcys5A@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commits in the nfs tree
-To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-Cc:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190705160536.12047-1-geert+renesas@glider.be>
+ <CAMpxmJXOrDLdw6ZPBHxzsDRYiLmhRNCb-s_Z=Gu=Ecg1XA5ONQ@mail.gmail.com> <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWdb0dcS8Nvk-Poz2dT7nuHjFhqpsRPZZnSKsc3VffcRA@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 9 Jul 2019 16:58:48 +0200
+Message-ID: <CAMpxmJUF1s1zyXVtoUGfbV7Yk+heua4rNjY=DrX=jr-v8UfNxA@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexander Graf <agraf@suse.de>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes please.
+pon., 8 lip 2019 o 12:24 Geert Uytterhoeven <geert@linux-m68k.org> napisa=
+=C5=82(a):
+>
+> Hi Bartosz,
+>
+> On Mon, Jul 8, 2019 at 11:45 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > pt., 5 lip 2019 o 18:05 Geert Uytterhoeven <geert+renesas@glider.be> na=
+pisa=C5=82(a):
+> > > GPIO controllers are exported to userspace using /dev/gpiochip*
+> > > character devices.  Access control to these devices is provided by
+> > > standard UNIX file system permissions, on an all-or-nothing basis:
+> > > either a GPIO controller is accessible for a user, or it is not.
+> > > Currently no mechanism exists to control access to individual GPIOs.
+> > >
+> > > Hence add a virtual GPIO driver to aggregate existing GPIOs (up to 32=
+),
+> > > and expose them as a new gpiochip.  This is useful for implementing
+> > > access control, and assigning a set of GPIOs to a specific user.
+> > > Furthermore, it would simplify and harden exporting GPIOs to a virtua=
+l
+> > > machine, as the VM can just grab the full virtual GPIO controller, an=
+d
+> > > no longer needs to care about which GPIOs to grab and which not,
+> > > reducing the attack surface.
+> > >
+> > > Virtual GPIO controllers are instantiated by writing to the "new_devi=
+ce"
+> > > attribute file in sysfs:
+> > >
+> > >     $ echo "<gpiochipA> <gpioA1> [<gpioA2> ...]"
+> > >            "[, <gpiochipB> <gpioB1> [<gpioB2> ...]] ...]"
+> > >             > /sys/bus/platform/drivers/gpio-virt-agg/new_device
+> > >
+> > > Likewise, virtual GPIO controllers can be destroyed after use:
+> > >
+> > >     $ echo gpio-virt-agg.<N> \
+> > >             > /sys/bus/platform/drivers/gpio-virt-agg/delete_device
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> > I like the general idea and the interface looks mostly fine. Since
+> > this is new ABI I think it needs to be documented as well.
+>
+> Sure.
+>
+> > I'm having trouble building this module:
+> >
+> >   CALL    scripts/atomic/check-atomics.sh
+> >   CALL    scripts/checksyscalls.sh
+> >   CHK     include/generated/compile.h
+> >   Kernel: arch/arm/boot/Image is ready
+> >   Building modules, stage 2.
+> >   MODPOST 235 modules
+> > ERROR: "gpiod_request" [drivers/gpio/gpio-virt-agg.ko] undefined!
+> > ERROR: "gpiochip_get_desc" [drivers/gpio/gpio-virt-agg.ko] undefined!
+> > ERROR: "gpiod_free" [drivers/gpio/gpio-virt-agg.ko] undefined!
+> > scripts/Makefile.modpost:91: recipe for target '__modpost' failed
+> > make[1]: *** [__modpost] Error 1
+> > Makefile:1287: recipe for target 'modules' failed
+> > make: *** [modules] Error 2
+> > make: *** Waiting for unfinished jobs....
+> >
+> > I'm not sure what the problem is.
+>
+> Oops. As this is an RFC, I didn't bother trying to build this driver as
+> a module, only builtin.  Apparently the 3 symbols above are not yet
+> exported using EXPORT_SYMBOL_GPL().
+>
 
-On Tue, 9 Jul 2019 at 10:30, Schumaker, Anna <Anna.Schumaker@netapp.com> wrote:
+Am I doing it right? I'm trying to create a device and am only getting this=
+:
+
+# echo gpiochip2 23 > new_device
+[  707.507039] gpio-virt-agg gpio-virt-agg.0: Cannot find gpiochip gpiochip=
+2
+
+gpiochip2 *does* exist in the system.
+
+> > > --- /dev/null
+> > > +++ b/drivers/gpio/gpio-virt-agg.c
+> > > @@ -0,0 +1,390 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +//
+> > > +// GPIO Virtual Aggregator
+> > > +//
+> > > +// Copyright (C) 2019 Glider bvba
+> > > +
+> > > +#include <linux/gpio/driver.h>
+> > > +#include <linux/idr.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/mutex.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +#include "gpiolib.h"
+> > > +
+> > > +#define DRV_NAME       "gpio-virt-agg"
+> > > +#define MAX_GPIOS      32
+> >
+> > Do we really need this limit? I see it simplifies the code, but maybe
+> > we can allocate the relevant arrays dynamically and not limit users?
 >
-> On Sun, 2019-07-07 at 17:30 -0400, Trond Myklebust wrote:
-> > NetApp Security WARNING: This is an external email. Do not click
-> > links or open attachments unless you recognize the sender and know
-> > the content is safe.
-> >
-> >
-> >
-> >
-> > On Sun, 7 Jul 2019 at 17:29, Stephen Rothwell <sfr@canb.auug.org.au>
-> > wrote:
-> > > Hi all,
-> > >
-> > > Commits
-> > >
-> > >   fe9ad197bd8a ("xprtrdma: Remove the RPCRDMA_REQ_F_PENDING flag")
-> > >   08d720bcd822 ("xprtrdma: Fix occasional transport deadlock")
-> > >   beb843739ea0 ("xprtrdma: Replace use of xdr_stream_pos in
-> > > rpcrdma_marshal_req")
-> > >
-> > > are missing a Signed-off-by from their committer.
-> > >
-> >
-> > Anna?
+> Sure. That limit can be lifted.
 >
-> Looks like I missed the "-s" flag to `git-am` when I was applying
-> these. I just fixed it locally, do you want me to send you a new pull
-> request?
+> > > +static int gpio_virt_agg_set_config(struct gpio_chip *chip,
+> > > +                                   unsigned int offset, unsigned lon=
+g config)
+> > > +{
+> > > +       struct gpio_virt_agg_priv *priv =3D gpiochip_get_data(chip);
+> > > +
+> > > +       chip =3D priv->desc[offset]->gdev->chip;
+> > > +       if (chip->set_config)
+> > > +               return chip->set_config(chip, offset, config);
+> > > +
+> > > +       // FIXME gpiod_set_transitory() expects success if not implem=
+ented
 >
-> Anna
+> BTW, do you have a comment about this FIXME?
+>
+
+Ha! Interesting. I'll give it a thought and respond elsewhere as it's
+a different subject.
+
+> > > +       return -ENOTSUPP;
+> > > +}
+>
+> > > +static int gpio_virt_agg_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct device *dev =3D &pdev->dev;
+> > > +       const char *param =3D dev_get_platdata(dev);
+> > > +       struct gpio_virt_agg_priv *priv;
+> > > +       const char *label =3D NULL;
+> > > +       struct gpio_chip *chip;
+> > > +       struct gpio_desc *desc;
+> > > +       unsigned int offset;
+> > > +       int error, i;
+> >
+> > This 'i' here is reported as possibly not initialized:
+> >
+> > drivers/gpio/gpio-virt-agg.c: In function =E2=80=98gpio_virt_agg_probe=
+=E2=80=99:
+> > drivers/gpio/gpio-virt-agg.c:230:13: warning: =E2=80=98i=E2=80=99 may b=
+e used
+> > uninitialized in this function [-Wmaybe-uninitialized]
+> >   int error, i;
+> >              ^
+>
+> Oops, should be preinitialized to zero. WIll fix.
+>
+> > > +static int gpio_virt_agg_remove(struct platform_device *pdev)
+> > > +{
+> > > +       struct gpio_virt_agg_priv *priv =3D platform_get_drvdata(pdev=
+);
+> > > +       unsigned int i;
+> > > +
+> > > +       gpiochip_remove(&priv->chip);
+> > > +
+> > > +       for (i =3D 0; i < priv->chip.ngpio; i++)
+> > > +               gpiod_free(priv->desc[i]);
+>
+> Perhaps I should use gpiod_put() instead, which is exported to modules?
+>
+> > > +
+> > > +       return 0;
+> > > +}
+> >
+> > You shouldn't need this function at all. It's up to users to free descr=
+iptors.
+>
+> This frees the upstream descriptors, not the descriptors used by users
+> of the virtual gpiochip. Shouldn't they be freed, as they are no longer
+> in use?
+>
+> Note that .probe() doesn't use devm_gpiochip_add_data(), as the upstream
+> descriptors need to be freed after the call to gpiochip_remove().
+>
+> Thanks!
+
+I see. I'll try to review it more thoroughly once I get to play with
+it. So far I'm stuck on creating the virtual chip.
+
+Bart
+
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
