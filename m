@@ -2,103 +2,111 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA4FC606D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A844C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D04D21707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:03:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NXVFLcn8"
+	by mail.kernel.org (Postfix) with ESMTP id 5F941216FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562659403;
+	bh=4h1slV9pnqJH/rMLYpW8VWFuid3BTsn6hQfIGxSGH7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sUx6V8gauc0qDo9I5DCxhRYsPwmubNcNusQjGFKh+2s/abZtQxWyrmD59ujv1z7C3
+	 rgcW+bw9PLZj200YeU8ik6Rl92gFz2tpPr+0drk7H0wgUHnJoIpH7F78exu86jQukS
+	 UHIysN02jStEisgYG5AcSkk6LsDwbhnBce13sy1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfGIIDT (ORCPT
+        id S1726569AbfGIIDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:03:19 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:48340 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725911AbfGIIDQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 04:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbfGIIDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jul 2019 04:03:16 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B4D2CC0269;
-        Tue,  9 Jul 2019 08:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562659396; bh=pjjR0DynETAtrfqRsKnG9IivsK2E0/99XZIXZKRRtnw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NXVFLcn8kjhVQ9hRwltqlZFa9UBoqh/qcY4xoijWRlNLzztXPdYooTWGAy/jKx5Nh
-         iNW85V96gv5v/3rQmLv/lXQTyUxo8aVUo5BhZcUy+BFmKIISvo8mwgi0fYG2m3W4Bx
-         7G9B7awEnPxiiQ5jdnXH7n9nHyKFq3xelUxHpxiK63CmBep9jsJJg0R84vYIzFqb9m
-         gbGtKK3IUSE3U3o/yXDUonxhwdIK7oLLtdgnPG0Xbcvmrc8J1p6gT4NBbn+Tg9XvHU
-         fcZK7T/tSz+Axk/tG2k4xQA1S+8Wqoto+8wi1ebEtyu6T1AAJ98gIZ09t+Ut0y8Wib
-         TSNtn2ZWaaadg==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 80E12A005D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2554D214AF;
         Tue,  9 Jul 2019 08:03:13 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 4256C3F82C;
-        Tue,  9 Jul 2019 10:03:13 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 0/3] net: stmmac: Some improvements and a fix
-Date:   Tue,  9 Jul 2019 10:02:57 +0200
-Message-Id: <cover.1562659012.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562659394;
+        bh=4h1slV9pnqJH/rMLYpW8VWFuid3BTsn6hQfIGxSGH7s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ast2bcDaol/o2l77DZNWhKqIV8d19g7TV+vXqo6wutx0XSI/WVX5UTBgvPLDPIwa/
+         H/J3yQT1yiCZ5nymdU1dL9LOVkMnz9L756SrwIQLn1Jz9XgF+esLaiPzLd2g2Y1qJc
+         9SfkI6MvUKAdoDcNd/yS0PDlmCCTbeA79lZH9clc=
+Date:   Tue, 9 Jul 2019 09:03:09 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jon Masters <jcm@jonmasters.org>
+Cc:     "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "indou.takao@fujitsu.com" <indou.takao@fujitsu.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
+ instruction within the same inner shareable domain
+Message-ID: <20190709080308.uueqgxuycfp5y2db@willie-the-truck>
+References: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
+ <20190617170328.GJ30800@fuggles.cambridge.arm.com>
+ <e8fe8faa-72ef-8185-1a9d-dc1bbe0ae15d@jp.fujitsu.com>
+ <20190627102724.vif6zh6zfqktpmjx@willie-the-truck>
+ <5999ed84-72d0-9d42-bf7d-b8d56eaa4d4a@jp.fujitsu.com>
+ <675313fe-007b-c850-d730-a629b82ccfc8@jonmasters.org>
+ <d0879ecc-78c6-b66f-3525-aa1ce175178f@jonmasters.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0879ecc-78c6-b66f-3525-aa1ce175178f@jonmasters.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some performace improvements (01/03 and 03/03) and a fix (02/03), all for -next.
+On Mon, Jul 08, 2019 at 08:29:26PM -0400, Jon Masters wrote:
+> On 7/8/19 8:25 PM, Jon Masters wrote:
+> > On 7/2/19 10:45 PM, qi.fuli@fujitsu.com wrote:
+> > 
+> >> However, we found that with the increase of that the TLB flash was called,
+> >> the noise was also increasing. Here we understood that the cause of this 
+> >> issue is the implementation of Linux's TLB flush for arm64, especially use of 
+> >> TLBI-is instruction which is a broadcast to all processor core on the system. 
+> > 
+> > Are you saying that for a microbenchmark in which very large numbers of
+> > threads are created and destroyed rapidly there are a large number of
+> > associated tlb range flushes which always use broadcast TLBIs?
+> > 
+> > If that's the case, and the hardware doesn't do any ASID filtering and
+> > each TLBI results in a DVM to every PE, would it make sense to look at
+> > whether there are ways to improve batching/switch to an IPI approach
+> > rather than relying on broadcasts, as a more generic solution?
+> 
+> What I meant was a heuristic to do this automatically, rather than via a
+> command line.
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
+One of my main initial objections to this patch [1] still applies to that
+approach, though, which is that I don't want the maintenance headache of
+maintaining two very different TLB invalidation schemes in the kernel.
+Dynamically switching between them is arguably worse. If "jitter" is such a
+big deal, then I don't think changing our TLBI mechanism even helps on a
+system that has broadcast cache maintenance (including for the I-side) as
+well as shared levels of cache further from the CPUs -- it just happens to
+solve the case of a spinning mprotect(), well yeah, maybe don't do that if
+your hardware can't handle it gracefully.
 
-Jose Abreu (3):
-  net: stmmac: Implement RX Coalesce Frames setting
-  net: stmmac: Fix descriptors address being in > 32 bits address space
-  net: stmmac: Introducing support for Page Pool
+What I would be interested in seeing is an evaluation of a real workload
+that suffers due to our mmu_gather/tlb_flush implementation on arm64 so that
+we can understand where the problem lies and whether or not we can do
+something to address it. But "jitter is bad, use IPIs" isn't helpful at all.
 
- drivers/net/ethernet/stmicro/stmmac/Kconfig        |   1 +
- drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  |   8 +-
- .../net/ethernet/stmicro/stmmac/dwmac1000_dma.c    |   8 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c |   8 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |   8 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |   2 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  10 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |   4 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  12 +-
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   7 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 217 +++++++--------------
- 12 files changed, 114 insertions(+), 172 deletions(-)
+Will
 
--- 
-2.7.4
-
+[1] https://lkml.kernel.org/r/20190617170328.GJ30800@fuggles.cambridge.arm.com
