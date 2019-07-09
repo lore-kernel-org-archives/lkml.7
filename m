@@ -2,83 +2,151 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3C8C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BA7C606D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9C221537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="07wh6UTI"
+	by mail.kernel.org (Postfix) with ESMTP id 69BDC2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:19:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562663992;
+	bh=9yWLDgxcCTw0+8Ei+xAzPvn1QrcopHK5lXFpOqTsihQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Tp/4uPZzSz4n5l/Qy6ajotJvKXJH7U9P6fGbI7KKtECG2ckE/h7kFhy1KQOPHEcg8
+	 JPN9R3jNgSBWLJ+LFSGDpmpdop9cuhLIAy4sP+X5EteVRAYoKsy8xJvEvb6ITZ8ifq
+	 RUeihz6EI7KTzEBbfK1Y1gPO3jdMJRnICkzteQwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726057AbfGIJR4 (ORCPT
+        id S1726154AbfGIJTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:17:56 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:56822 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfGIJRz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:17:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xqgAuKvy8GWlTYQeWcjTc9XmHRHeaV4psPeCFTBL620=; b=07wh6UTIMM3GoBMRNUq/wNVd5
-        602onDbjkZYuryHrHAVl/rxfT8HnaYaGIfJSSsi12vB+m7gUguLkYn1l2D8jDLlIJc3lIpXzIsNOp
-        nRtpDGuQ45OaF5AWssFisPcqr42gg0e1pVx1YXT9LnqoBHG2fJhr+D5JPmsF4NnB2IWi29Ko75DKa
-        bNMxVwhGZfl3ygoqfZMqHN3DEKa1BYhKuX6VmM1w0oCm9IT6w71R41/uYNEzd/Oeg0lMQvwawUMD6
-        CqvtH4vbIEGMK2ocUNg/INhO/T+xpJ7WEMYL9i13zwy4wVc9XRw8yeuPe72nfPvLlhtZe2i8gTH+3
-        HNDnHqaKg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60292)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hkmFy-0008Gh-3B; Tue, 09 Jul 2019 10:17:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hkmFv-0002rm-RQ; Tue, 09 Jul 2019 10:17:47 +0100
-Date:   Tue, 9 Jul 2019 10:17:47 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, clang-built-linux@googlegroups.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: mtd-xip: work around clang/llvm bug
-Message-ID: <20190709091747.cg3cqmzdfpzks2vx@shell.armlinux.org.uk>
-References: <20190708203049.3484750-1-arnd@arndb.de>
- <CACRpkdY1JzUZKgmXbObb6hqFcLFygAj2NuMgPMj=8tCp9U2C1A@mail.gmail.com>
+        Tue, 9 Jul 2019 05:19:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38114 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725975AbfGIJTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 05:19:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 37AAFB127;
+        Tue,  9 Jul 2019 09:19:47 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 11:19:45 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 1/5] mm: introduce MADV_COLD
+Message-ID: <20190709091945.GD26380@dhcp22.suse.cz>
+References: <20190627115405.255259-1-minchan@kernel.org>
+ <20190627115405.255259-2-minchan@kernel.org>
+ <343599f9-3d99-b74f-1732-368e584fa5ef@intel.com>
+ <20190627140203.GB5303@dhcp22.suse.cz>
+ <d9341eb3-08eb-3c2b-9786-00b8a4f59953@intel.com>
+ <20190627145302.GC5303@dhcp22.suse.cz>
+ <20190627235618.GC33052@google.com>
+ <20190701073500.GA136163@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdY1JzUZKgmXbObb6hqFcLFygAj2NuMgPMj=8tCp9U2C1A@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190701073500.GA136163@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 10:41:05AM +0200, Linus Walleij wrote:
-> I guess this brings up the old question whether the compiler should
-> be worked around or just considered immature, but as it happens this
-> other day I was grep:ing around to find "the 8 NOP" that is so
-> compulsively inserted in ARM executables (like at the very start of
-> the kernel execution)
+On Mon 01-07-19 16:35:00, Minchan Kim wrote:
+> >From 39df9f94e6204b8893f3f3feb692745657392657 Mon Sep 17 00:00:00 2001
+> From: Minchan Kim <minchan@kernel.org>
+> Date: Fri, 24 May 2019 13:47:54 +0900
+> Subject: [PATCH v3 1/5] mm: introduce MADV_COLD
+> 
+> When a process expects no accesses to a certain memory range, it could
+> give a hint to kernel that the pages can be reclaimed when memory pressure
+> happens but data should be preserved for future use.  This could reduce
+> workingset eviction so it ends up increasing performance.
+> 
+> This patch introduces the new MADV_COLD hint to madvise(2) syscall.
+> MADV_COLD can be used by a process to mark a memory range as not expected
+> to be used in the near future. The hint can help kernel in deciding which
+> pages to evict early during memory pressure.
+> 
+> It works for every LRU pages like MADV_[DONTNEED|FREE]. IOW, It moves
+> 
+> 	active file page -> inactive file LRU
+> 	active anon page -> inacdtive anon LRU
+> 
+> Unlike MADV_FREE, it doesn't move active anonymous pages to inactive
+> file LRU's head because MADV_COLD is a little bit different symantic.
+> MADV_FREE means it's okay to discard when the memory pressure because
+> the content of the page is *garbage* so freeing such pages is almost zero
+> overhead since we don't need to swap out and access afterward causes just
+> minor fault. Thus, it would make sense to put those freeable pages in
+> inactive file LRU to compete other used-once pages. It makes sense for
+> implmentaion point of view, too because it's not swapbacked memory any
+> longer until it would be re-dirtied. Even, it could give a bonus to make
+> them be reclaimed on swapless system. However, MADV_COLD doesn't mean
+> garbage so reclaiming them requires swap-out/in in the end so it's bigger
+> cost. Since we have designed VM LRU aging based on cost-model, anonymous
+> cold pages would be better to position inactive anon's LRU list, not file
+> LRU. Furthermore, it would help to avoid unnecessary scanning if system
+> doesn't have a swap device. Let's start simpler way without adding
+> complexity at this moment. However, keep in mind, too that it's a caveat
+> that workloads with a lot of pages cache are likely to ignore MADV_COLD
+> on anonymous memory because we rarely age anonymous LRU lists.
+> 
+> * man-page material
+> 
+> MADV_COLD (since Linux x.x)
+> 
+> Pages in the specified regions will be treated as less-recently-accessed
+> compared to pages in the system with similar access frequencies.
+> In contrast to MADV_FREE, the contents of the region are preserved
+> regardless of subsequent writes to pages.
+> 
+> MADV_COLD cannot be applied to locked pages, Huge TLB pages, or VM_PFNMAP
+> pages.
+> 
+> * v2
+>  * add up the warn with lots of page cache workload - mhocko
+>  * add man page stuff - dave
+> 
+> * v1
+>  * remove page_mapcount filter - hannes, mhocko
+>  * remove idle page handling - joelaf
+> 
+> * RFCv2
+>  * add more description - mhocko
+> 
+> * RFCv1
+>  * renaming from MADV_COOL to MADV_COLD - hannes
+> 
+> * internal review
+>  * use clear_page_youn in deactivate_page - joelaf
+>  * Revise the description - surenb
+>  * Renaming from MADV_WARM to MADV_COOL - surenb
+> 
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 
-The NOPs at the start of the kernel executable have nothing what so ever
-to do with this.  They are there to align the kernel entry with the old
-a.out format that was used (which had a 32 byte header).  Consequently,
-there are boot loaders around that jump to 32 bytes into the kernel
-header.
+OK, looks reasonable to me. THP part still gives me a head spin but it
+is consistent with madv_free part so I will trust that all weird corner
+cases are already caught there.
 
-There are other places that we insert 10 NOPs (at cpu_relax()) due to a
-CPU errata (otherwise a tight loop basically stalls other CPUs.)
+Acked-by: Michal Hocko <mhocko@suse.com>
 
+Thanks!
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Michal Hocko
+SUSE Labs
