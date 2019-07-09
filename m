@@ -2,420 +2,91 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B951DC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9144CC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744DD216FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562665111;
-	bh=tNjb1uy9iuUZcaC22MD0Fo5Cx1Qzzgjh8IZKRyvxqh0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZdNWQIFvjjufwzfMgznCIDu7q80hM7Q/ugpmQssbP/M54yV+PgWakv/fM4CSZwo6C
-	 7qgBbI003xL9vb78lUYk6ykz0L/TJK26zXoSsbMZxqKWyOq0VGzRVGEt1XiRJ7Mjf/
-	 mYw6QqTxbA17FfrI8GnwGTPFJP4U2eRYGKQfM1Q4=
+	by mail.kernel.org (Postfix) with ESMTP id 63CA7214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FxFjnWqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfGIJia (ORCPT
+        id S1726371AbfGIJjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:38:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42924 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725985AbfGIJi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:38:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6BF6EABD4;
-        Tue,  9 Jul 2019 09:38:27 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 11:38:25 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v3 3/5] mm: account nr_isolated_xxx in
- [isolate|putback]_lru_page
-Message-ID: <20190709093825.GE26380@dhcp22.suse.cz>
-References: <20190627115405.255259-1-minchan@kernel.org>
- <20190627115405.255259-4-minchan@kernel.org>
+        Tue, 9 Jul 2019 05:39:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45068 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfGIJjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 05:39:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kdQyODxMxUBFZB4Kjn197QaK8uIbLjFv68+mwzodhVw=; b=FxFjnWqpvev7+jPKMw6Lk98xS
+        6inWU1fgQUGSNvm+eGU6I7r7b3pvGbgtpjIdae0F69E9HbsXbecsKS0KF6UCHSc3hgQlkjlfLdoWS
+        kqt8XS9EErTQFa724v3i424FqUuzbU+u2OC39nZl0RDlXEbO7r6uoJyrMO875ZRl2HEZIbu52kb3Z
+        /ButXDHDP/kZRdK+MmfnRAqdk0Irc+mFTgTWV1469vcgOOW5l0QjwjUeif8vzu16Ds7cSsoZDuVrc
+        ewln0dLbVVPAKSYw/OXD22D7JqlxCznlfNCAlQ7KDI4cEsggaPDJojGUOLueewTDcOYdjO610uc7P
+        sxhO128yA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkmal-0006ZR-7N; Tue, 09 Jul 2019 09:39:19 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 84C1C20120CB1; Tue,  9 Jul 2019 11:39:17 +0200 (CEST)
+Date:   Tue, 9 Jul 2019 11:39:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Wei Wang <wei.w.wang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
+        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
+        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
+Subject: Re: [PATCH v7 08/12] KVM/x86/vPMU: Add APIs to support host
+ save/restore the guest lbr stack
+Message-ID: <20190709093917.GS3402@hirez.programming.kicks-ass.net>
+References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
+ <1562548999-37095-9-git-send-email-wei.w.wang@intel.com>
+ <20190708144831.GN3402@hirez.programming.kicks-ass.net>
+ <5D240435.2040801@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190627115405.255259-4-minchan@kernel.org>
+In-Reply-To: <5D240435.2040801@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 27-06-19 20:54:03, Minchan Kim wrote:
-> The isolate counting is pecpu counter so it would be not huge gain
-> to work them by batch. Rather than complicating to make them batch,
-> let's make it more stright-foward via adding the counting logic
-> into [isolate|putback]_lru_page API.
+On Tue, Jul 09, 2019 at 11:04:21AM +0800, Wei Wang wrote:
+> On 07/08/2019 10:48 PM, Peter Zijlstra wrote:
+
+> > *WHY* does the host need to save/restore? Why not make VMENTER/VMEXIT do
+> > this?
 > 
-> * v1
->  * fix accounting bug - Hillf
+> Because the VMX transition is much more frequent than the vCPU switching.
+> On SKL, saving 32 LBR entries could add 3000~4000 cycles overhead, this
+> would be too large for the frequent VMX transitions.
 > 
-> Link: http://lkml.kernel.org/r/20190531165927.GA20067@cmpxchg.org
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> LBR state is saved when vCPU is scheduled out to ensure that this
+> vCPU's LBR data doesn't get lost (as another vCPU or host thread that
+> is scheduled in may use LBR)
 
-I like that the NR_ISOLATED_$FOO handling gets out of any code except
-for vmscan and migration. This is definitely an improvement.
+But VMENTER/VMEXIT still have to enable/disable the LBR, right?
+Otherwise the host will pollute LBR contents. And you then rely on this
+'fake' event to ensure the host doesn't use LBR when the VCPU is
+running.
 
-I haven't spotted any imbalance so I hope I haven't really missed any
-path.
+But what about the counter scheduling rules; what happens when a CPU
+event claims the LBR before the task event can claim it? CPU events have
+precedence over task events.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Then your VCPU will clobber host state; which is BAD.
 
-Thanks!
-
-> ---
->  mm/compaction.c     |  2 --
->  mm/gup.c            |  7 +------
->  mm/khugepaged.c     |  3 ---
->  mm/memory-failure.c |  3 ---
->  mm/memory_hotplug.c |  4 ----
->  mm/mempolicy.c      |  6 +-----
->  mm/migrate.c        | 37 ++++++++-----------------------------
->  mm/vmscan.c         | 22 ++++++++++++++++------
->  8 files changed, 26 insertions(+), 58 deletions(-)
-> 
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 9e1b9acb116b..c6591682deda 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -982,8 +982,6 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  
->  		/* Successfully isolated */
->  		del_page_from_lru_list(page, lruvec, page_lru(page));
-> -		inc_node_page_state(page,
-> -				NR_ISOLATED_ANON + page_is_file_cache(page));
->  
->  isolate_success:
->  		list_add(&page->lru, &cc->migratepages);
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 7dde2e3a1963..aec3a2b7e61b 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1473,13 +1473,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
->  					drain_allow = false;
->  				}
->  
-> -				if (!isolate_lru_page(head)) {
-> +				if (!isolate_lru_page(head))
->  					list_add_tail(&head->lru, &cma_page_list);
-> -					mod_node_page_state(page_pgdat(head),
-> -							    NR_ISOLATED_ANON +
-> -							    page_is_file_cache(head),
-> -							    hpage_nr_pages(head));
-> -				}
->  			}
->  		}
->  	}
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 0f7419938008..7da34e198ec5 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -503,7 +503,6 @@ void __khugepaged_exit(struct mm_struct *mm)
->  
->  static void release_pte_page(struct page *page)
->  {
-> -	dec_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
->  	unlock_page(page);
->  	putback_lru_page(page);
->  }
-> @@ -602,8 +601,6 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  			result = SCAN_DEL_PAGE_LRU;
->  			goto out;
->  		}
-> -		inc_node_page_state(page,
-> -				NR_ISOLATED_ANON + page_is_file_cache(page));
->  		VM_BUG_ON_PAGE(!PageLocked(page), page);
->  		VM_BUG_ON_PAGE(PageLRU(page), page);
->  
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 7e08cbf3ba49..3586e8226e4e 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1795,9 +1795,6 @@ static int __soft_offline_page(struct page *page, int flags)
->  		 * so use !__PageMovable instead for LRU page's mapping
->  		 * cannot have PAGE_MAPPING_MOVABLE.
->  		 */
-> -		if (!__PageMovable(page))
-> -			inc_node_page_state(page, NR_ISOLATED_ANON +
-> -						page_is_file_cache(page));
->  		list_add(&page->lru, &pagelist);
->  		ret = migrate_pages(&pagelist, new_page, NULL, MPOL_MF_MOVE_ALL,
->  					MIGRATE_SYNC, MR_MEMORY_FAILURE);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index dfab21dc33dc..68577c677b46 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1384,10 +1384,6 @@ do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
->  			ret = isolate_movable_page(page, ISOLATE_UNEVICTABLE);
->  		if (!ret) { /* Success */
->  			list_add_tail(&page->lru, &source);
-> -			if (!__PageMovable(page))
-> -				inc_node_page_state(page, NR_ISOLATED_ANON +
-> -						    page_is_file_cache(page));
-> -
->  		} else {
->  			pr_warn("failed to isolate pfn %lx\n", pfn);
->  			dump_page(page, "isolation failed");
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 64562809bf3b..03081f3404ca 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -994,12 +994,8 @@ static int migrate_page_add(struct page *page, struct list_head *pagelist,
->  	 * Avoid migrating a page that is shared with others.
->  	 */
->  	if ((flags & MPOL_MF_MOVE_ALL) || page_mapcount(head) == 1) {
-> -		if (!isolate_lru_page(head)) {
-> +		if (!isolate_lru_page(head))
->  			list_add_tail(&head->lru, pagelist);
-> -			mod_node_page_state(page_pgdat(head),
-> -				NR_ISOLATED_ANON + page_is_file_cache(head),
-> -				hpage_nr_pages(head));
-> -		}
->  	}
->  
->  	return 0;
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 572b4bc85d76..5583324c01e7 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -190,8 +190,6 @@ void putback_movable_pages(struct list_head *l)
->  			unlock_page(page);
->  			put_page(page);
->  		} else {
-> -			mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON +
-> -					page_is_file_cache(page), -hpage_nr_pages(page));
->  			putback_lru_page(page);
->  		}
->  	}
-> @@ -1181,10 +1179,17 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->  		return -ENOMEM;
->  
->  	if (page_count(page) == 1) {
-> +		bool is_lru = !__PageMovable(page);
-> +
->  		/* page was freed from under us. So we are done. */
->  		ClearPageActive(page);
->  		ClearPageUnevictable(page);
-> -		if (unlikely(__PageMovable(page))) {
-> +		if (likely(is_lru))
-> +			mod_node_page_state(page_pgdat(page),
-> +						NR_ISOLATED_ANON +
-> +						page_is_file_cache(page),
-> +						-hpage_nr_pages(page));
-> +		else {
->  			lock_page(page);
->  			if (!PageMovable(page))
->  				__ClearPageIsolated(page);
-> @@ -1210,15 +1215,6 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->  		 * restored.
->  		 */
->  		list_del(&page->lru);
-> -
-> -		/*
-> -		 * Compaction can migrate also non-LRU pages which are
-> -		 * not accounted to NR_ISOLATED_*. They can be recognized
-> -		 * as __PageMovable
-> -		 */
-> -		if (likely(!__PageMovable(page)))
-> -			mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON +
-> -					page_is_file_cache(page), -hpage_nr_pages(page));
->  	}
->  
->  	/*
-> @@ -1572,9 +1568,6 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->  
->  		err = 0;
->  		list_add_tail(&head->lru, pagelist);
-> -		mod_node_page_state(page_pgdat(head),
-> -			NR_ISOLATED_ANON + page_is_file_cache(head),
-> -			hpage_nr_pages(head));
->  	}
->  out_putpage:
->  	/*
-> @@ -1890,8 +1883,6 @@ static struct page *alloc_misplaced_dst_page(struct page *page,
->  
->  static int numamigrate_isolate_page(pg_data_t *pgdat, struct page *page)
->  {
-> -	int page_lru;
-> -
->  	VM_BUG_ON_PAGE(compound_order(page) && !PageTransHuge(page), page);
->  
->  	/* Avoid migrating to a node that is nearly full */
-> @@ -1913,10 +1904,6 @@ static int numamigrate_isolate_page(pg_data_t *pgdat, struct page *page)
->  		return 0;
->  	}
->  
-> -	page_lru = page_is_file_cache(page);
-> -	mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON + page_lru,
-> -				hpage_nr_pages(page));
-> -
->  	/*
->  	 * Isolating the page has taken another reference, so the
->  	 * caller's reference can be safely dropped without the page
-> @@ -1971,8 +1958,6 @@ int migrate_misplaced_page(struct page *page, struct vm_area_struct *vma,
->  	if (nr_remaining) {
->  		if (!list_empty(&migratepages)) {
->  			list_del(&page->lru);
-> -			dec_node_page_state(page, NR_ISOLATED_ANON +
-> -					page_is_file_cache(page));
->  			putback_lru_page(page);
->  		}
->  		isolated = 0;
-> @@ -2002,7 +1987,6 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
->  	pg_data_t *pgdat = NODE_DATA(node);
->  	int isolated = 0;
->  	struct page *new_page = NULL;
-> -	int page_lru = page_is_file_cache(page);
->  	unsigned long start = address & HPAGE_PMD_MASK;
->  
->  	new_page = alloc_pages_node(node,
-> @@ -2048,8 +2032,6 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
->  		/* Retake the callers reference and putback on LRU */
->  		get_page(page);
->  		putback_lru_page(page);
-> -		mod_node_page_state(page_pgdat(page),
-> -			 NR_ISOLATED_ANON + page_lru, -HPAGE_PMD_NR);
->  
->  		goto out_unlock;
->  	}
-> @@ -2099,9 +2081,6 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
->  	count_vm_events(PGMIGRATE_SUCCESS, HPAGE_PMD_NR);
->  	count_vm_numa_events(NUMA_PAGE_MIGRATE, HPAGE_PMD_NR);
->  
-> -	mod_node_page_state(page_pgdat(page),
-> -			NR_ISOLATED_ANON + page_lru,
-> -			-HPAGE_PMD_NR);
->  	return isolated;
->  
->  out_fail:
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 49e9ee4d771d..223ce5da08f0 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1014,6 +1014,9 @@ int remove_mapping(struct address_space *mapping, struct page *page)
->  void putback_lru_page(struct page *page)
->  {
->  	lru_cache_add(page);
-> +	mod_node_page_state(page_pgdat(page),
-> +				NR_ISOLATED_ANON + page_is_file_cache(page),
-> +				-hpage_nr_pages(page));
->  	put_page(page);		/* drop ref from isolate */
->  }
->  
-> @@ -1479,6 +1482,9 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  		 */
->  		nr_reclaimed += nr_pages;
->  
-> +		mod_node_page_state(pgdat, NR_ISOLATED_ANON +
-> +						page_is_file_cache(page),
-> +						-nr_pages);
->  		/*
->  		 * Is there need to periodically free_page_list? It would
->  		 * appear not as the counts should be low
-> @@ -1554,7 +1560,6 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
->  	ret = shrink_page_list(&clean_pages, zone->zone_pgdat, &sc,
->  			TTU_IGNORE_ACCESS, &dummy_stat, true);
->  	list_splice(&clean_pages, page_list);
-> -	mod_node_page_state(zone->zone_pgdat, NR_ISOLATED_FILE, -ret);
->  	return ret;
->  }
->  
-> @@ -1630,6 +1635,9 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
->  		 */
->  		ClearPageLRU(page);
->  		ret = 0;
-> +		__mod_node_page_state(page_pgdat(page), NR_ISOLATED_ANON +
-> +						page_is_file_cache(page),
-> +						hpage_nr_pages(page));
->  	}
->  
->  	return ret;
-> @@ -1761,6 +1769,7 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
->  	trace_mm_vmscan_lru_isolate(sc->reclaim_idx, sc->order, nr_to_scan,
->  				    total_scan, skipped, nr_taken, mode, lru);
->  	update_lru_sizes(lruvec, lru, nr_zone_taken);
-> +
->  	return nr_taken;
->  }
->  
-> @@ -1809,6 +1818,9 @@ int isolate_lru_page(struct page *page)
->  			ClearPageLRU(page);
->  			del_page_from_lru_list(page, lruvec, lru);
->  			ret = 0;
-> +			mod_node_page_state(pgdat, NR_ISOLATED_ANON +
-> +						page_is_file_cache(page),
-> +						hpage_nr_pages(page));
->  		}
->  		spin_unlock_irq(&pgdat->lru_lock);
->  	}
-> @@ -1900,6 +1912,9 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->  		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
->  		list_move(&page->lru, &lruvec->lists[lru]);
->  
-> +		__mod_node_page_state(pgdat, NR_ISOLATED_ANON +
-> +						page_is_file_cache(page),
-> +						-hpage_nr_pages(page));
->  		if (put_page_testzero(page)) {
->  			__ClearPageLRU(page);
->  			__ClearPageActive(page);
-> @@ -1977,7 +1992,6 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
->  	nr_taken = isolate_lru_pages(nr_to_scan, lruvec, &page_list,
->  				     &nr_scanned, sc, lru);
->  
-> -	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, nr_taken);
->  	reclaim_stat->recent_scanned[file] += nr_taken;
->  
->  	item = current_is_kswapd() ? PGSCAN_KSWAPD : PGSCAN_DIRECT;
-> @@ -2003,8 +2017,6 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
->  
->  	move_pages_to_lru(lruvec, &page_list);
->  
-> -	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, -nr_taken);
-> -
->  	spin_unlock_irq(&pgdat->lru_lock);
->  
->  	mem_cgroup_uncharge_list(&page_list);
-> @@ -2063,7 +2075,6 @@ static void shrink_active_list(unsigned long nr_to_scan,
->  	nr_taken = isolate_lru_pages(nr_to_scan, lruvec, &l_hold,
->  				     &nr_scanned, sc, lru);
->  
-> -	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, nr_taken);
->  	reclaim_stat->recent_scanned[file] += nr_taken;
->  
->  	__count_vm_events(PGREFILL, nr_scanned);
-> @@ -2132,7 +2143,6 @@ static void shrink_active_list(unsigned long nr_to_scan,
->  	__count_vm_events(PGDEACTIVATE, nr_deactivate);
->  	__count_memcg_events(lruvec_memcg(lruvec), PGDEACTIVATE, nr_deactivate);
->  
-> -	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, -nr_taken);
->  	spin_unlock_irq(&pgdat->lru_lock);
->  
->  	mem_cgroup_uncharge_list(&l_active);
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-
--- 
-Michal Hocko
-SUSE Labs
+I'm missing all these details in the Changelogs. Please describe the
+whole setup and explain why this approach.
