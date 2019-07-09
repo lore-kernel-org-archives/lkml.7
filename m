@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84CCC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8451C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73B22086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B9A2086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfGIDbj (ORCPT
+        id S1727352AbfGIDbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:31:39 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51594 "EHLO huawei.com"
+        Mon, 8 Jul 2019 23:31:35 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51552 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727290AbfGIDbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 23:31:34 -0400
+        id S1726046AbfGIDbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 23:31:31 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 96328BE1485FE9F8D83D;
+        by Forcepoint Email with ESMTP id 812921B7C99B1553E632;
         Tue,  9 Jul 2019 11:31:29 +0800 (CST)
 Received: from huawei.com (10.67.189.167) by DGGEMS402-HUB.china.huawei.com
  (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
- 11:31:22 +0800
+ 11:31:20 +0800
 From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 To:     <davem@davemloft.net>, <robh+dt@kernel.org>,
         <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
@@ -35,9 +34,9 @@ CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <leeyou.li@huawei.com>,
         <nixiaoming@huawei.com>, <jianping.liu@huawei.com>,
         <xiekunxun@huawei.com>
-Subject: [PATCH v2 08/10] net: hisilicon: Offset buf address to adapt HI13X1_GMAC
-Date:   Tue, 9 Jul 2019 11:31:09 +0800
-Message-ID: <1562643071-46811-9-git-send-email-xiaojiangfeng@huawei.com>
+Subject: [PATCH v2 01/10] net: hisilicon: Add support for HI13X1 to hip04_eth
+Date:   Tue, 9 Jul 2019 11:31:02 +0800
+Message-ID: <1562643071-46811-2-git-send-email-xiaojiangfeng@huawei.com>
 X-Mailer: git-send-email 1.8.5.6
 In-Reply-To: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
 References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
@@ -50,74 +49,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The buf unit size of HI13X1_GMAC is cache_line_size,
-which is 64, so the address we write to the buf register
-needs to be shifted right by 6 bits.
-
-The 31st bit of the PPE_CFG_CPU_ADD_ADDR register
-of HI13X1_GMAC indicates whether to release the buffer
-of the message, and the low indicates that it is valid.
+Extend the hip04_eth driver to support HI13X1_GMAC.
+Enable it with CONFIG_HI13X1_GMAC option.
 
 Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/Kconfig     | 10 ++++++++
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 37 ++++++++++++++++++++++++------
+ 2 files changed, 40 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/net/ethernet/hisilicon/Kconfig b/drivers/net/ethernet/hisilicon/Kconfig
+index a0d780c..3892a20 100644
+--- a/drivers/net/ethernet/hisilicon/Kconfig
++++ b/drivers/net/ethernet/hisilicon/Kconfig
+@@ -46,6 +46,16 @@ config HIP04_ETH
+ 	  If you wish to compile a kernel for a hardware with hisilicon p04 SoC and
+ 	  want to use the internal ethernet then you should answer Y to this.
+ 
++config HI13X1_GMAC
++	bool "Hisilicon HI13X1 Network Device Support"
++	depends on HIP04_ETH
++	help
++	  If you wish to compile a kernel for a hardware with hisilicon hi13x1_gamc
++	  then you should answer Y to this. This makes this driver suitable for use
++	  on certain boards such as the HI13X1.
++
++	  If you are unsure, say N.
++
+ config HNS_MDIO
+ 	tristate
+ 	select PHYLIB
 diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 5328219..c578934 100644
+index e1f2978..2b5112b 100644
 --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
 +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -120,12 +120,20 @@
- #define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(0)
- #define PPE_CFG_QOS_VMID_MODE		BIT(15)
- #define PPE_CFG_BUS_LOCAL_REL		(BIT(9) | BIT(15) | BIT(19) | BIT(23))
+@@ -33,10 +33,23 @@
+ #define GE_MODE_CHANGE_REG		0x1b4
+ #define GE_RECV_CONTROL_REG		0x1e0
+ #define GE_STATION_MAC_ADDRESS		0x210
+-#define PPE_CFG_CPU_ADD_ADDR		0x580
+-#define PPE_CFG_MAX_FRAME_LEN_REG	0x408
 +
-+/* buf unit size is cache_line_size, which is 64, so the shift is 6 */
-+#define PPE_BUF_SIZE_SHIFT		6
-+#define PPE_TX_BUF_HOLD			BIT(31)
- #else
+ #define PPE_CFG_BUS_CTRL_REG		0x424
+ #define PPE_CFG_RX_CTRL_REG		0x428
++
++#if defined(CONFIG_HI13X1_GMAC)
++#define PPE_CFG_CPU_ADD_ADDR		0x6D0
++#define PPE_CFG_MAX_FRAME_LEN_REG	0x500
++#define PPE_CFG_RX_PKT_MODE_REG		0x504
++#define PPE_CFG_QOS_VMID_GEN		0x520
++#define PPE_CFG_RX_PKT_INT		0x740
++#define PPE_INTEN			0x700
++#define PPE_INTSTS			0x708
++#define PPE_RINT			0x704
++#define PPE_CFG_STS_MODE		0x880
++#else
++#define PPE_CFG_CPU_ADD_ADDR		0x580
++#define PPE_CFG_MAX_FRAME_LEN_REG	0x408
+ #define PPE_CFG_RX_PKT_MODE_REG		0x438
+ #define PPE_CFG_QOS_VMID_GEN		0x500
+ #define PPE_CFG_RX_PKT_INT		0x538
+@@ -44,6 +57,8 @@
+ #define PPE_INTSTS			0x608
+ #define PPE_RINT			0x604
+ #define PPE_CFG_STS_MODE		0x700
++#endif /* CONFIG_HI13X1_GMAC */
++
+ #define PPE_HIS_RX_PKT_CNT		0x804
+ 
+ /* REG_INTERRUPT */
+@@ -93,18 +108,26 @@
+ #define GE_RX_PORT_EN			BIT(1)
+ #define GE_TX_PORT_EN			BIT(2)
+ 
+-#define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(12)
+-
+ #define PPE_CFG_RX_PKT_ALIGN		BIT(18)
+-#define PPE_CFG_QOS_VMID_MODE		BIT(14)
++
++#if defined(CONFIG_HI13X1_GMAC)
++#define PPE_CFG_QOS_VMID_GRP_SHIFT	4
++#define PPE_CFG_RX_CTRL_ALIGN_SHIFT	7
++#define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(0)
++#define PPE_CFG_QOS_VMID_MODE		BIT(15)
++#define PPE_CFG_BUS_LOCAL_REL		(BIT(9) | BIT(15) | BIT(19) | BIT(23))
++#else
  #define PPE_CFG_QOS_VMID_GRP_SHIFT	8
- #define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
- #define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(12)
- #define PPE_CFG_QOS_VMID_MODE		BIT(14)
- #define PPE_CFG_BUS_LOCAL_REL		BIT(14)
-+
-+/* buf unit size is 1, so the shift is 6 */
-+#define PPE_BUF_SIZE_SHIFT		0
-+#define PPE_TX_BUF_HOLD			0
- #endif /* CONFIG_HI13X1_GMAC */
++#define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
++#define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(12)
++#define PPE_CFG_QOS_VMID_MODE		BIT(14)
++#define PPE_CFG_BUS_LOCAL_REL		BIT(14)
++#endif /* CONFIG_HI13X1_GMAC */
  
  #define PPE_CFG_RX_FIFO_FSFU		BIT(11)
-@@ -286,7 +294,7 @@ static void hip04_config_fifo(struct hip04_priv *priv)
- 	val |= PPE_CFG_QOS_VMID_MODE;
- 	writel_relaxed(val, priv->base + PPE_CFG_QOS_VMID_GEN);
+ #define PPE_CFG_RX_DEPTH_SHIFT		16
+ #define PPE_CFG_RX_START_SHIFT		0
+-#define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
  
--	val = RX_BUF_SIZE;
-+	val = RX_BUF_SIZE >> PPE_BUF_SIZE_SHIFT;
- 	regmap_write(priv->map, priv->port * 4 + PPE_CFG_RX_BUF_SIZE, val);
+-#define PPE_CFG_BUS_LOCAL_REL		BIT(14)
+ #define PPE_CFG_BUS_BIG_ENDIEN		BIT(0)
  
- 	val = RX_DESC_NUM << PPE_CFG_RX_DEPTH_SHIFT;
-@@ -369,12 +377,18 @@ static void hip04_mac_disable(struct net_device *ndev)
- 
- static void hip04_set_xmit_desc(struct hip04_priv *priv, dma_addr_t phys)
- {
--	writel(phys, priv->base + PPE_CFG_CPU_ADD_ADDR);
-+	u32 val;
-+
-+	val = phys >> PPE_BUF_SIZE_SHIFT | PPE_TX_BUF_HOLD;
-+	writel(val, priv->base + PPE_CFG_CPU_ADD_ADDR);
- }
- 
- static void hip04_set_recv_desc(struct hip04_priv *priv, dma_addr_t phys)
- {
--	regmap_write(priv->map, priv->port * 4 + PPE_CFG_RX_ADDR, phys);
-+	u32 val;
-+
-+	val = phys >> PPE_BUF_SIZE_SHIFT;
-+	regmap_write(priv->map, priv->port * 4 + PPE_CFG_RX_ADDR, val);
- }
- 
- static u32 hip04_recv_cnt(struct hip04_priv *priv)
+ #define RX_DESC_NUM			128
 -- 
 1.8.5.6
 
