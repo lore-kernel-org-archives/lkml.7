@@ -2,116 +2,194 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B97AC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A602C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583BB2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ZpzLMaKe"
+	by mail.kernel.org (Postfix) with ESMTP id 2026E216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562648806;
+	bh=vRLaNB39pENRx8xaYHGCilgHvRIBsh6uU1qpFKxiZUg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=mJ4Czo7fdHypAa6s78JITNTugKxnWRtgwCtxYMLiRBHUkVYAMpTG5P/dWpKbGc6BB
+	 LginHnOt/64gPLHerQvRu4lWzxpphTa69V+KKTieiJaFockTZPpwnLVD7I0cZQuZCs
+	 zSKkTlWzDrwt0PXW+6erwc13BFUfN0/d8UsO9qqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfGIFEq (ORCPT
+        id S1727186AbfGIFGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:04:46 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:64154 "EHLO pegase1.c-s.fr"
+        Tue, 9 Jul 2019 01:06:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfGIFEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:04:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45jVcC5PPgz9txvr;
-        Tue,  9 Jul 2019 07:04:43 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ZpzLMaKe; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id NtE2ogjVIdW2; Tue,  9 Jul 2019 07:04:43 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45jVcC4Fgfz9txvj;
-        Tue,  9 Jul 2019 07:04:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1562648683; bh=InD1pggxj7L0oiLqVKw9lp4Lo1SOo1AoAub535aBZZM=;
+        id S1726403AbfGIFGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 01:06:44 -0400
+Received: from [192.168.0.101] (unknown [49.65.245.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14CED2073D;
+        Tue,  9 Jul 2019 05:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562648803;
+        bh=vRLaNB39pENRx8xaYHGCilgHvRIBsh6uU1qpFKxiZUg=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZpzLMaKeSsTH4l510UePhhSoJco41Adi8YKLtLj6kN1YJ3QaPifONfn9FoZgvJA5n
-         nbn8J/K4v7W00iUT46j4RlPBFpK0PxwkA6vDPCtndy5SRTJj3OszjRUYDSJIOpVNZA
-         S+XYnOoBUltwCHlbP6pHRMdQW0VRN4BCE1F1j9FY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 60CFC8B7C1;
-        Tue,  9 Jul 2019 07:04:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LtvkpDjRKwoA; Tue,  9 Jul 2019 07:04:44 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 984448B756;
-        Tue,  9 Jul 2019 07:04:43 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <c6ff2faba7fbb56a7f5b5f08cd3453f89fc0aaf4.1557480165.git.christophe.leroy@c-s.fr>
- <45hnfp6SlLz9sP0@ozlabs.org> <20190708191416.GA21442@archlinux-threadripper>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr>
-Date:   Tue, 9 Jul 2019 07:04:43 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        b=JkBXnKwq258WetNLII677gJ2yQ9iCULpibiBmajAtfFg5IR+FSPzOeu3gAl4YxBtm
+         AGTDmST91bdQFhcdSlks6oR2E0WSaDgeJ22T4T0jA86hsC1WsBHqJOTmZUER/yPYvx
+         crYAwck8wyWbX8ycVhdZiaNPK7ZPLRb7i1EsHgog=
+Subject: Re: [PATCH] f2fs: allocate memory in batch in build_sit_info()
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Chen Gong <gongchen4@huawei.com>
+References: <20190704081730.46414-1-yuchao0@huawei.com>
+ <20190708234633.GB21769@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <86fb078c-0f9e-8d08-7e3b-29a2b6c8b107@kernel.org>
+Date:   Tue, 9 Jul 2019 13:06:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190708191416.GA21442@archlinux-threadripper>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190708234633.GB21769@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-7-9 7:46, Jaegeuk Kim wrote:
+> On 07/04, Chao Yu wrote:
+>> build_sit_info() allocate all bitmaps for each segment one by one,
+>> it's quite low efficiency, this pach changes to allocate large
+>> continuous memory at a time, and divide it and assign for each bitmaps
+> 
+> It may give more failure rate?
 
+For android, I think there should be no problem, since while startup, memory
+should be sufficient for f2fs mount.
+For server or desktop, if there is any failure on memory allocation,
+f2fs_kzalloc will fallback to vmalloc, so that would not be worse than before,
+right?
 
-Le 08/07/2019 à 21:14, Nathan Chancellor a écrit :
-> On Mon, Jul 08, 2019 at 11:19:30AM +1000, Michael Ellerman wrote:
->> On Fri, 2019-05-10 at 09:24:48 UTC, Christophe Leroy wrote:
->>> Cache instructions (dcbz, dcbi, dcbf and dcbst) take two registers
->>> that are summed to obtain the target address. Using 'Z' constraint
->>> and '%y0' argument gives GCC the opportunity to use both registers
->>> instead of only one with the second being forced to 0.
->>>
->>> Suggested-by: Segher Boessenkool <segher@kernel.crashing.org>
->>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Or if you worry about this really, could we add a fast path:
+
+build_sit_info()
+ - try allocate sit_i->bitmap
+  - success: divide memory
+ - fail: fallback to old method
+
+Thanks,
+
+> 
+>> of segment. For large size image, it can expect improving its mount
+>> speed.
 >>
->> Applied to powerpc next, thanks.
+>> Signed-off-by: Chen Gong <gongchen4@huawei.com>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/segment.c | 51 +++++++++++++++++++++--------------------------
+>>  fs/f2fs/segment.h |  1 +
+>>  2 files changed, 24 insertions(+), 28 deletions(-)
 >>
->> https://git.kernel.org/powerpc/c/6c5875843b87c3adea2beade9d1b8b3d4523900a
->>
->> cheers
-> 
-> This patch causes a regression with clang:
-
-Is that a Clang bug ?
-
-Do you have a disassembly of the code both with and without this patch 
-in order to compare ?
-
-Segher, any idea ?
-
-Christophe
-
-> 
-> https://travis-ci.com/ClangBuiltLinux/continuous-integration/jobs/213944668
-> 
-> I've attached my local bisect/build log.
-> 
-> Cheers,
-> Nathan
-> 
+>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>> index 402fbbbb2d7c..73c803af1f31 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -3929,7 +3929,7 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>>  	struct f2fs_super_block *raw_super = F2FS_RAW_SUPER(sbi);
+>>  	struct sit_info *sit_i;
+>>  	unsigned int sit_segs, start;
+>> -	char *src_bitmap;
+>> +	char *src_bitmap, *bitmap;
+>>  	unsigned int bitmap_size;
+>>  
+>>  	/* allocate memory for SIT information */
+>> @@ -3950,27 +3950,31 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>>  	if (!sit_i->dirty_sentries_bitmap)
+>>  		return -ENOMEM;
+>>  
+>> +#ifdef CONFIG_F2FS_CHECK_FS
+>> +	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 4;
+>> +#else
+>> +	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * 3;
+>> +#endif
+>> +	sit_i->bitmap = f2fs_kzalloc(sbi, bitmap_size, GFP_KERNEL);
+>> +	if (!sit_i->bitmap)
+>> +		return -ENOMEM;
+>> +
+>> +	bitmap = sit_i->bitmap;
+>> +
+>>  	for (start = 0; start < MAIN_SEGS(sbi); start++) {
+>> -		sit_i->sentries[start].cur_valid_map
+>> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+>> -		sit_i->sentries[start].ckpt_valid_map
+>> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+>> -		if (!sit_i->sentries[start].cur_valid_map ||
+>> -				!sit_i->sentries[start].ckpt_valid_map)
+>> -			return -ENOMEM;
+>> +		sit_i->sentries[start].cur_valid_map = bitmap;
+>> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>> +
+>> +		sit_i->sentries[start].ckpt_valid_map = bitmap;
+>> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>>  
+>>  #ifdef CONFIG_F2FS_CHECK_FS
+>> -		sit_i->sentries[start].cur_valid_map_mir
+>> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+>> -		if (!sit_i->sentries[start].cur_valid_map_mir)
+>> -			return -ENOMEM;
+>> +		sit_i->sentries[start].cur_valid_map_mir = bitmap;
+>> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>>  #endif
+>>  
+>> -		sit_i->sentries[start].discard_map
+>> -			= f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE,
+>> -							GFP_KERNEL);
+>> -		if (!sit_i->sentries[start].discard_map)
+>> -			return -ENOMEM;
+>> +		sit_i->sentries[start].discard_map = bitmap;
+>> +		bitmap += SIT_VBLOCK_MAP_SIZE;
+>>  	}
+>>  
+>>  	sit_i->tmp_map = f2fs_kzalloc(sbi, SIT_VBLOCK_MAP_SIZE, GFP_KERNEL);
+>> @@ -4440,21 +4444,12 @@ static void destroy_free_segmap(struct f2fs_sb_info *sbi)
+>>  static void destroy_sit_info(struct f2fs_sb_info *sbi)
+>>  {
+>>  	struct sit_info *sit_i = SIT_I(sbi);
+>> -	unsigned int start;
+>>  
+>>  	if (!sit_i)
+>>  		return;
+>>  
+>> -	if (sit_i->sentries) {
+>> -		for (start = 0; start < MAIN_SEGS(sbi); start++) {
+>> -			kvfree(sit_i->sentries[start].cur_valid_map);
+>> -#ifdef CONFIG_F2FS_CHECK_FS
+>> -			kvfree(sit_i->sentries[start].cur_valid_map_mir);
+>> -#endif
+>> -			kvfree(sit_i->sentries[start].ckpt_valid_map);
+>> -			kvfree(sit_i->sentries[start].discard_map);
+>> -		}
+>> -	}
+>> +	if (sit_i->sentries)
+>> +		kvfree(sit_i->bitmap);
+>>  	kvfree(sit_i->tmp_map);
+>>  
+>>  	kvfree(sit_i->sentries);
+>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+>> index 2fd53462fa27..4d171b489130 100644
+>> --- a/fs/f2fs/segment.h
+>> +++ b/fs/f2fs/segment.h
+>> @@ -226,6 +226,7 @@ struct sit_info {
+>>  	block_t sit_base_addr;		/* start block address of SIT area */
+>>  	block_t sit_blocks;		/* # of blocks used by SIT area */
+>>  	block_t written_valid_blocks;	/* # of valid blocks in main area */
+>> +	char *bitmap;			/* all bitmaps pointer */
+>>  	char *sit_bitmap;		/* SIT bitmap pointer */
+>>  #ifdef CONFIG_F2FS_CHECK_FS
+>>  	char *sit_bitmap_mir;		/* SIT bitmap mirror */
+>> -- 
+>> 2.18.0.rc1
