@@ -2,141 +2,101 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502CBC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8418C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C486214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB6F214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:44:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXAfduAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfGIPmL (ORCPT
+        id S1726345AbfGIPog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 11:42:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:46354 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfGIPmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 11:42:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2C7E2B;
-        Tue,  9 Jul 2019 08:42:09 -0700 (PDT)
-Received: from [10.1.194.67] (e108031-lin.cambridge.arm.com [10.1.194.67])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4D1C3F246;
-        Tue,  9 Jul 2019 08:42:08 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: Update rq_clock, cfs_rq before migrating for
- asym cpu capacity
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Dietmar Eggemann <Dietmar.Eggemann@arm.com>
-References: <20190709115759.10451-1-chris.redpath@arm.com>
- <20190709135054.GF3402@hirez.programming.kicks-ass.net>
- <b0d82dbf-f23b-f858-4c60-b5a413c0e618@arm.com>
- <CAKfTPtCxw8Xqz3rJPKeeDVfvWTcsByAb64_JtB-w2Bp83BGBgw@mail.gmail.com>
-Reply-To: chris.redpath@arm.com
-From:   Chris Redpath <chris.redpath@foss.arm.com>
-Message-ID: <1128a866-6817-3703-8962-8c3670dd10c1@foss.arm.com>
-Date:   Tue, 9 Jul 2019 16:42:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 9 Jul 2019 11:44:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39590 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfGIPog (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 11:44:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b7so10303913pls.6;
+        Tue, 09 Jul 2019 08:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rBSYD3TIeV10dpPGSnZAIDV4eDvbq6imUadVBmJjg0c=;
+        b=uXAfduAMO3rYjchKGJ46I19EP2W/0JZBhI/rp8UTiDBtgRpWLffX81POM3SaDJ1H8e
+         s4v74/CXBZtFJCBkNZUWrTYow+HeCch6W1k9TtN22Q6k3LHpNiH96Cw34WCBxMJ8G2y2
+         QCea5KAL/fC45YUH3VV5aXdUGhdJIhQmIYIhdP2CQ82W8B1vmqjSdocvzOUStVCpzDD5
+         6Cby6kWdZvbdcepHP06eLpAs7S4pxzlcJsI2zyPCbJsymcAoX+PN/Fm9/OOpUytYa2ki
+         4oJ6ThN6S7HEBDZyPaC7TY4MjYRIcfPYifUrVyg93hHabwhHagd8NLc4Zj6hGmWVeEe2
+         pmXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rBSYD3TIeV10dpPGSnZAIDV4eDvbq6imUadVBmJjg0c=;
+        b=q/Mnmy/k45UzDCTyHqp37tWCzUccEztp+kgVlHqXfi2ZnxN+L6guzc4/z1H0WmTyfz
+         A7Gg2zmHRAI/5ERDs/l2XXPHCRxoVvsy/BujSScGOTnTFomcfxEaaY4TKknICepQB5n4
+         5rt8h+Fy4NUEPpKwyIIQuBl0jS/+M2HFSR3n5O3G0mfPDqm0y3f99jj4dmRMk9BvoLwr
+         7oLrjVk/c/GCG1MmDYAkqlAYLx4Ih5XQng8A5D8KDe6U/8PK1DHGnVY8niwjkUaACHq2
+         DlIVdnZa4uBE9y3wowRCoSzTVFqGsFLyNAmdNuPehDLeA0fsvyTAWpzZu+UTVx7ux9VE
+         EoVQ==
+X-Gm-Message-State: APjAAAVjA04kGj2ePxMXziJhB1XysSzJw8F5eGg+cbMZs1ZFVIWDJdVE
+        TIXfUCwdj5JUhCXrALJKEQc=
+X-Google-Smtp-Source: APXvYqytM46hXlifPvXUlCb2uoDrs7LBjdwkrcuL67Oew94Dp0701YrzEOB8rR8fG5iUfdNANcCD+Q==
+X-Received: by 2002:a17:902:28e9:: with SMTP id f96mr31772255plb.114.1562687075186;
+        Tue, 09 Jul 2019 08:44:35 -0700 (PDT)
+Received: from arch ([43.250.158.197])
+        by smtp.gmail.com with ESMTPSA id b29sm41498777pfr.159.2019.07.09.08.44.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 08:44:34 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 21:14:29 +0530
+From:   Amol Surati <suratiamol@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 4.19 00/90] 4.19.58-stable review
+Message-ID: <20190709154429.GA2793@arch>
+References: <20190708150521.829733162@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtCxw8Xqz3rJPKeeDVfvWTcsByAb64_JtB-w2Bp83BGBgw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/07/2019 16:36, Vincent Guittot wrote:
-> Hi Chris,
+On Mon, Jul 08, 2019 at 05:12:27PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.58 release.
+> There are 90 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
->>
->> We enter this code quite often in our testing, most individual runs of a
->> test which has small tasks involved have at least one hit where we make
->> a change to the clock with this patch in.
+> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
+> Anything received after that time might be too late.
 > 
-> Do you have a rt-app file that you can share ?
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.58-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
 > 
-
-The ThreeSmallTasks test which is the worst hit produces this:
-
-{
-     "tasks": {
-         "small_0": {
-             "policy": "SCHED_OTHER",
-             "delay": 0,
-             "loop": 1,
-             "phases": {
-                 "p000001": {
-                     "loop": 62,
-                     "run": 2880,
-                     "timer": {
-                         "ref": "small_0",
-                         "period": 16000
-                     }
-                 }
-             }
-         },
-         "small_1": {
-             "policy": "SCHED_OTHER",
-             "delay": 0,
-             "loop": 1,
-             "phases": {
-                 "p000001": {
-                     "loop": 62,
-                     "run": 2880,
-                     "timer": {
-                         "ref": "small_1",
-                         "period": 16000
-                     }
-                 }
-             }
-         },
-         "small_2": {
-             "policy": "SCHED_OTHER",
-             "delay": 0,
-             "loop": 1,
-             "phases": {
-                 "p000001": {
-                     "loop": 62,
-                     "run": 2880,
-                     "timer": {
-                         "ref": "small_2",
-                         "period": 16000
-                     }
-                 }
-             }
-         }
-     },
-     "global": {
-         "default_policy": "SCHED_OTHER",
-         "duration": -1,
-         "calibration": 264,
-         "logdir": "/root/devlib-target"
-     }
-}
-
-when I run it
-
->>
->> That said - despite the relatively high number of hits only about 5% of
->> runs see enough additional energy consumed to trigger a test failure. We
->> do try to keep a quiet system as much as possible and only run for a few
->> seconds so the impact we see in testing is also probably higher than in
->> the real world.
+> thanks,
 > 
-> Yeah, I'm curious to see the impact on a real system which have a
-> 60fps screen update like an android phone
-> 
+> greg k-h
 
-I wouldn't expect much change there but I would on the idle-ish 
-homescreen/day-of-use type benchmarks.
+x86_64 compiled and booted; no regressions between 4.19.57 and
+4.19.58-rc1 among dmesg and kselftests.
 
-If I had a platform with any kind of representative energy use, I'd test 
-it :)
+Thanks,
+-amol
