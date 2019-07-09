@@ -2,98 +2,109 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EC5C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DD9C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F362087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:49:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KpUMySPy"
+	by mail.kernel.org (Postfix) with ESMTP id E07CE21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfGITtF (ORCPT
+        id S1728969AbfGITuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:49:05 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50298 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfGITtF (ORCPT
+        Tue, 9 Jul 2019 15:50:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46223 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfGITuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 15:49:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69JmwqP026550;
-        Tue, 9 Jul 2019 19:48:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=CmQbH8XJlLLeBfq76uQ18uqsTOTGRsTpvEFjktn/zmM=;
- b=KpUMySPyViEgkkaX/oUCUDyBS+C6O6Ic+0ZPNXD5H8Zxin2skZzqyvdWXkAWc/hB1kM/
- JzRxAvllvQ7oeqo3ydMr6kGqTapDOrkL4b/RQpz4QZSEREPhsB4hDenAkY68l8Buhr38
- HY5L35HcOXmrdOVMWskHGYLnEnmGTOJWCxVFrhmaQyQt5Q44p4udPxfH5TkEkgysbZqs
- jDpzi7JuqVFXxotGzxBqEJ+Eem7zUgybHNSY6llK4wBU7enr8Wg0onqrsY8g09VnwSD4
- feoQzR/FAtYU+PSa32TFq6azgTR0gZ5b5yuJ8/NRHMqx2EDgpXNefmDG+svQ2Ox8iy7K YQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2tjm9qp8us-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 19:48:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69JmAnq137219;
-        Tue, 9 Jul 2019 19:48:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2tmmh35b4q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 19:48:54 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x69JmntI020580;
-        Tue, 9 Jul 2019 19:48:52 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jul 2019 12:48:49 -0700
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] first round of SCSI updates for the 5.2+ merge window
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1562699693.3362.93.camel@HansenPartnership.com>
-        <yq1lfx7c80r.fsf@oracle.com>
-        <1562701406.3362.105.camel@HansenPartnership.com>
-Date:   Tue, 09 Jul 2019 15:48:46 -0400
-In-Reply-To: <1562701406.3362.105.camel@HansenPartnership.com> (James
-        Bottomley's message of "Tue, 09 Jul 2019 12:43:26 -0700")
-Message-ID: <yq1ef2zc7kx.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 9 Jul 2019 15:50:40 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hkw8C-000583-CT; Tue, 09 Jul 2019 21:50:28 +0200
+Date:   Tue, 9 Jul 2019 21:50:27 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nadav Amit <namit@vmware.com>
+cc:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>, Russ Anderson <rja@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>
+Subject: Re: [PATCH v2 8/9] x86/mm/tlb: Remove UV special case
+In-Reply-To: <20190702235151.4377-9-namit@vmware.com>
+Message-ID: <alpine.DEB.2.21.1907092146570.1758@nanos.tec.linutronix.de>
+References: <20190702235151.4377-1-namit@vmware.com> <20190702235151.4377-9-namit@vmware.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=721
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907090235
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=790 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907090235
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2 Jul 2019, Nadav Amit wrote:
 
-James,
+> SGI UV support is outdated and not maintained, and it is not clear how
+> it performs relatively to non-UV. Remove the code to simplify the code.
 
-> Actually, I was planning a second pull request for that one.  I
-> presume you think it's ready to go?
+You should at least Cc the SGI/HP folks on that. They are still
+around. Done so.
 
-It's spent 3 weeks in -next without any complaints.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Suggested-by: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Nadav Amit <namit@vmware.com>
+> ---
+>  arch/x86/mm/tlb.c | 25 -------------------------
+>  1 file changed, 25 deletions(-)
+> 
+> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+> index b47a71820f35..64afe1215495 100644
+> --- a/arch/x86/mm/tlb.c
+> +++ b/arch/x86/mm/tlb.c
+> @@ -689,31 +689,6 @@ void native_flush_tlb_multi(const struct cpumask *cpumask,
+>  		trace_tlb_flush(TLB_REMOTE_SEND_IPI,
+>  				(info->end - info->start) >> PAGE_SHIFT);
+>  
+> -	if (is_uv_system()) {
+> -		/*
+> -		 * This whole special case is confused.  UV has a "Broadcast
+> -		 * Assist Unit", which seems to be a fancy way to send IPIs.
+> -		 * Back when x86 used an explicit TLB flush IPI, UV was
+> -		 * optimized to use its own mechanism.  These days, x86 uses
+> -		 * smp_call_function_many(), but UV still uses a manual IPI,
+> -		 * and that IPI's action is out of date -- it does a manual
+> -		 * flush instead of calling flush_tlb_func_remote().  This
+> -		 * means that the percpu tlb_gen variables won't be updated
+> -		 * and we'll do pointless flushes on future context switches.
+> -		 *
+> -		 * Rather than hooking native_flush_tlb_multi() here, I think
+> -		 * that UV should be updated so that smp_call_function_many(),
+> -		 * etc, are optimal on UV.
+> -		 */
+> -		flush_tlb_func_local(info);
+> -
+> -		cpumask = uv_flush_tlb_others(cpumask, info);
+> -		if (cpumask)
+> -			smp_call_function_many(cpumask, flush_tlb_func_remote,
+> -					       (void *)info, 1);
+> -		return;
+> -	}
+> -
+>  	/*
+>  	 * If no page tables were freed, we can skip sending IPIs to
+>  	 * CPUs in lazy TLB mode. They will flush the CPU themselves
+> -- 
+> 2.17.1
+> 
+> 
