@@ -2,153 +2,142 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8FDC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8657C73C5C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761C020844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83DB20844
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfGIVL2 (ORCPT
+        id S1727656AbfGIVRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:11:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22480 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726318AbfGIVL1 (ORCPT
+        Tue, 9 Jul 2019 17:17:38 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:12432 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726462AbfGIVRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:11:27 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x69L83Zx101361;
-        Tue, 9 Jul 2019 17:11:24 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tn1bcjskg-1
+        Tue, 9 Jul 2019 17:17:38 -0400
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x69LGFNl024628;
+        Tue, 9 Jul 2019 21:17:21 GMT
+Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2tmye9987t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jul 2019 17:11:24 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x69L9eho030322;
-        Tue, 9 Jul 2019 21:11:23 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01wdc.us.ibm.com with ESMTP id 2tjk96fq36-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jul 2019 21:11:23 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x69LBLiS36962590
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jul 2019 21:11:21 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 113D228059;
-        Tue,  9 Jul 2019 21:11:21 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC6C82805C;
-        Tue,  9 Jul 2019 21:11:20 +0000 (GMT)
-Received: from [9.60.75.173] (unknown [9.60.75.173])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Jul 2019 21:11:20 +0000 (GMT)
-Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate resource
- in use
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
- <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
- <20190618182558.7d7e025a.cohuck@redhat.com>
- <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
- <20190701212643.0dd7d4ab.cohuck@redhat.com>
- <c771961d-f840-fe8a-09b7-a11b39a74d4c@linux.ibm.com>
- <20190709124920.3a910dca.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <089663dd-2e6d-cbb7-c1ef-a8a4b325abd3@linux.ibm.com>
-Date:   Tue, 9 Jul 2019 17:11:20 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 09 Jul 2019 21:17:21 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g9t5009.houston.hpe.com (Postfix) with ESMTP id DE5AE58;
+        Tue,  9 Jul 2019 21:17:20 +0000 (UTC)
+Received: from [16.116.129.61] (unknown [16.116.129.61])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id C1B7248;
+        Tue,  9 Jul 2019 21:17:18 +0000 (UTC)
+Subject: Re: [PATCH v2 8/9] x86/mm/tlb: Remove UV special case
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Russ Anderson <rja@hpe.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>
+References: <20190702235151.4377-1-namit@vmware.com>
+ <20190702235151.4377-9-namit@vmware.com>
+ <alpine.DEB.2.21.1907092146570.1758@nanos.tec.linutronix.de>
+ <20190709200914.fjvi3cy3qfc6fmis@hpe.com>
+ <373adfb0-0047-eae2-46a5-041caddfca97@hpe.com>
+ <3AA5020A-111F-48F4-A0E9-B3C09E5EC43E@vmware.com>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <6a40267d-f646-5406-db14-155ecd05cf48@hpe.com>
+Date:   Tue, 9 Jul 2019 14:17:18 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20190709124920.3a910dca.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <3AA5020A-111F-48F4-A0E9-B3C09E5EC43E@vmware.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 8bit
+X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907090253
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907090256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/19 6:49 AM, Cornelia Huck wrote:
-> On Mon, 8 Jul 2019 10:27:11 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> 
->> On 7/1/19 3:26 PM, Cornelia Huck wrote:
->>> On Wed, 19 Jun 2019 09:04:18 -0400
->>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> 
->>>> Allow me to first address your fear that a bad actor can hog
->>>> resources that can't be removed by root. With this enhancement,
->>>> there is nothing preventing a root user from taking resources
->>>> from a matrix mdev, it simply forces him/her to follow the
->>>> proper procedure. The resources to be removed must first be
->>>> unassigned from the matrix mdev to which they are assigned.
->>>> The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask
->>>> sysfs attributes can then be edited to transfer ownership
->>>> of the resources to zcrypt.
->>>
->>> What is the suggested procedure when root wants to unbind a queue
->>> device? Find the mdev using the queue (is that easy enough?), unassign
->>> it, then unbind? Failing to unbind is a bit unexpected; can we point
->>> the admin to the correct mdev from which the queue has to be removed
->>> first?
+
+
+On 7/9/2019 2:09 PM, Nadav Amit wrote:
+>> On Jul 9, 2019, at 1:29 PM, Mike Travis <mike.travis@hpe.com> wrote:
 >>
->> The proper procedure is to first unassign the adapter, domain, or both
->> from the mdev to which the APQN is assigned. The difficulty in finding
->> the queue depends upon how many mdevs have been created. I would expect
->> that an admin would keep records of who owns what, but in the case he or
->> she doesn't, it would be a matter of printing out the matrix attribute
->> of each mdev until you find the mdev to which the APQN is assigned.
-> 
-> Ok, so the information is basically available, if needed.
-> 
->> The only means I know of for informing the admin to which mdev a given
->> APQN is assigned is to log the error when it occurs.
-> 
-> That might be helpful, if it's easy to do.
-> 
->> I think Matt is
->> also looking to provide query functions in the management tool on which
->> he is currently working.
-> 
-> That also sounds helpful.
-> 
-> (...)
-> 
->>>> * It forces the use of the proper procedure to change ownership of AP
->>>>      queues.
->>>
->>> This needs to be properly documented, and the admin needs to have a
->>> chance to find out why unbinding didn't work and what needs to be done
->>> (see my comments above).
 >>
->> I will create a section in the vfio-ap.txt document that comes with this
->> patch set describing the proper procedure for unbinding queues. Of
->> course, we'll make sure the official IBM doc also more thoroughly
->> describes this.
+>>
+>> On 7/9/2019 1:09 PM, Russ Anderson wrote:
+>>> On Tue, Jul 09, 2019 at 09:50:27PM +0200, Thomas Gleixner wrote:
+>>>> On Tue, 2 Jul 2019, Nadav Amit wrote:
+>>>>
+>>>>> SGI UV support is outdated and not maintained, and it is not clear how
+>>>>> it performs relatively to non-UV. Remove the code to simplify the code.
+>>>>
+>>>> You should at least Cc the SGI/HP folks on that. They are still
+>>>> around. Done so.
+>>> Thanks Thomas.  The SGI UV is now HPE Superdome Flex and is
+>>> very much still supported.
+>>> Thanks.
+>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>>> Cc: Dave Hansen <dave.hansen@intel.com>
+>>>>> Suggested-by: Andy Lutomirski <luto@kernel.org>
+>>>>> Signed-off-by: Nadav Amit <namit@vmware.com>
+>>>>> ---
+>>>>>   arch/x86/mm/tlb.c | 25 -------------------------
+>>>>>   1 file changed, 25 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+>>>>> index b47a71820f35..64afe1215495 100644
+>>>>> --- a/arch/x86/mm/tlb.c
+>>>>> +++ b/arch/x86/mm/tlb.c
+>>>>> @@ -689,31 +689,6 @@ void native_flush_tlb_multi(const struct cpumask *cpumask,
+>>>>>   		trace_tlb_flush(TLB_REMOTE_SEND_IPI,
+>>>>>   				(info->end - info->start) >> PAGE_SHIFT);
+>>>>>   -	if (is_uv_system()) {
+>>>>> -		/*
+>>>>> -		 * This whole special case is confused.  UV has a "Broadcast
+>>>>> -		 * Assist Unit", which seems to be a fancy way to send IPIs.
+>>>>> -		 * Back when x86 used an explicit TLB flush IPI, UV was
+>>>>> -		 * optimized to use its own mechanism.  These days, x86 uses
+>>>>> -		 * smp_call_function_many(), but UV still uses a manual IPI,
+>>>>> -		 * and that IPI's action is out of date -- it does a manual
+>>>>> -		 * flush instead of calling flush_tlb_func_remote().  This
+>>>>> -		 * means that the percpu tlb_gen variables won't be updated
+>>>>> -		 * and we'll do pointless flushes on future context switches.
+>>>>> -		 *
+>>>>> -		 * Rather than hooking native_flush_tlb_multi() here, I think
+>>>>> -		 * that UV should be updated so that smp_call_function_many(),
+>>>>> -		 * etc, are optimal on UV.
+>>>>> -		 */
+>>
+>> I thought this change was already proposed a bit ago and we acked it
+>> awhile back. Also the replacement functionality is being worked on but it
+>> is more complex. The smp call many has to support all the reasons why it’s
+>> called and not just the tlb shoot downs as is the current BAU case.
 > 
-> +1 for good documentation.
+> Sorry for not cc’ing you before. In the meanwhile, can you give an explicit
+> acked-by? (I couldn’t find the previous patch you regarded.)
+
+Sure:
+
+Acked-by: Mike Travis <mike.travis@hpe.com>
+
 > 
-> With that, I don't really object to this change.
-
-Then I will make the suggested changes and post v5 to the list.
-
+> Thanks,
+> Nadav
 > 
-
