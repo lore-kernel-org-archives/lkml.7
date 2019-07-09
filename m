@@ -2,167 +2,213 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBF6C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0E1C73C47
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBBA20861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqrLe8hL"
+	by mail.kernel.org (Postfix) with ESMTP id DE386214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562679944;
+	bh=pFpOkJHiAYbGncovzMXBIx9dzH17tRDacavgDnffM50=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Beb3uvV4drPPf7WV+zIFhhp2IAiaFA7f6fup+GUQ4kqCW5m05SgbbiSnjJmH1dlg0
+	 uqf4myUymd1bSZdJYIWnjWrd+PnWkxrQQfyvM7sVi0EDGh05G0mX5Ss8IFsDCSXpYY
+	 U1cEUYSgCJI5l4AxEWmYV9/EaP+4jCtFDzLhae7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfGINpg (ORCPT
+        id S1726987AbfGINpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:45:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44477 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGINpg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:45:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so9939845wrf.11;
-        Tue, 09 Jul 2019 06:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WoOafQCA+SKQoC197BJQPKhoNGwN0GTGPnMhrXbSqsY=;
-        b=JqrLe8hLX3vXecb9fN+lSl3VceukltpW7iONEOWHMfWuvftTwnQTzDrRtpIq86BnTo
-         6oUWzHhWA6iSgm/Ua+Cpz0dncARYLe04rUP4rPAXvVCtY28zKRQGW6QZRzG2ZGpEPeUS
-         NeCBhT3XMXIFoICUd5tUZqJlxZKWj/Xy1DHIMHzF+3jwxiXbf5qbY4+zKO+6Sg+0n+Uk
-         1Vo7xMFx/U2pDIaUEbV4XCMHa0IzrvkYbTzOGquArrNNSsoSbrz9hzNdYzbv41/34J4Z
-         WwpGLLId/AUGjV9IzE/CAYkoO9v5Ta5V7My/gTq81TZvLSRdL5HluZpPkeOtGe1mlF5k
-         XEZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WoOafQCA+SKQoC197BJQPKhoNGwN0GTGPnMhrXbSqsY=;
-        b=sokIQLqXkLQ30MqVf8wbWzjXGtMIWdPSDjwGptrILIG0g/a0TAhpWMgjIsRyGSFpiE
-         i3lJq7X+ovvWLqji/VCvBcDcunyL+ieCBnUpDmDBquxT3QoiiQ5OSgdCdXEJhiQyn7m9
-         rdKK8KUktcHAM+APloaabzYod3pySygNQVYkvr7DkVSW15hO5iWzDKW+JpCURbjjWv33
-         50RoFj6yovU7ogRL8fUcGPruvIhJxS26FjfnvE5YkT8vVL/v9xCy8YPTV2MZw3zWGFGx
-         I+sRt4glOlCYD+mkKQoE1mvyP3t/YuwXoVeWlT+f6rWhPcDoQpXF8dqTMkJIb5CraF3n
-         zUeQ==
-X-Gm-Message-State: APjAAAUVEK4wbyQNv/77eRyKHsoWgS37NXhtkm1jo3P72CQxWYNIsdOu
-        SclStVv3uFyGbBh33rodWmIo+ztt
-X-Google-Smtp-Source: APXvYqw/XmDMK7cCCa7XSBY+rpaZf+lJHJTm3SWicQ/MOFP93fyo4mnqumuHjqdyYmAAkkrTN4xxMA==
-X-Received: by 2002:adf:f591:: with SMTP id f17mr26252881wro.119.1562679933912;
-        Tue, 09 Jul 2019 06:45:33 -0700 (PDT)
-Received: from [192.168.8.147] (179.162.185.81.rev.sfr.net. [81.185.162.179])
-        by smtp.gmail.com with ESMTPSA id x6sm20911824wrt.63.2019.07.09.06.45.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 06:45:33 -0700 (PDT)
-Subject: Re: [PATCH] tipc: ensure skb->lock is initialised
-To:     Jon Maloy <jon.maloy@ericsson.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190707225328.15852-1-chris.packham@alliedtelesis.co.nz>
- <2298b9eb-100f-6130-60c4-0e5e2c7b84d1@gmail.com>
- <361940337b0d4833a5634ddd1e1896a9@svr-chch-ex1.atlnz.lc>
- <87fd2150548041219fc42bce80b63c9c@svr-chch-ex1.atlnz.lc>
- <b862a74b-9f1e-fb64-0641-550a83b64664@gmail.com>
- <MN2PR15MB35811151C4A627C0AF364CAC9AF10@MN2PR15MB3581.namprd15.prod.outlook.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <ef9a2ec1-1413-e8f9-1193-d53cf8ee52ba@gmail.com>
-Date:   Tue, 9 Jul 2019 15:45:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 9 Jul 2019 09:45:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbfGINpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:45:42 -0400
+Received: from localhost (249.sub-174-234-174.myvzw.com [174.234.174.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39DB3214AF;
+        Tue,  9 Jul 2019 13:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562679940;
+        bh=pFpOkJHiAYbGncovzMXBIx9dzH17tRDacavgDnffM50=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cTwocF9iNQ/MOODLXMFPNInDXPHulYy4PTGwfoOKiR9X6a36MeEmx88KBCV69gbjY
+         HrJtzhMImMqasu++slJvQEkzNZHGf6b32cvpE3dyMvgxRBw0xCDenNROkPdvJmotrN
+         n5qNV764+21kArt71upxYFtC3GGq8N7nqucvZ5G4=
+Date:   Tue, 9 Jul 2019 08:45:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
+ supports wakeup from D0
+Message-ID: <20190709134538.GA35486@google.com>
+References: <20190522181157.GC79339@google.com>
+ <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
+ <20190522205231.GD79339@google.com>
+ <010C1D41-C66D-45C0-8AFF-6F746306CE29@canonical.com>
+ <20190527165747.GF79339@google.com>
+ <20190605115724.GE84290@google.com>
+ <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <MN2PR15MB35811151C4A627C0AF364CAC9AF10@MN2PR15MB3581.namprd15.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 05, 2019 at 03:02:01PM +0800, Kai-Heng Feng wrote:
+> at 19:57, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, May 27, 2019 at 11:57:47AM -0500, Bjorn Helgaas wrote:
 
+> > > I'm wondering if this platform has a firmware defect.  Here's my
+> > > thinking.  The xHC is a Root Complex Integrated Endpoint, so its PME
+> > > signaling is a little unusual.
+> > > 
+> > > The typical scenario is that a PCIe device is below a Root Port.  In
+> > > that case, it would send a PME Message upstream to the Root Port.  Per
+> > > PCIe r4.0, sec 6.1.6, when configured for native PME support (for ACPI
+> > > systems, I assume this means "when firmware has granted PME control to
+> > > the OS via _OSC"), the Root Port would generate a normal PCI INTx or
+> > > MSI interrupt:
+> > > 
+> > >   PCI Express-aware software can enable a mode where the Root Complex
+> > >   signals PME via an interrupt. When configured for native PME
+> > >   support, a Root Port receives the PME Message and sets the PME
+> > >   Status bit in its Root Status register. If software has set the PME
+> > >   Interrupt Enable bit in the Root Control register to 1b, the Root
+> > >   Port then generates an interrupt.
+> > > 
+> > > But on this platform the xHC is a Root Complex Integrated Endpoint, so
+> > > there is no Root Port upstream from it, and that mechanism can't be
+> > > used.  Per PCIe r4.0, sec 1.3.2.3, RCiEPs signal PME via "the same
+> > > mechanism as PCI systems" or via Root Complex Event Collectors:
+> > > 
+> > >   An RCiEP must signal PME and error conditions through the same
+> > >   mechanisms used on PCI systems. If a Root Complex Event Collector is
+> > >   implemented, an RCiEP may optionally signal PME and error conditions
+> > >   through a Root Complex Event Collector.
+> > > 
+> > > This platform has no Root Complex Event Collectors, so the xHC should
+> > > signal PME via the same mechanism as PCI systems, i.e., asserting a
+> > > PME# signal.  I think this means the OS cannot use native PCIe PME
+> > > control because it doesn't know what interrupt PME# is connected to.
+> > > The PCI Firmware Spec r3.2, sec 4.5.1 (also quoted in ACPI v6.2, sec
+> > > 6.2.11.3), says:
+> > > 
+> > >   PCI Express Native Power Management Events control
+> > > 
+> > >   The firmware sets this bit to 1 to grant control over PCI Express
+> > >   native power management event interrupts (PMEs). If firmware
+> > >   allows the operating system control of this feature, then in the
+> > >   context of the _OSC method, it must ensure that all PMEs are
+> > >   routed to root port interrupts as described in the PCI Express
+> > >   Base Specification.
+> > > 
+> > > This platform cannot route all PMEs to Root Port interrupts because
+> > > the xHC RCiEP cannot report PME via a Root Port, so I think its _OSC
+> > > method should not grant control of PCIe Native Power Management Events
+> > > to the OS, and I think that would mean we have to use the ACPI
+> > > mechanism for PME on this platform.
+> > > 
+> > > Can you confirm or deny any of this line of reasoning?  I'm wondering
+> > > if there's something wrong with the platform's _OSC, so Linux thinks
+> > > it can use native PME, but that doesn't work for this device.
+> > > 
+> > > > It’s a platform in development so the name can’t be disclosed.
+> > > 
+> > > Please attach a complete dmesg log to the bugzilla.  You can remove
+> > > identifying details like the platform name, but I want to see the
+> > > results of the _OSC negotiation.
+> > 
+> > Thanks for the dmesg log
+> > (https://bugzilla.kernel.org/attachment.cgi?id=283109).  It shows:
+> > 
+> >   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+> >   acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
+> >   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
+> > 
+> > I think it is incorrect for the platform to give the OS native control
+> > over PME because the OS has no way to know how the RCiEP PMEs are
+> > routed.  But it would be interesting to know how BIOSes on other
+> > platforms with RCiEPs handle this, and I did post a question to the
+> > PCI-SIG to see if there's any guidance there.
+> 
+> Is there any update from PCI-SIG?
 
-On 7/9/19 3:25 PM, Jon Maloy wrote:
-> 
-> 
->> -----Original Message-----
->> From: Eric Dumazet <eric.dumazet@gmail.com>
->> Sent: 9-Jul-19 03:31
->> To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>; Eric Dumazet
->> <eric.dumazet@gmail.com>; Jon Maloy <jon.maloy@ericsson.com>;
->> ying.xue@windriver.com; davem@davemloft.net
->> Cc: netdev@vger.kernel.org; tipc-discussion@lists.sourceforge.net; linux-
->> kernel@vger.kernel.org
->> Subject: Re: [PATCH] tipc: ensure skb->lock is initialised
->>
->>
->>
->> On 7/8/19 11:13 PM, Chris Packham wrote:
->>> On 9/07/19 8:43 AM, Chris Packham wrote:
->>>> On 8/07/19 8:18 PM, Eric Dumazet wrote:
->>>>>
->>>>>
->>>>> On 7/8/19 12:53 AM, Chris Packham wrote:
->>>>>> tipc_named_node_up() creates a skb list. It passes the list to
->>>>>> tipc_node_xmit() which has some code paths that can call
->>>>>> skb_queue_purge() which relies on the list->lock being initialised.
->>>>>> Ensure tipc_named_node_up() uses skb_queue_head_init() so that the
->>>>>> lock is explicitly initialised.
->>>>>>
->>>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->>>>>
->>>>> I would rather change the faulty skb_queue_purge() to
->>>>> __skb_queue_purge()
->>>>>
->>>>
->>>> Makes sense. I'll look at that for v2.
->>>>
->>>
->>> Actually maybe not. tipc_rcast_xmit(), tipc_node_xmit_skb(),
->>> tipc_send_group_msg(), __tipc_sendmsg(), __tipc_sendstream(), and
->>> tipc_sk_timeout() all use skb_queue_head_init(). So my original change
->>> brings tipc_named_node_up() into line with them.
->>>
->>> I think it should be safe for tipc_node_xmit() to use
->>> __skb_queue_purge() since all the callers seem to have exclusive
->>> access to the list of skbs. It still seems that the callers should all
->>> use
->>> skb_queue_head_init() for consistency.
-> 
-> I agree with that.
-> 
->>>
->>
->> No, tipc does not use the list lock (it relies on the socket lock)  and therefore
->> should consistently use __skb_queue_head_init() instead of
->> skb_queue_head_init()
-> 
-> TIPC is using the list lock at message reception within the scope of tipc_sk_rcv()/tipc_skb_peek_port(), so it is fundamental that the lock always is correctly initialized.
+Yes, but I did a terrible job asking the question, so we didn't
+really get an answer for this situation.  The thread on the forum is
+https://forum.pcisig.com/viewtopic.php?f=85&t=1081 (requires PCI-SIG
+login, unfortunately).  My question was:
 
-Where is the lock acquired, why was it only acquired by queue purge and not normal dequeues ???
+  Given an RCiEP that supports PME, can firmware grant control over
+  native power management events to the OS?
 
-> 
->>
-> [...]
->>
->> tipc_link_xmit() for example never acquires the spinlock, yet uses skb_peek()
->> and __skb_dequeue()
-> 
-> 
-> You should look at tipc_node_xmit instead. Node local messages are sent directly to tipc_sk_rcv(), and never go through tipc_link_xmit()
+  The PCI Firmware spec, r3.2, sec 4.5.1, says:
 
-tipc_node_xmit() calls tipc_link_xmit() eventually, right ?
+    PCI Express Native Power Management Events control
 
-Please show me where the head->lock is acquired, and why it needed.
+    The firmware sets this bit to 1 to grant control over PCI Express
+    native power management event interrupts (PMEs). If firmware
+    allows the operating system control of this feature, then in the
+    context of the _OSC method, it must ensure that all PMEs are
+    routed to root port interrupts as described in the PCI Express
+    Base Specification.
 
-If this is mandatory, then more fixes are needed than just initializing the lock for lockdep purposes.
+  I don't think there's a mechanism for RCiEPs to route PMEs to a Root
+  Port interrupt.
 
+  PCIe r4.0, sec 1.3.2.3, says:
+
+    An RCiEP must signal PME and error conditions through the same
+    mechanisms used on PCI systems. If a Root Complex Event Collector
+    is implemented, an RCiEP may optionally signal PME and error
+    conditions through a Root Complex Event Collector.
+
+  If the OS can be granted native PME control, how does it learn where
+  the RCiEP PME is routed?
+
+And the response from Robert Gough:
+
+  The routing of root complex devices- Root Ports and Root Complex
+  Integrated Endpionts- to Event Collectors is described in the Event
+  Collector's RCEC Endpoint Association Capability Structure.
+
+  In order for OSPM to process PMEs routed to an Event Collector, the
+  source of the PME is found in the PME Requester ID field within the
+  Root Status register of the Event Collector, in the same way that
+  PME messages from children of Root Ports are serviced.
+
+I just posted this follow-up question:
+
+  Thanks, that clarifies one piece. The PCI Firmware spec, r3.2, sec
+  4.5.1, says that if firmware allows OSPM control of PME, all PMEs
+  should be routed to Root Port interrupts. Your answer suggests that
+  this should be updated to say something like "all PMEs are routed to
+  Root Port *or RCEC* interrupts".
+
+  The piece I still don't understand is what happens when firmware
+  allows OSPM control of PME in a system with an RCiEP but no RCEC.
+  Where are PMEs from the RCiEP routed, and how does OSPM discover
+  that? Or is it simply illegal for firmware to allow OSPM control of
+  PME in that case?
+
+The system we're looking at doesn't have any RCECs, so I don't think
+the Root Complex Event Collector Endpoint Association Capability (what
+a mouthful :)) is applicable, but I don't think Linux currently has
+any support for it, so I think we're likely to trip over similar
+issues on systems that do have RCECs.
+
+It would be good if somebody added support for that capability.
+
+Bjorn
