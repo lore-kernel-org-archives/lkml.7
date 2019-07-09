@@ -2,125 +2,143 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91F0C73C60
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327C7C73C61
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B770720693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F217E20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6m5xpfx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiQcOAkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfGIXHH (ORCPT
+        id S1727122AbfGIXKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 19:07:07 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40575 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfGIXHH (ORCPT
+        Tue, 9 Jul 2019 19:10:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35274 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfGIXKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 19:07:07 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e8so209551otl.7
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 16:07:06 -0700 (PDT)
+        Tue, 9 Jul 2019 19:10:30 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y4so516023wrm.2;
+        Tue, 09 Jul 2019 16:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hDAj6zol3RaVmal+PtZQz5C2j+ZDGvpWtxUxeTzImJ8=;
-        b=c6m5xpfxQePOMGTMsYC75i5UBzSjYBhlvZ3MlYPp0JvUpt63L071NtaOtqN98rxKXw
-         McPekY6OcxyyirBZhgxqf5Iikis9pDkaaHNoyurXPt9wSrukxTLIZNOFB7Ze0FYL/sH9
-         g7df6hKlhMCemc4cyOciGzP9CI2cPCt4Fiv/WViBjvVZYdj0nPJ2QxqXu0JI2ccoYdoQ
-         oBpglV3I3RFQY/STUKoB24AhvddmVx1hFd+0KO1VYr/aO3U6O7ZQzHYEDifWltSQgMVg
-         FyWqqmYRP6hkGTiCkmys2PtaWZ6rGRrektJaMRMibQ01jEKMABHmf0Np9iBS0prT3/tM
-         XGPg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mVzABAaLZPttRpLpfx8AbBdhRdMXPPyOU3lhjijb9ko=;
+        b=NiQcOAkdF16fWhs2ZknhmulLdhJX0NZmCruIwDdoAvC3NBRiVPJTaTh+nOMoWo/isd
+         qwiBFOjDyo09xwrogq8Gs3wt9jdpMn9MkdMxhuy7Z6GQqa4i4B6X3JYSAum2CxE5ttNG
+         DYBQcWNuldMx5dDBVBDk4IEbgZQl5m2D1+doO0h0M6SrxEcnZk2Hs5i+H8/fjNu9Gxez
+         Hu2LC5naSfghB1bT45yOOOjORj28vIQ4nHfxAIF5xfQiU8Uc+LDZacMifcRdjN2307VQ
+         0PSWEFBBbG/MnTqTJM6D/9U4KI+n2VwNmJeVHq7vhQ5ylfE9GagvTHxfxIfwLO3ENd8N
+         R8sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=hDAj6zol3RaVmal+PtZQz5C2j+ZDGvpWtxUxeTzImJ8=;
-        b=EkkglsvMqDAH9qSQGSI9mRMDnxu6gVnFxoFS+XihJIqr206JIcaUll1FtP3FH9vcVG
-         4BjPO2EbVVzCTzRNT7/nDOjQ+jas21uDAdoqUAyW+C0ctCcW/nZod8/DYH7jRLCkX4lC
-         B+L2zAe8MrvySNBSoeCuRmOS4ItTeg5SERa6oEboNGo2D0H6+m5YEFFVLTv9rdUZTbsm
-         +9MUPqM6WZfwqwurbpQQEz0SXmo8i+boOvjUVURw7u9M6ZM8nkXRi2wrc0zkHfovTeJQ
-         TQ1QnWmWRVXXOdLwtvooIbv3NaYyVJ1sbg8+U5sKXpjhFWyz8mAVv1liypboV49qz0u9
-         8vlQ==
-X-Gm-Message-State: APjAAAWTGBbsiWs3nlFDKnXxZEdxMy8juhrWJMFr9Mdj/UIO7ixn3ZOh
-        +1EqZxFyFtMCbkxMLhp/bEjjmbo=
-X-Google-Smtp-Source: APXvYqx44AfZvFUNQHdYp8jx1vE4YVQXTsj60CNgH+TxZdsEHIMZHlpFqaSGemwRf80J2HkYb6dEbg==
-X-Received: by 2002:a9d:560b:: with SMTP id e11mr7098546oti.129.1562713625802;
-        Tue, 09 Jul 2019 16:07:05 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id g22sm198294otn.69.2019.07.09.16.07.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mVzABAaLZPttRpLpfx8AbBdhRdMXPPyOU3lhjijb9ko=;
+        b=SlPSRZ3fSMfYGPYUeyIBtrSiADIn0MbcX10fqgCmdRXkop3dOT1jEIwdiID8tfm358
+         20ITgZhtSK/mb4mAGsORue9Bh3ef2sVexb7KTukZAQAVpCAtVznqFffJGVH3yaPsBZL/
+         9H+JDktotRqYhjFu4Zd9disdoDfEGrU/ywB776dArYCxyOJ095lrbe7LjiVKSJespY2+
+         iADFOYCWnVJ8T+uwN2DvhLZMHfmLqEEX//c/2BK6R1TSvrwjKesoVXrnIYlv+DnigVgK
+         9Ye6Fgwy7bVIKOCHmmn1Pe5l7uqjN3HR4jV8PEjn63eoSToMb3u41YDh3FGv4xxuIYKz
+         XA4g==
+X-Gm-Message-State: APjAAAUhNnutirr8Jb37e5V64ge1LgQDSJ2bSXd6rznrwt+prVKHAIZx
+        hccYuDHdcJhP5NuebxmOyAw=
+X-Google-Smtp-Source: APXvYqzhURMOcsvp/8T5JJ5w1FsWX+QkKQXLR7zUXXu7AtvU6OJIVLFJDmoNYbWPZDgKxCEeFShKEQ==
+X-Received: by 2002:adf:8bd1:: with SMTP id w17mr6901359wra.50.1562713826986;
+        Tue, 09 Jul 2019 16:10:26 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id w7sm221876wrn.11.2019.07.09.16.10.26
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 16:07:05 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:6c89:b9b3:d6b4:3203])
-        by serve.minyard.net (Postfix) with ESMTPSA id E963F1805A4;
-        Tue,  9 Jul 2019 23:07:04 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 18:07:03 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     openipmi-developer@lists.sourceforge.net, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Openipmi-developer] [PATCH] ipmi_si_intf: use usleep_range()
- instead of busy looping
-Message-ID: <20190709230703.GF19430@minyard.net>
-Reply-To: minyard@acm.org
-References: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
- <20190709214602.GD19430@minyard.net>
- <20190709221147.GM657710@devbig004.ftw2.facebook.com>
+        Tue, 09 Jul 2019 16:10:26 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 16:10:24 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] net/mlx5e: Return in default case statement in
+ tx_post_resync_params
+Message-ID: <20190709231024.GA61953@archlinux-threadripper>
+References: <20190708231154.89969-1-natechancellor@gmail.com>
+ <CAKwvOdkYdNiKorJAKHZ7LTfk9eOpMqe6F4QSmJWQ=-YNuPAyrw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190709221147.GM657710@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAKwvOdkYdNiKorJAKHZ7LTfk9eOpMqe6F4QSmJWQ=-YNuPAyrw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 03:11:47PM -0700, Tejun Heo wrote:
-> On Tue, Jul 09, 2019 at 04:46:02PM -0500, Corey Minyard wrote:
-> > On Tue, Jul 09, 2019 at 02:06:43PM -0700, Tejun Heo wrote:
-> > > ipmi_thread() uses back-to-back schedule() to poll for command
-> > > completion which, on some machines, can push up CPU consumption and
-> > > heavily tax the scheduler locks leading to noticeable overall
-> > > performance degradation.
-> > > 
-> > > This patch replaces schedule() with usleep_range(100, 200).  This
-> > > allows the sensor readings to finish resonably fast and the cpu
-> > > consumption of the kthread is kept under several percents of a core.
-> > 
-> > The IPMI thread was not really designed for sensor reading, it was
-> > designed so that firmware updates would happen in a reasonable time
-> > on systems without an interrupt on the IPMI interface.  This change
-> > will degrade performance for that function.  IIRC correctly the
-> > people who did the patch tried this and it slowed things down too
-> > much.
+On Tue, Jul 09, 2019 at 03:44:59PM -0700, Nick Desaulniers wrote:
+> On Mon, Jul 8, 2019 at 4:13 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > clang warns:
+> >
+> > drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:251:2:
+> > warning: variable 'rec_seq_sz' is used uninitialized whenever switch
+> > default is taken [-Wsometimes-uninitialized]
+> >         default:
+> >         ^~~~~~~
+> > drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:255:46: note:
+> > uninitialized use occurs here
+> >         skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
+> >                                                     ^~~~~~~~~~
+> > drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:239:16: note:
+> > initialize the variable 'rec_seq_sz' to silence this warning
+> >         u16 rec_seq_sz;
+> >                       ^
+> >                        = 0
+> > 1 warning generated.
+> >
+> > This case statement was clearly designed to be one that should not be
+> > hit during runtime because of the WARN_ON statement so just return early
+> > to prevent copying uninitialized memory up into rn_be.
+> >
+> > Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/590
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+> > index 3f5f4317a22b..5c08891806f0 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+> > @@ -250,6 +250,7 @@ tx_post_resync_params(struct mlx5e_txqsq *sq,
+> >         }
+> >         default:
+> >                 WARN_ON(1);
+> > +               return;
+> >         }
 > 
-> Also, can you point me to the exact patch?  I'm kinda curious what
-> kind of timning they used.
-
-I believe the change was 33979734cd35ae "IPMI: use schedule in kthread"
-The original change that added the kthread was a9a2c44ff0a1350
-"ipmi: add timer thread".
-
-I mis-remembered this, we switched from doing a udelay() to
-schedule(), but that udelay was 1us, so that's probably not helpful
-information.
-
--corey
-
-> 
-> Thanks.
-> 
+> hmm...a switch statement with a single case is a code smell.  How
+> about a single conditional with early return?  Then the "meat" of the
+> happy path doesn't need an additional level of indentation.
 > -- 
-> tejun
-> 
-> 
-> _______________________________________________
-> Openipmi-developer mailing list
-> Openipmi-developer@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/openipmi-developer
+> Thanks,
+> ~Nick Desaulniers
+
+I assume that the reason for this is there may be other cipher types
+added in the future? I suppose the maintainers can give more clarity to
+that.
+
+Furthermore, if they want the switch statements to remain, it looks like
+fill_static_params_ctx also returns in the default statement so it seems
+like this is the right fix.
+
+Cheers,
+Nathan
