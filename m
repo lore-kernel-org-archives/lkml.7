@@ -6,61 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02680C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17D9C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41F82171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16472183E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562695509;
-	bh=2VWtp6phhJ75YvwQQnwZR3fgVyaKu6Vu+XSiGROl1Ew=;
+	s=default; t=1562695511;
+	bh=cho5xKoQ+OHVFvKDEWmUrfNzmzQzKJPJBdUaXIfCCYs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=LFmX6PALulDPFF2q1VkNDp5XZLfUiZ/gIG/KodPyatyOsgP9S1BdZbRmad7rfzSwN
-	 6UVIZWFRQ7G1qbeARJ1oSEHxkjh9q+zPYsyADhNyATK1uhSMAGK6GPxDKJXGqRo2HM
-	 vxW4MuUvOaPhDM6B6qk4i7D+xBMxt6wfime2zIRI=
+	b=YdC73lPudZjl2ELl9AU5XWAnB1OmrgpzRC+nePNdLdwoaEkUGkrUDfF/fmq2a0ahU
+	 RiCtnuWQHaWtMJNiDW0tqH4gEn33943AXoIZ71CSqqic4LZpyS6k5wxqPzUyNDeuMT
+	 vdk3rDc8KrsLqnsTs/nqYwNeVXd9TTwTcaJD4kPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfGISFJ (ORCPT
+        id S1727370AbfGISFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:05:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 14:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727329AbfGISFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727308AbfGISFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jul 2019 14:05:07 -0400
-Subject: Re: [GIT PULL] pwm: Changes for v5.3-rc1
+Subject: Re: [GIT PULL] LED updates for 5.3-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562695506;
-        bh=2VWtp6phhJ75YvwQQnwZR3fgVyaKu6Vu+XSiGROl1Ew=;
+        s=default; t=1562695507;
+        bh=cho5xKoQ+OHVFvKDEWmUrfNzmzQzKJPJBdUaXIfCCYs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=F+b1Sj0i4PdINjLFUpmz6wd8M74F/YKWjswNhXUVKLZHcjBDJCybAKZ7Dv+gqQ1jT
-         azMMhyyEmrUma7CohzyFUqj5RAoA+IRkRrqaCIR+qUXnKcCAL5P7FlWszRyQ1GvW85
-         wLP/2o9JcOCdnu2vdMoDQgaSHPqn9s+/bivr91MM=
+        b=HEt1ZLNABQQZvhApPiio0NHYUuEeWWFw5SypToFi0Wn/YO7cIGJMzez9XwyDmHJSO
+         72euKh2ms/ABli/FDLukLSFjYUF/4ahfUQtn+Xah1IrCZhpU3nouMb4r4K8vntQjx1
+         WVRsYV6mjOHYgnVEqQm8bRim66J+z14JPVtMQwjk=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190628120002.19597-1-thierry.reding@gmail.com>
-References: <20190628120002.19597-1-thierry.reding@gmail.com>
+In-Reply-To: <20190701164633.6133-1-jacek.anaszewski@gmail.com>
+References: <20190701164633.6133-1-jacek.anaszewski@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190628120002.19597-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git
- tags/pwm/for-5.3-rc1
-X-PR-Tracked-Commit-Id: 3d25025ce9c2f364ea4ee76f1461c8714b9c0b6d
+X-PR-Tracked-Message-Id: <20190701164633.6133-1-jacek.anaszewski@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
+ tags/leds-for-5.3-rc1
+X-PR-Tracked-Commit-Id: 2605085fba22792f3d4a6b856c7c5a05492d1fde
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6e2bbb688aa6d05073dd1dd0b836d9becec195c1
-Message-Id: <156269550646.14383.8718919902374016009.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 18:05:06 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 8a3367cc8005842efcefc0cb5c29780370818572
+Message-Id: <156269550705.14383.13824969277671553441.pr-tracker-bot@kernel.org>
+Date:   Tue, 09 Jul 2019 18:05:07 +0000
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, dmurphy@ti.com,
+        jacek.anaszewski@gmail.com, mchehab+samsung@kernel.org,
+        oss@c-mauderer.de, pavel@ucw.cz, wsa+renesas@sang-engineering.com,
+        yuehaibing@huawei.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 28 Jun 2019 14:00:02 +0200:
+The pull request you sent on Mon,  1 Jul 2019 18:46:33 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.3-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/leds-for-5.3-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6e2bbb688aa6d05073dd1dd0b836d9becec195c1
+https://git.kernel.org/torvalds/c/8a3367cc8005842efcefc0cb5c29780370818572
 
 Thank you!
 
