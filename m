@@ -2,118 +2,133 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11EBC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1736C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B84D0205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C7220645
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:15:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmj8AnZu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIZCFwI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfGIKMg (ORCPT
+        id S1726341AbfGIKPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 06:12:36 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35734 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfGIKMf (ORCPT
+        Tue, 9 Jul 2019 06:15:34 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34965 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfGIKPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 06:12:35 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so9837699plp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 03:12:35 -0700 (PDT)
+        Tue, 9 Jul 2019 06:15:33 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so7876209pfn.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 03:15:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RhoR5GKsIFoTSiglLtCPA0A3UUuVIpZh8wOmabYfUC8=;
-        b=dmj8AnZuLaqSXh4uEkr1ENxbRurhbd7SgTiXb64qUqSn7UBNckooPSHNDizjJ54xma
-         OJj/cKzNijTV2vlddX6zUQx1oNkKNvHF//HUww44WvA9nkkqxHg4eUr8QvJy/hOxagUu
-         Xq6ZzJMn/GiN+X6TVEDHEDhDZNOcDlvFrYA/0iKtxk503kHJ96KyC5f/FHt0aEjCLFeZ
-         +L1yOkxI7cS/nNa92OZu5SlhapqaoN8eEKWMXk9pBJBw3UE2JmkISmPgfCqh1mxXH/rT
-         Kv7aQaqrqW6A96YYQdXRsaF5/S+7ECYessQ/8MRGcVrPPzeIDxLt8hBJdFovOV2J42ct
-         HSCQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WA5gtuo+ySOXWIRiIrkIDOQyLhIa86b74KS4PTR9iAM=;
+        b=FIZCFwI3aBiR/vggDtx3YbxukWikWD/bDAZ+PULJfXWC5pJAtF9fan84oIQvdBAv1z
+         FrznwbgKfcmVahncHfLTinXidR1k5BhS41Nb+Ge5XSryESE3NKSAQgNZ+5bKQO1VSvqY
+         +eZh7xy9s7HiJwSWt3MnC2Yui/V5TBHCURh1zeevkFSz3sYeGbR3apVok8/B/1W6PujA
+         y1SsdtPcOmH6HVcJQ0meqk0ue2UCT151epRyaq6Cs/3eHyduHznh9hFzceYNnvAAwddD
+         doDztV60kGrUHN+LdImWdIn7o2AgTiHVitNJOWw6RTybGCMbYvPmBHItBpD/Gyr3mKM0
+         B5uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RhoR5GKsIFoTSiglLtCPA0A3UUuVIpZh8wOmabYfUC8=;
-        b=DKqxcCVj2uI7kYb6EKt3rPsQXEJ7Xu+Xw6Q8+IYabsDAuPAzZKU3O23y1ufnMFuSxL
-         wIjFWkQ3aAzcWVmh4vHZuEVuFS4OrExWHw2SFTofZEcuHRctBooHLLiH2qIQ2XjPDy9n
-         zK0ExG1CFZYLF47bZ38QMJOQqtNBt66Aue+tOEuWzHHlXsn3hRNJ6TAjBJOwQR/EW5YJ
-         JCSZMnYjEZQ7fc3OIZEqviE73zJHti1D449oZDbJFFWMvd+Jdpx8L71FsP0YYyRlAs6q
-         EQ7w0/2e40qaRYxsHFmDtWkt/2lOie06OoMw94Dx3/eS1NxZpuOTMzjYaY/cS6T9UUzc
-         g45Q==
-X-Gm-Message-State: APjAAAVbgI2g1N4fj+/b2MecYkBMs/uoRPR0SgCeGxhm+oOc+qu/dcNG
-        B9gDHREczX7dEBOPniONlgJh/TSe
-X-Google-Smtp-Source: APXvYqxrlyide7O9/j67bE6YvuyRXra94KwadyVuZPptMBTR/P/TVevLXGFaTWQRfhzagFenfCErig==
-X-Received: by 2002:a17:902:20ec:: with SMTP id v41mr29202567plg.142.1562667155186;
-        Tue, 09 Jul 2019 03:12:35 -0700 (PDT)
-Received: from localhost ([175.223.48.34])
-        by smtp.gmail.com with ESMTPSA id 33sm18563562pgy.22.2019.07.09.03.12.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 03:12:34 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 19:12:30 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-        Vincent Whitchurch <rabinv@axis.com>
-Subject: Re: [PATCH] printk: Do not lose last line in kmsg dump
-Message-ID: <20190709101230.GA16909@jagdpanzerIV>
-References: <20190709081042.31551-1-vincent.whitchurch@axis.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WA5gtuo+ySOXWIRiIrkIDOQyLhIa86b74KS4PTR9iAM=;
+        b=GybackT+ltQnJU1zIQhmFvLVCXe47LlaSAfclbXaufgLPQdq3a7Lu6LlX6C/FW85cG
+         EnfN0ZvJqZMwqDmieFP+0EqVue0HQpw017N7LBLbiCCFoWahxPMpKcv26+tWcCA1xz+X
+         //gGcfxeOynhEuR2lLR7XDAc4FPNw8EAETdsBRv5qYMbGLmO9JIITb9YULJFtlT57MwA
+         MXnjpPSAgbPGpnQpAr5iU8o+5Tur3Ei1lqomUyOR70UrWl/Irf7ne6NmbOpnr0kc7xHo
+         vUS65k7aM4wv7UjqaTl5fs2rXJJUcA3vH+ix0lm6BLrZOyXn+u/WeHM0ItFJOrstwy73
+         hE8w==
+X-Gm-Message-State: APjAAAW718gvjQ4QXYkv2WBerwzL+81G14hEs/I4Jr5LJPAYBMHRb9g/
+        ami3/ou40J0/COAThafYFFA=
+X-Google-Smtp-Source: APXvYqyYbZ2FcPOM4BrBIsJaKGs2wX4QGplboi4GLRlBACy/APhEYK73afvGEAyA6IiDHBBQMpEwxQ==
+X-Received: by 2002:a63:6901:: with SMTP id e1mr1697000pgc.390.1562667333181;
+        Tue, 09 Jul 2019 03:15:33 -0700 (PDT)
+Received: from localhost.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id i15sm22195320pfd.160.2019.07.09.03.15.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 03:15:32 -0700 (PDT)
+From:   Yuyang Du <duyuyang@gmail.com>
+To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org, frederic@kernel.org, arnd@arndb.de,
+        cai@lca.pw, Yuyang Du <duyuyang@gmail.com>
+Subject: [PATCH] locking/lockdep: Fix lock used or unused stats error
+Date:   Tue,  9 Jul 2019 18:15:22 +0800
+Message-Id: <20190709101522.9117-1-duyuyang@gmail.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709081042.31551-1-vincent.whitchurch@axis.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (07/09/19 10:10), Vincent Whitchurch wrote:
-> A dump of a 64-byte buffer filled by kmsg_dump_get_buffer(), before this
-> patch:
-> 
->  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 35 32 32 31 39 37  <0>[    6.522197
->  00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
->  00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->  00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> 
-> After this patch:
-> 
->  00000000: 3c 30 3e 5b 20 20 20 20 36 2e 34 32 37 35 30 32  <0>[    6.427502
->  00000010: 5d 20 41 41 41 41 41 41 41 41 41 41 41 41 41 0a  ] AAAAAAAAAAAAA.
->  00000020: 3c 30 3e 5b 20 20 20 20 36 2e 34 32 37 37 36 39  <0>[    6.427769
->  00000030: 5d 20 42 42 42 42 42 42 42 42 31 32 33 34 35 0a  ] BBBBBBBB12345.
+The stats variable nr_unused_locks is incremented every time a new lock
+class is register and decremented when the lock is first used in
+__lock_acquire(). And after all, it is shown and checked in lockdep_stats.
 
-[..]
+However, under configurations that either CONFIG_TRACE_IRQFLAGS or
+CONFIG_PROVE_LOCKING is not defined:
 
-> @@ -1318,7 +1318,7 @@ static size_t msg_print_text(const struct printk_log *msg, bool syslog,
->  		}
->  
->  		if (buf) {
-> -			if (prefix_len + text_len + 1 >= size - len)
-> +			if (prefix_len + text_len + 1 > size - len)
->  				break;
+The commit:
 
-So with this patch the last byte of the buffer is 0xA. It's a bit
-uncomfortable that `len', which we return from msg_print_text(),
-now points one byte beyond the buffer:
+  091806515124b20 ("locking/lockdep: Consolidate lock usage bit initialization")
 
-	buf[len++] = '\n';
-	return len;
+missed marking the LOCK_USED flag at IRQ usage initialization because
+as mark_usage() is not called. And the commit:
 
-This is not very common. Not sure what usually happens to kmsg_dump
-buffers, but anyone who'd do a rather innocent
+  886532aee3cd42d ("locking/lockdep: Move mark_lock() inside
+CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
 
-	kmsg_dump(buf, &len);
-	buf[len] = 0x00;
+further made mark_lock() not defined such that the LOCK_USED cannot be
+marked at all when the lock is first acquired.
 
-will write to something which is not a kmsg buffer (in some cases).
+As a result, we fix this by not showing and checking the stats under such
+configurations for lockdep_stats.
 
-	-ss
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+---
+ kernel/locking/lockdep_proc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 9c49ec6..65b6a16 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -210,6 +210,7 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		      nr_hardirq_read_safe = 0, nr_hardirq_read_unsafe = 0,
+ 		      sum_forward_deps = 0;
+ 
++#ifdef CONFIG_PROVE_LOCKING
+ 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
+ 
+ 		if (class->usage_mask == 0)
+@@ -241,13 +242,13 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 		if (class->usage_mask & LOCKF_ENABLED_HARDIRQ_READ)
+ 			nr_hardirq_read_unsafe++;
+ 
+-#ifdef CONFIG_PROVE_LOCKING
+ 		sum_forward_deps += lockdep_count_forward_deps(class);
+-#endif
+ 	}
+ #ifdef CONFIG_DEBUG_LOCKDEP
+ 	DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused);
+ #endif
++
++#endif
+ 	seq_printf(m, " lock-classes:                  %11lu [max: %lu]\n",
+ 			nr_lock_classes, MAX_LOCKDEP_KEYS);
+ 	seq_printf(m, " direct dependencies:           %11lu [max: %lu]\n",
+-- 
+1.8.3.1
+
