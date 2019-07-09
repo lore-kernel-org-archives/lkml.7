@@ -2,76 +2,115 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73E6C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18072C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A6C216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B79216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2HsF3vYq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FAKYRBQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfGIDR2 (ORCPT
+        id S1727343AbfGIDSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:17:28 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34096 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfGIDR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 23:17:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=0IeQiCsgznKInsLdgZEa+OjM4PnZxoN0re7tAB4Yxtk=; b=2HsF3vYqwqBYi1hrblG0UyH3vh
-        dK6Wpn1El1WpP1pUNeDn15qSFcXLWYl9FSjy2yNaEAA58pBdGIMib8Ptiq2vtsLgp5jHJ5n2WUziO
-        j0WeUKDbsUNxMXXhITYyJDPLt0xM8ZP5VowQpQXiEfiIMwndp25K3uPRXXn6FxAqJflc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hkgd7-00071s-54; Tue, 09 Jul 2019 05:17:21 +0200
-Date:   Tue, 9 Jul 2019 05:17:21 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        davem@davemloft.net, paweldembicki@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next] net: dsa: vsc73xx: Fix Kconfig warning and
- build errors
-Message-ID: <20190709031721.GE5835@lunn.ch>
-References: <20190708172808.GG9027@lunn.ch>
- <20190709030224.40292-1-yuehaibing@huawei.com>
+        Mon, 8 Jul 2019 23:18:37 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:48852 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGIDSg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 23:18:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1562642313; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pzy3NwVjkusfZHFaTz046qoprbVpGHFFowMHni2vKtY=;
+        b=FAKYRBQOCMleXkDI4SHI3KoMWnQ0xln8qD1jRqi8ki6Grz/6w0gtIXbzMqQs75W46LVFid
+        f/YIylx7EA97zTZvDMndKAP0Audad4Ic7N2eOK87xraEVSBW5jIzlI46JyRis7eLd/emjV
+        YqXSYYUHp7i8WAhgzPFpOuk5RqfpX8g=
+Date:   Mon, 08 Jul 2019 23:18:19 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1562642299.1834.0@crapouillou.net>
+In-Reply-To: <20190709020425.GA7984@bogus>
+References: <20190607154410.10633-1-paul@crapouillou.net>
+        <20190607154410.10633-2-paul@crapouillou.net> <20190709020425.GA7984@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709030224.40292-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 11:02:24AM +0800, YueHaibing wrote:
-> Fix Kconfig dependency warning and subsequent build errors
-> caused by OF is not set:
-> 
-> WARNING: unmet direct dependencies detected for NET_DSA_VITESSE_VSC73XX
->   Depends on [n]: NETDEVICES [=y] && HAVE_NET_DSA [=y] && OF [=n] && NET_DSA [=m]
->   Selected by [m]:
->   - NET_DSA_VITESSE_VSC73XX_PLATFORM [=m] && NETDEVICES [=y] && HAVE_NET_DSA [=y] && HAS_IOMEM [=y]
-> 
-> Make NET_DSA_VITESSE_VSC73XX_SPI and NET_DSA_VITESSE_VSC73XX_PLATFORM
-> depends on NET_DSA_VITESSE_VSC73XX to fix this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Fixes: 95711cd5f0b4 ("net: dsa: vsc73xx: Split vsc73xx driver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-    Andrew
+Le lun. 8 juil. 2019 =E0 22:04, Rob Herring <robh@kernel.org> a =E9crit :
+> On Fri, Jun 07, 2019 at 05:44:05PM +0200, Paul Cercueil wrote:
+>>  Right now none of the Ingenic-based boards probe this driver from
+>>  devicetree. This driver defined three compatible strings for the=20
+>> exact
+>>  same behaviour. Before these strings are used, we can remove two of
+>>  them.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: Rebase on v5.2-rc3
+>>=20
+>>   Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5=20
+>> +----
+>>   1 file changed, 1 insertion(+), 4 deletions(-)
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt=20
+>> b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+>>  index 7d9d3f90641b..493bec80d59b 100644
+>>  --- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+>>  +++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+>>  @@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
+>>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>>=20
+>>   Required properties:
+>>  -- compatible: One of:
+>>  -  * "ingenic,jz4740-pwm"
+>>  -  * "ingenic,jz4770-pwm"
+>>  -  * "ingenic,jz4780-pwm"
+>>  +- compatible: Should be "ingenic,jz4740-pwm"
+>=20
+> Are you sure all 3 chips are exactly the same features and bugs?
+
+The hardware on these chips have tiny differences, but the current
+driver code works on all the SoCs.
+
+
+> The correct thing to do here generally is the 4770 and 4780 would also
+> have ingenic,jz4740-pwm as a fallback compatible. Then the driver can
+> match on that until you find some difference and can use the more
+> specific compatible.
+
+Why not just update the devicetree with the new compatible string when
+a difference is found?
+
+
+>>   - #pwm-cells: Should be 3. See pwm.txt in this directory for a=20
+>> description
+>>     of the cells format.
+>>   - clocks : phandle to the external clock.
+>>  --
+>>  2.21.0.593.g511ec345e18
+>>=20
+
+=
+
