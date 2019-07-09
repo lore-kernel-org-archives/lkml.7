@@ -2,107 +2,102 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3262AC606D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C26C606D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B34216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3489D216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:22:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9zLoQTk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfGIHWq (ORCPT
+        id S1726341AbfGIHWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:22:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:26090 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfGIHWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:22:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 00:22:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
-   d="scan'208";a="188746591"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Jul 2019 00:22:41 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Pawel Laszczak <pawell@cadence.com>,
-        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "hdegoede\@redhat.com" <hdegoede@redhat.com>,
-        "heikki.krogerus\@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "robh+dt\@kernel.org" <robh+dt@kernel.org>,
-        "rogerq\@ti.com" <rogerq@ti.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel\@ti.com" <jbergsagel@ti.com>,
-        "nsekhar\@ti.com" <nsekhar@ti.com>, "nm\@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        "peter.chen\@nxp.com" <peter.chen@nxp.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-In-Reply-To: <BYAPR07MB47092C1E19FD36FB336A55C2DDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <87r274lmqk.fsf@linux.intel.com> <BYAPR07MB4709EF3753AC0B87606B1182DDF70@BYAPR07MB4709.namprd07.prod.outlook.com> <87a7dpm442.fsf@linux.intel.com> <BYAPR07MB47094B372CEC6DFD25FC78E1DDF10@BYAPR07MB4709.namprd07.prod.outlook.com> <87pnmj67ee.fsf@linux.intel.com> <BYAPR07MB47092C1E19FD36FB336A55C2DDF10@BYAPR07MB4709.namprd07.prod.outlook.com>
-Date:   Tue, 09 Jul 2019 10:22:40 +0300
-Message-ID: <87muhn65a7.fsf@linux.intel.com>
+        Tue, 9 Jul 2019 03:22:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36780 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfGIHWv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 03:22:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so19802819wrs.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eTTGtdAf9D8hMWA6RdwU6DYctiL/OmG776vwkKDwCdY=;
+        b=D9zLoQTk2FJgkaohPSj2m1p1zwZI89NM//MF5PYnexgpgf4SiMH++rB5G5zVRxXhKr
+         kYMteY2oyg2s8jY63/dsh9yMpX9CH7oYiLuARTVAqyvfM6mPxUEMXqwp6gJcF5qkCL1M
+         1uCTJTTO+JhaYlbZ3q1P641qfafCLT3h+eVzHQkSA0iib/gyjCM884tf0Lp+lMFILUg4
+         2ktc9iGkbEddgkAadHYi4SXOYsJOY2Jsh029gb4Ngmj8WpSmj+J69E2/ZuauZirjIO4t
+         4ZqbT+H3xpjVasdiStsr8xD/UOZZKphkpHkshKaRkYKSC1l/3jT3N5m7Q7QMTM7l/c1v
+         lVww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eTTGtdAf9D8hMWA6RdwU6DYctiL/OmG776vwkKDwCdY=;
+        b=OJBRogSrZJmRriBhDbtqro/mG3Ay6F6+WjZ5+aslAaSQ5xBSk8Fi4Fh0gwK0NW6En3
+         9g0GcOGSK5SDcBmYOsU1nDpJc7f7jhDnkZXutXxNhA8iFJHtfTiVgI1qBtCGHyzrZec+
+         B+wEP8XWM/84JcuNdkX9IMi0RImjGCSYc52T+0DO/7g2LZjucvWLnFWUDXe/v57Ruv+W
+         fKDZJxpkizyNiwR0EJPYs0iJZ3bboQ7gRviM+t4v3z2HApOIIBCKHFgcXlr/le0NDzh7
+         OxVeiKYlsfsmW+7GwaPuK3snsOn5EH+JwchK09+oT0Wc5TVif0K6dmLb9ULyX76Fld6t
+         y6gw==
+X-Gm-Message-State: APjAAAUAeJ5EPqwo1Be6GM5spIXZvYMHOPSuE5nr8+zne9/VF0bAsbTK
+        sTSD/WxEVHEabWyIdxlRaxHcZ92bDc7qkw==
+X-Google-Smtp-Source: APXvYqwpHuI9CWOWbco5N6jY+5LAeHjro1s1YTciZRy3YWL+F5Pp3hdmj4NAX2bBfyJX0mNGYk9vdQ==
+X-Received: by 2002:adf:e28a:: with SMTP id v10mr23876027wri.178.1562656969476;
+        Tue, 09 Jul 2019 00:22:49 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id l8sm32824144wrg.40.2019.07.09.00.22.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 00:22:48 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 00:22:47 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, Rex Zhu <rex.zhu@amd.com>,
+        Evan Quan <evan.quan@amd.com>, David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        clang-built-linux@googlegroups.com,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH 0/7] amdgpu clang warning fixes on next-20190703
+Message-ID: <20190709072247.GA92551@archlinux-threadripper>
+References: <20190704055217.45860-1-natechancellor@gmail.com>
+ <CADnq5_MGzLLMNPSQXpdxwrBpvsp7Fd1KdExS-K4yNeDBQYEGMg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADnq5_MGzLLMNPSQXpdxwrBpvsp7Fd1KdExS-K4yNeDBQYEGMg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 08, 2019 at 11:55:50AM -0400, Alex Deucher wrote:
+> Applied the series.  thanks!
+> 
+> Alex
 
-Hi,
+Thank you :)
 
-Pawel Laszczak <pawell@cadence.com> writes:
->>>>> IRQF_ONESHOT can be used  only in threaded handled.
->>>>> "
->>>>>  * IRQF_ONESHOT - Interrupt is not reenabled after the hardirq handler finished.
->>>>>  *                Used by threaded interrupts which need to keep the
->>>>>  *                irq line disabled until the threaded handler has been run.
->>>>> "
->>>>
->>>>so?
->>>
->>> I don't understand why If I don't have threaded handler why I need IRQF_ONESHOT.
->>> Why interrupt cannot be reenabled after hardirq handler finished ?
->>> I do not use threaded handler so this flag seem unnecessary.
->>
->>Unless this has changed over the years, it was a requirement from IRQ susbystem.
->>
->>	/*
->>	 * Drivers are often written to work w/o knowledge about the
->>	 * underlying irq chip implementation, so a request for a
->>	 * threaded irq without a primary hard irq context handler
->>	 * requires the ONESHOT flag to be set. Some irq chips like
->>	 * MSI based interrupts are per se one shot safe. Check the
->>	 * chip flags, so we can avoid the unmask dance at the end of
->>	 * the threaded handler for those.
->>	 */
->>	if (desc->irq_data.chip->flags & IRQCHIP_ONESHOT_SAFE)
->>		new->flags &= ~IRQF_ONESHOT;
->
-> From description I understand that it should be set when driver uses only 
-> threaded handler without hard irq handler.
-> eg. 
->
-> 	ret = devm_request_threaded_irq(dev, data->usb_id_irq,
-> 					NULL, int3496_thread_isr,
-> 					IRQF_SHARED | IRQF_ONESHOT |
-> 					IRQF_TRIGGER_RISING |
-> 					IRQF_TRIGGER_FALLING,
-> 					dev_name(dev), data);
->
-> It make sense, we don't have hard irq handler so we can't clear source of interrupt. 
-> If we clear it immediately in interrupt controller then the same interrupt could 
-> be raised again, because it was not cleared e.g in controller register. 
+I don't see the enum conversion ones in your current tree. If they
+indeed caused issues, could you guys please look into fixing the
+warnings properly yourselves (maybe something like Arnd's patch?)
+or let me know how you would like them fixed (explicit casts, changing
+type to int, etc)?
 
-You are correct. Big mistake on my side. Apologies.
+https://patchwork.freedesktop.org/patch/316466/
 
--- 
-balbi
+Cheers,
+Nathan
