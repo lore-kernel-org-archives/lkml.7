@@ -2,177 +2,113 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1E2C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4718DC606D4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEC62166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hC+wXI/l"
+	by mail.kernel.org (Postfix) with ESMTP id 283F22166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfGIEYm (ORCPT
+        id S1727054AbfGIEZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 00:24:42 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41215 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbfGIEYm (ORCPT
+        Tue, 9 Jul 2019 00:25:02 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:36236 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfGIEZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 00:24:42 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d24so9021952ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 21:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eTsII2jVWy/TWAPD/cCi3Eg6y30l0Z/PSexrTql7jxQ=;
-        b=hC+wXI/lLxGTOmeLNJ4qUh4ECbXN9maYRNa2x8/yH1UYeSR2kgJbIEaVQ0Rd8L97Dq
-         hEQnQ2oDtcwLzfM4mzd5VPwQZP+y5WhjIAvqwaJNfEix8NdBfpVoTU1t+ml2dNuJy9ND
-         xV55758j+rlmarpl+BDWztRA6Cbxco+mBwzuMtu/P1hJuUfwiPkk6GlHqZ9b8rRgx/a/
-         k7acGkhimhNgTI24ALTi812SLKFdxD/akaoeQ3YB4rf701vj4CeWBCKveEoNqQ//tCXi
-         onNCYnovXZmyOP1y0a8b2Gty09cbHCJfEp/Rn20zcyIw3PsL7TOmMO5x1S6G6at/dr8D
-         wwGw==
+        Tue, 9 Jul 2019 00:25:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id k21so21644222ioj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 21:25:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eTsII2jVWy/TWAPD/cCi3Eg6y30l0Z/PSexrTql7jxQ=;
-        b=VxYqNmQCLvpwltOdNjNvw9NEu8P0QnBtuSu/92rotgjtlK3wGkhpxA9SGMDB3yiYPK
-         8iB6VjgNZ814A+ds0ELar6/4Pd/pZqKC03ITD6h8izOI8EHfOHQfYr2A8ncrGvuSonHE
-         iEg3dsIWbOtfnUSPzqJepRFjTQPPdqxUf1+1MFl/vulmNI3vJdMmIdMgQZqub9Y0lrFE
-         H8py9efJ7hIkmaKYrvPgF6DW0/vrpEVMcx0o3RNLs7dYT08Ogc4OgCj3g+66EX/3zZYr
-         g2/jvfAopT3V9lOQ4rzzXIFgZ0+Ky6Dk9K4YgJjjKLsNn/u/NdPukOwmHZCWir/CTcJr
-         SwFA==
-X-Gm-Message-State: APjAAAXOYhSoEuRLX6OBNpah5sWwNR38dvi1JDNwovOGwlCn4ronT5vh
-        9AWIIJEezthKNhMQpvSCYSfemZUPymTDVfgYygbeiQ==
-X-Google-Smtp-Source: APXvYqxjXGKgol7YMUcuTeCWhNVhckQpTJsS9ttDgYVse54cyLDzvhBQTa2fOf9DV0Nmn3RaihyvK1C3uOxJwsCCPYg=
-X-Received: by 2002:a2e:9b4a:: with SMTP id o10mr12703909ljj.137.1562646279974;
- Mon, 08 Jul 2019 21:24:39 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ThTKrBZsQ1JlWFlPRVe4RXWJ3j4uyiYja7ipCGiZOCQ=;
+        b=d28gW2zQXn2/o3Jg+celt4twKPzJ55H8C9tbfxbcYYtNixUVnktx36Y2jIMi0flgts
+         9TITwUR6qg/crSRnQOviA1qx9LSpVBCPqHQ54UdXaq6DVV/96ngTvAJnlCiyacRrjb8K
+         XKCCHEatv1KPlFD3Z7Cwzb3D8it0AGPhKHYdbeiR4+m5wUSrm64h97nOls5TJmNuhqKx
+         7fkguqrSagytkclDJw+lZM0FB9TgEcfrCdAahaxODRICpW3oGRPtYdO/ew/YL9PZcbgS
+         eRXj6MJtpsIF990gVwi7OqDh81dv8/81ckIJNX1rLun/OkZmuLlsuo/IQ1e0Wqw2iJNQ
+         2k2g==
+X-Gm-Message-State: APjAAAXxF5oMBfKtWTcXqU+Bz/WLDUycoKicQ5XBtZmpKbvWtEphaTcs
+        TJjJ94CMgvTYtY4DNGAi8dety22UcbIdo/FjmfGvnkvMhfK3
+X-Google-Smtp-Source: APXvYqym5DaYVguOnx/vYC+8fr3X5IKtdXXfy6a1e9Ff48wtiCtsWW98PTt6iX6sFsLg9KiiCV1ve2K7VjNJJcGzMyGUA2cQGoZr
 MIME-Version: 1.0
-References: <20190708150521.829733162@linuxfoundation.org>
-In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 9 Jul 2019 09:54:28 +0530
-Message-ID: <CA+G9fYutQ2tmskCf=h27VQA_LBE+4tv7B0TXkPxXkL_30ivfdA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/90] 4.19.58-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a6b:641a:: with SMTP id t26mr916082iog.3.1562646300671;
+ Mon, 08 Jul 2019 21:25:00 -0700 (PDT)
+Date:   Mon, 08 Jul 2019 21:25:00 -0700
+In-Reply-To: <CAEf4BzaUEWwGL3k0VeiFYFqyJexQU9cDZWN69jSDpBjP1ZEcpw@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a94981058d37f1a4@google.com>
+Subject: Re: WARNING in mark_chain_precision
+From:   syzbot <syzbot+f21251a7468cd46efc60@syzkaller.appspotmail.com>
+To:     aaron.f.brown@intel.com, andrii.nakryiko@gmail.com, ast@kernel.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        hawk@kernel.org, intel-wired-lan@lists.osuosl.org,
+        jakub.kicinski@netronome.com, jeffrey.t.kirsher@intel.com,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        sasha.neftin@intel.com, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
+        yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 20:58, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.58 release.
-> There are 90 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.58-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Hello,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+WARNING in bpf_jit_free
 
-Summary
-------------------------------------------------------------------------
+WARNING: CPU: 0 PID: 9077 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9077 Comm: kworker/0:3 Not tainted 5.2.0-rc6+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events bpf_prog_free_deferred
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x744 kernel/panic.c:219
+  __warn.cold+0x20/0x4d kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:bpf_jit_free+0x157/0x1b0
+Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00  
+00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 09 7f f4 ff <0f> 0b e9 f9 fe  
+ff ff e8 2d 02 2e 00 e9 d9 fe ff ff 48 89 7d e0 e8
+RSP: 0018:ffff888084affcb0 EFLAGS: 00010293
+RAX: ffff88808a622100 RBX: ffff88809639d580 RCX: ffffffff817b0b0d
+RDX: 0000000000000000 RSI: ffffffff817c4557 RDI: ffff88809639d5f0
+RBP: ffff888084affcd0 R08: 1ffffffff150daa8 R09: fffffbfff150daa9
+R10: fffffbfff150daa8 R11: ffffffff8a86d547 R12: ffffc90001921000
+R13: ffff88809639d5e8 R14: ffff8880a0589800 R15: ffff8880ae834d40
+  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1982
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-kernel: 4.19.58-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: c4064b6569551279bd81da840126527a77b0ad20
-git describe: v4.19.57-91-gc4064b656955
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.57-91-gc4064b656955
 
+Tested on:
 
-No regressions (compared to build v4.19.57)
+commit:         b9321614 bpf: fix precision bit propagation for BPF_ST ins..
+git tree:       https://github.com/anakryiko/linux bpf-fix-precise-bpf_st
+console output: https://syzkaller.appspot.com/x/log.txt?x=112f0dfda00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6bb3e6e7997c14f9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-No fixes (compared to build v4.19.57)
-
-Ran 24004 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-containers-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
