@@ -2,220 +2,141 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD68C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07013C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2542086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77F7216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfGICvF (ORCPT
+        id S1727077AbfGICw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:51:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36738 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfGICvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:51:04 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 31FF888311;
-        Tue,  9 Jul 2019 02:50:56 +0000 (UTC)
-Received: from [10.72.12.197] (ovpn-12-197.pek2.redhat.com [10.72.12.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 18CD4381A9;
-        Tue,  9 Jul 2019 02:50:39 +0000 (UTC)
-Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
-To:     Tiwei Bie <tiwei.bie@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     mst@redhat.com, maxime.coquelin@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        dan.daly@intel.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, idos@mellanox.com,
-        Rob Miller <rob.miller@broadcom.com>,
-        Ariel Adam <aadam@redhat.com>
-References: <20190703091339.1847-1-tiwei.bie@intel.com>
- <7b8279b2-aa7e-7adc-eeff-20dfaf4400d0@redhat.com>
- <20190703115245.GA22374@___>
- <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com> <20190703130817.GA1978@___>
- <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
- <20190704062134.GA21116@___> <20190705084946.67b8f9f5@x1.home>
- <20190708061625.GA15936@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <deae5ede-57e9-41e6-ea42-d84e07ca480a@redhat.com>
-Date:   Tue, 9 Jul 2019 10:50:38 +0800
+        Mon, 8 Jul 2019 22:52:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63622 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725886AbfGICw1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 22:52:27 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x692pPF5045355;
+        Mon, 8 Jul 2019 22:52:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tmf1fdu7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jul 2019 22:52:00 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x692pxhj046997;
+        Mon, 8 Jul 2019 22:51:59 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tmf1fdu6u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jul 2019 22:51:59 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x692oQTk000936;
+        Tue, 9 Jul 2019 02:51:59 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2tjk96a903-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jul 2019 02:51:59 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x692pwIQ43385274
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Jul 2019 02:51:58 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 323B028059;
+        Tue,  9 Jul 2019 02:51:58 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE5FC28058;
+        Tue,  9 Jul 2019 02:51:55 +0000 (GMT)
+Received: from [9.102.0.209] (unknown [9.102.0.209])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Jul 2019 02:51:55 +0000 (GMT)
+Subject: Re: [PATCH 4/4] powerpc/64: reuse PPC32 static inline
+ flush_dcache_range()
+To:     "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <239d1c8f15b8bedc161a234f9f1a22a07160dbdf.1557824379.git.christophe.leroy@c-s.fr>
+ <d6f628ffdeb9c7863da722a8f6ef2949e57bb360.1557824379.git.christophe.leroy@c-s.fr>
+ <87y318d2th.fsf@linux.ibm.com>
+ <CAOSf1CG-oxpSDsAPw8xHV5367MrMn2Ty_yDpPY9TvA6wMrMZHA@mail.gmail.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <c0461069-8ef8-cb56-6807-71cc79793ac4@linux.ibm.com>
+Date:   Tue, 9 Jul 2019 08:21:54 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190708061625.GA15936@___>
+In-Reply-To: <CAOSf1CG-oxpSDsAPw8xHV5367MrMn2Ty_yDpPY9TvA6wMrMZHA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 09 Jul 2019 02:51:04 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907090036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/9/19 7:50 AM, Oliver O'Halloran wrote:
+> On Tue, Jul 9, 2019 at 12:22 AM Aneesh Kumar K.V
+> <aneesh.kumar@linux.ibm.com> wrote:
+>>
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>
+>>> *snip*
+>>> +     if (IS_ENABLED(CONFIG_PPC64))
+>>> +             isync();
+>>>   }
+>>
+>>
+>> Was checking with Michael about why we need that extra isync. Michael
+>> pointed this came via
+>>
+>> https://github.com/mpe/linux-fullhistory/commit/faa5ee3743ff9b6df9f9a03600e34fdae596cfb2#diff-67c7ffa8e420c7d4206cae4a9e888e14
+>>
+>> for 970 which doesn't have coherent icache. So possibly isync there is
+>> to flush the prefetch instructions? But even so we would need an icbi
+>> there before that isync.
+> 
+> I don't think it's that, there's some magic in flush_icache_range() to
+> handle dropping prefetched instructions on 970.
+> 
+>> So overall wondering why we need that extra barriers there.
+> 
+> I think the isync is needed there because the architecture only
+> requires sync to provide ordering. A sync alone doesn't guarantee the
+> dcbfs have actually completed so the isync is necessary to ensure the
+> flushed cache lines are back in memory. That said, as far as I know
+> all the IBM book3s chips from power4 onwards will wait for pending
+> dcbfs when they hit a sync, but that might change in the future.
+> 
 
-On 2019/7/8 下午2:16, Tiwei Bie wrote:
-> On Fri, Jul 05, 2019 at 08:49:46AM -0600, Alex Williamson wrote:
->> On Thu, 4 Jul 2019 14:21:34 +0800
->> Tiwei Bie <tiwei.bie@intel.com> wrote:
->>> On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
->>>> On 2019/7/3 下午9:08, Tiwei Bie wrote:
->>>>> On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
->>>>>> On 2019/7/3 下午7:52, Tiwei Bie wrote:
->>>>>>> On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
->>>>>>>> On 2019/7/3 下午5:13, Tiwei Bie wrote:
->>>>>>>>> Details about this can be found here:
->>>>>>>>>
->>>>>>>>> https://lwn.net/Articles/750770/
->>>>>>>>>
->>>>>>>>> What's new in this version
->>>>>>>>> ==========================
->>>>>>>>>
->>>>>>>>> A new VFIO device type is introduced - vfio-vhost. This addressed
->>>>>>>>> some comments from here:https://patchwork.ozlabs.org/cover/984763/
->>>>>>>>>
->>>>>>>>> Below is the updated device interface:
->>>>>>>>>
->>>>>>>>> Currently, there are two regions of this device: 1) CONFIG_REGION
->>>>>>>>> (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
->>>>>>>>> device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
->>>>>>>>> can be used to notify the device.
->>>>>>>>>
->>>>>>>>> 1. CONFIG_REGION
->>>>>>>>>
->>>>>>>>> The region described by CONFIG_REGION is the main control interface.
->>>>>>>>> Messages will be written to or read from this region.
->>>>>>>>>
->>>>>>>>> The message type is determined by the `request` field in message
->>>>>>>>> header. The message size is encoded in the message header too.
->>>>>>>>> The message format looks like this:
->>>>>>>>>
->>>>>>>>> struct vhost_vfio_op {
->>>>>>>>> 	__u64 request;
->>>>>>>>> 	__u32 flags;
->>>>>>>>> 	/* Flag values: */
->>>>>>>>>      #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
->>>>>>>>> 	__u32 size;
->>>>>>>>> 	union {
->>>>>>>>> 		__u64 u64;
->>>>>>>>> 		struct vhost_vring_state state;
->>>>>>>>> 		struct vhost_vring_addr addr;
->>>>>>>>> 	} payload;
->>>>>>>>> };
->>>>>>>>>
->>>>>>>>> The existing vhost-kernel ioctl cmds are reused as the message
->>>>>>>>> requests in above structure.
->>>>>>>> Still a comments like V1. What's the advantage of inventing a new protocol?
->>>>>>> I'm trying to make it work in VFIO's way..
->>>>>>>    
->>>>>>>> I believe either of the following should be better:
->>>>>>>>
->>>>>>>> - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
->>>>>>>> extend it with e.g notify region. The advantages is that all exist userspace
->>>>>>>> program could be reused without modification (or minimal modification). And
->>>>>>>> vhost API hides lots of details that is not necessary to be understood by
->>>>>>>> application (e.g in the case of container).
->>>>>>> Do you mean reusing vhost's ioctl on VFIO device fd directly,
->>>>>>> or introducing another mdev driver (i.e. vhost_mdev instead of
->>>>>>> using the existing vfio_mdev) for mdev device?
->>>>>> Can we simply add them into ioctl of mdev_parent_ops?
->>>>> Right, either way, these ioctls have to be and just need to be
->>>>> added in the ioctl of the mdev_parent_ops. But another thing we
->>>>> also need to consider is that which file descriptor the userspace
->>>>> will do the ioctl() on. So I'm wondering do you mean let the
->>>>> userspace do the ioctl() on the VFIO device fd of the mdev
->>>>> device?
->>>>>    
->>>> Yes.
->>> Got it! I'm not sure what's Alex opinion on this. If we all
->>> agree with this, I can do it in this way.
->>>
->>>> Is there any other way btw?
->>> Just a quick thought.. Maybe totally a bad idea. I was thinking
->>> whether it would be odd to do non-VFIO's ioctls on VFIO's device
->>> fd. So I was wondering whether it's possible to allow binding
->>> another mdev driver (e.g. vhost_mdev) to the supported mdev
->>> devices. The new mdev driver, vhost_mdev, can provide similar
->>> ways to let userspace open the mdev device and do the vhost ioctls
->>> on it. To distinguish with the vfio_mdev compatible mdev devices,
->>> the device API of the new vhost_mdev compatible mdev devices
->>> might be e.g. "vhost-net" for net?
->>>
->>> So in VFIO case, the device will be for passthru directly. And
->>> in VHOST case, the device can be used to accelerate the existing
->>> virtualized devices.
->>>
->>> How do you think?
->> VFIO really can't prevent vendor specific ioctls on the device file
->> descriptor for mdevs, but a) we'd want to be sure the ioctl address
->> space can't collide with ioctls we'd use for vfio defined purposes and
->> b) maybe the VFIO user API isn't what you want in the first place if
->> you intend to mostly/entirely ignore the defined ioctl set and replace
->> them with your own.  In the case of the latter, you're also not getting
->> the advantages of the existing VFIO userspace code, so why expose a
->> VFIO device at all.
-> Yeah, I totally agree.
+ISA doesn't list that as the sequence. Only place where isync was 
+mentioned was w.r.t  icbi where want to discards the prefetch.
 
 
-I guess the original idea is to reuse the VFIO DMA/IOMMU API for this. 
-Then we have the chance to reuse vfio codes in qemu for dealing with e.g 
-vIOMMU.
 
+> If it's a problem we could add a cpu-feature section around the isync
+> to no-op it in the common case. However, when I had a look with perf
+> it always showed that the sync was the hotspot so I don't think it'll
+> help much.
+> 
 
->
->> The mdev interface does provide a general interface for creating and
->> managing virtual devices, vfio-mdev is just one driver on the mdev
->> bus.  Parav (Mellanox) has been doing work on mdev-core to help clean
->> out vfio-isms from the interface, aiui, with the intent of implementing
->> another mdev bus driver for using the devices within the kernel.
-> Great to know this! I found below series after some searching:
->
-> https://lkml.org/lkml/2019/3/8/821
->
-> In above series, the new mlx5_core mdev driver will do the probe
-> by calling mlx5_get_core_dev() first on the parent device of the
-> mdev device. In vhost_mdev, maybe we can also keep track of all
-> the compatible mdev devices and use this info to do the probe.
+What about the preceding barriers (sync; isync;) before dcbf? Why are 
+they needed?
 
-
-I don't get why this is needed. My understanding is if we want to go 
-this way, there're actually two parts. 1) Vhost mdev that implements the 
-device managements and vhost ioctl. 2) Vhost it self, which can accept 
-mdev fd as it backend through VHOST_NET_SET_BACKEND.
-
-
-> But we also need a way to allow vfio_mdev driver to distinguish
-> and reject the incompatible mdev devices.
-
-
-One issue for this series is that it doesn't consider DMA isolation at all.
-
-
->
->> It
->> seems like this vhost-mdev driver might be similar, using mdev but not
->> necessarily vfio-mdev to expose devices.  Thanks,
-> Yeah, I also think so!
-
-
-I've cced some driver developers for their inputs. I think we need a 
-sample parent drivers in the next version for us to understand the full 
-picture.
-
-
-Thanks
-
-
->
-> Thanks!
-> Tiwei
->
->> Alex
+-aneesh
