@@ -2,177 +2,143 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95428C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825F6C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD522166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562704031;
-	bh=mJu8YPIjroJCPthF/1rwdFHUMvx5hem/a49NVTk6Lw0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=B4CBULoXRmR8NMLzCBlX0aXdiQuLPVhs8sYU7oxFLT1YjdBZEeb9GVD1pCynPsImz
-	 N7ijhZTN8hZ4HLMBAI5nmlnUGnaDL27xPyxFz8FwBgNVxyywJZYvj12aecVLkeBW63
-	 xAY4zT7BlhJq7H31P4EL9zzCIGn7+T61VVonSisE=
+	by mail.kernel.org (Postfix) with ESMTP id 54AEB208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbfGIU1K (ORCPT
+        id S1729713AbfGIUah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729532AbfGIU1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:27:09 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B31382087F;
-        Tue,  9 Jul 2019 20:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562704028;
-        bh=mJu8YPIjroJCPthF/1rwdFHUMvx5hem/a49NVTk6Lw0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=zqdTLtkICEfzubXbyFncqW72ufWZEWeVkibIE47VoYT3W2/c5cJpQBSjuzbm2Deaq
-         yPSDHRs9yxeaKPLRf1jHzJOJ0QBQsymanxoA41wLgLvt3ZfzhM00zvVjLmXzPC3Ehj
-         qOprhxbNQZMh+GrVQda3UimTVxzyEaHRZyHXBr5c=
-Date:   Tue, 9 Jul 2019 13:27:06 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-ntfs-dev@lists.sourceforge.net,
-        Anton Altaparmakov <anton@tuxera.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 5 open syzbot bugs in "fs/ntfs" subsystem
-Message-ID: <20190709202706.GL641@sol.localdomain>
-Mail-Followup-To: linux-ntfs-dev@lists.sourceforge.net,
-        Anton Altaparmakov <anton@tuxera.com>, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+        Tue, 9 Jul 2019 16:30:37 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:18182 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729179AbfGIUag (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:30:36 -0400
+Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x69KPsj6018245;
+        Tue, 9 Jul 2019 20:29:13 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2tn06s8q1y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jul 2019 20:29:13 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 77E2F9A;
+        Tue,  9 Jul 2019 20:29:12 +0000 (UTC)
+Received: from [16.116.129.61] (unknown [16.116.129.61])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 5101D48;
+        Tue,  9 Jul 2019 20:29:10 +0000 (UTC)
+Subject: Re: [PATCH v2 8/9] x86/mm/tlb: Remove UV special case
+To:     Russ Anderson <rja@hpe.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nadav Amit <namit@vmware.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>
+References: <20190702235151.4377-1-namit@vmware.com>
+ <20190702235151.4377-9-namit@vmware.com>
+ <alpine.DEB.2.21.1907092146570.1758@nanos.tec.linutronix.de>
+ <20190709200914.fjvi3cy3qfc6fmis@hpe.com>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <373adfb0-0047-eae2-46a5-041caddfca97@hpe.com>
+Date:   Tue, 9 Jul 2019 13:29:10 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190709200914.fjvi3cy3qfc6fmis@hpe.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907090244
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 5 of them as possibly being bugs in the "fs/ntfs" subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
 
-Of these 5 bugs, 2 were seen in mainline in the last week.
+On 7/9/2019 1:09 PM, Russ Anderson wrote:
+> On Tue, Jul 09, 2019 at 09:50:27PM +0200, Thomas Gleixner wrote:
+>> On Tue, 2 Jul 2019, Nadav Amit wrote:
+>>
+>>> SGI UV support is outdated and not maintained, and it is not clear how
+>>> it performs relatively to non-UV. Remove the code to simplify the code.
+>>
+>> You should at least Cc the SGI/HP folks on that. They are still
+>> around. Done so.
+> 
+> Thanks Thomas.  The SGI UV is now HPE Superdome Flex and is
+> very much still supported.
+> 
+> Thanks.
+> 
+>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>> Cc: Dave Hansen <dave.hansen@intel.com>
+>>> Suggested-by: Andy Lutomirski <luto@kernel.org>
+>>> Signed-off-by: Nadav Amit <namit@vmware.com>
+>>> ---
+>>>   arch/x86/mm/tlb.c | 25 -------------------------
+>>>   1 file changed, 25 deletions(-)
+>>>
+>>> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+>>> index b47a71820f35..64afe1215495 100644
+>>> --- a/arch/x86/mm/tlb.c
+>>> +++ b/arch/x86/mm/tlb.c
+>>> @@ -689,31 +689,6 @@ void native_flush_tlb_multi(const struct cpumask *cpumask,
+>>>   		trace_tlb_flush(TLB_REMOTE_SEND_IPI,
+>>>   				(info->end - info->start) >> PAGE_SHIFT);
+>>>   
+>>> -	if (is_uv_system()) {
+>>> -		/*
+>>> -		 * This whole special case is confused.  UV has a "Broadcast
+>>> -		 * Assist Unit", which seems to be a fancy way to send IPIs.
+>>> -		 * Back when x86 used an explicit TLB flush IPI, UV was
+>>> -		 * optimized to use its own mechanism.  These days, x86 uses
+>>> -		 * smp_call_function_many(), but UV still uses a manual IPI,
+>>> -		 * and that IPI's action is out of date -- it does a manual
+>>> -		 * flush instead of calling flush_tlb_func_remote().  This
+>>> -		 * means that the percpu tlb_gen variables won't be updated
+>>> -		 * and we'll do pointless flushes on future context switches.
+>>> -		 *
+>>> -		 * Rather than hooking native_flush_tlb_multi() here, I think
+>>> -		 * that UV should be updated so that smp_call_function_many(),
+>>> -		 * etc, are optimal on UV.
+>>> -		 */
 
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
+I thought this change was already proposed a bit ago and we acked it 
+awhile back.  Also the replacement functionality is being worked on but 
+it is more complex.  The smp call many has to support all the reasons 
+why it's called and not just the tlb shoot downs as is the current BAU case.
 
-If you believe I misattributed a bug to the "fs/ntfs" subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              WARNING: bad unlock balance in rcu_core
-Last occurred:      1 day ago
-Reported:           86 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0d5bdaf028e4283ad7404609d17e5077f48ff26d
-Original thread:    https://lkml.kernel.org/lkml/000000000000c0bffa0586795098@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+36baa6c2180e959e19b1@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000c0bffa0586795098@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in ntfs_read_locked_inode
-Last occurred:      460 days ago
-Reported:           460 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=5c5466347d4969ec80f5000c5e049056f48e3e2e
-Original thread:    https://lkml.kernel.org/lkml/001a11441b6c6cb96c0569120042@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+19b469021157c136116a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/001a11441b6c6cb96c0569120042@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: bad unlock balance in rcu_lock_release
-Last occurred:      5 days ago
-Reported:           16 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a939746456c0350d6a368a9d30a4dcfcafa800be
-Original thread:    https://lkml.kernel.org/lkml/000000000000fdd3f3058bfcf369@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f9545ab3e9f85cd43a3a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000fdd3f3058bfcf369@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in ntfs_attr_find
-Last occurred:      463 days ago
-Reported:           463 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=731ba1daa85050266cef2836e917da1cc785f50a
-Original thread:    https://lkml.kernel.org/lkml/001a11447acae6b4560568e08829@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+aed06913f36eff9b544e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/001a11447acae6b4560568e08829@google.com
-
---------------------------------------------------------------------------------
-Title:              kernel BUG at fs/ntfs/aops.c:LINE!
-Last occurred:      446 days ago
-Reported:           446 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=86d590f642a6d325d2f9dc9571e6702bed1a77ee
-Original thread:    https://lkml.kernel.org/lkml/000000000000c4b45a056a36872f@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6a5a7672f663cce8b156@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000c4b45a056a36872f@google.com
-
+>>> -		flush_tlb_func_local(info);
+>>> -
+>>> -		cpumask = uv_flush_tlb_others(cpumask, info);
+>>> -		if (cpumask)
+>>> -			smp_call_function_many(cpumask, flush_tlb_func_remote,
+>>> -					       (void *)info, 1);
+>>> -		return;
+>>> -	}
+>>> -
+>>>   	/*
+>>>   	 * If no page tables were freed, we can skip sending IPIs to
+>>>   	 * CPUs in lazy TLB mode. They will flush the CPU themselves
+>>> -- 
+>>> 2.17.1
+>>>
+>>>
+> 
