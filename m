@@ -2,88 +2,107 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61943C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC4FC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D512171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:54:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562633660;
-	bh=TaA19Hq9hxZFjnO5RqNyFUJ2lZYwSReMYdu022N7vBw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=iP8BPHECiAcOiO3UQjEDQxdf1yxbEXVbNBenDqfLtfXSS7fmXppTKYcpzVq2nggrc
-	 kQ2Yw/8cHH3IFucZI6tfxz2AL2yiQRYS3eNfPxeBmsKjwXMGa3n7wpSpLmun6/qvRW
-	 hFXu73iQZT147mYqVQu5vqyCbTvw7rzKaFyvg2Zg=
+	by mail.kernel.org (Postfix) with ESMTP id 937372171F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:57:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOogLk7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfGIAyT (ORCPT
+        id S1726133AbfGIA5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 20:54:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfGIAyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 20:54:18 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5383A2166E;
-        Tue,  9 Jul 2019 00:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562633658;
-        bh=TaA19Hq9hxZFjnO5RqNyFUJ2lZYwSReMYdu022N7vBw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=0qYdrUYKYIOnGkHKaWNt5AQ5jduT5TEBIbEXx/vhlAm3C3BM8MkVKuvCjeoSEf2U8
-         4Qi/pUunvfz8/DeeWI8XSYdY0Gh2Xpga7B6uv53aX9IZEDItdMYYm0WX3QhrchRTYq
-         kZW7IG1Py6Q2KxonLMb72t0vIJm5KPnp8Zna4Fp4=
-Subject: Re: [PATCH 4.19 00/90] 4.19.58-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190708150521.829733162@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <e048e940-ff30-a35e-092b-1623aa77241b@kernel.org>
-Date:   Mon, 8 Jul 2019 18:54:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jul 2019 20:57:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36001 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfGIA5l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 20:57:41 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so4522984pgm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 17:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ovvmvLXcN2WNj4sNwe4p/Xee5jrLgpchDLjIPq6YmSs=;
+        b=jOogLk7Rn8Qffuitf+GhyMJJEvfkhY9IoNwS0oiC7kgcxvC7hcWLNLfZCUrkWrDkCt
+         wzgyXYIcGChGJDMVffK9I1JdgAzPspuhFwRarpxbV5ScMXNuEvxZrvEDGbU9z1nQ4Pby
+         C1yDzOfctZM5xNzF2j2UiOwnIsTn51sw0qWaQVMSzViDl+vwipjaZe3fUkopGq3l/Wbx
+         tt9cdaScy+RIVLtLU3i1ovTXtDGK1YWnixyAl+r9uq9Helzuk0UuLWE7CoJP4gsVraSN
+         4HLbVTv9AgzQmw/bN8ZC1ZEZN6TgykRtfBo51TTpeNsibZ2dTmm3NDlHDEP7S8r4r5/M
+         F3vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ovvmvLXcN2WNj4sNwe4p/Xee5jrLgpchDLjIPq6YmSs=;
+        b=oCgUw4ZeTQ+eRSbJjqgWDwfBMoSSLnl/zKd5iqVPxs69XNtexvvzgmT6joK8gmH8kd
+         zuk5eYxaWyjZ6Jp5GUurYag9Plw7jjluuGRrkng4AN+bViG4CpU+Blq6zvbEfk+EvUvv
+         w94HdvO/w1NVNSLnwdo6Q1IQG8bzJqvO0Zlpkznzvl8+waDJRhb5eQatiKhwxknyta18
+         V6jo4XYLZ0fwv49j9isbe8zI/F+Y1KH/+05/O8u9wAg5RaEFKhs3EvcQUPODN4O0eZml
+         ZCWdNP6SisGJmNNmeDZbib3wUn3VQSvqqIm8wXYUGMQmUtA0fzNwlLw8B4LUQ2jBWjLu
+         /nCg==
+X-Gm-Message-State: APjAAAWHV94hBjA6gYaFQGf58+sbO8xv/QfZRNAMmcOk+q9I6oFvI/lM
+        gGy1upjHHg2H2eN/Hw6Mm3c=
+X-Google-Smtp-Source: APXvYqzSNUuTjgHJHseb1sIy2Pn9KXojzGnULdltP79uHnrMd5CKKPPe2fjbRm0R5Ggc8XUaiEF+bw==
+X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr29371769pjr.8.1562633861026;
+        Mon, 08 Jul 2019 17:57:41 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id q1sm32442857pfn.178.2019.07.08.17.57.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 08 Jul 2019 17:57:40 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 17:58:10 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 2/2] ASoC: fsl_esai: recover the channel swap after
+ xrun
+Message-ID: <20190709005809.GA28003@Asurada-Nvidia.nvidia.com>
+References: <VE1PR04MB64796C22C2D41B9A45E726BEE3F50@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB64796C22C2D41B9A45E726BEE3F50@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/8/19 9:12 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.58 release.
-> There are 90 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Jul 05, 2019 at 07:03:47AM +0000, S.j. Wang wrote:
+> > 
+> > > +
+> > > +     /* restore registers by regcache_sync */
+> > > +     fsl_esai_register_restore(esai_priv);
+> > > +
+> > > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
+> > > +                        ESAI_xCR_xPR_MASK, 0);
+> > > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
+> > > +                        ESAI_xCR_xPR_MASK, 0);
+> > 
+> > And just for curious, can (or shall) we stuff this personal reset to the reset()
+> > function? I found this one is a part of the reset routine being mentioned in
+> > the RM -- it was done after ESAI reset is done via ECR register.
+> > 
 > 
-> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.58-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> There is a problem to do this, TPR/RPR need to be clear after configure the control
+> register. (TCCR, TCR). So it seems not only one place (reset function) need to be
+> changed.
 
-Compiled and booted on my test system. No dmesg regressions.
+Do you know (or remember) why we suddenly involve this TPR/PRP?
+The driver has no problem so far, even if we don't have them.
 
-thanks,
--- Shuah
-
+The "personal reset" sounds like a feature that we would use to
+reset TX or RX individually, while this hw_reset() does a full
+reset for both TX and RX. So I wonder whether they're necessary.
