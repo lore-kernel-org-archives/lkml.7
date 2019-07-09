@@ -2,121 +2,167 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DB9C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBF6C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7119120861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBBA20861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C6E2IXvk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqrLe8hL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfGINmY (ORCPT
+        id S1726802AbfGINpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:42:24 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38640 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfGINmY (ORCPT
+        Tue, 9 Jul 2019 09:45:36 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44477 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGINpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:42:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=iqcAiKYT4gA3rRqHSRay8KcZmspIO/HAMHELnfctPNU=; b=C6E2IXvkLucSzRjvmxW7AvezT
-        hHZ5tFdWyohw28iCmr6u2OXylUVkQUrZmjM6R/jrTFLAEnRXriRt/usru/tjwIyOOonfGh5MAyB78
-        KGUVmMHeDMCPlzhv+Omayd9frO6RLyW4aEre6eXMj1dmkK3XFrYBhOG43dYzbOHMoWzG5asjZ5MC7
-        85zoPE6/T5asqQIlJd1PgoNL5Yim5xfnZwBkXifRttu5wQ+APhLv5/C/lx5lOPJalW6+vWFyEF5VC
-        a0+vKLU6KsiFdjmUcyZlja8oIDMrXoKHcM8BLdOR1Mw3OMrjaA1z2pDYu1KMt14C5ku/ETglE0UJC
-        5ehwBatvw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkqNf-0006sb-Sv; Tue, 09 Jul 2019 13:42:04 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 247A520976D63; Tue,  9 Jul 2019 15:42:00 +0200 (CEST)
-Date:   Tue, 9 Jul 2019 15:42:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     luca abeni <luca.abeni@santannapisa.it>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [RFC PATCH 3/6] sched/dl: Try better placement even for deadline
- tasks that do not block
-Message-ID: <20190709134200.GD3402@hirez.programming.kicks-ass.net>
-References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
- <20190506044836.2914-4-luca.abeni@santannapisa.it>
- <20190708135536.GK3402@hirez.programming.kicks-ass.net>
- <20190709152436.51825f98@luca64>
+        Tue, 9 Jul 2019 09:45:36 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so9939845wrf.11;
+        Tue, 09 Jul 2019 06:45:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WoOafQCA+SKQoC197BJQPKhoNGwN0GTGPnMhrXbSqsY=;
+        b=JqrLe8hLX3vXecb9fN+lSl3VceukltpW7iONEOWHMfWuvftTwnQTzDrRtpIq86BnTo
+         6oUWzHhWA6iSgm/Ua+Cpz0dncARYLe04rUP4rPAXvVCtY28zKRQGW6QZRzG2ZGpEPeUS
+         NeCBhT3XMXIFoICUd5tUZqJlxZKWj/Xy1DHIMHzF+3jwxiXbf5qbY4+zKO+6Sg+0n+Uk
+         1Vo7xMFx/U2pDIaUEbV4XCMHa0IzrvkYbTzOGquArrNNSsoSbrz9hzNdYzbv41/34J4Z
+         WwpGLLId/AUGjV9IzE/CAYkoO9v5Ta5V7My/gTq81TZvLSRdL5HluZpPkeOtGe1mlF5k
+         XEZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WoOafQCA+SKQoC197BJQPKhoNGwN0GTGPnMhrXbSqsY=;
+        b=sokIQLqXkLQ30MqVf8wbWzjXGtMIWdPSDjwGptrILIG0g/a0TAhpWMgjIsRyGSFpiE
+         i3lJq7X+ovvWLqji/VCvBcDcunyL+ieCBnUpDmDBquxT3QoiiQ5OSgdCdXEJhiQyn7m9
+         rdKK8KUktcHAM+APloaabzYod3pySygNQVYkvr7DkVSW15hO5iWzDKW+JpCURbjjWv33
+         50RoFj6yovU7ogRL8fUcGPruvIhJxS26FjfnvE5YkT8vVL/v9xCy8YPTV2MZw3zWGFGx
+         I+sRt4glOlCYD+mkKQoE1mvyP3t/YuwXoVeWlT+f6rWhPcDoQpXF8dqTMkJIb5CraF3n
+         zUeQ==
+X-Gm-Message-State: APjAAAUVEK4wbyQNv/77eRyKHsoWgS37NXhtkm1jo3P72CQxWYNIsdOu
+        SclStVv3uFyGbBh33rodWmIo+ztt
+X-Google-Smtp-Source: APXvYqw/XmDMK7cCCa7XSBY+rpaZf+lJHJTm3SWicQ/MOFP93fyo4mnqumuHjqdyYmAAkkrTN4xxMA==
+X-Received: by 2002:adf:f591:: with SMTP id f17mr26252881wro.119.1562679933912;
+        Tue, 09 Jul 2019 06:45:33 -0700 (PDT)
+Received: from [192.168.8.147] (179.162.185.81.rev.sfr.net. [81.185.162.179])
+        by smtp.gmail.com with ESMTPSA id x6sm20911824wrt.63.2019.07.09.06.45.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 06:45:33 -0700 (PDT)
+Subject: Re: [PATCH] tipc: ensure skb->lock is initialised
+To:     Jon Maloy <jon.maloy@ericsson.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "ying.xue@windriver.com" <ying.xue@windriver.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190707225328.15852-1-chris.packham@alliedtelesis.co.nz>
+ <2298b9eb-100f-6130-60c4-0e5e2c7b84d1@gmail.com>
+ <361940337b0d4833a5634ddd1e1896a9@svr-chch-ex1.atlnz.lc>
+ <87fd2150548041219fc42bce80b63c9c@svr-chch-ex1.atlnz.lc>
+ <b862a74b-9f1e-fb64-0641-550a83b64664@gmail.com>
+ <MN2PR15MB35811151C4A627C0AF364CAC9AF10@MN2PR15MB3581.namprd15.prod.outlook.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <ef9a2ec1-1413-e8f9-1193-d53cf8ee52ba@gmail.com>
+Date:   Tue, 9 Jul 2019 15:45:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709152436.51825f98@luca64>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <MN2PR15MB35811151C4A627C0AF364CAC9AF10@MN2PR15MB3581.namprd15.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 03:24:36PM +0200, luca abeni wrote:
-> Hi Peter,
-> 
-> On Mon, 8 Jul 2019 15:55:36 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Mon, May 06, 2019 at 06:48:33AM +0200, Luca Abeni wrote:
-> > > @@ -1223,8 +1250,17 @@ static void update_curr_dl(struct rq *rq)
-> > >  			dl_se->dl_overrun = 1;
-> > >  
-> > >  		__dequeue_task_dl(rq, curr, 0);
-> > > -		if (unlikely(dl_se->dl_boosted
-> > > || !start_dl_timer(curr)))
-> > > +		if (unlikely(dl_se->dl_boosted
-> > > || !start_dl_timer(curr))) { enqueue_task_dl(rq, curr,
-> > > ENQUEUE_REPLENISH); +#ifdef CONFIG_SMP
-> > > +		} else if (dl_se->dl_adjust) {
-> > > +			if (rq->migrating_task == NULL) {
-> > > +				queue_balance_callback(rq,
-> > > &per_cpu(dl_migrate_head, rq->cpu), migrate_dl_task);  
-> > 
-> > I'm not entirely sure about this one.
-> > 
-> > That is, we only do those callbacks from:
-> > 
-> >   schedule_tail()
-> >   __schedule()
-> >   rt_mutex_setprio()
-> >   __sched_setscheduler()
-> > 
-> > and the above looks like it can happen outside of those.
-> 
-> Sorry, I did not know the constraints or requirements for using
-> queue_balance_callback()...
-> 
-> I used it because I wanted to trigger a migration from
-> update_curr_dl(), but invoking double_lock_balance() from this function
-> obviously resulted in a warning. So, I probably misunderstood the
-> purpose of the balance callback API, and I misused it.
-> 
-> What would have been the "right way" to trigger a migration for a task
-> when it is throttled?
 
-I'm thinking we'll end up in schedule() pretty soon after a throttle to
-make 'current' go away, right? We could put the queue_balance_callback()
-in dequeue_task_dl() or something.
+
+On 7/9/19 3:25 PM, Jon Maloy wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Eric Dumazet <eric.dumazet@gmail.com>
+>> Sent: 9-Jul-19 03:31
+>> To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>; Eric Dumazet
+>> <eric.dumazet@gmail.com>; Jon Maloy <jon.maloy@ericsson.com>;
+>> ying.xue@windriver.com; davem@davemloft.net
+>> Cc: netdev@vger.kernel.org; tipc-discussion@lists.sourceforge.net; linux-
+>> kernel@vger.kernel.org
+>> Subject: Re: [PATCH] tipc: ensure skb->lock is initialised
+>>
+>>
+>>
+>> On 7/8/19 11:13 PM, Chris Packham wrote:
+>>> On 9/07/19 8:43 AM, Chris Packham wrote:
+>>>> On 8/07/19 8:18 PM, Eric Dumazet wrote:
+>>>>>
+>>>>>
+>>>>> On 7/8/19 12:53 AM, Chris Packham wrote:
+>>>>>> tipc_named_node_up() creates a skb list. It passes the list to
+>>>>>> tipc_node_xmit() which has some code paths that can call
+>>>>>> skb_queue_purge() which relies on the list->lock being initialised.
+>>>>>> Ensure tipc_named_node_up() uses skb_queue_head_init() so that the
+>>>>>> lock is explicitly initialised.
+>>>>>>
+>>>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>>>>>
+>>>>> I would rather change the faulty skb_queue_purge() to
+>>>>> __skb_queue_purge()
+>>>>>
+>>>>
+>>>> Makes sense. I'll look at that for v2.
+>>>>
+>>>
+>>> Actually maybe not. tipc_rcast_xmit(), tipc_node_xmit_skb(),
+>>> tipc_send_group_msg(), __tipc_sendmsg(), __tipc_sendstream(), and
+>>> tipc_sk_timeout() all use skb_queue_head_init(). So my original change
+>>> brings tipc_named_node_up() into line with them.
+>>>
+>>> I think it should be safe for tipc_node_xmit() to use
+>>> __skb_queue_purge() since all the callers seem to have exclusive
+>>> access to the list of skbs. It still seems that the callers should all
+>>> use
+>>> skb_queue_head_init() for consistency.
+> 
+> I agree with that.
+> 
+>>>
+>>
+>> No, tipc does not use the list lock (it relies on the socket lock)  and therefore
+>> should consistently use __skb_queue_head_init() instead of
+>> skb_queue_head_init()
+> 
+> TIPC is using the list lock at message reception within the scope of tipc_sk_rcv()/tipc_skb_peek_port(), so it is fundamental that the lock always is correctly initialized.
+
+Where is the lock acquired, why was it only acquired by queue purge and not normal dequeues ???
+
+> 
+>>
+> [...]
+>>
+>> tipc_link_xmit() for example never acquires the spinlock, yet uses skb_peek()
+>> and __skb_dequeue()
+> 
+> 
+> You should look at tipc_node_xmit instead. Node local messages are sent directly to tipc_sk_rcv(), and never go through tipc_link_xmit()
+
+tipc_node_xmit() calls tipc_link_xmit() eventually, right ?
+
+Please show me where the head->lock is acquired, and why it needed.
+
+If this is mandatory, then more fixes are needed than just initializing the lock for lockdep purposes.
+
