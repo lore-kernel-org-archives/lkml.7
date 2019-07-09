@@ -2,364 +2,191 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BF8C606D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C9CC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68E6216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B30C216FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UV5AAxFG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nS8TOdqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfGIHZ4 (ORCPT
+        id S1726585AbfGIH0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:25:56 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38539 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGIHZ4 (ORCPT
+        Tue, 9 Jul 2019 03:26:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43228 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbfGIH0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:25:56 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r9so18506862ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:25:54 -0700 (PDT)
+        Tue, 9 Jul 2019 03:26:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i189so8839671pfg.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:26:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ssRrB1UmxdVYZkciCFyojJGE0/1U4hBQ0GkOVyOsrZw=;
-        b=UV5AAxFGVvrkRuu8F+yS1+X88UxFsqNJrCrJnC12wkxdnmSbXynnx8rgiKKcV4gjIF
-         JMnKBYOG89aaCDo4okSwWk82BYSS4n4r5+uKu0J+HKvIR0i5UjBwxlG23qUKt4AGbvTE
-         zsPM+SYbewSRA3Jv+naODA8Go1w19MmNkDu95QgZQH/694TuHs5oiMTZ2v45pP16zxXz
-         ADW6CBaO0xP6VX4L4MtUYwEughivBhagMxC0qERNMZUtY6nKiRpvJ56fZgS7BCMLGOWh
-         ChgtgGkrFfrM8PxYxdQT2+1YVTjdxBw4OH1SWAvVso+so5AUFJDJUYGqVeWyTtj+NQHT
-         sdng==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RP8cwNZI6vl+UzCSHVGjLTU1x9m+QwnGrZ9u+nMAU1g=;
+        b=nS8TOdqbxndeZHxAaLxbCMmWGy7q1KroKpNKzgOKtd3nUvMgSFkZeUWxD5ocXp/irC
+         tsJgSW4yQ63vF552iICNMsw+lStUaWsVRMNkZuXRWN5EQTP6dM2MXer+r7SGjS+dNxLH
+         SdsvOF14QT/6GOvqSM4VPE12t69G0vI2M0CRo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ssRrB1UmxdVYZkciCFyojJGE0/1U4hBQ0GkOVyOsrZw=;
-        b=L3fGcOvGoEkE0pwYTeZqMn2IzsjVcIXCHxX58RF2cjOmM4xRJGUbUN9le+TPu3QR73
-         3zwALcmQssIuRuf9rl1v5SybLNUEhheiwCJexbChRXKsO3FVCgUpeJkPzFr/YhGnJpTy
-         Z3O0pGgPzPGrmS8ikZJuwngDP/2eCJ0n3wbXgBFNdm7A8VdM6wNhpLEPxBr5nRk53HjA
-         PnlwxAxcEvqJC3saf5IEqcnjV3mGwiBwIjwpo2HplF2iF44pXeL38MpjHnH+1ukJQPHE
-         Lj21yvHJx7AYM0NL+9LIz+bDEwbrvUJFHliU+EPYo5SxXeH5505/68Eu8OG/ruZ70eYX
-         bg6Q==
-X-Gm-Message-State: APjAAAUiNvbB8yJbJ7RAiDhZW5kAI3tz/NRhTMHjFexWkEU7DT04ZtIR
-        IBP/mfJbK9LD/FgSKQsKF1u0mKB03xpOkpPz8YTiBw==
-X-Google-Smtp-Source: APXvYqwHIeWY24fyZVANac6t2pPZziBg+Q43HU3Lq4VXHYfzhayBoudDIjje1hExC3mGVzvbs/haB3x9ZhA7FvkZ5GQ=
-X-Received: by 2002:a05:651c:20d:: with SMTP id y13mr790540ljn.204.1562657153311;
- Tue, 09 Jul 2019 00:25:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RP8cwNZI6vl+UzCSHVGjLTU1x9m+QwnGrZ9u+nMAU1g=;
+        b=rLFwf3FZCA5gVp68hkWw6PgV7HQGMJvD4Q4YF+38O2HM3V45nbkepfjARqSBcHDLCZ
+         wxiiofh8IONFzFwRTqCpe79THmGMMJ3nEO+YNrmju4/2lx1kkxXQt5u2lzcvT6bjYW4S
+         NuKByLXgBCsQNPB360JKIvdFAI8VAWsv8ie/h9UQTkoG8v3PMAUrykA20q2H38LNk4/Q
+         IWgARO+S6nD7F21OiaILqQud11SF22RTaQaKVs+8xreyiDeh1DmIZz/FddSoylpAe7un
+         HYPJImUPpn4ynJh/rXveCYAO8su63pSea5dt6UwSdSgHwNyf5/oAIagIO5Jcd5i5t0Dt
+         mXPg==
+X-Gm-Message-State: APjAAAXOUgB60RDYQGeaSAwYdxJBLjY2LbHS7NMb5Pzn9JffcUT3XeBn
+        frR7VmUeOuOXkUPNWArQnw978Q==
+X-Google-Smtp-Source: APXvYqwZxM26iZvzxdu388PZ2pSLODlgUVNSkRSEDJbpoYJMk83T1lbNOSASFdPv/HFwsdTTSR39pA==
+X-Received: by 2002:a63:56:: with SMTP id 83mr29232096pga.145.1562657161801;
+        Tue, 09 Jul 2019 00:26:01 -0700 (PDT)
+Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
+        by smtp.googlemail.com with ESMTPSA id 81sm12738135pfx.111.2019.07.09.00.25.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 00:26:01 -0700 (PDT)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Erin Lo <erin.lo@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), linux-kernel@vger.kernel.org (open list),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support),
+        linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR
+        (REMOTEPROC) SUBSYSTEM), Nicolas Boichat <drinkcat@chromium.org>
+Subject: [PATCH v13 0/5] Add support for mt8183 SCP.
+Date:   Tue,  9 Jul 2019 15:25:24 +0800
+Message-Id: <20190709072547.217957-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-7-saravanak@google.com>
- <CAKfTPtCJFaEfvu3Dnp9WSxQEwSfY=VS+xsoQ+4P+vg7_WL0BAQ@mail.gmail.com>
- <CAGETcx_5gu84FOVmELPnK5uJTE0NEhxYKtdFigoXGyFtjehQvw@mail.gmail.com>
- <CAKfTPtBHrXG1QZzcaStWCtL3nx+vE_-WKtOhjiHbjFQiw9Yk8w@mail.gmail.com> <CAGETcx912kpi9DejPCoWMUF5AMm4=o1C0C45zwMfUy6aX_jcYg@mail.gmail.com>
-In-Reply-To: <CAGETcx912kpi9DejPCoWMUF5AMm4=o1C0C45zwMfUy6aX_jcYg@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 9 Jul 2019 09:25:42 +0200
-Message-ID: <CAKfTPtBngOT__TfmHXmmim-b9YhExOOvwVRaxYM9g9M6ffr_zQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] interconnect: Add OPP table support for interconnects
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        sibis@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Jul 2019 at 23:48, Saravana Kannan <saravanak@google.com> wrote:
->
-> On Thu, Jul 4, 2019 at 12:12 AM Vincent Guittot
-> <vincent.guittot@linaro.org> wrote:
-> >
-> > On Wed, 3 Jul 2019 at 23:33, Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > On Tue, Jul 2, 2019 at 11:45 PM Vincent Guittot
-> > > <vincent.guittot@linaro.org> wrote:
-> > > >
-> > > > On Wed, 3 Jul 2019 at 03:10, Saravana Kannan <saravanak@google.com> wrote:
-> > > > >
-> > > > > Interconnect paths can have different performance points. Now that OPP
-> > > > > framework supports bandwidth OPP tables, add OPP table support for
-> > > > > interconnects.
-> > > > >
-> > > > > Devices can use the interconnect-opp-table DT property to specify OPP
-> > > > > tables for interconnect paths. And the driver can obtain the OPP table for
-> > > > > an interconnect path by calling icc_get_opp_table().
-> > > >
-> > > > The opp table of a path must come from the aggregation of OPP tables
-> > > > of the interconnect providers.
-> > >
-> > > The aggregation of OPP tables of the providers is certainly the
-> > > superset of what a path can achieve, but to say that OPPs for
-> > > interconnect path should match that superset is an oversimplification
-> > > of the reality in hardware.
-> > >
-> > > There are lots of reasons an interconnect path might not want to use
-> > > all the available bandwidth options across all the interconnects in
-> > > the route.
-> > >
-> > > 1. That particular path might not have been validated or verified
-> > >    during the HW design process for some of the frequencies/bandwidth
-> > >    combinations of the providers.
-> >
-> > All these constraint are provider's constraints and not consumer's one
-> >
-> > The consumer asks for a bandwidth according to its needs and then the
-> > providers select the optimal bandwidth of each interconnect after
-> > aggregating all the request and according to what OPP have been
-> > validated
->
-> Not really. The screening can be a consumer specific issue. The
-> consumer IP itself might have some issue with using too low of a
-> bandwidth or bandwidth that's not within some range. It should not be
+Add support for controlling and communicating with mt8183's system
+control processor (SCP), using the remoteproc & rpmsg framework.
+And also add a cros_ec driver for CrOS EC host command over rpmsg.
 
-How can an IP ask for not enough bandwidth ?
-It asks the needed bandwidth based on its requirements
+The overall structure of the series is:
+* remoteproc/mtk_scp.c: Control the start / stop of SCP (Patch 2, 3).
+* remoteproc/mtk_scp_ipi.c: Communicates to SCP using inter-processor
+  interrupt (IPI) and shared memory (Patch 2, 3).
+* rpmsg/mtk_rpmsg.c: Wrapper to wrap the IPI communication into a rpmsg
+  device. Supports name service for SCP firmware to
+  announce channels (Patch 4).
+* add scp dts node to mt8183 platform (Patch 5).
 
-> the provider's job to take into account all the IP that might be
-> connected to the interconnects. If the interconnect HW itself didn't
+Changes from v12:
+ - Initialize cache before firmware load, to avoid problem while loading
+   large firmware.
+ - Disable watchdog before stopping SCP, to avoid extra warning message.
+ - Fix new warnings by checkpatch.
 
-That's not what I'm saying. The provider knows which bandwidth the
-interconnect can provide as it is the ones which configures it. So if
-the interconnect has a finite number of bandwidth point based probably
-on the possible clock frequency and others config of the interconnect,
-it selects the best final config after aggregating the request of the
-consumer.
+Changes from v11:
+ - Fixed a bug that mtk_rpmsg_endpoint is not properly cleaned up if
+   rproc_boot fails.
+ - Add missing documentation in comment.
 
-> change, the provider driver shouldn't need to change. By your
-> definition, a provider driver will have to account for all the
-> possible bus masters that might be connected to it across all SoCs.
+Changes from v10:
+ - Drop applied cros_ec_rpmsg patches.
+ - Add clock reset before loading SCP firmware.
+ - Fix some type mismatch warnings when printing debug messages.
 
-you didn't catch my point
+Changes from v9:
+ - Remove reserve-memory-vpu_share node.
+ - Remove change to cros_ec_commands.h (That is already in
+   https://lore.kernel.org/lkml/20190518063949.GY4319@dell/T/)
 
-> That's not good design nor is it scalable.
->
-> > >
-> > > 2. Similarly during parts screening in the factory, some of the
-> > >    combinations might not have been screened and can't be guaranteed
-> > >    to work.
-> >
-> > As above, it's the provider's job to select the final bandwidth
-> > according to its constraint
->
-> Same reply as above.
->
-> > >
-> > > 3. Only a certain set of bandwidth levels might make sense to use from
-> > >    a power/performance balance given the device using it. For example:
-> > >    - The big CPU might not want to use some of the lower bandwidths
-> > >      but the little CPU might want to.
-> > >    - The big CPU might not want to use some intermediate bandwidth
-> > >      points if they don't save a lot of power compared to a higher
-> > >      bandwidth levels, but the little CPU might want to.
-> > >    - The little CPU might never want to use the higher set of
-> > >      bandwidth levels since they won't be power efficient for the use
-> > >      cases that might run on it.
-> >
-> > These example are quite vague about the reasons why little might never
-> > want to use higher bandwidth.
->
-> How is it vague? I just said because of power/performance balance.
->
-> > But then, if little doesn't ask high bandwidth it will not use them.
->
-> If you are running a heuristics based algorithm to pick bandwidth,
-> this is how it'll know NOT to use some of the bandwidth levels.
+Changes from v8:
+ - Rebased onto https://patchwork.kernel.org/cover/10962385/.
+ - Drop merged cros_ec_rpmsg patch, and add scp dts node patch.
+ - Add more reserved memory region.
 
-so you want to set a bandwidth according to the cpu frequency which is
-what has been proposed in other thread
+Changes from v7:
+ - Rebase onto https://lore.kernel.org/patchwork/patch/1059196/.
+ - Fix clock enable/disable timing for SCP driver.
+ - Add more SCP IPI ID.
 
->
-> > >
-> > > 4. It might not make sense from a system level power perspective.
-> > > Let's take an example of a path S (source) -> A -> B -> C -> D
-> > > (destination).
-> > >    - A supports only 2, 5, 7 and 10 GB/s. B supports 1, 2 ... 10 GB/s.
-> > >      C supports 5 and 10 GB/s
-> > >    - If you combine and list the superset of bandwidth levels
-> > >      supported in that path, that'd be 1, 2, 3, ... 10 GB/s.
-> > >    - Which set of bandwidth levels make sense will depend on the
-> > >      hardware characteristics of the interconnects.
-> > >    - If B is the biggest power sink, then you might want to use all 10
-> > >      levels.
-> > >    - If A is the biggest power sink, then you might want to use all 2,
-> > >      5 and 10 GB/s of the levels.
-> > >    - If C is the biggest power sink then you might only want to use 5
-> > >      and 10 GB/s
-> > >    - The more hops and paths you get the more convoluted this gets.
-> > >
-> > > 5. The design of the interconnects themselves might have an impact on
-> > > which bandwidth levels are used.
-> > >    - For example, the FIFO depth between two specific interconnects
-> > >      might affect the valid bandwidth levels for a specific path.
-> > >    - Say S1 -> A -> B -> D1, S2 -> C -> B -> D1 and S2 -> C -> D2 are
-> > >      three paths.
-> > >    - If C <-> B FIFO depth is small, then there might be a requirement
-> > >      that C and B be closely performance matched to avoid system level
-> > >      congestion due to back pressure.
-> > >    - So S2 -> D1 path can't use all the bandwidth levels supported by
-> > >      C-B combination.
-> > >    - But S2 -> D2 can use all the bandwidth levels supported by C.
-> > >    - And S1 -> D1 can use all the levels supported by A-B combination.
-> > >
-> >
-> > All the examples above makes sense but have to be handle by the
-> > provider not the consumer. The consumer asks for a bandwidth according
-> > to its constraints. Then the provider which is the driver that manages
-> > the interconnect IP, should manage all this hardware and platform
-> > specific stuff related to the interconnect IP in order to set the
-> > optimal bandwidth that fit both consumer constraint and platform
-> > specific configuration.
->
-> Sure, but the provider itself can have interconnect properties to
-> indicate which other interconnects it's tied to. And the provider will
-> still need the interconnect-opp-table to denote which bandwidth levels
-> are sensible to use with each of its connections.
->
-> So in some instances the interconnect-opp-table covers the needs of
-> purely consumers and in some instances purely providers. But in either
-> case, it's still needed to describe the hardware properly.
->
-> -Saravana
->
-> > > These are just some of the reasons I could recollect in a few minutes.
-> > > These are all real world cases I had to deal with in the past several
-> > > years of dealing with scaling interconnects. I'm sure vendors and SoCs
-> > > I'm not familiar with have other good reasons I'm not aware of.
-> > >
-> > > Trying to figure this all out by aggregating OPP tables of
-> > > interconnect providers just isn't feasible nor is it efficient. The
-> > > OPP tables for an interconnect path is describing the valid BW levels
-> > > supported by that path and verified in hardware and makes a lot of
-> > > sense to capture it clearly in DT.
-> > >
-> > > > So such kind of OPP table should be at
-> > > > provider level but not at path level.
-> > >
-> > > They can also use it if they want to, but they'll probably want to use
-> > > a frequency OPP table.
-> > >
-> > >
-> > > -Saravana
-> > >
-> > > >
-> > > > >
-> > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > > ---
-> > > > >  drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
-> > > > >  include/linux/interconnect.h |  7 +++++++
-> > > > >  2 files changed, 33 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> > > > > index 871eb4bc4efc..881bac80bc1e 100644
-> > > > > --- a/drivers/interconnect/core.c
-> > > > > +++ b/drivers/interconnect/core.c
-> > > > > @@ -47,6 +47,7 @@ struct icc_req {
-> > > > >   */
-> > > > >  struct icc_path {
-> > > > >         size_t num_nodes;
-> > > > > +       struct opp_table *opp_table;
-> > > > >         struct icc_req reqs[];
-> > > > >  };
-> > > > >
-> > > > > @@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
-> > > > >  {
-> > > > >         struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
-> > > > >         struct icc_node *src_node, *dst_node;
-> > > > > -       struct device_node *np = NULL;
-> > > > > +       struct device_node *np = NULL, *opp_node;
-> > > > >         struct of_phandle_args src_args, dst_args;
-> > > > >         int idx = 0;
-> > > > >         int ret;
-> > > > > @@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
-> > > > >                 dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
-> > > > >         mutex_unlock(&icc_lock);
-> > > > >
-> > > > > +       opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
-> > > > > +       if (opp_node) {
-> > > > > +               path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
-> > > > > +               of_node_put(opp_node);
-> > > > > +       }
-> > > > > +
-> > > > > +
-> > > > >         return path;
-> > > > >  }
-> > > > >  EXPORT_SYMBOL_GPL(of_icc_get);
-> > > > >
-> > > > > +/**
-> > > > > + * icc_get_opp_table() - Get the OPP table that corresponds to a path
-> > > > > + * @path: reference to the path returned by icc_get()
-> > > > > + *
-> > > > > + * This function will return the OPP table that corresponds to a path handle.
-> > > > > + * If the interconnect API is disabled, NULL is returned and the consumer
-> > > > > + * drivers will still build. Drivers are free to handle this specifically, but
-> > > > > + * they don't have to.
-> > > > > + *
-> > > > > + * Return: opp_table pointer on success. NULL is returned when the API is
-> > > > > + * disabled or the OPP table is missing.
-> > > > > + */
-> > > > > +struct opp_table *icc_get_opp_table(struct icc_path *path)
-> > > > > +{
-> > > > > +       return path->opp_table;
-> > > > > +}
-> > > > > +
-> > > > >  /**
-> > > > >   * icc_set_bw() - set bandwidth constraints on an interconnect path
-> > > > >   * @path: reference to the path returned by icc_get()
-> > > > > diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-> > > > > index dc25864755ba..0c0bc55f0e89 100644
-> > > > > --- a/include/linux/interconnect.h
-> > > > > +++ b/include/linux/interconnect.h
-> > > > > @@ -9,6 +9,7 @@
-> > > > >
-> > > > >  #include <linux/mutex.h>
-> > > > >  #include <linux/types.h>
-> > > > > +#include <linux/pm_opp.h>
-> > > > >
-> > > > >  /* macros for converting to icc units */
-> > > > >  #define Bps_to_icc(x)  ((x) / 1000)
-> > > > > @@ -28,6 +29,7 @@ struct device;
-> > > > >  struct icc_path *icc_get(struct device *dev, const int src_id,
-> > > > >                          const int dst_id);
-> > > > >  struct icc_path *of_icc_get(struct device *dev, const char *name);
-> > > > > +struct opp_table *icc_get_opp_table(struct icc_path *path);
-> > > > >  void icc_put(struct icc_path *path);
-> > > > >  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
-> > > > >
-> > > > > @@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
-> > > > >  {
-> > > > >  }
-> > > > >
-> > > > > +static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
-> > > > > +{
-> > > > > +       return NULL;
-> > > > > +}
-> > > > > +
-> > > > >  static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
-> > > > >  {
-> > > > >         return 0;
-> > > > > --
-> > > > > 2.22.0.410.gd8fdbe21b5-goog
-> > > > >
-> >
-> > --
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> >
+Changes from v6:
+ - Decouple mtk_rpmsg from mtk_scp.
+ - Change data of EC response to be aligned to 4 bytes.
+
+Changes from v5:
+ - Add device tree binding document for cros_ec_rpmsg.
+ - Better document in comments for cros_ec_rpmsg.
+ - Remove dependency on CONFIG_ in binding tree document.
+
+Changes from v4:
+ - Merge patch 6 (Load ELF firmware) into patch 2, so the driver loads
+   ELF firmware by default, and no longer accept plain binary.
+ - rpmsg_device listed in device tree (as a child of the SCP node) would
+   have it's device tree node mapped to the rpmsg_device, so the rpmsg
+   driver can use the properties on device tree.
+
+Changes from v3:
+ - Make writing to SCP SRAM aligned.
+ - Add a new patch (Patch 6) to load ELF instead of bin firmware.
+ - Add host event support for EC driver.
+ - Fix some bugs found in testing (missing spin_lock_init,
+   rproc_subdev_unprepare to rproc_subdev_stop).
+ - Fix some coding style issue found by checkpatch.pl.
+
+Changes from v2:
+ - Fold patch 3 into patch 2 in v2.
+ - Move IPI id around to support cross-testing for old and new firmware.
+ - Finish more TODO items.
+
+Changes from v1:
+ - Extract functions and rename variables in mtk_scp.c.
+ - Do cleanup properly in mtk_rpmsg.c, which also removes the problem of
+   short-lived work items.
+ - Code format fix based on feedback for cros_ec_rpmsg.c.
+ - Extract feature detection for SCP into separate patch (Patch 6).
+
+Eddie Huang (1):
+  arm64: dts: mt8183: add scp node
+
+Erin Lo (3):
+  dt-bindings: Add a binding for Mediatek SCP
+  remoteproc/mediatek: add SCP support for mt8183
+  remoteproc: mt8183: add reserved memory manager API
+
+Pi-Hsun Shih (1):
+  rpmsg: add rpmsg support for mt8183 SCP.
+
+ .../bindings/remoteproc/mtk,scp.txt           |  36 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |  11 +
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  12 +
+ drivers/remoteproc/Kconfig                    |  10 +
+ drivers/remoteproc/Makefile                   |   1 +
+ drivers/remoteproc/mtk_common.h               |  82 +++
+ drivers/remoteproc/mtk_scp.c                  | 689 ++++++++++++++++++
+ drivers/remoteproc/mtk_scp_ipi.c              | 163 +++++
+ drivers/rpmsg/Kconfig                         |   9 +
+ drivers/rpmsg/Makefile                        |   1 +
+ drivers/rpmsg/mtk_rpmsg.c                     | 414 +++++++++++
+ include/linux/platform_data/mtk_scp.h         | 167 +++++
+ include/linux/rpmsg/mtk_rpmsg.h               |  38 +
+ 13 files changed, 1633 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+ create mode 100644 drivers/remoteproc/mtk_common.h
+ create mode 100644 drivers/remoteproc/mtk_scp.c
+ create mode 100644 drivers/remoteproc/mtk_scp_ipi.c
+ create mode 100644 drivers/rpmsg/mtk_rpmsg.c
+ create mode 100644 include/linux/platform_data/mtk_scp.h
+ create mode 100644 include/linux/rpmsg/mtk_rpmsg.h
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
