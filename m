@@ -2,83 +2,134 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12355C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EECC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D908721670
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:48:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X0dXNaHO"
+	by mail.kernel.org (Postfix) with ESMTP id 79527216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfGIPst (ORCPT
+        id S1726602AbfGIPtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 11:48:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44886 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfGIPst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 11:48:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+SqRiX7dUQs2pjbdLNxkSvo5c+sYbuHqLzt+2iHVymw=; b=X0dXNaHO5xVa5gXR+XNOgRO+/
-        mm0iPB3e+bjQdJuAUv0hWybDRpjMBrpAwKK492/V4sMCeOu4fMQruNKRn65uSQS+jkmZJsQu//4kd
-        i3tDBLfEPUeCQQHvkQENkF+IXjj8CvQjw2clBSB0MXYYg6KRRUIn2T6A2mn/kuu2tMio02tQ6VvS4
-        phihrF88G+0fgyUm6xhaiUhxYF09uPTymaEfVu1RmRhKOZo9Uus32yWg90QzDLWvfO6z7i82NTzOq
-        9oBQR4dcQF5B5mb4sIWpmHkbmGFFSY+0kEYD3S+d0QmsSDmV9+MYdBUe9ZV4hszI2toHglLy8LcwN
-        OqZt+NyEw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hksM6-00031j-Ut; Tue, 09 Jul 2019 15:48:34 +0000
-Date:   Tue, 9 Jul 2019 08:48:34 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, kys@microsoft.com
-Cc:     Sasha Levin <sashal@kernel.org>
-Subject: exfat filesystem
-Message-ID: <20190709154834.GJ32320@bombadil.infradead.org>
-References: <21080.1562632662@turing-police>
- <20190709045020.GB23646@mit.edu>
- <20190709112136.GI32320@bombadil.infradead.org>
- <20190709153039.GA3200@mit.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709153039.GA3200@mit.edu>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 9 Jul 2019 11:49:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:50139 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbfGIPtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 11:49:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 08:49:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
+   d="scan'208";a="176532235"
+Received: from ngote-system-product-name.iind.intel.com ([10.106.124.92])
+  by orsmga002.jf.intel.com with ESMTP; 09 Jul 2019 08:49:09 -0700
+From:   NitinGote <nitin.r.gote@intel.com>
+To:     corbet@lwn.net
+Cc:     joe@perches.com, akpm@linux-foundation.org, apw@canonical.com,
+        keescook@chromium.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Nitin Gote <nitin.r.gote@intel.com>
+Subject: [PATCH v4] Added warnings in checkpatch.pl script to :
+Date:   Tue,  9 Jul 2019 21:18:06 +0530
+Message-Id: <20190709154806.26363-1-nitin.r.gote@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 11:30:39AM -0400, Theodore Ts'o wrote:
-> On Tue, Jul 09, 2019 at 04:21:36AM -0700, Matthew Wilcox wrote:
-> > How does
-> > https://www.zdnet.com/article/microsoft-open-sources-its-entire-patent-portfolio/
-> > change your personal opinion?
-> 
-> According to SFC's legal analysis, Microsoft joining the OIN doesn't
-> mean that the eXFAT patents are covered, unless *Microsoft*
-> contributes the code to the Linux usptream kernel.  That's because the
-> OIN is governed by the Linux System Definition, and until MS
-> contributes code which covered by the exFAT patents, it doesn't count.
-> 
-> For more details:
-> 
-> https://sfconservancy.org/blog/2018/oct/10/microsoft-oin-exfat/
-> 
-> (This is not legal advice, and I am not a lawyer.)
+From: Nitin Gote <nitin.r.gote@intel.com>
 
-Interesting analysis.  It seems to me that the correct forms would be
-observed if someone suitably senior at Microsoft accepted the work from
-Valdis and submitted it with their sign-off.  KY, how about it?
+1. Deprecate strcpy() in favor of strscpy().
+2. Deprecate strlcpy() in favor of strscpy().
+3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
+
+Updated strncpy() section in Documentation/process/deprecated.rst
+to cover strscpy_pad() case.
+
+Signed-off-by: Nitin Gote <nitin.r.gote@intel.com>
+---
+ Change log:
+ v1->v2
+ - For string related apis, created different %deprecated_string_api
+   and these will get emitted at CHECK Level using command line option
+   -f/--file to avoid bad patched from novice script users.
+
+ v2->v3
+ - Avoided use of $check in implementation.
+ - Incorporated trivial comments.
+
+ v3->v4
+ - Incorporated comment by removing "c:func:"
+
+ Documentation/process/deprecated.rst |  6 +++---
+ scripts/checkpatch.pl                | 24 ++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 49e0f64a3427..0fb37ebe3ad9 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -93,9 +93,9 @@ will be NUL terminated. This can lead to various linear read overflows
+ and other misbehavior due to the missing termination. It also NUL-pads the
+ destination buffer if the source contents are shorter than the destination
+ buffer size, which may be a needless performance penalty for callers using
+-only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
+-(Users of :c:func:`strscpy` still needing NUL-padding will need an
+-explicit :c:func:`memset` added.)
++only NUL-terminated strings. In this case, the safe replacement is
++`strscpy()`. If, however, the destination buffer still needs NUL-padding,
++the safe replacement is `strscpy_pad()`.
+
+ If a caller is using non-NUL-terminated strings, :c:func:`strncpy()` can
+ still be used, but destinations should be marked with the `__nonstring
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index bb28b178d929..e6fbf4cf4be4 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -605,6 +605,20 @@ foreach my $entry (keys %deprecated_apis) {
+ }
+ $deprecated_apis_search = "(?:${deprecated_apis_search})";
+
++our %deprecated_string_apis = (
++        "strcpy"				=> "strscpy",
++        "strlcpy"				=> "strscpy",
++        "strncpy"				=> "strscpy, strscpy_pad or for non-NUL-terminated strings, strncpy() can still be used, but destinations should be marked with the __nonstring",
++);
++
++#Create a search pattern for all these strings apis to speed up a loop below
++our $deprecated_string_apis_search = "";
++foreach my $entry (keys %deprecated_string_apis) {
++        $deprecated_string_apis_search .= '|' if ($deprecated_string_apis_search ne "");
++        $deprecated_string_apis_search .= $entry;
++}
++$deprecated_string_apis_search = "(?:${deprecated_string_apis_search})";
++
+ our $mode_perms_world_writable = qr{
+ 	S_IWUGO		|
+ 	S_IWOTH		|
+@@ -6446,6 +6460,16 @@ sub process {
+ 			     "Deprecated use of '$deprecated_api', prefer '$new_api' instead\n" . $herecurr);
+ 		}
+
++# check for string deprecated apis
++		if ($line =~ /\b($deprecated_string_apis_search)\b\s*\(/) {
++			my $deprecated_string_api = $1;
++			my $new_api = $deprecated_string_apis{$deprecated_string_api};
++			my $msg_level = \&WARN;
++			$msg_level = \&CHK if ($file);
++			&{$msg_level}("DEPRECATED_API",
++				      "Deprecated use of '$deprecated_string_api', prefer '$new_api' instead\n" . $herecurr);
++		}
++
+ # check for various structs that are normally const (ops, kgdb, device_tree)
+ # and avoid what seem like struct definitions 'struct foo {'
+ 		if ($line !~ /\bconst\b/ &&
+--
+2.17.1
+
