@@ -2,37 +2,37 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09ED5C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B32C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBB02073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC29A2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfGITc3 (ORCPT
+        id S1729103AbfGITce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:32:29 -0400
-Received: from mga03.intel.com ([134.134.136.65]:11270 "EHLO mga03.intel.com"
+        Tue, 9 Jul 2019 15:32:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:41957 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfGITc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727248AbfGITc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jul 2019 15:32:29 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 12:32:28 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 12:32:28 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,471,1557212400"; 
-   d="scan'208";a="173655907"
+   d="scan'208";a="317124773"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jul 2019 12:32:26 -0700
+  by orsmga004.jf.intel.com with ESMTP; 09 Jul 2019 12:32:27 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1hkvqk-0003hP-Bt; Wed, 10 Jul 2019 03:32:26 +0800
-Date:   Wed, 10 Jul 2019 03:32:25 +0800
+        id 1hkvqk-0003hv-Dy; Wed, 10 Jul 2019 03:32:26 +0800
+Date:   Wed, 10 Jul 2019 03:32:24 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 Cc:     kbuild-all@01.org, Grygorii Strashko <grygorii.strashko@ti.com>,
@@ -40,14 +40,13 @@ Cc:     kbuild-all@01.org, Grygorii Strashko <grygorii.strashko@ti.com>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
         linux-omap@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH linux-next] net: ethernet: ti: davinci_cpdma:
- cpdma_chan_split_pool() can be static
-Message-ID: <20190709193225.GA89649@lkp-kbuild04>
-References: <201907100329.bQl3UgMB%lkp@intel.com>
+Subject: [linux-next:master 13028/13492]
+ drivers/net/ethernet/ti/davinci_cpdma.c:725:5: sparse: sparse: symbol
+ 'cpdma_chan_split_pool' was not declared. Should it be static?
+Message-ID: <201907100329.bQl3UgMB%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201907100329.bQl3UgMB%lkp@intel.com>
 X-Patchwork-Hint: ignore
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,23 +54,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git master
+head:   4608a726c66807c27bc7d91bdf8a288254e29985
+commit: 962fb618909ef64e0c89af5b79ba0fed910b78e3 [13028/13492] net: ethernet: ti: davinci_cpdma: allow desc split while down
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        git checkout 962fb618909ef64e0c89af5b79ba0fed910b78e3
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Fixes: 962fb618909e ("net: ethernet: ti: davinci_cpdma: allow desc split while down")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/net/ethernet/ti/davinci_cpdma.c:725:5: sparse: sparse: symbol 'cpdma_chan_split_pool' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
 ---
- davinci_cpdma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 0ca2a1a..1f6065b 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -722,7 +722,7 @@ static void cpdma_chan_set_descs(struct cpdma_ctlr *ctlr,
-  * cpdma_chan_split_pool - Splits ctrl pool between all channels.
-  * Has to be called under ctlr lock
-  */
--int cpdma_chan_split_pool(struct cpdma_ctlr *ctlr)
-+static int cpdma_chan_split_pool(struct cpdma_ctlr *ctlr)
- {
- 	int tx_per_ch_desc = 0, rx_per_ch_desc = 0;
- 	int free_rx_num = 0, free_tx_num = 0;
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
