@@ -2,119 +2,119 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC73C606D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAB0C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEA8216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BEA21707
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562659680;
+	bh=DNUvEwIMLQXTZD5Y7EQdCgb2qw8MYQFBfgOVVb6NjT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jxGhma6db/dNdqw8iDqSWKxkvfKbfaH4t2GazMxHxvP7szH1UgTvDYMeidti/HxrM
+	 /esF1SE3Jl2pm0wOxh9ZvJKYYjkojyKnmxF/PCseLZY15swUZB78hLtSzvD2mZ1fzK
+	 O6l/nLVWt9iXRldz7+duhVs9JFqNo15YZ9WA4JOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbfGIIHS (ORCPT
+        id S1726165AbfGIIH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:07:18 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:47140 "EHLO mxhk.zte.com.cn"
+        Tue, 9 Jul 2019 04:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfGIIHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:07:18 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id BC8EBA91E0D4F0C49203;
-        Tue,  9 Jul 2019 16:07:15 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x6985tGw071272;
-        Tue, 9 Jul 2019 16:05:55 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070916060818-2196810 ;
-          Tue, 9 Jul 2019 16:06:08 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
-Subject: [PATCH v5] cpufreq/pasemi: fix an use-after-free in pas_cpufreq_cpu_init()
-Date:   Tue, 9 Jul 2019 16:04:07 +0800
-Message-Id: <1562659447-39989-1-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-09 16:06:08,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-09 16:05:58,
-        Serialize complete at 2019-07-09 16:05:58
-X-MAIL: mse-fl2.zte.com.cn x6985tGw071272
+        id S1725951AbfGIIH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 04:07:58 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 112E2216C4;
+        Tue,  9 Jul 2019 08:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562659676;
+        bh=DNUvEwIMLQXTZD5Y7EQdCgb2qw8MYQFBfgOVVb6NjT4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kmtOfnghaj1Mzr2LXNuXxUfNoz7LaSROB2zmH2/0rPSZJ+qpyVmBml/XTgtME+Be4
+         GdxemR2q0+/UmrpTxDujV99zKURn6bqU4KtxogUGYqiTZSWeQqUBo4eZ/lsTgEqeeA
+         xOFDCGIQhnPJ6T8PyjOShW6TYGHDLJIZtMOWS720=
+Date:   Tue, 9 Jul 2019 09:07:52 +0100
+From:   Will Deacon <will@kernel.org>
+To:     "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        "indou.takao@fujitsu.com" <indou.takao@fujitsu.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
+ instruction within the same inner shareable domain
+Message-ID: <20190709080751.3nm2llg64g44hmwn@willie-the-truck>
+References: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
+ <20190617170328.GJ30800@fuggles.cambridge.arm.com>
+ <e8fe8faa-72ef-8185-1a9d-dc1bbe0ae15d@jp.fujitsu.com>
+ <20190627102724.vif6zh6zfqktpmjx@willie-the-truck>
+ <5999ed84-72d0-9d42-bf7d-b8d56eaa4d4a@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5999ed84-72d0-9d42-bf7d-b8d56eaa4d4a@jp.fujitsu.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpu variable is still being used in the of_get_property() call
-after the of_node_put() call, which may result in use-after-free.
+On Wed, Jul 03, 2019 at 02:45:43AM +0000, qi.fuli@fujitsu.com wrote:
+> We used FWQ [1] to do an experiment on 1 node of our HPC environment,
+> we expected it would be tens of microseconds of maximum OS jitter, but 
+> it was
+> hundreds of microseconds, which didn't meet our requirement. We tried to 
+> find
+> out the cause by using ftrace, but we cannot find any processes which would
+> cause noise and only knew the extension of processing time. Then we 
+> confirmed
+> the CPU instruction count through CPU PMU, we also didn't find any changes.
+> However, we found that with the increase of that the TLB flash was called,
+> the noise was also increasing. Here we understood that the cause of this 
+> issue
+> is the implementation of Linux's TLB flush for arm64, especially use of 
+> TLBI-is
+> instruction which is a broadcast to all processor core on the system. 
+> Therefore,
+> we made this patch set to fix this issue. After testing for several 
+> times, the
+> noise was reduced and our original goal was achieved, so we do think 
+> this patch
+> makes sense.
+> 
+> As I mentioned, the OS jitter is a vital issue for large-scale HPC 
+> environment.
+> We tried a lot of things to reduce the OS jitter. One of them is task 
+> separation
+> between the CPUs which are used for computing and the CPUs which are 
+> used for
+> maintenance. All of the daemon processes and I/O interrupts are bounden 
+> to the
+> maintenance CPUs. Further more, we used nohz_full to avoid the noise 
+> caused by
+> computing CPU interruption, but all of the CPUs were affected by TLBI-is
+> instruction, the task separation of CPUs didn't work. Therefore, we 
+> would like
+> to implement that TLB flush is done on minimal CPUs to reducing the OS 
+> jitter
+> by using this patch set.
 
-Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-v5: put together the code to get, use, and release cpu device_node.
-v4: restore the blank line.
-v3: fix a leaked reference.
-v2: clean up the code according to the advice of viresh.
+So have you confirmed that this is due to TLBI traffic and not, for example,
+stores sitting in remote store buffers that get flushed by the IPI or
+something else like that? It feels like you're inferring things about the
+underlying behaviour, whereas you should be in a position to simulate this
+if nothing else.
 
- drivers/cpufreq/pasemi-cpufreq.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+If it *is* because of TLBI, then where are they coming from? Is FWQ calling
+munmap/mprotect all the time? Why?
 
-diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-index 6b1e4ab..1f0beb7 100644
---- a/drivers/cpufreq/pasemi-cpufreq.c
-+++ b/drivers/cpufreq/pasemi-cpufreq.c
-@@ -131,10 +131,17 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	int err = -ENODEV;
- 
- 	cpu = of_get_cpu_node(policy->cpu, NULL);
--
--	of_node_put(cpu);
- 	if (!cpu)
- 		goto out;
-+	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
-+	of_node_put(cpu);
-+	if (!max_freqp) {
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
-+	/* we need the freq in kHz */
-+	max_freq = *max_freqp / 1000;
- 
- 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
- 	if (!dn)
-@@ -171,16 +178,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	}
- 
- 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
--
--	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
--	if (!max_freqp) {
--		err = -EINVAL;
--		goto out_unmap_sdcpwr;
--	}
--
--	/* we need the freq in kHz */
--	max_freq = *max_freqp / 1000;
--
- 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
- 	pr_debug("initializing frequency table\n");
- 
--- 
-2.9.5
-
+Will
