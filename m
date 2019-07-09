@@ -2,141 +2,96 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AB6C73C66
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F08AC73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DF120656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F078020656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kpnGlFpc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ux3zZpd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfGJDKX (ORCPT
+        id S1726170AbfGJDOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 23:10:23 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:47976 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfGJDKX (ORCPT
+        Tue, 9 Jul 2019 23:14:55 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43807 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfGJDOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 23:10:23 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x6A3935O010665;
-        Wed, 10 Jul 2019 12:09:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x6A3935O010665
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562728145;
-        bh=yg87jS3mBO0kAMfLp5u/C6DBa8X2nswxL+kGhWPzUOg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kpnGlFpcSMzIQYPbVT4k8yuJ0iK5u1Xg9yTm6oCbld3FupuP6S1wqN5m09yY16Vyb
-         p+EZEWObjcPRUcC8ZNRgb78GdWU5X66K931RHTcFRL16pdIqZ5Pjo/PKVFRvuB9fc2
-         efVrduI/879i8wwwbc+qLCRighS32P9dsqCdu4XldXOIR7VF+tbaOtFWEqn2YguYM/
-         Krf8Q+srAdM4lvqQdcnow7zRJag2Q2PU6Lg/VCGhKov4gLwlYZwdYPDmrAqkL7ywp9
-         sjC8PIcD/F1p72iaglATkm1moBq5mTFfN2Vak+n4h2JK0Ob0Di9NHMngtEtAg4d8ol
-         d7L24k4mo7GDQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-parisc@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-um@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        linux-snps-arc@lists.infradead.org, Jeff Dike <jdike@addtoit.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Subject: [PATCH] fixup! kbuild: remove obj and src from the top Makefile
-Date:   Wed, 10 Jul 2019 12:09:01 +0900
-Message-Id: <20190710030901.1836-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jul 2019 23:14:55 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m14so776187qka.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 20:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RzSaHRt9YdV/Z0CPLlqdmqFot058kVxhXHZRpl8J5VA=;
+        b=Ux3zZpd+fG2z6B/QZu4LKUm4In7YWmJqrqttvmQyIeBn760fg2r7e/ADEmdWJJ0MmL
+         zmz2cl85r3clHZhI7fqXJepTJUyiCqhuhq5RwHZ+GLlixVXIedXu8LCcNtxYbW6s9cv9
+         hXjVL396ls2unsRS6sT+TpcrBbdII837nRxlkYveX3w62lx20fqOLXRkf8YGeyWhEVTo
+         D/frC/lpYEAUfnVhpLC14BbFA9/zNUS7XLa9nHirKpm2YwHQJqMlt/9vnhbUcT9Isq+0
+         xukyxGwiNmjzVI+bIZdIbcGCZ1erSsKR2MTZibTqX4c6iefEYBXy5b2Qy9pVLICsxvLq
+         YWcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RzSaHRt9YdV/Z0CPLlqdmqFot058kVxhXHZRpl8J5VA=;
+        b=ix041kPeasM1TM5pjWLbWrVU6TLQhIDnYpecn2DmW5YlVeqjAx+SMm1qMqN1haCeKE
+         IxIObiNqCaCQN7XbWGJa/OibQA59/UR900InvMXCxjJw6bhqm8Dnqpyj4CURxCLTUTvy
+         WUDNfnXV4pkdoodQ5N5EVREgFenDbBKG59/9hy5G6n8uP0uSF/554gcD02HClf6wSssB
+         I7XVop9PdYaGMlpBiiq96ZtTxSJV3DPnBhHGHKHbly5bjXuan09ma2me45+lOkxL3XyF
+         AHLV3TH2leL+o3LouQEwOvXPzXZ5jGDhMtchHbaQoJVAA86uAkee2t2M+A21JK7zfplO
+         iOAA==
+X-Gm-Message-State: APjAAAVY6OfRTYrDdfGuy2XhBSjH/oCl92rVnmbGU0JD2Gsh+YwdkEoi
+        OtpInloltNywHAchYqEbMg==
+X-Google-Smtp-Source: APXvYqx+hMaH8eK0Zi5P4YgBKu0RbqOjL7UJ+skXDNFqItXK+8GYxPjciXOvOee6Fj9jZDETRW7XEg==
+X-Received: by 2002:a05:620a:16cc:: with SMTP id a12mr20864484qkn.256.1562728494325;
+        Tue, 09 Jul 2019 20:14:54 -0700 (PDT)
+Received: from localhost.localdomain (modemcable148.230-83-70.mc.videotron.ca. [70.83.230.148])
+        by smtp.googlemail.com with ESMTPSA id t76sm571675qke.79.2019.07.09.20.14.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 20:14:53 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+Cc:     iamkeyur96@gmail.com, Johan Hovold <johan@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gnss: core: added logging statement when kfifo_alloc fails
+Date:   Tue,  9 Jul 2019 19:14:48 -0400
+Message-Id: <20190709231448.30799-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merging today's kbuild tree would break arc, um, parisc.
-I just noticed it now. I will fix it soon for tomorrow's linux-next.
+Added missing logging statement when kfifo_alloc fails, to improve
+debugging.
 
-If needed, this might be useful for today's linux-next.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
 ---
+ drivers/gnss/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- arch/arc/Makefile    |  2 +-
- arch/parisc/Makefile | 12 ++++++------
- arch/um/Makefile     |  2 +-
- 3 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arc/Makefile b/arch/arc/Makefile
-index 03a0b19c92cd..ee6d1184c2b1 100644
---- a/arch/arc/Makefile
-+++ b/arch/arc/Makefile
-@@ -19,7 +19,7 @@ ifdef CONFIG_ARC_CURR_IN_REG
- # any kernel headers, and missing the r25 global register
- # Can't do unconditionally because of recursive include issues
- # due to <linux/thread_info.h>
--LINUXINCLUDE	+=  -include ${src}/arch/arc/include/asm/current.h
-+LINUXINCLUDE	+=  -include $(srctree)/arch/arc/include/asm/current.h
- endif
+diff --git a/drivers/gnss/core.c b/drivers/gnss/core.c
+index e6f94501cb28..4377adfa25b4 100644
+--- a/drivers/gnss/core.c
++++ b/drivers/gnss/core.c
+@@ -256,6 +256,7 @@ struct gnss_device *gnss_allocate_device(struct device *parent)
  
- cflags-y				+= -fsection-anchors
-diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
-index 58d46665cad9..8acb8fa1f8d6 100644
---- a/arch/parisc/Makefile
-+++ b/arch/parisc/Makefile
-@@ -120,8 +120,8 @@ PALO := $(shell if (which palo 2>&1); then : ; \
- 	elif [ -x /sbin/palo ]; then echo /sbin/palo; \
- 	fi)
+ 	ret = kfifo_alloc(&gdev->read_fifo, GNSS_READ_FIFO_SIZE, GFP_KERNEL);
+ 	if (ret)
++		pr_err("kfifo_alloc failed\n");
+ 		goto err_put_device;
  
--PALOCONF := $(shell if [ -f $(src)/palo.conf ]; then echo $(src)/palo.conf; \
--	else echo $(obj)/palo.conf; \
-+PALOCONF := $(shell if [ -f $(srctree)/palo.conf ]; then echo $(srctree)/palo.conf; \
-+	else echo $(objtree)/palo.conf; \
- 	fi)
- 
- palo lifimage: vmlinuz
-@@ -131,8 +131,8 @@ palo lifimage: vmlinuz
- 		false; \
- 	fi
- 	@if test ! -f "$(PALOCONF)"; then \
--		cp $(src)/arch/parisc/defpalo.conf $(obj)/palo.conf; \
--		echo 'A generic palo config file ($(obj)/palo.conf) has been created for you.'; \
-+		cp $(srctree)/arch/parisc/defpalo.conf $(objtree)/palo.conf; \
-+		echo 'A generic palo config file ($(objree)/palo.conf) has been created for you.'; \
- 		echo 'You should check it and re-run "make palo".'; \
- 		echo 'WARNING: the "lifimage" file is now placed in this directory by default!'; \
- 		false; \
-@@ -162,10 +162,10 @@ vmlinuz: vmlinux
- endif
- 
- install:
--	$(CONFIG_SHELL) $(src)/arch/parisc/install.sh \
-+	$(CONFIG_SHELL) $(srctree)/arch/parisc/install.sh \
- 			$(KERNELRELEASE) vmlinux System.map "$(INSTALL_PATH)"
- zinstall:
--	$(CONFIG_SHELL) $(src)/arch/parisc/install.sh \
-+	$(CONFIG_SHELL) $(srctree)/arch/parisc/install.sh \
- 			$(KERNELRELEASE) vmlinuz System.map "$(INSTALL_PATH)"
- 
- CLEAN_FILES	+= lifimage
-diff --git a/arch/um/Makefile b/arch/um/Makefile
-index 273130cf91d1..d2daa206872d 100644
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -73,7 +73,7 @@ KBUILD_AFLAGS += $(ARCH_INCLUDE)
- USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
- 		$(ARCH_INCLUDE) $(MODE_INCLUDE) $(filter -I%,$(CFLAGS)) \
- 		-D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
--		-idirafter $(obj)/include -D__KERNEL__ -D__UM_HOST__
-+		-idirafter $(objtree)/include -D__KERNEL__ -D__UM_HOST__
- 
- #This will adjust *FLAGS accordingly to the platform.
- include $(ARCH_DIR)/Makefile-os-$(OS)
+ 	gdev->write_buf = kzalloc(GNSS_WRITE_BUF_SIZE, GFP_KERNEL);
 -- 
-2.17.1
+2.22.0
 
