@@ -2,144 +2,111 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04345C73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895C4C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A012166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562704268;
-	bh=/tteBi3FwGsHAETT02bIg+e0ZNo7j8DYyhLdl+lJps0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kHgI7G5nycVGb789Is9kyr9ChzJ4NAuTZ+gLSauSy706e5xrEgGfiRum0eWX6+lzA
-	 8Z+3Bz5+tWJ1npd2WYXwSOTHs2KX0i3L6Avu4zsVjM2uZb1qyV7SXvi497/vvwviin
-	 vgm9JenITV+QunEAintr+ut3vBGv83Ns9Bqup7l0=
+	by mail.kernel.org (Postfix) with ESMTP id 6600A21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:34:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhX+81Cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbfGIUbH (ORCPT
+        id S1729148AbfGIUe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729179AbfGIUbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:31:07 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C75A216C4;
-        Tue,  9 Jul 2019 20:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562704266;
-        bh=/tteBi3FwGsHAETT02bIg+e0ZNo7j8DYyhLdl+lJps0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WK6kvH07mh4thZzT1jrFK286npoFsNqcw7HX+SQcPx7Q4WS9QXAS+BLPRbyFafB22
-         2CafceWPg+iRvpXpebTOAzEj3GuQHGScoCPpGYUjb7gXPxe6U0Jql0Kya6+uMTtIob
-         bznSqIz5RyvDOp8Hx2XBgK4lt0h1F5Y4IuLO7a1Q=
-Received: by mail-qt1-f170.google.com with SMTP id k10so30613qtq.1;
-        Tue, 09 Jul 2019 13:31:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAVoEltQsI2oKhnVCaKSRJnLDGGGu/GseEVjyrwp7Ln7KiPoqaPh
-        ikEND7YESV9gNJQ3WVQDgrxrlym8O/MryTXM0A==
-X-Google-Smtp-Source: APXvYqzH8k8Dv1us69V2h3oPdKKrl7k8iPqPdSXKGumU7uUT/sxu6iBZEGR13WtL7FC+49CqCTsHjJ62OGTJqaZLYXE=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr20343076qtb.224.1562704265525;
- Tue, 09 Jul 2019 13:31:05 -0700 (PDT)
+        Tue, 9 Jul 2019 16:34:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39840 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfGIUe1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:34:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z23so100444wma.4;
+        Tue, 09 Jul 2019 13:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JW4pZp5yWurq7Q7UhzYQACCrJGsw4TFiXM6qLjGCVg0=;
+        b=YhX+81CrwKeI4FkvJGZ7vRLxnT5K52Y7j9LDT8/gNvuZhntHatNVDvWJhoHhxnL6rH
+         ozXRa67t/azRgYw5Coifbnix/RYsEl/MupQWiuC/SksvX2hsvJ50njJChymcmpcOIyoL
+         hclNNROQ/0OrZf1eqz1Jb3R6uClPsL+mozaRa9xjMj52rIyPJymTz0hpMPKjQSaxFtUS
+         fBP9XyouGZQ3QwQJesUz1+Hec8UP/AWfCZY8ZLU+Xqmr4b65CIfEoryWLl+G3plSjbmT
+         XxZr8UadZe1N4+T/r/HNnKJme2DwhPln8pPWyHA/VVnmIKW+CFYVISV/Jt/0qZKqDRNm
+         igqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JW4pZp5yWurq7Q7UhzYQACCrJGsw4TFiXM6qLjGCVg0=;
+        b=V52kxOGLBrSVaz7awIM2uq2oBG/wkyR5FXFsF3E9aKiZpqmr/cP4WPxdgEkIkKwSWq
+         yah3NLmPgdWzgpkUGpsTZg+Jawz57AgDztHayOOHGYlCFSmFF/pleNGiHLNdUtXjPgcG
+         Ig3Ee3fZEv9gPv5v5W1LlwOsbOpObC7IhpITJxV/WJMpNAanZ/sejUpyYcv6KqNEBGZN
+         ZH/tFR6fJH/YkfGmNjp9+K2+ompPl0Yh39fOilFgUodgFn6I2FvV0hV4a7ZfVIGD4u4Z
+         PhZx/9PNTTOHidE7tB4RvSoiglpgNh8+avdBCWpqCu9ODAGk7DCOLMe+LiOvYYuPq1no
+         5yeQ==
+X-Gm-Message-State: APjAAAWMJI6wW64ihIahiHd86Jcv0vAhDznDXiZTxyPzXRaYdsL262mf
+        wuzkRhK4w7DmpbRKlVp7nXsSqCSq1DMVsg==
+X-Google-Smtp-Source: APXvYqycXYrc4+rUtZW7EGPXG00XXUE7raSCtwgSfAnQ782kPpj5ut4EnHEoACqwEJDyPJL3SHoZqQ==
+X-Received: by 2002:a1c:228b:: with SMTP id i133mr1348861wmi.140.1562704464486;
+        Tue, 09 Jul 2019 13:34:24 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id t24sm60492wmj.14.2019.07.09.13.34.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 13:34:23 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "kernelci . org bot" <bot@kernelci.org>
+Subject: [PATCH] watchdog: digicolor_wdt: Remove unused variable in dc_wdt_probe
+Date:   Tue,  9 Jul 2019 13:34:09 -0700
+Message-Id: <20190709203409.117123-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190701093826.5472-1-Anson.Huang@nxp.com> <20190701093826.5472-2-Anson.Huang@nxp.com>
-In-Reply-To: <20190701093826.5472-2-Anson.Huang@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 9 Jul 2019 14:30:53 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com>
-Message-ID: <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com>
-Subject: Re: [PATCH V4 2/5] clocksource/drivers/sysctr: Add clock-frequency property
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Bai Ping <ping.bai@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 3:47 AM <Anson.Huang@nxp.com> wrote:
->
-> From: Anson Huang <Anson.Huang@nxp.com>
+clang warns:
 
-'dt-bindings: timer: ...' for the subject.
+drivers/watchdog/digicolor_wdt.c:121:6: warning: unused variable 'ret'
+[-Wunused-variable]
+        int ret;
+            ^
+1 warning generated.
 
->
-> Systems which use platform driver model for clock driver require the
-> clock frequency to be supplied via device tree when system counter
-> driver is enabled.
+It's unused now, remove it.
 
-This is a DT binding. What's a platform driver?
+Fixes: cdad26977e3f ("watchdog: digicolor_wdt: drop warning after registering device")
+Link: https://github.com/ClangBuiltLinux/linux/issues/591
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/watchdog/digicolor_wdt.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->
-> This is necessary as in the platform driver model the of_clk operations
-> do not work correctly because system counter driver is initialized in
-> early phase of system boot up, and clock driver using platform driver
-> model is NOT ready at that time, it will cause system counter driver
-> initialization failed.
->
-> Add clock-frequency property to the device tree bindings of the NXP
-> system counter, so the driver can tell timer-of driver to get clock
-> frequency from DT directly instead of doing of_clk operations via
-> clk APIs.
+diff --git a/drivers/watchdog/digicolor_wdt.c b/drivers/watchdog/digicolor_wdt.c
+index 33cda95bd238..073d37867f47 100644
+--- a/drivers/watchdog/digicolor_wdt.c
++++ b/drivers/watchdog/digicolor_wdt.c
+@@ -118,7 +118,6 @@ static int dc_wdt_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct dc_wdt *wdt;
+-	int ret;
+ 
+ 	wdt = devm_kzalloc(dev, sizeof(struct dc_wdt), GFP_KERNEL);
+ 	if (!wdt)
+-- 
+2.22.0
 
-While you've now given a good explanation why you need this, it all
-sounds like linux specific issues and a DT change should not be
-necessary.
-
-Presumably, 'clocks' points to a fixed-clock node, right? Just parse
-the 'clocks' phandle and fetch the frequency from that node if you
-need to get the frequency 'early'.
-
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change.
-> ---
->  .../devicetree/bindings/timer/nxp,sysctr-timer.txt        | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> index d576599..7088a0e 100644
-> --- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> +++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-> @@ -11,15 +11,18 @@ Required properties:
->  - reg :             Specifies the base physical address and size of the comapre
->                      frame and the counter control, read & compare.
->  - interrupts :      should be the first compare frames' interrupt
-> -- clocks :         Specifies the counter clock.
-> -- clock-names:             Specifies the clock's name of this module
-> +- clocks :          Specifies the counter clock, mutually exclusive with clock-frequency.
-> +- clock-names :     Specifies the clock's name of this module, mutually exclusive with
-> +                   clock-frequency.
-> +- clock-frequency : Specifies system counter clock frequency, mutually exclusive with
-> +                   clocks/clock-names.
-
-It doesn't really work to say one or the other is needed unless you
-make the OS support both cases.
-
-Rob
