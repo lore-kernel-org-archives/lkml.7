@@ -2,173 +2,105 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505CAC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3DAC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A91220861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4341C214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:08:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Hm1OhBOV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfGINFi (ORCPT
+        id S1726881AbfGINIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:05:38 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35087 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfGINFh (ORCPT
+        Tue, 9 Jul 2019 09:08:07 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40887 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfGINIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:05:37 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j19so1357838otq.2;
-        Tue, 09 Jul 2019 06:05:36 -0700 (PDT)
+        Tue, 9 Jul 2019 09:08:06 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so17698541eds.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 06:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZUz4WDQf+ePZiJBY+IeyizcaneS7fRJMcv4JWg/06b8=;
+        b=Hm1OhBOVDMZQHda4zzcLuqGw7waEGq2WvK+G8jN8/SRdmwfeo/59Bi1wqs5ICvYh45
+         GSjHRCeswdfMkPiDeZA4K7UuRQ+BVA61r4PJ6Dtal6ytrFHpU6gZjMj/6wjBhdP3VjxE
+         gy2rOEL5UW0eDkKhXLHxmiw6wc3KjwZu15XvEPQ54pKulEfTZdYyjRjm5VPGzd5S84dg
+         Ov9r7Pm2PMSdm3IS9926s6o8cfugx62BAxygvgcv5VnWSurbToFFkRfD9DFMr31Bg8rC
+         QRb/uiLG96RBV5+2aXtAVpUJ7HGaNLcmpvDHc8a5cLRQO52fZuUjLf2QN5y+OcMPBFvw
+         g6kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yDkyo3+Dccscyvat5dQl/nWwc7njks1SU13Nt8uYXo0=;
-        b=o8XaIEF49l6zxZrsaDNS0SGe3todgaxAot82Gk0hQZPuV1NN593rmkTU2D70G/EML/
-         1iKdYQ++3V2dQbxGTS3i/c9Evwcn/pomxfqzTeGohcIvN5ioEnNA7ZHuJh1IjJJAUgtE
-         ikQCprLTBfRVEdxuEwPLOcbma6gdfYXADzMgd94LVo9i8Qc6c8XmnARY2E59rtmuUD7r
-         lgrbOrmRKPEGnlHq4ELtKZ4QmYTdmUoGr/DGQxNnoAJoZK8ZwWjW/6XvpH+DugCOQ5+j
-         a83tH79oQWxHzW0gHbqV8cf/01HwwJRRB2pqpw2dnITPNjx0stmQUM0KF/040d7QXw3U
-         KRbg==
-X-Gm-Message-State: APjAAAXRaZ5Nnakrohi8OeEjxQzEQPewvgvLOz2nnyfwMxyFXAiQI9TY
-        igvEXULOGzsPVAhijktCHmZTkySPA2/U3VBq9LU=
-X-Google-Smtp-Source: APXvYqyP+O1IKeQS6X70Kvdb/lw+/tB1Nqscmj4QYnEGi/QzjPO6yk3rZPwXvI0VCPvpsiH7TFqgYOfpRyk0aFz32Cg=
-X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr1789780otc.250.1562677536141;
- Tue, 09 Jul 2019 06:05:36 -0700 (PDT)
+        bh=ZUz4WDQf+ePZiJBY+IeyizcaneS7fRJMcv4JWg/06b8=;
+        b=W7WUrhDIWaigc7NZt4rOysCEiklW6t4BwaUPLegZHweWTOFJ+pqn+5tE4tvOxdBu5B
+         sGpU8RYL/rTC3H4aqunz7+2tincdDmOWvPLQ/6T3QOaecRm/iwL9sm9WZ5Y4D9aws8Y6
+         8eq5CuJLZ6RT9b57mDOqUGdStyymWUxBwU4n+HI7n6nQ5ZAh0m+JWe7JYeL/bH6lUvoU
+         IMmb1VwmF/wZbIcdKRC5dtIaNncfqndGDvqjZYZCgnj388fU3MG235TEbQQ+5gDiYVtR
+         ZruUOA0hqmRTUe+OZPFGJMysRyAEc7Oh2cYsbXxXtjL+jGqdDQCqY9u44U1SPRhIFgS8
+         3V0A==
+X-Gm-Message-State: APjAAAXm7iikVzzL/1pbD/JVq7+CfQL+5QL67wLiyZNHwgQooVf7HXp3
+        uR4a7IMKEg0pMs4/3UHvygOeeS3/vVY2a7yluxfMhg==
+X-Google-Smtp-Source: APXvYqxiyJAFhEGRILc1BLQA9hva/JyooHVB+Ro4OjuwmAXAGlQqOwGA/cJXY+H0KZR6uBrhYIjHWmDcBko3Uo9wDmU=
+X-Received: by 2002:a50:a4ef:: with SMTP id x44mr25897335edb.304.1562677684997;
+ Tue, 09 Jul 2019 06:08:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com>
- <CAMuHMdUH46_yvYc840uvMoOOqXuU3mDOjaT65vZ=6WKGq7-Kqg@mail.gmail.com>
- <CAK7LNASuEQqb7w8qD9ZKx-LKp0+CqvybEqFtYxVk5d0YJt-Nfg@mail.gmail.com>
- <CAMuHMdVmmgW24vStkicXfA3hokcPYWo_r5bW=WFRs4zdP3SQyQ@mail.gmail.com> <CAK7LNATxCkEZKWknO40k-sArbwxzOjdyQdehSmdCNYjLBb7MQA@mail.gmail.com>
-In-Reply-To: <CAK7LNATxCkEZKWknO40k-sArbwxzOjdyQdehSmdCNYjLBb7MQA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 9 Jul 2019 15:05:25 +0200
-Message-ID: <CAMuHMdU7OY=FwWke6LqKtsMssN1ACJe15ODOp+tdkcZWoFaovw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: check arch/$(SRCARCH)/include/generated before
- out-of-tree build
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
+ <CACi5LpNGWhTnXyM8gB0Tn=682+08s-ppfDpX2SawfxMvue1GTQ@mail.gmail.com>
+ <CA+CK2bBrwBHhD-PFO_gVnDYoFi0Su6t456WNdtBWpOe4qM+oww@mail.gmail.com> <2d60f302-5161-638a-76cd-d7d79e5631fe@arm.com>
+In-Reply-To: <2d60f302-5161-638a-76cd-d7d79e5631fe@arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Tue, 9 Jul 2019 09:07:54 -0400
+Message-ID: <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
+Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
+To:     James Morse <james.morse@arm.com>
+Cc:     Bhupesh Sharma <bhsharma@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
-
-On Tue, Jul 9, 2019 at 2:59 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> On Tue, Jul 9, 2019 at 9:45 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Tue, Jul 9, 2019 at 2:22 PM Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> > > On Tue, Jul 9, 2019 at 5:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Sun, Apr 7, 2019 at 12:45 PM Masahiro Yamada
-> > > > <yamada.masahiro@socionext.com> wrote:
-> > > > > After cross-compiling the kernel, "make mrproper" should be executed
-> > > > > with the proper ARCH= option. Otherwise, stale objects will remain
-> > > > > under arch/$(SRCARCH)/.
-> > > > >
-> > > > > One bad scenario is like this:
-> > > > >
-> > > > >   $ make ARCH=arm defconfig all   # cross-compile the kernel for arm
-> > > > >   $ make mrproper                 # mrproper for host-arch (i.e. x86)
-> > > > >   $ make ARCH=arm O=build_dir defconfig all
-> > > > >
-> > > > > If you miss ARCH= for mrproper and cross-compile the kernel with O=
-> > > > > and ARCH= options, Kbuild will happily start to build, but may fail
-> > > > > due to stale objects in the srctree.
-> > > > >
-> > > > > If $(srctree)/arch/$(SRCARCH)/include/generated/ exists, let's stop
-> > > > > the out-of-tree build. To detect this, mrproper should clean only
-> > > > > arch/$(SRCARCH)/include/generated/.
-> > > > >
-> > > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > > > ---
-> > > > >
-> > > > >  Makefile | 6 ++++--
-> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/Makefile b/Makefile
-> > > > > index 10643c3..17945ce 100644
-> > > > > --- a/Makefile
-> > > > > +++ b/Makefile
-> > > > > @@ -1091,7 +1091,9 @@ PHONY += prepare archprepare prepare1 prepare3
-> > > > >  prepare3: include/config/kernel.release
-> > > > >  ifneq ($(srctree),.)
-> > > > >         @$(kecho) '  Using $(srctree) as source for kernel'
-> > > > > -       $(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
-> > > > > +       $(Q)if [ -f $(srctree)/.config -o \
-> > > > > +                -d $(srctree)/include/config -o \
-> > > > > +                -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
-> > > > >                 echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
-> > > > >                 echo >&2 "  in the '$(srctree)' directory.";\
-> > > >
-> > > > This took me a bit to find out what was wrong...
-> > > >
-> > > > Usually I don't run "make mrproper", as it removes files I may want to
-> > > > keep (e.g. tags).  Hence I ran "git ls-files -o | grep m68k | xargs rm"
-> > > > (I usually build in separate output directories), confirmed with "git
-> > > > ls-files -o" there were no remaining build artefacts, and was surprised
-> > > > to discover I still got the error message above?!?
-> > > >
-> > > > Apparently arch/m68k/include/generated was still present, but as "git
-> > > > ls-files -o" only shows files, not directories, it was not listed.
-> > > > Perhaps the directory checks above can be changed to directory exists
-> > > > _and_ is not empty?
-> > >
-> > > No.
-> > >
-> > > Since you did not run mrproper,
-> > > Kbuild _correctly_ showed error.
-> > > This is the expected and correct behavior. :)
-> > >
-> > > The upstream kernel is not a place
-> > > to be customized for your workflow. Sorry.
-> > >
-> > >
-> > > Every developer has a set of handy custom commands.
-> > >
-> > > Since you are already running a long command,
-> > > why don't you add one more line, and put in ~/.bash_aliases or somewhere?
-> > >
-> > > my_mrproper()
-> > > {
-> > >     git ls-files -o | grep m68k | xargs rm
-> > >     rm -rf arch/m68k/include/generated
-> > > }
-> >
-> > Please note this was not part of my standard workflow, so I don't have a
-> > script for it.  I just happened to had done a quick test build in my
-> > kernel source tree repository before, and had forgotten about that.
-> >
-> > So IMHO this is more of a usability issue: it is difficult to find out
-> > what is wrong, and how to solve it, as "git ls-files -o" doesn't give a
-> > clue.  And running "make mrproper" doesn't help.
-> >
-> > Perhaps the message should be changed to
-> >
-> >     $(srctree) is not clean, please run 'make ARCH=$(SRCARCH) mrproper'"
+> > Enabling MMU and D-Cache for relocation  would essentially require the
+> > same changes in kernel. Could you please share exactly why these were
+> > not accepted upstream into kexec-tools?
 >
-> Fair enough, but 'make ARCH=$(ARCH) mrproper' please.
+> Because '--no-checks' is a much simpler alternative.
+>
+> More of the discussion:
+> https://lore.kernel.org/linux-arm-kernel/5599813d-f83c-d154-287a-c131c48292ca@arm.com/
+>
+> While you can make purgatory a fully-fledged operating system, it doesn't really need to
+> do anything on arm64. Errata-workarounds alone are a reason not do start down this path.
 
-OK.
+Thank you James. I will summaries the information gathered from the
+yesterday's/today's discussion and add it to the cover letter together
+with ARM64 tag. I think, the patch series makes sense for ARM64 only,
+unless there are other platforms that disable caching/MMU during
+relocation.
 
-> Will you send a patch?
+Thank you,
+Pasha
 
-Sure, thanks!
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+>
+> Thanks,
+>
+> James
