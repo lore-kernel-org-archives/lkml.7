@@ -6,64 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4D2C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10665C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58FC2217F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1582173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562636711;
-	bh=3pQxoa4wxE1fHPq0aY4N0GeNMezeaWKpp8y9zbbC7uk=;
+	s=default; t=1562636713;
+	bh=AM9Oijc1kuJg1h1fP89xJz5cxOUQX2xrE9jndlRD8pI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=vOPdog6k9Lz3ctVoXt+UQodJQsb7jkBFoZb2FpWq9NaiyP51SZ5KKgKwxaJIPQSCJ
-	 v3s/On+8DnZ5hzwAa5w4DA1dFYc3LnUGFbyXK5FPjNAKs4oNwJFcbAjwxHih9Jm7H0
-	 3c7UT7ZrhjWekwOvCqf/FmMixDltHUJBM/Ck7Uac=
+	b=s25dCYIcw1EOBqdVJq9O2fsosRBvcUWAQuv5EzpC7QluYz8slQMYtmdK78v2+CAjp
+	 UrdALiEXPwA9woOvAajEVI1/qNwmvH3aMW1IUk0Y0KUdSC+1WoqwwC+iTFYZeRXkk/
+	 2xkA2YUvdonR0pdhnHOVCmqtncUYJ//qr8gCqKbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbfGIBpK (ORCPT
+        id S1727319AbfGIBpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38062 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 21:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbfGIBpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:45:07 -0400
-Subject: Re: [GIT PULL] scheduler changes for v5.3
+        id S1727183AbfGIBpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:45:09 -0400
+Subject: Re: [GIT PULL] x86/cache changes for v5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562636706;
-        bh=3pQxoa4wxE1fHPq0aY4N0GeNMezeaWKpp8y9zbbC7uk=;
+        s=default; t=1562636708;
+        bh=AM9Oijc1kuJg1h1fP89xJz5cxOUQX2xrE9jndlRD8pI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=w45foDUICgleUpcUXLfcB3pDOOVAY0JQ0FJNF28/Ljsoj3BgoYvy0msIU5YtVlBL7
-         zTk8u0+hhBcr7N8LrO5aipf48k6Xv4G8yNNqkxw8gQh9YdXNDREkElIgZM5DNK4MeG
-         yMcYJkxcsHGv93u7y/CrdYjetDjkFmOZjZLXuaWM=
+        b=u4PYy30IgUF6m089JLUFUeGsIfpS3eghnU6Ykf964e3E3EtYr6QCcNcD7yV4yERid
+         28UzfM+Ze1dEnJJ2fY3gAmdn8zxhZ5241vcZdxEMb6Emc8Yvl81PC9SzdDwCUadGjf
+         rCt0irAjiNQdZ21za71iY4/RzHi2sM+hX4oAxloc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190708115349.GA14779@gmail.com>
-References: <20190708115349.GA14779@gmail.com>
+In-Reply-To: <20190708160048.GA33834@gmail.com>
+References: <20190708160048.GA33834@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190708115349.GA14779@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- sched-core-for-linus
-X-PR-Tracked-Commit-Id: af24bde8df2029f067dc46aff0393c8f18ff6e2f
+X-PR-Tracked-Message-Id: <20190708160048.GA33834@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cache-for-linus
+X-PR-Tracked-Commit-Id: 2ef085bd110c5723ca08a522608ac3468dc304bd
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dad1c12ed831a7a89cc01e5582cd0b81a4be7f19
-Message-Id: <156263670684.17382.3495666365946701708.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 01:45:06 +0000
+X-PR-Merge-Commit-Id: 6cfcdad7630de2b2eb09740bdc6ee921de8c785e
+Message-Id: <156263670819.17382.2937360480718874014.pr-tracker-bot@kernel.org>
+Date:   Tue, 09 Jul 2019 01:45:08 +0000
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jul 2019 13:53:49 +0200:
+The pull request you sent on Mon, 8 Jul 2019 18:00:48 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-cache-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dad1c12ed831a7a89cc01e5582cd0b81a4be7f19
+https://git.kernel.org/torvalds/c/6cfcdad7630de2b2eb09740bdc6ee921de8c785e
 
 Thank you!
 
