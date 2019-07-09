@@ -2,386 +2,202 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C865C606DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2556FC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C529A21707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42802082A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:33:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="JsumvsUK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Je6k7CiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfGIK3s (ORCPT
+        id S1726284AbfGIKdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 06:29:48 -0400
-Received: from mx.socionext.com ([202.248.49.38]:38479 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbfGIK3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 06:29:33 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 09 Jul 2019 19:29:29 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id D21CD18022B;
-        Tue,  9 Jul 2019 19:29:29 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 9 Jul 2019 19:29:29 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 5C6401A14E3;
-        Tue,  9 Jul 2019 19:29:29 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-gpio@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 1/5] pinctrl: uniphier: Separate modem group from UART ctsrts group
-Date:   Tue,  9 Jul 2019 19:29:12 +0900
-Message-Id: <1562668156-12927-2-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562668156-12927-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1562668156-12927-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Tue, 9 Jul 2019 06:33:24 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:54622 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725947AbfGIKdY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 06:33:24 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 90113C0127;
+        Tue,  9 Jul 2019 10:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562668403; bh=3ID/eNgnM54kEEEIv4XlZ/O+E9xDglfl4VK2MpkrqOU=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=JsumvsUKc6BMVzr8/qfoPSPddFwQF+AyxBpnVZdDe6/4PxYvTTgfr4c0azG1xfauL
+         Au/iTUKgrAQhzwyMzw3uSAGj21CfcXNYaEJrESlw1yGMgCWbfV8DGDNAhaAAshxKNu
+         nd7Xk8mhlZ6j3cihPezGTK4AqFS2msBWNupf2hiW1G8wop1CFQj2/WeLFC+N5tCK+7
+         NeF07QEbaR7KqJ3spAQoiRyf3UMKUbM53d+jff/Sn5kYaJoHZ3aDIdkWcI49F687U7
+         SN+OzGd4SSUhN4YoR4o9q7H1cguwewoUBgmyZ8crCaDp2UVR33OtNA6XljD4HaQ7uB
+         aSteUNMSs7voA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id B67ACA0069;
+        Tue,  9 Jul 2019 10:33:22 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 9 Jul 2019 03:33:22 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 9 Jul 2019 03:33:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pjYWJ8yh1941EPOmwR85nb/Ljvk2zHonSgGY2fgXSKQ=;
+ b=Je6k7CiUSxZT61Zhdfhvr2DrdnuDBudiyCb5Vftwh1kzxmvbY6IG5hFB8dM3ZRysUhPOKohmecswY2KitzQf6RN3izGESpBS7Ir3D45q00oLqbAEMs4ManTzVdirC7ExBvqIGUWeAe84sO2RkWueLYvHlZyDS5L6gRU1AdDWUh0=
+Received: from MN2PR12MB3710.namprd12.prod.outlook.com (10.255.236.23) by
+ MN2PR12MB3133.namprd12.prod.outlook.com (20.178.241.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Tue, 9 Jul 2019 10:33:18 +0000
+Received: from MN2PR12MB3710.namprd12.prod.outlook.com
+ ([fe80::8025:feba:c9cf:ba9f]) by MN2PR12MB3710.namprd12.prod.outlook.com
+ ([fe80::8025:feba:c9cf:ba9f%3]) with mapi id 15.20.2052.020; Tue, 9 Jul 2019
+ 10:33:18 +0000
+From:   Luis de Oliveira <Luis.Oliveira@synopsys.com>
+To:     Rob Herring <robh@kernel.org>,
+        Luis Oliveira <Luis.Oliveira@synopsys.com>
+CC:     "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: RE: [PATCH V2 2/2] dt-bindings: Document the DesignWare IP reset
+ bindings
+Thread-Topic: [PATCH V2 2/2] dt-bindings: Document the DesignWare IP reset
+ bindings
+Thread-Index: AQHVHH23e2+X/xsJsUq7VXVMGc6J2KbBuOcAgACOyjA=
+Date:   Tue, 9 Jul 2019 10:33:18 +0000
+Message-ID: <MN2PR12MB371095ABA70D43398ABF982CCBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
+References: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
+ <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
+ <20190709015220.GA18239@bogus>
+In-Reply-To: <20190709015220.GA18239@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lolivei@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9977b52e-b334-484f-e5a5-08d70458db76
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR12MB3133;
+x-ms-traffictypediagnostic: MN2PR12MB3133:
+x-microsoft-antispam-prvs: <MN2PR12MB313328ECBE02E5B03CF873E3CBF10@MN2PR12MB3133.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0093C80C01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(376002)(346002)(136003)(39860400002)(189003)(199004)(54534003)(37524003)(6636002)(68736007)(478600001)(5660300002)(6436002)(3846002)(6116002)(229853002)(25786009)(446003)(316002)(66446008)(64756008)(66476007)(66556008)(4326008)(54906003)(107886003)(73956011)(110136005)(33656002)(66946007)(486006)(52536014)(476003)(186003)(11346002)(256004)(26005)(8676002)(81166006)(81156014)(71190400001)(74316002)(71200400001)(102836004)(66066001)(8936002)(7736002)(99286004)(76176011)(6506007)(7696005)(86362001)(6246003)(305945005)(9686003)(76116006)(53936002)(14454004)(55016002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR12MB3133;H:MN2PR12MB3710.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ik+Y5CevsidhK5AiS0Uwpu2Goc53762sZ1qel0/nMvLdQKrflYiC2eF3wZADMsyz6T+aNbtidZv0JqaajZ2r6/N25U3va5ZWf2VYPOvdsPvz+3+IP5ZMNxuUgYUEUVsRXdAh5IhptbZFd6IX541EB4+8k5IkiQvv7uWg1d5BCyLV3sN2GATqrqHBB44cwIweXckehFNezdzm6+bs315QBibPFjaC61YKYZTUj2DvAPIUdA1kqc9fderuCqmDkzloytuJo4z/S7J65oENq9PQiogxmjc/cdxMiylUphvty7Df9hd/p2OHZdpFG44Gd7vZwUDW+V60Wp3jdp+W3SKAR9RCqS5OBIzfePxzGsNlxRAZO+ShYINLMo94whIk1+hgTZ92ubNjBTQDM4U6HTwWhBkmO/EYWXsrPsxl/xI0M+I=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9977b52e-b334-484f-e5a5-08d70458db76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 10:33:18.0920
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lolivei@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3133
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It depends on the board implementation whether to have each pins of
-CTS/RTS, and others for modem. So it is necessary to divide current
-uart_ctsrts group into uart_ctsrts and uart_modem groups.
+Hi Rob,
 
-Since the number of implemented pins for modem differs depending
-on SoC, each uart_modem group also has a different number of pins.
+Thank you for the comments,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pinctrl/uniphier/pinctrl-uniphier-ld11.c | 10 +++++++---
- drivers/pinctrl/uniphier/pinctrl-uniphier-ld20.c | 10 +++++++---
- drivers/pinctrl/uniphier/pinctrl-uniphier-ld4.c  | 10 +++++++---
- drivers/pinctrl/uniphier/pinctrl-uniphier-ld6b.c | 10 +++++++---
- drivers/pinctrl/uniphier/pinctrl-uniphier-pro4.c | 10 +++++++---
- drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c | 10 +++++++---
- drivers/pinctrl/uniphier/pinctrl-uniphier-pxs2.c | 10 +++++++---
- drivers/pinctrl/uniphier/pinctrl-uniphier-pxs3.c | 10 +++++++---
- drivers/pinctrl/uniphier/pinctrl-uniphier-sld8.c | 10 +++++++---
- 9 files changed, 63 insertions(+), 27 deletions(-)
+From: Rob Herring <robh@kernel.org>
+Date: Tue, Jul 09, 2019 at 02:52:20
 
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-ld11.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-ld11.c
-index 92fef3a..c390a55 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-ld11.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-ld11.c
-@@ -526,8 +526,10 @@ static const unsigned uart2_pins[] = {90, 91};
- static const int uart2_muxvals[] = {1, 1};
- static const unsigned uart3_pins[] = {94, 95};
- static const int uart3_muxvals[] = {1, 1};
--static const unsigned uart3_ctsrts_pins[] = {96, 97, 98, 99, 100, 101};
--static const int uart3_ctsrts_muxvals[] = {1, 1, 1, 1, 1, 1};
-+static const unsigned uart3_ctsrts_pins[] = {96, 98};
-+static const int uart3_ctsrts_muxvals[] = {1, 1};
-+static const unsigned uart3_modem_pins[] = {97, 99, 100, 101};
-+static const int uart3_modem_muxvals[] = {1, 1, 1, 1};
- static const unsigned usb0_pins[] = {46, 47};
- static const int usb0_muxvals[] = {0, 0};
- static const unsigned usb1_pins[] = {48, 49};
-@@ -600,6 +602,7 @@ static const struct uniphier_pinctrl_group uniphier_ld11_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(uart2),
- 	UNIPHIER_PINCTRL_GROUP(uart3),
- 	UNIPHIER_PINCTRL_GROUP(uart3_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart3_modem),
- 	UNIPHIER_PINCTRL_GROUP(usb0),
- 	UNIPHIER_PINCTRL_GROUP(usb1),
- 	UNIPHIER_PINCTRL_GROUP(usb2),
-@@ -636,7 +639,8 @@ static const char * const system_bus_groups[] = {"system_bus",
- static const char * const uart0_groups[] = {"uart0"};
- static const char * const uart1_groups[] = {"uart1"};
- static const char * const uart2_groups[] = {"uart2"};
--static const char * const uart3_groups[] = {"uart3", "uart3_ctsrts"};
-+static const char * const uart3_groups[] = {"uart3", "uart3_ctsrts",
-+					    "uart3_modem"};
- static const char * const usb0_groups[] = {"usb0"};
- static const char * const usb1_groups[] = {"usb1"};
- static const char * const usb2_groups[] = {"usb2"};
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-ld20.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-ld20.c
-index 7fbc965..28e54b3 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-ld20.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-ld20.c
-@@ -619,8 +619,10 @@ static const unsigned uart2_pins[] = {90, 91};
- static const int uart2_muxvals[] = {1, 1};
- static const unsigned uart3_pins[] = {94, 95};
- static const int uart3_muxvals[] = {1, 1};
--static const unsigned uart3_ctsrts_pins[] = {96, 97, 98, 99, 100, 101};
--static const int uart3_ctsrts_muxvals[] = {1, 1, 1, 1, 1, 1};
-+static const unsigned uart3_ctsrts_pins[] = {96, 98};
-+static const int uart3_ctsrts_muxvals[] = {1, 1};
-+static const unsigned uart3_modem_pins[] = {97, 99, 100, 101};
-+static const int uart3_modem_muxvals[] = {1, 1, 1, 1};
- static const unsigned usb0_pins[] = {46, 47};
- static const int usb0_muxvals[] = {0, 0};
- static const unsigned usb1_pins[] = {48, 49};
-@@ -695,6 +697,7 @@ static const struct uniphier_pinctrl_group uniphier_ld20_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(uart2),
- 	UNIPHIER_PINCTRL_GROUP(uart3),
- 	UNIPHIER_PINCTRL_GROUP(uart3_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart3_modem),
- 	UNIPHIER_PINCTRL_GROUP(usb0),
- 	UNIPHIER_PINCTRL_GROUP(usb1),
- 	UNIPHIER_PINCTRL_GROUP(usb2),
-@@ -734,7 +737,8 @@ static const char * const system_bus_groups[] = {"system_bus",
- static const char * const uart0_groups[] = {"uart0"};
- static const char * const uart1_groups[] = {"uart1"};
- static const char * const uart2_groups[] = {"uart2"};
--static const char * const uart3_groups[] = {"uart3", "uart3_ctsrts"};
-+static const char * const uart3_groups[] = {"uart3", "uart3_ctsrts",
-+					    "uart3_modem"};
- static const char * const usb0_groups[] = {"usb0"};
- static const char * const usb1_groups[] = {"usb1"};
- static const char * const usb2_groups[] = {"usb2"};
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-ld4.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-ld4.c
-index d09019b..88fd68f 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-ld4.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-ld4.c
-@@ -583,8 +583,10 @@ static const unsigned system_bus_cs3_pins[] = {156};
- static const int system_bus_cs3_muxvals[] = {1};
- static const unsigned uart0_pins[] = {85, 88};
- static const int uart0_muxvals[] = {1, 1};
--static const unsigned uart0_ctsrts_pins[] = {86, 87, 89};
--static const int uart0_ctsrts_muxvals[] = {1, 1, 1};
-+static const unsigned uart0_ctsrts_pins[] = {86, 89};
-+static const int uart0_ctsrts_muxvals[] = {1, 1};
-+static const unsigned uart0_modem_pins[] = {87};
-+static const int uart0_modem_muxvals[] = {1};
- static const unsigned uart1_pins[] = {155, 156};
- static const int uart1_muxvals[] = {13, 13};
- static const unsigned uart1b_pins[] = {69, 70};
-@@ -641,6 +643,7 @@ static const struct uniphier_pinctrl_group uniphier_ld4_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(system_bus_cs3),
- 	UNIPHIER_PINCTRL_GROUP(uart0),
- 	UNIPHIER_PINCTRL_GROUP(uart0_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart0_modem),
- 	UNIPHIER_PINCTRL_GROUP(uart1),
- 	UNIPHIER_PINCTRL_GROUP(uart1b),
- 	UNIPHIER_PINCTRL_GROUP(uart2),
-@@ -667,7 +670,8 @@ static const char * const system_bus_groups[] = {"system_bus",
- 						 "system_bus_cs1",
- 						 "system_bus_cs2",
- 						 "system_bus_cs3"};
--static const char * const uart0_groups[] = {"uart0", "uart0_ctsrts"};
-+static const char * const uart0_groups[] = {"uart0", "uart0_ctsrts",
-+					    "uart0_modem"};
- static const char * const uart1_groups[] = {"uart1", "uart1b"};
- static const char * const uart2_groups[] = {"uart2"};
- static const char * const uart3_groups[] = {"uart3"};
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-ld6b.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-ld6b.c
-index 414ff3a..d1ed5b7 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-ld6b.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-ld6b.c
-@@ -780,8 +780,10 @@ static const unsigned system_bus_cs5_pins[] = {55};
- static const int system_bus_cs5_muxvals[] = {6};
- static const unsigned uart0_pins[] = {135, 136};
- static const int uart0_muxvals[] = {3, 3};
--static const unsigned uart0_ctsrts_pins[] = {137, 138, 139, 140, 141, 124};
--static const int uart0_ctsrts_muxvals[] = {3, 3, 3, 3, 3, 3};
-+static const unsigned uart0_ctsrts_pins[] = {137, 139};
-+static const int uart0_ctsrts_muxvals[] = {3, 3};
-+static const unsigned uart0_modem_pins[] = {138, 140, 141, 124};
-+static const int uart0_modem_muxvals[] = {3, 3, 3, 3};
- static const unsigned uart0b_pins[] = {11, 12};
- static const int uart0b_muxvals[] = {2, 2};
- static const unsigned uart1_pins[] = {115, 116};
-@@ -856,6 +858,7 @@ static const struct uniphier_pinctrl_group uniphier_ld6b_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(system_bus_cs5),
- 	UNIPHIER_PINCTRL_GROUP(uart0),
- 	UNIPHIER_PINCTRL_GROUP(uart0_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart0_modem),
- 	UNIPHIER_PINCTRL_GROUP(uart0b),
- 	UNIPHIER_PINCTRL_GROUP(uart1),
- 	UNIPHIER_PINCTRL_GROUP(uart1b),
-@@ -887,7 +890,8 @@ static const char * const system_bus_groups[] = {"system_bus",
- 						 "system_bus_cs3",
- 						 "system_bus_cs4",
- 						 "system_bus_cs5"};
--static const char * const uart0_groups[] = {"uart0", "uart0_ctsrts", "uart0b"};
-+static const char * const uart0_groups[] = {"uart0", "uart0_ctsrts",
-+					    "uart0_modem", "uart0b"};
- static const char * const uart1_groups[] = {"uart1", "uart1b"};
- static const char * const uart2_groups[] = {"uart2", "uart2b"};
- static const char * const usb0_groups[] = {"usb0"};
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-pro4.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-pro4.c
-index 919b9be..4f63d7b 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-pro4.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-pro4.c
-@@ -1072,8 +1072,10 @@ static const unsigned uart2_pins[] = {131, 132};
- static const int uart2_muxvals[] = {0, 0};
- static const unsigned uart3_pins[] = {88, 89};
- static const int uart3_muxvals[] = {2, 2};
--static const unsigned uart3_ctsrts_pins[] = {80, 81, 82, 83, 90, 91};
--static const int uart3_ctsrts_muxvals[] = {2, 2, 2, 2, 2, 2};
-+static const unsigned uart3_ctsrts_pins[] = {90, 91};
-+static const int uart3_ctsrts_muxvals[] = {2, 2};
-+static const unsigned uart3_modem_pins[] = {80, 81, 82, 83};
-+static const int uart3_modem_muxvals[] = {2, 2, 2, 2};
- static const unsigned usb0_pins[] = {180, 181};
- static const int usb0_muxvals[] = {0, 0};
- static const unsigned usb1_pins[] = {182, 183};
-@@ -1148,6 +1150,7 @@ static const struct uniphier_pinctrl_group uniphier_pro4_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(uart2),
- 	UNIPHIER_PINCTRL_GROUP(uart3),
- 	UNIPHIER_PINCTRL_GROUP(uart3_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart3_modem),
- 	UNIPHIER_PINCTRL_GROUP(usb0),
- 	UNIPHIER_PINCTRL_GROUP(usb1),
- 	UNIPHIER_PINCTRL_GROUP(usb2),
-@@ -1181,7 +1184,8 @@ static const char * const system_bus_groups[] = {"system_bus",
- static const char * const uart0_groups[] = {"uart0"};
- static const char * const uart1_groups[] = {"uart1"};
- static const char * const uart2_groups[] = {"uart2"};
--static const char * const uart3_groups[] = {"uart3", "uart3_ctsrts"};
-+static const char * const uart3_groups[] = {"uart3", "uart3_ctsrts",
-+					    "uart3_modem"};
- static const char * const usb0_groups[] = {"usb0"};
- static const char * const usb1_groups[] = {"usb1"};
- static const char * const usb2_groups[] = {"usb2"};
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
-index 4a6580d..1d418e3 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-pro5.c
-@@ -839,8 +839,10 @@ static const unsigned uart0_pins[] = {47, 48};
- static const int uart0_muxvals[] = {0, 0};
- static const unsigned uart0b_pins[] = {227, 228};
- static const int uart0b_muxvals[] = {3, 3};
--static const unsigned uart0b_ctsrts_pins[] = {229, 230, 231, 232, 233, 234};
--static const int uart0b_ctsrts_muxvals[] = {3, 3, 3, 3, 3, 3};
-+static const unsigned uart0b_ctsrts_pins[] = {232, 233};
-+static const int uart0b_ctsrts_muxvals[] = {3, 3};
-+static const unsigned uart0b_modem_pins[] = {229, 230, 231, 234};
-+static const int uart0b_modem_muxvals[] = {3, 3, 3, 3};
- static const unsigned uart1_pins[] = {49, 50};
- static const int uart1_muxvals[] = {0, 0};
- static const unsigned uart2_pins[] = {51, 52};
-@@ -916,6 +918,7 @@ static const struct uniphier_pinctrl_group uniphier_pro5_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(uart0),
- 	UNIPHIER_PINCTRL_GROUP(uart0b),
- 	UNIPHIER_PINCTRL_GROUP(uart0b_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart0b_modem),
- 	UNIPHIER_PINCTRL_GROUP(uart1),
- 	UNIPHIER_PINCTRL_GROUP(uart2),
- 	UNIPHIER_PINCTRL_GROUP(uart3),
-@@ -946,7 +949,8 @@ static const char * const system_bus_groups[] = {"system_bus",
- 						 "system_bus_cs5",
- 						 "system_bus_cs6",
- 						 "system_bus_cs7"};
--static const char * const uart0_groups[] = {"uart0", "uart0b", "uart0b_ctsrts"};
-+static const char * const uart0_groups[] = {"uart0", "uart0b",
-+					    "uart0b_ctsrts", "uart0b_modem"};
- static const char * const uart1_groups[] = {"uart1"};
- static const char * const uart2_groups[] = {"uart2"};
- static const char * const uart3_groups[] = {"uart3"};
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-pxs2.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-pxs2.c
-index 169bb44..e52e65a 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-pxs2.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-pxs2.c
-@@ -783,8 +783,10 @@ static const unsigned uart0_pins[] = {217, 218};
- static const int uart0_muxvals[] = {8, 8};
- static const unsigned uart0b_pins[] = {179, 180};
- static const int uart0b_muxvals[] = {10, 10};
--static const unsigned uart0b_ctsrts_pins[] = {176, 177, 178, 183, 184, 185};
--static const int uart0b_ctsrts_muxvals[] = {10, 10, 10, 10, 10, 10};
-+static const unsigned uart0b_ctsrts_pins[] = {183, 185};
-+static const int uart0b_ctsrts_muxvals[] = {10, 10};
-+static const unsigned uart0b_modem_pins[] = {176, 177, 178, 184};
-+static const int uart0b_modem_muxvals[] = {10, 10, 10, 10};
- static const unsigned uart1_pins[] = {115, 116};
- static const int uart1_muxvals[] = {8, 8};
- static const unsigned uart2_pins[] = {113, 114};
-@@ -863,6 +865,7 @@ static const struct uniphier_pinctrl_group uniphier_pxs2_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(uart0),
- 	UNIPHIER_PINCTRL_GROUP(uart0b),
- 	UNIPHIER_PINCTRL_GROUP(uart0b_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart0b_modem),
- 	UNIPHIER_PINCTRL_GROUP(uart1),
- 	UNIPHIER_PINCTRL_GROUP(uart2),
- 	UNIPHIER_PINCTRL_GROUP(uart3),
-@@ -898,7 +901,8 @@ static const char * const spi0_groups[] = {"spi0"};
- static const char * const spi1_groups[] = {"spi1"};
- static const char * const system_bus_groups[] = {"system_bus",
- 						 "system_bus_cs1"};
--static const char * const uart0_groups[] = {"uart0", "uart0b", "uart0b_ctsrts"};
-+static const char * const uart0_groups[] = {"uart0", "uart0b",
-+					    "uart0b_ctsrts", "uart0b_modem"};
- static const char * const uart1_groups[] = {"uart1"};
- static const char * const uart2_groups[] = {"uart2"};
- static const char * const uart3_groups[] = {"uart3", "uart3b"};
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-pxs3.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-pxs3.c
-index 3dc3e5b..2b388fd 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-pxs3.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-pxs3.c
-@@ -811,8 +811,10 @@ static const unsigned int system_bus_cs1_pins[] = {15};
- static const int system_bus_cs1_muxvals[] = {0};
- static const unsigned int uart0_pins[] = {92, 93};
- static const int uart0_muxvals[] = {0, 0};
--static const unsigned int uart0_ctsrts_pins[] = {243, 244, 245, 246, 247, 248};
--static const int uart0_ctsrts_muxvals[] = {3, 3, 3, 3, 3, 3};
-+static const unsigned int uart0_ctsrts_pins[] = {243, 247};
-+static const int uart0_ctsrts_muxvals[] = {3, 3};
-+static const unsigned int uart0_modem_pins[] = {244, 245, 246, 248};
-+static const int uart0_modem_muxvals[] = {3, 3, 3, 3};
- static const unsigned int uart1_pins[] = {94, 95};
- static const int uart1_muxvals[] = {0, 0};
- static const unsigned int uart2_pins[] = {96, 97};
-@@ -887,6 +889,7 @@ static const struct uniphier_pinctrl_group uniphier_pxs3_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(system_bus_cs1),
- 	UNIPHIER_PINCTRL_GROUP(uart0),
- 	UNIPHIER_PINCTRL_GROUP(uart0_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart0_modem),
- 	UNIPHIER_PINCTRL_GROUP(uart1),
- 	UNIPHIER_PINCTRL_GROUP(uart2),
- 	UNIPHIER_PINCTRL_GROUP(uart3),
-@@ -914,7 +917,8 @@ static const char * const spi0_groups[] = {"spi0"};
- static const char * const spi1_groups[] = {"spi1"};
- static const char * const system_bus_groups[] = {"system_bus",
- 						 "system_bus_cs1"};
--static const char * const uart0_groups[] = {"uart0", "uart0_ctsrts"};
-+static const char * const uart0_groups[] = {"uart0", "uart0_ctsrts",
-+					    "uart0_modem"};
- static const char * const uart1_groups[] = {"uart1"};
- static const char * const uart2_groups[] = {"uart2"};
- static const char * const uart3_groups[] = {"uart3"};
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-sld8.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-sld8.c
-index 463e932..087e8db 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-sld8.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-sld8.c
-@@ -513,8 +513,10 @@ static const unsigned system_bus_cs5_pins[] = {13};
- static const int system_bus_cs5_muxvals[] = {1};
- static const unsigned uart0_pins[] = {70, 71};
- static const int uart0_muxvals[] = {3, 3};
--static const unsigned uart0_ctsrts_pins[] = {72, 73, 74};
--static const int uart0_ctsrts_muxvals[] = {3, 3, 3};
-+static const unsigned uart0_ctsrts_pins[] = {72, 74};
-+static const int uart0_ctsrts_muxvals[] = {3, 3};
-+static const unsigned uart0_modem_pins[] = {73};
-+static const int uart0_modem_muxvals[] = {3};
- static const unsigned uart1_pins[] = {114, 115};
- static const int uart1_muxvals[] = {0, 0};
- static const unsigned uart2_pins[] = {112, 113};
-@@ -572,6 +574,7 @@ static const struct uniphier_pinctrl_group uniphier_sld8_groups[] = {
- 	UNIPHIER_PINCTRL_GROUP(system_bus_cs5),
- 	UNIPHIER_PINCTRL_GROUP(uart0),
- 	UNIPHIER_PINCTRL_GROUP(uart0_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart0_modem),
- 	UNIPHIER_PINCTRL_GROUP(uart1),
- 	UNIPHIER_PINCTRL_GROUP(uart2),
- 	UNIPHIER_PINCTRL_GROUP(uart3),
-@@ -599,7 +602,8 @@ static const char * const system_bus_groups[] = {"system_bus",
- 						 "system_bus_cs3",
- 						 "system_bus_cs4",
- 						 "system_bus_cs5"};
--static const char * const uart0_groups[] = {"uart0", "uart0_ctsrts"};
-+static const char * const uart0_groups[] = {"uart0", "uart0_ctsrts",
-+					    "uart0_modem"};
- static const char * const uart1_groups[] = {"uart1"};
- static const char * const uart2_groups[] = {"uart2"};
- static const char * const uart3_groups[] = {"uart3"};
--- 
-2.7.4
+> On Thu, Jun 06, 2019 at 05:36:28PM +0200, Luis Oliveira wrote:
+> > This adds documentation of device tree bindings for the
+> > DesignWare IP reset controller.
+> >=20
+> > Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
+> > ---
+> > Changelog
+> > - Add active low configuration example
+> > - Fix compatible string in the active high example
+> >=20
+> >  .../devicetree/bindings/reset/snps,dw-reset.txt    | 30 ++++++++++++++=
+++++++++
+> >  1 file changed, 30 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/reset/snps,dw-res=
+et.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/reset/snps,dw-reset.txt =
+b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+> > new file mode 100644
+> > index 0000000..85f3301
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+> > @@ -0,0 +1,30 @@
+> > +Synopsys DesignWare Reset controller
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Please also refer to reset.txt in this directory for common reset
+> > +controller binding usage.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: should be one of the following.
+> > +	"snps,dw-high-reset" - for active high configuration
+> > +	"snps,dw-low-reset" - for active low configuration
+>=20
+> This is really a standalone block?
+>=20
+> Are there versions of IP?
+>=20
+
+We use this block because is is very simple. The Verilog is autogenerated=20
+after an simple input configuration (APB config, reset pin number, active=20
+high/low, etc) so it does not need versioning.
+We use it in almost all our testchips and prototyping, and it is a=20
+standalone block.
+
+> > +
+> > +- reg: physical base address of the controller and length of memory ma=
+pped
+> > +	region.
+> > +
+> > +- #reset-cells: must be 1.
+> > +
+> > +example:
+> > +
+> > +	dw_rst_1: reset-controller@0000 {
+> > +		  compatible =3D "snps,dw-high-reset";
+> > +	 	  reg =3D <0x0000 0x4>;
+> > +		  #reset-cells =3D <1>;
+> > +	};
+> > +
+> > +	dw_rst_2: reset-controller@1000 {i
+> > +		  compatible =3D "snps,dw-low-reset";
+> > +		  reg =3D <0x1000 0x8>;
+> > +		  #reset-cells =3D <1>;
+> > +	};
+> > --=20
+> > 2.7.4
+> >=20
+
+Thank you Rob,
+
+Luis
 
