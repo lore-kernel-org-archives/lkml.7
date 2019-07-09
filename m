@@ -2,101 +2,78 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F73EC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87496C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243FB2171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562637171;
-	bh=1szwNiTjUlflqiuk8Yqh+yECkGJ+ByJfPsrAZ5TH3B4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nFwJgies9iEWetnJ1m2sfdWfP5Q3e6ZP+R5ECfZ5fSlBqNWAQmyvKd0uQ7oL2WH3w
-	 o8UfkXaFesInodMZFdLYj/18f0p4miNGT4+dnFBTbuhZiFI7OcKz4cGl8wyGyduKVs
-	 VAjQgwokUrzlbRYcWU1mw9Icy28Fe8pB9ym9htN4=
+	by mail.kernel.org (Postfix) with ESMTP id 4F08C216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfGIBwu (ORCPT
+        id S1726793AbfGIB4C convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:52:50 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37417 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfGIBwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:52:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id q22so17909311iog.4;
-        Mon, 08 Jul 2019 18:52:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=s4iT/C+ZTI6lS8Y15mNcXYBDPJVtxfB5rOYQ4KRci6s=;
-        b=jmVtikgOUC3rVx81wGXpn3jD4H3PkheB3VQFWX8kYKj61ZEJw9OEScZ6epQ4OoFs4G
-         IdVnvf976dnGa3E1kx77Wj7t7TzfSdcmVePaNMmHx9zz1ANK6l+X7kfN4DznTvOv6ua2
-         8zASkPHJchAEly+l4LYajlRjIOALH7O/s+BAVBBQe3/3HX3B4lFyIxOG99Kiw7E4rvA7
-         XsxjTVE/SPPzO5yq7NCOWuRXHypd5lkTaaz0w7OIPB7JaNLf5uu1Aa2BN+uN2cCWxyPW
-         6/qYsFVXk6u/klJaOB1SxSya5xXRaYISEFnNB8yxklcMUGqoxQ0G/HnwgyM5981UU+1y
-         8VCg==
-X-Gm-Message-State: APjAAAWFxM5HRoxkxC3Ghf7RjHne66uEQMs6+x7q9NU4uYlqD7os3Bal
-        eGtPb1yqiqrXjkC3Y9cWgg==
-X-Google-Smtp-Source: APXvYqxAB1vUvIqVP37afapbU1uZ0daFlx54UYQyhhrcCjs15oV7Bjsh/pZuPcpplBZBcFsuEEQPHw==
-X-Received: by 2002:a02:cd83:: with SMTP id l3mr24635684jap.66.1562637168778;
-        Mon, 08 Jul 2019 18:52:48 -0700 (PDT)
-Received: from localhost ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w23sm34368748ioa.51.2019.07.08.18.52.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 18:52:48 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 19:52:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?S=E9bastien?= Szymanski 
-        <sebastien.szymanski@armadeus.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
-        <sebastien.szymanski@armadeus.com>
-Subject: Re: [PATCH v2 3/3] media: dt-bindings: imx7-csi: add i.MX6UL/L
- support
-Message-ID: <20190709015247.GA25557@bogus>
-References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
- <20190606153825.8183-3-sebastien.szymanski@armadeus.com>
+        Mon, 8 Jul 2019 21:56:02 -0400
+Received: from app2.whu.edu.cn ([202.114.64.89]:39874 "EHLO whu.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbfGIB4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:56:02 -0400
+Received: from MI20170214RZUL (unknown [111.202.192.3])
+        by email2 (Coremail) with SMTP id AgBjCgBnNvQr9CNdzSxlAA--.254S3;
+        Tue, 09 Jul 2019 09:55:56 +0800 (CST)
+From:   "Peng Wang" <rocking@whu.edu.cn>
+To:     "'Tejun Heo'" <tj@kernel.org>
+Cc:     <lizefan@huawei.com>, <hannes@cmpxchg.org>,
+        <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190708130132.5582-1-rocking@whu.edu.cn> <20190708144121.GA657710@devbig004.ftw2.facebook.com>
+In-Reply-To: <20190708144121.GA657710@devbig004.ftw2.facebook.com>
+Subject: RE: [PATCH] cgroup: simplify code for cgroup_subtree_control_write()
+Date:   Tue, 9 Jul 2019 09:55:54 +0800
+Message-ID: <000301d535f9$71f1ab90$55d502b0$@whu.edu.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190606153825.8183-3-sebastien.szymanski@armadeus.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQE94/eHFYIYcEzptv5v1lkJv7sJaAH+JMagp+A37hA=
+Content-Language: zh-cn
+X-CM-TRANSID: AgBjCgBnNvQr9CNdzSxlAA--.254S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY87k0a2IF6r1xM7kC6x804xWl14x267AK
+        xVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
+        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j
+        6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F
+        4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvE
+        ncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I
+        8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xS
+        Y4AK67AK6w4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7sRN
+        b10UUUUUU==
+X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  6 Jun 2019 17:38:25 +0200, =?UTF-8?q?S=C3=A9bastien=20Szymanski?=          wrote:
-> Document "fsl,imx6ul-csi" entry.
+On Monday, July 8, 2019 10:41 PM, Tejun Heo wrote:
+> On Mon, Jul 08, 2019 at 09:01:32PM +0800, Peng Wang wrote:
+> > Process "enable" and "disable" earlier to simplify code.
 > 
-> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-> ---
-> 
-> Changes for v2:
->  - New patch to document new "fsl,imx6ul-csi" entry.
-> 
->  Documentation/devicetree/bindings/media/imx7-csi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> I don't think this is correct and even if it were the value of this
+> change is close to none, so nack on this one.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+OK. 
+Although I have tested this patch for common case, It's just somewhat trivial.
+
+Thanks for your time :-).
+
+> 
+> Thanks.
+> 
+> --
+> tejun
+
