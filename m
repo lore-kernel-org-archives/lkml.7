@@ -2,151 +2,71 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7DCC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48AFC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC15208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLKg8zsI"
+	by mail.kernel.org (Postfix) with ESMTP id 8F85E216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562695505;
+	bh=tQLIkCVsL/J5QqNbdtb5HHhnVyuLo2ONICaIVpCZ1LE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=FnxTcsxWgsxuXFGI3K33uSR8U8LZstVeIbsw4L0tU2cabZnSiFP1r8XrJVPAKwRK9
+	 3+1o2aZMZDYSvxTss8Qg7fd53hb8NUpwclwi/VdC3j38t8/wikwmz/H6mOLeTpOuAE
+	 LElKM8HkYTWPWEPRWJY5RuG4pYOu37VCzcF7jAF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfGISCz (ORCPT
+        id S1727328AbfGISFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:02:55 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38221 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfGISCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:02:54 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r9so20459889ljg.5;
-        Tue, 09 Jul 2019 11:02:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i9R0OFCUL3jMQABVdwSMXWLYp20n1lUt8oNSbrQL6kM=;
-        b=LLKg8zsIA8LoxKo96qzf1ltd7oFHbAEMTv7sEzYlSUfxvJhWHa5kNcnFprPNsJSyFk
-         MAla6ZNU7L6FPV0o0NwCiJxVTIeBi9F97Cw0D4PbDLsrOa38sMh3XGRCslhfI7L4l8aT
-         r5zhgmBQUj2L4FHou33rW3C23oeMfHlKugXRSx/L6q/SQQiRopmb3Lx+gerH9xFATKp5
-         v02WgvmqKuVNyUdkxakNxbV7si+wiiF7L1u5sXik5M5eGAJcl6+4tgAHWb+QZBJjKH8B
-         TNXFbfuE/gnFXhJHje4fcL5OqkmWdVovl12y6ZYfyf7OkGb7kvMX/Twou4xK5CEReCUm
-         3GHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i9R0OFCUL3jMQABVdwSMXWLYp20n1lUt8oNSbrQL6kM=;
-        b=W6ejJJkTKnuIHIpMxKTFxLh8s/MITZHhsShDTcZ2bOG+V/PBml0ZwZFwzvyrwZab/z
-         PiZeLuO5JUnV6b0GwDV20hnGj14O+q5tF/1e9a7a+gZYJFFyVZfsVScNZpFLjIvLTTGe
-         a8ovzG29JCrAT0OBbRB68ZEHjH32X7L8I3KCC40AZsyl23hjbwnhcqrjxmAPWt3fYji/
-         ouS2vDv7rfsJt1XvnyjuL2pRbM4pvDU+/hImmyDm/1FcN2YTj6clKSWPhE700dXfnjH9
-         nl0jlgTnfK5DeZ5KQpf09n4ChrPlICC0PvuUdijRf8CYzkgHwlpdEqsh4fUhR4+ACjZo
-         vi4A==
-X-Gm-Message-State: APjAAAW+Dnfj5mrIgG2clyrq3WXjfcXnpUblUkPpeKU4yDy59OF9tp5j
-        7E6JQH3wYzmzO3f1U5a0iMzMc+wobcE3R9qf5ZI=
-X-Google-Smtp-Source: APXvYqzr2uFkaqKlsoNwGNU7LSd8YW4kpX7SYjqvh7+7Anv8Q4YNjZL8knxebPlanpW4K1W1kulGTHw5sqh5AeLX2xc=
-X-Received: by 2002:a2e:a311:: with SMTP id l17mr14115937lje.214.1562695372462;
- Tue, 09 Jul 2019 11:02:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <tip-b22cf36c189f31883ad0238a69ccf82aa1f3b16b@git.kernel.org>
- <20190706202942.GA123403@gmail.com> <20190707013206.don22x3tfldec4zm@treble>
- <20190707055209.xqyopsnxfurhrkxw@treble> <CAADnVQJqT8o=_6P6xHjwxrXqX9ToSb0cTfoOcm2Xcha3KRNNSw@mail.gmail.com>
- <20190708223834.zx7u45a4uuu2yyol@treble> <CAADnVQKWDvzsvyjGoFvSQV7VGr2hF2zzCsC9vnpncWMxOJWYdw@mail.gmail.com>
- <20190708225359.ewk44pvrv6a4oao7@treble> <20190708230201.mol27wzansuy3n2v@treble>
- <CAADnVQ+imsK-reGBiSzY02e+KdyGYZxm1su7T1bWvti=YmSV-Q@mail.gmail.com> <20190709174744.dtbjm72cbu5fepar@treble>
-In-Reply-To: <20190709174744.dtbjm72cbu5fepar@treble>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 9 Jul 2019 11:02:40 -0700
-Message-ID: <CAADnVQJ+iCZ8g38XJkOiawS=p1mZU5XBqaBWc8_zCKVe8hMxTQ@mail.gmail.com>
-Subject: Re: [tip:x86/urgent] bpf: Fix ORC unwinding in non-JIT BPF code
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kairui Song <kasong@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 9 Jul 2019 14:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727305AbfGISFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:05:03 -0400
+Subject: Re: [GIT PULL for v5.3-rc1] media updates
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562695502;
+        bh=tQLIkCVsL/J5QqNbdtb5HHhnVyuLo2ONICaIVpCZ1LE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=lNUx5ElQxidJzgtme7oyS3OcJFt/yi19y1gXDFzOBO8/woy32nhGOWaySBtjFPKXH
+         UMgau/fWLllIiMsI3Ejel6Z27dNbfxB4KqvRUl5Ttvvwx4A+fPzuNqzfiDOJ2Lxzan
+         egmLDAV+wVClwyy9biDf3N2JvPYlzM9r6sBkbE+A=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190709081735.3d642186@coco.lan>
+References: <20190709081735.3d642186@coco.lan>
+X-PR-Tracked-List-Id: <linux-media.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190709081735.3d642186@coco.lan>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+ tags/media/v5.3-1
+X-PR-Tracked-Commit-Id: f81cbfc4f82a75ca0a2dc181a9c93b88f0e6509d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ed63b9c873601ca113da5c7b1745e3946493e9f3
+Message-Id: <156269550241.14383.417129534534296641.pr-tracker-bot@kernel.org>
+Date:   Tue, 09 Jul 2019 18:05:02 +0000
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 10:48 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Mon, Jul 08, 2019 at 04:16:25PM -0700, Alexei Starovoitov wrote:
-> > total time is hard to compare.
-> > Could you compare few tests?
-> > like two that are called "tcpdump *"
-> >
-> > I think small regression is ok.
-> > Folks that care about performance should be using JIT.
->
-> I did each test 20 times and computed the averages:
->
-> "tcpdump port 22":
->  default:       0.00743175s
->  -fno-gcse:     0.00709920s (~4.5% speedup)
->
-> "tcpdump complex":
->  default:       0.00876715s
->  -fno-gcse:     0.00854895s (~2.5% speedup)
->
-> So there does seem to be a small performance gain by disabling this
-> optimization.
+The pull request you sent on Tue, 9 Jul 2019 08:17:35 -0300:
 
-great. thanks for checking.
+> git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.3-1
 
-> We could change it for the whole file, by adjusting CFLAGS_core.o in the
-> BPF makefile, or we could change it for the function only with something
-> like the below patch.
->
-> Thoughts?
->
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index e8579412ad21..d7ee4c6bad48 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -170,3 +170,5 @@
->  #else
->  #define __diag_GCC_8(s)
->  #endif
-> +
-> +#define __no_fgcse __attribute__((optimize("-fno-gcse")))
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 095d55c3834d..599c27b56c29 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -189,6 +189,10 @@ struct ftrace_likely_data {
->  #define asm_volatile_goto(x...) asm goto(x)
->  #endif
->
-> +#ifndef __no_fgcse
-> +# define __no_fgcse
-> +#endif
-> +
->  /* Are two types/vars the same type (ignoring qualifiers)? */
->  #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
->
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index 7e98f36a14e2..8191a7db2777 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -1295,7 +1295,7 @@ bool bpf_opcode_in_insntable(u8 code)
->   *
->   * Decode and execute eBPF instructions.
->   */
-> -static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
-> +static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ed63b9c873601ca113da5c7b1745e3946493e9f3
 
-I prefer per-function flag.
-If you want to route it via tip:
-Acked-by: Alexei Starovoitov <ast@kerrnel.org>
+Thank you!
 
-or Daniel can take it into bpf tree while I'm traveling.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
