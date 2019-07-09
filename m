@@ -2,205 +2,134 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17402C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA554C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADA42173C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16502173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="QW0mlGJH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi5Qyysv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfGIF3q (ORCPT
+        id S1727487AbfGIF34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:29:46 -0400
-Received: from mail-eopbgr720099.outbound.protection.outlook.com ([40.107.72.99]:55635
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727373AbfGIF3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:29:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=INIocVZ4SfKqZJrPM864RgWjPpiVkyJOZr6yIiX/XzyEatxBvGiWi1LdM9+AulQOekizWLHIgp4qgiywUNZq8iyiITAKAF4+pmLdPHF3ERBF3++DS3P5rwZ48lwoWmJ0qHD+yQvBtJ2gNU80AE1EjlyQ16smrfObGBKTogAYPHGYDAFeKCYIk9rzjhAK8m59yUD8TVQV+r/x5COx2NFgCR3S6HgMjt7vqdLFYFnuqsRTPsSaXR2w+u8o20l7L/tn3d+HKxPuCPL1W9deUMARp5At4reRVlmmkyXs5DnIS72IrvL4w1lQxKVwDRGE8x3+Y+WBKvCZwcJKpeBZFbCdQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SvWBZR5xTsd/UoWD8u0c6uIlYMkCouyA2qe/AcDJyo0=;
- b=OCjR6y4vPponGH/Jvt26mZR7IyWDeTApataIAQJidj7YFiBd7UA3XoUA6zxrXZaIRKXjPjXdYKDCU3C+0NtYNWLOcRoZbGp9/kmIcr5vMzKlbHf3EjGx5EjVonIBrlIjYkZzz5O9498ReAcivErgG2kh8bWdLU17v/Fadn1BPl6ilSUNGMmSvDHHyU2Im9qhosDvI2XPhAaW+Dmr4japNPw01UhrzNuDvYXiqQhVtTvIqyRMMUH3yCv7B0uifbh3fB3U5dp2IK3M+XK2HHDztJbOGEzSJj2NYApnbfQjo0iJ7Zd4mnz8FHhPtLblwoO3FYgYr04VAC0iD6enCepoqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SvWBZR5xTsd/UoWD8u0c6uIlYMkCouyA2qe/AcDJyo0=;
- b=QW0mlGJHZ2z4UtK8GXf1mKbSXdPX68x+hrondsmyhSA/E68/H3pwsV7ukIg7eWUeKtdTyxReWMgR1jp9qFHU4jHCM9iXWSA6gV6YngysUqkf3u0csH7E/pqu2ifNyBJIg0ZtCOm4ktQ87u5sIbaGhg0/1FlqjQLbHquRSZTae44=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB1358.namprd21.prod.outlook.com (20.178.200.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.3; Tue, 9 Jul 2019 05:29:31 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::60d7:a692:61f4:e6ab]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::60d7:a692:61f4:e6ab%3]) with mapi id 15.20.2094.001; Tue, 9 Jul 2019
- 05:29:31 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH 7/7] Drivers: hv: vmbus: Implement suspend/resume for VSC
- drivers for hibernation
-Thread-Topic: [PATCH 7/7] Drivers: hv: vmbus: Implement suspend/resume for VSC
- drivers for hibernation
-Thread-Index: AQHVNhdJ4hVzL0roO0+FWkmCs00hUQ==
-Date:   Tue, 9 Jul 2019 05:29:31 +0000
-Message-ID: <1562650084-99874-8-git-send-email-decui@microsoft.com>
-References: <1562650084-99874-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1562650084-99874-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR15CA0060.namprd15.prod.outlook.com
- (2603:10b6:301:4c::22) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b7b0d9a3-e254-4210-786f-08d7042e6b61
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR2101MB1358;
-x-ms-traffictypediagnostic: SN6PR2101MB1358:|SN6PR2101MB1358:
-x-microsoft-antispam-prvs: <SN6PR2101MB1358FE66BB370D989FCA0EE5BFF10@SN6PR2101MB1358.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:873;
-x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(396003)(376002)(366004)(39860400002)(346002)(136003)(199004)(189003)(86362001)(6512007)(4326008)(53936002)(110136005)(25786009)(66066001)(4720700003)(1511001)(107886003)(15650500001)(52116002)(99286004)(6116002)(3846002)(316002)(22452003)(54906003)(43066004)(50226002)(2906002)(3450700001)(6436002)(6486002)(6506007)(386003)(66476007)(68736007)(76176011)(186003)(10090500001)(102836004)(26005)(5024004)(14444005)(2501003)(256004)(5660300002)(64756008)(66556008)(10290500003)(305945005)(7736002)(36756003)(73956011)(478600001)(66946007)(66446008)(81166006)(8936002)(11346002)(446003)(2616005)(476003)(14454004)(71190400001)(486006)(8676002)(71200400001)(81156014)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1358;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xVrKCjIH+ueVMip1rS88X8/FT8cRZVspbH0gtS4YCXrt8jWVYA35oIT+PvYgZnbWxNpDgo1/LysaY2+EjCfKcNf1dGW190fgMx/uRD6+TudYsyCSzXcMwi2ki9XEH/bG97fWo6ZEn0Jt1u4MISIBNB3B7b6Q/AcIHlkfp39Gbrdz/JUULVFKHoXXKUU7KRsPuDAmRmYdVFS0VvvsJs6L6IzsKw9VG7+VFPPod2B+yBLXYAC2TFZjGx6xC/XdDay+RySaKNFHS9iF2ZVaRI+BKLL+qACnim8+stjsqqPESw1i0K4Jd90wrkHJ4FE1Ji80yYNvkY3zBHMp5+hQomfej/F8Bn5yKEiATkqhCjPiLVJqMOYoEjbsIIFcHKzRiR9aUHHLLUrdS0tseSRheXYUECfob3vwbH2/zWcYPHA+Zpo=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 9 Jul 2019 01:29:56 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36833 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfGIF3z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 01:29:55 -0400
+Received: by mail-io1-f67.google.com with SMTP id o9so24917999iom.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 22:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ekTBrm84eDXWp2v27vp/vaf2aZ34u1Aceu1+v4AGHdQ=;
+        b=bi5Qyysv+BTUf6UfpIP1DBNvpEfxu1eIX6ZN3ZtCABgoI3gVIc9Ab6nbbW7wMIp9+v
+         NrhtR0tF4ki2WZZSh2W7XrGRwvXyWHbRvMBA1uI9u9Ii5NX91Uk3PEvFxiX45AL1ay6I
+         z2Cvk3ksOY48Fa3QlisSHncdSRaJfsaKkzFb84oyBTRnv7YXSLZwK7ikVQIh3U7aiRWG
+         JFRisGdvze06cdteG8b1YUE3eWYC70EQMeZSrnecXX2eG0/jZo6MOcBbv2VmLbL/Q7di
+         1mw5UqYdTPloGP1qsP2UPsQcnDJ7YQvQz0DMrGZwB5KvfaTyuSx4Cswh+tQrHXuhwJa0
+         LVFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ekTBrm84eDXWp2v27vp/vaf2aZ34u1Aceu1+v4AGHdQ=;
+        b=N+Kwu6vvTxd+sk6HXMTPkNGFKETQJE6A8BrLYUG4mS/4f8r4AIKzcKFfmCgT7Pclzx
+         OEc49Dk1lXZbvVqNRjk6vtcMGC8BWHc5Bb34Bn0y+7/L14f6Bj3mVWl5QKQQP6SnvOh5
+         5p6S0cEta5jlo/8dfbHbsq/x9ms7+d20HB8iF7wB34yOB9+V1aQukUis9+TrPGexmZ+M
+         nkXFn6lO2FlZ8WZbvDDuIGVAd2KsefOfvzR5nDzy7xBLZnBA6vf7aCr+4i90MtYGbTnq
+         J5m0dfWWK+MkVXaFrzCKMQmabHEs9b47w9x1r25/tjit6wSJ9aYBDM8g4Kwxu13HKwiQ
+         DyxQ==
+X-Gm-Message-State: APjAAAVfRk5G1m413M9ujh4JAmVzGIkkFqRV5cTbFdcP/FEM4H4RIvAp
+        h6V9PfiMQj0i3KlQhAW4rosgqP3SVXlWgGR5iSE=
+X-Google-Smtp-Source: APXvYqwlS6XUTtj022vlunepvujabK/y+bpHegMJ9IVb5gwkEqD17jg6eAVvZb3eDYVISpiQtcZhOGdsmj+f1PHg5V0=
+X-Received: by 2002:a02:9004:: with SMTP id w4mr26522994jaf.111.1562650194327;
+ Mon, 08 Jul 2019 22:29:54 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7b0d9a3-e254-4210-786f-08d7042e6b61
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 05:29:31.4620
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lkmldc@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1358
+References: <239d1c8f15b8bedc161a234f9f1a22a07160dbdf.1557824379.git.christophe.leroy@c-s.fr>
+ <d6f628ffdeb9c7863da722a8f6ef2949e57bb360.1557824379.git.christophe.leroy@c-s.fr>
+ <87y318d2th.fsf@linux.ibm.com> <CAOSf1CG-oxpSDsAPw8xHV5367MrMn2Ty_yDpPY9TvA6wMrMZHA@mail.gmail.com>
+ <c0461069-8ef8-cb56-6807-71cc79793ac4@linux.ibm.com>
+In-Reply-To: <c0461069-8ef8-cb56-6807-71cc79793ac4@linux.ibm.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Tue, 9 Jul 2019 15:29:43 +1000
+Message-ID: <CAOSf1CHYdUXOrxrnEgnF0QXWJ3At=x_70FOhr-9nyuXcgsYk3Q@mail.gmail.com>
+Subject: Re: [PATCH 4/4] powerpc/64: reuse PPC32 static inline flush_dcache_range()
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The high-level VSC drivers will implement device-specific callbacks.
+On Tue, Jul 9, 2019 at 12:52 PM Aneesh Kumar K.V
+<aneesh.kumar@linux.ibm.com> wrote:
+>
+> On 7/9/19 7:50 AM, Oliver O'Halloran wrote:
+> > On Tue, Jul 9, 2019 at 12:22 AM Aneesh Kumar K.V
+> > <aneesh.kumar@linux.ibm.com> wrote:
+> >>
+> >> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> >>
+> >>> *snip*
+> >>> +     if (IS_ENABLED(CONFIG_PPC64))
+> >>> +             isync();
+> >>>   }
+> >>
+> >>
+> >> Was checking with Michael about why we need that extra isync. Michael
+> >> pointed this came via
+> >>
+> >> https://github.com/mpe/linux-fullhistory/commit/faa5ee3743ff9b6df9f9a03600e34fdae596cfb2#diff-67c7ffa8e420c7d4206cae4a9e888e14
+> >>
+> >> for 970 which doesn't have coherent icache. So possibly isync there is
+> >> to flush the prefetch instructions? But even so we would need an icbi
+> >> there before that isync.
+> >
+> > I don't think it's that, there's some magic in flush_icache_range() to
+> > handle dropping prefetched instructions on 970.
+> >
+> >> So overall wondering why we need that extra barriers there.
+> >
+> > I think the isync is needed there because the architecture only
+> > requires sync to provide ordering. A sync alone doesn't guarantee the
+> > dcbfs have actually completed so the isync is necessary to ensure the
+> > flushed cache lines are back in memory. That said, as far as I know
+> > all the IBM book3s chips from power4 onwards will wait for pending
+> > dcbfs when they hit a sync, but that might change in the future.
+> >
+>
+> ISA doesn't list that as the sequence. Only place where isync was
+> mentioned was w.r.t  icbi where want to discards the prefetch.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- drivers/hv/vmbus_drv.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/hyperv.h |  3 +++
- 2 files changed, 45 insertions(+)
+doesn't list that as the sequence for what?
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 1730e7b..e29e2171 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -911,6 +911,43 @@ static void vmbus_shutdown(struct device *child_device=
-)
- 		drv->shutdown(dev);
- }
-=20
-+/*
-+ * vmbus_suspend - Suspend a vmbus device
-+ */
-+static int vmbus_suspend(struct device *child_device)
-+{
-+	struct hv_driver *drv;
-+	struct hv_device *dev =3D device_to_hv_device(child_device);
-+
-+	/* The device may not be attached yet */
-+	if (!child_device->driver)
-+		return 0;
-+
-+	drv =3D drv_to_hv_drv(child_device->driver);
-+	if (!drv->suspend)
-+		return -EOPNOTSUPP;
-+
-+	return drv->suspend(dev);
-+}
-+
-+/*
-+ * vmbus_resume - Resume a vmbus device
-+ */
-+static int vmbus_resume(struct device *child_device)
-+{
-+	struct hv_driver *drv;
-+	struct hv_device *dev =3D device_to_hv_device(child_device);
-+
-+	/* The device may not be attached yet */
-+	if (!child_device->driver)
-+		return 0;
-+
-+	drv =3D drv_to_hv_drv(child_device->driver);
-+	if (!drv->resume)
-+		return -EOPNOTSUPP;
-+
-+	return drv->resume(dev);
-+}
-=20
- /*
-  * vmbus_device_release - Final callback release of the vmbus child device
-@@ -926,6 +963,10 @@ static void vmbus_device_release(struct device *device=
-)
- 	kfree(hv_dev);
- }
-=20
-+static const struct dev_pm_ops vmbus_pm =3D {
-+	SET_SYSTEM_SLEEP_PM_OPS(vmbus_suspend, vmbus_resume)
-+};
-+
- /* The one and only one */
- static struct bus_type  hv_bus =3D {
- 	.name =3D		"vmbus",
-@@ -936,6 +977,7 @@ static void vmbus_device_release(struct device *device)
- 	.uevent =3D		vmbus_uevent,
- 	.dev_groups =3D		vmbus_dev_groups,
- 	.drv_groups =3D		vmbus_drv_groups,
-+	.pm =3D			&vmbus_pm,
- };
-=20
- struct onmessage_work_context {
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 6256cc3..94443c4 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1149,6 +1149,9 @@ struct hv_driver {
- 	int (*remove)(struct hv_device *);
- 	void (*shutdown)(struct hv_device *);
-=20
-+	int (*suspend)(struct hv_device *);
-+	int (*resume)(struct hv_device *);
-+
- };
-=20
- /* Base device object */
---=20
-1.8.3.1
+> > If it's a problem we could add a cpu-feature section around the isync
+> > to no-op it in the common case. However, when I had a look with perf
+> > it always showed that the sync was the hotspot so I don't think it'll
+> > help much.
+> >
+>
+> What about the preceding barriers (sync; isync;) before dcbf? Why are
+> they needed?
 
+Dunno, the sync might just be to ensure ordering between prior stores
+and the dcbf.
+
+>
+> -aneesh
