@@ -2,110 +2,99 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051FAC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534B4C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CFE205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E804216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562690269;
+	bh=pWkEe167WbQ442zTlFI4Y3F1p4RvsuiGLSHIBQKeshs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M3yAA6x2UMnTP74NaF88+QkzCcFPoet7nf4DNOJTWgzFzoB1+yHKTv7/KJHCi/IG+
+	 88hlgYTm0xVi1fzx0aT/jJl9EFfj/CAGK0PKLfLFrmmunT8ugHA0lTMrEnci6kOP/h
+	 pimqpPTp2YEjgmRcc+hm9n3YbTxInIiw1YhPVsXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfGIQfz (ORCPT
+        id S1726418AbfGIQhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 12:35:55 -0400
-Received: from mga06.intel.com ([134.134.136.31]:50954 "EHLO mga06.intel.com"
+        Tue, 9 Jul 2019 12:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfGIQfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 12:35:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 09:35:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
-   d="scan'208";a="185945552"
-Received: from mmaitert-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.34.54])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jul 2019 09:35:49 -0700
-Date:   Tue, 9 Jul 2019 19:35:48 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v2] tpm: tpm_ibm_vtpm: Fix unallocated banks
-Message-ID: <20190709163548.i6w7iawyy6bgnyuw@linux.intel.com>
-References: <1562458725-15999-1-git-send-email-nayna@linux.ibm.com>
- <586c629b6d3c718f0c1585d77fe175fe007b27b1.camel@linux.intel.com>
- <1562624644.11461.66.camel@linux.ibm.com>
+        id S1726133AbfGIQhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 12:37:47 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13781208C4;
+        Tue,  9 Jul 2019 16:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562690266;
+        bh=pWkEe167WbQ442zTlFI4Y3F1p4RvsuiGLSHIBQKeshs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jSyvIkqznH1WlovJsD6MlNU3vQ2Ji0uMayXarPnw61MDn+d/e4OSQ2ML34vrJRrUQ
+         LbA04BEPvfWB1SiBzqsJupyaw+8nQhqI0P2XRYpJqVgNybheVpIhb9X30QPwgvV/IG
+         M9a16F6dTB6YYhRxZrYqzfliKgEKI12jdC/OkYnk=
+Date:   Tue, 9 Jul 2019 12:37:44 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, kys@microsoft.com
+Subject: Re: exfat filesystem
+Message-ID: <20190709163744.GS10104@sasha-vm>
+References: <21080.1562632662@turing-police>
+ <20190709045020.GB23646@mit.edu>
+ <20190709112136.GI32320@bombadil.infradead.org>
+ <20190709153039.GA3200@mit.edu>
+ <20190709154834.GJ32320@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1562624644.11461.66.camel@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190709154834.GJ32320@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 06:24:04PM -0400, Mimi Zohar wrote:
-> > static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-> > {
-> > 	int rc;
-> > 
-> > 	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
-> >      	     tpm2_get_pcr_allocation(chip) :
-> >      	     tpm1_get_pcr_allocation(chip);
-> 
-> > 
-> > 	return rc > 0 ? -ENODEV : rc;
-> > }
-> > 
-> > This addresses the issue that Stefan also pointed out. You have to
-> > deal with the TPM error codes.
-> 
-> Hm, in the past I was told by Christoph not to use the ternary
-> operator.  Have things changed?  Other than removing the comment, the
-> only other difference is the return.
+On Tue, Jul 09, 2019 at 08:48:34AM -0700, Matthew Wilcox wrote:
+>On Tue, Jul 09, 2019 at 11:30:39AM -0400, Theodore Ts'o wrote:
+>> On Tue, Jul 09, 2019 at 04:21:36AM -0700, Matthew Wilcox wrote:
+>> > How does
+>> > https://www.zdnet.com/article/microsoft-open-sources-its-entire-patent-portfolio/
+>> > change your personal opinion?
+>>
+>> According to SFC's legal analysis, Microsoft joining the OIN doesn't
+>> mean that the eXFAT patents are covered, unless *Microsoft*
+>> contributes the code to the Linux usptream kernel.  That's because the
+>> OIN is governed by the Linux System Definition, and until MS
+>> contributes code which covered by the exFAT patents, it doesn't count.
+>>
+>> For more details:
+>>
+>> https://sfconservancy.org/blog/2018/oct/10/microsoft-oin-exfat/
+>>
+>> (This is not legal advice, and I am not a lawyer.)
+>
+>Interesting analysis.  It seems to me that the correct forms would be
+>observed if someone suitably senior at Microsoft accepted the work from
+>Valdis and submitted it with their sign-off.  KY, how about it?
 
-Lets purge the snippet:
+Huh, that's really how this works? Let me talk with our lawyers to clear
+this up.
 
-rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
-     tpm2_get_pcr_allocation(chip) :
-     tpm1_get_pcr_allocation(chip);
+Would this mean, hypothetically, that if MS has claims against the
+kernel's scheduler for example, it can still assert them if no one from
+MS touched the code? And then they lose that ability if a MS employee
+adds a tiny fix in?
 
-In this statement ternary operator does make sense because it is the
-most readable way to express what is going on. We assign something
-selecting one of the two options as the value  of rc based on a
-condition.
-
-It is like a natural fit for a ternary-operation and less messy than two
-assigment statements.
-
-On the other hand:
-
-return rc > 0 ? -ENODEV : rc;
-
-Here a better form would definitely be:
-
-if (rc > 0)
-	return - ENODEV;
-
-return rc;
-
-It is just two hard to grasp the logic when ternary operation is used.
-
-Total ban of any language construct would be just utterly stupid. I
-would instead use common sense here.
-
-/Jarkko
+--
+Thanks,
+Sasha
