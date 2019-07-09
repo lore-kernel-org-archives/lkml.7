@@ -2,141 +2,305 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ACCC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C8DC73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0867216E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562681672;
-	bh=aByOK+zzVwLPzmHerWij80ctxh6Sgg+/BIZzdxbJl4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YIKpG/CGqO87rVl+8QXiM7cyiUdBxEFDqBRWcl5oaHTN+QSLCiWVGye+1or8fhiFe
-	 ko2Z7OfNvH/IOcewfyuNGotNb+CtUa6S/KrVqd7l8GGKXf7fGAFYvxd5Otw2yeLMQR
-	 bnM1bZ0FTyKZOWY5jrPYtADQFQt+GxCSP2GK6fYI=
+	by mail.kernel.org (Postfix) with ESMTP id E65DF216E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="MzzNa06l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfGIOOb (ORCPT
+        id S1726335AbfGIOSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfGIOOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:14:31 -0400
-Received: from localhost (249.sub-174-234-174.myvzw.com [174.234.174.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 175D92080C;
-        Tue,  9 Jul 2019 14:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562681670;
-        bh=aByOK+zzVwLPzmHerWij80ctxh6Sgg+/BIZzdxbJl4c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AGNoPj52haojTKl83cHZhTcXgNZoRA03liHpBu8SHLapzLI5hKhvptQB/VzjqI+Gd
-         81+/WoF2FUAEVmTEC+Gps7rhtlY6ZjvnZdmu5exXK6xN+a6GL3lPXvn8ULTA6Zon/Y
-         0RpkAvPpzrniAx4NnJlh0LbdktlTQk6jN6IdViro=
-Date:   Tue, 9 Jul 2019 09:14:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
- features
-Message-ID: <20190709141427.GB35486@google.com>
-References: <20190701124010.7484-1-vidyas@nvidia.com>
- <20190701124010.7484-2-vidyas@nvidia.com>
+        Tue, 9 Jul 2019 10:18:22 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50929 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfGIOSW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 10:18:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v15so3306320wml.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 07:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zAfWkGTqy/4+jQo0giTgwlHBdMjJZDPW1KI+35w/1So=;
+        b=MzzNa06lRdFpz/NDLEEeMkVDhuvw2olLDScYMkyTard5PpwGHeT6eL89YrG21nCAhS
+         XOmu2RC5g7DaLUXJeNiapGREo/9mgzuZCFm6G+ChhtZnYp0jb7QzQJBjCSqpBzgpQ6wZ
+         gV0PE1ypvTuvtPLtsHrL1J24WS2GyuOOW6+KDRQDbGokgPumDETst39ata1/q9giFr3G
+         /RWOcWT43+tC7eyZUr4BfB6dDhdW9ETaVC6FEBiUiJr/SJI1qMidbF2PRZp6lzI7wkv2
+         pR4XXPbIO+9HZ0nvfVAbTQqHkLmzwIi9yRIt2uxBaPNcwXOccr4+Wzegp0m/SD06i7IS
+         RhWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zAfWkGTqy/4+jQo0giTgwlHBdMjJZDPW1KI+35w/1So=;
+        b=RSN4XGhoLgvZYJIcf4bY/NsM63HBS/ii/HRRWSzF4PhzwmzmnFrSnJ0CGE22xOkVYg
+         VdbkULu492RS/xObrqlfXDVk9XpViU0AmvUFA1psDdKOFw3K0qeejWjsrUzf+tfOjGG1
+         B2mLztZwmsx0gzbtFvqbFhp43wn6Cwz9kNBQ8eI2z5QIPSTeRvwjbLP1YZj7wJlOMyzb
+         8iUpH67tTCXv0uiH41pDZkhCxJbmPqSUqmQ3bdOTYP6YWdz4fib0NmUf+9UhjmuGMFDX
+         dxwKaDSBTOWZeS+iTtni2SrOM6sVHyld/tL5pjj8ClP/uiU6djelx9dvvJEP5qghUu4F
+         xEKw==
+X-Gm-Message-State: APjAAAVMDedJkiibVwrw5B4HbY6zji6StKG2EUZV+2100FKtZOhoYr0B
+        WIUW8/pSMscqAa4xhz/2fBSl57d+
+X-Google-Smtp-Source: APXvYqzCTRpFQwyIoXWEUjn/NVKXHfiD/OvyMQBa6YuYeqigTV6oOTZ9pJa+Addu63ORS1iQItwRng==
+X-Received: by 2002:a1c:f918:: with SMTP id x24mr223582wmh.132.1562681898990;
+        Tue, 09 Jul 2019 07:18:18 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id x11sm2433780wmi.26.2019.07.09.07.18.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 07:18:18 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 16:18:17 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
+Message-ID: <20190709141817.GE2301@nanopsycho.orion>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
+ <20190703114933.GW2250@nanopsycho>
+ <20190703181851.GP20101@unicorn.suse.cz>
+ <20190704080435.GF2250@nanopsycho>
+ <20190704115236.GR20101@unicorn.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701124010.7484-2-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190704115236.GR20101@unicorn.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 06:09:59PM +0530, Vidya Sagar wrote:
-> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
-> features.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
+Thu, Jul 04, 2019 at 01:52:36PM CEST, mkubecek@suse.cz wrote:
+>On Thu, Jul 04, 2019 at 10:04:35AM +0200, Jiri Pirko wrote:
+>> Wed, Jul 03, 2019 at 08:18:51PM CEST, mkubecek@suse.cz wrote:
+>> >On Wed, Jul 03, 2019 at 01:49:33PM +0200, Jiri Pirko wrote:
+>> >> Tue, Jul 02, 2019 at 01:50:09PM CEST, mkubecek@suse.cz wrote:
+>> >> >+Compact form: nested (bitset) atrribute contents:
+>> >> >+
+>> >> >+    ETHTOOL_A_BITSET_LIST	(flag)		no mask, only a list
+>> >> >+    ETHTOOL_A_BITSET_SIZE	(u32)		number of significant bits
+>> >> >+    ETHTOOL_A_BITSET_VALUE	(binary)	bitmap of bit values
+>> >> >+    ETHTOOL_A_BITSET_MASK	(binary)	bitmap of valid bits
+>> >> >+
+>> >> >+Value and mask must have length at least ETHTOOL_A_BITSET_SIZE bits rounded up
+>> >> >+to a multiple of 32 bits. They consist of 32-bit words in host byte order,
+>> >> 
+>> >> Looks like the blocks are similar to NLA_BITFIELD32. Why don't you user
+>> >> nested array of NLA_BITFIELD32 instead?
+>> >
+>> >That would mean a layout like
+>> >
+>> >  4 bytes of attr header
+>> >  4 bytes of value
+>> >  4 bytes of mask
+>> >  4 bytes of attr header
+>> >  4 bytes of value
+>> >  4 bytes of mask
+>> >  ...
+>> >
+>> >i.e. interleaved headers, words of value and words of mask. Having value
+>> >and mask contiguous looks cleaner to me. Also, I can quickly check the
+>> >sizes without iterating through a (potentially long) array.
+>> 
+>> Yeah, if you are not happy with this, I suggest to introduce
+>> NLA_BITFIELD with arbitrary size. That would be probably cleanest.
+>
+>There is still the question if it it should be implemented as a nested
+>attribute which could look like the current compact form without the
+>"list" flag (if there is no mask, it's a list). Or an unstructured data
+>block consisting of u32 bit length and one or two bitmaps of
+>corresponding length. I would prefer the nested attribute, netlink was
+>designed to represent structured data, passing structures as binary goes
+>against the design (just looked at VFINFO in rtnetlink few days ago,
+>it's awful, IMHO).
+>
+>Either way, I would still prefer to have bitmaps represented as an array
+>of 32-bit blocks in host byte order. This would be easy to handle in
+>kernel both in places where we have u32 based bitmaps and unsigned long
+>based ones. Other options seem less appealing:
+>
+>  - u8 based: only complicates processing
+>  - u64 based: have to care about alignment
+>  - unsigned long based: alignment and also problems with 64-bit kernel
+>    vs. 32-bit userspace
+>
+>> >> This is quite complex and confusing. Having the same API for 2 APIs is
+>> >> odd. The API should be crystal clear, easy to use.
+>> >> 
+>> >> Why can't you have 2 commands, one working with bit arrays only, one
+>> >> working with strings? Something like:
+>> >> X_GET
+>> >>    ETHTOOL_A_BITS (nested)
+>> >>       ETHTOOL_A_BIT_ARRAY (BITFIELD32)
+>> >> X_NAMES_GET
+>> >>    ETHTOOL_A_BIT_NAMES (nested)
+>> >> 	ETHTOOL_A_BIT_INDEX
+>> >> 	ETHTOOL_A_BIT_NAME
+>> >> 
+>> >> For set, you can also have multiple cmds:
+>> >> X_SET  - to set many at once, by bit index
+>> >>    ETHTOOL_A_BITS (nested)
+>> >>       ETHTOOL_A_BIT_ARRAY (BITFIELD32)
+>> >> X_ONE_SET   - to set one, by bit index
+>> >>    ETHTOOL_A_BIT_INDEX
+>> >>    ETHTOOL_A_BIT_VALUE
+>> >> X_ONE_SET   - to set one, by name
+>> >>    ETHTOOL_A_BIT_NAME
+>> >>    ETHTOOL_A_BIT_VALUE
+>> >
+>> >This looks as if you assume there is nothing except the bitset in the
+>> >message but that is not true. Even with your proposed breaking of
+>> >current groups, you would still have e.g. 4 bitsets in reply to netdev
+>> >features query, 3 in timestamping info GET request and often bitsets
+>> >combined with other data (e.g. WoL modes and optional WoL password).
+>> >If you wanted to further refine the message granularity to the level of
+>> >single parameters, we might be out of message type ids already.
+>> 
+>> You can still have multiple bitsets(bitfields) in single message and
+>> have separate cmd/cmds to get string-bit mapping. No need to mangle it.
+>
+>Let's take a look at what it means in practice, the command is
+>
+>  ethtool --set-prif-flags eth3 legacy-rx on
+>
+>on an ixgbe card. Currently, ethtool (from the github repository) does
+>
+>------------------------------------------------------------------------
+>ETHTOOL_CMD_SETTINGS_SET (K->U, 68 bytes)
+>    ETHTOOL_A_HEADER
+>        ETHTOOL_A_DEV_NAME = "eth3"
+>    ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>        ETHTOOL_A_BITSET_BITS
+>            ETHTOOL_A_BITS_BIT
+>                ETHTOOL_A_BIT_NAME = "legacy-rx"
+>                ETHTOOL_A_BIT_VALUE
+>
+>NLMSG_ERR (K->U, 36 bytes) err = 0
+>------------------------------------------------------------------------
+>
+>If we had only compact form (or some of the NLA_BITFIELD solutions we
+>are talking about), you would need
+>
+>------------------------------------------------------------------------
+>ETHTOOL_CMD_STRSET_GET (U->K, 52 bytes)
+>    ETHTOOL_A_HEADER
+>        ETHTOOL_A_DEV_NAME = "eth3"
+>    ETHTOOL_A_STRSET_STRINGSETS
+>        ETHTOOL_A_STRINGSETS_STRINGSET
+>            ETHTOOL_A_STRINGSET_ID = 2 (ETH_SS_PRIV_FLAGS)
+>
+>ETHTOOL_CMD_STRSET_GET_REPLY (K->U, 128 bytes)
+>    ETHTOOL_A_HEADER
+>        ETHTOOL_A_DEV_INDEX = 9
+>        ETHTOOL_A_DEV_NAME = "eth3"
+>    ETHTOOL_A_STRSET_STRINGSETS
+>        ETHTOOL_A_STRINGSETS_STRINGSET
+>            ETHTOOL_A_STRINGSET_ID = 2 (ETH_SS_PRIV_FLAGS)
+>            ETHTOOL_A_STRINGSET_COUNT = 2
+>            ETHTOOL_A_STRINGSET_STRINGS
+>                ETHTOOL_A_STRINGS_STRING
+>                    ETHTOOL_A_STRING_INDEX = 0
+>                    ETHTOOL_A_STRING_VALUE = "legacy-rx"
+>                ETHTOOL_A_STRINGS_STRING
+>                    ETHTOOL_A_STRING_INDEX = 1
+>                    ETHTOOL_A_STRING_VALUE = "vf-ipsec"
+>
+>NLMSG_ERR (K->U, 36 bytes) err = 0
+>
+>ETHTOOL_CMD_SETTINGS_SET (K->U, 64 bytes)
+>    ETHTOOL_A_HEADER
+>        ETHTOOL_A_DEV_NAME = "eth3"
+>    ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>        ETHTOOL_A_BITSET_SIZE = 2
+>        ETHTOOL_A_BITSET_VALUE = 00000001
+>        ETHTOOL_A_BITSET_MASK = 00000001
+>
+>NLMSG_ERR (K->U, 36 bytes) err = 0
+>------------------------------------------------------------------------
+>
+>That's an extra roundtrip, lot more chat and the SETTINGS_SET message is
+>only 4 bytes shorter in the end. And we can consider ourselves lucky
+>this NIC has only two private flags. Or that we didn't need to enable or
+>disable a netdev feature (56 bits) or link mode (69 bits and growing).
+>
+>We could reduce the overhead by allowing STRSET_GET query to only ask
+>for specific string(s) but there would still be the extra roundtrip
+>which I dislike in the ioctl interface. Florian also said in the v5
+>discussion that he would like if it was possible to get names and data
+>together in one request.
 
-Please include spec references in the commit log, e.g., PCIe r5.0, sec
-7.7.4, for Data Link Feature and sec 7.7.5 for Physical Layer 16 GT/s.
+I understand. So how about avoid the bitfield all together and just
+have array of either bits of strings or combinations?
 
->  include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f28e562d7ca8..1c79f6a097d2 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -713,7 +713,9 @@
->  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
-> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
+ETHTOOL_CMD_SETTINGS_SET (U->K)
+    ETHTOOL_A_HEADER
+        ETHTOOL_A_DEV_NAME = "eth3"
+    ETHTOOL_A_SETTINGS_PRIV_FLAGS
+       ETHTOOL_A_SETTINGS_PRIV_FLAG
+           ETHTOOL_A_FLAG_NAME = "legacy-rx"
+	   ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
 
-Maybe PCI_EXT_CAP_ID_PL_16GT so there's a little more hint of what
-this is for?
+or the same with index instead of string
 
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
->  
->  #define PCI_EXT_CAP_DSN_SIZEOF	12
->  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1053,4 +1055,22 @@
->  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
->  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
->  
-> +/* Data Link Feature */
-> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
-> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
-> +#define PCI_DLF_STS		0x08	/* Status Register */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
+ETHTOOL_CMD_SETTINGS_SET (U->K)
+    ETHTOOL_A_HEADER
+        ETHTOOL_A_DEV_NAME = "eth3"
+    ETHTOOL_A_SETTINGS_PRIV_FLAGS
+        ETHTOOL_A_SETTINGS_PRIV_FLAG
+            ETHTOOL_A_FLAG_INDEX = 0
+ 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
 
-I'm a little bit ambivalent about adding #defines that aren't used.  I
-personally would probably just add the things we use, so the header
-file gives a clue about what's currently implemented.  But I guess
-either way is fine.
 
-> +/* Physical Layer 16.0 GT/s */
-> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
-> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
-> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
-> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
-> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
+For set you can combine both when you want to set multiple bits:
 
-Use lower-case hex consistently here.  There's no global consistency
-in this file, but we can at least be consistent in each section.  But
-I'm even more hesitant about included unused #defines for "reserved"
-fields, so if you drop this it would take care of both :)
+ETHTOOL_CMD_SETTINGS_SET (U->K)
+    ETHTOOL_A_HEADER
+        ETHTOOL_A_DEV_NAME = "eth3"
+    ETHTOOL_A_SETTINGS_PRIV_FLAGS
+        ETHTOOL_A_SETTINGS_PRIV_FLAG
+            ETHTOOL_A_FLAG_INDEX = 2
+ 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+        ETHTOOL_A_SETTINGS_PRIV_FLAG
+            ETHTOOL_A_FLAG_INDEX = 8
+ 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+        ETHTOOL_A_SETTINGS_PRIV_FLAG
+            ETHTOOL_A_FLAG_NAME = "legacy-rx"
+ 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
 
-> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
 
-This is the only register you actually use.  You defined a local
-PL16G_CAP_OFF_DSP_16G_TX_PRESET_MASK for this register.  Shouldn't
-that be defined here instead of in
-drivers/pci/controller/dwc/pcie-tegra194.c?
+For get this might be a bit bigger message:
 
->  #endif /* LINUX_PCI_REGS_H */
-> -- 
-> 2.17.1
-> 
+ETHTOOL_CMD_SETTINGS_GET_REPLY (K->U)
+    ETHTOOL_A_HEADER
+        ETHTOOL_A_DEV_NAME = "eth3"
+    ETHTOOL_A_SETTINGS_PRIV_FLAGS
+        ETHTOOL_A_SETTINGS_PRIV_FLAG
+            ETHTOOL_A_FLAG_INDEX = 0
+            ETHTOOL_A_FLAG_NAME = "legacy-rx"
+ 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+        ETHTOOL_A_SETTINGS_PRIV_FLAG
+            ETHTOOL_A_FLAG_INDEX = 1
+            ETHTOOL_A_FLAG_NAME = "vf-ipsec"
+ 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+        ETHTOOL_A_SETTINGS_PRIV_FLAG
+            ETHTOOL_A_FLAG_INDEX = 8
+            ETHTOOL_A_FLAG_NAME = "something-else"
+ 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+
+
+>
+>Michal
