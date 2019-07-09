@@ -2,83 +2,90 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04044C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C90C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC3C20665
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562698406;
-	bh=0ImkJUz3uR/+DVGq2bXGZLAIbe6zf2CjaYLEOlRY4ps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WFsP5k6VML5/ZiCBLqP7Pkpb/Y2z20o3/YEz/z754knmMJKLoV7bsF+9DGF597FsY
-	 4r2MtJar0kv7MVur32k2D7XJIFSA1/g8os/9zTW0FqhK6cREmBzmFB+vjw4fs35FU4
-	 AK573rrI5TtmebVwRTsT9bk9ZkTZuzbMPBBmG0KI=
+	by mail.kernel.org (Postfix) with ESMTP id 34D7120665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:55:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmHqjFAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbfGISxZ (ORCPT
+        id S1729433AbfGISza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfGISxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:53:25 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 819BB21670;
-        Tue,  9 Jul 2019 18:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562698404;
-        bh=0ImkJUz3uR/+DVGq2bXGZLAIbe6zf2CjaYLEOlRY4ps=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2hvgQEnOPWC1SvHHrf8dXGJxWxD4yWceJdhi4hloTlumiiTegaZkuaI/tFneSFCDK
-         3xeoJtlqtM5pHiqMQ3Mc7kzVGgFdQQZzikumbGqCF12E+X0WA3Aj7p9WbrTWsEAv7l
-         g+RCorpwnDSB1brEdg6kE1alx6PSeliKzH9aqnSI=
-Received: by mail-qt1-f178.google.com with SMTP id h18so15298441qtm.9;
-        Tue, 09 Jul 2019 11:53:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAVoqC2G9l4l0DyZPF52x8I+Irxe75tHiF2Y6pfUk/N/jpYd19m/
-        5RWG+hdtwtwdcdZEmo1OPnrOGKIBg5cSZPsJqQ==
-X-Google-Smtp-Source: APXvYqylibJKKbin92OddAtVOLNyjL4xzmkeD9zXAOF4W4EKSaAZ0cVt6KqwCFYn1XAIrYpKX6ExRt5TG60yMAb0li0=
-X-Received: by 2002:aed:3f10:: with SMTP id p16mr20147515qtf.110.1562698403737;
- Tue, 09 Jul 2019 11:53:23 -0700 (PDT)
+        Tue, 9 Jul 2019 14:55:30 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43270 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfGISza (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:55:30 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m14so16813029qka.10;
+        Tue, 09 Jul 2019 11:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f9RwapZGzyFkNT+dfGo5wVJbdzZuRB3mHC5GSj9LmJ8=;
+        b=BmHqjFAfGGPLYECr2mLWMITHeNaZHCOuICzgPdidHDiuAYl1DuB9BIHuF8L9YXZZBN
+         32fRp3SSz8YfQ9ebbRhi1MUTYnu1W5q4U5padrZzDoWDxjK6w4+GHDvFUEwCbWXuKhqQ
+         V7H7zH65QGE6QRGOlLq4y3gwm6gwv1/GmzVS2ZP7A0B+6NObpJq/lCNkAoMvopXqhkZ4
+         +hUhPTWV+2R/amH37Qw08ey3hykfYDMrk12/z8xg6aea9RvC6oPbm/ESUCy8qmGl44pc
+         DPUY9/SJ4EOJ+RqTBxKQnK7lqFCMmjI8al7q6nuhAW9Tq7Wo/bHQ1F97J72/Ae8WDwOt
+         gDqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f9RwapZGzyFkNT+dfGo5wVJbdzZuRB3mHC5GSj9LmJ8=;
+        b=lqg16nVC/bz+2PTeyO8sWBlLajeDTXNwHulKb9uaxWyriUQHbLGSR6TTMR4xKSFM6N
+         XkYtVmjluqmr4wrAHHMvQt6S31Is9HLKRxe0UbNeO83bc1+EzvqK3weYN7XvCw8FMqgo
+         hNxf50/jAfuNPHS3Tg4QuprTAyA0U9+k6bleFgTB2X24OwxMOx9xoGFHtfC+WLWN5IfS
+         Zo9hy72V3YDX1JJ835wQ4nUMC134i2fBgi1C+4SHMQ5Ip5U0o5iEzT2tsZC2GqrRPQ7w
+         2ZZ0bOC5bfgZRoDK88fy2zHZfXy/mN42FH5aJNTZKY5Fxqlgox/TJ13cikagl5Dy3goO
+         szwQ==
+X-Gm-Message-State: APjAAAV+sMML6jXhbFyoaJr+a2WSwdRI7bgEMrl1uCQycjXDEdh6VT1Z
+        asH9G1kzYcd+xRhPr77hWgiM5T4wWJ0QR0lsCPI=
+X-Google-Smtp-Source: APXvYqy2K48JPuWKCtWjDTYwAWXMIBHAHIA2ef38g1U6AO2efdVySfxR3FLKDJCS+JpAxv2GrF7QjA5Xj7T/w8AyjhQ=
+X-Received: by 2002:a37:660d:: with SMTP id a13mr20589208qkc.36.1562698528762;
+ Tue, 09 Jul 2019 11:55:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
-In-Reply-To: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 9 Jul 2019 12:53:12 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+0z4OZ7qbaiUva1v5xCKXpsaPBZ9tj_M4HbEihsU_MfA@mail.gmail.com>
-Message-ID: <CAL_Jsq+0z4OZ7qbaiUva1v5xCKXpsaPBZ9tj_M4HbEihsU_MfA@mail.gmail.com>
-Subject: Re: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
-To:     Hongwei Zhang <hongweiz@ami.com>
-Cc:     devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CAEf4BzaUEWwGL3k0VeiFYFqyJexQU9cDZWN69jSDpBjP1ZEcpw@mail.gmail.com>
+ <000000000000a94981058d37f1a4@google.com>
+In-Reply-To: <000000000000a94981058d37f1a4@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 9 Jul 2019 11:55:17 -0700
+Message-ID: <CAEf4BzYTGuXgN+vNJEoMbH_GFAVnSsBvq_YhvoFOeGG5Y+N_ug@mail.gmail.com>
+Subject: Re: WARNING in mark_chain_precision
+To:     syzbot <syzbot+f21251a7468cd46efc60@syzkaller.appspotmail.com>
+Cc:     aaron.f.brown@intel.com, Alexei Starovoitov <ast@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
+        intel-wired-lan@lists.osuosl.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        jeffrey.t.kirsher@intel.com,
+        john fastabend <john.fastabend@gmail.com>,
+        Martin Lau <kafai@fb.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, sasha.neftin@intel.com,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
+        Yonghong Song <yhs@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 2:01 PM Hongwei Zhang <hongweiz@ami.com> wrote:
->
-> Add bindings to support SGPIO on AST2400 or AST2500.
->
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> ---
->  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 36 ++++++++++++++++++++++
+Original reproducer is almost identical to the one that is fixed by
+https://patchwork.ozlabs.org/patch/1129479/.
 
-Is this SGPIO as in the blinky lights for HDDs in servers? If so, that
-has nothing to do with Linux GPIO subsystem.
+bpf_prog_free_deferred bug that's undeterministically exposed after
+this fix seems to be the cause of a bunch of other bug reports and is
+not related to verifier precision tracking.
 
-BTW, You might want to look at Calxeda highbank SATA driver. It has a
-bit-banged SGPIO interface using GPIO lines in it.
-
-
-Rob
+#syz dup: WARNING in __mark_chain_precision
