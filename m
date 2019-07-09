@@ -2,134 +2,364 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053E3C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BF8C606D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2618216FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68E6216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUQVg5Ps"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UV5AAxFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfGIHYm (ORCPT
+        id S1726260AbfGIHZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:24:42 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33872 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGIHYm (ORCPT
+        Tue, 9 Jul 2019 03:25:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38539 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGIHZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:24:42 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so41109878iot.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:24:41 -0700 (PDT)
+        Tue, 9 Jul 2019 03:25:56 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so18506862ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uMm8/j9yRMRH4iQPqFsUmwQgdLXGN0EeOqXIdi11IUA=;
-        b=dUQVg5PsEBC8sNS6Ko5mv4/t4K3hCsAqHkcyJqYwSeI54TV9HIhBglh0iGBRbuEIuu
-         5M75SqaCIZpE4ARE6teF2Xeymege0iPEJUz1ETqQ//XenEbHajapvmxrImOwcNg7OfLC
-         PN0wXbJY75I8aGJdzcUVDud0y4Vsb/YMiqjZOTss7bWQ1CpSMxUcFOzXiOvDsCU7tb2h
-         lAbni/hhSzXZ988Z5uxonG9nSwpg+roUyxFSvq+bkm2T6MIuCGyROxokpyR2qggdj5F5
-         D1ASMOALGfggeW+UrhKQg9l24tUGduKleQsdSiwiFC3WyECJpAOMAr4usJpl7fQ7gTvF
-         3Kgg==
+        bh=ssRrB1UmxdVYZkciCFyojJGE0/1U4hBQ0GkOVyOsrZw=;
+        b=UV5AAxFGVvrkRuu8F+yS1+X88UxFsqNJrCrJnC12wkxdnmSbXynnx8rgiKKcV4gjIF
+         JMnKBYOG89aaCDo4okSwWk82BYSS4n4r5+uKu0J+HKvIR0i5UjBwxlG23qUKt4AGbvTE
+         zsPM+SYbewSRA3Jv+naODA8Go1w19MmNkDu95QgZQH/694TuHs5oiMTZ2v45pP16zxXz
+         ADW6CBaO0xP6VX4L4MtUYwEughivBhagMxC0qERNMZUtY6nKiRpvJ56fZgS7BCMLGOWh
+         ChgtgGkrFfrM8PxYxdQT2+1YVTjdxBw4OH1SWAvVso+so5AUFJDJUYGqVeWyTtj+NQHT
+         sdng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uMm8/j9yRMRH4iQPqFsUmwQgdLXGN0EeOqXIdi11IUA=;
-        b=SAYoH7IvnpffxeUEI3Rk+BEtvblO0mCyQQNiXbNwTeSGyvnhMXA9zlDOv6U+8m6x2I
-         VBWrWjt13Z6CMaOWFD1y6p8LSD6DaMjrP+5wq9iB7rDGLNQHt/U8Vp6o2mEmmAxbcxsj
-         /MXDKBENpMYFFGxgW3+OnTLfdpFjbvmsOilIOfY8A6jyFvK7xdZWctFRNmxD1GUYq20x
-         /z2CEulQsWDOrlhXOQfZqSRh38jNYvLpaGVEJdMBMyEEVswil59rS7f+Bf8wuRIsdTz2
-         hNi7i3UChfbr3MOBTQrBQmTJHtzWUCe/8vqQ1miqg/noPXePLvdajC/BaJR0T08FgZvC
-         nzPA==
-X-Gm-Message-State: APjAAAVlpdR56CNGSpqJk+0hmA401EwYoU4oXCR9lFtSGnLiTMM8oEa0
-        aOO/ikdEoqs+dy3Um8ah+dBBu4VTaJCF1nyWiQ==
-X-Google-Smtp-Source: APXvYqxZ1TMWNH+36GLrWQQsmnuqHh3EOslMTVV+pbK9EYv2MWK4YLlVK93ISUt77XpQ21YB0euUCe9VBw5T41iKQzU=
-X-Received: by 2002:a5e:d60a:: with SMTP id w10mr25150800iom.78.1562657081578;
- Tue, 09 Jul 2019 00:24:41 -0700 (PDT)
+        bh=ssRrB1UmxdVYZkciCFyojJGE0/1U4hBQ0GkOVyOsrZw=;
+        b=L3fGcOvGoEkE0pwYTeZqMn2IzsjVcIXCHxX58RF2cjOmM4xRJGUbUN9le+TPu3QR73
+         3zwALcmQssIuRuf9rl1v5SybLNUEhheiwCJexbChRXKsO3FVCgUpeJkPzFr/YhGnJpTy
+         Z3O0pGgPzPGrmS8ikZJuwngDP/2eCJ0n3wbXgBFNdm7A8VdM6wNhpLEPxBr5nRk53HjA
+         PnlwxAxcEvqJC3saf5IEqcnjV3mGwiBwIjwpo2HplF2iF44pXeL38MpjHnH+1ukJQPHE
+         Lj21yvHJx7AYM0NL+9LIz+bDEwbrvUJFHliU+EPYo5SxXeH5505/68Eu8OG/ruZ70eYX
+         bg6Q==
+X-Gm-Message-State: APjAAAUiNvbB8yJbJ7RAiDhZW5kAI3tz/NRhTMHjFexWkEU7DT04ZtIR
+        IBP/mfJbK9LD/FgSKQsKF1u0mKB03xpOkpPz8YTiBw==
+X-Google-Smtp-Source: APXvYqwHIeWY24fyZVANac6t2pPZziBg+Q43HU3Lq4VXHYfzhayBoudDIjje1hExC3mGVzvbs/haB3x9ZhA7FvkZ5GQ=
+X-Received: by 2002:a05:651c:20d:: with SMTP id y13mr790540ljn.204.1562657153311;
+ Tue, 09 Jul 2019 00:25:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <1562300143-11671-1-git-send-email-kernelfans@gmail.com>
- <1562300143-11671-2-git-send-email-kernelfans@gmail.com> <alpine.DEB.2.21.1907072133310.3648@nanos.tec.linutronix.de>
- <CAFgQCTvwS+yEkAmCJnsCfnr0JS01OFtBnDg4cr41_GqU79A4Gg@mail.gmail.com>
- <alpine.DEB.2.21.1907081125300.3648@nanos.tec.linutronix.de>
- <CAFgQCTvAOeerLHQvgvFXy_kLs=H=CuUFjYE+UAN+vhPCG+s=pQ@mail.gmail.com> <alpine.DEB.2.21.1907090810490.1961@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907090810490.1961@nanos.tec.linutronix.de>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Tue, 9 Jul 2019 15:24:30 +0800
-Message-ID: <CAFgQCTui7D6_FQ_v_ijj6k_=+TQzQ3PaGvzxd6p+XEGjQ2S6jw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86/numa: instance all parsed numa node
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     x86@kernel.org, Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>,
-        Barret Rhoden <brho@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-7-saravanak@google.com>
+ <CAKfTPtCJFaEfvu3Dnp9WSxQEwSfY=VS+xsoQ+4P+vg7_WL0BAQ@mail.gmail.com>
+ <CAGETcx_5gu84FOVmELPnK5uJTE0NEhxYKtdFigoXGyFtjehQvw@mail.gmail.com>
+ <CAKfTPtBHrXG1QZzcaStWCtL3nx+vE_-WKtOhjiHbjFQiw9Yk8w@mail.gmail.com> <CAGETcx912kpi9DejPCoWMUF5AMm4=o1C0C45zwMfUy6aX_jcYg@mail.gmail.com>
+In-Reply-To: <CAGETcx912kpi9DejPCoWMUF5AMm4=o1C0C45zwMfUy6aX_jcYg@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 9 Jul 2019 09:25:42 +0200
+Message-ID: <CAKfTPtBngOT__TfmHXmmim-b9YhExOOvwVRaxYM9g9M6ffr_zQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] interconnect: Add OPP table support for interconnects
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        sibis@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 2:12 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Sun, 7 Jul 2019 at 23:48, Saravana Kannan <saravanak@google.com> wrote:
 >
-> On Tue, 9 Jul 2019, Pingfan Liu wrote:
-> > On Mon, Jul 8, 2019 at 5:35 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > It can and it does.
-> > >
-> > > That's the whole point why we bring up all CPUs in the 'nosmt' case and
-> > > shut the siblings down again after setting CR4.MCE. Actually that's in fact
-> > > a 'let's hope no MCE hits before that happened' approach, but that's all we
-> > > can do.
-> > >
-> > > If we don't do that then the MCE broadcast can hit a CPU which has some
-> > > firmware initialized state. The result can be a full system lockup, triple
-> > > fault etc.
-> > >
-> > > So when the MCE hits a CPU which is still in the crashed kernel lala state,
-> > > then all hell breaks lose.
-> > Thank you for the comprehensive explain. With your guide, now, I have
-> > a full understanding of the issue.
+> On Thu, Jul 4, 2019 at 12:12 AM Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
 > >
-> > But when I tried to add something to enable CR4.MCE in
-> > crash_nmi_callback(), I realized that it is undo-able in some case (if
-> > crashed, we will not ask an offline smt cpu to online), also it is
-> > needless. "kexec -l/-p" takes the advantage of the cpu state in the
-> > first kernel, where all logical cpu has CR4.MCE=1.
+> > On Wed, 3 Jul 2019 at 23:33, Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > On Tue, Jul 2, 2019 at 11:45 PM Vincent Guittot
+> > > <vincent.guittot@linaro.org> wrote:
+> > > >
+> > > > On Wed, 3 Jul 2019 at 03:10, Saravana Kannan <saravanak@google.com> wrote:
+> > > > >
+> > > > > Interconnect paths can have different performance points. Now that OPP
+> > > > > framework supports bandwidth OPP tables, add OPP table support for
+> > > > > interconnects.
+> > > > >
+> > > > > Devices can use the interconnect-opp-table DT property to specify OPP
+> > > > > tables for interconnect paths. And the driver can obtain the OPP table for
+> > > > > an interconnect path by calling icc_get_opp_table().
+> > > >
+> > > > The opp table of a path must come from the aggregation of OPP tables
+> > > > of the interconnect providers.
+> > >
+> > > The aggregation of OPP tables of the providers is certainly the
+> > > superset of what a path can achieve, but to say that OPPs for
+> > > interconnect path should match that superset is an oversimplification
+> > > of the reality in hardware.
+> > >
+> > > There are lots of reasons an interconnect path might not want to use
+> > > all the available bandwidth options across all the interconnects in
+> > > the route.
+> > >
+> > > 1. That particular path might not have been validated or verified
+> > >    during the HW design process for some of the frequencies/bandwidth
+> > >    combinations of the providers.
 > >
-> > So kexec is exempt from this bug if the first kernel already do it.
+> > All these constraint are provider's constraints and not consumer's one
+> >
+> > The consumer asks for a bandwidth according to its needs and then the
+> > providers select the optimal bandwidth of each interconnect after
+> > aggregating all the request and according to what OPP have been
+> > validated
 >
-> No. If the MCE broadcast is handled by a CPU which is stuck in the old
-> kernel stop loop, then it will execute on the old kernel and eventually run
-> into the memory corruption which crashed the old one.
+> Not really. The screening can be a consumer specific issue. The
+> consumer IP itself might have some issue with using too low of a
+> bandwidth or bandwidth that's not within some range. It should not be
+
+How can an IP ask for not enough bandwidth ?
+It asks the needed bandwidth based on its requirements
+
+> the provider's job to take into account all the IP that might be
+> connected to the interconnects. If the interconnect HW itself didn't
+
+That's not what I'm saying. The provider knows which bandwidth the
+interconnect can provide as it is the ones which configures it. So if
+the interconnect has a finite number of bandwidth point based probably
+on the possible clock frequency and others config of the interconnect,
+it selects the best final config after aggregating the request of the
+consumer.
+
+> change, the provider driver shouldn't need to change. By your
+> definition, a provider driver will have to account for all the
+> possible bus masters that might be connected to it across all SoCs.
+
+you didn't catch my point
+
+> That's not good design nor is it scalable.
 >
-Yes, you are right. Stuck cpu may execute the old do_machine_check()
-code. But I just found out that we have
-do_machine_check()->__mc_check_crashing_cpu() to against this case.
+> > >
+> > > 2. Similarly during parts screening in the factory, some of the
+> > >    combinations might not have been screened and can't be guaranteed
+> > >    to work.
+> >
+> > As above, it's the provider's job to select the final bandwidth
+> > according to its constraint
+>
+> Same reply as above.
+>
+> > >
+> > > 3. Only a certain set of bandwidth levels might make sense to use from
+> > >    a power/performance balance given the device using it. For example:
+> > >    - The big CPU might not want to use some of the lower bandwidths
+> > >      but the little CPU might want to.
+> > >    - The big CPU might not want to use some intermediate bandwidth
+> > >      points if they don't save a lot of power compared to a higher
+> > >      bandwidth levels, but the little CPU might want to.
+> > >    - The little CPU might never want to use the higher set of
+> > >      bandwidth levels since they won't be power efficient for the use
+> > >      cases that might run on it.
+> >
+> > These example are quite vague about the reasons why little might never
+> > want to use higher bandwidth.
+>
+> How is it vague? I just said because of power/performance balance.
+>
+> > But then, if little doesn't ask high bandwidth it will not use them.
+>
+> If you are running a heuristics based algorithm to pick bandwidth,
+> this is how it'll know NOT to use some of the bandwidth levels.
 
-And I think the MCE issue with nr_cpus is not closely related with
-this series, can
-be a separated issue. I had question whether Andy will take it, if
-not, I am glad to do it.
+so you want to set a bandwidth according to the cpu frequency which is
+what has been proposed in other thread
 
-Thanks and regards,
-  Pingfan
+>
+> > >
+> > > 4. It might not make sense from a system level power perspective.
+> > > Let's take an example of a path S (source) -> A -> B -> C -> D
+> > > (destination).
+> > >    - A supports only 2, 5, 7 and 10 GB/s. B supports 1, 2 ... 10 GB/s.
+> > >      C supports 5 and 10 GB/s
+> > >    - If you combine and list the superset of bandwidth levels
+> > >      supported in that path, that'd be 1, 2, 3, ... 10 GB/s.
+> > >    - Which set of bandwidth levels make sense will depend on the
+> > >      hardware characteristics of the interconnects.
+> > >    - If B is the biggest power sink, then you might want to use all 10
+> > >      levels.
+> > >    - If A is the biggest power sink, then you might want to use all 2,
+> > >      5 and 10 GB/s of the levels.
+> > >    - If C is the biggest power sink then you might only want to use 5
+> > >      and 10 GB/s
+> > >    - The more hops and paths you get the more convoluted this gets.
+> > >
+> > > 5. The design of the interconnects themselves might have an impact on
+> > > which bandwidth levels are used.
+> > >    - For example, the FIFO depth between two specific interconnects
+> > >      might affect the valid bandwidth levels for a specific path.
+> > >    - Say S1 -> A -> B -> D1, S2 -> C -> B -> D1 and S2 -> C -> D2 are
+> > >      three paths.
+> > >    - If C <-> B FIFO depth is small, then there might be a requirement
+> > >      that C and B be closely performance matched to avoid system level
+> > >      congestion due to back pressure.
+> > >    - So S2 -> D1 path can't use all the bandwidth levels supported by
+> > >      C-B combination.
+> > >    - But S2 -> D2 can use all the bandwidth levels supported by C.
+> > >    - And S1 -> D1 can use all the levels supported by A-B combination.
+> > >
+> >
+> > All the examples above makes sense but have to be handle by the
+> > provider not the consumer. The consumer asks for a bandwidth according
+> > to its constraints. Then the provider which is the driver that manages
+> > the interconnect IP, should manage all this hardware and platform
+> > specific stuff related to the interconnect IP in order to set the
+> > optimal bandwidth that fit both consumer constraint and platform
+> > specific configuration.
+>
+> Sure, but the provider itself can have interconnect properties to
+> indicate which other interconnects it's tied to. And the provider will
+> still need the interconnect-opp-table to denote which bandwidth levels
+> are sensible to use with each of its connections.
+>
+> So in some instances the interconnect-opp-table covers the needs of
+> purely consumers and in some instances purely providers. But in either
+> case, it's still needed to describe the hardware properly.
+>
+> -Saravana
+>
+> > > These are just some of the reasons I could recollect in a few minutes.
+> > > These are all real world cases I had to deal with in the past several
+> > > years of dealing with scaling interconnects. I'm sure vendors and SoCs
+> > > I'm not familiar with have other good reasons I'm not aware of.
+> > >
+> > > Trying to figure this all out by aggregating OPP tables of
+> > > interconnect providers just isn't feasible nor is it efficient. The
+> > > OPP tables for an interconnect path is describing the valid BW levels
+> > > supported by that path and verified in hardware and makes a lot of
+> > > sense to capture it clearly in DT.
+> > >
+> > > > So such kind of OPP table should be at
+> > > > provider level but not at path level.
+> > >
+> > > They can also use it if they want to, but they'll probably want to use
+> > > a frequency OPP table.
+> > >
+> > >
+> > > -Saravana
+> > >
+> > > >
+> > > > >
+> > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > > ---
+> > > > >  drivers/interconnect/core.c  | 27 ++++++++++++++++++++++++++-
+> > > > >  include/linux/interconnect.h |  7 +++++++
+> > > > >  2 files changed, 33 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> > > > > index 871eb4bc4efc..881bac80bc1e 100644
+> > > > > --- a/drivers/interconnect/core.c
+> > > > > +++ b/drivers/interconnect/core.c
+> > > > > @@ -47,6 +47,7 @@ struct icc_req {
+> > > > >   */
+> > > > >  struct icc_path {
+> > > > >         size_t num_nodes;
+> > > > > +       struct opp_table *opp_table;
+> > > > >         struct icc_req reqs[];
+> > > > >  };
+> > > > >
+> > > > > @@ -313,7 +314,7 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
+> > > > >  {
+> > > > >         struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
+> > > > >         struct icc_node *src_node, *dst_node;
+> > > > > -       struct device_node *np = NULL;
+> > > > > +       struct device_node *np = NULL, *opp_node;
+> > > > >         struct of_phandle_args src_args, dst_args;
+> > > > >         int idx = 0;
+> > > > >         int ret;
+> > > > > @@ -381,10 +382,34 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
+> > > > >                 dev_err(dev, "%s: invalid path=%ld\n", __func__, PTR_ERR(path));
+> > > > >         mutex_unlock(&icc_lock);
+> > > > >
+> > > > > +       opp_node = of_parse_phandle(np, "interconnect-opp-table", idx);
+> > > > > +       if (opp_node) {
+> > > > > +               path->opp_table = dev_pm_opp_of_find_table_from_node(opp_node);
+> > > > > +               of_node_put(opp_node);
+> > > > > +       }
+> > > > > +
+> > > > > +
+> > > > >         return path;
+> > > > >  }
+> > > > >  EXPORT_SYMBOL_GPL(of_icc_get);
+> > > > >
+> > > > > +/**
+> > > > > + * icc_get_opp_table() - Get the OPP table that corresponds to a path
+> > > > > + * @path: reference to the path returned by icc_get()
+> > > > > + *
+> > > > > + * This function will return the OPP table that corresponds to a path handle.
+> > > > > + * If the interconnect API is disabled, NULL is returned and the consumer
+> > > > > + * drivers will still build. Drivers are free to handle this specifically, but
+> > > > > + * they don't have to.
+> > > > > + *
+> > > > > + * Return: opp_table pointer on success. NULL is returned when the API is
+> > > > > + * disabled or the OPP table is missing.
+> > > > > + */
+> > > > > +struct opp_table *icc_get_opp_table(struct icc_path *path)
+> > > > > +{
+> > > > > +       return path->opp_table;
+> > > > > +}
+> > > > > +
+> > > > >  /**
+> > > > >   * icc_set_bw() - set bandwidth constraints on an interconnect path
+> > > > >   * @path: reference to the path returned by icc_get()
+> > > > > diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+> > > > > index dc25864755ba..0c0bc55f0e89 100644
+> > > > > --- a/include/linux/interconnect.h
+> > > > > +++ b/include/linux/interconnect.h
+> > > > > @@ -9,6 +9,7 @@
+> > > > >
+> > > > >  #include <linux/mutex.h>
+> > > > >  #include <linux/types.h>
+> > > > > +#include <linux/pm_opp.h>
+> > > > >
+> > > > >  /* macros for converting to icc units */
+> > > > >  #define Bps_to_icc(x)  ((x) / 1000)
+> > > > > @@ -28,6 +29,7 @@ struct device;
+> > > > >  struct icc_path *icc_get(struct device *dev, const int src_id,
+> > > > >                          const int dst_id);
+> > > > >  struct icc_path *of_icc_get(struct device *dev, const char *name);
+> > > > > +struct opp_table *icc_get_opp_table(struct icc_path *path);
+> > > > >  void icc_put(struct icc_path *path);
+> > > > >  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+> > > > >
+> > > > > @@ -49,6 +51,11 @@ static inline void icc_put(struct icc_path *path)
+> > > > >  {
+> > > > >  }
+> > > > >
+> > > > > +static inline struct opp_table *icc_get_opp_table(struct icc_path *path)
+> > > > > +{
+> > > > > +       return NULL;
+> > > > > +}
+> > > > > +
+> > > > >  static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+> > > > >  {
+> > > > >         return 0;
+> > > > > --
+> > > > > 2.22.0.410.gd8fdbe21b5-goog
+> > > > >
+> >
+> > --
+> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> >
