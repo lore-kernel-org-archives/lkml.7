@@ -2,163 +2,126 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45763C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A21C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23CF5216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59014216FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562663224;
+	bh=gBRbV35m5F7XIm4mY3P77vIRA1ulbfrdqYeY5XmCOgk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FxqMd98j6MCI9gr5EekhsrzkMPC1w2gaqAqVBb6q2mqMPnk71elbuaMthPAcNPupy
+	 CP/jdatkEQk9CqJ7/sz4upS+w3ziH0U9169Ow+jfVp5SY7rrdZvq5ZWr91vKnas8lv
+	 vNUcs922Sn0cDCKfFLwoi3NBZ/odMgCnsvC6aWBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbfGIJGM (ORCPT
+        id S1726171AbfGIJHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:06:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34872 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725989AbfGIJGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:06:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 75E29ADBF;
-        Tue,  9 Jul 2019 09:06:10 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 11:06:09 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH POC] printk_ringbuffer: Alternative implementation of
- lockless printk ringbuffer
-Message-ID: <20190709090609.shx7j2mst7wlkbqm@pathway.suse.cz>
-References: <20190621140516.h36g4in26pe3rmly@pathway.suse.cz>
- <20190704103321.10022-1-pmladek@suse.com>
- <20190704103321.10022-1-pmladek@suse.com>
- <87r275j15h.fsf@linutronix.de>
- <20190708152311.7u6hs453phhjif3q@pathway.suse.cz>
- <20190708152311.7u6hs453phhjif3q@pathway.suse.cz>
- <874l3wng7g.fsf@linutronix.de>
+        Tue, 9 Jul 2019 05:07:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfGIJHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 05:07:02 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32D5A216FD;
+        Tue,  9 Jul 2019 09:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562663221;
+        bh=gBRbV35m5F7XIm4mY3P77vIRA1ulbfrdqYeY5XmCOgk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gxorLcYJevSSmtpzy/o0ew1VV/QK4r2pm5NRoEH/VSxNz9qvy3wP64EGkH6vdnfn5
+         xcaPE11FnphyP26cvOIJEE/cJwEmiqRLj8nwvBsJmE3hSHAANeOMpVVviPHzMIDUX0
+         czxnOGsSYcDxeLI7YO03LwH2/5T7yhyHcyv3B938=
+Received: by mail-lj1-f180.google.com with SMTP id m23so18770353lje.12;
+        Tue, 09 Jul 2019 02:07:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAXhKMdbDUiK3kwPmOvPtrP+oKZm6JWFhR/oJKCrFz0/kpdhOT8c
+        i89fyGLBWFzdkgM9fAN6DNY9UHyf8aIhGsINChI=
+X-Google-Smtp-Source: APXvYqwRGEMAT7YRdSOSn3gQFgEwbb92VncYwQYDe1Ihzvsow5YWnFGx7ye2yBLB8agC6UeZtzmBb1KtmubvXQ6NpxE=
+X-Received: by 2002:a2e:980a:: with SMTP id a10mr10458109ljj.40.1562663219477;
+ Tue, 09 Jul 2019 02:06:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874l3wng7g.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20190708195613.205729-1-dianders@chromium.org>
+In-Reply-To: <20190708195613.205729-1-dianders@chromium.org>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 9 Jul 2019 11:06:48 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPf9OTPaheUdiZtaDGU0sE2vsdRiLx5nptMt_EVKU7GObA@mail.gmail.com>
+Message-ID: <CAJKOXPf9OTPaheUdiZtaDGU0sE2vsdRiLx5nptMt_EVKU7GObA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc: Fix occasional hang after tuning on eMMC
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org, briannorris@chromium.org,
+        mka@chromium.org, groeck@chromium.org, sonnyrao@chromium.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Alim Akhtar <alim.akhtar@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-07-09 03:34:43, John Ogness wrote:
-> On 2019-07-08, Petr Mladek <pmladek@suse.com> wrote:
-> >> 1. The code claims that the cmpxchg(seq_newest) in prb_reserve_desc()
-> >> guarantees that "The descriptor is ours until the COMMITTED bit is
-> >> set."  This is not true if in that wind seq_newest wraps, allowing
-> >> another writer to gain ownership of the same descriptor. For small
-> >> descriptor arrays (such as in my test module), this situation is
-> >> quite easy to reproduce.
-> >
-> Let me inline the function are talking about and add commentary to
-> illustrate what I am saying:
-> 
-> static int prb_reserve_desc(struct prb_reserved_entry *entry)
-> {
-> 	unsigned long seq, seq_newest, seq_prev_wrap;
-> 	struct printk_ringbuffer *rb = entry->rb;
-> 	struct prb_desc *desc;
-> 	int err;
-> 
-> 	/* Get descriptor for the next sequence number. */
-> 	do {
-> 		seq_newest = READ_ONCE(rb->seq_newest);
-> 		seq = (seq_newest + 1) & PRB_SEQ_MASK;
-> 		seq_prev_wrap = (seq - PRB_DESC_SIZE(rb)) & PRB_SEQ_MASK;
-> 
-> 		/*
-> 		 * Remove conflicting descriptor from the previous wrap
-> 		 * if ever used. It might fail when the related data
-> 		 * have not been committed yet.
-> 		 */
-> 		if (seq_prev_wrap == READ_ONCE(rb->seq_oldest)) {
-> 			err = prb_remove_desc_oldest(rb, seq_prev_wrap);
-> 			if (err)
-> 				return err;
-> 		}
-> 	} while (cmpxchg(&rb->seq_newest, seq_newest, seq) != seq_newest);
-> 
-> I am referring to this point in the code, after the
-> cmpxchg(). seq_newest has been incremented but the descriptor is still
-> in the unused state and seq is still 1 wrap behind. If an NMI occurs
-> here and the NMI (or some other CPU) inserts enough entries to wrap the
-> descriptor array, this descriptor will be reserved again, even though it
-> has already been reserved.
+On Tue, 9 Jul 2019 at 00:48, Douglas Anderson <dianders@chromium.org> wrote:
+>
+> In commit 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after
+> response errors.") we fixed a tuning-induced hang that I saw when
+> stress testing tuning on certain SD cards.  I won't re-hash that whole
+> commit, but the summary is that as a normal part of tuning you need to
+> deal with transfer errors and there were cases where these transfer
+> errors was putting my system into a bad state causing all future
+> transfers to fail.  That commit fixed handling of the transfer errors
+> for me.
+>
+> In downstream Chrome OS my fix landed and had the same behavior for
+> all SD/MMC commands.  However, it looks like when the commit landed
+> upstream we limited it to only SD tuning commands.  Presumably this
+> was to try to get around problems that Alim Akhtar reported on exynos
+> [1].
+>
+> Unfortunately while stress testing reboots (and suspend/resume) on
+> some rk3288-based Chromebooks I found the same problem on the eMMC on
+> some of my Chromebooks (the ones with Hynix eMMC).  Since the eMMC
+> tuning command is different (MMC_SEND_TUNING_BLOCK_HS200
+> vs. MMC_SEND_TUNING_BLOCK) we were basically getting back into the
+> same situation.
+>
+> I'm hoping that whatever problems exynos was having in the past are
+> somehow magically fixed now and we can make the behavior the same for
+> all commands.
+>
+> [1] https://lkml.kernel.org/r/CAGOxZ53WfNbaMe0_AM0qBqU47kAfgmPBVZC8K8Y-_J3mDMqW4A@mail.gmail.com
+>
+> Fixes: 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after response errors.")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Alim Akhtar <alim.akhtar@gmail.com>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> Marek (or anyone else using exynos): is it easy for you to test this
+> and check if things are still broken when we land this patch?  If so,
+> I guess we could have a quirk to have different behavior for just
+> Rockchip SoCs but I'd rather avoid that if possible.
+>
+> NOTE: I'm not hoping totally in vain here.  It is possible that some
+> of the CTO/DTO timers that landed could be the magic that would get
+> exynos unstuck.
 
-Not really, the NMI will not reach the cmpxchg() in this case.
-prb_remove_desc_oldest() will return error. It will not
-be able to remove the conflicting descriptor because it will
-still be occupied by a two-wraps-old descriptor.
+I have eMMC module attached to Odroid U3 (Exynos4412,
+samsung,exynos4412-dw-mshc). What is the testing procedure? With your
+patch it boots fine:
+[    3.698637] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+req 52000000Hz, actual 50000000HZ div = 0)
+[    3.703900] mmc1: new DDR MMC card at address 0001
+[    3.728458] mmcblk1: mmc1:0001 008G92 7.28 GiB
 
-BTW: I did meet these problems in some early variatns. But everything
-started working at some point. I always looked how you solved
-a particular situation in the link-based approach. Then I
-somehow translated it into the pure-array variant.
-
-
-> > BTW: There is one potential problem with my alternative approach.
-> >
-> >      The descriptors and the related data blocks might get reserved
-> >      in different order. Now, the descriptor might get reused only
-> >      when the related datablock is moved outside the valid range.
-> >      This operation might move also other data blocks outside
-> >      the range and invalidate descriptors that were reserved later.
-> >      As a result we might need to invalidate more messages in
-> >      the log buffer then would be really necessary.
-> >
-> >      If I get it properly, this problem does not exist with the
-> >      implementation using links. It is because the descriptors are
-> >      linked in the same order as the reserved data blocks.
-> 
-> Descriptors in the committed list are ordered in commit order (not the
-> reserve order). However, if there are not enough descriptors
-> (i.e. avgdatabits is higher than the true average) this problem exists
-> with the list approach as well.
-
-Thanks for the explanation.
-
-> >      I am not sure how big the problem, with more invalidated messages,
-> >      would be in reality. I am not sure if it would be worth
-> >      a more complicated implementation.
-> 
-> I am also not sure how big the problem is in a practical sense. However
-> to help avoid this issue, I will increase the descbits:avgdatabits ratio
-> for v3.
-
-Yup, it sounds reasonable. The number of reserved but not committed
-descriptors is basically limited by the number of CPUs.
-
-The only unknown variable is the length of the messages. Which brings
-another problem. We might need a solution for continuous lines.
-People would want it. Also storing one line in many entries would
-be quite inefficient. But let's discuss this later when
-printk() gets converted into the lockless ring buffer.
-
-
-> >      Anyway, I still need to fully understand the linked approach
-> >      first.
-> 
-> You may want to wait for v3. I've now split the ringbuffer into multiple
-> generic data structures (as unintentionally suggested[0] by PeterZ),
-> which helps to clarify the role of each data structure and also isolates
-> the memory barriers so that it is clear which data structure requires
-> which memory barriers.
-
-Sure, I am interested to see v3.
-
-Best Regards,
-Petr
+Best regards,
+Krzysztof
