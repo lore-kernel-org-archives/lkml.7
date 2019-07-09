@@ -2,105 +2,134 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AF3C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576D7C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989D52073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373312073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfGIFk6 (ORCPT
+        id S1727294AbfGIFmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:40:58 -0400
-Received: from smtprelay0142.hostedemail.com ([216.40.44.142]:56051 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727230AbfGIFkz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:40:55 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 1F860181D341A;
-        Tue,  9 Jul 2019 05:40:54 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bag59_7c29b583d1004
-X-Filterd-Recvd-Size: 2614
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  9 Jul 2019 05:40:53 +0000 (UTC)
-Message-ID: <9a5dedb0c9221743033f28974820e8dd724e388d.camel@perches.com>
-Subject: Re: [PATCH 8/8] nfsd: Fix misuse of strlcpy
-From:   Joe Perches <joe@perches.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 08 Jul 2019 22:40:50 -0700
-In-Reply-To: <20190709031404.GD14439@fieldses.org>
-References: <cover.1562283944.git.joe@perches.com>
-         <b51141d12de77eb22101e81f9eb2c9cc44104d7a.1562283944.git.joe@perches.com>
-         <20190709031404.GD14439@fieldses.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 9 Jul 2019 01:42:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:5715 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbfGIFmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 01:42:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 22:42:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
+   d="scan'208";a="249045835"
+Received: from ngote-system-product-name.iind.intel.com ([10.106.124.92])
+  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2019 22:42:09 -0700
+From:   NitinGote <nitin.r.gote@intel.com>
+To:     akpm@linux-foundation.org, joe@perches.com
+Cc:     corbet@lwn.net, apw@canonical.com, keescook@chromium.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com,
+        Nitin Gote <nitin.r.gote@intel.com>
+Subject: [PATCH v2] Added warnings in checkpatch.pl script to :
+Date:   Tue,  9 Jul 2019 11:10:55 +0530
+Message-Id: <20190709054055.21984-1-nitin.r.gote@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-08 at 23:14 -0400, J. Bruce Fields wrote:
-> On Thu, Jul 04, 2019 at 04:57:48PM -0700, Joe Perches wrote:
-> > Probable cut&paste typo - use the correct field size.
-> 
-> Huh, that's been there forever, I wonder why we haven't seen crashes?
-> Oh, I see, name and authname both have the same size.
-> 
-> Anyway, makes sense, thanks.  Will apply for 5.3.
-> 
-> (Unless someone else is getting this; I didn't get copied on the rest of
-> the series.)
+From: Nitin Gote <nitin.r.gote@intel.com>
 
-It's generally hard to cc everyone on treewide fixes like this.
+1. Deprecate strcpy() in favor of strscpy().
+2. Deprecate strlcpy() in favor of strscpy().
+3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
 
-There's no good mechanism I know of.
-vger mailing lists reject emails with too many addressees.
+Updated strncpy() section in Documentation/process/deprecated.rst
+to cover strscpy_pad() case.
 
-Do you have an opinion on adding the stracpy macro which
-could avoid many of these defects?
-
+Acked-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Nitin Gote <nitin.r.gote@intel.com>
 ---
- include/linux/string.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ Change log:
+ v1->v2
+ - For string related apis, created different %deprecated_string_api
+   and these will get emitted at CHECK Level using command line option
+   -f/--file to avoid bad patched from novice script users.
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 4deb11f7976b..ef01bd6f19df 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -35,6 +35,22 @@ ssize_t strscpy(char *, const char *, size_t);
- /* Wraps calls to strscpy()/memset(), no arch specific code required */
- ssize_t strscpy_pad(char *dest, const char *src, size_t count);
- 
-+#define stracpy(to, from)					\
-+({								\
-+	size_t size = ARRAY_SIZE(to);				\
-+	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-+								\
-+	strscpy(to, from, size);				\
-+})
+ This patch is already reviewed by mailing list
+ kernel-hardening@lists.openwall.com. Refer below link
+ <https://www.openwall.com/lists/kernel-hardening/2019/07/03/4>
+Acked-by: Kees Cook <keescook@chromium.org>
+
+ Documentation/process/deprecated.rst |  6 +++---
+ scripts/checkpatch.pl                | 25 +++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 49e0f64a3427..f564de3caf76 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -93,9 +93,9 @@ will be NUL terminated. This can lead to various linear read overflows
+ and other misbehavior due to the missing termination. It also NUL-pads the
+ destination buffer if the source contents are shorter than the destination
+ buffer size, which may be a needless performance penalty for callers using
+-only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
+-(Users of :c:func:`strscpy` still needing NUL-padding will need an
+-explicit :c:func:`memset` added.)
++only NUL-terminated strings. In this case, the safe replacement is
++:c:func:`strscpy`. If, however, the destination buffer still needs
++NUL-padding, the safe replacement is :c:func:`strscpy_pad`.
+
+ If a caller is using non-NUL-terminated strings, :c:func:`strncpy()` can
+ still be used, but destinations should be marked with the `__nonstring
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index bb28b178d929..10bd72e99dc8 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -605,6 +605,21 @@ foreach my $entry (keys %deprecated_apis) {
+ }
+ $deprecated_apis_search = "(?:${deprecated_apis_search})";
+
++our %deprecated_string_apis = (
++        "strcpy"                                => "strscpy",
++        "strlcpy"                               => "strscpy",
++        "strncpy"                               => "strscpy, strscpy_pad or for non-NUL-terminated strings,
++         strncpy() can still be used, but destinations should be marked with the __nonstring",
++);
 +
-+#define stracpy_pad(to, from)					\
-+({								\
-+	size_t size = ARRAY_SIZE(to);				\
-+	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
-+								\
-+	strscpy_pad(to, from, size);				\
-+})
++#Create a search pattern for all these strings apis to speed up a loop below
++our $deprecated_string_apis_search = "";
++foreach my $entry (keys %deprecated_string_apis) {
++        $deprecated_string_apis_search .= '|' if ($deprecated_string_apis_search ne "");
++        $deprecated_string_apis_search .= $entry;
++}
++$deprecated_string_apis_search = "(?:${deprecated_string_apis_search})";
 +
- #ifndef __HAVE_ARCH_STRCAT
- extern char * strcat(char *, const char *);
- #endif
+ our $mode_perms_world_writable = qr{
+ 	S_IWUGO		|
+ 	S_IWOTH		|
+@@ -6446,6 +6461,16 @@ sub process {
+ 			     "Deprecated use of '$deprecated_api', prefer '$new_api' instead\n" . $herecurr);
+ 		}
 
-
++# check for string deprecated apis
++                if ($line =~ /\b($deprecated_string_apis_search)\b\s*\(/) {
++                        my $deprecated_string_api = $1;
++                        my $new_api = $deprecated_string_apis{$deprecated_string_api};
++			$check = 1;
++                        CHK("DEPRECATED_API",
++                             "Deprecated use of '$deprecated_string_api', prefer '$new_api' instead\n" . $herecurr);
++			$check = 0;
++                }
++
+ # check for various structs that are normally const (ops, kgdb, device_tree)
+ # and avoid what seem like struct definitions 'struct foo {'
+ 		if ($line !~ /\bconst\b/ &&
+--
+2.17.1
 
