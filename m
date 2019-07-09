@@ -2,218 +2,145 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EBFC73C61
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF57C73C60
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00A420844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xdo5o65c"
+	by mail.kernel.org (Postfix) with ESMTP id E2BFC20861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562713235;
+	bh=mqZhnQlsfaKKtYTzAc3OH9DchjWPLQmojcR0X/Nieqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LCnMV4XkbpzbY8WH2O+49xXMe7lI5LmImbOVSILZ9MvHCrfl/+Y4ueu0w/jHl7dMM
+	 j97FFGfuzps7IbW2S37Fe04jrAvx4jkh3CFBy9yfUIU8d8n3vkj7Gx3WFqTVwfpfZB
+	 GNHDJYD1jSZ/yd1khAnWaq0V02nPmmdTFlvvTraE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfGIW7B (ORCPT
+        id S1726983AbfGIXAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 18:59:01 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36909 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfGIW6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 18:58:50 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b3so149157plr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 15:58:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bBVhvAORuxa08E5bVyE4KLrue551lcg8cyCDKswqftI=;
-        b=Xdo5o65cAK0QkwgE8+dbR/c1yDAk2t5FwKNDXKsYILcGubptUD38xPIDZfyVnqTa+h
-         sa3PH/U+Gv5aJH9973+Q+uoe7Ftq7/sI8YQulmahRwnpv6kLxCwWgHPg/iUZe1G4XRJZ
-         tGzaHLAYrNaHpRcnyVZ6cds07QpeSw2YznNNo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bBVhvAORuxa08E5bVyE4KLrue551lcg8cyCDKswqftI=;
-        b=aYa2brUFMC42wHHw5MlZupWRkjQZw/R8gFahIiLu5DpobAcHdIyGGk7nOS1WCxv9MX
-         /FIEWz+5zuWLkCohU7G8CqTZBTy3i84fj3TcBW3VTlNyPf9f+AwDbxTFQLUf1FUT9HYM
-         zKhnxSuWoLHYOX0U8W5WGFng5MQeEDNE6gvqOE7/1A1mPrP+BjyU/8PlH9vEa0ZNRzID
-         18UZt48zfypOe6lTTQGrWdFObT6HQtlvSV1xYqSz1OSO3Vu+erTAKzqxG37MJgzt1K85
-         jyDv+YnsnDNF5oHf7fWtAf7LeBF2awbrQ9ROgBhbFSdIuT4na2D2e2vooVQwAsCGhNpp
-         C4AA==
-X-Gm-Message-State: APjAAAWoetIaAq/lcRnoZYYvONZoKOaiYO53D+hIA/nZENTopPpXqrxh
-        TdmU2UyJtf2ImfGbuXUmV3ScM37ipm8=
-X-Google-Smtp-Source: APXvYqzZlkNmhfqk8NpJFSECWIici1jDsXejIOk3tHKjZZRaYi12mGIwm3jVDCZAHNZe3qyLI0qj9A==
-X-Received: by 2002:a17:902:934a:: with SMTP id g10mr35703367plp.18.1562713129173;
-        Tue, 09 Jul 2019 15:58:49 -0700 (PDT)
-Received: from exogeni.mtv.corp.google.com ([2620:15c:202:1:5be8:f2a6:fd7b:7459])
-        by smtp.gmail.com with ESMTPSA id 201sm152939pfz.24.2019.07.09.15.58.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 15:58:48 -0700 (PDT)
-From:   Derek Basehore <dbasehore@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Derek Basehore <dbasehore@chromium.org>
-Subject: [PATCH v6 3/4] drm/connector: Split out orientation quirk detection
-Date:   Tue,  9 Jul 2019 15:58:39 -0700
-Message-Id: <20190709225840.144038-4-dbasehore@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190709225840.144038-1-dbasehore@chromium.org>
-References: <20190709225840.144038-1-dbasehore@chromium.org>
+        Tue, 9 Jul 2019 19:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726284AbfGIXAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 19:00:32 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A1F720693;
+        Tue,  9 Jul 2019 23:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562713231;
+        bh=mqZhnQlsfaKKtYTzAc3OH9DchjWPLQmojcR0X/Nieqw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vzXUz2HIFKteVEHxqti9rKG3oLGZG2C694w3R4hypaFOd0SA9dbT32K+xTO1i2Dh8
+         3nluBJ2isuTx2QR8wY5M52xwivDW/IP6fpTNGDAactYWvX4Pd/XRDyt4WT909VmEBB
+         eB+Pw1bv/Q7NxX+QXpDoscKHvxGzJdwHqU2Fkowk=
+Date:   Tue, 9 Jul 2019 16:00:29 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfs: fsmount: add missing mntget()
+Message-ID: <20190709230029.GO641@sol.localdomain>
+Mail-Followup-To: Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <20190610183031.GE63833@gmail.com>
+ <20190612184313.143456-1-ebiggers@kernel.org>
+ <20190613084728.GA32129@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613084728.GA32129@miu.piliscsaba.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not every platform needs quirk detection for panel orientation, so
-split the drm_connector_init_panel_orientation_property into two
-functions. One for platforms without the need for quirks, and the
-other for platforms that need quirks.
+On Thu, Jun 13, 2019 at 10:47:28AM +0200, Miklos Szeredi wrote:
+> On Wed, Jun 12, 2019 at 11:43:13AM -0700, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > sys_fsmount() needs to take a reference to the new mount when adding it
+> > to the anonymous mount namespace.  Otherwise the filesystem can be
+> > unmounted while it's still in use, as found by syzkaller.
+> 
+> So it needs one count for the file (which dentry_open() obtains) and one for the
+> attachment into the anonymous namespace.  The latter one is dropped at cleanup
+> time, so your patch appears to be correct at getting that ref.
+> 
+> I wonder why such a blatant use-after-free was missed in normal testing.  RCU
+> delayed freeing, I guess?
+> 
+> How about this additional sanity checking patch?
+> 
+> Thanks,
+> Miklos
+> 
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index b26778bdc236..c638f220805a 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -153,10 +153,10 @@ static inline void mnt_add_count(struct mount *mnt, int n)
+>  /*
+>   * vfsmount lock must be held for write
+>   */
+> -unsigned int mnt_get_count(struct mount *mnt)
+> +int mnt_get_count(struct mount *mnt)
+>  {
+>  #ifdef CONFIG_SMP
+> -	unsigned int count = 0;
+> +	int count = 0;
+>  	int cpu;
+>  
+>  	for_each_possible_cpu(cpu) {
+> @@ -1140,6 +1140,8 @@ static DECLARE_DELAYED_WORK(delayed_mntput_work, delayed_mntput);
+>  
+>  static void mntput_no_expire(struct mount *mnt)
+>  {
+> +	int count;
+> +
+>  	rcu_read_lock();
+>  	if (likely(READ_ONCE(mnt->mnt_ns))) {
+>  		/*
+> @@ -1162,11 +1164,13 @@ static void mntput_no_expire(struct mount *mnt)
+>  	 */
+>  	smp_mb();
+>  	mnt_add_count(mnt, -1);
+> -	if (mnt_get_count(mnt)) {
+> +	count = mnt_get_count(mnt);
+> +	if (count > 0) {
+>  		rcu_read_unlock();
+>  		unlock_mount_hash();
+>  		return;
+>  	}
+> +	WARN_ON(count < 0);
+>  	if (unlikely(mnt->mnt.mnt_flags & MNT_DOOMED)) {
+>  		rcu_read_unlock();
+>  		unlock_mount_hash();
+> diff --git a/fs/pnode.h b/fs/pnode.h
+> index 49a058c73e4c..26f74e092bd9 100644
+> --- a/fs/pnode.h
+> +++ b/fs/pnode.h
+> @@ -44,7 +44,7 @@ int propagate_mount_busy(struct mount *, int);
+>  void propagate_mount_unlock(struct mount *);
+>  void mnt_release_group_id(struct mount *);
+>  int get_dominating_id(struct mount *mnt, const struct path *root);
+> -unsigned int mnt_get_count(struct mount *mnt);
+> +int mnt_get_count(struct mount *mnt);
+>  void mnt_set_mountpoint(struct mount *, struct mountpoint *,
+>  			struct mount *);
+>  void mnt_change_mountpoint(struct mount *parent, struct mountpoint *mp,
 
-Signed-off-by: Derek Basehore <dbasehore@chromium.org>
----
- drivers/gpu/drm/drm_connector.c         | 45 ++++++++++++++++++-------
- drivers/gpu/drm/i915/display/intel_dp.c |  4 +--
- drivers/gpu/drm/i915/display/vlv_dsi.c  |  2 +-
- include/drm/drm_connector.h             |  2 ++
- 4 files changed, 38 insertions(+), 15 deletions(-)
+Miklos, are you planning to send this as a formal patch?
 
-diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-index b3f2cf7eae9c..52777d647494 100644
---- a/drivers/gpu/drm/drm_connector.c
-+++ b/drivers/gpu/drm/drm_connector.c
-@@ -1892,31 +1892,23 @@ EXPORT_SYMBOL(drm_connector_set_vrr_capable_property);
-  * drm_connector_init_panel_orientation_property -
-  *	initialize the connecters panel_orientation property
-  * @connector: connector for which to init the panel-orientation property.
-- * @width: width in pixels of the panel, used for panel quirk detection
-- * @height: height in pixels of the panel, used for panel quirk detection
-  *
-  * This function should only be called for built-in panels, after setting
-  * connector->display_info.panel_orientation first (if known).
-  *
-- * This function will check for platform specific (e.g. DMI based) quirks
-- * overriding display_info.panel_orientation first, then if panel_orientation
-- * is not DRM_MODE_PANEL_ORIENTATION_UNKNOWN it will attach the
-- * "panel orientation" property to the connector.
-+ * This function will check if the panel_orientation is not
-+ * DRM_MODE_PANEL_ORIENTATION_UNKNOWN. If not, it will attach the "panel
-+ * orientation" property to the connector.
-  *
-  * Returns:
-  * Zero on success, negative errno on failure.
-  */
- int drm_connector_init_panel_orientation_property(
--	struct drm_connector *connector, int width, int height)
-+	struct drm_connector *connector)
- {
- 	struct drm_device *dev = connector->dev;
- 	struct drm_display_info *info = &connector->display_info;
- 	struct drm_property *prop;
--	int orientation_quirk;
--
--	orientation_quirk = drm_get_panel_orientation_quirk(width, height);
--	if (orientation_quirk != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
--		info->panel_orientation = orientation_quirk;
- 
- 	if (info->panel_orientation == DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
- 		return 0;
-@@ -1939,6 +1931,35 @@ int drm_connector_init_panel_orientation_property(
- }
- EXPORT_SYMBOL(drm_connector_init_panel_orientation_property);
- 
-+/**
-+ * drm_connector_init_panel_orientation_property_quirk -
-+ *	initialize the connecters panel_orientation property with a quirk
-+ *	override
-+ * @connector: connector for which to init the panel-orientation property.
-+ * @width: width in pixels of the panel, used for panel quirk detection
-+ * @height: height in pixels of the panel, used for panel quirk detection
-+ *
-+ * This function will check for platform specific (e.g. DMI based) quirks
-+ * overriding display_info.panel_orientation first, then if panel_orientation
-+ * is not DRM_MODE_PANEL_ORIENTATION_UNKNOWN it will attach the
-+ * "panel orientation" property to the connector.
-+ *
-+ * Returns:
-+ * Zero on success, negative errno on failure.
-+ */
-+int drm_connector_init_panel_orientation_property_quirk(
-+	struct drm_connector *connector, int width, int height)
-+{
-+	int orientation_quirk;
-+
-+	orientation_quirk = drm_get_panel_orientation_quirk(width, height);
-+	if (orientation_quirk != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
-+		connector->display_info.panel_orientation = orientation_quirk;
-+
-+	return drm_connector_init_panel_orientation_property(connector);
-+}
-+EXPORT_SYMBOL(drm_connector_init_panel_orientation_property_quirk);
-+
- int drm_connector_set_obj_prop(struct drm_mode_object *obj,
- 				    struct drm_property *property,
- 				    uint64_t value)
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 8f7188d71d08..45b637419085 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -7068,8 +7068,8 @@ static bool intel_edp_init_connector(struct intel_dp *intel_dp,
- 	intel_panel_setup_backlight(connector, pipe);
- 
- 	if (fixed_mode)
--		drm_connector_init_panel_orientation_property(
--			connector, fixed_mode->hdisplay, fixed_mode->vdisplay);
-+		drm_connector_init_panel_orientation_property_quirk(connector,
-+				fixed_mode->hdisplay, fixed_mode->vdisplay);
- 
- 	return true;
- 
-diff --git a/drivers/gpu/drm/i915/display/vlv_dsi.c b/drivers/gpu/drm/i915/display/vlv_dsi.c
-index e272d826210a..dd7fa806f95c 100644
---- a/drivers/gpu/drm/i915/display/vlv_dsi.c
-+++ b/drivers/gpu/drm/i915/display/vlv_dsi.c
-@@ -1662,7 +1662,7 @@ static void intel_dsi_add_properties(struct intel_connector *connector)
- 
- 		connector->base.display_info.panel_orientation =
- 			vlv_dsi_get_panel_orientation(connector);
--		drm_connector_init_panel_orientation_property(
-+		drm_connector_init_panel_orientation_property_quirk(
- 				&connector->base,
- 				connector->panel.fixed_mode->hdisplay,
- 				connector->panel.fixed_mode->vdisplay);
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index ca745d9feaf5..940254b06767 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -1512,6 +1512,8 @@ void drm_connector_set_link_status_property(struct drm_connector *connector,
- void drm_connector_set_vrr_capable_property(
- 		struct drm_connector *connector, bool capable);
- int drm_connector_init_panel_orientation_property(
-+	struct drm_connector *connector);
-+int drm_connector_init_panel_orientation_property_quirk(
- 	struct drm_connector *connector, int width, int height);
- int drm_connector_attach_max_bpc_property(struct drm_connector *connector,
- 					  int min, int max);
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+- Eric
