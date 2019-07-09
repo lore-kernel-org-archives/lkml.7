@@ -2,83 +2,98 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA454C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E977C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7F621537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C7321537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MUCfYy4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbfGIGMF (ORCPT
+        id S1726108AbfGIGNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 02:12:05 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7778 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfGIGME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 02:12:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 23:12:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
-   d="scan'208";a="159359245"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga008.jf.intel.com with ESMTP; 08 Jul 2019 23:12:00 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com,
-        nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, jpawar@cadence.com,
-        kurahul@cadence.com, aniljoy@cadence.com,
-        Pawel Laszczak <pawell@cadence.com>
-Subject: Re: [PATCH 1/3] usb: common: Add usb_get_dr_mode_from_string and usb_dr_mode_to_string.
-In-Reply-To: <1562592924-17528-1-git-send-email-pawell@cadence.com>
-References: <1562592924-17528-1-git-send-email-pawell@cadence.com>
-Date:   Tue, 09 Jul 2019 09:11:59 +0300
-Message-ID: <87y31768k0.fsf@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 9 Jul 2019 02:13:14 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:42787 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfGIGNO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 02:13:14 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x696D2LL030773;
+        Tue, 9 Jul 2019 15:13:02 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x696D2LL030773
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562652783;
+        bh=lnTkZOWAozqElNoBWK0L63rALMGbDSyFD2Pe++T0T9Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MUCfYy4xiocaxazb9OPb1wu3bZjr11ZoUaQhOL2mzlVOn0YNgKj/kI74R5A84fuOg
+         OOPZHSMwYdcyJ1o7r+tvuqdoxwDB79XLIPFFB4emL6t4nawhBBRzedhxFKcbZrJsR0
+         Oz6jh9syQ0ix49Z/UynsefJtrajshefVhoUaoyALBvioOiG43iTZ+qVMhr48ZSl2kj
+         OU40LwLlWL+hOpLFjrjMKMGrEIoXtQ1tLEbKeK1MzVXJKcoTd4UFat8aHPbkoC4W/8
+         ENQ8o9Ma+QgGDraRjXKPQ04ViJPKYqh9O27E1REWlKMaHBTkZ4FhuygZI8H8qwTJhJ
+         wkwpZxXLXm8yA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: use -- separater intead of $(filter-out ...) for cc-cross-prefix
+Date:   Tue,  9 Jul 2019 15:13:00 +0900
+Message-Id: <20190709061300.527-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+arch/mips/Makefile passes prefixes that start with '-' to cc-cross-prefix
+when $(tool-archpref) evaluates to the empty string.
 
-Hi,
+They are filtered-out before the $(shell ...) invocation. Otherwise,
+'command -v' would be confused.
 
-Pawel Laszczak <pawell@cadence.com> writes:
-> diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-> index 69f1b6328532..c156817672c4 100644
-> --- a/include/linux/usb/otg.h
-> +++ b/include/linux/usb/otg.h
-> @@ -129,4 +129,20 @@ enum usb_dr_mode {
->   */
->  extern enum usb_dr_mode usb_get_dr_mode(struct device *dev);
->  
-> +/**
-> + * usb_get_dr_mode_from_string - Convert string to dual role mode.
-> + * @str: Pointer to the given string
-> + *
-> + * The function gets string and returns the correspondig enum usb_dr_mode.
-> + */
-> +extern enum usb_dr_mode usb_get_dr_mode_from_string(const char *str);
-> +
-> +/**
-> + * usb_dr_mode_to_string - Convert dual role mode to string.
-> + * @dr_mode: Pointer to the given dual role mode
-> + *
-> + * The function gets enum usb_dr_mode, and returns the correspondig string.
-> + */
-> +extern const char *usb_dr_mode_to_string(const enum usb_dr_mode dr_mode);
-> +
->  #endif /* __LINUX_USB_OTG_H */
+  $ command -v -linux-gcc
+  bash: command: -l: invalid option
+  command: usage: command [-pVv] command [arg ...]
 
-Still missing the stubs I mentioned. Did you try compiling with and
-without common enabled?
+Since commit 913ab9780fc0 ("kbuild: use more portable 'command -v' for
+cc-cross-prefix"), cc-cross-prefix throws away the stderr output, so
+the console is not polluted in any way.
 
+This is not a big deal in practice, but I see a slightly better taste
+in adding '--' to teach it that '-linux-gcc' is an argument instead of
+a command option.
+
+This will cause extra forking of subshell, but it will not be noticeable
+performance regression.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ scripts/Kbuild.include | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 222fd1d7d3ae..c62d690c7dcf 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -79,8 +79,8 @@ endef
+ # would try to directly execute the shell builtin 'command'. This workaround
+ # should be kept for a long time since this issue was fixed only after the
+ # GNU Make 4.2.1 release.
+-cc-cross-prefix = $(firstword $(foreach c, $(filter-out -%, $(1)), \
+-			$(if $(shell command -v $(c)gcc 2>/dev/null), $(c))))
++cc-cross-prefix = $(firstword $(foreach c, $(1), \
++			$(if $(shell command -v -- $(c)gcc 2>/dev/null), $(c))))
+ 
+ # output directory for tests below
+ TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
 -- 
-balbi
+2.17.1
+
