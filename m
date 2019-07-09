@@ -2,44 +2,43 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BA3C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C085C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC7921670
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4EE216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562697166;
-	bh=aBft+gINQRhuZNu1Z7kfa7Cu75HU0QObR3t0kaYYwJ0=;
+	s=default; t=1562697169;
+	bh=EIoD0PbUix/W/kisd/QUvH9q/xHwqqJQ7FyM9w9/X/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13owrLFDAu3Jq0UxT5VTGTrIJLWK86trfQZNCvOr7qLCdUyRwPVCpulMDg2d+ATIl
-	 ECK1tw84Nr/RQnM+EKBgSKNgvgVww25WlPuWEQd75kW55CECTTw6tVocMkQdzW6YS6
-	 7Pd++1FF6Nwnb/xs3Tr3jKRiBFIRN7tOYdCKLnmY=
+	b=sqy8EMhBn5XqpJUYOgwdzAfcpFNJD01IpL7eh/wDL0x2BRK/g9uX/4YPFanu9gXEG
+	 GgCv83xKYQWkFRodqK/ST8Se+Wyn28xmD9a2yEtSIjxt9LuSctJ/ZX7/PdFkFuLY2i
+	 dV0RU7FCK7e29WTuWBqwttzsM4MGH4SmkHKvjOms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbfGIScp (ORCPT
+        id S1729213AbfGIScr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 14:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbfGIScn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:32:43 -0400
+        id S1729166AbfGIScq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:32:46 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 149EC216FD;
-        Tue,  9 Jul 2019 18:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5193120665;
+        Tue,  9 Jul 2019 18:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562697161;
-        bh=aBft+gINQRhuZNu1Z7kfa7Cu75HU0QObR3t0kaYYwJ0=;
+        s=default; t=1562697165;
+        bh=EIoD0PbUix/W/kisd/QUvH9q/xHwqqJQ7FyM9w9/X/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YMWVsSBPCVpGRbH/znBK9kzq0n55NDm4vxp7L9wkCuUlzRAB59gvMITbtUtp65LFq
-         PRHsSN176eIMH+K4v9ugZoF9ARySiIJFZjazpuSv3ECuZKkLGWQyMpjq7ujy51dYIi
-         O8jMGNeOUpWlyv0Lg7PC7U7NxI2g+gONA/9tjgDw=
+        b=egsQx1fHvCs4ivXdvJScPqzlTyeGL4P9oq991ZegKks5SsGz5akq7gW5GH9+0Dt6f
+         aTN0w4pi0tubjiZM5hiWHp6g2aPAn3Lt8H53FmW9KF94gZCytPOVTpST9Tb7ET4vFB
+         YUbg9Nhmi6dHzbbJXgzDYe+zFc0vn6XZ4GZyRH6Y=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 13/25] tools lib: Adopt zalloc()/zfree() from tools/perf
-Date:   Tue,  9 Jul 2019 15:31:14 -0300
-Message-Id: <20190709183126.30257-14-acme@kernel.org>
+Subject: [PATCH 14/25] perf tools: Use zfree() where applicable
+Date:   Tue,  9 Jul 2019 15:31:15 -0300
+Message-Id: <20190709183126.30257-15-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190709183126.30257-1-acme@kernel.org>
 References: <20190709183126.30257-1-acme@kernel.org>
@@ -63,1810 +62,904 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Eroding a bit more the tools/perf/util/util.h hodpodge header.
+In places where the equivalent was already being done, i.e.:
+
+   free(a);
+   a = NULL;
+
+And in placs where struct members are being freed so that if we have
+some erroneous reference to its struct, then accesses to freed members
+will result in segfaults, which we can detect faster than use after free
+to areas that may still have something seemingly valid.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-natazosyn9rwjka25tvcnyi0@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-jatyoofo5boc1bsvoig6bb6i@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/zalloc.h                      | 12 ++++++++++++
- tools/lib/zalloc.c                                | 15 +++++++++++++++
- tools/perf/MANIFEST                               |  1 +
- tools/perf/arch/arm/annotate/instructions.c       |  1 +
- tools/perf/arch/arm/util/auxtrace.c               |  1 +
- tools/perf/arch/arm/util/cs-etm.c                 |  1 +
- tools/perf/arch/arm64/util/arm-spe.c              |  1 +
- tools/perf/arch/common.c                          |  2 +-
- tools/perf/arch/powerpc/util/perf_regs.c          |  2 +-
- tools/perf/arch/s390/util/auxtrace.c              |  1 +
- tools/perf/arch/s390/util/header.c                |  2 +-
- tools/perf/arch/x86/util/event.c                  |  2 +-
- tools/perf/arch/x86/util/intel-bts.c              |  2 +-
- tools/perf/arch/x86/util/intel-pt.c               |  2 +-
- tools/perf/arch/x86/util/perf_regs.c              |  2 +-
- tools/perf/bench/mem-functions.c                  |  2 +-
- tools/perf/bench/numa.c                           |  2 +-
- tools/perf/builtin-annotate.c                     |  2 +-
- tools/perf/builtin-bench.c                        |  2 +-
- tools/perf/builtin-c2c.c                          |  2 +-
- tools/perf/builtin-diff.c                         |  2 +-
- tools/perf/builtin-help.c                         |  1 +
- tools/perf/builtin-kmem.c                         |  2 +-
- tools/perf/builtin-kvm.c                          |  2 +-
- tools/perf/builtin-lock.c                         |  2 +-
- tools/perf/builtin-probe.c                        |  2 +-
- tools/perf/builtin-report.c                       |  2 +-
- tools/perf/builtin-sched.c                        |  2 +-
- tools/perf/builtin-script.c                       |  2 +-
- tools/perf/builtin-stat.c                         |  2 +-
- tools/perf/builtin-timechart.c                    |  4 +---
- tools/perf/builtin-trace.c                        |  1 +
- tools/perf/perf.c                                 |  2 +-
- tools/perf/tests/switch-tracking.c                |  1 +
- tools/perf/ui/browser.c                           |  2 +-
- tools/perf/ui/browsers/annotate.c                 |  2 +-
- tools/perf/ui/browsers/hists.c                    |  2 +-
- tools/perf/ui/gtk/util.c                          |  3 +--
- tools/perf/ui/stdio/hist.c                        |  2 +-
- tools/perf/util/Build                             |  5 +++++
- tools/perf/util/arm-spe.c                         |  2 +-
- tools/perf/util/auxtrace.c                        |  2 +-
- tools/perf/util/bpf-loader.c                      |  1 +
- tools/perf/util/build-id.c                        |  1 +
- tools/perf/util/call-path.c                       |  3 ++-
- tools/perf/util/callchain.c                       |  2 +-
- tools/perf/util/cgroup.c                          |  2 +-
- tools/perf/util/comm.c                            |  2 +-
- tools/perf/util/config.c                          |  3 +--
- tools/perf/util/counts.c                          |  2 +-
- tools/perf/util/cpumap.c                          |  2 +-
- tools/perf/util/cputopo.c                         |  2 +-
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.c   |  1 +
- tools/perf/util/cs-etm.c                          |  1 +
- tools/perf/util/data-convert-bt.c                 |  2 +-
- tools/perf/util/data.c                            |  1 +
- tools/perf/util/db-export.c                       |  2 +-
- tools/perf/util/dso.c                             |  3 ++-
- tools/perf/util/env.c                             |  2 +-
- tools/perf/util/event.c                           |  1 +
- tools/perf/util/evlist.c                          |  2 +-
- tools/perf/util/evsel.c                           |  2 +-
- tools/perf/util/header.c                          |  2 +-
- tools/perf/util/help-unknown-cmd.c                |  2 ++
- tools/perf/util/hist.c                            |  2 +-
- tools/perf/util/intel-bts.c                       |  2 +-
- .../perf/util/intel-pt-decoder/intel-pt-decoder.c |  2 +-
- tools/perf/util/intel-pt.c                        |  2 +-
- tools/perf/util/llvm-utils.c                      |  1 +
- tools/perf/util/machine.c                         |  2 +-
- tools/perf/util/map.c                             |  2 +-
- tools/perf/util/mem2node.c                        |  2 +-
- tools/perf/util/mmap.c                            |  1 +
- tools/perf/util/namespaces.c                      |  2 +-
- tools/perf/util/parse-events.c                    |  1 +
- tools/perf/util/pmu.c                             |  2 +-
- tools/perf/util/probe-event.c                     |  2 +-
- tools/perf/util/probe-file.c                      |  2 +-
- tools/perf/util/probe-finder.c                    |  2 +-
- tools/perf/util/pstack.c                          |  2 +-
- tools/perf/util/python-ext-sources                |  1 +
- tools/perf/util/s390-cpumsf.c                     |  2 +-
- tools/perf/util/session.c                         |  2 +-
- tools/perf/util/srcline.c                         |  2 +-
- tools/perf/util/stat.c                            |  1 +
- tools/perf/util/strbuf.c                          |  2 +-
- tools/perf/util/strfilter.c                       |  3 ++-
- tools/perf/util/strlist.c                         |  2 +-
- tools/perf/util/svghelper.c                       |  2 +-
- tools/perf/util/symbol-elf.c                      |  1 +
- tools/perf/util/symbol-minimal.c                  |  2 +-
- tools/perf/util/symbol.c                          |  1 +
- tools/perf/util/syscalltbl.c                      |  2 +-
- tools/perf/util/thread-stack.c                    |  2 +-
- tools/perf/util/thread.c                          |  2 +-
- tools/perf/util/thread_map.c                      |  2 +-
- tools/perf/util/trace-event-info.c                |  1 +
- tools/perf/util/trace-event-scripting.c           |  2 +-
- tools/perf/util/unwind-libdw.c                    |  1 +
- tools/perf/util/util.h                            |  9 ---------
- tools/perf/util/values.c                          |  2 +-
- tools/perf/util/vdso.c                            |  1 +
- tools/perf/util/xyarray.c                         |  2 +-
- 103 files changed, 135 insertions(+), 86 deletions(-)
- create mode 100644 tools/include/linux/zalloc.h
- create mode 100644 tools/lib/zalloc.c
+ tools/perf/bench/futex-hash.c            |  3 +-
+ tools/perf/bench/futex-lock-pi.c         |  3 +-
+ tools/perf/builtin-record.c              |  4 +-
+ tools/perf/builtin-stat.c                |  4 +-
+ tools/perf/tests/dwarf-unwind.c          |  5 ++-
+ tools/perf/tests/expr.c                  |  3 +-
+ tools/perf/tests/mem2node.c              |  3 +-
+ tools/perf/tests/thread-map.c            |  3 +-
+ tools/perf/ui/browsers/res_sample.c      |  6 +--
+ tools/perf/ui/browsers/scripts.c         |  4 +-
+ tools/perf/util/annotate.c               |  3 +-
+ tools/perf/util/auxtrace.c               |  5 +--
+ tools/perf/util/cgroup.c                 |  2 +-
+ tools/perf/util/cputopo.c                |  2 +-
+ tools/perf/util/cs-etm.c                 |  5 +--
+ tools/perf/util/data-convert-bt.c        |  2 +-
+ tools/perf/util/data.c                   |  2 +-
+ tools/perf/util/env.c                    |  8 ++--
+ tools/perf/util/event.c                  |  2 +-
+ tools/perf/util/header.c                 |  6 +--
+ tools/perf/util/hist.c                   | 14 +++----
+ tools/perf/util/jitdump.c                |  7 ++--
+ tools/perf/util/llvm-utils.c             |  3 +-
+ tools/perf/util/machine.c                |  4 +-
+ tools/perf/util/metricgroup.c            |  9 +++--
+ tools/perf/util/probe-event.c            | 51 +++++++++++-------------
+ tools/perf/util/s390-cpumsf.c            |  7 ++--
+ tools/perf/util/srccode.c                |  9 +++--
+ tools/perf/util/stat-shadow.c            |  3 +-
+ tools/perf/util/stat.c                   |  2 +-
+ tools/perf/util/symbol-elf.c             | 10 ++---
+ tools/perf/util/thread_map.c             |  2 +-
+ tools/perf/util/unwind-libunwind-local.c |  3 +-
+ 33 files changed, 100 insertions(+), 99 deletions(-)
 
-diff --git a/tools/include/linux/zalloc.h b/tools/include/linux/zalloc.h
-new file mode 100644
-index 000000000000..81099c84043f
---- /dev/null
-+++ b/tools/include/linux/zalloc.h
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+#ifndef __TOOLS_LINUX_ZALLOC_H
-+#define __TOOLS_LINUX_ZALLOC_H
-+
-+#include <stddef.h>
-+
-+void *zalloc(size_t size);
-+void __zfree(void **ptr);
-+
-+#define zfree(ptr) __zfree((void **)(ptr))
-+
-+#endif // __TOOLS_LINUX_ZALLOC_H
-diff --git a/tools/lib/zalloc.c b/tools/lib/zalloc.c
-new file mode 100644
-index 000000000000..9c856d59f56e
---- /dev/null
-+++ b/tools/lib/zalloc.c
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+
-+#include <stdlib.h>
-+#include <linux/zalloc.h>
-+
-+void *zalloc(size_t size)
-+{
-+	return calloc(1, size);
-+}
-+
-+void __zfree(void **ptr)
-+{
-+	free(*ptr);
-+	*ptr = NULL;
-+}
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index 6a5de44b2de9..70f1ff4e2eb4 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -18,3 +18,4 @@ tools/lib/find_bit.c
- tools/lib/bitmap.c
- tools/lib/str_error_r.c
- tools/lib/vsprintf.c
-+tools/lib/zalloc.c
-diff --git a/tools/perf/arch/arm/annotate/instructions.c b/tools/perf/arch/arm/annotate/instructions.c
-index f64516d5b23e..c7d1a69b894f 100644
---- a/tools/perf/arch/arm/annotate/instructions.c
-+++ b/tools/perf/arch/arm/annotate/instructions.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
-+#include <linux/zalloc.h>
- #include <sys/types.h>
- #include <regex.h>
- 
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 1ce6bdbda561..02014740a1aa 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -6,6 +6,7 @@
- 
- #include <stdbool.h>
- #include <linux/coresight-pmu.h>
-+#include <linux/zalloc.h>
- 
- #include "../../util/auxtrace.h"
- #include "../../util/evlist.h"
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 2b83cc8e4796..4208974c24f8 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -12,6 +12,7 @@
- #include <linux/kernel.h>
- #include <linux/log2.h>
- #include <linux/types.h>
-+#include <linux/zalloc.h>
- 
- #include "cs-etm.h"
- #include "../../perf.h"
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 5ccfce87e693..2c009aa74633 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -8,6 +8,7 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- #include <time.h>
- 
- #include "../../util/cpumap.h"
-diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-index 1bc329412bcf..1a9e22f78c22 100644
---- a/tools/perf/arch/common.c
-+++ b/tools/perf/arch/common.c
-@@ -3,8 +3,8 @@
+diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+index 9aa3a674829b..a80797763e1f 100644
+--- a/tools/perf/bench/futex-hash.c
++++ b/tools/perf/bench/futex-hash.c
+@@ -18,6 +18,7 @@
  #include <stdlib.h>
- #include "common.h"
- #include "../util/env.h"
--#include "../util/util.h"
- #include "../util/debug.h"
-+#include <linux/zalloc.h>
- 
- const char *const arc_triplets[] = {
- 	"arc-linux-",
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-index 64f65c296d3e..f14102b85509 100644
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ b/tools/perf/arch/powerpc/util/perf_regs.c
-@@ -2,9 +2,9 @@
- #include <errno.h>
- #include <string.h>
- #include <regex.h>
-+#include <linux/zalloc.h>
- 
- #include "../../perf.h"
--#include "../../util/util.h"
- #include "../../util/perf_regs.h"
- #include "../../util/debug.h"
- 
-diff --git a/tools/perf/arch/s390/util/auxtrace.c b/tools/perf/arch/s390/util/auxtrace.c
-index 44c857388897..0fe1be93f375 100644
---- a/tools/perf/arch/s390/util/auxtrace.c
-+++ b/tools/perf/arch/s390/util/auxtrace.c
-@@ -3,6 +3,7 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- 
- #include "../../util/evlist.h"
- #include "../../util/auxtrace.h"
-diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
-index 165c51435e72..8b0b018d896a 100644
---- a/tools/perf/arch/s390/util/header.c
-+++ b/tools/perf/arch/s390/util/header.c
-@@ -13,9 +13,9 @@
- #include <string.h>
- #include <linux/ctype.h>
+ #include <linux/compiler.h>
  #include <linux/kernel.h>
 +#include <linux/zalloc.h>
- 
- #include "../../util/header.h"
--#include "../../util/util.h"
- 
- #define SYSINFO_MANU	"Manufacturer:"
- #define SYSINFO_TYPE	"Type:"
-diff --git a/tools/perf/arch/x86/util/event.c b/tools/perf/arch/x86/util/event.c
-index 675a0213044d..a3a0b6884779 100644
---- a/tools/perf/arch/x86/util/event.c
-+++ b/tools/perf/arch/x86/util/event.c
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/types.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- 
- #include "../../util/machine.h"
- #include "../../util/tool.h"
- #include "../../util/map.h"
--#include "../../util/util.h"
- #include "../../util/debug.h"
- 
- #if defined(__x86_64__)
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index e6d4d9591c79..ec5c1bb84095 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -9,12 +9,12 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- 
- #include "../../util/cpumap.h"
- #include "../../util/evsel.h"
- #include "../../util/evlist.h"
- #include "../../util/session.h"
--#include "../../util/util.h"
- #include "../../util/pmu.h"
- #include "../../util/debug.h"
- #include "../../util/tsc.h"
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index 9804098dcefb..609088c01e3a 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -10,6 +10,7 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- #include <cpuid.h>
- 
- #include "../../perf.h"
-@@ -25,7 +26,6 @@
- #include "../../util/auxtrace.h"
- #include "../../util/tsc.h"
- #include "../../util/intel-pt.h"
--#include "../../util/util.h"
- 
- #define KiB(x) ((x) * 1024)
- #define MiB(x) ((x) * 1024 * 1024)
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index 3666c0076df9..0d7b77ff0ae6 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -2,9 +2,9 @@
- #include <errno.h>
- #include <string.h>
- #include <regex.h>
-+#include <linux/zalloc.h>
- 
- #include "../../perf.h"
--#include "../../util/util.h"
- #include "../../util/perf_regs.h"
- #include "../../util/debug.h"
- 
-diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-index 0251dd348124..64dc994c72ea 100644
---- a/tools/perf/bench/mem-functions.c
-+++ b/tools/perf/bench/mem-functions.c
-@@ -9,7 +9,6 @@
- 
- #include "debug.h"
- #include "../perf.h"
--#include "../util/util.h"
- #include <subcmd/parse-options.h>
- #include "../util/header.h"
- #include "../util/cloexec.h"
-@@ -24,6 +23,7 @@
  #include <sys/time.h>
- #include <errno.h>
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
  
- #define K 1024
+ #include "../util/stat.h"
+@@ -214,7 +215,7 @@ int bench_futex_hash(int argc, const char **argv)
+ 				       &worker[i].futex[nfutexes-1], t);
+ 		}
  
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index a7784554a80d..a640ca7aaada 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -11,7 +11,6 @@
+-		free(worker[i].futex);
++		zfree(&worker[i].futex);
+ 	}
  
- #include "../perf.h"
- #include "../builtin.h"
--#include "../util/util.h"
+ 	print_summary();
+diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
+index 8e9c4753e304..d02330a69745 100644
+--- a/tools/perf/bench/futex-lock-pi.c
++++ b/tools/perf/bench/futex-lock-pi.c
+@@ -12,6 +12,7 @@
  #include <subcmd/parse-options.h>
- #include "../util/cloexec.h"
- 
-@@ -35,6 +34,7 @@
- #include <linux/kernel.h>
- #include <linux/time64.h>
- #include <linux/numa.h>
-+#include <linux/zalloc.h>
- 
- #include <numa.h>
- #include <numaif.h>
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 77deb3a40596..e0aa14faf2b5 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -8,11 +8,11 @@
-  */
- #include "builtin.h"
- 
--#include "util/util.h"
- #include "util/color.h"
- #include <linux/list.h>
- #include "util/cache.h"
- #include <linux/rbtree.h>
-+#include <linux/zalloc.h>
- #include "util/symbol.h"
- 
- #include "perf.h"
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index 334c77ffc1d9..b8e7c38ef221 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -17,7 +17,6 @@
-  *  epoll ... Event poll performance
-  */
- #include "perf.h"
--#include "util/util.h"
- #include <subcmd/parse-options.h>
- #include "builtin.h"
- #include "bench/bench.h"
-@@ -26,6 +25,7 @@
- #include <stdlib.h>
- #include <string.h>
- #include <sys/prctl.h>
-+#include <linux/zalloc.h>
- 
- typedef int (*bench_fn_t)(int argc, const char **argv);
- 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 9e6cc868bdb4..e3776f5c2e01 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -15,9 +15,9 @@
  #include <linux/compiler.h>
  #include <linux/kernel.h>
- #include <linux/stringify.h>
-+#include <linux/zalloc.h>
- #include <asm/bug.h>
- #include <sys/param.h>
--#include "util.h"
- #include "debug.h"
- #include "builtin.h"
- #include <subcmd/parse-options.h>
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index f924b46910b5..f6f5dd15bea7 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -16,12 +16,12 @@
- #include "util/tool.h"
- #include "util/sort.h"
- #include "util/symbol.h"
--#include "util/util.h"
- #include "util/data.h"
- #include "util/config.h"
- #include "util/time-utils.h"
- #include "util/annotate.h"
- #include "util/map.h"
-+#include <linux/zalloc.h>
- 
- #include <errno.h>
- #include <inttypes.h>
-diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-index 6a1cab547043..a83af92fb0d1 100644
---- a/tools/perf/builtin-help.c
-+++ b/tools/perf/builtin-help.c
-@@ -14,6 +14,7 @@
- #include <subcmd/help.h>
- #include "util/debug.h"
- #include <linux/kernel.h>
 +#include <linux/zalloc.h>
  #include <errno.h>
- #include <stdio.h>
- #include <stdlib.h>
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 9bd3829de76d..9e5e60898083 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -4,7 +4,6 @@
+ #include "bench.h"
+ #include "futex.h"
+@@ -217,7 +218,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
+ 			       worker[i].tid, worker[i].futex, t);
  
- #include "util/evlist.h"
- #include "util/evsel.h"
--#include "util/util.h"
- #include "util/config.h"
- #include "util/map.h"
- #include "util/symbol.h"
-@@ -26,6 +25,7 @@
- #include <linux/kernel.h>
- #include <linux/rbtree.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include <errno.h>
- #include <inttypes.h>
- #include <locale.h>
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index dbb6f737a3e2..b33c83489120 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -5,7 +5,6 @@
- #include "util/evsel.h"
- #include "util/evlist.h"
- #include "util/term.h"
--#include "util/util.h"
- #include "util/cache.h"
- #include "util/symbol.h"
- #include "util/thread.h"
-@@ -32,6 +31,7 @@
+ 		if (multi)
+-			free(worker[i].futex);
++			zfree(&worker[i].futex);
+ 	}
  
- #include <linux/kernel.h>
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
- #include <errno.h>
- #include <inttypes.h>
- #include <poll.h>
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index b9810a8d350a..c0be44e65e9d 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -6,7 +6,6 @@
- 
- #include "util/evlist.h"
- #include "util/evsel.h"
--#include "util/util.h"
- #include "util/cache.h"
- #include "util/symbol.h"
- #include "util/thread.h"
-@@ -30,6 +29,7 @@
- #include <linux/list.h>
- #include <linux/hash.h>
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- 
- static struct perf_session *session;
- 
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 8bb124e55c6d..6418782951a4 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -19,7 +19,6 @@
- #include "perf.h"
- #include "builtin.h"
- #include "namespaces.h"
--#include "util/util.h"
- #include "util/strlist.h"
- #include "util/strfilter.h"
- #include "util/symbol.h"
-@@ -28,6 +27,7 @@
- #include "util/probe-finder.h"
- #include "util/probe-event.h"
- #include "util/probe-file.h"
-+#include <linux/zalloc.h>
- 
- #define DEFAULT_VAR_FILTER "!__k???tab_* & !__crc_*"
- #define DEFAULT_FUNC_FILTER "!_*"
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 93d4b12e248e..abf0b9b8f566 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -8,7 +8,6 @@
-  */
- #include "builtin.h"
- 
--#include "util/util.h"
- #include "util/config.h"
- 
- #include "util/annotate.h"
-@@ -16,6 +15,7 @@
- #include <linux/list.h>
- #include <linux/rbtree.h>
- #include <linux/err.h>
-+#include <linux/zalloc.h>
- #include "util/map.h"
- #include "util/symbol.h"
- #include "util/callchain.h"
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 1519989961ff..56d1907b1215 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2,7 +2,6 @@
- #include "builtin.h"
+ 	print_summary();
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index dca55997934e..8779cee58185 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -11,7 +11,6 @@
  #include "perf.h"
  
--#include "util/util.h"
- #include "util/evlist.h"
- #include "util/cache.h"
- #include "util/evsel.h"
-@@ -26,6 +25,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- #include <sys/prctl.h>
- #include <sys/resource.h>
- #include <inttypes.h>
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 2f6232f1bfdc..b3536820f9a8 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -14,7 +14,6 @@
- #include "util/symbol.h"
- #include "util/thread.h"
- #include "util/trace-event.h"
--#include "util/util.h"
- #include "util/evlist.h"
- #include "util/evsel.h"
- #include "util/sort.h"
-@@ -34,6 +33,7 @@
- #include <linux/kernel.h>
- #include <linux/stringify.h>
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
- #include <sys/utsname.h>
- #include "asm/bug.h"
- #include "util/mem-events.h"
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b81f7b197d24..c72f4a0831a8 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -43,7 +43,6 @@
- #include "perf.h"
- #include "builtin.h"
- #include "util/cgroup.h"
+ #include "util/build-id.h"
 -#include "util/util.h"
  #include <subcmd/parse-options.h>
  #include "util/parse-events.h"
- #include "util/pmu.h"
-@@ -67,6 +66,7 @@
- #include "asm/bug.h"
- 
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
- #include <api/fs/fs.h>
- #include <errno.h>
- #include <signal.h>
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 145a19668114..4bde3fa245d1 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -13,9 +13,6 @@
- #include <traceevent/event-parse.h>
- 
- #include "builtin.h"
--
--#include "util/util.h"
--
- #include "util/color.h"
- #include <linux/list.h>
- #include "util/cache.h"
-@@ -24,6 +21,7 @@
- #include <linux/kernel.h>
- #include <linux/rbtree.h>
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
- #include "util/symbol.h"
- #include "util/thread.h"
- #include "util/callchain.h"
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e3fc9062f136..1aa2ed096f65 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -61,6 +61,7 @@
- #include <linux/random.h>
- #include <linux/stringify.h>
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
- #include <fcntl.h>
- #include <sys/sysmacros.h>
- 
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index 2123b3cc4dcf..97e2628ea5dd 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -18,7 +18,6 @@
- #include "util/bpf-loader.h"
- #include "util/debug.h"
- #include "util/event.h"
--#include "util/util.h"
- #include <api/fs/fs.h>
- #include <api/fs/tracing_path.h>
- #include <errno.h>
-@@ -30,6 +29,7 @@
- #include <sys/stat.h>
- #include <unistd.h>
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- 
- const char perf_usage_string[] =
- 	"perf [--version] [--help] [OPTIONS] COMMAND [ARGS]";
-diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 9b5be51e5e7b..744409dce65f 100644
---- a/tools/perf/tests/switch-tracking.c
-+++ b/tools/perf/tests/switch-tracking.c
-@@ -4,6 +4,7 @@
- #include <errno.h>
- #include <time.h>
- #include <stdlib.h>
-+#include <linux/zalloc.h>
- 
- #include "parse-events.h"
- #include "evlist.h"
-diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-index 55ff05a46e0b..f80c51d53565 100644
---- a/tools/perf/ui/browser.c
-+++ b/tools/perf/ui/browser.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "../util.h"
- #include "../string2.h"
- #include "../config.h"
- #include "../../perf.h"
-@@ -17,6 +16,7 @@
- #include "keysyms.h"
- #include "../color.h"
- #include <linux/ctype.h>
-+#include <linux/zalloc.h>
- 
- static int ui_browser__percent_color(struct ui_browser *browser,
- 				     double percent, bool current)
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index b0d089a95dac..e67880bf1efe 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "../../util/util.h"
- #include "../browser.h"
- #include "../helpline.h"
- #include "../ui.h"
-@@ -15,6 +14,7 @@
- #include <pthread.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include <sys/ttydefaults.h>
- #include <asm/bug.h>
- 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 33e67aa91347..85581cfb9112 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -9,6 +9,7 @@
- #include <linux/string.h>
- #include <sys/ttydefaults.h>
+ #include "util/config.h"
+@@ -54,6 +53,7 @@
+ #include <sys/mman.h>
+ #include <sys/wait.h>
  #include <linux/time64.h>
 +#include <linux/zalloc.h>
  
- #include "../../util/callchain.h"
- #include "../../util/evsel.h"
-@@ -18,7 +19,6 @@
- #include "../../util/symbol.h"
- #include "../../util/pstack.h"
- #include "../../util/sort.h"
--#include "../../util/util.h"
- #include "../../util/top.h"
- #include "../../util/thread.h"
- #include "../../arch/common.h"
-diff --git a/tools/perf/ui/gtk/util.c b/tools/perf/ui/gtk/util.c
-index 7250d8101c8f..c28bdb7517ac 100644
---- a/tools/perf/ui/gtk/util.c
-+++ b/tools/perf/ui/gtk/util.c
-@@ -1,11 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "../util.h"
--#include "../../util/util.h"
- #include "../../util/debug.h"
- #include "gtk.h"
+ struct switch_output {
+ 	bool		 enabled;
+@@ -1110,7 +1110,7 @@ record__switch_output(struct record *rec, bool at_exit)
+ 		rec->switch_output.cur_file = n;
+ 		if (rec->switch_output.filenames[n]) {
+ 			remove(rec->switch_output.filenames[n]);
+-			free(rec->switch_output.filenames[n]);
++			zfree(&rec->switch_output.filenames[n]);
+ 		}
+ 		rec->switch_output.filenames[n] = new_filename;
+ 	} else {
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index c72f4a0831a8..b55a534b4de0 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1586,7 +1586,7 @@ static void runtime_stat_delete(struct perf_stat_config *config)
+ 	for (i = 0; i < config->stats_num; i++)
+ 		runtime_stat__exit(&config->stats[i]);
  
- #include <string.h>
--
-+#include <linux/zalloc.h>
+-	free(config->stats);
++	zfree(&config->stats);
+ }
  
- struct perf_gtk_context *pgctx;
+ static const char * const stat_report_usage[] = {
+@@ -2003,7 +2003,7 @@ int cmd_stat(int argc, const char **argv)
+ 	perf_stat__exit_aggr_mode();
+ 	perf_evlist__free_stats(evsel_list);
+ out:
+-	free(stat_config.walltime_run);
++	zfree(&stat_config.walltime_run);
  
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 89393c79d870..ee7ea6deed21 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -3,7 +3,6 @@
- #include <linux/string.h>
- 
- #include "../../util/callchain.h"
--#include "../../util/util.h"
- #include "../../util/hist.h"
- #include "../../util/map.h"
- #include "../../util/map_groups.h"
-@@ -14,6 +13,7 @@
- #include "../../util/string2.h"
- #include "../../util/thread.h"
- #include <linux/ctype.h>
-+#include <linux/zalloc.h>
- 
- static size_t callchain__fprintf_left_margin(FILE *fp, int left_margin)
- {
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index d3408a463060..d7e3b008a613 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -25,6 +25,7 @@ perf-y += rbtree.o
- perf-y += libstring.o
- perf-y += bitmap.o
- perf-y += hweight.o
-+perf-y += zalloc.o
- perf-y += smt.o
- perf-y += strbuf.o
- perf-y += string.o
-@@ -241,3 +242,7 @@ $(OUTPUT)util/hweight.o: ../lib/hweight.c FORCE
- $(OUTPUT)util/vsprintf.o: ../lib/vsprintf.c FORCE
- 	$(call rule_mkdir)
- 	$(call if_changed_dep,cc_o_c)
-+
-+$(OUTPUT)util/zalloc.o: ../lib/zalloc.c FORCE
-+	$(call rule_mkdir)
-+	$(call if_changed_dep,cc_o_c)
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 6067267cc76c..a314e5b26e9d 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -12,6 +12,7 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- 
- #include "cpumap.h"
- #include "color.h"
-@@ -19,7 +20,6 @@
- #include "evlist.h"
- #include "machine.h"
- #include "session.h"
--#include "util.h"
- #include "thread.h"
- #include "debug.h"
- #include "auxtrace.h"
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index bc215fe0b4b4..0812a11a0dbe 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -24,9 +24,9 @@
- #include <stdlib.h>
- #include <stdio.h>
- #include <linux/list.h>
-+#include <linux/zalloc.h>
- 
- #include "../perf.h"
--#include "util.h"
- #include "evlist.h"
- #include "dso.h"
- #include "map.h"
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 251d9ea6252f..93d0f239ad4f 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -12,6 +12,7 @@
- #include <linux/err.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include <errno.h>
- #include "perf.h"
- #include "debug.h"
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 89c6913dfc25..f1abfab7aa8c 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -30,6 +30,7 @@
- #include "strlist.h"
- 
- #include <linux/ctype.h>
-+#include <linux/zalloc.h>
- 
- static bool no_buildid_cache;
- 
-diff --git a/tools/perf/util/call-path.c b/tools/perf/util/call-path.c
-index c5b90300304d..e8a80c41cba3 100644
---- a/tools/perf/util/call-path.c
-+++ b/tools/perf/util/call-path.c
-@@ -6,8 +6,9 @@
- 
- #include <linux/rbtree.h>
- #include <linux/list.h>
-+#include <linux/zalloc.h>
-+#include <stdlib.h>
- 
--#include "util.h"
- #include "call-path.h"
- 
- static void call_path__init(struct call_path *cp, struct call_path *parent,
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index abb608b09269..b4af25dca5eb 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -16,11 +16,11 @@
- #include <stdbool.h>
- #include <errno.h>
- #include <math.h>
-+#include <linux/zalloc.h>
- 
- #include "asm/bug.h"
- 
- #include "hist.h"
--#include "util.h"
- #include "sort.h"
- #include "machine.h"
- #include "map.h"
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index ccd02634a616..f505d78f059b 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "util.h"
- #include "../perf.h"
- #include <subcmd/parse-options.h>
- #include "evsel.h"
- #include "cgroup.h"
- #include "evlist.h"
- #include <linux/stringify.h>
-+#include <linux/zalloc.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <fcntl.h>
-diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-index 1066de92af12..afb8d4fd2644 100644
---- a/tools/perf/util/comm.c
-+++ b/tools/perf/util/comm.c
-@@ -1,12 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "comm.h"
--#include "util.h"
- #include <errno.h>
- #include <stdlib.h>
- #include <stdio.h>
- #include <string.h>
- #include <linux/refcount.h>
- #include <linux/rbtree.h>
-+#include <linux/zalloc.h>
- #include "rwsem.h"
- 
- struct comm_str {
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 752cce853e51..042ffbc8c53f 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -11,7 +11,6 @@
-  */
- #include <errno.h>
- #include <sys/param.h>
--#include "util.h"
- #include "cache.h"
- #include "callchain.h"
- #include <subcmd/exec-cmd.h>
-@@ -23,7 +22,7 @@
- #include <sys/stat.h>
- #include <unistd.h>
- #include <linux/string.h>
--
-+#include <linux/zalloc.h>
- #include <linux/ctype.h>
- 
- #define MAXNAME (256)
-diff --git a/tools/perf/util/counts.c b/tools/perf/util/counts.c
-index 03032b410c29..88be9c4365e0 100644
---- a/tools/perf/util/counts.c
-+++ b/tools/perf/util/counts.c
-@@ -3,7 +3,7 @@
- #include <stdlib.h>
- #include "evsel.h"
- #include "counts.h"
--#include "util.h"
-+#include <linux/zalloc.h>
- 
- struct perf_counts *perf_counts__new(int ncpus, int nthreads)
- {
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 0d8fbedf7bd5..3acfbe34ebaf 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "util.h"
- #include <api/fs/fs.h>
- #include "../perf.h"
- #include "cpumap.h"
-@@ -11,6 +10,7 @@
- #include "asm/bug.h"
- 
- #include <linux/ctype.h>
-+#include <linux/zalloc.h>
- 
- static int max_cpu_num;
- static int max_present_cpu_num;
-diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index d3b2bd258b9e..fa1778aee5d6 100644
---- a/tools/perf/util/cputopo.c
-+++ b/tools/perf/util/cputopo.c
-@@ -4,10 +4,10 @@
- #include <inttypes.h>
- #include <stdlib.h>
- #include <api/fs/fs.h>
-+#include <linux/zalloc.h>
- 
- #include "cputopo.h"
- #include "cpumap.h"
--#include "util.h"
- #include "env.h"
- 
- #define CORE_SIB_FMT \
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index bb45e23018ee..37d7c492b155 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/err.h>
- #include <linux/list.h>
-+#include <linux/zalloc.h>
- #include <stdlib.h>
- #include <opencsd/c_api/opencsd_c_api.h>
- #include <opencsd/etmv4/trc_pkt_types_etmv4.h>
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 0c7776b51045..d92516edbead 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/log2.h>
- #include <linux/types.h>
-+#include <linux/zalloc.h>
- 
- #include <opencsd/ocsd_if_types.h>
- #include <stdlib.h>
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 7b06e7373b9e..1e93f2e94c40 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -10,6 +10,7 @@
- #include <inttypes.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- #include <babeltrace/ctf-writer/writer.h>
- #include <babeltrace/ctf-writer/clock.h>
- #include <babeltrace/ctf-writer/stream.h>
-@@ -22,7 +23,6 @@
- #include "asm/bug.h"
- #include "data-convert-bt.h"
- #include "session.h"
--#include "util.h"
- #include "debug.h"
- #include "tool.h"
- #include "evlist.h"
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 6a64f713710d..df7e000e19ea 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
+ 	if (smi_cost && smi_reset)
+ 		sysfs__write_int(FREEZE_ON_SMI_PATH, 0);
+diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
+index 077c306c1cae..f33709a79335 100644
+--- a/tools/perf/tests/dwarf-unwind.c
++++ b/tools/perf/tests/dwarf-unwind.c
 @@ -1,6 +1,7 @@
  // SPDX-License-Identifier: GPL-2.0
  #include <linux/compiler.h>
- #include <linux/kernel.h>
+ #include <linux/types.h>
 +#include <linux/zalloc.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <errno.h>
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index 4cdd1f579156..3f2694ccfac7 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -14,11 +14,11 @@
- #include "symbol.h"
- #include "map.h"
- #include "event.h"
--#include "util.h"
- #include "thread-stack.h"
- #include "callchain.h"
- #include "call-path.h"
- #include "db-export.h"
-+#include <linux/zalloc.h>
- 
- struct deferred_export {
- 	struct list_head node;
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index c7fde04400f7..ebacf07fc9ee 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -2,6 +2,7 @@
- #include <asm/bug.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include <sys/time.h>
- #include <sys/resource.h>
- #include <sys/types.h>
-@@ -21,7 +22,7 @@
- #include "dso.h"
- #include "machine.h"
- #include "auxtrace.h"
--#include "util.h"
-+#include "util.h" /* O_CLOEXEC for older systems */
- #include "debug.h"
- #include "string2.h"
- #include "vdso.h"
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 7d317d49d207..f92d992bd2db 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -2,7 +2,7 @@
- #include "cpumap.h"
- #include "env.h"
- #include <linux/ctype.h>
--#include "util.h"
-+#include <linux/zalloc.h>
- #include "bpf-event.h"
- #include <errno.h>
- #include <sys/utsname.h>
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index e1d0c5ba1f92..7524bda5140b 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -11,6 +11,7 @@
- #include <uapi/linux/mman.h> /* To get things like MAP_HUGETLB even on older libc headers */
- #include <api/fs/fs.h>
- #include <linux/perf_event.h>
-+#include <linux/zalloc.h>
- #include "event.h"
- #include "debug.h"
- #include "hist.h"
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index a474ede17cd6..b0364d923f76 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -5,7 +5,6 @@
-  * Parts came from builtin-{top,stat,record}.c, see those files for further
-  * copyright notes.
-  */
--#include "util.h"
- #include <api/fs/fs.h>
- #include <errno.h>
  #include <inttypes.h>
-@@ -33,6 +32,7 @@
- #include <linux/hash.h>
- #include <linux/log2.h>
- #include <linux/err.h>
+ #include <unistd.h>
+ #include "tests.h"
+@@ -115,8 +116,8 @@ noinline int test_dwarf_unwind__thread(struct thread *thread)
+ 	}
+ 
+  out:
+-	free(sample.user_stack.data);
+-	free(sample.user_regs.regs);
++	zfree(&sample.user_stack.data);
++	zfree(&sample.user_regs.regs);
+ 	return err;
+ }
+ 
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 9acc1e80b936..ee1d88650e69 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -3,6 +3,7 @@
+ #include "util/expr.h"
+ #include "tests.h"
+ #include <stdlib.h>
 +#include <linux/zalloc.h>
  
- #ifdef LACKS_SIGQUEUE_PROTOTYPE
- int sigqueue(pid_t pid, int sig, const union sigval value);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 7fb4ae82f34c..7ede674edf07 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -17,6 +17,7 @@
- #include <linux/perf_event.h>
- #include <linux/compiler.h>
- #include <linux/err.h>
-+#include <linux/zalloc.h>
- #include <sys/ioctl.h>
- #include <sys/resource.h>
- #include <sys/types.h>
-@@ -27,7 +28,6 @@
- #include "event.h"
- #include "evsel.h"
- #include "evlist.h"
--#include "util.h"
- #include "cpumap.h"
- #include "thread_map.h"
- #include "target.h"
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 6a93ff5d8db5..4e2efaa50c2f 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1,7 +1,6 @@
+ static int test(struct parse_ctx *ctx, const char *e, double val2)
+ {
+@@ -58,7 +59,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	TEST_ASSERT_VAL("find other", other[3] == NULL);
+ 
+ 	for (i = 0; i < num_other; i++)
+-		free((void *)other[i]);
++		zfree(&other[i]);
+ 	free((void *)other);
+ 
+ 	return 0;
+diff --git a/tools/perf/tests/mem2node.c b/tools/perf/tests/mem2node.c
+index d23ff1b68eba..520cc91af256 100644
+--- a/tools/perf/tests/mem2node.c
++++ b/tools/perf/tests/mem2node.c
+@@ -1,6 +1,7 @@
  // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
- #include <inttypes.h>
--#include "util.h"
- #include "string2.h"
- #include <sys/param.h>
- #include <sys/types.h>
-@@ -15,6 +14,7 @@
- #include <linux/bitops.h>
- #include <linux/string.h>
- #include <linux/stringify.h>
+ #include <linux/compiler.h>
+ #include <linux/bitmap.h>
 +#include <linux/zalloc.h>
- #include <sys/stat.h>
- #include <sys/utsname.h>
- #include <linux/time64.h>
-diff --git a/tools/perf/util/help-unknown-cmd.c b/tools/perf/util/help-unknown-cmd.c
-index 4f07a5ba5030..ab9e16123626 100644
---- a/tools/perf/util/help-unknown-cmd.c
-+++ b/tools/perf/util/help-unknown-cmd.c
-@@ -3,9 +3,11 @@
- #include "config.h"
- #include <poll.h>
- #include <stdio.h>
-+#include <stdlib.h>
- #include <subcmd/help.h>
- #include "../builtin.h"
- #include "levenshtein.h"
+ #include "cpumap.h"
+ #include "mem2node.h"
+ #include "tests.h"
+@@ -67,7 +68,7 @@ int test__mem2node(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	T("failed: mem2node__node", -1 == mem2node__node(&map, 0x1050));
+ 
+ 	for (i = 0; i < ARRAY_SIZE(nodes); i++)
+-		free(nodes[i].set);
++		zfree(&nodes[i].set);
+ 
+ 	mem2node__exit(&map);
+ 	return 0;
+diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
+index 4de1939b58ba..ccc17aced49e 100644
+--- a/tools/perf/tests/thread-map.c
++++ b/tools/perf/tests/thread-map.c
+@@ -6,6 +6,7 @@
+ #include "tests.h"
+ #include "thread_map.h"
+ #include "debug.h"
 +#include <linux/zalloc.h>
  
- static int autocorrect;
+ #define NAME	(const char *) "perf"
+ #define NAMEUL	(unsigned long) NAME
+@@ -133,7 +134,7 @@ int test__thread_map_remove(struct test *test __maybe_unused, int subtest __mayb
+ 			thread_map__remove(threads, 0));
  
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 27cecb59f866..bb1d77331add 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
+ 	for (i = 0; i < threads->nr; i++)
+-		free(threads->map[i].comm);
++		zfree(&threads->map[i].comm);
+ 
+ 	free(threads);
+ 	return 0;
+diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
+index c0dd73176d42..8aa3547bb9ff 100644
+--- a/tools/perf/ui/browsers/res_sample.c
++++ b/tools/perf/ui/browsers/res_sample.c
 @@ -1,6 +1,5 @@
  // SPDX-License-Identifier: GPL-2.0
- #include "callchain.h"
+ /* Display a menu with individual samples to browse with perf script */
 -#include "util.h"
- #include "build-id.h"
  #include "hist.h"
- #include "map.h"
-@@ -20,6 +19,7 @@
- #include <inttypes.h>
- #include <sys/param.h>
- #include <linux/time64.h>
-+#include <linux/zalloc.h>
- 
- static bool hists__filter_entry_by_dso(struct hists *hists,
- 				       struct hist_entry *he);
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index e32dbffebb2f..5a21bcdb8ef7 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -12,6 +12,7 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- 
- #include "cpumap.h"
- #include "color.h"
-@@ -21,7 +22,6 @@
- #include "map.h"
- #include "symbol.h"
- #include "session.h"
--#include "util.h"
- #include "thread.h"
- #include "thread-stack.h"
- #include "debug.h"
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index 4d14e78c5927..3bfdf2b7a96a 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -14,9 +14,9 @@
- #include <stdint.h>
- #include <inttypes.h>
- #include <linux/compiler.h>
-+#include <linux/zalloc.h>
- 
- #include "../cache.h"
--#include "../util.h"
- #include "../auxtrace.h"
- 
- #include "intel-pt-insn-decoder.h"
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 470aaae9d930..c76a96f777fb 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -10,6 +10,7 @@
- #include <errno.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
-+#include <linux/zalloc.h>
- 
- #include "../perf.h"
- #include "session.h"
-@@ -22,7 +23,6 @@
  #include "evsel.h"
- #include "map.h"
- #include "color.h"
--#include "util.h"
- #include "thread.h"
- #include "thread-stack.h"
- #include "symbol.h"
-diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-index 5b0b60f00275..b9fddb809d58 100644
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -9,6 +9,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <linux/err.h>
-+#include <linux/zalloc.h>
- #include "debug.h"
- #include "llvm-utils.h"
+ #include "hists.h"
+@@ -8,6 +7,7 @@
  #include "config.h"
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 147ed85ea2bc..f523da3009e4 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -15,7 +15,6 @@
- #include "strlist.h"
- #include "thread.h"
- #include "vdso.h"
--#include "util.h"
- #include <stdbool.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-@@ -28,6 +27,7 @@
- #include <linux/ctype.h>
- #include <symbol/kallsyms.h>
- #include <linux/mman.h>
-+#include <linux/zalloc.h>
- 
- static void __machine__remove_thread(struct machine *machine, struct thread *th, bool lock);
- 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 5f87975d2562..668410b1d426 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -12,10 +12,10 @@
- #include "thread.h"
- #include "vdso.h"
- #include "build-id.h"
--#include "util.h"
- #include "debug.h"
- #include "machine.h"
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include "srcline.h"
- #include "namespaces.h"
- #include "unwind.h"
-diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
-index c6fd81c02586..cacc2fc4dcbd 100644
---- a/tools/perf/util/mem2node.c
-+++ b/tools/perf/util/mem2node.c
-@@ -1,8 +1,8 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <linux/bitmap.h>
-+#include <linux/zalloc.h>
- #include "mem2node.h"
--#include "util.h"
- 
- struct phys_entry {
- 	struct rb_node	rb_node;
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 768c632b0d82..9f0b6391af33 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -9,6 +9,7 @@
- #include <sys/mman.h>
- #include <inttypes.h>
- #include <asm/bug.h>
-+#include <linux/zalloc.h>
- #ifdef HAVE_LIBNUMA_SUPPORT
- #include <numaif.h>
- #endif
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index fda2fa1e8819..46d3a7754897 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -5,7 +5,6 @@
-  */
- 
- #include "namespaces.h"
--#include "util.h"
- #include "event.h"
- #include "get_current_dir_name.h"
- #include <sys/types.h>
-@@ -18,6 +17,7 @@
- #include <string.h>
- #include <unistd.h>
- #include <asm/bug.h>
-+#include <linux/zalloc.h>
- 
- struct namespaces *namespaces__new(struct namespaces_event *event)
- {
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index cf0b9b81c5aa..aa439853f20a 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/hw_breakpoint.h>
- #include <linux/err.h>
-+#include <linux/zalloc.h>
- #include <dirent.h>
- #include <errno.h>
- #include <sys/ioctl.h>
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 55f4de6442e3..12b677902fbc 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -2,6 +2,7 @@
- #include <linux/list.h>
- #include <linux/compiler.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include <sys/types.h>
- #include <errno.h>
- #include <fcntl.h>
-@@ -14,7 +15,6 @@
- #include <api/fs/fs.h>
- #include <locale.h>
- #include <regex.h>
--#include "util.h"
- #include "pmu.h"
- #include "parse-events.h"
- #include "cpumap.h"
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 6f24eaf6e504..80c0eca0f1ee 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -19,7 +19,6 @@
- #include <limits.h>
- #include <elf.h>
- 
--#include "util.h"
- #include "event.h"
- #include "namespaces.h"
- #include "strlist.h"
-@@ -40,6 +39,7 @@
- #include "string2.h"
- 
- #include <linux/ctype.h>
-+#include <linux/zalloc.h>
- 
- #define PERFPROBE_GROUP "probe"
- 
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 0ed1900454eb..c2998f90b23c 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -10,8 +10,8 @@
- #include <sys/types.h>
- #include <sys/uio.h>
- #include <unistd.h>
-+#include <linux/zalloc.h>
- #include "namespaces.h"
--#include "util.h"
- #include "event.h"
- #include "strlist.h"
- #include "strfilter.h"
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 6b40cc691a2d..7d8c99734928 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -19,11 +19,11 @@
- #include <dwarf-regs.h>
- 
- #include <linux/bitops.h>
-+#include <linux/zalloc.h>
- #include "event.h"
- #include "dso.h"
- #include "debug.h"
- #include "intlist.h"
--#include "util.h"
- #include "strlist.h"
- #include "symbol.h"
- #include "probe-finder.h"
-diff --git a/tools/perf/util/pstack.c b/tools/perf/util/pstack.c
-index 797fe1ae2d2e..28de8a4c2ce8 100644
---- a/tools/perf/util/pstack.c
-+++ b/tools/perf/util/pstack.c
-@@ -5,10 +5,10 @@
-  * (c) 2010 Arnaldo Carvalho de Melo <acme@redhat.com>
-  */
- 
--#include "util.h"
- #include "pstack.h"
- #include "debug.h"
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- #include <stdlib.h>
- 
- struct pstack {
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index 2237bac9fadb..ceb8afdf9a89 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -18,6 +18,7 @@ util/namespaces.c
- ../lib/hweight.c
- ../lib/string.c
- ../lib/vsprintf.c
-+../lib/zalloc.c
- util/thread_map.c
- util/util.c
- util/xyarray.c
-diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-index 10d36d9b7909..ea669702825d 100644
---- a/tools/perf/util/s390-cpumsf.c
-+++ b/tools/perf/util/s390-cpumsf.c
-@@ -146,6 +146,7 @@
- #include <linux/types.h>
- #include <linux/bitops.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- 
- #include <sys/stat.h>
- #include <sys/types.h>
-@@ -156,7 +157,6 @@
- #include "evlist.h"
- #include "machine.h"
- #include "session.h"
--#include "util.h"
- #include "thread.h"
- #include "debug.h"
- #include "auxtrace.h"
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index e3463df18493..d0fd6c614e68 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2,6 +2,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- #include <traceevent/event-parse.h>
- #include <api/fs/fs.h>
- 
-@@ -18,7 +19,6 @@
- #include "session.h"
- #include "tool.h"
- #include "sort.h"
--#include "util.h"
- #include "cpumap.h"
- #include "perf_regs.h"
- #include "asm/bug.h"
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index dcad75daf5e4..6ccf6f6d09df 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -6,9 +6,9 @@
- 
- #include <linux/kernel.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- 
- #include "util/dso.h"
--#include "util/util.h"
- #include "util/debug.h"
- #include "util/callchain.h"
- #include "util/symbol_conf.h"
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index d91fe754b6d2..c967715c1d4c 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -6,6 +6,7 @@
- #include "evlist.h"
- #include "evsel.h"
- #include "thread_map.h"
-+#include <linux/zalloc.h>
- 
- void update_stats(struct stats *stats, u64 val)
- {
-diff --git a/tools/perf/util/strbuf.c b/tools/perf/util/strbuf.c
-index 54336df089df..2ce0dc887364 100644
---- a/tools/perf/util/strbuf.c
-+++ b/tools/perf/util/strbuf.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "debug.h"
--#include "util.h"
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- #include <errno.h>
- #include <stdlib.h>
- 
-diff --git a/tools/perf/util/strfilter.c b/tools/perf/util/strfilter.c
-index 90ea2b209cbb..78aa4c3b990d 100644
---- a/tools/perf/util/strfilter.c
-+++ b/tools/perf/util/strfilter.c
-@@ -1,11 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "util.h"
- #include "string2.h"
- #include "strfilter.h"
- 
- #include <errno.h>
-+#include <stdlib.h>
- #include <linux/ctype.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- 
- /* Operators */
- static const char *OP_and	= "&";	/* Logical AND */
-diff --git a/tools/perf/util/strlist.c b/tools/perf/util/strlist.c
-index af45c6fd97db..8a868cbeffae 100644
---- a/tools/perf/util/strlist.c
-+++ b/tools/perf/util/strlist.c
-@@ -4,12 +4,12 @@
-  */
- 
- #include "strlist.h"
--#include "util.h"
- #include <errno.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <unistd.h>
-+#include <linux/zalloc.h>
- 
- static
- struct rb_node *strlist__node_new(struct rblist *rblist, const void *entry)
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index fab8a048d31b..76cc54000483 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -15,10 +15,10 @@
- #include <string.h>
- #include <linux/bitmap.h>
+ #include "time-utils.h"
  #include <linux/time64.h>
 +#include <linux/zalloc.h>
  
- #include "perf.h"
- #include "svghelper.h"
--#include "util.h"
- #include "cpumap.h"
+ static u64 context_len = 10 * NSEC_PER_MSEC;
  
- static u64 first_time, last_time;
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 429920978cb0..ad683fbe9678 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -17,6 +17,7 @@
- #include "debug.h"
- #include "util.h"
- #include <linux/ctype.h>
+@@ -46,14 +46,14 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
+ 		if (asprintf(&names[i], "%s: CPU %d tid %d", tbuf,
+ 			     res_samples[i].cpu, res_samples[i].tid) < 0) {
+ 			while (--i >= 0)
+-				free(names[i]);
++				zfree(&names[i]);
+ 			free(names);
+ 			return -1;
+ 		}
+ 	}
+ 	choice = ui__popup_menu(num_res, names);
+ 	for (i = 0; i < num_res; i++)
+-		free(names[i]);
++		zfree(&names[i]);
+ 	free(names);
+ 
+ 	if (choice < 0 || choice >= num_res)
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 27cf3ab88d13..4d565cc14076 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -1,12 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "../../util/sort.h"
+-#include "../../util/util.h"
+ #include "../../util/hist.h"
+ #include "../../util/debug.h"
+ #include "../../util/symbol.h"
+ #include "../browser.h"
+ #include "../libslang.h"
+ #include "config.h"
 +#include <linux/zalloc.h>
- #include <symbol/kallsyms.h>
  
- #ifndef EM_AARCH64
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index c8b7cadbc9c4..3bc8b7e3300e 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -10,7 +10,7 @@
- #include <stdlib.h>
- #include <byteswap.h>
- #include <sys/stat.h>
--
-+#include <linux/zalloc.h>
+ #define SCRIPT_NAMELEN	128
+ #define SCRIPT_MAX_NO	64
+@@ -142,7 +142,7 @@ static int list_scripts(char *script_name, bool *custom,
+ out:
+ 	free(buf);
+ 	for (i = 0; i < max_std; i++)
+-		free(paths[i]);
++		zfree(&paths[i]);
+ 	return ret;
+ }
  
- static bool check_need_swap(int file_endian)
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 944a6507a5e3..ef0e6028684c 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1235,8 +1235,7 @@ void disasm_line__free(struct disasm_line *dl)
+ 		dl->ins.ops->free(&dl->ops);
+ 	else
+ 		ins__delete(&dl->ops);
+-	free((void *)dl->ins.name);
+-	dl->ins.name = NULL;
++	zfree(&dl->ins.name);
+ 	annotation_line__delete(&dl->al);
+ }
+ 
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 0812a11a0dbe..b033a43dfe3b 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1413,7 +1413,7 @@ void auxtrace_cache__free(struct auxtrace_cache *c)
+ 		return;
+ 
+ 	auxtrace_cache__drop(c);
+-	free(c->hashtable);
++	zfree(&c->hashtable);
+ 	free(c);
+ }
+ 
+@@ -1459,12 +1459,11 @@ void *auxtrace_cache__lookup(struct auxtrace_cache *c, u32 key)
+ 
+ static void addr_filter__free_str(struct addr_filter *filt)
  {
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index ae2ce255e848..173f3378aaa0 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -26,6 +26,7 @@
- #include "header.h"
- #include "path.h"
- #include <linux/ctype.h>
-+#include <linux/zalloc.h>
+-	free(filt->str);
++	zfree(&filt->str);
+ 	filt->action   = NULL;
+ 	filt->sym_from = NULL;
+ 	filt->sym_to   = NULL;
+ 	filt->filename = NULL;
+-	filt->str      = NULL;
+ }
  
- #include <elf.h>
- #include <limits.h>
-diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-index c2037ac533f3..022a9c670338 100644
---- a/tools/perf/util/syscalltbl.c
-+++ b/tools/perf/util/syscalltbl.c
-@@ -10,9 +10,9 @@
- #include <linux/compiler.h>
+ static struct addr_filter *addr_filter__new(void)
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index f505d78f059b..484c29830a81 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -124,7 +124,7 @@ static struct cgroup *cgroup__new(const char *name)
+ 	return cgroup;
  
- #ifdef HAVE_SYSCALL_TABLE_SUPPORT
-+#include <linux/zalloc.h>
- #include <string.h>
- #include "string2.h"
--#include "util.h"
+ out_free_name:
+-	free(cgroup->name);
++	zfree(&cgroup->name);
+ out_err:
+ 	free(cgroup);
+ 	return NULL;
+diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+index fa1778aee5d6..64336a280967 100644
+--- a/tools/perf/util/cputopo.c
++++ b/tools/perf/util/cputopo.c
+@@ -344,7 +344,7 @@ void numa_topology__delete(struct numa_topology *tp)
+ 	u32 i;
  
- #if defined(__x86_64__)
- #include <asm/syscalls_64.c>
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 48d585a0175c..15134ac9b8f1 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -7,13 +7,13 @@
- #include <linux/rbtree.h>
- #include <linux/list.h>
- #include <linux/log2.h>
-+#include <linux/zalloc.h>
- #include <errno.h>
- #include <stdlib.h>
- #include "thread.h"
- #include "event.h"
- #include "machine.h"
- #include "env.h"
--#include "util.h"
- #include "debug.h"
- #include "symbol.h"
- #include "comm.h"
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 3e29a4e8b5e6..bbfb9c767f5f 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -5,10 +5,10 @@
- #include <stdio.h>
- #include <string.h>
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
- #include "session.h"
- #include "thread.h"
- #include "thread-stack.h"
--#include "util.h"
- #include "debug.h"
- #include "namespaces.h"
- #include "comm.h"
-diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-index 281bf06f10f2..c291874352cf 100644
---- a/tools/perf/util/thread_map.c
-+++ b/tools/perf/util/thread_map.c
-@@ -13,9 +13,9 @@
- #include <string.h>
- #include <api/fs/fs.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include "asm/bug.h"
- #include "thread_map.h"
--#include "util.h"
- #include "debug.h"
- #include "event.h"
+ 	for (i = 0; i < tp->nr; i++)
+-		free(tp->nodes[i].cpus);
++		zfree(&tp->nodes[i].cpus);
  
-diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-index 806a11b334d3..4550015b9d5d 100644
---- a/tools/perf/util/trace-event-info.c
-+++ b/tools/perf/util/trace-event-info.c
-@@ -18,6 +18,7 @@
- #include <stdbool.h>
- #include <linux/list.h>
- #include <linux/kernel.h>
-+#include <linux/zalloc.h>
+ 	free(tp);
+ }
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index d92516edbead..508e4a3ddc8c 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -555,8 +555,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
+ 	etmq->traceid_queues_list = NULL;
  
- #include "../perf.h"
- #include "trace-event.h"
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-index b023db136ef3..ba58f69777a1 100644
---- a/tools/perf/util/trace-event-scripting.c
-+++ b/tools/perf/util/trace-event-scripting.c
-@@ -12,8 +12,8 @@
+ 	/* finally free the traceid_queues array */
+-	free(etmq->traceid_queues);
+-	etmq->traceid_queues = NULL;
++	zfree(&etmq->traceid_queues);
+ }
  
- #include "../perf.h"
- #include "debug.h"
--#include "util.h"
- #include "trace-event.h"
-+#include <linux/zalloc.h>
+ static void cs_etm__free_queue(void *priv)
+@@ -2569,7 +2568,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+ err_free_metadata:
+ 	/* No need to check @metadata[j], free(NULL) is supported */
+ 	for (j = 0; j < num_cpu; j++)
+-		free(metadata[j]);
++		zfree(&metadata[j]);
+ 	zfree(&metadata);
+ err_free_traceid_list:
+ 	intlist__delete(traceid_list);
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 1e93f2e94c40..ddbcd59f2d9b 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -1353,7 +1353,7 @@ static void free_streams(struct ctf_writer *cw)
+ 	for (cpu = 0; cpu < cw->stream_cnt; cpu++)
+ 		ctf_stream__delete(cw->stream[cpu]);
  
- struct scripting_context *scripting_context;
+-	free(cw->stream);
++	zfree(&cw->stream);
+ }
  
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 407d0167b942..28f71ca6ce1c 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -12,6 +12,7 @@
- #include "symbol.h"
- #include "thread.h"
- #include <linux/types.h>
-+#include <linux/zalloc.h>
- #include "event.h"
- #include "perf_regs.h"
- #include "callchain.h"
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index cfc4d85bbd42..dc7a469921e9 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -9,8 +9,6 @@
- #include <fcntl.h>
- #include <stdbool.h>
- #include <stddef.h>
--#include <stdlib.h>
--#include <stdarg.h>
- #include <linux/compiler.h>
- #include <sys/types.h>
+ static int ctf_writer__setup_env(struct ctf_writer *cw,
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index df7e000e19ea..1d1b97a92c3f 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -21,7 +21,7 @@ static void close_dir(struct perf_data_file *files, int nr)
+ {
+ 	while (--nr >= 1) {
+ 		close(files[nr].fd);
+-		free(files[nr].path);
++		zfree(&files[nr].path);
+ 	}
+ 	free(files);
+ }
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index f92d992bd2db..9909ec40c6d2 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -187,7 +187,7 @@ void perf_env__exit(struct perf_env *env)
+ 	zfree(&env->caches);
  
-@@ -18,13 +16,6 @@
- void usage(const char *err) __noreturn;
- void die(const char *err, ...) __noreturn __printf(1, 2);
+ 	for (i = 0; i < env->nr_memory_nodes; i++)
+-		free(env->memory_nodes[i].set);
++		zfree(&env->memory_nodes[i].set);
+ 	zfree(&env->memory_nodes);
+ }
  
--static inline void *zalloc(size_t size)
--{
--	return calloc(1, size);
--}
--
--#define zfree(ptr) ({ free(*ptr); *ptr = NULL; })
--
- struct dirent;
- struct nsinfo;
- struct strlist;
-diff --git a/tools/perf/util/values.c b/tools/perf/util/values.c
-index 4b7a303e4ba8..c59154e2d124 100644
---- a/tools/perf/util/values.c
-+++ b/tools/perf/util/values.c
-@@ -3,8 +3,8 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <errno.h>
-+#include <linux/zalloc.h>
+@@ -287,9 +287,9 @@ int perf_env__nr_cpus_avail(struct perf_env *env)
  
--#include "util.h"
- #include "values.h"
- #include "debug.h"
- 
-diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
-index 5031b7b22bbd..7f427bab6c12 100644
---- a/tools/perf/util/vdso.c
-+++ b/tools/perf/util/vdso.c
-@@ -16,6 +16,7 @@
- #include "machine.h"
- #include "thread.h"
- #include "linux/string.h"
-+#include <linux/zalloc.h>
- #include "debug.h"
+ void cpu_cache_level__free(struct cpu_cache_level *cache)
+ {
+-	free(cache->type);
+-	free(cache->map);
+-	free(cache->size);
++	zfree(&cache->type);
++	zfree(&cache->map);
++	zfree(&cache->size);
+ }
  
  /*
-diff --git a/tools/perf/util/xyarray.c b/tools/perf/util/xyarray.c
-index dc95154f5646..86889ebc3514 100644
---- a/tools/perf/util/xyarray.c
-+++ b/tools/perf/util/xyarray.c
-@@ -1,8 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "xyarray.h"
--#include "util.h"
- #include <stdlib.h>
- #include <string.h>
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 7524bda5140b..f1f4848947ce 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -856,7 +856,7 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
+ 	free(synthesize_threads);
+ free_dirent:
+ 	for (i = 0; i < n; i++)
+-		free(dirent[i]);
++		zfree(&dirent[i]);
+ 	free(dirent);
+ 
+ 	return err;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 4e2efaa50c2f..c24db7f4909c 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1052,7 +1052,7 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 
+ 	scnprintf(file, PATH_MAX, "%s/size", path);
+ 	if (sysfs__read_str(file, &cache->size, &len)) {
+-		free(cache->type);
++		zfree(&cache->type);
+ 		return -1;
+ 	}
+ 
+@@ -1061,8 +1061,8 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 
+ 	scnprintf(file, PATH_MAX, "%s/shared_cpu_list", path);
+ 	if (sysfs__read_str(file, &cache->map, &len)) {
+-		free(cache->map);
+-		free(cache->type);
++		zfree(&cache->map);
++		zfree(&cache->type);
+ 		return -1;
+ 	}
+ 
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index bb1d77331add..9b0ee0ef0f44 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -472,16 +472,16 @@ static int hist_entry__init(struct hist_entry *he,
+ 	return 0;
+ 
+ err_srcline:
+-	free(he->srcline);
++	zfree(&he->srcline);
+ 
+ err_rawdata:
+-	free(he->raw_data);
++	zfree(&he->raw_data);
+ 
+ err_infos:
+ 	if (he->branch_info) {
+ 		map__put(he->branch_info->from.map);
+ 		map__put(he->branch_info->to.map);
+-		free(he->branch_info);
++		zfree(&he->branch_info);
+ 	}
+ 	if (he->mem_info) {
+ 		map__put(he->mem_info->iaddr.map);
+@@ -489,7 +489,7 @@ static int hist_entry__init(struct hist_entry *he,
+ 	}
+ err:
+ 	map__zput(he->ms.map);
+-	free(he->stat_acc);
++	zfree(&he->stat_acc);
+ 	return -ENOMEM;
+ }
+ 
+@@ -1254,10 +1254,10 @@ void hist_entry__delete(struct hist_entry *he)
+ 	zfree(&he->stat_acc);
+ 	free_srcline(he->srcline);
+ 	if (he->srcfile && he->srcfile[0])
+-		free(he->srcfile);
++		zfree(&he->srcfile);
+ 	free_callchain(he->callchain);
+-	free(he->trace_output);
+-	free(he->raw_data);
++	zfree(&he->trace_output);
++	zfree(&he->raw_data);
+ 	ops->free(he);
+ }
+ 
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 28908afedec4..18c34f0c1966 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -29,6 +29,7 @@
+ #include "../builtin.h"
+ 
+ #include <linux/ctype.h>
 +#include <linux/zalloc.h>
  
- struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size)
+ struct jit_buf_desc {
+ 	struct perf_data *output;
+@@ -431,14 +432,12 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+ 			   jd->unwinding_data, jd->eh_frame_hdr_size, jd->unwinding_size);
+ 
+ 	if (jd->debug_data && jd->nr_debug_entries) {
+-		free(jd->debug_data);
+-		jd->debug_data = NULL;
++		zfree(&jd->debug_data);
+ 		jd->nr_debug_entries = 0;
+ 	}
+ 
+ 	if (jd->unwinding_data && jd->eh_frame_hdr_size) {
+-		free(jd->unwinding_data);
+-		jd->unwinding_data = NULL;
++		zfree(&jd->unwinding_data);
+ 		jd->eh_frame_hdr_size = 0;
+ 		jd->unwinding_mapped_size = 0;
+ 		jd->unwinding_size = 0;
+diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+index b9fddb809d58..9f0470ecbca9 100644
+--- a/tools/perf/util/llvm-utils.c
++++ b/tools/perf/util/llvm-utils.c
+@@ -353,8 +353,7 @@ void llvm__get_kbuild_opts(char **kbuild_dir, char **kbuild_include_opts)
+ "     \toption in [llvm] to \"\" to suppress this detection.\n\n",
+ 			*kbuild_dir);
+ 
+-		free(*kbuild_dir);
+-		*kbuild_dir = NULL;
++		zfree(kbuild_dir);
+ 		goto errout;
+ 	}
+ 
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index f523da3009e4..cf826eca3aaf 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -810,7 +810,7 @@ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ out:
+ 	/* put the dso here, corresponding to  machine__findnew_module_dso */
+ 	dso__put(dso);
+-	free(m.name);
++	zfree(&m.name);
+ 	return map;
+ }
+ 
+@@ -1350,7 +1350,7 @@ static int map_groups__set_modules_path_dir(struct map_groups *mg,
+ 			if (m.kmod)
+ 				ret = map_groups__set_module_path(mg, path, &m);
+ 
+-			free(m.name);
++			zfree(&m.name);
+ 
+ 			if (ret)
+ 				goto out;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index d8164574cb16..0d8c840f88c0 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -18,6 +18,7 @@
+ #include "strlist.h"
+ #include <assert.h>
+ #include <linux/ctype.h>
++#include <linux/zalloc.h>
+ 
+ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+ 					 struct perf_evsel *evsel,
+@@ -235,7 +236,7 @@ static struct rb_node *mep_new(struct rblist *rl __maybe_unused,
+ 		goto out_name;
+ 	return &me->nd;
+ out_name:
+-	free((char *)me->name);
++	zfree(&me->name);
+ out_me:
+ 	free(me);
+ 	return NULL;
+@@ -263,7 +264,7 @@ static void mep_delete(struct rblist *rl __maybe_unused,
+ 	struct mep *me = container_of(nd, struct mep, nd);
+ 
+ 	strlist__delete(me->metrics);
+-	free((void *)me->name);
++	zfree(&me->name);
+ 	free(me);
+ }
+ 
+@@ -489,8 +490,8 @@ static void metricgroup__free_egroups(struct list_head *group_list)
+ 
+ 	list_for_each_entry_safe (eg, egtmp, group_list, nd) {
+ 		for (i = 0; i < eg->idnum; i++)
+-			free((char *)eg->ids[i]);
+-		free(eg->ids);
++			zfree(&eg->ids[i]);
++		zfree(&eg->ids);
+ 		free(eg);
+ 	}
+ }
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 80c0eca0f1ee..0a57b316c4dd 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -214,9 +214,9 @@ static int convert_exec_to_group(const char *exec, char **result)
+ 
+ static void clear_perf_probe_point(struct perf_probe_point *pp)
  {
+-	free(pp->file);
+-	free(pp->function);
+-	free(pp->lazy_line);
++	zfree(&pp->file);
++	zfree(&pp->function);
++	zfree(&pp->lazy_line);
+ }
+ 
+ static void clear_probe_trace_events(struct probe_trace_event *tevs, int ntevs)
+@@ -1175,12 +1175,11 @@ int show_available_vars(struct perf_probe_event *pevs __maybe_unused,
+ 
+ void line_range__clear(struct line_range *lr)
+ {
+-	free(lr->function);
+-	free(lr->file);
+-	free(lr->path);
+-	free(lr->comp_dir);
++	zfree(&lr->function);
++	zfree(&lr->file);
++	zfree(&lr->path);
++	zfree(&lr->comp_dir);
+ 	intlist__delete(lr->line_list);
+-	memset(lr, 0, sizeof(*lr));
+ }
+ 
+ int line_range__init(struct line_range *lr)
+@@ -2203,15 +2202,15 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
+ 	struct perf_probe_arg_field *field, *next;
+ 	int i;
+ 
+-	free(pev->event);
+-	free(pev->group);
+-	free(pev->target);
++	zfree(&pev->event);
++	zfree(&pev->group);
++	zfree(&pev->target);
+ 	clear_perf_probe_point(&pev->point);
+ 
+ 	for (i = 0; i < pev->nargs; i++) {
+-		free(pev->args[i].name);
+-		free(pev->args[i].var);
+-		free(pev->args[i].type);
++		zfree(&pev->args[i].name);
++		zfree(&pev->args[i].var);
++		zfree(&pev->args[i].type);
+ 		field = pev->args[i].field;
+ 		while (field) {
+ 			next = field->next;
+@@ -2220,8 +2219,7 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
+ 			field = next;
+ 		}
+ 	}
+-	free(pev->args);
+-	memset(pev, 0, sizeof(*pev));
++	zfree(&pev->args);
+ }
+ 
+ #define strdup_or_goto(str, label)	\
+@@ -2302,15 +2300,15 @@ void clear_probe_trace_event(struct probe_trace_event *tev)
+ 	struct probe_trace_arg_ref *ref, *next;
+ 	int i;
+ 
+-	free(tev->event);
+-	free(tev->group);
+-	free(tev->point.symbol);
+-	free(tev->point.realname);
+-	free(tev->point.module);
++	zfree(&tev->event);
++	zfree(&tev->group);
++	zfree(&tev->point.symbol);
++	zfree(&tev->point.realname);
++	zfree(&tev->point.module);
+ 	for (i = 0; i < tev->nargs; i++) {
+-		free(tev->args[i].name);
+-		free(tev->args[i].value);
+-		free(tev->args[i].type);
++		zfree(&tev->args[i].name);
++		zfree(&tev->args[i].value);
++		zfree(&tev->args[i].type);
+ 		ref = tev->args[i].ref;
+ 		while (ref) {
+ 			next = ref->next;
+@@ -2318,8 +2316,7 @@ void clear_probe_trace_event(struct probe_trace_event *tev)
+ 			ref = next;
+ 		}
+ 	}
+-	free(tev->args);
+-	memset(tev, 0, sizeof(*tev));
++	zfree(&tev->args);
+ }
+ 
+ struct kprobe_blacklist_node {
+@@ -2337,7 +2334,7 @@ static void kprobe_blacklist__delete(struct list_head *blacklist)
+ 		node = list_first_entry(blacklist,
+ 					struct kprobe_blacklist_node, list);
+ 		list_del(&node->list);
+-		free(node->symbol);
++		zfree(&node->symbol);
+ 		free(node);
+ 	}
+ }
+diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+index ea669702825d..cca9cb851d02 100644
+--- a/tools/perf/util/s390-cpumsf.c
++++ b/tools/perf/util/s390-cpumsf.c
+@@ -1044,7 +1044,7 @@ static void s390_cpumsf_free(struct perf_session *session)
+ 	auxtrace_heap__free(&sf->heap);
+ 	s390_cpumsf_free_queues(session);
+ 	session->auxtrace = NULL;
+-	free(sf->logdir);
++	zfree(&sf->logdir);
+ 	free(sf);
+ }
+ 
+@@ -1101,8 +1101,7 @@ static int s390_cpumsf__config(const char *var, const char *value, void *cb)
+ 	if (rc == -1 || !S_ISDIR(stbuf.st_mode)) {
+ 		pr_err("Missing auxtrace log directory %s,"
+ 		       " continue with current directory...\n", value);
+-		free(sf->logdir);
+-		sf->logdir = NULL;
++		zfree(&sf->logdir);
+ 	}
+ 	return 1;
+ }
+@@ -1162,7 +1161,7 @@ int s390_cpumsf_process_auxtrace_info(union perf_event *event,
+ 	auxtrace_queues__free(&sf->queues);
+ 	session->auxtrace = NULL;
+ err_free:
+-	free(sf->logdir);
++	zfree(&sf->logdir);
+ 	free(sf);
+ 	return err;
+ }
+diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
+index 684b155c222a..688a85a3d454 100644
+--- a/tools/perf/util/srccode.c
++++ b/tools/perf/util/srccode.c
+@@ -4,7 +4,8 @@
+  * Copyright (c) 2017, Intel Corporation.
+  * Author: Andi Kleen
+  */
+-#include "linux/list.h"
++#include <linux/list.h>
++#include <linux/zalloc.h>
+ #include <stdlib.h>
+ #include <sys/mman.h>
+ #include <sys/stat.h>
+@@ -86,8 +87,8 @@ static void free_srcfile(struct srcfile *sf)
+ 	hlist_del(&sf->hash_nd);
+ 	map_total_sz -= sf->maplen;
+ 	munmap(sf->map, sf->maplen);
+-	free(sf->lines);
+-	free(sf->fn);
++	zfree(&sf->lines);
++	zfree(&sf->fn);
+ 	free(sf);
+ 	num_srcfiles--;
+ }
+@@ -153,7 +154,7 @@ static struct srcfile *find_srcfile(char *fn)
+ out_map:
+ 	munmap(h->map, sz);
+ out_fn:
+-	free(h->fn);
++	zfree(&h->fn);
+ out_h:
+ 	free(h);
+ 	return NULL;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index cb891e5c2969..656065af4971 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -8,6 +8,7 @@
+ #include "evlist.h"
+ #include "expr.h"
+ #include "metricgroup.h"
++#include <linux/zalloc.h>
+ 
+ /*
+  * AGGR_GLOBAL: Use CPU 0
+@@ -775,7 +776,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 		print_metric(config, ctxp, NULL, NULL, "", 0);
+ 
+ 	for (i = 1; i < pctx.num_ids; i++)
+-		free((void *)pctx.ids[i].name);
++		zfree(&pctx.ids[i].name);
+ }
+ 
+ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index c967715c1d4c..db8a6cf336be 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -133,7 +133,7 @@ static void perf_evsel__free_stat_priv(struct perf_evsel *evsel)
+ 	struct perf_stat_evsel *ps = evsel->stats;
+ 
+ 	if (ps)
+-		free(ps->group_data);
++		zfree(&ps->group_data);
+ 	zfree(&evsel->stats);
+ }
+ 
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index ad683fbe9678..1d5447594f5d 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -2133,11 +2133,11 @@ static int populate_sdt_note(Elf **elf, const char *data, size_t len,
+ 	return 0;
+ 
+ out_free_args:
+-	free(tmp->args);
++	zfree(&tmp->args);
+ out_free_name:
+-	free(tmp->name);
++	zfree(&tmp->name);
+ out_free_prov:
+-	free(tmp->provider);
++	zfree(&tmp->provider);
+ out_free_note:
+ 	free(tmp);
+ out_err:
+@@ -2253,8 +2253,8 @@ int cleanup_sdt_note_list(struct list_head *sdt_notes)
+ 
+ 	list_for_each_entry_safe(pos, tmp, sdt_notes, note_list) {
+ 		list_del(&pos->note_list);
+-		free(pos->name);
+-		free(pos->provider);
++		zfree(&pos->name);
++		zfree(&pos->provider);
+ 		free(pos);
+ 		nr_free++;
+ 	}
+diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
+index c291874352cf..5b3511f2b6b1 100644
+--- a/tools/perf/util/thread_map.c
++++ b/tools/perf/util/thread_map.c
+@@ -480,7 +480,7 @@ int thread_map__remove(struct thread_map *threads, int idx)
+ 	/*
+ 	 * Free the 'idx' item and shift the rest up.
+ 	 */
+-	free(threads->map[idx].comm);
++	zfree(&threads->map[idx].comm);
+ 
+ 	for (i = idx; i < threads->nr - 1; i++)
+ 		threads->map[i] = threads->map[i + 1];
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 25e1406b1f8b..71a788921b62 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -25,6 +25,7 @@
+ #include <unistd.h>
+ #include <sys/mman.h>
+ #include <linux/list.h>
++#include <linux/zalloc.h>
+ #ifndef REMOTE_UNWIND_LIBUNWIND
+ #include <libunwind.h>
+ #include <libunwind-ptrace.h>
+@@ -345,7 +346,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ 							__func__,
+ 							dso->symsrc_filename,
+ 							debuglink);
+-					free(dso->symsrc_filename);
++					zfree(&dso->symsrc_filename);
+ 				}
+ 				dso->symsrc_filename = debuglink;
+ 			} else {
 -- 
 2.21.0
 
