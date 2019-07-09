@@ -2,113 +2,115 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FC0C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61BAC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F0821537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EAE216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrZHEjNO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tnh6bm5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfGIGIG (ORCPT
+        id S1726165AbfGIGIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 02:08:06 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43671 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfGIGIG (ORCPT
+        Tue, 9 Jul 2019 02:08:10 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:44555 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGIGIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 02:08:06 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 16so18278501ljv.10
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 23:08:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lDoNVvD7C6FVcsC+DxIkAkGU9HfgXYwnu4pCiukVnKg=;
-        b=OrZHEjNOCtylYw84fC1KfxMdEzFsbZSw7fZg5zCvFhhJuUaGWEnLR27vQDCRcRwgaT
-         9GyynzHzhdcKF9exXfKzTxPRivGNDDjDGrbHHWgqDp0fBCifMmRFsbrgAx/c4xtRvn0J
-         i8nkczgxvAyBDj03wVyc96CnFZlm5En3admqzyz7Hseb3/h4PHpol8Yl8kB49PVpCafb
-         b8tmwfctMyTprU7brLnvzEAdL9ma9n/Ks1xhjt4RAsVDju+0399Q/LtE1JOFHM7Y6W3H
-         KfrxBZlKJRxcFS1uhvFnMjeWPr5e1nOQtbSgLJxuDN7/aIoAIUdA/esya9g2+p8ppoAH
-         Iulg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lDoNVvD7C6FVcsC+DxIkAkGU9HfgXYwnu4pCiukVnKg=;
-        b=LB5GXv17D80EQfU8fuOoBCI24br5JDQswFVKRwuCI6VJZtYX/0VqOrZA5UdtcqmmOw
-         GHCqv6z14W039fcHbBsvTCiGoFJcOGP3FPGI+/yRDXBmmbvVyqa3Ujr0UiezdIY6RlMb
-         7pEL7TPvOxgREHaKSpS/sNaSqr4OzKqCYYZPJwvuvx0YcUq8H4SCHa8HW+nKVph9pYio
-         7SXQksqKLnSDnf6X0W6bOlzldGlwuAncqf/BYbI3Ey1y6h8YcyXUSQQsFUHj2bcSZ7RQ
-         NiQzWzgKu/wvinGGSwEh8Ohk3lgMXZQkkvXmt6VGn7VcVcl9rt9nFfPhksClgXvqN4gv
-         kxxQ==
-X-Gm-Message-State: APjAAAUaw7M/rd66eLVzl/WOhkvezhjk/FyzfgH7MnAkMBgZjrKo4XHX
-        Qm2xNMGcqg0FDqZ0yoqURkp54AB5dSJ1Sa5hWVU=
-X-Google-Smtp-Source: APXvYqw7hzD5rcX0X5fJY2QJLnYDxenhwuSWFlNbLQLOvrGptJ4aoCEzYA8ep7K7I8g3JFw2VbutLGsDMzyoEzAhBUE=
-X-Received: by 2002:a2e:92c6:: with SMTP id k6mr12837360ljh.148.1562652484113;
- Mon, 08 Jul 2019 23:08:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190708123952.3341920-1-arnd@arndb.de>
-In-Reply-To: <20190708123952.3341920-1-arnd@arndb.de>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Tue, 9 Jul 2019 09:07:37 +0300
-Message-ID: <CAFCwf12rQ8Rgr37qPOrN7k0Ru+_jJk-XnXEOGi4Vhp0S8iZB+Q@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: use %pad for printing a dma_addr_t
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tomer Tayar <ttayar@habana.ai>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Omer Shpigelman <oshpigelman@habana.ai>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 9 Jul 2019 02:08:09 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190709060807epoutp01f7e2fbf7d792c5d7783919dcfb38b19e~vqCh_EcL72167921679epoutp016
+        for <linux-kernel@vger.kernel.org>; Tue,  9 Jul 2019 06:08:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190709060807epoutp01f7e2fbf7d792c5d7783919dcfb38b19e~vqCh_EcL72167921679epoutp016
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562652487;
+        bh=fBiaLjVRBBfHwy5oM6/n3Hq8ZdYU5NBcVwh0x+P9gVQ=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=tnh6bm5rx3FCteCOGptr7bLoEJ4RKnrhai3XHI3BYBVlQPZQevJBKGf6ieO3xEXLi
+         oXpI8eXl8/dY7P8H5L1Lwc0s098ykYYe7mRC38MKuT/KWMfio4LlyJjFw0F6mwhcUo
+         H9O+O97ZBkJ35fveiq0SkNd5kWwSQEjk2oSxcMNI=
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.153]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190709060805epcas1p44363f2a3a0bbb79d69ae94bf99c3adf1~vqCfq-XrI2940329403epcas1p4f;
+        Tue,  9 Jul 2019 06:08:05 +0000 (GMT)
+X-AuditID: b6c32a35-973ff7000000102b-5c-5d242f447680
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        38.30.04139.44F242D5; Tue,  9 Jul 2019 15:08:04 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: Re: [PATCH] devfreq: tegra20: add COMMON_CLK dependency
+Reply-To: myungjoo.ham@samsung.com
+From:   MyungJoo Ham <myungjoo.ham@samsung.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+CC:     Dmitry Osipenko <digetx@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <87564032-015a-323f-6d15-0abc67f6cc60@samsung.com>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190709060804epcms1p6222bcb63ae886de2f94246ed92dbdc4b@epcms1p6>
+Date:   Tue, 09 Jul 2019 15:08:04 +0900
+X-CMS-MailID: 20190709060804epcms1p6222bcb63ae886de2f94246ed92dbdc4b
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphk+LIzCtJLcpLzFFi42LZdlhTT9dFXyXWYMtkDYu/k46xW1z/8pzV
+        YvXHx4wWZ5vesFtc3jWHzeJz7xFGBzaP378mMXrsnHWX3aNvyypGj8+b5AJYorJtMlITU1KL
+        FFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4CWKymUJeaUAoUCEouL
+        lfTtbIryS0tSFTLyi0tslVILUnIKLAv0ihNzi0vz0vWS83OtDA0MjEyBChOyM479XcBacICn
+        4vCDyawNjJN4uhg5OSQETCRmfbzG2MXIxSEksINR4sTx40AOBwevgKDE3x3CIDXCAi4SD9sO
+        MILYQgJKEg039zFDxPUlOh5sA4uzCehKbN1wlwXEFhEokXg/az8byExmgQVAM098YYNYxisx
+        o/0pC4QtLbF9+VawZk4Be4lb6xYwQ8RFJW6ufssOY78/Np8RwhaRaL13FqpGUOLBz92MMHNm
+        TPkPNbNa4tr0xewgiyUEWhgleldPgSrSlzgz9yTYEbwCvhKN5+4ygdgsAqoS5/beh2p2kdh2
+        5Q8riM0soC2xbOFrZlBAMAtoSqzfpQ9Roiix8/dcRogSPol3X3tYYf7aMe8JE4StJnFo9xKo
+        +2UkTk9fCHWzh8TS5f3MkIDeyChx/k034wRGhVmIsJ6FZPMshM0LGJlXMYqlFhTnpqcWGxYY
+        IkfvJkZwStQy3cE45ZzPIUYBDkYlHl6BQOVYIdbEsuLK3EOMEhzMSiK8+9yBQrwpiZVVqUX5
+        8UWlOanFhxhNgQEwkVlKNDkfmK7zSuINTY2MjY0tTAzNTA0NlcR5Mx7KxgoJpCeWpGanphak
+        FsH0MXFwSjUwLvZfXqReOj/p4+qyzS+s7ii9Vb8x48/fv+xR0ht/dnLc2rk5sShlOzPvk+KS
+        1zXlPzT/xO+/6OF5U8q4Lst9o3RzY6HXX7n13c4mf0KEHl6UC/td92BRpUYso2HF6Sop6/nm
+        fvu9Zm5gj7tm9mixyapND2YXq+zjX/NVW4LDLfuZ2VGVr5NeK7EUZyQaajEXFScCAKaGvamf
+        AwAA
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190628103243epcas4p133102dfa6709970b1dd49296f82425b2
+References: <87564032-015a-323f-6d15-0abc67f6cc60@samsung.com>
+        <20190628103232.2467959-1-arnd@arndb.de>
+        <CGME20190628103243epcas4p133102dfa6709970b1dd49296f82425b2@epcms1p6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> dma_addr_t might be different sizes depending on the configuration,
-> so we cannot print it as %llx:
->
-> drivers/misc/habanalabs/goya/goya.c: In function 'goya_sw_init':
-> drivers/misc/habanalabs/goya/goya.c:698:21: error: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'dma_addr_t' {aka 'unsigned int'} [-Werror=format=]
->
-> Use the special %pad format string. This requires passing the
-> argument by reference.
->
-> Fixes: 2a51558c8c7f ("habanalabs: remove DMA mask hack for Goya")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/misc/habanalabs/goya/goya.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-> index 75294ec65257..60e509f64051 100644
-> --- a/drivers/misc/habanalabs/goya/goya.c
-> +++ b/drivers/misc/habanalabs/goya/goya.c
-> @@ -695,8 +695,8 @@ static int goya_sw_init(struct hl_device *hdev)
->                 goto free_dma_pool;
->         }
->
-> -       dev_dbg(hdev->dev, "cpu accessible memory at bus address 0x%llx\n",
-> -               hdev->cpu_accessible_dma_address);
-> +       dev_dbg(hdev->dev, "cpu accessible memory at bus address %pad\n",
-> +               &hdev->cpu_accessible_dma_address);
->
->         hdev->cpu_accessible_dma_pool = gen_pool_create(ilog2(32), -1);
->         if (!hdev->cpu_accessible_dma_pool) {
-> --
-> 2.20.0
->
-
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-
-Thanks! applied to -next
+On 19. 6. 28. =EC=98=A4=ED=9B=84=207:32,=20Arnd=20Bergmann=20wrote:=0D=0A>=
+=20Compile-testing=20the=20new=20driver=20on=20platforms=20without=20CONFIG=
+_COMMON_CLK=0D=0A>=20leads=20to=20a=20link=20error:=0D=0A>=20=0D=0A>=20driv=
+ers/devfreq/tegra20-devfreq.o:=20In=20function=20=60tegra_devfreq_target':=
+=0D=0A>=20tegra20-devfreq.c:(.text+0x288):=20undefined=20reference=20to=20=
+=60clk_set_min_rate'=0D=0A>=20=0D=0A>=20Add=20a=20dependency=20on=20COMMON_=
+CLK=20to=20avoid=20this.=0D=0A>=20=0D=0A>=20Fixes:=201d39ee8dad6d=20(=22PM=
+=20/=20devfreq:=20Introduce=20driver=20for=20NVIDIA=20Tegra20=22)=0D=0A>=20=
+Signed-off-by:=20Arnd=20Bergmann=20<arnd=40arndb.de>=0D=0A>=20---=0D=0A>=20=
+=20drivers/devfreq/Kconfig=20=7C=201=20+=0D=0A>=20=201=20file=20changed,=20=
+1=20insertion(+)=0D=0A>=20=0D=0A>=20diff=20--git=20a/drivers/devfreq/Kconfi=
+g=20b/drivers/devfreq/Kconfig=0D=0A>=20index=20f3b242987fd9..defe1d438710=
+=20100644=0D=0A>=20---=20a/drivers/devfreq/Kconfig=0D=0A>=20+++=20b/drivers=
+/devfreq/Kconfig=0D=0A>=20=40=40=20-107,6=20+107,7=20=40=40=20config=20ARM_=
+TEGRA_DEVFREQ=0D=0A>=20=20config=20ARM_TEGRA20_DEVFREQ=0D=0A>=20=20=09trist=
+ate=20=22NVIDIA=20Tegra20=20DEVFREQ=20Driver=22=0D=0A>=20=20=09depends=20on=
+=20(TEGRA_MC=20&&=20TEGRA20_EMC)=20=7C=7C=20COMPILE_TEST=0D=0A>=20+=09depen=
+ds=20on=20COMMON_CLK=0D=0A>=20=20=09select=20DEVFREQ_GOV_SIMPLE_ONDEMAND=0D=
+=0A>=20=20=09select=20PM_OPP=0D=0A>=20=20=09help=0D=0A>=20=0D=0A=0D=0AAcked=
+-by:=20MyungJoo=20Ham=20<myungjoo.ham=40samsung.com>=0D=0A=0D=0AThanks=21=
+=0D=0A=0D=0A=0D=0ACheers,=0D=0AMyungJoo.=0D=0A
