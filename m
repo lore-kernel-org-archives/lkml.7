@@ -2,131 +2,198 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EDCC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DAEC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD7720656
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:46:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grVm2WAK"
+	by mail.kernel.org (Postfix) with ESMTP id 0FB2220656
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562708836;
+	bh=NXp7FiXBy0jAkEE1QQLlJbfmjifSHIlflhSKhIqgdFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lgte1sbGBoxFJ+l7FGpRwv8jHswFD8nRNgt7NdiPgRWEkdJMCN+g+9s368YwEA0FQ
+	 fDIGTSLotHKZGo5wpGy9GR4DRAtyJgWOb8bcKPzy8jGWwFxqqyHgqbPp0wwrjF1Aao
+	 Xf+ADm42mHZhC95f8ptuCJfNlYzktyrvZ9YB6+GY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbfGIVqG (ORCPT
+        id S1729648AbfGIVrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:46:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36060 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfGIVqG (ORCPT
+        Tue, 9 Jul 2019 17:47:15 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35338 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729552AbfGIVrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:46:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r6so41938oti.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 14:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MYX+bKitIKuhlu8Fk10A4x6cbLxiCn6+G+7FkkYZdXE=;
-        b=grVm2WAKocF8t+tmT/HihvCR2t3lAwyANm/vTKQtwHLAeF76RNsARgiGzwCP59QOLu
-         PaGfbNymbTKDco5C5xg1Vng2+3SgRTxr2dVfLP9VtbcbzCjv8IdRu/ks6lN5+WnRXaKK
-         BbWo05mX8glK1+OiwlrlsI0cnjIKa3TtlHoEY/L8mmmFE9BLQ0BAezo7o5GPlvCsTqwZ
-         29TMFerSGEKQh+hJgatVzTDIN7UHNomMY2uRYeHUGgl99SqwErY57qp8u1ZlJL6JXXqr
-         RccJ94fKzBKPIkAivdiAkd17FIkFYEOx4XUrKUYKnd4imOU+IwKOCaGJlxggSis/qozm
-         tpIQ==
+        Tue, 9 Jul 2019 17:47:14 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so287749ioo.2;
+        Tue, 09 Jul 2019 14:47:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=MYX+bKitIKuhlu8Fk10A4x6cbLxiCn6+G+7FkkYZdXE=;
-        b=F4XG2U/ThO479htHDv/eiXXDFg6+Xx1eB//AAJQB7kutiu7hxDYccRXIpCOC4myZ4r
-         OEHJJwWUQaFwQV87klvTUAASncR1Tw9wX1bG/9tY1B0uSz5U1zlw2apuFLNQlhRuXRll
-         /oYjIyso0HDS7CHPDPlLgmeJnjPBp0NtOvxMppJRQ4HuIY1GhXQXoaV5BPlBLIaE0Tbv
-         Tt82PG78KdnKBuGcxMdMLDhaKcKv3e/XaLi1ve8oCPuuTT8VtL/hWgAEVTKkrteFRD+f
-         Y2OVEfQL2Z2yUTcU78oEJoZ8E4vtWU8TtEo04iX+iWVSPWTMZHm6pvaOzLcSEHkPYs52
-         6jSw==
-X-Gm-Message-State: APjAAAWNRwOu8LybPojJHnYvqk6al8iGdLtw6e/FjLW7qpmLe0RlCqCK
-        +781/8bsvDhLHg2oXuG8Dg==
-X-Google-Smtp-Source: APXvYqzCdHFAKERg88yoYs2ZV/Vft2Jyh4mrZ1K3HM3dLPrEuiGyLvxGpSX8zPOMSRpPSLk1Nap9lw==
-X-Received: by 2002:a9d:6853:: with SMTP id c19mr20299107oto.213.1562708765032;
-        Tue, 09 Jul 2019 14:46:05 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.134.43])
-        by smtp.gmail.com with ESMTPSA id l5sm124032otf.53.2019.07.09.14.46.04
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fp2QaEC9w/eoPJPJ2uirJ4Jgi05QvJmCljUYdY+Ygew=;
+        b=maBlaT8+ENM4B2a5I89CDK1zediAFBpd5HPEc3ypdmyw0fiUHAT7NPrDTUGKdN9Qnm
+         TYFbfyNquvfSvuu9x0VW8G+sC7m9pZd7tf7u8cOL7YqWM/5yTDWTxaS/ytdQrbs3fuKS
+         TyjgOc2f3FBo3wpqjWXOxedVRP89L2OqZm6wqsfbT+NnwKesOGfiseAE67bz/qfT7Jlo
+         xR6dZQhllJ4ojc+nNJjYb/mFeGAGPVDJo3XgY2yUcp3Uj2YM07zeThWt1lacNOMk0O9p
+         bKO1l2OptJ0wltYjL5m9bEP8rCFvUbuBiAx9zHDunkmEitcJoxp/qMHOrmTcJ4gYCY1i
+         yBUA==
+X-Gm-Message-State: APjAAAV06ZZrspmVDiDiLJnsBH0hZiVhMn6o1M8gIhBdTw/nTloIVcdt
+        U7G+evAW6M4UX0QVVnqgmQ==
+X-Google-Smtp-Source: APXvYqwDAnjg5Tt3ibEL5NhcurpWnU/VEvZ9JKJRUwfsH2vEvBMPUMqe1ezOcu/WXvYDK3d5LwKUTQ==
+X-Received: by 2002:a6b:d81a:: with SMTP id y26mr594024iob.126.1562708833703;
+        Tue, 09 Jul 2019 14:47:13 -0700 (PDT)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id r7sm20183111ioa.71.2019.07.09.14.47.12
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 14:46:04 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:6c89:b9b3:d6b4:3203])
-        by serve.minyard.net (Postfix) with ESMTPSA id 179C81805A4;
-        Tue,  9 Jul 2019 21:46:04 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 16:46:02 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] ipmi_si_intf: use usleep_range() instead of busy looping
-Message-ID: <20190709214602.GD19430@minyard.net>
-Reply-To: minyard@acm.org
-References: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
+        Tue, 09 Jul 2019 14:47:12 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 15:47:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Kevin Hilman <khilman@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        HenryC Chen <HenryC.Chen@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: soc: add mtk svs dt-bindings
+Message-ID: <20190709214711.GA9818@bogus>
+References: <20190621084348.16834-1-roger.lu@mediatek.com>
+ <20190621084348.16834-2-roger.lu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190709210643.GJ657710@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190621084348.16834-2-roger.lu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 02:06:43PM -0700, Tejun Heo wrote:
-> ipmi_thread() uses back-to-back schedule() to poll for command
-> completion which, on some machines, can push up CPU consumption and
-> heavily tax the scheduler locks leading to noticeable overall
-> performance degradation.
+On Fri, Jun 21, 2019 at 04:43:47PM +0800, Roger Lu wrote:
+> Document the binding for enabling mtk svs on MediaTek SoC.
 > 
-> This patch replaces schedule() with usleep_range(100, 200).  This
-> allows the sensor readings to finish resonably fast and the cpu
-> consumption of the kthread is kept under several percents of a core.
-
-The IPMI thread was not really designed for sensor reading, it was
-designed so that firmware updates would happen in a reasonable time
-on systems without an interrupt on the IPMI interface.  This change
-will degrade performance for that function.  IIRC correctly the
-people who did the patch tried this and it slowed things down too
-much.
-
-I'm also a little confused because the CPU in question shouldn't
-be doing anything else if the schedule() immediately returns here,
-so it's not wasting CPU that could be used on another process.  Or
-is it lock contention that is causing an issue on other CPUs?
-
-IMHO, this whole thing is stupid; if you design hardware with
-stupid interfaces (byte at a time, no interrupts) you should
-expect to get bad performance.  But I can't control what the
-hardware vendors do.  This whole thing is a carefully tuned
-compromise.
-
-So I can't really take this as-is.
-
--corey
-
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
 > ---
->  drivers/char/ipmi/ipmi_si_intf.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/power/mtk-svs.txt     | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
 > 
-> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-> index f124a2d2bb9f..2143e3c10623 100644
-> --- a/drivers/char/ipmi/ipmi_si_intf.c
-> +++ b/drivers/char/ipmi/ipmi_si_intf.c
-> @@ -1010,7 +1010,7 @@ static int ipmi_thread(void *data)
->  		if (smi_result == SI_SM_CALL_WITHOUT_DELAY)
->  			; /* do nothing */
->  		else if (smi_result == SI_SM_CALL_WITH_DELAY && busy_wait)
-> -			schedule();
-> +			usleep_range(100, 200);
->  		else if (smi_result == SI_SM_IDLE) {
->  			if (atomic_read(&smi_info->need_watch)) {
->  				schedule_timeout_interruptible(100);
+> diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> new file mode 100644
+> index 000000000000..6a71992ef162
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> @@ -0,0 +1,88 @@
+> +* Mediatek Smart Voltage Scaling (MTK SVS)
+> +
+> +This describes the device tree binding for the MTK SVS controller (bank)
+> +which helps provide the optimized CPU/GPU/CCI voltages. This device also
+> +needs thermal data to calculate thermal slope for accurately compensate
+> +the voltages when temperature change.
+> +
+> +Required properties:
+> +- compatible:
+> +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
+> +- reg: Address range of the MTK SVS controller.
+> +- interrupts: IRQ for the MTK SVS controller.
+> +- clocks, clock-names: Clocks needed for the svs controller. required
+> +                       clocks are:
+> +		       "main_clk": Main clock needed for register access
+
+'_clk' is redundant and can be dropped.
+
+> +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
+> +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
+> +
+> +Subnodes:
+> +- svs_cpu_little: SVS bank device node of little CPU
+> +  compatible: "mediatek,mt8183-svs-cpu-little"
+> +  operating-points-v2: OPP table hooked by SVS little CPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcpu-little-supply: PMIC buck of little CPU
+> +- svs_cpu_big: SVS bank device node of big CPU
+> +  compatible: "mediatek,mt8183-svs-cpu-big"
+> +  operating-points-v2: OPP table hooked by SVS big CPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcpu-big-supply: PMIC buck of big CPU
+> +- svs_cci: SVS bank device node of CCI
+> +  compatible: "mediatek,mt8183-svs-cci"
+> +  operating-points-v2: OPP table hooked by SVS CCI bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcci-supply: PMIC buck of CCI
+> +- svs_gpu: SVS bank device node of GPU
+> +  compatible: "mediatek,mt8183-svs-gpu"
+> +  operating-points-v2: OPP table hooked by SVS GPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vgpu-spply: PMIC buck of GPU
+
+typo
+
+> +
+> +Example:
+> +
+> +	svs: svs@1100b000 {
+> +		compatible = "mediatek,mt8183-svs";
+> +		reg = <0 0x1100b000 0 0x1000>;
+> +		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
+> +		clocks = <&infracfg CLK_INFRA_THERM>;
+> +		clock-names = "main_clk";
+> +		nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
+> +		nvmem-cell-names = "svs-calibration-data", "calibration-data";
+> +
+> +		svs_cpu_little: svs_cpu_little {
+> +			compatible = "mediatek,mt8183-svs-cpu-little";
+> +			operating-points-v2 = <&cluster0_opp>;
+> +		};
+> +
+> +		svs_cpu_big: svs_cpu_big {
+> +			compatible = "mediatek,mt8183-svs-cpu-big";
+> +			operating-points-v2 = <&cluster1_opp>;
+> +		};
+> +
+> +		svs_cci: svs_cci {
+> +			compatible = "mediatek,mt8183-svs-cci";
+> +			operating-points-v2 = <&cci_opp>;
+> +		};
+> +
+> +		svs_gpu: svs_gpu {
+> +			compatible = "mediatek,mt8183-svs-gpu";
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
+> +			operating-points-v2 = <&gpu_opp_table>;
+> +		};
+
+This all looks like redundant data which can be found in the cpu, gpu, 
+etc. nodes. Can't you parse those nodes to get the information?
+
+> +	};
+> +
+> +	&svs_cpu_little {
+> +		vcpu-little-supply = <&mt6358_vproc12_reg>;
+
+Don't split examples like this. Just should one flat example.
+
+> +	};
+> +
+> +	&svs_cpu_big {
+> +		vcpu-big-supply = <&mt6358_vproc11_reg>;
+> +	};
+> +
+> +	&svs_cci {
+> +		vcci-supply = <&mt6358_vproc12_reg>;
+> +	};
+> +
+> +	&svs_gpu {
+> +		vgpu-spply = <&mt6358_vgpu_reg>;
+> +	};
+> -- 
+> 2.18.0
+> 
