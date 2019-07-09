@@ -2,105 +2,267 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99B7C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78ADC73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD2C20665
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E396208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:56:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjjfT3k6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfGIS4l (ORCPT
+        id S1728968AbfGIS4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:56:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:49835 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfGIS4k (ORCPT
+        Tue, 9 Jul 2019 14:56:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41269 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfGIS4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:56:40 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MyNoa-1ih2kD1m0a-00yj1f; Tue, 09 Jul 2019 20:56:29 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Pawel Dembicki <paweldembicki@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [net-next] net: dsa: vsc73xx: fix NET_DSA and OF dependencies
-Date:   Tue,  9 Jul 2019 20:55:55 +0200
-Message-Id: <20190709185626.3275510-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 9 Jul 2019 14:56:43 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c2so22137909wrm.8;
+        Tue, 09 Jul 2019 11:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R2a5Ykr8Gh3HS3Iw/maFNxbOLyKlmoZP6KXVN9Qj8GI=;
+        b=MjjfT3k6/J4egSnsGLaJht4OzRmt/hG6IglXvRc7MxF6l2bGuHM0tzWAq+nCxqG9Z5
+         dmu5C7BuA8iN7NibzvYPB/4TsLiuPKlmOACSB4LRkg1Xe1O75S46BkkJEZNNo/OW0vJQ
+         wRixxlyjCmoID6Ib2+db65eCseZfuInANMOxlvqH/Q3qQ+mvA4O91xiCD1H7t3q473jx
+         G1g1ylXLxPWU6JiahG9xf5NKU4wo1KXN35Kwo97wat6FEL2TND/VipVW+yFHJI/HUxJz
+         U+PH18zM3+35UKAM12ycyrapRVn9r8a5hpQ7Se66jZKA+V2NYiM8r+FAnXOA4+Qfpgae
+         +kpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R2a5Ykr8Gh3HS3Iw/maFNxbOLyKlmoZP6KXVN9Qj8GI=;
+        b=Rngnx7jgaDaJJIzJIiYoBTtTpuy/KU88PeKznNA+YYrSbMP4SxFcxuqS4cC/t6CmMH
+         pjRAbEyAzAHRWMQFvyT9Zo3ztxboRfIREDm6jyOGO8/FfP8y+lPfnC9xNzjnAedDolKz
+         BHvKZrvj4IuzenJ47ka7bubT00WGvmS3A9aJFb0otn3YnNMQmRizjPEAcnaXMQ1CGOuX
+         pEyIJWvwxm+/eIRuHE+NaEqvnDXCF/RPwqghSDm+dueb+lbJnQ8lacGZbIJTbDMwWmme
+         CSxBa1mpQ/sCDZaNLkGnVQkY+53RCVXCW5VWeHRqVo3Wv5On8bYFwaO8CbBkkWnUZPjn
+         fvPw==
+X-Gm-Message-State: APjAAAU/g+PHimF4Kz/+/hoRi2GLLE1p4ho5GK59cpVk4V0FcM6DsdTW
+        +jTPyRgKW1v+SdJZKtBRQULV93DA
+X-Google-Smtp-Source: APXvYqxVt2pqqgMEecALIDhzP/6aJO7dhV/kJH6FnDqImA/oUTahBFF+chHpxnhOuwN14JrD9rVlTQ==
+X-Received: by 2002:a5d:5186:: with SMTP id k6mr7832039wrv.30.1562698600673;
+        Tue, 09 Jul 2019 11:56:40 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id 72sm22824991wrk.22.2019.07.09.11.56.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Jul 2019 11:56:39 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 20:56:38 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Steve Magnani <steve.magnani@digidescorp.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        =?utf-8?Q?Vojt=C4=9Bch?= Vladyka <vojtech.vladyka@foxyco.cz>,
+        linux-fsdevel@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] udf: 2.01 interoperability issues with Windows 10
+Message-ID: <20190709185638.pcgdbdqoqgur6id3@pali>
+References: <96e1ea00-ac12-015d-5c54-80a83f08b898@digidescorp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:B23ZNL92t9F/IUnyQGFh8/+hX2SO/gVgPJMR323zJSPmPOxQdzA
- 6Xuj/fq/GzYC5z5ff2E7aTX/JaXm2JVV2AADZBFm38pUrBOQ3VWAi8pRj9kUOd/OcArxXYc
- U4K2IqcyxYF1ENBiFTwWvyUwTAPFaOwpeg5JmmQREucjGE8ARGnQ7xM8d94H1w3RMKg1enE
- /Bqrm1Wrp++RAMpq4RRdQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cPjMJwBK140=:MJaLkyHabLEIhuoC4AdLJx
- S3wPkPOnP1UYfmGk7SXx37JiJCTq5LYimH6GIsXICDndTqnhjjbnUEINmsT/X6k5LVYq1uCGK
- FQQ2jhrem59XqYKc8UZh3KxAJbbBtb4lpW39rTUob1NXWPsJZnspWCpYK6fnhFtGFHohc31XA
- iLbQpQ587nU7iUGV9nbZhFRzf4J5S+tx9sM9oRsaEJN2BLl3YtZkKDCkj7pkLdFPj8Qzl7dAE
- pnoi5XURl2+gqzuNjlBMlDDt2FKYcbkhKSHemXtsAn7z0ich5f85Loyynnq2+nlhWZwkzVS4W
- PalilIND2pWh5ywXrSh/xlSCOot5bSCwIwwdnjDFTVr3c8w4Uzm4zIzOwxuTu+S9fng1DZG9D
- 4gePICIKJLtREdfLH4XGqTZN7sVUGjhdEG3sOkHwPIE6yPJcA3kC3iPNmUx9fFpW51iMfsjYJ
- AquRV0ajCteO9PQHhGRD9w9ROz8GM/5kKWaKKew8Ryqa0OTBHH3NuxL+4zhpndeX//zPHibYb
- YKsTVdSFMIm5BrydYyIvmnisSRVnC+O8D9pARssnAE//gopknmwSaUraq3jrWyU0onW0dfOyo
- PUkHRK7OLHCkeBK8uoSvkgfoVdShTCEELr3qwI5Il3s5b+6OdtAtLSj5xw23mcAsyN/rBnixr
- L5w8J5rFpZqYWRzusHXH51r1shK8iJzZHa/1/IyoUGdQXq/BpCugCmxFwzZvzcGxW6jcrPKcR
- u5iIRQRJPlSWxgIL3re2WSVGEja32HOv5sUNcw==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="eccj5ajh3vtt7ix3"
+Content-Disposition: inline
+In-Reply-To: <96e1ea00-ac12-015d-5c54-80a83f08b898@digidescorp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The restructuring of the driver got the dependencies wrong: without
-CONFIG_NET_DSA we get this build failure:
 
-WARNING: unmet direct dependencies detected for NET_DSA_VITESSE_VSC73XX
-  Depends on [n]: NETDEVICES [=y] && HAVE_NET_DSA [=y] && OF [=y] && NET_DSA [=n]
-  Selected by [m]:
-  - NET_DSA_VITESSE_VSC73XX_PLATFORM [=m] && NETDEVICES [=y] && HAVE_NET_DSA [=y] && HAS_IOMEM [=y]
+--eccj5ajh3vtt7ix3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ERROR: "dsa_unregister_switch" [drivers/net/dsa/vitesse-vsc73xx-core.ko] undefined!
-ERROR: "dsa_switch_alloc" [drivers/net/dsa/vitesse-vsc73xx-core.ko] undefined!
-ERROR: "dsa_register_switch" [drivers/net/dsa/vitesse-vsc73xx-core.ko] undefined!
+Hi! I'm adding Vojt=C4=9Bch Vladyka to conversation.
 
-Add the appropriate dependencies.
+Steve, can you describe what you mean by Advanced Format 4K sector size?
 
-Fixes: 95711cd5f0b4 ("net: dsa: vsc73xx: Split vsc73xx driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/dsa/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+It is hard disk with 512 bytes logical sector size and 4096 bytes
+physical sector size? Or do you mean hard disk which has both logical
+and physical sector size equal to 4096 bytes?
 
-diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
-index cf9dbd15dd2d..f6232ce8481f 100644
---- a/drivers/net/dsa/Kconfig
-+++ b/drivers/net/dsa/Kconfig
-@@ -111,6 +111,8 @@ config NET_DSA_VITESSE_VSC73XX
- 
- config NET_DSA_VITESSE_VSC73XX_SPI
- 	tristate "Vitesse VSC7385/7388/7395/7398 SPI mode support"
-+	depends on OF
-+	depends on NET_DSA
- 	depends on SPI
- 	select NET_DSA_VITESSE_VSC73XX
- 	---help---
-@@ -119,6 +121,8 @@ config NET_DSA_VITESSE_VSC73XX_SPI
- 
- config NET_DSA_VITESSE_VSC73XX_PLATFORM
- 	tristate "Vitesse VSC7385/7388/7395/7398 Platform mode support"
-+	depends on OF
-+	depends on NET_DSA
- 	depends on HAS_IOMEM
- 	select NET_DSA_VITESSE_VSC73XX
- 	---help---
--- 
-2.20.0
+On Tuesday 09 July 2019 13:27:58 Steve Magnani wrote:
+> Hi,
+>=20
+> Recently I have been exploring Advanced Format (4K sector size)
+> and high capacity aspects of UDF 2.01 support in Linux and
+> Windows 10. I thought it might be helpful to summarize my findings.
+>=20
+> The good news is that I did not see any bugs in the Linux
+> ecosystem (kernel driver + mkudffs).
+>=20
+> The not-so-good news is that Windows has some issues that affect
+> interoperability. One of my goals in posting this is to open a
+> discussion on whether changes should be made in the Linux UDF
+> ecosystem to accommodate these quirks.
+>=20
+> My test setup includes the following software components:
+>=20
+> * mkudffs 1.3 and 2.0
 
+Can you do tests also with last version of mkudffs 2.1?
+
+> * kernel 4.15.0-43 and 4.15.0-52
+> * Windows 10 1803 17134.829
+> * chkdsk 10.0.17134.1
+> * udfs.sys 10.0.17134.648
+>=20
+>=20
+> ISSUE 1: Inability of the Linux UDF driver to mount 4K-sector
+>          media formatted by Windows.
+
+Can you check if udfinfo (from udftools) can recognize such disk?
+
+And can blkid (from util-linux) recognize such disk as UDF with reading
+all properties?
+
+Can grub2 recognize such disks?
+
+Also can you check if libparted from git master branch can recognize
+such disk? In following commit I added support for recognizing UDF
+filesystem in libparted, it is only in git master branch, not released:
+
+http://git.savannah.gnu.org/cgit/parted.git/commit/?id=3D8740cfcff3ea839dd6=
+dc8650dec0a466e9870625
+
+> This is because the Windows ecosystem mishandles the ECMA-167
+> corner case that requires Volume Recognition Sequence components
+> to be placed at 4K intervals on 4K-sector media, instead of the
+> 2K intervals required with smaller sectors. The Linux UDF driver
+> emits the following when presented with Windows-formatted media:
+>=20
+>   UDF-fs: warning (device sdc1): udf_load_vrs: No VRS found
+>   UDF-fs: Scanning with blocksize 4096 failed
+>=20
+> A hex dump of the VRS written by the Windows 10 'format' utility
+> yields this:
+>=20
+>   0000: 00 42 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .BEA01..........
+>   0800: 00 4e 53 52 30 33 01 00 00 00 00 00 00 00 00 00  .NSR03..........
+>   1000: 00 54 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .TEA01..........
+>=20
+> We may want to consider tweaking the kernel UDF driver to
+> tolerate this quirk; if so a question is whether that should be
+> done automatically, only in response to a mount option or
+> module parameter, or only with some subsequent confirmation
+> that the medium was formatted by Windows.
+>=20
+>=20
+> ISSUE 2: Inability of Windows chkdsk to analyze 4K-sector media
+>          formatted by mkudffs.
+
+This is really bad :-(
+
+> This is another aspect of Windows' VRS corner case bug.
+> Formatting by mkudffs places the VRS components at the proper 4K
+> intervals. But the chkdsk utility looks for components at 2K
+> intervals. Not finding a component at byte offset 2048, chkdsk
+> decides that the media is RAW and cannot be checked. Note that
+> this bug affects chkdsk only; udfs.sys *does* recognize mkudffs-
+> formatted 4K-sector media and is able to mount it.
+>=20
+> It would be possible to work around this by tweaking mkudffs to
+> insert dummy BOOT2 components in between the BEA/NSR/TEA:
+>=20
+>   0000: 00 42 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .BEA01..........
+>   0800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
+>   1000: 00 4e 53 52 30 33 01 00 00 00 00 00 00 00 00 00  .NSR03..........
+>   1800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
+>   2000: 00 54 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .TEA01..........
+>=20
+> That would introduce a slight ECMA-167 nonconformity, but Linux
+> does not object and Windows actually performs better. I would
+> have to tweak udffsck though since I believe this could confuse
+> its automatic detection of medium block size.
+
+I would like to avoid this hack. If chkdsk is unable to detect such
+filesystem, it is really a good idea to let it do try doing filesystem
+checks and recovery? You are saying that udfs.sys can recognize such
+disk and mount it. I think this should be enough.
+
+Currently mkudffs contains workarounds for older util-linux versions or
+MBR partition layout. But everything should be fully complaint with
+ECMA-67 and OSTA-UDF.
+
+>=20
+> ISSUE 3: Inability of the Windows UDF driver to mount media
+>          read-write when a maximally-sized space bitmap
+>          descriptor is present
+>=20
+> I suspect this is an off-by-one error in udfs.sys relating to
+> the maximum number of blocks a space bitmap descriptor can
+> occupy. The bug causes UDF partitions that are close to 2 TiB
+> (512-sector media) or 16 TiB (4K-sector media) to be mounted
+> read-only, with no user-visible indication as to why.
+>=20
+> It would be possible for mkudffs to print a warning when
+> formatting results in a space bitmap that occupies the maximum
+> number of blocks.
+>=20
+>=20
+> ISSUE 4: chkdsk reports spurious errors when space bitmap
+>          descriptor exceeds 32 MiB
+>=20
+> Some permutations of this:
+>=20
+>   * "Correcting errors in Space Bitmap Descriptor at block 0"
+>     (with no prior mention of any errors)
+>   * "Space Bitmap Descriptor at block 32 is corrupt or unreadable"
+>=20
+> This is actually one of the more crippling issues if one values
+> Windows' ability to check and repair UDF errors. A limit of
+> 32 MiB on the space bitmap implies a UDF partition size of at
+> most 137 GB (not GiB) with 512-sector media or at most 1099 GB
+> with 4K-sector media.
+>=20
+> Again, the most I think we could do is code mkudffs to warn of
+> this possibility. But a message that clearly conveys the issue
+> and what should be done to avoid it could be a little tricky to
+> construct.
+
+I have no problems with solution that udftools prints warning message
+that current selected configuration does not work on Windows systems.
+There are already some such warning messages in mkudffs.
+
+>=20
+> Obviously the best solution would be for the Windows bugs to
+> get fixed. If anyone reading this can convey these details into
+> the Microsoft silo, that would be great.
+
+For Windows 10 users, the only option is to report bug via
+Use Feedback app on the Start Menu.
+
+> Regards,
+> ------------------------------------------------------------------------
+>  Steven J. Magnani               "I claim this network for MARS!
+>  www.digidescorp.com              Earthling, return my space modulator!"
+>=20
+>  #include <standard.disclaimer>
+>=20
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--eccj5ajh3vtt7ix3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXSTjZAAKCRCL8Mk9A+RD
+UljMAJ9XBtkRV9CJ2h3Abr/M7Lalenk/TQCfXvPkPPTsB8aiIgZ3BTpG+UCFedo=
+=8B+j
+-----END PGP SIGNATURE-----
+
+--eccj5ajh3vtt7ix3--
