@@ -2,198 +2,170 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AA2C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA84BC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9157E20861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C292087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uU4kwx9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfGIVDq (ORCPT
+        id S1729688AbfGIVED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:03:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34454 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728998AbfGIVDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:03:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 374FAAEE9;
-        Tue,  9 Jul 2019 21:03:44 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 90CEB1E4376; Tue,  9 Jul 2019 23:03:43 +0200 (CEST)
-Date:   Tue, 9 Jul 2019 23:03:43 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     " Steven J. Magnani " <steve.magnani@digidescorp.com>
-Cc:     Jan Kara <jack@suse.com>,
-        "Steven J . Magnani" <steve@digidescorp.com>,
+        Tue, 9 Jul 2019 17:04:03 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44084 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGIVED (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 17:04:03 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d79so204825qke.11;
+        Tue, 09 Jul 2019 14:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wpghyK4dozu5v3hFpJGTeVXF3O891a2KOUKLtA2/s7Q=;
+        b=uU4kwx9NLOtv/WY27Kbwrzjh9vMwckOyHx4U3LkvO6nmgZKidA4HhHZ0u02NycVP6t
+         gOSQotf8KmSCZPn1P74YEu7INxpJdl9mG8IOde4TeVPFdwAK4PB7JZcHTzTBvulnBqV2
+         WCy4TsXx0t4SLmbNwxGsmVqfm9JWWvLtB99DekUCJDnAUyU1+9K/cjQTW9eOWhMl4xnZ
+         wL6so19l9AeL0jEbz8FjY7VWNdJy8kI8VkwbQvr77gGZE0O6a/v+riUouBRwx3T1Neiy
+         NezwhCqVU7VFqfFbyhbkvNqrEgFtSJCnRlUMmXLvA/FjpsN92IOT6dSjBxyJzvSGkfih
+         T6VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wpghyK4dozu5v3hFpJGTeVXF3O891a2KOUKLtA2/s7Q=;
+        b=hViwRyH3T2rrSLWUT8lQjtDMywWKNA/grizUpUzI4nN91woGf0olmzTeIrWIZprgND
+         rxPnKw37FKe/AHduktyt2q69oMLCv9mkN3W/1Fq9q8YqSPw4ohfb6L6oju49H3P94dNj
+         ePxHm0Ud0GrLFqJfThzWAlhcusygK0gir0z4JL3UGpG43tYLEUY9ecQPIgnspV6ru58k
+         +KEhpH0TZkBdufsxxGyt8CVWyIrQ6wsE7CF+kcR2AobEJjUX+HMvaHfUoIHcz9Lpe1MN
+         hs8wNLBoqY+Mz3QZztrW6Y+Z912ud4EfxYMDbY6PY4CKNW2ol3xT9AJlZvRrbG1FNp8F
+         8D8w==
+X-Gm-Message-State: APjAAAVD1YaAgpSBerzTow49IBzBaczEpv4Gl55mcP9x52uOBCbNpA+K
+        f2jzjFJyXKC10bGPANZ0aXRUq36v
+X-Google-Smtp-Source: APXvYqzxdl4qVrv5T+Ey4gJlsXUVNtPWb624rW6L1vHtsdIqxE7NJhGlM7MoMCQoEGqcRCA5vSGZsA==
+X-Received: by 2002:a37:9c0c:: with SMTP id f12mr19391827qke.442.1562706241767;
+        Tue, 09 Jul 2019 14:04:01 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id z50sm10999043qtz.36.2019.07.09.14.03.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 14:04:01 -0700 (PDT)
+Subject: Re: [PATCH v1] i2c: tegra: Compile PM functions unconditionally
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] udf: Fix incorrect final NOT_ALLOCATED (hole) extent
- length
-Message-ID: <20190709210343.GA2517@quack2.suse.cz>
-References: <1561948775-5878-1-git-send-email-steve@digidescorp.com>
+References: <20190707231234.11679-1-digetx@gmail.com>
+ <13be0f2e-2131-2e0d-d39f-9f1c964b8698@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <44febd8d-6b1a-a948-4102-b1809e906f44@gmail.com>
+Date:   Wed, 10 Jul 2019 00:03:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561948775-5878-1-git-send-email-steve@digidescorp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <13be0f2e-2131-2e0d-d39f-9f1c964b8698@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 30-06-19 21:39:35,  Steven J. Magnani  wrote:
-> In some cases, using the 'truncate' command to extend a UDF file results
-> in a mismatch between the length of the file's extents (specifically, due
-> to incorrect length of the final NOT_ALLOCATED extent) and the information
-> (file) length. The discrepancy can prevent other operating systems
-> (i.e., Windows 10) from opening the file.
+09.07.2019 13:12, Jon Hunter пишет:
 > 
-> Two particular errors have been observed when extending a file:
+> On 08/07/2019 00:12, Dmitry Osipenko wrote:
+>> The I2C driver fails to probe if CONFIG_PM_SLEEP=n because runtime PM
+>> doesn't depend on the PM sleep and in this case the runtime PM ops are
+>> not included in the driver, resulting in I2C clock not being enabled.
+>> It's much cleaner to simply allow compiler to remove the dead code
+>> instead of messing with the #ifdefs.
+>>
+>> This patch fixes such errors when CONFIG_PM_SLEEP=n:
+>>
+>>   tegra-i2c 7000c400.i2c: timeout waiting for fifo flush
+>>   tegra-i2c 7000c400.i2c: Failed to initialize i2c controller
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/i2c/busses/i2c-tegra.c | 16 +++++-----------
+>>  1 file changed, 5 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+>> index 9fcb13beeb8f..18f0ceed9f1b 100644
+>> --- a/drivers/i2c/busses/i2c-tegra.c
+>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>> @@ -636,7 +636,7 @@ static void tegra_dvc_init(struct tegra_i2c_dev *i2c_dev)
+>>  	dvc_writel(i2c_dev, val, DVC_CTRL_REG1);
+>>  }
+>>  
+>> -static int tegra_i2c_runtime_resume(struct device *dev)
+>> +static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+>>  {
+>>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>>  	int ret;
+>> @@ -665,7 +665,7 @@ static int tegra_i2c_runtime_resume(struct device *dev)
+>>  	return 0;
+>>  }
+>>  
+>> -static int tegra_i2c_runtime_suspend(struct device *dev)
+>> +static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
+>>  {
+>>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>>  
+>> @@ -1711,8 +1711,7 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+>>  	return 0;
+>>  }
+>>  
+>> -#ifdef CONFIG_PM_SLEEP
+>> -static int tegra_i2c_suspend(struct device *dev)
+>> +static int __maybe_unused tegra_i2c_suspend(struct device *dev)
+>>  {
+>>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>>  
+>> @@ -1721,7 +1720,7 @@ static int tegra_i2c_suspend(struct device *dev)
+>>  	return 0;
+>>  }
+>>  
+>> -static int tegra_i2c_resume(struct device *dev)
+>> +static int __maybe_unused tegra_i2c_resume(struct device *dev)
+>>  {
+>>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>>  	int err;
+>> @@ -1741,18 +1740,13 @@ static const struct dev_pm_ops tegra_i2c_pm = {
+>>  			   NULL)
+>>  };
+>>  
+>> -#define TEGRA_I2C_PM	(&tegra_i2c_pm)
+>> -#else
+>> -#define TEGRA_I2C_PM	NULL
+>> -#endif
+>> -
+>>  static struct platform_driver tegra_i2c_driver = {
+>>  	.probe   = tegra_i2c_probe,
+>>  	.remove  = tegra_i2c_remove,
+>>  	.driver  = {
+>>  		.name  = "tegra-i2c",
+>>  		.of_match_table = tegra_i2c_of_match,
+>> -		.pm    = TEGRA_I2C_PM,
+>> +		.pm    = &tegra_i2c_pm,
+>>  	},
+>>  };
+>>  
 > 
-> 1. The final extent is larger than it should be, having been rounded up
->    to a multiple of the block size.
+> Looks good to me.
 > 
-> B. The final extent is not shorter than it should be, due to not having
->    been updated when the file's information length was increased.
-> 
-> Change since v1:
-> Simplified udf_do_extend_file() API, partially by factoring out its
-> handling of the "extending within the last file block" corner case.
-> 
-> Fixes: 2c948b3f86e5 ("udf: Avoid IO in udf_clear_inode")
-> Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-Thanks for the patch! I have added it with some small modifications to my
-tree. Below are the changes I did.
+Thanks!
 
-> --- a/fs/udf/inode.c	2019-05-24 21:17:33.659704533 -0500
-> +++ b/fs/udf/inode.c	2019-06-29 21:10:48.938562957 -0500
-> @@ -470,13 +470,15 @@ static struct buffer_head *udf_getblk(st
->  	return NULL;
->  }
->  
-> -/* Extend the file by 'blocks' blocks, return the number of extents added */
-> +/* Extend the file with new blocks totaling 'new_block_bytes',
-> + * return the number of extents added
-> + */
->  static int udf_do_extend_file(struct inode *inode,
->  			      struct extent_position *last_pos,
->  			      struct kernel_long_ad *last_ext,
-> -			      sector_t blocks)
-> +			      loff_t new_block_bytes)
->  {
-> -	sector_t add;
-> +	unsigned long add;
-
-I've changed the type here to uint32_t since that's what we usually use for
-extent size.
-
-> +/* Extend the final block of the file to final_block_len bytes */
-> +static int udf_do_extend_final_block(struct inode *inode,
-
-Changed return type to void since the function doesn't return anything
-useful.
-
-> +				     struct extent_position *last_pos,
-> +				     struct kernel_long_ad *last_ext,
-> +				     unsigned long final_block_len)
-> +{
-> +	struct super_block *sb = inode->i_sb;
-> +	struct kernel_lb_addr tmploc;
-> +	uint32_t tmplen;
-> +	struct udf_inode_info *iinfo;
-> +	unsigned long added_bytes;
-> +
-> +	iinfo = UDF_I(inode);
-> +
-> +	added_bytes = final_block_len -
-> +		      (last_ext->extLength & (sb->s_blocksize - 1));
-> +	last_ext->extLength += added_bytes;
-> +	iinfo->i_lenExtents += added_bytes;
-> +
-> +	udf_write_aext(inode, last_pos, &last_ext->extLocation,
-> +			last_ext->extLength, 1);
-> +	/*
-> +	 * We've rewritten the last extent but there may be empty
-> +	 * indirect extent after it - enter it.
-> +	 */
-> +	udf_next_aext(inode, last_pos, &tmploc, &tmplen, 0);
-> +
-> +	/* last_pos should point to the last written extent... */
-> +	if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_SHORT)
-> +		last_pos->offset -= sizeof(struct short_ad);
-> +	else if (iinfo->i_alloc_type == ICBTAG_FLAG_AD_LONG)
-> +		last_pos->offset -= sizeof(struct long_ad);
-> +	else
-> +		return -EIO;
-
-I've dropped the updates of last_pos here. This function is used from a
-single place and passed epos isn't used in any way after the function
-returns.
-
-> +
-> +	return 0;
-> +}
-> +
->  static int udf_extend_file(struct inode *inode, loff_t newsize)
->  {
->  
-> @@ -605,10 +643,12 @@ static int udf_extend_file(struct inode
->  	int8_t etype;
->  	struct super_block *sb = inode->i_sb;
->  	sector_t first_block = newsize >> sb->s_blocksize_bits, offset;
-> +	unsigned long partial_final_block;
-
-Again uint32_t here.
-
-> @@ -643,7 +673,22 @@ static int udf_extend_file(struct inode
->  				      &extent.extLength, 0);
->  		extent.extLength |= etype << 30;
->  	}
-> -	err = udf_do_extend_file(inode, &epos, &extent, offset);
-> +
-> +	partial_final_block = newsize & (sb->s_blocksize - 1);
-> +
-> +	/* File has extent covering the new size (could happen when extending
-> +	 * inside a block)?
-> +	 */
-> +	if (within_final_block) {
-> +		/* Extending file within the last file block */
-> +		err = udf_do_extend_final_block(inode, &epos, &extent,
-> +						partial_final_block);
-> +	} else {
-> +		loff_t add = (offset << sb->s_blocksize_bits) |
-
-Typed 'offset' to loff_t before shifting. Otherwise the shift could
-overflow for systems with 32-bit sector_t.
-
-> +			     partial_final_block;
-> +		err = udf_do_extend_file(inode, &epos, &extent, add);
-> +	}
-> +
->  	if (err < 0)
->  		goto out;
->  	err = 0;
-...
-> @@ -760,7 +806,8 @@ static sector_t inode_getblk(struct inod
->  			startnum = (offset > 0);
->  		}
->  		/* Create extents for the hole between EOF and offset */
-> -		ret = udf_do_extend_file(inode, &prev_epos, laarr, offset);
-> +		hole_len = offset << inode->i_sb->s_blocksize_bits;
-
-The same as above.
-
-> +		ret = udf_do_extend_file(inode, &prev_epos, laarr, hole_len);
->  		if (ret < 0) {
->  			*err = ret;
->  			newblock = 0;
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
