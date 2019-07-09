@@ -2,119 +2,124 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDB1C73C60
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC40C73C61
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89A020693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D246B20861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:58:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKimPJQv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g+2aDXwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfGIW6a (ORCPT
+        id S1726993AbfGIW6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 18:58:30 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33806 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfGIW6a (ORCPT
+        Tue, 9 Jul 2019 18:58:46 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46489 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfGIW6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 18:58:30 -0400
-Received: by mail-lj1-f194.google.com with SMTP id p17so115285ljg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 15:58:28 -0700 (PDT)
+        Tue, 9 Jul 2019 18:58:46 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i8so170894pgm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 15:58:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F1q4TA7V+oBcDgmqSY6j6ZlCOYtkPjgIBwS25WUZLTs=;
-        b=QKimPJQvVZxi7GGt2IK1wSGVwVlf4++Q5OMJBzPPYYowi8Envs3WSce6Gh6UtIGn7p
-         mMKAlA/kneX13lMFTJKpO7ij59QRaHjSt/QfGE9ZB6jk35NiPPjRmvTbmNKN0ehzBGxA
-         zyxh0P4ALP4P+wbKb/tJ0Mbl8WsNRtZvaujAom76uQk7w7Kx6RRDzBbgfDjAhBuCqqrc
-         7JGBAc2nihErYrwfyD+Yp/S7DVlpCbM2jqSYhX4tCZC3CcBuONBCNN3NMDysY8fsf/qv
-         UnUHv51vUsvmObHPcD6MQrJ5iWSwo8SF9ejOhIxDPhTaUnQR4sRnrdc+XPZEdGX4JSUy
-         zC2A==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VfBNRjMW96lNOTO1+wc8G+mqG3/RxD26VY8ohNb7l7s=;
+        b=g+2aDXwaj0DzsFicoZrXvoungL+MWOPC0VtEH2gPXuj8zlNnwwgyIhkxF0bkqpoWcm
+         8TboO6bKfQEBXG8g8wp2IMRGW/TvAviOydq287DyBpvxHMXEz6+WOc0/hqAIcJYCcTju
+         BoRstaqm8JPuzjtT4y8KqxFrOGp53xRR93cJ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F1q4TA7V+oBcDgmqSY6j6ZlCOYtkPjgIBwS25WUZLTs=;
-        b=h90UyiUk9iLNjtJaoi9mnXI+VuhSwmJgACQ4MEAofjgS6wLU1bcRPDeSAjG1+gX22H
-         h1i0pY3UrUt314TFJyr6bChcJ1uULD4lOnfFrr9ZsmYoBiPl+3y6aXTcM/gGqhKWA93n
-         QTTB7/NtKza2bnXVy/Lo9SnCUwSo0R/Jiks/rEWB0ca4xxFPrubzYLbKXkD/ZvTGA+rk
-         NysyMnW/2PdQWSlbBGw7vxyEazq/mCDYTAXMGJUBD/wUZ177DZDYhhwawrkrQLoxqCJs
-         O/0Nzm9uEPuAa5oJVyMI3kq+sNw/4WqCAkLORo767RmuzCL4EHqw7+Zcvd7MK5UyeXVe
-         Ylpw==
-X-Gm-Message-State: APjAAAU9cmgnxreZvlxvltz9dnSZvGUBr1aeBN4KFSNWrfsWRuBymdf4
-        1+SgkxqJMX0QOY/nTYUP8u9BEQFDGjLD3pfYCyo=
-X-Google-Smtp-Source: APXvYqxbFGUwEu2uaJdKJTp5ypFTyrjL1JHgGSn+2cAk5GRU6ARJ8/16eg6flo1l5iygVqe1kZ2+pFWrBsTQu9VGrl8=
-X-Received: by 2002:a2e:86cc:: with SMTP id n12mr14985598ljj.146.1562713108067;
- Tue, 09 Jul 2019 15:58:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VfBNRjMW96lNOTO1+wc8G+mqG3/RxD26VY8ohNb7l7s=;
+        b=JQ4d+RBAKrxl0xYU4qxMdR8Bhiat5EriEOsQvrGpCQt9nn/UyRh2NWsA73fzRXxAHC
+         +9iSOLiw8LiDfjgOa5Jv94swbnpd9gdLRMQ+ipkitXWHdmPEQB1vE4b0NoQH7S0ujXf4
+         A+HZQZo2fPorvz/sl87A9EnuQ0jbEehgEef53bsS66WK13IMjhqeU6eLOiUDFmxs0pcK
+         nnLcieywFn2WQVqHVQaYjq+f4hDyaKgAjsQ6VQCKtiny7627pdSz0gOJyiPPb86DhAEx
+         mJvhbU6RUjpBGlaFHBMXXTRoU074skz0dcpCgGan5YQfBXIAHHjdAiFSbjxpU9TGyDXc
+         xExg==
+X-Gm-Message-State: APjAAAXSqxzOGxDB+gQTavJqxPJRSalYHB0y1+N7dqRvW3Vs5V8/tcsr
+        NexBAjFhJ0wTMU7YGP+Zde9d4rEGTGg=
+X-Google-Smtp-Source: APXvYqzHCjdRgs8T2Gzw/2FP8RssoOjRLpdQrKxiGCNwSt8p03lTof0IAKIZqNN5ejjfFbu9SwHkpQ==
+X-Received: by 2002:a17:90a:20c6:: with SMTP id f64mr2812506pjg.57.1562713125358;
+        Tue, 09 Jul 2019 15:58:45 -0700 (PDT)
+Received: from exogeni.mtv.corp.google.com ([2620:15c:202:1:5be8:f2a6:fd7b:7459])
+        by smtp.gmail.com with ESMTPSA id 201sm152939pfz.24.2019.07.09.15.58.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 15:58:44 -0700 (PDT)
+From:   Derek Basehore <dbasehore@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Derek Basehore <dbasehore@chromium.org>
+Subject: [PATCH v6 0/4] Panel rotation patches
+Date:   Tue,  9 Jul 2019 15:58:36 -0700
+Message-Id: <20190709225840.144038-1-dbasehore@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-References: <20190703001842.12238-1-alistair.francis@wdc.com>
- <20190703001842.12238-3-alistair.francis@wdc.com> <CAK8P3a37GLzp+w6m0SEV+9j_6sH91SuStyAEW-VzuJ5_dUCnZw@mail.gmail.com>
- <CAKmqyKP07futGV1WsZwvqGzeR646eo-ysVy9RCqaSOG-2qhH_g@mail.gmail.com>
- <CAK8P3a1zJPiR06uxZ5QVoEyDU64v=oUu_p9X-mULLeXN-som8A@mail.gmail.com>
- <CAKmqyKMtsQaq9DpfPY=T0pixrH2sntewDz42dTvD5rDcK+ZV0w@mail.gmail.com> <CAK8P3a36CXf+HGgL=nNYzc-1Qhh=tu6to0opwYjO4fO5KDxUDA@mail.gmail.com>
-In-Reply-To: <CAK8P3a36CXf+HGgL=nNYzc-1Qhh=tu6to0opwYjO4fO5KDxUDA@mail.gmail.com>
-From:   Alistair Francis <alistair23@gmail.com>
-Date:   Tue, 9 Jul 2019 15:55:18 -0700
-Message-ID: <CAKmqyKMx8JqGw7uhUO5pDkgyRDCixv6TXPCZUSHrAu8efZNBRQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] riscv/include/uapi: Define a custom __SIGINFO struct
- for RV32
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alistair Francis <alistair.francis@wdc.com>,
-        linux-riscv-bounces@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 1:34 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Jul 4, 2019 at 12:18 AM Alistair Francis <alistair23@gmail.com> wrote:
-> > On Wed, Jul 3, 2019 at 12:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Wed, Jul 3, 2019 at 8:45 PM Alistair Francis <alistair23@gmail.com> wrote:
-> > > > What I don't understand though is how that impacted this struct, it
-> > > > doesn't use clock_t at all, everything in the struct is an int or
-> > > > void*.
-> > >
-> > > si_utime/si_stime in siginfo are clock_t.
-> >
-> > But they are further down the struct. I just assumed that GCC would
-> > align those as required, I guess it aligns the start of the struct to
-> > match some 64-bit members which seems strange.
->
-> These are the regular struct alignment rules. Essentially you would
-> get something like
->
-> struct s {
->     int a;
->     int b;
->     int c;
->     union {
->          int d;
->          long long e;
->    };
->    int f;
-> };
->
-> Since 'e' has 8 byte alignment, the same is true for the union,
-> and putting the union in a struct also requires the same alignment
-> for the struct itself, so now you get padding after 'c' and 'f'.
+This adds the plumbing for reading panel rotation from the devicetree
+and sets up adding a panel property for the panel orientation on
+Mediatek SoCs when a rotation is present.
 
-Now that I think about it more it does make sense. Thanks for the help
-with this and all the glibc stuff.
+v6 changes:
+-added enum declaration to drm_panel.h header
 
-I have a new patch set that seems to work on RV32 and RV64. I'm now
-hitting issues with syscalls that glibc doesn't use but other projects
-do like io_getevents in OpenSSL.
+v5 changes:
+-rebased
 
-Alistair
+v4 changes:
+-fixed some changes made to the i915 driver
+-clarified comments on of orientation helper
 
->
->        Arnd
+v3 changes:
+-changed from attach/detach callbacks to directly setting fixed panel
+ values in drm_panel_attach
+-removed update to Documentation
+-added separate function for quirked panel orientation property init
+
+v2 changes:
+fixed build errors in i915
+
+Derek Basehore (4):
+  drm/panel: Add helper for reading DT rotation
+  drm/panel: set display info in panel attach
+  drm/connector: Split out orientation quirk detection
+  drm/mtk: add panel orientation property
+
+ drivers/gpu/drm/drm_connector.c    | 45 ++++++++++++++-----
+ drivers/gpu/drm/drm_panel.c        | 70 ++++++++++++++++++++++++++++++
+ drivers/gpu/drm/i915/intel_dp.c    |  4 +-
+ drivers/gpu/drm/i915/vlv_dsi.c     |  5 +--
+ drivers/gpu/drm/mediatek/mtk_dsi.c |  8 ++++
+ include/drm/drm_connector.h        |  2 +
+ include/drm/drm_panel.h            | 21 +++++++++
+ 7 files changed, 138 insertions(+), 17 deletions(-)
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
