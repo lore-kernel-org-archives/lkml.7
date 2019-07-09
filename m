@@ -2,105 +2,112 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06A3C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF3BC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D61216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:22:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcwjA0ir"
+	by mail.kernel.org (Postfix) with ESMTP id A63B421537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfGIBWf (ORCPT
+        id S1726529AbfGIB0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:22:35 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39065 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfGIBWf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:22:35 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so9183060pls.6;
-        Mon, 08 Jul 2019 18:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=FkIRuQbZrNsm7KJsxVPrVjGVu+RAoRtGJt58KQ0F+f4=;
-        b=dcwjA0irj4oApbmACQeVWnPZPu4XCtfM4YKscx61GZ4HlWfOcMV2hkmhQLS657zH/y
-         hVWk7bTiHvxhkZwpBAEoFRWIKoGXmbr5NAPCUfv75cr3lFdiCcFRo2KpI/MbdtblYB4d
-         h/pJW3xam2a/rNGHnF3eMYa3/SyPDTVgiw8qqRfMzlmXdGpuFKZnKzIXVvs9HDegrT30
-         Rchyr0ZUH9FZJgEn4K9HX6YO88qp9x62dMvNbU/MNY4oWzMyJSCWniGmbVGdurLyeTbc
-         sjQuoy0hTnjihjv9m38tHDxV0VaQYeyjY7ZOE5FnS6B2Ic65UN1X9d2o8KRZXkmQgY/k
-         73EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:content-transfer-encoding
-         :user-agent;
-        bh=FkIRuQbZrNsm7KJsxVPrVjGVu+RAoRtGJt58KQ0F+f4=;
-        b=hArT13oM4Acx68qE47vIIMW9pU7dtxlC7KhubwcoT0gd/XC1IZB/7zDsm5+oJF5ArT
-         w5imGFXjdmrgq0ZU7npRXxU8xxgfae0tbEmgBEa5sBGBonCTAPGJ9RZhEy6SWKhzXn9h
-         yGgdWTPTKE9kAAI5t6pJQoD32N3R55O7hTIzBjJwsul2oXY6IY+YKvdu5HxuoK2YBGZo
-         UkR685P2KbBvt1EdugZ0ExfvCCAfrr/zpN0zfkgHqErCArlIwIIJojrjLxh39Og67/NC
-         CWVtfqXa2lkwwnVJcoq9xQr4Zcoomte2rHCVswgCb1HPAZEpBDbfXbylR19urlQVc9g1
-         SFuQ==
-X-Gm-Message-State: APjAAAVjrzqY+KYsyOUEMpCWhl0Y/geEzjM+on7ubwvc24WwRZkWTlaO
-        W0CaXDel/Fr2RrOfxLzqw8MUWnez
-X-Google-Smtp-Source: APXvYqyF64OC2v7AmcoZKNj2xVVQQdi9RsHGdqyd1aV7qkua2encOhksCX7h///rp4da/HEV1ukOcg==
-X-Received: by 2002:a17:902:7791:: with SMTP id o17mr12651385pll.27.1562635354573;
-        Mon, 08 Jul 2019 18:22:34 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w12sm20672420pgp.56.2019.07.08.18.22.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jul 2019 18:22:34 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 18:22:33 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Fabian Schindlatz <fabian.schindlatz@fau.de>
-Cc:     linux-hwmon@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        tglx@linutronix.de, Ingo Molnar <mingo@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] hwmon: Correct struct allocation style
-Message-ID: <20190709012233.GA311@roeck-us.net>
+        Mon, 8 Jul 2019 21:26:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2187 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbfGIB0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:26:15 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 48593A0AEE318C646116;
+        Tue,  9 Jul 2019 09:26:11 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
+ 09:26:00 +0800
+Subject: Re: [PATCH next] softirq: enable MAX_SOFTIRQ_TIME tuning with sysctl
+ max_softirq_time_usecs
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     <corbet@lwn.net>, <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>, <akpm@linux-foundation.org>,
+        <manfred@colorfullife.com>, <jwilk@jwilk.net>,
+        <dvyukov@google.com>, <feng.tang@intel.com>,
+        <sunilmut@microsoft.com>, <quentin.perret@arm.com>,
+        <linux@leemhuis.info>, <alex.popov@linux.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, <tedheadster@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+References: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com>
+ <alpine.DEB.2.21.1906231820470.32342@nanos.tec.linutronix.de>
+ <0099726a-ead3-bdbe-4c66-c8adc9a4f11b@huawei.com>
+ <alpine.DEB.2.21.1906241141370.32342@nanos.tec.linutronix.de>
+ <c1b7a345-fa22-e52a-4db8-1f1288e7ad15@huawei.com>
+ <alpine.DEB.2.21.1907081558400.4709@nanos.tec.linutronix.de>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <cbd68d63-ac48-7b36-d317-7bb2b480e6f7@huawei.com>
+Date:   Tue, 9 Jul 2019 09:25:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <alpine.DEB.2.21.1907081558400.4709@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="gb18030"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Thu, Jun 27, 2019 at 05:27:38PM +0200, Fabian Schindlatz wrote:
-> Use sizeof(*var) instead of sizeof(struct var_type) as argument to
-> kalloc() and friends to comply with the kernel coding style.
+
+On 2019/7/8 22:14, Thomas Gleixner wrote:
+> Zhiqiang,
 > 
-> Co-developed-by: Thomas Röthenbacher <thomas.roethenbacher@fau.de>
-> Signed-off-by: Thomas Röthenbacher <thomas.roethenbacher@fau.de>
-> Signed-off-by: Fabian Schindlatz <fabian.schindlatz@fau.de>
-> [groeck: Resolved comment conflict against -next]
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> If HZ satisfies the condition: HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC %
+>> HZ), the return value of _msecs_to_jiffies func with m=0 is different
+>> with different HZ setting.
+> 
+>> ------------------------------------
+>> | HZ |	MSEC_PER_SEC / HZ | return |
+>> ------------------------------------
+>> |1000|		1	  |   0	   |
+>> |500 |		2	  |   1	   |
+>> |200 |		5	  |   1	   |
+>> |100 |		10	  |   1	   |
+>> ------------------------------------
+>>
+>> Why only the return value of HZ=1000 is equal to 0 with m=0 ?
+> 
+> I don't know how you tested that, but obviously all four HZ values use
+> this variant:
+> 
+>>     #if HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC % HZ)
+>>     static inline unsigned long _msecs_to_jiffies(const unsigned int m)
+>>     {
+>>             return (m + (MSEC_PER_SEC / HZ) - 1) / (MSEC_PER_SEC / HZ);
+>>     }
+> 
+> and for all four HZ values the result is 0. Why?
+> 
+> For m = 0 the calculation reduces to:
+> 
+>       ((MSEC_PER_SEC / HZ) - 1) / (MSEC_PER_SEC / HZ)
+> 
+> i.e.
+> 
+> 	(x - 1) / x	where x = [1, 2, 5, 10]
+> 
+> which is guaranteed to be 0 for integer math. If not, you have a compiler
+> problem.
+> 
+> Thanks,
+> 
+> 	tglx
+Thanks for your reply. Actually, I have made a low-level mistake.
+I am really sorry for that.
+Thanks again.
 
-This patch causes conflicts in -next due to commit 835896a59b95
-("hwmon/coretemp: Cosmetic: Rename internal variables to zones
-from packages"), which is not being submitted through the hwmon
-subsystem. Unfortunately, the conflicts are more substantial than
-I thought and not trivial. Since I have no control over the
-conflicting patch, I decided to drop this patch from the hwmon
-subsystem commit queue.
-
-Please feel free to resubmit after the commit window closes.
-I would suggest to drop the coretemp driver from the patch since
-I don't know if further changes outside my control will be made
-to that driver.
-
-Sorry for the trouble.
-
-Guenter
