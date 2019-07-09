@@ -2,146 +2,165 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B273C73C42
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDD8C73C42
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A52021707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19FB216E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562675455;
+	bh=BCctahsZCXIi3y2EElHt4wtbP9jSttNX4X4IVfwp7AI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CLpd41x/E6NKzB78BLJWYkD2zYeuwrcd7XIqZ4VDC2+s2g+y5Q2cK5YnF4Im3lPSi
+	 Zk8CimStbw++7mmHSv/usrPuRqsU/gAUEriwJ9R8m2arjFFgbExPoXDqif+EagtZ9T
+	 XGJO5QS0wGidLNjR7YN4liAw936Z0DFYbFbOeQBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfGIM1l (ORCPT
+        id S1726229AbfGIMay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:27:41 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:37851 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfGIM1I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:27:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id v3so16364651ios.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 05:27:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=NebuMAkCn1+znBhCDmKMJxR+15w2PZJUV9MwEwc6ooc=;
-        b=drNJ2Pb6hzPKBgb9Y8LLRSgotpwLPY3EzNjBV4bFyqtLbzBokz0MSAb9OACzqzX2P/
-         N+evsfSB6hlxuqiUzxBQCiI40SQd22nrXsHK7l6AoMyVKAh3yc43RtdV29zn4gH/yoVo
-         bWA7gcDx3rFhBZALDrcfcsFldHTP23hn1q7bZJvGCxH1fBXq4oE44BssxKbsKVCQCxxH
-         XprpFiUKs/G4zstlMkmUA45xLHNL+BuDt0v6mE5F+qigUeugFbNZiQWyEhHlyDwESk14
-         tp9lwZUpK3nyJauNoofCDQdBJ5abUhx0xowj+qVZ/w3h1YXrczMKiyJfoE9Fu4quo1co
-         54eA==
-X-Gm-Message-State: APjAAAU7TVb81axgokLmuytjylGedpXYrmO7uXRPejkMu95NkXgl1hXo
-        hMT91d1tqLmIX5PURuwelb1mq5y4Z/q5kh+8gG4BzDTXeGAl
-X-Google-Smtp-Source: APXvYqxOnYwlM/KwfZvRBaNh/afE0RR6116tCNtS6/Reiv8S1pCZegG1cKFDfqh8NqnK8YMGCdy5qXYdKkDVtdhbvxfaQWKUamSh
-MIME-Version: 1.0
-X-Received: by 2002:a5e:8b43:: with SMTP id z3mr3852350iom.287.1562675227812;
- Tue, 09 Jul 2019 05:27:07 -0700 (PDT)
-Date:   Tue, 09 Jul 2019 05:27:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000da6a0e058d3ead50@google.com>
-Subject: general protection fault in vidioc_querycap
-From:   syzbot <syzbot+646272341e25afebff05@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, andreyknvl@google.com,
-        gregkh@linuxfoundation.org, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Tue, 9 Jul 2019 08:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbfGIMay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 08:30:54 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0073D214AF;
+        Tue,  9 Jul 2019 12:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562675453;
+        bh=BCctahsZCXIi3y2EElHt4wtbP9jSttNX4X4IVfwp7AI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ElWcx5thcaH0OKL05/0EQXZFk++2rdKvYBeTSr72PVp0JIxTRStMffQ9pqzLFiCxc
+         UVVOiyKMsXEibzIOiG0HdNySMPIzJUf9J/DgbtcrvM33CllOebVJSU0SQuUTj9D1Wt
+         BmSF2kIv67+6kLj+2q+mCp6zKE9orOgakyFeQHto=
+Date:   Tue, 9 Jul 2019 21:30:49 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [for-next][PATCH 12/16] kprobes: Initialize kprobes at
+ postcore_initcall
+Message-Id: <20190709213049.f84b4df6562250ac6ef0b51d@kernel.org>
+In-Reply-To: <20190703100205.0b58f3bf@gandalf.local.home>
+References: <20190526191828.466305460@goodmis.org>
+        <20190526191848.266163206@goodmis.org>
+        <20190702165008.GC34718@lakrids.cambridge.arm.com>
+        <20190703100205.0b58f3bf@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Steve,
 
-syzbot found the following crash on:
+On Wed, 3 Jul 2019 10:02:05 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1321f9a3a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
-dashboard link: https://syzkaller.appspot.com/bug?extid=646272341e25afebff05
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ac261ba00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=171d6739a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+646272341e25afebff05@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 1 PID: 1878 Comm: v4l_id Not tainted 5.2.0-rc6+ #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:usb_make_path include/linux/usb.h:913 [inline]
-RIP: 0010:vidioc_querycap+0x12d/0x3e0  
-drivers/media/usb/usbvision/usbvision-video.c:461
-Code: 3c 02 00 0f 85 ba 02 00 00 49 8b ac 24 58 16 00 00 48 b8 00 00 00 00  
-00 fc ff df 48 8d 7d 48 4c 8d 45 04 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 7d 02 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
-RSP: 0018:ffff8881cc727a28 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff8881cc727c20 RCX: 0000000000000000
-RDX: 0000000000000009 RSI: 451f481f4b404f27 RDI: 0000000000000048
-RBP: 0000000000000000 R08: 0000000000000004 R09: fffffbfff0c9ba38
-R10: fffffbfff0c9ba37 R11: ffffffff864dd1b8 R12: ffff8881cc9aa100
-R13: ffff8881cc9ab804 R14: ffff8881cc9aa998 R15: ffff8881cc727c50
-FS:  00007f579210f700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000625208 CR3: 00000001cd192000 CR4: 00000000001406e0
-Call Trace:
-  v4l_querycap+0x121/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1058
-  __video_do_ioctl+0x5b0/0xb30 drivers/media/v4l2-core/v4l2-ioctl.c:2871
-  video_usercopy+0x446/0xee0 drivers/media/v4l2-core/v4l2-ioctl.c:3053
-  v4l2_ioctl+0x147/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:360
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xcda/0x12e0 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f5791c42347
-Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff  
-ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffced1878d8 EFLAGS: 00000206 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f5791c42347
-RDX: 00007ffced1878e0 RSI: 0000000080685600 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000400884
-R13: 00007ffced187a30 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 5550531bc37b28bc ]---
-RIP: 0010:usb_make_path include/linux/usb.h:913 [inline]
-RIP: 0010:vidioc_querycap+0x12d/0x3e0  
-drivers/media/usb/usbvision/usbvision-video.c:461
-Code: 3c 02 00 0f 85 ba 02 00 00 49 8b ac 24 58 16 00 00 48 b8 00 00 00 00  
-00 fc ff df 48 8d 7d 48 4c 8d 45 04 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 7d 02 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
-RSP: 0018:ffff8881cc727a28 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff8881cc727c20 RCX: 0000000000000000
-RDX: 0000000000000009 RSI: 451f481f4b404f27 RDI: 0000000000000048
-RBP: 0000000000000000 R08: 0000000000000004 R09: fffffbfff0c9ba38
-R10: fffffbfff0c9ba37 R11: ffffffff864dd1b8 R12: ffff8881cc9aa100
-R13: ffff8881cc9ab804 R14: ffff8881cc9aa998 R15: ffff8881cc727c50
-FS:  00007f579210f700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000625208 CR3: 00000001cd192000 CR4: 00000000001406e0
+> On Tue, 2 Jul 2019 17:50:09 +0100
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> > On Sun, May 26, 2019 at 03:18:40PM -0400, Steven Rostedt wrote:
+> > > From: Masami Hiramatsu <mhiramat@kernel.org>
+> > > 
+> > > Initialize kprobes at postcore_initcall level instead of module_init
+> > > since kprobes is not a module, and it depends on only subsystems
+> > > initialized in core_initcall.
+> > > This will allow ftrace kprobe event to add new events when it is
+> > > initializing because ftrace kprobe event is initialized at
+> > > later initcall level.
+> > > 
+> > > Link: http://lkml.kernel.org/r/155851394736.15728.13626739508905120098.stgit@devnote2
+> > > 
+> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > > ---
+> > >  kernel/kprobes.c | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > 
+> > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > > index b1ea30a5540e..54aaaad00a47 100644
+> > > --- a/kernel/kprobes.c
+> > > +++ b/kernel/kprobes.c
+> > > @@ -2289,6 +2289,7 @@ static int __init init_kprobes(void)
+> > >  		init_test_probes();
+> > >  	return err;
+> > >  }
+> > > +postcore_initcall(init_kprobes);  
+> > 
+> > As a heads-up, this is causing boot-time failures on arm64.
+> 
+> Thanks for the report.
+> 
+> > 
+> > On arm64 kprobes depends on the BRK handler we register in
+> > debug_traps_init(), which is an arch_initcall.
+> > 
+> > As of this change, init_krprobes() calls init_test_probes() before
+> > that's registered, so we end up hitting a BRK before we can handle it.
+> > 
+> 
+> Would something like this help?
+> 
+> -- Steve
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 5471efbeb937..0ca6f53c8505 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2235,6 +2235,8 @@ static struct notifier_block kprobe_module_nb = {
+>  extern unsigned long __start_kprobe_blacklist[];
+>  extern unsigned long __stop_kprobe_blacklist[];
+>  
+> +static bool run_kprobe_tests __initdata;
+> +
+>  static int __init init_kprobes(void)
+>  {
+>  	int i, err = 0;
+> @@ -2286,11 +2288,18 @@ static int __init init_kprobes(void)
+>  	kprobes_initialized = (err == 0);
+>  
+>  	if (!err)
+> -		init_test_probes();
+> +		run_kprobe_tests = true;
+>  	return err;
+>  }
+>  subsys_initcall(init_kprobes);
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Just out of curious, if arm64's handler code initialized in arch_initcall,
+why this subsys_initcall() function causes a problem?
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+This is actually related to my boot-time tracing series, so I would like
+fix this issue without this patch.
+
+Thank you,
+
+>  
+> +static int __init run_init_test_probes(void)
+> +{
+> +	if (run_kprobe_tests)
+> +		init_test_probes();
+> +}
+> +module_init(run_init_test_probes);
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>  static void report_probe(struct seq_file *pi, struct kprobe *p,
+>  		const char *sym, int offset, char *modname, struct kprobe *pp)
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
