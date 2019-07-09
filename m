@@ -2,116 +2,137 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A54C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B397CC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A8621707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7779C21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="Bk59+xg0"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BNhPmv9C";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="CM8Dc0Uz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfGIHfR (ORCPT
+        id S1726108AbfGIHiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:35:17 -0400
-Received: from mickerik.phytec.de ([195.145.39.210]:61846 "EHLO
-        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfGIHeq (ORCPT
+        Tue, 9 Jul 2019 03:38:50 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:47334 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725905AbfGIHit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:34:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
-        q=dns/txt; i=@phytec.de; t=1562656769; x=1565248769;
-        h=From:Sender:Reply-To:Subject:Date:Message-Id:To:Cc:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=z/Ce/mLF65vxqmXovjOXbBz9hT5T4pHaAptHuYI5I90=;
-        b=Bk59+xg0GUKvuP9xK1qEx1MPp1VeUT6dI/VlX+NYBGGM0x0Y9L2RF5S76F4xQecB
-        4V/I256BmfEZt7QKDfbNqVT7QkS8GCMn8kMKy7nCwU1gRfllgdlE39MGHvYg30Ir
-        DAVyvQbj10T93RBSGb3RZ70VSjqjoHS5pZ3Wh4EhjLY=;
-X-AuditID: c39127d2-17dff70000001aee-05-5d244001f440
-Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
-        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 9B.B0.06894.100442D5; Tue,  9 Jul 2019 09:19:29 +0200 (CEST)
-Received: from augenblix2.phytec.de ([172.16.21.122])
-          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
-          with ESMTP id 2019070909192876-309709 ;
-          Tue, 9 Jul 2019 09:19:28 +0200 
-From:   Stefan Riedmueller <s.riedmueller@phytec.de>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, martyn.welch@collabora.com,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com
-Subject: [PATCH 06/10] ARM: dts: imx6ul: segin: Only enable NAND if it is populated
-Date:   Tue, 9 Jul 2019 09:19:23 +0200
-Message-Id: <1562656767-273566-7-git-send-email-s.riedmueller@phytec.de>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
-References: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
-X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 09.07.2019 09:19:28,
-        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 09.07.2019 09:19:29,
-        Serialize complete at 09.07.2019 09:19:29
-X-TNEFEvaluated: 1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPLMWRmVeSWpSXmKPExsWyRoCBS5fRQSXW4PJBTov5R86xWjy86m+x
-        aupOFotNj6+xWnT9WslscXnXHDaLpdcvMlk8uNjFYtG69wi7xd/tm1gsXmwRd+D2WDNvDaPH
-        jrtLGD12zrrL7rFpVSebx+Yl9R4b3+1g8uj/a+DxeZNcAEcUl01Kak5mWWqRvl0CV8bEmauY
-        C9ZxVRzZvZW5gfElRxcjB4eEgInEth1cXYxcHEICOxglXl2ZwAzhXGCUuNO7EMjh5GATMJJY
-        MK2RCcQWEYiUeLf9NztIEbPAHkaJadevM4IkhAWCJU4dmc0CYrMIqEi8u/yODcTmFfCQeHJx
-        PzuILSEgJ3HzXCfYUE4BT4mjF3+B2UJANZcXTGMBGSoh0Mgk8frUNiaIBiGJ04vPMk9g5FvA
-        yLCKUSg3Mzk7tSgzW68go7IkNVkvJXUTIzBQD09Uv7SDsW+OxyFGJg7GQ4wSHMxKIrz73JVj
-        hXhTEiurUovy44tKc1KLDzFKc7AoifNu4C0JExJITyxJzU5NLUgtgskycXBKNTB2BKi17e5e
-        IVYefYdD6GJ/5au9b62+XFZddyFtsdyl2C+XRBObejuu9Gusu93canWiqMRj0W0J96oK9b1c
-        /Ambf23ysS+8sav8XOHGz6KzQnKDui/zXGF/KHdr7++pvBcOKb454ug6/Xj4uWvlBjkmC0td
-        p02Z7nDL/Yj504V/nF9JPxCUmXlCiaU4I9FQi7moOBEAuVJR6EICAAA=
+        Tue, 9 Jul 2019 03:38:49 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3BBF4C0269;
+        Tue,  9 Jul 2019 07:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562657929; bh=+LJlXz9wRRGJ9ijaGUy79RJrxoxGdW6dI2VFm65aYf4=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=BNhPmv9CSlCVh3zStW9ek56EVeasGB+0tPoFIYud7i7lCvJKINt7l4Ueu8Mb3mCRi
+         OP2c8HBe1UppkFQzS49ZNZ+fgCZDZQMVdNDvtjak8FVZcuI0zK2k8d9JqKTHHN5bWF
+         egf9P0Pi0JFtq+HCilF/ORWlE2vzfTgQjg5PJqiVoUZlBbqKcjmEZmpEIKiOIPZd0m
+         crFqMLGzRqDq6q2Tv3wiYZGFfx9sXH4uWQxdR8qc9PRE8dRvPIqyEXpe4NEXxdr8/q
+         avj2xkPgcNHGBKLqheqNEW0CgnTqDkja3vDMhGyikPOH6/tvetkh7UPEBVx9BtPAZY
+         +IW/JATHkPKaA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 1BB97A0069;
+        Tue,  9 Jul 2019 07:38:44 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 9 Jul 2019 00:38:44 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 9 Jul 2019 00:38:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+LJlXz9wRRGJ9ijaGUy79RJrxoxGdW6dI2VFm65aYf4=;
+ b=CM8Dc0Uz/NYavUvlCVr1i1ZHY+e1ZlJe+SSYUXTjVYoHuFQrzGcMqzUJeQFFs+KnK1vn6ZhFyB3GG/JjH7hQ+L0ovIhsb/PHHd4J7BoysMSBLqNc3K0WVs76zypjepoJCdMUYkeIU+F6EMKlLowlL8DKzapy2LIWWdDzuWIS4ng=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
+ BN8PR12MB3204.namprd12.prod.outlook.com (20.179.65.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Tue, 9 Jul 2019 07:38:42 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2052.020; Tue, 9 Jul 2019
+ 07:38:42 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        David Miller <davem@davemloft.net>
+CC:     "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
+        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "arnd@arndb.de" <arnd@arndb.de>
+Subject: RE: [PATCH net-next v3 3/3] net: stmmac: Introducing support for Page
+ Pool
+Thread-Topic: [PATCH net-next v3 3/3] net: stmmac: Introducing support for
+ Page Pool
+Thread-Index: AQHVMwKNzVmUsJPJMUCkE31Cd4D9oqa8BTaAgAAezsCAAAGNgIAEwrOwgABWL4CAAKoRAIAABACg
+Date:   Tue, 9 Jul 2019 07:38:42 +0000
+Message-ID: <BN8PR12MB3266F5F7775BF6DB2F93E1D9D3F10@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <BN8PR12MB32666359FABD7D7E55FE4761D3F50@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190705152453.GA24683@apalos>
+ <BN8PR12MB32667BCA58B617432CACE677D3F60@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190708.141515.1767939731073284700.davem@davemloft.net>
+ <20190709072356.GA4599@apalos>
+In-Reply-To: <20190709072356.GA4599@apalos>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6a49f6ef-60fc-4750-17fb-08d704407784
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3204;
+x-ms-traffictypediagnostic: BN8PR12MB3204:
+x-microsoft-antispam-prvs: <BN8PR12MB3204AD2617366755E04E27AFD3F10@BN8PR12MB3204.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:597;
+x-forefront-prvs: 0093C80C01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(346002)(376002)(366004)(199004)(189003)(476003)(486006)(86362001)(6246003)(33656002)(14454004)(446003)(55016002)(71200400001)(71190400001)(11346002)(9686003)(99286004)(6506007)(52536014)(5660300002)(102836004)(229853002)(186003)(26005)(76176011)(7696005)(66066001)(305945005)(478600001)(7736002)(7416002)(81166006)(81156014)(25786009)(8676002)(73956011)(66476007)(66946007)(6116002)(53936002)(2906002)(66446008)(64756008)(66556008)(76116006)(110136005)(68736007)(316002)(74316002)(54906003)(4326008)(256004)(558084003)(6436002)(3846002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3204;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bwwDIYSt/Lsyre2pV01qVybJYMLyJy5guO+pDaTONQpF2rp3B5GNRQetMWvESgdYHn7QSigRAMEYT/IWgO5Tk4WAGzZIQjKn+qWy74v11TBMsH7iDG63ifNUgKVSAtS3wfwSAlDKuoTCdrqmjLvVpzTkuOjoQZshymoG4ryuq1WwnI4XyCEex8qv2mzXV9BhVCGs5SbXu1FOHiaBO1cEdXmRgKaLS4cf9/HZ3wB/xdM2hOCR5rKRIaLr4p75CxjnN6n2UmJdEVaP1aRzb+7CnQpVItH2P2ORwC2mn6s7K6Pr12EJONxsSkdOr57ydo8lRgFZJu2fklKpaqlzbVR+R4FYytC6j76/vYw5MFloee7bpRfPiP4fIEcaNjX7g29rqaw5JisFaWcnRMdl05HKIgD6fc5dtRAsr6vembjjoLI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a49f6ef-60fc-4750-17fb-08d704407784
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 07:38:42.3859
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3204
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phyCORE-i.MX 6UL/ULL now comes either with NAND flash or eMMC. We
-have to configure the populated memory type in the device tree files. So
-the GPMI node gets disabled by default and only enabled if populated.
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org> | Date: Tue, Jul 09, 2=
+019 at 08:23:56
 
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+> The patch from Ivan did get merged, can you change the free call to
+> page_pool_destroy and re-spin? You can add my acked-by
+
+Yes, I will re-spin then. Thanks!
+
 ---
- arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi      | 2 +-
- arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
-index fee7a7e938ee..de6ffbb0183c 100644
---- a/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-phytec-phycore-som.dtsi
-@@ -65,7 +65,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_gpmi_nand>;
- 	nand-on-flash-bbt;
--	status = "okay";
-+	status = "disabled";
- };
- 
- &i2c1 {
-diff --git a/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-index 81a82dd65019..c6ef13685a7c 100644
---- a/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-+++ b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-@@ -50,6 +50,10 @@
- 	status = "okay";
- };
- 
-+&gpmi {
-+	status = "okay";
-+};
-+
- &i2c_rtc {
- 	status = "okay";
- };
--- 
-2.7.4
-
+Thanks,
+Jose Miguel Abreu
