@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A81C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFC3C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580102171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9CD2171F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562642111;
-	bh=kUCUIuuvcBdKnEGzrNhNOlf6e4V0XnVxsJjaK1hFxbI=;
+	s=default; t=1562642114;
+	bh=bhI5nRtP7I46rw87zwlc1TgXY5dZsMFgbNno8ecg+WI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=vpqmE3BRDR8PW085ej9Jsd0paXZQLLGF0gtQjlicmFNJOo4FcAqbhOGaWEJA0uPKW
-	 Ken3LxjCcSW66LEOqqA8r+fdYIPUxo7l/Bw9QmbX3pzRO6/34U/jH5J5MSu3LYFhXt
-	 bN32sy+9NfjSqKI3jlQVjWCcMDw9tuIMSPm1xqkc=
+	b=LfjylgxX7flYqfcXMIWMR0S109t05IdlySC4AcVUnOggPIfA5GVANKTmYzKQiVdIU
+	 aajZB1M1NJF+9iYQ0+7vtSTjmQJ+bFPfkW87YpqG2grAifNZmaGtvMCiQfarwyMKLG
+	 HQ+8CcAHqjR8dyLLGtN890q6ZMKxunmyLsTBTrUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfGIDPJ (ORCPT
+        id S1727584AbfGIDPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 23:15:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbfGIDPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 23:15:07 -0400
-Subject: Re: [GIT PULL] Audit patches for v5.3
+        id S1727540AbfGIDPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 23:15:09 -0400
+Subject: Re: [GIT PULL] Keys: Set 2 - request_key() improvements for 5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562642106;
-        bh=kUCUIuuvcBdKnEGzrNhNOlf6e4V0XnVxsJjaK1hFxbI=;
+        s=default; t=1562642108;
+        bh=bhI5nRtP7I46rw87zwlc1TgXY5dZsMFgbNno8ecg+WI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=uvQkHgu3l/Ol/y/obZbi6XnmVTkkVtO+9DM6Hi8ezGRBl+53MNJNk3IuS51XGyzeH
-         NQ3tx1rM+wrnBe6g/7lZLHx/Vue3K+lY0FxZ0MKS0OzBdFqySo59H2Xn5IgsXPQekw
-         iCi/u7AxaPPCFxFXtglXgmXzEd0PvaYp9pD48zpk=
+        b=f3oUwImdKjQ6v12txKshRctFBzFNQBLY3DqIiYTrWn/QCCpXd5n5NBiNuUcbV8tN5
+         RCsHiTBzFAxgRmrRvkeS9ssn2XGgLXdsig0eI5K5t0KyQ8QA2cPKDHFJzzV4t2t1KG
+         mZjJh/0dcxj8V9wPRgb43dH3K/fQ4nyX+xW7k08A=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAHC9VhQ7md3PmUkzv8DNL-RTrq_4r2sRzGjwwaT0ZS-CPOxGBw@mail.gmail.com>
-References: <CAHC9VhQ7md3PmUkzv8DNL-RTrq_4r2sRzGjwwaT0ZS-CPOxGBw@mail.gmail.com>
+In-Reply-To: <27327.1562361214@warthog.procyon.org.uk>
+References: <27327.1562361214@warthog.procyon.org.uk>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAHC9VhQ7md3PmUkzv8DNL-RTrq_4r2sRzGjwwaT0ZS-CPOxGBw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git
- tags/audit-pr-20190702
-X-PR-Tracked-Commit-Id: 839d05e413856bd686a33b59294d4e8238169320
+X-PR-Tracked-Message-Id: <27327.1562361214@warthog.procyon.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+ tags/keys-request-20190626
+X-PR-Tracked-Commit-Id: 3b8c4a08a471d56ecaaca939c972fdf5b8255629
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 61fc5771f5e729a2ce235af42f69c8506725e84a
-Message-Id: <156264210680.2709.714753527819815674.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 03:15:06 +0000
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: f771fde82051976a6fc0fd570f8b86de4a92124b
+Message-Id: <156264210874.2709.11032841563948507768.pr-tracker-bot@kernel.org>
+Date:   Tue, 09 Jul 2019 03:15:08 +0000
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
+        jmorris@namei.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 2 Jul 2019 13:28:33 -0400:
+The pull request you sent on Fri, 05 Jul 2019 22:13:34 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20190702
+> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-request-20190626
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/61fc5771f5e729a2ce235af42f69c8506725e84a
+https://git.kernel.org/torvalds/c/f771fde82051976a6fc0fd570f8b86de4a92124b
 
 Thank you!
 
