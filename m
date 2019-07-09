@@ -6,167 +6,90 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12B6C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C38C606D4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5FD21707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E86E2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sWUOdSvK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OTAcW/C4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfGIAQr (ORCPT
+        id S1726582AbfGIAR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 20:16:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55607 "EHLO ozlabs.org"
+        Mon, 8 Jul 2019 20:17:59 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59541 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbfGIAQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 20:16:47 -0400
+        id S1725905AbfGIAR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 20:17:59 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jNCw1H3wz9s7T;
-        Tue,  9 Jul 2019 10:16:44 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jNFH2W5cz9s7T;
+        Tue,  9 Jul 2019 10:17:55 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562631404;
-        bh=nk3neh4Zo9aogHly5OJsf0d91N2BmN+veRQb05n5YSE=;
+        s=201702; t=1562631476;
+        bh=lp21XVmr94RjmaXIYaqt7yfBze2ly3TCDE+T5re+5rY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sWUOdSvKNY6HWxGpdJ0DauB58sZrxhjlSSCz9EwP339xXsEhg1qirSoYmU7zbMKdB
-         cY+kYsyLwLswxO6FfOQ/h2OQTtypXS10oXYV5FxiAFQ3fmJWqZDteIlten5aqMww6V
-         ve7fkGPgoLHF/ufNa1G1MXeO8Fz6OohjyAzW+1UnfABdzQNUAOnrytSGkL5Lrupw8I
-         MtrbXNsfomFAVhhajJlh77e02igoiRVdrXyxVsi6Xxre+GGg6qqUr/aqIQXYhqpmqQ
-         UidiAn7fKO6KhL7GproWbJKvgQw+yHXBzuf3uv7BdJpm6CmxwgtGjNy2Zl29/DLNru
-         23YNKOcyNvuhw==
-Date:   Tue, 9 Jul 2019 10:16:43 +1000
+        b=OTAcW/C4AuMBkOT91yjFKDVktQnNCZIWuO3fyWgqUnxNq9esbXVFKu18N81zL0Vx9
+         ySXZkRfdYTIc9ilLZ5P9yECpCLZGqExgeveA1XGAvle2FgPivDl9VnGa6HeWTGDt+s
+         V/4Y4+SrKCurleHkd6MVaEKWMVISGQtPVkXTMD7GmJorbf7rx9wPmzrCri49U89qXR
+         GdFHfo1eybKCpgV1M/9FPCFIpwDCmU2MilISzsLPfKdhszhFwEGhfakXx9ldtp9Uyg
+         kBA0QdM2SyvI3sz+kXu9Em9ysB5j6+XP1+avjDvbod+t89NN55Vy8zfleE+Z0kYZyO
+         Ozvy008cKMlMA==
+Date:   Tue, 9 Jul 2019 10:17:54 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fredrik Noring <noring@nocrew.org>
-Subject: Re: linux-next: manual merge of the dma-mapping tree with Linus'
+        Fabian Schindlatz <fabian.schindlatz@fau.de>,
+        Len Brown <len.brown@intel.com>
+Subject: Re: linux-next: manual merge of the tip tree with the hwmon-staging
  tree
-Message-ID: <20190709101643.335abba1@canb.auug.org.au>
-In-Reply-To: <20190701084213.1056beab@canb.auug.org.au>
-References: <20190701084213.1056beab@canb.auug.org.au>
+Message-ID: <20190709101754.1836ac73@canb.auug.org.au>
+In-Reply-To: <20190701171524.774dfc75@canb.auug.org.au>
+References: <20190701171524.774dfc75@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/3PLp19x1hK.Lb_kp0Dl=kLQ"; protocol="application/pgp-signature"
+ boundary="Sig_/xsNrBZ8CSrMvZiWfq8.boU1"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3PLp19x1hK.Lb_kp0Dl=kLQ
+--Sig_/xsNrBZ8CSrMvZiWfq8.boU1
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
 Hi all,
 
-On Mon, 1 Jul 2019 08:42:13 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+On Mon, 1 Jul 2019 17:15:24 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
 rote:
+>
+> Today's linux-next merge of the tip tree got a conflict in:
 >=20
-> Today's linux-next merge of the dma-mapping tree got a conflict in:
->=20
->   include/linux/genalloc.h
+>   drivers/hwmon/coretemp.c
 >=20
 > between commit:
 >=20
->   795ee30648c7 ("lib/genalloc: introduce chunk owners")
+>   601fdf7e6635 ("hwmon: Correct struct allocation style")
 >=20
-> from Linus' tree and commit:
+> from the hwmon-staging tree and commit:
 >=20
->   cf394fc5f715 ("lib/genalloc.c: Add algorithm, align and zeroed family o=
-f DMA allocators")
+>   835896a59b95 ("hwmon/coretemp: Cosmetic: Rename internal variables to z=
+ones from packages")
 >=20
-> from the dma-mapping tree.
+> from the tip tree.
 >=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc include/linux/genalloc.h
-> index 205f62b8d291,ed641337df87..000000000000
-> --- a/include/linux/genalloc.h
-> +++ b/include/linux/genalloc.h
-> @@@ -122,47 -116,21 +122,56 @@@ static inline int gen_pool_add(struct g
->   	return gen_pool_add_virt(pool, addr, -1, size, nid);
->   }
->   extern void gen_pool_destroy(struct gen_pool *);
->  -extern unsigned long gen_pool_alloc(struct gen_pool *, size_t);
->  -extern unsigned long gen_pool_alloc_algo(struct gen_pool *, size_t,
->  -		genpool_algo_t algo, void *data);
->  +unsigned long gen_pool_alloc_algo_owner(struct gen_pool *pool, size_t s=
-ize,
->  +		genpool_algo_t algo, void *data, void **owner);
->  +
->  +static inline unsigned long gen_pool_alloc_owner(struct gen_pool *pool,
->  +		size_t size, void **owner)
->  +{
->  +	return gen_pool_alloc_algo_owner(pool, size, pool->algo, pool->data,
->  +			owner);
->  +}
->  +
->  +static inline unsigned long gen_pool_alloc_algo(struct gen_pool *pool,
->  +		size_t size, genpool_algo_t algo, void *data)
->  +{
->  +	return gen_pool_alloc_algo_owner(pool, size, algo, data, NULL);
->  +}
->  +
->  +/**
->  + * gen_pool_alloc - allocate special memory from the pool
->  + * @pool: pool to allocate from
->  + * @size: number of bytes to allocate from the pool
->  + *
->  + * Allocate the requested number of bytes from the specified pool.
->  + * Uses the pool allocation function (with first-fit algorithm by defau=
-lt).
->  + * Can not be used in NMI handler on architectures without
->  + * NMI-safe cmpxchg implementation.
->  + */
->  +static inline unsigned long gen_pool_alloc(struct gen_pool *pool, size_=
-t size)
->  +{
->  +	return gen_pool_alloc_algo(pool, size, pool->algo, pool->data);
->  +}
->  +
->   extern void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size,
->   		dma_addr_t *dma);
-> + extern void *gen_pool_dma_alloc_algo(struct gen_pool *pool, size_t size,
-> + 		dma_addr_t *dma, genpool_algo_t algo, void *data);
-> + extern void *gen_pool_dma_alloc_align(struct gen_pool *pool, size_t siz=
-e,
-> + 		dma_addr_t *dma, int align);
-> + extern void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dm=
-a_addr_t *dma);
-> + extern void *gen_pool_dma_zalloc_algo(struct gen_pool *pool, size_t siz=
-e,
-> + 		dma_addr_t *dma, genpool_algo_t algo, void *data);
-> + extern void *gen_pool_dma_zalloc_align(struct gen_pool *pool, size_t si=
-ze,
-> + 		dma_addr_t *dma, int align);
->  -extern void gen_pool_free(struct gen_pool *, unsigned long, size_t);
->  +extern void gen_pool_free_owner(struct gen_pool *pool, unsigned long ad=
-dr,
->  +		size_t size, void **owner);
->  +static inline void gen_pool_free(struct gen_pool *pool, unsigned long a=
-ddr,
->  +                size_t size)
->  +{
->  +	gen_pool_free_owner(pool, addr, size, NULL);
->  +}
->  +
->   extern void gen_pool_for_each_chunk(struct gen_pool *,
->   	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
->   extern size_t gen_pool_avail(struct gen_pool *);
+> I fixed it up (the comment fixed in the latter was also fixed in the
+> former) and can carry the fix as necessary. This is now fixed as far as
+> linux-next is concerned, but any non trivial conflicts should be mentioned
+> to your upstream maintainer when your tree is submitted for merging.
+> You may also want to consider cooperating with the maintainer of the
+> conflicting tree to minimise any particularly complex conflicts.
 
 I am still getting this conflict (the commit ids may have changed).
 Just a reminder in case you think Linus may need to know.
@@ -175,20 +98,20 @@ Just a reminder in case you think Linus may need to know.
 Cheers,
 Stephen Rothwell
 
---Sig_/3PLp19x1hK.Lb_kp0Dl=kLQ
+--Sig_/xsNrBZ8CSrMvZiWfq8.boU1
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0j3OsACgkQAVBC80lX
-0GwB7Qf7BO3NB8TpO59WmIdVTpF4aDnBv/ofbhm5xXFt/cZB47Vo7RRlWo9DfKdt
-ub1WPHC4BB0ATu2ZLhEY78wv5dZoJONADjeBpl9HUKuHp8tm53vmUCVh6bzSpnJ4
-XeAo6JJNZo3M8gx/I0fny2DGIRY5H6PuLQ6LKADjaPu3lbb1TtKMSV331OE1seVH
-K4xmjAvIaSAdYkZp8iS0oZ48Ck7X1VUw4ZbkZScsgR981QkA0vUNFE9Fo7DktWSs
-ykweaxFQGY/sSiWKO95/rnczkR67y8Js/iOKQboiQi4PeY+EEmFiE+BmPgKORd/t
-CKSyb9QzQZFeeGonWTqP/hF2mB8Meg==
-=+n3i
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0j3TIACgkQAVBC80lX
+0Gz2PggAkIgVKxBWr7Dq+tRDT6iulMKeirJtBRN2V+WAhx03NcljBfmYx6u7y4tW
+6XHNt2Pn5WTKukkWKbI7oEGuVS3ohKyCRjfqRUfXV8KMZLnpAvJXqcwbeCMSTLcr
+OXlKaEKLLMN0YDXAjIT7dLfj/Klj+O3InTCgCyVtVJ5E9EaIqVPFj5X7Pkdd4l56
+WklOfzbK0HQ1d7j1wVZSh697W6eipJOdKtLAHNdAQOeJ8YeTa4pCLvoZb3NmryWG
+SdmIgWZ3o2H3SAZ589VWFZpDQlQ6dpRSNLpYKso2iA1DATlfQOblOhRlcWBf9p+Q
+S+B/drAnWPyMHQrp2Mvd6CkoVCGYUQ==
+=MoZU
 -----END PGP SIGNATURE-----
 
---Sig_/3PLp19x1hK.Lb_kp0Dl=kLQ--
+--Sig_/xsNrBZ8CSrMvZiWfq8.boU1--
