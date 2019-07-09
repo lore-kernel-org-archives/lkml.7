@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFC3C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3DEC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9CD2171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B545D2173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562642114;
-	bh=bhI5nRtP7I46rw87zwlc1TgXY5dZsMFgbNno8ecg+WI=;
+	s=default; t=1562642115;
+	bh=DTsjYMo4hXZJwEifoFQ9oCkFLKg14iT6hgBB03U8Md4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=LfjylgxX7flYqfcXMIWMR0S109t05IdlySC4AcVUnOggPIfA5GVANKTmYzKQiVdIU
-	 aajZB1M1NJF+9iYQ0+7vtSTjmQJ+bFPfkW87YpqG2grAifNZmaGtvMCiQfarwyMKLG
-	 HQ+8CcAHqjR8dyLLGtN890q6ZMKxunmyLsTBTrUc=
+	b=UTMgX0ovxT0CBj1R0EuyM0usYzGYkVrUrJpFa5Heib7QUU/izrsvaHtFWToIirQ39
+	 42rkuYvim9DSWdLk7yqqvcfYQG1S+k2SSJ6cIDkBC2ka+Sy0MXnvwOerghtm+IOa9M
+	 wIM4qZfVXHsUz4WSNUxRzcChIFlonofmqgmM4QtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfGIDPO (ORCPT
+        id S1727602AbfGIDPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 8 Jul 2019 23:15:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32796 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:32782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727540AbfGIDPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727193AbfGIDPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 23:15:09 -0400
-Subject: Re: [GIT PULL] Keys: Set 2 - request_key() improvements for 5.3
+Subject: Re: [GIT PULL] Keys: Set 1 - Miscellany for 5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1562642108;
-        bh=bhI5nRtP7I46rw87zwlc1TgXY5dZsMFgbNno8ecg+WI=;
+        bh=DTsjYMo4hXZJwEifoFQ9oCkFLKg14iT6hgBB03U8Md4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=f3oUwImdKjQ6v12txKshRctFBzFNQBLY3DqIiYTrWn/QCCpXd5n5NBiNuUcbV8tN5
-         RCsHiTBzFAxgRmrRvkeS9ssn2XGgLXdsig0eI5K5t0KyQ8QA2cPKDHFJzzV4t2t1KG
-         mZjJh/0dcxj8V9wPRgb43dH3K/fQ4nyX+xW7k08A=
+        b=jDSdzA21h9mGbPGZg8pjBONTeSE/aNOu/mVMuNlvcDsUzeZw4m24J+Su+7a/p3tSV
+         BmlsQlhDOP28k+evsDH6rJZaedRu7cy2sg/+AAHq/hiwgrCqbOrgewtReti2zQiaBp
+         LDanZi+czEP4zcVkAk/tN0jETySGy0uDcp/LrC+8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <27327.1562361214@warthog.procyon.org.uk>
-References: <27327.1562361214@warthog.procyon.org.uk>
+In-Reply-To: <26702.1562360619@warthog.procyon.org.uk>
+References: <26702.1562360619@warthog.procyon.org.uk>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <27327.1562361214@warthog.procyon.org.uk>
+X-PR-Tracked-Message-Id: <26702.1562360619@warthog.procyon.org.uk>
 X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
- tags/keys-request-20190626
-X-PR-Tracked-Commit-Id: 3b8c4a08a471d56ecaaca939c972fdf5b8255629
+ tags/keys-misc-20190619
+X-PR-Tracked-Commit-Id: 45e0f30c30bb131663fbe1752974d6f2e39611e2
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f771fde82051976a6fc0fd570f8b86de4a92124b
-Message-Id: <156264210874.2709.11032841563948507768.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 504b69eb3c95180bc59f1ae9096ad4b10bbbf254
+Message-Id: <156264210818.2709.2723899358322424793.pr-tracker-bot@kernel.org>
 Date:   Tue, 09 Jul 2019 03:15:08 +0000
 To:     David Howells <dhowells@redhat.com>
 Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
@@ -56,12 +56,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 05 Jul 2019 22:13:34 +0100:
+The pull request you sent on Fri, 05 Jul 2019 22:03:39 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-request-20190626
+> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/keys-misc-20190619
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f771fde82051976a6fc0fd570f8b86de4a92124b
+https://git.kernel.org/torvalds/c/504b69eb3c95180bc59f1ae9096ad4b10bbbf254
 
 Thank you!
 
