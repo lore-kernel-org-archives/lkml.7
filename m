@@ -2,128 +2,160 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FE8C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAE6C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4740520656
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:10:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hac0RIVr"
+	by mail.kernel.org (Postfix) with ESMTP id 9D77C2171F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562688647;
+	bh=sZeMD4oVQwPrdMKxyv7QW1fVkzIcKk8DIBHqtvwcWPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OTUXQZ1k40RYtUdcDdIDtY3j6bsZgF2xdXUlutVpa82X9ZXBfKVW5UJniSfLuWGUS
+	 18rA1IFlZuZUcaXEOakU5ciOfsXUIOthUbZdrSZ/5+tPjr//T8amIJoEYV4KSn+1+o
+	 lZdBl7OdKy9cm+zqjs9S7RojqmiQLd1BajSo96I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfGIQKe (ORCPT
+        id S1726660AbfGIQKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 12:10:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41497 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfGIQKe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 12:10:34 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so6649927pls.8;
-        Tue, 09 Jul 2019 09:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Sg8Y/+nJCqL5nneX2knQ5cyB6HIpIg84jtKACGxUrtw=;
-        b=hac0RIVrFQWNBa7HyDu3rESY+4QAmgxOZDpne12VkNC2JObfBJGw36vTlr+lEnPSQB
-         2Wb+y3VrIKcvyzxXb7qRITLG546QEqXnc5retHQ+rIWq21lVxTb6XXRxo3oM6NA4Jtez
-         utAx29+Pgy9BSI2mo7gqC5lVKYAxWsP3IpiWkVA5ENyf47Q3w+rrtN+CCQhiNyANXZLP
-         GIDEhvxGpO1h9IKl9XcNK8rRHOJ6MDl8Owe7Imy/TuQtwdTUGu5WYa5caSIs+5eTyBSS
-         uQ2UOc0Lo7yhl08iWaXw4DEvcNR9Z2Zf3YqCTeIZjn+4HPCOoxR7nXBfhgTir9k3H/nY
-         vs1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sg8Y/+nJCqL5nneX2knQ5cyB6HIpIg84jtKACGxUrtw=;
-        b=Zu1NgcZmTZa2Uo1S4taymuFK2uJqTFycqv87pIaca0QnPBWEOWLXzhfV1/ojwMbWfx
-         AY0kS+muxGG2a4SdbEU+cf7EueyEq1i+iiVwNNGM9Yu0uPcBw4Q4bCLGcB6Mv+hJXHP1
-         KIz7OiEKDIy1XhZI9RpY9kOP96oXPVd+wcJnnWtbBN/iCEyRzm1/ZJISHn/PNBGLvDWF
-         o4VhE1sR2MpoV9DBX4CTI05Vo/VcjKJNbRWxw2Hv4pvxZqUTtsGCxffFFanYKJ9mmFZJ
-         8qhXqNDRpCNeIqCytCHPI37vj5bfnE2Lo2Q1wp+kt/GBfW7V3UEs6Jn5xBim4m9Wgg7+
-         Q5aA==
-X-Gm-Message-State: APjAAAWDXG/r8h+RJ06BFNtOZ73H83C7DKOUvA7Pzt6ueLTNpBKXo1+v
-        Zfus4wIy1h7zFTvq5DJLrJEMlwb1
-X-Google-Smtp-Source: APXvYqwVCKjVczwu6Z4CpF0VZnh+8Dmbi51CLTfiYlVD+b4tl0+NtgaI7USMXSMQt3RuERkP1h5DlA==
-X-Received: by 2002:a17:902:f01:: with SMTP id 1mr33110232ply.170.1562688633691;
-        Tue, 09 Jul 2019 09:10:33 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u6sm2967708pjx.23.2019.07.09.09.10.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 09:10:32 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 09:10:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Sterba <dsterba@suse.com>
-Subject: Re: [PATCH -next] btrfs: Select LIBCRC32C again
-Message-ID: <20190709161031.GA7703@roeck-us.net>
-References: <1562593403-19545-1-git-send-email-linux@roeck-us.net>
+        Tue, 9 Jul 2019 12:10:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbfGIQKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 12:10:46 -0400
+Received: from linux-8ccs (ip5f5adbef.dynamic.kabel-deutschland.de [95.90.219.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67EB720656;
+        Tue,  9 Jul 2019 16:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562688645;
+        bh=sZeMD4oVQwPrdMKxyv7QW1fVkzIcKk8DIBHqtvwcWPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ar5tnU95snb3l/W5KYlNQP9YQ1KcXM5zwJ7JQjzNWOjLwiCytDHRWgQyjFt0Oi0GP
+         IF+CW2oXBDXZem/WACI2CXhMNKEaXo3h4WE9cSLKzxIpjD3daJ+RWmC4r7aqgFuYkn
+         T7jI/n2nFLhON2jr2Ygkg+lAcr+VSrOnAKF19Nwc=
+Date:   Tue, 9 Jul 2019 18:10:39 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc:     rusty@rustcorp.com.au, kay.sievers@vrfy.org,
+        clabbe.montjoie@gmail.com, LKML <linux-kernel@vger.kernel.org>,
+        wangxiaogang3@huawei.com, zhoukang7@huawei.com,
+        Mingfangsen <mingfangsen@huawei.com>
+Subject: Re: [PATCH v2] module: add usage links when calling ref_module func
+Message-ID: <20190709161039.GA3501@linux-8ccs>
+References: <4fec6c3b-03b8-dd57-4009-99431105a8a5@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <1562593403-19545-1-git-send-email-linux@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <4fec6c3b-03b8-dd57-4009-99431105a8a5@huawei.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 06:43:23AM -0700, Guenter Roeck wrote:
-> With CONFIG_BTRFS_FS=y and CONFIG_CRYPTO_CRC32C=m, we get:
-> 
-> fs/btrfs/super.o: In function `btrfs_mount_root':
-> fs/btrfs/super.c:1557: undefined reference to `crc32c_impl'
-> fs/btrfs/super.o: In function `btrfs_print_mod_info':
-> fs/btrfs/super.c:2348: undefined reference to `crc32c_impl'
-> fs/btrfs/extent-tree.o: In function `btrfs_crc32c':
-> fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
-> fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
-> fs/btrfs/ctree.h:2609: undefined reference to `crc32c'
-> fs/btrfs/dir-item.o: In function `btrfs_name_hash':
-> fs/btrfs/ctree.h:2619: undefined reference to `crc32c'
-> fs/btrfs/ctree.h:2619: undefined reference to `crc32c'
-> 
-> and more.
-> 
-> Note that the comment in the offending commit "The module dependency on
-> crc32c is preserved via MODULE_SOFTDEP("pre: crc32c"), which was previously
-> provided by LIBCRC32C config option doing the same." is wrong, since it
-> permits CONFIG_BTRFS_FS=y in combination with CONFIG_CRYPTO_CRC32C=m.
-> 
++++ Zhiqiang Liu [03/07/19 10:09 +0800]:
+>From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>
+>Users can call ref_module func in their modules to construct
+>relationships with other modules. However, the holders
+>'/sys/module/<mod-name>/holders' of the target module donot include
+>the users` module. So lsmod command misses detailed info of 'Used by'.
+>
+>When load module, the process is given as follows,
+>load_module()
+>	-> mod_sysfs_setup()
+>		-> add_usage_links
+>	-> do_init_module
+>		-> mod->init()
+>
+>add_usage_links func creates holders of target modules linking to
+>this module. If ref_module is called in mod->init() func, the usage
+>links cannot be added.
+>
+>Here, we will add usage link of a to b's holder_dir.
+>
+>V1->V2:
+>- remove incorrect Fixes tag
+>- fix error handling of sysfs_create_link as suggested by Jessica Yu
+>
+>Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>Suggested-by: Jessica Yu <jeyu@kernel.org>
+>Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+>---
+> kernel/module.c | 18 ++++++++++++++----
+> 1 file changed, 14 insertions(+), 4 deletions(-)
+>
+>diff --git a/kernel/module.c b/kernel/module.c
+>index 80c7c09584cf..672abce2222c 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -837,25 +837,26 @@ static int already_uses(struct module *a, struct module *b)
+>  *    'b' can walk the list to see who sourced them), and of 'a'
+>  *    targets (so 'a' can see what modules it targets).
+>  */
+>-static int add_module_usage(struct module *a, struct module *b)
+>+static struct module_use *add_module_usage(struct module *a, struct module *b)
+> {
+> 	struct module_use *use;
+>
+> 	pr_debug("Allocating new usage for %s.\n", a->name);
+> 	use = kmalloc(sizeof(*use), GFP_ATOMIC);
+> 	if (!use)
+>-		return -ENOMEM;
+>+		return NULL;
+>
+> 	use->source = a;
+> 	use->target = b;
+> 	list_add(&use->source_list, &b->source_list);
+> 	list_add(&use->target_list, &a->target_list);
+>-	return 0;
+>+	return use;
+> }
+>
+> /* Module a uses b: caller needs module_mutex() */
+> int ref_module(struct module *a, struct module *b)
+> {
+>+	struct module_use *use;
+> 	int err;
+>
+> 	if (b == NULL || already_uses(a, b))
+>@@ -866,9 +867,18 @@ int ref_module(struct module *a, struct module *b)
+> 	if (err)
+> 		return err;
+>
+>-	err = add_module_usage(a, b);
+>+	use = add_module_usage(a, b);
+>+	if (!use) {
+>+		module_put(b);
+>+		return -ENOMEM;
+>+	}
+>+
+>+	err = sysfs_create_link(b->holders_dir, &a->mkobj.kobj, a->name);
 
-Meh, that should have been CONFIG_LIBCRC32C=m. Sorry for the confusion.
+Sigh. This ultimately doesn't work because in load_module(), we use
+ref_module() in resolve_symbol(), and mod->mkobj.kobj doesn't get
+initialized until mod_sysfs_init(), which happens much later in
+load_module(). So what happens is that the ref_module(mod, owner) call
+in resolve_symbol() returns an error because sysfs_create_link() fails here.
+We could *maybe* move sysfs initialization earlier in load_module()
+but that is an entirely untested idea and I would need to think about
+that more.
 
-Anyway, I'll select CONFIG_LIBCRC32C=y in conjunction with CONFIG_BTRFS_FS=y
-in my own build/boot tests going forward. That won't fix the problem, but
-it will avoid loss of test coverage.
-
-Guenter
-
-> Cc: David Sterba <dsterba@suse.com>
-> Fixes: d5178578bcd4 ("btrfs: directly call into crypto framework for checksumming")
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  fs/btrfs/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/btrfs/Kconfig b/fs/btrfs/Kconfig
-> index 212b4a854f2c..4c80c70597f9 100644
-> --- a/fs/btrfs/Kconfig
-> +++ b/fs/btrfs/Kconfig
-> @@ -2,6 +2,7 @@
->  
->  config BTRFS_FS
->  	tristate "Btrfs filesystem support"
-> +	select LIBCRC32C
->  	select CRYPTO
->  	select CRYPTO_CRC32C
->  	select ZLIB_INFLATE
-> -- 
-> 2.7.4
-> 
+> 	if (err) {
+> 		module_put(b);
+>+		list_del(&use->source_list);
+>+		list_del(&use->target_list);
+>+		kfree(use);
+> 		return err;
+> 	}
+> 	return 0;
+>-- 
+>2.19.1
+>
