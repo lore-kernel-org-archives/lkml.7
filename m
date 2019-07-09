@@ -4,62 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8666DC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FF6C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E66A208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B672080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562702131;
-	bh=X21EgHxZMVX721gzxHS8gFrq68RvC1djA1EQZ0iTsXA=;
+	s=default; t=1562702134;
+	bh=p8McqkZPbJMafKOclnSs3qGsZajsOXS/ra5BNJGRfnw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wV0X+j8eoQDVv/2YX9LnZw0ZAi/JN0IlNt5gREU9AXOUh7I5NEeLRay0AofzIqHZU
-	 qS6nwU9LQz2ltHBovbFtXmsQyHTZepO0tfiUVxoWCrwnv7C9rK85WwzxI8bbovMYIB
-	 05aFW8YOa/PKFC0n1MFL8MenUzwQelhtBzhV4pw8=
+	b=kbsX1T8XaLZaYVEqtzTRkMiALqeVm7cE6avq0ZfevNVKPjicnq66ynSUb6hh4lia/
+	 MJlaZJ0za/6vltpoHb+XUckHIfwGi3l0QsjXz0K8q5OvOapBQF47ycazWPRCWqYctu
+	 CqZhLx8vnGSReL7mN+ATp29Vw8z5JT6fdOYdkMSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbfGITza (ORCPT
+        id S1729580AbfGITzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729575AbfGITzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jul 2019 15:55:10 -0400
-Subject: Re: [GIT pull] x86/boot for 5.3-rc1
+Received: from mail.kernel.org ([198.145.29.99]:34400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729566AbfGITzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 15:55:09 -0400
+Subject: Re: [GIT PULL] LSM: capabilities updates for v5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562702110;
-        bh=X21EgHxZMVX721gzxHS8gFrq68RvC1djA1EQZ0iTsXA=;
+        s=default; t=1562702109;
+        bh=p8McqkZPbJMafKOclnSs3qGsZajsOXS/ra5BNJGRfnw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=TEYPZ/yAmhBv/5kaISmlFfE9Kghy51DMFaElnOcU6Q2zS8VmEXFQEeUjRkKq7TwlQ
-         80MRRFYplRbjRUC36ZFGmGMKQmzyoGIqUgdAxHg4FxF426jF5PlPN2KmN4mQUkdpdw
-         ZktzrNKIWEWmU/2qu7wQQ9U6J1g3mBpzK+6I8qh0=
+        b=ISxjqDyrk1nojQDLvDQlB7BRJhFDhHYMOoMhUsun1dTas4TkFEQsbCjaP24eXLobz
+         kzQTe4dOn78x3vkugFiRlJpMnm1p5iWzDhSY6ctk6Esvxr0gRf4anQ0ONY1P5sdP3r
+         jHK6YFbDtx/hwn9wLjSWw7g15bB6+xWA2Pylk/xg=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <156267559466.6547.5675975755906539836.tglx@nanos.tec.linutronix.de>
-References: <156267559466.6547.5675975755906539836.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.LRH.2.21.1907090427070.13953@namei.org>
+References: <alpine.LRH.2.21.1907090427070.13953@namei.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <156267559466.6547.5675975755906539836.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-for-linus
-X-PR-Tracked-Commit-Id: 8ff80fbe7e9870078b1cc3c2cdd8f3f223b333a9
+X-PR-Tracked-Message-Id: <alpine.LRH.2.21.1907090427070.13953@namei.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git
+ next-lsm
+X-PR-Tracked-Commit-Id: c5eaab1d131d0a6272df7d55a971a67400d63f56
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b7d5c9239855f99762e8a547bea03a436e8a12e8
-Message-Id: <156270211030.21525.8116972067868395720.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 19:55:10 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
+X-PR-Merge-Commit-Id: 9d22167f34305280c5dd57a74c21651da3c23015
+Message-Id: <156270210912.21525.4158654088652904074.pr-tracker-bot@kernel.org>
+Date:   Tue, 09 Jul 2019 19:55:09 +0000
+To:     James Morris <jmorris@namei.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 09 Jul 2019 12:33:14 -0000:
+The pull request you sent on Tue, 9 Jul 2019 04:32:39 -0700 (PDT):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-lsm
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b7d5c9239855f99762e8a547bea03a436e8a12e8
+https://git.kernel.org/torvalds/c/9d22167f34305280c5dd57a74c21651da3c23015
 
 Thank you!
 
