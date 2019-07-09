@@ -2,94 +2,140 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422A0C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA72C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165282073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562700396;
-	bh=FNQmgvFw4Aq6fUys5cigBZac5Fyb6mjPiTDli0HhRL4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=a8RFR+dVXurE2PKgD6GBTu6d53HEmkqD0sXROpXZRsZF/mRbP5gchKTquB8Oct7eb
-	 Z0KS9+ch44AWwhw6NPd58clYNfcRPGC/peRiv/7CY8bffEfMKOUP+STxdNA0/FH+aO
-	 3GWqcpNOiZPeRR5nhpFJsnN/nndCQ53e+rjftHMY=
+	by mail.kernel.org (Postfix) with ESMTP id 8E07A2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:27:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="vA9eHWFF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfGIT0f (ORCPT
+        id S1728673AbfGIT1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:26:35 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34148 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfGIT0e (ORCPT
+        Tue, 9 Jul 2019 15:27:10 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42541 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbfGIT1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 15:26:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so454614iot.1;
-        Tue, 09 Jul 2019 12:26:34 -0700 (PDT)
+        Tue, 9 Jul 2019 15:27:10 -0400
+Received: by mail-io1-f67.google.com with SMTP id u19so45621978ior.9
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 12:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=T97Y7Xhc+iNinb7J95m1ClDnpftj8xDW9+inLk5U/ys=;
+        b=vA9eHWFFKZzn9UHXFg38aVO/i848nLoffBQU9YEjFhMbM7Nezm1bh2liAketQATXM9
+         oFVv5w54Ln9LfK3riZFBO+0ULgKfV2bp6BoFjTeufJdUOv7ch7ndYnhKP1QrX2FnW2GG
+         HlcJeWJjtqrZeznsnxFdH/NXF1ml7owpMNnkMK81W23wPNlFQ77YiS3//QEtdH6iQLjp
+         Yfc5aU2WKPjXfW04uYI2oZXmyq8VD5ekXN7e9x2p1PR539ix1WNM1DYNiPtrkvb9sQUo
+         p8BIFuiCa83cCe2g+XKHFU7/79D2XUs/Ducv1bITj8cS0OeAmKB/Akfm5ejqQEUBcmiL
+         VeQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YJCxWDqrIACeyw572XUN88X748QX9Vah3vz0WR7ceS0=;
-        b=YCpxB+sehO4NnSiV+g6W2Xa1MMwpIoZVq4FwBkp5z+xJL6Zpqqvnvgf8JkCc5Ir2+4
-         6+Kdo5oY++mF2hqWIZJKiB3YgV3qlMZP5IwaQXpePNtKhCg1H8waZrxzEzQVB21xz4sX
-         wx9dfDY+V/TIH4jsTmpj+KFKLwagRI8f2oxd8L/uQwuEEjWIrUJMas3MIHDlIKD4t2Jl
-         LlgGwdVednr2sStHoPAxe76UzOLfdtwUGw0ZYDnoOo2MjA0RBFn/FcVELjdOV15xGWqk
-         cqUPrEtqnl8MCREIJjcXMP4lG/Xaf8nQ1ma3hlAZoi6qvmbVrxGYag1DzAELMfNoSrDi
-         yIbA==
-X-Gm-Message-State: APjAAAWhsSV3b3jMrtJa2tp7f80aX6xuTE46q/n5LnryDJfHRTv2v02Y
-        g8IHB69hKdeE99ZAfo4uu5EHrCF1CQ==
-X-Google-Smtp-Source: APXvYqzFQYn+xq0I9wKEnggnMxeBx0XK0qbhuePWj72qrLE7hJHFol3dpjQxB5aYLpvyr7Hg82Dl9w==
-X-Received: by 2002:a05:6638:3d2:: with SMTP id r18mr30146201jaq.13.1562700393681;
-        Tue, 09 Jul 2019 12:26:33 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.251])
-        by smtp.googlemail.com with ESMTPSA id c17sm18671708ioo.82.2019.07.09.12.26.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 12:26:33 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-spi@vger.kernel.org
-Subject: [PATCH] spi: dt-bindings: spi-controller: remove unnecessary 'maxItems: 1' from reg
-Date:   Tue,  9 Jul 2019 13:26:31 -0600
-Message-Id: <20190709192631.16394-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=T97Y7Xhc+iNinb7J95m1ClDnpftj8xDW9+inLk5U/ys=;
+        b=OzMMg8w6mjnQH+HgvthmWVfkYf9jZQaHwJoR0z/gwGoUsULcux4Hc0ry8ul86ISvvK
+         Cwms9gt6dyxAhoGQZep/6nPcmTve1TI6ssyKOD/M/EgmTjtzvGii4w3yiapVf8bc61Uz
+         tj2edp2CFNCclRAU53DEvq0Z9xKRsxmNSJ4GZhpxtO7kh6D2olaaKvXd6YBwQR99giZt
+         LP2pPyzrdgCN4Xm0wFnvDrtpH0UwDSnRD/Cj4anpKKQpU6H2auOBuJgrYdep3LT4zeIU
+         aUCza0ajczb3OSVHGbzhRNv7acKP++thDqwH+coAZvYr8PlzSSsjWJ91Dmyen/chVyAR
+         PwTg==
+X-Gm-Message-State: APjAAAWabbRBbtiKVctfwUpRG7yBA6KhU1+AzFtbRn0oTOLSFiSXFatb
+        U4u7lcAFyFw8Bn51uaIHMx79/1369AxLBNQ1A49Avw==
+X-Google-Smtp-Source: APXvYqxV7yiLjk3v4LoPbcmdRk8c+zTn6LbS+P4RQ9YJ9CNx6wJD13fR3jqidFhcTLiOP8moLpZ9fZSElhLLLP/iTxA=
+X-Received: by 2002:a5e:a712:: with SMTP id b18mr26557129iod.220.1562700429190;
+ Tue, 09 Jul 2019 12:27:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190528154601.7597-1-brgl@bgdev.pl> <CAMuHMdV=eVJKVENkLUi1pj7MY8RGwUGZEt=MG4fdfvToZZquNQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdV=eVJKVENkLUi1pj7MY8RGwUGZEt=MG4fdfvToZZquNQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 9 Jul 2019 21:26:58 +0200
+Message-ID: <CAMRc=Mf0--Yc+S_EEiFxSXbip7JX3y8Qz1fsxFPTUt_fR6dOTg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: em: use the managed version of gpiochip_add_data()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mixing array constraints like 'maxItems' and string or integer value
-constraints like 'minimum' don't make sense. Also, with only value
-constraints, it is implied we have a single value. So lets remove
-'maxItems: 1'.
+wt., 9 lip 2019 o 20:49 Geert Uytterhoeven <geert@linux-m68k.org> napisa=C5=
+=82(a):
+>
+> Hi Bartosz,
+>
+> On Tue, May 28, 2019 at 5:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Use the managed variant of gpiochip_add_data() and remove the call to
+> > gpiochip_remove().
+> >
+> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  drivers/gpio/gpio-em.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+> > index 40f8c38bec1c..299101d25fa8 100644
+> > --- a/drivers/gpio/gpio-em.c
+> > +++ b/drivers/gpio/gpio-em.c
+> > @@ -359,7 +359,7 @@ static int em_gio_probe(struct platform_device *pde=
+v)
+> >                 goto err1;
+> >         }
+> >
+> > -       ret =3D gpiochip_add_data(gpio_chip, p);
+> > +       ret =3D devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
+> >         if (ret) {
+> >                 dev_err(&pdev->dev, "failed to add GPIO controller\n");
+> >                 goto err1;
+> > @@ -376,8 +376,6 @@ static int em_gio_remove(struct platform_device *pd=
+ev)
+> >  {
+> >         struct em_gio_priv *p =3D platform_get_drvdata(pdev);
+> >
+> > -       gpiochip_remove(&p->gpio_chip);
+> > -
+> >         irq_domain_remove(p->irq_domain);
+>
+> On a second thought, is it safe to call irq_domain_remove() before
+> gpiochip_remove() (which calls gpiochip_irqchip_remove())?
+>
 
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/spi/spi-controller.yaml | 1 -
- 1 file changed, 1 deletion(-)
+Good call. I think the most elegant solution here would be to use
+devm_add_action() to keep the ordering right. I'll send a follow-up
+tomorrow morning.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-index 876c0623f322..a02e2fe2bfb2 100644
---- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-@@ -73,7 +73,6 @@ patternProperties:
-           Compatible of the SPI device.
- 
-       reg:
--        maxItems: 1
-         minimum: 0
-         maximum: 256
-         description:
--- 
-2.20.1
+Bart
 
+> >         return 0;
+>
+> >  }
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
