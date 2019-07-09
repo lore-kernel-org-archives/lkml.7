@@ -2,69 +2,72 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA35C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66675C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3BB2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3941020665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="nsdWBt1+"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="fROPV6xg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfGISUT (ORCPT
+        id S1729027AbfGISUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:20:19 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41921 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbfGISUR (ORCPT
+        Tue, 9 Jul 2019 14:20:24 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44499 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfGISUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:20:17 -0400
-Received: by mail-qk1-f194.google.com with SMTP id v22so16753591qkj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:20:17 -0700 (PDT)
+        Tue, 9 Jul 2019 14:20:21 -0400
+Received: by mail-qt1-f193.google.com with SMTP id 44so18751964qtg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:20:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=07lbMtNvRAMyX/POjVIPF1YJUTpi61TvrSJ6roJeVPs=;
-        b=nsdWBt1+R1ve8tCsDIWPrNy0y/NCDmw+8vDsI/xQ0qqlV/ZxUzX4XqCrlGrImpvaxv
-         bpKrt+60Fa3kB29M/KXQjapzKaDStgaZ7nQXw/WldmvXgddhp8rPPpJae/df0oZGQy4h
-         gVHsFN7crraEJnzfrq/y9JWg5aTPEv1/kkAx1s6m3jHG5VIGRQWfIODhRs8AkBKyXXso
-         fX4ZYxnGYoaxXW254flFRzCTVyUMDsXyUQPsr7UTYZJ683KQ/nPgb2LwR0NlJgTrhleL
-         OVQ+4zEfOSArBal5dVyMakYw9h0xf4hFLt0LnHZ7Wi9shjUez3sbBFm0jzjbMZlB9NNl
-         0NCw==
+        bh=vxweX2U2+Z856CcsxOG088urab10u3d6VzbrdBwUe6o=;
+        b=fROPV6xgBSJhQ01nOcdaPocwDpq/tgqFMzKuQ1aRxe0BdHGYSbE7Mx44Vo+unqXPkG
+         2iQxFwNOSDAL+6xrRHgsE+5oOTpNUcaTtUnWzBQnoArvLe1SZxJuhHKRqH6oJXqWWaJp
+         mYmJUMNp0hMmxuR5+lUvmF10SjSgGCn+X92RBQXE9trtp4e1hWtwVG70nLYhqgZMEneU
+         8FmJGF1qVgPlKmCQFFhG0OpQiGa2Sk5FjgCfMZI5LZbu1a0BxKAkQuR29zt1kcT31VdG
+         IC8BDEXiFHBmdYydbK6a2ULNeXX78BJpyz62xQihfh1Y656wUkRhF7ksMuPF83a9UM3a
+         2t6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=07lbMtNvRAMyX/POjVIPF1YJUTpi61TvrSJ6roJeVPs=;
-        b=nu+GtEv59dX/0nHh9VdXrg7/6TEDH3Twl9VGunlmpm4TVtj6ZofDfJzc03QpT3pE0t
-         DevABdoxNVGejOHeEjSWuyOvWeMYun7vGkQZvU7xfLDYQM8q8Vv0i7yG0BxAjd+H9Bpa
-         Z9783eVq5VMPCGmO5kfOsrdSepFfBuit9IVBEetnCgeWxXWmPpPQi9f5WsP5W8AzghR3
-         beQr1eSjtEDp7z2euctuWrlOf5UiXeq5eMfuk+9IGAdHUjRhxGFuZsjLKC8LrwBZFXM+
-         RwoGgfagJLCwoQ4g1WzIkCAvS7js3C3m4mDGFzuJIzc0tCO/TWMghjEBZILknf/oznVU
-         PMug==
-X-Gm-Message-State: APjAAAVRThCBzc9lai2PmXb6wemr1Rfk9p4g6xP2dxN29RYraUvht/KY
-        YK7CUpWsuaaZDU1b59nr/XrNaw==
-X-Google-Smtp-Source: APXvYqwZyzZlJCfnfaRBNAPrTgjGG/pRCaQYSyhIHt8cn7HXaH8O6U0lFii9rAJ8o1Oxephvp24BSQ==
-X-Received: by 2002:a37:bf07:: with SMTP id p7mr19214845qkf.315.1562696416701;
-        Tue, 09 Jul 2019 11:20:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vxweX2U2+Z856CcsxOG088urab10u3d6VzbrdBwUe6o=;
+        b=hFhctdaHDtZwywQhgNTr+daKfbr4NzbnA3ejYV/NlmX2me2TJQjJ/WpARGde1i314W
+         ZBn9S/wknNjOb4mQtiQhZLJkBoyRbIZsPSolTbe0iSCXiy+rzXWrX/5miXNV5MGX9dvG
+         ADKPkqKGFNlVx6S74KieqzX1zn30Kqa/Iw5CxnalBrjepTc5c0SBFL/zwE3uzUCJE7DB
+         jjh8RPAV7kwZ+Hf5F6gVsaD1l/rPkHnIG5mKB/ouUmlGPy6eXXJgOmbJdrlw5UsPHYca
+         jegF2WafdxjxWpyiTDt5MOx8mP3mnbuFUSw2ST+goPnYRGtf+GWaeiPMyrIJ6lqIKGbK
+         p3NQ==
+X-Gm-Message-State: APjAAAVa3QYX9oIEJhn0o0o2UyUEROuFOBTYwTxP3IU/f34Fosa2UUVQ
+        BceUjvkZu2zzzAHxidjyfZBGcA==
+X-Google-Smtp-Source: APXvYqwpag+IBIQrGBDcCLRZVOWUUlgFjtMGgOzroSxhP3WwPBpgsirFrCOkxvY0XxfGhw6CZgULUQ==
+X-Received: by 2002:ac8:1106:: with SMTP id c6mr18604187qtj.332.1562696420496;
+        Tue, 09 Jul 2019 11:20:20 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id k123sm9113056qkf.13.2019.07.09.11.20.15
+        by smtp.gmail.com with ESMTPSA id k123sm9113056qkf.13.2019.07.09.11.20.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 11:20:15 -0700 (PDT)
+        Tue, 09 Jul 2019 11:20:19 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
         linux-kernel@vger.kernel.org, corbet@lwn.net,
         catalin.marinas@arm.com, will@kernel.org,
         linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [v2 0/5] arm64: allow to reserve memory for normal kexec kernel
-Date:   Tue,  9 Jul 2019 14:20:09 -0400
-Message-Id: <20190709182014.16052-1-pasha.tatashin@soleen.com>
+Subject: [v2 3/5] kexec: export common crashkernel/kexeckernel parser
+Date:   Tue,  9 Jul 2019 14:20:12 -0400
+Message-Id: <20190709182014.16052-4-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190709182014.16052-1-pasha.tatashin@soleen.com>
+References: <20190709182014.16052-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,74 +75,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changelog
-v1 - v2
-	- No changes to patches, addressed suggestion from James Morse
-	  to add "arm64" tag to cover letter.
-	- Improved cover letter information based on discussion.
+To reserve memory for normal kexec reboot, the new parameter:
+kexeckernel=size[KMG][@offset[KMG]] is used. Its syntax is the
+same as craskernel=, therefore they can use the same function to
+parse parameter settings.
 
-Currently, it is only allowed to reserve memory for crash kernel, because
-it is a requirement in order to be able to boot into crash kernel without
-touching memory of crashed kernel is to have memory reserved.
+Rename: __parse_crashkernel() to parse_crash_or_kexec_kernel(), and
+make it public.
 
-The second benefit for having memory reserved for kexec kernel is
-that it does not require a relocation after segments are loaded into
-memory.
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ .../admin-guide/kernel-parameters.txt         |  7 +++++
+ include/linux/crash_core.h                    |  6 +++++
+ kernel/crash_core.c                           | 27 ++++++++++---------
+ 3 files changed, 28 insertions(+), 12 deletions(-)
 
-If kexec functionality is used for a fast system update, with a minimal
-downtime, the relocation of kernel + initramfs might take a significant
-portion of reboot.
-
-In fact, on the machine that we are using, that has ARM64 processor
-it takes 0.35s to relocate during kexec, thus taking 52% of kernel reboot
-time:
-
-kernel shutdown	0.03s
-relocation	0.35s
-kernel startup	0.29s
-
-Image: 13M and initramfs is 24M. If initramfs increases, the relocation
-time increases proportionally.
-
-While, it is possible to add 'kexeckernel=' parameters support to other
-architectures by modifying reserve_crashkernel(), in this series this is
-done for arm64 only.
-
-The reason it is so slow on arm64 to relocate kernel is because the code
-that does relocation does this with MMU disabled, and thus D-Cache and
-I-Cache must also be disabled.
-
-Alternative solution is more complicated: Setup a temporary page table
-for relocation_routine and also for code from cpu_soft_restart. Perform
-relocation with MMU enabled, do cpu_soft_restart where MMU and caching
-are disabled, jump to purgatory. A similar approach was suggested for
-purgatory and was rejected due to making purgatory too complicated.
-On, the other hand hibernate does something similar already, but there
-MMU never needs to be disabled, and also by the time machine_kexec()
-is called, allocator is not available, as we can't fail to do reboot,
-so page table must be pre-allocated during kernel load time.
-
-Note: the above time is relocation time only. Purgatory usually also
-computes checksum, but that is skipped, because --no-check is used when
-kernel image is loaded via kexec.
-
-Pavel Tatashin (5):
-  kexec: quiet down kexec reboot
-  kexec: add resource for normal kexec region
-  kexec: export common crashkernel/kexeckernel parser
-  kexec: use reserved memory for normal kexec reboot
-  arm64, kexec: reserve kexeckernel region
-
- .../admin-guide/kernel-parameters.txt         |  7 ++
- arch/arm64/kernel/setup.c                     |  5 ++
- arch/arm64/mm/init.c                          | 83 ++++++++++++-------
- include/linux/crash_core.h                    |  6 ++
- include/linux/ioport.h                        |  1 +
- include/linux/kexec.h                         |  6 +-
- kernel/crash_core.c                           | 27 +++---
- kernel/kexec_core.c                           | 50 +++++++----
- 8 files changed, 127 insertions(+), 58 deletions(-)
-
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 5c7a0f5b0a2f..0f5ce665c7f5 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -739,6 +739,13 @@
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
+ 
++	kexeckernel=size[KMG][@offset[KMG]]
++			[KNL] Using kexec, Linux can reboot to a new kernel.
++			This parameter reserves the physical memory region
++			[offset, offset + size] for that kernel. If '@offset' is
++			omitted, then a suitable offset is selected
++			automatically.
++
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
+ 
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 525510a9f965..e90789ff0bec 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -74,5 +74,11 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
+ int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
++int parse_crash_or_kexec_kernel(char *cmdline,
++				unsigned long long system_ram,
++				unsigned long long *crash_size,
++				unsigned long long *crash_base,
++				const char *name,
++				const char *suffix);
+ 
+ #endif /* LINUX_CRASH_CORE_H */
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 9f1557b98468..11e0f9837a32 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -224,12 +224,12 @@ static __init char *get_last_crashkernel(char *cmdline,
+ 	return ck_cmdline;
+ }
+ 
+-static int __init __parse_crashkernel(char *cmdline,
+-			     unsigned long long system_ram,
+-			     unsigned long long *crash_size,
+-			     unsigned long long *crash_base,
+-			     const char *name,
+-			     const char *suffix)
++int __init parse_crash_or_kexec_kernel(char *cmdline,
++				       unsigned long long system_ram,
++				       unsigned long long *crash_size,
++				       unsigned long long *crash_base,
++				       const char *name,
++				       const char *suffix)
+ {
+ 	char	*first_colon, *first_space;
+ 	char	*ck_cmdline;
+@@ -270,8 +270,9 @@ int __init parse_crashkernel(char *cmdline,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
+ {
+-	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
+-					"crashkernel=", NULL);
++	return parse_crash_or_kexec_kernel(cmdline, system_ram, crash_size,
++					   crash_base, "crashkernel=",
++					   NULL);
+ }
+ 
+ int __init parse_crashkernel_high(char *cmdline,
+@@ -279,8 +280,9 @@ int __init parse_crashkernel_high(char *cmdline,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
+ {
+-	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
+-				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
++	return parse_crash_or_kexec_kernel(cmdline, system_ram, crash_size,
++					   crash_base, "crashkernel=",
++					   suffix_tbl[SUFFIX_HIGH]);
+ }
+ 
+ int __init parse_crashkernel_low(char *cmdline,
+@@ -288,8 +290,9 @@ int __init parse_crashkernel_low(char *cmdline,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
+ {
+-	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
+-				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
++	return parse_crash_or_kexec_kernel(cmdline, system_ram, crash_size,
++					   crash_base, "crashkernel=",
++					   suffix_tbl[SUFFIX_LOW]);
+ }
+ 
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
 -- 
 2.22.0
 
