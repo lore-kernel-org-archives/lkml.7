@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA818C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68750C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DD420665
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AF020656
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562697179;
-	bh=hG55PhgOHy3ikEgahhbxuo3nTT8T+RySmL74y+x7wmY=;
+	s=default; t=1562697184;
+	bh=+bbI8CCw/BZYZ26lYZsA8qZMGed2nsZC/c+U/8yw4wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZiD54fGuaPJ81GnnWsW3ryn+4iLjgcLzBnhPaz0wU7r7vfsQNxCJ2Pnnv/Zv6CrAs
-	 qR9vx4e6MJ/p8yc16T91zr7rlZRWAfPNSVhPv06O4Njs5w2KywT4PcaWsj806smhCY
-	 WH63vLdvu3RHgvPmEH6+tyMAfgiNcUQfslkF5LC8=
+	b=RnEBBCCZADh9REkBgC+dhru7LJXpC5f8qqYCwgnOR5qKAC/4NICo6k41ea6UXyei9
+	 HqYwxul/+m4JEszqwUdPRDtnA+hS10eP6MKzpGszDsGi2kGXSeo18xvHueNVeChdCr
+	 la4gQ3hPjca3qJMVOfGJt4ImGItAsaj5+5Vb57Qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbfGISc6 (ORCPT
+        id S1729267AbfGISdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 14:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfGISc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:32:57 -0400
+        id S1726218AbfGISdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:33:01 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 118C5216C4;
-        Tue,  9 Jul 2019 18:32:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23B3F21537;
+        Tue,  9 Jul 2019 18:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562697176;
-        bh=hG55PhgOHy3ikEgahhbxuo3nTT8T+RySmL74y+x7wmY=;
+        s=default; t=1562697180;
+        bh=+bbI8CCw/BZYZ26lYZsA8qZMGed2nsZC/c+U/8yw4wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPt0ApImb9gtCJ68fKUgahoIZcnJqkQsJV3ivaDzaPB7Blwp8dKEcPDCP4976iudJ
-         p8CxI0JywoKvgR+VhT/a/+fKzigA89pCBa4mhCNZsMSCYM73GnPhrq6yCzsqIZEX8a
-         Hy4UDbb53IsWrLJrb8sRpFixEzER0VscG2Uibb0A=
+        b=vQFQ8K/uCqqYlWFgI5m3qA/qlrRdoKlcUoBa9ygb/k0+/gPnE1OQJTp53baRQHHUd
+         h94N2fnSp0kmV/1csS3Ih+0CSOGkBgtYDtZa4Gpb0CLmViVOE5m2a9/A387X5Br+DV
+         vyGOnZP3qyBd9xxk+Of4Xacapnj+gSyy+wSRb9qw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 17/25] perf parse-events: Remove unused variable 'i'
-Date:   Tue,  9 Jul 2019 15:31:18 -0300
-Message-Id: <20190709183126.30257-18-acme@kernel.org>
+Subject: [PATCH 18/25] perf parse-events: Remove unused variable: error
+Date:   Tue,  9 Jul 2019 15:31:19 -0300
+Message-Id: <20190709183126.30257-19-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190709183126.30257-1-acme@kernel.org>
 References: <20190709183126.30257-1-acme@kernel.org>
@@ -66,8 +66,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Luke Mujica <lukemujica@google.com>
 
-Remove the 'int i' because it is declared but not used in parse-events.y
-or in the generated parse-events.c.
+Remove the 'error' variable because it is declared but not used in
+parse-events.y or in the generated parse-events.c.
 
 Signed-off-by: Luke Mujica <lukemujica@google.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -76,24 +76,24 @@ Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190703222509.109616-1-lukemujica@google.com
+Link: http://lkml.kernel.org/r/20190703222509.109616-2-lukemujica@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
  tools/perf/util/parse-events.y | 1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 6ad8d4914969..172dbb73941f 100644
+index 172dbb73941f..f1c36ed1cf36 100644
 --- a/tools/perf/util/parse-events.y
 +++ b/tools/perf/util/parse-events.y
-@@ -626,7 +626,6 @@ PE_TERM
- PE_NAME array '=' PE_NAME
+@@ -480,7 +480,6 @@ event_bpf_file:
+ PE_BPF_OBJECT opt_event_config
  {
- 	struct parse_events_term *term;
--	int i;
+ 	struct parse_events_state *parse_state = _parse_state;
+-	struct parse_events_error *error = parse_state->error;
+ 	struct list_head *list;
  
- 	ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER,
- 					$1, $4, &@1, &@4));
+ 	ALLOC_LIST(list);
 -- 
 2.21.0
 
