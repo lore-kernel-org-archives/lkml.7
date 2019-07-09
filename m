@@ -2,82 +2,98 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1112C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB6FC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F30216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E39A21707
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfGIDSl (ORCPT
+        id S1727500AbfGIDTS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:18:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:27127 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfGIDSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 23:18:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 20:18:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
-   d="scan'208";a="156048700"
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by orsmga007.jf.intel.com with ESMTP; 08 Jul 2019 20:18:37 -0700
-Message-ID: <5D2408D7.3000002@intel.com>
-Date:   Tue, 09 Jul 2019 11:24:07 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+        Mon, 8 Jul 2019 23:19:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:32831 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfGIDTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 23:19:16 -0400
+Received: from mail-wr1-f71.google.com ([209.85.221.71])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <chia-lin.kao@canonical.com>)
+        id 1hkgew-00059K-BR
+        for linux-kernel@vger.kernel.org; Tue, 09 Jul 2019 03:19:14 +0000
+Received: by mail-wr1-f71.google.com with SMTP id q2so9013551wrr.18
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 20:19:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1QqfQjHI6M6xLQMvNpyZB6ztRCUN973WhV6VSHgEn54=;
+        b=p3wj3TENjWnBUUpKN+iKVsXj8Xu2Iu0S5jzUU79yBSX+WS0E5dhLEQs/ZTaH2OHmpU
+         BLwml/dGYSVDqLObc4LLICfXFszodQ1tl2SeTsWfR43yYTnTrdsy+NWRYNvlLGX3EIDe
+         zEc82FEI3wt2y3CxS+HaeCa5t2RLYDKL5VdGfyGOKrua1UUZymALh0jNeRQhAwBLNOve
+         TLkCcVsNc7vvNiOf41mUvsWyUcojPcAN0gUWx9G7Aeh79UqH64JJaNg6dBNGSQaCQfnB
+         ueTgtSbVQ6JV98SvvM36v76pxWTWHOJ3uJw2hpgahqPtUG3FYWrxGFu3V7rtK6WEgqCx
+         0rgA==
+X-Gm-Message-State: APjAAAUYQDakpxorYSlVGpk3yvRLQe+HIZYOJpLNsrBYP6gN8NEgLsmT
+        kRSYJd7/l0nSwZKEdH6h0nBETtuoMUJ8B67sRDSdipfIun5gVXQGfaO0AsOg56TrdUVOT9cxkiS
+        WxgLeUptwmRLE+/j4oseyB1NS3RIW9b5H76KYBP9dpWZnur9UlBTOFkkO+Q==
+X-Received: by 2002:a1c:6a11:: with SMTP id f17mr18052544wmc.110.1562642353853;
+        Mon, 08 Jul 2019 20:19:13 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzeoDMt0MH/23K6Nq80Yvr7C5VC5zRBuvbMf4w56eRexL9FbXcS7tJELrmIiEFI5hpNDUj8erQcw7cihFoBgcA=
+X-Received: by 2002:a1c:6a11:: with SMTP id f17mr18052532wmc.110.1562642353629;
+ Mon, 08 Jul 2019 20:19:13 -0700 (PDT)
 MIME-Version: 1.0
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
-        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
-        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
-Subject: Re: [PATCH v7 12/12] KVM/VMX/vPMU: support to report GLOBAL_STATUS_LBRS_FROZEN
-References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com> <1562548999-37095-13-git-send-email-wei.w.wang@intel.com> <20190708150909.GP3402@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190708150909.GP3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20190708063751.16234-1-acelan.kao@canonical.com> <53f82481-ed41-abc5-2e4e-ac1026617219@gmail.com>
+In-Reply-To: <53f82481-ed41-abc5-2e4e-ac1026617219@gmail.com>
+From:   AceLan Kao <acelan.kao@canonical.com>
+Date:   Tue, 9 Jul 2019 11:19:01 +0800
+Message-ID: <CAFv23Q=mA9t0j2F4fKdOkgG6sao0m7rR_9-d9OvAmSerZf_=ew@mail.gmail.com>
+Subject: Re: [PATCH] r8169: add enable_aspm parameter
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08/2019 11:09 PM, Peter Zijlstra wrote:
-> On Mon, Jul 08, 2019 at 09:23:19AM +0800, Wei Wang wrote:
->> This patch enables the LBR related features in Arch v4 in advance,
->> though the current vPMU only has v2 support. Other arch v4 related
->> support will be enabled later in another series.
->>
->> Arch v4 supports streamlined Freeze_LBR_on_PMI. According to the SDM,
->> the LBR_FRZ bit is set to global status when debugctl.freeze_lbr_on_pmi
->> has been set and a PMI is generated. The CTR_FRZ bit is set when
->> debugctl.freeze_perfmon_on_pmi is set and a PMI is generated.
-> (that's still a misnomer; it is: freeze_perfmon_on_overflow)
-
-OK. (but that was directly copied from the sdm 18.2.4.1)
-
-
-> Why?
+Heiner Kallweit <hkallweit1@gmail.com> 於 2019年7月9日 週二 上午2:27寫道：
 >
-> Who uses that v4 crud?
+> On 08.07.2019 08:37, AceLan Kao wrote:
+> > We have many commits in the driver which enable and then disable ASPM
+> > function over and over again.
+> >    commit b75bb8a5b755 ("r8169: disable ASPM again")
+> >    commit 0866cd15029b ("r8169: enable ASPM on RTL8106E")
+> >    commit 94235460f9ea ("r8169: Align ASPM/CLKREQ setting function with vendor driver")
+> >    commit aa1e7d2c31ef ("r8169: enable ASPM on RTL8168E-VL")
+> >    commit f37658da21aa ("r8169: align ASPM entry latency setting with vendor driver")
+> >    commit a99790bf5c7f ("r8169: Reinstate ASPM Support")
+> >    commit 671646c151d4 ("r8169: Don't disable ASPM in the driver")
+> >    commit 4521e1a94279 ("Revert "r8169: enable internal ASPM and clock request settings".")
+> >    commit d64ec841517a ("r8169: enable internal ASPM and clock request settings")
+> >
+> > This function is very important for production, and if we can't come out
+> > a solution to make both happy, I'd suggest we add a parameter in the
+> > driver to toggle it.
+> >
+> The usage of a module parameter to control ASPM is discouraged.
+> There have been more such attempts in the past that have been declined.
+>
+> Pending with the PCI maintainers is a series adding ASPM control
+> via sysfs, see here: https://www.spinics.net/lists/linux-pci/msg83228.html
+Cool, I'll try your patches and reply on that thread.
 
-I saw the native perf driver has been updated to v4.
-After the vPMU gets updated to v4, the guest perf would use that.
-
-If you prefer to hold on this patch until vPMU v4 support,
-we could do that as well.
-
-
-> It's broken. It looses events between overflow
-> and PMI.
-
-Do you mean it's a v4 hardware issue?
-
-Best,
-Wei
+>
+> Also more details than just stating "it's important for production"
+> would have been appreciated in the commit message, e.g. which
+> power-savings you can achieve with ASPM on which systems.
+I should use more specific wordings rather than "important for
+production", thanks.
