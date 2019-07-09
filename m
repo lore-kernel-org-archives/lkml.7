@@ -2,77 +2,177 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15C2C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50618C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D5E21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289C321537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:04:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FqERsOeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbfGIHCi (ORCPT
+        id S1726284AbfGIHEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:02:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2191 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725818AbfGIHCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:02:38 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 127BF232B05D5409DAFF;
-        Tue,  9 Jul 2019 15:02:34 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
- 15:02:26 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <pablo@netfilter.org>,
-        <kadlec@netfilter.org>, <fw@strlen.de>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <wenxu@ucloud.cn>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <coreteam@netfilter.org>,
-        <netfilter-devel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] netfilter: nft_meta: Fix build error
-Date:   Tue, 9 Jul 2019 15:01:26 +0800
-Message-ID: <20190709070126.29972-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 9 Jul 2019 03:04:00 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43034 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfGIHEA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 03:04:00 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c19so7001362lfm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8chQ+xCDfWyHiMLd66byg5KO/gfXH9gGO2RNNVTCalM=;
+        b=FqERsOeKsbYL1hDU92erKcsqSB1n/vAR7oF6mwlHmjMymElPV/dSjJn/XSlHSfZEwl
+         FiJa2Qy+MbE0ZcRhYzxULeOxF+5amdUoNaUDvzBiG1ygbeOoXtJt4r+y4dSA6n3rKTtX
+         ahxZEns92uGy9H/iigIR/zg4sIsdA3LKqGbPUloh86uxiIRheCYx1r9BDkztOgbK6+j1
+         drSe44wrIRt1WYt5yoAQLhVI2ZpPP58F+Mf5uIrl/Ie3prj3FyR9nsR4qHG+KzjLnak1
+         Ts4jHuNI5+q0idxZC1kHvKIXskrUQe/brL4cELfjcUGeJU9GsDJ47tE9mooBwA32FKaG
+         0b7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8chQ+xCDfWyHiMLd66byg5KO/gfXH9gGO2RNNVTCalM=;
+        b=VcZF6klJJppK3PJcnsjo3ljMz2eW9b63vnq3NRaEdMpR13NKjFb9Wns2V4otPHab8Z
+         B/IdjaKbdGT6WryXAIgfK2JtyFdxdYiJqdef5u1AvLMvfud+upTpSgLBaV4FJfsIKJuE
+         XuShO0FhKFxNXwty0HuV1np+x1Xxvvgm0Rq/0FVP0nkV6iQHpPWmCFD7gUxurN3iTF7z
+         wmEBP8bcOeI3o09x6Ccfq61eV32+4PXWr/xsQmuZn6vYhHKcgajGVfACmkT6yxd4mzze
+         ln/i/vvMREIzdvs7ODlUYJRYmWOj7rruCJjy2PJ5stYeVcnpx2IwMMi50TnjEmclOXfN
+         eBtA==
+X-Gm-Message-State: APjAAAXoTjuwTTqY5U1p9cG/b4xXXb+0vO2DPAQ3JTV4i+mbCNj9LX5o
+        wBgZXrKK2JSn/STc2KOGUILFhA==
+X-Google-Smtp-Source: APXvYqzgNmzW9LCOXb+v0waZuOzOFRSv6192P+bRM1wg2dgVLC7ByJM1yDax+2RlKtrpd1p4VkFDMA==
+X-Received: by 2002:ac2:5609:: with SMTP id v9mr10278057lfd.27.1562655838100;
+        Tue, 09 Jul 2019 00:03:58 -0700 (PDT)
+Received: from jax (h-84-105.A175.priv.bahnhof.se. [79.136.84.105])
+        by smtp.gmail.com with ESMTPSA id t23sm4092662ljd.98.2019.07.09.00.03.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Jul 2019 00:03:57 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 09:03:55 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, corbet@lwn.net,
+        dhowells@redhat.com, jejb@linux.ibm.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, jmorris@namei.org,
+        serge@hallyn.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        tee-dev@lists.linaro.org
+Subject: Re: [RFC 3/7] tee: add private login method for kernel clients
+Message-ID: <20190709070354.GA5791@jax>
+References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
+ <1560421833-27414-4-git-send-email-sumit.garg@linaro.org>
+ <20190708153908.GA28253@jax>
+ <CAFA6WYNzs=RErreWaa5BmF-P03Vf9nzQjvY_JpMckw87k9z12w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYNzs=RErreWaa5BmF-P03Vf9nzQjvY_JpMckw87k9z12w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If NFT_BRIDGE_META is y and NF_TABLES is m, building fails:
+On Tue, Jul 09, 2019 at 11:26:19AM +0530, Sumit Garg wrote:
+> Thanks Jens for your comments.
+> 
+> On Mon, 8 Jul 2019 at 21:09, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+> >
+> > Hi Sumit,
+> >
+> > On Thu, Jun 13, 2019 at 04:00:29PM +0530, Sumit Garg wrote:
+> > > There are use-cases where user-space shouldn't be allowed to communicate
+> > > directly with a TEE device which is dedicated to provide a specific
+> > > service for a kernel client. So add a private login method for kernel
+> > > clients and disallow user-space to open-session using this login method.
+> > >
+> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > ---
+> > >  drivers/tee/tee_core.c   | 6 ++++++
+> > >  include/uapi/linux/tee.h | 2 ++
+> > >  2 files changed, 8 insertions(+)
+> > >
+> > > diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> > > index 0f16d9f..4581bd1 100644
+> > > --- a/drivers/tee/tee_core.c
+> > > +++ b/drivers/tee/tee_core.c
+> > > @@ -334,6 +334,12 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
+> > >                       goto out;
+> > >       }
+> > >
+> > > +     if (arg.clnt_login == TEE_IOCTL_LOGIN_REE_KERNEL) {
+> > TEE_IOCTL_LOGIN_REE_KERNEL is defined as 0x80000000 which is in the
+> > range specified and implementation defined by the GP spec. I wonder if
+> > we shouldn't filter the entire implementation defined range instead of
+> > just this value.
+> 
+> Agree. Will rather check for entire implementation defined range:
+> 0x80000000 - 0xFFFFFFFF.
+> 
+> >
+> > > +             pr_err("login method not allowed for user-space client\n");
+> > pr_debug(), if it's needed at all.
+> >
+> 
+> Ok will use pr_debug() instead.
+> 
+> > > +             rc = -EPERM;
+> > > +             goto out;
+> > > +     }
+> > > +
+> > >       rc = ctx->teedev->desc->ops->open_session(ctx, &arg, params);
+> > >       if (rc)
+> > >               goto out;
+> > > diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+> > > index 4b9eb06..f33c69c 100644
+> > > --- a/include/uapi/linux/tee.h
+> > > +++ b/include/uapi/linux/tee.h
+> > > @@ -172,6 +172,8 @@ struct tee_ioctl_buf_data {
+> > >  #define TEE_IOCTL_LOGIN_APPLICATION          4
+> > >  #define TEE_IOCTL_LOGIN_USER_APPLICATION     5
+> > >  #define TEE_IOCTL_LOGIN_GROUP_APPLICATION    6
+> > > +/* Private login method for REE kernel clients */
+> > It's worth noting that this is filtered by the TEE framework, compared
+> > to everything else which is treated opaquely.
+> >
+> 
+> IIUC, you are referring to login filter in optee_os. Change to prevent
+> filter for this login method is part of this PR [1].
+> 
+> [1] https://github.com/OP-TEE/optee_os/pull/3082
 
-net/bridge/netfilter/nft_meta_bridge.o: In function `nft_meta_bridge_get_init':
-nft_meta_bridge.c:(.text+0xd0): undefined reference to `nft_parse_register'
-nft_meta_bridge.c:(.text+0xec): undefined reference to `nft_validate_register_store'
+No, I was referring to the changes in tee_ioctl_open_session() above.
+It's relevant for user space to know since it will be prevented from
+using that range of login identifiers. This will restrict the user space
+API, but I think the risk of breakage is minimal as OP-TEE is the only
+in-tree driver registering in the TEE framework. I'm not aware of any
+out-of-tree drivers registering.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 30e103fe24de ("netfilter: nft_meta: move bridge meta keys into nft_meta_bridge")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/bridge/netfilter/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
+Jens
 
-diff --git a/net/bridge/netfilter/Kconfig b/net/bridge/netfilter/Kconfig
-index fbc7085..ca3214f 100644
---- a/net/bridge/netfilter/Kconfig
-+++ b/net/bridge/netfilter/Kconfig
-@@ -12,6 +12,7 @@ if NF_TABLES_BRIDGE
- 
- config NFT_BRIDGE_META
- 	tristate "Netfilter nf_table bridge meta support"
-+	depends on NF_TABLES
- 	help
- 	  Add support for bridge dedicated meta key.
- 
--- 
-2.7.4
-
-
+> 
+> -Sumit
+> 
+> > > +#define TEE_IOCTL_LOGIN_REE_KERNEL           0x80000000
+> > >
+> > >  /**
+> > >   * struct tee_ioctl_param - parameter
+> > > --
+> > > 2.7.4
+> > >
+> >
+> > Thanks,
+> > Jens
