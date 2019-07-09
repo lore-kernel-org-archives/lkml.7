@@ -2,79 +2,174 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C81BC73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EDDC73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06966214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C142087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562704005;
+	bh=Q8lJunzvHA1hNJvcYCrAGVr7+FzwmbTZShJ9CiwF6vc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=FBFZTT6INYI8qW2ciKi4QVs3JdvhxVraiwQUkvC7yw7+9u6xfSe/53vIHf/n5bhk3
+	 Jv3V0aeQLvb+ba3dVXwXrnr4z5lK6w2mmt0BPU5NGmo498b+f64cu9y+sUOuoFY5L5
+	 +LjoWYfIABzjlR8PxD8LdCU2nBgR9JtUHr4961bM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfGIUWE (ORCPT
+        id S1729705AbfGIU0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:22:04 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:36340 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729545AbfGIUWB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:22:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id k21so191962ioj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 13:22:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=gNp6IGzQMQGefwcCXwihte4j+oJMtUnlDKJXuaM+cUk=;
-        b=tSxU67gJy48F/TCxJdR2QxVnoy7xUImIBkrejze5jOv3EtHLKsIhQyXi6Hzcrcur9g
-         trYxybm8ThTgk5c5e4wAZQJMXFx/JUNQQoOcob0joQa5kcn6ZKITIWGQb4hw+TvTMbLL
-         ldCynwzSNs+m9A34TJ3WEfOlH40JvcTuOLQ36DLDs7Im7XXgUpCmPSEqLMLfRq9OZQ9x
-         2nGGsXpc+K+hMWGoxVccr1CdCh6DVj4sD+CmO/aY3YQ6etbuFYRs78mfWXZQ+4rb7gax
-         ZEr+h7MaKA8dL1LwgLIZL48cDvNrHaEXgvcj2H7BmUy5voOfv5gszh80lAohDbNA4FDa
-         p8Jw==
-X-Gm-Message-State: APjAAAUg8vJcsn8+G+twpvbwfd1Fiub673FIXx1AjingjGvjX73SHqi8
-        Yf5e+lYxVSbGhf1QKziubvht3IVekvNsjMUie/Jh2bE4p0M+
-X-Google-Smtp-Source: APXvYqwFgwJAcUPiL5NbtuCyvSACDdRE25Si64mrNjVzIA9vXUAmOPuBWXTLl+KgXo65r6gDEueAVIzpruHAb52RcugMcVs1Xph6
+        Tue, 9 Jul 2019 16:26:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729532AbfGIU0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:26:44 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B7742087F;
+        Tue,  9 Jul 2019 20:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562704002;
+        bh=Q8lJunzvHA1hNJvcYCrAGVr7+FzwmbTZShJ9CiwF6vc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CEm7vztHVchPlqxQQwL8bd4TKtK7i9+bFCQT1iWKsKpqwACTJxo1Ghx9B+f6zpocr
+         lhixxGyF9mUAe4zLWq3UcO6R7xSK5G25FdeYpRpoWDgjsqIWM2Hg4RCU3bkBiY6A4y
+         H6R1crB4Q0J/q4Pv0PctlRjyd+a03TFM6owI3OfY=
+Date:   Tue, 9 Jul 2019 13:26:41 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     reiserfs-devel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 5 open syzbot bugs in "fs/reiserfs" subsystem
+Message-ID: <20190709202641.GK641@sol.localdomain>
+Mail-Followup-To: reiserfs-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6409:: with SMTP id t9mr9378524iog.270.1562703720611;
- Tue, 09 Jul 2019 13:22:00 -0700 (PDT)
-Date:   Tue, 09 Jul 2019 13:22:00 -0700
-In-Reply-To: <0000000000000595ea058d411c35@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000280332058d45509c@google.com>
-Subject: Re: WARNING: refcount bug in nr_insert_socket
-From:   syzbot <syzbot+ec1fd464d849d91c3665@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-commit c8c8218ec5af5d2598381883acbefbf604e56b5e
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu Jun 27 21:30:58 2019 +0000
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 5 of them as possibly being bugs in the "fs/reiserfs" subsystem.  I've
+listed these reports below, sorted by an algorithm that tries to list first the
+reports most likely to be still valid, important, and actionable.
 
-     netrom: fix a memory leak in nr_rx_frame()
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1677f227a00000
-start commit:   4608a726 Add linux-next specific files for 20190709
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1577f227a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1177f227a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7a02e36d356a9a17
-dashboard link: https://syzkaller.appspot.com/bug?extid=ec1fd464d849d91c3665
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b47be8600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15172e7ba00000
+If you believe I misattributed a bug to the "fs/reiserfs" subsystem, please let
+me know, and if possible forward the report to the correct people or mailing
+list.
 
-Reported-by: syzbot+ec1fd464d849d91c3665@syzkaller.appspotmail.com
-Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
+Here are the bugs:
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in blkdev_get
+Last occurred:      19 days ago
+Reported:           391 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=00965426fe7ceec1fd2d8756770d4c7c3cacdc4b
+Original thread:    https://lkml.kernel.org/lkml/000000000000e59aab056e8873ae@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 1 reply, 215 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+eaeb616d85c9a0afec7d@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000e59aab056e8873ae@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: unable to handle kernel paging request in cleanup_bitmap_list
+Last occurred:      13 days ago
+Reported:           464 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f7a51e226194a72ab7364a64af1b8fb1e80e94bb
+Original thread:    https://lkml.kernel.org/lkml/001a1140e9201dd16b0568cc6beb@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+008ac33be9dec51e0ca3@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a1140e9201dd16b0568cc6beb@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in unlock_new_inode
+Last occurred:      446 days ago
+Reported:           446 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ef79070d08a744686c4db202d9ba6817bba86ebb
+Original thread:    https://lkml.kernel.org/lkml/0000000000002ab8c5056a35b12b@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+187510916eb6a14598f7@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000002ab8c5056a35b12b@google.com
+
+--------------------------------------------------------------------------------
+Title:              kernel BUG at fs/reiserfs/journal.c:LINE!
+Last occurred:      445 days ago
+Reported:           465 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=4f66f3287ba3341410ff35b736339628173a5aaa
+Original thread:    https://lkml.kernel.org/lkml/001a113eba282f2ffc0568b76123@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+6820505ae5978f4f8f2f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a113eba282f2ffc0568b76123@google.com
+
+--------------------------------------------------------------------------------
+Title:              kernel BUG at fs/reiserfs/lock.c:LINE!
+Last occurred:      78 days ago
+Reported:           364 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=633d4e446a638abe31cc3054b5a69a42a4cd25d6
+Original thread:    https://lkml.kernel.org/lkml/0000000000002bd65e0570aa16f2@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+66d2c2155ece8b6d3fc0@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000002bd65e0570aa16f2@google.com
+
