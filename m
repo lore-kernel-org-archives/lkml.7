@@ -2,94 +2,96 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A432BC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D57BC606D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876CE21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071C6216FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsjoQQxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfGIHoC (ORCPT
+        id S1726091AbfGIHtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:44:02 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:49003 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfGIHn7 (ORCPT
+        Tue, 9 Jul 2019 03:49:42 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36320 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfGIHtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:43:59 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-02.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hkkn7-0004Jq-G3 from Cedric_Hombourger@mentor.com ; Tue, 09 Jul 2019 00:43:57 -0700
-Received: from FRG-W10-HOMBOUR.world.mentorg.com (137.202.0.90) by
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Tue, 9 Jul 2019 08:43:52 +0100
-From:   Cedric Hombourger <Cedric_Hombourger@mentor.com>
-To:     <yamada.masahiro@socionext.com>
-CC:     <ben@decadent.org.uk>, <isar-users@googlegroups.com>,
-        <michal.lkml@markovi.net>, <linux-kbuild@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <riku.voipio@linaro.org>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>
-Subject: [PATCH v4] builddeb: generate multi-arch friendly linux-libc-dev package
-Date:   Tue, 9 Jul 2019 09:43:35 +0200
-Message-ID: <1562658215-186-2-git-send-email-Cedric_Hombourger@mentor.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1562658215-186-1-git-send-email-Cedric_Hombourger@mentor.com>
-References: <CAK7LNARgFmSm+kCngidevQ3HnNjqKDKfGzYXrFPzhgBRHmccXw@mail.gmail.com>
- <1562658215-186-1-git-send-email-Cedric_Hombourger@mentor.com>
+        Tue, 9 Jul 2019 03:49:41 -0400
+Received: by mail-lf1-f67.google.com with SMTP id q26so12717087lfc.3;
+        Tue, 09 Jul 2019 00:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Lr2whDP6TvqJ2ADIjhq7mz88RZ7yHusi+UOpci+undc=;
+        b=lsjoQQxrT+7be45fZKC40vABY2rSG3KtriNO+swSZsexezOt1wA3gifEm9uyUOiyWx
+         ZMx8ufFL4sWlYexviVex5BFwbVB+ltod5Y/ZKu+bQgkmaWyFjk39h+9Nn1hl5GpYas1i
+         jymMFT4mj9LLqgJp1iXIUXFYJapnvZwU0pWrLtx7FcdwL2aSezElDDvgC7HbH1eJhH4h
+         1sYEgX88gN2h2S388BPs64mkzWxj5iLyTPlSs1y0PcWDk0Rkzg6FzYuIHdXzUtqtbGdJ
+         Io45ez7HngIokVLanp43RnceuUvmaUPRSDdDnqHIZPZBvTL4+hXHQ7h4SwNMEtOsZ2zc
+         3cGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Lr2whDP6TvqJ2ADIjhq7mz88RZ7yHusi+UOpci+undc=;
+        b=trALjgLVZq7LsmMMuh6wGF++hoIROokQrhji5V7u8E3OFc3Ei1te7q4pilbGG0+6IP
+         AAqsWpAKeTEGJ+RYhFJEtcH2SAaV39iEfWh1l5Z/uwu70NHyyS4ne9E7JhrIrtcy1gmj
+         p0HoTxJPsag2rjMmK79pme9gPc/IieDECafyn134DA+aSgxjwaWXlRVtxuqYsEtNzClZ
+         Gb3opLPMg0hx/zzAgS5imSG8oGTRUYJpJlsFdxMr93sHwTNNIh09nUkEQqIe3uBFI8Jl
+         EkgfFgu4IL1Ak7Rmo0aj+huxgWIxObn2vPM95KtpcuK4NfDpxz82Y8CjgRjSJJnqJHBJ
+         eocA==
+X-Gm-Message-State: APjAAAV/47WjJlPlh2J23dXhLKdfOkJASKRLt+pFF+Q+aFDJcV3xhvqf
+        PP/BVH0Wo4ieqpMf6upB3b4lT1dJRxI=
+X-Google-Smtp-Source: APXvYqzOSJ47E7gu9Ez7XhZdasbZBKZZzzh5AKJAVmI7DTbhVGLsqWKowYZuFdezcE23bYVGQZkxxQ==
+X-Received: by 2002:a19:a87:: with SMTP id 129mr10467586lfk.98.1562658579418;
+        Tue, 09 Jul 2019 00:49:39 -0700 (PDT)
+Received: from localhost.localdomain ([94.234.49.38])
+        by smtp.gmail.com with ESMTPSA id o11sm3148665lfl.15.2019.07.09.00.49.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 00:49:38 -0700 (PDT)
+From:   Marcus Folkesson <marcus.folkesson@gmail.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: [PATCH] docs: driver-api: generic-counter: fix file path to ABI doc
+Date:   Tue,  9 Jul 2019 09:51:42 +0200
+Message-Id: <20190709075142.6909-1-marcus.folkesson@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debian-based distributions place libc header files in a machine
-specific directory (/usr/include/<libc-machine>) instead of
-/usr/include/asm to support installation of the linux-libc-dev
-package from multiple architectures. Move headers installed by
-"make headers_install" accordingly using Debian's tuple from
-dpkg-architecture (stored in debian/arch).
-
-Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 ---
- scripts/package/builddeb | 5 +++++
- scripts/package/mkdebian | 1 +
- 2 files changed, 6 insertions(+)
+ Documentation/driver-api/generic-counter.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index b03dd56a4782..d5d33bcba1fb 100755
---- a/scripts/package/builddeb
-+++ b/scripts/package/builddeb
-@@ -132,6 +132,11 @@ fi
- if [ "$ARCH" != "um" ]; then
- 	$MAKE -f $srctree/Makefile headers_check
- 	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
-+	# move asm headers to /usr/include/<libc-machine>/asm to match the structure
-+	# used by Debian-based distros (to support multi-arch)
-+	host_arch=$(dpkg-architecture -a$(cat debian/arch) -qDEB_HOST_MULTIARCH)
-+	mkdir $libc_headers_dir/usr/include/$host_arch
-+	mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/include/$host_arch/
- fi
+diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
+index 0c161b1a3be6..b62375782c75 100644
+--- a/Documentation/driver-api/generic-counter.rst
++++ b/Documentation/driver-api/generic-counter.rst
+@@ -233,7 +233,7 @@ Userspace Interface
+ Several sysfs attributes are generated by the Generic Counter interface,
+ and reside under the /sys/bus/counter/devices/counterX directory, where
+ counterX refers to the respective counter device. Please see
+-Documentation/ABI/testing/sys-bus-counter-generic-sysfs for detailed
++Documentation/ABI/testing/sysfs-bus-counter for detailed
+ information on each Generic Counter interface sysfs attribute.
  
- # Install the maintainer scripts
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index 8351584cb24e..e0750b70453f 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -197,6 +197,7 @@ Architecture: $debarch
- Description: Linux support headers for userspace development
-  This package provides userspaces headers from the Linux kernel.  These headers
-  are used by the installed headers for GNU glibc and other system libraries.
-+Multi-Arch: same
- 
- Package: $dbg_packagename
- Section: debug
+ Through these sysfs attributes, programs and scripts may interact with
 -- 
-2.11.0
+2.22.0
 
