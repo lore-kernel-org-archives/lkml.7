@@ -2,135 +2,173 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADBFC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D51C73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1447120861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB7320861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="w8YPvVso"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Bnnge/N9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfGIM63 (ORCPT
+        id S1726831AbfGIM71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:58:29 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45707 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGIM63 (ORCPT
+        Tue, 9 Jul 2019 08:59:27 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:64113 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGIM71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:58:29 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x69CwBk41920782
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 9 Jul 2019 05:58:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x69CwBk41920782
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562677092;
-        bh=CD6Y4OFGUWp/bG1/hPiAbqcU/PTvaJHpU4bQW4hpAS8=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=w8YPvVsom4qfeNk+kMAsjUSd3uE9LpumFvkGO7nkBHnfKE78ukVlZ8swd8qNGdKds
-         4YG83WMXeIXJLdme2d1TG7FErRUXVlWYmRuj1IHaOf7i0ddKCu7YRHvfFxCPzI7d6Z
-         JBBmx8NKTv/t34NHgBa8iohebnzlyNmbHawTa3mLdTmwC8r3KamABw8yDSz5V+TNQb
-         QE+r4nMyzWV8egEAFWYS0yTG7KPOmt6x9IwhSW49B+leMN/7CxKQAR4Xi5kjuCyuar
-         nQQKjHpekGD+chk1IzKTEqU1bu0H8gJ/51mwYxIKMCY2wFwpkASkujnBHrSrszAc2M
-         Km4kN6iVo6ieg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x69Cw9Pu1920776;
-        Tue, 9 Jul 2019 05:58:09 -0700
-Date:   Tue, 9 Jul 2019 05:58:09 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Wen Yang <tipbot@zytor.com>
-Message-ID: <tip-7c8e90ddf02f139a90bc29c04302e9914818f0c8@git.kernel.org>
-Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org, wen.yang99@zte.com.cn,
-        mingo@kernel.org, geert+renesas@glider.be, tglx@linutronix.de
-Reply-To: hpa@zytor.com, mingo@kernel.org, wen.yang99@zte.com.cn,
-          linux-kernel@vger.kernel.org, geert+renesas@glider.be,
-          tglx@linutronix.de
-In-Reply-To: <1562566745-7447-3-git-send-email-wen.yang99@zte.com.cn>
-References: <1562566745-7447-3-git-send-email-wen.yang99@zte.com.cn>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:irq/urgent] irqchip/renesas-rza1: Prevent use-after-free in
- rza1_irqc_probe()
-Git-Commit-ID: 7c8e90ddf02f139a90bc29c04302e9914818f0c8
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 9 Jul 2019 08:59:27 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x69CxDHx028630;
+        Tue, 9 Jul 2019 21:59:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x69CxDHx028630
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562677154;
+        bh=7A2N7Ho/Fdv5L4vwp1BQNOK65hN86LtcgZIzAIW+wEE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Bnnge/N9Fv4luUIPhbG9LIXeqmI8ZHLkUm8+3sS0i2BVdOYLpsWFFX7YPnyVvUQuo
+         TkhkfQI9hkTgtHGmwKMwr5vYLx98x05YPz+KwsvEDLe8ZfHkem7IQpVXBQKh6h0GAi
+         2UTu7RxOXYDEIvklae1TwrgMRTJbbhDzGfN8BCbJACTnJM3ScMbgPLljSvyxPWiqNM
+         iusJZG3BvXIYkscM9/wi//NnMpLwYUhuUsVQFab1fPxXCHi7XxYmodNmPueOOaFA7n
+         OYXbeZq5Oa4dRmjj4OlPeq0SKiDyBaSONgZdoCP+jgRCXzXSCBBEh6czauupOsjKzw
+         75ZguVXbLyVRg==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id v18so6352289uad.12;
+        Tue, 09 Jul 2019 05:59:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAV4u/ZaWkK6G9qzUHOPFpMnJqyhF2FqCPqRO8O8gnzAxkbitZHd
+        FcQQ2xYiHvuZS2mhhxgG9ab0Jj3rNNSwZU/8JIk=
+X-Google-Smtp-Source: APXvYqwtKIB0v3EDyCZQeUN86YmMG6zvyxmpJC2IQaVOnT3ACLkK6Z3rtEjhPGYgzoXMUsz9eqTldUU5Op9Q8n79YPk=
+X-Received: by 2002:ab0:70d9:: with SMTP id r25mr12877071ual.109.1562677153044;
+ Tue, 09 Jul 2019 05:59:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAMuHMdUH46_yvYc840uvMoOOqXuU3mDOjaT65vZ=6WKGq7-Kqg@mail.gmail.com>
+ <CAK7LNASuEQqb7w8qD9ZKx-LKp0+CqvybEqFtYxVk5d0YJt-Nfg@mail.gmail.com> <CAMuHMdVmmgW24vStkicXfA3hokcPYWo_r5bW=WFRs4zdP3SQyQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVmmgW24vStkicXfA3hokcPYWo_r5bW=WFRs4zdP3SQyQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 9 Jul 2019 21:58:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATxCkEZKWknO40k-sArbwxzOjdyQdehSmdCNYjLBb7MQA@mail.gmail.com>
+Message-ID: <CAK7LNATxCkEZKWknO40k-sArbwxzOjdyQdehSmdCNYjLBb7MQA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: check arch/$(SRCARCH)/include/generated before
+ out-of-tree build
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7c8e90ddf02f139a90bc29c04302e9914818f0c8
-Gitweb:     https://git.kernel.org/tip/7c8e90ddf02f139a90bc29c04302e9914818f0c8
-Author:     Wen Yang <wen.yang99@zte.com.cn>
-AuthorDate: Mon, 8 Jul 2019 14:19:04 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 9 Jul 2019 14:53:50 +0200
+Hi Geert,
 
-irqchip/renesas-rza1: Prevent use-after-free in rza1_irqc_probe()
+On Tue, Jul 9, 2019 at 9:45 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Yamada-san,
+>
+> On Tue, Jul 9, 2019 at 2:22 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> > On Tue, Jul 9, 2019 at 5:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Sun, Apr 7, 2019 at 12:45 PM Masahiro Yamada
+> > > <yamada.masahiro@socionext.com> wrote:
+> > > > After cross-compiling the kernel, "make mrproper" should be executed
+> > > > with the proper ARCH= option. Otherwise, stale objects will remain
+> > > > under arch/$(SRCARCH)/.
+> > > >
+> > > > One bad scenario is like this:
+> > > >
+> > > >   $ make ARCH=arm defconfig all   # cross-compile the kernel for arm
+> > > >   $ make mrproper                 # mrproper for host-arch (i.e. x86)
+> > > >   $ make ARCH=arm O=build_dir defconfig all
+> > > >
+> > > > If you miss ARCH= for mrproper and cross-compile the kernel with O=
+> > > > and ARCH= options, Kbuild will happily start to build, but may fail
+> > > > due to stale objects in the srctree.
+> > > >
+> > > > If $(srctree)/arch/$(SRCARCH)/include/generated/ exists, let's stop
+> > > > the out-of-tree build. To detect this, mrproper should clean only
+> > > > arch/$(SRCARCH)/include/generated/.
+> > > >
+> > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > ---
+> > > >
+> > > >  Makefile | 6 ++++--
+> > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/Makefile b/Makefile
+> > > > index 10643c3..17945ce 100644
+> > > > --- a/Makefile
+> > > > +++ b/Makefile
+> > > > @@ -1091,7 +1091,9 @@ PHONY += prepare archprepare prepare1 prepare3
+> > > >  prepare3: include/config/kernel.release
+> > > >  ifneq ($(srctree),.)
+> > > >         @$(kecho) '  Using $(srctree) as source for kernel'
+> > > > -       $(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
+> > > > +       $(Q)if [ -f $(srctree)/.config -o \
+> > > > +                -d $(srctree)/include/config -o \
+> > > > +                -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
+> > > >                 echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
+> > > >                 echo >&2 "  in the '$(srctree)' directory.";\
+> > >
+> > > This took me a bit to find out what was wrong...
+> > >
+> > > Usually I don't run "make mrproper", as it removes files I may want to
+> > > keep (e.g. tags).  Hence I ran "git ls-files -o | grep m68k | xargs rm"
+> > > (I usually build in separate output directories), confirmed with "git
+> > > ls-files -o" there were no remaining build artefacts, and was surprised
+> > > to discover I still got the error message above?!?
+> > >
+> > > Apparently arch/m68k/include/generated was still present, but as "git
+> > > ls-files -o" only shows files, not directories, it was not listed.
+> > > Perhaps the directory checks above can be changed to directory exists
+> > > _and_ is not empty?
+> >
+> > No.
+> >
+> > Since you did not run mrproper,
+> > Kbuild _correctly_ showed error.
+> > This is the expected and correct behavior. :)
+> >
+> > The upstream kernel is not a place
+> > to be customized for your workflow. Sorry.
+> >
+> >
+> > Every developer has a set of handy custom commands.
+> >
+> > Since you are already running a long command,
+> > why don't you add one more line, and put in ~/.bash_aliases or somewhere?
+> >
+> > my_mrproper()
+> > {
+> >     git ls-files -o | grep m68k | xargs rm
+> >     rm -rf arch/m68k/include/generated
+> > }
+>
+> Please note this was not part of my standard workflow, so I don't have a
+> script for it.  I just happened to had done a quick test build in my
+> kernel source tree repository before, and had forgotten about that.
+>
+> So IMHO this is more of a usability issue: it is difficult to find out
+> what is wrong, and how to solve it, as "git ls-files -o" doesn't give a
+> clue.  And running "make mrproper" doesn't help.
+>
+> Perhaps the message should be changed to
+>
+>     $(srctree) is not clean, please run 'make ARCH=$(SRCARCH) mrproper'"
 
-The gic_node is still being used in the rza1_irqc_parse_map() call
-after the of_node_put() call, which may result in use-after-free.
+Fair enough, but 'make ARCH=$(ARCH) mrproper' please.
 
-Fixes: a644ccb819bc ("irqchip: Add Renesas RZ/A1 Interrupt Controller driver")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lkml.kernel.org/r/1562566745-7447-3-git-send-email-wen.yang99@zte.com.cn
----
- drivers/irqchip/irq-renesas-rza1.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+Will you send a patch?
 
-diff --git a/drivers/irqchip/irq-renesas-rza1.c b/drivers/irqchip/irq-renesas-rza1.c
-index b1f19b210190..b0d46ac42b89 100644
---- a/drivers/irqchip/irq-renesas-rza1.c
-+++ b/drivers/irqchip/irq-renesas-rza1.c
-@@ -208,20 +208,19 @@ static int rza1_irqc_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->base);
- 
- 	gic_node = of_irq_find_parent(np);
--	if (gic_node) {
-+	if (gic_node)
- 		parent = irq_find_host(gic_node);
--		of_node_put(gic_node);
--	}
- 
- 	if (!parent) {
- 		dev_err(dev, "cannot find parent domain\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto out_put_node;
- 	}
- 
- 	ret = rza1_irqc_parse_map(priv, gic_node);
- 	if (ret) {
- 		dev_err(dev, "cannot parse %s: %d\n", "interrupt-map", ret);
--		return ret;
-+		goto out_put_node;
- 	}
- 
- 	priv->chip.name = "rza1-irqc",
-@@ -237,10 +236,12 @@ static int rza1_irqc_probe(struct platform_device *pdev)
- 						    priv);
- 	if (!priv->irq_domain) {
- 		dev_err(dev, "cannot initialize irq domain\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
- 	}
- 
--	return 0;
-+out_put_node:
-+	of_node_put(gic_node);
-+	return ret;
- }
- 
- static int rza1_irqc_remove(struct platform_device *pdev)
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
