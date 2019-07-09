@@ -2,100 +2,103 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC3CC606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD818C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F012821537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7F721537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfGIC6y (ORCPT
+        id S1727065AbfGIDEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:58:54 -0400
-Received: from mga01.intel.com ([192.55.52.88]:14717 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfGIC6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:58:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 19:58:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
-   d="scan'208";a="173435531"
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Jul 2019 19:58:51 -0700
-Message-ID: <5D240435.2040801@intel.com>
-Date:   Tue, 09 Jul 2019 11:04:21 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+        Mon, 8 Jul 2019 23:04:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2190 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbfGIDEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 23:04:40 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A7D0215961FB8D5B5554;
+        Tue,  9 Jul 2019 11:04:35 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
+ 11:04:26 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
+        <f.fainelli@gmail.com>, <davem@davemloft.net>,
+        <paweldembicki@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: dsa: vsc73xx: Fix Kconfig warning and build errors
+Date:   Tue, 9 Jul 2019 11:02:24 +0800
+Message-ID: <20190709030224.40292-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190708172808.GG9027@lunn.ch>
+References: <20190708172808.GG9027@lunn.ch>
 MIME-Version: 1.0
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
-        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
-        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
-Subject: Re: [PATCH v7 08/12] KVM/x86/vPMU: Add APIs to support host save/restore
- the guest lbr stack
-References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com> <1562548999-37095-9-git-send-email-wei.w.wang@intel.com> <20190708144831.GN3402@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190708144831.GN3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08/2019 10:48 PM, Peter Zijlstra wrote:
-> On Mon, Jul 08, 2019 at 09:23:15AM +0800, Wei Wang wrote:
->> From: Like Xu <like.xu@intel.com>
->>
->> This patch adds support to enable/disable the host side save/restore
-> This patch should be disqualified on Changelog alone...
->
->    Documentation/process/submitting-patches.rst:instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
+Fix Kconfig dependency warning and subsequent build errors
+caused by OF is not set:
 
-OK, we will discard "This patch" in the description:
+WARNING: unmet direct dependencies detected for NET_DSA_VITESSE_VSC73XX
+  Depends on [n]: NETDEVICES [=y] && HAVE_NET_DSA [=y] && OF [=n] && NET_DSA [=m]
+  Selected by [m]:
+  - NET_DSA_VITESSE_VSC73XX_PLATFORM [=m] && NETDEVICES [=y] && HAVE_NET_DSA [=y] && HAS_IOMEM [=y]
 
-To enable/disable the host side save/restore for the guest lbr stack on
-vCPU switching, the host creates a perf event for the vCPU..
+Make NET_DSA_VITESSE_VSC73XX_SPI and NET_DSA_VITESSE_VSC73XX_PLATFORM
+depends on NET_DSA_VITESSE_VSC73XX to fix this.
 
->> for the guest lbr stack on vCPU switching. To enable that, the host
->> creates a perf event for the vCPU, and the event attributes are set
->> to the user callstack mode lbr so that all the conditions are meet in
->> the host perf subsystem to save the lbr stack on task switching.
->>
->> The host side lbr perf event are created only for the purpose of saving
->> and restoring the lbr stack. There is no need to enable the lbr
->> functionality for this perf event, because the feature is essentially
->> used in the vCPU. So perf_event_create is invoked with need_counter=false
->> to get no counter assigned for the perf event.
->>
->> The vcpu_lbr field is added to cpuc, to indicate if the lbr perf event is
->> used by the vCPU only for context switching. When the perf subsystem
->> handles this event (e.g. lbr enable or read lbr stack on PMI) and finds
->> it's non-zero, it simply returns.
-> *WHY* does the host need to save/restore? Why not make VMENTER/VMEXIT do
-> this?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 95711cd5f0b4 ("net: dsa: vsc73xx: Split vsc73xx driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: Use "depends on" instead of "select" NET_DSA_VITESSE_VSC73XX
+---
+ drivers/net/dsa/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Because the VMX transition is much more frequent than the vCPU switching.
-On SKL, saving 32 LBR entries could add 3000~4000 cycles overhead, this
-would be too large for the frequent VMX transitions.
+diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
+index cf9dbd1..618853d 100644
+--- a/drivers/net/dsa/Kconfig
++++ b/drivers/net/dsa/Kconfig
+@@ -99,7 +99,7 @@ config NET_DSA_SMSC_LAN9303_MDIO
+ 	  for MDIO managed mode.
+ 
+ config NET_DSA_VITESSE_VSC73XX
+-	tristate
++	tristate "Vitesse VSC7385/7388/7395/7398 support"
+ 	depends on OF
+ 	depends on NET_DSA
+ 	select FIXED_PHY
+@@ -112,7 +112,7 @@ config NET_DSA_VITESSE_VSC73XX
+ config NET_DSA_VITESSE_VSC73XX_SPI
+ 	tristate "Vitesse VSC7385/7388/7395/7398 SPI mode support"
+ 	depends on SPI
+-	select NET_DSA_VITESSE_VSC73XX
++	depends on NET_DSA_VITESSE_VSC73XX
+ 	---help---
+ 	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
+ 	  and VSC7398 SparX integrated ethernet switches in SPI managed mode.
+@@ -120,7 +120,7 @@ config NET_DSA_VITESSE_VSC73XX_SPI
+ config NET_DSA_VITESSE_VSC73XX_PLATFORM
+ 	tristate "Vitesse VSC7385/7388/7395/7398 Platform mode support"
+ 	depends on HAS_IOMEM
+-	select NET_DSA_VITESSE_VSC73XX
++	depends on NET_DSA_VITESSE_VSC73XX
+ 	---help---
+ 	  This enables support for the Vitesse VSC7385, VSC7388, VSC7395
+ 	  and VSC7398 SparX integrated ethernet switches, connected over
+-- 
+2.7.4
 
-LBR state is saved when vCPU is scheduled out to ensure that this vCPU's
-LBR data doesn't get lost (as another vCPU or host thread that is 
-scheduled in
-may use LBR)
 
-
-> Many of these patches don't explain why things are done; that's a
-> problem.
-
-We'll improve, please help when you find anywhere isn't clear to you, 
-thanks.
-
-Best,
-Wei
