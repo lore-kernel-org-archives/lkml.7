@@ -6,64 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B54CC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AEEC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78ABC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CE121537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562695525;
-	bh=haDQtb26+fghg9OXTvV9KWxITnThNUfZvQFnEdNh+ik=;
+	s=default; t=1562695533;
+	bh=+vNpwoN2lp1O2/h2yYLLFN2QzaPpKX+omBzKmNgf0iA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=njIDJvjmNUgmRnyklUECH8fWgqFek/9RR0s0Hcwg2wvgs9su/t+cDHDOdlmEkQia4
-	 505fM02AVmhQG354mM2rQ74X+Lxx3umqZjl5Riko9cQH6B9Woj491GfPt3DY37QdqT
-	 m9pW1Vci/lRqoiyyW1fbVzURg5ZlZ/DCk7C4Z3zc=
+	b=pilbSQbSU7hDv7V1k2oUCITF4vXmivaiQrKANzdsp4K7rWc4eozI99HHFmQO3P9pz
+	 ahDW30k3kV9AxSrYOXbdJL0t6j6yVXg8Iip0UPJuBG/7omJlDh3OtLSpguNoq4Qqll
+	 chnwMYz+ApIBHVd1gPRHpDVCw6eLILmNN99xFT4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfGISFY (ORCPT
+        id S1727536AbfGISFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36544 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 14:05:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfGISFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:05:14 -0400
-Subject: Re: [GIT PULL] fbdev changes for v5.3
+        id S1726910AbfGISFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:05:13 -0400
+Subject: Re: [GIT PULL] Device properties framework updates for v5.3-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1562695513;
-        bh=haDQtb26+fghg9OXTvV9KWxITnThNUfZvQFnEdNh+ik=;
+        bh=+vNpwoN2lp1O2/h2yYLLFN2QzaPpKX+omBzKmNgf0iA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=V1uo+EaHdXkacdzeCiFbgDCjeJPUNfgKAFvfORq3I6mQnzFMHvP87HxeNo/e4pdUt
-         6xlDrqzQDzJWBko/mLVR63gzJU6xMmBrCy0IIfJLcE2gJEnPxaL9X9aenEplCy0uJx
-         5TSZGVzoEe4JUkzrr/4a1XJpZv5mg0lDlTZaANYU=
+        b=enKy1BDyzsr2hs0CMgLRYjkwwSaTxw0joMc7r8v2+AXT0lu2u0EBEv15+r4vv1yak
+         SQPNC9hmXR0M67h+IB6/JTtDTDRxXDsuY7ZOkdtj3TuU3MMfx+zUWHYzKdNkpTvVfg
+         e9UfHgiIpUi2x5GEh90jqZOSsEezbknZbjbI/G9g=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <a6d44af3-cf51-a072-7c52-f505c8990630@samsung.com>
-References: <CGME20190709131028eucas1p1f45ed7a16b10e58c649da4ab4a30aff5@eucas1p1.samsung.com>
- <a6d44af3-cf51-a072-7c52-f505c8990630@samsung.com>
+In-Reply-To: <CAJZ5v0g8O+XLjSarCiZcj0LnSZYnCqGE3D6tfFD30wOZjprb2g@mail.gmail.com>
+References: <CAJZ5v0g8O+XLjSarCiZcj0LnSZYnCqGE3D6tfFD30wOZjprb2g@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <a6d44af3-cf51-a072-7c52-f505c8990630@samsung.com>
-X-PR-Tracked-Remote: https://github.com/bzolnier/linux.git tags/fbdev-v5.3
-X-PR-Tracked-Commit-Id: 732146a3f1dc78ebb0d3c4b1f4dc6ea33cc2c58f
+X-PR-Tracked-Message-Id: <CAJZ5v0g8O+XLjSarCiZcj0LnSZYnCqGE3D6tfFD30wOZjprb2g@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+ devprop-5.3-rc1
+X-PR-Tracked-Commit-Id: 33ee09cd59ce154b64f9df942dfa5456db90d5f9
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2d41ef5432b76ae90dc0db93026f1d981f874ec4
-Message-Id: <156269551372.14383.671855111699940274.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 0415052db4f92b7e272fc15802ad8b8be672deea
+Message-Id: <156269551313.14383.5369373802013265503.pr-tracker-bot@kernel.org>
 Date:   Tue, 09 Jul 2019 18:05:13 +0000
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 9 Jul 2019 15:10:33 +0200:
+The pull request you sent on Mon, 8 Jul 2019 23:39:24 +0200:
 
-> https://github.com/bzolnier/linux.git tags/fbdev-v5.3
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git devprop-5.3-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2d41ef5432b76ae90dc0db93026f1d981f874ec4
+https://git.kernel.org/torvalds/c/0415052db4f92b7e272fc15802ad8b8be672deea
 
 Thank you!
 
