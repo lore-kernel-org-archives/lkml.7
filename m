@@ -6,66 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9631C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD1DC606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3363217D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556AB217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562636708;
-	bh=+GPAZg4Y8mf4kxQTGgapsdz3fUid/7IC4kwCpo2ZurE=;
+	s=default; t=1562636710;
+	bh=oqN/JhEGISVX09s0AuKpX7cjRWniQ3KynGD9u/JKYiA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=EXIhiPUUhqJiHRgLFpQ9ari1XjM/EFZNbuajtyQDPZP2Gyj55YrmVorGNCnuJRS0H
-	 WZ44sTV0kQSVG1RyEWAAUHfmXzYK2EoJBMCAO+OkfLVRj28SiEd7eWifMnWZRjaXS6
-	 STC09X0v4avcTe0WoRAukMSva4N0R7hH1Mk46XFQ=
+	b=aDK+yIb4I6lZ2jgM+CeLA5PZiwksPpVzfo+kT895vXblpN5FA+JaujK+fwtHEUZr1
+	 yJTTtP2X/LULYeUmRtg/bSsokh0WrQcKrrBfWH6x8jFsHZ8cRo/tntGQktrG4wRKKK
+	 kzIni7kMQkP2FnoYtLcAD3MGqPMOh4UmyGz7wNAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfGIBpH (ORCPT
+        id S1727215AbfGIBpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38032 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 21:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbfGIBpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:45:06 -0400
-Subject: Re: [GIT PULL] locking changes for v5.3
+        id S1727167AbfGIBpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:45:07 -0400
+Subject: Re: [GIT PULL] x86/asm changes for v5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562636705;
-        bh=+GPAZg4Y8mf4kxQTGgapsdz3fUid/7IC4kwCpo2ZurE=;
+        s=default; t=1562636707;
+        bh=oqN/JhEGISVX09s0AuKpX7cjRWniQ3KynGD9u/JKYiA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=zC8gfxGPUfLUorqOCHm60DnCw6tlPNyI/J+17Kmo8PryS6TN+uDnlWouHE4qMXOZl
-         OBX6mhKzFtcYMwN+/isGmqojiy/PucWJIyzWrQhN+MP8VCPjOD9n+y7Cn7uv+Tgz3k
-         mgHfTxoxTEF0enhM62c3CBd3Vj75DmVSsQJTLk0U=
+        b=VOlf0IARERtMvud2vv4Lnyc8KEIQ8gsXyEriCO9fst1LkW6M9JcObNfR7gkY9gIGR
+         PI16cugIKE+MsniJWkNighZgtV2UA480BKqiFCjST4Ws0eHdbwo0kcwTcwLNuN+Gch
+         OJBuQc23qI0/lKa2fzakO4urOeD4G1LWiy8gjtxE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190708093516.GA57558@gmail.com>
-References: <20190708093516.GA57558@gmail.com>
+In-Reply-To: <20190708122247.GA57237@gmail.com>
+References: <20190708122247.GA57237@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190708093516.GA57558@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- locking-core-for-linus
-X-PR-Tracked-Commit-Id: 9156e545765e467e6268c4814cfa609ebb16237e
+X-PR-Tracked-Message-Id: <20190708122247.GA57237@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-asm-for-linus
+X-PR-Tracked-Commit-Id: 7457c0da024b181a9143988d740001f9bc98698d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e1928328699a582a540b105e5f4c160832a7fdcb
-Message-Id: <156263670579.17382.15644756693175491737.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 01:45:05 +0000
+X-PR-Merge-Commit-Id: a1aab6f3d295f078c008893ee7fa2c011626c46f
+Message-Id: <156263670726.17382.8448182923476237899.pr-tracker-bot@kernel.org>
+Date:   Tue, 09 Jul 2019 01:45:07 +0000
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Will Deacon <will.deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@us.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jul 2019 11:35:16 +0200:
+The pull request you sent on Mon, 8 Jul 2019 14:22:47 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-core-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-asm-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e1928328699a582a540b105e5f4c160832a7fdcb
+https://git.kernel.org/torvalds/c/a1aab6f3d295f078c008893ee7fa2c011626c46f
 
 Thank you!
 
