@@ -4,137 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA19C606D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B758C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8D5205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B83520665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfGIJc7 (ORCPT
+        id S1726744AbfGIJdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:32:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:59511 "EHLO
+        Tue, 9 Jul 2019 05:33:08 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:38433 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbfGIJc6 (ORCPT
+        with ESMTP id S1726496AbfGIJc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:32:58 -0400
+        Tue, 9 Jul 2019 05:32:57 -0400
 Received: from orion.localdomain ([95.118.92.226]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MjPYI-1iE5gX0bP8-00kvBV; Tue, 09 Jul 2019 11:32:43 +0200
+ 1MjBNV-1iNfXb1B1p-00f8fy; Tue, 09 Jul 2019 11:32:42 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
         info@metux.net, apw@canonical.com, joe@perches.com,
         linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH 4/4] debian: add generic rule file
-Date:   Tue,  9 Jul 2019 11:32:39 +0200
-Message-Id: <1562664759-16009-4-git-send-email-info@metux.net>
+Subject: [PATCH 2/4] scripts: mkdebian: allow renaming generated debian/rules via env
+Date:   Tue,  9 Jul 2019 11:32:37 +0200
+Message-Id: <1562664759-16009-2-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1562664759-16009-1-git-send-email-info@metux.net>
 References: <1562664759-16009-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:jKhi6lLozAg2IH0o7JxX5GA0JrBrDeDdVL9UaNzdpfsuRuXXdTV
- GI0COtD4SErDVWUkYTz05mOnJcH5X/9+2q58oyRs4I8QRh8V8dmXRfNAO17PSehGOQDaKvE
- T86Un6w4CkuFqM1BEOaUtpLVTajmWf8839oXpIAv39QprOuajLioZw0INYZ2ADT/nQjnnox
- h9/HUqdMxsemWuCFaUszw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KG8HrKoByR8=:sD7hpa9EF7H0gm+eHv8FMJ
- eToxSgaDCL2tS7/7qeZizHw9wrPfBUjOn2wS8D18q732Bp2D41jPky8AozMIAw7R/LIbfZXR8
- A5sx+3MTiQ/pDAvI2pZMxdGBoPJ5u5BNt6awmg4yc9phCoXqmIBIrxmdp+sGzPjnRSUiEf0YU
- aZhpyKxUGZlNVsvhnSdsFF5h7g7uT5kd7g2tM0VYEnQ1LFcfLO7Ne5+/HQDzJyujre1QrN4ew
- oHozcN9VdBtr9WJusQ5fK+zIoh76kWzOx276MOuz/nyS5f8FXhctXHnSIwqgLQFOczmDSj+E0
- a6pvaM5nMDRWySMKmRV2zFf5QidVovrV4HfTyrd4q/w6I99+ti3+htOavC/nYvxJN2LfSO36a
- vkYW+pH1JvNTtDxdUBVL5jzf5qcsrlwxawqXlw9mq3oEsUqOThEKe/NUIOxRMtrgxjeJUMirV
- P7wqY0afXUg/YziPHJktc8Gbn929tQnKEqeTfADV9iOy8W0IrN1AhSHK0J2zBLttCTJHcXr+s
- msbEx8EIncqkiW5vsHmjr+Nt9PxKFTbwpdTTqdj5uiyYWRwtrS+nXQbzee54brvKtJpBpnCR2
- 0FJQs50BkAYFq4GtgEjN/u3rCEPq69/IkHNqTGlIX96qx4TNo76e48vsUqpFzJr76vgYyw36a
- Y9ZGcju44Ozk8o8UmS0QrCijrlp6H+uEe5NMEee3/IBulmy85YPUvaEAcumQWO8aFo1MFLYtc
- /jbsn7xsaXVtF5smAt8LF4LIuPp5exCYzYUgfQ==
+X-Provags-ID: V03:K1:8RxMCZ0EExgOaxV88l74wKMkDX0CtH6zeqLohpBk6Mjl+jjrB7B
+ Tw8pgUAQp78XVLp1IriBcq4lhAkCL7Hd5Usj8SFv3A98K0WsN0eTVviF1exOx6VwMR0dLTW
+ Z8zgDIK5zS96kRCExRpcoNeYNM3QyJ3dxFRddf5f/idPUOelcF6w4ilgjWhw7jDyj7gQRyd
+ WmiIQXuTAY18e0UoH3uDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4vHSzAF5fWc=:dj9t0ZG4mhtFfEmznKOVdL
+ v6HsHLvPp50GhgFAMg0yKB+fcmYn9UamoNf8kZcnXPqW3r6Swrg4P7KNBy3gdc1ojYDp7MqOn
+ 9uDtfDMsqm6lamwRwfWxSLeWpu0CQ9HtkOZvkRQ0hlU5zlXHxxWgCFcsN8Halyvb41bZLflGj
+ B98txiT0qI7iWLo8cRPv1YGKGPZ42jkpfQbdUI5s8UkRqAHIUIXVyldioQawpmvTHqQiqBL39
+ D5OfB0+9e1NIoJ9gdBM/z/fO8B58siNjcWeyKyrUV9rSh97SZmYSJ6d02u/WRnUkQAR3CdpH8
+ +X/xrvhAnVoHSI4Bx42NfSEV57Ut+XfySDBEYqK0Fd5wzFiUgGjtbO9sffq3FgMzrPAmEFDPC
+ 2Sp3iw3e/RVfhZ4tTLK1y9NYw4ar/7CSKHEZqcGZXM7yrrY0E9IPAWK6ZtHiPq3Fz4kQZD/Rd
+ MEoVridzPCsjKeEZXyRErLrpu++VrdZB9i1aEC2nL0D3aiGF6eG+kcSLZX8q4nnzKHyEu3zq1
+ gTLIlNvyCv1H9F9lpBJ+5fXyDJINLY9Fzz8HZBch4zMzdfrEQzesTUPry6H9YfGB8Z6Lyy0Ml
+ yG24jGIQB+Dv9/wHZX0lrzH8fXHq8s75RxB68EUuYdN4GpvjG3y6M26wIdmOZUp5TLqQQgGay
+ vXE7OLDJzqxQ46K9WaRsmMrsps31qiLnb4pfFYnGDyEp9tJ35jOoU6EVSffdekW/aHDGZmUUX
+ 2HGiHjpLZgiYxsOXnqIeukT3KxYwUL61vfgJZg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding a generic debian rule file, so we can build the directly
-via usual Debian package build tools (eg. git-buildpackage,
-dck-buildpackage, etc). It expects the .config file already
-placed in the source tree.
-
-The rule file contains a rule for creating debian/control and
-other metadata - this is done similar to the 'deb-pkg' make rule,
-scripts/packaging/mkdebian.
+Add new environment variable KDEB_RULES for controlling where the
+generated debian rules are written to. By defaults, it's debian/rules,
+but packagers might override it for providing their own rules file.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- .gitignore   |  1 +
- MAINTAINERS  |  6 ++++++
- debian/rules | 27 +++++++++++++++++++++++++++
- 3 files changed, 34 insertions(+)
- create mode 100755 debian/rules
+ scripts/package/mkdebian | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/.gitignore b/.gitignore
-index 7587ef56..01d742c 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -69,6 +69,7 @@ modules.builtin
- # Debian directory (make deb-pkg)
- #
- /debian/
-+!/debian/rules
+diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+index 8351584..7a9ca4e 100755
+--- a/scripts/package/mkdebian
++++ b/scripts/package/mkdebian
+@@ -99,6 +99,9 @@ kernel_headers_packagename=linux-headers-$version
+ dbg_packagename=$packagename-dbg
+ debarch=
+ set_debarch
++if [ -z "$KDEB_RULES" ]; then
++    KDEB_RULES=debian/rules
++fi
  
- #
- # Snap directory (make snap-pkg)
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 558acf2..56e034c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4516,6 +4516,12 @@ F:	include/uapi/linux/dccp.h
- F:	include/linux/tfrc.h
- F:	net/dccp/
+ if [ "$ARCH" = "um" ] ; then
+ 	packagename=user-mode-linux-$version
+@@ -206,7 +209,7 @@ Description: Linux kernel debugging symbols for $version
+  all the necessary debug symbols for the kernel and its modules.
+ EOF
  
-+DEBIAN PACKAGING FILES
-+M:	Enrico Weigelt <info@metux.net>
-+L:	linux-kbuild@vger.kernel.org
-+S:	Maintained
-+F:	debian/
-+
- DECnet NETWORK LAYER
- W:	http://linux-decnet.sourceforge.net
- L:	linux-decnet-user@lists.sourceforge.net
-diff --git a/debian/rules b/debian/rules
-new file mode 100755
-index 0000000..c2f0319
---- /dev/null
-+++ b/debian/rules
-@@ -0,0 +1,27 @@
-+#!/usr/bin/make -f
-+# SPDX-License-Identifier: GPL-2.0
-+
-+export MAKE
-+export KERNELARCH           = $(shell $(MAKE) kernelarch)
-+export KERNELRELEASE        = $(shell $(MAKE) kernelrelease)
-+export KBUILD_DEBARCH       = $(shell dpkg-architecture -qDEB_HOST_ARCH)
-+export KBUILD_BUILD_VERSION = $(shell $(MAKE) kernellocalversion)
-+export KDEB_RULES           = debian/rules.auto
-+export KDEB_SOURCENAME      = linux-source
-+export ARCH                 = $(KERNELARCH)
-+
-+debian/control debian/changelong debian/arch debian/copyright:
-+debian/control:
-+	./scripts/package/mkdebian
-+
-+build:	debian/control
-+	$(MAKE) KERNELRELEASE=$(KERNELRELEASE) ARCH=$(KERNELARCH) KBUILD_BUILD_VERSION=$(KBUILD_BUILD_VERSION) KBUILD_SRC=
-+
-+binary-arch:	debian/control
-+	$(MAKE) KERNELRELEASE=$(KERNELRELEASE) ARCH=$(KERNELARCH) KBUILD_BUILD_VERSION=$(KBUILD_BUILD_VERSION) KBUILD_SRC= intdeb-pkg
-+
-+clean:
-+	rm -rf debian/*tmp debian/files debian/changelog debian/control debian/copyright debian/rules.auto debian/arch
-+	$(MAKE) clean
-+
-+binary: binary-arch
+-cat <<EOF > debian/rules
++cat <<EOF > $KDEB_RULES
+ #!$(command -v $MAKE) -f
+ 
+ srctree ?= .
 -- 
 1.9.1
 
