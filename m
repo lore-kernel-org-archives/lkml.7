@@ -2,221 +2,115 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1E8C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5101CC606D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E0F216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2954A2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAl2MDBM"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ivffd6vt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfGIFpF (ORCPT
+        id S1726760AbfGIFqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:45:05 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34736 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfGIFpF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:45:05 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n5so213255otk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 22:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P212O3pD6J1OHFbkKOo30mb6JIIMTTuJiFwciEcoMBI=;
-        b=XAl2MDBM1SqnFzOMbq9qOjKyVUmi6eASeOwZqhW4/RSgqSMKiwgIoXCZzXefE/Tv6o
-         xsyfIgJgsYWkEXNA/DcJMaXO9CvxreOkZqvDPD2cKcOQFOVrdZCf0yp8VC6ntO/kK2GE
-         Ib6o+dYeMWoeAx7R2t9enaqt9XioShu3aUhWtB/1DbvL2dD8miEOSmHeS9BxU563H6+P
-         r6HJ+ScsU0jvKZS0xaO1ie3zyJQ0yWVpgtSFaMdrWkFVNrdK20MUWRLW62kh7Sg85Fik
-         Kf1TZ0kwjrYH2RwyScIVwvE1De5SEeTDqah423zA2jhXwAxxkU81dDCI2OV/cfGv82fG
-         QGtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P212O3pD6J1OHFbkKOo30mb6JIIMTTuJiFwciEcoMBI=;
-        b=hVPIU1OivijyF9F4uN78m70LFoNCImPtONbqEbrHbqqTDj3ZnwT16Pmm+1SoiXDpKC
-         FN2Bp7tTXuiZIUXEuEnTbO0+nfMp2Fd3g2pmHNv4rCCvitE+KFqP9M33W3i1yXAprmC3
-         DmJtPZTs/H6nmdllbrijqfI0hDQelnjPmIgsi637Ow4RKmGhh92StATyyMJ0HP7o2tDz
-         L4dVFy6qk5thB53t3r6/wCkA+/gOizz9GUoUIpMs8yQP+RykNF5iA1NG7an2HLGXNM0a
-         bXw3bItmg2p6VICA7j75HM6dktBTRbOM5xy3Ca+hPoJkTCWAmdbpLzcs8cKI9IoUPFAY
-         gnFw==
-X-Gm-Message-State: APjAAAVJ3V+UDGfvyPuVGKKHQOBMPOg8zl5kZOk4+Q5qvavnH+XKSeeK
-        iX0k2gc9GySjWRBp+Nv/at1BeKDEBqNTQbg5OzMbgg==
-X-Google-Smtp-Source: APXvYqw6oUZkKhaG1Q540oYRSkHVIx1Akfrd0ty6pGytUdVf3Ue+NeqdRc2ryNHhrFzl0/ATHqOmJUR42rC/yZojFUg=
-X-Received: by 2002:a9d:529:: with SMTP id 38mr17765884otw.145.1562651104246;
- Mon, 08 Jul 2019 22:45:04 -0700 (PDT)
+        Tue, 9 Jul 2019 01:46:43 -0400
+Received: from mout.gmx.net ([212.227.15.19]:53329 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbfGIFqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 01:46:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1562651196;
+        bh=joE9GeqsQWrzBQwgXRlkWwo09aacLPPhCLf9GSg+/M8=;
+        h=X-UI-Sender-Class:Date:From:To:Subject;
+        b=ivffd6vtNBtTScwtrDyKMiaKli+g8N7EMsQoRLmYvLSg2MFFJGl/MZ+2go+Kr6wa+
+         IjLCVDcl9NF4wMY8CHihWtRaHQr7u3xYLFsB8hQCQfquz2StA6bANL4hrmi7Ln0wV1
+         OnbhL4q0UJ30R6Q16Uj9124NfoZy81iLifXO9xwM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.dellerweb.de ([92.116.158.121]) by mail.gmx.com
+ (mrgmx002 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 0LfSeH-1iI6tB0IYr-00p3Cv; Tue, 09 Jul 2019 07:46:36 +0200
+Date:   Tue, 9 Jul 2019 07:46:32 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
+Subject: [GIT PULL] parisc architecture patches for kernel v5.3
+Message-ID: <20190709054632.GA14843@ls3530.dellerweb.de>
 MIME-Version: 1.0
-References: <20190708123251.11759-1-huangfq.daxian@gmail.com>
-In-Reply-To: <20190708123251.11759-1-huangfq.daxian@gmail.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 9 Jul 2019 13:44:52 +0800
-Message-ID: <CAMz4kuJvnops5ecjP9PFwLW=WBPo4do9eawCX3cFTOL45qLgVQ@mail.gmail.com>
-Subject: Re: [PATCH 03/14] power: supply: sc27xx: Introduce local variable
- 'struct device *dev'
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Provags-ID: V03:K1:VIonYAy/xwcpqwB91oMJFKn7kTKiuuCzDbroEXVUs4XqS5MgDcd
+ DRvD4yuITLvSmSlxtkTX5fDlpLgJ0OLZiB9LStyzBnM3igQS/ur6EtP70FoYthCOPW84hoQ
+ fYUxBn43vJl9L0Ma6t5cYddMWNukj1/+ldg/fwDGHGpJH3NTk6yZSGVWvQCZzWOoYW427tl
+ 8r3smvCvz9sTlRYaj/7xQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:564hTMAUo+A=:5YbLjwZiwUbQQMrRrTAPQb
+ rZS97SxbEm8/CgKHjWn0AxCyZBQJz4IRFZIHU3FP82f4xyzCL5b9N2ZbicpDhtDcsEYS6BS4k
+ qZcFzADZOYvMseYcoVvVR6r71Ko0xIX6VJKE+EolXlRJtDfXH/lrFKDmNYOq8XiwAZ9u8yNps
+ s71OklrYXe0a8ZXfCGnbunfpE7dGJB72N2Dg7RlMPQ5HBxF/SGObvvdYijf2guVwHMJ/lCAY/
+ /+qmWLvbE7Ip4YICEkaQQ9nX5BPLAz0WArV8bESzG+UxrhcB4nwmeUiiaBzLno/GNyRv1LWmO
+ Xn5JtyHGWg0UAlvvvRAfzQ8Qg7GUkfMAZ/rtwRWg26qOh4U7ryW3P9eeHrackInp4+oB49dDj
+ HU+/fEEI7AODXtU8dAW3/kGuyJWdd+kc/pDd5LKKNWIvHRSB+Jt5e9al6v5N6L6xjR7dWUFLC
+ L+Tz4yUdfQP0dX2/Kv5HNIIF54X0hzfE3xtA8l5yjHiG7QQ+5w8qKtaEsOak1BJxcjhFvvxFc
+ zORsdAHZsl7deYI56eLcL4S6yJwQb0kbKCt9BBQKdUBjtJR7xk0KCYY5eLQURJeODfqHwP6Eo
+ sR81SlqdsEsmLTePexzgeQcmx4eNOwY4aM1PfTwfX8oHY1h47yzsDE88NX5vUXZr17K7nAm3C
+ DGZoqYX/CVfq6+FVuRyy+D/IY9xzJr/fOL7xnlBEGaewvvJ+ODNW1xQQIAS/YqBrZlotb231V
+ VUyfzlQFBIYr2gtEB7C5kFF1XaJi+I9rwMRy5jy62ZgTrtxBMuGvxt5qlRidFOGjM8tHE9bFq
+ WJnCm/C2bKbyzeC+w7BMbn2VLahtSUB1Zw4/EZ5ZBq9RzTlbkC7G3jj7pTT89BlwG8E+OBp9I
+ u8xqgGc7NqINZvexqtnNvp1jSekGHNeNxbjuloVKT+PGEIaMS6wDSDPUXG0vyhMfdoR9ho1BZ
+ e1kDvYHECZ2lDgabQQVLKRZHxKn22fUlXOputLSgpIECUPtUAMQtpMzmhs6tcFZREu/ehvskL
+ QLkoycvWaS0FNBpqhiD1V6nl+gZpbODt5yovHyinSYGpTPtidPwrwunTwvsLZAXTww==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 20:33, Fuqian Huang <huangfq.daxian@gmail.com> wrote:
->
-> Introduce local variable 'struct device *dev' and use it instead of
-> dereferencing it repeatly.
->
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Hi Linus,
 
-Looks good to me. Thanks.
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+please pull enhancements for the parisc architecture for kernel 5.3 from:
 
-> ---
->  drivers/power/supply/sc27xx_fuel_gauge.c | 47 ++++++++++++++++----------------
->  1 file changed, 24 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
-> index 24895cc3b41e..9c184d80088b 100644
-> --- a/drivers/power/supply/sc27xx_fuel_gauge.c
-> +++ b/drivers/power/supply/sc27xx_fuel_gauge.c
-> @@ -957,81 +957,82 @@ static int sc27xx_fgu_hw_init(struct sc27xx_fgu_data *data)
->
->  static int sc27xx_fgu_probe(struct platform_device *pdev)
->  {
-> -       struct device_node *np = pdev->dev.of_node;
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
->         struct power_supply_config fgu_cfg = { };
->         struct sc27xx_fgu_data *data;
->         int ret, irq;
->
-> -       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->         if (!data)
->                 return -ENOMEM;
->
-> -       data->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +       data->regmap = dev_get_regmap(dev->parent, NULL);
->         if (!data->regmap) {
-> -               dev_err(&pdev->dev, "failed to get regmap\n");
-> +               dev_err(dev, "failed to get regmap\n");
->                 return -ENODEV;
->         }
->
-> -       ret = device_property_read_u32(&pdev->dev, "reg", &data->base);
-> +       ret = device_property_read_u32(dev, "reg", &data->base);
->         if (ret) {
-> -               dev_err(&pdev->dev, "failed to get fgu address\n");
-> +               dev_err(dev, "failed to get fgu address\n");
->                 return ret;
->         }
->
-> -       data->channel = devm_iio_channel_get(&pdev->dev, "bat-temp");
-> +       data->channel = devm_iio_channel_get(dev, "bat-temp");
->         if (IS_ERR(data->channel)) {
-> -               dev_err(&pdev->dev, "failed to get IIO channel\n");
-> +               dev_err(dev, "failed to get IIO channel\n");
->                 return PTR_ERR(data->channel);
->         }
->
-> -       data->charge_chan = devm_iio_channel_get(&pdev->dev, "charge-vol");
-> +       data->charge_chan = devm_iio_channel_get(dev, "charge-vol");
->         if (IS_ERR(data->charge_chan)) {
-> -               dev_err(&pdev->dev, "failed to get charge IIO channel\n");
-> +               dev_err(dev, "failed to get charge IIO channel\n");
->                 return PTR_ERR(data->charge_chan);
->         }
->
-> -       data->gpiod = devm_gpiod_get(&pdev->dev, "bat-detect", GPIOD_IN);
-> +       data->gpiod = devm_gpiod_get(dev, "bat-detect", GPIOD_IN);
->         if (IS_ERR(data->gpiod)) {
-> -               dev_err(&pdev->dev, "failed to get battery detection GPIO\n");
-> +               dev_err(dev, "failed to get battery detection GPIO\n");
->                 return PTR_ERR(data->gpiod);
->         }
->
->         ret = gpiod_get_value_cansleep(data->gpiod);
->         if (ret < 0) {
-> -               dev_err(&pdev->dev, "failed to get gpio state\n");
-> +               dev_err(dev, "failed to get gpio state\n");
->                 return ret;
->         }
->
->         data->bat_present = !!ret;
->         mutex_init(&data->lock);
-> -       data->dev = &pdev->dev;
-> +       data->dev = dev;
->         platform_set_drvdata(pdev, data);
->
->         fgu_cfg.drv_data = data;
->         fgu_cfg.of_node = np;
-> -       data->battery = devm_power_supply_register(&pdev->dev, &sc27xx_fgu_desc,
-> +       data->battery = devm_power_supply_register(dev, &sc27xx_fgu_desc,
->                                                    &fgu_cfg);
->         if (IS_ERR(data->battery)) {
-> -               dev_err(&pdev->dev, "failed to register power supply\n");
-> +               dev_err(dev, "failed to register power supply\n");
->                 return PTR_ERR(data->battery);
->         }
->
->         ret = sc27xx_fgu_hw_init(data);
->         if (ret) {
-> -               dev_err(&pdev->dev, "failed to initialize fgu hardware\n");
-> +               dev_err(dev, "failed to initialize fgu hardware\n");
->                 return ret;
->         }
->
-> -       ret = devm_add_action(&pdev->dev, sc27xx_fgu_disable, data);
-> +       ret = devm_add_action(dev, sc27xx_fgu_disable, data);
->         if (ret) {
->                 sc27xx_fgu_disable(data);
-> -               dev_err(&pdev->dev, "failed to add fgu disable action\n");
-> +               dev_err(dev, "failed to add fgu disable action\n");
->                 return ret;
->         }
->
->         irq = platform_get_irq(pdev, 0);
->         if (irq < 0) {
-> -               dev_err(&pdev->dev, "no irq resource specified\n");
-> +               dev_err(dev, "no irq resource specified\n");
->                 return irq;
->         }
->
-> @@ -1046,17 +1047,17 @@ static int sc27xx_fgu_probe(struct platform_device *pdev)
->
->         irq = gpiod_to_irq(data->gpiod);
->         if (irq < 0) {
-> -               dev_err(&pdev->dev, "failed to translate GPIO to IRQ\n");
-> +               dev_err(dev, "failed to translate GPIO to IRQ\n");
->                 return irq;
->         }
->
-> -       ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +       ret = devm_request_threaded_irq(dev, irq, NULL,
->                                         sc27xx_fgu_bat_detection,
->                                         IRQF_ONESHOT | IRQF_TRIGGER_RISING |
->                                         IRQF_TRIGGER_FALLING,
->                                         pdev->name, data);
->         if (ret) {
-> -               dev_err(&pdev->dev, "failed to request IRQ\n");
-> +               dev_err(dev, "failed to request IRQ\n");
->                 return ret;
->         }
->
-> --
-> 2.11.0
->
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git pa=
+risc-5.3-1
 
+Dynamic ftrace support by Sven Schnelle and a header guard fix by Denis Ef=
+remov.
 
--- 
-Baolin Wang
-Best Regards
+Thanks,
+Helge
+
+=2D---------------------------------------------------------------
+Denis Efremov (1):
+      parisc: asm: psw.h: missing header guard
+
+Sven Schnelle (6):
+      parisc: add support for patching multiple words
+      parisc: add spinlock to patch function
+      parisc: add WARN_ON() to clear_fixmap
+      parisc: use pr_debug() in kernel/module.c
+      compiler.h: add CC_USING_PATCHABLE_FUNCTION_ENTRY
+      parisc: add dynamic ftrace
+
+ arch/parisc/Kconfig               |   2 +
+ arch/parisc/Makefile              |  18 ++++++
+ arch/parisc/include/asm/ftrace.h  |  15 ++++-
+ arch/parisc/include/asm/patch.h   |   4 +-
+ arch/parisc/include/asm/psw.h     |   2 +-
+ arch/parisc/kernel/Makefile       |   9 +--
+ arch/parisc/kernel/entry.S        |  64 +++++++++++++++++++
+ arch/parisc/kernel/ftrace.c       | 129 +++++++++++++++++++++++++++++++++=
+++---
+ arch/parisc/kernel/module.c       |  64 +++++++++++--------
+ arch/parisc/kernel/module.lds     |   7 +++
+ arch/parisc/kernel/patch.c        |  88 +++++++++++++++++++++-----
+ arch/parisc/kernel/vmlinux.lds.S  |   2 +
+ arch/parisc/mm/fixmap.c           |   7 ++-
+ include/asm-generic/vmlinux.lds.h |   7 +++
+ include/linux/compiler_types.h    |   2 +
+ 15 files changed, 359 insertions(+), 61 deletions(-)
+ create mode 100644 arch/parisc/kernel/module.lds
