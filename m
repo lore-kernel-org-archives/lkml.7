@@ -2,131 +2,95 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3603EC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A30C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F747214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5263820665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:31:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lRX0A7gL"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jI8IubuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbfGIS21 (ORCPT
+        id S1728988AbfGISbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:28:27 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:53378 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfGIS20 (ORCPT
+        Tue, 9 Jul 2019 14:31:25 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:46848 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfGISbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:28:26 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69IOJ71146036;
-        Tue, 9 Jul 2019 18:27:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=ZuuBmd+hn0gNy1yFa1x6CDg54lC3wgXrt5IpUQJMaw8=;
- b=lRX0A7gL0wgwbmshdLkJUR2nj6Nkv0327AL5K1+MgOC/0emwkvWtP24UtlurMRGDHP+8
- 3sKCLAT/0m+YdzcMvusZtNfGFsvBPgpSVbtNF8lbJSfJzm1P9qoxZvpFjZADFI84SZ9U
- hIVeITJmHqlhA1wH8rLYqIXinP7/oAKZKrCjmb8bNmdVljnM7c+gDv6rNypd0DOp34Sa
- +r2eXShIlfFW4wHe8xtLXa2bWI4nvSoqHFSfL6XHiB3Zijd1wqGrpLbhH+lH8D3Iv7Wy
- S04ZamFBMOiywBd63+jP0fCC6yrZ505RRPJIgyAiRDiiTOBmYfEAXsDPi9L9Rc6wBQPY gA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2tjk2tp0s8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 18:27:03 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69IIhwl138656;
-        Tue, 9 Jul 2019 18:27:02 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2tmmh3474u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 18:27:02 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x69IR19r025057;
-        Tue, 9 Jul 2019 18:27:01 GMT
-Received: from [10.156.75.135] (/10.156.75.135)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jul 2019 11:27:01 -0700
-Subject: Re: cputime takes cstate into consideration
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Raslan, KarimAllah" <karahmed@amazon.de>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "kernellwp@gmail.com" <kernellwp@gmail.com>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>
-References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
- <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
- <20190626145413.GE6753@char.us.oracle.com>
- <1561575536.25880.10.camel@amazon.de>
- <alpine.DEB.2.21.1906262119430.32342@nanos.tec.linutronix.de>
- <7f721d94-aa19-20a4-6930-9ed4d1cd4834@oracle.com>
- <20190709123838.GA3402@hirez.programming.kicks-ass.net>
-From:   Ankur Arora <ankur.a.arora@oracle.com>
-Message-ID: <a1dbbed2-17e4-89e5-d141-9c30dc352c5f@oracle.com>
-Date:   Tue, 9 Jul 2019 11:27:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190709123838.GA3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=565
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907090215
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=606 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907090216
+        Tue, 9 Jul 2019 14:31:24 -0400
+Received: by mail-qt1-f174.google.com with SMTP id h21so20450309qtn.13
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pB9dO1YoSFCBt5VqzlZlYrCP0I0wMvKymwW5GOWPpKE=;
+        b=jI8IubuELbmmKNncJfTqWmP+f9zvxt+ULoPrMyeL77bS9w8hq6YecHEc205qXD15al
+         9L85FNMg9SN4XHzK4g5mkKz6lpYGJ8YIV2//WPmbS6Q/wRkdjD/BUC7Y7dZk5FUbVQ61
+         AIABW8VOZ3wAPf7hDmV0DuHRLFxFG1ZDkt3aSzrD4Hi/eQ/rJO9ePJrOaJkbTEdHxt4u
+         KEnrcITkTc3ZpMgx4MDYtzz17UTuuAYY7+bMPHdu+3YNLpOuu85jY+suc3zhsY87Qbcx
+         kAGiv/l9M3R/sOOZHKY5k+VuhAlIayNg38swphmhtovOKnFIPwAv0SoNJhA2kAni1eTk
+         0b2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pB9dO1YoSFCBt5VqzlZlYrCP0I0wMvKymwW5GOWPpKE=;
+        b=mqImsYTyfX4iniVuo/Nk4JTA3vy/9qkGJC581pY0bKKzaxXqUQwoL0eIP+/0/ygjlu
+         j///h2T+5ciFHinLwzYC1+P+/ZYfNYegpCWxD/FhEbGZc/0RWUK4JF4QyuDERi3o+h6W
+         j4TjE9sF0Rtn1acO8Z1RMQvMzq9WkfGNOaLpS8KQqQawqxV88TtneAKUEAnIBQsrmfs4
+         D0mB/DYh8XbPOwaOtmv4G/J9RNcuE3PwO13P+FjYce0AIsW3uWrOvwqpK6v3WSQOLP2u
+         YZml3tFXzS65Ea7j4zFsjalGcEnkuZKZuo+1KlUqV8CdyUr6ZaL5aF3HptLSSAMGfNBy
+         zEAg==
+X-Gm-Message-State: APjAAAVR91IJbn/SEnjI+Q+ya3KrvcL2gV8PnFu0r9QaCvtlFumolDEr
+        Y8iWhG5YBYgrYn5V+z8tUOIhkQ==
+X-Google-Smtp-Source: APXvYqzQbs8wLB91EIFIdM/HDibRu80Gnv/0PS61jRGBz092aGBNDw1iOxO5ZeHzT1FrxgFLIIEKRw==
+X-Received: by 2002:a0c:91bc:: with SMTP id n57mr21158460qvn.141.1562697083769;
+        Tue, 09 Jul 2019 11:31:23 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id i16sm8864623qkk.1.2019.07.09.11.31.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 11:31:22 -0700 (PDT)
+Message-ID: <1562697081.8510.16.camel@lca.pw>
+Subject: Re: memory leaks from xfs_rw_bdev()
+From:   Qian Cai <cai@lca.pw>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     darrick.wong@oracle.com, david@fromorbit.com,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jul 2019 14:31:21 -0400
+In-Reply-To: <20190708213515.GB18177@lst.de>
+References: <1562616489.8510.15.camel@lca.pw>
+         <20190708213515.GB18177@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/19 5:38 AM, Peter Zijlstra wrote:
-> On Mon, Jul 08, 2019 at 07:00:08PM -0700, Ankur Arora wrote:
->> On 2019-06-26 12:23 p.m., Thomas Gleixner wrote:
->>> On Wed, 26 Jun 2019, Raslan, KarimAllah wrote:
->>>> On Wed, 2019-06-26 at 10:54 -0400, Konrad Rzeszutek Wilk wrote:
->>>>> There were some ideas that Ankur (CC-ed) mentioned to me of using the perf
->>>>> counters (in the host) to sample the guest and construct a better
->>>>> accounting idea of what the guest does. That way the dashboard
->>>>> from the host would not show 100% CPU utilization.
->>>>
->>>> You can either use the UNHALTED cycles perf-counter or you can use MPERF/APERF
->>>> MSRs for that. (sorry I got distracted and forgot to send the patch)
->>>
->>> Sure, but then you conflict with the other people who fight tooth and nail
->>> over every single performance counter.
->> How about using Intel PT PwrEvt extensions? This should allow us to
->> precisely track idle residency via just MWAIT and TSC packets. Should
->> be pretty cheap too. It's post Cascade Lake though.
+On Mon, 2019-07-08 at 23:35 +0200, Christoph Hellwig wrote:
+> We actually have a discussion on that in another thread, but if you
+> can easily reproduce the issue, can you test the patch below?
 > 
-> That would fully claim PT just for this stupid accounting thing and be
-> completely Intel specific.
-> 
-> Just stop this madness already.
-I see the point about just accruing guest time (in mwait or not) as
-guest CPU time.
-But, to take this madness a little further, I'm not sure I see why it
-fully claims PT. AFAICS, we should be able to enable PwrEvt and whatever
-else simultaneously.
+> diff --git a/fs/xfs/xfs_bio_io.c b/fs/xfs/xfs_bio_io.c
+> index 757c1d9293eb..e2148f2d5d6b 100644
+> --- a/fs/xfs/xfs_bio_io.c
+> +++ b/fs/xfs/xfs_bio_io.c
+> @@ -43,7 +43,7 @@ xfs_rw_bdev(
+>  			bio_copy_dev(bio, prev);
+>  			bio->bi_iter.bi_sector = bio_end_sector(prev);
+>  			bio->bi_opf = prev->bi_opf;
+> -			bio_chain(bio, prev);
+> +			bio_chain(prev, bio);
+>  
+>  			submit_bio(prev);
+>  		}
 
-Ankur
-
-> 
+Yes, it works fine.
