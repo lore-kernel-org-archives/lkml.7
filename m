@@ -2,164 +2,104 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CDBC73C42
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB90C73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65A0216E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFD021537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:46:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DAePqwMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfGIMpG (ORCPT
+        id S1726692AbfGIMqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:45:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39141 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfGIMpF (ORCPT
+        Tue, 9 Jul 2019 08:46:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36091 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfGIMqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:45:05 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r21so4319467otq.6;
-        Tue, 09 Jul 2019 05:45:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s3SJLHa0QaBvqcRDd1S8n2545S3PIjUttJK3XHvIBbo=;
-        b=ic+zZAw5K6Z6i7Oi13yfgZLjrjq6LcGLwok89yIdKI7HDYc4+8sLXHMKOvBFY5maPk
-         vUnu2ypikMaOc90aaoJ4FT/w/txjLLd5WqJsdy/L7T836cSOwTSw2I/kb3CFGYaTuqZX
-         MJUho9mgD9yJFkkYEmkeMAJsXQmpJ2a2pHujxWhRHZtHtiGIZ6juRt6bCOzNvT+iRbUu
-         zAtHRRqwSzFE2lw5UMXRSI2c41j9msO2o+O58gKI3LZK3p5aasw9/q+JUdjDrBWTSEcP
-         N2hbfRTp71cf8JOz4Ls6eiyquNh/b4SFYbqSsnQa7YoloExOitXGk02vFzVDobip6v/o
-         4Hjw==
-X-Gm-Message-State: APjAAAU13CGEUi53ctnp+qogKJZMJMEbfsCTyLPQIe+zXzHNtIBADkza
-        XE0vBcKInKKwLttM9zCkcgbbI5CVkgEK4oQ5sT0=
-X-Google-Smtp-Source: APXvYqzSvNdQu/tZ7D58EU1NScOy26xYDrz419I/q9nngx9aEe3FyCQAPS3FRZZhwJ1tIrqKV7xxD7EnjwL3hdRbPv4=
-X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr1717391otc.250.1562676304654;
- Tue, 09 Jul 2019 05:45:04 -0700 (PDT)
+        Tue, 9 Jul 2019 08:46:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x69CkDjL1917659
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 9 Jul 2019 05:46:13 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x69CkDjL1917659
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562676373;
+        bh=U/vVBHXOEkI3YW6CYUzVqwbbM4lrp80ZngJftIrF8aM=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=DAePqwMINK0JUQJEyeww02fCph2N/S/lwrdSrWJhAuZta8A+bGlstpRj0c8YzssVl
+         EEhY6G1yKG0WuL8cmAJYWBwCpiP3nck4A5SWbPkLh/0bXekR4Q6FWtoJNCUZmHN/m5
+         tBwxgHZyLJdZBhfAmm0ISgQ+W9wmU5hmaRhKftq3OjmOU821vEmx84S6vkuxBn8UGu
+         nfTBQmMIiEMOE0UUkh9SmbzkzMdImKfUS1LBlVztEKQz16XuakYSfhiXT5B8ev0reQ
+         Hkd/SF6jlGpMIwXmvf8yJF7XzZX8SFcRGz2vnVTunjmFwNrxCeKbBB1FhJpk+xzRvv
+         FkhRW8aV6P87w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x69CkClK1917656;
+        Tue, 9 Jul 2019 05:46:12 -0700
+Date:   Tue, 9 Jul 2019 05:46:12 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Slaby <tipbot@zytor.com>
+Message-ID: <tip-1cbec37b3f9cff074a67bef4fc34b30a09958a0a@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
+        tglx@linutronix.de, jslaby@suse.cz
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de, jslaby@suse.cz,
+          mingo@kernel.org, hpa@zytor.com
+In-Reply-To: <20190709063402.19847-1-jslaby@suse.cz>
+References: <20190709063402.19847-1-jslaby@suse.cz>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/entry/32: Fix ENDPROC of common_spurious
+Git-Commit-ID: 1cbec37b3f9cff074a67bef4fc34b30a09958a0a
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com>
- <CAMuHMdUH46_yvYc840uvMoOOqXuU3mDOjaT65vZ=6WKGq7-Kqg@mail.gmail.com> <CAK7LNASuEQqb7w8qD9ZKx-LKp0+CqvybEqFtYxVk5d0YJt-Nfg@mail.gmail.com>
-In-Reply-To: <CAK7LNASuEQqb7w8qD9ZKx-LKp0+CqvybEqFtYxVk5d0YJt-Nfg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 9 Jul 2019 14:44:53 +0200
-Message-ID: <CAMuHMdVmmgW24vStkicXfA3hokcPYWo_r5bW=WFRs4zdP3SQyQ@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: check arch/$(SRCARCH)/include/generated before
- out-of-tree build
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+Commit-ID:  1cbec37b3f9cff074a67bef4fc34b30a09958a0a
+Gitweb:     https://git.kernel.org/tip/1cbec37b3f9cff074a67bef4fc34b30a09958a0a
+Author:     Jiri Slaby <jslaby@suse.cz>
+AuthorDate: Tue, 9 Jul 2019 08:34:02 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Tue, 9 Jul 2019 14:41:03 +0200
 
-On Tue, Jul 9, 2019 at 2:22 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> On Tue, Jul 9, 2019 at 5:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sun, Apr 7, 2019 at 12:45 PM Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> > > After cross-compiling the kernel, "make mrproper" should be executed
-> > > with the proper ARCH= option. Otherwise, stale objects will remain
-> > > under arch/$(SRCARCH)/.
-> > >
-> > > One bad scenario is like this:
-> > >
-> > >   $ make ARCH=arm defconfig all   # cross-compile the kernel for arm
-> > >   $ make mrproper                 # mrproper for host-arch (i.e. x86)
-> > >   $ make ARCH=arm O=build_dir defconfig all
-> > >
-> > > If you miss ARCH= for mrproper and cross-compile the kernel with O=
-> > > and ARCH= options, Kbuild will happily start to build, but may fail
-> > > due to stale objects in the srctree.
-> > >
-> > > If $(srctree)/arch/$(SRCARCH)/include/generated/ exists, let's stop
-> > > the out-of-tree build. To detect this, mrproper should clean only
-> > > arch/$(SRCARCH)/include/generated/.
-> > >
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > ---
-> > >
-> > >  Makefile | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Makefile b/Makefile
-> > > index 10643c3..17945ce 100644
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -1091,7 +1091,9 @@ PHONY += prepare archprepare prepare1 prepare3
-> > >  prepare3: include/config/kernel.release
-> > >  ifneq ($(srctree),.)
-> > >         @$(kecho) '  Using $(srctree) as source for kernel'
-> > > -       $(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
-> > > +       $(Q)if [ -f $(srctree)/.config -o \
-> > > +                -d $(srctree)/include/config -o \
-> > > +                -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
-> > >                 echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
-> > >                 echo >&2 "  in the '$(srctree)' directory.";\
-> >
-> > This took me a bit to find out what was wrong...
-> >
-> > Usually I don't run "make mrproper", as it removes files I may want to
-> > keep (e.g. tags).  Hence I ran "git ls-files -o | grep m68k | xargs rm"
-> > (I usually build in separate output directories), confirmed with "git
-> > ls-files -o" there were no remaining build artefacts, and was surprised
-> > to discover I still got the error message above?!?
-> >
-> > Apparently arch/m68k/include/generated was still present, but as "git
-> > ls-files -o" only shows files, not directories, it was not listed.
-> > Perhaps the directory checks above can be changed to directory exists
-> > _and_ is not empty?
->
-> No.
->
-> Since you did not run mrproper,
-> Kbuild _correctly_ showed error.
-> This is the expected and correct behavior. :)
->
-> The upstream kernel is not a place
-> to be customized for your workflow. Sorry.
->
->
-> Every developer has a set of handy custom commands.
->
-> Since you are already running a long command,
-> why don't you add one more line, and put in ~/.bash_aliases or somewhere?
->
-> my_mrproper()
-> {
->     git ls-files -o | grep m68k | xargs rm
->     rm -rf arch/m68k/include/generated
-> }
+x86/entry/32: Fix ENDPROC of common_spurious
 
-Please note this was not part of my standard workflow, so I don't have a
-script for it.  I just happened to had done a quick test build in my
-kernel source tree repository before, and had forgotten about that.
+common_spurious is currently ENDed erroneously. common_interrupt is used
+in its ENDPROC. So fix this mistake.
 
-So IMHO this is more of a usability issue: it is difficult to find out
-what is wrong, and how to solve it, as "git ls-files -o" doesn't give a
-clue.  And running "make mrproper" doesn't help.
+Found by my asm macros rewrite patchset.
 
-Perhaps the message should be changed to
+Fixes: f8a8fe61fec8 ("x86/irq: Seperate unused system vectors from spurious entry again")
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190709063402.19847-1-jslaby@suse.cz
 
-    $(srctree) is not clean, please run 'make ARCH=$(SRCARCH) mrproper'"
+---
+ arch/x86/entry/entry_32.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-instead?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 1285e5abf669..90b473297299 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1189,7 +1189,7 @@ common_spurious:
+ 	movl	%esp, %eax
+ 	call	smp_spurious_interrupt
+ 	jmp	ret_from_intr
+-ENDPROC(common_interrupt)
++ENDPROC(common_spurious)
+ #endif
+ 
+ /*
