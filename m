@@ -2,97 +2,229 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0470EC73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA89C73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EE7214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:12:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beBQHaBL"
+	by mail.kernel.org (Postfix) with ESMTP id 81A912171F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfGINMV (ORCPT
+        id S1726887AbfGINN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:12:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41989 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbfGINMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:12:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so9275067pff.9;
-        Tue, 09 Jul 2019 06:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=soAPOe6ih8tkO1SzpXlTIE8MerV+aOYsemjpB1yNW54=;
-        b=beBQHaBLCiFSzYk8Ibe8uqGODy8KGV8qIwkrArSb45PoZUYSSus8LpwBAohf0OVQa+
-         BE9qaM9q/OdBaJHBo0MJOuvaH5NLZWHXNTUEfQf0FKBRbKTKA6Q4xJ6pBegXH9Xa5/4V
-         B36xiaoNK3Dffe9RWTXTecU49B0c0+rhpICRMJuVQeMJ4ovTY+lYS4cVi2CEzGO5U/nN
-         pr2mo5DdDs9YgV+YB/EsTOPIKsK7oSyJMLplV5OOoYyHAYc+2RMdiAcINKQfK6GjnqrR
-         efim1dHzLlGiE0TukG3v1stTUHaB8MrMiUxDEnyNEo1rlrVvm47eZ5UkwX4FyFWj+1Oq
-         UKvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=soAPOe6ih8tkO1SzpXlTIE8MerV+aOYsemjpB1yNW54=;
-        b=TA8vDxgAKlPrMAH+I6XUjAOnzUnNPC0tde3wJXmWuRyFJEOKD7mdgQYHdNXuOlwWw6
-         EVXlzrDdxaa5SPWBtm/W++3wqFRoEFKNmYofQxPTCgAcQRz/hPQrsGzH8jDTA5754BYX
-         iIoL1AjugB3oq+GXqjMgrZEBRO1v8D5mKsOwz/WiPNVMrDt4uCbhTeWTkMK6JeoeCmdM
-         YIXlkANvEXZzX2HImwEDP8HW6tQ7lY4G+CBBlYk24fjuw6iVpRpB7Cd/FIwMCVlzASou
-         tidWqr84/saPq2La4Wz5Ob1t7aslQDojCshEQmIxV6+ojBLdXD9Gpx5cQm5L47Rhm7N2
-         tnNg==
-X-Gm-Message-State: APjAAAVUmiRZFWwQ/zAGdUejnLkSUb8M5NccoGIUJy6bO9N/+gYyyH++
-        ZGECoJHQOf9Pu8vQhrFb8Wc=
-X-Google-Smtp-Source: APXvYqx9kv8MNlJQO+z5Dn9rUVkyMoi69mfTi6wVP0m0DNBlh2lcfoeC8G/fMv4pNK0p74of+y8iQA==
-X-Received: by 2002:a63:3046:: with SMTP id w67mr31272984pgw.37.1562677940677;
-        Tue, 09 Jul 2019 06:12:20 -0700 (PDT)
-Received: from arch ([43.250.158.197])
-        by smtp.gmail.com with ESMTPSA id q7sm7103795pff.2.2019.07.09.06.12.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 06:12:19 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 18:42:14 +0530
-From:   Amol Surati <suratiamol@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 00/96] 5.1.17-stable review
-Message-ID: <20190709131214.GA32761@arch>
-References: <20190708150526.234572443@linuxfoundation.org>
+        Tue, 9 Jul 2019 09:13:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41546 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbfGINN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:13:57 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ACBC8C055671;
+        Tue,  9 Jul 2019 13:13:56 +0000 (UTC)
+Received: from treble (ovpn-112-43.rdu2.redhat.com [10.10.112.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F3606848CE;
+        Tue,  9 Jul 2019 13:13:54 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 08:13:52 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel test robot <rong.a.chen@intel.com>
+Subject: Re: [PATCH] x86/alternatives: Fix int3_emulate_call() selftest stack
+ corruption
+Message-ID: <20190709131352.hdylu45cul52ghyy@treble>
+References: <1a859cba4db356852b20222ebe056b38c6a6e963.1562619299.git.jpoimboe@redhat.com>
+ <20190709125744.GB3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190708150526.234572443@linuxfoundation.org>
+In-Reply-To: <20190709125744.GB3402@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 09 Jul 2019 13:13:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 05:12:32PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.17 release.
-> There are 96 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, Jul 09, 2019 at 02:57:44PM +0200, Peter Zijlstra wrote:
+> On Mon, Jul 08, 2019 at 03:55:30PM -0500, Josh Poimboeuf wrote:
 > 
-> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
-> Anything received after that time might be too late.
+> >  arch/x86/kernel/alternative.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> > index 99ef8b6f9a1a..2644a7b82f96 100644
+> > --- a/arch/x86/kernel/alternative.c
+> > +++ b/arch/x86/kernel/alternative.c
+> > @@ -651,6 +651,13 @@ int3_exception_notify(struct notifier_block *self, unsigned long val, void *data
+> >  	return NOTIFY_STOP;
+> >  }
+> >  
+> > +#ifdef CONFIG_X86_32
+> > +# define INT3_TEST_CLOBBERS "memory", "cc", "ecx", "edx"
+> > +#else
+> > +# define INT3_TEST_CLOBBERS "memory", "cc", "rax", "rcx", "rdx", "rsi", "r8", \
+> > +			    "r9", "r10", "r11"
+> > +#endif
+> > +
+> >  static void __init int3_selftest(void)
+> >  {
+> >  	static __initdata struct notifier_block int3_exception_nb = {
+> > @@ -676,7 +683,7 @@ static void __init int3_selftest(void)
+> >  		      "int3_selftest_ip:\n\t"
+> >  		      __ASM_SEL(.long, .quad) " 1b\n\t"
+> >  		      ".popsection\n\t"
+> > -		      : : __ASM_SEL_RAW(a, D) (&val) : "memory");
+> > +		      : : __ASM_SEL_RAW(a, D) (&val) : INT3_TEST_CLOBBERS);
+> >  
+> >  	BUG_ON(val != 1);
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.17-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
+> As discussed on IRC; I've changed that to the other variant.
 > 
-> thanks,
+> ---
+> Subject: x86/alternatives: Fix int3_emulate_call() selftest stack corruption
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Mon, 8 Jul 2019 15:55:30 -0500
 > 
-> greg k-h
+> KASAN shows the following splat during boot:
+> 
+>   BUG: KASAN: unknown-crash in unwind_next_frame+0x3f6/0x490
+>   Read of size 8 at addr ffffffff84007db0 by task swapper/0
+> 
+>   CPU: 0 PID: 0 Comm: swapper Tainted: G                T 5.2.0-rc6-00013-g7457c0d #1
+>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+>   Call Trace:
+>    dump_stack+0x19/0x1b
+>    print_address_description+0x1b0/0x2b2
+>    ? unwind_next_frame+0x3f6/0x490
+>    __kasan_report+0x10f/0x171
+>    ? unwind_next_frame+0x3f6/0x490
+>    kasan_report+0x12/0x1c
+>    __asan_load8+0x54/0x81
+>    unwind_next_frame+0x3f6/0x490
+>    ? unwind_dump+0x24e/0x24e
+>    unwind_next_frame+0x1b/0x23
+>    ? create_prof_cpu_mask+0x20/0x20
+>    arch_stack_walk+0x68/0xa5
+>    ? set_memory_4k+0x2a/0x2c
+>    stack_trace_save+0x7b/0xa0
+>    ? stack_trace_consume_entry+0x89/0x89
+>    save_trace+0x3c/0x93
+>    mark_lock+0x1ef/0x9b1
+>    ? sched_clock_local+0x86/0xa6
+>    __lock_acquire+0x3ba/0x1bea
+>    ? __asan_loadN+0xf/0x11
+>    ? mark_held_locks+0x8e/0x8e
+>    ? mark_lock+0xb4/0x9b1
+>    ? sched_clock_local+0x86/0xa6
+>    lock_acquire+0x122/0x221
+>    ? _vm_unmap_aliases+0x141/0x183
+>    __mutex_lock+0xb6/0x731
+>    ? _vm_unmap_aliases+0x141/0x183
+>    ? sched_clock_cpu+0xac/0xb1
+>    ? __mutex_add_waiter+0xae/0xae
+>    ? lock_downgrade+0x368/0x368
+>    ? _vm_unmap_aliases+0x40/0x183
+>    mutex_lock_nested+0x16/0x18
+>    _vm_unmap_aliases+0x141/0x183
+>    ? _vm_unmap_aliases+0x40/0x183
+>    vm_unmap_aliases+0x14/0x16
+>    change_page_attr_set_clr+0x15e/0x2f2
+>    ? __set_pages_p+0x111/0x111
+>    ? alternative_instructions+0xd8/0x118
+>    ? arch_init_ideal_nops+0x181/0x181
+>    set_memory_4k+0x2a/0x2c
+>    check_bugs+0x11fd/0x1298
+>    ? l1tf_cmdline+0x1dc/0x1dc
+>    ? proc_create_single_data+0x5f/0x6e
+>    ? cgroup_init+0x2b1/0x2f6
+>    start_kernel+0x793/0x7eb
+>    ? thread_stack_cache_init+0x2e/0x2e
+>    ? idt_setup_early_handler+0x70/0xb1
+>    x86_64_start_reservations+0x55/0x76
+>    x86_64_start_kernel+0x87/0xaa
+>    secondary_startup_64+0xa4/0xb0
+> 
+>   Memory state around the buggy address:
+>    ffffffff84007c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1
+>    ffffffff84007d00: f1 00 00 00 00 00 00 00 00 00 f2 f2 f2 f3 f3 f3
+>   >ffffffff84007d80: f3 79 be 52 49 79 be 00 00 00 00 00 00 00 00 f1
+> 
+> It turns out that int3_selftest() is corrupting the stack.  The problem
+> is that the KASAN-ified version of int3_magic() is much less trivial
+> than the C code appears.  It clobbers several unexpected registers.  So
+> when the selftest's INT3 is converted to an emulated call to
+> int3_magic(), the registers are clobbered and Bad Things happen when the
+> function returns.
+> 
+> Fix this by converting int3_magic() to the trivial ASM function it
+> should be, avoiding all calling convetion issues. Also add
+> ASM_CALL_CONSTRAINT to the INT3 ASM, since it contains a 'CALL'.
+> 
+> Fixes: 7457c0da024b ("x86/alternatives: Add int3_emulate_call() selftest")
+> Cc: x86@kernel.org
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Debugged-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> [peterz: cribbed changelog from josh]
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/kernel/alternative.c |   25 ++++++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
+> 
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -625,10 +625,23 @@ extern struct paravirt_patch_site __star
+>   *
+>   * See entry_{32,64}.S for more details.
+>   */
+> -static void __init int3_magic(unsigned int *ptr)
+> -{
+> -	*ptr = 1;
+> -}
+> +
+> +/*
+> + * We define the int3_magic() function in assembly to control the calling
+> + * convention such that we can 'call' it from assembly.
+> + */
+> +
+> +extern void int3_magic(unsigned int *ptr); /* defined in asm */
+> +
+> +asm (
+> +"	.pushsection	.init.text, \"ax\", @progbits\n"
+> +"	.type		int3_magic, @function\n"
+> +"int3_magic:\n"
+> +"	movl	$1, (%" _ASM_ARG1 ")\n"
+> +"	ret\n"
+> +"	.size		int3_magic, .-int3_magic\n"
+> +"	.popsection\n"
+> +);
+>  
+>  extern __initdata unsigned long int3_selftest_ip; /* defined in asm below */
+>  
+> @@ -676,7 +689,9 @@ static void __init int3_selftest(void)
+>  		      "int3_selftest_ip:\n\t"
+>  		      __ASM_SEL(.long, .quad) " 1b\n\t"
+>  		      ".popsection\n\t"
+> -		      : : __ASM_SEL_RAW(a, D) (&val) : "memory");
+> +		      : ASM_CALL_CONSTRAINT
+> +		      : __ASM_SEL_RAW(a, D) (&val)
+> +		      : "memory");
+>  
+>  	BUG_ON(val != 1);
+>  
 
-Compiled, booted; no regressions between 5.1.16 and 5.1.17-rc1 for
-dmesg, and kselftests (at least those that did run in my environment).
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+
+-- 
+Josh
