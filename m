@@ -2,134 +2,115 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EECC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9EDC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79527216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43212166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:52:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="vFN6luL8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfGIPtN (ORCPT
+        id S1726380AbfGIPwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 11:49:13 -0400
-Received: from mga02.intel.com ([134.134.136.20]:50139 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfGIPtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 11:49:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 08:49:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
-   d="scan'208";a="176532235"
-Received: from ngote-system-product-name.iind.intel.com ([10.106.124.92])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jul 2019 08:49:09 -0700
-From:   NitinGote <nitin.r.gote@intel.com>
-To:     corbet@lwn.net
-Cc:     joe@perches.com, akpm@linux-foundation.org, apw@canonical.com,
-        keescook@chromium.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Nitin Gote <nitin.r.gote@intel.com>
-Subject: [PATCH v4] Added warnings in checkpatch.pl script to :
-Date:   Tue,  9 Jul 2019 21:18:06 +0530
-Message-Id: <20190709154806.26363-1-nitin.r.gote@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jul 2019 11:52:20 -0400
+Received: from mail.efficios.com ([167.114.142.138]:46424 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfGIPwU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 11:52:20 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id C77A22A2A84;
+        Tue,  9 Jul 2019 11:52:18 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id xsjFskoTtcOq; Tue,  9 Jul 2019 11:52:18 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 6038F2A2A7C;
+        Tue,  9 Jul 2019 11:52:18 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 6038F2A2A7C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1562687538;
+        bh=5klOSNIno6HXWTvWyvWMe1zJvNm5l++YeHh3NU3ODNk=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=vFN6luL8ZYCv0+2xVs2nAT1DWtUdEq7l926QxOAz2PO67k0M9XBZth4d+6A45rE9+
+         MUE86ArQNcnZWuWfspUlH6xP8tmqN7OSipSK6tuX2Xa1fYyX1yOslzumJDJCBauezM
+         iGTsYx256tpJ1aTZUQTbkC4yW5J9AlQTAkxyjCzZfzTbpyfd/V3Lyd0BZDyimcuHgc
+         JntT4O5JhUd2PKopEd8mQUmVt/77xjnvM+vxjJkVOpscLCeR+SJinGD8HBrPdaqOfk
+         9pScWOoUFSTcP2PPW9BSA6qcPdjKcbdcNJg78Sk0fJYYGcs3VjwgAfDNLUNNN3jBEV
+         5lOF8u0s4ZBig==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id YI3xn3pFAFu6; Tue,  9 Jul 2019 11:52:18 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 4A50B2A2A76;
+        Tue,  9 Jul 2019 11:52:18 -0400 (EDT)
+Date:   Tue, 9 Jul 2019 11:52:18 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     paulmck <paulmck@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Message-ID: <262027381.15855.1562687538131.JavaMail.zimbra@efficios.com>
+In-Reply-To: <alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de>
+References: <1987107359.5048.1562273987626.JavaMail.zimbra@efficios.com> <824482130.8027.1562341133252.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.1907052246220.3648@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907052256490.3648@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907081531560.4709@nanos.tec.linutronix.de> <20190708140732.GI26519@linux.ibm.com> <alpine.DEB.2.21.1907081618270.4709@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907091622590.1634@nanos.tec.linutronix.de>
+Subject: Re: [PATCH V3] cpu/hotplug: Cache number of online CPUs
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3809)
+Thread-Topic: cpu/hotplug: Cache number of online CPUs
+Thread-Index: +8Uf++qq2pM+ULxRrVoYbRDAlrUa1Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nitin Gote <nitin.r.gote@intel.com>
+----- On Jul 9, 2019, at 10:23 AM, Thomas Gleixner tglx@linutronix.de wrote:
+[...]
+> +void set_cpu_online(unsigned int cpu, bool online)
+> +{
+> +	/*
+> +	 * atomic_inc/dec() is required to handle the horrid abuse of this
+> +	 * function by the reboot and kexec code which invokes it from
 
-1. Deprecate strcpy() in favor of strscpy().
-2. Deprecate strlcpy() in favor of strscpy().
-3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
+invokes -> invoke
 
-Updated strncpy() section in Documentation/process/deprecated.rst
-to cover strscpy_pad() case.
+> +	 * IPI/NMI broadcasts when shutting down CPUs. Inocation from
 
-Signed-off-by: Nitin Gote <nitin.r.gote@intel.com>
----
- Change log:
- v1->v2
- - For string related apis, created different %deprecated_string_api
-   and these will get emitted at CHECK Level using command line option
-   -f/--file to avoid bad patched from novice script users.
+Inocation -> Invocation
 
- v2->v3
- - Avoided use of $check in implementation.
- - Incorporated trivial comments.
+The rest looks good!
 
- v3->v4
- - Incorporated comment by removing "c:func:"
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
- Documentation/process/deprecated.rst |  6 +++---
- scripts/checkpatch.pl                | 24 ++++++++++++++++++++++++
- 2 files changed, 27 insertions(+), 3 deletions(-)
+> +	 * regular CPU hotplug is properly serialized.
+> +	 *
+> +	 * Note, that the fact that __num_online_cpus is of type atomic_t
+> +	 * does not protect readers which are not serialized against
+> +	 * concurrent hotplug operations.
+> +	 */
+> +	if (online) {
+> +		if (!cpumask_test_and_set_cpu(cpu, &__cpu_online_mask))
+> +			atomic_inc(&__num_online_cpus);
+> +	} else {
+> +		if (cpumask_test_and_clear_cpu(cpu, &__cpu_online_mask))
+> +			atomic_dec(&__num_online_cpus);
+> +	}
+> +}
+> +
+> /*
+>  * Activate the first processor.
+>   */
 
-diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-index 49e0f64a3427..0fb37ebe3ad9 100644
---- a/Documentation/process/deprecated.rst
-+++ b/Documentation/process/deprecated.rst
-@@ -93,9 +93,9 @@ will be NUL terminated. This can lead to various linear read overflows
- and other misbehavior due to the missing termination. It also NUL-pads the
- destination buffer if the source contents are shorter than the destination
- buffer size, which may be a needless performance penalty for callers using
--only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
--(Users of :c:func:`strscpy` still needing NUL-padding will need an
--explicit :c:func:`memset` added.)
-+only NUL-terminated strings. In this case, the safe replacement is
-+`strscpy()`. If, however, the destination buffer still needs NUL-padding,
-+the safe replacement is `strscpy_pad()`.
-
- If a caller is using non-NUL-terminated strings, :c:func:`strncpy()` can
- still be used, but destinations should be marked with the `__nonstring
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index bb28b178d929..e6fbf4cf4be4 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -605,6 +605,20 @@ foreach my $entry (keys %deprecated_apis) {
- }
- $deprecated_apis_search = "(?:${deprecated_apis_search})";
-
-+our %deprecated_string_apis = (
-+        "strcpy"				=> "strscpy",
-+        "strlcpy"				=> "strscpy",
-+        "strncpy"				=> "strscpy, strscpy_pad or for non-NUL-terminated strings, strncpy() can still be used, but destinations should be marked with the __nonstring",
-+);
-+
-+#Create a search pattern for all these strings apis to speed up a loop below
-+our $deprecated_string_apis_search = "";
-+foreach my $entry (keys %deprecated_string_apis) {
-+        $deprecated_string_apis_search .= '|' if ($deprecated_string_apis_search ne "");
-+        $deprecated_string_apis_search .= $entry;
-+}
-+$deprecated_string_apis_search = "(?:${deprecated_string_apis_search})";
-+
- our $mode_perms_world_writable = qr{
- 	S_IWUGO		|
- 	S_IWOTH		|
-@@ -6446,6 +6460,16 @@ sub process {
- 			     "Deprecated use of '$deprecated_api', prefer '$new_api' instead\n" . $herecurr);
- 		}
-
-+# check for string deprecated apis
-+		if ($line =~ /\b($deprecated_string_apis_search)\b\s*\(/) {
-+			my $deprecated_string_api = $1;
-+			my $new_api = $deprecated_string_apis{$deprecated_string_api};
-+			my $msg_level = \&WARN;
-+			$msg_level = \&CHK if ($file);
-+			&{$msg_level}("DEPRECATED_API",
-+				      "Deprecated use of '$deprecated_string_api', prefer '$new_api' instead\n" . $herecurr);
-+		}
-+
- # check for various structs that are normally const (ops, kgdb, device_tree)
- # and avoid what seem like struct definitions 'struct foo {'
- 		if ($line !~ /\bconst\b/ &&
---
-2.17.1
-
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
