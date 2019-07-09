@@ -2,115 +2,101 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A25C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7365C606D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0226B21783
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GEpzdHRz"
+	by mail.kernel.org (Postfix) with ESMTP id C0A40214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfGIJnY (ORCPT
+        id S1726602AbfGIJnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:43:24 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36962 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfGIJnY (ORCPT
+        Tue, 9 Jul 2019 05:43:33 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41124 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbfGIJnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:43:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YvNdAX19+AlHDeuKAGCP65zmxXubPuWrKB2jZ5bNMIM=; b=GEpzdHRzEtOanWUg28nD/5dbI
-        ozMVjRbOv332eCPS6W4HEPH0kQQg2G5Jr1El4puKBeIPhSy3o3J9TtuGb9q9NYZWelH+CzC+33vNA
-        57gvyTNQeqbX1OvHo43H9AM3uczhqaDFMDOtWBJYeOtVwrscP79TRTcHZYWc7lpmxjuWGwV4P100p
-        NXmNTEvIG4odLZbT8XTrxVEpxdCoEJNAPBlZ/mCfDmM3Aupo849wh6U4WiGIO7DbkXKLb7EGPr9Yq
-        ukXJTb8Ztk1yXEsxGbj9fCfl8s205T/Rr/JURabd++/P+N+K05Y/a7CDNjRGaiLth4tVi3MiB6i5l
-        QhcfYQGjA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkmeR-0005xB-Rt; Tue, 09 Jul 2019 09:43:08 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7A5C820120CB1; Tue,  9 Jul 2019 11:43:05 +0200 (CEST)
-Date:   Tue, 9 Jul 2019 11:43:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
-        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
-        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
-Subject: Re: [PATCH v7 07/12] perf/x86: no counter allocation support
-Message-ID: <20190709094305.GT3402@hirez.programming.kicks-ass.net>
-References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
- <1562548999-37095-8-git-send-email-wei.w.wang@intel.com>
- <20190708142947.GM3402@hirez.programming.kicks-ass.net>
- <5D2402E6.7060104@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D2402E6.7060104@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 9 Jul 2019 05:43:33 -0400
+Received: from laptop-1.home (unknown [IPv6:2a01:cb19:8ad6:900:42dd:dd1c:19ee:7c60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0681E28B1DA;
+        Tue,  9 Jul 2019 10:43:30 +0100 (BST)
+Message-ID: <5c3e6d57e83839c278f3ae8be16c39c50be2dee4.camel@collabora.com>
+Subject: Re: [PATCH v3 8/8] docs: iio: add precision about
+ sampling_frequency_available
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     kernel@collabora.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jul 2019 11:43:28 +0200
+In-Reply-To: <20190622112114.78a58440@archlinux>
+References: <cover.1560848479.git.fabien.lahoudere@collabora.com>
+         <0c5b7e1f7996e8c1c5f6787cbb9fb58986be1f17.1560848479.git.fabien.lahoudere@collabora.com>
+         <20190622112114.78a58440@archlinux>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.2 (3.30.2-2.fc29) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 10:58:46AM +0800, Wei Wang wrote:
-> On 07/08/2019 10:29 PM, Peter Zijlstra wrote:
+Le samedi 22 juin 2019 à 11:21 +0100, Jonathan Cameron a écrit :
+> On Tue, 18 Jun 2019 11:06:39 +0200
+> Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
 > 
-> Thanks for the comments.
-> 
+> > The documentation give some exemple on what format can be expected
+> > from sampling_frequency_available sysfs attribute
 > > 
-> > > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > > index 0ab99c7..19e6593 100644
-> > > --- a/include/linux/perf_event.h
-> > > +++ b/include/linux/perf_event.h
-> > > @@ -528,6 +528,7 @@ typedef void (*perf_overflow_handler_t)(struct perf_event *,
-> > >    */
-> > >   #define PERF_EV_CAP_SOFTWARE		BIT(0)
-> > >   #define PERF_EV_CAP_READ_ACTIVE_PKG	BIT(1)
-> > > +#define PERF_EV_CAP_NO_COUNTER		BIT(2)
-> > >   #define SWEVENT_HLIST_BITS		8
-> > >   #define SWEVENT_HLIST_SIZE		(1 << SWEVENT_HLIST_BITS)
-> > > @@ -895,6 +896,13 @@ extern int perf_event_refresh(struct perf_event *event, int refresh);
-> > >   extern void perf_event_update_userpage(struct perf_event *event);
-> > >   extern int perf_event_release_kernel(struct perf_event *event);
-> > >   extern struct perf_event *
-> > > +perf_event_create(struct perf_event_attr *attr,
-> > > +		  int cpu,
-> > > +		  struct task_struct *task,
-> > > +		  perf_overflow_handler_t overflow_handler,
-> > > +		  void *context,
-> > > +		  bool counter_assignment);
-> > > +extern struct perf_event *
-> > >   perf_event_create_kernel_counter(struct perf_event_attr *attr,
-> > >   				int cpu,
-> > >   				struct task_struct *task,
-> > Why the heck are you creating this wrapper nonsense?
+> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> It seems I already applied this one, though probably haven't sent
+> a pull request for it to Greg yet.
 > 
-> (please see early discussions: https://lkml.org/lkml/2018/9/20/868)
-> I thought we agreed that the perf event created here don't need to consume
-> an extra counter.
-
-That's almost a year ago; I really can't remember that and you didn't
-put any of that in your Changelog to help me remember.
-
-(also please use: https://lkml.kernel.org/r/$msgid style links)
-
-> In the previous version, we added a "no_counter" bit to perf_event_attr, and
-> that will be exposed to user ABI, which seems not good.
-> (https://lkml.org/lkml/2019/2/14/791)
-> So we wrap a new kernel API above to support this.
+> Please drop it from your v4 posting as otherwise I'll get confused
+> (again).
 > 
-> Do you have a different suggestion to do this?
-> (exclude host/guest just clears the enable bit when on VM-exit/entry,
-> still consumes the counter)
 
-Just add an argument to perf_event_create_kernel_counter() ?
+Sorry, it will be dropped next time.
+
+> Thanks,
+> 
+> Jonathan
+> 
+> 
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-iio | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio
+> > b/Documentation/ABI/testing/sysfs-bus-iio
+> > index 6aef7dbbde44..680451695422 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-iio
+> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> > @@ -61,8 +61,11 @@ What:		/sys/bus/iio/devices/triggerX/s
+> > ampling_frequency_available
+> >  KernelVersion:	2.6.35
+> >  Contact:	linux-iio@vger.kernel.org
+> >  Description:
+> > -		When the internal sampling clock can only take a small
+> > -		discrete set of values, this file lists those
+> > available.
+> > +		When the internal sampling clock can only take a
+> > specific set of
+> > +		frequencies, we can specify the available values with:
+> > +		- a small discrete set of values like "0 2 4 6 8"
+> > +		- a range with minimum, step and maximum frequencies
+> > like
+> > +		  "[min step max]"
+> >  
+> >  What:		/sys/bus/iio/devices/iio:deviceX/oversampling_r
+> > atio
+> >  KernelVersion:	2.6.38
+
