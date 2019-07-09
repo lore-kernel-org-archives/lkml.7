@@ -2,111 +2,132 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895C4C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C49EC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6600A21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:34:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhX+81Cr"
+	by mail.kernel.org (Postfix) with ESMTP id 6997020861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:37:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562704660;
+	bh=/9LTzKi2u4iUq755wikCwdwulj3n2J071wkeNeptzIE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kg725NH9+/d+jjxRl359xoCVmXavosQXwwCRdKcgwHORgnyRZiP8XwldVc+QRXJZ1
+	 /6SUqyxJpHbmvRS5zznQW1MqYxId8k2UpFUFul6UXDsrA3W7g+eZ3bJaiRO+AdgpwG
+	 jE2Q79e7wJImSMZL2Bpqzc3QIBSc7YXiGAokUdqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbfGIUe1 (ORCPT
+        id S1729752AbfGIUhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:34:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39840 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbfGIUe1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:34:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z23so100444wma.4;
-        Tue, 09 Jul 2019 13:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JW4pZp5yWurq7Q7UhzYQACCrJGsw4TFiXM6qLjGCVg0=;
-        b=YhX+81CrwKeI4FkvJGZ7vRLxnT5K52Y7j9LDT8/gNvuZhntHatNVDvWJhoHhxnL6rH
-         ozXRa67t/azRgYw5Coifbnix/RYsEl/MupQWiuC/SksvX2hsvJ50njJChymcmpcOIyoL
-         hclNNROQ/0OrZf1eqz1Jb3R6uClPsL+mozaRa9xjMj52rIyPJymTz0hpMPKjQSaxFtUS
-         fBP9XyouGZQ3QwQJesUz1+Hec8UP/AWfCZY8ZLU+Xqmr4b65CIfEoryWLl+G3plSjbmT
-         XxZr8UadZe1N4+T/r/HNnKJme2DwhPln8pPWyHA/VVnmIKW+CFYVISV/Jt/0qZKqDRNm
-         igqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JW4pZp5yWurq7Q7UhzYQACCrJGsw4TFiXM6qLjGCVg0=;
-        b=V52kxOGLBrSVaz7awIM2uq2oBG/wkyR5FXFsF3E9aKiZpqmr/cP4WPxdgEkIkKwSWq
-         yah3NLmPgdWzgpkUGpsTZg+Jawz57AgDztHayOOHGYlCFSmFF/pleNGiHLNdUtXjPgcG
-         Ig3Ee3fZEv9gPv5v5W1LlwOsbOpObC7IhpITJxV/WJMpNAanZ/sejUpyYcv6KqNEBGZN
-         ZH/tFR6fJH/YkfGmNjp9+K2+ompPl0Yh39fOilFgUodgFn6I2FvV0hV4a7ZfVIGD4u4Z
-         PhZx/9PNTTOHidE7tB4RvSoiglpgNh8+avdBCWpqCu9ODAGk7DCOLMe+LiOvYYuPq1no
-         5yeQ==
-X-Gm-Message-State: APjAAAWMJI6wW64ihIahiHd86Jcv0vAhDznDXiZTxyPzXRaYdsL262mf
-        wuzkRhK4w7DmpbRKlVp7nXsSqCSq1DMVsg==
-X-Google-Smtp-Source: APXvYqycXYrc4+rUtZW7EGPXG00XXUE7raSCtwgSfAnQ782kPpj5ut4EnHEoACqwEJDyPJL3SHoZqQ==
-X-Received: by 2002:a1c:228b:: with SMTP id i133mr1348861wmi.140.1562704464486;
-        Tue, 09 Jul 2019 13:34:24 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id t24sm60492wmj.14.2019.07.09.13.34.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 13:34:23 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "kernelci . org bot" <bot@kernelci.org>
-Subject: [PATCH] watchdog: digicolor_wdt: Remove unused variable in dc_wdt_probe
-Date:   Tue,  9 Jul 2019 13:34:09 -0700
-Message-Id: <20190709203409.117123-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
+        Tue, 9 Jul 2019 16:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729147AbfGIUhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:37:39 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C6CA20861;
+        Tue,  9 Jul 2019 20:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562704657;
+        bh=/9LTzKi2u4iUq755wikCwdwulj3n2J071wkeNeptzIE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=J+oSXowCJu1Ojf7ZugvCFOUS/kT5hfSiz48WLrqAbUGjEHMko79VqV+tiTfBPcwzL
+         vSSbj06XgQKQbh2t6Z60kkhgAuMmF6IP0GT18Z+jf4x7Zg0QxDmuIr3q5wuCx65KbV
+         vfgDL/QRQJKySDVn6SeD2m7kXE4QAqa1KdtZNkMA=
+Date:   Tue, 9 Jul 2019 13:37:36 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Mark-PK Tsai <Mark-PK.Tsai@mediatek.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        kernel-build-reports@lists.linaro.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: Re: next/master build: 230 builds: 3 failed, 227 passed, 391
+ warnings (next-20190709)
+Message-Id: <20190709133736.31f22a5e4aae49fec83faa99@linux-foundation.org>
+In-Reply-To: <20190709151333.GD14859@sirena.co.uk>
+References: <5d24a6be.1c69fb81.c03b6.0fc7@mx.google.com>
+        <20190709151333.GD14859@sirena.co.uk>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns:
+On Tue, 9 Jul 2019 16:13:33 +0100 Mark Brown <broonie@kernel.org> wrote:
 
-drivers/watchdog/digicolor_wdt.c:121:6: warning: unused variable 'ret'
-[-Wunused-variable]
-        int ret;
-            ^
-1 warning generated.
+> On Tue, Jul 09, 2019 at 07:37:50AM -0700, kernelci.org bot wrote:
+> 
+> Today's -next fails to build tinyconfig on arm64 and x86_64:
+> 
+> > arm64:
+> >     tinyconfig: (clang-8) FAIL
+> >     tinyconfig: (gcc-8) FAIL
+> > 
+> > x86_64:
+> >     tinyconfig: (gcc-8) FAIL
+> 
+> due to:
+> 
+> > tinyconfig (arm64, gcc-8) — FAIL, 0 errors, 0 warnings, 0 section mismatches
+> > 
+> > Section mismatches:
+> >     WARNING: vmlinux.o(.meminit.text+0x430): Section mismatch in reference from the function sparse_buffer_alloc() to the function .init.text:sparse_buffer_free()
+> >     FATAL: modpost: Section mismatches detected.
+> 
+> (same error for all of them, the warning appears non-fatally in
+> other configs).  This is caused by f13d13caa6ef2 (mm/sparse.c:
+> fix memory leak of sparsemap_buf in aliged memory) which adds a
+> reference from the __meminit annotated sparse_buffer_alloc() to
+> the newly added __init annotated sparse_buffer_free().
 
-It's unused now, remove it.
+Thanks.  Arnd just fixed this:
 
-Fixes: cdad26977e3f ("watchdog: digicolor_wdt: drop warning after registering device")
-Link: https://github.com/ClangBuiltLinux/linux/issues/591
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: mm/sparse.c: mark sparse_buffer_free as __meminit
+
+Calling an __init function from a __meminit function is not allowed:
+
+WARNING: vmlinux.o(.meminit.text+0x30ff): Section mismatch in reference from the function sparse_buffer_alloc() to the function .init.text:sparse_buffer_free()
+The function __meminit sparse_buffer_alloc() references
+a function __init sparse_buffer_free().
+If sparse_buffer_free is only used by sparse_buffer_alloc then
+annotate sparse_buffer_free with a matching annotation.
+
+Downgrade the annotation to __meminit for both, as they may be
+used in the hotplug case.
+
+Link: http://lkml.kernel.org/r/20190709185528.3251709-1-arnd@arndb.de
+Fixes: mmotm ("mm/sparse.c: fix memory leak of sparsemap_buf in aliged memory")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- drivers/watchdog/digicolor_wdt.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/watchdog/digicolor_wdt.c b/drivers/watchdog/digicolor_wdt.c
-index 33cda95bd238..073d37867f47 100644
---- a/drivers/watchdog/digicolor_wdt.c
-+++ b/drivers/watchdog/digicolor_wdt.c
-@@ -118,7 +118,6 @@ static int dc_wdt_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct dc_wdt *wdt;
--	int ret;
+ mm/sparse.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/mm/sparse.c~mm-sparse-fix-memory-leak-of-sparsemap_buf-in-aliged-memory-fix
++++ a/mm/sparse.c
+@@ -428,7 +428,7 @@ struct page __init *sparse_mem_map_popul
+ static void *sparsemap_buf __meminitdata;
+ static void *sparsemap_buf_end __meminitdata;
  
- 	wdt = devm_kzalloc(dev, sizeof(struct dc_wdt), GFP_KERNEL);
- 	if (!wdt)
--- 
-2.22.0
+-static inline void __init sparse_buffer_free(unsigned long size)
++static inline void __meminit sparse_buffer_free(unsigned long size)
+ {
+ 	WARN_ON(!sparsemap_buf || size == 0);
+ 	memblock_free_early(__pa(sparsemap_buf), size);
+_
 
