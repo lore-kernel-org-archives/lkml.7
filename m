@@ -2,294 +2,137 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E377AC73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEADC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE9E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:18:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="L28CIUC0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AfQ5xgsY"
+	by mail.kernel.org (Postfix) with ESMTP id 810A82080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562682009;
+	bh=LbGkXLwi1q2+pIjmmsKwQjRpNbjOm2Z2RNuaT2RUaAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JthNt0CvKeY/uzWJrR1SgE47GrrNIPi9ta7UrII9NCpJ5EyHgBqwlVNW7mn9G1JZW
+	 zjV9naYQkO8GAC3Tqp7iqpMzRd5JW7o1rnFWZVGbrw1jVx+daY+l71pZXTeDqaC6qF
+	 X0/yoMBWZqxgfufFlVBcsfgfL68lJptqMOL+uhDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfGIOSc (ORCPT
+        id S1726732AbfGIOUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:18:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34236 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfGIOSc (ORCPT
+        Tue, 9 Jul 2019 10:20:04 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46824 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbfGIOUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:18:32 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A191D60C5F; Tue,  9 Jul 2019 14:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562681911;
-        bh=jiNkhUFiBuXVKK2bh358QUq3e/FALFdLQxfZUHlBHpE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=L28CIUC0p10IGJjm+Cv/Mn6QYlFY2qr+KKv33FcOfMp0gNEAOeFikvYDuy6z8KrfG
-         B5sRsexq6jR0fLHTQCpEXVokZXfTvn34sgzF+jjrbg9MDPwPss4d9eBpEY1SowaOzH
-         ytN8SofJgvzRbNRX0THx23KQPX5QDgVOOsSgMgNM=
-Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B170260863;
-        Tue,  9 Jul 2019 14:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1562681910;
-        bh=jiNkhUFiBuXVKK2bh358QUq3e/FALFdLQxfZUHlBHpE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AfQ5xgsYmVixi5uyJFFbIbqnbTrbkB2c3aywAx/U1DtJea5tnZyr8ff9yN2KpbYKr
-         3Canyk7awS+3Jl+RwL1GzcvE2LUlGUAWinAOSbd9CLSjbTfdtxEMqEiqRU765aCQ/2
-         ZT4Yf2pH5PWmKlRjD5ks5HrRCb/Uu5TF97E3G7ts=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B170260863
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: [PATCH] arm64: Explicitly set pstate.ssbs for el0 on kernel entry
-To:     Marc Zyngier <marc.zyngier@arm.com>, will@kernel.org,
-        mark.rutland@arm.com, julien.thierry@arm.com, tglx@linutronix.de
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, gkohli@codeaurora.org,
-        parthd@codeaurora.org
-References: <1562671333-3563-1-git-send-email-neeraju@codeaurora.org>
- <62c4fed5-39ac-adc9-3bc5-56eb5234a9d1@arm.com>
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <386316d0-f844-d88c-8b78-0ffc4ffe0aaa@codeaurora.org>
-Date:   Tue, 9 Jul 2019 19:48:25 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 9 Jul 2019 10:20:04 -0400
+Received: by mail-io1-f66.google.com with SMTP id i10so43429633iol.13;
+        Tue, 09 Jul 2019 07:20:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f2rYhg/DnEqI7oO9ihLyCMIa+DmpfPhe6CmZvRfBjfY=;
+        b=RFYT7bwKfCzsEl+RgjzSgVmE3xmwUf5TCseip+R+CHbyBHhnj0u6WwuYWran68UCOd
+         S3g4OOuHGNSNQSJ/0bq3icUn8GuzJ5a3aNXyknWYNzFuGQaftIMXGSP8elwJNeGIxW6m
+         mgIRkpzoL7Qq+wjfJqpbCHRAHZBhxC0qYp3a7YonYmTfJ2yB0zbhwhuZd6xGGf5hT4WM
+         FMx8LH0WE2zKHNXEgfMtVXkx6n8MGhaG/Co3vZ656ILqrfOvG2YUOR01LX3J8jcroiev
+         vsSms6eS/DgOyoWairWIHzEZDzdVLLhUBsUMmZ1SZTJj2J9rYoPRGrf6NKkJVmb0D4Ra
+         VVgw==
+X-Gm-Message-State: APjAAAVY1stULLF2AxOp5nBzCgV6jfqNO6xqrcmABVOI4QhORujg1nj+
+        sCTfLg09okgvSdNHxgkwEQ==
+X-Google-Smtp-Source: APXvYqw1WjCcN1aunVPm/TK1Ts7TfCgcpbAxxtxX/jK2MfStDyZ/tJCkQjlPTGKNQDZuFADZmjBdmQ==
+X-Received: by 2002:a02:69d1:: with SMTP id e200mr28763177jac.138.1562682003125;
+        Tue, 09 Jul 2019 07:20:03 -0700 (PDT)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id y20sm18421134iol.34.2019.07.09.07.20.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 07:20:02 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 08:20:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc:     mchehab@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
+        mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joao.Pinto@synopsys.com
+Subject: Re: [v4 4/6] dt-bindings: phy: Document the Synopsys MIPI DPHY Rx
+ bindings
+Message-ID: <20190709142000.GA995@bogus>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-5-git-send-email-luis.oliveira@synopsys.com>
 MIME-Version: 1.0
-In-Reply-To: <62c4fed5-39ac-adc9-3bc5-56eb5234a9d1@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560280855-18085-5-git-send-email-luis.oliveira@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 7/9/19 6:38 PM, Marc Zyngier wrote:
-> Hi Neeraj,
->
-> On 09/07/2019 12:22, Neeraj Upadhyay wrote:
->> For cpus which do not support pstate.ssbs feature, el0
->> might not retain spsr.ssbs. This is problematic, if this
->> task migrates to a cpu supporting this feature, thus
->> relying on its state to be correct. On kernel entry,
->> explicitly set spsr.ssbs, so that speculation is enabled
->> for el0, when this task migrates to a cpu supporting
->> ssbs feature. Restoring state at kernel entry ensures
->> that el0 ssbs state is always consistent while we are
->> in el1.
->>
->> As alternatives are applied by boot cpu, at the end of smp
->> init, presence/absence of ssbs feature on boot cpu, is used
->> for deciding, whether the capability is uniformly provided.
-> I've seen the same issue, but went for a slightly different
-> approach, see below.
->
->> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
->> ---
->>   arch/arm64/kernel/cpu_errata.c | 16 ++++++++++++++++
->>   arch/arm64/kernel/entry.S      | 26 +++++++++++++++++++++++++-
->>   2 files changed, 41 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
->> index ca11ff7..c84a56d 100644
->> --- a/arch/arm64/kernel/cpu_errata.c
->> +++ b/arch/arm64/kernel/cpu_errata.c
->> @@ -336,6 +336,22 @@ void __init arm64_enable_wa2_handling(struct alt_instr *alt,
->>   		*updptr = cpu_to_le32(aarch64_insn_gen_nop());
->>   }
->>   
->> +void __init arm64_restore_ssbs_state(struct alt_instr *alt,
->> +				     __le32 *origptr, __le32 *updptr,
->> +				     int nr_inst)
->> +{
->> +	BUG_ON(nr_inst != 1);
->> +	/*
->> +	 * Only restore EL0 SSBS state on EL1 entry if cpu does not
->> +	 * support the capability and capability is present for at
->> +	 * least one cpu and if the SSBD state allows it to
->> +	 * be changed.
->> +	 */
->> +	if (!this_cpu_has_cap(ARM64_SSBS) && cpus_have_cap(ARM64_SSBS) &&
->> +	    arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
->> +		*updptr = cpu_to_le32(aarch64_insn_gen_nop());
->> +}
->> +
->>   void arm64_set_ssbd_mitigation(bool state)
->>   {
->>   	if (!IS_ENABLED(CONFIG_ARM64_SSBD)) {
->> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
->> index 9cdc459..7e79305 100644
->> --- a/arch/arm64/kernel/entry.S
->> +++ b/arch/arm64/kernel/entry.S
->> @@ -143,6 +143,25 @@ alternative_cb_end
->>   #endif
->>   	.endm
->>   
->> +	// This macro updates spsr. It also corrupts the condition
->> +	// codes state.
->> +	.macro	restore_ssbs_state, saved_spsr, tmp
->> +#ifdef CONFIG_ARM64_SSBD
->> +alternative_cb	arm64_restore_ssbs_state
->> +	b	.L__asm_ssbs_skip\@
->> +alternative_cb_end
->> +	ldr	\tmp, [tsk, #TSK_TI_FLAGS]
->> +	tbnz	\tmp, #TIF_SSBD, .L__asm_ssbs_skip\@
->> +	tst	\saved_spsr, #PSR_MODE32_BIT	// native task?
->> +	b.ne	.L__asm_ssbs_compat\@
->> +	orr	\saved_spsr, \saved_spsr, #PSR_SSBS_BIT
->> +	b	.L__asm_ssbs_skip\@
->> +.L__asm_ssbs_compat\@:
->> +	orr	\saved_spsr, \saved_spsr, #PSR_AA32_SSBS_BIT
->> +.L__asm_ssbs_skip\@:
->> +#endif
->> +	.endm
-> Although this is in keeping with the rest of entry.S (perfectly
-> unreadable ;-), I think we can do something a bit simpler, that
-> doesn't rely on patching. Also, this doesn't seem to take the
-> SSBD options such as ARM64_SSBD_FORCE_ENABLE into account.
-
-arm64_restore_ssbs_state has a check for ARM64_SSBD_FORCE_ENABLE,
-
-does that look wrong?
-
->
->> +
->>   	.macro	kernel_entry, el, regsize = 64
->>   	.if	\regsize == 32
->>   	mov	w0, w0				// zero upper 32 bits of x0
->> @@ -182,8 +201,13 @@ alternative_cb_end
->>   	str	x20, [tsk, #TSK_TI_ADDR_LIMIT]
->>   	/* No need to reset PSTATE.UAO, hardware's already set it to 0 for us */
->>   	.endif /* \el == 0 */
->> -	mrs	x22, elr_el1
->>   	mrs	x23, spsr_el1
->> +
->> +	.if	\el == 0
->> +	restore_ssbs_state x23, x22
->> +	.endif
->> +
->> +	mrs	x22, elr_el1
->>   	stp	lr, x21, [sp, #S_LR]
->>   
->>   	/*
->>
-> How about the patch below?
-
-Looks good; was just going to mention PF_KTHREAD check, but Mark R. has 
-already
-
-given detailed information about it.
-
-
-Thanks
-
-Neeraj
-
->
-> Thanks,
->
-> 	M.
->
->  From 7d4314d1ef3122d8bf56a7ef239c8c68e0c81277 Mon Sep 17 00:00:00 2001
-> From: Marc Zyngier <marc.zyngier@arm.com>
-> Date: Tue, 4 Jun 2019 17:35:18 +0100
-> Subject: [PATCH] arm64: Force SSBS on context switch
->
-> On a CPU that doesn't support SSBS, PSTATE[12] is RES0.  In a system
-> where only some of the CPUs implement SSBS, we end-up losing track of
-> the SSBS bit across task migration.
->
-> To address this issue, let's force the SSBS bit on context switch.
->
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+On Tue, Jun 11, 2019 at 09:20:53PM +0200, Luis Oliveira wrote:
+> Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
+> RX mode.
+> 
+> Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
 > ---
->   arch/arm64/include/asm/processor.h | 14 ++++++++++++--
->   arch/arm64/kernel/process.c        | 14 ++++++++++++++
->   2 files changed, 26 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-> index fd5b1a4efc70..844e2964b0f5 100644
-> --- a/arch/arm64/include/asm/processor.h
-> +++ b/arch/arm64/include/asm/processor.h
-> @@ -193,6 +193,16 @@ static inline void start_thread_common(struct pt_regs *regs, unsigned long pc)
->   		regs->pmr_save = GIC_PRIO_IRQON;
->   }
->   
-> +static inline void set_ssbs_bit(struct pt_regs *regs)
-> +{
-> +	regs->pstate |= PSR_SSBS_BIT;
-> +}
-> +
-> +static inline void set_compat_ssbs_bit(struct pt_regs *regs)
-> +{
-> +	regs->pstate |= PSR_AA32_SSBS_BIT;
-> +}
-> +
->   static inline void start_thread(struct pt_regs *regs, unsigned long pc,
->   				unsigned long sp)
->   {
-> @@ -200,7 +210,7 @@ static inline void start_thread(struct pt_regs *regs, unsigned long pc,
->   	regs->pstate = PSR_MODE_EL0t;
->   
->   	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
-> -		regs->pstate |= PSR_SSBS_BIT;
-> +		set_ssbs_bit(regs);
->   
->   	regs->sp = sp;
->   }
-> @@ -219,7 +229,7 @@ static inline void compat_start_thread(struct pt_regs *regs, unsigned long pc,
->   #endif
->   
->   	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
-> -		regs->pstate |= PSR_AA32_SSBS_BIT;
-> +		set_compat_ssbs_bit(regs);
->   
->   	regs->compat_sp = sp;
->   }
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index 9856395ccdb7..d451b3b248cf 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -442,6 +442,19 @@ void uao_thread_switch(struct task_struct *next)
->   	}
->   }
->   
-> +static void ssbs_thread_switch(struct task_struct *next)
-> +{
-> +	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE &&
-> +	    !test_tsk_thread_flag(next, TIF_SSBD)) {
-> +		struct pt_regs *regs = task_pt_regs(next);
-> +
-> +		if (compat_user_mode(regs))
-> +			set_compat_ssbs_bit(regs);
-> +		else if (user_mode(regs))
-> +			set_ssbs_bit(regs);
-> +	}
-> +}
-> +
->   /*
->    * We store our current task in sp_el0, which is clobbered by userspace. Keep a
->    * shadow copy so that we can restore this upon entry from userspace.
-> @@ -471,6 +484,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
->   	entry_task_switch(next);
->   	uao_thread_switch(next);
->   	ptrauth_thread_switch(next);
-> +	ssbs_thread_switch(next);
->   
->   	/*
->   	 * Complete any pending TLB or cache maintenance on this CPU in case
+> Changelog
+> v3-v4
+> - @Laurent I know I told you I could remove the snps,dphy-frequency on V3 but
+>   it is really useful for me here. I removed all other the proprietary
+>   properties except this one. Do you still think it must be removed?
+> - Frequency units @Rob
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+Frequency units means append '-khz' to the property name. That also 
+makes the 'frequency' part redundant, so maybe name it more around what 
+the frequency is. The frequency for what?
 
+Rob
+
+> 
+>  .../devicetree/bindings/phy/snps,dw-dphy-rx.txt    | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt b/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
+> new file mode 100644
+> index 0000000..50603e6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/snps,dw-dphy-rx.txt
+> @@ -0,0 +1,29 @@
+> +Synopsys DesignWare MIPI Rx D-PHY block details
+> +
+> +Description
+> +-----------
+> +
+> +The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
+> +Please refer to phy-bindings.txt for more information.
+> +
+> +Required properties:
+> +- compatible		: Shall be "snps,dw-dphy-rx".
+> +- #phy-cells		: Must be 1.
+> +- bus-width		: Size of the test interface data bus (8 bits->8 or
+> +			  12bits->12).
+> +- snps,dphy-frequency	: Frequency at which D-PHY should start, configurable.
+> +			  Check Synopsys databook. (-kHz)
+> +- reg			: Test interface register. This correspondes to the
+> +			  physical base address of the controller and size of
+> +			  the device memory mapped registers; Check Synopsys
+> +			  databook.
+> +
+> +Example:
+> +
+> +	mipi_dphy_rx1: dphy@d00003040 {
+> +		compatible = "snps,dw-dphy-rx";
+> +		#phy-cells = <1>;
+> +		bus-width = <12>;
+> +		snps,dphy-frequency = <300000>;
+> +		reg = <0xd0003040 0x20>;
+> +	};
+> -- 
+> 2.7.4
+> 
