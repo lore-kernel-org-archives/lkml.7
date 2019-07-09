@@ -2,152 +2,87 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEE5C73C50
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00788C73C50
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11FD216FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ph8QN36B"
+	by mail.kernel.org (Postfix) with ESMTP id BFE49216E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:20:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562682044;
+	bh=8Ym+Znht2YGu6ycouh/OqTemHfRz1DE0F8Q9RXJOK4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bNXnhb3zMysziN1ZJcx3vJVwxk3q+Z6GfHCNlrIhn046t5ZNvysUYzMqaGFAlSEXi
+	 nB6qLrEIFxoQ+nFb2uFPmRuwYOLt3gcgvQx+OY73gtM2MVinBPZ4ydAa7aAVjtgtk2
+	 hyTuGBZRtytu1laqE46dLstrD8ePT8Z6gurUFx5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfGIOUg (ORCPT
+        id S1726977AbfGIOUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:20:36 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42512 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfGIOUg (ORCPT
+        Tue, 9 Jul 2019 10:20:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:47019 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfGIOUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:20:36 -0400
-Received: by mail-io1-f66.google.com with SMTP id u19so43475615ior.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 07:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XTag6E0HRY5pOM5AumSCXipohqiU4rMp+bu0B7wd10U=;
-        b=ph8QN36Brvz4GaO1lsbpAF+S34pEG3KOZn6OCqqyV1r0b+nSHJmHs7L5iApZcmsVSv
-         ONf5pK1IYRZTeE67/2OjKhJHRZCppo+3gWxUhmDXn4+yhq1jps7zacdDz6o6mLUYFUHs
-         CVlO6upXOLgmWTmrKu7/BwNkp9MuXH50C2ZvDFjidCtZMLY7PRpw1O61qy/t3FX+ehSd
-         UPrjkFnjsJ1ogTjp/UKUxSg1d+xfwMMJIPB1w+b4TR0TkpSOXaopRjZqhSd6V07a9Nxo
-         rkLl/VbzpFAsJT3woNWB36gFV7OlFYWRb3Mfody3109YK+h5qrJBFZ+2wqms8DRrsZ87
-         lPvg==
+        Tue, 9 Jul 2019 10:20:42 -0400
+Received: by mail-io1-f68.google.com with SMTP id i10so43434768iol.13;
+        Tue, 09 Jul 2019 07:20:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XTag6E0HRY5pOM5AumSCXipohqiU4rMp+bu0B7wd10U=;
-        b=Y8Yyl4QTo/W8OYKdP4WCJ/gW1y/3lM0ppMCw6gSMVY0ArdekzOxziG9vJcDtKYCp1t
-         wavVCQDf1ZbB5KqJ71JsYKguIFJlMw6bv082bbfP4WaqanQF8zllp0z7tLliDZ+RJERs
-         xD/LMm7aqK3chXjF0q+4iZy+hv3w2JxFvVIEqNyzo7B+P75bEaw7yIHO7Maec1cihSkK
-         QRIOXIF8NcGI7/yq6JTnlCKExZ683izMBfMDzno4vdHm/dNQwZI/EI/+kcpDpwzrVAx6
-         DeXZa4UFNF0cmPJt/GS+TLt0hVLeCKiLdhoE7o86tMMzYqykGpw89ilIEA2rzPH+sic7
-         CHOQ==
-X-Gm-Message-State: APjAAAVplk7ThwNm/lTjMfGYvEdO0XuVDFHi8XgemrH6gjzoBLOjMnHn
-        0O+Y8HYB8EuYwDCgYzDGytrUGUDZiOTGsqWPMEARkg==
-X-Google-Smtp-Source: APXvYqwwrSRPNbn4TV83T9qqax53T5vJC4cuF7WYiJ/hbHx2RKwKXAKBF/PLOuBrRswRmAipW/TcA3SeRyefBbzged4=
-X-Received: by 2002:a5e:8b43:: with SMTP id z3mr516301iom.287.1562682035066;
- Tue, 09 Jul 2019 07:20:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uwLVA3tOL3nh/Q8f5KgkTWHNu7X1kGgEZRYGWxDF7jY=;
+        b=C+2oFhSWwYzWBbSdn0B++qAWDZafWwBmgKAeNodEdWMzsp0X0He1Pmdh+StutJTeak
+         KptrrBhxqgvD2jvNoNLj+oi3YoxtukK36hwdmWsE1/LEA+cPEHQfFXkGVn0yCdiY9PKl
+         UlP1GxS8940aWmXndBrv1HYoDCHkvIDxKkxS8TkLgUU1YStSyQ/JAlRy1eSGfNqSQZ2q
+         9qG1Ikgm4mBgsdRwNcMMJ/d+geVemNhZoFiB1Y5RUHmd+VrGVDWCWSQe5qcJiOjjyE+f
+         3HAIhc+ccd6iEpwV2WI7Q8pmPiDG6z+13pSg7caNksRHex961TlysbhSo/4TqyJTVlQt
+         g81Q==
+X-Gm-Message-State: APjAAAUtL2vgsbWETZ7EoalvGRH5tTRIZdqkb1AtgOjD7VsaVYJDpSLr
+        q0W3fAJaGAIOmGg/5kG6ww==
+X-Google-Smtp-Source: APXvYqyd6NOWgi5h/HRhfAnx29VFzRk5mq/hbjdb807MsQYKsvLUtQPDHwnd+s0+N3IP/O2FuB0npQ==
+X-Received: by 2002:a02:5185:: with SMTP id s127mr28314036jaa.44.1562682041727;
+        Tue, 09 Jul 2019 07:20:41 -0700 (PDT)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id p10sm26942432iob.54.2019.07.09.07.20.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 07:20:41 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 08:20:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jumin Li <jumin.li@mediatek.com>
+Subject: Re: [PATCH 1/5] dt-bindings: usb: mtu3: fix typo of DMA clock name
+Message-ID: <20190709142040.GA10200@bogus>
+References: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-References: <20190708082343.30726-1-brgl@bgdev.pl> <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
-In-Reply-To: <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 9 Jul 2019 16:20:24 +0200
-Message-ID: <CAMRc=MfB9R70QDqtjG5a5Roq1roeL78Ss5noytrY-7P=tY1OHA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Claus H . Stovgaard" <cst@phaseone.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 9 lip 2019 o 15:30 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
->
-> Hi Bartosz,
->
-> On Mon, Jul 8, 2019 at 10:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > If gpiolib is disabled, we use the inline stubs from gpio/consumer.h
-> > instead of regular definitions of GPIO API. The stubs for 'optional'
-> > variants of gpiod_get routines return NULL in this case as if the
-> > relevant GPIO wasn't found. This is correct so far.
-> >
-> > Calling other (non-gpio_get) stubs from this header triggers a warning
-> > because the GPIO descriptor couldn't have been requested. The warning
-> > however is unconditional (WARN_ON(1)) and is emitted even if the passed
-> > descriptor pointer is NULL.
-> >
-> > We don't want to force the users of 'optional' gpio_get to check the
-> > returned pointer before calling e.g. gpiod_set_value() so let's only
-> > WARN on non-NULL descriptors.
-> >
-> > Reported-by: Claus H. Stovgaard <cst@phaseone.com>
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> I remember I had this discussion in the past, and I made a large
-> refactoring to make it possible for drivers that need gpiod_*
-> calls to simply do:
->
-> select GPIOLIB
->
-> in Kconfig.
->
-> This should solve also this problem I think.
->
-> However I do realize that there may be situations where people
-> simply want to make GPIO support entirely optional without
-> having to e.g. create custom stubs and encapsulate things
-> inside if IS_ENABLED(CONFIG_GPIOLIB).
->
+On Wed, 12 Jun 2019 13:55:17 +0800, Chunfeng Yun wrote:
+> Fix typo of dma_ck
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/usb/mediatek,mtu3.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-In this case the board doesn't provide any GPIO controller at all so
-there's simply no need to select GPIOLIB - it would only add bloat.
-
-> I was thinking something like this in the stubs:
->
-> gpiod_get[_index]() {
->     return POISON;
-> }
->
-> gpiod_get[_index]_optional() {
->    return NULL;
-> }
-
-This is already being done.
-
->
-> This way all gpiod_get() and optional calls are properly
-> handled and the semantic that only _optional calls
-> can return NULL is preserved. (Your patch would
-> violate this.)
->
-
-Maybe I'm missing something, but I don't quite see how my patch
-violates this behavior. :(
-
-> Then other stubs can do:
->
-> gpiod_set_value() {
->   WARN_ON(desc);
-> }
->
-> As in your patch, and all will be smooth provided the
-> _optional calls have been used to obtain the desc.
->
-> Yours,
-> Linus Walleij
-
-Bart
+Reviewed-by: Rob Herring <robh@kernel.org>
