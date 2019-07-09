@@ -2,133 +2,103 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F87C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0E9C73C5C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDAF20693
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE9820656
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562708495;
-	bh=hVv4LjTavofkUrh/+Ry4OXEfaVckqONNKz3FhdkLNv8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=i98tmRs64dtj36h03aeLUR13rL9mrDSmdu1xwEAr0D/VRSoxgxPHdQL3HaHQ4VLDV
-	 uUkWBKOMiUFmZ3Q+fQYQu1czzc3S5ktydEP5nf4kJrBqRq+VY8Sy9SRadjb6AJm5bz
-	 CaED5NVKMOLR5dHfkRbIfkROj0WLor/vnqm6TSgI=
+	s=default; t=1562708763;
+	bh=D33/BjQSH7r/O4onNmNNj4oFVAorE+aRUj4WCXmZtE0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A2hu0S8lE7pCzbrGf/erk1fdrJgL0KqJqqc358qsCdzfDzC9PY6RxGlgAmZ0bOiqA
+	 ENZMucOH8lz/KUgLwEYnSWmUNzd+FVhI2dUDMnecIEzEwTXfhNgWLRgheTAZ/EO1aX
+	 OveTDIwTpzHOTapP6+/e+CJ3DspkgPSxLHJ0ZGn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbfGIVld (ORCPT
+        id S1729586AbfGIVqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:41:33 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34079 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfGIVld (ORCPT
+        Tue, 9 Jul 2019 17:46:02 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44768 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGIVqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:41:33 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k10so241095qtq.1;
-        Tue, 09 Jul 2019 14:41:33 -0700 (PDT)
+        Tue, 9 Jul 2019 17:46:01 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k18so21032127ljc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 14:46:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QwndTe0YbWPxv611pI7V02B0mIgtu96cP7ewbywUwjg=;
-        b=ZlaVdzKR62QMVBXExU9yecMvvjrWv8pcrvYYz0tUBQsKOLGNKSV5xNTkinxqgIqCgS
-         HCVlwMsbqDmAOOUh8vx8/AMcBziTzA++EN/SxF22aFYfg9JJl/IikxqOUwcog7DAmDAR
-         f3bOc18RFmELS57k6X6Y5nAaP3+lZsUSK3l2XCl5CIbFa3JKm8chgH/lxW35c0INZaii
-         unu8dLxIq56kVcfKpFqwvQJUe1o/2gJNfpeZJneMA1cgX1r+0oglkb1NrIMHIMF/1cFv
-         W1l7fs4qDJuewO0qsb3PpdlXhmFeKW7Nh6KaKJ4ghjLIiws6HHB9UBoZf25KvZLE1q61
-         9ACw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Iag3LSwtxbGH/6JXykV0X2cYRNwhwRjefA47JZ1iyg=;
+        b=HxwB0twpmxNCaV1pxwV8vfkgNh1oFJQAhGF6eY25qjofRadbo+wwDsJ+ySl+oAzjh9
+         PTL+wrSTjcrHQjvYntl/xpsqXOxQCq95sJVDTEmke1HpziwTIRDLj+9ejhDDBTjUNi7t
+         wBDoSkn/dtcxI97Nifc2jlmWj4Pv3k7Ay3vjQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=QwndTe0YbWPxv611pI7V02B0mIgtu96cP7ewbywUwjg=;
-        b=M/UUUnu4lrcb/B4xKwzQa+Eixbk/9+qFOWzAOi8i0gXP3w81VpP8KJfjL4AsdcwqP8
-         Ofv/+Ouea/IZ7JxAfWlthk9W0d9ubXhMMSnqJor9nRhkgaAFmZfVkqJdxRbH0Rtq54Nk
-         3kTfiFZ2b+QnrCIITwmpvPak/XSVv0IkTPd1pjEzG+iKKrtjiFDZCIcvpS6iJAr2UfEP
-         7mbbNzyXJBwUVzMIGomI/hAhxKJ8csQli7R09VeEYEu16fgpkjDyIfom6Qq0Bkzm2q6U
-         YcsABqSF7ZY4YuCM6HGl6OfsLPf5wjOdQSM1R9ddmEWoeCs6ee+M6Pl83W3uESXcRseI
-         D6cw==
-X-Gm-Message-State: APjAAAXd++SY4N9siO6zFxge5jz5boLB2izxIUs4Mjhc2Kt0FasqGWVo
-        YlzpCTg6KQjkke5J8LUV37M=
-X-Google-Smtp-Source: APXvYqxaoI19YT2qAqYhYrPj4SUcXRaqW0XeVWjsErjSs90LfkZJ+RwXWeVsjac2cGBC6uCKXbNK6g==
-X-Received: by 2002:a0c:b521:: with SMTP id d33mr21593820qve.239.1562708492394;
-        Tue, 09 Jul 2019 14:41:32 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:fa50])
-        by smtp.gmail.com with ESMTPSA id x8sm138972qka.106.2019.07.09.14.41.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 14:41:31 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 14:41:29 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH] blk-cgroup: turn on psi memstall stuff
-Message-ID: <20190709214129.GK657710@devbig004.ftw2.facebook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Iag3LSwtxbGH/6JXykV0X2cYRNwhwRjefA47JZ1iyg=;
+        b=OIvVX3EILc4W+Nb3julyaIF4Vgq6eiWixZQOePPQuoRIwV93mjma+ohFGXrQcvPQyG
+         XLk2Ly109oUPhr3YwrrGIYC5nJshGjEqO548eSznM+xxfjRs20dF4KY9mlXDMES/OPXR
+         jrNN/XvYYp5jnDZcbfMrnhDWV1bxJlmkGLpYhDadMos3RwJVPIU45pritZZli3Pj23kA
+         OwKq+Q0tp7jxQfElE09D0S4S2laT3aZ+Ae1KOSduz9fuyIhOXqhfH7LUI25KwF47tsql
+         TFEC5ni+owhwjvPPET7OKKmXdX1B0VlUWNJxnrsDrPzkmLhn1goIWerscaW4MVugkDsC
+         D5NQ==
+X-Gm-Message-State: APjAAAUiGe7ll3qeuMbjhonY3mDriEBhGnR0sVfoN9Kox/xmfZotuIWz
+        fVV+fn9A3oc81n2/73bEb5SQeX1J41M=
+X-Google-Smtp-Source: APXvYqzv2Zyngqu7fFXqiI3mDyOsQQ07ONdD9iEQECEzAk7K7BBO3xuz7WEFbZFvxly3rWFJoSveGw==
+X-Received: by 2002:a2e:9a87:: with SMTP id p7mr15114127lji.133.1562708759073;
+        Tue, 09 Jul 2019 14:45:59 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id w6sm18056lff.80.2019.07.09.14.45.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 14:45:58 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id s19so80267lfb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 14:45:58 -0700 (PDT)
+X-Received: by 2002:ac2:4565:: with SMTP id k5mr12824867lfm.170.1562708757887;
+ Tue, 09 Jul 2019 14:45:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190708162756.GA69120@gmail.com> <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com>
+ <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>
+In-Reply-To: <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 9 Jul 2019 14:45:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+Message-ID: <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <jbacik@fb.com>
+On Tue, Jul 9, 2019 at 2:26 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> but still bisecting to pinpoint the exact thing.
 
-With the psi stuff in place we can use the memstall flag to indicate
-pressure that happens from throttling.
+One of:
 
-Signed-off-by: Josef Bacik <jbacik@fb.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- block/blk-cgroup.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+  c21ac93288f0 (refs/bisect/bad) Merge tag 'v5.2-rc6' into x86/asm, to
+refresh the branch
+  8dbec27a242c x86/asm: Pin sensitive CR0 bits
+  873d50d58f67 x86/asm: Pin sensitive CR4 bits
+  7b347ad4938d (HEAD) Merge tag 'v5.2-rc5' into x86/asm, to refresh the branch
+  9db9b76767f1 Documentation/x86: Fix path to entry_32.S
+  7231d0165df3 x86/asm: Remove unused TASK_TI_flags from asm-offsets.c
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 1f7127b03490..6ed515b78cb3 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -29,6 +29,7 @@
- #include <linux/ctype.h>
- #include <linux/blk-cgroup.h>
- #include <linux/tracehook.h>
-+#include <linux/psi.h>
- #include "blk.h"
- 
- #define MAX_KEY_LEN 100
-@@ -1644,6 +1645,7 @@ static void blkcg_scale_delay(struct blkcg_gq *blkg, u64 now)
-  */
- static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
- {
-+	unsigned long pflags;
- 	u64 now = ktime_to_ns(ktime_get());
- 	u64 exp;
- 	u64 delay_nsec = 0;
-@@ -1670,11 +1672,8 @@ static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
- 	 */
- 	delay_nsec = min_t(u64, delay_nsec, 250 * NSEC_PER_MSEC);
- 
--	/*
--	 * TODO: the use_memdelay flag is going to be for the upcoming psi stuff
--	 * that hasn't landed upstream yet.  Once that stuff is in place we need
--	 * to do a psi_memstall_enter/leave if memdelay is set.
--	 */
-+	if (use_memdelay)
-+		psi_memstall_enter(&pflags);
- 
- 	exp = ktime_add_ns(now, delay_nsec);
- 	tok = io_schedule_prepare();
-@@ -1684,6 +1683,9 @@ static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
- 			break;
- 	} while (!fatal_signal_pending(current));
- 	io_schedule_finish(tok);
-+
-+	if (use_memdelay)
-+		psi_memstall_leave(&pflags);
- }
- 
- /**
+and I suspect it's the sensitive bit pinning. But I'll delve all the way.
+
+                Linus
