@@ -2,90 +2,86 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772E2C73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C86C73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4983D20844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OSd4xChr"
+	by mail.kernel.org (Postfix) with ESMTP id 1978D20844
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfGINe4 (ORCPT
+        id S1726792AbfGINgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:34:56 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:32098 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGINe4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:34:56 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x69DYjxD018175;
-        Tue, 9 Jul 2019 22:34:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x69DYjxD018175
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562679286;
-        bh=MhiFviPPcu6nKoAgHxu9kLhRkVqIviOlQ70GIDwHeWY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OSd4xChr4LqPJ0Z4yhqGX3d3kE9XdqIWooNxF5CZvnCr9hYyyM0tkmeXJZiuT7bPA
-         3tzbSVxctZN4Mzgg14Ic/hKH6jNms7QB6P3OX7/+r9HSNjgs+k0y1BJZILLxJLsgnj
-         x9BA2i0ZhDDUK+A0txJflcwn/4LA/GQXK26qhAV0o9QTgDTDkb+fhg2OWi2WfkqSpk
-         JwFmK6lalYppx3rchoEXF8HeBTG49hV0RLM7gBQMS4/0/YbSEO0RYpz/w7EhOTtnuT
-         UTnAsty9noOWweofUEuHFiJA90kdbNkgBufO/45pSR2T7fOid43ccGBSOP0Hppmfqa
-         7OAdCPxsEDL/w==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id m8so10632931vsj.0;
-        Tue, 09 Jul 2019 06:34:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAVHmbloNd8NFGdcFI45UlUZQPIxYGyUruMhPUjmqUwz3LKG0hPA
-        MjYl/aDvHHgNRqEfvCM9h31wh9xwKw+fYm5fKjI=
-X-Google-Smtp-Source: APXvYqyIsj0LNWx9aTVN/OMIaankoVJ8VT6eyJzjNgIeas/TFD8/3C9KDnnCoiLvZA0kmhd14e/lYr8EIcM6As0eMUc=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr14288099vsd.215.1562679285090;
- Tue, 09 Jul 2019 06:34:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190709132639.26802-1-geert@linux-m68k.org>
-In-Reply-To: <20190709132639.26802-1-geert@linux-m68k.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 9 Jul 2019 22:34:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQaoaovbRmOqc80XF_EcwzE5Sju3ZXQDYSkQGSabxQj_A@mail.gmail.com>
-Message-ID: <CAK7LNAQaoaovbRmOqc80XF_EcwzE5Sju3ZXQDYSkQGSabxQj_A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Inform user to pass ARCH= for make mrproper
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 9 Jul 2019 09:36:10 -0400
+Received: from gate.crashing.org ([63.228.1.57]:57459 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbfGINgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:36:10 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x69DZgCw003161;
+        Tue, 9 Jul 2019 08:35:42 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x69DZfPa003160;
+        Tue, 9 Jul 2019 08:35:41 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 9 Jul 2019 08:35:40 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2] powerpc: slightly improve cache helpers
+Message-ID: <20190709133540.GJ30355@gate.crashing.org>
+References: <c6ff2faba7fbb56a7f5b5f08cd3453f89fc0aaf4.1557480165.git.christophe.leroy@c-s.fr> <45hnfp6SlLz9sP0@ozlabs.org> <20190708191416.GA21442@archlinux-threadripper> <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a5864549-40c3-badd-8c41-d5b7bf3c4f3c@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 10:26 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> When cross-compiling an out-of-tree build with an unclean source tree
-> directory, the build fails with:
->
->   /path/to/kernel/source/tree is not clean, please run 'make mrproper'
->   in the '/path/to/kernel/source/tree' directory.
->
-> However, doing so does not fix the problem, as "make mrproper" now
-> requires passing the target architecture to the make command, else it
-> won't remove $(srctree)/arch/$(SRCARCH)/include/generated.
-> "git ls-files -o" doesn't give a clue, as it doesn't list (empty)
-> directories, only files.
->
-> Improve usability by including the ARCH= option in the error output.
->
-> Fixes: a788b2ed81abeb94 ("kbuild: check arch/$(SRCARCH)/include/generated before out-of-tree build")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
+On Tue, Jul 09, 2019 at 07:04:43AM +0200, Christophe Leroy wrote:
+> Le 08/07/2019 à 21:14, Nathan Chancellor a écrit :
+> >On Mon, Jul 08, 2019 at 11:19:30AM +1000, Michael Ellerman wrote:
+> >>On Fri, 2019-05-10 at 09:24:48 UTC, Christophe Leroy wrote:
+> >>>Cache instructions (dcbz, dcbi, dcbf and dcbst) take two registers
+> >>>that are summed to obtain the target address. Using 'Z' constraint
+> >>>and '%y0' argument gives GCC the opportunity to use both registers
+> >>>instead of only one with the second being forced to 0.
+> >>>
+> >>>Suggested-by: Segher Boessenkool <segher@kernel.crashing.org>
+> >>>Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> >>
+> >>Applied to powerpc next, thanks.
+> >>
+> >>https://git.kernel.org/powerpc/c/6c5875843b87c3adea2beade9d1b8b3d4523900a
+> >>
+> >>cheers
+> >
+> >This patch causes a regression with clang:
+> 
+> Is that a Clang bug ?
 
-Applied to linux-kbuild. Thanks.
+I would think so, but cannot tell from the given information.
+
+> Do you have a disassembly of the code both with and without this patch 
+> in order to compare ?
+
+That's what we need to start debugging this, yup.
+
+> Segher, any idea ?
+
+There is nothing I recognise, no.
 
 
-
--- 
-Best Regards
-Masahiro Yamada
+Segher
