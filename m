@@ -2,123 +2,119 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AAAC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF724C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2508C20861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19AF214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BOPS402W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXnOkwxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfGILBP (ORCPT
+        id S1726238AbfGILG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 07:01:15 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:44219 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfGILBO (ORCPT
+        Tue, 9 Jul 2019 07:06:56 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44187 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfGILG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 07:01:14 -0400
+        Tue, 9 Jul 2019 07:06:56 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so6824673plr.11;
+        Tue, 09 Jul 2019 04:06:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1562670074; x=1594206074;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=FMJEzTCAPWq9BYGA0wXEs1vocglVfN8Tlz/V4lS1OfE=;
-  b=BOPS402WtIgEXuGGqPOpCG/uDfBrkqpnIRtWJTA/YdY7BfFvA/jQKndX
-   NLYAm72XFn1HwlzrrwmAZReA6fYrFd+kSwF2gwoZ4/BYHERAC3OInzwei
-   AOc+7ZuyYEMV0lqwFu3T1GXG7Jf4ME+JwOpFFjA+ytOzLYQ07U1Y9Mhgh
-   k=;
-X-IronPort-AV: E=Sophos;i="5.62,470,1554768000"; 
-   d="scan'208";a="740972077"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 09 Jul 2019 11:01:11 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 839CCA2066;
-        Tue,  9 Jul 2019 11:01:10 +0000 (UTC)
-Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 9 Jul 2019 11:01:10 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 9 Jul 2019 11:01:10 +0000
-Received: from [10.107.3.17] (10.107.3.17) by mail-relay.amazon.com
- (10.43.160.118) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Tue, 9 Jul 2019 11:01:05 +0000
-Subject: Re: [PATCH v2 2/4] edac: Add support for Amazon's Annapurna Labs L1
- EDAC
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
-        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
-        <nicolas.ferre@microchip.com>, <paulmck@linux.ibm.com>,
-        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-edac@vger.kernel.org>
-References: <1562500658-14717-1-git-send-email-hhhawa@amazon.com>
- <1562500658-14717-3-git-send-email-hhhawa@amazon.com>
- <20190709173229.0000135f@huawei.com>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <45e9ac35-9ffc-8f5f-cbdb-f85453227363@amazon.com>
-Date:   Tue, 9 Jul 2019 14:01:03 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vcLUjHeh6h5uRgV4arFKMehsSH4BFabQLIxDxss6ZJ4=;
+        b=JXnOkwxRPW4lN1TVBlKXh44workAk1kDfFsZVyOw4Ludga29DE6wVIqyrLIv0TPH3X
+         1nzgKZH9iKxy3yb6Uv/aPNBKKKFJfZeAGaUnJXZzeoh/sF42TUOsG/9Bpx8Y4NpmzPkQ
+         j20JPYWc6AdJaxkZrJeLlhaHkUydzAqftb2mZc2gWKd77vUIYAmR41cWXQ6NTbQ5oHp/
+         aUJRaO7n9n0Ohj7XZ+JjPqn4y2vXCeIsbgRv7Yuk3haWTL0yO+ovPrZXw6Gy5LCYTm2a
+         oBElS/O2IeRzyKAQRseN/ZXxCdU3H+HW8RBXNgAMnxjJ7eNJ8UySdaZLUmdAGp/0ux7U
+         UDmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vcLUjHeh6h5uRgV4arFKMehsSH4BFabQLIxDxss6ZJ4=;
+        b=ebdO9A76Mcff343cIqzNatK5EF4BWjuPx/6aAZt3Y2vOWkYiES3itLpbp5wqbBMu6d
+         ag/GpbqxxPhy9bXL5o/XQqgjifyPlJcLjMc7ECJGFKiBxaZuj1yUy4MDRdUk4DhWJaiV
+         LpOJy33XuiaUE0VUpw+ZkCjxzobA6u4875pal2rx2MLRnolgx3H7qhSb+pFbPMJolnSf
+         OkkNAwA2LyWu+uD0b6q0KEkOlJvP5fzpb5sI0h5bqH7PZp1gAbNeT03e+2kzxng5jK3d
+         kMiTUJkOLUQtfKMzF6KeqIAQXAA9fMDhv6ezSLgOYDzDHBgMhEeSQ0UDpW7o/WEqhfG6
+         rnmA==
+X-Gm-Message-State: APjAAAUKgPn/81c9HlKSpLyyl2UKBoHGUMufiLNAnZXLMSCYYI4UqjaP
+        kACqkzjSdTo58wLvc3QCPlQ=
+X-Google-Smtp-Source: APXvYqy2N4F/E6s4YB0OPMYZJTxr/jPSl8pt2vXg8mDcllsDoKMSeWYdu5jq4uQU8BdRrUrAF+ev1g==
+X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr29213267plb.164.1562670415368;
+        Tue, 09 Jul 2019 04:06:55 -0700 (PDT)
+Received: from icarus ([2001:268:c145:6825:1c79:bf4:8232:d614])
+        by smtp.gmail.com with ESMTPSA id h1sm29334483pfo.152.2019.07.09.04.06.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Jul 2019 04:06:54 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 20:06:33 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] docs: driver-api: generic-counter: fix file path to
+ ABI doc
+Message-ID: <20190709110613.GA4476@icarus>
+References: <20190709075436.7294-1-marcus.folkesson@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190709173229.0000135f@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190709075436.7294-1-marcus.folkesson@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 09, 2019 at 09:54:36AM +0200, Marcus Folkesson wrote:
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> ---
+> v2: Correct the other place as well..
+> 
+>  Documentation/driver-api/generic-counter.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
+> index 0c161b1a3be6..8382f01a53e3 100644
+> --- a/Documentation/driver-api/generic-counter.rst
+> +++ b/Documentation/driver-api/generic-counter.rst
+> @@ -233,7 +233,7 @@ Userspace Interface
+>  Several sysfs attributes are generated by the Generic Counter interface,
+>  and reside under the /sys/bus/counter/devices/counterX directory, where
+>  counterX refers to the respective counter device. Please see
+> -Documentation/ABI/testing/sys-bus-counter-generic-sysfs for detailed
+> +Documentation/ABI/testing/sysfs-bus-counter for detailed
+>  information on each Generic Counter interface sysfs attribute.
+>  
+>  Through these sysfs attributes, programs and scripts may interact with
+> @@ -325,7 +325,7 @@ sysfs attributes, where Y is the unique ID of the respective Count:
+>  
+>  For a more detailed breakdown of the available Generic Counter interface
+>  sysfs attributes, please refer to the
+> -Documentation/ABI/testing/sys-bus-counter file.
+> +Documentation/ABI/testing/sysfs-bus-counter file.
+>  
+>  The Signals and Counts associated with the Counter device are registered
+>  to the system as well by the counter_register function. The
+> -- 
+> 2.22.0
 
+Fixes: 09e7d4ed8991 ("docs: Add Generic Counter interface documentation")
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-On 7/9/2019 12:32 PM, Jonathan Cameron wrote:
->> Signed-off-by: Hanna Hawa<hhhawa@amazon.com>
-> A quick drive by review as I was feeling curious.
-> 
-> Just a couple of trivial queries and observation on the fact it
-> might be useful to add a few devm managed functions to cut down
-> on edac driver boilerplate.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
->> +#define ARM_CA57_CPUMERRSR_VALID		GENMASK(31, 31)
-> For a single bit it's common to use BIT(31) rather than GENMASK to make
-> it explicit.
+Jonathan, would you be able to pick this up in your tree?
 
-Will fix.
+Thanks,
 
-> 
-> 
->> +	edac_dev->mod_name = dev_name(dev);
-> I'd admit I'm not that familiar with edac, but seems odd that a
-> module name field would have the dev_name.
-
-Will fix when I got more inputs.
-
-> 
->> +	edac_device_free_ctl_info(edac_dev);
-> More a passing observation than a suggestion for this driver, but if there was
-> ever a place where it looked like a couple of devm_ allocation functions would
-> be useful, this is it;)
-> 
-> edac_dev = devm_device_alloc_ctrl_info(dev, ...)
-> ...
-> devm_edac_device_add_device(dev, ...)
-
-I agree.
-I can implement the devm_* functions in separate patches as this is not 
-related to my patches (and not to delay this patches).
-
-> 
-> 
+William Breathitt Gray
