@@ -2,118 +2,113 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDBDC606D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351BEC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32CB2216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:14:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uDcfYqYF"
+	by mail.kernel.org (Postfix) with ESMTP id 13A6A216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfGIIOk (ORCPT
+        id S1726518AbfGIIP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:14:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38009 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfGIIOk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:14:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z75so9049358pgz.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 01:14:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WwQ5bucdLWQygYxygSJozlXHDjj0Eb5bfaQTAqD/RAY=;
-        b=uDcfYqYFArvBK5OKADRY9kCppXYU9MKVJkzXKP+XmdGwa+G+W5U6Apj/QIwIw1wbdq
-         mlm+vab7pxbwcYkSarZB4iWWIagZSfR06v/5FgDZyMJvtCnafnawfUYqRS2naVJBmwaB
-         LOeSJnW/zeQ3pjYzrACQTdcy9L9O9IwzFFme93iS59Wt2t50/F75s4YNvXQtSce43IXb
-         f7LMWR3mP9zzL6KQQshGUyxJkOMGkgXTacrC0A5ifnX3kyIeBP/9PWtl5vEpN6IUzBhR
-         mZkwGuCc8ayAIvv/MrH1i798OGSOpetrigTzCMeRMXV17X2KaprPL79lQpqfNY7a0Njw
-         yHww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WwQ5bucdLWQygYxygSJozlXHDjj0Eb5bfaQTAqD/RAY=;
-        b=IUtboHeIvdJ7wsnBE3rhhRfb7OFrIRHKmWVzxaHt0cN1DaBrjS/cf0d4wN6S8qSg2c
-         sxEoIyRzomjaxW/YbzHC5UACL54l1cHDPB4kroQ3M6x4vDD4uPWbLQ37TOskZKouJFHo
-         YoARgX83TgkL/n5jyjVyb6Y1/kSTppgf8C7Ppt7+owm0lmQtVq8/4fIIpzA913djQJIb
-         pWMycfbqOAlUD4N/Dc//AxqgmwZQTpyKeQYViK3hQ+M1kGXuTANC7BS1ZWaN/5IfkkL7
-         mLDrKl6hyrGW+2CU0/9rKq9mR6ro4gFxo6jcXYou2Es6nyUesJQTWKcwAN+O9xZeZH+u
-         WrNg==
-X-Gm-Message-State: APjAAAUuIaIh1zJ4MM0FTBU0dlgqpyrC+YXiDF7TxHNVl/wxCURkA0N/
-        3j3tDKvfzoKzfhYbvuwzPVz7nQ==
-X-Google-Smtp-Source: APXvYqzICT10j5UplTlApExoj/w21dBQdKmi/8TtBgI8+M4EnpKOLgBeiolAXaDckLPieEY5y7K7mA==
-X-Received: by 2002:a63:1847:: with SMTP id 7mr29794492pgy.204.1562660079412;
-        Tue, 09 Jul 2019 01:14:39 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id u97sm1823179pjb.26.2019.07.09.01.14.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 01:14:38 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 13:44:36 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Anson.Huang@nxp.com
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, p.zabel@pengutronix.de, ping.bai@nxp.com,
-        daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com,
-        angus@akkea.ca, andrew.smirnov@gmail.com, ccaione@baylibre.com,
-        agx@sigxcpu.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/4] dt-bindings: opp: Support multiple opp-suspend
- properties
-Message-ID: <20190709081436.fguhzv2quldql2k4@vireshk-i7>
-References: <20190709080015.43442-1-Anson.Huang@nxp.com>
+        Tue, 9 Jul 2019 04:15:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:39312 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbfGIIP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 04:15:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 464F528;
+        Tue,  9 Jul 2019 01:15:25 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB2003F59C;
+        Tue,  9 Jul 2019 01:15:22 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] dt-bindings: interrupt-controller: Amazon's
+ Annapurna Labs FIC
+To:     "Shenhar, Talel" <talel@amazon.com>, Rob Herring <robh@kernel.org>
+Cc:     nicolas.ferre@microchip.com, jason@lakedaemon.net,
+        mark.rutland@arm.com, mchehab+samsung@kernel.org,
+        davem@davemloft.net, shawn.lin@rock-chips.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, jonnyc@amazon.com, hhhawa@amazon.com,
+        ronenk@amazon.com, hanochu@amazon.com, barakw@amazon.com
+References: <1560155683-29584-1-git-send-email-talel@amazon.com>
+ <1560155683-29584-2-git-send-email-talel@amazon.com>
+ <20190709022301.GA8734@bogus>
+ <f1fd393d-0b8c-16f1-9ac2-0589e9cb9ea7@amazon.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <ff3794af-cd5a-5331-fca0-30280530670e@arm.com>
+Date:   Tue, 9 Jul 2019 09:15:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709080015.43442-1-Anson.Huang@nxp.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <f1fd393d-0b8c-16f1-9ac2-0589e9cb9ea7@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-07-19, 16:00, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Update opp-suspend property's description to support multiple
-> opp-suspend properties defined in DT, the OPP with highest opp-hz
-> and with opp-suspend property present will be used as suspend opp.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> New patch.
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 76b6c79..6859227 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -140,8 +140,8 @@ Optional properties:
->    frequency for a short duration of time limited by the device's power, current
->    and thermal limits.
->  
-> -- opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
-> -  the table should have this.
-> +- opp-suspend: Marks the OPP to be used during device suspend. If multiple OPPs
-> +  in the table have this, the OPP with highest opp-hz will be used.
->  
->  - opp-supported-hw: This enables us to select only a subset of OPPs from the
->    larger OPP table, based on what version of the hardware we are running on. We
+On 09/07/2019 06:59, Shenhar, Talel wrote:
+> Marc, should I publish those fixes as new patch that updates the 
+> dt-bindings or new patchset to this list?
 
-LGTM. Once Rob Acks it, I will apply the first two patches to the OPP
-tree.
 
+If you are going to update the binding, please submit a patch on top of
+mainline, as it's been merged already.
+
+Thanks,
+
+	M.
 -- 
-viresh
+Jazz is not dead. It just smells funny...
