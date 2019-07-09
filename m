@@ -2,132 +2,101 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7447C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F73EC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D5F217F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243FB2171F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562637144;
-	bh=xMnqEIC8brZu5gZZFbj/ysEfSWLv5w57WDhGQDSuYbM=;
+	s=default; t=1562637171;
+	bh=1szwNiTjUlflqiuk8Yqh+yECkGJ+ByJfPsrAZ5TH3B4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uN9u5KZeRnG2fjb5jwKHQIpF3yCl2TSjFT/n7RoRImFCJNkFHdgX8La+eTg23SQ/U
-	 lLUAcVUeV10qe3C6JRGSoZ2r1TC5Z+H7pvOlledM7BF0PMCXCWtyrogoEEpbJZFslw
-	 wme8MGcFO+218HMkyC5K+6yJ4PeSahZlNd7XSgq8=
+	b=nFwJgies9iEWetnJ1m2sfdWfP5Q3e6ZP+R5ECfZ5fSlBqNWAQmyvKd0uQ7oL2WH3w
+	 o8UfkXaFesInodMZFdLYj/18f0p4miNGT4+dnFBTbuhZiFI7OcKz4cGl8wyGyduKVs
+	 VAjQgwokUrzlbRYcWU1mw9Icy28Fe8pB9ym9htN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfGIBwX (ORCPT
+        id S1727034AbfGIBwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:52:23 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35473 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfGIBwX (ORCPT
+        Mon, 8 Jul 2019 21:52:50 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37417 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfGIBwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:52:23 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so30247323ioo.2;
-        Mon, 08 Jul 2019 18:52:22 -0700 (PDT)
+        Mon, 8 Jul 2019 21:52:49 -0400
+Received: by mail-io1-f67.google.com with SMTP id q22so17909311iog.4;
+        Mon, 08 Jul 2019 18:52:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/tzcZLlDxbC1twwv0AFnIwTd9l+z877k7LvqZNpQY/c=;
-        b=kMwyIDadQowI9Se3474fkdqIU67ubqm8PaDM2K1pPoKp+c4wFFz5JaQXsxMGfdF0mL
-         xbZFQj8bqgy/EF+i0XH94/dJe56NO8EibhLTDlrpNU+2saVGeRj2TNugjbrFwsW6Nx11
-         vr/L+UzPQPW+w2devIJ+7Th1yQagCpdHH86X67oPfcpcv99bf/JB5j8Eie+ZnlxXpeQq
-         YmVPOLm4Q/bUwi059pXwZUtI3xedcPnkhe2alJI71JaxtgmBm5zWwtX/T9wMBfvXz1fy
-         8H6TEnq7JkMpQ+J0UpYOluZcASqaQ08ShXorknPJGzo+caNwES0FKdDl08xqsXUC+J3D
-         0bNA==
-X-Gm-Message-State: APjAAAUuRUkKPMlawxakxcP3yPT1myk3vHBBDZPUK6/NjcOVIBIxG2Wj
-        ynLelUNQoEYmpd5OEpUcLQ==
-X-Google-Smtp-Source: APXvYqyuoLXWQjUHBrmOlsWqa0z0KTgxi+6bb9MZ0KVWo5iYoxRliYViJNxGihIE2TjIS3iii9ESlQ==
-X-Received: by 2002:a02:6d24:: with SMTP id m36mr25055180jac.87.1562637142441;
-        Mon, 08 Jul 2019 18:52:22 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=s4iT/C+ZTI6lS8Y15mNcXYBDPJVtxfB5rOYQ4KRci6s=;
+        b=jmVtikgOUC3rVx81wGXpn3jD4H3PkheB3VQFWX8kYKj61ZEJw9OEScZ6epQ4OoFs4G
+         IdVnvf976dnGa3E1kx77Wj7t7TzfSdcmVePaNMmHx9zz1ANK6l+X7kfN4DznTvOv6ua2
+         8zASkPHJchAEly+l4LYajlRjIOALH7O/s+BAVBBQe3/3HX3B4lFyIxOG99Kiw7E4rvA7
+         XsxjTVE/SPPzO5yq7NCOWuRXHypd5lkTaaz0w7OIPB7JaNLf5uu1Aa2BN+uN2cCWxyPW
+         6/qYsFVXk6u/klJaOB1SxSya5xXRaYISEFnNB8yxklcMUGqoxQ0G/HnwgyM5981UU+1y
+         8VCg==
+X-Gm-Message-State: APjAAAWFxM5HRoxkxC3Ghf7RjHne66uEQMs6+x7q9NU4uYlqD7os3Bal
+        eGtPb1yqiqrXjkC3Y9cWgg==
+X-Google-Smtp-Source: APXvYqxAB1vUvIqVP37afapbU1uZ0daFlx54UYQyhhrcCjs15oV7Bjsh/pZuPcpplBZBcFsuEEQPHw==
+X-Received: by 2002:a02:cd83:: with SMTP id l3mr24635684jap.66.1562637168778;
+        Mon, 08 Jul 2019 18:52:48 -0700 (PDT)
 Received: from localhost ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id e188sm16873548ioa.3.2019.07.08.18.52.21
+        by smtp.gmail.com with ESMTPSA id w23sm34368748ioa.51.2019.07.08.18.52.48
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 18:52:21 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 19:52:20 -0600
+        Mon, 08 Jul 2019 18:52:48 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 19:52:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc:     p.zabel@pengutronix.de, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Joao.Pinto@synopsys.com,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: Re: [PATCH V2 2/2] dt-bindings: Document the DesignWare IP reset
- bindings
-Message-ID: <20190709015220.GA18239@bogus>
-References: <1559835388-2578-1-git-send-email-luis.oliveira@synopsys.com>
- <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
+To:     =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Subject: Re: [PATCH v2 3/3] media: dt-bindings: imx7-csi: add i.MX6UL/L
+ support
+Message-ID: <20190709015247.GA25557@bogus>
+References: <20190606153825.8183-1-sebastien.szymanski@armadeus.com>
+ <20190606153825.8183-3-sebastien.szymanski@armadeus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1559835388-2578-3-git-send-email-luis.oliveira@synopsys.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190606153825.8183-3-sebastien.szymanski@armadeus.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 05:36:28PM +0200, Luis Oliveira wrote:
-> This adds documentation of device tree bindings for the
-> DesignWare IP reset controller.
+On Thu,  6 Jun 2019 17:38:25 +0200, =?UTF-8?q?S=C3=A9bastien=20Szymanski?=          wrote:
+> Document "fsl,imx6ul-csi" entry.
 > 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 > ---
-> Changelog
-> - Add active low configuration example
-> - Fix compatible string in the active high example
 > 
->  .../devicetree/bindings/reset/snps,dw-reset.txt    | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/snps,dw-reset.txt
+> Changes for v2:
+>  - New patch to document new "fsl,imx6ul-csi" entry.
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/snps,dw-reset.txt b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-> new file mode 100644
-> index 0000000..85f3301
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/snps,dw-reset.txt
-> @@ -0,0 +1,30 @@
-> +Synopsys DesignWare Reset controller
-> +=======================================
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +Required properties:
-> +
-> +- compatible: should be one of the following.
-> +	"snps,dw-high-reset" - for active high configuration
-> +	"snps,dw-low-reset" - for active low configuration
-
-This is really a standalone block?
-
-Are there versions of IP?
-
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +	region.
-> +
-> +- #reset-cells: must be 1.
-> +
-> +example:
-> +
-> +	dw_rst_1: reset-controller@0000 {
-> +		  compatible = "snps,dw-high-reset";
-> +	 	  reg = <0x0000 0x4>;
-> +		  #reset-cells = <1>;
-> +	};
-> +
-> +	dw_rst_2: reset-controller@1000 {i
-> +		  compatible = "snps,dw-low-reset";
-> +		  reg = <0x1000 0x8>;
-> +		  #reset-cells = <1>;
-> +	};
-> -- 
-> 2.7.4
+>  Documentation/devicetree/bindings/media/imx7-csi.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
