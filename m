@@ -2,106 +2,146 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5586FC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4F1C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADB8214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kz12+iAg"
+	by mail.kernel.org (Postfix) with ESMTP id 8A510216FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfGIIlU (ORCPT
+        id S1726043AbfGIIzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:41:20 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45481 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfGIIlT (ORCPT
+        Tue, 9 Jul 2019 04:55:37 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:39977 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfGIIzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:41:19 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so18695334lje.12
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 01:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KW4urHyn9lKTkE1GguMjzjUH4Z42XiBkXGp6QALBBzE=;
-        b=Kz12+iAgKvNThqsgJb5ncahTCH39onCnTWNmtzIJz8N7M6yVJCHvKMJHqX7NMCYHJf
-         mSUgKbRH2UsmFJwjAZsTdsyHkeRCerZVnsy1pLHUlPVdkTMtyhKinxm8SHrQvgAnx4hO
-         fRnNUGP2SszVVIzqJRRJ9j0XKZNGzA202cCe+1Yx/2rsLfyYDFiy9dEfhTI8SVkT7omr
-         BTbFn6bhEzZ9gEYs2dU4yCXPaPOvvcx2LXJalHx+DIjjLq9WvE20OpKPEpO/98wjuAdd
-         i15huZwwlIBni6pnJNYBIqdnSk0wxWrypHLrxCVJS0vKCvH6RCWj/qt4cBG1aMVfkEUm
-         rEGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KW4urHyn9lKTkE1GguMjzjUH4Z42XiBkXGp6QALBBzE=;
-        b=hDT8faP6uAjpFIas5SlVJqZ2xwyEh4xx9UbCJdOymxn3RKSFgQIT7X4ceTwKOn9z6v
-         m+QGtWAu7aEqIdTJO+dxtPCqf2ELSyctmT13RLqvzdEyfX2TGzkL2ub9br5aWJVsjCRu
-         +RqWRicVuzkJpbiMBXxIFEH/Ln1+A/Mt9NORo9/aINc/+qImL3oR0o9pz9ti/26OTT32
-         8Ns4aQYAAJwfZ6g6lSvXPm9E6lPN3ZYBuqYdPDead+yFRC4p6fZcLo9x5dGPSTE+Yezk
-         Jf7EUj+bdkyWgMkZYXJLSSY2OGu8W6yddPvCp4u2DsaINoIn5T0NZtGMNBttcUX6K69J
-         0IMg==
-X-Gm-Message-State: APjAAAVUVEQ5cKo+wqfZYMKNEiiSUM/SjsDr1Qdfcem5iWgghq1FraUI
-        FwB6xw/aS+JmITDh37R//RulE5fLvM/DAmmPubl5yg==
-X-Google-Smtp-Source: APXvYqw0jyVm13vCM2kziODAQ0A5OhPssA3jNapr/manrVR+U6kZZMvBVLPyYy6OTOyqEuhjHIFh+hTX4RVT+EaZ2VI=
-X-Received: by 2002:a2e:9593:: with SMTP id w19mr9976145ljh.69.1562661677756;
- Tue, 09 Jul 2019 01:41:17 -0700 (PDT)
+        Tue, 9 Jul 2019 04:55:36 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 648996000D;
+        Tue,  9 Jul 2019 08:55:32 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 10:55:32 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>,
+        Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Message-ID: <20190709085532.cdqv7whuesrjs64c@flea>
+References: <20190605120237.ekmytfxcwbjaqy3x@flea>
+ <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
+ <20190607062802.m5wslx3imiqooq5a@flea>
+ <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+ <20190607094030.GA12373@lst.de>
+ <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+ <20190612152022.c3cfhp4cauhzhfyr@flea>
+ <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+ <20190701095842.fvganvycce2cy7jn@flea>
+ <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190708203049.3484750-1-arnd@arndb.de>
-In-Reply-To: <20190708203049.3484750-1-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Jul 2019 10:41:05 +0200
-Message-ID: <CACRpkdY1JzUZKgmXbObb6hqFcLFygAj2NuMgPMj=8tCp9U2C1A@mail.gmail.com>
-Subject: Re: [PATCH] ARM: mtd-xip: work around clang/llvm bug
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ejhhd7l2mldty4ew"
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 10:31 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> llvm gets confused by inline asm with .rep directives,
+--ejhhd7l2mldty4ew
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Are the LLVM developers aware of the bug?
-It seems like something we can work around but should
-eventually be fixed properly in LLVM, right?
-
-> which
-> can lead to miscalculating the number of instructions inside it,
-> and in turn lead to an overflow for relative address calculation:
+On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
+> > > Maybe instead of edp-connector one would introduce integrator's specific
+> > > connector, for example with compatible "olimex,teres-edp-connector"
+> > > which should follow edp abstract connector rules? This will be at least
+> > > consistent with below presentation[1] - eDP requirements depends on
+> > > integrator. Then if olimex has standard way of dealing with panels
+> > > present in olimex/teres platforms the driver would then create
+> > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
+> > > Anyway it still looks fishy for me :), maybe because I am not
+> > > familiarized with details of these platforms.
+> >
+> > That makes sense yes
 >
-> /tmp/cfi_cmdset_0002-539a47.s: Assembler messages:
-> /tmp/cfi_cmdset_0002-539a47.s:11288: Error: bad immediate value for offset (4100)
-> /tmp/cfi_cmdset_0002-539a47.s:11289: Error: bad immediate value for offset (4100)
->
-> This might be fixed in future clang versions, but is not hard
-> to work around by just replacing the .rep with a series of
-> eight unrolled nop instructions.
->
-> Link: https://bugs.llvm.org/show_bug.cgi?id=42539
-> https://godbolt.org/z/DSM2Jy
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Actually, it makes no sense at all. Current implementation for anx6345
+> driver works fine as is with any panel specified assuming panel delays
+> are long enough for connected panel. It just doesn't use panel timings
+> from the driver. Creating a platform driver for connector itself looks
+> redundant since it can't be reused, it doesn't describe actual
+> hardware and it's just defeats purpose of DT by introducing
+> board-specific code.
 
-I guess this brings up the old question whether the compiler should
-be worked around or just considered immature, but as it happens this
-other day I was grep:ing around to find "the 8 NOP" that is so
-compulsively inserted in ARM executables (like at the very start of
-the kernel execution) and I couldn't find them and now I see why.
-Spelling them out makes it easier to find so:
+I'm not sure where you got the idea that the purpose of DT is to not
+have any board-specific code.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+It's perfectly fine to have some, that's even why there's a compatible
+assigned to each and every board.
 
-Yours,
-Linus Walleij
+What the DT is about is allowing us to have a generic behaviour that
+we can detect: we can have a given behaviour for a given board, and a
+separate one for another one, and this will be evaluated at runtime.
+
+This is *exactly* what this is about: we can have a compatible that
+sets a given, more specific, behaviour (olimex,teres-edp-connector)
+while saying that this is compatible with the generic behaviour
+(edp-connector). That way, any OS will know what quirk to apply if
+needed, and if not that it can use the generic behaviour.
+
+And we could create a generic driver, for the generic behaviour if
+needed.
+
+> There's another issue: if we introduce edp-connector we'll have to
+> specify power up delays somewhere (in dts? or in platform driver?), so
+> edp-connector doesn't really solve the issue of multiple panels with
+> same motherboard.
+
+And that's what that compatible is about :)
+
+> I'd say DT overlays should be preferred solution here, not another
+> connector binding.
+
+Overlays are a way to apply a device tree dynamically. It's orthogonal
+to the binding.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ejhhd7l2mldty4ew
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSRWhAAKCRDj7w1vZxhR
+xX17AP9m55K0q2PlhGjTg96EP4qSaUJ3PeJP4YHnC9hGYGMuWwD9HbDHJHhrb3wn
+zWBH9y7+q3si+oAQDJcL8eGh17MSBgc=
+=IVjC
+-----END PGP SIGNATURE-----
+
+--ejhhd7l2mldty4ew--
