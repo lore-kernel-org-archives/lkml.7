@@ -2,130 +2,125 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1461CC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1E5C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CEE21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GzifLgaL"
+	by mail.kernel.org (Postfix) with ESMTP id 0C9A721537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfGIIWe (ORCPT
+        id S1726458AbfGIIbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:22:34 -0400
-Received: from mail-eopbgr140073.outbound.protection.outlook.com ([40.107.14.73]:28357
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725886AbfGIIWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:22:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aFFjx8Bfr95fqxYAYadzrFzzMV8DGJioJm9RQ/xO/pxzqRpJh617EOleAGGjjL9V1Stoqv8zbaTdIO8zE4/OXH6MebtLMuIuEcDY7uGVlDjIWAMlZNpafUYi1xQXQqSU11MU3bnxSejXu/Cbseexo7jtGSdiNWjxvaSTPYrAB0hu+7KhInjrRLKINUzUUe+caWFMa80EmOMJL8zkIw2nZz679ibn2RXZ+rYiC/KtvXKpYmd/5NcNSfZPJYzqCN72kqMAdXh3hrSkqSA4jKAiDnEbFeHzF1EGxyYoeFVXpcDu3VHdVKqA5LzJrfBreY6r0RgTd+ehBrkSMFbIGvFHUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b0VeOYnQJzd+/2ZaGMz39y9y70V69Y7YVJV+39rC1WU=;
- b=CmAzxd13ZyP/Bo7XcEueHl+dMo61VjdK6Oho2vDiU8DyAiDiRE6YNsXY+pNxBkZuxG9wSAwAp6DPP1eblJMyNj5Dn886suOlXoy0090MlWOH3DynWzx+y08eZBCe+fktMKGhbOhMIw3ofmsw7mFeHkUPvEZHmng5AGTUuPa6forofKYxUwugFlzWjJKzRvZhWtjcxNbfHizVmR/yHWL/xtdxDPeC8H4dhqz5eOgOlUilmcv1/t7GnDmmp8LwuPdMKgWYOGgVccqbu/xF5U8tpVXXApGX3ABP+NZY272woR6OqB160PSZm45PCtOQjjUeC6cjgSACHEpjNQmiCPtnlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b0VeOYnQJzd+/2ZaGMz39y9y70V69Y7YVJV+39rC1WU=;
- b=GzifLgaLwt+rSoT4WuEWTwgjCBp/ktWL/wPP2tyXjxHkMBJ+5VLi2rq96Zadlplh5RT6MsHnX95SuMjYyIgv/iirqIPrRhyITPtzN8aqP/i8zhts6p1/zAAiVt24SXVeW70nmHoG08W+RzduvzABv42RsMn+jRRcD81CDdk3NfE=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6050.eurprd04.prod.outlook.com (20.179.32.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Tue, 9 Jul 2019 08:22:30 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::2023:c0e5:8a63:2e47]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::2023:c0e5:8a63:2e47%5]) with mapi id 15.20.2052.020; Tue, 9 Jul 2019
- 08:22:30 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>
-Subject: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
-Thread-Topic: [PATCH] arm: xen: mm: use __GPF_DMA32 for arm64
-Thread-Index: AQHVNi9zmpVhxJk2Z0aPUBEkePn3cw==
-Date:   Tue, 9 Jul 2019 08:22:30 +0000
-Message-ID: <20190709083729.11135-1-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.16.4
-x-clientproxiedby: HK0PR01CA0004.apcprd01.prod.exchangelabs.com
- (2603:1096:203:92::16) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9121fe40-b778-47ae-ea76-08d7044695ae
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6050;
-x-ms-traffictypediagnostic: AM0PR04MB6050:
-x-microsoft-antispam-prvs: <AM0PR04MB605051BEAB92F04288000EDE88F10@AM0PR04MB6050.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:194;
-x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(396003)(346002)(39860400002)(199004)(189003)(478600001)(7736002)(50226002)(386003)(4326008)(5660300002)(6436002)(6506007)(4744005)(99286004)(2906002)(66066001)(52116002)(54906003)(6486002)(2501003)(8936002)(186003)(26005)(110136005)(14444005)(256004)(305945005)(316002)(102836004)(6512007)(81166006)(81156014)(486006)(25786009)(68736007)(86362001)(6116002)(3846002)(53936002)(8676002)(1076003)(476003)(44832011)(2616005)(73956011)(36756003)(66446008)(66476007)(66556008)(64756008)(71200400001)(14454004)(66946007)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6050;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gdfL97amVfYXLuvxiFtdG8YKtio0ybCCX44aY3h+w3W0ckmOmYG9WW5UBijEnmx7Qv3uJAik2y9m3zVAf3Dh49uYf8e2ax0+DPY7pixHax2DJR0TOq1p2Yk8Sz/kyRS40l0LCqMxvCbwuv3meeKaFKZ6iNxHNoSSjm1Fd5Rch/gDZvgrb39UXGc60D3GQRng2iHSpFALYtQHG6flwkZ9yF2KawuoTwR8I0Mu4foJBYoI8G1JVRnlX7GR/oNHgcKClzRRQzzKR0kkdEWSiVHHycKzECvLtd/a/oFFNHA8o15TvDNzgwc6vQBsv4TBIrMcvxCqkE36S3nLePywz/26Lm3x3Q5s1/eJDYsxKi8JaWh6z+e2FEy/B1kkCriNg4Spq9zpnehdo/RnRT103oqtK3Xkq0nrK304bkjPic/tyLs=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 9 Jul 2019 04:31:06 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40031 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGIIbG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 04:31:06 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w196so14739158oie.7;
+        Tue, 09 Jul 2019 01:31:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yPz8Wrc9scfbvUYSoeH3P5XkfDp5IV5bPUgpQapxuj0=;
+        b=IIQlBN5LDRNO2wWAUYgrNtmYB37gmiiJzvcJuLr6naF6gGXgXLSyJKRtxJIA4JZknh
+         eD+AACRyxsRrT9rZ57l8R0Jixn/mHcy8ct/LRAD+RZxlkbNoFFWg59PrqZdUNFpqUe8G
+         eJnVfxx4VpqxytvOyW8afn9CoRqlS6EYLR+oBtVKc0A1h/7ouG9tu51X6KozyhJksKME
+         xL0LZTRLii6WNDQUWlh6fidaoG2OAs6K0v+zN8RQ7L8ZJtfofB6adzGiJbhxnNP4DWqE
+         IoS0Xiq1l1fYA0jkpN2mjNQQv1g2LstaI0wywzz1lcJ7z/7o8p6wBM5jo9JAu0Pq7om+
+         FyCA==
+X-Gm-Message-State: APjAAAXvaVYA4cNH/uxsVcnI3QKfB1izf5KNqcvzFEgIJBuIvmJCNILD
+        LWb17wMtBaqjaqS8R2vCX6aAneUYJrvjrIKz2IM=
+X-Google-Smtp-Source: APXvYqyKI0T8msqU4zRnkOtnk4CuiAuhybApyJo3IIAbQep1kB5/rzz1YGjuq/OVF9u3ux3cgEea7Yq6VJBy4ugZ8A4=
+X-Received: by 2002:aca:c4d5:: with SMTP id u204mr970498oif.131.1562661065479;
+ Tue, 09 Jul 2019 01:31:05 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9121fe40-b778-47ae-ea76-08d7044695ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 08:22:30.5672
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6050
+References: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 9 Jul 2019 10:30:53 +0200
+Message-ID: <CAMuHMdUH46_yvYc840uvMoOOqXuU3mDOjaT65vZ=6WKGq7-Kqg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: check arch/$(SRCARCH)/include/generated before
+ out-of-tree build
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm64 shares some code under arch/arm/xen, including mm.c.
-However ZONE_DMA is removed by commit
-ad67f5a6545("arm64: replace ZONE_DMA with ZONE_DMA32").
-So to ARM64, need use __GFP_DMA32.
+Hi Yamada-san,
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm/xen/mm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Apr 7, 2019 at 12:45 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> After cross-compiling the kernel, "make mrproper" should be executed
+> with the proper ARCH= option. Otherwise, stale objects will remain
+> under arch/$(SRCARCH)/.
+>
+> One bad scenario is like this:
+>
+>   $ make ARCH=arm defconfig all   # cross-compile the kernel for arm
+>   $ make mrproper                 # mrproper for host-arch (i.e. x86)
+>   $ make ARCH=arm O=build_dir defconfig all
+>
+> If you miss ARCH= for mrproper and cross-compile the kernel with O=
+> and ARCH= options, Kbuild will happily start to build, but may fail
+> due to stale objects in the srctree.
+>
+> If $(srctree)/arch/$(SRCARCH)/include/generated/ exists, let's stop
+> the out-of-tree build. To detect this, mrproper should clean only
+> arch/$(SRCARCH)/include/generated/.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  Makefile | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 10643c3..17945ce 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1091,7 +1091,9 @@ PHONY += prepare archprepare prepare1 prepare3
+>  prepare3: include/config/kernel.release
+>  ifneq ($(srctree),.)
+>         @$(kecho) '  Using $(srctree) as source for kernel'
+> -       $(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
+> +       $(Q)if [ -f $(srctree)/.config -o \
+> +                -d $(srctree)/include/config -o \
+> +                -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
+>                 echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
+>                 echo >&2 "  in the '$(srctree)' directory.";\
 
-diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
-index e1d44b903dfc..a95e76d18bf9 100644
---- a/arch/arm/xen/mm.c
-+++ b/arch/arm/xen/mm.c
-@@ -27,7 +27,7 @@ unsigned long xen_get_swiotlb_free_pages(unsigned int ord=
-er)
-=20
- 	for_each_memblock(memory, reg) {
- 		if (reg->base < (phys_addr_t)0xffffffff) {
--			flags |=3D __GFP_DMA;
-+			flags |=3D __GFP_DMA | __GFP_DMA32;
- 			break;
- 		}
- 	}
---=20
-2.16.4
+This took me a bit to find out what was wrong...
 
+Usually I don't run "make mrproper", as it removes files I may want to
+keep (e.g. tags).  Hence I ran "git ls-files -o | grep m68k | xargs rm"
+(I usually build in separate output directories), confirmed with "git
+ls-files -o" there were no remaining build artefacts, and was surprised
+to discover I still got the error message above?!?
+
+Apparently arch/m68k/include/generated was still present, but as "git
+ls-files -o" only shows files, not directories, it was not listed.
+Perhaps the directory checks above can be changed to directory exists
+_and_ is not empty?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
