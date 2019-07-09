@@ -2,134 +2,113 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576D7C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C61C606D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373312073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229612073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jnbG1dpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfGIFmN (ORCPT
+        id S1726680AbfGIFok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:42:13 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5715 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfGIFmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:42:13 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 22:42:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
-   d="scan'208";a="249045835"
-Received: from ngote-system-product-name.iind.intel.com ([10.106.124.92])
-  by orsmga001.jf.intel.com with ESMTP; 08 Jul 2019 22:42:09 -0700
-From:   NitinGote <nitin.r.gote@intel.com>
-To:     akpm@linux-foundation.org, joe@perches.com
-Cc:     corbet@lwn.net, apw@canonical.com, keescook@chromium.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com,
-        Nitin Gote <nitin.r.gote@intel.com>
-Subject: [PATCH v2] Added warnings in checkpatch.pl script to :
-Date:   Tue,  9 Jul 2019 11:10:55 +0530
-Message-Id: <20190709054055.21984-1-nitin.r.gote@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jul 2019 01:44:40 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44483 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfGIFoj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 01:44:39 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b7so18642668otl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 22:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EqaZJyYgM0Os8ebMGdlkWjjcPY48Zl3Ke8JX40ALnsw=;
+        b=jnbG1dpqI0K+YHq/9S1CeaYEP7TPEOBIvVGhWbP/GwvHf0hUw0j7jJmO2BrWnkkr0q
+         rTzbdUNc641u+BMwgQEzAAC35Xy0R1R3oHIE0W4okbM3zaEsBFkdzLQiSTh+JmMzpGGi
+         umUsPNbjX7wYWsnzhnSuiCvm9txeL5ajrc6XT8gRo9J4Vj3KBidkZ6AWBzszzmDvfUnb
+         0I7u4pCq6i5Nz3vCPZmBuNpeOAGJO/w0ST+jsHQs/i0W7A5thVxLvEpW6KPXYYhxadVY
+         OFFDEFCWqMgujbWTVHrfsNxLcwYXRgZaO/4dZNIyI39rQ1GpQYlBsuHMJknNLH58Cs3l
+         pSBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EqaZJyYgM0Os8ebMGdlkWjjcPY48Zl3Ke8JX40ALnsw=;
+        b=nVNXQgyTV8nuzGr1j4cCZ3BXQc5gyjtTRArm3Qo38M2Zlloaj+s7IrmE7DOR8gUSZk
+         77qoBMppeYHR5HZuXkDxQ8siKnN5tbjLaVYTftE2hVzEVTMtF+NvDa4QfSu3wwmMbV+O
+         k86tHtxo1GE8FMjC2hwSDvQjiwQuvU1WLYlAmP3tUzqxxrdyGStKN4Gh9UGvM07Mf5xe
+         SRGfHTcUGbswX41UpnDslFw3dUPTyGvbiXSs/TH885xleIJ55lrGAuLL8c7GR1jWKTNq
+         HTrby0xCCa7ztwYWM7NB5bMNkReyGIn6xEf8PN2n4cC9VzeWJa/xOXACWAOkQbUuXCdl
+         bCQg==
+X-Gm-Message-State: APjAAAUzE8pOVDOqnlHDNM+UJGnrUBlx7v3GWY+pWymCF/JFpQO97vdd
+        n6IiWE2WcHBYQyT2D0mqX89L6REAKbfMK/M7mco+fQ==
+X-Google-Smtp-Source: APXvYqxrhFRqVKYyJq1ZhsiBjelse+AtAmo3grTsG7ZGewv362i4vAyCgqz/v7JpkkyAnIm3AsGpr09SzdI4qPyUoVc=
+X-Received: by 2002:a05:6830:13c2:: with SMTP id e2mr15699382otq.123.1562651079043;
+ Mon, 08 Jul 2019 22:44:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190708123259.11805-1-huangfq.daxian@gmail.com>
+In-Reply-To: <20190708123259.11805-1-huangfq.daxian@gmail.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 9 Jul 2019 13:44:27 +0800
+Message-ID: <CAMz4kuK6FOw2bxPzyrg0014zrU57k1KhUymyTfFYV6pVfw1vdQ@mail.gmail.com>
+Subject: Re: [PATCH 04/14] power: supply: sc27xx: Replace devm_add_action()
+ followed by failure action with devm_add_action_or_reset()
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nitin Gote <nitin.r.gote@intel.com>
+Hi Fuqian,
 
-1. Deprecate strcpy() in favor of strscpy().
-2. Deprecate strlcpy() in favor of strscpy().
-3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
+On Mon, 8 Jul 2019 at 20:33, Fuqian Huang <huangfq.daxian@gmail.com> wrote:
+>
+> devm_add_action_or_reset() is introduced as a helper function which
+> internally calls devm_add_action(). If devm_add_action() fails
+> then it will execute the action mentioned and return the error code.
+> This reduce source code size (avoid writing the action twice)
+> and reduce the likelyhood of bugs.
+>
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-Updated strncpy() section in Documentation/process/deprecated.rst
-to cover strscpy_pad() case.
+Looks good to me. Thanks.
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
 
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Nitin Gote <nitin.r.gote@intel.com>
----
- Change log:
- v1->v2
- - For string related apis, created different %deprecated_string_api
-   and these will get emitted at CHECK Level using command line option
-   -f/--file to avoid bad patched from novice script users.
+> ---
+>  drivers/power/supply/sc27xx_fuel_gauge.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/power/supply/sc27xx_fuel_gauge.c b/drivers/power/supply/sc27xx_fuel_gauge.c
+> index 9c184d80088b..58b2970cd359 100644
+> --- a/drivers/power/supply/sc27xx_fuel_gauge.c
+> +++ b/drivers/power/supply/sc27xx_fuel_gauge.c
+> @@ -1023,9 +1023,8 @@ static int sc27xx_fgu_probe(struct platform_device *pdev)
+>                 return ret;
+>         }
+>
+> -       ret = devm_add_action(dev, sc27xx_fgu_disable, data);
+> +       ret = devm_add_action_or_reset(dev, sc27xx_fgu_disable, data);
+>         if (ret) {
+> -               sc27xx_fgu_disable(data);
+>                 dev_err(dev, "failed to add fgu disable action\n");
+>                 return ret;
+>         }
+> --
+> 2.11.0
+>
 
- This patch is already reviewed by mailing list
- kernel-hardening@lists.openwall.com. Refer below link
- <https://www.openwall.com/lists/kernel-hardening/2019/07/03/4>
-Acked-by: Kees Cook <keescook@chromium.org>
 
- Documentation/process/deprecated.rst |  6 +++---
- scripts/checkpatch.pl                | 25 +++++++++++++++++++++++++
- 2 files changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-index 49e0f64a3427..f564de3caf76 100644
---- a/Documentation/process/deprecated.rst
-+++ b/Documentation/process/deprecated.rst
-@@ -93,9 +93,9 @@ will be NUL terminated. This can lead to various linear read overflows
- and other misbehavior due to the missing termination. It also NUL-pads the
- destination buffer if the source contents are shorter than the destination
- buffer size, which may be a needless performance penalty for callers using
--only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
--(Users of :c:func:`strscpy` still needing NUL-padding will need an
--explicit :c:func:`memset` added.)
-+only NUL-terminated strings. In this case, the safe replacement is
-+:c:func:`strscpy`. If, however, the destination buffer still needs
-+NUL-padding, the safe replacement is :c:func:`strscpy_pad`.
-
- If a caller is using non-NUL-terminated strings, :c:func:`strncpy()` can
- still be used, but destinations should be marked with the `__nonstring
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index bb28b178d929..10bd72e99dc8 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -605,6 +605,21 @@ foreach my $entry (keys %deprecated_apis) {
- }
- $deprecated_apis_search = "(?:${deprecated_apis_search})";
-
-+our %deprecated_string_apis = (
-+        "strcpy"                                => "strscpy",
-+        "strlcpy"                               => "strscpy",
-+        "strncpy"                               => "strscpy, strscpy_pad or for non-NUL-terminated strings,
-+         strncpy() can still be used, but destinations should be marked with the __nonstring",
-+);
-+
-+#Create a search pattern for all these strings apis to speed up a loop below
-+our $deprecated_string_apis_search = "";
-+foreach my $entry (keys %deprecated_string_apis) {
-+        $deprecated_string_apis_search .= '|' if ($deprecated_string_apis_search ne "");
-+        $deprecated_string_apis_search .= $entry;
-+}
-+$deprecated_string_apis_search = "(?:${deprecated_string_apis_search})";
-+
- our $mode_perms_world_writable = qr{
- 	S_IWUGO		|
- 	S_IWOTH		|
-@@ -6446,6 +6461,16 @@ sub process {
- 			     "Deprecated use of '$deprecated_api', prefer '$new_api' instead\n" . $herecurr);
- 		}
-
-+# check for string deprecated apis
-+                if ($line =~ /\b($deprecated_string_apis_search)\b\s*\(/) {
-+                        my $deprecated_string_api = $1;
-+                        my $new_api = $deprecated_string_apis{$deprecated_string_api};
-+			$check = 1;
-+                        CHK("DEPRECATED_API",
-+                             "Deprecated use of '$deprecated_string_api', prefer '$new_api' instead\n" . $herecurr);
-+			$check = 0;
-+                }
-+
- # check for various structs that are normally const (ops, kgdb, device_tree)
- # and avoid what seem like struct definitions 'struct foo {'
- 		if ($line !~ /\bconst\b/ &&
---
-2.17.1
-
+-- 
+Baolin Wang
+Best Regards
