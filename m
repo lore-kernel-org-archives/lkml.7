@@ -2,243 +2,169 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A884DC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5FEC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E34214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F80214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:57:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XhtqQP9a"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="OtEuElw9";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="OtEuElw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfGIHzk (ORCPT
+        id S1726165AbfGIH5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:55:40 -0400
-Received: from mail-eopbgr50079.outbound.protection.outlook.com ([40.107.5.79]:42887
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Tue, 9 Jul 2019 03:57:22 -0400
+Received: from mail-eopbgr60078.outbound.protection.outlook.com ([40.107.6.78]:9710
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfGIHzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:55:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+        id S1725975AbfGIH5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 03:57:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l7JOqoZNLF1ch2AXaETC6HGqHaRuhuy6+juS3/DgGdc=;
- b=XhtqQP9aiQyyWmUlJ2fsn6lQ9DnHBOi9cR0RE8+Ur4APKHlRTp4wQrmsXq+pqUslTWWmWwKmKpvzRSnjUMha01K+66Wixt0NejRapsc9M8iTwJvdRQ0XHPXhJ/iscCK8OUA846b6M/Jt+js67ZvZalaNhjZySGaGmk+k6Ge6y74=
-Received: from VE1PR04MB6655.eurprd04.prod.outlook.com (20.179.235.94) by
- VE1PR04MB6735.eurprd04.prod.outlook.com (20.179.235.212) with Microsoft SMTP
+ bh=E9SHeghH8YsF/Lbm6khjeKdt4e0RMCnaqrZAcIjzcA0=;
+ b=OtEuElw9saz0MOZsHtpTrG0zvkOMmpL56V7Ua20lX/X4wBEt6NJSARtDNh0PZSd61xEHhtU9aBanmOHJOwZPl5iCen2sR5dzI/H5zqeYxkSIgB2Da7I8oETBpjdnvM6hHO+r7gmDcYjE0crr4+D4q/PEqOx2KYuawAFaXVLKK1k=
+Received: from VI1PR08CA0139.eurprd08.prod.outlook.com (2603:10a6:800:d5::17)
+ by DB8PR08MB4954.eurprd08.prod.outlook.com (2603:10a6:10:bf::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2052.18; Tue, 9 Jul
+ 2019 07:57:18 +0000
+Received: from DB5EUR03FT051.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::204) by VI1PR08CA0139.outlook.office365.com
+ (2603:10a6:800:d5::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2052.18 via Frontend
+ Transport; Tue, 9 Jul 2019 07:57:17 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=temperror action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT051.mail.protection.outlook.com (10.152.21.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2052.18 via Frontend Transport; Tue, 9 Jul 2019 07:57:16 +0000
+Received: ("Tessian outbound a1cd17a9f69b:v23"); Tue, 09 Jul 2019 07:57:11 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 03038269163b7d30
+X-CR-MTA-TID: 64aa7808
+Received: from c78b36e33537.2 (cr-mta-lb-1.cr-mta-net [104.47.0.56])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id CA6CCEF2-7370-4625-B2E9-28D8EFB98D99.1;
+        Tue, 09 Jul 2019 07:57:06 +0000
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01lp2056.outbound.protection.outlook.com [104.47.0.56])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id c78b36e33537.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Tue, 09 Jul 2019 07:57:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E9SHeghH8YsF/Lbm6khjeKdt4e0RMCnaqrZAcIjzcA0=;
+ b=OtEuElw9saz0MOZsHtpTrG0zvkOMmpL56V7Ua20lX/X4wBEt6NJSARtDNh0PZSd61xEHhtU9aBanmOHJOwZPl5iCen2sR5dzI/H5zqeYxkSIgB2Da7I8oETBpjdnvM6hHO+r7gmDcYjE0crr4+D4q/PEqOx2KYuawAFaXVLKK1k=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4816.eurprd08.prod.outlook.com (10.255.112.142) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Tue, 9 Jul 2019 07:55:31 +0000
-Received: from VE1PR04MB6655.eurprd04.prod.outlook.com
- ([fe80::846e:134d:2731:fcd]) by VE1PR04MB6655.eurprd04.prod.outlook.com
- ([fe80::846e:134d:2731:fcd%7]) with mapi id 15.20.2052.020; Tue, 9 Jul 2019
- 07:55:31 +0000
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
-Thread-Topic: [PATCH] usb: dwc3: Enable the USB snooping
-Thread-Index: AQHTXdpMV/QBUrO8J0eNmcCmR0ATg6MVIlkAgAAD6zCAABVWgINueaJwgAAMz4CAAwpoAIAF38DwgBavPgCACkIu0IAASk0AgBejzDA=
-Date:   Tue, 9 Jul 2019 07:55:30 +0000
-Message-ID: <VE1PR04MB6655D052B076C52F7F24A387F1F10@VE1PR04MB6655.eurprd04.prod.outlook.com>
-References: <20171115060459.45375-1-ran.wang_1@nxp.com>
- <87ineb9b5v.fsf@linux.intel.com>
- <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com>
- <87shdfet90.fsf@linux.intel.com>
- <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <87k1eaanjw.fsf@linux.intel.com>
- <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
- <87o92wgyqj.fsf@linux.intel.com>
- <VE1PR04MB66557834D3588FC8B558950AF1E00@VE1PR04MB6655.eurprd04.prod.outlook.com>
- <87v9wvsex3.fsf@linux.intel.com>
-In-Reply-To: <87v9wvsex3.fsf@linux.intel.com>
+ 15.20.2052.19; Tue, 9 Jul 2019 07:57:02 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::4062:a380:35ba:11d1]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::4062:a380:35ba:11d1%3]) with mapi id 15.20.2032.019; Tue, 9 Jul 2019
+ 07:57:02 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH 0/2] drm/komeda: Add new product "D32" support
+Thread-Topic: [PATCH 0/2] drm/komeda: Add new product "D32" support
+Thread-Index: AQHVNivkfsTufjYJCUi/AKchas7bNw==
+Date:   Tue, 9 Jul 2019 07:57:02 +0000
+Message-ID: <20190709075640.22012-1-james.qian.wang@arm.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ran.wang_1@nxp.com; 
-x-originating-ip: [92.121.36.197]
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2P15301CA0001.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:202:1::11) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c9c4a4c7-3feb-476e-7082-08d70442d097
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6735;
-x-ms-traffictypediagnostic: VE1PR04MB6735:
-x-microsoft-antispam-prvs: <VE1PR04MB6735CFA97D7A01FA7A5ADF27F1F10@VE1PR04MB6735.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+X-MS-Office365-Filtering-Correlation-Id: e80dd58f-2ebe-4357-2391-08d704430f4b
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4816;
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4816:|DB8PR08MB4954:
+X-Microsoft-Antispam-PRVS: <DB8PR08MB495449C94F1C787EC84B8873B3F10@DB8PR08MB4954.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:3173;OLM:3173;
 x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(396003)(136003)(189003)(199004)(504964003)(3846002)(7696005)(186003)(6116002)(74316002)(6246003)(102836004)(6506007)(26005)(53546011)(76176011)(52536014)(86362001)(229853002)(33656002)(486006)(8676002)(81166006)(81156014)(5660300002)(2906002)(446003)(8936002)(316002)(9686003)(25786009)(14454004)(76116006)(73956011)(55016002)(478600001)(4326008)(476003)(71190400001)(54906003)(99286004)(71200400001)(110136005)(305945005)(68736007)(66446008)(64756008)(66556008)(66946007)(66476007)(7736002)(53936002)(256004)(14444005)(66066001)(6436002)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6735;H:VE1PR04MB6655.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(366004)(39860400002)(346002)(189003)(199004)(66066001)(305945005)(7736002)(2201001)(64756008)(8676002)(81156014)(81166006)(66946007)(73956011)(66446008)(1076003)(8936002)(186003)(66556008)(86362001)(54906003)(110136005)(66476007)(55236004)(386003)(316002)(6506007)(102836004)(71190400001)(71200400001)(52116002)(5660300002)(14454004)(6436002)(103116003)(68736007)(3846002)(6116002)(478600001)(4326008)(36756003)(25786009)(6486002)(53936002)(4744005)(99286004)(6512007)(50226002)(26005)(2501003)(256004)(486006)(14444005)(2906002)(2616005)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4816;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /LBlbvyE4InEq3vOIdp05vwA/+sTkagOMRYEP8wQNKiN0N8MN6MBVh0DM2P2AJ+Me5NKpXA7HLzfc3/a0HCjuErNQiYpz/mf4TW3UCLOsrRzd41lctK+GvJu+KattMuWG+mPbXs8jrCUseoi/g/S3f66jc1VBLoDVmjnN2NsESakVXl8w+ZgQOqt8XlMdXILEFVGwvYNRKU0neyjOLCztSr8bBxgw1Oa2kpSDzFZMf3WK9O9FsW5KayQJeSTTKYTT62TPPXzVFvO0OEYRZMrViVbJ9CWD+ANSmTeE4cIRnH22H68/3Ae9ueaFxRNO+12o9LJztw/SrrglINeKz7cEgmel7U4VrUsDVoJOdoV5PNvCfo5OiayI878z0COKmw+ySduzWQngKuZnghEr9celEtSepvQpORfMdZg8CBb5SE=
-Content-Type: text/plain; charset="us-ascii"
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: HMZpwUTooPbtR5CSW8TMznPu91DtTTAmZbAMF2m99zM4qz4tj14nnDPBcvgekuSuXnHoJpFk3lS26OkKgDHW6D39wLgHYjCd5qry4Q0JLG9kTkJSTKuXUVYPuXMfuz5cz8JzWbiYqOiCqCAlnry7K+wtkDDzUCyQ2rRj/n9Y2CKCzV7u+PGsc1pbN1q5k22M3ZV4WMACFKXDnTNSKojcMVru0WNh3LsF7ebu2+8LBf/pAuQzXkyFS+YPzUvkMWps8z2ibq5WRAC9+jqpAE6hXR1puwR1euqYUIFkyvxBWl3XGCbhLsizE40T1OTygkFxq8cevhJw64e4zsCRIBygF4B/zDUrPw4oZNI7kh+gIlc66Nl45oRUY9UpPlzOvubvyOeGUqCO1GcSiY25klSrsNwTf1Boj9G9WfNrWf8vIuI=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9c4a4c7-3feb-476e-7082-08d70442d097
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 07:55:30.8443
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4816
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT051.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(2980300002)(199004)(189003)(47776003)(4744005)(66066001)(2501003)(23756003)(26826003)(486006)(316002)(6486002)(76130400001)(103116003)(110136005)(54906003)(25786009)(386003)(26005)(6506007)(186003)(2616005)(102836004)(6116002)(3846002)(126002)(99286004)(476003)(1076003)(2906002)(14444005)(336012)(14454004)(63350400001)(63370400001)(70586007)(478600001)(70206006)(36756003)(86362001)(50466002)(305945005)(7736002)(356004)(4326008)(2201001)(50226002)(22756006)(6512007)(8746002)(81166006)(8936002)(5660300002)(81156014)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR08MB4954;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: c08669e5-92c6-4387-801f-08d7044306b0
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(710020)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB8PR08MB4954;
+NoDisclaimer: True
+X-Forefront-PRVS: 0093C80C01
+X-Microsoft-Antispam-Message-Info: Q/a94ptEIpqg3pMnwLOU08PnPfDLIbKFSTVWtxd2DXE9fSWovAkemYIO2iBUVI/akwk49VChPU/pBHSz43JFEXjr9Li00cPa+g5m7vIWHn0pJ8kR3hhnmsDMp67KCeOBKTaIM4ddhSSQA5U8SmTpI60U2woZDCMTrbPq8l2PvYi5twHpzV3BkwJivN4wCBpGrhEEVhjZ5m9FpAKgglUHOVNddlTGEATSa7GuUXDQuOII7GqiffTS8yfqlqtnQWtTZxc1r/eOVvP7wDGgFHxfNY2qIhlm2HB2KF900GknB1EhS09ODZuzOrUYfVDCxDSKa2FDcPIaVJ0B5ZTNytJSQWj4Te6xiiB14DgrChMty8v+ekJrYAQugNHew13J/Ikfq2qVz3MdXnWZRYiDo3sBCPK2X7cbE2bydjf78vK4VRY=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2019 07:57:16.1586
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ran.wang_1@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6735
+X-MS-Exchange-CrossTenant-Network-Message-Id: e80dd58f-2ebe-4357-2391-08d704430f4b
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB4954
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Felipe,
+This series enables new product "D32" support
 
-On Monday, June 24, 2019 13:58, Felipe Balbi wrote:
->=20
-> Hi,
->=20
-> Ran Wang <ran.wang_1@nxp.com> writes:
-> >> >> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
-> >> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
-> >> >> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
-> >> >> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
-> >> >> > >> >> >   * 	3	- Reserved
-> >> >> > >> >> >   * @imod_interval: set the interrupt moderation interval=
- in
-> 250ns
-> >> >> > >> >> >   *                 increments or 0 to disable.
-> >> >> > >> >> > + * @dma_coherent: set if enable dma-coherent.
-> >> >> > >> >>
-> >> >> > >> >> you're not enabling dma coherency, you're enabling cache
-> snooping.
-> >> >> > >> >> And this property should describe that. Also, keep in mind
-> >> >> > >> >> that different devices may want different cache types for
-> >> >> > >> >> each of those fields, so your property would have to be a
-> >> >> > >> >> lot more complex. Something
-> >> >> > like:
-> >> >> > >> >>
-> >> >> > >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable"=
->, ...
-> >> >> > >> >>
-> >> >> > >> >> Then driver would have to parse this properly to setup GSBU=
-SCFG0.
-> >> >> > >
-> >> >> > > According to the DesignWare Cores SuperSpeed USB 3.0
-> >> >> > > Controller Databook (v2.60a), it has described Type Bit
-> >> >> > > Assignments for all supported
-> >> >> > master bus type:
-> >> >> > > AHB, AXI3, AXI4 and Native. I found the bit definition are
-> >> >> > > different among
-> >> >> > them.
-> >> >> > > So, for the example you gave above, feel a little bit confused.
-> >> >> > > Did you mean:
-> >> >> > >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
-> >> >> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read
-> >> >> > > allocate">
-> >> >> >
-> >> >> > yeah, something like that.
-> >> >>
-> >> >> I think DATA_RD  should be a macro, right? So, where I can put its =
-define?
-> >> >> Create a dwc3.h in include/dt-bindings/usb/ ?
-> >> >
-> >> > Could you please give me some advice here? I'd like to prepare next
-> >> > version patch after getting this settled.
-> >> >
-> >> >> Another question about this remain open is: DWC3 data book's Table
-> >> >> 6-5 Cache Type Bit Assignments show that bits definition will
-> >> >> differ per MBUS_TYPEs as
-> >> >> below:
-> >> >> ----------------------------------------------------------------
-> >> >>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
-> >> >>  ----------------------------------------------------------------
-> >> >>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
-> >> >>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
-> >> >>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
-> >> >>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
-> >> >>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
-> >> >>  ----------------------------------------------------------------
-> >> >>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names
-> >> >> for certain  signals, which have the same meaning:
-> >> >>    Bufferable =3D Posted
-> >> >>    Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
-> >> >>
-> >> >> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to
-> >> >> use snps,cache-type =3D <DATA_RD  "write allocate">, to cover all
-> MBUS_TYPE?
-> >> >> (you can notice that AHB and AXI3's cacheable are on different
-> >> >> bit) Or I just need to handle AXI3 case?
-> >> >
-> >> > Also on this open. Thank you in advance.
-> >>
-> >> You could pass two strings and let the driver process them. Something
-> >> like:
-> >>
-> >> 	snps,cache_type =3D <"data_wr" "write allocate">, <"desc_rd"
-> >> "cacheable">...
-> >>
-> >> And so on. The only thing missing is for the mbus_type to be known by =
-the
-> driver.
-> >> Is that something we can figure out on any of the HWPARAMS registers
-> >> or does it have to be told explicitly?
-> >
-> > I have checked Layerscape Reference manual, HWPARAMS0~8 doesn't
-> > contain mbus_type Info, and I didn't know where have declared it explic=
-itly.
-> >
-> >> Another option would be to pass a string followed by one hex digit for=
- the
-> bits:
-> >>
-> >> 	snps,cache_type =3D <"data_wr" 0x8>, <"desc_rd" 0x2>...;
-> >>
-> >> Then we don't need to describe mbus_type since the bits are what matte=
-rs.
+James Qian Wang (Arm Technology China) (2):
+  drm/komeda: Update the chip identify
+  drm/komeda: Enable new product D32 support
 
-For this option, looks like DTC doesn't allow form of <"data_wr" 0x8>, <"de=
-sc_rd" 0x2>...=20
-It will report error when compiling:
+ .../drm/arm/display/include/malidp_product.h  |  3 +-
+ .../arm/display/komeda/d71/d71_component.c    |  2 +-
+ .../gpu/drm/arm/display/komeda/d71/d71_dev.c  | 70 +++++++++++++------
+ .../gpu/drm/arm/display/komeda/d71/d71_regs.h | 13 ++++
+ .../gpu/drm/arm/display/komeda/komeda_dev.c   | 62 ++++++++--------
+ .../gpu/drm/arm/display/komeda/komeda_dev.h   | 14 +---
+ .../gpu/drm/arm/display/komeda/komeda_drv.c   | 10 +--
+ 7 files changed, 104 insertions(+), 70 deletions(-)
 
-DTC     arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dtb
-Error: arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi:383.23-24 syntax erro=
-r
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:294: recipe for target 'arch/arm64/boot/dts/freescale/=
-fsl-ls1088a-qds.dtb' failed
-make[2]: *** [arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-Error: arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi:383.23-24 syntax erro=
-r
-FATAL ERROR: Unable to parse input tree
-
-One of the solution I can figure out is to use macro to replace "data_wr", =
-like below:
-<DATA_WR 0x8>, <DESC_RD 0x2>...
-
-However, it will require creating file in include/dt-bindings/usb/dwc3.h to
-place macro definitions.
-
-Or may I use:  "data_wr", <0x8>,  "desc_rd",  <0x2>... ?
-
-Thanks & Regards,
-Ran
-
-> > Yes, it's also what we prefer to use, it will be more flexible, I can
-> > add above Table
-> > 6-5 Cache Type Bit Assignments in binding to help user decide which
-> > value they would use.
-> >
-> > I would submit another version of patch for further review, thank you v=
-ery
-> much.
->=20
-> cool, thanks
->=20
-> --
-> balbi
+--
+2.20.1
