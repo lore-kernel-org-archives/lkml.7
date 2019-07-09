@@ -2,132 +2,119 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C23C73C50
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A4FC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83BB6214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:53:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXmFco6S"
+	by mail.kernel.org (Postfix) with ESMTP id 4C89E216E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562684023;
+	bh=Mv7YTLIc+jI3uCRwSd1DAeik4HQLm9P9oMcVwz2d2dk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lixff879iBnqm8DU4jh0AmB6SmVN+QfTiCYUgT6pdtDnK3JWGXcFGDUl+dqkIp/nK
+	 LoHQZRZBBTScVH437zA7k05P7CSgfRhdL3FQY0AcZ7+Y4wBld/Pgnp3eOnldHvc0vZ
+	 mEuejrOTfAAqQ5ZKfkeFg9TKUFDwvQJ9CdJM7uSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfGIOxY (ORCPT
+        id S1726692AbfGIOxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:53:24 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36143 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfGIOxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:53:23 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z4so18442448qtc.3;
-        Tue, 09 Jul 2019 07:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YbsGaS1BVbJ+f3VVB6My2e8DPp6j8hXOIEffynol0Ok=;
-        b=pXmFco6SOoagS7jQFlMht0LwTgnpY+87Ybjy0HLOGFQ+LsPExFi8j1H3T5RXHqDp2l
-         UByeml2I0IuXGS6j8C1peLZYmsXYcbgF2233PzQK4HIvDX+muI9ED9zPcxazOC6PuB7q
-         Dia4ZhKXjxJ0VE+nprtXPo7l4ZxpLvSy11veYqg/nMFp9VtydK5mmuCPmIlwTVc7/E3M
-         mAd71PJ3xUJMW5RjVh+KL2zwfLB8bA79mnw8vUv/cVJCsnKOFnNCqPESPUll/og01Vs8
-         OT6CJvNdtxgWVzhNWeA1wqmaJgpCFJqeNmQrHEF6AbqM+jbhTvbCTP4UHdTst1sPDSra
-         7dwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YbsGaS1BVbJ+f3VVB6My2e8DPp6j8hXOIEffynol0Ok=;
-        b=G6NxmtpFj5+RDpycaDCpDflg9dsXZ6g+ULztYq6E8q9IPN1FZCD1I61B0NsER6265h
-         mXyMdMz9QXsjhWO+BNMfM9qRgKp3CEGot1awvAXrUNypNsFYI4VS8fguOKpYHGUv/mrV
-         LqoWZaaTEXxV0Fli8SElCqQVu2ojy7hy9TtseZsWkpjHVin5//44PWuIR7V5uUpKpVJR
-         1RDd6rZVkbDTPmoWVoQCENVa6fWWl3Usix8zYIi4zyxbV8ogK1EVi4qnme6DEM+q+W+e
-         tbszROsHaC+udK7fE3zz+qP0OW4WpZGWjBkoP3Zlixb45E28TlRZl31wpBB1w1nhN0eR
-         odiw==
-X-Gm-Message-State: APjAAAWDksHKDhRPeNf49+IBhoeK36DYOf+hYNhF2LBwle2hZKyeSTzf
-        b1Fjc+1P/zA5VPJqFM7IMrDqF+wq
-X-Google-Smtp-Source: APXvYqwbU2+yK2jTnkJvrpeIWH19D9iyd+/+yn4kHi335O5rSYQCwV6LlRPM6TTPp5MXcPkWBRFuqQ==
-X-Received: by 2002:a05:6214:3f0:: with SMTP id cf16mr19329542qvb.211.1562684002950;
-        Tue, 09 Jul 2019 07:53:22 -0700 (PDT)
-Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id x46sm9667276qtx.96.2019.07.09.07.53.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 07:53:22 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] drm/modes: Skip invalid cmdline mode
-Date:   Tue,  9 Jul 2019 17:51:51 +0300
-Message-Id: <20190709145151.23086-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 9 Jul 2019 10:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbfGIOxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 10:53:41 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6644F214AF;
+        Tue,  9 Jul 2019 14:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562684020;
+        bh=Mv7YTLIc+jI3uCRwSd1DAeik4HQLm9P9oMcVwz2d2dk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XgulwaGpIAZUTMHGK6H52VD3EGXSfaZA2VLPhCuPHVQN4Ql3qcJzAtWEmAruTZN6F
+         CiqOnOuc9sTH4GW5+VhzHiNXC2Jpq24ah0VHZEIGAOqDliCu4Fwf44hiQwbpQ/Q/If
+         Xl4Y5OinAOMyTTsR/xSt2diAONVrq1cwoJa/TeF8=
+Subject: Re: [PATCH v7 16/18] MAINTAINERS: add entry for KUnit the unit
+ testing framework
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, shuah <shuah@kernel.org>
+References: <20190709063023.251446-1-brendanhiggins@google.com>
+ <20190709063023.251446-17-brendanhiggins@google.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <7cc417dd-036f-7dc1-6814-b1fdac810f03@kernel.org>
+Date:   Tue, 9 Jul 2019 08:53:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190709063023.251446-17-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The named mode could be invalid and then cmdline parser misses to validate
-mode's dimensions, happily adding 0x0 mode as a valid mode. One case where
-this happens is NVIDIA Tegra devices that are using downstream bootloader
-which adds "video=tegrafb" to the kernel's cmdline and thus upstream Tegra
-DRM driver fails to probe because of the invalid mode.
+On 7/9/19 12:30 AM, Brendan Higgins wrote:
+> Add myself as maintainer of KUnit, the Linux kernel's unit testing
+> framework.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>   MAINTAINERS | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 677ef41cb012c..48d04d180a988 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8599,6 +8599,17 @@ S:	Maintained
+>   F:	tools/testing/selftests/
+>   F:	Documentation/dev-tools/kselftest*
+>   
+> +KERNEL UNIT TESTING FRAMEWORK (KUnit)
+> +M:	Brendan Higgins <brendanhiggins@google.com>
+> +L:	linux-kselftest@vger.kernel.org
+> +L:	kunit-dev@googlegroups.com
+> +W:	https://google.github.io/kunit-docs/third_party/kernel/docs/
+> +S:	Maintained
+> +F:	Documentation/dev-tools/kunit/
+> +F:	include/kunit/
+> +F:	kunit/
+> +F:	tools/testing/kunit/
+> +
+>   KERNEL USERMODE HELPER
+>   M:	Luis Chamberlain <mcgrof@kernel.org>
+>   L:	linux-kernel@vger.kernel.org
+> 
 
-Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command line")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/gpu/drm/drm_client_modeset.c | 3 ++-
- drivers/gpu/drm/drm_modes.c          | 6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+Thanks Brendan.
 
-diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
-index e95fceac8f8b..56d36779d213 100644
---- a/drivers/gpu/drm/drm_client_modeset.c
-+++ b/drivers/gpu/drm/drm_client_modeset.c
-@@ -180,7 +180,8 @@ drm_connector_pick_cmdline_mode(struct drm_connector *connector)
- 
- create_mode:
- 	mode = drm_mode_create_from_cmdline_mode(connector->dev, cmdline_mode);
--	list_add(&mode->head, &connector->modes);
-+	if (mode)
-+		list_add(&mode->head, &connector->modes);
- 
- 	return mode;
- }
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index 910561d4f071..74a5739df506 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -158,6 +158,9 @@ struct drm_display_mode *drm_cvt_mode(struct drm_device *dev, int hdisplay,
- 	int interlace;
- 	u64 tmp;
- 
-+	if (!hdisplay || !vdisplay)
-+		return NULL;
-+
- 	/* allocate the drm_display_mode structure. If failure, we will
- 	 * return directly
- 	 */
-@@ -392,6 +395,9 @@ drm_gtf_mode_complex(struct drm_device *dev, int hdisplay, int vdisplay,
- 	int hsync, hfront_porch, vodd_front_porch_lines;
- 	unsigned int tmp1, tmp2;
- 
-+	if (!hdisplay || !vdisplay)
-+		return NULL;
-+
- 	drm_mode = drm_mode_create(dev);
- 	if (!drm_mode)
- 		return NULL;
--- 
-2.22.0
+I am good with this. I can take KUnit patches through kselftest
+with your Ack.
 
+thanks,
+-- Shuah
