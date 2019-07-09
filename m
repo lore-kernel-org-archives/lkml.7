@@ -2,301 +2,124 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9BAC73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4781CC73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459062171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C04E2171F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UoJ33hjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfGINId (ORCPT
+        id S1726976AbfGINIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:08:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:43790 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfGINIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:08:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DBD02B;
-        Tue,  9 Jul 2019 06:08:31 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14C7F3F738;
-        Tue,  9 Jul 2019 06:08:29 -0700 (PDT)
-Subject: Re: [PATCH] arm64: Explicitly set pstate.ssbs for el0 on kernel entry
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>, will@kernel.org,
-        mark.rutland@arm.com, julien.thierry@arm.com, tglx@linutronix.de
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, gkohli@codeaurora.org,
-        parthd@codeaurora.org
-References: <1562671333-3563-1-git-send-email-neeraju@codeaurora.org>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <62c4fed5-39ac-adc9-3bc5-56eb5234a9d1@arm.com>
-Date:   Tue, 9 Jul 2019 14:08:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 9 Jul 2019 09:08:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55060 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfGINIw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:08:52 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so3028213wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 06:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5zNw7yOYRGRe3lmbESQC+BIywwsER5mP5dHtawRmtUg=;
+        b=UoJ33hjw2DBUdQFoWS7L44YXRtnxWNnY7mi1ulDEHyxW3pYDsBu0z1m2o30P0n3fee
+         kcoCCUI+RMcB1s2PORs1EB0sZRFPwv2hOCw+PSg/Qw29A/9+kELX6c5HVVMLkWS24w8d
+         ImGM5PQX3xf52ZwWewIuxDpxOP0qya5ynIMcFDu5C7bDbabKNN5L9zX0JSw6HG+9NmP+
+         Uqmkq1tQdlNz+DmfJEia90+qVAXC3h3ycmM0eu/Lvf4enGxKHRZH2/FH7z4EleDVulOf
+         J83tBVT481Sc0wf+cguIss4ZeDPmHV4wWUgebavf/DPyEI23lDPaNyaoJ+AXodcgUMRH
+         NQgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5zNw7yOYRGRe3lmbESQC+BIywwsER5mP5dHtawRmtUg=;
+        b=t4p1zzpl67KsAEAWAR/9ZxgeSVnHAOttrBtGB4OPEvoDTLYOHkWD6nAwbKWKiA22ZD
+         ktOpN1qv/nAE1JPjRWRBvcVcD2/bl8c9cBKJ5GnMJyr0ZVw0qjjQ6qhdhYOfmzSrZj/t
+         lHhZyto4YZb5rLp/mf5GAWpnOBjeJfx4NmlLItZaCdXTBNxj3PF8orfrgFmYIufHwy8O
+         BS8bH2FobOt2eFwPV4dDRP2GcpyEHm4hFnfm29jIMSpv0hlU3nb9Q0x+mQgp6QtgUFY0
+         OgU9d6faRbaY9gl/YfyZ58fnlFMA7aVN3AliqQPdBmjXKXBwmfc4W0Z3B2bVylR2zGPS
+         6VGw==
+X-Gm-Message-State: APjAAAUxR/nbRWiyTSfuNd1AJxA5MkbHOfCiX112xp+yqKU1CXQt+2TE
+        yXQPt96auOZcdLRV7LxTotvC9tmW/Ks7P38FcJw=
+X-Google-Smtp-Source: APXvYqyqC0d9hRgfT+ZieDiI7TjJUankW7mnEizvkt8y5jvweTTMyCC91zHfJhxUqmmygj4YFXdcPTHW4axFKWce+jU=
+X-Received: by 2002:a1c:9e90:: with SMTP id h138mr23670087wme.67.1562677729889;
+ Tue, 09 Jul 2019 06:08:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1562671333-3563-1-git-send-email-neeraju@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190709091048.35260-1-yuehaibing@huawei.com>
+In-Reply-To: <20190709091048.35260-1-yuehaibing@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 9 Jul 2019 09:08:38 -0400
+Message-ID: <CADnq5_OTri_FzBHUSzKDPrMMAx2fDj8Mx67qHSofo+Hx7Q+60Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: Fix build without CONFIG_HMM_MIRROR
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Yang, Philip" <Philip.Yang@amd.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neeraj,
+On Tue, Jul 9, 2019 at 8:55 AM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> If CONFIG_HMM_MIRROR is not set, building may fails:
+>
+> In file included from drivers/gpu/drm/amd/amdgpu/amdgpu.h:72:0,
+>                  from drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:40:
+> drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h:69:20: error: field mirror has incomplete type
+>   struct hmm_mirror mirror;
+>
+> Fixes: 7590f6d211ec ("drm/amdgpu: Prepare for hmm_range_register API change")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-On 09/07/2019 12:22, Neeraj Upadhyay wrote:
-> For cpus which do not support pstate.ssbs feature, el0
-> might not retain spsr.ssbs. This is problematic, if this
-> task migrates to a cpu supporting this feature, thus
-> relying on its state to be correct. On kernel entry,
-> explicitly set spsr.ssbs, so that speculation is enabled
-> for el0, when this task migrates to a cpu supporting
-> ssbs feature. Restoring state at kernel entry ensures
-> that el0 ssbs state is always consistent while we are
-> in el1.
-> 
-> As alternatives are applied by boot cpu, at the end of smp
-> init, presence/absence of ssbs feature on boot cpu, is used
-> for deciding, whether the capability is uniformly provided.
-
-I've seen the same issue, but went for a slightly different
-approach, see below.
-
-> 
-> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-> ---
->  arch/arm64/kernel/cpu_errata.c | 16 ++++++++++++++++
->  arch/arm64/kernel/entry.S      | 26 +++++++++++++++++++++++++-
->  2 files changed, 41 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-> index ca11ff7..c84a56d 100644
-> --- a/arch/arm64/kernel/cpu_errata.c
-> +++ b/arch/arm64/kernel/cpu_errata.c
-> @@ -336,6 +336,22 @@ void __init arm64_enable_wa2_handling(struct alt_instr *alt,
->  		*updptr = cpu_to_le32(aarch64_insn_gen_nop());
->  }
->  
-> +void __init arm64_restore_ssbs_state(struct alt_instr *alt,
-> +				     __le32 *origptr, __le32 *updptr,
-> +				     int nr_inst)
-> +{
-> +	BUG_ON(nr_inst != 1);
-> +	/*
-> +	 * Only restore EL0 SSBS state on EL1 entry if cpu does not
-> +	 * support the capability and capability is present for at
-> +	 * least one cpu and if the SSBD state allows it to
-> +	 * be changed.
-> +	 */
-> +	if (!this_cpu_has_cap(ARM64_SSBS) && cpus_have_cap(ARM64_SSBS) &&
-> +	    arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
-> +		*updptr = cpu_to_le32(aarch64_insn_gen_nop());
-> +}
-> +
->  void arm64_set_ssbd_mitigation(bool state)
->  {
->  	if (!IS_ENABLED(CONFIG_ARM64_SSBD)) {
-> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> index 9cdc459..7e79305 100644
-> --- a/arch/arm64/kernel/entry.S
-> +++ b/arch/arm64/kernel/entry.S
-> @@ -143,6 +143,25 @@ alternative_cb_end
->  #endif
->  	.endm
->  
-> +	// This macro updates spsr. It also corrupts the condition
-> +	// codes state.
-> +	.macro	restore_ssbs_state, saved_spsr, tmp
-> +#ifdef CONFIG_ARM64_SSBD
-> +alternative_cb	arm64_restore_ssbs_state
-> +	b	.L__asm_ssbs_skip\@
-> +alternative_cb_end
-> +	ldr	\tmp, [tsk, #TSK_TI_FLAGS]
-> +	tbnz	\tmp, #TIF_SSBD, .L__asm_ssbs_skip\@
-> +	tst	\saved_spsr, #PSR_MODE32_BIT	// native task?
-> +	b.ne	.L__asm_ssbs_compat\@
-> +	orr	\saved_spsr, \saved_spsr, #PSR_SSBS_BIT
-> +	b	.L__asm_ssbs_skip\@
-> +.L__asm_ssbs_compat\@:
-> +	orr	\saved_spsr, \saved_spsr, #PSR_AA32_SSBS_BIT
-> +.L__asm_ssbs_skip\@:
-> +#endif
-> +	.endm
-
-Although this is in keeping with the rest of entry.S (perfectly
-unreadable ;-), I think we can do something a bit simpler, that
-doesn't rely on patching. Also, this doesn't seem to take the
-SSBD options such as ARM64_SSBD_FORCE_ENABLE into account.
-
-> +
->  	.macro	kernel_entry, el, regsize = 64
->  	.if	\regsize == 32
->  	mov	w0, w0				// zero upper 32 bits of x0
-> @@ -182,8 +201,13 @@ alternative_cb_end
->  	str	x20, [tsk, #TSK_TI_ADDR_LIMIT]
->  	/* No need to reset PSTATE.UAO, hardware's already set it to 0 for us */
->  	.endif /* \el == 0 */
-> -	mrs	x22, elr_el1
->  	mrs	x23, spsr_el1
-> +
-> +	.if	\el == 0
-> +	restore_ssbs_state x23, x22
-> +	.endif
-> +
-> +	mrs	x22, elr_el1
->  	stp	lr, x21, [sp, #S_LR]
->  
->  	/*
-> 
-
-How about the patch below?
+I already applied a similar patch from Arnd.
 
 Thanks,
 
-	M.
+Alex
 
-From 7d4314d1ef3122d8bf56a7ef239c8c68e0c81277 Mon Sep 17 00:00:00 2001
-From: Marc Zyngier <marc.zyngier@arm.com>
-Date: Tue, 4 Jun 2019 17:35:18 +0100
-Subject: [PATCH] arm64: Force SSBS on context switch
-
-On a CPU that doesn't support SSBS, PSTATE[12] is RES0.  In a system
-where only some of the CPUs implement SSBS, we end-up losing track of
-the SSBS bit across task migration.
-
-To address this issue, let's force the SSBS bit on context switch.
-
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
----
- arch/arm64/include/asm/processor.h | 14 ++++++++++++--
- arch/arm64/kernel/process.c        | 14 ++++++++++++++
- 2 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index fd5b1a4efc70..844e2964b0f5 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -193,6 +193,16 @@ static inline void start_thread_common(struct pt_regs *regs, unsigned long pc)
- 		regs->pmr_save = GIC_PRIO_IRQON;
- }
- 
-+static inline void set_ssbs_bit(struct pt_regs *regs)
-+{
-+	regs->pstate |= PSR_SSBS_BIT;
-+}
-+
-+static inline void set_compat_ssbs_bit(struct pt_regs *regs)
-+{
-+	regs->pstate |= PSR_AA32_SSBS_BIT;
-+}
-+
- static inline void start_thread(struct pt_regs *regs, unsigned long pc,
- 				unsigned long sp)
- {
-@@ -200,7 +210,7 @@ static inline void start_thread(struct pt_regs *regs, unsigned long pc,
- 	regs->pstate = PSR_MODE_EL0t;
- 
- 	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
--		regs->pstate |= PSR_SSBS_BIT;
-+		set_ssbs_bit(regs);
- 
- 	regs->sp = sp;
- }
-@@ -219,7 +229,7 @@ static inline void compat_start_thread(struct pt_regs *regs, unsigned long pc,
- #endif
- 
- 	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
--		regs->pstate |= PSR_AA32_SSBS_BIT;
-+		set_compat_ssbs_bit(regs);
- 
- 	regs->compat_sp = sp;
- }
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 9856395ccdb7..d451b3b248cf 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -442,6 +442,19 @@ void uao_thread_switch(struct task_struct *next)
- 	}
- }
- 
-+static void ssbs_thread_switch(struct task_struct *next)
-+{
-+	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE &&
-+	    !test_tsk_thread_flag(next, TIF_SSBD)) {
-+		struct pt_regs *regs = task_pt_regs(next);
-+
-+		if (compat_user_mode(regs))
-+			set_compat_ssbs_bit(regs);
-+		else if (user_mode(regs))
-+			set_ssbs_bit(regs);
-+	}
-+}
-+
- /*
-  * We store our current task in sp_el0, which is clobbered by userspace. Keep a
-  * shadow copy so that we can restore this upon entry from userspace.
-@@ -471,6 +484,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
- 	entry_task_switch(next);
- 	uao_thread_switch(next);
- 	ptrauth_thread_switch(next);
-+	ssbs_thread_switch(next);
- 
- 	/*
- 	 * Complete any pending TLB or cache maintenance on this CPU in case
--- 
-2.20.1
-
-
--- 
-Jazz is not dead. It just smells funny...
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
+> index 281fd9f..b14f175 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_mn.h
+> @@ -65,8 +65,10 @@ struct amdgpu_mn {
+>         struct rw_semaphore     lock;
+>         struct rb_root_cached   objects;
+>
+> +#if defined(CONFIG_HMM_MIRROR)
+>         /* HMM mirror */
+>         struct hmm_mirror       mirror;
+> +#endif
+>  };
+>
+>  #if defined(CONFIG_HMM_MIRROR)
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
