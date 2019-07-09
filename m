@@ -6,85 +6,127 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10044C73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0A8C73C42
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BE1214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD0D21707
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfGIMZR (ORCPT
+        id S1726863AbfGIMZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:25:17 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40871 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfGIMZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:25:16 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v19so3010792wmj.5;
-        Tue, 09 Jul 2019 05:25:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ea9OBefP7pvSSVqfUjzFtJLO1qfu1J5IpuBC6szvXA8=;
-        b=lIar8W4V571Uxu2sERl4IlWUHpeepEqFxd/bFLkygRHMvazE9Zr+z/Yc3aTF8JC8Ra
-         B55X43nzw41xyOLFNVrJJhwdsInndY3rU7HG9jZeEqP/C+K/I/9lj959goQLVF02n5E7
-         FrXMazJ4C+P6EVwBN0ZAUGFvD6E+lEsbKGzWKIMxlkM5xpTQ7WANdGIxf5dOW9YGbdKf
-         xGGXv6wyAE6YXSNaAs5SSExZCicSfiCIXHir0k1m/CsFY0H4RbVapgdkcpBoK8pvPViI
-         p8aBxqUTJfjtBVyMR88jy3UrFCDqdcUu1tdCo8gXBqTKqoRxgxHlXlAp0GK2d4090G8a
-         TITA==
-X-Gm-Message-State: APjAAAWfy/ruBe+CvDucBWLiNoHuLMrRdYdSwCJ2gdsNHx6F1oBuoz42
-        MemV8yl8cj2+HgG4jLvli4E=
-X-Google-Smtp-Source: APXvYqzDZc0RyEdZ7iWpR3epirfMFXKeXritactUFpnbeioCQkvkLq+btZ7C1vEOYk7kJC7xOrnXqg==
-X-Received: by 2002:a1c:7a02:: with SMTP id v2mr22236575wmc.159.1562675114409;
-        Tue, 09 Jul 2019 05:25:14 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id j26sm21223565wrb.88.2019.07.09.05.25.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 05:25:13 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Harald Freudenberger <freude@linux.ibm.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] s390/zcrypt: remove the exporting of ap_query_configuration
-Date:   Tue,  9 Jul 2019 15:25:07 +0300
-Message-Id: <20190709122507.11158-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 9 Jul 2019 08:25:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:1737 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfGIMZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 08:25:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 05:25:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
+   d="scan'208";a="249133728"
+Received: from ngote-system-product-name.iind.intel.com ([10.106.124.92])
+  by orsmga001.jf.intel.com with ESMTP; 09 Jul 2019 05:25:33 -0700
+From:   NitinGote <nitin.r.gote@intel.com>
+To:     joe@perches.com, akpm@linux-foundation.org
+Cc:     corbet@lwn.net, apw@canonical.com, keescook@chromium.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com,
+        Nitin Gote <nitin.r.gote@intel.com>
+Subject: [PATCH v3] Added warnings in checkpatch.pl script to :
+Date:   Tue,  9 Jul 2019 17:54:17 +0530
+Message-Id: <20190709122417.25778-1-nitin.r.gote@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function ap_query_configuration is declared static and marked
-EXPORT_SYMBOL, which is at best an odd combination. Because the
-function is not used outside of the drivers/s390/crypto/ap_bus.c
-file it is defined in, this commit removes the EXPORT_SYMBOL() marking.
+From: Nitin Gote <nitin.r.gote@intel.com>
 
-Fixes: f1b0a4343c41 ("s390/zcrypt: Integrate ap_asm.h into include/asm/ap.h.")
-Fixes: 050349b5b71d ("s390/zcrypt: externalize AP config info query")
-Signed-off-by: Denis Efremov <efremov@linux.com>
+1. Deprecate strcpy() in favor of strscpy().
+2. Deprecate strlcpy() in favor of strscpy().
+3. Deprecate strncpy() in favor of strscpy() or strscpy_pad().
+
+Updated strncpy() section in Documentation/process/deprecated.rst
+to cover strscpy_pad() case.
+
+Signed-off-by: Nitin Gote <nitin.r.gote@intel.com>
 ---
- drivers/s390/crypto/ap_bus.c | 1 -
- 1 file changed, 1 deletion(-)
+ Change log:
+ v1->v2
+ - For string related apis, created different %deprecated_string_api
+   and these will get emitted at CHECK Level using command line option
+   -f/--file to avoid bad patched from novice script users.
 
-diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-index b9fc502c58c2..379e43b79006 100644
---- a/drivers/s390/crypto/ap_bus.c
-+++ b/drivers/s390/crypto/ap_bus.c
-@@ -208,7 +208,6 @@ static inline int ap_query_configuration(struct ap_config_info *info)
- 		return -EINVAL;
- 	return ap_qci(info);
+ v2->v3
+ - Avoided use of $check in implementation.
+ - Incorporated trivial comments.
+
+ Documentation/process/deprecated.rst |  6 +++---
+ scripts/checkpatch.pl                | 24 ++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 49e0f64a3427..f564de3caf76 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -93,9 +93,9 @@ will be NUL terminated. This can lead to various linear read overflows
+ and other misbehavior due to the missing termination. It also NUL-pads the
+ destination buffer if the source contents are shorter than the destination
+ buffer size, which may be a needless performance penalty for callers using
+-only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
+-(Users of :c:func:`strscpy` still needing NUL-padding will need an
+-explicit :c:func:`memset` added.)
++only NUL-terminated strings. In this case, the safe replacement is
++:c:func:`strscpy`. If, however, the destination buffer still needs
++NUL-padding, the safe replacement is :c:func:`strscpy_pad`.
+
+ If a caller is using non-NUL-terminated strings, :c:func:`strncpy()` can
+ still be used, but destinations should be marked with the `__nonstring
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index bb28b178d929..e6fbf4cf4be4 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -605,6 +605,20 @@ foreach my $entry (keys %deprecated_apis) {
  }
--EXPORT_SYMBOL(ap_query_configuration);
- 
- /**
-  * ap_init_configuration(): Allocate and query configuration array.
--- 
-2.21.0
+ $deprecated_apis_search = "(?:${deprecated_apis_search})";
+
++our %deprecated_string_apis = (
++        "strcpy"				=> "strscpy",
++        "strlcpy"				=> "strscpy",
++        "strncpy"				=> "strscpy, strscpy_pad or for non-NUL-terminated strings, strncpy() can still be used, but destinations should be marked with the __nonstring",
++);
++
++#Create a search pattern for all these strings apis to speed up a loop below
++our $deprecated_string_apis_search = "";
++foreach my $entry (keys %deprecated_string_apis) {
++        $deprecated_string_apis_search .= '|' if ($deprecated_string_apis_search ne "");
++        $deprecated_string_apis_search .= $entry;
++}
++$deprecated_string_apis_search = "(?:${deprecated_string_apis_search})";
++
+ our $mode_perms_world_writable = qr{
+ 	S_IWUGO		|
+ 	S_IWOTH		|
+@@ -6446,6 +6460,16 @@ sub process {
+ 			     "Deprecated use of '$deprecated_api', prefer '$new_api' instead\n" . $herecurr);
+ 		}
+
++# check for string deprecated apis
++		if ($line =~ /\b($deprecated_string_apis_search)\b\s*\(/) {
++			my $deprecated_string_api = $1;
++			my $new_api = $deprecated_string_apis{$deprecated_string_api};
++			my $msg_level = \&WARN;
++			$msg_level = \&CHK if ($file);
++			&{$msg_level}("DEPRECATED_API",
++				      "Deprecated use of '$deprecated_string_api', prefer '$new_api' instead\n" . $herecurr);
++		}
++
+ # check for various structs that are normally const (ops, kgdb, device_tree)
+ # and avoid what seem like struct definitions 'struct foo {'
+ 		if ($line !~ /\bconst\b/ &&
+--
+2.17.1
 
