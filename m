@@ -2,81 +2,135 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE78C73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1533FC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B02620844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F6820844
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JoYm0A/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfGIN0p (ORCPT
+        id S1726962AbfGINaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:26:45 -0400
-Received: from andre.telenet-ops.be ([195.130.132.53]:49670 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfGIN0o (ORCPT
+        Tue, 9 Jul 2019 09:30:35 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33958 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfGINaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:26:44 -0400
-Received: from ramsan ([84.194.98.4])
-        by andre.telenet-ops.be with bizsmtp
-        id adSg2000Q05gfCL01dSgrQ; Tue, 09 Jul 2019 15:26:42 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hkq8m-0001FG-DI; Tue, 09 Jul 2019 15:26:40 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hkq8m-0006zD-AZ; Tue, 09 Jul 2019 15:26:40 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] kbuild: Inform user to pass ARCH= for make mrproper
-Date:   Tue,  9 Jul 2019 15:26:39 +0200
-Message-Id: <20190709132639.26802-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jul 2019 09:30:35 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b29so13468942lfq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 06:30:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0aUhy01MvjYTIuBK0AjDqzuZqZYxgG2aAS7wxVUO+Ws=;
+        b=JoYm0A/NaqY/RJJ8uj0MbIJYXDsl5MJCKrhp/jp2LS2zO6pysb/Mb9/byTuAK7zFr9
+         X2eynOziS6C8SBX5vVQYnNem1NIY4zlXXQBpszyorhkYABCI/XqVSrJjXM8YSG0nmEUT
+         lp7XJcaLcGLKkscah7/ZYbCliLd6Uvob9249QwNYQ59W6zGUYZ4Yxq3McUtmmD65917K
+         oE3sM2HHEMG1nOfOscOoQ1BkhvdioxCnKxhcc/BsQxVyJFhJFgEaFwjX1gKpjnwzbq63
+         ZFyyHSsHwqJMfB7g0hhp36b5QJkY5Yj/jWTS+CWthz18hOQzNFfz41N49VXBuRvNt/wt
+         1tKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0aUhy01MvjYTIuBK0AjDqzuZqZYxgG2aAS7wxVUO+Ws=;
+        b=XTbvZx81Yv3cYatj2PlxclzmKWkCR8KBMVDF3d9HEw66uGGqVUlO4lj/+1ClU/cQeT
+         4krM3r8M/R58ZBaCTfPXjAkeP515rFayPO3HYlrOIH5Bb2mjJRNcFmTyvI/ZlyZNO8lu
+         wsXHshJhxoSVRKesgiH0cQDdwa9dSdURxSpjYnIHlfk/z99z09Vu+2TOTmiiVaBK7u1U
+         wePgPZ6tjHYzB507SHV4K9uoJ3hyxJLoVYiZAMWQRFovfzD0cEt+M+lr+aQjEd0TBp7V
+         tNoTlhsQfHzfyac8nFqZy/niHtLJIKrssL7KFIHe3nrmPzxNfoZ5CkIUG6HINHrqmJaD
+         cE5Q==
+X-Gm-Message-State: APjAAAWkJnAR4oh0C2BTniEnMqtYd4DMBUgmcxfDzwhARM/4GQ90RQiq
+        3N2BSl5D5DWa5VcYsk9BbMU12Lw/k+IS9bEGkMhBBpFp
+X-Google-Smtp-Source: APXvYqyvmS/ah3xdKBS2SMnUvhVq3tVc6azhTV9Dh7OiscP4kyOJBs9BHR3v7HDEhjl+V/9EVEJBcrBmIptZAfL6/vU=
+X-Received: by 2002:a19:7616:: with SMTP id c22mr2897636lff.115.1562679033241;
+ Tue, 09 Jul 2019 06:30:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190708082343.30726-1-brgl@bgdev.pl>
+In-Reply-To: <20190708082343.30726-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 9 Jul 2019 15:30:22 +0200
+Message-ID: <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Claus H . Stovgaard" <cst@phaseone.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When cross-compiling an out-of-tree build with an unclean source tree
-directory, the build fails with:
+Hi Bartosz,
 
-  /path/to/kernel/source/tree is not clean, please run 'make mrproper'
-  in the '/path/to/kernel/source/tree' directory.
+On Mon, Jul 8, 2019 at 10:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-However, doing so does not fix the problem, as "make mrproper" now
-requires passing the target architecture to the make command, else it
-won't remove $(srctree)/arch/$(SRCARCH)/include/generated.
-"git ls-files -o" doesn't give a clue, as it doesn't list (empty)
-directories, only files.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> If gpiolib is disabled, we use the inline stubs from gpio/consumer.h
+> instead of regular definitions of GPIO API. The stubs for 'optional'
+> variants of gpiod_get routines return NULL in this case as if the
+> relevant GPIO wasn't found. This is correct so far.
+>
+> Calling other (non-gpio_get) stubs from this header triggers a warning
+> because the GPIO descriptor couldn't have been requested. The warning
+> however is unconditional (WARN_ON(1)) and is emitted even if the passed
+> descriptor pointer is NULL.
+>
+> We don't want to force the users of 'optional' gpio_get to check the
+> returned pointer before calling e.g. gpiod_set_value() so let's only
+> WARN on non-NULL descriptors.
+>
+> Reported-by: Claus H. Stovgaard <cst@phaseone.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Improve usability by including the ARCH= option in the error output.
+I remember I had this discussion in the past, and I made a large
+refactoring to make it possible for drivers that need gpiod_*
+calls to simply do:
 
-Fixes: a788b2ed81abeb94 ("kbuild: check arch/$(SRCARCH)/include/generated before out-of-tree build")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+select GPIOLIB
 
-diff --git a/Makefile b/Makefile
-index 3e4868a6498b2224..704e193c16472be1 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1101,7 +1101,7 @@ ifneq ($(srctree),.)
- 	$(Q)if [ -f $(srctree)/.config -o \
- 		 -d $(srctree)/include/config -o \
- 		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
--		echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
-+		echo >&2 "  $(srctree) is not clean, please run 'make ARCH=$(ARCH) mrproper'"; \
- 		echo >&2 "  in the '$(srctree)' directory.";\
- 		/bin/false; \
- 	fi;
--- 
-2.17.1
+in Kconfig.
 
+This should solve also this problem I think.
+
+However I do realize that there may be situations where people
+simply want to make GPIO support entirely optional without
+having to e.g. create custom stubs and encapsulate things
+inside if IS_ENABLED(CONFIG_GPIOLIB).
+
+I was thinking something like this in the stubs:
+
+gpiod_get[_index]() {
+    return POISON;
+}
+
+gpiod_get[_index]_optional() {
+   return NULL;
+}
+
+This way all gpiod_get() and optional calls are properly
+handled and the semantic that only _optional calls
+can return NULL is preserved. (Your patch would
+violate this.)
+
+Then other stubs can do:
+
+gpiod_set_value() {
+  WARN_ON(desc);
+}
+
+As in your patch, and all will be smooth provided the
+_optional calls have been used to obtain the desc.
+
+Yours,
+Linus Walleij
