@@ -2,85 +2,96 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB5AC606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EC8C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F5C21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D50C21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2n5CkPq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfGIBHc (ORCPT
+        id S1726760AbfGIBH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:07:32 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2243 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725886AbfGIBHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:07:31 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8F1A245A256F786BE060;
-        Tue,  9 Jul 2019 09:07:28 +0800 (CST)
-Received: from [127.0.0.1] (10.65.87.206) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
- 09:07:19 +0800
-Subject: Re: [PATCH] net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
-To:     David Miller <davem@davemloft.net>
-References: <1562307003-103516-1-git-send-email-xiaojiangfeng@huawei.com>
- <20190707.221805.2104668553072088371.davem@davemloft.net>
- <20190708.111833.1002341757593028886.davem@davemloft.net>
-CC:     <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-        <dingtianhong@huawei.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <leeyou.li@huawei.com>, <xiekunxun@huawei.com>,
-        <jianping.liu@huawei.com>, <nixiaoming@huawei.com>
-From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Message-ID: <89adc83e-c789-9c61-222b-23110778a873@huawei.com>
-Date:   Tue, 9 Jul 2019 09:07:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 8 Jul 2019 21:07:57 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:26826 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGIBH4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:07:56 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x6917aNE015671;
+        Tue, 9 Jul 2019 10:07:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6917aNE015671
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562634457;
+        bh=Oi+gJ4HjdFeJYGIhOMRbLASYMIcmJKxUKb0BC5utJb8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2n5CkPq4Drp9hqyl8EXSdGfcIVC/5h5DCr5xhvF9ZEf9FrRVRAPkHTLq8r1gT3eF5
+         1A3+QcCEiTo1G0+0erm6MjYheXIkn2HNUs+smuzipXKPXB0rv3uCxB9+Aep8trlFLS
+         lSE5j2qvmsnU452++kbGZh3x+U6cNVKYsDN+g4wnyuNAubzWAc0B8A0bGl5hLgNrrZ
+         KMFSed5LJk9VmKbDBvCx15L1DGkJH3WM9ivXiA8zMV76zt6q7qKOVOVDrZZiIn1p2p
+         zlCQcwGS+ckY9h/UC/jNJjTF3dTT37gtHZlwt3oiS7gBy38vmoUvL3AMGeU3q6MDl9
+         VbSoWv7G712cA==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id j2so5742102uaq.5;
+        Mon, 08 Jul 2019 18:07:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAXyqcdex+LcOt4n56IRt+KK/vFwygnviP8nETa3gtzj//l/WWFg
+        1aBiOcLJWYwDPaviByV89m2TrME9ehv26Vy3KXk=
+X-Google-Smtp-Source: APXvYqytdy+Rsj1ktWvl7YXRGUOeJJcZxpwUHQgkKNLEvfRVRLhEJTgLnhE0we6l52NZwC93vFQP8FceJKJd6vYz6No=
+X-Received: by 2002:ab0:234e:: with SMTP id h14mr1976914uao.25.1562634455710;
+ Mon, 08 Jul 2019 18:07:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190708.111833.1002341757593028886.davem@davemloft.net>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.87.206]
-X-CFilter-Loop: Reflected
+References: <20190706162508.8529-1-yamada.masahiro@socionext.com> <20190708140223.39d15d56@lwn.net>
+In-Reply-To: <20190708140223.39d15d56@lwn.net>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 9 Jul 2019 10:06:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR50AdaOUZ9taD9rcD_mhKYR47YqWnxN0T9SbD9+j9vBA@mail.gmail.com>
+Message-ID: <CAK7LNAR50AdaOUZ9taD9rcD_mhKYR47YqWnxN0T9SbD9+j9vBA@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: get rid of misleading $(AS) from documents
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 9, 2019 at 5:02 AM Jonathan Corbet <corbet@lwn.net> wrote:
+>
+> On Sun,  7 Jul 2019 01:25:08 +0900
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+>
+> > The assembler files in the kernel are *.S instead of *.s, so they must
+> > be preprocessed. Since 'as' of GNU binutils is not able to preprocess,
+> > we always use $(CC) as an assembler driver.
+> >
+> > $(AS) is almost unused in Kbuild. As of writing, there is just one place
+> > that directly invokes $(AS).
+> >
+> >   $ git grep -e '$(AS)' -e '${AS}' -e '$AS' -e '$(AS:' -e '${AS:' -- :^Documentation
+> >   drivers/net/wan/Makefile:  AS68K = $(AS)
+> >
+> > The documentation about *_AFLAGS* sounds like the flags were passed
+> > to $(AS). This is somewhat misleading.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+>
+> Would you like me to send this up through the docs tree?
+
+No, I will apply it to linux-kbuild shortly.
+
+Thanks.
 
 
-On 2019/7/9 2:18, David Miller wrote:
-> From: David Miller <davem@davemloft.net>
-> Date: Sun, 07 Jul 2019 22:18:05 -0700 (PDT)
-> 
->> From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
->> Date: Fri, 5 Jul 2019 14:10:03 +0800
->>
->>> HI13X1 changed the offsets and bitmaps for tx_desc
->>> registers in the same peripheral device on different
->>> models of the hip04_eth.
->>>
->>> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
->>
->> Applied.
-> 
-> Actually I didn't apply this because I can't see that HI13X1_GMAC
-> kconfig knob anywhere in the tree at all.
-> 
-
-Thank you for your guidance, I made a mistake, for which I am
-sincerely sorry for wasting your time.
-
-I will submit the correct one again.
-I will not make this low-level mistake again.
-
-Thanks,
-Jiangfeng Xiao
-
-
-
+-- 
+Best Regards
+Masahiro Yamada
