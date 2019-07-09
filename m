@@ -2,108 +2,141 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6981AC73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ACCC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA832080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0867216E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562681556;
-	bh=cNwCBdoZz9FLZk29HoCJnpNGxkwg2GGbQsQRD0M2yjY=;
+	s=default; t=1562681672;
+	bh=aByOK+zzVwLPzmHerWij80ctxh6Sgg+/BIZzdxbJl4c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aGXIWGHxXbrmTwxcI8KqFY2H5SChrN7Wd/BuuDqyzEzx15JQSy35xmOBifuUtHDHL
-	 6MX1ITEiMRNZUfzSs6Myg+HzufP5ERA6BEqq92ZGUDGnXfigCw0N0ORu/y9H4ZWoKy
-	 iKHznCgIo+Wct1mcNHkQcx6/P+KXsNAwRtlMY7WM=
+	b=YIKpG/CGqO87rVl+8QXiM7cyiUdBxEFDqBRWcl5oaHTN+QSLCiWVGye+1or8fhiFe
+	 ko2Z7OfNvH/IOcewfyuNGotNb+CtUa6S/KrVqd7l8GGKXf7fGAFYvxd5Otw2yeLMQR
+	 bnM1bZ0FTyKZOWY5jrPYtADQFQt+GxCSP2GK6fYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfGIOMe (ORCPT
+        id S1726518AbfGIOOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:12:34 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34260 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfGIOMe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:12:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=V/u97jHNPmLvmTFvnXoJFWrA6FUKihtUF7vD/H2p1QU=; b=QOEmchoPQ9nmuToWmMJj/YqMf
-        uTd9ny3nzPsSlzStQ0fbSOpLhpxBAyXab6JIs5f+CLQA8+u9suJKoptJFa9pV5sRyxOTHkFXvJjsq
-        bqSCW43hh2n8aSGBwPYwQebVVl+HlB3R8ghUTI0urMtdApAyXEbt95/qeMJf8VZHHVaWk=;
-Received: from [217.140.106.51] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hkqr7-0005ci-9l; Tue, 09 Jul 2019 14:12:29 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 56D73D02D6A; Tue,  9 Jul 2019 15:12:28 +0100 (BST)
-Date:   Tue, 9 Jul 2019 15:12:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH 2/5] drivers: spi: core: Add optional stall delay between
- cs_change transfers
-Message-ID: <20190709141228.GC14859@sirena.co.uk>
-References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
- <20190625131328.11883-2-alexandru.ardelean@analog.com>
- <20190626193438.7248d0a9@archlinux>
+        Tue, 9 Jul 2019 10:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfGIOOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 10:14:31 -0400
+Received: from localhost (249.sub-174-234-174.myvzw.com [174.234.174.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 175D92080C;
+        Tue,  9 Jul 2019 14:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562681670;
+        bh=aByOK+zzVwLPzmHerWij80ctxh6Sgg+/BIZzdxbJl4c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AGNoPj52haojTKl83cHZhTcXgNZoRA03liHpBu8SHLapzLI5hKhvptQB/VzjqI+Gd
+         81+/WoF2FUAEVmTEC+Gps7rhtlY6ZjvnZdmu5exXK6xN+a6GL3lPXvn8ULTA6Zon/Y
+         0RpkAvPpzrniAx4NnJlh0LbdktlTQk6jN6IdViro=
+Date:   Tue, 9 Jul 2019 09:14:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
+ features
+Message-ID: <20190709141427.GB35486@google.com>
+References: <20190701124010.7484-1-vidyas@nvidia.com>
+ <20190701124010.7484-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="m51xatjYGsM+13rf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626193438.7248d0a9@archlinux>
-X-Cookie: Visit beautiful Vergas, Minnesota.
+In-Reply-To: <20190701124010.7484-2-vidyas@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 01, 2019 at 06:09:59PM +0530, Vidya Sagar wrote:
+> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
+> features.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 
---m51xatjYGsM+13rf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please include spec references in the commit log, e.g., PCIe r5.0, sec
+7.7.4, for Data Link Feature and sec 7.7.5 for Physical Layer 16 GT/s.
 
-On Wed, Jun 26, 2019 at 07:34:38PM +0100, Jonathan Cameron wrote:
-> On Tue, 25 Jun 2019 16:13:25 +0300
-> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
->=20
-> > Some devices like the ADIS16460 IMU require a stall period between
-> > transfers, i.e. between when the CS is de-asserted and re-asserted. The
-> > default value of 10us is not enough. This change makes the delay
-> > configurable for when the next CS change goes active.
+>  include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f28e562d7ca8..1c79f6a097d2 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -713,7 +713,9 @@
+>  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+>  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
+> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
 
-This looks like cs_change_delay.
+Maybe PCI_EXT_CAP_ID_PL_16GT so there's a little more hint of what
+this is for?
 
-As documented in SubmittingPatches please send patches to the=20
-maintainers for the code you would like to change.  The normal kernel
-workflow is that people apply patches from their inboxes, if they aren't
-copied they are likely to not see the patch at all and it is much more
-difficult to apply patches.
+> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
+>  
+>  #define PCI_EXT_CAP_DSN_SIZEOF	12
+>  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> @@ -1053,4 +1055,22 @@
+>  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+>  
+> +/* Data Link Feature */
+> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
+> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
+> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+> +#define PCI_DLF_STS		0x08	/* Status Register */
+> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
+> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
 
---m51xatjYGsM+13rf
-Content-Type: application/pgp-signature; name="signature.asc"
+I'm a little bit ambivalent about adding #defines that aren't used.  I
+personally would probably just add the things we use, so the header
+file gives a clue about what's currently implemented.  But I guess
+either way is fine.
 
------BEGIN PGP SIGNATURE-----
+> +/* Physical Layer 16.0 GT/s */
+> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
+> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
+> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
+> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0koMsACgkQJNaLcl1U
-h9DKIAf/ZSDNvbMm/N+6RjKfnFdQwjyhpG6CS03BFIGfNvdDiHDfcIUOccR8kUSS
-hWzTKI/7f4jlLyaWXinkVc59G60+IS1+DbO8o2PCAQ3Fpciz5/c6F7BQrLy42Xal
-/icTrnVX0d/70ss5a7YT5yj67O7bItcRvbUuT8bDzHIIVzNWmXc8hMZYMTSB14DV
-fLs8tnfbR0SK4zjd2smCFHGieZBZquTeBjF2ZQlA0YS232MyNNBJCtmW52KUfbVn
-gBukHDwh9QkCJEAdFHknAMmcYPgBF0FXnBkMwhXKeCW9PAxHXK/PC+nqvanw4dmi
-ZVeeGKO4caaGNXi5unWwFznO4RwCFQ==
-=xlH7
------END PGP SIGNATURE-----
+Use lower-case hex consistently here.  There's no global consistency
+in this file, but we can at least be consistent in each section.  But
+I'm even more hesitant about included unused #defines for "reserved"
+fields, so if you drop this it would take care of both :)
 
---m51xatjYGsM+13rf--
+> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
+
+This is the only register you actually use.  You defined a local
+PL16G_CAP_OFF_DSP_16G_TX_PRESET_MASK for this register.  Shouldn't
+that be defined here instead of in
+drivers/pci/controller/dwc/pcie-tegra194.c?
+
+>  #endif /* LINUX_PCI_REGS_H */
+> -- 
+> 2.17.1
+> 
