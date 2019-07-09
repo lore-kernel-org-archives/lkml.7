@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2543CC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5596C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2C72171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986C021707
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:26:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="q46wm6dj"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HekhdKDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfGIE0E (ORCPT
+        id S1727565AbfGIE0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 00:26:04 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:42171 "EHLO
+        Tue, 9 Jul 2019 00:26:09 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:42175 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbfGIEZm (ORCPT
+        with ESMTP id S1727127AbfGIEZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jul 2019 00:25:42 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x694OqVm009969;
-        Tue, 9 Jul 2019 13:24:55 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x694OqVm009969
+        by conuserg-09.nifty.com with ESMTP id x694OqVk009969;
+        Tue, 9 Jul 2019 13:24:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x694OqVk009969
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562646295;
-        bh=66C6WSUar+9fCnRwYJ6reDlsM+3fNuxKvxVBSvN7M4A=;
+        s=dec2015msa; t=1562646294;
+        bh=iBlTAZJuJJ6+50j0WGjD4LyvREzE6vt9HBWQ8mbamWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q46wm6djBsOMl+UO7ZtYGgKPKq/5uWI1+EejrxIb6jgSgMFQ75kuiq914nMu/wkox
-         UWaJOaXFTlI5UhkkLDUw5QQuPkYP8GjokqLebrW67zJHWz0kyhMvyRX49SqaXWWfn1
-         5RaasWQ5LjZz8w/Y4fT/31ZmXAHnseqIBx/ca06Ykr/fzMTffYKvlgqd7UFZ+serXT
-         jjgFvGFxeVK7+c7kDsUZLRxNkEt7puygIvDtSYROgA20ui1qdp+fue7Zao5DT2g1n0
-         Qq7eJnIjoFVv3Bow8jCqqUiIm6AU9unVIBnewsUY87vlr6oNdqb1cMNSHYTnvjJraF
-         xBdJgoF5+M7FA==
+        b=HekhdKDxoDJEqpBGRw/bM/WReVW8JEMj5vTDoxmIOmauxgkb9SRw3YCaUUh528FGx
+         PmzO8bd2BmeBP/DqTG45W/lG6AyLq2y7601d2ogLbhZuR29UQ8w3CFB4RlwFudfDYa
+         okg6ukaV7SeSvkuGLlxM5Rh2yGSzUR9xlsM76E6qUK0ixai2aSWpDSdoS5be9TUi3W
+         BdbQxVkm0w9x5ttJyvgipizBQBNpqvQMsU5pDPs0yfKU5y/VMML9l9BkAqxFphKKWK
+         zJ2nVCvhi24btSI8bfRMTQIVEzYmWqoHorMqegak9tb/exc9Xje2uEaDHLUS5uADJ7
+         OnjQMbpWcUPZw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -44,9 +44,9 @@ Cc:     Nicolas Pitre <nico@fluxnic.net>, Sam Ravnborg <sam@ravnborg.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/11] kbuild: remove duplication from modules.order in sub-directories
-Date:   Tue,  9 Jul 2019 13:24:07 +0900
-Message-Id: <20190709042416.27554-4-yamada.masahiro@socionext.com>
+Subject: [PATCH 01/11] kbuild: do not create empty modules.order in the prepare stage
+Date:   Tue,  9 Jul 2019 13:24:05 +0900
+Message-Id: <20190709042416.27554-2-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190709042416.27554-1-yamada.masahiro@socionext.com>
 References: <20190709042416.27554-1-yamada.masahiro@socionext.com>
@@ -55,42 +55,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, only the top-level modules.order drops duplicated entries.
+Currently, $(objtree)/modules.order is touched in two places.
 
-The modules.order files in sub-directories potentially contain
-duplication. To list out the paths of all modules, I want to use
-modules.order instead of parsing *.mod files in $(MODVERDIR).
+In the 'prepare0' rule, scripts/Makefile.build creates an empty
+modules.order while processing 'obj=.'
 
-To achieve this, I want to rip off duplication from modules.order
-of external modules too.
+In the 'modules' rule, the top-level Makefile overwrites it with
+the correct list of modules.
+
+It might be a good side-effect that modules.order is made empty
+every time (probably this is not intended functionality), but I
+personally do not like this behavior.
+
+Kbuild descends into some directories in the preparation stage,
+where created modules.order files may be broken.
+
+Export 'preparing' while running the 'prepare' target, and when it
+is defined, do not touch modules.order at all.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/Makefile.build | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ Makefile               | 1 +
+ scripts/Makefile.build | 2 ++
+ 2 files changed, 3 insertions(+)
 
+diff --git a/Makefile b/Makefile
+index 5c75ea7177f6..a31b672d512b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1000,6 +1000,7 @@ ifdef CONFIG_STACK_VALIDATION
+ endif
+ 
+ PHONY += prepare0
++prepare: export preparing=1
+ 
+ ifeq ($(KBUILD_EXTMOD),)
+ core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
 diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index d827b7a36892..1492e37c3927 100644
+index 776842b7e6a3..93c20664bcbb 100644
 --- a/scripts/Makefile.build
 +++ b/scripts/Makefile.build
-@@ -425,13 +425,10 @@ endif # builtin-target
- #
- # Create commands to either record .ko file or cat modules.order from
- # a subdirectory
--modorder-cmds =						\
--	$(foreach m, $(modorder),			\
--		$(if $(filter %/modules.order, $m),	\
--			cat $m;, echo $m;))
--
- $(modorder-target): $(subdir-ym) FORCE
--	$(Q)(cat /dev/null; $(modorder-cmds)) > $@
-+	$(Q){ $(foreach m, $(modorder), \
-+	$(if $(filter %/modules.order, $m), cat $m, echo $m);) :; } \
-+	| $(AWK) '!x[$$0]++' - > $@
+@@ -64,8 +64,10 @@ builtin-target := $(obj)/built-in.a
+ endif
  
- #
- # Rule to compile a set of .o files into one .a file (with symbol table)
+ ifdef CONFIG_MODULES
++ifndef preparing
+ modorder-target := $(obj)/modules.order
+ endif
++endif
+ 
+ # We keep a list of all modules in $(MODVERDIR)
+ 
 -- 
 2.17.1
 
