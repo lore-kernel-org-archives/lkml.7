@@ -2,136 +2,197 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A65C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4683DC606D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA82216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC97216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbfGII6w convert rfc822-to-8bit (ORCPT
+        id S1726518AbfGIJAw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:58:52 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:50534 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbfGII6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:58:52 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 557806E5CF;
-        Tue,  9 Jul 2019 08:58:42 +0000 (UTC)
-Date:   Tue, 09 Jul 2019 16:58:35 +0800
-In-Reply-To: <20190709085532.cdqv7whuesrjs64c@flea>
-References: <20190605120237.ekmytfxcwbjaqy3x@flea> <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at> <20190607062802.m5wslx3imiqooq5a@flea> <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com> <20190607094030.GA12373@lst.de> <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com> <20190612152022.c3cfhp4cauhzhfyr@flea> <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com> <20190701095842.fvganvycce2cy7jn@flea> <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com> <20190709085532.cdqv7whuesrjs64c@flea>
+        Tue, 9 Jul 2019 05:00:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63540 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726025AbfGIJAw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 05:00:52 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x698uubL092054
+        for <linux-kernel@vger.kernel.org>; Tue, 9 Jul 2019 05:00:50 -0400
+Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.81])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmq3yt196-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 05:00:50 -0400
+Received: from localhost
+        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
+        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
+        Tue, 9 Jul 2019 09:00:49 -0000
+Received: from us1a3-smtp03.a3.dal06.isc4sb.com (10.106.154.98)
+        by smtp.notes.na.collabserv.com (10.106.227.88) with smtp.notes.na.collabserv.com ESMTP;
+        Tue, 9 Jul 2019 09:00:41 -0000
+Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
+          by us1a3-smtp03.a3.dal06.isc4sb.com
+          with ESMTP id 2019070909004074-237333 ;
+          Tue, 9 Jul 2019 09:00:40 +0000 
+In-Reply-To: <20190709064346.GF7034@mtr-leonro.mtl.com>
+From:   "Bernard Metzler" <BMT@zurich.ibm.com>
+To:     "Leon Romanovsky" <leon@kernel.org>
+Cc:     "Stephen Rothwell" <sfr@canb.auug.org.au>,
+        "Doug Ledford" <dledford@redhat.com>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        "David Miller" <davem@davemloft.net>,
+        "Networking" <netdev@vger.kernel.org>,
+        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Date:   Tue, 9 Jul 2019 09:00:40 +0000
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Sensitivity: 
+Importance: Normal
+X-Priority: 3 (Normal)
+References: <20190709064346.GF7034@mtr-leonro.mtl.com>,<20190709135636.4d36e19f@canb.auug.org.au>
+X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
+ SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
+X-LLNOutbound: False
+X-Disclaimed: 56111
+X-TNEFEvaluated: 1
 Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
-To:     linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Torsten Duwe <duwe@lst.de>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Harald Geyer <harald@ccbib.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-From:   Icenowy Zheng <icenowy@aosc.io>
-Message-ID: <72E7C765-3660-413A-8450-94BE4B3D1345@aosc.io>
+Content-Type: text/plain; charset=UTF-8
+x-cbid: 19070909-7093-0000-0000-00000C001049
+X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
+ SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.009927
+X-IBM-SpamModules-Versions: BY=3.00011400; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01229610; UDB=6.00647592; IPR=6.01010869;
+ BA=6.00006352; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
+ ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027647; XFM=3.00000015;
+ UTC=2019-07-09 09:00:47
+X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
+X-IBM-AV-VERSION: SAVI=2019-07-09 02:46:09 - 6.00010142
+x-cbparentid: 19070909-7094-0000-0000-00008DFF1023
+Message-Id: <OF3548A4E6.BB93884C-ON00258432.00308557-00258432.00318024@notes.na.collabserv.com>
+Subject: Re:  Re: linux-next: build failure after merge of the net-next tree
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_04:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+-----"Leon Romanovsky" <leon@kernel.org> wrote: -----
 
-
-于 2019年7月9日 GMT+08:00 下午4:55:32, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
->On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
->> > > Maybe instead of edp-connector one would introduce integrator's
->specific
->> > > connector, for example with compatible
->"olimex,teres-edp-connector"
->> > > which should follow edp abstract connector rules? This will be at
->least
->> > > consistent with below presentation[1] - eDP requirements depends
->on
->> > > integrator. Then if olimex has standard way of dealing with
->panels
->> > > present in olimex/teres platforms the driver would then create
->> > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I
->guess.
->> > > Anyway it still looks fishy for me :), maybe because I am not
->> > > familiarized with details of these platforms.
->> >
->> > That makes sense yes
+>To: "Stephen Rothwell" <sfr@canb.auug.org.au>
+>From: "Leon Romanovsky" <leon@kernel.org>
+>Date: 07/09/2019 08:43AM
+>Cc: "Doug Ledford" <dledford@redhat.com>, "Jason Gunthorpe"
+><jgg@mellanox.com>, "David Miller" <davem@davemloft.net>,
+>"Networking" <netdev@vger.kernel.org>, "Linux Next Mailing List"
+><linux-next@vger.kernel.org>, "Linux Kernel Mailing List"
+><linux-kernel@vger.kernel.org>, "Bernard Metzler"
+><bmt@zurich.ibm.com>
+>Subject: [EXTERNAL] Re: linux-next: build failure after merge of the
+>net-next tree
+>
+>On Tue, Jul 09, 2019 at 01:56:36PM +1000, Stephen Rothwell wrote:
+>> Hi all,
 >>
->> Actually, it makes no sense at all. Current implementation for
->anx6345
->> driver works fine as is with any panel specified assuming panel
->delays
->> are long enough for connected panel. It just doesn't use panel
->timings
->> from the driver. Creating a platform driver for connector itself
->looks
->> redundant since it can't be reused, it doesn't describe actual
->> hardware and it's just defeats purpose of DT by introducing
->> board-specific code.
+>> After merging the net-next tree, today's linux-next build (x86_64
+>> allmodconfig) failed like this:
+>>
+>> drivers/infiniband/sw/siw/siw_cm.c: In function
+>'siw_create_listen':
+>> drivers/infiniband/sw/siw/siw_cm.c:1978:3: error: implicit
+>declaration of function 'for_ifa'; did you mean 'fork_idle'?
+>[-Werror=implicit-function-declaration]
+>>    for_ifa(in_dev)
+>>    ^~~~~~~
+>>    fork_idle
+>> drivers/infiniband/sw/siw/siw_cm.c:1978:18: error: expected ';'
+>before '{' token
+>>    for_ifa(in_dev)
+>>                   ^
+>>                   ;
+>>    {
+>>    ~
+>>
+>> Caused by commit
+>>
+>>   6c52fdc244b5 ("rdma/siw: connection management")
+>>
+>> from the rdma tree.  I don't know why this didn't fail after I
+>mereged
+>> that tree.
 >
->I'm not sure where you got the idea that the purpose of DT is to not
->have any board-specific code.
+>I had the same question, because I have this fix for a couple of days
+>already.
 >
->It's perfectly fine to have some, that's even why there's a compatible
->assigned to each and every board.
+>From 56c9e15ec670af580daa8c3ffde9503af3042d67 Mon Sep 17 00:00:00
+>2001
+>From: Leon Romanovsky <leonro@mellanox.com>
+>Date: Sun, 7 Jul 2019 10:43:42 +0300
+>Subject: [PATCH] Fixup to build SIW issue
 >
->What the DT is about is allowing us to have a generic behaviour that
->we can detect: we can have a given behaviour for a given board, and a
->separate one for another one, and this will be evaluated at runtime.
+>Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+>---
+> drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
+> 1 file changed, 2 insertions(+), 3 deletions(-)
 >
->This is *exactly* what this is about: we can have a compatible that
->sets a given, more specific, behaviour (olimex,teres-edp-connector)
->while saying that this is compatible with the generic behaviour
->(edp-connector). That way, any OS will know what quirk to apply if
->needed, and if not that it can use the generic behaviour.
+>diff --git a/drivers/infiniband/sw/siw/siw_cm.c
+>b/drivers/infiniband/sw/siw/siw_cm.c
+>index 8e618cb7261f..c883bf514341 100644
+>--- a/drivers/infiniband/sw/siw/siw_cm.c
+>+++ b/drivers/infiniband/sw/siw/siw_cm.c
+>@@ -1954,6 +1954,7 @@ static void siw_drop_listeners(struct iw_cm_id
+>*id)
+> int siw_create_listen(struct iw_cm_id *id, int backlog)
+> {
+> 	struct net_device *dev = to_siw_dev(id->device)->netdev;
+>+	const struct in_ifaddr *ifa;
+> 	int rv = 0, listeners = 0;
 >
->And we could create a generic driver, for the generic behaviour if
->needed.
+> 	siw_dbg(id->device, "id 0x%p: backlog %d\n", id, backlog);
+>@@ -1975,8 +1976,7 @@ int siw_create_listen(struct iw_cm_id *id, int
+>backlog)
+> 			id, &s_laddr.sin_addr, ntohs(s_laddr.sin_port),
+> 			&s_raddr->sin_addr, ntohs(s_raddr->sin_port));
 >
->> There's another issue: if we introduce edp-connector we'll have to
->> specify power up delays somewhere (in dts? or in platform driver?),
->so
->> edp-connector doesn't really solve the issue of multiple panels with
->> same motherboard.
->
->And that's what that compatible is about :)
-
-Maybe we can introduce a connector w/o any driver just like hdmi-connector?
-
->
->> I'd say DT overlays should be preferred solution here, not another
->> connector binding.
->
->Overlays are a way to apply a device tree dynamically. It's orthogonal
->to the binding.
->
->Maxime
->
+>-		for_ifa(in_dev)
+>-		{
+>+		in_dev_for_each_ifa_rcu(ifa, in_dev) {
+> 			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
+> 			    s_laddr.sin_addr.s_addr == ifa->ifa_address) {
+> 				s_laddr.sin_addr.s_addr = ifa->ifa_address;
+>@@ -1988,7 +1988,6 @@ int siw_create_listen(struct iw_cm_id *id, int
+>backlog)
+> 					listeners++;
+> 			}
+> 		}
+>-		endfor_ifa(in_dev);
+> 		in_dev_put(in_dev);
+> 	} else if (id->local_addr.ss_family == AF_INET6) {
+> 		struct inet6_dev *in6_dev = in6_dev_get(dev);
 >--
->Maxime Ripard, Bootlin
->Embedded Linux and Kernel engineering
->https://bootlin.com
+>2.21.0
+>
+>
+>>
+>> I have marked that driver as depending on BROKEN for today.
+>>
+>> --
+>> Cheers,
+>> Stephen Rothwell
+>
+>
+>
+I am very sorry for that issues. Things are moving fast, and I
+didn't realize 'for_ifa' recently went away. I agree with Leon,
+his patch fixes the issue. So, please, let's apply that one.
 
--- 
-使用 K-9 Mail 发送自我的Android设备。
+Leon, many thanks for providing the fix.
+
+Thanks very much,
+Bernard.
+
