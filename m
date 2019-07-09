@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C768DC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737B3C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE7420665
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505BA2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="AqunWWWx"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="alGd9MvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbfGISU0 (ORCPT
+        id S1729100AbfGISUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:20:26 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37131 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729002AbfGISUX (ORCPT
+        Tue, 9 Jul 2019 14:20:32 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41329 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728972AbfGISUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:20:23 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y26so10046868qto.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:20:23 -0700 (PDT)
+        Tue, 9 Jul 2019 14:20:22 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d17so21200109qtj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=AiVVzsQgxExtlPdXUQO7u3KIlgj9fJXNjXAFaENAUkA=;
-        b=AqunWWWxGh4NAhLbFvISj8wCzu6id3JXejuIXa4TvV30VuMXGIT0XEXhkQJ6p4TGgR
-         DjjKaYUsaAaVrwO0CP1uVEJp5OBZ4ZkazaAVcwwTVNPZpUvUow0ckU9EpwWik/tlIupX
-         b/5dCH7k5TtiD1e3G4JHhANhB95vpUm8sKLXx6E1+5Ay29tkvlxkYf9asnwd2JcpbkDs
-         ZflCqDPNQ9DDfGOkeI1EgEgDY8Txm1qrd14+8P75qq+3BJyby4paKruB3BM8iwSL5wRi
-         Q8JvaJDDY7rxp4ujqvGLkI1MTqlzc4WcOryOl/Sk1EbjnjIndttpQuVZgDtUlgTT7MXp
-         Xqbg==
+        bh=0AMQxB8fjID6n1nIoBRP/bexLOV4+LcL9MqYB3dLbp0=;
+        b=alGd9MvUbfRqM3kWiylqGdR8tXCWntU7urG6O/GicndbUQb45Df3lZ60ss0lN4iTMX
+         jILCKJ8XZjIJdyeJ9PcMuePTuVByoJd0pIN6Zvi/4M5oIPlwrKJ9CLBWGL1jSDoRpkf0
+         7X2QpEiClR1Sqxlu/X0MWv0BSWiGKT7v524JLl7HEKf6FhOOLIOozehl9Jf+5Bybqzb3
+         Yq18ArXRnGQthoo3H5BaaEHVGZOc/wySgb/UPR0PjLwFUdTbZAL5xBFZQi23eAr5VBtf
+         IN7pVQ8wypit/IlAEFI+AYFsKgAOblvL17tMEno3+sg80gzfyoxh8k12uI7mGYUEGlMz
+         VC2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AiVVzsQgxExtlPdXUQO7u3KIlgj9fJXNjXAFaENAUkA=;
-        b=m3vVyKv/jDW4qoP826Hm9i8rfFBFN5bx0JpV6Z8yQ25SHayp+nC8IXxsG2OFXks4X7
-         fqFjoKnnYd0nz2irR/ryj7gOErhsabUHCgtoA73ngV/BKxHZT3ty6dgL4KknyZkMKRGe
-         8fww3IScVOemG09b6IdMGuq3NCfkt622DWzVzEN4T4HDPcQppovFT2EFoAG6P4lZ1JdC
-         ynP9CjpbtTb5IaC8soeEQ8MKF24Ucxtex/WGhZCu9XR/s6s/fBc9M0oPhxVT2vyVqOlG
-         rSrDT3MjtFhNACty09658e2lDUHSCEvAofK+UE/YfGK9vSfLF24XmeRuin6K6b2yk2RQ
-         p+4g==
-X-Gm-Message-State: APjAAAWH/P6ssUCuETJsjRyTbE08K1jJsykt/+/imoMjL7VuZ8FchVtT
-        rbpHzv/oLYvH6CZwno1WahcEbA==
-X-Google-Smtp-Source: APXvYqypFDORJK55t4/iPYv6UX1UCBaFaqAzD+I5UAklLCwgFf6Nywn8Ipf3ouT61bmq39qnWmnv5Q==
-X-Received: by 2002:ac8:1195:: with SMTP id d21mr19311947qtj.278.1562696422992;
-        Tue, 09 Jul 2019 11:20:22 -0700 (PDT)
+        bh=0AMQxB8fjID6n1nIoBRP/bexLOV4+LcL9MqYB3dLbp0=;
+        b=YkMWcJRTVzn1VoRGfBRjzwNnNYbHz0MWadwF93Iv/Qm6+3tSZIdzea1Z4CkixnbzCj
+         SQ9mEIfh+MU4tpeDIMwS1AAvOJnevEgz9W9oHIU7T0/RCNNJfaPw8bNlbxKkJC8zrc8t
+         6KjPcckT3wub1X9Mzb/ssp7bCrx93hSufsbMIj7X+aeRcegik+15yTjY3reH6EBl6jXY
+         Sfp+i+ZDLiQFLw+JMZBf9Iim+TDS4AXVYI5oCXcSFcwFdh1aeQRzEN1ESZsVyObq/N2c
+         nNV5xitoIn2g0ngrcqMRD0/ykRO3Iz6acJDSArwUgYpTxfjuku+ZU+DMqP9tPf4fhP7z
+         QesA==
+X-Gm-Message-State: APjAAAVNb+bEExdLjUYidfAaVXbsvMLCQ2AZvKl5ZudWM4CCuaNPVGYC
+        1H6nib0K/TuL536qpYKx3UUvFlG6b9g=
+X-Google-Smtp-Source: APXvYqw8hj3zXjnTBHv5EU0i1mynT0zTuqlV/Rhh2l9bHQwU9e09NhIl+cnbQoA6x9C2nK4A4lK5kg==
+X-Received: by 2002:a0c:81b8:: with SMTP id 53mr19886187qvd.91.1562696421760;
+        Tue, 09 Jul 2019 11:20:21 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id k123sm9113056qkf.13.2019.07.09.11.20.21
+        by smtp.gmail.com with ESMTPSA id k123sm9113056qkf.13.2019.07.09.11.20.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 11:20:22 -0700 (PDT)
+        Tue, 09 Jul 2019 11:20:21 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
         linux-kernel@vger.kernel.org, corbet@lwn.net,
         catalin.marinas@arm.com, will@kernel.org,
         linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [v2 5/5] arm64, kexec: reserve kexeckernel region
-Date:   Tue,  9 Jul 2019 14:20:14 -0400
-Message-Id: <20190709182014.16052-6-pasha.tatashin@soleen.com>
+Subject: [v2 4/5] kexec: use reserved memory for normal kexec reboot
+Date:   Tue,  9 Jul 2019 14:20:13 -0400
+Message-Id: <20190709182014.16052-5-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190709182014.16052-1-pasha.tatashin@soleen.com>
 References: <20190709182014.16052-1-pasha.tatashin@soleen.com>
@@ -75,184 +75,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kexeckernel= is used to reserve memory for normal kexec kernel for
-faster reboot.
+If memory was reserved for the given segment use it directly instead of
+allocating on per-page bases. This will avoid relocating this segment to
+final destination when machine is rebooted.
 
-Rename reserve_crashkernel() to reserve_crash_or_kexec_kernel(), and
-generalize it by adding an argument that specifies what is reserved:
-"crashkernel=" for crash kernel region
-"kexeckernel=" for normal kexec region
+This is done on a per segment bases because user might decide to always
+load kernel segments at the given address (i.e. non-relocatable kernel),
+but load initramfs at reserved address, and thus save reboot time on
+copying initramfs if it is large, and reduces reboot performance.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- .../admin-guide/kernel-parameters.txt         | 10 +--
- arch/arm64/kernel/setup.c                     |  5 ++
- arch/arm64/mm/init.c                          | 83 ++++++++++++-------
- 3 files changed, 63 insertions(+), 35 deletions(-)
+ kernel/kexec_core.c | 39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0f5ce665c7f5..a18222c1fbee 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -740,11 +740,11 @@
- 			or memory reserved is below 4G.
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 932feadbeb3a..2a8d8746e0a1 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -154,6 +154,18 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 				       gfp_t gfp_mask,
+ 				       unsigned long dest);
  
- 	kexeckernel=size[KMG][@offset[KMG]]
--			[KNL] Using kexec, Linux can reboot to a new kernel.
--			This parameter reserves the physical memory region
--			[offset, offset + size] for that kernel. If '@offset' is
--			omitted, then a suitable offset is selected
--			automatically.
-+			[KNL, ARM64] Using kexec, Linux can reboot to a new
-+			kernel. This parameter reserves the physical memory
-+			region [offset, offset + size] for that kernel. If
-+			'@offset' is omitted, then a suitable offset is
-+			selected automatically.
- 
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 7e541f947b4c..9f308fa103c5 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -235,6 +235,11 @@ static void __init request_standard_resources(void)
- 		if (crashk_res.end && crashk_res.start >= res->start &&
- 		    crashk_res.end <= res->end)
- 			request_resource(res, &crashk_res);
++/* Check whether this segment is fully within the resource */
++static bool segment_is_reserved(struct kexec_segment *seg, struct resource *res)
++{
++	unsigned long mstart = seg->mem;
++	unsigned long mend = mstart + seg->memsz - 1;
 +
-+		/* Userspace will find "Kexec kernel" region in /proc/iomem. */
-+		if (kexeck_res.end && kexeck_res.start >= res->start &&
-+		    kexeck_res.end <= res->end)
-+			request_resource(res, &kexeck_res);
- #endif
- 	}
- }
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index f3c795278def..dfef39f72faf 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -54,61 +54,83 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_KEXEC_CORE
- /*
-- * reserve_crashkernel() - reserves memory for crash kernel
-+ * reserve_crash_or_kexec_kernel() - reserves memory for crash kernel or
-+ * for normal kexec kernel.
-  *
-- * This function reserves memory area given in "crashkernel=" kernel command
-- * line parameter. The memory reserved is used by dump capture kernel when
-- * primary kernel is crashing.
-+ * This function reserves memory area given in "crashkernel=" or "kexeckenel="
-+ * kernel command line parameter. The memory reserved is used by dump capture
-+ * kernel when primary kernel is crashing, or to load new kexec kernel for
-+ * faster reboot without relocation.
-  */
--static void __init reserve_crashkernel(void)
-+static void __init reserve_crash_or_kexec_kernel(char *cmd)
++	if (mstart < phys_to_boot_phys(res->start) ||
++	    mend > phys_to_boot_phys(res->end))
++		return false;
++	return true;
++}
++
+ int sanity_check_segment_list(struct kimage *image)
  {
--	unsigned long long crash_base, crash_size;
-+	unsigned long long base, size;
-+	struct resource *res;
-+	char s[16];
- 	int ret;
+ 	int i;
+@@ -246,13 +258,9 @@ int sanity_check_segment_list(struct kimage *image)
  
--	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--				&crash_size, &crash_base);
--	/* no crashkernel= or invalid value specified */
--	if (ret || !crash_size)
-+	/* cmd must be either: "crashkernel=" or "kexeckernel=" */
-+	if (!strcmp(cmd, "crashkernel=")) {
-+		res = &crashk_res;
-+	} else if (!strcmp(cmd, "kexeckernel=")) {
-+		res = &kexeck_res;
-+	} else {
-+		pr_err("%s: invalid cmd %s\n", __func__, cmd);
-+		return;
-+	}
-+
-+	/* remove trailing '=' for a nicer printfs */
-+	strcpy(s, cmd);
-+	s[strlen(s) - 1] = '\0';
-+
-+	ret = parse_crash_or_kexec_kernel(boot_command_line,
-+					  memblock_phys_mem_size(),
-+					  &size, &base, cmd, NULL);
-+	/* no specified command or invalid value specified */
-+	if (ret || !size)
- 		return;
- 
--	crash_size = PAGE_ALIGN(crash_size);
-+	size = PAGE_ALIGN(size);
- 
--	if (crash_base == 0) {
-+	if (base == 0) {
- 		/* Current arm64 boot protocol requires 2MB alignment */
--		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
--				crash_size, SZ_2M);
--		if (crash_base == 0) {
--			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
--				crash_size);
-+		base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
-+					      size, SZ_2M);
-+		if (base == 0) {
-+			pr_warn("cannot allocate %s (size:0x%llx)\n",
-+				s, size);
- 			return;
- 		}
- 	} else {
- 		/* User specifies base address explicitly. */
--		if (!memblock_is_region_memory(crash_base, crash_size)) {
--			pr_warn("cannot reserve crashkernel: region is not memory\n");
-+		if (!memblock_is_region_memory(base, size)) {
-+			pr_warn("cannot reserve %s: region is not memory\n",
-+				s);
- 			return;
- 		}
- 
--		if (memblock_is_region_reserved(crash_base, crash_size)) {
--			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
-+		if (memblock_is_region_reserved(base, size)) {
-+			pr_warn("cannot reserve %s: region overlaps reserved memory\n",
-+				s);
- 			return;
- 		}
- 
--		if (!IS_ALIGNED(crash_base, SZ_2M)) {
--			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
-+		if (!IS_ALIGNED(base, SZ_2M)) {
-+			pr_warn("cannot reserve %s: base address is not 2MB aligned\n",
-+				s);
- 			return;
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+ 		for (i = 0; i < nr_segments; i++) {
+-			unsigned long mstart, mend;
+-
+-			mstart = image->segment[i].mem;
+-			mend = mstart + image->segment[i].memsz - 1;
+ 			/* Ensure we are within the crash kernel limits */
+-			if ((mstart < phys_to_boot_phys(crashk_res.start)) ||
+-			    (mend > phys_to_boot_phys(crashk_res.end)))
++			if (!segment_is_reserved(&image->segment[i],
++						 &crashk_res))
+ 				return -EADDRNOTAVAIL;
  		}
  	}
--	memblock_reserve(crash_base, crash_size);
-+	memblock_reserve(base, size);
- 
--	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
--		crash_base, crash_base + crash_size, crash_size >> 20);
-+	pr_info("%s reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-+		s, base, base + size, size >> 20);
- 
--	crashk_res.start = crash_base;
--	crashk_res.end = crash_base + crash_size - 1;
-+	res->start = base;
-+	res->end = base + size - 1;
+@@ -848,12 +856,13 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 	return result;
  }
- #else
--static void __init reserve_crashkernel(void)
-+static void __init reserve_crash_or_kexec_kernel(char *cmd)
+ 
+-static int kimage_load_crash_segment(struct kimage *image,
+-					struct kexec_segment *segment)
++static int kimage_load_crash_or_reserved_segment(struct kimage *image,
++						 struct kexec_segment *segment)
  {
- }
- #endif /* CONFIG_KEXEC_CORE */
-@@ -411,7 +433,8 @@ void __init arm64_memblock_init(void)
- 	else
- 		arm64_dma_phys_limit = PHYS_MASK + 1;
+-	/* For crash dumps kernels we simply copy the data from
+-	 * user space to it's destination.
+-	 * We do things a page at a time for the sake of kmap.
++	/*
++	 * For crash dumps and kexec-reserved kernels we simply copy the data
++	 * from user space to it's destination. We do things a page at a time
++	 * for the sake of kmap.
+ 	 */
+ 	unsigned long maddr;
+ 	size_t ubytes, mbytes;
+@@ -923,10 +932,14 @@ int kimage_load_segment(struct kimage *image,
  
--	reserve_crashkernel();
-+	reserve_crash_or_kexec_kernel("crashkernel=");
-+	reserve_crash_or_kexec_kernel("kexeckernel=");
- 
- 	reserve_elfcorehdr();
+ 	switch (image->type) {
+ 	case KEXEC_TYPE_DEFAULT:
+-		result = kimage_load_normal_segment(image, segment);
++		if (segment_is_reserved(segment, &kexeck_res))
++			result = kimage_load_crash_or_reserved_segment(image,
++								       segment);
++		else
++			result = kimage_load_normal_segment(image, segment);
+ 		break;
+ 	case KEXEC_TYPE_CRASH:
+-		result = kimage_load_crash_segment(image, segment);
++		result = kimage_load_crash_or_reserved_segment(image, segment);
+ 		break;
+ 	}
  
 -- 
 2.22.0
