@@ -2,87 +2,150 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7127C73C44
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2F0C73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761E820861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B70B214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:22:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EJlZCQji"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CYNSEga2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfGIMUY (ORCPT
+        id S1726486AbfGIMW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:20:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55623 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfGIMUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:20:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jhGr3PWfz9sMr;
-        Tue,  9 Jul 2019 22:20:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562674820;
-        bh=HoygXb3/Zo6Iy6m7TvCJiEIzVG8U8NQlgvLlTjIgFRk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EJlZCQjiwVJbUoyiH/6xvaU+bilP3uWZ7eeqf6tNeOiZvVv6E+I3cdjFc8MMprOMr
-         EYb1v2hYyIrpvWXw4LdFroayF6yQl3ERGVJ0BRMB2eNsYrIdEBp9jpakZiajbt78vV
-         Nh6jW6rEUMMJyKkNNNqYNqRqOxsplDfUtzbp9mOBUCIz6u40WE/tt0iax7d1sl4+mq
-         izboagDTxjnRb7RrCrCWdwaZ2BtEk92SIElkzBmwvo336Y0LBUdPni0gYysmgVhEvJ
-         zW6EsMUkgrYzkQWjTC1EyNxvk8QHN1qrK760myabEF48ZPdmN4eCUvFlfXiYg0v/sJ
-         O2tqkRzQ1gQ2A==
-Date:   Tue, 9 Jul 2019 22:20:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the kbuild tree
-Message-ID: <20190709222019.5359e707@canb.auug.org.au>
+        Tue, 9 Jul 2019 08:22:26 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:61707 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfGIMW0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 08:22:26 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x69CMKZC012244;
+        Tue, 9 Jul 2019 21:22:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x69CMKZC012244
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562674941;
+        bh=s/dMvs8eRlfbHNunWA9MxkzWSv0qolGiWLffGStjx7k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CYNSEga2nPu7THXvvpTuVPXOOJoOMk05l1RBRFckfq2v/3iHSyzgRsxYoAjxbQh7B
+         2FcnSK3sjQ+VcRTNka7Ym14BuAyIEz3BFxEnHJOumUwFD2AyW/nzSVi7TktzBdY1Tf
+         uGXIP78m59Dfp8DjT+DVWy75kw8QAbDsPXqM4RkkrqY1VCnWL0V9TsAOQs28Vg73k8
+         sjUFkwq/wfDyXemd2KIv85jtFAi3nHPjV8REFuoRxikAyjWJU21r0cTefEXyG9u8Z/
+         t2KhrTCsyZ11a2GEuTbf8thuPBrsdzeQTEdzxDBKrc7vrO7/hXxXp93ZJEntirJRLX
+         seexPIfAVjzbA==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id o19so6307709uap.13;
+        Tue, 09 Jul 2019 05:22:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAWDgqT9HP5UzWqtlY5NN2B/XTPsB+vkBL2j6eJY36mK8tXcxwe9
+        xlctIr3+dkqNSgyx7vXaeG46iZDt6swILHpOKXM=
+X-Google-Smtp-Source: APXvYqwzOwXe4sIRylbKVb28bYAtmrOPXWkHFX1As+qU0ivcxqCVk9Sz0a5C15GRIF17CJFW4MC7xgvYUxVf10f9jto=
+X-Received: by 2002:ab0:70d9:: with SMTP id r25mr12782778ual.109.1562674940309;
+ Tue, 09 Jul 2019 05:22:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/lAHwKFOoHd3kTbOgLtIp/GK"; protocol="application/pgp-signature"
+References: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com> <CAMuHMdUH46_yvYc840uvMoOOqXuU3mDOjaT65vZ=6WKGq7-Kqg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUH46_yvYc840uvMoOOqXuU3mDOjaT65vZ=6WKGq7-Kqg@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 9 Jul 2019 21:21:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASuEQqb7w8qD9ZKx-LKp0+CqvybEqFtYxVk5d0YJt-Nfg@mail.gmail.com>
+Message-ID: <CAK7LNASuEQqb7w8qD9ZKx-LKp0+CqvybEqFtYxVk5d0YJt-Nfg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: check arch/$(SRCARCH)/include/generated before
+ out-of-tree build
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lAHwKFOoHd3kTbOgLtIp/GK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Geert,
 
-Hi all,
+On Tue, Jul 9, 2019 at 5:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Yamada-san,
+>
+> On Sun, Apr 7, 2019 at 12:45 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> > After cross-compiling the kernel, "make mrproper" should be executed
+> > with the proper ARCH= option. Otherwise, stale objects will remain
+> > under arch/$(SRCARCH)/.
+> >
+> > One bad scenario is like this:
+> >
+> >   $ make ARCH=arm defconfig all   # cross-compile the kernel for arm
+> >   $ make mrproper                 # mrproper for host-arch (i.e. x86)
+> >   $ make ARCH=arm O=build_dir defconfig all
+> >
+> > If you miss ARCH= for mrproper and cross-compile the kernel with O=
+> > and ARCH= options, Kbuild will happily start to build, but may fail
+> > due to stale objects in the srctree.
+> >
+> > If $(srctree)/arch/$(SRCARCH)/include/generated/ exists, let's stop
+> > the out-of-tree build. To detect this, mrproper should clean only
+> > arch/$(SRCARCH)/include/generated/.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  Makefile | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 10643c3..17945ce 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1091,7 +1091,9 @@ PHONY += prepare archprepare prepare1 prepare3
+> >  prepare3: include/config/kernel.release
+> >  ifneq ($(srctree),.)
+> >         @$(kecho) '  Using $(srctree) as source for kernel'
+> > -       $(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
+> > +       $(Q)if [ -f $(srctree)/.config -o \
+> > +                -d $(srctree)/include/config -o \
+> > +                -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
+> >                 echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
+> >                 echo >&2 "  in the '$(srctree)' directory.";\
+>
+> This took me a bit to find out what was wrong...
+>
+> Usually I don't run "make mrproper", as it removes files I may want to
+> keep (e.g. tags).  Hence I ran "git ls-files -o | grep m68k | xargs rm"
+> (I usually build in separate output directories), confirmed with "git
+> ls-files -o" there were no remaining build artefacts, and was surprised
+> to discover I still got the error message above?!?
+>
+> Apparently arch/m68k/include/generated was still present, but as "git
+> ls-files -o" only shows files, not directories, it was not listed.
+> Perhaps the directory checks above can be changed to directory exists
+> _and_ is not empty?
 
-Commit
+No.
 
-  8eaeddd155af ("kbuild: header-test: Exclude more headers for um and paris=
-c")
+Since you did not run mrproper,
+Kbuild _correctly_ showed error.
+This is the expected and correct behavior. :)
 
-is missing a Signed-off-by from its author and committer.
+The upstream kernel is not a place
+to be customized for your workflow. Sorry.
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/lAHwKFOoHd3kTbOgLtIp/GK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Every developer has a set of handy custom commands.
 
------BEGIN PGP SIGNATURE-----
+Since you are already running a long command,
+why don't you add one more line, and put in ~/.bash_aliases or somewhere?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0khoMACgkQAVBC80lX
-0Gyqfgf/eRUoUbdzGWq+N08wWLBPCbzjPv0tXnpn9lc9ttbdCTizlrG2gkTPW/yE
-rORFZmWu52WeobEoDXZ6WX/0cHAdAt8b6ICLwY1mF/MfRNiKhZpjLt3Y+UOEXRYw
-LKMWDKd1Ze6GKIcI62a2zGMNGIqZvUJeOQ5I9fzDzQnHucQa4Oh4D0UwNay1Z0sr
-r8T/k3LmBSiipY6u549xM4UIxBshGg504AMhxrdqRmBI3GrQLmKuPu6tpDd2IC4L
-wPF9OlVlj2W3SylACz0E7/Z6Ay97rGSrpSkPbzjrJdWof+jr4auiQ3FCWXsviDlK
-9CwRTGLmd2kr7LQkS97aKjvViUO2aA==
-=Xsmp
------END PGP SIGNATURE-----
+my_mrproper()
+{
+    git ls-files -o | grep m68k | xargs rm
+    rm -rf arch/m68k/include/generated
+}
 
---Sig_/lAHwKFOoHd3kTbOgLtIp/GK--
+
+-- 
+Best Regards
+Masahiro Yamada
