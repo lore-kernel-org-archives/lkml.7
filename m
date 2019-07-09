@@ -2,90 +2,164 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C04DC73C50
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19827C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5851D2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562682091;
-	bh=2JwpfJPEApfJG2HtwdZTN1RdfT7jYGryKNu8LYmSXA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oLzfUM/Vp5E1B1rd4XYAg/FlSBR6G9qJNHBzvvhrQzK59+GBEzdheeLYuEb0fEyyD
-	 1cPaKabgqvyGKZsTb3nsZHrcgMrxTMtz9TJTG1yNNsHVA0P6bLdjCbt6A7B+XN6BeQ
-	 TeUjbXQaT0l4r9hDXsaRDeVUVSsEE2//G61pKQqg=
+	by mail.kernel.org (Postfix) with ESMTP id EC6A62080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfGIOVa (ORCPT
+        id S1726618AbfGIOWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:21:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40608 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfGIOVa (ORCPT
+        Tue, 9 Jul 2019 10:22:01 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:45827 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbfGIOWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:21:30 -0400
-Received: by mail-io1-f66.google.com with SMTP id h6so35287592iom.7;
-        Tue, 09 Jul 2019 07:21:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f+ADFttYA/V+/O077+27AshpU1PxQ349Mul0CkZ+ZM8=;
-        b=YX5qqxiAxnDWZPShm1KGvkgNyAh1xFkXeRTh5KwBsoJeP/jptZRriLHHDQ9VNMyhSO
-         9LS/y1RnECrkb/AFfde3H4jzaHLp7E/HoPPJ96twH31Y2WO7K7UiRKfx/MTo+Z09OEwL
-         fZ3CYC+uglODj7EPLGq22Kobj4xvBa0/guGnFKPS4pDBpmqtTIr+Jmsrbu3Q5S/17OA7
-         MXUlpF9wwG5ldHtjLCAbOsb/beGKnesIDG+beesN/Ce4j89dbxemOEtgN0vHZbuctem5
-         JfbwMz3t5LW/4Nd7XGXl2njcwPUyxwX3Fqe3rXZCalADSIkXae2JeqcT19mDb1o6uh1e
-         PXLA==
-X-Gm-Message-State: APjAAAXn4qs+kKCEoVMb/8EXul795iS2hFf5NezuIQ3VQKRkm5/epkx/
-        mHSHeIClUd32mSPoKsrbmw==
-X-Google-Smtp-Source: APXvYqzbsid7dTL3N+pWXFiO0kKMIqliSgYTpkA/OGN2Sn45du3OpebITY3EKGINiVg4qHcN9Zad3Q==
-X-Received: by 2002:a6b:fd10:: with SMTP id c16mr24143731ioi.217.1562682089211;
-        Tue, 09 Jul 2019 07:21:29 -0700 (PDT)
-Received: from localhost ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id v3sm11643441iom.53.2019.07.09.07.21.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 07:21:28 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 08:21:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 9 Jul 2019 10:22:00 -0400
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id EA3DB20001A;
+        Tue,  9 Jul 2019 14:21:55 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 16:21:55 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jumin Li <jumin.li@mediatek.com>
-Subject: Re: [PATCH 2/5] dt-bindings: usb: mtu3: support force_vbus mode
-Message-ID: <20190709142127.GA11737@bogus>
-References: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
- <65f025186332b2b44f7b27f58af893217df1adb5.1560246390.git.chunfeng.yun@mediatek.com>
+        devicetree <devicetree@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Torsten Duwe <duwe@lst.de>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Harald Geyer <harald@ccbib.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
+ on Teres-I
+Message-ID: <20190709142155.2blclgbqapjeifv3@flea>
+References: <20190607062802.m5wslx3imiqooq5a@flea>
+ <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
+ <20190607094030.GA12373@lst.de>
+ <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
+ <20190612152022.c3cfhp4cauhzhfyr@flea>
+ <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
+ <20190701095842.fvganvycce2cy7jn@flea>
+ <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
+ <20190709085532.cdqv7whuesrjs64c@flea>
+ <72E7C765-3660-413A-8450-94BE4B3D1345@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="en37fuotj5a3o4w2"
 Content-Disposition: inline
-In-Reply-To: <65f025186332b2b44f7b27f58af893217df1adb5.1560246390.git.chunfeng.yun@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <72E7C765-3660-413A-8450-94BE4B3D1345@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 13:55:18 +0800, Chunfeng Yun wrote:
-> Add a new property to indicate that the controller doesn't support Vbus
-> detection due to non-exist Vbus PIN, and the driver should set force_vbus
-> state for device mode
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/usb/mediatek,mtu3.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--en37fuotj5a3o4w2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 09, 2019 at 04:58:35PM +0800, Icenowy Zheng wrote:
+>
+>
+> =E4=BA=8E 2019=E5=B9=B47=E6=9C=889=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=884=
+:55:32, Maxime Ripard <maxime.ripard@bootlin.com> =E5=86=99=E5=88=B0:
+> >On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
+> >> > > Maybe instead of edp-connector one would introduce integrator's
+> >specific
+> >> > > connector, for example with compatible
+> >"olimex,teres-edp-connector"
+> >> > > which should follow edp abstract connector rules? This will be at
+> >least
+> >> > > consistent with below presentation[1] - eDP requirements depends
+> >on
+> >> > > integrator. Then if olimex has standard way of dealing with
+> >panels
+> >> > > present in olimex/teres platforms the driver would then create
+> >> > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I
+> >guess.
+> >> > > Anyway it still looks fishy for me :), maybe because I am not
+> >> > > familiarized with details of these platforms.
+> >> >
+> >> > That makes sense yes
+> >>
+> >> Actually, it makes no sense at all. Current implementation for
+> >anx6345
+> >> driver works fine as is with any panel specified assuming panel
+> >delays
+> >> are long enough for connected panel. It just doesn't use panel
+> >timings
+> >> from the driver. Creating a platform driver for connector itself
+> >looks
+> >> redundant since it can't be reused, it doesn't describe actual
+> >> hardware and it's just defeats purpose of DT by introducing
+> >> board-specific code.
+> >
+> >I'm not sure where you got the idea that the purpose of DT is to not
+> >have any board-specific code.
+> >
+> >It's perfectly fine to have some, that's even why there's a compatible
+> >assigned to each and every board.
+> >
+> >What the DT is about is allowing us to have a generic behaviour that
+> >we can detect: we can have a given behaviour for a given board, and a
+> >separate one for another one, and this will be evaluated at runtime.
+> >
+> >This is *exactly* what this is about: we can have a compatible that
+> >sets a given, more specific, behaviour (olimex,teres-edp-connector)
+> >while saying that this is compatible with the generic behaviour
+> >(edp-connector). That way, any OS will know what quirk to apply if
+> >needed, and if not that it can use the generic behaviour.
+> >
+> >And we could create a generic driver, for the generic behaviour if
+> >needed.
+> >
+> >> There's another issue: if we introduce edp-connector we'll have to
+> >> specify power up delays somewhere (in dts? or in platform driver?),
+> >so
+> >> edp-connector doesn't really solve the issue of multiple panels with
+> >> same motherboard.
+> >
+> >And that's what that compatible is about :)
+>
+> Maybe we can introduce a connector w/o any driver just like hdmi-connecto=
+r?
+
+Ironically, a driver for it has been sent yesterday :)
+
+But yeah, we can definitely do that too.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--en37fuotj5a3o4w2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSSjAwAKCRDj7w1vZxhR
+xRd1AQCJ5jZZvccoYKMTlhIFwESGq/tLGx3Ao78XQTTrIK5CFAEA11fhHaijvh3D
+nQ4CuXzwsgPAxXOwMwPH8TV3F9oC/Aw=
+=S7iw
+-----END PGP SIGNATURE-----
+
+--en37fuotj5a3o4w2--
