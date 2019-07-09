@@ -2,164 +2,144 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152C3C73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04345C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1043208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TK7AxUoP"
+	by mail.kernel.org (Postfix) with ESMTP id D0A012166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562704268;
+	bh=/tteBi3FwGsHAETT02bIg+e0ZNo7j8DYyhLdl+lJps0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kHgI7G5nycVGb789Is9kyr9ChzJ4NAuTZ+gLSauSy706e5xrEgGfiRum0eWX6+lzA
+	 8Z+3Bz5+tWJ1npd2WYXwSOTHs2KX0i3L6Avu4zsVjM2uZb1qyV7SXvi497/vvwviin
+	 vgm9JenITV+QunEAintr+ut3vBGv83Ns9Bqup7l0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbfGIUaq (ORCPT
+        id S1729751AbfGIUbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:30:46 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39363 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729179AbfGIUaq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:30:46 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m202so16396772oig.6;
-        Tue, 09 Jul 2019 13:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PzzhMIXkgjfY/3I8xNBuuzFKRaBW4WRzScdd/5mOmm8=;
-        b=TK7AxUoPJ8Dp1bYwsCGbWOtglqsnbxpl+OsqficcEvLFcPrjduzrCyRFvtBGl1xr73
-         qURoStNeMzxVIVm64zwh5TFdq9AsSUWUj4nLs77NBb97lBuPc+5RvLDo5bHdmHZEQdLM
-         4BnivVI511PHSv6rb+gjX8zyi7OdBkFdHfR6lbALcvKx78W4lbNaoN59XlHuicbt7fbC
-         slWnOxT4/3CPXM+Y8ob087puyLO3iPxUyWSzk8xl01WIq+U7kVDtqZ2LkxKZbcTznKwM
-         d2mtxvLQtrnqSJ5YGcaVN7ZkU1jUK+MfLwg0qAkIym8QIVHlF9B+Nq/SflEE8mkVq7Cn
-         uDbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PzzhMIXkgjfY/3I8xNBuuzFKRaBW4WRzScdd/5mOmm8=;
-        b=ZKj4/q9wzaxTMWesDc5NLXcIqtKna/Y6U9xY0waVKgiXai+1ODSMkvE8IMFF+HQ3BJ
-         DH1xlpZohq4tB3WvUzO1Y/dbLeE6aQwHc0OA5w+ksGMU5ici7suG0Fde9FMr/yPfFSwb
-         FPPeqp8M7N4gksgu8dWZ74PxOh7RZZv5xaUDy7WCK8Jvrqri2uiE+lFQv3ngWUhrZqFN
-         gTOsAxuDg+7F8Y6A9Dd9b737gjk0Pb0GsdoM2hHE6c6kLdCEkZM4PNYxz6vTced7ijSV
-         5nakoKmXe+Kv6nZb5xVXXnajH2tc83D8BiJcXuLBwYnh/AL/7W2x6xhIJK4CoSnbPXXg
-         8eIA==
-X-Gm-Message-State: APjAAAW9A5tsipHMrjspk6GRAzgvFb8Ij+DAOtxPPvfwCRr9+35IklCd
-        XcJL/FKMZGepbxSH5RoUbGgGuaESHbjzyC0GdA4=
-X-Google-Smtp-Source: APXvYqxcnttgFG+ExJVZtKNgY/nJZ0LcoVm1wiyk2wRS4arEWWVemvY2rYVYYkQOuT1IpF4ima0OhtnS4WB0PchMdxE=
-X-Received: by 2002:aca:b208:: with SMTP id b8mr1217173oif.98.1562704244691;
- Tue, 09 Jul 2019 13:30:44 -0700 (PDT)
+        Tue, 9 Jul 2019 16:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729179AbfGIUbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:31:07 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C75A216C4;
+        Tue,  9 Jul 2019 20:31:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562704266;
+        bh=/tteBi3FwGsHAETT02bIg+e0ZNo7j8DYyhLdl+lJps0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WK6kvH07mh4thZzT1jrFK286npoFsNqcw7HX+SQcPx7Q4WS9QXAS+BLPRbyFafB22
+         2CafceWPg+iRvpXpebTOAzEj3GuQHGScoCPpGYUjb7gXPxe6U0Jql0Kya6+uMTtIob
+         bznSqIz5RyvDOp8Hx2XBgK4lt0h1F5Y4IuLO7a1Q=
+Received: by mail-qt1-f170.google.com with SMTP id k10so30613qtq.1;
+        Tue, 09 Jul 2019 13:31:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAVoEltQsI2oKhnVCaKSRJnLDGGGu/GseEVjyrwp7Ln7KiPoqaPh
+        ikEND7YESV9gNJQ3WVQDgrxrlym8O/MryTXM0A==
+X-Google-Smtp-Source: APXvYqzH8k8Dv1us69V2h3oPdKKrl7k8iPqPdSXKGumU7uUT/sxu6iBZEGR13WtL7FC+49CqCTsHjJ62OGTJqaZLYXE=
+X-Received: by 2002:ac8:3908:: with SMTP id s8mr20343076qtb.224.1562704265525;
+ Tue, 09 Jul 2019 13:31:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190605120237.ekmytfxcwbjaqy3x@flea> <E1hYsvP-0000PY-Pz@stardust.g4.wien.funkfeuer.at>
- <20190607062802.m5wslx3imiqooq5a@flea> <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
- <20190607094030.GA12373@lst.de> <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
- <20190612152022.c3cfhp4cauhzhfyr@flea> <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
- <20190701095842.fvganvycce2cy7jn@flea> <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
- <20190709085532.cdqv7whuesrjs64c@flea>
-In-Reply-To: <20190709085532.cdqv7whuesrjs64c@flea>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Tue, 9 Jul 2019 13:30:18 -0700
-Message-ID: <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>,
-        Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+References: <20190701093826.5472-1-Anson.Huang@nxp.com> <20190701093826.5472-2-Anson.Huang@nxp.com>
+In-Reply-To: <20190701093826.5472-2-Anson.Huang@nxp.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 9 Jul 2019 14:30:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com>
+Message-ID: <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com>
+Subject: Re: [PATCH V4 2/5] clocksource/drivers/sysctr: Add clock-frequency property
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Bai Ping <ping.bai@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 1:55 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Mon, Jul 1, 2019 at 3:47 AM <Anson.Huang@nxp.com> wrote:
 >
-> On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
-> > > > Maybe instead of edp-connector one would introduce integrator's specific
-> > > > connector, for example with compatible "olimex,teres-edp-connector"
-> > > > which should follow edp abstract connector rules? This will be at least
-> > > > consistent with below presentation[1] - eDP requirements depends on
-> > > > integrator. Then if olimex has standard way of dealing with panels
-> > > > present in olimex/teres platforms the driver would then create
-> > > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
-> > > > Anyway it still looks fishy for me :), maybe because I am not
-> > > > familiarized with details of these platforms.
-> > >
-> > > That makes sense yes
-> >
-> > Actually, it makes no sense at all. Current implementation for anx6345
-> > driver works fine as is with any panel specified assuming panel delays
-> > are long enough for connected panel. It just doesn't use panel timings
-> > from the driver. Creating a platform driver for connector itself looks
-> > redundant since it can't be reused, it doesn't describe actual
-> > hardware and it's just defeats purpose of DT by introducing
-> > board-specific code.
->
-> I'm not sure where you got the idea that the purpose of DT is to not
-> have any board-specific code.
+> From: Anson Huang <Anson.Huang@nxp.com>
 
-I believe DT was an attempt to move to declarative approach for
-describing hardware. Yes, we have different compatibles for different
-devices but they're specific to particular device rather than
-particular board. Device interconnection is described in DT along with
-some properties rather than in board-specific C-file. Introducing
-board-specific compatible for a connector isn't looking right to me.
+'dt-bindings: timer: ...' for the subject.
 
-> It's perfectly fine to have some, that's even why there's a compatible
-> assigned to each and every board.
 >
-> What the DT is about is allowing us to have a generic behaviour that
-> we can detect: we can have a given behaviour for a given board, and a
-> separate one for another one, and this will be evaluated at runtime.
->
-> This is *exactly* what this is about: we can have a compatible that
-> sets a given, more specific, behaviour (olimex,teres-edp-connector)
-> while saying that this is compatible with the generic behaviour
-> (edp-connector). That way, any OS will know what quirk to apply if
-> needed, and if not that it can use the generic behaviour.
->
-> And we could create a generic driver, for the generic behaviour if
-> needed.
->
-> > There's another issue: if we introduce edp-connector we'll have to
-> > specify power up delays somewhere (in dts? or in platform driver?), so
-> > edp-connector doesn't really solve the issue of multiple panels with
-> > same motherboard.
->
-> And that's what that compatible is about :)
+> Systems which use platform driver model for clock driver require the
+> clock frequency to be supplied via device tree when system counter
+> driver is enabled.
 
-Sorry, I fail to see how it would be different from using existing
-panels infrastructure and different panels compatibles. I think Rob's
-idea was to introduce generic edp-connector. If we can't make it
-generic then let's use panel infrastructure.
+This is a DT binding. What's a platform driver?
 
-> > I'd say DT overlays should be preferred solution here, not another
-> > connector binding.
 >
-> Overlays are a way to apply a device tree dynamically. It's orthogonal
-> to the binding.
-
-It isn't orthogonal to original problem though.
-
-> Maxime
+> This is necessary as in the platform driver model the of_clk operations
+> do not work correctly because system counter driver is initialized in
+> early phase of system boot up, and clock driver using platform driver
+> model is NOT ready at that time, it will cause system counter driver
+> initialization failed.
 >
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> Add clock-frequency property to the device tree bindings of the NXP
+> system counter, so the driver can tell timer-of driver to get clock
+> frequency from DT directly instead of doing of_clk operations via
+> clk APIs.
+
+While you've now given a good explanation why you need this, it all
+sounds like linux specific issues and a DT change should not be
+necessary.
+
+Presumably, 'clocks' points to a fixed-clock node, right? Just parse
+the 'clocks' phandle and fetch the frequency from that node if you
+need to get the frequency 'early'.
+
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change.
+> ---
+>  .../devicetree/bindings/timer/nxp,sysctr-timer.txt        | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+> index d576599..7088a0e 100644
+> --- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+> @@ -11,15 +11,18 @@ Required properties:
+>  - reg :             Specifies the base physical address and size of the comapre
+>                      frame and the counter control, read & compare.
+>  - interrupts :      should be the first compare frames' interrupt
+> -- clocks :         Specifies the counter clock.
+> -- clock-names:             Specifies the clock's name of this module
+> +- clocks :          Specifies the counter clock, mutually exclusive with clock-frequency.
+> +- clock-names :     Specifies the clock's name of this module, mutually exclusive with
+> +                   clock-frequency.
+> +- clock-frequency : Specifies system counter clock frequency, mutually exclusive with
+> +                   clocks/clock-names.
+
+It doesn't really work to say one or the other is needed unless you
+make the OS support both cases.
+
+Rob
