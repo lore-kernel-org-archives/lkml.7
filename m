@@ -2,136 +2,103 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4758C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E365C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5372080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kkB6qwlK"
+	by mail.kernel.org (Postfix) with ESMTP id 260EB2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbfGISmo (ORCPT
+        id S1729263AbfGISpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:42:44 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35016 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfGISmn (ORCPT
+        Tue, 9 Jul 2019 14:45:25 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:51369 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfGISpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:42:43 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so10533640plp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:42:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=YK8HnDW92D+ZcMeXZwEcU33SpTDrdHnDF8vDLTjwf5s=;
-        b=kkB6qwlK4xX9daXzHcc9L1T4Mj6a6SO0VEC7YbpN2qEwk4FwZzherF440LW3iui/mu
-         +kvX9cDmbK1vGjcozntltdcAVEjFRLjTc9XBKFRe1g2OCrklnm7Tvjp8Ncui4OsyOfGM
-         +QqRYrmKTK/1esiT4f/+eVsQx5PoOj5zN+LgHQZ46SFk0W8MQRLd7R+HKaSFWYGnQ722
-         XqleeeB3+8k5oSkgBONyzr7wRKwcphnvvgA++3vYtbbA20mDhQ9+J4AuGDLUYthlmlbX
-         Ts48nyFv+28GaPMs5J9m24qpLGdsGlmwT2f8AYaLpwm4qCL8t8qruG7yQYD2FWJMwFc4
-         Rk9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=YK8HnDW92D+ZcMeXZwEcU33SpTDrdHnDF8vDLTjwf5s=;
-        b=FBzac6pZoI3c0XZDmmJi4v62/bl0Tz24YBdJzkko4dTkXZPCtEuyAgWvrb64Ao5phV
-         Cv6Ox8jxfo3G0q6e9ZvgjqqBmMCcr2sd/uHEvHlJ8EsVCQSYRN4kPg2v2v222ICxDCyl
-         /icaN71xKDdmDns2y6gKGgTRayVFCtD0rNNMr31U/gaxW/tDCax2dezbWlMHofWSGkTz
-         kOtqU1J9Ih+UwXQyblXfJ4tbfJJ2wXqu83KcA2yYg3MvJ3e9r+Ew2cpRHqyC1T+/MMJm
-         kBUAn2QZUHq5RWUc/Ngtgkzg9cPRZMvypshaXjK5+5JYfsd0EHeR6un2Lahg/oHHU5fj
-         imIg==
-X-Gm-Message-State: APjAAAVxaJcvPsAypwg2/Li76LFIuobwgjSarOF22WdHq2ws9p9JdaHA
-        scH9ZlCXU8HVOdu+GKvd57g=
-X-Google-Smtp-Source: APXvYqxpoGHClqBhZvSk6c0AeV7usiTYaC08tEej11WUV8nOUh0tPg53DkAkDAcCGle8Vk2SkZT8JA==
-X-Received: by 2002:a17:902:f095:: with SMTP id go21mr34549642plb.58.1562697763289;
-        Tue, 09 Jul 2019 11:42:43 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id l44sm3051428pje.29.2019.07.09.11.42.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 11:42:42 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 00:12:37 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sound: soc: bcm: cygnus-pcm: Unneeded variable: "ret".
-Message-ID: <20190709184236.GA7873@hari-Inspiron-1545>
+        Tue, 9 Jul 2019 14:45:24 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mt7Pt-1idzjz2DuL-00tTez; Tue, 09 Jul 2019 20:45:10 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] [v2] ARM: mtd-xip: work around clang/llvm bug
+Date:   Tue,  9 Jul 2019 20:44:57 +0200
+Message-Id: <20190709184509.2967503-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:nUy/ge+wQYWTJFpTzajM48Zt0XR341x3ye6BHYNlezP3zD2R+Fl
+ 9o2NckE1O/IEMT9a7C+mPH6dOzZoanf6JBnCRem3dzLHQdHaEH0N3O5xdEcipjjfHjOj2N0
+ O7du1CzjrDYrslT9HuNZjZwGI495tjDa33+cZu5GaujvauGiFl5jc6/ophvmYrq0SQrZNbO
+ qZkUbiefWFywNY3tMYg5A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gXOCuUaHk4U=:Bjom7hSzoUeYR7ZcaDToJH
+ 4hzyP0frf+d8a0d3kDrqFN9l57bKYZ67+WdHuGmFw7N9H00MKb1CGwSSYQLA5GBsCZYnSaydr
+ VIwvJpqEAm9L2F45SMuqdYvsmgOhCmzaUL+EvxzWwYa2fViA8NDeHEEJyig6PMv9nKBANOJBo
+ cM36r3OY1tra8vryoR8O+jYtIwNDSK9OMXIysfgbX/m+eoMqE+uTuHMbqIH6aTDB9ZOoYeU3d
+ XcBt2/UYEsH6P25b/I8PcoakPqJJHxsayXhuhUMABppUPtVAOO6+npJtAVoq2zcTDDRuLovwR
+ P9CbUH0wZKP7tGDCxkIxLiGoW0bf7f8Z9zUoDA6UDg15JVUp6Ib8reA07Kpm21YTtK4dYCj5d
+ TODaXMOTPnMB04IvykU86zxyDeJuKDc+nsff37sv9ANTB5lBlBEnqVAmy3cIAazdsfcqLs5xZ
+ k+QxitwDSj4xSkc+bJcR65wuk4IQ1nIWsjnNv1qgS3hccMrwUOvOKoQHZq+EvzJAL+zY/fMj4
+ faaXseke75b5Boo7KG6/3ikiDhL/2UF22hEKb0K2GG3Ls6g4nnK/I/ESEB5QECfhDenHiKX1b
+ blkFztg6R+hg+0a7SFEV+kKX+7iRdA5gyNrQDtZuGqiRrd7ylCbBDzliYt5qkXPe1WdX0HD+v
+ HjoTH26jlsGx07wMjFunU9DgZh6dv4PGolGG4HK6K3oOJ2o0PaE0VxITdhxWSc00/zsmE0EPk
+ 79gGnYlxlR/AYisnh60ip+o2+o5EPNtB3q6W8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below issues reported by coccicheck
+llvm gets confused by inline asm with .rep directives, which
+can lead to miscalculating the number of instructions inside it,
+and in turn lead to an overflow for relative address calculation:
 
-sound/soc/bcm/cygnus-pcm.c:642:5-8: Unneeded variable: "ret". Return "0"
-on line 650
-sound/soc/bcm/cygnus-pcm.c:671:5-8: Unneeded variable: "ret". Return "0"
-on line 696
+/tmp/cfi_cmdset_0002-539a47.s: Assembler messages:
+/tmp/cfi_cmdset_0002-539a47.s:11288: Error: bad immediate value for offset (4100)
+/tmp/cfi_cmdset_0002-539a47.s:11289: Error: bad immediate value for offset (4100)
 
-We cannot change return type of these functions as they are callback
-functions of snd_pcm_ops
+This might be fixed in future clang versions, but is not hard
+to work around by just replacing the .rep with a series of
+eight unrolled nop instructions.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+As Russell points out, the original code uses an undocumented
+assembler directive, as .rep is normally spelled .rept, though
+the shorter form is common on arch/x86 as well.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=42539
+Link: https://godbolt.org/z/DSM2Jy
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/soc/bcm/cygnus-pcm.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+v2: mention .rep/.rept
+    add missing "Link:" keyword.
+---
+ arch/arm/include/asm/mtd-xip.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/bcm/cygnus-pcm.c b/sound/soc/bcm/cygnus-pcm.c
-index 123ecf5..8966b02 100644
---- a/sound/soc/bcm/cygnus-pcm.c
-+++ b/sound/soc/bcm/cygnus-pcm.c
-@@ -639,7 +639,6 @@ static int cygnus_pcm_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct cygnus_aio_port *aio;
--	int ret = 0;
+diff --git a/arch/arm/include/asm/mtd-xip.h b/arch/arm/include/asm/mtd-xip.h
+index dfcef0152e3d..5ad0325604e4 100644
+--- a/arch/arm/include/asm/mtd-xip.h
++++ b/arch/arm/include/asm/mtd-xip.h
+@@ -15,6 +15,8 @@
+ #include <mach/mtd-xip.h>
  
- 	aio = cygnus_dai_get_dma_data(substream);
- 	dev_dbg(rtd->cpu_dai->dev, "%s  port %d\n", __func__, aio->portnum);
-@@ -647,7 +646,7 @@ static int cygnus_pcm_hw_params(struct snd_pcm_substream *substream,
- 	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
- 	runtime->dma_bytes = params_buffer_bytes(params);
+ /* fill instruction prefetch */
+-#define xip_iprefetch() 	do { asm volatile (".rep 8; nop; .endr"); } while (0)
++#define xip_iprefetch()	do {						\
++	 asm volatile ("nop; nop; nop; nop; nop; nop; nop; nop;");	\
++} while (0)								\
  
--	return ret;
-+	return 0;
- }
- 
- static int cygnus_pcm_hw_free(struct snd_pcm_substream *substream)
-@@ -668,7 +667,6 @@ static int cygnus_pcm_prepare(struct snd_pcm_substream *substream)
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct cygnus_aio_port *aio;
- 	unsigned long bufsize, periodsize;
--	int ret = 0;
- 	bool is_play;
- 	u32 start;
- 	struct ringbuf_regs *p_rbuf = NULL;
-@@ -693,7 +691,7 @@ static int cygnus_pcm_prepare(struct snd_pcm_substream *substream)
- 	ringbuf_set_initial(aio->cygaud->audio, p_rbuf, is_play, start,
- 				periodsize, bufsize);
- 
--	return ret;
-+	return 0;
- }
- 
- static snd_pcm_uframes_t cygnus_pcm_pointer(struct snd_pcm_substream *substream)
+ #endif /* __ARM_MTD_XIP_H__ */
 -- 
-2.7.4
+2.20.0
 
