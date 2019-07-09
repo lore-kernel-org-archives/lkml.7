@@ -2,162 +2,133 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A00C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20CCC606D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D0B214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB36214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbfGIFXQ (ORCPT
+        id S1726917AbfGIFZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:23:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:7645 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfGIFXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:23:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 22:23:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
-   d="scan'208";a="188721465"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Jul 2019 22:23:13 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 1/1] iommu/vt-d: Avoid duplicated pci dma alias consideration
-Date:   Tue,  9 Jul 2019 13:22:45 +0800
-Message-Id: <20190709052245.28882-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jul 2019 01:25:57 -0400
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:57504 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbfGIFZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 01:25:57 -0400
+X-AuditID: c0a8fbf4-501ff700000014c1-89-5d24256267f8
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 60.4E.05313.265242D5; Tue,  9 Jul 2019 07:25:55 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 9 Jul 2019 07:25:51 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "arnd@arndb.de" <arnd@arndb.de>
+CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>
+Subject: Re: [PATCH] rtc: bd70528: fix link error
+Thread-Topic: [PATCH] rtc: bd70528: fix link error
+Thread-Index: AQHVNYqcYstSvLPbPUmgdDecItnyFKbAlGyAgAAuWQCAAN4rAA==
+Date:   Tue, 9 Jul 2019 05:25:50 +0000
+Message-ID: <e1687224a155787d9f3c042dca1c03a81b89ed25.camel@fi.rohmeurope.com>
+References: <20190708124227.3422311-1-arnd@arndb.de>
+         <e752a638c0bde6893adf805322f73de5bd459dbc.camel@fi.rohmeurope.com>
+         <CAK8P3a1HNnstePcreH-ZLyiJi3tNcCNJ=VozZUMnp-VLvYLSaA@mail.gmail.com>
+In-Reply-To: <CAK8P3a1HNnstePcreH-ZLyiJi3tNcCNJ=VozZUMnp-VLvYLSaA@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [84.253.205.146]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2C0FFF9D8B531940B5EDBBEAFE95AAA2@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsVyYMXvjbrJqiqxBlM2M1ssuXiV3aL93TJ2
+        i7+TjrFb3P96lNHi8q45bBbHVl9hs3h7ZzqLA7vH71+TGD3mran22LxCy+POtT1sHtPn/WTy
+        +LxJLoAtitsmKbGkLDgzPU/fLoE74+/lZqaCFSoVT85tY25g3KDcxcjJISFgItG5YjVzFyMX
+        h5DANUaJeY8fMkI4xxkl2lZuZ+li5OBgE7CR6LrJDtIgIqAssXvCekYQm1ngEpPEzr/RILaw
+        gKHEmu67TCDlIgJGEte6KiHKnSSWT5zFCmKzCKhIbD03kQ3E5hXwk3i18z3UqkOMEnemQhRx
+        CgRKLL3znBnEZhSQlehseMcEsUtcYtOz76wQRwtILNlznhnCFpV4+fgfVFxJYuOhfWwgNzAL
+        aEqs36UP0eog8epMN9TJihJTuh+yQ9wgKHFy5hOWCYxis5BsmIXQPQtJ9ywk3bOQdC9gZF3F
+        KJGbmJmTnliSaqhXlFqqV5SfkQukkvNzNzFC4vXLDsb/hzwPMQpwMCrx8DoLqMQKsSaWFVfm
+        HmKU5GBSEuWNi1KOFeJLyk+pzEgszogvKs1JLQYGCwezkgjvPnegHG9KYmVValE+TEqag0VJ
+        nFeN91eMkADI5uzU1ILUIpisDAeHkgTvHRWgPYJFqempFWmZOSUIaSYOTpDhXFIixal5KalF
+        iaUlGfGgxBJfDEwtICkeoL0iwKQoxFtckJgLFIVoPcWozTHh5dxFzBxH5i5dxCzEkpeflyol
+        zpsOskkApDSjNA9u0StGcaB/hXk1QLI8wKQON+cV0AomoBV1kUogK0oSEVJSDYx5HS82fXs0
+        8W3Eit4TCtxzw7i8bj89s3Ja+K7vV9tXBDpf0px4OKCi3Vj679rvfFVqnp3hE7mmt2Ra+mzY
+        sf2s4qXIvT8Sk3ztmr4+z1/40u2l+j9+N58pPz2+azwyn5sTrf4hNcRmBV8o9/qbZenWLw+p
+        vVrfcKQpN3511Iqy2ed9PEWnHDZRYinOSDTUYi4qTgQAKmXkQqcDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we have abandoned the home-made lazy domain allocation
-and delegated the DMA domain life cycle up to the default
-domain mechanism defined in the generic iommu layer, we
-needn't consider pci alias anymore when mapping/unmapping
-the context entries. Without this fix, we see kernel NULL
-pointer dereference during pci device hot-plug test.
-
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Fixes: fa954e6831789 ("iommu/vt-d: Delegate the dma domain to upper layer")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reported-and-tested-by: Xu Pengfei <pengfei.xu@intel.com>
----
- drivers/iommu/intel-iommu.c | 55 ++-----------------------------------
- 1 file changed, 2 insertions(+), 53 deletions(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 7625702b2143..71cbca04c622 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -348,8 +348,6 @@ static void domain_exit(struct dmar_domain *domain);
- static void domain_remove_dev_info(struct dmar_domain *domain);
- static void dmar_remove_one_dev_info(struct device *dev);
- static void __dmar_remove_one_dev_info(struct device_domain_info *info);
--static void domain_context_clear(struct intel_iommu *iommu,
--				 struct device *dev);
- static int domain_detach_iommu(struct dmar_domain *domain,
- 			       struct intel_iommu *iommu);
- static bool device_is_rmrr_locked(struct device *dev);
-@@ -2040,26 +2038,9 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
- 	return ret;
- }
- 
--struct domain_context_mapping_data {
--	struct dmar_domain *domain;
--	struct intel_iommu *iommu;
--	struct pasid_table *table;
--};
--
--static int domain_context_mapping_cb(struct pci_dev *pdev,
--				     u16 alias, void *opaque)
--{
--	struct domain_context_mapping_data *data = opaque;
--
--	return domain_context_mapping_one(data->domain, data->iommu,
--					  data->table, PCI_BUS_NUM(alias),
--					  alias & 0xff);
--}
--
- static int
- domain_context_mapping(struct dmar_domain *domain, struct device *dev)
- {
--	struct domain_context_mapping_data data;
- 	struct pasid_table *table;
- 	struct intel_iommu *iommu;
- 	u8 bus, devfn;
-@@ -2069,17 +2050,7 @@ domain_context_mapping(struct dmar_domain *domain, struct device *dev)
- 		return -ENODEV;
- 
- 	table = intel_pasid_get_table(dev);
--
--	if (!dev_is_pci(dev))
--		return domain_context_mapping_one(domain, iommu, table,
--						  bus, devfn);
--
--	data.domain = domain;
--	data.iommu = iommu;
--	data.table = table;
--
--	return pci_for_each_dma_alias(to_pci_dev(dev),
--				      &domain_context_mapping_cb, &data);
-+	return domain_context_mapping_one(domain, iommu, table, bus, devfn);
- }
- 
- static int domain_context_mapped_cb(struct pci_dev *pdev,
-@@ -4738,28 +4709,6 @@ int __init intel_iommu_init(void)
- 	return ret;
- }
- 
--static int domain_context_clear_one_cb(struct pci_dev *pdev, u16 alias, void *opaque)
--{
--	struct intel_iommu *iommu = opaque;
--
--	domain_context_clear_one(iommu, PCI_BUS_NUM(alias), alias & 0xff);
--	return 0;
--}
--
--/*
-- * NB - intel-iommu lacks any sort of reference counting for the users of
-- * dependent devices.  If multiple endpoints have intersecting dependent
-- * devices, unbinding the driver from any one of them will possibly leave
-- * the others unable to operate.
-- */
--static void domain_context_clear(struct intel_iommu *iommu, struct device *dev)
--{
--	if (!iommu || !dev || !dev_is_pci(dev))
--		return;
--
--	pci_for_each_dma_alias(to_pci_dev(dev), &domain_context_clear_one_cb, iommu);
--}
--
- static void __dmar_remove_one_dev_info(struct device_domain_info *info)
- {
- 	struct dmar_domain *domain;
-@@ -4780,7 +4729,7 @@ static void __dmar_remove_one_dev_info(struct device_domain_info *info)
- 					PASID_RID2PASID);
- 
- 		iommu_disable_dev_iotlb(info);
--		domain_context_clear(iommu, info->dev);
-+		domain_context_clear_one(iommu, info->bus, info->devfn);
- 		intel_pasid_free_table(info->dev);
- 	}
- 
--- 
-2.17.1
-
+SGVsbG8gQXJuZCwNCg0KKEFkZGVkIFJhbmR5IHdobyBhbHNvIHNlbnQgYSBwYXRjaCB0byBmaXgg
+dGhpcykNCg0KT24gTW9uLCAyMDE5LTA3LTA4IGF0IDE4OjEwICswMjAwLCBBcm5kIEJlcmdtYW5u
+IHdyb3RlOg0KPiBPbiBNb24sIEp1bCA4LCAyMDE5IGF0IDM6MjQgUE0gVmFpdHRpbmVuLCBNYXR0
+aQ0KPiA8TWF0dGkuVmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPiB3cm90ZToNCj4gDQo+ID4g
+T24gTW9uLCAyMDE5LTA3LTA4IGF0IDE0OjQxICswMjAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0K
+PiA+ID4gV2l0aCBDT05GSUdfQkQ3MDUyOF9XQVRDSERPRz1tLCBhIGJ1aWx0LWluIHJ0YyBkcml2
+ZXIgY2Fubm90IGNhbGwNCj4gPiA+IGludG8gdGhlIGxvdy1sZXZlbCBmdW5jdGlvbnMgdGhhdCBh
+cmUgcGFydCBvZiB0aGUgd2F0Y2hkb2cNCj4gPiA+IG1vZHVsZToNCj4gPiA+IA0KPiA+ID4gZHJp
+dmVycy9ydGMvcnRjLWJkNzA1MjgubzogSW4gZnVuY3Rpb24gYGJkNzA1Mjhfc2V0X3RpbWUnOg0K
+PiA+ID4gcnRjLWJkNzA1MjguYzooLnRleHQrMHgyMmMpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRv
+DQo+ID4gPiBgYmQ3MDUyOF93ZHRfbG9jaycNCj4gPiA+IHJ0Yy1iZDcwNTI4LmM6KC50ZXh0KzB4
+MmE4KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0bw0KPiA+ID4gYGJkNzA1Mjhfd2R0X3VubG9jaycN
+Cj4gPiA+IGRyaXZlcnMvcnRjL3J0Yy1iZDcwNTI4Lm86IEluIGZ1bmN0aW9uDQo+ID4gPiBgYmQ3
+MDUyOF9zZXRfcnRjX2Jhc2VkX3RpbWVycyc6DQo+ID4gPiBydGMtYmQ3MDUyOC5jOigudGV4dCsw
+eDUwYyk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8NCj4gPiA+IGBiZDcwNTI4X3dkdF9zZXQnDQo+
+ID4gPiANCj4gPiA+IEFkZCBhIEtjb25maWcgZGVwZW5kZW5jeSBvbiB0aGlzIGRyaXZlciwgYnV0
+IHN0aWxsIGFsbG93IGNvbXBpbGUtDQo+ID4gPiB0ZXN0aW5nDQo+ID4gPiB3aXRob3V0IGl0Lg0K
+PiA+ID4gDQo+ID4gPiBGaXhlczogMzJhNGE0ZWJmNzY4ICgicnRjOiBiZDcwNTI4OiBJbml0aWFs
+IHN1cHBvcnQgZm9yIFJPSE0NCj4gPiA+IGJkNzA1MjgNCj4gPiA+IFJUQyIpDQo+ID4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiA+ID4gLS0tDQo+ID4g
+PiAgZHJpdmVycy9ydGMvS2NvbmZpZyB8IDIgKysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBp
+bnNlcnRpb25zKCspDQo+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3J0Yy9LY29u
+ZmlnIGIvZHJpdmVycy9ydGMvS2NvbmZpZw0KPiA+ID4gaW5kZXggM2JmYzA0YTg2NTI5Li43YjA3
+MWNjNzQ0MjIgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3J0Yy9LY29uZmlnDQo+ID4gPiAr
+KysgYi9kcml2ZXJzL3J0Yy9LY29uZmlnDQo+ID4gPiBAQCAtNDk4LDggKzQ5OCwxMCBAQCBjb25m
+aWcgUlRDX0RSVl9NNDFUODBfV0RUDQo+ID4gPiAgICAgICBoZWxwDQo+ID4gPiAgICAgICAgIElm
+IHlvdSBzYXkgWSBoZXJlIHlvdSB3aWxsIGdldCBzdXBwb3J0IGZvciB0aGUNCj4gPiA+ICAgICAg
+ICAgd2F0Y2hkb2cgdGltZXIgaW4gdGhlIFNUIE00MVQ2MCBhbmQgTTQxVDgwIFJUQyBjaGlwcw0K
+PiA+ID4gc2VyaWVzLg0KPiA+ID4gKw0KPiA+ID4gIGNvbmZpZyBSVENfRFJWX0JENzA1MjgNCj4g
+PiA+ICAgICAgIHRyaXN0YXRlICJST0hNIEJENzA1MjggUE1JQyBSVEMiDQo+ID4gPiArICAgICBk
+ZXBlbmRzIG9uIEJENzA1MjhfV0FUQ0hET0cgfHwgKENPTVBJTEVfVEVTVCAmJg0KPiA+ID4gIUJE
+NzA1MjhfV0FUQ0hET0cpDQo+ID4gDQo+ID4gSSBhbSBub3QgZmFuIG9mIHRoaXMuIFRoZXJlIG1h
+eSB3ZWxsIGJlIHVzZS1jYXNlcyB3aGVyZSBpdCBpcw0KPiA+IGRlc2lyYWJsZQ0KPiA+IHRvIGxl
+YXZlIHRoZSB3YXRjaGRvZyBvdXQgYnV0IHN0aWxsIGNvbXBpbGUgaW4gdGhlIFJUQy4gVGhpcyBp
+cyB3aHkNCj4gPiB3ZQ0KPiA+IGhhdmUgc3RhdGljIGlubGluZSBzdHVicyBpbiB0aGUgaGVhZGVy
+IGZvciBjYXNlcyB3aGVyZSBXREcgaXMgbm90DQo+ID4gY29tcGlsZWQgaW4uIChSVEMgZG9lcyBu
+b3QgbmVlZCB0byBzdG9wIFdERyBpZiBXREcgZHJpdmVyIGlzIG5vdA0KPiA+IGluY2x1ZGVkKQ0K
+PiA+IA0KPiA+IEFkZGluZyBkZXBlbmRlbmN5IGZyb20gUlRDIHRvIE1GRCBmb3IgQkQ3MDUyOCBz
+aG91bGQgYmUgZG9uZSAtIHRoaXMNCj4gPiB3aWxsIGF2b2lkIG1vc3Qgb2YgdGhlIGlzc3VlcyAo
+QW5kIHRoZXJlIGhhcyBiZWVuIGZldyBwYXRjaGVzIHNlbnQNCj4gPiBmb3INCj4gPiB0aGlzIGFs
+cmVhZHkpLiBCdXQgdGhhdCdzIHN0aWxsIG5vdCBjb21wbGV0ZSBzb2x1dGlvbiBiZWNhdXNlDQo+
+ID4gY29uZmlndXJpbmcgUlRDIGFuZCBNRkQgdG8gYmUgYnVpbHQgaW4ta2VybmVsIGFuZCBXREcg
+YXMgYSBtb2R1bGUNCj4gPiB3aWxsDQo+ID4gY2F1c2UgZXJyb3JzIGFnYWluLg0KPiA+IA0KPiA+
+IElzIHRoZXJlIGEgd2F5IHRvIGZvcmNlIFdERyBpbi1rZXJuZWwgaWYgUlRDIGlzIGluLWtlcm5l
+bD8gKE9yDQo+ID4gZGlzYWxsb3cgY29uZmlndXJpbmcgUlRDIGluLWtlcm5lbCBpZiBXREcgaXMg
+YSBtb2R1bGUgLSB3aGlsZSBzdGlsbA0KPiA+IGFsbG93IFJUQyB0byBiZSBidWlsdCB3aXRob3V0
+IFdERz8NCj4gDQo+IFdlIGNvdWxkIG1ha2UgdGhpcw0KPiANCj4gICAgICAgICBkZXBlbmRzIG9u
+IEJENzA1MjhfV0FUQ0hET0cgfHwgIUJENzA1MjhfV0FUQ0hET0cNCj4gDQo+IHdoaWNoIHdvdWxk
+IGFsbG93IGJ1aWxkaW5nIHdpdGggb3Igd2l0aG91dCB3YXRjaGRvZywgZXZlbiB3aGVuIG5vdA0K
+PiBjb21waWxlLXRlc3RpbmcsIGJ1dCBzdGlsbCBkaXNhbGxvdyB0aGUgY29tYmluYXRpb24gb2YN
+Cj4gLg0KDQpUaGFua3MgZm9yIHRlYWNoaW5nIG1lIEFybmQhIFRoYXQgaXMgY2xldmVyIDopIFdl
+IG5lZWQgc29tZXRoaW5nIGxpa2UNCg0KZGVwZW5kcyBvbiBNRkRfUk9ITV9CRDcwNTI4ICYmIChC
+RDcwNTI4X1dBVENIRE9HIHx8ICFCRDcwNTI4X1dBVENIRE9HKQ0KDQooSSdtIG5vdCBzdXJlIGlm
+IHBhcmVudGhlc2lzIGFyZSBPayBhbmQgcmVzcGVjdGVkIGluIEtjb25maWcpLiBJIHdvdWxkDQpu
+ZXZlciBoYXZlIHRob3VnaHQgb2YgQkQ3MDUyOF9XQVRDSERPRyB8fCAhQkQ3MDUyOF9XQVRDSERP
+RyAtIGl0IGxvb2tzDQphd2t3YXJkIGF0IGZpcnN0IHNpZ2h0IGJ1dCBpbmRlZWQgLSBkZXBlbmRz
+IG9uIEJENzA1MjhfV0FUQ0hET0cNCmRpc2FsbG93cyBCRDcwNTI4X1dBVENIRE9HPW0gd2l0aCBS
+VENfRFJWX0JENzA1Mjg9eSB3aGlsZQ0KIUJENzA1MjhfV0FUQ0hET0cgYWxsb3dzIEJENzA1Mjhf
+V0FUQ0hET0c9bi4gQnJpbGxpYW50IGFuZCBleGFjdGx5IHdoYXQNCndlIG5lZWQgOikgVGhhbmtz
+IGEgYnVuY2ghDQoNCj4gDQo+ICAgICAgICBBcm5kDQo=
