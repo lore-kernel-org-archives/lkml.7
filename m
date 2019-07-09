@@ -2,85 +2,103 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6372EC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA4FC606D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D98221743
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D04D21707
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:03:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NXVFLcn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbfGIH7j convert rfc822-to-8bit (ORCPT
+        id S1726449AbfGIIDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:59:39 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:58655 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGIH7j (ORCPT
+        Tue, 9 Jul 2019 04:03:19 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:48340 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725911AbfGIIDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:59:39 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C60EC20002;
-        Tue,  9 Jul 2019 07:59:25 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 09:59:25 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <richard@nod.at>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <vigneshr@ti.com>, <bbrezillon@kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH] mtd: rawnand: stm32_fmc2: avoid warnings when building
- with W=1 option
-Message-ID: <20190709095925.7accd6f4@xps13>
-In-Reply-To: <13d30ef8-b649-6416-3814-35a53c5c09ce@st.com>
-References: <1561128189-14411-1-git-send-email-christophe.kerello@st.com>
-        <20190701091128.4e67f1de@xps13>
-        <13d30ef8-b649-6416-3814-35a53c5c09ce@st.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Tue, 9 Jul 2019 04:03:16 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B4D2CC0269;
+        Tue,  9 Jul 2019 08:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1562659396; bh=pjjR0DynETAtrfqRsKnG9IivsK2E0/99XZIXZKRRtnw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NXVFLcn8kjhVQ9hRwltqlZFa9UBoqh/qcY4xoijWRlNLzztXPdYooTWGAy/jKx5Nh
+         iNW85V96gv5v/3rQmLv/lXQTyUxo8aVUo5BhZcUy+BFmKIISvo8mwgi0fYG2m3W4Bx
+         7G9B7awEnPxiiQ5jdnXH7n9nHyKFq3xelUxHpxiK63CmBep9jsJJg0R84vYIzFqb9m
+         gbGtKK3IUSE3U3o/yXDUonxhwdIK7oLLtdgnPG0Xbcvmrc8J1p6gT4NBbn+Tg9XvHU
+         fcZK7T/tSz+Axk/tG2k4xQA1S+8Wqoto+8wi1ebEtyu6T1AAJ98gIZ09t+Ut0y8Wib
+         TSNtn2ZWaaadg==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 80E12A005D;
+        Tue,  9 Jul 2019 08:03:13 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 4256C3F82C;
+        Tue,  9 Jul 2019 10:03:13 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v4 0/3] net: stmmac: Some improvements and a fix
+Date:   Tue,  9 Jul 2019 10:02:57 +0200
+Message-Id: <cover.1562659012.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+Some performace improvements (01/03 and 03/03) and a fix (02/03), all for -next.
 
-Christophe Kerello <christophe.kerello@st.com> wrote on Tue, 9 Jul 2019
-09:50:10 +0200:
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
 
-> On 7/1/19 9:11 AM, Miquel Raynal wrote:
-> > Hi Christophe,
-> > 
-> > Christophe Kerello <christophe.kerello@st.com> wrote on Fri, 21 Jun
-> > 2019 16:43:09 +0200:
-> >   
-> >> This patch solves warnings detected by setting W=1 when building.
-> >>
-> >> Warnings type detected:
-> >> drivers/mtd/nand/raw/stm32_fmc2_nand.c: In function ‘stm32_fmc2_calc_timings’:
-> >> drivers/mtd/nand/raw/stm32_fmc2_nand.c:1417:23: warning: comparison is
-> >> always false due to limited range of data type [-Wtype-limits]
-> >>    else if (tims->twait > FMC2_PMEM_PATT_TIMING_MASK)
-> >>
-> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >> ---  
-> > 
-> > Applied to nand/next, thanks.  
-> 
-> Hi Miquel,
-> 
-> After fetching nand/next, I do not see this patch applied.
-> 
+Jose Abreu (3):
+  net: stmmac: Implement RX Coalesce Frames setting
+  net: stmmac: Fix descriptors address being in > 32 bits address space
+  net: stmmac: Introducing support for Page Pool
 
-Not sure what happened, please resend with a Fixes/stable tag added,
-I'll apply when -rc1 will be out.
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |   1 +
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  |   8 +-
+ .../net/ethernet/stmicro/stmmac/dwmac1000_dma.c    |   8 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c |   8 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |   8 +-
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |   2 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  10 +-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |   4 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  12 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   7 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 217 +++++++--------------
+ 12 files changed, 114 insertions(+), 172 deletions(-)
 
-Sorry again for the trouble, thanks for the notice!
-Miquèl
+-- 
+2.7.4
+
