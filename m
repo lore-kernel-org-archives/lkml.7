@@ -2,297 +2,119 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67D0C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC73C606D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2B421707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:03:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jO6/9cwd"
+	by mail.kernel.org (Postfix) with ESMTP id 6BEA8216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfGIIDf (ORCPT
+        id S1726030AbfGIIHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:03:35 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:48362 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726165AbfGIIDR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:03:17 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C9311C003F;
-        Tue,  9 Jul 2019 08:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1562659397; bh=AK6ejBW8inmPTPe2cYdiV31NaL06U6W/+OcHV5d48Yo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=jO6/9cwdscgg2gAhhRjYLrwGzeNr25uEId5a5TqS+aGThVA5lptNKeWBUI8SBBuHD
-         DvlvLbLzYKgdmGzrbXjovfgCxloFfM+H/RHRpi3Lhz4L9dqSkVwwi/nM+m70ZJgk4D
-         4P7SX3GDst6g7Wy4qKbjCm4kH3YGgn4byA0Zl75Sc7iMUZKz5W0LbIHbHjkJFL3VeN
-         Bq1E0W9W6ddyFig5kqGY0luS8INFICQu4iKyH+ZwEItqwKzsAJlhVFTbPU8Q19NUt4
-         5JNUQFeUDj+hgIGRQ0HIij7dvF+6ZLi8bmwSgd0UXDwo4R/BBE9x1JAlFTjaon39Rh
-         cIeKELtsGTp+A==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id AC62AA0057;
-        Tue,  9 Jul 2019 08:03:13 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 6F68B3F832;
-        Tue,  9 Jul 2019 10:03:13 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 2/3] net: stmmac: Fix descriptors address being in > 32 bits address space
-Date:   Tue,  9 Jul 2019 10:02:59 +0200
-Message-Id: <f5d6cde26f99df33baa45b7c48f1265e602549f4.1562659012.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1562659012.git.joabreu@synopsys.com>
-References: <cover.1562659012.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1562659012.git.joabreu@synopsys.com>
-References: <cover.1562659012.git.joabreu@synopsys.com>
+        Tue, 9 Jul 2019 04:07:18 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:47140 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfGIIHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 04:07:18 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id BC8EBA91E0D4F0C49203;
+        Tue,  9 Jul 2019 16:07:15 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x6985tGw071272;
+        Tue, 9 Jul 2019 16:05:55 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070916060818-2196810 ;
+          Tue, 9 Jul 2019 16:06:08 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
+Subject: [PATCH v5] cpufreq/pasemi: fix an use-after-free in pas_cpufreq_cpu_init()
+Date:   Tue, 9 Jul 2019 16:04:07 +0800
+Message-Id: <1562659447-39989-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-09 16:06:08,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-09 16:05:58,
+        Serialize complete at 2019-07-09 16:05:58
+X-MAIL: mse-fl2.zte.com.cn x6985tGw071272
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a993db88d17d ("net: stmmac: Enable support for > 32 Bits
-addressing in XGMAC"), introduced support for > 32 bits addressing in
-XGMAC but the conversion of descriptors to dma_addr_t was left out.
+The cpu variable is still being used in the of_get_property() call
+after the of_node_put() call, which may result in use-after-free.
 
-As some devices assing coherent memory in regions > 32 bits we need to
-set lower and upper value of descriptors address when initializing DMA
-channels.
-
-Luckly, this was working for me because I was assigning CMA to < 4GB
-address space for performance reasons.
-
-Fixes: a993db88d17d ("net: stmmac: Enable support for > 32 Bits addressing in XGMAC")
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
+Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c   |  8 ++++----
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c |  8 ++++----
- drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c  |  8 ++++----
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c    |  8 ++++----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h      |  2 ++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c  | 10 ++++++----
- drivers/net/ethernet/stmicro/stmmac/hwif.h          |  4 ++--
- 7 files changed, 26 insertions(+), 22 deletions(-)
+v5: put together the code to get, use, and release cpu device_node.
+v4: restore the blank line.
+v3: fix a leaked reference.
+v2: clean up the code according to the advice of viresh.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 6d5cba4075eb..2856f3fe5266 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -289,18 +289,18 @@ static void sun8i_dwmac_dma_init(void __iomem *ioaddr,
+ drivers/cpufreq/pasemi-cpufreq.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index 6b1e4ab..1f0beb7 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -131,10 +131,17 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	int err = -ENODEV;
  
- static void sun8i_dwmac_dma_init_rx(void __iomem *ioaddr,
- 				    struct stmmac_dma_cfg *dma_cfg,
--				    u32 dma_rx_phy, u32 chan)
-+				    dma_addr_t dma_rx_phy, u32 chan)
- {
- 	/* Write RX descriptors address */
--	writel(dma_rx_phy, ioaddr + EMAC_RX_DESC_LIST);
-+	writel(lower_32_bits(dma_rx_phy), ioaddr + EMAC_RX_DESC_LIST);
- }
+ 	cpu = of_get_cpu_node(policy->cpu, NULL);
+-
+-	of_node_put(cpu);
+ 	if (!cpu)
+ 		goto out;
++	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
++	of_node_put(cpu);
++	if (!max_freqp) {
++		err = -EINVAL;
++		goto out;
++	}
++
++	/* we need the freq in kHz */
++	max_freq = *max_freqp / 1000;
  
- static void sun8i_dwmac_dma_init_tx(void __iomem *ioaddr,
- 				    struct stmmac_dma_cfg *dma_cfg,
--				    u32 dma_tx_phy, u32 chan)
-+				    dma_addr_t dma_tx_phy, u32 chan)
- {
- 	/* Write TX descriptors address */
--	writel(dma_tx_phy, ioaddr + EMAC_TX_DESC_LIST);
-+	writel(lower_32_bits(dma_tx_phy), ioaddr + EMAC_TX_DESC_LIST);
- }
+ 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+ 	if (!dn)
+@@ -171,16 +178,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	}
  
- /* sun8i_dwmac_dump_regs() - Dump EMAC address space
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-index 1fdedf77678f..2bac49b49f73 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-@@ -112,18 +112,18 @@ static void dwmac1000_dma_init(void __iomem *ioaddr,
+ 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
+-
+-	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+-	if (!max_freqp) {
+-		err = -EINVAL;
+-		goto out_unmap_sdcpwr;
+-	}
+-
+-	/* we need the freq in kHz */
+-	max_freq = *max_freqp / 1000;
+-
+ 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
+ 	pr_debug("initializing frequency table\n");
  
- static void dwmac1000_dma_init_rx(void __iomem *ioaddr,
- 				  struct stmmac_dma_cfg *dma_cfg,
--				  u32 dma_rx_phy, u32 chan)
-+				  dma_addr_t dma_rx_phy, u32 chan)
- {
- 	/* RX descriptor base address list must be written into DMA CSR3 */
--	writel(dma_rx_phy, ioaddr + DMA_RCV_BASE_ADDR);
-+	writel(lower_32_bits(dma_rx_phy), ioaddr + DMA_RCV_BASE_ADDR);
- }
- 
- static void dwmac1000_dma_init_tx(void __iomem *ioaddr,
- 				  struct stmmac_dma_cfg *dma_cfg,
--				  u32 dma_tx_phy, u32 chan)
-+				  dma_addr_t dma_tx_phy, u32 chan)
- {
- 	/* TX descriptor base address list must be written into DMA CSR4 */
--	writel(dma_tx_phy, ioaddr + DMA_TX_BASE_ADDR);
-+	writel(lower_32_bits(dma_tx_phy), ioaddr + DMA_TX_BASE_ADDR);
- }
- 
- static u32 dwmac1000_configure_fc(u32 csr6, int rxfifosz)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
-index c980cc7360a4..8f0d9bc7cab5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
-@@ -31,18 +31,18 @@ static void dwmac100_dma_init(void __iomem *ioaddr,
- 
- static void dwmac100_dma_init_rx(void __iomem *ioaddr,
- 				 struct stmmac_dma_cfg *dma_cfg,
--				 u32 dma_rx_phy, u32 chan)
-+				 dma_addr_t dma_rx_phy, u32 chan)
- {
- 	/* RX descriptor base addr lists must be written into DMA CSR3 */
--	writel(dma_rx_phy, ioaddr + DMA_RCV_BASE_ADDR);
-+	writel(lower_32_bits(dma_rx_phy), ioaddr + DMA_RCV_BASE_ADDR);
- }
- 
- static void dwmac100_dma_init_tx(void __iomem *ioaddr,
- 				 struct stmmac_dma_cfg *dma_cfg,
--				 u32 dma_tx_phy, u32 chan)
-+				 dma_addr_t dma_tx_phy, u32 chan)
- {
- 	/* TX descriptor base addr lists must be written into DMA CSR4 */
--	writel(dma_tx_phy, ioaddr + DMA_TX_BASE_ADDR);
-+	writel(lower_32_bits(dma_tx_phy), ioaddr + DMA_TX_BASE_ADDR);
- }
- 
- /* Store and Forward capability is not used at all.
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-index 0f208e13da9f..6cbcdaea55f6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-@@ -70,7 +70,7 @@ static void dwmac4_dma_axi(void __iomem *ioaddr, struct stmmac_axi *axi)
- 
- static void dwmac4_dma_init_rx_chan(void __iomem *ioaddr,
- 				    struct stmmac_dma_cfg *dma_cfg,
--				    u32 dma_rx_phy, u32 chan)
-+				    dma_addr_t dma_rx_phy, u32 chan)
- {
- 	u32 value;
- 	u32 rxpbl = dma_cfg->rxpbl ?: dma_cfg->pbl;
-@@ -79,12 +79,12 @@ static void dwmac4_dma_init_rx_chan(void __iomem *ioaddr,
- 	value = value | (rxpbl << DMA_BUS_MODE_RPBL_SHIFT);
- 	writel(value, ioaddr + DMA_CHAN_RX_CONTROL(chan));
- 
--	writel(dma_rx_phy, ioaddr + DMA_CHAN_RX_BASE_ADDR(chan));
-+	writel(lower_32_bits(dma_rx_phy), ioaddr + DMA_CHAN_RX_BASE_ADDR(chan));
- }
- 
- static void dwmac4_dma_init_tx_chan(void __iomem *ioaddr,
- 				    struct stmmac_dma_cfg *dma_cfg,
--				    u32 dma_tx_phy, u32 chan)
-+				    dma_addr_t dma_tx_phy, u32 chan)
- {
- 	u32 value;
- 	u32 txpbl = dma_cfg->txpbl ?: dma_cfg->pbl;
-@@ -97,7 +97,7 @@ static void dwmac4_dma_init_tx_chan(void __iomem *ioaddr,
- 
- 	writel(value, ioaddr + DMA_CHAN_TX_CONTROL(chan));
- 
--	writel(dma_tx_phy, ioaddr + DMA_CHAN_TX_BASE_ADDR(chan));
-+	writel(lower_32_bits(dma_tx_phy), ioaddr + DMA_CHAN_TX_BASE_ADDR(chan));
- }
- 
- static void dwmac4_dma_init_channel(void __iomem *ioaddr,
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 9a9792527530..7f86dffb264d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -199,7 +199,9 @@
- #define XGMAC_RxPBL			GENMASK(21, 16)
- #define XGMAC_RxPBL_SHIFT		16
- #define XGMAC_RXST			BIT(0)
-+#define XGMAC_DMA_CH_TxDESC_HADDR(x)	(0x00003110 + (0x80 * (x)))
- #define XGMAC_DMA_CH_TxDESC_LADDR(x)	(0x00003114 + (0x80 * (x)))
-+#define XGMAC_DMA_CH_RxDESC_HADDR(x)	(0x00003118 + (0x80 * (x)))
- #define XGMAC_DMA_CH_RxDESC_LADDR(x)	(0x0000311c + (0x80 * (x)))
- #define XGMAC_DMA_CH_TxDESC_TAIL_LPTR(x)	(0x00003124 + (0x80 * (x)))
- #define XGMAC_DMA_CH_RxDESC_TAIL_LPTR(x)	(0x0000312c + (0x80 * (x)))
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index 229c58758cbd..a4f236e3593e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -44,7 +44,7 @@ static void dwxgmac2_dma_init_chan(void __iomem *ioaddr,
- 
- static void dwxgmac2_dma_init_rx_chan(void __iomem *ioaddr,
- 				      struct stmmac_dma_cfg *dma_cfg,
--				      u32 dma_rx_phy, u32 chan)
-+				      dma_addr_t phy, u32 chan)
- {
- 	u32 rxpbl = dma_cfg->rxpbl ?: dma_cfg->pbl;
- 	u32 value;
-@@ -54,12 +54,13 @@ static void dwxgmac2_dma_init_rx_chan(void __iomem *ioaddr,
- 	value |= (rxpbl << XGMAC_RxPBL_SHIFT) & XGMAC_RxPBL;
- 	writel(value, ioaddr + XGMAC_DMA_CH_RX_CONTROL(chan));
- 
--	writel(dma_rx_phy, ioaddr + XGMAC_DMA_CH_RxDESC_LADDR(chan));
-+	writel(upper_32_bits(phy), ioaddr + XGMAC_DMA_CH_RxDESC_HADDR(chan));
-+	writel(lower_32_bits(phy), ioaddr + XGMAC_DMA_CH_RxDESC_LADDR(chan));
- }
- 
- static void dwxgmac2_dma_init_tx_chan(void __iomem *ioaddr,
- 				      struct stmmac_dma_cfg *dma_cfg,
--				      u32 dma_tx_phy, u32 chan)
-+				      dma_addr_t phy, u32 chan)
- {
- 	u32 txpbl = dma_cfg->txpbl ?: dma_cfg->pbl;
- 	u32 value;
-@@ -70,7 +71,8 @@ static void dwxgmac2_dma_init_tx_chan(void __iomem *ioaddr,
- 	value |= XGMAC_OSP;
- 	writel(value, ioaddr + XGMAC_DMA_CH_TX_CONTROL(chan));
- 
--	writel(dma_tx_phy, ioaddr + XGMAC_DMA_CH_TxDESC_LADDR(chan));
-+	writel(upper_32_bits(phy), ioaddr + XGMAC_DMA_CH_TxDESC_HADDR(chan));
-+	writel(lower_32_bits(phy), ioaddr + XGMAC_DMA_CH_TxDESC_LADDR(chan));
- }
- 
- static void dwxgmac2_dma_axi(void __iomem *ioaddr, struct stmmac_axi *axi)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 2acfbc70e3c8..278c0dbec9d9 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -150,10 +150,10 @@ struct stmmac_dma_ops {
- 			  struct stmmac_dma_cfg *dma_cfg, u32 chan);
- 	void (*init_rx_chan)(void __iomem *ioaddr,
- 			     struct stmmac_dma_cfg *dma_cfg,
--			     u32 dma_rx_phy, u32 chan);
-+			     dma_addr_t phy, u32 chan);
- 	void (*init_tx_chan)(void __iomem *ioaddr,
- 			     struct stmmac_dma_cfg *dma_cfg,
--			     u32 dma_tx_phy, u32 chan);
-+			     dma_addr_t phy, u32 chan);
- 	/* Configure the AXI Bus Mode Register */
- 	void (*axi)(void __iomem *ioaddr, struct stmmac_axi *axi);
- 	/* Dump DMA registers */
 -- 
-2.7.4
+2.9.5
 
