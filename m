@@ -2,177 +2,120 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E126CC606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D87C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA0E3216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Az8wDUbx"
+	by mail.kernel.org (Postfix) with ESMTP id 8389021537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfGICLC (ORCPT
+        id S1727059AbfGICPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:11:02 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34902 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfGICLC (ORCPT
+        Mon, 8 Jul 2019 22:15:46 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:41499 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725905AbfGICPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:11:02 -0400
-Received: by mail-lf1-f66.google.com with SMTP id p197so12258847lfa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 19:11:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=b2d61h/e8K7gOexBQzZ4oZE/XD/sRT3CTsvG5+H3A4Q=;
-        b=Az8wDUbxlJdsuRoTLXS8WpGGYc5jVO+MA1eR/qCcI5Mq8AhJqHP35faax/F5lL1Odb
-         bc/gcnb2WCIDMS0dF1vKT7pAXmPdkZ8wGfuyXw4ipLbUsprXxY4J3+k2AWCsAbkpfYkf
-         slwrauPARr48uLoKMmsABzbBSJCcvgFN6Ga7ytTObRW8nTBuYvCdQnS/wpO8oqzk5sxM
-         ZafCsFj1mg822AhxmBfU9Ji0DAMMgTPz4eEMlr4A94bnMO5oiq1hmVLTdjl33DzwUFAO
-         CJMKhYYxhBfWvhQIs2lyIPVVR8SrSPfqLPoZRGeK2rW0y5nGojy+NJK8yraVkfKw6iU2
-         b8cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=b2d61h/e8K7gOexBQzZ4oZE/XD/sRT3CTsvG5+H3A4Q=;
-        b=p54V61kwE07lBcUpaskofWXIbouSg/lTxU3OJa5pTYkoPXpq9KovADWacgZuCnwjpq
-         +tFAMyghuHd46OTBMOQRfQzwnHxllGOmspZCHH0jTHwBixrJTMcko4Ve5gLZWOYqdfFN
-         Q47oYy13JHmNp37loJZigQBdjf9ocisI5OyuZSltw5NXubl+kGW6FwqLhees7bOFQC3K
-         SQbX7hQ7OS7PHpMIj/KrVBXxG27F2fqhGHt3MTl/MKmnY21cnpMfnP8gvP4o96+edhg7
-         +CrD82MleA/b5dVWQnFYT8FKg5dNM8EpmrgnHcHh3Crmghb2zTslMOzoNCDJhXeg/C7x
-         pX2A==
-X-Gm-Message-State: APjAAAXR/4szZFd4zmgDjjz6Nc7Gx3KzwnTivspOnJrLty98JB4DDdfT
-        pTADmXBobwh9nXnWn8KZ52KNRAVPtb8xEoKMWCPlRq521GY=
-X-Google-Smtp-Source: APXvYqyEXn5Zj5tRUTNMBjRTanMF9aoy0uQ9svpDftElzBhGVu2a8UNMWA9QdZkDQjIELvV07tM+mUdIrOEmWBXmb08=
-X-Received: by 2002:a19:ed0c:: with SMTP id y12mr9946172lfy.191.1562638260033;
- Mon, 08 Jul 2019 19:11:00 -0700 (PDT)
+        Mon, 8 Jul 2019 22:15:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TWQeV8w_1562638537;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWQeV8w_1562638537)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 09 Jul 2019 10:15:38 +0800
+Subject: Re: [PATCH v2 4/4] numa: introduce numa cling feature
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <b24c6aa0-7a89-b0b4-984a-a775b8df40a5@linux.alibaba.com>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <b9a58067-194b-221d-111c-ed1f7661976b@linux.alibaba.com>
+Date:   Tue, 9 Jul 2019 10:15:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190708150525.973820964@linuxfoundation.org>
-In-Reply-To: <20190708150525.973820964@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 9 Jul 2019 07:40:48 +0530
-Message-ID: <CA+G9fYuRfaWnZ4x5PO6fPj9-8wQZkco-imJD8HGT35ePvAXqMA@mail.gmail.com>
-Subject: Re: [PATCH 4.9 000/102] 4.9.185-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <b24c6aa0-7a89-b0b4-984a-a775b8df40a5@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 20:50, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.185 release.
-> There are 102 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.185-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On 2019/7/8 下午4:07, Hillf Danton wrote:
+> 
+> On Mon, 8 Jul 2019 10:25:27 +0800 Michael Wang wrote:
+>> /* Attempt to migrate a task to a CPU on the preferred node. */
+>> static void numa_migrate_preferred(struct task_struct *p)
+>> {
+>> +	bool failed, target;
+>> 	unsigned long interval = HZ;
+>>
+>> 	/* This task has no NUMA fault statistics yet */
+>> @@ -1891,8 +2117,12 @@ static void numa_migrate_preferred(struct task_struct *p)
+>> 	if (task_node(p) == p->numa_preferred_nid)
+>> 		return;
+>>
+>> +	target = p->numa_preferred_nid;
+>> +
+> Something instead of bool can be used, too.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Thx for point out :-) to be fix in v3.
 
-Summary
-------------------------------------------------------------------------
+> 
+>> 	/* Otherwise, try migrate to a CPU on the preferred node */
+>> -	task_numa_migrate(p);
+>> +	failed = (task_numa_migrate(p) != 0);
+>> +
+>> +	update_migrate_stat(p, target, failed);
+>> }
+>>
+>> static void
+>> @@ -6195,6 +6447,13 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+>> 	if ((unsigned)i < nr_cpumask_bits)
+>> 		return i;
+>>
+>> +	/*
+>> +	 * Failed to find an idle cpu, wake affine may want to pull but
+>> +	 * try stay on prev-cpu when the task cling to it.
+>> +	 */
+>> +	if (task_numa_cling(p, cpu_to_node(prev), cpu_to_node(target)))
+>> +		return prev;
+>> +
+> Curious to know what test figures would look like without the above line.
 
-kernel: 4.9.185-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: bb7044a09b6bd0f3b0a78afd25a4eb42ca85f50d
-git describe: v4.9.184-103-gbb7044a09b6b
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.184-103-gbb7044a09b6b
+It depends on the wake affine condition then, when waker task consider wakee
+suitable for pull, wakee may leave the preferred node, or maybe pull to the
+preferred node, just randomly and follow the fate.
 
+In mysql case when there are many such wakeup cases and system is very busy,
+the observed workloads could be 4:6 or 3:7 distributed in two nodes.
 
-No regressions (compared to build v4.9.184)
+Regards,
+Michael Wang
 
-No fixes (compared to build v4.9.184)
-
-
-Ran 23371 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> 
+>> 	return target;
+>> }
+>>
+>> Tested on a 2 node box with 96 cpus, do sysbench-mysql-oltp_read_write
+>> testing, X mysqld instances created and attached to X cgroups, X sysbench
+>> instances then created and attached to corresponding cgroup to test the
+>> mysql with oltp_read_write script for 20 minutes, average eps show:
+>>
+>> 				origin		ng + cling
+>> 4 instances each 24 threads	7545.28		7790.49		+3.25%
+>> 4 instances each 48 threads	9359.36		9832.30		+5.05%
+>> 4 instances each 72 threads	9602.88		10196.95	+6.19%
+>>
+>> 8 instances each 24 threads	4478.82		4508.82		+0.67%
+>> 8 instances each 48 threads	5514.90		5689.93		+3.17%
+>> 8 instances each 72 threads	5582.19		5741.33		+2.85%
+> 
