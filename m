@@ -2,121 +2,102 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF847C73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF855C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E072073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE56C20861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562704949;
-	bh=WuMoU6c/Nu0kKp80/Mw0OKcXEh7XR0qwBohejD1dIqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gFjGJtql/TcHOzwLi51/WSNbP8ZegMKm0sfosJtHOUbgVzzdCgUAGYtLoS72l4jzm
-	 Y756HyFQSldFWruYtPff3fMW2Od2fnN03w4PThnoN5AuG7MbCYrEL0GkZdK/Z1MWcd
-	 vbcSpHgJ1EclJwHcsX2b7o8g50qTwdbhRbdy1a/Y=
+	s=default; t=1562704956;
+	bh=GEmvXXtJuZoeMjHkUNxrqjxRtgJkTpEtZUN+Li1Nq6w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cXEt2+CCCNWcxGxjJUP2CX4M9pGsY3AldbUgXj8Hk0aDOSlq3Qw/xcq+7yyfNtaK6
+	 Tbyet7iAHuvm2MWl+QHJ7duSG8ePJbk/JBYS0P1JspywhYnb6u9tFlU4sPWe4bMNHN
+	 k1o4ntINwBPc3O5Tp2Vlp/UaBLwMhEj5luc5LvRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbfGIUm2 (ORCPT
+        id S1729793AbfGIUmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59490 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 16:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728955AbfGIUm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:42:28 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        id S1728955AbfGIUme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:42:34 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE7932073D;
-        Tue,  9 Jul 2019 20:42:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49F72073D;
+        Tue,  9 Jul 2019 20:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562704947;
-        bh=WuMoU6c/Nu0kKp80/Mw0OKcXEh7XR0qwBohejD1dIqU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zeH5QyOsqThxkjJIZX95VM+NEDkLi3h3gW0ti8uqkiMXGMGer5nV3h1TJ/FFIECb2
-         kMqY3IKr4hjxBxv9k3s2bHI44yVU4f1y1x2/WUR4VRGCHQdFBYuIEO46ZnbQ753TtK
-         qB77okb7UD4mPGVERbK9snJgmKsv4zV3Hn5+uRg4=
-Date:   Tue, 9 Jul 2019 13:42:25 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] KEYS: Provide KEYCTL_GRANT_PERMISSION
-Message-ID: <20190709204225.GM641@sol.localdomain>
-Mail-Followup-To: David Howells <dhowells@redhat.com>,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <155862710003.24863.11807972177275927370.stgit@warthog.procyon.org.uk>
- <155862712317.24863.13455329541359881229.stgit@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155862712317.24863.13455329541359881229.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        s=default; t=1562704953;
+        bh=GEmvXXtJuZoeMjHkUNxrqjxRtgJkTpEtZUN+Li1Nq6w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZmWqLO2MGKo9QjsetZzCTSXngUYeLKa3JvNAikweNYugfvLIbMiyers4p3kUwTi9C
+         yxIgUZkvGl+xVfd/ZLwP1VlpGO5T/DWLw7rkl82b0lXLQnVh4JNtFeV9tBjlg59fqy
+         9cd6v34dSORzhTUQygVKWLdrYVe4X3FSqiKRHKd0=
+Date:   Tue, 9 Jul 2019 13:42:33 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yang Shi <shy828301@gmail.com>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-Id: <20190709134233.b50814f5a789244b9bdb573e@linux-foundation.org>
+In-Reply-To: <20190709211559.6ffd2f4e@canb.auug.org.au>
+References: <20190709211559.6ffd2f4e@canb.auug.org.au>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:58:43PM +0100, David Howells wrote:
-> Provide a keyctl() operation to grant/remove permissions.  The grant
-> operation, wrapped by libkeyutils, looks like:
-> 
-> 	int ret = keyctl_grant_permission(key_serial_t key,
-> 					  enum key_ace_subject_type type,
-> 					  unsigned int subject,
-> 					  unsigned int perm);
-> 
-> Where key is the key to be modified, type and subject represent the subject
-> to which permission is to be granted (or removed) and perm is the set of
-> permissions to be granted.  0 is returned on success.  SET_SECURITY
-> permission is required for this.
-> 
-> The subject type currently must be KEY_ACE_SUBJ_STANDARD for the moment
-> (other subject types will come along later).
-> 
-> For subject type KEY_ACE_SUBJ_STANDARD, the following subject values are
-> available:
-> 
-> 	KEY_ACE_POSSESSOR	The possessor of the key
-> 	KEY_ACE_OWNER		The owner of the key
-> 	KEY_ACE_GROUP		The key's group
-> 	KEY_ACE_EVERYONE	Everyone
-> 
-> perm lists the permissions to be granted:
-> 
-> 	KEY_ACE_VIEW		Can view the key metadata
-> 	KEY_ACE_READ		Can read the key content
-> 	KEY_ACE_WRITE		Can update/modify the key content
-> 	KEY_ACE_SEARCH		Can find the key by searching/requesting
-> 	KEY_ACE_LINK		Can make a link to the key
-> 	KEY_ACE_SET_SECURITY	Can set security
-> 	KEY_ACE_INVAL		Can invalidate
-> 	KEY_ACE_REVOKE		Can revoke
-> 	KEY_ACE_JOIN		Can join this keyring
-> 	KEY_ACE_CLEAR		Can clear this keyring
-> 
-> If an ACE already exists for the subject, then the permissions mask will be
-> overwritten; if perm is 0, it will be deleted.
-> 
-> Currently, the internal ACL is limited to a maximum of 16 entries.
-> 
-> For example:
-> 
-> 	int ret = keyctl_grant_permission(key,
-> 					  KEY_ACE_SUBJ_STANDARD,
-> 					  KEY_ACE_OWNER,
-> 					  KEY_ACE_VIEW | KEY_ACE_READ);
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+On Tue, 9 Jul 2019 21:15:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Where is the documentation and tests for this?  I want to add syzkaller
-definitions for this, but there is no documentation (a commit message doesn't
-count).  I checked the 'next' branch of keyutils as well.
+> Hi all,
+> 
+> After merging the akpm-current tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+> 
+> arm-linux-gnueabi-ld: mm/list_lru.o: in function `list_lru_add':
+> list_lru.c:(.text+0x1a0): undefined reference to `memcg_set_shrinker_bit'
+> 
+> Caused by commit
+> 
+>   ca37e9e5f18d ("mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-fix-2")
+> 
+> CONFIG_MEMCG is not set for this build.
+> 
+> I have reverted that commit for today.
 
-How is anyone supposed to use this if there is no documentation?
+Thanks.  This, I suppose:
 
-- Eric
+--- a/include/linux/memcontrol.h~mm-shrinker-make-shrinker-not-depend-on-memcg-kmem-fix-2-fix
++++ a/include/linux/memcontrol.h
+@@ -1259,6 +1259,8 @@ static inline bool mem_cgroup_under_sock
+ 	} while ((memcg = parent_mem_cgroup(memcg)));
+ 	return false;
+ }
++extern void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
++                                  int nid, int shrinker_id);
+ #else
+ #define mem_cgroup_sockets_enabled 0
+ static inline void mem_cgroup_sk_alloc(struct sock *sk) { };
+@@ -1267,6 +1269,10 @@ static inline bool mem_cgroup_under_sock
+ {
+ 	return false;
+ }
++static inline void memcg_set_shrinker_bit(struct mem_cgroup *memcg,
++					  int nid, int shrinker_id)
++{
++}
+ #endif
+ 
+ struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
+_
+
