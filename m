@@ -2,154 +2,245 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E80AC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416E7C606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE57021537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EFA21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fVLfhr49"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sy+sZ9y0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfGIBK5 (ORCPT
+        id S1726392AbfGIBVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:10:57 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:30792 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfGIBK5 (ORCPT
+        Mon, 8 Jul 2019 21:21:46 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41224 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfGIBVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:10:57 -0400
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x691AnSt017037;
-        Tue, 9 Jul 2019 10:10:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x691AnSt017037
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562634650;
-        bh=IOwQGTfU4ebKDBmJHalk2uzWGfPFmTPrl0A5OrM7+Os=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fVLfhr49DCkywMnybofx5e0NO7NRm9Jm7umee48aGhPLxR3UbyrflToAtImlixuqV
-         xHkcdTUbovKPb46Fq+fGhXf2K/fuDSBRu6elB1JopUV21pi38/wu5EjCnf0kIt8ImG
-         NxvWfHiIflRDmc7fx1ZWZDvydZ6CXmfZsOWR2V1S2vXeIk6OFcv4u5bt5dvH8YMF0e
-         jgf/jdZ40VrWG2To8vAR2ot2F9lp6LpmQ+qLZDUfu8y/Ut2uGsF6G98aaqGu33e87R
-         A1mOFAyOMQezSPq+h2voqFxNAGmU5dRdpsQAwuWLaHY7qP/yM+BxpcChpENTNrUxMD
-         CkxjKJAZ5BWCQ==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id o2so5734368uae.10;
-        Mon, 08 Jul 2019 18:10:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAWWzeHTx51qYhaTWLGjhD4NrUsqX0Ly8xH1nAPKUtUX0JRXUR7B
-        UQXuiew7RbnbV00z3Kd+gMBSaS+pmR40Lsm315A=
-X-Google-Smtp-Source: APXvYqzTtVnJ5vHaoTQu6SmM6VKV08euJlrWHu9PZx1ejUCWdpfuBh1WApgD7WIrNyGfSQGFNP8uS015OlZvOkfHSLw=
-X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr2853334uag.40.1562634648634;
- Mon, 08 Jul 2019 18:10:48 -0700 (PDT)
+        Mon, 8 Jul 2019 21:21:46 -0400
+Received: by mail-qk1-f195.google.com with SMTP id v22so14835434qkj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 18:21:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mJPLJFRZklumgGo3UfXbE2D4rwEid6onhitxhpd4hh4=;
+        b=Sy+sZ9y0lUCQsiBVdC82Iyar/i/QOx6oIduzGqS12UVNAXi9Gw/OxdAQgBtaBzcohy
+         B/xcGDfquUTGkHunoAEhaRERlWoRWCXKof8Oqo8roVztKSW6eztwPg/kyBOI0gGBsf0Y
+         7iFtBjaj3M4bPfOYh1VGhLMUhFL7lOF5iVlmsAQMncFCjVB2CrdNE4WK5gNCohjyZ6N+
+         7gF2SvZTPCtNH16Xb28jTtz2+c8bGdg3yM4em64nWfpnYVmnVdy4OceJdYs0MSVWWrKR
+         Byt/IX85rYAStpm+Yo+UO1Ea4cBd0/eHAZkaRaexmddFifh75efBa20GVfujDxkyo90j
+         4EyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mJPLJFRZklumgGo3UfXbE2D4rwEid6onhitxhpd4hh4=;
+        b=JlItuE5rn+FS5lN7KRA70HJwe4qMbCDLmu69hFL2AQnXtOLVKiSGp5qrw2Itw0y/Kh
+         wi2JFT+iPMKgzuEHVu3DgkvO7HQ3e9oluxqwi9MPxlwxYMf9UJ7Pb6vYCRh2pK6YzCTH
+         b2hWDNujtlXI47mrraklbRqOQPxkgsMA8taJm+ApvlwjkCozG13s7D6Lqet5mT1pkyhP
+         Z4EKzTogqig7xoFxX0l0FF+cFvoefwWGEP8A6teGJr4Uc7letHm2GGFshFesHCOtPvz2
+         Q7cLFcYCUfE42x+BGzfhHAmWYLVWV0dY4S6MYEW+aOV+6okRMqU11maWuAnY2JKq/OH2
+         jn3A==
+X-Gm-Message-State: APjAAAUBlWArhtKHAPnkyMf88k8B0k43nEOuWkFITRJaqm5E3CGF8M4p
+        nWF+sLODGwI506WyjjD6OTczEJ5PKTYydbf+mUVE3a+i8gfsaQ==
+X-Google-Smtp-Source: APXvYqwH+h9ZD/IJ/stDbLxYjtc817038rjfrRjrSc6Le6e5PvkHv+JQEXhBxCxMCd0lXU0mKZYoycck0m+saHw76uo=
+X-Received: by 2002:a37:6b87:: with SMTP id g129mr16430203qkc.305.1562635305406;
+ Mon, 08 Jul 2019 18:21:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190701005845.12475-1-yamada.masahiro@socionext.com> <20190701005845.12475-4-yamada.masahiro@socionext.com>
-In-Reply-To: <20190701005845.12475-4-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 9 Jul 2019 10:10:12 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARjYtGGe2Jk9H6VPU5_G_X6xbMU=KS3oPgFrAbGyMNePQ@mail.gmail.com>
-Message-ID: <CAK7LNARjYtGGe2Jk9H6VPU5_G_X6xbMU=KS3oPgFrAbGyMNePQ@mail.gmail.com>
-Subject: Re: [PATCH 3/7] kbuild: do not create wrappers for header-test-y
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
+References: <20190610055258.6424-1-duyuyang@gmail.com> <1562607152.8510.5.camel@lca.pw>
+In-Reply-To: <1562607152.8510.5.camel@lca.pw>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Tue, 9 Jul 2019 09:21:34 +0800
+Message-ID: <CAHttsrbQuHYEYYgx+c7-Q=ffPxoqRQ1PfZ5bhWNhuMAeR9LvuQ@mail.gmail.com>
+Subject: Re: [PATCH] locking/lockdep: Fix lock IRQ usage initialization bug
+To:     Qian Cai <cai@lca.pw>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 1, 2019 at 10:00 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> header-test-y does not work with headers in sub-directories.
->
-> For example, you may want to write a Makefile, like this:
->
-> include/linux/Kbuild:
->
->   header-test-y += mtd/nand.h
->
-> This entry will create a wrapper include/linux/mtd/nand.hdrtest.c
-> with the following content:
->
->   #include "mtd/nand.h"
->
-> To make this work, we need to add $(srctree)/include/linux to the
-> header search path. It would be tedious to add ccflags-y.
->
-> Instead, we could change the *.hdrtest.c rule to wrap:
->
->   #include "nand.h"
->
-> This works for in-tree build since #include "..." searches in the
-> relative path from the header with this directive. For O=... build,
-> we need to add $(srctree)/include/linux/mtd to the header search path,
-> which will be even more tedious.
->
-> After all, I thought it would be handier to compile headers directly
-> without creating wrappers.
->
-> I added a new build rule to compile %.h into %.h.s
->
-> The target is %.h.s instead of %.h.o because it is slightly faster.
-> Also, as for GCC, an empty assembly is smaller than an empty object.
->
-> I wrote the build rule:
->
->   $(CC) $(c_flags) -S -o $@ -x c /dev/null -include $<
->
-> instead of:
->
->   $(CC) $(c_flags) -S -o $@ -x c $<
->
-> Both work fine with GCC, but the latter is bad for Clang.
->
-> This comes down to the difference in the -Wunused-function policy.
-> GCC does not warn about unused 'static inline' functions at all.
-> Clang does not warn about the ones in included headers, but does
-> about the ones in the source. So, we should handle headers as
-> headers, not as source files.
->
-> In fact, this has been hidden since commit abb2ea7dfd82 ("compiler,
-> clang: suppress warning for unused static inline functions"), but we
-> should not rely on that.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Acked-by: Jani Nikula <jani.nikula@intel.com>
-> Tested-by: Jani Nikula <jani.nikula@intel.com>
-> ---
+The problem should have been fixed with this in that pull:
 
-To exclude *.h.s from kernel-devel rpm,
-I will squash the following change:
+locking/lockdep: Move mark_lock() inside CONFIG_TRACE_IRQFLAGS &&
+CONFIG_PROVE_LOCKING
 
-diff --git a/scripts/package/mkspec b/scripts/package/mkspec
-index 009147d4718e..2d29df4a0a53 100755
---- a/scripts/package/mkspec
-+++ b/scripts/package/mkspec
-@@ -31,7 +31,7 @@ PROVIDES="$PROVIDES kernel-$KERNELRELEASE"
- __KERNELRELEASE=$(echo $KERNELRELEASE | sed -e "s/-/_/g")
- EXCLUDES="$RCS_TAR_IGNORE --exclude=.tmp_versions --exclude=*vmlinux* \
- --exclude=*.o --exclude=*.ko --exclude=*.cmd --exclude=Documentation \
----exclude=.config.old --exclude=.missing-syscalls.d"
-+--exclude=.config.old --exclude=.missing-syscalls.d --exclude=*.s"
+and this is a better fix than mine.
 
- # We can label the here-doc lines for conditional output to the spec file
- #
+Thanks,
+Yuyang
 
-
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+On Tue, 9 Jul 2019 at 01:32, Qian Cai <cai@lca.pw> wrote:
+>
+> I saw Ingo send a pull request to Linus for 5.3 [1] includes the offensive
+> commit "locking/lockdep: Consolidate lock usage bit initialization" but did not
+> include this patch.
+>
+> [1] https://lore.kernel.org/lkml/20190708093516.GA57558@gmail.com/
+>
+> On Mon, 2019-06-10 at 13:52 +0800, Yuyang Du wrote:
+> > The commit:
+> >
+> >   091806515124b20 ("locking/lockdep: Consolidate lock usage bit
+> > initialization")
+> >
+> > misses marking LOCK_USED flag at IRQ usage initialization when
+> > CONFIG_TRACE_IRQFLAGS
+> > or CONFIG_PROVE_LOCKING is not defined. Fix it.
+> >
+> > Reported-by: Qian Cai <cai@lca.pw>
+> > Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+> > ---
+> >  kernel/locking/lockdep.c | 110 +++++++++++++++++++++++-----------------------
+> > -
+> >  1 file changed, 53 insertions(+), 57 deletions(-)
+> >
+> > diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> > index 48a840a..c3db987 100644
+> > --- a/kernel/locking/lockdep.c
+> > +++ b/kernel/locking/lockdep.c
+> > @@ -3460,9 +3460,61 @@ void trace_softirqs_off(unsigned long ip)
+> >               debug_atomic_inc(redundant_softirqs_off);
+> >  }
+> >
+> > +static inline unsigned int task_irq_context(struct task_struct *task)
+> > +{
+> > +     return 2 * !!task->hardirq_context + !!task->softirq_context;
+> > +}
+> > +
+> > +static int separate_irq_context(struct task_struct *curr,
+> > +             struct held_lock *hlock)
+> > +{
+> > +     unsigned int depth = curr->lockdep_depth;
+> > +
+> > +     /*
+> > +      * Keep track of points where we cross into an interrupt context:
+> > +      */
+> > +     if (depth) {
+> > +             struct held_lock *prev_hlock;
+> > +
+> > +             prev_hlock = curr->held_locks + depth-1;
+> > +             /*
+> > +              * If we cross into another context, reset the
+> > +              * hash key (this also prevents the checking and the
+> > +              * adding of the dependency to 'prev'):
+> > +              */
+> > +             if (prev_hlock->irq_context != hlock->irq_context)
+> > +                     return 1;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> > +#else /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
+> > +
+> > +static inline
+> > +int mark_lock_irq(struct task_struct *curr, struct held_lock *this,
+> > +             enum lock_usage_bit new_bit)
+> > +{
+> > +     WARN_ON(1); /* Impossible innit? when we don't have TRACE_IRQFLAG */
+> > +     return 1;
+> > +}
+> > +
+> > +static inline unsigned int task_irq_context(struct task_struct *task)
+> > +{
+> > +     return 0;
+> > +}
+> > +
+> > +static inline int separate_irq_context(struct task_struct *curr,
+> > +             struct held_lock *hlock)
+> > +{
+> > +     return 0;
+> > +}
+> > +
+> > +#endif /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
+> > +
+> >  static int
+> >  mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
+> >  {
+> > +#if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
+> >       if (!check)
+> >               goto lock_used;
+> >
+> > @@ -3510,6 +3562,7 @@ void trace_softirqs_off(unsigned long ip)
+> >       }
+> >
+> >  lock_used:
+> > +#endif
+> >       /* mark it as used: */
+> >       if (!mark_lock(curr, hlock, LOCK_USED))
+> >               return 0;
+> > @@ -3517,63 +3570,6 @@ void trace_softirqs_off(unsigned long ip)
+> >       return 1;
+> >  }
+> >
+> > -static inline unsigned int task_irq_context(struct task_struct *task)
+> > -{
+> > -     return 2 * !!task->hardirq_context + !!task->softirq_context;
+> > -}
+> > -
+> > -static int separate_irq_context(struct task_struct *curr,
+> > -             struct held_lock *hlock)
+> > -{
+> > -     unsigned int depth = curr->lockdep_depth;
+> > -
+> > -     /*
+> > -      * Keep track of points where we cross into an interrupt context:
+> > -      */
+> > -     if (depth) {
+> > -             struct held_lock *prev_hlock;
+> > -
+> > -             prev_hlock = curr->held_locks + depth-1;
+> > -             /*
+> > -              * If we cross into another context, reset the
+> > -              * hash key (this also prevents the checking and the
+> > -              * adding of the dependency to 'prev'):
+> > -              */
+> > -             if (prev_hlock->irq_context != hlock->irq_context)
+> > -                     return 1;
+> > -     }
+> > -     return 0;
+> > -}
+> > -
+> > -#else /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
+> > -
+> > -static inline
+> > -int mark_lock_irq(struct task_struct *curr, struct held_lock *this,
+> > -             enum lock_usage_bit new_bit)
+> > -{
+> > -     WARN_ON(1); /* Impossible innit? when we don't have TRACE_IRQFLAG */
+> > -     return 1;
+> > -}
+> > -
+> > -static inline int
+> > -mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
+> > -{
+> > -     return 1;
+> > -}
+> > -
+> > -static inline unsigned int task_irq_context(struct task_struct *task)
+> > -{
+> > -     return 0;
+> > -}
+> > -
+> > -static inline int separate_irq_context(struct task_struct *curr,
+> > -             struct held_lock *hlock)
+> > -{
+> > -     return 0;
+> > -}
+> > -
+> > -#endif /* defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING) */
+> > -
+> >  /*
+> >   * Mark a lock with a usage bit, and validate the state transition:
+> >   */
