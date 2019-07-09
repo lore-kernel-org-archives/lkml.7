@@ -2,199 +2,133 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC34C606D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E7DC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B412166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC59C2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YSok24rh"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="i3oe6W0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfGIAIf (ORCPT
+        id S1726760AbfGIAJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 20:08:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:34729 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfGIAIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 20:08:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jN2S2FK0z9s7T;
-        Tue,  9 Jul 2019 10:08:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562630912;
-        bh=gIbeMJpsgUZdACr7gjCFzSrPO4XcPubah6dmaViDyX4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YSok24rhAuzbBnDgImJvUM0Oqd9cn1DbrgLq4DeCO+ui5TkBP9ExoVKVsUk+YPqDT
-         PniEy4cr47ey41DFUpSX2FeLhfZMG5EOEq9q6cMg8St0V2AGnxGkyxniyvSxlKYeWk
-         tfU5Cbt+cg6VTBrzbpKoZasQHx/2fOcEPI8wqe0HLTfDM9qssSSuZV4uXmScaBgG5u
-         GkaAsxg9DGBxKlDaRBRp50HIQNPhM1/hEOinTgL7+C7K98i3q4be83kndhNJSdfZ5D
-         MjaSGiA76BRy6CMjzDQyouhIboFWt724gz2eIkQKRvgnNlm4juRoiQxKTA7DqTh0kD
-         jVJJXjUa57I9w==
-Date:   Tue, 9 Jul 2019 10:08:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the block tree with the jc_docs
- tree
-Message-ID: <20190709100830.5d76bb12@canb.auug.org.au>
-In-Reply-To: <20190625144226.48fff697@canb.auug.org.au>
-References: <20190625144226.48fff697@canb.auug.org.au>
+        Mon, 8 Jul 2019 20:09:17 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33961 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfGIAJQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 20:09:16 -0400
+Received: by mail-ed1-f67.google.com with SMTP id s49so16106328edb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 17:09:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=98rToMWmhy/jqHktBRjZkc7KbW9VRwSYkaJRbC3br4I=;
+        b=i3oe6W0BGcSkTepcfGEJAhzFh8lQOwvniDzY3lf8xxhn8MfBi54r7Fl2n2nGdZvlrv
+         7qtP66giWRCRfgSjdETIbISxBkBjHk349VzwNpp/XUSzNBj2A4jXAiMANZzOUckZ3zsy
+         GZCrXZ4v9OgdNrrN316v6BDBm1BJmbH4r/ZIXLqHFYfLRWALRxuNxJYNFhA9oLquz8Sq
+         NBAeaau88Q7EXNC0lm/sm5RyVSXsNXKR6Zxnb9akp6QytAnKknq+Tmi5c0hVCRIb8prp
+         RPVziOWqDM+agE/TcfMw0rzPWiH28hw1sqnvRf/EiFr1TJQ3LYqFuANfxTtWwFTIEXSQ
+         QoYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=98rToMWmhy/jqHktBRjZkc7KbW9VRwSYkaJRbC3br4I=;
+        b=nhk9o1G57Qtio4KLgefdNtGmxMeM6CKIWWTdaTlKvYxGdEAh3wTic9kR0PBbvJoLli
+         myQBisSdKjzRsFro8VNtKKQ6kmmwKOhjFpJ3n2/QyjO8DDuFLkaUoCrzejuyt4VnYpEr
+         LVx14ObZNecQbz7C0yYMRNxwTLmUEdFhHB+o8/3nWyd2nH5DwTXZ9asynrgbygPS6XxP
+         Ip3ApynvXWcmJa3A9CBmihqMzpY4SbQMAqnQLh2AMFXMnCOAoo7N0AgnBl1Fsde57Qxr
+         Qtowzs6ikonb5rwUEyHk/lZkGBfS0KdLwYl0FlRgbOx+5rerPw8ee8slE8uXAJxRqMtX
+         3kXQ==
+X-Gm-Message-State: APjAAAXvQJKrT5DcnX2Z2ur35KThTgQQuPI/nTR67PVNU923dT8O3liH
+        /T2SPMIF31qw8o5ne9aSyxsoCzRLh2EYdMJJSDtLZpjXG2s=
+X-Google-Smtp-Source: APXvYqwU07Zh/QKPE/nEPDgFLpdMlrr6cwb9a/ibICEkDuXQ69QLQF/9cX8my8Dhn7VceVLo/ycOsWAviGk5vIhAkmk=
+X-Received: by 2002:a17:906:7c8d:: with SMTP id w13mr18501893ejo.264.1562630955016;
+ Mon, 08 Jul 2019 17:09:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/JYZFN1xrTdD/9l5Mo4UoRqO"; protocol="application/pgp-signature"
+References: <20190708211528.12392-1-pasha.tatashin@soleen.com> <87sgrgjd6i.fsf@xmission.com>
+In-Reply-To: <87sgrgjd6i.fsf@xmission.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 8 Jul 2019 20:09:04 -0400
+Message-ID: <CA+CK2bAOPkN=qEdE38R0FRnrzRK0EqLid7eUVnTj1acmaFHY_w@mail.gmail.com>
+Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        corbet@lwn.net, Catalin Marinas <catalin.marinas@arm.com>,
+        will@kernel.org, linux-doc@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JYZFN1xrTdD/9l5Mo4UoRqO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Tue, 25 Jun 2019 14:42:26 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+> Something is very very wrong there.
 >
-> Today's linux-next merge of the block tree got a conflict in:
->=20
->   Documentation/fault-injection/nvme-fault-injection.txt
->=20
-> between commit:
->=20
->   10ffebbed550 ("docs: fault-injection: convert docs to ReST and rename t=
-o *.rst")
->=20
-> from the jc_docs tree and commit:
->=20
->   7e31d8215fd8 ("Documentation: nvme: add an example for nvme fault injec=
-tion")
->=20
-> from the block tree.
->=20
-> I fixed it up (I removed the file and applied the following patch) and
-> can carry the fix as necessary. This is now fixed as far as linux-next
-> is concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the conflicting
-> tree to minimise any particularly complex conflicts.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 25 Jun 2019 14:39:46 +1000
-> Subject: [PATCH] Documentation: nvme: fix for change to rst
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  .../fault-injection/nvme-fault-injection.rst  | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
->=20
-> diff --git a/Documentation/fault-injection/nvme-fault-injection.rst b/Doc=
-umentation/fault-injection/nvme-fault-injection.rst
-> index bbb1bf3e8650..cdb2e829228e 100644
-> --- a/Documentation/fault-injection/nvme-fault-injection.rst
-> +++ b/Documentation/fault-injection/nvme-fault-injection.rst
-> @@ -118,3 +118,61 @@ Message from dmesg::
->      cpu_startup_entry+0x6f/0x80
->      start_secondary+0x187/0x1e0
->      secondary_startup_64+0xa5/0xb0
-> +
-> +Example 3: Inject an error into the 10th admin command
-> +------------------------------------------------------
-> +
-> +::
-> +
-> +  echo 100 > /sys/kernel/debug/nvme0/fault_inject/probability
-> +  echo 10 > /sys/kernel/debug/nvme0/fault_inject/space
-> +  echo 1 > /sys/kernel/debug/nvme0/fault_inject/times
-> +  nvme reset /dev/nvme0
-> +
-> +Expected Result::
-> +
-> +  After NVMe controller reset, the reinitialization may or may not succe=
-ed.
-> +  It depends on which admin command is actually forced to fail.
-> +
-> +Message from dmesg::
-> +
-> +  nvme nvme0: resetting controller
-> +  FAULT_INJECTION: forcing a failure.
-> +  name fault_inject, interval 1, probability 100, space 1, times 1
-> +  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-rc2+ #2
-> +  Hardware name: MSI MS-7A45/B150M MORTAR ARCTIC (MS-7A45), BIOS 1.50 04=
-/25/2017
-> +  Call Trace:
-> +   <IRQ>
-> +   dump_stack+0x63/0x85
-> +   should_fail+0x14a/0x170
-> +   nvme_should_fail+0x38/0x80 [nvme_core]
-> +   nvme_irq+0x129/0x280 [nvme]
-> +   ? blk_mq_end_request+0xb3/0x120
-> +   __handle_irq_event_percpu+0x84/0x1a0
-> +   handle_irq_event_percpu+0x32/0x80
-> +   handle_irq_event+0x3b/0x60
-> +   handle_edge_irq+0x7f/0x1a0
-> +   handle_irq+0x20/0x30
-> +   do_IRQ+0x4e/0xe0
-> +   common_interrupt+0xf/0xf
-> +   </IRQ>
-> +  RIP: 0010:cpuidle_enter_state+0xc5/0x460
-> +  Code: ff e8 8f 5f 86 ff 80 7d c7 00 74 17 9c 58 0f 1f 44 00 00 f6 c4 0=
-2 0f 85 69 03 00 00 31 ff e8 62 aa 8c ff fb 66 0f 1f 44 00 00 <45> 85 ed 0f=
- 88 37 03 00 00 4c 8b 45 d0 4c 2b 45 b8 48 ba cf f7 53
-> +  RSP: 0018:ffffffff88c03dd0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdc
-> +  RAX: ffff9dac25a2ac80 RBX: ffffffff88d53760 RCX: 000000000000001f
-> +  RDX: 0000000000000000 RSI: 000000002d958403 RDI: 0000000000000000
-> +  RBP: ffffffff88c03e18 R08: fffffff75e35ffb7 R09: 00000a49a56c0b48
-> +  R10: ffffffff88c03da0 R11: 0000000000001b0c R12: ffff9dac25a34d00
-> +  R13: 0000000000000006 R14: 0000000000000006 R15: ffffffff88d53760
-> +   cpuidle_enter+0x2e/0x40
-> +   call_cpuidle+0x23/0x40
-> +   do_idle+0x201/0x280
-> +   cpu_startup_entry+0x1d/0x20
-> +   rest_init+0xaa/0xb0
-> +   arch_call_rest_init+0xe/0x1b
-> +   start_kernel+0x51c/0x53b
-> +   x86_64_start_reservations+0x24/0x26
-> +   x86_64_start_kernel+0x74/0x77
-> +   secondary_startup_64+0xa4/0xb0
-> +  nvme nvme0: Could not set queue count (16385)
-> +  nvme nvme0: IO queues not created
-> --=20
-> 2.20.1
+> Last I measured memory bandwidth seriously I could touch a Gigabyte per
+> second easily, and that was nearly 20 years ago.  Did you manage to
+> disable caching or have some particularly slow code that does the
+> reolocations.
+>
+> There is a serious cost to reserving memory in that it is simply not
+> available at other times.  For kexec on panic there is no other reliable
+> way to get memory that won't be DMA'd to.
 
-I am still getting this conflict (the commit ids may have changed).
-Just a reminder in case you think Linus may need to know.
+Hi Eric,
 
---=20
-Cheers,
-Stephen Rothwell
+Thank you for your comments.
 
---Sig_/JYZFN1xrTdD/9l5Mo4UoRqO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Indeed, but sometimes fast reboot is more important than the cost of
+reserving 32M-64M of memory.
 
------BEGIN PGP SIGNATURE-----
+>
+> We have options in this case and I would strongly encourage you to track
+> down why that copy in relocation is so very slow.  I suspect a 4KiB page
+> size is large enough that it can swamp pointer following costs.
+>
+> My back of the napkin math says even 20 years ago your copying costs
+> should be only 0.037s.  The only machine I have ever tested on where
+> the copy costs were noticable was my old 386.
+>
+> Maybe I am out to lunch here but a claim that your memory only runs
+> at 100MiB/s (the speed of my spinning rust hard drive) is rather
+> incredible.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0j2v4ACgkQAVBC80lX
-0GxjeQf8C4sX4LFHiH7ta1FzJ+XfKEE6aDaTRAekdUPyKdadebk1onRgZd+L7m9/
-tUPbPX+DAJHFQUFu+CAHogxDD056jcVIiuCmtV4dBAYPjP7HD4B4bGTRNkCCNAYs
-t9v28XeIeFXCcKvHEuHtJyvN01kHIBvda1+7eC7MYCD5pSD1HWwPk9EwGE1bNIkJ
-V448cVaNzrE2yqw7SpXLnXVCIbTgCt8fj+ng1nJWAm2WMmzXitvR6j1ezcuWs8CM
-sdXon9+BjA7lA/JLJv49yFWlHTMJIKkbQukKGJoYK6G+jmYzZxGMFHeuH4ANpEc6
-QsHdDGKOrkKzsEwaOS++8Wjf/EviyQ==
-=vKNy
------END PGP SIGNATURE-----
+I agree,  my measurement on this machine was 2,857MB/s. Perhaps when
+MMU is disabled ARM64 also has caching disabled? The function that
+loops through array of pages and relocates them to final destination
+is this:
 
---Sig_/JYZFN1xrTdD/9l5Mo4UoRqO--
+https://soleen.com/source/xref/linux/arch/arm64/kernel/relocate_kernel.S?r=d2912cb1#29
+
+A comment before calling it:
+
+205   /*
+206   * cpu_soft_restart will shutdown the MMU, disable data caches, then
+207   * transfer control to the reboot_code_buffer which contains a copy of
+208   * the arm64_relocate_new_kernel routine.  arm64_relocate_new_kernel
+209   * uses physical addressing to relocate the new image to its final
+210   * position and transfers control to the image entry point when the
+211   * relocation is complete.
+212   * In kexec case, kimage->start points to purgatory assuming that
+213   * kernel entry and dtb address are embedded in purgatory by
+214   * userspace (kexec-tools).
+215   * In kexec_file case, the kernel starts directly without purgatory.
+216   */
+https://soleen.com/source/xref/linux/arch/arm64/kernel/machine_kexec.c?r=d2912cb1#206
+
+So, as I understand at least data caches are disabled, and MMU is
+disabled, perhaps this is why this function is so incredibly slow?
+
+Perhaps, there is a better way to fix this problem by keeping caches
+enabled while still relocating? Any suggestions from Aarch64
+developers?
+
+Pasha
