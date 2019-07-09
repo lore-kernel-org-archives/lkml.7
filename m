@@ -4,102 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20779C73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EC1C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB3A208C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82894214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562703437;
-	bh=/7w2s/MYH1JhMDmaUyVtvh5HJdLLcWL4dUX+RYNl888=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vszvVbv4dXE6ET4auA51P47f+XDQi19MCIYzViY3FSPVmyHItogHoxkU2leH3a1pD
-	 nlO/b4Ry4z/9LowQcy5AQ9dxn/h1d4M2+4gj+/PO/mhiQq6kRGjLAVBDG20ct2CbTR
-	 XyFIWV5lb0mIh49mcyqcfxjvlcNfk6SMLoevOT5o=
+	s=default; t=1562703500;
+	bh=crdGPQ/iD9mYVu0eYQ4YGZ1dxC8m0vkoOtgzPp11MLo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xkrK70oulhon9oL8uhuUkxjzijso/Hy41bPtIYHpPxuQjzUZV2A/j1ygZAUYd/yCr
+	 jTbeCrBmXyHPmGzMRY5QC5cM/Bx6H5ymDRZdzfIuSRIfX94NOyj+NPelIViy+grYrC
+	 s7CJtsGdNWm8U4C6NnogpWGIQpArknQdQjvk5Cq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbfGIURP (ORCPT
+        id S1729722AbfGIUST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:17:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46072 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 16:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729165AbfGIURP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:17:15 -0400
+        id S1727241AbfGIUSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:18:18 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4359D2073D;
-        Tue,  9 Jul 2019 20:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744782073D;
+        Tue,  9 Jul 2019 20:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562703434;
-        bh=/7w2s/MYH1JhMDmaUyVtvh5HJdLLcWL4dUX+RYNl888=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1zb64ASlEC203NksJleQ987t2K4CdmHfcYyXBkEyww967+p0KR51WgOm+k9HzaOG+
-         x4YY9k1okgvBw7KK5T1OVVaTqsSKpRiLci2oPhPlGabLQi8X+X5zID6h7C+3pEbnjQ
-         g2lxW3/kGHVIEB/1pyXk/h13qFa/XaI734p5yDiU=
-Date:   Tue, 9 Jul 2019 13:17:12 -0700
+        s=default; t=1562703497;
+        bh=crdGPQ/iD9mYVu0eYQ4YGZ1dxC8m0vkoOtgzPp11MLo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZtDCAB+kldnnbEKMM/qHETC/OcIa+r6yFdV/RdQnjlvJLsdjorCUMVQQBAKZXYqP5
+         UqDFQeT+OenpnPXmDhmq4feNMVtshJybs5NvZ6tzgnSqPVPnN5QlqCF+PY5c48llwY
+         gJTt2DvrFWurelfG56S9cyxIq32cgeK9dsCLyN/k=
+Date:   Tue, 9 Jul 2019 13:18:14 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        David Woodhouse <dwmw2@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: next-20190705 - problems generating certs/x509_certificate_list
-Message-ID: <20190709201712.GI641@sol.localdomain>
-Mail-Followup-To: David Howells <dhowells@redhat.com>,
-        keyrings@vger.kernel.org,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org
-References: <27671.1562384658@turing-police>
+To:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 4 open syzbot bugs in sound subsystem
+Message-ID: <20190709201814.GJ641@sol.localdomain>
+Mail-Followup-To: alsa-devel@alsa-project.org,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <27671.1562384658@turing-police>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 11:44:18PM -0400, Valdis Klētnieks wrote:
-> This worked fine in next-20190618, but in next-20190701 I'm seeing dmesg
-> entries at boot:
-> 
-> dmesg | grep -i x.509
-> [    8.345699] Loading compiled-in X.509 certificates
-> [    8.366137] Problem loading in-kernel X.509 certificate (-13)
-> [    8.507348] cfg80211: Loading compiled-in X.509 certificates for regulatory database
-> [    8.526556] cfg80211: Problem loading in-kernel X.509 certificate (-13)
-> 
-> I start debugging, and discover that certs/x509_certificate_list is a zero-length file.
-> I rm it, and 'make V=1 certs/system_certificates.o', which tells me:
-> 
-> (....)
-> make -f ./scripts/Makefile.headersinst obj=include/uapi
-> make -f ./scripts/Makefile.headersinst obj=arch/x86/include/uapi
-> make -f ./scripts/Makefile.build obj=certs certs/system_certificates.o
-> ---- smoking gun alert
->   scripts/extract-cert "" certs/x509_certificate_list
-> ----
->   gcc -Wp,-MD,certs/.system_certificates.o.d  -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/9/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/kconfig.h -D__KERNEL__ -D__ASSEMBLY__ -fno-PIE -m64 -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DCONFIG_AS_CFI_SECTIONS=1 -DCONFIG_AS_SSSE3=1 -DCONFIG_AS_AVX=1 -DCONFIG_AS_AVX2=1 -DCONFIG_AS_AVX512=1 -DCONFIG_AS_SHA1_NI=1 -DCONFIG_AS_SHA256_NI=1 -Wa,-gdwarf-2 -DCC_USING_FENTRY -I.   -c -o certs/system_certificates.o certs/system_certificates.S
-> 
-> I go look at extract-cert.c, and sure enough, if the first parameter is a null string
-> it just goes and creates an empty file.
-> 
-> The Makefile says:
-> 
-> quiet_cmd_extract_certs  = EXTRACT_CERTS   $(patsubst "%",%,$(2))
->       cmd_extract_certs  = scripts/extract-cert $(2) $@
-> 
-> and damned if I know why $(2) is "". Diffed the config files from -0618 and -0705,
-> not seeing anything relevant difference.
-> 
-> Any ideas?
-> 
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-I'm seeing on mainline now:
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 4 of them as possibly being bugs in the sound subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-[   10.915386] Problem loading in-kernel X.509 certificate (-13)
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-- Eric
+If you believe I misattributed a bug to the sound subsystem, please let me know,
+and if possible forward the report to the correct people or mailing list.
+
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in snd_seq_write
+Last occurred:      72 days ago
+Reported:           316 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=33501520944e11adedf1c454eec4cb818bee16c8
+Original thread:    https://lkml.kernel.org/lkml/000000000000e5050205746dcbb0@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug received 1 reply, 315 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000e5050205746dcbb0@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: suspicious RCU usage in line6_pcm_acquire
+Last occurred:      44 days ago
+Reported:           75 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a0ea128a37bfe56208042c02d080873dcbdf69a0
+Original thread:    https://lkml.kernel.org/lkml/0000000000007cb1ee0587591549@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+This looks like a bug in a sound USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+06b7a5a8c4acc0445995@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000007cb1ee0587591549@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in wake_up_if_idle
+Last occurred:      117 days ago
+Reported:           253 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=b1e300cd7b124fc83dd4199d4d1df26310111b0f
+Original thread:    https://lkml.kernel.org/lkml/00000000000066ab7105795f245e@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2c1253bc508adef78a7f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000066ab7105795f245e@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in snd_seq_write
+Last occurred:      110 days ago
+Reported:           315 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=9366cef8455b032553567ce096a5b31d8307b7dc
+Original thread:    https://lkml.kernel.org/lkml/0000000000001f74de0574710d3e@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000001f74de0574710d3e@google.com
+
