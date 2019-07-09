@@ -2,229 +2,189 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA89C73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140A7C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A912171F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08E9214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:19:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="fH7DwuaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfGINN6 (ORCPT
+        id S1726892AbfGINTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:13:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41546 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfGINN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:13:57 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ACBC8C055671;
-        Tue,  9 Jul 2019 13:13:56 +0000 (UTC)
-Received: from treble (ovpn-112-43.rdu2.redhat.com [10.10.112.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F3606848CE;
-        Tue,  9 Jul 2019 13:13:54 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 08:13:52 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel test robot <rong.a.chen@intel.com>
-Subject: Re: [PATCH] x86/alternatives: Fix int3_emulate_call() selftest stack
- corruption
-Message-ID: <20190709131352.hdylu45cul52ghyy@treble>
-References: <1a859cba4db356852b20222ebe056b38c6a6e963.1562619299.git.jpoimboe@redhat.com>
- <20190709125744.GB3402@hirez.programming.kicks-ass.net>
+        Tue, 9 Jul 2019 09:19:31 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:4899 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfGINTa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:19:30 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: SmOgdNKh9HiZ80OQVIkR3Ce6HthdBYmV9l7jpamc5XkEOotUPWPEKWCqIAgQDYOVY+OFD3cH7f
+ ROghGuGk82L1W8ya1IX/XtFPw/iM25+QwD0XCfOIYCIRlOiJPc/fKHkEy2b8jYw7lOPE7KnTyL
+ c+D8jJtkx50iD5ZffXUlogVn9ij0Z1RMzxBpVdvZffHDDrzeExb7MjEWp+Xwy90rgvuGSKG0jR
+ SDCLjYl95pCHo6jSEshRk+RYBmbczWgatWY3PANPA9Z9jpzxM6lr5oxcZMBTy8kkecSfZeqCBJ
+ KCU=
+X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
+   d="scan'208";a="41983854"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jul 2019 06:19:28 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 9 Jul 2019 06:19:27 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 9 Jul 2019 06:19:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QiV+H+OvU5mTtAeCVYDwtLApn5ex4belhc+VQ52jQJw=;
+ b=fH7DwuaRFn41HpTtargKY7oA7d9uj7Tn9pD9V6slpYXERr94CNA3PegMZttmVAC3A+TBETisvqeHUeZejniIlOzb/aCDIioed1Z71gRtSJhfzyi7iOYbygRFd/N9LdSSVGrDfDzrHkfEv5+IuKn9uY2W/dI66KQ9cteUsPLXIcM=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1785.namprd11.prod.outlook.com (10.175.88.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.20; Tue, 9 Jul 2019 13:19:26 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::917d:f91d:9398:3925]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::917d:f91d:9398:3925%8]) with mapi id 15.20.2052.019; Tue, 9 Jul 2019
+ 13:19:26 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <wsa@the-dreams.de>, <peda@axentia.se>, <mark.rutland@arm.com>,
+        <Ludovic.Desroches@microchip.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <pierre-yves.mordret@st.com>,
+        <alexandre.belloni@bootlin.com>, <robh+dt@kernel.org>
+CC:     <Nicolas.Ferre@microchip.com>, <Eugen.Hristev@microchip.com>
+Subject: [PATCH v3 0/9] i2c: add support for filters
+Thread-Topic: [PATCH v3 0/9] i2c: add support for filters
+Thread-Index: AQHVNljuO/4Zfm2qEEOYNYIbMTanpQ==
+Date:   Tue, 9 Jul 2019 13:19:26 +0000
+Message-ID: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0141.eurprd08.prod.outlook.com
+ (2603:10a6:800:d5::19) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2d38cf48-6e0b-4be9-106d-08d704701114
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB1785;
+x-ms-traffictypediagnostic: DM5PR11MB1785:
+x-microsoft-antispam-prvs: <DM5PR11MB1785300C2085BE6F2302C2DBE8F10@DM5PR11MB1785.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0093C80C01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(366004)(346002)(396003)(376002)(189003)(199004)(71200400001)(7736002)(305945005)(2906002)(476003)(66066001)(81156014)(7416002)(50226002)(6486002)(2616005)(3846002)(110136005)(66556008)(72206003)(66446008)(54906003)(73956011)(8936002)(478600001)(81166006)(71190400001)(6116002)(6436002)(316002)(107886003)(64756008)(6506007)(14454004)(4326008)(186003)(36756003)(26005)(102836004)(5660300002)(66476007)(6512007)(2501003)(53936002)(99286004)(86362001)(8676002)(52116002)(256004)(66946007)(2201001)(486006)(386003)(68736007)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1785;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /2gyFE926xbEZiB+ZqOW1fPOC0yCP9QoJUAZkcPIZX8j/KScV/GeZx6bCWkv98xYVn5JlRhMfwUMoP8JiitArrrFWsFSRuUfvViZn89wwmKUUBm5UtSqHTYWMt2aEa4AxOgovikABydZR9r5kBbJ3R6YIjh9mOoBXL3ZxIhjr3Yl6EA692bgNcNiwnbp93rgp0D0AWZpQ5LbStsaaPAF2ErmGASyDS2bna3yPx9g2DaLu0gesp2P8sTtBrQUUf0Hyw+A5ZLI5MqmYij+T9eC7o1vN2YR8nox0gMiTDCPJbyyYpcsQLK/s4Qq/1085FgxhKCjwjEm4mDCQoXCaJ/Vm+fpC9WVFRD6Ua5LISvKHBUvnuc52g8d5+sElGDfGdrokB38AZzxKpn47h5f/OhZuPwOGQgJsyOxXr5oKMznbDA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190709125744.GB3402@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 09 Jul 2019 13:13:56 +0000 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d38cf48-6e0b-4be9-106d-08d704701114
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 13:19:26.7561
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eugen.hristev@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1785
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 02:57:44PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 08, 2019 at 03:55:30PM -0500, Josh Poimboeuf wrote:
-> 
-> >  arch/x86/kernel/alternative.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> > index 99ef8b6f9a1a..2644a7b82f96 100644
-> > --- a/arch/x86/kernel/alternative.c
-> > +++ b/arch/x86/kernel/alternative.c
-> > @@ -651,6 +651,13 @@ int3_exception_notify(struct notifier_block *self, unsigned long val, void *data
-> >  	return NOTIFY_STOP;
-> >  }
-> >  
-> > +#ifdef CONFIG_X86_32
-> > +# define INT3_TEST_CLOBBERS "memory", "cc", "ecx", "edx"
-> > +#else
-> > +# define INT3_TEST_CLOBBERS "memory", "cc", "rax", "rcx", "rdx", "rsi", "r8", \
-> > +			    "r9", "r10", "r11"
-> > +#endif
-> > +
-> >  static void __init int3_selftest(void)
-> >  {
-> >  	static __initdata struct notifier_block int3_exception_nb = {
-> > @@ -676,7 +683,7 @@ static void __init int3_selftest(void)
-> >  		      "int3_selftest_ip:\n\t"
-> >  		      __ASM_SEL(.long, .quad) " 1b\n\t"
-> >  		      ".popsection\n\t"
-> > -		      : : __ASM_SEL_RAW(a, D) (&val) : "memory");
-> > +		      : : __ASM_SEL_RAW(a, D) (&val) : INT3_TEST_CLOBBERS);
-> >  
-> >  	BUG_ON(val != 1);
-> 
-> As discussed on IRC; I've changed that to the other variant.
-> 
-> ---
-> Subject: x86/alternatives: Fix int3_emulate_call() selftest stack corruption
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon, 8 Jul 2019 15:55:30 -0500
-> 
-> KASAN shows the following splat during boot:
-> 
->   BUG: KASAN: unknown-crash in unwind_next_frame+0x3f6/0x490
->   Read of size 8 at addr ffffffff84007db0 by task swapper/0
-> 
->   CPU: 0 PID: 0 Comm: swapper Tainted: G                T 5.2.0-rc6-00013-g7457c0d #1
->   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
->   Call Trace:
->    dump_stack+0x19/0x1b
->    print_address_description+0x1b0/0x2b2
->    ? unwind_next_frame+0x3f6/0x490
->    __kasan_report+0x10f/0x171
->    ? unwind_next_frame+0x3f6/0x490
->    kasan_report+0x12/0x1c
->    __asan_load8+0x54/0x81
->    unwind_next_frame+0x3f6/0x490
->    ? unwind_dump+0x24e/0x24e
->    unwind_next_frame+0x1b/0x23
->    ? create_prof_cpu_mask+0x20/0x20
->    arch_stack_walk+0x68/0xa5
->    ? set_memory_4k+0x2a/0x2c
->    stack_trace_save+0x7b/0xa0
->    ? stack_trace_consume_entry+0x89/0x89
->    save_trace+0x3c/0x93
->    mark_lock+0x1ef/0x9b1
->    ? sched_clock_local+0x86/0xa6
->    __lock_acquire+0x3ba/0x1bea
->    ? __asan_loadN+0xf/0x11
->    ? mark_held_locks+0x8e/0x8e
->    ? mark_lock+0xb4/0x9b1
->    ? sched_clock_local+0x86/0xa6
->    lock_acquire+0x122/0x221
->    ? _vm_unmap_aliases+0x141/0x183
->    __mutex_lock+0xb6/0x731
->    ? _vm_unmap_aliases+0x141/0x183
->    ? sched_clock_cpu+0xac/0xb1
->    ? __mutex_add_waiter+0xae/0xae
->    ? lock_downgrade+0x368/0x368
->    ? _vm_unmap_aliases+0x40/0x183
->    mutex_lock_nested+0x16/0x18
->    _vm_unmap_aliases+0x141/0x183
->    ? _vm_unmap_aliases+0x40/0x183
->    vm_unmap_aliases+0x14/0x16
->    change_page_attr_set_clr+0x15e/0x2f2
->    ? __set_pages_p+0x111/0x111
->    ? alternative_instructions+0xd8/0x118
->    ? arch_init_ideal_nops+0x181/0x181
->    set_memory_4k+0x2a/0x2c
->    check_bugs+0x11fd/0x1298
->    ? l1tf_cmdline+0x1dc/0x1dc
->    ? proc_create_single_data+0x5f/0x6e
->    ? cgroup_init+0x2b1/0x2f6
->    start_kernel+0x793/0x7eb
->    ? thread_stack_cache_init+0x2e/0x2e
->    ? idt_setup_early_handler+0x70/0xb1
->    x86_64_start_reservations+0x55/0x76
->    x86_64_start_kernel+0x87/0xaa
->    secondary_startup_64+0xa4/0xb0
-> 
->   Memory state around the buggy address:
->    ffffffff84007c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1
->    ffffffff84007d00: f1 00 00 00 00 00 00 00 00 00 f2 f2 f2 f3 f3 f3
->   >ffffffff84007d80: f3 79 be 52 49 79 be 00 00 00 00 00 00 00 00 f1
-> 
-> It turns out that int3_selftest() is corrupting the stack.  The problem
-> is that the KASAN-ified version of int3_magic() is much less trivial
-> than the C code appears.  It clobbers several unexpected registers.  So
-> when the selftest's INT3 is converted to an emulated call to
-> int3_magic(), the registers are clobbered and Bad Things happen when the
-> function returns.
-> 
-> Fix this by converting int3_magic() to the trivial ASM function it
-> should be, avoiding all calling convetion issues. Also add
-> ASM_CALL_CONSTRAINT to the INT3 ASM, since it contains a 'CALL'.
-> 
-> Fixes: 7457c0da024b ("x86/alternatives: Add int3_emulate_call() selftest")
-> Cc: x86@kernel.org
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Debugged-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> [peterz: cribbed changelog from josh]
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/kernel/alternative.c |   25 ++++++++++++++++++++-----
->  1 file changed, 20 insertions(+), 5 deletions(-)
-> 
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -625,10 +625,23 @@ extern struct paravirt_patch_site __star
->   *
->   * See entry_{32,64}.S for more details.
->   */
-> -static void __init int3_magic(unsigned int *ptr)
-> -{
-> -	*ptr = 1;
-> -}
-> +
-> +/*
-> + * We define the int3_magic() function in assembly to control the calling
-> + * convention such that we can 'call' it from assembly.
-> + */
-> +
-> +extern void int3_magic(unsigned int *ptr); /* defined in asm */
-> +
-> +asm (
-> +"	.pushsection	.init.text, \"ax\", @progbits\n"
-> +"	.type		int3_magic, @function\n"
-> +"int3_magic:\n"
-> +"	movl	$1, (%" _ASM_ARG1 ")\n"
-> +"	ret\n"
-> +"	.size		int3_magic, .-int3_magic\n"
-> +"	.popsection\n"
-> +);
->  
->  extern __initdata unsigned long int3_selftest_ip; /* defined in asm below */
->  
-> @@ -676,7 +689,9 @@ static void __init int3_selftest(void)
->  		      "int3_selftest_ip:\n\t"
->  		      __ASM_SEL(.long, .quad) " 1b\n\t"
->  		      ".popsection\n\t"
-> -		      : : __ASM_SEL_RAW(a, D) (&val) : "memory");
-> +		      : ASM_CALL_CONSTRAINT
-> +		      : __ASM_SEL_RAW(a, D) (&val)
-> +		      : "memory");
->  
->  	BUG_ON(val != 1);
->  
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Hello,
 
--- 
-Josh
+This series adds support for analog and digital filters for i2c controllers
+
+This series is based on the series:
+[PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
+and enhanced to add the bindings for all controllers plus an extra binding
+for the width of the spikes in nanoseconds.
+
+First, bindings are created for
+'i2c-ana-filter'
+'i2c-dig-filter'
+'i2c-filter-width-ns'
+
+The support is added in the i2c core to retrieve filter width and add it
+to the timings structure.
+Next, the at91 driver is enhanced for supporting digital filter, advanced
+digital filter (with selectable spike width) and the analog filter.
+
+Finally the device tree for two boards are modified to make use of the
+new properties.
+
+This series is the result of the comments on the ML in the direction
+requested: to make the bindings globally available for i2c drivers.
+
+Changes in v3:
+- made bindings global for i2c controllers and modified accordingly
+- gave up PADFCDF bit because it's a lack in datasheet
+- the computation on the width of the spike is based on periph clock as it
+is done for hold time.
+
+Changes in v2:
+- added device tree bindings and support for enable-ana-filt and
+enable-dig-filt
+- added the new properties to the DT for sama5d4_xplained/sama5d2_xplained
+
+Eugen Hristev (9):
+  dt-bindings: i2c: at91: add new compatible
+  dt-bindings: i2c: add bindings for i2c analog and digital filter
+  i2c: add support for filter-width-ns optional property
+  i2c: at91: add new platform support for sam9x60
+  i2c: at91: add support for digital filtering
+  i2c: at91: add support for advanced digital filtering
+  i2c: at91: add support for analog filtering
+  ARM: dts: at91: sama5d2_xplained: add analog and digital filter for
+    i2c
+  ARM: dts: at91: sama5d4_xplained: add analog filter for i2c
+
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt |  3 +-
+ Documentation/devicetree/bindings/i2c/i2c.txt      | 11 +++++
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  6 +++
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  1 +
+ drivers/i2c/busses/i2c-at91-core.c                 | 38 +++++++++++++++++
+ drivers/i2c/busses/i2c-at91-master.c               | 49 ++++++++++++++++++=
+++--
+ drivers/i2c/busses/i2c-at91.h                      | 13 ++++++
+ drivers/i2c/i2c-core-base.c                        |  2 +
+ include/linux/i2c.h                                |  2 +
+ 9 files changed, 121 insertions(+), 4 deletions(-)
+
+--=20
+2.7.4
+
