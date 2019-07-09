@@ -2,95 +2,109 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC9DC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FD0C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320582087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA9B2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfGIStX (ORCPT
+        id S1729323AbfGIStj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:49:23 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56933 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfGIStX (ORCPT
+        Tue, 9 Jul 2019 14:49:39 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41383 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfGISti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:49:23 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <seth.forshee@canonical.com>)
-        id 1hkvB4-0006CQ-9K
-        for linux-kernel@vger.kernel.org; Tue, 09 Jul 2019 18:49:22 +0000
-Received: by mail-io1-f71.google.com with SMTP id v3so17535472ios.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:49:22 -0700 (PDT)
+        Tue, 9 Jul 2019 14:49:38 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o101so20986806ota.8;
+        Tue, 09 Jul 2019 11:49:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PxPSNMyhSc6n3DVu8+8initQj1WYg71cqa7Dt37YRsc=;
-        b=oDxc1/8GvO5rSl1Lm57Y6TEt1PP8wWxUAwGEPK+yw1oUSKiFFhQCJTZCyg66/7ag6l
-         Ck0dU0WMmCgKvX6vovPjAl08+I/rZpN3EnczX2b6Sw4Q0C057FdhnWNJaIPrC6VKP7x9
-         GgNAUZND4OOyq2oKGiJ7VvgDasCZOtObuRbfvaGLp93dkw2gHl1VDUfOaiU7zTHgEIVF
-         39cyGqfbqYECxLkki3sLBXZ37Ih+9XCuz6Wgf/Av0oInBt2lLHS7V+wtC0Cpobm/GyeC
-         9aUe2q308KQSIChc+wlHUC97v2fawc3xgea9HYAiqPjDZ3mvDBmUhVO0/yd/AN28ZWwp
-         IYHA==
-X-Gm-Message-State: APjAAAU2cH/wCkTLl5CCiKQUupCBESSP2cy05rWNHOVw0I2ZcYRemA4L
-        PZZ6NZcMfY+wsn+O8c+a9XpDRwbr6m7HQVEhZ5nVf3SSk+D0Vq9YN5x6IfJimdafd5843b//1zR
-        b2uS5rtU8iD0uW02g6TvqyEssSqE9rAuzowizfJksFg==
-X-Received: by 2002:a02:cc50:: with SMTP id i16mr3728954jaq.50.1562698161274;
-        Tue, 09 Jul 2019 11:49:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqww71No87FKb3rA8fwT+GlZqF9MtRtPIDfWtG04OMqHpUZRPq3+YiRqWPLQiJMSyPtIx7hDRg==
-X-Received: by 2002:a02:cc50:: with SMTP id i16mr3728928jaq.50.1562698160978;
-        Tue, 09 Jul 2019 11:49:20 -0700 (PDT)
-Received: from localhost ([2605:a601:ac2:fb20:b0e0:a018:77ee:9817])
-        by smtp.gmail.com with ESMTPSA id n17sm20052182iog.63.2019.07.09.11.49.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 11:49:20 -0700 (PDT)
-From:   Seth Forshee <seth.forshee@canonical.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: add -fcf-protection=none to retpoline flags
-Date:   Tue,  9 Jul 2019 13:49:19 -0500
-Message-Id: <20190709184919.20178-1-seth.forshee@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rhxO6zJT4kRA59/IE9s5VDYziBesrtC+fZUNEZkjtko=;
+        b=gBJO1isCIiP+YinNQDOtEByiDAIVlFe0gYZMVIsSBdfCfI55vV35d08PclcbGd9xRN
+         Kd5/gYW+sBZufftojyWncqoXBulOPsPpAJBJhO/AC2eJDsF1E8TKROHSCe+8LB38CC2a
+         gso9qiEhckdpMTXCasR0Xps5TmKtAAlftOx0uB8DW9sq14Cu8K+ZgwHcCh+ceWpOuVAA
+         XlD/SesliZVmXyZY3Xc0Jy61n5L31oLGqLHqXhWsmL8S5F2gocypJzQgbyTmWhAQpvfY
+         1hbuJNWz3ffdRQhUwRwqnAlGr9WoHxCuAfzMVXRwG1Ogd4+t0OGFFDTDP7nkVmHDkJgR
+         5iWg==
+X-Gm-Message-State: APjAAAWTjhsl4nQ5lz/KmgOSlf4l61zDYtbiwAvry+LvkqgMpWmVzsaY
+        E33lLTBNI6cLV0aSnOw4fwDLXaqFDcC2s0Zhs1Q=
+X-Google-Smtp-Source: APXvYqyL3dMbX2i3nej8DK/ZmGllJsd3RJyRbEKEzUYfxJu+XFcPm+IWp2Bxk++nSFFXCeSNzisYGHWavSJL4Bp5h3A=
+X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr3012583otc.250.1562698177652;
+ Tue, 09 Jul 2019 11:49:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190528154601.7597-1-brgl@bgdev.pl>
+In-Reply-To: <20190528154601.7597-1-brgl@bgdev.pl>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 9 Jul 2019 20:49:23 +0200
+Message-ID: <CAMuHMdV=eVJKVENkLUi1pj7MY8RGwUGZEt=MG4fdfvToZZquNQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: em: use the managed version of gpiochip_add_data()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--mindirect-branch and -fcf-protection are not compatible, and
-so kernel builds fail with a gcc build where -fcf-protection is
-enabled by default. Add -fcf-protection=none to the retpoline
-flags to fix this.
+Hi Bartosz,
 
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
----
- Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+On Tue, May 28, 2019 at 5:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Use the managed variant of gpiochip_add_data() and remove the call to
+> gpiochip_remove().
+>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpio-em.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-em.c b/drivers/gpio/gpio-em.c
+> index 40f8c38bec1c..299101d25fa8 100644
+> --- a/drivers/gpio/gpio-em.c
+> +++ b/drivers/gpio/gpio-em.c
+> @@ -359,7 +359,7 @@ static int em_gio_probe(struct platform_device *pdev)
+>                 goto err1;
+>         }
+>
+> -       ret = gpiochip_add_data(gpio_chip, p);
+> +       ret = devm_gpiochip_add_data(&pdev->dev, gpio_chip, p);
+>         if (ret) {
+>                 dev_err(&pdev->dev, "failed to add GPIO controller\n");
+>                 goto err1;
+> @@ -376,8 +376,6 @@ static int em_gio_remove(struct platform_device *pdev)
+>  {
+>         struct em_gio_priv *p = platform_get_drvdata(pdev);
+>
+> -       gpiochip_remove(&p->gpio_chip);
+> -
+>         irq_domain_remove(p->irq_domain);
 
-diff --git a/Makefile b/Makefile
-index 3e4868a6498b..050f11d19777 100644
---- a/Makefile
-+++ b/Makefile
-@@ -636,6 +636,10 @@ RETPOLINE_CFLAGS_CLANG := -mretpoline-external-thunk
- RETPOLINE_VDSO_CFLAGS_CLANG := -mretpoline
- RETPOLINE_CFLAGS := $(call cc-option,$(RETPOLINE_CFLAGS_GCC),$(call cc-option,$(RETPOLINE_CFLAGS_CLANG)))
- RETPOLINE_VDSO_CFLAGS := $(call cc-option,$(RETPOLINE_VDSO_CFLAGS_GCC),$(call cc-option,$(RETPOLINE_VDSO_CFLAGS_CLANG)))
-+# -mindirect-branch is incompatible with -fcf-protection, so ensure the
-+# latter is disabled
-+RETPOLINE_CFLAGS += $(call cc-option,-fcf-protection=none,)
-+RETPOLINE_VDSO_CFLAGS += $(call cc-option,-fcf-protection=none,)
- export RETPOLINE_CFLAGS
- export RETPOLINE_VDSO_CFLAGS
- 
--- 
-2.20.1
+On a second thought, is it safe to call irq_domain_remove() before
+gpiochip_remove() (which calls gpiochip_irqchip_remove())?
 
+>         return 0;
+
+>  }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
