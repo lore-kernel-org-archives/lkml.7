@@ -2,108 +2,106 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E476C73C5A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC4EC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF87D2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:33:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nJSBYwdx"
+	by mail.kernel.org (Postfix) with ESMTP id 2B1882073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbfGITdX (ORCPT
+        id S1728993AbfGITfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:33:23 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46337 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbfGITdW (ORCPT
+        Tue, 9 Jul 2019 15:35:52 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45542 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbfGITfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 15:33:22 -0400
-Received: by mail-qk1-f194.google.com with SMTP id r4so16872758qkm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 12:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=TqnFX/ucbxcY5k2LU8B7XgzLfUpDzAFYa9LXap9J5UU=;
-        b=nJSBYwdxUv5VMP0rEUMz93pcWQ28dTbOLxoOwrWHLWCf1MSxkLTpKz2x8fxtV2+E/R
-         tXsUU3isWUYxjOPUM6t0qCMv560B5H1unNR0QcR5JPw3ycBYCoKo4LDe/wsMqNEhL/zl
-         ZczdjxlpNisocOP3/OhjpkUf2xKW2V9mrCM6eDI3EmS5aK4e6AbXWsFA/MaZCNHhyEnk
-         w4Z42pcMYK3A/nvN2x/95LPHdAv9lAcaP70awzU4Hvnyy2CUphCP4NqDwoLxyz/O5kpd
-         AcIgjMsPHoTqJr8TeoXVzKWAKEnMRS83pZDgNEkgwGuWMagj18LeXUOa06mYcaDBm5pC
-         i90Q==
+        Tue, 9 Jul 2019 15:35:52 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s22so16912414qkj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 12:35:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=TqnFX/ucbxcY5k2LU8B7XgzLfUpDzAFYa9LXap9J5UU=;
-        b=dU5zFgFMH35ueqzq8BzFId83tad+ZAQjxYAOo7xrD7kAySxb3HeSk2Gnt6qK4RR4ek
-         wAYNjvQAhINp9hERV6Bl7yBxcEB0SAp25LvaS5vs+gpIVZiSP6FdooOfSAgPeUHfMif2
-         2RwuNfCjeeQeHiMpK1lK+pmXlIHm6/7fGgS6Df0CDH9lpvzALDmTvIDKH9rdsGVTcf6N
-         P41sRFdwu/xmmqpRp2r8Qrk95b2rs15ubF/BNP4+zmO8vW8i/tIZ7b9WmBhElmqS4L35
-         7hxC8fbXJ7C0Ik72PzOjB/4LVaz0VrgNWvHK2UG7dcviuYZnWOeylyqeiOW1+4zhhUtt
-         enVg==
-X-Gm-Message-State: APjAAAX6JJMqIwV0JpRV18JVxR/uTIMpAmG3GaAr2crxBwyVFQWgZF8M
-        blL/blZlkU7XsZYYn7qPet7mxg==
-X-Google-Smtp-Source: APXvYqwJv1A9aQVqldMtbeBQ5nnec3iTfBKL3S6OeKUyA3kkYjNI/CON0uVEHClqFsFEEJNKMO/I9A==
-X-Received: by 2002:a05:620a:1006:: with SMTP id z6mr2854127qkj.312.1562700801760;
-        Tue, 09 Jul 2019 12:33:21 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id 67sm9662013qkh.108.2019.07.09.12.33.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Jul 2019 12:33:21 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hkvrc-0003nt-Rl; Tue, 09 Jul 2019 16:33:20 -0300
-Date:   Tue, 9 Jul 2019 16:33:20 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: hmm_range_fault related fixes and legacy API removal v2
-Message-ID: <20190709193320.GD3422@ziepe.ca>
-References: <20190703220214.28319-1-hch@lst.de>
- <20190705123336.GA31543@ziepe.ca>
- <20190709143038.GA3092@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LYkOxU56fFZbe/rXWQ61Eydypj6M58uv2TRFoFlJd+U=;
+        b=f4aoozibe2xS4JQ0aXnjs7bkPvwurBw6e7Yinh67fJVviT/VAwtakWrEfQk0CqKAz1
+         BoacAxRWHSqKaOz0TeY5lX1Njk+HQrF5lnrTB5Gsq50z70Caexfy6Thcq5qsfDJCwRF0
+         GFb9sp381aW1wNlBKXY6UmDimf61x1DxzWiRp1QS0QBv8lNsTKu3n0L5OfCybQ6Iw1lQ
+         G/elJgJO/1rQOVKcH4NagOOC8r+oFYSbDhPYQiLaK2qUs7+tbeqM5ssCaW1T6I3qd0gs
+         V82ATU9kekCmgB16vp4oMdvbET+U0fNMlb/b6IffZ6Pt1EQfIZAsAm0DUjS5jZ3fKMKf
+         KGSg==
+X-Gm-Message-State: APjAAAWNQ0oLHnmgdF4U2f32aMJvSX18mTrhRh1GNkJDDI8nyJHxLjzq
+        73yKKG7lten0R569BPNhertX7r7CY8cSGXgwJNs=
+X-Google-Smtp-Source: APXvYqzIrfw3JIJHqKR6sAb8jF/wgeD0S6YuTEPHCsoMBdWLmV+cJpJI++7MjWLFIegbqP/XnIrhKu8WvMkL5wQ0lHY=
+X-Received: by 2002:a37:ad12:: with SMTP id f18mr19622232qkm.3.1562700951363;
+ Tue, 09 Jul 2019 12:35:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190709143038.GA3092@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190709183612.2693974-1-arnd@arndb.de> <CANpmjNNiygcPkXSFWGNZtOf6LC1Z_xjnim=4hH_KMDEZ9SodDg@mail.gmail.com>
+In-Reply-To: <CANpmjNNiygcPkXSFWGNZtOf6LC1Z_xjnim=4hH_KMDEZ9SodDg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 9 Jul 2019 21:35:34 +0200
+Message-ID: <CAK8P3a1SQaEymLpvTaX0_YDsGcKt=ys6_KwceC7mpkFJzhpQ=g@mail.gmail.com>
+Subject: Re: [PATCH] mm/kasan: fix kasan_check_read() compiler warning
+To:     Marco Elver <elver@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        "ndesaulniers@google.com" <ndesaulniers@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 04:30:38PM +0200, Christoph Hellwig wrote:
-> On Fri, Jul 05, 2019 at 09:33:36AM -0300, Jason Gunthorpe wrote:
-> > On Wed, Jul 03, 2019 at 03:02:08PM -0700, Christoph Hellwig wrote:
-> > > Hi Jérôme, Ben and Jason,
-> > > 
-> > > below is a series against the hmm tree which fixes up the mmap_sem
-> > > locking in nouveau and while at it also removes leftover legacy HMM APIs
-> > > only used by nouveau.
+On Tue, Jul 9, 2019 at 8:46 PM Marco Elver <elver@google.com> wrote:
+>
+> On Tue, 9 Jul 2019 at 20:36, Arnd Bergmann <arnd@arndb.de> wrote:
 > >
-> > As much as I like this series, it won't make it to this merge window,
-> > sorry.
-> 
-> Note that patch 4 fixes a pretty severe locking bug, and 1-3 is just
-> preparation for that.  
+> > The kasan_check_read() is marked 'inline', which usually includes
+> > the 'always_inline' attribute. In some configuration, gcc decides that
+> > it cannot inline this, causing a build failure:
+> >
+> > In file included from include/linux/compiler.h:257,
+> >                  from arch/x86/include/asm/current.h:5,
+> >                  from include/linux/sched.h:12,
+> >                  from include/linux/ratelimit.h:6,
+> >                  from fs/dcache.c:18:
+> > include/linux/compiler.h: In function 'read_word_at_a_time':
+> > include/linux/kasan-checks.h:31:20: error: inlining failed in call to always_inline 'kasan_check_read': function attribute mismatch
+> >  static inline bool kasan_check_read(const volatile void *p, unsigned int size)
+> >                     ^~~~~~~~~~~~~~~~
+> > In file included from arch/x86/include/asm/current.h:5,
+> >                  from include/linux/sched.h:12,
+> >                  from include/linux/ratelimit.h:6,
+> >                  from fs/dcache.c:18:
+> > include/linux/compiler.h:280:2: note: called from here
+> >   kasan_check_read(addr, 1);
+> >   ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > While I have no idea why it does this, but changing the call to the
+> > internal __kasan_check_read() fixes the issue.
+>
+> Thanks, this was fixed more generally in v5:
+> http://lkml.kernel.org/r/20190708170706.174189-1-elver@google.com
 
-Yes, I know, but that code is all marked STAGING last I saw, so I
-don't feel an urgency to get severe bug fixes in for it after the
-merge window opens.
+Ok, that looks like a better solution indeed. I tried something
+similar at first but got it wrong.
 
-I'd like to apply it to hmm.git when rc1 comes out with Ralph's test
-result..
-
-Jason
+      Arnd
