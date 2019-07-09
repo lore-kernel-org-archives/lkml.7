@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E12FC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44E0C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF6F2082A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762E12082A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 19:00:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kfV/7/kv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SI2rCAS7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfGITAV (ORCPT
+        id S1728999AbfGITAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 15:00:21 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34318 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729031AbfGITAT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 9 Jul 2019 15:00:19 -0400
-Received: by mail-pl1-f194.google.com with SMTP id i2so10574918plt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 12:00:19 -0700 (PDT)
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43392 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfGITAQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 15:00:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so9910160pgv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 12:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7VTnoQhILwKHLps+gGfkisxkuSKBxEyo68mEBQUHAaY=;
-        b=kfV/7/kvbkaJ7UsIzdsFDRlAMdzpK6L6mf+hCSJgo/ppqnLdG493pA1TwsgBo8gqI+
-         4m8IhLpUYafypQV62VutcuQ/xBvf5+Qfw9xSrUk4r15c6IIY+l2X2T26Z72GsIoqOOBe
-         J11qlTxGksNKv6aSrfL+fr+Nca1CmutGbOxRA=
+        bh=T12A56st4U6xMjv9tNrkzq8tQL5jOdbBhnZMauX8Bws=;
+        b=SI2rCAS72N9CLesCndW5GOG2uj6BrMPw1IuIl2eGt1duNnrycvb0HSTo7g2HFa1dw6
+         jre8ouKqMScn+GMJN2aW8u5WpdLg/vvwtRO68eGyrvh+hIhbuIR2XNab2JOlmMjR9svO
+         NzG03XiTXHzv8UWz60/01C2e7bjXzIlH5mj70=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7VTnoQhILwKHLps+gGfkisxkuSKBxEyo68mEBQUHAaY=;
-        b=ePC89UXair6Nmh63VAC3KxCXbieiwC4WwRzXs/ghIy3ncYNGYPiPmiVEHFnYulHxpp
-         VMG5XWtXtY9fOrA3LYbDtyASDUP1bQ25KTkTGqHVxXUYagp78jfUx6DHK+daiH7wCZIF
-         afJpptx8ONzADHa/aBSqWBmULz6vioufSm2itBMivreGCBUyriEgcM5oMCiZQubYY84/
-         DHKUVrdACkDVgdhotddLjUB1p2s3tetoBYg64f+JPMdLaSIBfXhvQhOW9aYIWS1Zf2if
-         HdUCxt42FpT32Wt4el2MyOoZYbn34OxKzd9IOL4oDYMUtHSPhekGBAftb++qWzbZMRnr
-         A9Mw==
-X-Gm-Message-State: APjAAAWE/iAz859ONio9ul45Ee8maP0sQOhmQFLx8CG9U7ksGhT6w+Zk
-        +y60XA2UVaV1YKNRGQ5dbxJlxg==
-X-Google-Smtp-Source: APXvYqyFxcn+t9rWGoWrMrwk7IGCCiVhSunnF0u4fJQLec9Z7/8us2QIzzEsGo2V3Ixk/lZr9QooRQ==
-X-Received: by 2002:a17:902:29e6:: with SMTP id h93mr32447140plb.297.1562698818959;
-        Tue, 09 Jul 2019 12:00:18 -0700 (PDT)
+        bh=T12A56st4U6xMjv9tNrkzq8tQL5jOdbBhnZMauX8Bws=;
+        b=fgOi1Py9ZzOfsCVuafzghjw4gxAGOj9lB3tj8DkL242c9JE8/3DZ2IZwb8IwGOPeh/
+         XhoaR1SGwZvGnQ/5NWa/EKP/ggS+UFDcZ29yJvu1Mddzn1eaWhN/ukvo3lyAmBoSXADS
+         qFHOIn++MnqF5KhX7NORAbKLreGmc42Lva2GbLEWPobqlD5ccJVRDcMFr+24sOFerjog
+         P9fDRvwHMkOrc9NpuEK1N5yL2nk1qTt2w2h7zqDDX2BubZxGT4CNYcwIwqO7Ahs7QuOi
+         vQyehZ7rJAesgbXAdaWskBwL2Z29xafn9imURk7rX8hCRrGFSxI3V36HbM1zupOzBfrE
+         G+DA==
+X-Gm-Message-State: APjAAAV9TSBhfUUeOiHbFjGy9hh90o2eW1yWidbTtKK86Ye48Vpg/xV8
+        qNiTSYDjRAsFNLCac8/GYHngVg==
+X-Google-Smtp-Source: APXvYqyEa4ryD7UuELRziTCBGlJ9o4biH2jBafr0m0ioDSkfIt9v3ZzlZ12RUj4fyPMeD5pAkrk6Hw==
+X-Received: by 2002:a63:7519:: with SMTP id q25mr439220pgc.13.1562698815766;
+        Tue, 09 Jul 2019 12:00:15 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id v63sm8391683pfv.174.2019.07.09.12.00.18
+        by smtp.gmail.com with ESMTPSA id b15sm20363265pfi.141.2019.07.09.12.00.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 12:00:18 -0700 (PDT)
+        Tue, 09 Jul 2019 12:00:15 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
@@ -67,9 +67,9 @@ Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Pavel Machek <pavel@ucw.cz>,
         Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v3 4/4] backlight: pwm_bl: Set scale type for brightness curves specified in the DT
-Date:   Tue,  9 Jul 2019 12:00:07 -0700
-Message-Id: <20190709190007.91260-5-mka@chromium.org>
+Subject: [PATCH v3 2/4] backlight: Expose brightness curve type through sysfs
+Date:   Tue,  9 Jul 2019 12:00:05 -0700
+Message-Id: <20190709190007.91260-3-mka@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 In-Reply-To: <20190709190007.91260-1-mka@chromium.org>
 References: <20190709190007.91260-1-mka@chromium.org>
@@ -80,77 +80,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check if a brightness curve specified in the device tree is linear or
-not and set the corresponding property accordingly. This makes the
-scale type available to userspace via the 'scale' sysfs attribute.
+Backlight brightness curves can have different shapes. The two main
+types are linear and non-linear curves. The human eye doesn't
+perceive linearly increasing/decreasing brightness as linear (see
+also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+linearly to human eye"), hence many backlights use non-linear (often
+logarithmic) brightness curves. The type of curve currently is opaque
+to userspace, so userspace often uses more or less reliable heuristics
+(like the number of brightness levels) to decide whether to treat a
+backlight device as linear or non-linear.
 
-To determine if a curve is linear it is compared to a interpolated linear
-curve between min and max brightness. The curve is considered linear if
-no value deviates more than +/-5% of ${brightness_range} from their
-interpolated value.
+Export the type of the brightness curve via the new sysfs attribute
+'scale'. The value of the attribute can be 'linear', 'non-linear' or
+'unknown'. For devices that don't provide information about the scale
+of their brightness curve the value of the 'scale' attribute is 'unknown'.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
+Feel free to suggest improvements in the documentation :)
+
 Changes in v3:
-- none
+- removed composite strings, only keep 'linear', 'non-linear' and
+  'unknown'
+- updated sysfs attribute documentation
+- updated commit message
 
 Changes in v2:
-- use 128 (power of two) instead of 100 as factor for the slope
-- add comment about max quantization error
-- added Daniel's 'Acked-by' tag
+- changed order of brightness scale enums, explicitly make 'unknown' zero
+- minor update of commit message
+- deleted excess blank line after 'backlight_scale_types'
+- s/curves/curve/ in sysfs doc
 ---
- drivers/video/backlight/pwm_bl.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ .../ABI/testing/sysfs-class-backlight         | 26 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ drivers/video/backlight/backlight.c           | 19 ++++++++++++++
+ include/linux/backlight.h                     |  8 ++++++
+ 4 files changed, 54 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 7c6dfc4a601d..fef98beb8b7e 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -404,6 +404,31 @@ int pwm_backlight_brightness_default(struct device *dev,
+diff --git a/Documentation/ABI/testing/sysfs-class-backlight b/Documentation/ABI/testing/sysfs-class-backlight
+new file mode 100644
+index 000000000000..3ab175a3f5cb
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-backlight
+@@ -0,0 +1,26 @@
++What:		/sys/class/backlight/<backlight>/scale
++Date:		July 2019
++KernelVersion:	5.4
++Contact:	Daniel Thompson <daniel.thompson@linaro.org>
++Description:
++		Description of the scale of the brightness curve.
++
++		The human eye senses brightness approximately logarithmically,
++		hence linear changes in brightness are perceived as being
++		non-linear. To achieve a linear perception of brightness changes
++		controls like sliders need to apply a logarithmic mapping for
++		backlights with a linear brightness curve.
++
++		Possible values of the attribute are:
++
++		unknown
++		  The scale of the brightness curve is unknown.
++
++		linear
++		  The brightness changes linearly with each step. Brightness
++		  controls should apply a logarithmic mapping for a linear
++		  perception.
++
++		non-linear
++		  The brightness changes non-linearly with each step. Brightness
++		  controls should use a linear mapping for a linear perception.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d51e74340870..c46812510ba5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2858,6 +2858,7 @@ F:	include/linux/backlight.h
+ F:	include/linux/pwm_backlight.h
+ F:	Documentation/devicetree/bindings/leds/backlight
+ F:	Documentation/ABI/stable/sysfs-class-backlight
++F:	Documentation/ABI/testing/sysfs-class-backlight
+ 
+ BATMAN ADVANCED
+ M:	Marek Lindner <mareklindner@neomailbox.ch>
+diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+index 1ef8b6fd62ac..277abc76c83a 100644
+--- a/drivers/video/backlight/backlight.c
++++ b/drivers/video/backlight/backlight.c
+@@ -32,6 +32,12 @@ static const char *const backlight_types[] = {
+ 	[BACKLIGHT_FIRMWARE] = "firmware",
+ };
+ 
++static const char *const backlight_scale_types[] = {
++	[BACKLIGHT_SCALE_UNKNOWN]	= "unknown",
++	[BACKLIGHT_SCALE_LINEAR]	= "linear",
++	[BACKLIGHT_SCALE_NON_LINEAR]	= "non-linear",
++};
++
+ #if defined(CONFIG_FB) || (defined(CONFIG_FB_MODULE) && \
+ 			   defined(CONFIG_BACKLIGHT_CLASS_DEVICE_MODULE))
+ /* This callback gets called when something important happens inside a
+@@ -246,6 +252,18 @@ static ssize_t actual_brightness_show(struct device *dev,
  }
- #endif
+ static DEVICE_ATTR_RO(actual_brightness);
  
-+static bool pwm_backlight_is_linear(struct platform_pwm_backlight_data *data)
++static ssize_t scale_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
 +{
-+	unsigned int nlevels = data->max_brightness + 1;
-+	unsigned int min_val = data->levels[0];
-+	unsigned int max_val = data->levels[nlevels - 1];
-+	/*
-+	 * Multiplying by 128 means that even in pathological cases such
-+	 * as (max_val - min_val) == nlevels the error at max_val is less
-+	 * than 1%.
-+	 */
-+	unsigned int slope = (128 * (max_val - min_val)) / nlevels;
-+	unsigned int margin = (max_val - min_val) / 20; /* 5% */
-+	int i;
++	struct backlight_device *bd = to_backlight_device(dev);
 +
-+	for (i = 1; i < nlevels; i++) {
-+		unsigned int linear_value = min_val + ((i * slope) / 128);
-+		unsigned int delta = abs(linear_value - data->levels[i]);
++	if (WARN_ON(bd->props.scale > BACKLIGHT_SCALE_NON_LINEAR))
++		return sprintf(buf, "unknown\n");
 +
-+		if (delta > margin)
-+			return false;
-+	}
-+
-+	return true;
++	return sprintf(buf, "%s\n", backlight_scale_types[bd->props.scale]);
 +}
++static DEVICE_ATTR_RO(scale);
 +
- static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
- {
- 	struct device_node *node = pb->dev->of_node;
-@@ -567,6 +592,11 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ static struct class *backlight_class;
  
- 			pb->levels = data->levels;
- 		}
+ #ifdef CONFIG_PM_SLEEP
+@@ -292,6 +310,7 @@ static struct attribute *bl_device_attrs[] = {
+ 	&dev_attr_brightness.attr,
+ 	&dev_attr_actual_brightness.attr,
+ 	&dev_attr_max_brightness.attr,
++	&dev_attr_scale.attr,
+ 	&dev_attr_type.attr,
+ 	NULL,
+ };
+diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+index 0b5897446dca..c7d6b2e8c3b5 100644
+--- a/include/linux/backlight.h
++++ b/include/linux/backlight.h
+@@ -46,6 +46,12 @@ enum backlight_notification {
+ 	BACKLIGHT_UNREGISTERED,
+ };
+ 
++enum backlight_scale {
++	BACKLIGHT_SCALE_UNKNOWN = 0,
++	BACKLIGHT_SCALE_LINEAR,
++	BACKLIGHT_SCALE_NON_LINEAR,
++};
 +
-+		if (pwm_backlight_is_linear(data))
-+			props.scale = BACKLIGHT_SCALE_LINEAR;
-+		else
-+			props.scale = BACKLIGHT_SCALE_NON_LINEAR;
- 	} else if (!data->max_brightness) {
- 		/*
- 		 * If no brightness levels are provided and max_brightness is
+ struct backlight_device;
+ struct fb_info;
+ 
+@@ -80,6 +86,8 @@ struct backlight_properties {
+ 	enum backlight_type type;
+ 	/* Flags used to signal drivers of state changes */
+ 	unsigned int state;
++	/* Type of the brightness scale (linear, non-linear, ...) */
++	enum backlight_scale scale;
+ 
+ #define BL_CORE_SUSPENDED	(1 << 0)	/* backlight is suspended */
+ #define BL_CORE_FBBLANK		(1 << 1)	/* backlight is under an fb blank event */
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
