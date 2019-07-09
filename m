@@ -2,150 +2,114 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A129C606D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708BCC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4685216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:12:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p0sVP6ul"
+	by mail.kernel.org (Postfix) with ESMTP id 4F88F216FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 08:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfGIIMJ (ORCPT
+        id S1726462AbfGIINH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 04:12:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35991 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfGIIMJ (ORCPT
+        Tue, 9 Jul 2019 04:13:07 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:36893 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfGIINH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 04:12:09 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so9697508plt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 01:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eOuvT6Cckl+GniRg64y9AJ/5rozkkhx3polgR2aQ1Gg=;
-        b=p0sVP6ulMvod/W51H37xuLg53Fl+A7Bh19Wz2kvDNDJCRba5OeflOxKLz4VCwk3vBH
-         OxhobdOmtfIck0hPhXEgusq0pIkl8iHdl3N3nWWSmB40YunTxHNbS4db/5b7aaZ3LxbL
-         6JtBhD4FbnUAb89fDssoCeREhxfNP3HWrxsgayq0PHlA29aKvfj+q3TTRAbdc3E937/U
-         tsTDMgouPDMrh5g068LzbdDu/x4kmIbgBkwaietOvRfW5FuuLm5214ZWY6nz688PSwMR
-         7btjap/Xfck/KXDQiNfrSAT2G6zkJGnWmJJ5QGFcQuCb2AJ3oz5EvM46B1V2V+3mqOf/
-         rP8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eOuvT6Cckl+GniRg64y9AJ/5rozkkhx3polgR2aQ1Gg=;
-        b=sLnQ9g8F4YNnhaJdrMmTqN6Qye/tqzZQpZbEMOaB2+jiHP2Ae4M7ZYKvhFLdFjTyZ1
-         QXfrw3tpc81W55R0hnkfKnk10LqW4Wwr50rZVMIb2ggCYRAhczb8fbu4DE6iBuK44r8x
-         3qC4wzNHw8hrWQsUkvCJZjPU8o+5NuK/qrIN/sLGOGdFSbzv2+8GH8s5aOnUdlymNi1y
-         VgjM7z0aWzqy/zX9lHl4+O2f7OztlYTTCTYm7BRg2AEDDkwUeYQD3QSoEF+SjDNRVpRP
-         bU01rHhpAob2fyDaB8nPinzEOedf0/idtgHp2VePbUPlFJdlbYK88aouZXv+DfhmejRs
-         7OEA==
-X-Gm-Message-State: APjAAAUqIT3s+OZNkJKC0cI/hBgoReuRerdQBuCmUlEYtE7egbolrIlD
-        0adXMPlv6iypI1KW9f/kyGXAsw==
-X-Google-Smtp-Source: APXvYqyba7DGNCtta2YQmlEVmhFZ7couczowCm4W1ouKSK5ZaSHTVWK5GxIV6Rk69Zyj4e8ga2Xfsg==
-X-Received: by 2002:a17:902:8207:: with SMTP id x7mr30445929pln.63.1562659928360;
-        Tue, 09 Jul 2019 01:12:08 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id l1sm22620240pfl.9.2019.07.09.01.12.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 01:12:07 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 13:42:05 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5] cpufreq/pasemi: fix an use-after-free in
- pas_cpufreq_cpu_init()
-Message-ID: <20190709081205.a5sjsqo2el6zt24b@vireshk-i7>
-References: <1562659447-39989-1-git-send-email-wen.yang99@zte.com.cn>
+        Tue, 9 Jul 2019 04:13:07 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id D81498057F; Tue,  9 Jul 2019 10:12:53 +0200 (CEST)
+Date:   Tue, 9 Jul 2019 10:13:04 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 22/90] usb: gadget: fusb300_udc: Fix memory leak of
+ fusb300->ep[i]
+Message-ID: <20190709081304.GA11574@amd>
+References: <20190708150521.829733162@linuxfoundation.org>
+ <20190708150523.753501550@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
 Content-Disposition: inline
-In-Reply-To: <1562659447-39989-1-git-send-email-wen.yang99@zte.com.cn>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190708150523.753501550@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-07-19, 16:04, Wen Yang wrote:
-> The cpu variable is still being used in the of_get_property() call
-> after the of_node_put() call, which may result in use-after-free.
-> 
-> Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> v5: put together the code to get, use, and release cpu device_node.
-> v4: restore the blank line.
-> v3: fix a leaked reference.
-> v2: clean up the code according to the advice of viresh.
-> 
->  drivers/cpufreq/pasemi-cpufreq.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
-> index 6b1e4ab..1f0beb7 100644
-> --- a/drivers/cpufreq/pasemi-cpufreq.c
-> +++ b/drivers/cpufreq/pasemi-cpufreq.c
-> @@ -131,10 +131,17 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	int err = -ENODEV;
->  
->  	cpu = of_get_cpu_node(policy->cpu, NULL);
-> -
-> -	of_node_put(cpu);
->  	if (!cpu)
->  		goto out;
 
-I would have loved a blank line here :)
+--LQksG6bCIzRHxTLp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
-> +	of_node_put(cpu);
-> +	if (!max_freqp) {
-> +		err = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	/* we need the freq in kHz */
-> +	max_freq = *max_freqp / 1000;
->  
->  	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
->  	if (!dn)
-> @@ -171,16 +178,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+Hi!
+
+> There is no deallocation of fusb300->ep[i] elements, allocated at
+> fusb300_probe.
+>=20
+> The patch adds deallocation of fusb300->ep array elements.
+=2E..=20
+> diff --git a/drivers/usb/gadget/udc/fusb300_udc.c b/drivers/usb/gadget/ud=
+c/fusb300_udc.c
+> index 263804d154a7..00e3f66836a9 100644
+> --- a/drivers/usb/gadget/udc/fusb300_udc.c
+> +++ b/drivers/usb/gadget/udc/fusb300_udc.c
+> @@ -1342,12 +1342,15 @@ static const struct usb_gadget_ops fusb300_gadget=
+_ops =3D {
+>  static int fusb300_remove(struct platform_device *pdev)
+>  {
+>  	struct fusb300 *fusb300 =3D platform_get_drvdata(pdev);
+> +	int i;
+> =20
+>  	usb_del_gadget_udc(&fusb300->gadget);
+>  	iounmap(fusb300->reg);
+>  	free_irq(platform_get_irq(pdev, 0), fusb300);
+> =20
+>  	fusb300_free_request(&fusb300->ep[0]->ep, fusb300->ep0_req);
+> +	for (i =3D 0; i < FUSB300_MAX_NUM_EP; i++)
+> +		kfree(fusb300->ep[i]);
+>  	kfree(fusb300);
+> =20
+>  	return 0;
+> @@ -1491,6 +1494,8 @@ clean_up:
+>  		if (fusb300->ep0_req)
+>  			fusb300_free_request(&fusb300->ep[0]->ep,
+>  				fusb300->ep0_req);
+> +		for (i =3D 0; i < FUSB300_MAX_NUM_EP; i++)
+> +			kfree(fusb300->ep[i]);
+>  		kfree(fusb300);
 >  	}
->  
->  	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
-> -
-> -	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
-> -	if (!max_freqp) {
-> -		err = -EINVAL;
-> -		goto out_unmap_sdcpwr;
-> -	}
-> -
-> -	/* we need the freq in kHz */
-> -	max_freq = *max_freqp / 1000;
-> -
->  	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
->  	pr_debug("initializing frequency table\n");
+>  	if (reg)
 
-Though, enough versions have happened now.
+Maybe it would be worth it to have a common function doing the cleanup
+at this point?
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Alternatively consider using devm_ function family; that deallocates
+memory automatically.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
--- 
-viresh
+--LQksG6bCIzRHxTLp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0kTJAACgkQMOfwapXb+vIp7QCggP3RXuMOj8CtICSqJ6ZdFZkz
+CGQAoKm38YqmF4jSyu01AO2QaxCAvDbq
+=ILf2
+-----END PGP SIGNATURE-----
+
+--LQksG6bCIzRHxTLp--
