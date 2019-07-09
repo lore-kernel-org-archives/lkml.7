@@ -2,153 +2,153 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFD0C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8FDC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C297020844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:09:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Tch8c7cq"
+	by mail.kernel.org (Postfix) with ESMTP id 761C020844
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbfGIVJS (ORCPT
+        id S1727285AbfGIVL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:09:18 -0400
-Received: from mail-eopbgr700078.outbound.protection.outlook.com ([40.107.70.78]:22880
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726318AbfGIVJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:09:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LNJgZZVfXfFl/CKVb1MGI4wi9tGt8bmnSKcgBqNqkjXW4CoJi+tb44kRnjqZ8o/lJaeiKG11QuJLOtoR0Mi+Gq1KSL5tMt36N4rBUimalo4pY7ceAfOFuX0htiwM0JmbtyyK1gTZ1Q9I14E021v/ycY+DMSTDn31k8JL4DJuB9oj5yuMgYcVbxfH1EmNSImUF/K2jMmxZ/1kLzevbLfYFLxBLFGF6VQQ5CguuIZbYEXTvvFWpCMLsiAxyK9dhb6c5TiLdZuk7lEGTmS3dJJfe+qcejhCDyXGaAG9tgxK8LGAzzHt5AEOuflp53mJ+D+kdATNHQiPuflTia4IWTF6ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5nWQgrb6P3c01GcdgOokhynhMubBwyBD+0ysm0SYgL4=;
- b=FjSZtZZ6XqR7+J4mOaswZhxeugzp2q6JcKbRGTJ6R7pazDo+XS6N3dzoj++cwzO7TQmOkXYsI7inqmpisPYl2t0fekLdXiyLfy1DiE5kfPOwH+k0YVCHl9W5mN6bhmnlfBtVHC+cGS/6fagBWclro/jtPUgKZieWBZtlBAP/cUDKsUHfYg4UV1qeXjegoiKUXuXqsxJwn3T9KXJtLqRLiHCYElBntelTRntn894eLViCYL1I+ed3RfO6eYd+ZQk1m0dXrpvl2geMYC0S9Px62H0Lh0yKpx140JlIX3D3DfkiOmWym1/42Nxcja1YRcyh+rOaJvkPZzvkC9jXsqyQdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=vmware.com;dmarc=pass action=none
- header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5nWQgrb6P3c01GcdgOokhynhMubBwyBD+0ysm0SYgL4=;
- b=Tch8c7cqHOAJYpo5uMVHPF1QnUsP953QlSjs+mdkypWDSoTYFJy2jAgx1MYbNjre5G1K/qHZ22v0AxcCPjW9sHhU7Fypt5r8fq7zmFwd4QnBFQUC9PJs5b2/I46tUFjIoYKqWW9+36hXcMX+5eYHXbnmUObRRtgMr+LiXojJxAg=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4903.namprd05.prod.outlook.com (52.135.235.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.8; Tue, 9 Jul 2019 21:09:13 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2073.008; Tue, 9 Jul 2019
- 21:09:13 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Mike Travis <mike.travis@hpe.com>
-CC:     Russ Anderson <rja@hpe.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>
-Subject: Re: [PATCH v2 8/9] x86/mm/tlb: Remove UV special case
-Thread-Topic: [PATCH v2 8/9] x86/mm/tlb: Remove UV special case
-Thread-Index: AQHVMW7tVxgDsYZZ7Ee0f7SvqciMDKbCvD6AgAAFPwCAAAWSAIAACzAA
-Date:   Tue, 9 Jul 2019 21:09:13 +0000
-Message-ID: <3AA5020A-111F-48F4-A0E9-B3C09E5EC43E@vmware.com>
-References: <20190702235151.4377-1-namit@vmware.com>
- <20190702235151.4377-9-namit@vmware.com>
- <alpine.DEB.2.21.1907092146570.1758@nanos.tec.linutronix.de>
- <20190709200914.fjvi3cy3qfc6fmis@hpe.com>
- <373adfb0-0047-eae2-46a5-041caddfca97@hpe.com>
-In-Reply-To: <373adfb0-0047-eae2-46a5-041caddfca97@hpe.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [38.119.166.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ba61a693-e7b3-468d-4c20-08d704b1b1d7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4903;
-x-ms-traffictypediagnostic: BYAPR05MB4903:
-x-microsoft-antispam-prvs: <BYAPR05MB49034D0C82FEF01C930D90F0D0F10@BYAPR05MB4903.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(346002)(366004)(39860400002)(199004)(189003)(256004)(26005)(6116002)(229853002)(3846002)(86362001)(11346002)(7736002)(54906003)(6246003)(446003)(2616005)(476003)(486006)(14454004)(5660300002)(8936002)(6486002)(186003)(99286004)(6916009)(316002)(296002)(76116006)(305945005)(76176011)(2906002)(71200400001)(8676002)(66066001)(25786009)(478600001)(53546011)(36756003)(33656002)(6512007)(53936002)(66476007)(102836004)(4326008)(66556008)(68736007)(66946007)(6436002)(7416002)(66446008)(64756008)(71190400001)(81156014)(6506007)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4903;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +EV+1o0Yl7rjRC6Ta9cvESXkKX7LlJDgWDADWTb0l9bHDiai+m8Vs4/HlXk/Hqy7CnGrSvzfStSysjpYmoct/zInnfGFAbDCFic3V/frV/Ay+8dT+B4Fcfqt1TFBHoP6VxZvdVlB0Ioro3BmLscRh5s7mEkDWueXXO4K8nixvEHbhX5njZYS+s5vX7OXcL4YXdZatOaR3gI9WBALm6e9Nh6cZETXWTpUkpiSBxqLjzWGwehNjk/Q9QM9C7RnVD89cwWm4AfVU9c+w0l0m0cQWf/RN2fDAWqmtFpp/ituaGJExuS9jP5KCc06nxKL7yaCwDMtmuatJVA+lO+lhLeIpFoi3O7EtkWY2oXU12wubhFQxJH88GI/9UcKOpue+YvyxUX/8B6Ipa0PqtC6AE2UQAB74FoEjT68EMyM5pe81so=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D7C8FC00949CFE41BCCA74E6E8D814EC@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 9 Jul 2019 17:11:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22480 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726318AbfGIVL1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 17:11:27 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x69L83Zx101361;
+        Tue, 9 Jul 2019 17:11:24 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tn1bcjskg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jul 2019 17:11:24 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x69L9eho030322;
+        Tue, 9 Jul 2019 21:11:23 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tjk96fq36-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jul 2019 21:11:23 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x69LBLiS36962590
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Jul 2019 21:11:21 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 113D228059;
+        Tue,  9 Jul 2019 21:11:21 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BC6C82805C;
+        Tue,  9 Jul 2019 21:11:20 +0000 (GMT)
+Received: from [9.60.75.173] (unknown [9.60.75.173])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Jul 2019 21:11:20 +0000 (GMT)
+Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate resource
+ in use
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
+ <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
+ <20190618182558.7d7e025a.cohuck@redhat.com>
+ <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
+ <20190701212643.0dd7d4ab.cohuck@redhat.com>
+ <c771961d-f840-fe8a-09b7-a11b39a74d4c@linux.ibm.com>
+ <20190709124920.3a910dca.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <089663dd-2e6d-cbb7-c1ef-a8a4b325abd3@linux.ibm.com>
+Date:   Tue, 9 Jul 2019 17:11:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba61a693-e7b3-468d-4c20-08d704b1b1d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 21:09:13.3844
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4903
+In-Reply-To: <20190709124920.3a910dca.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907090253
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdWwgOSwgMjAxOSwgYXQgMToyOSBQTSwgTWlrZSBUcmF2aXMgPG1pa2UudHJhdmlzQGhw
-ZS5jb20+IHdyb3RlOg0KPiANCj4gDQo+IA0KPiBPbiA3LzkvMjAxOSAxOjA5IFBNLCBSdXNzIEFu
-ZGVyc29uIHdyb3RlOg0KPj4gT24gVHVlLCBKdWwgMDksIDIwMTkgYXQgMDk6NTA6MjdQTSArMDIw
-MCwgVGhvbWFzIEdsZWl4bmVyIHdyb3RlOg0KPj4+IE9uIFR1ZSwgMiBKdWwgMjAxOSwgTmFkYXYg
-QW1pdCB3cm90ZToNCj4+PiANCj4+Pj4gU0dJIFVWIHN1cHBvcnQgaXMgb3V0ZGF0ZWQgYW5kIG5v
-dCBtYWludGFpbmVkLCBhbmQgaXQgaXMgbm90IGNsZWFyIGhvdw0KPj4+PiBpdCBwZXJmb3JtcyBy
-ZWxhdGl2ZWx5IHRvIG5vbi1VVi4gUmVtb3ZlIHRoZSBjb2RlIHRvIHNpbXBsaWZ5IHRoZSBjb2Rl
-Lg0KPj4+IA0KPj4+IFlvdSBzaG91bGQgYXQgbGVhc3QgQ2MgdGhlIFNHSS9IUCBmb2xrcyBvbiB0
-aGF0LiBUaGV5IGFyZSBzdGlsbA0KPj4+IGFyb3VuZC4gRG9uZSBzby4NCj4+IFRoYW5rcyBUaG9t
-YXMuICBUaGUgU0dJIFVWIGlzIG5vdyBIUEUgU3VwZXJkb21lIEZsZXggYW5kIGlzDQo+PiB2ZXJ5
-IG11Y2ggc3RpbGwgc3VwcG9ydGVkLg0KPj4gVGhhbmtzLg0KPj4+PiBDYzogUGV0ZXIgWmlqbHN0
-cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPg0KPj4+PiBDYzogRGF2ZSBIYW5zZW4gPGRhdmUuaGFu
-c2VuQGludGVsLmNvbT4NCj4+Pj4gU3VnZ2VzdGVkLWJ5OiBBbmR5IEx1dG9taXJza2kgPGx1dG9A
-a2VybmVsLm9yZz4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogTmFkYXYgQW1pdCA8bmFtaXRAdm13YXJl
-LmNvbT4NCj4+Pj4gLS0tDQo+Pj4+ICBhcmNoL3g4Ni9tbS90bGIuYyB8IDI1IC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0NCj4+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAyNSBkZWxldGlvbnMoLSkNCj4+
-Pj4gDQo+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9tbS90bGIuYyBiL2FyY2gveDg2L21tL3Rs
-Yi5jDQo+Pj4+IGluZGV4IGI0N2E3MTgyMGYzNS4uNjRhZmUxMjE1NDk1IDEwMDY0NA0KPj4+PiAt
-LS0gYS9hcmNoL3g4Ni9tbS90bGIuYw0KPj4+PiArKysgYi9hcmNoL3g4Ni9tbS90bGIuYw0KPj4+
-PiBAQCAtNjg5LDMxICs2ODksNiBAQCB2b2lkIG5hdGl2ZV9mbHVzaF90bGJfbXVsdGkoY29uc3Qg
-c3RydWN0IGNwdW1hc2sgKmNwdW1hc2ssDQo+Pj4+ICAJCXRyYWNlX3RsYl9mbHVzaChUTEJfUkVN
-T1RFX1NFTkRfSVBJLA0KPj4+PiAgCQkJCShpbmZvLT5lbmQgLSBpbmZvLT5zdGFydCkgPj4gUEFH
-RV9TSElGVCk7DQo+Pj4+ICAtCWlmIChpc191dl9zeXN0ZW0oKSkgew0KPj4+PiAtCQkvKg0KPj4+
-PiAtCQkgKiBUaGlzIHdob2xlIHNwZWNpYWwgY2FzZSBpcyBjb25mdXNlZC4gIFVWIGhhcyBhICJC
-cm9hZGNhc3QNCj4+Pj4gLQkJICogQXNzaXN0IFVuaXQiLCB3aGljaCBzZWVtcyB0byBiZSBhIGZh
-bmN5IHdheSB0byBzZW5kIElQSXMuDQo+Pj4+IC0JCSAqIEJhY2sgd2hlbiB4ODYgdXNlZCBhbiBl
-eHBsaWNpdCBUTEIgZmx1c2ggSVBJLCBVViB3YXMNCj4+Pj4gLQkJICogb3B0aW1pemVkIHRvIHVz
-ZSBpdHMgb3duIG1lY2hhbmlzbS4gIFRoZXNlIGRheXMsIHg4NiB1c2VzDQo+Pj4+IC0JCSAqIHNt
-cF9jYWxsX2Z1bmN0aW9uX21hbnkoKSwgYnV0IFVWIHN0aWxsIHVzZXMgYSBtYW51YWwgSVBJLA0K
-Pj4+PiAtCQkgKiBhbmQgdGhhdCBJUEkncyBhY3Rpb24gaXMgb3V0IG9mIGRhdGUgLS0gaXQgZG9l
-cyBhIG1hbnVhbA0KPj4+PiAtCQkgKiBmbHVzaCBpbnN0ZWFkIG9mIGNhbGxpbmcgZmx1c2hfdGxi
-X2Z1bmNfcmVtb3RlKCkuICBUaGlzDQo+Pj4+IC0JCSAqIG1lYW5zIHRoYXQgdGhlIHBlcmNwdSB0
-bGJfZ2VuIHZhcmlhYmxlcyB3b24ndCBiZSB1cGRhdGVkDQo+Pj4+IC0JCSAqIGFuZCB3ZSdsbCBk
-byBwb2ludGxlc3MgZmx1c2hlcyBvbiBmdXR1cmUgY29udGV4dCBzd2l0Y2hlcy4NCj4+Pj4gLQkJ
-ICoNCj4+Pj4gLQkJICogUmF0aGVyIHRoYW4gaG9va2luZyBuYXRpdmVfZmx1c2hfdGxiX211bHRp
-KCkgaGVyZSwgSSB0aGluaw0KPj4+PiAtCQkgKiB0aGF0IFVWIHNob3VsZCBiZSB1cGRhdGVkIHNv
-IHRoYXQgc21wX2NhbGxfZnVuY3Rpb25fbWFueSgpLA0KPj4+PiAtCQkgKiBldGMsIGFyZSBvcHRp
-bWFsIG9uIFVWLg0KPj4+PiAtCQkgKi8NCj4gDQo+IEkgdGhvdWdodCB0aGlzIGNoYW5nZSB3YXMg
-YWxyZWFkeSBwcm9wb3NlZCBhIGJpdCBhZ28gYW5kIHdlIGFja2VkIGl0DQo+IGF3aGlsZSBiYWNr
-LiBBbHNvIHRoZSByZXBsYWNlbWVudCBmdW5jdGlvbmFsaXR5IGlzIGJlaW5nIHdvcmtlZCBvbiBi
-dXQgaXQNCj4gaXMgbW9yZSBjb21wbGV4LiBUaGUgc21wIGNhbGwgbWFueSBoYXMgdG8gc3VwcG9y
-dCBhbGwgdGhlIHJlYXNvbnMgd2h5IGl04oCZcw0KPiBjYWxsZWQgYW5kIG5vdCBqdXN0IHRoZSB0
-bGIgc2hvb3QgZG93bnMgYXMgaXMgdGhlIGN1cnJlbnQgQkFVIGNhc2UuDQoNClNvcnJ5IGZvciBu
-b3QgY2PigJlpbmcgeW91IGJlZm9yZS4gSW4gdGhlIG1lYW53aGlsZSwgY2FuIHlvdSBnaXZlIGFu
-IGV4cGxpY2l0DQphY2tlZC1ieT8gKEkgY291bGRu4oCZdCBmaW5kIHRoZSBwcmV2aW91cyBwYXRj
-aCB5b3UgcmVnYXJkZWQuKQ0KDQpUaGFua3MsDQpOYWRhdg==
+On 7/9/19 6:49 AM, Cornelia Huck wrote:
+> On Mon, 8 Jul 2019 10:27:11 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> 
+>> On 7/1/19 3:26 PM, Cornelia Huck wrote:
+>>> On Wed, 19 Jun 2019 09:04:18 -0400
+>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> 
+>>>> Allow me to first address your fear that a bad actor can hog
+>>>> resources that can't be removed by root. With this enhancement,
+>>>> there is nothing preventing a root user from taking resources
+>>>> from a matrix mdev, it simply forces him/her to follow the
+>>>> proper procedure. The resources to be removed must first be
+>>>> unassigned from the matrix mdev to which they are assigned.
+>>>> The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask
+>>>> sysfs attributes can then be edited to transfer ownership
+>>>> of the resources to zcrypt.
+>>>
+>>> What is the suggested procedure when root wants to unbind a queue
+>>> device? Find the mdev using the queue (is that easy enough?), unassign
+>>> it, then unbind? Failing to unbind is a bit unexpected; can we point
+>>> the admin to the correct mdev from which the queue has to be removed
+>>> first?
+>>
+>> The proper procedure is to first unassign the adapter, domain, or both
+>> from the mdev to which the APQN is assigned. The difficulty in finding
+>> the queue depends upon how many mdevs have been created. I would expect
+>> that an admin would keep records of who owns what, but in the case he or
+>> she doesn't, it would be a matter of printing out the matrix attribute
+>> of each mdev until you find the mdev to which the APQN is assigned.
+> 
+> Ok, so the information is basically available, if needed.
+> 
+>> The only means I know of for informing the admin to which mdev a given
+>> APQN is assigned is to log the error when it occurs.
+> 
+> That might be helpful, if it's easy to do.
+> 
+>> I think Matt is
+>> also looking to provide query functions in the management tool on which
+>> he is currently working.
+> 
+> That also sounds helpful.
+> 
+> (...)
+> 
+>>>> * It forces the use of the proper procedure to change ownership of AP
+>>>>      queues.
+>>>
+>>> This needs to be properly documented, and the admin needs to have a
+>>> chance to find out why unbinding didn't work and what needs to be done
+>>> (see my comments above).
+>>
+>> I will create a section in the vfio-ap.txt document that comes with this
+>> patch set describing the proper procedure for unbinding queues. Of
+>> course, we'll make sure the official IBM doc also more thoroughly
+>> describes this.
+> 
+> +1 for good documentation.
+> 
+> With that, I don't really object to this change.
+
+Then I will make the suggested changes and post v5 to the list.
+
+> 
+
