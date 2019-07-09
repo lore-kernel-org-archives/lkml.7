@@ -2,90 +2,133 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9F1C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F87C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174B620656
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VxKXDupf"
+	by mail.kernel.org (Postfix) with ESMTP id 3EDAF20693
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:41:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562708495;
+	bh=hVv4LjTavofkUrh/+Ry4OXEfaVckqONNKz3FhdkLNv8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=i98tmRs64dtj36h03aeLUR13rL9mrDSmdu1xwEAr0D/VRSoxgxPHdQL3HaHQ4VLDV
+	 uUkWBKOMiUFmZ3Q+fQYQu1czzc3S5ktydEP5nf4kJrBqRq+VY8Sy9SRadjb6AJm5bz
+	 CaED5NVKMOLR5dHfkRbIfkROj0WLor/vnqm6TSgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbfGIVhG (ORCPT
+        id S1729524AbfGIVld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:37:06 -0400
-Received: from ozlabs.org ([203.11.71.1]:37421 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbfGIVhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:37:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jwdB6nWwz9sBF;
-        Wed, 10 Jul 2019 07:37:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562708223;
-        bh=MEmOXDI97jity7DijGRA1XeyE6JKjpiqpj9iM0EwCqE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VxKXDupfP217sU2hOLZ5jkEtvwkH8PBLBVI2mqdypq7hjjLrx3RKhnU9Vv12k4ylo
-         Vx5Vky15Lxs2jbKnNDnyPfrW9lNVr4aFDNokrTqbrOzCO33fRnkdOxnqTNAYBSyXKv
-         +ljB0AQYcuzW1deMBjESPqB30C4jnl8ToljSh8uvOwYgg2vgY8z7m6VCBXf6+l8tHV
-         hRf/XiiSIzJ/PGko3veFs8YUrrQ0X0xx6jBJRkaIYQ/KQ38+M15Yxkg+xBUERV4o33
-         RCkmNBaH5+xJbTezlXra6UZCa2l6AxP3AhOPMQzUzi2LYhnIipNZcjlpQlmwMtdpi4
-         c+9MLSFU7Ey/g==
-Date:   Wed, 10 Jul 2019 07:36:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        Paul Blakey <paulb@mellanox.com>
-Subject: linux-next: Signed-off-by missing for commit in the net-next tree
-Message-ID: <20190710073656.45a843db@canb.auug.org.au>
+        Tue, 9 Jul 2019 17:41:33 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34079 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGIVld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 17:41:33 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k10so241095qtq.1;
+        Tue, 09 Jul 2019 14:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=QwndTe0YbWPxv611pI7V02B0mIgtu96cP7ewbywUwjg=;
+        b=ZlaVdzKR62QMVBXExU9yecMvvjrWv8pcrvYYz0tUBQsKOLGNKSV5xNTkinxqgIqCgS
+         HCVlwMsbqDmAOOUh8vx8/AMcBziTzA++EN/SxF22aFYfg9JJl/IikxqOUwcog7DAmDAR
+         f3bOc18RFmELS57k6X6Y5nAaP3+lZsUSK3l2XCl5CIbFa3JKm8chgH/lxW35c0INZaii
+         unu8dLxIq56kVcfKpFqwvQJUe1o/2gJNfpeZJneMA1cgX1r+0oglkb1NrIMHIMF/1cFv
+         W1l7fs4qDJuewO0qsb3PpdlXhmFeKW7Nh6KaKJ4ghjLIiws6HHB9UBoZf25KvZLE1q61
+         9ACw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=QwndTe0YbWPxv611pI7V02B0mIgtu96cP7ewbywUwjg=;
+        b=M/UUUnu4lrcb/B4xKwzQa+Eixbk/9+qFOWzAOi8i0gXP3w81VpP8KJfjL4AsdcwqP8
+         Ofv/+Ouea/IZ7JxAfWlthk9W0d9ubXhMMSnqJor9nRhkgaAFmZfVkqJdxRbH0Rtq54Nk
+         3kTfiFZ2b+QnrCIITwmpvPak/XSVv0IkTPd1pjEzG+iKKrtjiFDZCIcvpS6iJAr2UfEP
+         7mbbNzyXJBwUVzMIGomI/hAhxKJ8csQli7R09VeEYEu16fgpkjDyIfom6Qq0Bkzm2q6U
+         YcsABqSF7ZY4YuCM6HGl6OfsLPf5wjOdQSM1R9ddmEWoeCs6ee+M6Pl83W3uESXcRseI
+         D6cw==
+X-Gm-Message-State: APjAAAXd++SY4N9siO6zFxge5jz5boLB2izxIUs4Mjhc2Kt0FasqGWVo
+        YlzpCTg6KQjkke5J8LUV37M=
+X-Google-Smtp-Source: APXvYqxaoI19YT2qAqYhYrPj4SUcXRaqW0XeVWjsErjSs90LfkZJ+RwXWeVsjac2cGBC6uCKXbNK6g==
+X-Received: by 2002:a0c:b521:: with SMTP id d33mr21593820qve.239.1562708492394;
+        Tue, 09 Jul 2019 14:41:32 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:fa50])
+        by smtp.gmail.com with ESMTPSA id x8sm138972qka.106.2019.07.09.14.41.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 14:41:31 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 14:41:29 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Josef Bacik <josef@toxicpanda.com>
+Subject: [PATCH] blk-cgroup: turn on psi memstall stuff
+Message-ID: <20190709214129.GK657710@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/akBiVyxF7kLJ5yKG_sTIIe0"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/akBiVyxF7kLJ5yKG_sTIIe0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Josef Bacik <jbacik@fb.com>
 
-Hi all,
+With the psi stuff in place we can use the memstall flag to indicate
+pressure that happens from throttling.
 
-Commit
+Signed-off-by: Josef Bacik <jbacik@fb.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+ block/blk-cgroup.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-  6e52fca36c67 ("tc-tests: Add tc action ct tests")
-
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/akBiVyxF7kLJ5yKG_sTIIe0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0lCPgACgkQAVBC80lX
-0GzNrggApEX4LTveaFpL/lsLcs8Lxp9DR5q5vXAsGSwfePOmKOv7VA0KIo3NtmJp
-YuBPiyEaV29gcHkKd5StK52XQe0hzJdS2raI3vkq2ZQ3hgiKeTJHEC8ZNbmvzFWy
-O12mjO5SI3MUdiRFLkJsevTXMOGWONjypfRabJcbrULEScGwh0Mqj41xZznWQsnB
-ppEA1GFlSVwjgjmA++mC1FgLyfALsBdrLPQOUGj6vwy81GNt25bZemoq5lUn0JLh
-fR+KTTyGza8YS+MuJmJrar7aAzOjuETIIWg/3ynAWVDNqamiAK0KwZyc87c85wrn
-PxdDeo+blNlf2jKoEo0l55hZJJ+R3Q==
-=AEcI
------END PGP SIGNATURE-----
-
---Sig_/akBiVyxF7kLJ5yKG_sTIIe0--
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 1f7127b03490..6ed515b78cb3 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -29,6 +29,7 @@
+ #include <linux/ctype.h>
+ #include <linux/blk-cgroup.h>
+ #include <linux/tracehook.h>
++#include <linux/psi.h>
+ #include "blk.h"
+ 
+ #define MAX_KEY_LEN 100
+@@ -1644,6 +1645,7 @@ static void blkcg_scale_delay(struct blkcg_gq *blkg, u64 now)
+  */
+ static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
+ {
++	unsigned long pflags;
+ 	u64 now = ktime_to_ns(ktime_get());
+ 	u64 exp;
+ 	u64 delay_nsec = 0;
+@@ -1670,11 +1672,8 @@ static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
+ 	 */
+ 	delay_nsec = min_t(u64, delay_nsec, 250 * NSEC_PER_MSEC);
+ 
+-	/*
+-	 * TODO: the use_memdelay flag is going to be for the upcoming psi stuff
+-	 * that hasn't landed upstream yet.  Once that stuff is in place we need
+-	 * to do a psi_memstall_enter/leave if memdelay is set.
+-	 */
++	if (use_memdelay)
++		psi_memstall_enter(&pflags);
+ 
+ 	exp = ktime_add_ns(now, delay_nsec);
+ 	tok = io_schedule_prepare();
+@@ -1684,6 +1683,9 @@ static void blkcg_maybe_throttle_blkg(struct blkcg_gq *blkg, bool use_memdelay)
+ 			break;
+ 	} while (!fatal_signal_pending(current));
+ 	io_schedule_finish(tok);
++
++	if (use_memdelay)
++		psi_memstall_leave(&pflags);
+ }
+ 
+ /**
