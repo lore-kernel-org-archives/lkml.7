@@ -3,94 +3,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E743C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F57C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAA320656
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B1F20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfGIPa5 (ORCPT
+        id S1726541AbfGIPbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 11:30:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31242 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726055AbfGIPa4 (ORCPT
+        Tue, 9 Jul 2019 11:31:00 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36107 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726444AbfGIPa6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 11:30:56 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x69FEqO2001247
-        for <linux-kernel@vger.kernel.org>; Tue, 9 Jul 2019 11:30:55 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmurvwmrp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:30:54 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 9 Jul 2019 16:30:52 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 9 Jul 2019 16:30:49 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x69FUmUd50790458
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jul 2019 15:30:48 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E78B4A405F;
-        Tue,  9 Jul 2019 15:30:47 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80931A4040;
-        Tue,  9 Jul 2019 15:30:47 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.228])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Jul 2019 15:30:47 +0000 (GMT)
-Date:   Tue, 9 Jul 2019 17:30:46 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, frankja@linux.ibm.com, david@redhat.com,
-        mjrosato@linux.ibm.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com
-Subject: Re: [PATCH v4 0/7] s390: vfio-ap: dynamic configuration support
-In-Reply-To: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
-References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Tue, 9 Jul 2019 11:30:58 -0400
+Received: from callcc.thunk.org ([199.116.118.215])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x69FUe61012204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 9 Jul 2019 11:30:42 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id D86D942002E; Tue,  9 Jul 2019 11:30:39 -0400 (EDT)
+Date:   Tue, 9 Jul 2019 11:30:39 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Re: Procedure questions - new filesystem driver..
+Message-ID: <20190709153039.GA3200@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+References: <21080.1562632662@turing-police>
+ <20190709045020.GB23646@mit.edu>
+ <20190709112136.GI32320@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070915-0020-0000-0000-00000351B118
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070915-0021-0000-0000-000021A56158
-Message-Id: <20190709173046.0a622f3a.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=877 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907090180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709112136.GI32320@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 15:39:33 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Tue, Jul 09, 2019 at 04:21:36AM -0700, Matthew Wilcox wrote:
+> How does
+> https://www.zdnet.com/article/microsoft-open-sources-its-entire-patent-portfolio/
+> change your personal opinion?
 
-> The current design for AP pass-through does not support making dynamic
-> changes to the AP matrix of a running guest
+According to SFC's legal analysis, Microsoft joining the OIN doesn't
+mean that the eXFAT patents are covered, unless *Microsoft*
+contributes the code to the Linux usptream kernel.  That's because the
+OIN is governed by the Linux System Definition, and until MS
+contributes code which covered by the exFAT patents, it doesn't count.
 
-Sorry guys, I currently don't have the bandwidth to participate in this
-discussion. Please proceed without me ;)
+For more details:
 
-Regards,
-Halil
+https://sfconservancy.org/blog/2018/oct/10/microsoft-oin-exfat/
 
+(This is not legal advice, and I am not a lawyer.)
+
+						- Ted
