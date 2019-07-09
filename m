@@ -2,149 +2,109 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7605EC73C5C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B992AC73C5C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455F02073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C2C2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 22:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562709495;
-	bh=V0t94zidShPRLZ22vm+sPfcAMvFC9tNqSb2NrZj7IsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tdayk4+s8GZ650HVZGHt2NtwXl7U7IzhNCiPiX/slKDxo3dWtMAFNy4N5aR+1I0KB
-	 GVyg9GYz2GDtS19eiTTKXaps9Rq2PPHIjQpz2sP6Pa6I9CtM5rhN+g71AsO+rYvUII
-	 YFoifrm/3aj5eWHiQUf8SHXfL/ZtVKUfcOw9+mAQ=
+	s=default; t=1562709637;
+	bh=bZB3wvd281Tkbuktzn2vzVJvaisRfC1J+QDnNtgkiYQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E+LNcm6in/uCZdPbZ+oje+Kd/Oe5Isg8CdUyvvT4WeJB0wGmm22SRyIvbVBZ4xgcl
+	 FtE4k8MqmF73jKRqUMey9B/FJXp6td/mCfCdwdwvAEz6f4uGM+tr2d0KkGV5O4jvOv
+	 seVEZn9wNMJCEHwUXr3DVfY89WCy39W5yZa3S+RU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfGIV6O (ORCPT
+        id S1728962AbfGIWAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:58:14 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44702 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfGIV6N (ORCPT
+        Tue, 9 Jul 2019 18:00:36 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43974 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfGIWAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:58:13 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so234894iob.11;
-        Tue, 09 Jul 2019 14:58:13 -0700 (PDT)
+        Tue, 9 Jul 2019 18:00:36 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c19so98562lfm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 15:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8LCwmhlroqvJoYVtDftuB4WQNbdMt0NyyAkLxO2Zs9Q=;
+        b=HhwTYpbATadQKDGXoiAludJULBBU0pueoAUphrh8Qaksl3ncvO1J6KZ62+ktfNXAlG
+         DSFOMyGTLdI8yJsK/mFpOMYNtuCJoMkpBXOq7FBXxcPYOfCtbbBNq2ixwBKZmzQQJHLn
+         MZfyY2VFMtHkHDCy/N+jJ5bx9mtpYey9ALX2k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Ey61egmeTzlJzdnS3KXDPWo7KaDWydr+b+uOUD/PhiM=;
-        b=dGy6QPfFr0GGfn2v93VPxlUrS+5pK+zHvIe+iSUVvUgt53VxHWunGpJC6N9Hd/IfUi
-         BFLVQaRYukKyDoaVIct6TNZgZsgl+P5RNNhkx/Ie2hA6+smDyI7ilD6ewgU22LQEHXhI
-         CUZCfiuLVyhq5FWbOYGJK26I/rGEBsVIZPhuXHR1DNvfXsQiEPT9BVroU+LRtp+cJvVr
-         7jEm70/kZuFRkFDVQe/lsoqJrqYmOIrP5V7gRrm9LChqJqEBrMNKUaVvAPrNbCuJg/79
-         GmPinNXqX3r9KjlOSuvcorEOuKlEc7VDd6Jnd7zI5Z28a9vaSoZIw8asjct/jxIp5WMH
-         8xCQ==
-X-Gm-Message-State: APjAAAXoVtJz01e6xru2Ch7rPzOywAnCaLMqjX7f6+XtYiHHi6K0rV04
-        u8J6OeLcfLvItgOsiM5/9A==
-X-Google-Smtp-Source: APXvYqw5juZHQchjp5SSeEn+D8SjtVO4k6VtZq4TP772vPqxBVFTwIGj7pgz0nnUSAKu0HaFyjkq1Q==
-X-Received: by 2002:a5d:87d6:: with SMTP id q22mr7694894ios.2.1562709492517;
-        Tue, 09 Jul 2019 14:58:12 -0700 (PDT)
-Received: from localhost ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id p3sm58971iom.7.2019.07.09.14.58.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 14:58:11 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 15:58:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc:     sre@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: max8998: Add charger subnode
- binding
-Message-ID: <20190709215810.GB26049@bogus>
-References: <20190621115602.17559-1-pawel.mikolaj.chmiel@gmail.com>
- <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8LCwmhlroqvJoYVtDftuB4WQNbdMt0NyyAkLxO2Zs9Q=;
+        b=UPypmSYYednkaMuqk11qlETMmpCw444/Dt4eMr07LbtNmj+vNW48nJtoZOeUf38gbe
+         sffE4TwtgSO7Dlkg71BbMHIvUEr8aIgdUsqwroh0rbt1dRdNmCIB3aHHu+xU1qnsPK9z
+         RmytII11eRLLCSqdvuU/UOpBeYTD4U24RKXZrA9/H3EtIXupyP8rCKZFXFkC32eY0YoI
+         BKDdHUCF4+Yk3+znskQlv3Awv8QAr/0FGyAMhio50Lk5SvskUAKxr5rpon0NiqeXwERw
+         bZ4MPby4OeS8oXyv4JmavuQJkeCGuKPO552s9R2OKTCGUBFfgEb9WCDI9U1d2VR9u5l6
+         sSqQ==
+X-Gm-Message-State: APjAAAV7uot15x21Z2CDcnzYi1RQCVDXJAulWgMWKzhOt5j0RzlGJ1YS
+        kg5Q22j2iNKiZYP8KHokQRrDX+vxjZU=
+X-Google-Smtp-Source: APXvYqxMZDziGZtnvBS3DIV/DeEaELQzJvxt+7lr1h8pkyT2tMUn6vnrB8LPkCCBFSqc8dumtE+ffw==
+X-Received: by 2002:ac2:47fa:: with SMTP id b26mr12661782lfp.82.1562709633098;
+        Tue, 09 Jul 2019 15:00:33 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id c15sm57781lja.79.2019.07.09.15.00.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 15:00:32 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id c19so98489lfm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 15:00:31 -0700 (PDT)
+X-Received: by 2002:a19:641a:: with SMTP id y26mr11915886lfb.29.1562709631714;
+ Tue, 09 Jul 2019 15:00:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190708162756.GA69120@gmail.com> <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com>
+ <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com> <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+In-Reply-To: <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 9 Jul 2019 15:00:15 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>
+Message-ID: <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+To:     Ingo Molnar <mingo@kernel.org>, Kees Cook <keescook@chromium.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 01:56:02PM +0200, Paweł Chmiel wrote:
-> This patch adds devicetree bindings documentation for
-> battery charging controller as the subnode of MAX8998 PMIC.
-> 
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
-> Changes from v3:
->   - Property prefix should be maxim, not max8998
->   - Describe what End of Charge in percent means
-> 
-> Changes from v2:
->   - Make charge-restart-level-microvolt optional.
->   - Make charge-timeout-hours optional.
-> 
-> Changes from v1:
->   - Removed unneeded Fixes tag
->   - Correct description of all charger values
->   - Added missing property unit
-> ---
->  .../devicetree/bindings/mfd/max8998.txt       | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
-> index 5f2f07c09c90..368f787d6079 100644
-> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-> @@ -48,6 +48,25 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
->  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
->    for buck2 regulator that can be selected using dvs gpio.
->  
-> +Charger: Configuration for battery charging controller should be added
-> +inside a child node named 'charger'.
-> +  Required properties:
-> +  - maxim,end-of-charge-percentage: End of Charge in percent.
-> +    When the charge current in constant-voltage phase drops below
-> +    end-of-charge-percentage of it's start value, charging is terminated.
-> +    If value equals 0, leave it unchanged. Otherwise it should be value
-> +    from 10 to 45 by 5 step.
-> +
-> +  Optional properties:
-> +  - maxim,charge-restart-threshold: Charge restart threshold in millivolts.
-> +    If property is not present, this will be disabled.
-> +    Valid values are: 0, 100, 150, 200. If the value equals 0, leave it
-> +    unchanged.
+On Tue, Jul 9, 2019 at 2:45 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> and I suspect it's the sensitive bit pinning. But I'll delve all the way.
 
-Needs a unit suffix as defined in property-units.txt.
+Confirmed. Bisection says
 
-> +
-> +  - maxim,charge-timeout: Charge timeout in hours. If property is not
-> +    present, this will be disabled. Valid values are: 0, 5, 6, 7.
-> +    If the value equals 0, leave it unchanged.
+873d50d58f67ef15d2777b5e7f7a5268bb1fbae2 is the first bad commit
+commit 873d50d58f67ef15d2777b5e7f7a5268bb1fbae2
+Author: Kees Cook <keescook@chromium.org>
+Date:   Mon Jun 17 21:55:02 2019 -0700
 
-Needs a unit suffix as defined in property-units.txt.
+    x86/asm: Pin sensitive CR4 bits
 
-> +
->  Regulators: All the regulators of MAX8998 to be instantiated shall be
->  listed in a child node named 'regulators'. Each regulator is represented
->  by a child node of the 'regulators' node.
-> @@ -97,6 +116,13 @@ Example:
->  		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
->  		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
->  
-> +		/* Charger configuration */
-> +		charger {
-> +			maxim,end-of-charge-percentage = <20>;
-> +			maxim,charge-restart-threshold = <100>;
-> +			maxim,charge-timeout = <7>;
-> +		};
-> +
->  		/* Regulators to instantiate */
->  		regulators {
->  			ldo2_reg: LDO2 {
-> -- 
-> 2.17.1
-> 
+this is on a bog-standard Intel setup with F30, both desktop and
+laptop (i9-9900k and i7-8565u respectively).
+
+I haven't confirmed yet whether reverting just that one commit is
+required, or if I need to revert the cr0 one too.
+
+I also don't have any logs, because the boot never gets far enough. I
+assume that there was a problem bringing up a non-boot CPU, and the
+eventual hang ends up being due to that.
+
+                   Linus
