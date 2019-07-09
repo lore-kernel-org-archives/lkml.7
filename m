@@ -2,269 +2,130 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B7BC73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 17:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2E6C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 17:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 018EF2082A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 17:40:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUn1o+Ca"
+	by mail.kernel.org (Postfix) with ESMTP id 97FE42082A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 17:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfGIRk5 (ORCPT
+        id S1726784AbfGIRsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 13:40:57 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43957 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfGIRk4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 13:40:56 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m14so16634260qka.10;
-        Tue, 09 Jul 2019 10:40:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KaXFjL0Bq/Ll+4OsPHIbth6j2gGxDomZsAOX/Z1XXXs=;
-        b=VUn1o+CakjYdO9JM6RHoG3gX7/7OiZeO8s4EIAI2IJJUSqoWT/jntWD6Egk0xRsO2j
-         6YWVI7SKiIQ1kwWtMNY3qNNBiyI6jNPjj8b/jXl21k2+7kXqb90Qk7sIdikVSNkAGJlQ
-         I5Q0eNgP6AxYUXgqd1fOD0MS5/Ir098elHlvGrp60YiSM3WwL1ZdB3Eah7eqxgM5XROi
-         24eWJXT8oUyyrhN0Ijv0eTdElqHJEqRL+s5605MR3xKYnSavi4m7I+8g04Fq1e4rdgnH
-         LscJ7EoSJHK2h2dEsVuRM51/rDt7R98HWnNHFkRtkfDeftNGvDwA1gkIc0m8RC7RFcKW
-         AL8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KaXFjL0Bq/Ll+4OsPHIbth6j2gGxDomZsAOX/Z1XXXs=;
-        b=sg7256kjec16+uMwhSX00vCNJV4LrRp2LFl2ZHPT9mJ3jDkRBSBWUjCWe70yg7rS/6
-         bSITYaqC/i+A97FRlf7MO4JXaJos2Ohu/TeTJpVJ14Hrp+K/2cZLwpDddng7NrcTqpPt
-         maN5HvTZj6l8Vj3va/uJ+XTFubmpfNYvSemhuUMxkMh9+xTuo6b5IdGTAEBPnEIOGnOW
-         7VFHfzBQPuJ81r/sTo8NG4+EQDLxbphi5hewOYSfI9ezmdOqPht2GLYiZSVnFrBz19WV
-         +c4mD6Gk/ludoByt7IkLcCoPVZ/X+Q59bGQuToMDyloOn/0QzTf65KIPokHJCbEiYDNn
-         uTDQ==
-X-Gm-Message-State: APjAAAW5IiGC+2WAWKR85jd0fWWciHxd3cI7vS2cgbx9WJziAvNQ+Jbr
-        9XTR68aWqEslJgYWuLXdkXVlZgRpUGlKAMx6gSQ=
-X-Google-Smtp-Source: APXvYqyibMJbXm9Alo8OLT3WRTcDDkUx/HvVnnjCSs6UcJAHxInXJmFTgPtzV0XSTmEzeKFa1M3rdHtI/7Sedpr0JjA=
-X-Received: by 2002:a37:9b48:: with SMTP id d69mr18180458qke.449.1562694054353;
- Tue, 09 Jul 2019 10:40:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1562359091.git.a.s.protopopov@gmail.com>
- <e183c0af99056f8ea4de06acb358ace7f3a3d6ae.1562359091.git.a.s.protopopov@gmail.com>
- <734dd45a-95b0-a7fd-9e1d-0535ef4d3e12@iogearbox.net> <CAEf4BzaGGVv2z8jB8MnT7=gnn4nG0cp7DGYxfnnnpohOT=ujCA@mail.gmail.com>
- <CAGn_itw=BqWXn7ibg6M7j4r2T5CMo0paBhBoQQv7b+x7D2g2ww@mail.gmail.com>
-In-Reply-To: <CAGn_itw=BqWXn7ibg6M7j4r2T5CMo0paBhBoQQv7b+x7D2g2ww@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 9 Jul 2019 10:40:43 -0700
-Message-ID: <CAEf4BzYaiH_GhSJJjkGv4dGF7CbBrusTyShPP9DXvXjCLcmK+w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf, libbpf: add a new API bpf_object__reuse_maps()
-To:     Anton Protopopov <a.s.protopopov@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Tue, 9 Jul 2019 13:48:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53422 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbfGIRsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 13:48:02 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BA25788E59;
+        Tue,  9 Jul 2019 17:47:56 +0000 (UTC)
+Received: from treble (ovpn-112-43.rdu2.redhat.com [10.10.112.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D927C9D4C;
+        Tue,  9 Jul 2019 17:47:46 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 12:47:44 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Song Liu <songliubraving@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kairui Song <kasong@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:x86/urgent] bpf: Fix ORC unwinding in non-JIT BPF code
+Message-ID: <20190709174744.dtbjm72cbu5fepar@treble>
+References: <tip-b22cf36c189f31883ad0238a69ccf82aa1f3b16b@git.kernel.org>
+ <20190706202942.GA123403@gmail.com>
+ <20190707013206.don22x3tfldec4zm@treble>
+ <20190707055209.xqyopsnxfurhrkxw@treble>
+ <CAADnVQJqT8o=_6P6xHjwxrXqX9ToSb0cTfoOcm2Xcha3KRNNSw@mail.gmail.com>
+ <20190708223834.zx7u45a4uuu2yyol@treble>
+ <CAADnVQKWDvzsvyjGoFvSQV7VGr2hF2zzCsC9vnpncWMxOJWYdw@mail.gmail.com>
+ <20190708225359.ewk44pvrv6a4oao7@treble>
+ <20190708230201.mol27wzansuy3n2v@treble>
+ <CAADnVQ+imsK-reGBiSzY02e+KdyGYZxm1su7T1bWvti=YmSV-Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAADnVQ+imsK-reGBiSzY02e+KdyGYZxm1su7T1bWvti=YmSV-Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 09 Jul 2019 17:48:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 1:37 PM Anton Protopopov
-<a.s.protopopov@gmail.com> wrote:
->
-> =D0=BF=D0=BD, 8 =D0=B8=D1=8E=D0=BB. 2019 =D0=B3. =D0=B2 13:54, Andrii Nak=
-ryiko <andrii.nakryiko@gmail.com>:
-> >
-> > On Fri, Jul 5, 2019 at 2:53 PM Daniel Borkmann <daniel@iogearbox.net> w=
-rote:
-> > >
-> > > On 07/05/2019 10:44 PM, Anton Protopopov wrote:
-> > > > Add a new API bpf_object__reuse_maps() which can be used to replace=
- all maps in
-> > > > an object by maps pinned to a directory provided in the path argume=
-nt.  Namely,
-> > > > each map M in the object will be replaced by a map pinned to path/M=
-.name.
-> > > >
-> > > > Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
-> > > > ---
-> > > >  tools/lib/bpf/libbpf.c   | 34 ++++++++++++++++++++++++++++++++++
-> > > >  tools/lib/bpf/libbpf.h   |  2 ++
-> > > >  tools/lib/bpf/libbpf.map |  1 +
-> > > >  3 files changed, 37 insertions(+)
-> > > >
-> > > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > > > index 4907997289e9..84c9e8f7bfd3 100644
-> > > > --- a/tools/lib/bpf/libbpf.c
-> > > > +++ b/tools/lib/bpf/libbpf.c
-> > > > @@ -3144,6 +3144,40 @@ int bpf_object__unpin_maps(struct bpf_object=
- *obj, const char *path)
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > +int bpf_object__reuse_maps(struct bpf_object *obj, const char *pat=
-h)
-> >
-> > As is, bpf_object__reuse_maps() can be easily implemented by user
-> > applications, as it's only using public libbpf APIs, so I'm not 100%
-> > sure we need to add method like that to libbpf.
->
-> The bpf_object__reuse_maps() can definitely be implemented by user
-> applications, however, to use it a user also needs to re-implement the
-> bpf_prog_load_xattr funciton, so it seemed to me that adding this
-> functionality to the library is a better way.
+On Mon, Jul 08, 2019 at 04:16:25PM -0700, Alexei Starovoitov wrote:
+> total time is hard to compare.
+> Could you compare few tests?
+> like two that are called "tcpdump *"
+> 
+> I think small regression is ok.
+> Folks that care about performance should be using JIT.
 
-I'm still not convinced. Looking at bpf_prog_load_xattr, I think some
-of what it's doing should be part of bpf_object__object_xattr anyway
-(all the expected type setting for programs).
+I did each test 20 times and computed the averages:
 
-Besides that, there isn't much more than just bpf_object__open and
-bpf_object__load, to be honest. By doing open and load explicitly,
-user gets an opportunity to do whatever adjustment they need: reuse
-maps, adjust map sizes, etc. So I think we should improve
-bpf_object__open to "guess" program attach types and add map
-definition flags to allow reuse declaratively.
+"tcpdump port 22":
+ default:	0.00743175s
+ -fno-gcse:	0.00709920s (~4.5% speedup)
 
+"tcpdump complex":
+ default:	0.00876715s
+ -fno-gcse:	0.00854895s (~2.5% speedup)
 
->
-> >
-> > > > +{
-> > > > +     struct bpf_map *map;
-> > > > +
-> > > > +     if (!obj)
-> > > > +             return -ENOENT;
-> > > > +
-> > > > +     if (!path)
-> > > > +             return -EINVAL;
-> > > > +
-> > > > +     bpf_object__for_each_map(map, obj) {
-> > > > +             int len, err;
-> > > > +             int pinned_map_fd;
-> > > > +             char buf[PATH_MAX];
-> > >
-> > > We'd need to skip the case of bpf_map__is_internal(map) since they ar=
-e always
-> > > recreated for the given object.
-> > >
-> > > > +             len =3D snprintf(buf, PATH_MAX, "%s/%s", path, bpf_ma=
-p__name(map));
-> > > > +             if (len < 0) {
-> > > > +                     return -EINVAL;
-> > > > +             } else if (len >=3D PATH_MAX) {
-> > > > +                     return -ENAMETOOLONG;
-> > > > +             }
-> > > > +
-> > > > +             pinned_map_fd =3D bpf_obj_get(buf);
-> > > > +             if (pinned_map_fd < 0)
-> > > > +                     return pinned_map_fd;
-> > >
-> > > Should we rather have a new map definition attribute that tells to re=
-use
-> > > the map if it's pinned in bpf fs, and if not, we create it and later =
-on
-> > > pin it? This is what iproute2 is doing and which we're making use of =
-heavily.
-> >
-> > I'd like something like that as well. This would play nicely with
-> > recently added BTF-defined maps as well.
-> >
-> > I think it should be not just pin/don't pin flag, but rather pinning
-> > strategy, to accommodate various typical strategies of handling maps
-> > that are already pinned. So something like this:
-> >
-> > 1. BPF_PIN_NOTHING - default, don't pin;
-> > 2. BPF_PIN_EXCLUSIVE - pin, but if map is already pinned - fail;
-> > 3. BPF_PIN_SET - pin; if existing map exists, reset its state to be
-> > exact state of object's map;
-> > 4. BPF_PIN_MERGE - pin, if map exists, fill in NULL entries only (this
-> > is how Cilium is pinning PROG_ARRAY maps, if I understand correctly);
-> > 5. BPF_PIN_MERGE_OVERWRITE - pin, if map exists, overwrite non-NULL val=
-ues.
-> >
-> > This list is only for illustrative purposes, ideally people that have
-> > a lot of experience using pinning for real-world use cases would chime
-> > in on what strategies are useful and make sense.
->
-> My case was simply to reuse existing maps when reloading a program.
-> Does it make sense for you to add only the simplest cases of listed above=
-?
+So there does seem to be a small performance gain by disabling this
+optimization.
 
-Of course, it's enum, so we can start with few clearly useful ones and
-then expand more if we ever have a need. But I think we still need a
-bit wider discussion and let people who use pinning to chime in.
+We could change it for the whole file, by adjusting CFLAGS_core.o in the
+BPF makefile, or we could change it for the function only with something
+like the below patch.
 
->
-> Also, libbpf doesn't use standard naming conventions for pinning maps.
+Thoughts?
 
-We talked about this in another thread related to BTF-defined maps. I
-think the way to go with this is to actually define a default pinning
-root path, but allow to override it on bpf_object__open, if user needs
-a different one.
-
-> Does it make sense to provide a list of already open maps to the
-> bpf_prog_load_xattr function as an attribute? In this case a user
-> can execute his own policy on pinning, but still will have an option
-> to reuse, reset, and merge maps.
-
-As explained above, I don't think there isn't much added value in
-bpf_prog_load, so I'd advise to just switch to explicit
-bpf_object__open + bpf_object__load and get maximum control and
-flexibility.
-
->
-> >
-> > > In bpf_object__reuse_maps() bailing out if bpf_obj_get() fails is per=
-haps
-> > > too limiting for a generic API as new version of an object file may c=
-ontain
-> > > new maps which are not yet present in bpf fs at that point.
-> > >
-> > > > +             err =3D bpf_map__reuse_fd(map, pinned_map_fd);
-> > > > +             if (err)
-> > > > +                     return err;
-> > > > +     }
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > >  int bpf_object__pin_programs(struct bpf_object *obj, const char *p=
-ath)
-> > > >  {
-> > > >       struct bpf_program *prog;
-> > > > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-> > > > index d639f47e3110..7fe465a1be76 100644
-> > > > --- a/tools/lib/bpf/libbpf.h
-> > > > +++ b/tools/lib/bpf/libbpf.h
-> > > > @@ -82,6 +82,8 @@ int bpf_object__variable_offset(const struct bpf_=
-object *obj, const char *name,
-> > > >  LIBBPF_API int bpf_object__pin_maps(struct bpf_object *obj, const =
-char *path);
-> > > >  LIBBPF_API int bpf_object__unpin_maps(struct bpf_object *obj,
-> > > >                                     const char *path);
-> > > > +LIBBPF_API int bpf_object__reuse_maps(struct bpf_object *obj,
-> > > > +                                   const char *path);
-> > > >  LIBBPF_API int bpf_object__pin_programs(struct bpf_object *obj,
-> > > >                                       const char *path);
-> > > >  LIBBPF_API int bpf_object__unpin_programs(struct bpf_object *obj,
-> > > > diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-> > > > index 2c6d835620d2..66a30be6696c 100644
-> > > > --- a/tools/lib/bpf/libbpf.map
-> > > > +++ b/tools/lib/bpf/libbpf.map
-> > > > @@ -172,5 +172,6 @@ LIBBPF_0.0.4 {
-> > > >               btf_dump__new;
-> > > >               btf__parse_elf;
-> > > >               bpf_object__load_xattr;
-> > > > +             bpf_object__reuse_maps;
-> > > >               libbpf_num_possible_cpus;
-> > > >  } LIBBPF_0.0.3;
-> > > >
-> > >
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index e8579412ad21..d7ee4c6bad48 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -170,3 +170,5 @@
+ #else
+ #define __diag_GCC_8(s)
+ #endif
++
++#define __no_fgcse __attribute__((optimize("-fno-gcse")))
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 095d55c3834d..599c27b56c29 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -189,6 +189,10 @@ struct ftrace_likely_data {
+ #define asm_volatile_goto(x...) asm goto(x)
+ #endif
+ 
++#ifndef __no_fgcse
++# define __no_fgcse
++#endif
++
+ /* Are two types/vars the same type (ignoring qualifiers)? */
+ #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+ 
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 7e98f36a14e2..8191a7db2777 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1295,7 +1295,7 @@ bool bpf_opcode_in_insntable(u8 code)
+  *
+  * Decode and execute eBPF instructions.
+  */
+-static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
++static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ {
+ #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+ #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
