@@ -2,83 +2,125 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD33FC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0A3C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11CB20665
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369BE20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:36:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="xIz67RFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfGIJdG (ORCPT
+        id S1726105AbfGIJgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:33:06 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:36681 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfGIJc5 (ORCPT
+        Tue, 9 Jul 2019 05:36:07 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:47085 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfGIJgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:32:57 -0400
-Received: from orion.localdomain ([95.118.92.226]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N1cvQ-1iV4bZ3MRU-0122MZ; Tue, 09 Jul 2019 11:32:41 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        info@metux.net, apw@canonical.com, joe@perches.com,
-        linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH 1/4] Makefile: rules for printing kernel architecture and localversion
-Date:   Tue,  9 Jul 2019 11:32:36 +0200
-Message-Id: <1562664759-16009-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:uc03CDIsqb9vBEzIMWVZpyU2revDgAT8kF66aLNaXkdHn4yNDk8
- p4J0t/KayKdxyG9BCpkBBkU883Z/mAiidkam56XGgnJjXVus1UnoYBDpSXCbbaXo1F1J5su
- 0JpsapweoM8r10i+aYj0l1EFuPRJEhzRcGNdzVlCONEBw8XcAK7B3G8+0q1mD7EpIXP+Hja
- HDptjN8qIK8MJh3DG/8yg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5EjeTTw4q4M=:HMIXZz/XPCgvbro1gN0kmS
- 0nX4PljAVK0pGfLMSmNHN9UrOjhKd2+AqneTIQGzFw5yQ/pnOsgMDtAiXFQ9zUxb2jbbbgTDV
- 5yvsErr8Jz0jByZBkKxdHNlUFhTTxlXYQzYbrb5Kvo35y5gR8t7gXfkJjy3uXCdQiWy9D9NT5
- 0MYsr6Jciw7CRPmjnfZaIRA0Cf8yNpzq/xvvjoc5oW+uPoREGbJZt+LeNPcit+iXMYRAE5N9O
- CT1um5XV519QyBF9W/uoVNYEmbOzo0IT5vfxv4q3GNMlKAuE/galW1VV0SpIINF8UFwKzrRON
- qqnk9AvP/PqLR1V+CRnAmlU+DtVMCZYGxMLZa2J+Dx8h+9O1RanxF07IamZafWThQZOO75swt
- jz+wS63UXk9bxQVK++XIJtpjnJ++lfCuSFHqNjSKhmefETgihL7LEJxWDkwFOmp4azkI84Iqj
- IgE9h0Y2+4wtJuVu5jrYuVXd4fvnY6huF8ei5Z7TOJloj4YdneL09kD3708MXOLlLhrzCPf8V
- MzDqAU6Xi0jew2LhFsNcycoAHgV2OZtvSCAw+aOonwcAWTc5S3iG5w95TZvi08Cgeu+uTtEHP
- rl0XDuOKIqHkUlF/oYKheO5UdNpbCmTDCyKgY//6ANXvRy5TFyBiSIPCr8g2fnDMh8Qfawnvd
- bK0aN9e+ttkHA46Gwo+Ow1qgY/MFRqb9SGzqiSCxWhE0lP3l3WPZ5Eyh6ZwfrV92dVG/UNyDF
- t1pOnuS9iki+hbpLbuNXRepne+gP8YxEHhjZLA==
+        Tue, 9 Jul 2019 05:36:07 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z15so12912115lfh.13
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 02:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XU2IBGyFRzKn02DPmdzj6szchTRAPUpG4CBxe0IbZxM=;
+        b=xIz67RFwEx4FnMHMwebDTUVE9XLXFv8FCz7wp9SaGHdJlEH5Z3EEk3wEuu7Mtp2zbG
+         M4T+EmJW0LsmjGJoak92C7bJ2U6zeKs+oNarpfT7EgB7rYP8h9/LGM+aOKvCcGQbR1Kw
+         qYwWOxViWDwiGlwbH4ipBaOha885QznmvsQtbk7LHgiVDrTnSNvX4BzCWSdGBD7Cf0H1
+         Rj3W3NjOQku2W/94ZTyRcy/ZV2iB+q7HTarYXQBoDq2XBVxy2UoamJNPIu2wSpbVi+U4
+         gMBmx/57gTp6NgVzCPbl8TipJ3u+A3U2lC+cXeqODlnqu7tBNqCfAuqpV6Mf7Fck3HLQ
+         RFng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XU2IBGyFRzKn02DPmdzj6szchTRAPUpG4CBxe0IbZxM=;
+        b=k+ePzvwnbfkuNe30dgTF0BD7Qh6/xxU6cWpAwHSS5r+bXvTjX2SG3I04XTNvI0vfUo
+         iEsTEnySfbgB0SO8NCodJJslAR/VBQqKoKaYPKuYnymbQJzmn74B0XjxE6JKkNDUY4lZ
+         yBa+mi3RudyWoBRI3UkiHYshgyX2Qg/wz5R5DwRcrm/ZvfjEcQH8fYQWtUIU0X6Yh+a0
+         PRYSpBDBYZAh8xbUfuHSxTTQM5ygNpPTsRUfFmp2Wb6sjd7RXNaMFexpdmYXzIcifd7m
+         rsBDn96O8Pv1DNvs5AI/643JMYSs1dWxgRsefzwX8go2pRKj1SWoojXkTldG5NGFaArq
+         QHWQ==
+X-Gm-Message-State: APjAAAUo+aEgVJ3c/ZsfgVaJm+L6ooVq4bJrxSbKWSgW7Iltw/qT5V8o
+        LCuWYJjpI3wxoSL0619mUZCr+g==
+X-Google-Smtp-Source: APXvYqxGrufPNKdsqBBStgGj1iNyRF54W7AS2XauiAm/Fr8QXkxDauZ+cr22x87ZgqJU7N1c+XgycQ==
+X-Received: by 2002:a19:ec15:: with SMTP id b21mr11999025lfa.32.1562664965397;
+        Tue, 09 Jul 2019 02:36:05 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:293:b564:5d38:7bfd:30:5ce9? ([2a00:1fa0:293:b564:5d38:7bfd:30:5ce9])
+        by smtp.gmail.com with ESMTPSA id i17sm2828273lfp.94.2019.07.09.02.36.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 02:36:04 -0700 (PDT)
+Subject: Re: [PATCH v2 05/10] net: hisilicon: HI13X1_GMAX need dreq reset at
+ first
+To:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>, davem@davemloft.net,
+        robh+dt@kernel.org, yisen.zhuang@huawei.com,
+        salil.mehta@huawei.com, mark.rutland@arm.com,
+        dingtianhong@huawei.com
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, leeyou.li@huawei.com,
+        nixiaoming@huawei.com, jianping.liu@huawei.com,
+        xiekunxun@huawei.com
+References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
+ <1562643071-46811-6-git-send-email-xiaojiangfeng@huawei.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <890c48d1-76b8-5aea-e175-aa7d9967acd2@cogentembedded.com>
+Date:   Tue, 9 Jul 2019 12:35:57 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <1562643071-46811-6-git-send-email-xiaojiangfeng@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-trivial rule to print out the kernel arch and localversion, so
-external tools, like distro packagers, can easily get it.
+Hello!
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 09.07.2019 6:31, Jiangfeng Xiao wrote:
 
-diff --git a/Makefile b/Makefile
-index 3e4868a..5afc3de 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1706,6 +1706,12 @@ kernelrelease:
- kernelversion:
- 	@echo $(KERNELVERSION)
- 
-+kernellocalversion:
-+	@$(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree) | sed -e 's~^\-~~'
-+
-+kernelarch:
-+	@echo $(ARCH)
-+
- image_name:
- 	@echo $(KBUILD_IMAGE)
- 
--- 
-1.9.1
+> HI13X1_GMAC delete request for soft reset at first,
+> otherwise, the subsequent initialization will not
+> take effect.
+> 
+> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+> ---
+>   drivers/net/ethernet/hisilicon/hip04_eth.c | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+> index fe61b01..19d8cfd 100644
+> --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
+> +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+[...]
+> @@ -853,6 +867,15 @@ static int hip04_mac_probe(struct platform_device *pdev)
+>   		goto init_fail;
+>   	}
+>   
+> +#if defined(CONFIG_HI13X1_GMAC)
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	priv->sysctrl_base = devm_ioremap_resource(d, res);
 
+    There's devm_platform_ioremap_resource() now.
+
+> +	if (IS_ERR(priv->sysctrl_base)) {
+> +		ret = PTR_ERR(priv->sysctrl_base);
+> +		goto init_fail;
+> +	}
+> +#endif
+> +
+>   	ret = of_parse_phandle_with_fixed_args(node, "port-handle", 2, 0, &arg);
+>   	if (ret < 0) {
+>   		dev_warn(d, "no port-handle\n");
+[...]
+
+MBR, Sergei
