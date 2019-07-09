@@ -2,138 +2,112 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8182AC606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A49CC606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B2321707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ljg9018W"
+	by mail.kernel.org (Postfix) with ESMTP id F0D3920693
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 00:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfGIA1e (ORCPT
+        id S1726660AbfGIAby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 20:27:34 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49499 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfGIA1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 20:27:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jNSK1HYJz9s8m;
-        Tue,  9 Jul 2019 10:27:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562632050;
-        bh=jKvKlrFXe07Fpw3txFGQXGR5J2AXGtNYEGJMdD5adJ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ljg9018W1CfPYY7OP0Z79VM7KwIphqePyLGfwxoBC2GcxeRzvtnjBGKFYKuZFlxxE
-         y56glV/BvdwfbObqPEnEWqd8Y1j777rM15dJ1+qktiyYmZz9X8s86WJPg7HCF6753o
-         ogO9vk7rD+9xIiFVtqLSNJBNFF+tBkwATXOUsJPxDH5Qr31l1v7RPF7OzgsAxtv1M1
-         AXvHxBIjCw1/uaR91VCKnXf5a0s1AYClAjLKjfwbTRY6cgnahAEkCag7PvuIYITwiS
-         JWpOusNm7XqtQCiilPfl++IXwuzNWi90qKAK7ETVOzB825nwBuz3DhPN3CqwBdylKj
-         0XI5c80q9PaSQ==
-Date:   Tue, 9 Jul 2019 10:27:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
+        Mon, 8 Jul 2019 20:31:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54810 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725905AbfGIAby (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 20:31:54 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x690VSKv146348
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jul 2019 20:31:52 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmemeb4y7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 20:31:52 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 9 Jul 2019 01:31:50 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 9 Jul 2019 01:31:48 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x690VlBu55967862
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Jul 2019 00:31:47 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A2A0A4057;
+        Tue,  9 Jul 2019 00:31:47 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 763DCA404D;
+        Tue,  9 Jul 2019 00:31:46 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.58])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Jul 2019 00:31:46 +0000 (GMT)
+Subject: Re: linux-next: manual merge of the keys tree with the integrity
+ tree
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matteo Croce <mcroce@redhat.com>,
-        Florian Westphal <fw@strlen.de>
-Subject: Re: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20190709102728.70299ba8@canb.auug.org.au>
-In-Reply-To: <20190702121357.65f9b0b4@canb.auug.org.au>
-References: <20190702121357.65f9b0b4@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/V3hnu3YvyhoLQaqhVeqx3Ds"; protocol="application/pgp-signature"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 08 Jul 2019 20:31:35 -0400
+In-Reply-To: <20190709101107.0754b26c@canb.auug.org.au>
+References: <20190626143333.7ee527ca@canb.auug.org.au>
+         <20190709101107.0754b26c@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19070900-0016-0000-0000-000002906DAB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070900-0017-0000-0000-000032EE1DA9
+Message-Id: <1562632295.11461.73.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907090005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/V3hnu3YvyhoLQaqhVeqx3Ds
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Stephen,
 
-Hi all,
+On Tue, 2019-07-09 at 10:11 +1000, Stephen Rothwell wrote:
+> > diff --cc security/integrity/digsig.c
+> > index 868ade3e8970,e432900c00b9..000000000000
+> > --- a/security/integrity/digsig.c
+> > +++ b/security/integrity/digsig.c
+> > @@@ -69,9 -70,8 +70,9 @@@ int integrity_digsig_verify(const unsig
+> >   	return -EOPNOTSUPP;
+> >   }
+> >   
+> >  -static int __integrity_init_keyring(const unsigned int id, struct key_acl *acl,
+> >  -				    struct key_restriction *restriction)
+> >  +static int __init __integrity_init_keyring(const unsigned int id,
+> > - 					   key_perm_t perm,
+> > ++					   struct key_acl *acl,
+> >  +					   struct key_restriction *restriction)
+> >   {
+> >   	const struct cred *cred = current_cred();
+> >   	int err = 0;
+> 
+> I am still getting this conflict (the commit ids may have changed).
+> Just a reminder in case you think Linus may need to know.
 
-On Tue, 2 Jul 2019 12:13:57 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Today's linux-next merge of the net-next tree got a conflict in:
->=20
->   net/ipv4/devinet.c
->=20
-> between commit:
->=20
->   2e6054636816 ("ipv4: don't set IPv6 only flags to IPv4 addresses")
->=20
-> from the net tree and commit:
->=20
->   2638eb8b50cf ("net: ipv4: provide __rcu annotation for ifa_list")
->=20
-> from the net-next tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc net/ipv4/devinet.c
-> index c5ebfa199794,137d1892395d..000000000000
-> --- a/net/ipv4/devinet.c
-> +++ b/net/ipv4/devinet.c
-> @@@ -473,11 -482,10 +487,13 @@@ static int __inet_insert_ifa(struct in_
->   	ifa->ifa_flags &=3D ~IFA_F_SECONDARY;
->   	last_primary =3D &in_dev->ifa_list;
->  =20
->  +	/* Don't set IPv6 only flags to IPv4 addresses */
->  +	ifa->ifa_flags &=3D ~IPV6ONLY_FLAGS;
->  +
-> - 	for (ifap =3D &in_dev->ifa_list; (ifa1 =3D *ifap) !=3D NULL;
-> - 	     ifap =3D &ifa1->ifa_next) {
-> + 	ifap =3D &in_dev->ifa_list;
-> + 	ifa1 =3D rtnl_dereference(*ifap);
-> +=20
-> + 	while (ifa1) {
->   		if (!(ifa1->ifa_flags & IFA_F_SECONDARY) &&
->   		    ifa->ifa_scope <=3D ifa1->ifa_scope)
->   			last_primary =3D &ifa1->ifa_next;
+Thank you for carrying the patch!  I did remember to mention it in the
+pull request.  :)
 
+Mimi
 
-I am still getting this conflict (the commit ids may have changed).
-Just a reminder in case you think Linus may need to know.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/V3hnu3YvyhoLQaqhVeqx3Ds
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0j33AACgkQAVBC80lX
-0GwB1gf/bYeymsjEJKZD7rtNgI+l/u3G+WhPHOMWD4mqBf9HDXEbuhm9eh6w0eiH
-UwCykKCsLEn0/xhDcOkhRXSkoMX/UkgxdfX2meLcXJIHIRISVjv+xu4+0cw1892T
-ik+L/JWA1hdUOAvVQmVWHX16/CUHwluS3fsT/teiZ0GUeKDMEvRShcXg5PguXomY
-gjX0LE1WOIn7Y4+wYeuBUHoo4lYgOFb00WYjGpf4zaJ/4Lar6mP3ZNclbG7TQNk8
-HxkIn284NvLARWuAxHk5fEb2t4lH/WNz9WrLBdqLCFrbBNHcS22MzyS1LSv3/wDU
-Zkezcwet1MPmiTw/UrDWUIiyXPtNuQ==
-=qFgw
------END PGP SIGNATURE-----
-
---Sig_/V3hnu3YvyhoLQaqhVeqx3Ds--
