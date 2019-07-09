@@ -2,108 +2,138 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A75AC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2728C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7042E20645
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562667907;
-	bh=s6cE65Eljr/iHn5WA9WGd58naGDekFmphC0KLU2gGdU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=aAuojPmp4ehQEJstMJ3DcNNFBsDGd3M51RqoSiSf2eJvZVb+ygItXUhbCxDN/tqmS
-	 2xcmBmnTlx85HZDVUyAOC14+SyTRBaTZXZAEWksMSwcMIMAFHYH25PpR/IGjyb8YbJ
-	 85np65fD+RBiBvXAYvzosJc/tnQjzpSqRL1cmAjU=
+	by mail.kernel.org (Postfix) with ESMTP id 9386420645
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:26:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="B1jMCVbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbfGIKZG (ORCPT
+        id S1726341AbfGIK0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 06:25:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57844 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfGIKZF (ORCPT
+        Tue, 9 Jul 2019 06:26:00 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36288 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfGIK0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 06:25:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SFTO/dK8SIeELbyjmWLxRQjDXjnyydcKlq+hFQch7Xk=; b=kaTYe12YjtXiZyDx7eArbT8N7
-        tp56ndNM22Z2sEqW/o4XYuU6REDbGGlDQI5mCtzdOxLjv6DvzQ/CIihog3RU2TnN4SrBGWw9MlMlZ
-        9abWY6HKcIcoVSxcrvJlZCFIer9cOy8LCJNoJ+X4rW9PPbafjDudIr+ItpYbHhjrUz0Cwl1oyjzKB
-        d3We1Q5OD1sKsaMU2I2ydIWQGKIMHV/X7Uf7Suhs1wPxnY8TKvMMIdg5TMQMX7i0Hh3pNCubP6/8q
-        aNZc0XZL2HJp3NuOF015JQOppeJWT2w44lwvGjOw7CvgkSFTxMqEuKGZePyekzkxWFgB83rGxr8Dk
-        2T6JX4geg==;
-Received: from 177.43.30.58.dynamic.adsl.gvt.net.br ([177.43.30.58] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hknJ3-0005Wy-CQ; Tue, 09 Jul 2019 10:25:05 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hknJ1-0001Ts-5f; Tue, 09 Jul 2019 07:25:03 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] docs: pdf: add all Documentation/*/index.rst to PDF output
-Date:   Tue,  9 Jul 2019 07:25:02 -0300
-Message-Id: <534357e57c539b421a745536dcf95cef78252b1e.1562667900.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Tue, 9 Jul 2019 06:26:00 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 36D1656A;
+        Tue,  9 Jul 2019 12:25:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1562667957;
+        bh=ZYHMxvvJim6hbjaTGl5y6D8E2o2DERWTCjYt31J9EPI=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=B1jMCVbSAkSLQiD2PT8q2lHnxI/5zQJ+aM9i1nnEK763fyL7+HnOtW2DX7PF1IW3W
+         1BMn3VTZswHokGyR8gWqcmSQpzlqq/3phOftg8sgiNdff9o6Ws5TvlvNe1O2CKroGj
+         BiI1LdgN5C/Nrb1Fdot1uk5OKaUcKGVbQMj/8STg=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH] i2c: core: make exported functions non-static
+To:     Denis Efremov <efremov@linux.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190707210419.14868-1-efremov@linux.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <f843944d-2721-d200-19dd-7b624ca592c4@ideasonboard.com>
+Date:   Tue, 9 Jul 2019 11:25:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190707210419.14868-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, all index files should be manually added to the
-latex_documents array at conf.py.
+Hi Denis,
 
-While this allows fine-tuning some LaTeX specific things, like
-the name of the output file and the name of the document, it
-is not uncommon to forget adding new documents there.
+Thank you for the patch,
 
-So, add a logic that will seek for all Documentation/*/index.rst.
-If the index is not yet at latex_documents, it includes using
-a reasonable default.
+On 07/07/2019 22:04, Denis Efremov wrote:
+> The functions i2c_new_client_device and i2c_new_dummy_device are declared
+> static and marked EXPORT_SYMBOL_GPL(), which is at best an odd combination.
+> Because the functions were decided to be a part of API, this commit removes
+> the static attributes and adds the declarations to the header.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/conf.py | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+I'm afraid I think Wolfram pipped you to the post on this one.
 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index a502baecbb85..191bd380c523 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -410,6 +410,21 @@ latex_documents = [
-      'The kernel development community', 'manual'),
- ]
- 
-+# Add all other index files from Documentation/ subdirectories
-+for fn in os.listdir('.'):
-+    doc = os.path.join(fn, "index")
-+    if os.path.exists(doc + ".rst"):
-+        has = False
-+        for l in latex_documents:
-+            if l[0] == doc:
-+                has = True
-+                break
-+        if not has:
-+            latex_documents.append((doc, fn + '.tex',
-+                                    'Linux %s Documentation' % fn.capitalize(),
-+                                    'The kernel development community',
-+                                    'manual'))
-+
- # The name of an image file (relative to this directory) to place at the top of
- # the title page.
- #latex_logo = None
--- 
-2.21.0
+He posted a very similar fix [0] on the 24th June.
+
+[0]
+https://lore.kernel.org/linux-renesas-soc/20190624170402.6944-1-wsa+renesas@sang-engineering.com/
+
+I believe his patch is already applied and on it's way through the trees.
+
+Regards
+
+Kieran
+
+
+> Fixes: 7159dbdae3c5 ("i2c: core: improve return value handling of i2c_new_device and i2c_new_dummy")
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 4 ++--
+>  include/linux/i2c.h         | 7 +++++++
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 9e43508d4567..7792fa40fc32 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -721,7 +721,7 @@ static int i2c_dev_irq_from_resources(const struct resource *resources,
+>   * This returns the new i2c client, which may be saved for later use with
+>   * i2c_unregister_device(); or an ERR_PTR to describe the error.
+>   */
+> -static struct i2c_client *
+> +struct i2c_client *
+>  i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *info)
+>  {
+>  	struct i2c_client	*client;
+> @@ -887,7 +887,7 @@ static struct i2c_driver dummy_driver = {
+>   * This returns the new i2c client, which should be saved for later use with
+>   * i2c_unregister_device(); or an ERR_PTR to describe the error.
+>   */
+> -static struct i2c_client *
+> +struct i2c_client *
+>  i2c_new_dummy_device(struct i2c_adapter *adapter, u16 address)
+>  {
+>  	struct i2c_board_info info = {
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index 1308126fc384..fa42f6f594ce 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -436,6 +436,10 @@ struct i2c_board_info {
+>  extern struct i2c_client *
+>  i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info);
+>  
+> +extern struct i2c_client *
+> +i2c_new_client_device(struct i2c_adapter *adap,
+> +			struct i2c_board_info const *info);
+> +
+>  /* If you don't know the exact address of an I2C device, use this variant
+>   * instead, which can probe for device presence in a list of possible
+>   * addresses. The "probe" callback function is optional. If it is provided,
+> @@ -457,6 +461,9 @@ extern int i2c_probe_func_quick_read(struct i2c_adapter *, unsigned short addr);
+>  extern struct i2c_client *
+>  i2c_new_dummy(struct i2c_adapter *adap, u16 address);
+>  
+> +extern struct i2c_client *
+> +i2c_new_dummy_device(struct i2c_adapter *adap, u16 address);
+> +
+>  extern struct i2c_client *
+>  devm_i2c_new_dummy_device(struct device *dev, struct i2c_adapter *adap, u16 address);
+>  
+> 
 
