@@ -2,80 +2,85 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2903C606CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB5AC606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DCAA2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F5C21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfGIBCe (ORCPT
+        id S1726580AbfGIBHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:02:34 -0400
-Received: from edison.jonmasters.org ([173.255.233.168]:59278 "EHLO
-        edison.jonmasters.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfGIBCb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:02:31 -0400
-Received: from boston.jonmasters.org ([50.195.43.97] helo=tonnant.bos.jonmasters.org)
-        by edison.jonmasters.org with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.71)
-        (envelope-from <jcm@jonmasters.org>)
-        id 1hkdxB-0003Xo-BL; Tue, 09 Jul 2019 00:25:53 +0000
-To:     "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        "indou.takao@fujitsu.com" <indou.takao@fujitsu.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
- <20190617170328.GJ30800@fuggles.cambridge.arm.com>
- <e8fe8faa-72ef-8185-1a9d-dc1bbe0ae15d@jp.fujitsu.com>
- <20190627102724.vif6zh6zfqktpmjx@willie-the-truck>
- <5999ed84-72d0-9d42-bf7d-b8d56eaa4d4a@jp.fujitsu.com>
-From:   Jon Masters <jcm@jonmasters.org>
-Message-ID: <675313fe-007b-c850-d730-a629b82ccfc8@jonmasters.org>
-Date:   Mon, 8 Jul 2019 20:25:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 8 Jul 2019 21:07:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2243 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbfGIBHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:07:31 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8F1A245A256F786BE060;
+        Tue,  9 Jul 2019 09:07:28 +0800 (CST)
+Received: from [127.0.0.1] (10.65.87.206) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
+ 09:07:19 +0800
+Subject: Re: [PATCH] net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
+To:     David Miller <davem@davemloft.net>
+References: <1562307003-103516-1-git-send-email-xiaojiangfeng@huawei.com>
+ <20190707.221805.2104668553072088371.davem@davemloft.net>
+ <20190708.111833.1002341757593028886.davem@davemloft.net>
+CC:     <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
+        <dingtianhong@huawei.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <leeyou.li@huawei.com>, <xiekunxun@huawei.com>,
+        <jianping.liu@huawei.com>, <nixiaoming@huawei.com>
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <89adc83e-c789-9c61-222b-23110778a873@huawei.com>
+Date:   Tue, 9 Jul 2019 09:07:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <5999ed84-72d0-9d42-bf7d-b8d56eaa4d4a@jp.fujitsu.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190708.111833.1002341757593028886.davem@davemloft.net>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 50.195.43.97
-X-SA-Exim-Mail-From: jcm@jonmasters.org
-Subject: Re: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
- instruction within the same inner shareable domain
-X-SA-Exim-Version: 4.2.1 (built Sun, 08 Nov 2009 07:31:22 +0000)
-X-SA-Exim-Scanned: Yes (on edison.jonmasters.org)
+X-Originating-IP: [10.65.87.206]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/2/19 10:45 PM, qi.fuli@fujitsu.com wrote:
 
-> However, we found that with the increase of that the TLB flash was called,
-> the noise was also increasing. Here we understood that the cause of this 
-> issue is the implementation of Linux's TLB flush for arm64, especially use of 
-> TLBI-is instruction which is a broadcast to all processor core on the system. 
 
-Are you saying that for a microbenchmark in which very large numbers of
-threads are created and destroyed rapidly there are a large number of
-associated tlb range flushes which always use broadcast TLBIs?
+On 2019/7/9 2:18, David Miller wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Sun, 07 Jul 2019 22:18:05 -0700 (PDT)
+> 
+>> From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+>> Date: Fri, 5 Jul 2019 14:10:03 +0800
+>>
+>>> HI13X1 changed the offsets and bitmaps for tx_desc
+>>> registers in the same peripheral device on different
+>>> models of the hip04_eth.
+>>>
+>>> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+>>
+>> Applied.
+> 
+> Actually I didn't apply this because I can't see that HI13X1_GMAC
+> kconfig knob anywhere in the tree at all.
+> 
 
-If that's the case, and the hardware doesn't do any ASID filtering and
-each TLBI results in a DVM to every PE, would it make sense to look at
-whether there are ways to improve batching/switch to an IPI approach
-rather than relying on broadcasts, as a more generic solution?
+Thank you for your guidance, I made a mistake, for which I am
+sincerely sorry for wasting your time.
 
-Jon.
+I will submit the correct one again.
+I will not make this low-level mistake again.
+
+Thanks,
+Jiangfeng Xiao
+
+
+
