@@ -2,305 +2,294 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C8DC73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E377AC73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65DF216E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE9E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:18:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="MzzNa06l"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="L28CIUC0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AfQ5xgsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfGIOSW (ORCPT
+        id S1726492AbfGIOSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:18:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50929 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfGIOSW (ORCPT
+        Tue, 9 Jul 2019 10:18:32 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34236 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfGIOSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:18:22 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v15so3306320wml.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 07:18:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zAfWkGTqy/4+jQo0giTgwlHBdMjJZDPW1KI+35w/1So=;
-        b=MzzNa06lRdFpz/NDLEEeMkVDhuvw2olLDScYMkyTard5PpwGHeT6eL89YrG21nCAhS
-         XOmu2RC5g7DaLUXJeNiapGREo/9mgzuZCFm6G+ChhtZnYp0jb7QzQJBjCSqpBzgpQ6wZ
-         gV0PE1ypvTuvtPLtsHrL1J24WS2GyuOOW6+KDRQDbGokgPumDETst39ata1/q9giFr3G
-         /RWOcWT43+tC7eyZUr4BfB6dDhdW9ETaVC6FEBiUiJr/SJI1qMidbF2PRZp6lzI7wkv2
-         pR4XXPbIO+9HZ0nvfVAbTQqHkLmzwIi9yRIt2uxBaPNcwXOccr4+Wzegp0m/SD06i7IS
-         RhWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zAfWkGTqy/4+jQo0giTgwlHBdMjJZDPW1KI+35w/1So=;
-        b=RSN4XGhoLgvZYJIcf4bY/NsM63HBS/ii/HRRWSzF4PhzwmzmnFrSnJ0CGE22xOkVYg
-         VdbkULu492RS/xObrqlfXDVk9XpViU0AmvUFA1psDdKOFw3K0qeejWjsrUzf+tfOjGG1
-         B2mLztZwmsx0gzbtFvqbFhp43wn6Cwz9kNBQ8eI2z5QIPSTeRvwjbLP1YZj7wJlOMyzb
-         8iUpH67tTCXv0uiH41pDZkhCxJbmPqSUqmQ3bdOTYP6YWdz4fib0NmUf+9UhjmuGMFDX
-         dxwKaDSBTOWZeS+iTtni2SrOM6sVHyld/tL5pjj8ClP/uiU6djelx9dvvJEP5qghUu4F
-         xEKw==
-X-Gm-Message-State: APjAAAVMDedJkiibVwrw5B4HbY6zji6StKG2EUZV+2100FKtZOhoYr0B
-        WIUW8/pSMscqAa4xhz/2fBSl57d+
-X-Google-Smtp-Source: APXvYqzCTRpFQwyIoXWEUjn/NVKXHfiD/OvyMQBa6YuYeqigTV6oOTZ9pJa+Addu63ORS1iQItwRng==
-X-Received: by 2002:a1c:f918:: with SMTP id x24mr223582wmh.132.1562681898990;
-        Tue, 09 Jul 2019 07:18:18 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id x11sm2433780wmi.26.2019.07.09.07.18.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 07:18:18 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 16:18:17 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
-Message-ID: <20190709141817.GE2301@nanopsycho.orion>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
- <20190703114933.GW2250@nanopsycho>
- <20190703181851.GP20101@unicorn.suse.cz>
- <20190704080435.GF2250@nanopsycho>
- <20190704115236.GR20101@unicorn.suse.cz>
+        Tue, 9 Jul 2019 10:18:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A191D60C5F; Tue,  9 Jul 2019 14:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562681911;
+        bh=jiNkhUFiBuXVKK2bh358QUq3e/FALFdLQxfZUHlBHpE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=L28CIUC0p10IGJjm+Cv/Mn6QYlFY2qr+KKv33FcOfMp0gNEAOeFikvYDuy6z8KrfG
+         B5sRsexq6jR0fLHTQCpEXVokZXfTvn34sgzF+jjrbg9MDPwPss4d9eBpEY1SowaOzH
+         ytN8SofJgvzRbNRX0THx23KQPX5QDgVOOsSgMgNM=
+Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B170260863;
+        Tue,  9 Jul 2019 14:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1562681910;
+        bh=jiNkhUFiBuXVKK2bh358QUq3e/FALFdLQxfZUHlBHpE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AfQ5xgsYmVixi5uyJFFbIbqnbTrbkB2c3aywAx/U1DtJea5tnZyr8ff9yN2KpbYKr
+         3Canyk7awS+3Jl+RwL1GzcvE2LUlGUAWinAOSbd9CLSjbTfdtxEMqEiqRU765aCQ/2
+         ZT4Yf2pH5PWmKlRjD5ks5HrRCb/Uu5TF97E3G7ts=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B170260863
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+Subject: Re: [PATCH] arm64: Explicitly set pstate.ssbs for el0 on kernel entry
+To:     Marc Zyngier <marc.zyngier@arm.com>, will@kernel.org,
+        mark.rutland@arm.com, julien.thierry@arm.com, tglx@linutronix.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, gkohli@codeaurora.org,
+        parthd@codeaurora.org
+References: <1562671333-3563-1-git-send-email-neeraju@codeaurora.org>
+ <62c4fed5-39ac-adc9-3bc5-56eb5234a9d1@arm.com>
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+Message-ID: <386316d0-f844-d88c-8b78-0ffc4ffe0aaa@codeaurora.org>
+Date:   Tue, 9 Jul 2019 19:48:25 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190704115236.GR20101@unicorn.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <62c4fed5-39ac-adc9-3bc5-56eb5234a9d1@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thu, Jul 04, 2019 at 01:52:36PM CEST, mkubecek@suse.cz wrote:
->On Thu, Jul 04, 2019 at 10:04:35AM +0200, Jiri Pirko wrote:
->> Wed, Jul 03, 2019 at 08:18:51PM CEST, mkubecek@suse.cz wrote:
->> >On Wed, Jul 03, 2019 at 01:49:33PM +0200, Jiri Pirko wrote:
->> >> Tue, Jul 02, 2019 at 01:50:09PM CEST, mkubecek@suse.cz wrote:
->> >> >+Compact form: nested (bitset) atrribute contents:
->> >> >+
->> >> >+    ETHTOOL_A_BITSET_LIST	(flag)		no mask, only a list
->> >> >+    ETHTOOL_A_BITSET_SIZE	(u32)		number of significant bits
->> >> >+    ETHTOOL_A_BITSET_VALUE	(binary)	bitmap of bit values
->> >> >+    ETHTOOL_A_BITSET_MASK	(binary)	bitmap of valid bits
->> >> >+
->> >> >+Value and mask must have length at least ETHTOOL_A_BITSET_SIZE bits rounded up
->> >> >+to a multiple of 32 bits. They consist of 32-bit words in host byte order,
->> >> 
->> >> Looks like the blocks are similar to NLA_BITFIELD32. Why don't you user
->> >> nested array of NLA_BITFIELD32 instead?
->> >
->> >That would mean a layout like
->> >
->> >  4 bytes of attr header
->> >  4 bytes of value
->> >  4 bytes of mask
->> >  4 bytes of attr header
->> >  4 bytes of value
->> >  4 bytes of mask
->> >  ...
->> >
->> >i.e. interleaved headers, words of value and words of mask. Having value
->> >and mask contiguous looks cleaner to me. Also, I can quickly check the
->> >sizes without iterating through a (potentially long) array.
->> 
->> Yeah, if you are not happy with this, I suggest to introduce
->> NLA_BITFIELD with arbitrary size. That would be probably cleanest.
->
->There is still the question if it it should be implemented as a nested
->attribute which could look like the current compact form without the
->"list" flag (if there is no mask, it's a list). Or an unstructured data
->block consisting of u32 bit length and one or two bitmaps of
->corresponding length. I would prefer the nested attribute, netlink was
->designed to represent structured data, passing structures as binary goes
->against the design (just looked at VFINFO in rtnetlink few days ago,
->it's awful, IMHO).
->
->Either way, I would still prefer to have bitmaps represented as an array
->of 32-bit blocks in host byte order. This would be easy to handle in
->kernel both in places where we have u32 based bitmaps and unsigned long
->based ones. Other options seem less appealing:
->
->  - u8 based: only complicates processing
->  - u64 based: have to care about alignment
->  - unsigned long based: alignment and also problems with 64-bit kernel
->    vs. 32-bit userspace
->
->> >> This is quite complex and confusing. Having the same API for 2 APIs is
->> >> odd. The API should be crystal clear, easy to use.
->> >> 
->> >> Why can't you have 2 commands, one working with bit arrays only, one
->> >> working with strings? Something like:
->> >> X_GET
->> >>    ETHTOOL_A_BITS (nested)
->> >>       ETHTOOL_A_BIT_ARRAY (BITFIELD32)
->> >> X_NAMES_GET
->> >>    ETHTOOL_A_BIT_NAMES (nested)
->> >> 	ETHTOOL_A_BIT_INDEX
->> >> 	ETHTOOL_A_BIT_NAME
->> >> 
->> >> For set, you can also have multiple cmds:
->> >> X_SET  - to set many at once, by bit index
->> >>    ETHTOOL_A_BITS (nested)
->> >>       ETHTOOL_A_BIT_ARRAY (BITFIELD32)
->> >> X_ONE_SET   - to set one, by bit index
->> >>    ETHTOOL_A_BIT_INDEX
->> >>    ETHTOOL_A_BIT_VALUE
->> >> X_ONE_SET   - to set one, by name
->> >>    ETHTOOL_A_BIT_NAME
->> >>    ETHTOOL_A_BIT_VALUE
->> >
->> >This looks as if you assume there is nothing except the bitset in the
->> >message but that is not true. Even with your proposed breaking of
->> >current groups, you would still have e.g. 4 bitsets in reply to netdev
->> >features query, 3 in timestamping info GET request and often bitsets
->> >combined with other data (e.g. WoL modes and optional WoL password).
->> >If you wanted to further refine the message granularity to the level of
->> >single parameters, we might be out of message type ids already.
->> 
->> You can still have multiple bitsets(bitfields) in single message and
->> have separate cmd/cmds to get string-bit mapping. No need to mangle it.
->
->Let's take a look at what it means in practice, the command is
->
->  ethtool --set-prif-flags eth3 legacy-rx on
->
->on an ixgbe card. Currently, ethtool (from the github repository) does
->
->------------------------------------------------------------------------
->ETHTOOL_CMD_SETTINGS_SET (K->U, 68 bytes)
->    ETHTOOL_A_HEADER
->        ETHTOOL_A_DEV_NAME = "eth3"
->    ETHTOOL_A_SETTINGS_PRIV_FLAGS
->        ETHTOOL_A_BITSET_BITS
->            ETHTOOL_A_BITS_BIT
->                ETHTOOL_A_BIT_NAME = "legacy-rx"
->                ETHTOOL_A_BIT_VALUE
->
->NLMSG_ERR (K->U, 36 bytes) err = 0
->------------------------------------------------------------------------
->
->If we had only compact form (or some of the NLA_BITFIELD solutions we
->are talking about), you would need
->
->------------------------------------------------------------------------
->ETHTOOL_CMD_STRSET_GET (U->K, 52 bytes)
->    ETHTOOL_A_HEADER
->        ETHTOOL_A_DEV_NAME = "eth3"
->    ETHTOOL_A_STRSET_STRINGSETS
->        ETHTOOL_A_STRINGSETS_STRINGSET
->            ETHTOOL_A_STRINGSET_ID = 2 (ETH_SS_PRIV_FLAGS)
->
->ETHTOOL_CMD_STRSET_GET_REPLY (K->U, 128 bytes)
->    ETHTOOL_A_HEADER
->        ETHTOOL_A_DEV_INDEX = 9
->        ETHTOOL_A_DEV_NAME = "eth3"
->    ETHTOOL_A_STRSET_STRINGSETS
->        ETHTOOL_A_STRINGSETS_STRINGSET
->            ETHTOOL_A_STRINGSET_ID = 2 (ETH_SS_PRIV_FLAGS)
->            ETHTOOL_A_STRINGSET_COUNT = 2
->            ETHTOOL_A_STRINGSET_STRINGS
->                ETHTOOL_A_STRINGS_STRING
->                    ETHTOOL_A_STRING_INDEX = 0
->                    ETHTOOL_A_STRING_VALUE = "legacy-rx"
->                ETHTOOL_A_STRINGS_STRING
->                    ETHTOOL_A_STRING_INDEX = 1
->                    ETHTOOL_A_STRING_VALUE = "vf-ipsec"
->
->NLMSG_ERR (K->U, 36 bytes) err = 0
->
->ETHTOOL_CMD_SETTINGS_SET (K->U, 64 bytes)
->    ETHTOOL_A_HEADER
->        ETHTOOL_A_DEV_NAME = "eth3"
->    ETHTOOL_A_SETTINGS_PRIV_FLAGS
->        ETHTOOL_A_BITSET_SIZE = 2
->        ETHTOOL_A_BITSET_VALUE = 00000001
->        ETHTOOL_A_BITSET_MASK = 00000001
->
->NLMSG_ERR (K->U, 36 bytes) err = 0
->------------------------------------------------------------------------
->
->That's an extra roundtrip, lot more chat and the SETTINGS_SET message is
->only 4 bytes shorter in the end. And we can consider ourselves lucky
->this NIC has only two private flags. Or that we didn't need to enable or
->disable a netdev feature (56 bits) or link mode (69 bits and growing).
->
->We could reduce the overhead by allowing STRSET_GET query to only ask
->for specific string(s) but there would still be the extra roundtrip
->which I dislike in the ioctl interface. Florian also said in the v5
->discussion that he would like if it was possible to get names and data
->together in one request.
+Hi Marc,
 
-I understand. So how about avoid the bitfield all together and just
-have array of either bits of strings or combinations?
+On 7/9/19 6:38 PM, Marc Zyngier wrote:
+> Hi Neeraj,
+>
+> On 09/07/2019 12:22, Neeraj Upadhyay wrote:
+>> For cpus which do not support pstate.ssbs feature, el0
+>> might not retain spsr.ssbs. This is problematic, if this
+>> task migrates to a cpu supporting this feature, thus
+>> relying on its state to be correct. On kernel entry,
+>> explicitly set spsr.ssbs, so that speculation is enabled
+>> for el0, when this task migrates to a cpu supporting
+>> ssbs feature. Restoring state at kernel entry ensures
+>> that el0 ssbs state is always consistent while we are
+>> in el1.
+>>
+>> As alternatives are applied by boot cpu, at the end of smp
+>> init, presence/absence of ssbs feature on boot cpu, is used
+>> for deciding, whether the capability is uniformly provided.
+> I've seen the same issue, but went for a slightly different
+> approach, see below.
+>
+>> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+>> ---
+>>   arch/arm64/kernel/cpu_errata.c | 16 ++++++++++++++++
+>>   arch/arm64/kernel/entry.S      | 26 +++++++++++++++++++++++++-
+>>   2 files changed, 41 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+>> index ca11ff7..c84a56d 100644
+>> --- a/arch/arm64/kernel/cpu_errata.c
+>> +++ b/arch/arm64/kernel/cpu_errata.c
+>> @@ -336,6 +336,22 @@ void __init arm64_enable_wa2_handling(struct alt_instr *alt,
+>>   		*updptr = cpu_to_le32(aarch64_insn_gen_nop());
+>>   }
+>>   
+>> +void __init arm64_restore_ssbs_state(struct alt_instr *alt,
+>> +				     __le32 *origptr, __le32 *updptr,
+>> +				     int nr_inst)
+>> +{
+>> +	BUG_ON(nr_inst != 1);
+>> +	/*
+>> +	 * Only restore EL0 SSBS state on EL1 entry if cpu does not
+>> +	 * support the capability and capability is present for at
+>> +	 * least one cpu and if the SSBD state allows it to
+>> +	 * be changed.
+>> +	 */
+>> +	if (!this_cpu_has_cap(ARM64_SSBS) && cpus_have_cap(ARM64_SSBS) &&
+>> +	    arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
+>> +		*updptr = cpu_to_le32(aarch64_insn_gen_nop());
+>> +}
+>> +
+>>   void arm64_set_ssbd_mitigation(bool state)
+>>   {
+>>   	if (!IS_ENABLED(CONFIG_ARM64_SSBD)) {
+>> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+>> index 9cdc459..7e79305 100644
+>> --- a/arch/arm64/kernel/entry.S
+>> +++ b/arch/arm64/kernel/entry.S
+>> @@ -143,6 +143,25 @@ alternative_cb_end
+>>   #endif
+>>   	.endm
+>>   
+>> +	// This macro updates spsr. It also corrupts the condition
+>> +	// codes state.
+>> +	.macro	restore_ssbs_state, saved_spsr, tmp
+>> +#ifdef CONFIG_ARM64_SSBD
+>> +alternative_cb	arm64_restore_ssbs_state
+>> +	b	.L__asm_ssbs_skip\@
+>> +alternative_cb_end
+>> +	ldr	\tmp, [tsk, #TSK_TI_FLAGS]
+>> +	tbnz	\tmp, #TIF_SSBD, .L__asm_ssbs_skip\@
+>> +	tst	\saved_spsr, #PSR_MODE32_BIT	// native task?
+>> +	b.ne	.L__asm_ssbs_compat\@
+>> +	orr	\saved_spsr, \saved_spsr, #PSR_SSBS_BIT
+>> +	b	.L__asm_ssbs_skip\@
+>> +.L__asm_ssbs_compat\@:
+>> +	orr	\saved_spsr, \saved_spsr, #PSR_AA32_SSBS_BIT
+>> +.L__asm_ssbs_skip\@:
+>> +#endif
+>> +	.endm
+> Although this is in keeping with the rest of entry.S (perfectly
+> unreadable ;-), I think we can do something a bit simpler, that
+> doesn't rely on patching. Also, this doesn't seem to take the
+> SSBD options such as ARM64_SSBD_FORCE_ENABLE into account.
 
-ETHTOOL_CMD_SETTINGS_SET (U->K)
-    ETHTOOL_A_HEADER
-        ETHTOOL_A_DEV_NAME = "eth3"
-    ETHTOOL_A_SETTINGS_PRIV_FLAGS
-       ETHTOOL_A_SETTINGS_PRIV_FLAG
-           ETHTOOL_A_FLAG_NAME = "legacy-rx"
-	   ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+arm64_restore_ssbs_state has a check for ARM64_SSBD_FORCE_ENABLE,
 
-or the same with index instead of string
-
-ETHTOOL_CMD_SETTINGS_SET (U->K)
-    ETHTOOL_A_HEADER
-        ETHTOOL_A_DEV_NAME = "eth3"
-    ETHTOOL_A_SETTINGS_PRIV_FLAGS
-        ETHTOOL_A_SETTINGS_PRIV_FLAG
-            ETHTOOL_A_FLAG_INDEX = 0
- 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-
-
-For set you can combine both when you want to set multiple bits:
-
-ETHTOOL_CMD_SETTINGS_SET (U->K)
-    ETHTOOL_A_HEADER
-        ETHTOOL_A_DEV_NAME = "eth3"
-    ETHTOOL_A_SETTINGS_PRIV_FLAGS
-        ETHTOOL_A_SETTINGS_PRIV_FLAG
-            ETHTOOL_A_FLAG_INDEX = 2
- 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-        ETHTOOL_A_SETTINGS_PRIV_FLAG
-            ETHTOOL_A_FLAG_INDEX = 8
- 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-        ETHTOOL_A_SETTINGS_PRIV_FLAG
-            ETHTOOL_A_FLAG_NAME = "legacy-rx"
- 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-
-
-For get this might be a bit bigger message:
-
-ETHTOOL_CMD_SETTINGS_GET_REPLY (K->U)
-    ETHTOOL_A_HEADER
-        ETHTOOL_A_DEV_NAME = "eth3"
-    ETHTOOL_A_SETTINGS_PRIV_FLAGS
-        ETHTOOL_A_SETTINGS_PRIV_FLAG
-            ETHTOOL_A_FLAG_INDEX = 0
-            ETHTOOL_A_FLAG_NAME = "legacy-rx"
- 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-        ETHTOOL_A_SETTINGS_PRIV_FLAG
-            ETHTOOL_A_FLAG_INDEX = 1
-            ETHTOOL_A_FLAG_NAME = "vf-ipsec"
- 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-        ETHTOOL_A_SETTINGS_PRIV_FLAG
-            ETHTOOL_A_FLAG_INDEX = 8
-            ETHTOOL_A_FLAG_NAME = "something-else"
- 	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
-
+does that look wrong?
 
 >
->Michal
+>> +
+>>   	.macro	kernel_entry, el, regsize = 64
+>>   	.if	\regsize == 32
+>>   	mov	w0, w0				// zero upper 32 bits of x0
+>> @@ -182,8 +201,13 @@ alternative_cb_end
+>>   	str	x20, [tsk, #TSK_TI_ADDR_LIMIT]
+>>   	/* No need to reset PSTATE.UAO, hardware's already set it to 0 for us */
+>>   	.endif /* \el == 0 */
+>> -	mrs	x22, elr_el1
+>>   	mrs	x23, spsr_el1
+>> +
+>> +	.if	\el == 0
+>> +	restore_ssbs_state x23, x22
+>> +	.endif
+>> +
+>> +	mrs	x22, elr_el1
+>>   	stp	lr, x21, [sp, #S_LR]
+>>   
+>>   	/*
+>>
+> How about the patch below?
+
+Looks good; was just going to mention PF_KTHREAD check, but Mark R. has 
+already
+
+given detailed information about it.
+
+
+Thanks
+
+Neeraj
+
+>
+> Thanks,
+>
+> 	M.
+>
+>  From 7d4314d1ef3122d8bf56a7ef239c8c68e0c81277 Mon Sep 17 00:00:00 2001
+> From: Marc Zyngier <marc.zyngier@arm.com>
+> Date: Tue, 4 Jun 2019 17:35:18 +0100
+> Subject: [PATCH] arm64: Force SSBS on context switch
+>
+> On a CPU that doesn't support SSBS, PSTATE[12] is RES0.  In a system
+> where only some of the CPUs implement SSBS, we end-up losing track of
+> the SSBS bit across task migration.
+>
+> To address this issue, let's force the SSBS bit on context switch.
+>
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>   arch/arm64/include/asm/processor.h | 14 ++++++++++++--
+>   arch/arm64/kernel/process.c        | 14 ++++++++++++++
+>   2 files changed, 26 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+> index fd5b1a4efc70..844e2964b0f5 100644
+> --- a/arch/arm64/include/asm/processor.h
+> +++ b/arch/arm64/include/asm/processor.h
+> @@ -193,6 +193,16 @@ static inline void start_thread_common(struct pt_regs *regs, unsigned long pc)
+>   		regs->pmr_save = GIC_PRIO_IRQON;
+>   }
+>   
+> +static inline void set_ssbs_bit(struct pt_regs *regs)
+> +{
+> +	regs->pstate |= PSR_SSBS_BIT;
+> +}
+> +
+> +static inline void set_compat_ssbs_bit(struct pt_regs *regs)
+> +{
+> +	regs->pstate |= PSR_AA32_SSBS_BIT;
+> +}
+> +
+>   static inline void start_thread(struct pt_regs *regs, unsigned long pc,
+>   				unsigned long sp)
+>   {
+> @@ -200,7 +210,7 @@ static inline void start_thread(struct pt_regs *regs, unsigned long pc,
+>   	regs->pstate = PSR_MODE_EL0t;
+>   
+>   	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
+> -		regs->pstate |= PSR_SSBS_BIT;
+> +		set_ssbs_bit(regs);
+>   
+>   	regs->sp = sp;
+>   }
+> @@ -219,7 +229,7 @@ static inline void compat_start_thread(struct pt_regs *regs, unsigned long pc,
+>   #endif
+>   
+>   	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE)
+> -		regs->pstate |= PSR_AA32_SSBS_BIT;
+> +		set_compat_ssbs_bit(regs);
+>   
+>   	regs->compat_sp = sp;
+>   }
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index 9856395ccdb7..d451b3b248cf 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -442,6 +442,19 @@ void uao_thread_switch(struct task_struct *next)
+>   	}
+>   }
+>   
+> +static void ssbs_thread_switch(struct task_struct *next)
+> +{
+> +	if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE &&
+> +	    !test_tsk_thread_flag(next, TIF_SSBD)) {
+> +		struct pt_regs *regs = task_pt_regs(next);
+> +
+> +		if (compat_user_mode(regs))
+> +			set_compat_ssbs_bit(regs);
+> +		else if (user_mode(regs))
+> +			set_ssbs_bit(regs);
+> +	}
+> +}
+> +
+>   /*
+>    * We store our current task in sp_el0, which is clobbered by userspace. Keep a
+>    * shadow copy so that we can restore this upon entry from userspace.
+> @@ -471,6 +484,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
+>   	entry_task_switch(next);
+>   	uao_thread_switch(next);
+>   	ptrauth_thread_switch(next);
+> +	ssbs_thread_switch(next);
+>   
+>   	/*
+>   	 * Complete any pending TLB or cache maintenance on this CPU in case
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
+
