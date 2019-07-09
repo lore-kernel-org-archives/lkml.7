@@ -4,108 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8468C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B6EC606D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79892173C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE6521537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:51:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="P+nWViIi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fNEDVX0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfGIHvB (ORCPT
+        id S1726585AbfGIHvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:51:01 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:62964 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfGIHvA (ORCPT
+        Tue, 9 Jul 2019 03:51:32 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43323 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfGIHvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:51:00 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x697fIMC005989;
-        Tue, 9 Jul 2019 09:50:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=/DmdBFluf3TNNYk0EQ5Y03piO+O0zI/xncWXtOGKcac=;
- b=P+nWViIidUmuppObGmoj4H4VowV9mJSROGx0hIanQdkFgY9X/9Q4mNFhKSYMf129WOWg
- BUnGr/00pT5Q8nB2AfajhXVLGc41p5UNbuDGArY3UWqg6E/rxIDuZFRyKiiars0JUQ05
- Fpd/mYHI/4OrsAdGMX6uEAO04FGUNlXbvJZF1Iu4UHOGorgaBmPf2nZ8aPcRANomMvc1
- l8xRc7P+xfONcOulMYA8ww5z9yNu+jvJ5Lzk4tvP0pDT66y/xZs84Q6nzcJnYSRCxuS4
- RI+cg9ipLGn6KJcwsKFpAY4epJrvhq/247/r7iD6yRkkATQQD3LNI9VMAcwmdnQ6FPR4 5g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2tmh511qy7-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 09 Jul 2019 09:50:31 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0E23D34;
-        Tue,  9 Jul 2019 07:50:28 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DDEC228B4;
-        Tue,  9 Jul 2019 07:50:25 +0000 (GMT)
-Received: from [10.201.23.29] (10.75.127.46) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 9 Jul
- 2019 09:50:24 +0200
-Subject: Re: [PATCH] mtd: rawnand: stm32_fmc2: avoid warnings when building
- with W=1 option
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     <richard@nod.at>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <vigneshr@ti.com>, <bbrezillon@kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1561128189-14411-1-git-send-email-christophe.kerello@st.com>
- <20190701091128.4e67f1de@xps13>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <13d30ef8-b649-6416-3814-35a53c5c09ce@st.com>
-Date:   Tue, 9 Jul 2019 09:50:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Jul 2019 03:51:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so9627361plb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 00:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Smrq/vDbxcQl6KW/Rh/T3b+nDUYxB6msX/ZOzbcRi2U=;
+        b=fNEDVX0HL7EI/I6m5GdoAodJt4iCk6yzm4tuOh8ajweaBLKmh9prOUVmdOdhKNPrl/
+         dF3nyni3L1tkHubOOl5yp+pZHwYmI6cZ1c3rOLgyQyUyMlHl/uO3Y8rQUElrUmbk4b/E
+         s3cRHEU3henZjAe+fTlvzeiQrrhtUSUBrqQ9jp67liLLgUB7XiuawxR83WCDpO5YTeIt
+         JTLzoOs1VfiHTiiaVAcLZKR7PrE9gOkt7Y0/jN1HQSKYAeTxJ2E1przF39kV1CKPCCFm
+         rFc04TDY3RgryFc0c4/s+B1NzXD/tC82rN9nwc7Bpq3ybzaqCUVXRn1lzKeWeLOVbX7i
+         xT6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Smrq/vDbxcQl6KW/Rh/T3b+nDUYxB6msX/ZOzbcRi2U=;
+        b=QNXCbO95cvYI53OJt456V7JGD/tShq2fEOJX6xGcywEIgLx5ek4WjynZXFHcj7KEiA
+         zHUOQjs2pA44nQ4HKh/5BdbJzk+H8Nm4+85u0qeICHqe8VozWCq48xiY/OBg0X58yENZ
+         GtSmDKgLaX5NHLiy/sfYOUR2QgoygXS3F8p4bA+n4cC3hXhMJixJJgp8yl/XXvflWP3t
+         sq97CKBeNwvqF2Q6+DH6tK4joQ/m+seZh4WVxKQ3IFf0fPCnnFSWKmMCNyqripFZbk7o
+         Kw+3BfwIX5RGHxHjkIBWkQpevInfBHQIXJpgAVNoboJHlFUev5xvWEELfItzrdXfbtEC
+         xQ4Q==
+X-Gm-Message-State: APjAAAVvktKYLN/+HltM5z4W6ypMU1ZlEoZs2K4XJ+k7BIYGONyqYKHj
+        qio87+S95fk5fabPlZ83lJQXmg==
+X-Google-Smtp-Source: APXvYqwdU6F7Yn1VJPjF6KItVXdlcrtq2LV7yj+CbXHG4RpzQKgCu+AE6ystgZtAN6RbIoZ7toO/rA==
+X-Received: by 2002:a17:902:9041:: with SMTP id w1mr30857440plz.132.1562658691215;
+        Tue, 09 Jul 2019 00:51:31 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id p68sm32770294pfb.80.2019.07.09.00.51.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 00:51:21 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 13:21:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Anson.Huang@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        leonard.crestez@nxp.com, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de,
+        abel.vesa@nxp.com, ccaione@baylibre.com, angus@akkea.ca,
+        andrew.smirnov@gmail.com, agx@sigxcpu.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/3] opp: of: Support multiple suspend OPPs defined in DT
+Message-ID: <20190709075119.rg6ktsg7nwdadsmd@vireshk-i7>
+References: <20190709071056.26361-1-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190701091128.4e67f1de@xps13>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_03:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709071056.26361-1-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/1/19 9:11 AM, Miquel Raynal wrote:
-> Hi Christophe,
+On 09-07-19, 15:10, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> Christophe Kerello <christophe.kerello@st.com> wrote on Fri, 21 Jun
-> 2019 16:43:09 +0200:
+> With property "opp-supported-hw" introduced, the OPP table
+> in DT could be a large OPP table and ONLY a subset of OPPs
+> are available, based on the version of the hardware running
+> on. That introduces restriction of using "opp-suspend"
+> property to define the suspend OPP, as we are NOT sure if the
+> OPP containing "opp-suspend" property is available for the
+> hardware running on, and the of opp core does NOT allow multiple
+> suspend OPPs defined in DT OPP table.
 > 
->> This patch solves warnings detected by setting W=1 when building.
->>
->> Warnings type detected:
->> drivers/mtd/nand/raw/stm32_fmc2_nand.c: In function ‘stm32_fmc2_calc_timings’:
->> drivers/mtd/nand/raw/stm32_fmc2_nand.c:1417:23: warning: comparison is
->> always false due to limited range of data type [-Wtype-limits]
->>    else if (tims->twait > FMC2_PMEM_PATT_TIMING_MASK)
->>
->> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->> ---
+> To eliminate this restrition, make of opp core allow multiple
+> suspend OPPs defined in DT, and pick the OPP with highest rate
+> and with "opp-suspend" property present to be suspend OPP, it
+> can speed up the suspend/resume process.
 > 
-> Applied to nand/next, thanks.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/opp/of.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 
-Hi Miquel,
+Please update the DT bindings first.
 
-After fetching nand/next, I do not see this patch applied.
+FWIW, all three patches look fine otherwise.
 
-Regards,
-Christophe Kerello.
-
-> 
-> Miquèl
-> 
+-- 
+viresh
