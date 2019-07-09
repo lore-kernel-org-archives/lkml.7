@@ -2,84 +2,202 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFCEC73C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFACC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3B42175B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A6120861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XSevLwhR"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aCct5Umy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfGINhT (ORCPT
+        id S1727026AbfGINi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:37:19 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:30081 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGINhT (ORCPT
+        Tue, 9 Jul 2019 09:38:58 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19608 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfGINi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:37:19 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x69Db7Js021418;
-        Tue, 9 Jul 2019 22:37:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x69Db7Js021418
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562679428;
-        bh=ObKEOLR2UbFEeFTWRY9OPCc16z3rd26SnSFncXPuWbc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XSevLwhRcDuoYBqb/kB42Ni5nStGcoveUoWvEgSCp15o5bjj8Xxbc0Q84F5nP6N4B
-         pCe0i754DFtUJ1FGjPr06MZeEUlRpjKfsZHWRujJkP5AOjdMkyLB+o65Y28SayNHcy
-         UBUaGfflZA6c3xVWkhMbG1hdPUAsrWPzpsjaY/PyjPMDBswAvG01cxlE+bJqAQHdRR
-         3NcoOEip1hHptCTzcPjWj/IGAUQVS2jUBS8hXFz3mfMZZKYefmF4GKIFXiZ4BmjHnX
-         04yT+AcEc9byxm0pUeDju3nW+HTlfJDvDtwvrtjL6J1COOTP9z6wG0rbC4nY923xhd
-         l4IF/3C4qZ/LA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id k9so10630344vso.5;
-        Tue, 09 Jul 2019 06:37:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAWRPgfOjqdPuk5OyNby5YgWotx8lBa3ZJxG2lyfiBlIWTZ2WZo8
-        uT6snb9E9L99YB0qP8taJHzgmvdEnnYHEUHtqt0=
-X-Google-Smtp-Source: APXvYqyGPtmfLEn9rBW7ihZhvrJgW4nZtGiWD36NunhGiORc2fmpyab0TS4YqtBrz/EDtZruAE01UplHwZOi6/ypFwM=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr14546426vsn.54.1562679427317;
- Tue, 09 Jul 2019 06:37:07 -0700 (PDT)
+        Tue, 9 Jul 2019 09:38:57 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2498ea0000>; Tue, 09 Jul 2019 06:38:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 09 Jul 2019 06:38:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 09 Jul 2019 06:38:55 -0700
+Received: from [10.25.74.15] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 9 Jul
+ 2019 13:38:49 +0000
+Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
+ features
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>
+CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190701124010.7484-1-vidyas@nvidia.com>
+ <20190701124010.7484-2-vidyas@nvidia.com>
+ <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <841a79fa-24ff-8710-456a-44f081230d8f@nvidia.com>
+Date:   Tue, 9 Jul 2019 19:08:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190709222019.5359e707@canb.auug.org.au>
-In-Reply-To: <20190709222019.5359e707@canb.auug.org.au>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 9 Jul 2019 22:36:31 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARBUkmcgOzMSHav7_w2OjX-_FHBpZ5ir_kP59_27VE6Ug@mail.gmail.com>
-Message-ID: <CAK7LNARBUkmcgOzMSHav7_w2OjX-_FHBpZ5ir_kP59_27VE6Ug@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the kbuild tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <66d8af45-66f5-b597-0ea8-39e8662df5e6@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562679530; bh=eH8RfLaPI82FgFhlZTVX588/yBLz0+QCElzGkG7NYFc=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=aCct5UmybzIIUCobuk1bacIiVcdUMSfBvPPs7i603WYBHXMYK+4IPlmmklNl7qZW8
+         xLnxYlBQa4UBG/2FKpWDlz8D4jiAfMEnvmFnl5WkXgbe5xE+Snh4SuwMvnIJ9CJMZT
+         HBj+K8d/0O1SSvA796hdO8+UqNh7hpJn7lhDdJetHlY2gdwCpwxW7WLctV7sXbK0+T
+         vK1vnceH9Ry6QqWgPZjC57doyvrHAB74TjvW7+dnEykgmD6G361G962nCAZ1VVT01m
+         rZGE+4HWfy/0t3O/WuiE2HYqs0PdFkpX5Nu4n9mOzKm7b8UGMbf4+GPpAwCvYgmePr
+         LpD7zNfpQEfDQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen,
+On 7/5/2019 7:16 PM, Vidya Sagar wrote:
+Bjorn,
+Apologies for pinging again about this.
+Can you please provide Ack for this change so that Lorenzo can pick up this=
+ series?
 
-On Tue, Jul 9, 2019 at 9:20 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   8eaeddd155af ("kbuild: header-test: Exclude more headers for um and parisc")
->
-> is missing a Signed-off-by from its author and committer.
+Thanks,
+Vidya Sagar
 
+> On 7/1/2019 6:09 PM, Vidya Sagar wrote:
+> Bjorn,
+> Can you please provide Ack for this patch?
+>=20
+> Thanks,
+> Vidya Sagar
+>=20
+>> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
+>> features.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Reviewed-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> Changes since [v11]:
+>> * None
+>>
+>> Changes since [v10]:
+>> * None
+>>
+>> Changes since [v9]:
+>> * None
+>>
+>> Changes since [v8]:
+>> * None
+>>
+>> Changes since [v7]:
+>> * None
+>>
+>> Changes since [v6]:
+>> * None
+>>
+>> Changes since [v5]:
+>> * None
+>>
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * None
+>>
+>> Changes since [v2]:
+>> * Updated commit message and description to explicitly mention that defi=
+nes are
+>> =C2=A0=C2=A0 added only for some of the features and not all.
+>>
+>> Changes since [v1]:
+>> * None
+>>
+>> =C2=A0 include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
+>> =C2=A0 1 file changed, 21 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs=
+.h
+>> index f28e562d7ca8..1c79f6a097d2 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -713,7 +713,9 @@
+>> =C2=A0 #define PCI_EXT_CAP_ID_DPC=C2=A0=C2=A0=C2=A0 0x1D=C2=A0=C2=A0=C2=
+=A0 /* Downstream Port Containment */
+>> =C2=A0 #define PCI_EXT_CAP_ID_L1SS=C2=A0=C2=A0=C2=A0 0x1E=C2=A0=C2=A0=C2=
+=A0 /* L1 PM Substates */
+>> =C2=A0 #define PCI_EXT_CAP_ID_PTM=C2=A0=C2=A0=C2=A0 0x1F=C2=A0=C2=A0=C2=
+=A0 /* Precision Time Measurement */
+>> -#define PCI_EXT_CAP_ID_MAX=C2=A0=C2=A0=C2=A0 PCI_EXT_CAP_ID_PTM
+>> +#define PCI_EXT_CAP_ID_DLF=C2=A0=C2=A0=C2=A0 0x25=C2=A0=C2=A0=C2=A0 /* =
+Data Link Feature */
+>> +#define PCI_EXT_CAP_ID_PL=C2=A0=C2=A0=C2=A0 0x26=C2=A0=C2=A0=C2=A0 /* P=
+hysical Layer 16.0 GT/s */
+>> +#define PCI_EXT_CAP_ID_MAX=C2=A0=C2=A0=C2=A0 PCI_EXT_CAP_ID_PL
+>> =C2=A0 #define PCI_EXT_CAP_DSN_SIZEOF=C2=A0=C2=A0=C2=A0 12
+>> =C2=A0 #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+>> @@ -1053,4 +1055,22 @@
+>> =C2=A0 #define=C2=A0 PCI_L1SS_CTL1_LTR_L12_TH_SCALE=C2=A0=C2=A0=C2=A0 0x=
+e0000000=C2=A0 /* LTR_L1.2_THRESHOLD_Scale */
+>> =C2=A0 #define PCI_L1SS_CTL2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=
+x0c=C2=A0=C2=A0=C2=A0 /* Control 2 Register */
+>> +/* Data Link Feature */
+>> +#define PCI_DLF_CAP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x04=C2=
+=A0=C2=A0=C2=A0 /* Capabilities Register */
+>> +#define=C2=A0 PCI_DLF_LOCAL_DLF_SUP_MASK=C2=A0=C2=A0=C2=A0 0x007fffff=
+=C2=A0 /* Local Data Link Feature Supported */
+>> +#define=C2=A0 PCI_DLF_EXCHANGE_ENABLE=C2=A0=C2=A0=C2=A0 0x80000000=C2=
+=A0 /* Data Link Feature Exchange Enable */
+>> +#define PCI_DLF_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x08=C2=
+=A0=C2=A0=C2=A0 /* Status Register */
+>> +#define=C2=A0 PCI_DLF_REMOTE_DLF_SUP_MASK=C2=A0=C2=A0=C2=A0 0x007fffff=
+=C2=A0 /* Remote Data Link Feature Supported */
+>> +#define=C2=A0 PCI_DLF_REMOTE_DLF_SUP_VALID=C2=A0=C2=A0=C2=A0 0x80000000=
+=C2=A0 /* Remote Data Link Feature Support Valid */
+>> +
+>> +/* Physical Layer 16.0 GT/s */
+>> +#define PCI_PL_16GT_CAP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x04=
+=C2=A0=C2=A0=C2=A0 /* Capabilities Register */
+>> +#define PCI_PL_16GT_CTRL=C2=A0=C2=A0=C2=A0 0x08=C2=A0=C2=A0=C2=A0 /* Co=
+ntrol Register */
+>> +#define PCI_PL_16GT_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0c=
+=C2=A0=C2=A0=C2=A0 /* Status Register */
+>> +#define PCI_PL_16GT_LDPM_STS=C2=A0=C2=A0=C2=A0 0x10=C2=A0=C2=A0=C2=A0 /=
+* Local Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_FRDPM_STS=C2=A0=C2=A0=C2=A0 0x14=C2=A0=C2=A0=C2=A0 =
+/* First Retimer Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_SRDPM_STS=C2=A0=C2=A0=C2=A0 0x18=C2=A0=C2=A0=C2=A0 =
+/* Second Retimer Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_RSVD=C2=A0=C2=A0=C2=A0 0x1C=C2=A0=C2=A0=C2=A0 /* Re=
+served */
+>> +#define PCI_PL_16GT_LE_CTRL=C2=A0=C2=A0=C2=A0 0x20=C2=A0=C2=A0=C2=A0 /*=
+ Lane Equalization Control Register */
+>> +
+>> =C2=A0 #endif /* LINUX_PCI_REGS_H */
+>>
+>=20
 
-Sorry, I was trying to squash this, but missed to do that.
-Will fix it for tomorrow's linux-next.
-
-Thanks.
-
-
--- 
-Best Regards
-Masahiro Yamada
