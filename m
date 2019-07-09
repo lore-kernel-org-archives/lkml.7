@@ -2,205 +2,104 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F8DC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27435C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9FC21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F233421537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V1eweIgJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en9sy9Bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfGIOyj (ORCPT
+        id S1726660AbfGIOzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:54:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37938 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfGIOyj (ORCPT
+        Tue, 9 Jul 2019 10:55:46 -0400
+Received: from mail-io1-f48.google.com ([209.85.166.48]:44433 "EHLO
+        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfGIOzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:54:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69ErbLG066765;
-        Tue, 9 Jul 2019 14:53:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=u55sha/1Wgkn8aGbxvOPN/fuopn0d6ARjtboy0So9i0=;
- b=V1eweIgJlQ2Lhcu1e9WwB8ndvlKozvldRfq9xXxgHZIO4WDxoVqmqE/Xbmm0r/mceFE1
- qcPiCH13J70nj8E9p8Sfa17w9LQ3oapH6z5kUODUXbOY05YWVOwZ9xk2JNx342KKlUsY
- HFGWHu75LHWxFhk0cI+nLQxWcf1uq5CoB8abnnz7kQO8MT8T+oIOCQCdsNLyeQV9A4FW
- yHNtEIQkkWtXNc+gOcgQhUOTvTJJRgFi6/lh/+gI2wvr8QZt5PAJGKY4M09eUsOp4WKf
- dF/3iJmGEvQZo/MJn1zyhgns0JBKUTAJK0a1B4sXWSHpEchO9Xdh8QHvc60u7VjHwl0f IA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2tjkkpmtsp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 14:53:37 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69Eqg6V182230;
-        Tue, 9 Jul 2019 14:53:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tjgru5c97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 14:53:35 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x69ErSTw018106;
-        Tue, 9 Jul 2019 14:53:28 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jul 2019 07:53:27 -0700
-Subject: Re: [PATCH v6 4/4] x86/xen: Add "nopv" support for HVM guest
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org, jgross@suse.com,
-        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de
-References: <1562490908-17882-1-git-send-email-zhenzhong.duan@oracle.com>
- <1562490908-17882-5-git-send-email-zhenzhong.duan@oracle.com>
- <86b0dbb9-74a7-6883-e6d7-210bd35a6944@oracle.com>
- <6cbd7b78-3d8d-64ae-fd2e-82244dbe6a1e@oracle.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <3d7db7c6-cea3-9dce-0519-a1c600b33273@oracle.com>
-Date:   Tue, 9 Jul 2019 10:54:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 9 Jul 2019 10:55:46 -0400
+Received: by mail-io1-f48.google.com with SMTP id s7so43742263iob.11;
+        Tue, 09 Jul 2019 07:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9KMd9yknkR/+c86sYJxaacnce7lwo4HnwkWIRsstIvc=;
+        b=en9sy9BoC7AQ5xWdOXvEGc7M1sc8G+FncI3Wyf8tSliOeOv9I0QKLXudMJBeKS5bgC
+         Lve6jVlSQ5y277mYdGTyzFuO2Gz9bmHjn898R/i6KNFCn2sx4Co0Y+Yqv+EE275ZcXH6
+         iK0rGJn/cLWvFdxk8SXTbetAYu/5je58SOkP94dzw29sNTGpKCgqyIpTtsYIzq5c4qs2
+         ic0lV+wFjB9uqcy9MeXAS5nsZndMEoD03Y7UgTDIZjfUac8QvU0xCnO7De+ZXxwPMzkF
+         SS4q/fPVKymRKFsqg4zifJvvrxAuK5JiMkU7pY6LkMo29hGmbMzL41H4iEayvHbHW73B
+         zKqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9KMd9yknkR/+c86sYJxaacnce7lwo4HnwkWIRsstIvc=;
+        b=aZMKERySd/i3jU2Z3izPJo07gPm73PPpjfjDXoNTQgjIY2lmgdLQWYLxh5+uda+oa7
+         kqrhXg4mwzXRn/O3HhJsbiw8kkCdSNZgUvPvFZP1QMYNxHN5b4V8ZbnIh4qM+MZfmk/s
+         qAeTY6hvrhuJs75ovzDOKDS1dDajDalWZy59n64bDgCaE2Wk5zaMCzb4cTS4chaIbFIp
+         szJ5UjCL8nvnj1evcYoI/W7yJ6jtKG+OgPYGxAmPmkm9sqHus7sedxrSo/ndx61xEnMz
+         wrLf8NXPv3yqlzRazvK0UBeI22B3HGnJMG9vU2mE96+475MFbqBhe9pU+3ZEZVUdT6pb
+         giuQ==
+X-Gm-Message-State: APjAAAXP1SP3q7f6rJ8zQTc32/ef0nIal0LmZnTgMgiEJI6yveTFBWcQ
+        +GzA1vFMXo6PDLK8Kzs3yaUTELiZxaEaBefbdC+EPKQ=
+X-Google-Smtp-Source: APXvYqwDxozVdqx2YUjLNkgpJjIKpdsN6GzZLTkWR9W7hcYndFmMhOnt4/nJgTTsxkPIdoGLLKL1prXG/lBM8MLRZKs=
+X-Received: by 2002:a5d:8404:: with SMTP id i4mr11903742ion.146.1562684145110;
+ Tue, 09 Jul 2019 07:55:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6cbd7b78-3d8d-64ae-fd2e-82244dbe6a1e@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907090178
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907090179
+References: <20190708072858.566aa564@canb.auug.org.au> <CAABAsM7jKzWPNoe63LU33tVfn7a88ZP9yzp4Bb1BN2TDWMxgjQ@mail.gmail.com>
+ <ed6656ad172920882862e5571b6c237a31974bc3.camel@netapp.com>
+In-Reply-To: <ed6656ad172920882862e5571b6c237a31974bc3.camel@netapp.com>
+From:   Trond Myklebust <trondmy@gmail.com>
+Date:   Tue, 9 Jul 2019 10:55:34 -0400
+Message-ID: <CAABAsM4GzOXHrv1JLC3KRpdA=+7jiFF2tGL5=5PKYbV_Qcys5A@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commits in the nfs tree
+To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+Cc:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/19 12:20 AM, Zhenzhong Duan wrote:
+Yes please.
+
+On Tue, 9 Jul 2019 at 10:30, Schumaker, Anna <Anna.Schumaker@netapp.com> wrote:
 >
-> -const __initconst struct hypervisor_x86 x86_hyper_xen_hvm = {
-> +static uint32_t __init xen_platform_hvm(void)
-> +{
-> +       uint32_t xen_domain = xen_cpuid_base();
-> +       struct x86_hyper_init *h = &x86_hyper_xen_hvm.init;
-> +
-> +       if (xen_pv_domain())
-> +               return 0;
-> +
-> +       if (xen_pvh_domain() && nopv) {
-> +               /* Guest booting via the Xen-PVH boot entry goes here */
-> +               pr_info("\"nopv\" parameter is ignored in PVH guest\n");
-> +               nopv = false;
-> +       } else if (nopv && xen_domain) {
-> +               /*
-> +                * Guest booting via normal boot entry (like via
-> grub2) goes
-> +                * here.
-> +                *
-> +                * Use interface functions for bare hardware if nopv,
-> +                * xen_hvm_guest_late_init is an exception as we need to
-> +                * detect PVH and panic there.
-> +                */
-> +               memcpy(h, (void *)&x86_init.hyper,
-> sizeof(x86_init.hyper));
-
-
-And this worked? I'd think it would fail since h points to RO section.
-
-
-> +               memcpy(&x86_hyper_xen_hvm.runtime, (void
-> *)&x86_platform.hyper,
-> +                      sizeof(x86_platform.hyper));
-> +               h->guest_late_init = xen_hvm_guest_late_init;
-
-
-To me this still doesn't look right --- you are making assumptions about
-x86_platform/x86_init.hyper and I don't think you can assume they have
-not been set to point to another hypervisor, for example.
-
-Would modifying all x86_hyper_xen_hvm's ops (except, I guess,
-xen_hvm_guest_late_init()) to immediately return if nopv is set work?
-
-Also question for Juergen --- is there anything perhaps in zeropage that
-indicates we are booting PVH guest from grub?
-
--boris
-
-
-> +       }
-> +       return xen_domain;
-> +}
-> +
-> +struct hypervisor_x86 x86_hyper_xen_hvm __initdata = {
->         .name                   = "Xen HVM",
->         .detect                 = xen_platform_hvm,
->         .type                   = X86_HYPER_XEN_HVM,
-> @@ -268,4 +292,5 @@ static __init void xen_hvm_guest_late_init(void)
->         .init.init_mem_mapping  = xen_hvm_init_mem_mapping,
->         .init.guest_late_init   = xen_hvm_guest_late_init,
->         .runtime.pin_vcpu       = xen_pin_vcpu,
-> +       .ignore_nopv            = true,
->  };
+> On Sun, 2019-07-07 at 17:30 -0400, Trond Myklebust wrote:
+> > NetApp Security WARNING: This is an external email. Do not click
+> > links or open attachments unless you recognize the sender and know
+> > the content is safe.
+> >
+> >
+> >
+> >
+> > On Sun, 7 Jul 2019 at 17:29, Stephen Rothwell <sfr@canb.auug.org.au>
+> > wrote:
+> > > Hi all,
+> > >
+> > > Commits
+> > >
+> > >   fe9ad197bd8a ("xprtrdma: Remove the RPCRDMA_REQ_F_PENDING flag")
+> > >   08d720bcd822 ("xprtrdma: Fix occasional transport deadlock")
+> > >   beb843739ea0 ("xprtrdma: Replace use of xdr_stream_pos in
+> > > rpcrdma_marshal_req")
+> > >
+> > > are missing a Signed-off-by from their committer.
+> > >
+> >
+> > Anna?
 >
+> Looks like I missed the "-s" flag to `git-am` when I was applying
+> these. I just fixed it locally, do you want me to send you a new pull
+> request?
 >
-> Thanks
->
-> Zhenzhong
->
-
+> Anna
