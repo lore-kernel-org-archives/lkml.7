@@ -2,115 +2,116 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DD3C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29091C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755DC2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A37216E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="D2jpmbvB";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Xv/lRfCr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ds586ejC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfGIQPo (ORCPT
+        id S1726620AbfGIQP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 12:15:44 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:48810 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725816AbfGIQPo (ORCPT
+        Tue, 9 Jul 2019 12:15:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47048 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfGIQP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 12:15:44 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 1F3128EE24C;
-        Tue,  9 Jul 2019 09:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562688943;
-        bh=JfZMiQaimhE8tVjgh946XQAbwaDQ14EcoZOpefa0Lbw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=D2jpmbvBni9SZpVSSd/xGo0DsC7Cwg2SKxoZuYQD/MxjLZwZFhwULDO2SEDCwW6KM
-         Lw4i0/CW3PPwIXjLRp2wfOBxwKqRJ/OedEuqfy243/9naKpkb5uLNVELx4Gm5vYSbo
-         D+aPk57XzEQfTZOEycwSamnxCEM5Mjx89jP91j4E=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GDlUqWcQ81zh; Tue,  9 Jul 2019 09:15:42 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 431918EE15F;
-        Tue,  9 Jul 2019 09:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1562688942;
-        bh=JfZMiQaimhE8tVjgh946XQAbwaDQ14EcoZOpefa0Lbw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Xv/lRfCrzwwiTloyTSScopIfEE7eEPQbnqE02Yrzg1vgbqu65vAhM1mt85FCgCXP0
-         5dx/nf7TZvFI0470536UhfLg6n/6WZDjr2c40GL8MYwAwO53TgLzQD9bKovgz4p33m
-         2dBM7fZSaRzPz9We0OFM8/EXxo4yQudtQ3mIh5sg=
-Message-ID: <1562688939.3362.47.camel@HansenPartnership.com>
-Subject: Re: exfat filesystem
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Valdis =?UTF-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, kys@microsoft.com
-Cc:     Sasha Levin <sashal@kernel.org>
-Date:   Tue, 09 Jul 2019 09:15:39 -0700
-In-Reply-To: <20190709154834.GJ32320@bombadil.infradead.org>
-References: <21080.1562632662@turing-police>
-         <20190709045020.GB23646@mit.edu>
-         <20190709112136.GI32320@bombadil.infradead.org>
-         <20190709153039.GA3200@mit.edu>
-         <20190709154834.GJ32320@bombadil.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 9 Jul 2019 12:15:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dCpzFzu5/U/he9Oo9VsjZUs68uCHS4wh8DDRIspguLY=; b=Ds586ejCEExvMxDQM6zwFPeBH
+        kaA+bMZBmskIlrdYh8RE6ZVHf9Lh+O+gJE5BmWCqK3tbZhqGYVk4AwTGtSKs6o/CWdpUMUJuezJ1T
+        tXrlXR1ng40iAM4lhSAwrOeuZ7kzTyfZ5rShXjpLIXSUB+bSSHGCMl6FI8TSwOyXEXofGEpSwiCtw
+        vjsLaLVrOmIuzT46BuLplm5VZS/G/cxkCs2bi/YvnfCHAjxY25sRekw1BFgbaD+3lJgxHLZiR9oNH
+        cZXpXN0SB7wlerrq2i37lxXPnzF+GL38QPexntwuX8wQ0GmeLCvsIlgHr9KT9FobLmrrgnBSg5f2s
+        Vpp/7zbyg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hksmU-0003ek-Hu; Tue, 09 Jul 2019 16:15:50 +0000
+Date:   Tue, 9 Jul 2019 09:15:50 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        David Laight <David.Laight@aculab.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Daniel Drake <drake@endlessm.com>
+Subject: Re: [PATCH v2 2/2] rtw88: pci: Use DMA sync instead of remapping in
+ RX ISR
+Message-ID: <20190709161550.GA8703@infradead.org>
+References: <20190708063252.4756-1-jian-hong@endlessm.com>
+ <20190709102059.7036-2-jian-hong@endlessm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709102059.7036-2-jian-hong@endlessm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-09 at 08:48 -0700, Matthew Wilcox wrote:
-> On Tue, Jul 09, 2019 at 11:30:39AM -0400, Theodore Ts'o wrote:
-> > On Tue, Jul 09, 2019 at 04:21:36AM -0700, Matthew Wilcox wrote:
-> > > How does
-> > > https://www.zdnet.com/article/microsoft-open-sources-its-entire-p
-> > > atent-portfolio/
-> > > change your personal opinion?
-> > 
-> > According to SFC's legal analysis, Microsoft joining the OIN
-> > doesn't mean that the eXFAT patents are covered, unless *Microsoft*
-> > contributes the code to the Linux usptream kernel.  That's because
-> > the OIN is governed by the Linux System Definition, and until MS
-> > contributes code which covered by the exFAT patents, it doesn't
-> > count.
-> > 
-> > For more details:
-> > 
-> > https://sfconservancy.org/blog/2018/oct/10/microsoft-oin-exfat/
-> > 
-> > (This is not legal advice, and I am not a lawyer.)
+On Tue, Jul 09, 2019 at 06:21:01PM +0800, Jian-Hong Pan wrote:
+> Since each skb in RX ring is reused instead of new allocation, we can
+> treat the DMA in a more efficient way by DMA synchronization.
 > 
-> Interesting analysis.  It seems to me that the correct forms would be
-> observed if someone suitably senior at Microsoft accepted the work
-> from Valdis and submitted it with their sign-off.  KY, how about it?
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> ---
+>  drivers/net/wireless/realtek/rtw88/pci.c | 35 ++++++++++++++++++++++--
+>  1 file changed, 32 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+> index e9fe3ad896c8..28ca76f71dfe 100644
+> --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> @@ -206,6 +206,35 @@ static int rtw_pci_reset_rx_desc(struct rtw_dev *rtwdev, struct sk_buff *skb,
+>  	return 0;
+>  }
+>  
+> +static int rtw_pci_sync_rx_desc_cpu(struct rtw_dev *rtwdev, dma_addr_t dma)
+> +{
+> +	struct device *dev = rtwdev->dev;
+> +	int buf_sz = RTK_PCI_RX_BUF_SIZE;
+> +
+> +	dma_sync_single_for_cpu(dev, dma, buf_sz, PCI_DMA_FROMDEVICE);
+> +
+> +	return 0;
+> +}
 
-KY, if you need local help to convince anyone, I can do that ... I've
-been deeply involved in patent issues with open source from the
-community angle for a while and I'm used to talking to corporate
-counsels.  Personally I think we could catch Microsoft in the implied
-licence to the FAT patent simply by putting exfat in the kernel and
-waiting for them to distribute it but I think it would benefit
-Microsoft much more from a community perspective to make an open
-donation of the FAT patents to Linux in much the same way they've
-already done for UEFI.  If my analysis of the distribution situation is
-correct, it would be making a virtue of a necessity anyway which is
-always a useful business case argument.
+No need to return a value from this helper. In fact I'm not even sure
+you need the helper at all.  Also please use the DMA_FROM_DEVICE
+constant instead of the deprecated PCI variant.
 
-James
+> +static int rtw_pci_sync_rx_desc_device(struct rtw_dev *rtwdev, dma_addr_t dma,
+> +				       struct rtw_pci_rx_ring *rx_ring,
+> +				       u32 idx, u32 desc_sz)
+> +{
+> +	struct device *dev = rtwdev->dev;
+> +	struct rtw_pci_rx_buffer_desc *buf_desc;
+> +	int buf_sz = RTK_PCI_RX_BUF_SIZE;
+> +
+> +	dma_sync_single_for_device(dev, dma, buf_sz, PCI_DMA_FROMDEVICE);
+> +
+> +	buf_desc = (struct rtw_pci_rx_buffer_desc *)(rx_ring->r.head +
+> +						     idx * desc_sz);
+> +	memset(buf_desc, 0, sizeof(*buf_desc));
+> +	buf_desc->buf_size = cpu_to_le16(RTK_PCI_RX_BUF_SIZE);
+> +	buf_desc->dma = cpu_to_le32(dma);
+> +
+> +	return 0;
+> +}
 
+Same comment on the PCI constant and the return value here.
