@@ -2,171 +2,309 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8A2C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13985C606D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3425F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rqnKeKFj"
+	by mail.kernel.org (Postfix) with ESMTP id EB016205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfGIJbk (ORCPT
+        id S1726491AbfGIJcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:31:40 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53627 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbfGIJbk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:31:40 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so2318781wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 02:31:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yJGoyEUVe04ghlPBAiRSMxOfNeRDmZRLOGlGSZ3RhuY=;
-        b=rqnKeKFjvWV2+mKs3dFf/1L6IRTNBJkA4VnQHtXllGQzIsJlwefKhcgiFdS2J01ObC
-         HoB3s69MZhZ6+Wt95wiTGoJdHI+oGi+6ATxt5S+sRw/dQzcPqEg2MUhcdiO9OnZskuj8
-         XNAC6hB2+Uw/NSI7ARjYIErlAz5FAuiBDVbJSc8x7A7CV+W5emZwsJZlIuI7BNq/4lUt
-         O1Hv0JKjg7zfpa6uuo2F/o21JcyaBSlseMFLej56n11uaasGBx/+1It0lmGBW4Vy9ABE
-         Eg2EU957+uxwWq2RfZh98sjALcDFDUePr/2Azx/nBObLuxWReaUIIt2tIt6nf9e8I3gZ
-         /5OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yJGoyEUVe04ghlPBAiRSMxOfNeRDmZRLOGlGSZ3RhuY=;
-        b=ALD6APGDDB5qgt7rIhzHqOum/eDCLwtt/plXJxuw06g62zoewvzdloSDrblIujsRY4
-         2aj6CyWdM1NlEJG3TZ2OKoJUPTS+d1Pv05MjXQzjG00iY2opysR+coxT4ZBSgahiUQiJ
-         /T7wXlxxe/TW4+rgnOGZh0nHS3AUJxdZRfmhka897hz5HNWTAGkkcTd5vxpabn5okCRN
-         Udt7B+QQDlbg5+gjWVX4lNlivoPsz75Lqdd9UpMyiuUiMoJqdf/JzugvXEDFx9nPv2y0
-         sCLh94Xh4I9BWgognEKiIMyS4dfa66NtIzli9DQee9j9LWIPDRNoO3cI3rg5DZf23g1O
-         LHVQ==
-X-Gm-Message-State: APjAAAXOhEgMaCwJtKAGPvxtcqoEeoOkWsV/ISKPTcZzVwBqQYbTHPzC
-        fuE0TzrwJzZPcN8gSnHkQuQV2g==
-X-Google-Smtp-Source: APXvYqxaKfA0IPSQWqpEN1DXOFT+NZh2VNo/h4XIwGQO9RD28/m5pNHRYx4x8r8Sj6hw0LG/HUd+3w==
-X-Received: by 2002:a1c:1bd7:: with SMTP id b206mr16469516wmb.85.1562664697503;
-        Tue, 09 Jul 2019 02:31:37 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id c14sm15454547wrr.56.2019.07.09.02.31.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 02:31:36 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 10:31:35 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, lee.jones@linaro.org, jingoohan1@gmail.com,
-        dmurphy@ti.com, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        tomi.valkeinen@ti.com
-Subject: Re: [PATCH v2 4/4] backlight: add led-backlight driver
-Message-ID: <20190709093135.ceuj5tszmuri52w2@holly.lan>
-References: <20190708102700.23138-1-jjhiblot@ti.com>
- <20190708102700.23138-5-jjhiblot@ti.com>
+        Tue, 9 Jul 2019 05:32:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58928 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725961AbfGIJcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 05:32:50 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0842599946FD24336839;
+        Tue,  9 Jul 2019 17:32:47 +0800 (CST)
+Received: from localhost (10.227.98.71) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
+ 17:32:43 +0800
+Date:   Tue, 9 Jul 2019 17:32:29 +0800
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Hanna Hawa <hhhawa@amazon.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <bp@alien8.de>,
+        <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <paulmck@linux.ibm.com>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+Message-ID: <20190709173229.0000135f@huawei.com>
+In-Reply-To: <1562500658-14717-3-git-send-email-hhhawa@amazon.com>
+References: <1562500658-14717-1-git-send-email-hhhawa@amazon.com>
+        <1562500658-14717-3-git-send-email-hhhawa@amazon.com>
+Organization: Huawei R&D UK Ltd.
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708102700.23138-5-jjhiblot@ti.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.227.98.71]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 12:27:00PM +0200, Jean-Jacques Hiblot wrote:
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> 
-> This patch adds a led-backlight driver (led_bl), which is similar to
-> pwm_bl except the driver uses a LED class driver to adjust the
-> brightness in the HW. Multiple LEDs can be used for a single backlight.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> ---
->  drivers/video/backlight/Kconfig  |   7 +
->  drivers/video/backlight/Makefile |   1 +
->  drivers/video/backlight/led_bl.c | 235 +++++++++++++++++++++++++++++++
->  3 files changed, 243 insertions(+)
->  create mode 100644 drivers/video/backlight/led_bl.c
+On Sun, 7 Jul 2019 14:57:36 +0300
+Hanna Hawa <hhhawa@amazon.com> wrote:
 
-> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
+> report L1 errors.
+> 
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+A quick drive by review as I was feeling curious.
+
+Just a couple of trivial queries and observation on the fact it
+might be useful to add a few devm managed functions to cut down
+on edac driver boilerplate.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  MAINTAINERS               |   6 ++
+>  drivers/edac/Kconfig      |   8 +++
+>  drivers/edac/Makefile     |   1 +
+>  drivers/edac/al_l1_edac.c | 154 ++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 169 insertions(+)
+>  create mode 100644 drivers/edac/al_l1_edac.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 77eae44..fd29ea6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -743,6 +743,12 @@ F:	drivers/tty/serial/altera_jtaguart.c
+>  F:	include/linux/altera_uart.h
+>  F:	include/linux/altera_jtaguart.h
+>  
+> +AMAZON ANNAPURNA LABS L1 EDAC
+> +M:	Hanna Hawa <hhhawa@amazon.com>
+> +S:	Maintained
+> +F:	drivers/edac/al_l1_edac.c
+> +F:	Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+> +
+>  AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+>  M:	Talel Shenhar <talel@amazon.com>
+>  S:	Maintained
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 200c04c..58b92bc 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -74,6 +74,14 @@ config EDAC_GHES
+>  
+>  	  In doubt, say 'Y'.
+>  
+> +config EDAC_AL_L1
+> +	bool "Amazon's Annapurna Labs L1 EDAC"
+> +	depends on ARCH_ALPINE
+> +	help
+> +	  Support for L1 error detection and correction
+> +	  for Amazon's Annapurna Labs SoCs.
+> +	  This driver detects errors of L1 caches.
+> +
+>  config EDAC_AMD64
+>  	tristate "AMD64 (Opteron, Athlon64)"
+>  	depends on AMD_NB && EDAC_DECODE_MCE
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index 165ca65e..caa2dc9 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
+>  edac_mce_amd-y				:= mce_amd.o
+>  obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
+>  
+> +obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
+>  obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
+>  obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
+>  obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
+> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
 > new file mode 100644
-> index 000000000000..7644277cfdbb
+> index 0000000..f51a6c3
 > --- /dev/null
-> +++ b/drivers/video/backlight/led_bl.c
-> @@ -0,0 +1,235 @@
+> +++ b/drivers/edac/al_l1_edac.c
+> @@ -0,0 +1,154 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
-> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> + *
-> + * Based on pwm_bl.c
+> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 > + */
 > +
-> +#include <linux/backlight.h>
-> +#include <linux/gpio/consumer.h>
+> +#include <linux/bitfield.h>
+> +
+> +#include "edac_device.h"
+> +#include "edac_module.h"
+> +
+> +/* Same bit assignments of CPUMERRSR_EL1 in ARM CA57/CA72 */
+> +#define ARM_CA57_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
+> +#define ARM_CA57_CPUMERRSR_RAM_ID		GENMASK(30, 24)
+> +#define  ARM_CA57_L1_I_TAG_RAM			0x00
+> +#define  ARM_CA57_L1_I_DATA_RAM			0x01
+> +#define  ARM_CA57_L1_D_TAG_RAM			0x08
+> +#define  ARM_CA57_L1_D_DATA_RAM			0x09
+> +#define  ARM_CA57_L2_TLB_RAM			0x18
+> +#define ARM_CA57_CPUMERRSR_VALID		GENMASK(31, 31)
 
-Header should no longer be needed.
+For a single bit it's common to use BIT(31) rather than GENMASK to make
+it explicit.
 
-> +static int led_bl_probe(struct platform_device *pdev)
+
+> +#define ARM_CA57_CPUMERRSR_REPEAT		GENMASK(39, 32)
+> +#define ARM_CA57_CPUMERRSR_OTHER		GENMASK(47, 40)
+> +#define ARM_CA57_CPUMERRSR_FATAL		GENMASK(63, 63)
+> +
+> +#define AL_L1_EDAC_MSG_MAX			256
+> +
+> +static void al_l1_edac_cpumerrsr(void *arg)
 > +{
-> +	struct backlight_properties props;
-> +	struct led_bl_data *priv;
+> +	struct edac_device_ctl_info *edac_dev = arg;
+> +	int cpu, i;
+> +	u32 ramid, repeat, other, fatal;
+> +	u64 val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
+> +	char msg[AL_L1_EDAC_MSG_MAX];
+> +	int space, count;
+> +	char *p;
+> +
+> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
+> +		return;
+> +
+> +	cpu = smp_processor_id();
+> +	ramid = FIELD_GET(ARM_CA57_CPUMERRSR_RAM_ID, val);
+> +	repeat = FIELD_GET(ARM_CA57_CPUMERRSR_REPEAT, val);
+> +	other = FIELD_GET(ARM_CA57_CPUMERRSR_OTHER, val);
+> +	fatal = FIELD_GET(ARM_CA57_CPUMERRSR_FATAL, val);
+> +
+> +	space = sizeof(msg);
+> +	p = msg;
+> +	count = snprintf(p, space, "CPU%d L1 %serror detected", cpu,
+> +			 (fatal) ? "Fatal " : "");
+> +	p += count;
+> +	space -= count;
+> +
+> +	switch (ramid) {
+> +	case ARM_CA57_L1_I_TAG_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-I Tag RAM'");
+> +		break;
+> +	case ARM_CA57_L1_I_DATA_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-I Data RAM'");
+> +		break;
+> +	case ARM_CA57_L1_D_TAG_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-D Tag RAM'");
+> +		break;
+> +	case ARM_CA57_L1_D_DATA_RAM:
+> +		count = snprintf(p, space, " RAMID='L1-D Data RAM'");
+> +		break;
+> +	case ARM_CA57_L2_TLB_RAM:
+> +		count = snprintf(p, space, " RAMID='L2 TLB RAM'");
+> +		break;
+> +	default:
+> +		count = snprintf(p, space, " RAMID='unknown'");
+> +		break;
+> +	}
+> +
+> +	p += count;
+> +	space -= count;
+> +	count = snprintf(p, space,
+> +			 " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
+> +			 repeat, other, val);
+> +
+> +	for (i = 0; i < repeat; i++) {
+> +		if (fatal)
+> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+> +		else
+> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+> +	}
+> +
+> +	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
+> +}
+> +
+> +static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
+> +{
+> +	on_each_cpu(al_l1_edac_cpumerrsr, edac_dev, 1);
+> +}
+> +
+> +static int al_l1_edac_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *edac_dev;
+> +	struct device *dev = &pdev->dev;
 > +	int ret;
-> +	int i;
 > +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
+> +	edac_dev = edac_device_alloc_ctl_info(0, (char *)dev_name(dev), 1, "L",
+> +					      1, 1, NULL, 0,
+> +					      edac_device_alloc_index());
+> +	if (IS_ERR(edac_dev))
 > +		return -ENOMEM;
 > +
-> +	platform_set_drvdata(pdev, priv);
+> +	edac_dev->edac_check = al_l1_edac_check;
+> +	edac_dev->dev = dev;
+> +	edac_dev->mod_name = dev_name(dev);
+
+I'd admit I'm not that familiar with edac, but seems odd that a
+module name field would have the dev_name. 
+
+> +	edac_dev->dev_name = dev_name(dev);
+> +	edac_dev->ctl_name = dev_name(dev);
+> +	platform_set_drvdata(pdev, edac_dev);
 > +
-> +	priv->dev = &pdev->dev;
-> +
-> +	ret = led_bl_parse_dt(&pdev->dev, priv);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to parse DT data\n");
-> +		return ret;
-> +	}
-> +	priv->leds = devm_kzalloc(&pdev->dev,
-> +				  sizeof(struct led_classdev *) * priv->nb_leds,
-> +				  GFP_KERNEL);
-> +	if (!priv->leds)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < priv->nb_leds; i++) {
-> +		priv->leds[i] = devm_led_get(&pdev->dev, i);
-> +		if (IS_ERR(priv->leds[i]))
-> +			return PTR_ERR(priv->leds[i]);
-> +	}
-> +
-> +	memset(&props, 0, sizeof(struct backlight_properties));
-> +	props.type = BACKLIGHT_RAW;
-> +	props.max_brightness = priv->max_brightness;
-> +	priv->bl_dev = backlight_device_register(dev_name(&pdev->dev),
-> +			&pdev->dev, priv, &led_bl_ops, &props);
-> +	if (IS_ERR(priv->bl_dev)) {
-> +		dev_err(&pdev->dev, "failed to register backlight\n");
-> +		ret = PTR_ERR(priv->bl_dev);
+> +	ret = edac_device_add_device(edac_dev);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to add L1 edac device\n");
 > +		goto err;
-
-goto is pointless for a pure-devm function.
-
 > +	}
 > +
-> +	priv->bl_dev->props.brightness = priv->default_brightness;
-> +	backlight_update_status(priv->bl_dev);
+> +	return 0;
+> +err:
+> +	edac_device_free_ctl_info(edac_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int al_l1_edac_remove(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
+> +
+> +	edac_device_del_device(edac_dev->dev);
+> +	edac_device_free_ctl_info(edac_dev);
 
-This will light up the backlight during backlight probe.
+More a passing observation than a suggestion for this driver, but if there was
+ever a place where it looked like a couple of devm_ allocation functions would
+be useful, this is it ;)
 
-Can you take a look at pwm_backlight_initial_power_state() and decide
-how much of it applies to an LED based backlight (the phandle stuff
-certainly does).
+edac_dev = devm_device_alloc_ctrl_info(dev, ...)
+...
+devm_edac_device_add_device(dev, ...)
 
 
-Daniel.
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id al_l1_edac_of_match[] = {
+> +	{ .compatible = "amazon,al-l1-edac" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, al_l1_edac_of_match);
+> +
+> +static struct platform_driver al_l1_edac_driver = {
+> +	.probe = al_l1_edac_probe,
+> +	.remove = al_l1_edac_remove,
+> +	.driver = {
+> +		.name = "al_l1_edac",
+> +		.of_match_table = al_l1_edac_of_match,
+> +	},
+> +};
+> +module_platform_driver(al_l1_edac_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
+> +MODULE_DESCRIPTION("Amazon's Annapurna Lab's L1 EDAC Driver");
+
+
