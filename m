@@ -2,159 +2,155 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292B4C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C198EC606DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED49A214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:55:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="H3WlmKui"
+	by mail.kernel.org (Postfix) with ESMTP id A4A2C20861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfGIKz4 (ORCPT
+        id S1726805AbfGIK6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 06:55:56 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40070 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGIKz4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 06:55:56 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so17319140eds.7
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 03:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CuR0e69I7mgSfC2aZ+6Blt0AlnXi6b5+QGMHj0cl8wQ=;
-        b=H3WlmKuijQsSU0a7TLuEFl5089i9cBj5bQlzW0gPvihWPMgP7G94S30SDDV2haeICa
-         pGMt/tK8FnppDqzcxSyDW/ZGHEBCDZF9y+SItMZORqBsUrYu7gWSBoRGhqvDlsRgCk3L
-         CJFf3ltd8JZY5lsUyIPS3BcsvbXDX+aEDXSYvTa69E4sO6vP3fGrxCVgD3jxFxcK3kWc
-         7HgLFC117OAk1gqAJL9/arNhNxDJv5ZGq02OWiM5Qfyr+bIicJ4bYEBP7ydQ+0WcFv/L
-         bDTQbUbW7RbXsY8zovPUrWR5ZXV+ttIdrqIfu0jz4gftf9++zkA4rDA/sSp6z/o/n0Et
-         6f6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CuR0e69I7mgSfC2aZ+6Blt0AlnXi6b5+QGMHj0cl8wQ=;
-        b=ul3PmaiYDKp9fdaeNt0SeDwTtZoZ8OS9sdaXHJZyeIoiTrgdmAvbhp2vv1XnQoAy26
-         imNmlkc6hQ+kWLwduWnLeJyvjyvzcMLRI3EJlO0n0QI23kMfPPIePnMVRBk2atMOFq9d
-         tBfbIyE/ZxaKH5wwv3dJp+W2CNloFO+sK7UKFbx34cI3Ji4n2JIEw0ORcqH7J5H3IAlS
-         bPfOyIpJ9fYDedVegAL5SDPwP28PVJ2Wd1LYjMBc9GHW+wSbq0iV/UKRb8uEBUSJiDWv
-         gt4kXY2QAd5vWk7XWYWsQHJqgOqTW5RBBohbHUdTxh7xEdvkKZX397jYDlKOUzJt6F7z
-         TN9Q==
-X-Gm-Message-State: APjAAAXQkiAwDWH3wXR0HjszYC++Wtkj/ddMxysosTss3I7i9VKtieYX
-        l5nDVCVWhbmBErr/1fmIXX6R2cDK33DWP7/8B0mCqg==
-X-Google-Smtp-Source: APXvYqx/6vJ3gKcKwyl7lr8xaD9C3sEOSHeUsI11wzdsW0Z+TsR9S678RUXH+ItREyVctYyP5WUXtxp+9zz/FamrbHo=
-X-Received: by 2002:a05:6402:782:: with SMTP id d2mr25261183edy.80.1562669754543;
- Tue, 09 Jul 2019 03:55:54 -0700 (PDT)
+        Tue, 9 Jul 2019 06:58:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33078 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726411AbfGIK6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 06:58:19 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 199AE73B2FB0975BC6FC;
+        Tue,  9 Jul 2019 18:58:15 +0800 (CST)
+Received: from [127.0.0.1] (10.61.25.96) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
+ 18:58:09 +0800
+Subject: Re: [PATCH 1/2][next] RDMA/hns: fix comparison of unsigned long
+ variable 'end' with less than zero
+To:     Colin King <colin.king@canonical.com>,
+        Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, <linux-rdma@vger.kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190531092101.28772-1-colin.king@canonical.com>
+From:   oulijun <oulijun@huawei.com>
+Message-ID: <2046653d-bc90-d287-22a6-b9eaa2740b6e@huawei.com>
+Date:   Tue, 9 Jul 2019 18:58:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.0
 MIME-Version: 1.0
-References: <20190708211528.12392-1-pasha.tatashin@soleen.com> <CACi5LpNGWhTnXyM8gB0Tn=682+08s-ppfDpX2SawfxMvue1GTQ@mail.gmail.com>
-In-Reply-To: <CACi5LpNGWhTnXyM8gB0Tn=682+08s-ppfDpX2SawfxMvue1GTQ@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Tue, 9 Jul 2019 06:55:43 -0400
-Message-ID: <CA+CK2bBrwBHhD-PFO_gVnDYoFi0Su6t456WNdtBWpOe4qM+oww@mail.gmail.com>
-Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190531092101.28772-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.61.25.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 6:36 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
+在 2019/5/31 17:21, Colin King 写道:
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Hi Pavel,
+> Currently the comparison of end with less than zero is always false
+> because end is an unsigned long.  Also, replace checks of end with
+> non-zero with end > 0 as it is possible that the #defined decrement
+> may be changed in the future causing end to step over zero and go
+> negative.
 >
-> On Tue, Jul 9, 2019 at 2:46 AM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
-> >
-> > Currently, it is only allowed to reserve memory for crash kernel, because
-> > it is a requirement in order to be able to boot into crash kernel without
-> > touching memory of crashed kernel is to have memory reserved.
-> >
-> > The second benefit for having memory reserved for kexec kernel is
-> > that it does not require a relocation after segments are loaded into
-> > memory.
-> >
-> > If kexec functionality is used for a fast system update, with a minimal
-> > downtime, the relocation of kernel + initramfs might take a significant
-> > portion of reboot.
-> >
-> > In fact, on the machine that we are using, that has ARM64 processor
-> > it takes 0.35s to relocate during kexec, thus taking 52% of kernel reboot
-> > time:
-> >
-> > kernel shutdown 0.03s
-> > relocation      0.35s
-> > kernel startup  0.29s
-> >
-> > Image: 13M and initramfs is 24M. If initramfs increases, the relocation
-> > time increases proportionally.
-> >
-> > While, it is possible to add 'kexeckernel=' parameters support to other
-> > architectures by modifying reserve_crashkernel(), in this series this is
-> > done for arm64 only.
-> >
-> > Pavel Tatashin (5):
-> >   kexec: quiet down kexec reboot
-> >   kexec: add resource for normal kexec region
-> >   kexec: export common crashkernel/kexeckernel parser
-> >   kexec: use reserved memory for normal kexec reboot
-> >   arm64, kexec: reserve kexeckernel region
-> >
-> >  .../admin-guide/kernel-parameters.txt         |  7 ++
-> >  arch/arm64/kernel/setup.c                     |  5 ++
-> >  arch/arm64/mm/init.c                          | 83 ++++++++++++-------
-> >  include/linux/crash_core.h                    |  6 ++
-> >  include/linux/ioport.h                        |  1 +
-> >  include/linux/kexec.h                         |  6 +-
-> >  kernel/crash_core.c                           | 27 +++---
-> >  kernel/kexec_core.c                           | 50 +++++++----
-> >  8 files changed, 127 insertions(+), 58 deletions(-)
-> >
-> > --
-> > 2.22.0
+> The initialization of end with 0 is also redundant as this value is
+> never read and is later set to HW_SYNC_TIMEOUT_MSECS, so fix this by
+> initializing it with this value to begin with.
 >
-> This seems like an issue with time spent while doing sha256
-> verification while in purgatory.
+> Addresses-Coverity: ("Unsigned compared against 0")
+> Fixes: 669cefb654cb ("RDMA/hns: Remove jiffies operation in disable interrupt context")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_hem.c   |  4 ++--
+>  drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 12 ++++++------
+>  2 files changed, 8 insertions(+), 8 deletions(-)
 >
-> Can you please try the following two patches which enable D-cache in
-> purgatory before SHA verification and disable it before switching to
-> kernel:
->
-> http://lists.infradead.org/pipermail/kexec/2017-May/018839.html
-> http://lists.infradead.org/pipermail/kexec/2017-May/018840.html
+> diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
+> index 157c84a1f55f..b3641aeff27a 100644
+> --- a/drivers/infiniband/hw/hns/hns_roce_hem.c
+> +++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
+> @@ -326,7 +326,7 @@ static int hns_roce_set_hem(struct hns_roce_dev *hr_dev,
+>  {
+>  	spinlock_t *lock = &hr_dev->bt_cmd_lock;
+>  	struct device *dev = hr_dev->dev;
+> -	unsigned long end = 0;
+> +	long end;
+>  	unsigned long flags;
+>  	struct hns_roce_hem_iter iter;
+>  	void __iomem *bt_cmd;
+> @@ -377,7 +377,7 @@ static int hns_roce_set_hem(struct hns_roce_dev *hr_dev,
+>  		bt_cmd = hr_dev->reg_base + ROCEE_BT_CMD_H_REG;
+>  
+>  		end = HW_SYNC_TIMEOUT_MSECS;
+> -		while (end) {
+> +		while (end > 0) {
+>  			if (!readl(bt_cmd) >> BT_CMD_SYNC_SHIFT)
+>  				break;
+>  
+> diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
+> index 1fc77b1f2c6d..e13fea71bcb8 100644
+> --- a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
+> +++ b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
+> @@ -966,7 +966,7 @@ static int hns_roce_v1_recreate_lp_qp(struct hns_roce_dev *hr_dev)
+>  	struct hns_roce_free_mr *free_mr;
+>  	struct hns_roce_v1_priv *priv;
+>  	struct completion comp;
+> -	unsigned long end = HNS_ROCE_V1_RECREATE_LP_QP_TIMEOUT_MSECS;
+> +	long end = HNS_ROCE_V1_RECREATE_LP_QP_TIMEOUT_MSECS;
+>  
+>  	priv = (struct hns_roce_v1_priv *)hr_dev->priv;
+>  	free_mr = &priv->free_mr;
+> @@ -986,7 +986,7 @@ static int hns_roce_v1_recreate_lp_qp(struct hns_roce_dev *hr_dev)
+>  
+>  	queue_work(free_mr->free_mr_wq, &(lp_qp_work->work));
+>  
+> -	while (end) {
+> +	while (end > 0) {
+>  		if (try_wait_for_completion(&comp))
+>  			return 0;
+>  		msleep(HNS_ROCE_V1_RECREATE_LP_QP_WAIT_VALUE);
+> @@ -1104,7 +1104,7 @@ static int hns_roce_v1_dereg_mr(struct hns_roce_dev *hr_dev,
+>  	struct hns_roce_free_mr *free_mr;
+>  	struct hns_roce_v1_priv *priv;
+>  	struct completion comp;
+> -	unsigned long end = HNS_ROCE_V1_FREE_MR_TIMEOUT_MSECS;
+> +	long end = HNS_ROCE_V1_FREE_MR_TIMEOUT_MSECS;
+>  	unsigned long start = jiffies;
+>  	int npages;
+>  	int ret = 0;
+> @@ -1134,7 +1134,7 @@ static int hns_roce_v1_dereg_mr(struct hns_roce_dev *hr_dev,
+>  
+>  	queue_work(free_mr->free_mr_wq, &(mr_work->work));
+>  
+> -	while (end) {
+> +	while (end > 0) {
+>  		if (try_wait_for_completion(&comp))
+>  			goto free_mr;
+>  		msleep(HNS_ROCE_V1_FREE_MR_WAIT_VALUE);
+> @@ -2425,7 +2425,8 @@ static int hns_roce_v1_clear_hem(struct hns_roce_dev *hr_dev,
+>  {
+>  	struct device *dev = &hr_dev->pdev->dev;
+>  	struct hns_roce_v1_priv *priv;
+> -	unsigned long end = 0, flags = 0;
+> +	unsigned long flags = 0;
+> +	long end = HW_SYNC_TIMEOUT_MSECS;
+>  	__le32 bt_cmd_val[2] = {0};
+>  	void __iomem *bt_cmd;
+>  	u64 bt_ba = 0;
+> @@ -2463,7 +2464,6 @@ static int hns_roce_v1_clear_hem(struct hns_roce_dev *hr_dev,
+>  
+>  	bt_cmd = hr_dev->reg_base + ROCEE_BT_CMD_H_REG;
+>  
+> -	end = HW_SYNC_TIMEOUT_MSECS;
+>  	while (1) {
+>  		if (readl(bt_cmd) >> BT_CMD_SYNC_SHIFT) {
+>  			if (end < 0) {
 
-Hi Bhupesh,
+Good, thanks.
 
-The verification was taking 2.31s. This is why it is disabled via
-kexec's '-i' flag. Therefore 0.35s is only the relocation part where
-time is spent, and with my patches the time is completely gone.
-Actually, I am glad you showed these patches to me because I might
-pull them and enable verification for our needs.
 
->
-> Note that these were not accepted upstream but are included in several
-> distros in some form or the other :)
-
-Enabling MMU and D-Cache for relocation  would essentially require the
-same changes in kernel. Could you please share exactly why these were
-not accepted upstream into kexec-tools?
-
-Thank you,
-Pasha
-
->
-> Thanks,
-> Bhupesh
