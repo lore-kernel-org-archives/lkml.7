@@ -2,195 +2,131 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19652C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3603EC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E006A20665
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F747214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="n7M07cSM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lRX0A7gL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfGIS2B (ORCPT
+        id S1728982AbfGIS21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:28:01 -0400
-Received: from mail-io1-f49.google.com ([209.85.166.49]:44829 "EHLO
-        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfGIS2B (ORCPT
+        Tue, 9 Jul 2019 14:28:27 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53378 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfGIS20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:28:01 -0400
-Received: by mail-io1-f49.google.com with SMTP id s7so45245214iob.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:28:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digidescorp.com; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=Ys1tExUXnGuHx8mMvauSevz/cEht+mA14Kwl4w2Pkgw=;
-        b=n7M07cSM57J43wmXSptJW0h23FDbdLBNfgOY3GXy8apjXAgyQVk7XoQt5ZaH5j4b2q
-         SR07R21oEchFeZca5/Px2wFoHHW+k4iS8kF/r5RH6I28MZeRu6PwR51nbMWIaSSKW3pS
-         iV5w0eIla2AZrTsdzBcVNfQninRssaQqBg9pg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=Ys1tExUXnGuHx8mMvauSevz/cEht+mA14Kwl4w2Pkgw=;
-        b=l382BoTW/dpps1F93l7roSBwAjmrwAvn26n5IGRERHQNzGBl4Q5RIFeda7Gtn/GzQ8
-         aRhPfBVqjTqwAiVr5DEyoJXNwd0obuJAm1jb5TBBPAJXO0e9/cXwBgXJYe2Txszao+G8
-         fsculm+20A2FB6NUAwn3qFEFqPtXkbLVribcGNvcBrYIDFI10fGE0C4x3N0YkGJVxxNm
-         O7htsuBk5fdt94hDmMyOc4IeyG6VoRdXjQACLHjQix1JNEcSvRmHSVcj9hojrZGObZFt
-         cQ4i+5IEH2ETgl4xbeNv4Xte1NXXUZRI0OvSSIwJAq09A8Zq3FU6KmxbfBUpIyV2yiDK
-         inCA==
-X-Gm-Message-State: APjAAAUH5v+OOvgqYLrG41+ksjlrhMqTsNbpmduhVzxITXtHawZTCQq6
-        2UnjOWp0nPnyIY0LFU5PnuJmV0Mh1iU=
-X-Google-Smtp-Source: APXvYqwggVBc6dkzGd+FN3uEMd8GyEsCpYlkbc9X79mVnUFMVz5cBz+cpxtVvT+5YxaLD8rgXcE08w==
-X-Received: by 2002:a5d:8c87:: with SMTP id g7mr27016585ion.85.1562696880133;
-        Tue, 09 Jul 2019 11:28:00 -0700 (PDT)
-Received: from [10.10.3.1] (104-51-28-62.lightspeed.cicril.sbcglobal.net. [104.51.28.62])
-        by smtp.googlemail.com with ESMTPSA id j1sm18257487iop.14.2019.07.09.11.27.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 11:27:59 -0700 (PDT)
-To:     Jan Kara <jack@suse.cz>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Steve Magnani <steve.magnani@digidescorp.com>
-Subject: [RFC] udf: 2.01 interoperability issues with Windows 10
-Message-ID: <96e1ea00-ac12-015d-5c54-80a83f08b898@digidescorp.com>
-Date:   Tue, 9 Jul 2019 13:27:58 -0500
+        Tue, 9 Jul 2019 14:28:26 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69IOJ71146036;
+        Tue, 9 Jul 2019 18:27:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=ZuuBmd+hn0gNy1yFa1x6CDg54lC3wgXrt5IpUQJMaw8=;
+ b=lRX0A7gL0wgwbmshdLkJUR2nj6Nkv0327AL5K1+MgOC/0emwkvWtP24UtlurMRGDHP+8
+ 3sKCLAT/0m+YdzcMvusZtNfGFsvBPgpSVbtNF8lbJSfJzm1P9qoxZvpFjZADFI84SZ9U
+ hIVeITJmHqlhA1wH8rLYqIXinP7/oAKZKrCjmb8bNmdVljnM7c+gDv6rNypd0DOp34Sa
+ +r2eXShIlfFW4wHe8xtLXa2bWI4nvSoqHFSfL6XHiB3Zijd1wqGrpLbhH+lH8D3Iv7Wy
+ S04ZamFBMOiywBd63+jP0fCC6yrZ505RRPJIgyAiRDiiTOBmYfEAXsDPi9L9Rc6wBQPY gA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2tjk2tp0s8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jul 2019 18:27:03 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69IIhwl138656;
+        Tue, 9 Jul 2019 18:27:02 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2tmmh3474u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 09 Jul 2019 18:27:02 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x69IR19r025057;
+        Tue, 9 Jul 2019 18:27:01 GMT
+Received: from [10.156.75.135] (/10.156.75.135)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Jul 2019 11:27:01 -0700
+Subject: Re: cputime takes cstate into consideration
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Raslan, KarimAllah" <karahmed@amazon.de>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "kernellwp@gmail.com" <kernellwp@gmail.com>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>
+References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
+ <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
+ <20190626145413.GE6753@char.us.oracle.com>
+ <1561575536.25880.10.camel@amazon.de>
+ <alpine.DEB.2.21.1906262119430.32342@nanos.tec.linutronix.de>
+ <7f721d94-aa19-20a4-6930-9ed4d1cd4834@oracle.com>
+ <20190709123838.GA3402@hirez.programming.kicks-ass.net>
+From:   Ankur Arora <ankur.a.arora@oracle.com>
+Message-ID: <a1dbbed2-17e4-89e5-d141-9c30dc352c5f@oracle.com>
+Date:   Tue, 9 Jul 2019 11:27:54 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190709123838.GA3402@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=565
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907090215
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=606 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907090216
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 7/9/19 5:38 AM, Peter Zijlstra wrote:
+> On Mon, Jul 08, 2019 at 07:00:08PM -0700, Ankur Arora wrote:
+>> On 2019-06-26 12:23 p.m., Thomas Gleixner wrote:
+>>> On Wed, 26 Jun 2019, Raslan, KarimAllah wrote:
+>>>> On Wed, 2019-06-26 at 10:54 -0400, Konrad Rzeszutek Wilk wrote:
+>>>>> There were some ideas that Ankur (CC-ed) mentioned to me of using the perf
+>>>>> counters (in the host) to sample the guest and construct a better
+>>>>> accounting idea of what the guest does. That way the dashboard
+>>>>> from the host would not show 100% CPU utilization.
+>>>>
+>>>> You can either use the UNHALTED cycles perf-counter or you can use MPERF/APERF
+>>>> MSRs for that. (sorry I got distracted and forgot to send the patch)
+>>>
+>>> Sure, but then you conflict with the other people who fight tooth and nail
+>>> over every single performance counter.
+>> How about using Intel PT PwrEvt extensions? This should allow us to
+>> precisely track idle residency via just MWAIT and TSC packets. Should
+>> be pretty cheap too. It's post Cascade Lake though.
+> 
+> That would fully claim PT just for this stupid accounting thing and be
+> completely Intel specific.
+> 
+> Just stop this madness already.
+I see the point about just accruing guest time (in mwait or not) as
+guest CPU time.
+But, to take this madness a little further, I'm not sure I see why it
+fully claims PT. AFAICS, we should be able to enable PwrEvt and whatever
+else simultaneously.
 
-Recently I have been exploring Advanced Format (4K sector size)
-and high capacity aspects of UDF 2.01 support in Linux and
-Windows 10. I thought it might be helpful to summarize my findings.
+Ankur
 
-The good news is that I did not see any bugs in the Linux
-ecosystem (kernel driver + mkudffs).
-
-The not-so-good news is that Windows has some issues that affect
-interoperability. One of my goals in posting this is to open a
-discussion on whether changes should be made in the Linux UDF
-ecosystem to accommodate these quirks.
-
-My test setup includes the following software components:
-
-* mkudffs 1.3 and 2.0
-* kernel 4.15.0-43 and 4.15.0-52
-* Windows 10 1803 17134.829
-* chkdsk 10.0.17134.1
-* udfs.sys 10.0.17134.648
-
-
-ISSUE 1: Inability of the Linux UDF driver to mount 4K-sector
-          media formatted by Windows.
-
-This is because the Windows ecosystem mishandles the ECMA-167
-corner case that requires Volume Recognition Sequence components
-to be placed at 4K intervals on 4K-sector media, instead of the
-2K intervals required with smaller sectors. The Linux UDF driver
-emits the following when presented with Windows-formatted media:
-
-   UDF-fs: warning (device sdc1): udf_load_vrs: No VRS found
-   UDF-fs: Scanning with blocksize 4096 failed
-
-A hex dump of the VRS written by the Windows 10 'format' utility
-yields this:
-
-   0000: 00 42 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .BEA01..........
-   0800: 00 4e 53 52 30 33 01 00 00 00 00 00 00 00 00 00  .NSR03..........
-   1000: 00 54 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .TEA01..........
-
-We may want to consider tweaking the kernel UDF driver to
-tolerate this quirk; if so a question is whether that should be
-done automatically, only in response to a mount option or
-module parameter, or only with some subsequent confirmation
-that the medium was formatted by Windows.
-
-
-ISSUE 2: Inability of Windows chkdsk to analyze 4K-sector media
-          formatted by mkudffs.
-
-This is another aspect of Windows' VRS corner case bug.
-Formatting by mkudffs places the VRS components at the proper 4K
-intervals. But the chkdsk utility looks for components at 2K
-intervals. Not finding a component at byte offset 2048, chkdsk
-decides that the media is RAW and cannot be checked. Note that
-this bug affects chkdsk only; udfs.sys *does* recognize mkudffs-
-formatted 4K-sector media and is able to mount it.
-
-It would be possible to work around this by tweaking mkudffs to
-insert dummy BOOT2 components in between the BEA/NSR/TEA:
-
-   0000: 00 42 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .BEA01..........
-   0800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
-   1000: 00 4e 53 52 30 33 01 00 00 00 00 00 00 00 00 00  .NSR03..........
-   1800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
-   2000: 00 54 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .TEA01..........
-
-That would introduce a slight ECMA-167 nonconformity, but Linux
-does not object and Windows actually performs better. I would
-have to tweak udffsck though since I believe this could confuse
-its automatic detection of medium block size.
-
-
-ISSUE 3: Inability of the Windows UDF driver to mount media
-          read-write when a maximally-sized space bitmap
-          descriptor is present
-
-I suspect this is an off-by-one error in udfs.sys relating to
-the maximum number of blocks a space bitmap descriptor can
-occupy. The bug causes UDF partitions that are close to 2 TiB
-(512-sector media) or 16 TiB (4K-sector media) to be mounted
-read-only, with no user-visible indication as to why.
-
-It would be possible for mkudffs to print a warning when
-formatting results in a space bitmap that occupies the maximum
-number of blocks.
-
-
-ISSUE 4: chkdsk reports spurious errors when space bitmap
-          descriptor exceeds 32 MiB
-
-Some permutations of this:
-
-   * "Correcting errors in Space Bitmap Descriptor at block 0"
-     (with no prior mention of any errors)
-   * "Space Bitmap Descriptor at block 32 is corrupt or unreadable"
-
-This is actually one of the more crippling issues if one values
-Windows' ability to check and repair UDF errors. A limit of
-32 MiB on the space bitmap implies a UDF partition size of at
-most 137 GB (not GiB) with 512-sector media or at most 1099 GB
-with 4K-sector media.
-
-Again, the most I think we could do is code mkudffs to warn of
-this possibility. But a message that clearly conveys the issue
-and what should be done to avoid it could be a little tricky to
-construct.
-
-
-Obviously the best solution would be for the Windows bugs to
-get fixed. If anyone reading this can convey these details into
-the Microsoft silo, that would be great.
-
-Regards,
-------------------------------------------------------------------------
-  Steven J. Magnani               "I claim this network for MARS!
-  www.digidescorp.com              Earthling, return my space modulator!"
-
-  #include <standard.disclaimer>
-
+> 
