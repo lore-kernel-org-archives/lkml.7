@@ -2,29 +2,29 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31904C606D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B62C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088A82086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17188217D4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfGIDbz (ORCPT
+        id S1727620AbfGIDb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:31:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51598 "EHLO huawei.com"
+        Mon, 8 Jul 2019 23:31:57 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51602 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727278AbfGIDbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727294AbfGIDbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 23:31:34 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7BF10EEDB3371A83C5AB;
+        by Forcepoint Email with ESMTP id 914E36710C36FFFF234A;
         Tue,  9 Jul 2019 11:31:29 +0800 (CST)
 Received: from huawei.com (10.67.189.167) by DGGEMS402-HUB.china.huawei.com
  (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
- 11:31:21 +0800
+ 11:31:20 +0800
 From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 To:     <davem@davemloft.net>, <robh+dt@kernel.org>,
         <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
@@ -34,12 +34,10 @@ CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <leeyou.li@huawei.com>,
         <nixiaoming@huawei.com>, <jianping.liu@huawei.com>,
         <xiekunxun@huawei.com>
-Subject: [PATCH v2 02/10] net: hisilicon: Cleanup for got restricted __be32
-Date:   Tue, 9 Jul 2019 11:31:03 +0800
-Message-ID: <1562643071-46811-3-git-send-email-xiaojiangfeng@huawei.com>
+Subject: [PATCH v2 00/10] net: hisilicon: Add support for HI13X1 to hip04_eth
+Date:   Tue, 9 Jul 2019 11:31:01 +0800
+Message-ID: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
 X-Mailer: git-send-email 1.8.5.6
-In-Reply-To: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
-References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.189.167]
@@ -49,45 +47,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the following warning from sparse:
-hip04_eth.c:468:25: warning: incorrect type in assignment
-hip04_eth.c:468:25:    expected unsigned int [usertype] send_addr
-hip04_eth.c:468:25:    got restricted __be32 [usertype]
-hip04_eth.c:469:25: warning: incorrect type in assignment
-hip04_eth.c:469:25:    expected unsigned int [usertype] send_size
-hip04_eth.c:469:25:    got restricted __be32 [usertype]
-hip04_eth.c:470:19: warning: incorrect type in assignment
-hip04_eth.c:470:19:    expected unsigned int [usertype] cfg
-hip04_eth.c:470:19:    got restricted __be32 [usertype]
-hip04_eth.c:472:23: warning: incorrect type in assignment
-hip04_eth.c:472:23:    expected unsigned int [usertype] wb_addr
-hip04_eth.c:472:23:    got restricted __be32 [usertype]
+The main purpose of this patch series is to extend the
+hip04_eth driver to support HI13X1_GMAC.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
----
- drivers/net/ethernet/hisilicon/hip04_eth.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+The offset and bitmap of some registers of HI13X1_GMAC
+are different from hip04_eth common soc. In addition,
+the definition of send descriptor and parsing descriptor
+are different from hip04_eth common soc. So the macro
+of the register offset is redefined to adapt the HI13X1_GMAC.
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 2b5112b..31f13cf 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -465,11 +465,11 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 
- 	priv->tx_skb[tx_head] = skb;
- 	priv->tx_phys[tx_head] = phys;
--	desc->send_addr = cpu_to_be32(phys);
--	desc->send_size = cpu_to_be32(skb->len);
--	desc->cfg = cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV);
-+	desc->send_addr = (__force u32)cpu_to_be32(phys);
-+	desc->send_size = (__force u32)cpu_to_be32(skb->len);
-+	desc->cfg = (__force u32)cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV);
- 	phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
--	desc->wb_addr = cpu_to_be32(phys);
-+	desc->wb_addr = (__force u32)cpu_to_be32(phys);
- 	skb_tx_timestamp(skb);
- 
- 	hip04_set_xmit_desc(priv, phys);
+Clean up the sparse warning by the way.
+
+Change since v1:
+* Add a cover letter.
+
+Jiangfeng Xiao (10):
+  net: hisilicon: Add support for HI13X1 to hip04_eth
+  net: hisilicon: Cleanup for got restricted __be32
+  net: hisilicon: Cleanup for cast to restricted __be32
+  net: hisilicon: HI13X1_GMAX skip write LOCAL_PAGE_REG
+  net: hisilicon: HI13X1_GMAX need dreq reset at first
+  net: hisilicon: dt-bindings: Add an field of port-handle
+  net: hisilicon: Add group field to adapt HI13X1_GMAC
+  net: hisilicon: Offset buf address to adapt HI13X1_GMAC
+  net: hisilicon: Add an rx_desc to adapt HI13X1_GMAC
+  net: hisilicon: Add an tx_desc to adapt HI13X1_GMAC
+
+ .../bindings/net/hisilicon-hip04-net.txt           |   7 +-
+ drivers/net/ethernet/hisilicon/Kconfig             |  10 ++
+ drivers/net/ethernet/hisilicon/hip04_eth.c         | 142 ++++++++++++++++++---
+ 3 files changed, 136 insertions(+), 23 deletions(-)
+
 -- 
 1.8.5.6
 
