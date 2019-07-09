@@ -2,79 +2,151 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE69C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD5AC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AB72086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D55932086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:42:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oQuVf51p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfGICjX (ORCPT
+        id S1726803AbfGICm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:39:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:35075 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbfGICjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:39:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 19:39:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,468,1557212400"; 
-   d="scan'208";a="165631313"
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.239.196.152]) ([10.239.196.152])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Jul 2019 19:39:21 -0700
-Subject: Re: [LKP] [SUNRPC] 0472e47660: fsmark.app_overhead 16.0% regression
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "rong.a.chen@intel.com" <rong.a.chen@intel.com>
-Cc:     "lkp@01.org" <lkp@01.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190520055434.GZ31424@shao2-debian>
- <f1abba58-5fd2-5f26-74cc-f72724cfa13f@linux.intel.com>
- <9a07c589f955e5af5acc0fa09a16a3256089e764.camel@hammerspace.com>
- <d796ac23-d5d6-cdfa-89c8-536e9496b551@linux.intel.com>
- <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
- <2bbe636a-14f1-4592-d1f9-a9f765a02939@linux.intel.com>
- <81fb0e7d-1879-9267-83da-4671fec50920@linux.intel.com>
- <DM5PR13MB1851813BBEA446E25C5001C2B8F60@DM5PR13MB1851.namprd13.prod.outlook.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Message-ID: <e29f82e0-6847-b264-300b-130bb31399d1@linux.intel.com>
-Date:   Tue, 9 Jul 2019 10:39:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jul 2019 22:42:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35234 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGICm2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 22:42:28 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so7335534pfn.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 19:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N3ZRbdsvjb/D9ul4Io/biNGoMRXfxsqZ68h/ywmeG3w=;
+        b=oQuVf51puIsvyNvkx1cQUc0gxF/XXJbXQir1A6N/zGhQ8ZxsvDOE4wU9nDW5TUD+sN
+         c7zFsrC//363lNbCHiNN6m5z3e0frziUO4WqR0CZmmNRF87hS+akddpOTWQCFogBwHuP
+         jnZIndnU8gtrnd3B+xM9KJ+WaPFc2G4lcbU7l0E44CVObHDIQBnNYAHPYjBhYV0apkSe
+         eWrF4V9cAfn/TYGgD29SS2C7A7FEm0arF519pkj3Y3pIAq5CQDBi3yoR+KJ1OkZ0tFoZ
+         e4PitwPNZhLrgg1O+tbqmxxUx2yr8yRbjx0KzEYQU0uy2v2rBi4Elr5tpXPoLCmGkjfv
+         yAew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N3ZRbdsvjb/D9ul4Io/biNGoMRXfxsqZ68h/ywmeG3w=;
+        b=NfZkw8NE6WjnpLJuJee6ZC0FEGwcIzJL761ccg1Y5q1W/K9u1WQzISdi8+CreOJp4a
+         ujdQQznHgz298uUw1W9VL0lQ2a6olN74TpveYZFO1d2ZsRh3cIIWoeEAEv/9bObtytSM
+         vFkcu3Vybhj5LLNRFOzUm9BC1/pZlD+AN6Yhz1lPxuGZTAcaDLu5bxURqPzeoPUIOhgX
+         GBNP8D0owVOQIGL7U4UOK/TvdFqFutRUkupzl86nfnoetbfr4/igA6Frkor+9o80sxy7
+         wSQZUll4ueCvE4rfyHyIqWMM1Va+RQ1nqnsAlcTYZ/fGzqa1X0tfYsTU9vjzOLZSk68P
+         Dliw==
+X-Gm-Message-State: APjAAAV7+s0R+P0dt2nPsGbjhiza9HROnLtAZYBHcTWWkyNiLOdLNqKC
+        5oOit5Jklu3d5sf9li9U+53Psg==
+X-Google-Smtp-Source: APXvYqwXb+lG4wfrVmwIc+3kveiWWNUbdUhgx7Y6Fyih8hmcxfb9FXdcVe7BJVFYRwXkUWHKlhedYg==
+X-Received: by 2002:a63:24c1:: with SMTP id k184mr28173703pgk.120.1562640147020;
+        Mon, 08 Jul 2019 19:42:27 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id 81sm11500964pfx.111.2019.07.08.19.42.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 19:42:25 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 08:12:21 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4] cpufreq/pasemi: fix an use-after-free in
+ pas_cpufreq_cpu_init()
+Message-ID: <20190709024221.evyukzbis6lnok4f@vireshk-i7>
+References: <1562629144-13584-1-git-send-email-wen.yang99@zte.com.cn>
 MIME-Version: 1.0
-In-Reply-To: <DM5PR13MB1851813BBEA446E25C5001C2B8F60@DM5PR13MB1851.namprd13.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562629144-13584-1-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Trond,
+On 09-07-19, 07:39, Wen Yang wrote:
+> The cpu variable is still being used in the of_get_property() call
+> after the of_node_put() call, which may result in use-after-free.
+> 
+> Fixes: a9acc26b75f ("cpufreq/pasemi: fix possible object reference leak")
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> v4: restore the blank line.
 
-On 7/8/2019 7:44 PM, Trond Myklebust wrote:
-> I've asked several times now about how to interpret your results. As far 
-> as I can tell from your numbers, the overhead appears to be entirely 
-> contained in the NUMA section of your results.
-> IOW: it would appear to be a scheduling overhead due to NUMA. I've been 
-> asking whether or not that is a correct interpretation of the numbers 
-> you published.
-Thanks for your feedback. I used the same hardware and the same test 
-parameters to test the two commits:
-    e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use iov_iter_kvec()")
-    0472e47660 ("SUNRPC: Convert socket page send code to use iov_iter()")
+I don't find it restored in the below code.
 
-If it is caused by NUMA, why only commit 0472e47660 throughput is 
-decreased? The filesystem we test is NFS, commit 0472e47660 is related 
-with the network, could you help to check if have any other clues for 
-the regression. Thanks.
+> v3: fix a leaked reference.
+> v2: clean up the code according to the advice of viresh.
+> 
+>  drivers/cpufreq/pasemi-cpufreq.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+> index 6b1e4ab..f0c98fc 100644
+> --- a/drivers/cpufreq/pasemi-cpufreq.c
+> +++ b/drivers/cpufreq/pasemi-cpufreq.c
+> @@ -128,20 +128,21 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	int cur_astate, idx;
+>  	struct resource res;
+>  	struct device_node *cpu, *dn;
+> -	int err = -ENODEV;
+> +	int err;
+>  
+>  	cpu = of_get_cpu_node(policy->cpu, NULL);
+>  
+> -	of_node_put(cpu);
+>  	if (!cpu)
+> -		goto out;
+> +		return -ENODEV;
+>  
+>  	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+>  	if (!dn)
+>  		dn = of_find_compatible_node(NULL, NULL,
+>  					     "pasemi,pwrficient-sdc");
+> -	if (!dn)
+> +	if (!dn) {
+> +		err = -ENODEV;
+>  		goto out;
+> +	}
+>  	err = of_address_to_resource(dn, 0, &res);
+>  	of_node_put(dn);
+>  	if (err)
+> @@ -196,6 +197,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	policy->cur = pas_freqs[cur_astate].frequency;
+>  	ppc_proc_freq = policy->cur * 1000ul;
+>  
+> +	of_node_put(cpu);
+>  	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+>  
+>  out_unmap_sdcpwr:
+> @@ -204,6 +206,7 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  out_unmap_sdcasr:
+>  	iounmap(sdcasr_mapbase);
+>  out:
+> +	of_node_put(cpu);
+>  	return err;
+>  }
+>  
+> -- 
+> 2.9.5
 
 -- 
-Zhengjun Xing
+viresh
