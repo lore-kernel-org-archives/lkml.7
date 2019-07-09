@@ -2,154 +2,104 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21258C73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20779C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E9A2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:16:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="NXqm2flO"
+	by mail.kernel.org (Postfix) with ESMTP id DFB3A208C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562703437;
+	bh=/7w2s/MYH1JhMDmaUyVtvh5HJdLLcWL4dUX+RYNl888=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vszvVbv4dXE6ET4auA51P47f+XDQi19MCIYzViY3FSPVmyHItogHoxkU2leH3a1pD
+	 nlO/b4Ry4z/9LowQcy5AQ9dxn/h1d4M2+4gj+/PO/mhiQq6kRGjLAVBDG20ct2CbTR
+	 XyFIWV5lb0mIh49mcyqcfxjvlcNfk6SMLoevOT5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfGIUQ3 (ORCPT
+        id S1729720AbfGIURP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:16:29 -0400
-Received: from mail-eopbgr700040.outbound.protection.outlook.com ([40.107.70.40]:58625
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729165AbfGIUQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:16:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UhGhIuFXIOyflNMGdqGdS0i3vWEzYlQ82RcY26Uj3oc=;
- b=NXqm2flOrAmCe9BTe2vHeGx6DX5lx7AheISuovmfOIGp74hFDHm+HvzOaGoTKDzPbhDINacl+aTqhDW7uD/QCX2aSoSM7VoMl/cVP60OE45g69CH38VsST44JfbYRKiaJWFpu+HryTjk6VqKPz2X/8/i1WBbfDj1vr+NvY1kipk=
-Received: from MN2PR15MB3581.namprd15.prod.outlook.com (52.132.172.94) by
- MN2PR15MB2816.namprd15.prod.outlook.com (20.179.148.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Tue, 9 Jul 2019 20:15:44 +0000
-Received: from MN2PR15MB3581.namprd15.prod.outlook.com
- ([fe80::7d02:e054:fcd1:f7a0]) by MN2PR15MB3581.namprd15.prod.outlook.com
- ([fe80::7d02:e054:fcd1:f7a0%7]) with mapi id 15.20.2052.020; Tue, 9 Jul 2019
- 20:15:44 +0000
-From:   Jon Maloy <jon.maloy@ericsson.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] tipc: ensure skb->lock is initialised
-Thread-Topic: [PATCH] tipc: ensure skb->lock is initialised
-Thread-Index: AQHVNRbZCg2+IkEFUEKEsAEksjW2W6bB5j8AgABgI5CAAAiXAIAAV45A
-Date:   Tue, 9 Jul 2019 20:15:43 +0000
-Message-ID: <MN2PR15MB35813EA3ADE7E5E83A657D3F9AF10@MN2PR15MB3581.namprd15.prod.outlook.com>
-References: <20190707225328.15852-1-chris.packham@alliedtelesis.co.nz>
- <2298b9eb-100f-6130-60c4-0e5e2c7b84d1@gmail.com>
- <361940337b0d4833a5634ddd1e1896a9@svr-chch-ex1.atlnz.lc>
- <87fd2150548041219fc42bce80b63c9c@svr-chch-ex1.atlnz.lc>
- <b862a74b-9f1e-fb64-0641-550a83b64664@gmail.com>
- <MN2PR15MB35811151C4A627C0AF364CAC9AF10@MN2PR15MB3581.namprd15.prod.outlook.com>
- <ef9a2ec1-1413-e8f9-1193-d53cf8ee52ba@gmail.com>
-In-Reply-To: <ef9a2ec1-1413-e8f9-1193-d53cf8ee52ba@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jon.maloy@ericsson.com; 
-x-originating-ip: [24.225.233.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 24d44e21-b776-42f1-b8e1-08d704aa38fd
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR15MB2816;
-x-ms-traffictypediagnostic: MN2PR15MB2816:
-x-microsoft-antispam-prvs: <MN2PR15MB28160DD2E6721138BB8D67169AF10@MN2PR15MB2816.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(189003)(199004)(13464003)(7696005)(2906002)(99286004)(305945005)(476003)(74316002)(316002)(6506007)(102836004)(53546011)(54906003)(478600001)(14454004)(110136005)(26005)(186003)(33656002)(4326008)(14444005)(256004)(2501003)(76176011)(8676002)(8936002)(68736007)(11346002)(71190400001)(446003)(44832011)(486006)(81156014)(81166006)(6436002)(25786009)(5660300002)(2201001)(86362001)(66476007)(76116006)(66556008)(52536014)(66446008)(64756008)(66946007)(7736002)(53936002)(6116002)(9686003)(3846002)(55016002)(71200400001)(66066001)(6246003)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR15MB2816;H:MN2PR15MB3581.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: ericsson.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pfAykqAVsvo5XE/N0/CQJedya5n5mt99lIC+OxqIiiKtNoEamBk2PhSZJ5Ymn34Wf8HEBV39yhjtCghmhyWOZeebdh2xblaO2VsGT726LqsG9OzeJh1QK04JaPApIPYhhh7PePHJjhV2v6LzKrlq/Uq6DR5+WDVXRv2z23moWYpbG2jEXBW/hpOH5OXW/bynaD/9YeDLX1AR/YRtnWaTr3z/IO28z+ysnbZ2nMdqTN2rzl4GKlDZgq+0sW+CTFqhUEq+l6xpcGFe1MZS3d9VTjYaBolWuKyVnZHqItkQFLFDfqlwWiz2BUheKEPoeiVmOSOsLn8GuxJD6oafbd53T1Is4sdjPFFTCwiEuJz4jrWlOD9fiikr7yhNO7Urfq6vH+VQgpZKp9vhrtA7z29Bj+zQ/a4a5MQkNiCKYibIviQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 9 Jul 2019 16:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729165AbfGIURP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:17:15 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4359D2073D;
+        Tue,  9 Jul 2019 20:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562703434;
+        bh=/7w2s/MYH1JhMDmaUyVtvh5HJdLLcWL4dUX+RYNl888=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1zb64ASlEC203NksJleQ987t2K4CdmHfcYyXBkEyww967+p0KR51WgOm+k9HzaOG+
+         x4YY9k1okgvBw7KK5T1OVVaTqsSKpRiLci2oPhPlGabLQi8X+X5zID6h7C+3pEbnjQ
+         g2lxW3/kGHVIEB/1pyXk/h13qFa/XaI734p5yDiU=
+Date:   Tue, 9 Jul 2019 13:17:12 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        David Woodhouse <dwmw2@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: next-20190705 - problems generating certs/x509_certificate_list
+Message-ID: <20190709201712.GI641@sol.localdomain>
+Mail-Followup-To: David Howells <dhowells@redhat.com>,
+        keyrings@vger.kernel.org,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org
+References: <27671.1562384658@turing-police>
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24d44e21-b776-42f1-b8e1-08d704aa38fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 20:15:44.0599
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jon.maloy@ericsson.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB2816
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <27671.1562384658@turing-police>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRXJpYyBEdW1hemV0IDxl
-cmljLmR1bWF6ZXRAZ21haWwuY29tPg0KPiBTZW50OiA5LUp1bC0xOSAwOTo0Ng0KPiBUbzogSm9u
-IE1hbG95IDxqb24ubWFsb3lAZXJpY3Nzb24uY29tPjsgRXJpYyBEdW1hemV0DQo+IDxlcmljLmR1
-bWF6ZXRAZ21haWwuY29tPjsgQ2hyaXMgUGFja2hhbQ0KPiA8Q2hyaXMuUGFja2hhbUBhbGxpZWR0
-ZWxlc2lzLmNvLm56PjsgeWluZy54dWVAd2luZHJpdmVyLmNvbTsNCj4gZGF2ZW1AZGF2ZW1sb2Z0
-Lm5ldA0KPiBDYzogbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgdGlwYy1kaXNjdXNzaW9uQGxpc3Rz
-LnNvdXJjZWZvcmdlLm5ldDsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSF0gdGlwYzogZW5zdXJlIHNrYi0+bG9jayBpcyBpbml0aWFsaXNlZA0K
-PiANCj4gDQo+IA0KPiBPbiA3LzkvMTkgMzoyNSBQTSwgSm9uIE1hbG95IHdyb3RlOg0KDQpbLi4u
-XQ0KDQo+ID4gVElQQyBpcyB1c2luZyB0aGUgbGlzdCBsb2NrIGF0IG1lc3NhZ2UgcmVjZXB0aW9u
-IHdpdGhpbiB0aGUgc2NvcGUgb2YNCj4gdGlwY19za19yY3YoKS90aXBjX3NrYl9wZWVrX3BvcnQo
-KSwgc28gaXQgaXMgZnVuZGFtZW50YWwgdGhhdCB0aGUgbG9jayBhbHdheXMNCj4gaXMgY29ycmVj
-dGx5IGluaXRpYWxpemVkLg0KPiANCj4gV2hlcmUgaXMgdGhlIGxvY2sgYWNxdWlyZWQsIHdoeSB3
-YXMgaXQgb25seSBhY3F1aXJlZCBieSBxdWV1ZSBwdXJnZSBhbmQgbm90DQo+IG5vcm1hbCBkZXF1
-ZXVlcyA/Pz8NCg0KSXQgaXMgYWNxdWlyZWQgdHdpY2U6DQotIEZpcnN0LCBpbiB0aXBjX3NrX3Jj
-digpLT50aXBjX3NrYl9wZWVrX3BvcnQoKSwgdG8gcGVlayBpbnRvIG9uZSBvciBtb3JlIHF1ZXVl
-IG1lbWJlcnMgYW5kIHJlYWQgdGhlaXIgZGVzdGluYXRpb24gcG9ydCBudW1iZXIuDQotIFNlY29u
-ZCwgaW4gdGlwY19za19yY3YoKS0+dGlwY19za19lbnF1ZXVlKCktPnRpcGNfc2tiX2RlcXVldWUo
-KSB0byB1bmxpbmsgYSBsaXN0IG1lbWJlciBmcm9tIHRoZSBxdWV1ZS4NCg0KPiA+Pg0KPiA+IFsu
-Li5dDQo+ID4+DQo+ID4+IHRpcGNfbGlua194bWl0KCkgZm9yIGV4YW1wbGUgbmV2ZXIgYWNxdWly
-ZXMgdGhlIHNwaW5sb2NrLCB5ZXQgdXNlcw0KPiA+PiBza2JfcGVlaygpIGFuZCBfX3NrYl9kZXF1
-ZXVlKCkNCj4gPg0KPiA+DQo+ID4gWW91IHNob3VsZCBsb29rIGF0IHRpcGNfbm9kZV94bWl0IGlu
-c3RlYWQuIE5vZGUgbG9jYWwgbWVzc2FnZXMgYXJlDQo+ID4gc2VudCBkaXJlY3RseSB0byB0aXBj
-X3NrX3JjdigpLCBhbmQgbmV2ZXIgZ28gdGhyb3VnaCB0aXBjX2xpbmtfeG1pdCgpDQo+IA0KPiB0
-aXBjX25vZGVfeG1pdCgpIGNhbGxzIHRpcGNfbGlua194bWl0KCkgZXZlbnR1YWxseSwgcmlnaHQg
-Pw0KDQpOby4gDQp0aXBjX2xpbmtfeG1pdCgpIGlzIGNhbGxlZCBvbmx5IGZvciBtZXNzYWdlcyB3
-aXRoIGEgbm9uLWxvY2FsIGRlc3RpbmF0aW9uLiAgT3RoZXJ3aXNlLCB0aXBjX25vZGVfeG1pdCgp
-IHNlbmRzIG5vZGUgbG9jYWwgbWVzc2FnZXMgZGlyZWN0bHkgdG8gdGhlIGRlc3RpbmF0aW9uIHNv
-Y2tldCB2aWEgdGlwY19za19yY3YoKS4NClRoZSBhcmd1bWVudCAneG1pdHEnIGJlY29tZXMgJ2lu
-cHV0cScgaW4gdGlwY19za19yY3YoKSBhbmQgJ2xpc3QnIGluIHRpcGNfc2tiX3BlZWtfcG9ydCgp
-LCBzaW5jZSB0aG9zZSBmdW5jdGlvbnMgZG9uJ3QgZGlzdGluZ3Vpc2ggYmV0d2VlbiBsb2NhbCBh
-bmQgbm9kZSBleHRlcm5hbCBpbmNvbWluZyBtZXNzYWdlcy4NCg0KPiANCj4gUGxlYXNlIHNob3cg
-bWUgd2hlcmUgdGhlIGhlYWQtPmxvY2sgaXMgYWNxdWlyZWQsIGFuZCB3aHkgaXQgbmVlZGVkLg0K
-DQpUaGUgYXJndW1lbnQgICdpbnB1dHEnICB0byB0aXBjX3NrX3JjdigpIG1heSBjb21lIGZyb20g
-dHdvIHNvdXJjZXM6IA0KMSkgQXMgYW4gYWdncmVnYXRlZCBtZW1iZXIgb2YgZWFjaCB0aXBjX25v
-ZGU6OnRpcGNfbGlua19lbnRyeS4gVGhpcyBxdWV1ZSBpcyBuZWVkZWQgdG8gZ3VhcmFudGVlIHNl
-cXVlbnRpYWwgZGVsaXZlcnkgb2YgbWVzc2FnZXMgZnJvbSB0aGUgbm9kZS9saW5rIGxheWVyIHRv
-IHRoZSBzb2NrZXQgbGF5ZXIuIEluIHRoaXMgY2FzZSwgdGhlcmUgbWF5IGJlIGJ1ZmZlcnMgZm9y
-IG11bHRpcGxlIGRlc3RpbmF0aW9uIHNvY2tldHMgaW4gdGhlIHNhbWUgcXVldWUsIGFuZCB3ZSBt
-YXkgaGF2ZSBtdWx0aXBsZSBjb25jdXJyZW50IHRpcGNfc2tfcmN2KCkgam9icyB3b3JraW5nIHRo
-YXQgcXVldWUuIFNvLCB0aGUgbG9jayBpcyBuZWVkZWQgYm90aCBmb3IgYWRkaW5nIChpbiAgbGlu
-ay5jOjp0aXBjX2RhdGFfaW5wdXQoKSksIHBlZWtpbmcgYW5kIHJlbW92aW5nIGJ1ZmZlcnMuDQoN
-CjIpIFRoZSBjYXNlIHlvdSBoYXZlIGJlZW4gbG9va2luZyBhdCwgd2hlcmUgaXQgaXMgY3JlYXRl
-ZCBhcyAneG1pdHEnIG9uIHRoZSBzdGFjayBieSBhIGxvY2FsIHNvY2tldC4gIEhlcmUsIHRoZSBs
-b2NrIGlzIG5vdCBzdHJpY3RseSBuZWVkZWQsIGFzIHlvdSBoYXZlIG9ic2VydmVkLiBCdXQgdG8g
-cmVkdWNlIGNvZGUgZHVwbGljYXRpb24gd2UgaGF2ZSBjaG9zZW4gdG8gbGV0IHRoZSBjb2RlIGlu
-IHRpcGNfc2tfcmN2KCkgaGFuZGxlIGJvdGggdHlwZXMgb2YgcXVldWVzIHVuaWZvcm1seSwgaS5l
-LiwgYXMgaWYgdGhleSBhbGwgY29udGFpbiBidWZmZXJzIHdpdGggcG90ZW50aWFsbHkgbXVsdGlw
-bGUgZGVzdGluYXRpb24gc29ja2V0cywgd29ya2VkIG9uIGJ5IG11bHRpcGxlIGNvbmN1cnJlbnQg
-Y2FsbHMuIFRoaXMgcmVxdWlyZXMgdGhhdCB0aGUgbG9jayBpcyBpbml0aWFsaXplZCBldmVuIGZv
-ciB0aGlzIHR5cGUgb2YgcXVldWUuIFdlIGhhdmUgc2VlbiBubyBtZWFzdXJhYmxlIHBlcmZvcm1h
-bmNlIGRpZmZlcmVuY2UgYmV0d2VlbiB0aGlzICdnZW5lcmljJyByZWNlcHRpb24gYWxnb3JpdGht
-IGFuZCBhIHRhaWxvci1tYWRlIGRpdHRvIGZvciBsb2NhbCBtZXNzYWdlcyBvbmx5LCAgd2hpbGUg
-dGhlIGFtb3VudCBvZiBzYXZlZCBjb2RlIGlzIHNpZ25pZmljYW50Lg0KDQo+IA0KPiBJZiB0aGlz
-IGlzIG1hbmRhdG9yeSwgdGhlbiBtb3JlIGZpeGVzIGFyZSBuZWVkZWQgdGhhbiBqdXN0IGluaXRp
-YWxpemluZyB0aGUgbG9jaw0KPiBmb3IgbG9ja2RlcCBwdXJwb3Nlcy4NCg0KSXQgaXMgbm90IG9u
-bHkgZm9yIGxvY2tkZXAgcHVycG9zZXMsIC1pdCBpcyBlc3NlbnRpYWwuICBCdXQgcGxlYXNlIHBy
-b3ZpZGUgZGV0YWlscyBhYm91dCB3aGVyZSB5b3Ugc2VlIHRoYXQgbW9yZSBmaXhlcyBhcmUgbmVl
-ZGVkLg0KDQpCUg0KLy8vam9uDQoNCg0K
+On Fri, Jul 05, 2019 at 11:44:18PM -0400, Valdis Klētnieks wrote:
+> This worked fine in next-20190618, but in next-20190701 I'm seeing dmesg
+> entries at boot:
+> 
+> dmesg | grep -i x.509
+> [    8.345699] Loading compiled-in X.509 certificates
+> [    8.366137] Problem loading in-kernel X.509 certificate (-13)
+> [    8.507348] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+> [    8.526556] cfg80211: Problem loading in-kernel X.509 certificate (-13)
+> 
+> I start debugging, and discover that certs/x509_certificate_list is a zero-length file.
+> I rm it, and 'make V=1 certs/system_certificates.o', which tells me:
+> 
+> (....)
+> make -f ./scripts/Makefile.headersinst obj=include/uapi
+> make -f ./scripts/Makefile.headersinst obj=arch/x86/include/uapi
+> make -f ./scripts/Makefile.build obj=certs certs/system_certificates.o
+> ---- smoking gun alert
+>   scripts/extract-cert "" certs/x509_certificate_list
+> ----
+>   gcc -Wp,-MD,certs/.system_certificates.o.d  -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/9/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/kconfig.h -D__KERNEL__ -D__ASSEMBLY__ -fno-PIE -m64 -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DCONFIG_AS_CFI_SECTIONS=1 -DCONFIG_AS_SSSE3=1 -DCONFIG_AS_AVX=1 -DCONFIG_AS_AVX2=1 -DCONFIG_AS_AVX512=1 -DCONFIG_AS_SHA1_NI=1 -DCONFIG_AS_SHA256_NI=1 -Wa,-gdwarf-2 -DCC_USING_FENTRY -I.   -c -o certs/system_certificates.o certs/system_certificates.S
+> 
+> I go look at extract-cert.c, and sure enough, if the first parameter is a null string
+> it just goes and creates an empty file.
+> 
+> The Makefile says:
+> 
+> quiet_cmd_extract_certs  = EXTRACT_CERTS   $(patsubst "%",%,$(2))
+>       cmd_extract_certs  = scripts/extract-cert $(2) $@
+> 
+> and damned if I know why $(2) is "". Diffed the config files from -0618 and -0705,
+> not seeing anything relevant difference.
+> 
+> Any ideas?
+> 
+
+I'm seeing on mainline now:
+
+[   10.915386] Problem loading in-kernel X.509 certificate (-13)
+
+- Eric
