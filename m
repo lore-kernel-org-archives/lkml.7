@@ -2,55 +2,55 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0280DC73C50
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB26C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA39B20844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938B221537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562682931;
-	bh=rBe6G/O1Bimwl/Ic9c9cbAgIWYymvf0uigY0Nh51Rj0=;
+	s=default; t=1562683124;
+	bh=0iU4cQBqASLhhwhn5Rj3Z6ors0Xy7YKzKyGv0Wxz9xg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=17ib9Y3lQh08NlRAQVD3Cc5m6Hv/NNzVEY23ac4LJVFC96ScZ4Hos54iAx6HkJcUc
-	 5EZxsSv6zJQc5vAgnLCFar/6s2F6Y6glcXDAeLdkXpmYapAGxqSPO6k8k7KSCKL4sN
-	 C+WD+x5FHylTdFb0qQAgzYIe9kGLDNviZ6H/Xmh4=
+	b=iv9XUTSgseULjpWETRviZKfUGrV9d1tX6rp8VVWqD99UD4dJZEibAW0uRZven5o5c
+	 Nga5IJSBaORzLCmkdWyxYTgz4kosogrE658sKqd51hQ5Px3s2ahxtaLG5p2DIRzXy5
+	 obFvsB3FoVhYcpSktyPX3ePPaTaWN2l8mqqPQRyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfGIOfa (ORCPT
+        id S1726449AbfGIOin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:35:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45056 "EHLO
+        Tue, 9 Jul 2019 10:38:43 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36255 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfGIOfa (ORCPT
+        with ESMTP id S1726055AbfGIOil (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:35:30 -0400
-Received: by mail-io1-f66.google.com with SMTP id g20so22510604ioc.12;
-        Tue, 09 Jul 2019 07:35:29 -0700 (PDT)
+        Tue, 9 Jul 2019 10:38:41 -0400
+Received: by mail-io1-f66.google.com with SMTP id o9so28066846iom.3;
+        Tue, 09 Jul 2019 07:38:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lwKfxQYrNRix0RZpaeVKxAuscBcsaH2KK8rGZ1jsPCc=;
-        b=ocRzfiRgXIva0JauHKxvl0Qx4lxvrR0xCAKBGt//mP8ageVe/80cST9MYCFCplvhOV
-         H0VO1yuRgbruHYe7tqRsV7eO2SSKomX9bmC3Y6YukRyeHB7XM/npKs4jcOHNJqkoR7Su
-         BoS/pe0AFdEnLBOHeLEKQbGmBVX6P099jVa/n//lom9YA97T1G7YAXHt44zd6yAzpal6
-         HV5uZx/iUCWzlg+Sm1mqivE3tTOHalyGlizL1f3FNN7KBA1S70u9nY+t5ToMIB2xjta9
-         56V4HaflRlt8/Yg9jdz2CHRJDdSVUK6MOhUyWs2noBH9vh3WGu0yBf+k0M7o1ci/TyKC
-         AJCQ==
-X-Gm-Message-State: APjAAAU1qH2n6lfS2Dy9AhiuHHzrX0bTBsHlsji/HsJgz+QtMDd4uRB8
-        WN33mz39uAg69hJ5bL8yVg==
-X-Google-Smtp-Source: APXvYqxycFxWOrP0VFA297PFQw08U0eQrnQU3S4DTJhbrCNZVKI7ILJJDrcU1R51khX7qQdXozwvCg==
-X-Received: by 2002:a5e:8e4a:: with SMTP id r10mr6692177ioo.100.1562682929485;
-        Tue, 09 Jul 2019 07:35:29 -0700 (PDT)
+        bh=+prWP/l+NiaYOcrIk/R8mV2BTVhCl2S22LwiNWpEL0Q=;
+        b=Ax9PXdoO5Cn1pUF6+EACh4GI81NYTMp5t5PhYKxqFPzjO8Pf/0UQC86EMuI4rqH6BL
+         IqMACuhQ6aWR1YJkuqPT+DMjFM8m9noWJ45Xyx49m1BBTwtoxR63MhveYs5OVHQ/Ihrw
+         yug1U71C7439xL6BaHeJAZOsw5WgpEFZTSRJFTdeb31BoXrQnNlWC98FRj1M2XY+sWjC
+         b157r2SnEZ2NOIyTg46EwA3sltsT0lh9wJDZc07nrdLmSytN5QouxXLBLyjX8I8IvhNI
+         GKzcUZFntKrf5jzDXd85fO/oUUFH3GAWYyl5PDEz5AMiM0E5ARj0cnzp8zSbcNsitgUt
+         lL/Q==
+X-Gm-Message-State: APjAAAXLax8Q7zdJsaBbn5YLwGXydboBoZl6Pd46hdTokZxnZ5w8Qm5U
+        Q5xZ0KseMUClrr74DS6p6Q==
+X-Google-Smtp-Source: APXvYqySHhAtm9GlvHKsUPEMTbTk1st1sP64SKKq5dl6tEvxnFV5wYea+XzPa0VvC7nIO5Guff5xRg==
+X-Received: by 2002:a6b:6d07:: with SMTP id a7mr556026iod.254.1562683120146;
+        Tue, 09 Jul 2019 07:38:40 -0700 (PDT)
 Received: from localhost ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id n2sm14065735ioa.27.2019.07.09.07.35.28
+        by smtp.gmail.com with ESMTPSA id j1sm17618610iop.14.2019.07.09.07.38.38
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 07:35:28 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 08:35:27 -0600
+        Tue, 09 Jul 2019 07:38:39 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 08:38:38 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Erwan Le Ray <erwan.leray@st.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -61,28 +61,50 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-serial@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>,
+        devicetree@vger.kernel.org,
         Fabrice Gasnier <fabrice.gasnier@st.com>,
         Bich Hemon <bich.hemon@st.com>
-Subject: Re: [PATCH v3 01/10] dt-bindings: serial: stm32: add wakeup option
-Message-ID: <20190709143527.GA5489@bogus>
+Subject: Re: [PATCH v3 02/10] dt-bindings: serial: add optional pinctrl states
+Message-ID: <20190709143838.GA5665@bogus>
 References: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
- <1560433800-12255-2-git-send-email-erwan.leray@st.com>
+ <1560433800-12255-3-git-send-email-erwan.leray@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560433800-12255-2-git-send-email-erwan.leray@st.com>
+In-Reply-To: <1560433800-12255-3-git-send-email-erwan.leray@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 15:49:51 +0200, Erwan Le Ray wrote:
-> Add a note for enabling wakeup capabilities of usart
+On Thu, Jun 13, 2019 at 03:49:52PM +0200, Erwan Le Ray wrote:
+> From: Bich Hemon <bich.hemon@st.com>
+> 
+> Add options for pinctrl states:
+> - "sleep" for low power
+> - "idle" for low power and wakeup capabilities enabled
+> - "no_console_suspend" for enabling console messages in low power
 > 
 > Signed-off-by: Bich Hemon <bich.hemon@st.com>
 > Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 > 
+> diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+> index 5ec80c1..64a5ea9 100644
+> --- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+> +++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+> @@ -13,7 +13,14 @@ Required properties:
+>  - clocks: The input clock of the USART instance
+>  
+>  Optional properties:
+> -- pinctrl: The reference on the pins configuration
+> +- pinctrl-names: Set to "default". An additional "sleep" state can be defined
+> +  to set pins in sleep state when in low power. In case the device is used as
+> +  a wakeup source, "idle" state is defined in order to keep RX pin active.
+> +  For a console device, an optional state "no_console_suspend" can be defined
+> +  to enable console messages during suspend. Typically, "no_console_suspend" and
+> +  "default" states can refer to the same pin configuration.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+no_console_suspend is a linux thing and doesn't belong in DT.
+
+Rob
