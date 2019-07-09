@@ -2,107 +2,109 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795B5C73C65
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABA3C73C63
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4543D2082A
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="s9WEygv3"
+	by mail.kernel.org (Postfix) with ESMTP id CBFA92082A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 23:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfGIXar (ORCPT
+        id S1726995AbfGIXdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 19:30:47 -0400
-Received: from ozlabs.org ([203.11.71.1]:50083 "EHLO ozlabs.org"
+        Tue, 9 Jul 2019 19:33:54 -0400
+Received: from fieldses.org ([173.255.197.46]:52792 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfGIXar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 19:30:47 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jz8M0dPZz9sBt;
-        Wed, 10 Jul 2019 09:30:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562715044;
-        bh=B85qe5sVAs6gET2P/YWRTXMs4fjDTUH5FZWZR59bAow=;
-        h=Date:From:To:Cc:Subject:From;
-        b=s9WEygv3l9mId4NqL9V4v/s1fxnBwUxJy/tJy3fqrxuxRIAB4FZs3caN8vEdMv3iP
-         7tMFPnnxeFjTzanMB6p5z8qIqBhX7fHoW6DvX+JqI6CNOjrZA6UN5SKEpk98NZPCvn
-         yhHN1wVTw9TMPZXeyhkI8RKz0jUMiDVEbRDjDkcOQyjiKRB03dWHBxKd4H86CPBbcA
-         KJNrmgNOpJ8XIESp86VHXaVXdDhdDzDc5ik9NLyH4pSzr1h+TgFcyHx5Y/2JIc9Lvz
-         BZ6g3eLEWONkTBznWTSUsNjDkZnhXtwLi5f6Krxi0EEcPxiFn/CcyrBZeZlHks5nN0
-         yFk6F+JHUCvZA==
-Date:   Wed, 10 Jul 2019 09:30:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg Ungerer <gerg@snapgear.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the m68knommu tree with the
- m68k-current tree
-Message-ID: <20190710093035.48cc876d@canb.auug.org.au>
+        id S1726951AbfGIXdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 19:33:54 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id A988D1C9D; Tue,  9 Jul 2019 19:33:53 -0400 (EDT)
+Date:   Tue, 9 Jul 2019 19:33:53 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/8] nfsd: Fix misuse of strlcpy
+Message-ID: <20190709233353.GA1536@fieldses.org>
+References: <cover.1562283944.git.joe@perches.com>
+ <b51141d12de77eb22101e81f9eb2c9cc44104d7a.1562283944.git.joe@perches.com>
+ <20190709031404.GD14439@fieldses.org>
+ <9a5dedb0c9221743033f28974820e8dd724e388d.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/tVRVxORUodfEB/.8uiS1NPT"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a5dedb0c9221743033f28974820e8dd724e388d.camel@perches.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tVRVxORUodfEB/.8uiS1NPT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 08, 2019 at 10:40:50PM -0700, Joe Perches wrote:
+> On Mon, 2019-07-08 at 23:14 -0400, J. Bruce Fields wrote:
+> > On Thu, Jul 04, 2019 at 04:57:48PM -0700, Joe Perches wrote:
+> > > Probable cut&paste typo - use the correct field size.
+> > 
+> > Huh, that's been there forever, I wonder why we haven't seen crashes?
+> > Oh, I see, name and authname both have the same size.
+> > 
+> > Anyway, makes sense, thanks.  Will apply for 5.3.
+> > 
+> > (Unless someone else is getting this; I didn't get copied on the rest of
+> > the series.)
+> 
+> It's generally hard to cc everyone on treewide fixes like this.
+> 
+> There's no good mechanism I know of.
+> vger mailing lists reject emails with too many addressees.
 
-Hi all,
+Yeah.  I guess what I don't understand is why this patch is part of a
+series at all.  It makes me wonder if there's some dependency I missed
+or if the 0/8 mail actually asked somebody else to apply it.
 
-Today's linux-next merge of the m68knommu tree got a conflict in:
+Whatever, I guess I'm being silly, it clearly stands alone.  Applying
+for 5.3.
 
-  arch/m68k/Kconfig
+> Do you have an opinion on adding the stracpy macro which
+> could avoid many of these defects?
 
-between commit:
+I don't have an opinion.
 
-  f28a1f16135c ("m68k: Don't select ARCH_HAS_DMA_PREP_COHERENT for nommu or=
- coldfire")
-
-from the m68k-current tree and commit:
-
-  aef0f78e7460 ("binfmt_flat: add a ARCH_HAS_BINFMT_FLAT option")
-
-from the m68knommu tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+--b.
 
 
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/tVRVxORUodfEB/.8uiS1NPT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0lI5wACgkQAVBC80lX
-0Gygsgf+LX6svK04n4v1wEAt+dRj62g9jHZtsf95gD7DTPiHoQifMT3kEsgvw4Bv
-YFgCjWY/QrUpO/ZsSo22+bnOmAYTSlTRmLZRLLaoZaSgB6qpLy3ELSBfHUkoER4W
-QdCM8WbgaEYsA6uW1gg8lP+D5HshDkH3NuO2QL2a5rtYJUoLmmg6D91an8vu1bwY
-wtfvhnww4/7zrHzbVvVBduWEhsU+WWboBPP2xTdHPzqAPqA7gru8gRaP/7ZGYG40
-okPMPTFkujeRqcupOlVI0FiQx9fYrvd9S8AxQopFrlZN6jf68Iv7sX2Hc+fZ/TJ3
-cWElbW4xlUrdS9kSzr2rWu7k6Rp4sw==
-=GMBw
------END PGP SIGNATURE-----
-
---Sig_/tVRVxORUodfEB/.8uiS1NPT--
+> ---
+>  include/linux/string.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 4deb11f7976b..ef01bd6f19df 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -35,6 +35,22 @@ ssize_t strscpy(char *, const char *, size_t);
+>  /* Wraps calls to strscpy()/memset(), no arch specific code required */
+>  ssize_t strscpy_pad(char *dest, const char *src, size_t count);
+>  
+> +#define stracpy(to, from)					\
+> +({								\
+> +	size_t size = ARRAY_SIZE(to);				\
+> +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
+> +								\
+> +	strscpy(to, from, size);				\
+> +})
+> +
+> +#define stracpy_pad(to, from)					\
+> +({								\
+> +	size_t size = ARRAY_SIZE(to);				\
+> +	BUILD_BUG_ON(!__same_type(typeof(*to), char));		\
+> +								\
+> +	strscpy_pad(to, from, size);				\
+> +})
+> +
+>  #ifndef __HAVE_ARCH_STRCAT
+>  extern char * strcat(char *, const char *);
+>  #endif
+> 
+> 
