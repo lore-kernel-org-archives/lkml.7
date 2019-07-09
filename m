@@ -2,117 +2,132 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EFCC004EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39850C004EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D0920844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1742F20844
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbfGIL1B (ORCPT
+        id S1726298AbfGIL26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 07:27:01 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:17110 "EHLO mxhk.zte.com.cn"
+        Tue, 9 Jul 2019 07:28:58 -0400
+Received: from mga11.intel.com ([192.55.52.93]:54993 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfGIL1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 07:27:01 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id BF05A3D636B270877121;
-        Tue,  9 Jul 2019 19:26:58 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x69BEa6q016939;
-        Tue, 9 Jul 2019 19:14:36 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019070919144868-2212253 ;
-          Tue, 9 Jul 2019 19:14:48 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Scott Wood <oss@buserror.net>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 2/2] powerpc/83xx: cleanup error paths in mpc831x_usb_cfg()
-Date:   Tue, 9 Jul 2019 19:12:48 +0800
-Message-Id: <1562670768-23178-3-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1562670768-23178-1-git-send-email-wen.yang99@zte.com.cn>
-References: <1562670768-23178-1-git-send-email-wen.yang99@zte.com.cn>
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-07-09 19:14:48,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-07-09 19:14:39,
-        Serialize complete at 2019-07-09 19:14:39
-X-MAIL: mse-fl1.zte.com.cn x69BEa6q016939
+        id S1726043AbfGIL26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 07:28:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 04:28:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,470,1557212400"; 
+   d="scan'208";a="173539452"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Jul 2019 04:28:55 -0700
+Message-ID: <5D247BC2.70104@intel.com>
+Date:   Tue, 09 Jul 2019 19:34:26 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+MIME-Version: 1.0
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
+        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
+        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
+Subject: Re: [PATCH v7 08/12] KVM/x86/vPMU: Add APIs to support host save/restore
+ the guest lbr stack
+References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com> <1562548999-37095-9-git-send-email-wei.w.wang@intel.com> <20190708144831.GN3402@hirez.programming.kicks-ass.net> <5D240435.2040801@intel.com> <20190709093917.GS3402@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190709093917.GS3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the jump labels according to the cleanup they perform,
-and move reference handling to simplify cleanup.
+On 07/09/2019 05:39 PM, Peter Zijlstra wrote:
+> On Tue, Jul 09, 2019 at 11:04:21AM +0800, Wei Wang wrote:
+>> On 07/08/2019 10:48 PM, Peter Zijlstra wrote:
+>>> *WHY* does the host need to save/restore? Why not make VMENTER/VMEXIT do
+>>> this?
+>> Because the VMX transition is much more frequent than the vCPU switching.
+>> On SKL, saving 32 LBR entries could add 3000~4000 cycles overhead, this
+>> would be too large for the frequent VMX transitions.
+>>
+>> LBR state is saved when vCPU is scheduled out to ensure that this
+>> vCPU's LBR data doesn't get lost (as another vCPU or host thread that
+>> is scheduled in may use LBR)
+> But VMENTER/VMEXIT still have to enable/disable the LBR, right?
+> Otherwise the host will pollute LBR contents. And you then rely on this
+> 'fake' event to ensure the host doesn't use LBR when the VCPU is
+> running.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Scott Wood <oss@buserror.net>
-Cc: Kumar Gala <galak@kernel.crashing.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/powerpc/platforms/83xx/usb.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+Yes, only the debugctl msr is save/restore on vmx tranisions.
 
-diff --git a/arch/powerpc/platforms/83xx/usb.c b/arch/powerpc/platforms/83xx/usb.c
-index 19dcef5..56b36fa 100644
---- a/arch/powerpc/platforms/83xx/usb.c
-+++ b/arch/powerpc/platforms/83xx/usb.c
-@@ -160,11 +160,9 @@ int mpc831x_usb_cfg(void)
- 
- 	/* Map USB SOC space */
- 	ret = of_address_to_resource(np, 0, &res);
--	if (ret) {
--		of_node_put(immr_node);
--		of_node_put(np);
--		return ret;
--	}
-+	if (ret)
-+		goto out_put_node;
-+
- 	usb_regs = ioremap(res.start, resource_size(&res));
- 
- 	/* Using on-chip PHY */
-@@ -173,7 +171,7 @@ int mpc831x_usb_cfg(void)
- 		u32 refsel;
- 
- 		if (of_device_is_compatible(immr_node, "fsl,mpc8308-immr"))
--			goto out;
-+			goto out_unmap;
- 
- 		if (of_device_is_compatible(immr_node, "fsl,mpc8315-immr"))
- 			refsel = CONTROL_REFSEL_24MHZ;
-@@ -200,8 +198,9 @@ int mpc831x_usb_cfg(void)
- 		ret = -EINVAL;
- 	}
- 
--out:
-+out_unmap:
- 	iounmap(usb_regs);
-+out_put_node:
- 	of_node_put(immr_node);
- 	of_node_put(np);
- 	return ret;
--- 
-2.9.5
 
+>
+> But what about the counter scheduling rules;
+
+The counter is emulated independent of the lbr emulation.
+
+Here is the background reason:
+
+The direction we are going is the architectural emulation, where the 
+features
+are emulated based on the hardware behavior described in the spec. So 
+the lbr
+emulation path only offers the lbr feature to the guest (no counters 
+associated, as
+the lbr feature doesn't have a counter essentially).
+
+If the above isn't clear, please see this example: the guest could run 
+any software
+to use the lbr feature (non-perf or non-linux, or even a testing kernel 
+module to try
+lbr for their own purpose), and it could choose to use a regular timer 
+to do sampling.
+If the lbr emulation takes a counter to generate a PMI to the guest to 
+do sampling,
+that pmi isn't expected from the guest perspective.
+
+So the counter scheduling isn't considered by the lbr emulation here, it 
+is considered
+by the counter emulation. If the guest needs a counter, it configures 
+the related msr,
+which traps to KVM, and the counter emulation has it own emulation path
+(e.g. reprogram_gp_counter which is called when the guest writes to the 
+emulated
+eventsel msr).
+
+
+> what happens when a CPU
+> event claims the LBR before the task event can claim it? CPU events have
+> precedence over task events.
+
+I think the precedence (cpu pined and task pined) is for the counter 
+multiplexing,
+right?
+
+For the lbr feature, could we thought of it as first come, first served?
+For example, if we have 2 host threads who want to use lbr at the same time,
+I think one of them would simply fail to use.
+
+So if guest first gets the lbr, host wouldn't take over unless some 
+userspace
+command (we added to QEMU) is executed to have the vCPU actively
+stop using lbr.
+
+
+>
+> I'm missing all these details in the Changelogs. Please describe the
+> whole setup and explain why this approach.
+
+OK, just shared some important background above.
+I'll see if any more important details missed.
+
+Best,
+Wei
