@@ -2,101 +2,166 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8418C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51944C73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB6F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D11214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 15:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXAfduAM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S6liV1la"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfGIPog (ORCPT
+        id S1726428AbfGIPqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 11:44:36 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39590 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfGIPog (ORCPT
+        Tue, 9 Jul 2019 11:46:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43174 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfGIPqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 11:44:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b7so10303913pls.6;
-        Tue, 09 Jul 2019 08:44:35 -0700 (PDT)
+        Tue, 9 Jul 2019 11:46:31 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 16so20010587ljv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 08:46:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rBSYD3TIeV10dpPGSnZAIDV4eDvbq6imUadVBmJjg0c=;
-        b=uXAfduAMO3rYjchKGJ46I19EP2W/0JZBhI/rp8UTiDBtgRpWLffX81POM3SaDJ1H8e
-         s4v74/CXBZtFJCBkNZUWrTYow+HeCch6W1k9TtN22Q6k3LHpNiH96Cw34WCBxMJ8G2y2
-         QCea5KAL/fC45YUH3VV5aXdUGhdJIhQmIYIhdP2CQ82W8B1vmqjSdocvzOUStVCpzDD5
-         6Cby6kWdZvbdcepHP06eLpAs7S4pxzlcJsI2zyPCbJsymcAoX+PN/Fm9/OOpUytYa2ki
-         4oJ6ThN6S7HEBDZyPaC7TY4MjYRIcfPYifUrVyg93hHabwhHagd8NLc4Zj6hGmWVeEe2
-         pmXA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ATI/TZzm+B0VbUvyUPBuGeEy3pilz7Di8ahTsMVIDKw=;
+        b=S6liV1laeivRRmIWP2pjOtY6fB34kHttLPnB41MOCk/pthvJddX8AmDyFD/RusmiWl
+         f5Io9P75NDej9SSck0BTHc9uIbPuXWT3at3VegPJHTdp3YAWgUfZCUegyGhpF/I1Cp8I
+         9i++m5GQDFpf1elWGda63cRO+So9Z6WLzZb3gFR4fjx2SRKIvYgkMPRVP1Q3jIbOanvl
+         p4D/qkUceAk85LKany0Cvu9ShK1rYB21xqoeTwWxvf9OnHkAMTlogNqC8igPyDlFoHLS
+         UC49NeXJXrHv42kEX4ZQB4Yqod/0k1bbfZzIW1n/uzXef4fbYUtTHOatz2fGh71B4dhM
+         iyDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rBSYD3TIeV10dpPGSnZAIDV4eDvbq6imUadVBmJjg0c=;
-        b=q/Mnmy/k45UzDCTyHqp37tWCzUccEztp+kgVlHqXfi2ZnxN+L6guzc4/z1H0WmTyfz
-         A7Gg2zmHRAI/5ERDs/l2XXPHCRxoVvsy/BujSScGOTnTFomcfxEaaY4TKknICepQB5n4
-         5rt8h+Fy4NUEPpKwyIIQuBl0jS/+M2HFSR3n5O3G0mfPDqm0y3f99jj4dmRMk9BvoLwr
-         7oLrjVk/c/GCG1MmDYAkqlAYLx4Ih5XQng8A5D8KDe6U/8PK1DHGnVY8niwjkUaACHq2
-         DlIVdnZa4uBE9y3wowRCoSzTVFqGsFLyNAmdNuPehDLeA0fsvyTAWpzZu+UTVx7ux9VE
-         EoVQ==
-X-Gm-Message-State: APjAAAVjA04kGj2ePxMXziJhB1XysSzJw8F5eGg+cbMZs1ZFVIWDJdVE
-        TIXfUCwdj5JUhCXrALJKEQc=
-X-Google-Smtp-Source: APXvYqytM46hXlifPvXUlCb2uoDrs7LBjdwkrcuL67Oew94Dp0701YrzEOB8rR8fG5iUfdNANcCD+Q==
-X-Received: by 2002:a17:902:28e9:: with SMTP id f96mr31772255plb.114.1562687075186;
-        Tue, 09 Jul 2019 08:44:35 -0700 (PDT)
-Received: from arch ([43.250.158.197])
-        by smtp.gmail.com with ESMTPSA id b29sm41498777pfr.159.2019.07.09.08.44.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 08:44:34 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 21:14:29 +0530
-From:   Amol Surati <suratiamol@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH 4.19 00/90] 4.19.58-stable review
-Message-ID: <20190709154429.GA2793@arch>
-References: <20190708150521.829733162@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ATI/TZzm+B0VbUvyUPBuGeEy3pilz7Di8ahTsMVIDKw=;
+        b=Cd4C+3v8O1+/t6TqVvJLWoRVIUaL0pigz2y+dlq4HP+I89nXWDqnDFkyXZd+oyK446
+         WgqDCfI6wJtMHLP+y4OxsFURnV0ewa9tbh2jiujJLokWEWnEloaowIIwT08/WMcxZRxL
+         6qNIp7g2UMEVzHWSY8xLnKhxPTUcYXnVqIgl02z9NLqkEnjnDQ8uyL7CTCucDV0UqL5c
+         hDYY5fv+NunYxZ3IRAQ4Ufw0O8YxTpz6dvTgNqfH2lAtyEVAooFMalm+M4fzM6r5x/Mh
+         CSIh2naGq8Qpr+eA4fh8rS3GFJF7TG+N6I+x+UZJLn5uxnjsAWZmerTci8zxUyQJVSJ2
+         UzGw==
+X-Gm-Message-State: APjAAAV6wlSd/3fXL95pQnSFZo9J8CanaXXcTa6qdIZ65fSl1Hv7XGFI
+        gsThV3iXWPzj/0sUf6+ajccrZd90wAzgXAmqhtqXKQ==
+X-Google-Smtp-Source: APXvYqwhnYsBtjymv+e7iT4LtPb38VAweME90FfJ/SAgwtKmIM/VuIfOcRll09QCJIvl+NaemEWfJVSkUfbBVT3bzKk=
+X-Received: by 2002:a2e:995a:: with SMTP id r26mr14072623ljj.107.1562687189661;
+ Tue, 09 Jul 2019 08:46:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708150521.829733162@linuxfoundation.org>
+References: <20190709115759.10451-1-chris.redpath@arm.com> <20190709135054.GF3402@hirez.programming.kicks-ass.net>
+ <b0d82dbf-f23b-f858-4c60-b5a413c0e618@arm.com> <CAKfTPtCxw8Xqz3rJPKeeDVfvWTcsByAb64_JtB-w2Bp83BGBgw@mail.gmail.com>
+ <1128a866-6817-3703-8962-8c3670dd10c1@foss.arm.com>
+In-Reply-To: <1128a866-6817-3703-8962-8c3670dd10c1@foss.arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 9 Jul 2019 17:46:18 +0200
+Message-ID: <CAKfTPtD3j6M5q1feDMQ3S7=YVwL7BJ2ShHcki777Xx2sHbD+_w@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: Update rq_clock, cfs_rq before migrating for
+ asym cpu capacity
+To:     Chris Redpath <chris.redpath@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Dietmar Eggemann <Dietmar.Eggemann@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 05:12:27PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.58 release.
-> There are 90 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.58-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Tue, 9 Jul 2019 at 17:42, Chris Redpath <chris.redpath@foss.arm.com> wrote:
+>
+> On 09/07/2019 16:36, Vincent Guittot wrote:
+> > Hi Chris,
+> >
+> >>
+> >> We enter this code quite often in our testing, most individual runs of a
+> >> test which has small tasks involved have at least one hit where we make
+> >> a change to the clock with this patch in.
+> >
+> > Do you have a rt-app file that you can share ?
+> >
+>
+> The ThreeSmallTasks test which is the worst hit produces this:
+>
+> {
+>      "tasks": {
+>          "small_0": {
+>              "policy": "SCHED_OTHER",
+>              "delay": 0,
+>              "loop": 1,
+>              "phases": {
+>                  "p000001": {
+>                      "loop": 62,
+>                      "run": 2880,
+>                      "timer": {
+>                          "ref": "small_0",
+>                          "period": 16000
+>                      }
+>                  }
+>              }
+>          },
+>          "small_1": {
+>              "policy": "SCHED_OTHER",
+>              "delay": 0,
+>              "loop": 1,
+>              "phases": {
+>                  "p000001": {
+>                      "loop": 62,
+>                      "run": 2880,
+>                      "timer": {
+>                          "ref": "small_1",
+>                          "period": 16000
+>                      }
+>                  }
+>              }
+>          },
+>          "small_2": {
+>              "policy": "SCHED_OTHER",
+>              "delay": 0,
+>              "loop": 1,
+>              "phases": {
+>                  "p000001": {
+>                      "loop": 62,
+>                      "run": 2880,
+>                      "timer": {
+>                          "ref": "small_2",
+>                          "period": 16000
+>                      }
+>                  }
+>              }
+>          }
+>      },
+>      "global": {
+>          "default_policy": "SCHED_OTHER",
+>          "duration": -1,
+>          "calibration": 264,
+>          "logdir": "/root/devlib-target"
+>      }
+> }
+>
+> when I run it
 
-x86_64 compiled and booted; no regressions between 4.19.57 and
-4.19.58-rc1 among dmesg and kselftests.
+Thanks I will make it a try on my b.L platform
 
-Thanks,
--amol
+>
+> >>
+> >> That said - despite the relatively high number of hits only about 5% of
+> >> runs see enough additional energy consumed to trigger a test failure. We
+> >> do try to keep a quiet system as much as possible and only run for a few
+> >> seconds so the impact we see in testing is also probably higher than in
+> >> the real world.
+> >
+> > Yeah, I'm curious to see the impact on a real system which have a
+> > 60fps screen update like an android phone
+> >
+>
+> I wouldn't expect much change there but I would on the idle-ish
+> homescreen/day-of-use type benchmarks.
+>
+> If I had a platform with any kind of representative energy use, I'd test
+> it :)
