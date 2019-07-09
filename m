@@ -2,70 +2,111 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC916C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD45DC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A456121537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562644204;
-	bh=bSpee7tgEC/rC+AguQRL/7GowSvvZiLyLDUK2NBpCoo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=TVbxqBzLz4Gs8nTqzF43lII0fe6swIetLs5N/cLExkKZTby2M/Bo92c+tNErQlpKh
-	 oXPK5Sy/ZyYR0e6I2euo75FUhGeInMa/F8h9fB81nosriSwK9wubgcC4kl6vCT+LgT
-	 3aYFDjEhbu9X9TREA9K3G1QxdcgbbwvPNPebigPU=
+	by mail.kernel.org (Postfix) with ESMTP id A5944216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IP26mwXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfGIDuD (ORCPT
+        id S1726793AbfGID4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:50:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41106 "EHLO mail.kernel.org"
+        Mon, 8 Jul 2019 23:56:41 -0400
+Received: from ozlabs.org ([203.11.71.1]:44651 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbfGIDuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 23:50:02 -0400
-Subject: Re: [GIT PULL] integrity subsystem updates for v5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562644201;
-        bh=bSpee7tgEC/rC+AguQRL/7GowSvvZiLyLDUK2NBpCoo=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QNvkychssA+TYO3qiLvQRRlfWCduktTCilXvSbhkayP7VknKY8HOUtRrD8Oj87OHg
-         UzQPik22A7ljpKl8mA6dV5esCrfGw/YmxQ2vD9WhVdTMkey8AW71zZyVpJgj76w4Sw
-         mr7H3OIOyqiITNkDSt+I4U7ixbfNd5yh2rNfNFqA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1562590738.11461.9.camel@linux.ibm.com>
-References: <1562590738.11461.9.camel@linux.ibm.com>
-X-PR-Tracked-List-Id: <linux-integrity.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1562590738.11461.9.camel@linux.ibm.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
- next-integrity
-X-PR-Tracked-Commit-Id: 650b29dbdf2caf7db27cdc8bfa8fc009b28a6ce3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8b68150883ca466a23e90902dd4113b22e692f04
-Message-Id: <156264420177.1489.11656108173683014565.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 03:50:01 +0000
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        id S1725886AbfGID4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 23:56:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jT5d1nkvz9s7T;
+        Tue,  9 Jul 2019 13:56:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562644597;
+        bh=UqZEZcZKy1f8rwwEkckMs23H6FKxwqNSg8du442vxJs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IP26mwXgUBuIHF8m8ouNsD+YNkYnbV2mzs7DfI8zZpvLdjOWK4b93F6aDkFJ8LLee
+         FdgWRukjvbllteIjSZUM5Fs5hyg1qsTkST9t9434tHTKzsvCGIazI4WkpccLofsbeb
+         j9UUTorA/q2tlKS1PrF6rNHOfKAsSXA876NzaxSH5pdp5JUR0C4GM8tzB6Xw4LJK1g
+         eBwkyBQTxIla5IR5CutWnt66KVAXMQHR8j8Y591P3TuoPfWfta4WgASPg07aSz5Ed1
+         mxnqQwMQnmYazgIa8zPin687oKa4Kqp+B+BM+cOjlubAvB9x84BJINk+EVU12p0WUp
+         wv6m4+/0iJE/w==
+Date:   Tue, 9 Jul 2019 13:56:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>
+Subject: linux-next: build failure after merge of the net-next tree
+Message-ID: <20190709135636.4d36e19f@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/t_yr42Ckp5lLUP9oC59bwsp"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 08 Jul 2019 08:58:58 -0400:
+--Sig_/t_yr42Ckp5lLUP9oC59bwsp
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+Hi all,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8b68150883ca466a23e90902dd4113b22e692f04
+After merging the net-next tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Thank you!
+drivers/infiniband/sw/siw/siw_cm.c: In function 'siw_create_listen':
+drivers/infiniband/sw/siw/siw_cm.c:1978:3: error: implicit declaration of f=
+unction 'for_ifa'; did you mean 'fork_idle'? [-Werror=3Dimplicit-function-d=
+eclaration]
+   for_ifa(in_dev)
+   ^~~~~~~
+   fork_idle
+drivers/infiniband/sw/siw/siw_cm.c:1978:18: error: expected ';' before '{' =
+token
+   for_ifa(in_dev)
+                  ^
+                  ;
+   {
+   ~
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Caused by commit
+
+  6c52fdc244b5 ("rdma/siw: connection management")
+
+from the rdma tree.  I don't know why this didn't fail after I mereged
+that tree.
+
+I have marked that driver as depending on BROKEN for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/t_yr42Ckp5lLUP9oC59bwsp
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0kEHQACgkQAVBC80lX
+0GxFawgAhsIcbHAnRtR3Osl3H6dREHj5GcJ/XV7LAFJ9XwRz6mPVNxy+GdROU5Hb
+cxp5LmmKPZmUD95kQ0SLET7hsW6OKEgNk1lxH8veN4IGIsX+7DPSCQdRXbhtNCSY
+zKQAb8oCu3S2qfQchWzKbelqegBwXvB1oEWFavi+0rZqZVx4lKlDZsxCutAeZSqL
+XQHQqLTGVYhDWNtdIi4HK6F25URZ+H5G5Nlhph+RPRXhGetxELyxB8v8K6xrn2iC
+o9qlFV61ox0+QO4LERGnwqwo4FsXy8W0PKFsjZvvCNdRt7M1NAAqyAVyWnLJw8Sx
+XkCdOtQIjLte/LEEYxuC7rNXTHS6fg==
+=LdNM
+-----END PGP SIGNATURE-----
+
+--Sig_/t_yr42Ckp5lLUP9oC59bwsp--
