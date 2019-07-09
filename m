@@ -2,510 +2,108 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A456EC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6981AC73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0642080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA832080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562681424;
-	bh=rWJD1aUqpay44exjrdfnINVu4s/apdDb6upgtwMeip0=;
+	s=default; t=1562681556;
+	bh=cNwCBdoZz9FLZk29HoCJnpNGxkwg2GGbQsQRD0M2yjY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=To/EAm3ZJ/kY9b/wttR2Ow1st98ikfDRSF0xw9rduucqx/O0EuRe4+l3FL9QN7/Qj
-	 zpGeYfDvA2FSAiGfsuK01uM9H9KMZDbe+lfOFNM86JHFUJpJ2dVSvAhk28YG9D16Ma
-	 P++xoXwrIbHbfkxzzaxfmie0wtmkPq4jxokHFl+E=
+	b=aGXIWGHxXbrmTwxcI8KqFY2H5SChrN7Wd/BuuDqyzEzx15JQSy35xmOBifuUtHDHL
+	 6MX1ITEiMRNZUfzSs6Myg+HzufP5ERA6BEqq92ZGUDGnXfigCw0N0ORu/y9H4ZWoKy
+	 iKHznCgIo+Wct1mcNHkQcx6/P+KXsNAwRtlMY7WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfGIOKX (ORCPT
+        id S1726401AbfGIOMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:10:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55764 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726115AbfGIOKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:10:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 305F6AB8C;
-        Tue,  9 Jul 2019 14:10:21 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 16:10:19 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v3 5/5] mm: factor out pmd young/dirty bit handling and
- THP split
-Message-ID: <20190709141019.GN26380@dhcp22.suse.cz>
-References: <20190627115405.255259-1-minchan@kernel.org>
- <20190627115405.255259-6-minchan@kernel.org>
+        Tue, 9 Jul 2019 10:12:34 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34260 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfGIOMe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 10:12:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=V/u97jHNPmLvmTFvnXoJFWrA6FUKihtUF7vD/H2p1QU=; b=QOEmchoPQ9nmuToWmMJj/YqMf
+        uTd9ny3nzPsSlzStQ0fbSOpLhpxBAyXab6JIs5f+CLQA8+u9suJKoptJFa9pV5sRyxOTHkFXvJjsq
+        bqSCW43hh2n8aSGBwPYwQebVVl+HlB3R8ghUTI0urMtdApAyXEbt95/qeMJf8VZHHVaWk=;
+Received: from [217.140.106.51] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hkqr7-0005ci-9l; Tue, 09 Jul 2019 14:12:29 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 56D73D02D6A; Tue,  9 Jul 2019 15:12:28 +0100 (BST)
+Date:   Tue, 9 Jul 2019 15:12:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH 2/5] drivers: spi: core: Add optional stall delay between
+ cs_change transfers
+Message-ID: <20190709141228.GC14859@sirena.co.uk>
+References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
+ <20190625131328.11883-2-alexandru.ardelean@analog.com>
+ <20190626193438.7248d0a9@archlinux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="m51xatjYGsM+13rf"
 Content-Disposition: inline
-In-Reply-To: <20190627115405.255259-6-minchan@kernel.org>
+In-Reply-To: <20190626193438.7248d0a9@archlinux>
+X-Cookie: Visit beautiful Vergas, Minnesota.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 27-06-19 20:54:05, Minchan Kim wrote:
-> Now, there are common part among MADV_COLD|PAGEOUT|FREE to reset
-> access/dirty bit resetting or split the THP page to handle part
-> of subpages in the THP page. This patch factor out the common part.
 
-While this reduces the code duplication to some degree I suspect it only
-goes half way. I haven't tried that myself due to lack of time but I
-believe this has a potential to reduce even more. All those madvise
-calls are doing the same thing essentially. What page tables and apply
-an operation on ptes and/or a page that is mapped. And that suggests
-that the specific operation should be good with defining two - pte and
-page operations on each entry. All the rest should be a common code.
+--m51xatjYGsM+13rf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That being said, I do not feel strongly about this patch. The rest of
-the series should be good enough even without it and I wouldn't delay it
-just by discussing a potential of the cleanup.
+On Wed, Jun 26, 2019 at 07:34:38PM +0100, Jonathan Cameron wrote:
+> On Tue, 25 Jun 2019 16:13:25 +0300
+> Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+>=20
+> > Some devices like the ADIS16460 IMU require a stall period between
+> > transfers, i.e. between when the CS is de-asserted and re-asserted. The
+> > default value of 10us is not enough. This change makes the delay
+> > configurable for when the next CS change goes active.
 
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-> ---
->  include/linux/huge_mm.h |   3 -
->  mm/huge_memory.c        |  74 -------------
->  mm/madvise.c            | 234 +++++++++++++++++++++++-----------------
->  3 files changed, 135 insertions(+), 176 deletions(-)
-> 
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index 7cd5c150c21d..2667e1aa3ce5 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -29,9 +29,6 @@ extern struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
->  					  unsigned long addr,
->  					  pmd_t *pmd,
->  					  unsigned int flags);
-> -extern bool madvise_free_huge_pmd(struct mmu_gather *tlb,
-> -			struct vm_area_struct *vma,
-> -			pmd_t *pmd, unsigned long addr, unsigned long next);
->  extern int zap_huge_pmd(struct mmu_gather *tlb,
->  			struct vm_area_struct *vma,
->  			pmd_t *pmd, unsigned long addr);
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 93f531b63a45..e4b9a06788f3 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1671,80 +1671,6 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
->  	return 0;
->  }
->  
-> -/*
-> - * Return true if we do MADV_FREE successfully on entire pmd page.
-> - * Otherwise, return false.
-> - */
-> -bool madvise_free_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
-> -		pmd_t *pmd, unsigned long addr, unsigned long next)
-> -{
-> -	spinlock_t *ptl;
-> -	pmd_t orig_pmd;
-> -	struct page *page;
-> -	struct mm_struct *mm = tlb->mm;
-> -	bool ret = false;
-> -
-> -	tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
-> -
-> -	ptl = pmd_trans_huge_lock(pmd, vma);
-> -	if (!ptl)
-> -		goto out_unlocked;
-> -
-> -	orig_pmd = *pmd;
-> -	if (is_huge_zero_pmd(orig_pmd))
-> -		goto out;
-> -
-> -	if (unlikely(!pmd_present(orig_pmd))) {
-> -		VM_BUG_ON(thp_migration_supported() &&
-> -				  !is_pmd_migration_entry(orig_pmd));
-> -		goto out;
-> -	}
-> -
-> -	page = pmd_page(orig_pmd);
-> -	/*
-> -	 * If other processes are mapping this page, we couldn't discard
-> -	 * the page unless they all do MADV_FREE so let's skip the page.
-> -	 */
-> -	if (page_mapcount(page) != 1)
-> -		goto out;
-> -
-> -	if (!trylock_page(page))
-> -		goto out;
-> -
-> -	/*
-> -	 * If user want to discard part-pages of THP, split it so MADV_FREE
-> -	 * will deactivate only them.
-> -	 */
-> -	if (next - addr != HPAGE_PMD_SIZE) {
-> -		get_page(page);
-> -		spin_unlock(ptl);
-> -		split_huge_page(page);
-> -		unlock_page(page);
-> -		put_page(page);
-> -		goto out_unlocked;
-> -	}
-> -
-> -	if (PageDirty(page))
-> -		ClearPageDirty(page);
-> -	unlock_page(page);
-> -
-> -	if (pmd_young(orig_pmd) || pmd_dirty(orig_pmd)) {
-> -		pmdp_invalidate(vma, addr, pmd);
-> -		orig_pmd = pmd_mkold(orig_pmd);
-> -		orig_pmd = pmd_mkclean(orig_pmd);
-> -
-> -		set_pmd_at(mm, addr, pmd, orig_pmd);
-> -		tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
-> -	}
-> -
-> -	mark_page_lazyfree(page);
-> -	ret = true;
-> -out:
-> -	spin_unlock(ptl);
-> -out_unlocked:
-> -	return ret;
-> -}
-> -
->  static inline void zap_deposited_table(struct mm_struct *mm, pmd_t *pmd)
->  {
->  	pgtable_t pgtable;
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index ee210473f639..13b06dc8d402 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -310,6 +310,91 @@ static long madvise_willneed(struct vm_area_struct *vma,
->  	return 0;
->  }
->  
-> +enum madv_pmdp_reset_t {
-> +	MADV_PMDP_RESET,	/* pmd was reset successfully */
-> +	MADV_PMDP_SPLIT,	/* pmd was split */
-> +	MADV_PMDP_ERROR,
-> +};
-> +
-> +static enum madv_pmdp_reset_t madvise_pmdp_reset_or_split(struct mm_walk *walk,
-> +				pmd_t *pmd, spinlock_t *ptl,
-> +				unsigned long addr, unsigned long end,
-> +				bool young, bool dirty)
-> +{
-> +	pmd_t orig_pmd;
-> +	unsigned long next;
-> +	struct page *page;
-> +	struct mmu_gather *tlb = walk->private;
-> +	struct mm_struct *mm = walk->mm;
-> +	struct vm_area_struct *vma = walk->vma;
-> +	bool reset_young = false;
-> +	bool reset_dirty = false;
-> +	enum madv_pmdp_reset_t ret = MADV_PMDP_ERROR;
-> +
-> +	orig_pmd = *pmd;
-> +	if (is_huge_zero_pmd(orig_pmd))
-> +		return ret;
-> +
-> +	if (unlikely(!pmd_present(orig_pmd))) {
-> +		VM_BUG_ON(thp_migration_supported() &&
-> +				!is_pmd_migration_entry(orig_pmd));
-> +		return ret;
-> +	}
-> +
-> +	next = pmd_addr_end(addr, end);
-> +	page = pmd_page(orig_pmd);
-> +	if (next - addr != HPAGE_PMD_SIZE) {
-> +		/*
-> +		 * THP collapsing is not cheap so only split the page is
-> +		 * private to the this process.
-> +		 */
-> +		if (page_mapcount(page) != 1)
-> +			return ret;
-> +		get_page(page);
-> +		spin_unlock(ptl);
-> +		lock_page(page);
-> +		if (!split_huge_page(page))
-> +			ret = MADV_PMDP_SPLIT;
-> +		unlock_page(page);
-> +		put_page(page);
-> +		return ret;
-> +	}
-> +
-> +	if (young && pmd_young(orig_pmd))
-> +		reset_young = true;
-> +	if (dirty && pmd_dirty(orig_pmd))
-> +		reset_dirty = true;
-> +
-> +	/*
-> +	 * Other process could rely on the PG_dirty for data consistency,
-> +	 * not pte_dirty so we could reset PG_dirty only when we are owner
-> +	 * of the page.
-> +	 */
-> +	if (reset_dirty) {
-> +		if (page_mapcount(page) != 1)
-> +			goto out;
-> +		if (!trylock_page(page))
-> +			goto out;
-> +		if (PageDirty(page))
-> +			ClearPageDirty(page);
-> +		unlock_page(page);
-> +	}
-> +
-> +	ret = MADV_PMDP_RESET;
-> +	if (reset_young || reset_dirty) {
-> +		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
-> +		pmdp_invalidate(vma, addr, pmd);
-> +		if (reset_young)
-> +			orig_pmd = pmd_mkold(orig_pmd);
-> +		if (reset_dirty)
-> +			orig_pmd = pmd_mkclean(orig_pmd);
-> +		set_pmd_at(mm, addr, pmd, orig_pmd);
-> +		tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
-> +	}
-> +out:
-> +	return ret;
-> +}
-> +
->  static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
->  				unsigned long end, struct mm_walk *walk)
->  {
-> @@ -319,64 +404,31 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
->  	pte_t *orig_pte, *pte, ptent;
->  	spinlock_t *ptl;
->  	struct page *page;
-> -	unsigned long next;
->  
-> -	next = pmd_addr_end(addr, end);
->  	if (pmd_trans_huge(*pmd)) {
-> -		pmd_t orig_pmd;
-> -
-> -		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
->  		ptl = pmd_trans_huge_lock(pmd, vma);
->  		if (!ptl)
->  			return 0;
->  
-> -		orig_pmd = *pmd;
-> -		if (is_huge_zero_pmd(orig_pmd))
-> -			goto huge_unlock;
-> -
-> -		if (unlikely(!pmd_present(orig_pmd))) {
-> -			VM_BUG_ON(thp_migration_supported() &&
-> -					!is_pmd_migration_entry(orig_pmd));
-> -			goto huge_unlock;
-> -		}
-> -
-> -		page = pmd_page(orig_pmd);
-> -		if (next - addr != HPAGE_PMD_SIZE) {
-> -			int err;
-> -
-> -			if (page_mapcount(page) != 1)
-> -				goto huge_unlock;
-> -
-> -			get_page(page);
-> +		switch (madvise_pmdp_reset_or_split(walk, pmd, ptl, addr, end,
-> +							true, false)) {
-> +		case MADV_PMDP_RESET:
->  			spin_unlock(ptl);
-> -			lock_page(page);
-> -			err = split_huge_page(page);
-> -			unlock_page(page);
-> -			put_page(page);
-> -			if (!err)
-> -				goto regular_page;
-> -			return 0;
-> -		}
-> -
-> -		if (pmd_young(orig_pmd)) {
-> -			pmdp_invalidate(vma, addr, pmd);
-> -			orig_pmd = pmd_mkold(orig_pmd);
-> -
-> -			set_pmd_at(mm, addr, pmd, orig_pmd);
-> -			tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
-> +			page = pmd_page(*pmd);
-> +			test_and_clear_page_young(page);
-> +			deactivate_page(page);
-> +			goto next;
-> +		case MADV_PMDP_ERROR:
-> +			spin_unlock(ptl);
-> +			goto next;
-> +		case MADV_PMDP_SPLIT:
-> +			; /* go through */
->  		}
-> -
-> -		test_and_clear_page_young(page);
-> -		deactivate_page(page);
-> -huge_unlock:
-> -		spin_unlock(ptl);
-> -		return 0;
->  	}
->  
->  	if (pmd_trans_unstable(pmd))
->  		return 0;
->  
-> -regular_page:
->  	tlb_change_page_size(tlb, PAGE_SIZE);
->  	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
->  	flush_tlb_batched_pending(mm);
-> @@ -443,6 +495,7 @@ static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
->  
->  	arch_enter_lazy_mmu_mode();
->  	pte_unmap_unlock(orig_pte, ptl);
-> +next:
->  	cond_resched();
->  
->  	return 0;
-> @@ -493,70 +546,38 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
->  	LIST_HEAD(page_list);
->  	struct page *page;
->  	int isolated = 0;
-> -	unsigned long next;
->  
->  	if (fatal_signal_pending(current))
->  		return -EINTR;
->  
-> -	next = pmd_addr_end(addr, end);
->  	if (pmd_trans_huge(*pmd)) {
-> -		pmd_t orig_pmd;
-> -
-> -		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
->  		ptl = pmd_trans_huge_lock(pmd, vma);
->  		if (!ptl)
->  			return 0;
->  
-> -		orig_pmd = *pmd;
-> -		if (is_huge_zero_pmd(orig_pmd))
-> -			goto huge_unlock;
-> -
-> -		if (unlikely(!pmd_present(orig_pmd))) {
-> -			VM_BUG_ON(thp_migration_supported() &&
-> -					!is_pmd_migration_entry(orig_pmd));
-> -			goto huge_unlock;
-> -		}
-> -
-> -		page = pmd_page(orig_pmd);
-> -		if (next - addr != HPAGE_PMD_SIZE) {
-> -			int err;
-> -
-> -			if (page_mapcount(page) != 1)
-> -				goto huge_unlock;
-> -			get_page(page);
-> +		switch (madvise_pmdp_reset_or_split(walk, pmd, ptl, addr, end,
-> +							true, false)) {
-> +		case MADV_PMDP_RESET:
-> +			page = pmd_page(*pmd);
->  			spin_unlock(ptl);
-> -			lock_page(page);
-> -			err = split_huge_page(page);
-> -			unlock_page(page);
-> -			put_page(page);
-> -			if (!err)
-> -				goto regular_page;
-> -			return 0;
-> -		}
-> -
-> -		if (isolate_lru_page(page))
-> -			goto huge_unlock;
-> -
-> -		if (pmd_young(orig_pmd)) {
-> -			pmdp_invalidate(vma, addr, pmd);
-> -			orig_pmd = pmd_mkold(orig_pmd);
-> -
-> -			set_pmd_at(mm, addr, pmd, orig_pmd);
-> -			tlb_remove_tlb_entry(tlb, pmd, addr);
-> +			if (isolate_lru_page(page))
-> +				return 0;
-> +			ClearPageReferenced(page);
-> +			test_and_clear_page_young(page);
-> +			list_add(&page->lru, &page_list);
-> +			reclaim_pages(&page_list);
-> +			goto next;
-> +		case MADV_PMDP_ERROR:
-> +			spin_unlock(ptl);
-> +			goto next;
-> +		case MADV_PMDP_SPLIT:
-> +			; /* go through */
->  		}
-> -
-> -		ClearPageReferenced(page);
-> -		test_and_clear_page_young(page);
-> -		list_add(&page->lru, &page_list);
-> -huge_unlock:
-> -		spin_unlock(ptl);
-> -		reclaim_pages(&page_list);
-> -		return 0;
->  	}
->  
->  	if (pmd_trans_unstable(pmd))
->  		return 0;
-> -regular_page:
-> +
->  	tlb_change_page_size(tlb, PAGE_SIZE);
->  	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
->  	flush_tlb_batched_pending(mm);
-> @@ -631,6 +652,7 @@ static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
->  	arch_leave_lazy_mmu_mode();
->  	pte_unmap_unlock(orig_pte, ptl);
->  	reclaim_pages(&page_list);
-> +next:
->  	cond_resched();
->  
->  	return 0;
-> @@ -700,12 +722,26 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
->  	pte_t *orig_pte, *pte, ptent;
->  	struct page *page;
->  	int nr_swap = 0;
-> -	unsigned long next;
->  
-> -	next = pmd_addr_end(addr, end);
-> -	if (pmd_trans_huge(*pmd))
-> -		if (madvise_free_huge_pmd(tlb, vma, pmd, addr, next))
-> +	if (pmd_trans_huge(*pmd)) {
-> +		ptl = pmd_trans_huge_lock(pmd, vma);
-> +		if (!ptl)
-> +			return 0;
-> +
-> +		switch (madvise_pmdp_reset_or_split(walk, pmd, ptl, addr, end,
-> +							true, true)) {
-> +		case MADV_PMDP_RESET:
-> +			page = pmd_page(*pmd);
-> +			spin_unlock(ptl);
-> +			mark_page_lazyfree(page);
->  			goto next;
-> +		case MADV_PMDP_ERROR:
-> +			spin_unlock(ptl);
-> +			goto next;
-> +		case MADV_PMDP_SPLIT:
-> +			; /* go through */
-> +		}
-> +	}
->  
->  	if (pmd_trans_unstable(pmd))
->  		return 0;
-> @@ -817,8 +853,8 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
->  	}
->  	arch_leave_lazy_mmu_mode();
->  	pte_unmap_unlock(orig_pte, ptl);
-> -	cond_resched();
->  next:
-> +	cond_resched();
->  	return 0;
->  }
->  
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
+This looks like cs_change_delay.
 
--- 
-Michal Hocko
-SUSE Labs
+As documented in SubmittingPatches please send patches to the=20
+maintainers for the code you would like to change.  The normal kernel
+workflow is that people apply patches from their inboxes, if they aren't
+copied they are likely to not see the patch at all and it is much more
+difficult to apply patches.
+
+--m51xatjYGsM+13rf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0koMsACgkQJNaLcl1U
+h9DKIAf/ZSDNvbMm/N+6RjKfnFdQwjyhpG6CS03BFIGfNvdDiHDfcIUOccR8kUSS
+hWzTKI/7f4jlLyaWXinkVc59G60+IS1+DbO8o2PCAQ3Fpciz5/c6F7BQrLy42Xal
+/icTrnVX0d/70ss5a7YT5yj67O7bItcRvbUuT8bDzHIIVzNWmXc8hMZYMTSB14DV
+fLs8tnfbR0SK4zjd2smCFHGieZBZquTeBjF2ZQlA0YS232MyNNBJCtmW52KUfbVn
+gBukHDwh9QkCJEAdFHknAMmcYPgBF0FXnBkMwhXKeCW9PAxHXK/PC+nqvanw4dmi
+ZVeeGKO4caaGNXi5unWwFznO4RwCFQ==
+=xlH7
+-----END PGP SIGNATURE-----
+
+--m51xatjYGsM+13rf--
