@@ -2,164 +2,99 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19827C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E78CC73C50
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6A62080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2863C2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 14:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562682133;
+	bh=+0n8GlrqRKQUG/47XYRXFYBt5IHcvkFJ8wpGkEzqjUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q+JZG29BEbMVIvqWyUPAaSudnoiWJW2kwep+iMupx6RDTwsOI43qoJuC7/908wbbM
+	 paVd9ioOwdEzasDkKET+TH+nhXKqvNXr5RmCrwFtzR9bWBj4m8+qpGnlQN6lv8UMD7
+	 GFfP9byOThYRKfglVp1DENW94r7lMnfyYzslZPAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfGIOWB (ORCPT
+        id S1726765AbfGIOWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 10:22:01 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:45827 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbfGIOWA (ORCPT
+        Tue, 9 Jul 2019 10:22:11 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:46378 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbfGIOWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 10:22:00 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id EA3DB20001A;
-        Tue,  9 Jul 2019 14:21:55 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 16:21:55 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Torsten Duwe <duwe@lst.de>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Harald Geyer <harald@ccbib.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Message-ID: <20190709142155.2blclgbqapjeifv3@flea>
-References: <20190607062802.m5wslx3imiqooq5a@flea>
- <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
- <20190607094030.GA12373@lst.de>
- <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
- <20190612152022.c3cfhp4cauhzhfyr@flea>
- <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
- <20190701095842.fvganvycce2cy7jn@flea>
- <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
- <20190709085532.cdqv7whuesrjs64c@flea>
- <72E7C765-3660-413A-8450-94BE4B3D1345@aosc.io>
+        Tue, 9 Jul 2019 10:22:11 -0400
+Received: by mail-qt1-f174.google.com with SMTP id h21so19582185qtn.13
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 07:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZOJuPULlrE2vBj/9c6KgmQ77330wz9gdrf5HX3f8siY=;
+        b=JDFVm5GfySg8Sd4dZ3vDpuc/MVCMu8c1Ktmjz2sipL5/bYCXthqdqTfl0bNqoCBCI1
+         dC7Dtu4MtLf2FqM7JRoqn0A/nQvL6M8evor8AgzJK/w1CufgGmOorzJZHxvCCl9aHaBd
+         4wDo7PBrRPXRTNWy4BIhCqgjQ8DqP39asU5NJ1ICrNyqUtBSlfDdcsa3VmeMvjtsIYMx
+         /K3MgQfRw9h/p4QB2k7JpAgjFcsjru4n8+zEKkoILGXOc9kVEIKqfX91oNercxLdtLa/
+         ay7BjWlyoaz8EGyUH1HyGJgey/unBEiisACqinSU5ZD8z+5t/cdODiPdGMSk6sQqIZhB
+         x1Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZOJuPULlrE2vBj/9c6KgmQ77330wz9gdrf5HX3f8siY=;
+        b=nqmoBQqUPWIWLmX62UU6AHExF4bksz0LhxmqaiZI/tATDmsknjP1lpmA64hN8Aq/ID
+         V1AQh/s/8aAkc9YObaXZ8J6AsvHnNucQCZqP1uqbaGntH4gX8aBVSfN7hvyVl9m0/MPh
+         NS4mD/Rqsco86FrpQEH4kZ+rWycNbA6D80/1iIXSKS6BGCp/7LeyhQ+MPvpYiEooolWb
+         zJPgSt2g6z7Uy0L8hpCkJDRS0bAhbQ/gvYGrnHrnhPvb17jl/9XVyU59UJrqBx+7VsER
+         Cqog3QMP+4amnZ5H09U/Fob8Yh2NLi+5MRBSdrDCuBXr17aOJve3CK2TK1x2YC43K7VT
+         K/0w==
+X-Gm-Message-State: APjAAAV0Fj2gC4iVfbUN3dEWaK81k/xeelcz0IZIg3DcwP+uQhMCKKxF
+        xj/PwUQjHKok8N6cVLjUud8=
+X-Google-Smtp-Source: APXvYqxhZ6GaC0CzKYNXaWrldMUxDF2XzrreMcfaj5I6XaPJLQ6R+7EpiOkA1wtD/Y1dkMTF1J3YhQ==
+X-Received: by 2002:a0c:e1cd:: with SMTP id v13mr18273199qvl.245.1562682130349;
+        Tue, 09 Jul 2019 07:22:10 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:fa50])
+        by smtp.gmail.com with ESMTPSA id p4sm9672337qkb.84.2019.07.09.07.22.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 07:22:08 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 07:22:06 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+38f5d5cf7ae88c46b11a@syzkaller.appspotmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING in kernfs_create_dir_ns
+Message-ID: <20190709142206.GI657710@devbig004.ftw2.facebook.com>
+References: <20190709022335.12928-1-hdanton@sina.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="en37fuotj5a3o4w2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72E7C765-3660-413A-8450-94BE4B3D1345@aosc.io>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190709022335.12928-1-hdanton@sina.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---en37fuotj5a3o4w2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jul 09, 2019 at 04:58:35PM +0800, Icenowy Zheng wrote:
->
->
-> =E4=BA=8E 2019=E5=B9=B47=E6=9C=889=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=884=
-:55:32, Maxime Ripard <maxime.ripard@bootlin.com> =E5=86=99=E5=88=B0:
-> >On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
-> >> > > Maybe instead of edp-connector one would introduce integrator's
-> >specific
-> >> > > connector, for example with compatible
-> >"olimex,teres-edp-connector"
-> >> > > which should follow edp abstract connector rules? This will be at
-> >least
-> >> > > consistent with below presentation[1] - eDP requirements depends
-> >on
-> >> > > integrator. Then if olimex has standard way of dealing with
-> >panels
-> >> > > present in olimex/teres platforms the driver would then create
-> >> > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I
-> >guess.
-> >> > > Anyway it still looks fishy for me :), maybe because I am not
-> >> > > familiarized with details of these platforms.
-> >> >
-> >> > That makes sense yes
-> >>
-> >> Actually, it makes no sense at all. Current implementation for
-> >anx6345
-> >> driver works fine as is with any panel specified assuming panel
-> >delays
-> >> are long enough for connected panel. It just doesn't use panel
-> >timings
-> >> from the driver. Creating a platform driver for connector itself
-> >looks
-> >> redundant since it can't be reused, it doesn't describe actual
-> >> hardware and it's just defeats purpose of DT by introducing
-> >> board-specific code.
+On Tue, Jul 09, 2019 at 10:23:35AM +0800, Hillf Danton wrote:
+> > I don't think this is the correct fix.  It's being called with kobj
+> > whose parent's sysfs node is dangling.  It gotta be fixed from the
+> > caller side.
 > >
-> >I'm not sure where you got the idea that the purpose of DT is to not
-> >have any board-specific code.
-> >
-> >It's perfectly fine to have some, that's even why there's a compatible
-> >assigned to each and every board.
-> >
-> >What the DT is about is allowing us to have a generic behaviour that
-> >we can detect: we can have a given behaviour for a given board, and a
-> >separate one for another one, and this will be evaluated at runtime.
-> >
-> >This is *exactly* what this is about: we can have a compatible that
-> >sets a given, more specific, behaviour (olimex,teres-edp-connector)
-> >while saying that this is compatible with the generic behaviour
-> >(edp-connector). That way, any OS will know what quirk to apply if
-> >needed, and if not that it can use the generic behaviour.
-> >
-> >And we could create a generic driver, for the generic behaviour if
-> >needed.
-> >
-> >> There's another issue: if we introduce edp-connector we'll have to
-> >> specify power up delays somewhere (in dts? or in platform driver?),
-> >so
-> >> edp-connector doesn't really solve the issue of multiple panels with
-> >> same motherboard.
-> >
-> >And that's what that compatible is about :)
->
-> Maybe we can introduce a connector w/o any driver just like hdmi-connecto=
-r?
+> Make sense?
+> 
+> --- a/lib/kobject.c
+> +++ b/lib/kobject.c
 
-Ironically, a driver for it has been sent yesterday :)
+No, I meant that the problem likely is in the driver which is calling
+into the generic layer with a dead parent.  We shouldn't be working
+around that from generic layer.
 
-But yeah, we can definitely do that too.
+Thanks.
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---en37fuotj5a3o4w2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSSjAwAKCRDj7w1vZxhR
-xRd1AQCJ5jZZvccoYKMTlhIFwESGq/tLGx3Ao78XQTTrIK5CFAEA11fhHaijvh3D
-nQ4CuXzwsgPAxXOwMwPH8TV3F9oC/Aw=
-=S7iw
------END PGP SIGNATURE-----
-
---en37fuotj5a3o4w2--
+-- 
+tejun
