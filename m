@@ -4,84 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA318C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A1CC73C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A348F20861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E2A20861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfGIN60 (ORCPT
+        id S1727068AbfGIN7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:58:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36240 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726060AbfGIN60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:58:26 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A9C93614EF8499F1F427;
-        Tue,  9 Jul 2019 21:58:22 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
- 21:58:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <james.qian.wang@arm.com>, <liviu.dudau@arm.com>,
-        <brian.starkey@arm.com>, <airlied@linux.ie>
-CC:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <daniel@ffwll.ch>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/komeda: remove set but not used variable 'old'
-Date:   Tue, 9 Jul 2019 21:58:08 +0800
-Message-ID: <20190709135808.56388-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Tue, 9 Jul 2019 09:59:12 -0400
+Received: from bastet.se.axis.com ([195.60.68.11]:33439 "EHLO
+        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfGIN7M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:59:12 -0400
+X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jul 2019 09:59:11 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by bastet.se.axis.com (Postfix) with ESMTP id 11FD618383;
+        Tue,  9 Jul 2019 15:54:07 +0200 (CEST)
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id QvO7OHhFl5QD; Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
+Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
+        by bastet.se.axis.com (Postfix) with ESMTPS id 656A718485;
+        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5471F1A06F;
+        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4915E1A065;
+        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
+        by boulder02.se.axis.com (Postfix) with ESMTP;
+        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
+Received: from pc32929-1845.se.axis.com (pc32929-1845.se.axis.com [10.88.129.17])
+        by seth.se.axis.com (Postfix) with ESMTP id 3CF0C2262;
+        Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
+Received: by pc32929-1845.se.axis.com (Postfix, from userid 20456)
+        id 3950E40B30; Tue,  9 Jul 2019 15:54:06 +0200 (CEST)
+From:   Lars Persson <lars.persson@axis.com>
+To:     linux-mmc@vger.kernel.org, ulf.hansson@linaro.org
+Cc:     jespern@axis.com, linux-kernel@vger.kernel.org,
+        Lars Persson <larper@axis.com>
+Subject: [PATCH] mmc: usdhi6rol0: Add maintainers
+Date:   Tue,  9 Jul 2019 15:53:51 +0200
+Message-Id: <20190709135351.25628-1-larper@axis.com>
+X-Mailer: git-send-email 2.11.0
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+The usdhi6rol0 driver is exclusively used for the ARTPEC family of
+SoCs. Other SoCs with the same IP of Panasonic origin use the tmio_mmc
+driver. Therefore we assigner maintainer responsibility to us at Axis
+until the two drivers become unified.
 
-drivers/gpu/drm/arm/display/komeda/komeda_plane.c:
- In function komeda_plane_atomic_duplicate_state:
-drivers/gpu/drm/arm/display/komeda/komeda_plane.c:161:35:
- warning: variable old set but not used [-Wunused-but-set-variable
-
-It is not used since commit 990dee3aa456 ("drm/komeda:
-Computing image enhancer internally")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Change-Id: I38b6fd0addc1d93ae172332b67e6eb71c0871508
+Signed-off-by: Lars Persson <larper@axis.com>
 ---
- drivers/gpu/drm/arm/display/komeda/komeda_plane.c | 4 ----
- 1 file changed, 4 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
-index c095af1..c1381ac 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_plane.c
-@@ -158,8 +158,6 @@ static void komeda_plane_reset(struct drm_plane *plane)
- static struct drm_plane_state *
- komeda_plane_atomic_duplicate_state(struct drm_plane *plane)
- {
--	struct komeda_plane_state *new, *old;
--
- 	if (WARN_ON(!plane->state))
- 		return NULL;
- 
-@@ -169,8 +167,6 @@ komeda_plane_atomic_duplicate_state(struct drm_plane *plane)
- 
- 	__drm_atomic_helper_plane_duplicate_state(plane, &new->base);
- 
--	old = to_kplane_st(plane->state);
--
- 	return &new->base;
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 677ef41cb012..a91d04e5c084 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1432,6 +1432,7 @@ F:	arch/arm/mach-artpec
+ F:	arch/arm/boot/dts/artpec6*
+ F:	drivers/clk/axis
+ F:	drivers/crypto/axis
++F:	drivers/mmc/host/usdhi6rol0.c
+ F:	drivers/pinctrl/pinctrl-artpec*
+ F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
  
 -- 
-2.7.4
-
+2.11.0
 
