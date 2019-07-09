@@ -2,211 +2,141 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34A2C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B0CC606D4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A323721707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E293A20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uhBk2/WQ"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="iirb/6Ws";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xQfFfIj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfGIGfL (ORCPT
+        id S1727059AbfGIGfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 02:35:11 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:48828 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfGIGfJ (ORCPT
+        Tue, 9 Jul 2019 02:35:16 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:44473 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726060AbfGIGfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 02:35:09 -0400
-Received: by mail-pl1-f201.google.com with SMTP id i33so10139382pld.15
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 23:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=JaclVjWWg1jR5XC8IB5tgYYWiqh+NZ/mVD/zRwjH/mc=;
-        b=uhBk2/WQ99qwdbaLnmR+jWRNmEdj97wqxiZB4JYThMcjGE5OwsJNbkcsrF7cAwML9D
-         C1YEUdBhb+f97fiieh2FM+nAaBN+aEHGeAq8rSo+n+p5h9hNzvvYvCGQezxaOVpVZtEE
-         IGWgphk+8WIkhoBDWE6psMqFdcpxUU15h5xHJ4aCLHU2nikfTxERvndUOGiooQ6w3aAi
-         mTQazPzz+XZJ9xg/fjBPPK0j7243SG8xeASUE3XReNCYYxONnNLqE9h/OYvfeHVVUhY+
-         IosaC4JVP3FFOrXgoVANgni+PGXfv0ZKaMBvJruVijKF4Qo5iFj/o325pujplMEc/af3
-         RviQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=JaclVjWWg1jR5XC8IB5tgYYWiqh+NZ/mVD/zRwjH/mc=;
-        b=WEEzSvPoW3c7T1ME0/8Ev4nv3bn1TFFVR3B4V66b0zr8dGk/RJFEExwHO2VzVXUlfQ
-         YOLgpkx9DKYQjo23S2ZOIxfwBOdloWpnHeG9lgP7Je4DgocWML9QmkakmVW/PWY3lCmf
-         i10pygle2Ns00/M/4sb9jLsqCd3Jo0z8y/9a56CdUe1t1WwUh4cS/YfajV+OVXAmvyAG
-         aH7knmg1YH152BvOJB7TJh18YdLkLu82zI/PUuBaCM/gMV7xsltTXOQGnGH0yE8wtWzD
-         l9W8e51cIWmM6Bua0Z4xOPc1MA53D1n/OK24UJISdbvhUxgzFHzdqP2Z/ykyqzu+i+1R
-         GiMg==
-X-Gm-Message-State: APjAAAXl0BynP0f1vd/xl16zsX9zPaASww8nCqVASb+2C4fB/s8/5JJF
-        WNr44bLEmBGbkTH68mLuVkJR3Jky2g1z5HulHA61Iw==
-X-Google-Smtp-Source: APXvYqywVVGC+1gDgBlITX3JcbXBaV54FL23Rr1U9Jm4S+hFp7EV7Ej0KuIpfZOKmXGH59TlEXtJsYs9Ny4QV2rhu6oFuA==
-X-Received: by 2002:a65:610a:: with SMTP id z10mr28797482pgu.178.1562654108258;
- Mon, 08 Jul 2019 23:35:08 -0700 (PDT)
-Date:   Mon,  8 Jul 2019 23:30:19 -0700
-In-Reply-To: <20190709063023.251446-1-brendanhiggins@google.com>
-Message-Id: <20190709063023.251446-15-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20190709063023.251446-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v7 14/18] kunit: defconfig: add defconfigs for building KUnit tests
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 9 Jul 2019 02:35:15 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id CAD8A38B;
+        Tue,  9 Jul 2019 02:35:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 09 Jul 2019 02:35:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=v8ab4iz9mRCsmFOih2FrXq41LQe
+        WiVzpeFoeaTn6hNU=; b=iirb/6WsCSI72Cry2wR8Bk05xjMShkMzoq0iAUsHOrf
+        cxtju/5PixmO9n7iw230R2FxqWcmX9fjoZNrS3x2onMxrjXaZ5QXFfs3GsN4/hTl
+        zZIRkwXvtmDu/N6CcRICo67UH4xsx8iEH4gIDRrEjtuUYTjak0LU0FnXluz1DH3R
+        NUNqfVbpRWYwsuH9UQhNcEhGZ9B8qqLffRf5LqSuSoaGJM7QdqepRejEs7M1IVpD
+        rR17CiVFCkgefoLrWexJszEjoBgUPwUCZzAP00LZyYYDSeuqfuyk2kKfWvuRoCc4
+        uaC5qld7cdGXbEGEHW+A9AlEQ4PdiNMhx9ZqViK5prQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=v8ab4i
+        z9mRCsmFOih2FrXq41LQeWiVzpeFoeaTn6hNU=; b=xQfFfIj7CC5zEcAGqOi/rP
+        GUxpW2wniHebayaVAgyUwuto91M/CYo+jshTVjELVT/YsG2imZ27dA4FvogoG70m
+        2NBBtuHvfZKWwjza20QZw6OkEkH98MqGQAt6z9zKZze7UZQMmwyM8+5BHbIvX/Fi
+        eevsFqDW8Ez0Sya6+EWW3s8W4k9uHzSCzL9Nohc5W8i6pDas0RBKMAjK4CEbQmJ5
+        WzovAkWMmvDQ1o2vexhAizJVZpiYZg0USO+0khnLf7OjObBvTngZpIr28iJjOe4d
+        GVNlwgttQjU8PD5WPpVyonkBxhMziinU/JaIcaC3edkadW68coPBTJU1mYSCpg8w
+        ==
+X-ME-Sender: <xms:oTUkXZYiA98kgBjXVX2SZBduegJYPV0m2q3Crnb1--UQ59XbMcKOpQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgedugddutdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:oTUkXctqW33h0l1NVMpVtS6ws9bfP11KqTyVFOrEvBpMO1aDRNYoYg>
+    <xmx:oTUkXevjAQ5NcgbDmBV7OaaIstu_lpm-B1ND3ZFPzxxarS5QFDxtDg>
+    <xmx:oTUkXZfMymim6Q-oQXx23pRgchGQgpZWE6T-WiCquoXO82JSdTumbg>
+    <xmx:oTUkXcSyvUf1VAqp-EgPRGTAZtnKfqAJOh-_StDc7RWwCLwt8SrgJA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A2B4980061;
+        Tue,  9 Jul 2019 02:35:12 -0400 (EDT)
+Date:   Tue, 9 Jul 2019 08:35:10 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: linux-next: manual merge of the usb tree with the pci tree
+Message-ID: <20190709063510.GB10587@kroah.com>
+References: <20190624171229.6415ca4f@canb.auug.org.au>
+ <20190624073443.GA13830@kroah.com>
+ <20190624174729.327f2edf@canb.auug.org.au>
+ <20190709095833.727ac5e8@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709095833.727ac5e8@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add defconfig for UML and a fragment that can be used to configure other
-architectures for building KUnit tests. Add option to kunit_tool to use
-a defconfig to create the kunitconfig.
+On Tue, Jul 09, 2019 at 09:58:33AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Mon, 24 Jun 2019 17:47:29 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Today's linux-next merge of the usb tree got a conflict in:
+> > 
+> >   Documentation/index.rst
+> > 
+> > between commit:
+> > 
+> >   c42eaffa1656 ("Documentation: add Linux PCI to Sphinx TOC tree")
+> > 
+> > from the pci tree and commit:
+> > 
+> >   ecefae6db042 ("docs: usb: rename files to .rst and add them to drivers-api")
+> > 
+> > from the usb tree.
+> > 
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
+> > 
+> > -- 
+> > Cheers,
+> > Stephen Rothwell
+> > 
+> > diff --cc Documentation/index.rst
+> > index 239100accbf6,91055adde327..000000000000
+> > --- a/Documentation/index.rst
+> > +++ b/Documentation/index.rst
+> > @@@ -101,7 -101,7 +101,8 @@@ needed)
+> >      filesystems/index
+> >      vm/index
+> >      bpf/index
+> >  +   PCI/index
+> > +    usb/index
+> >      misc-devices/index
+> >   
+> >   Architecture-specific documentation
+> 
+> I am still getting this conflict (the commit ids may have changed).
+> Just a reminder in case you think Linus may need to know.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
- arch/um/configs/kunit_defconfig              |  8 ++++++++
- tools/testing/kunit/configs/all_tests.config |  8 ++++++++
- tools/testing/kunit/kunit.py                 | 18 ++++++++++++++++--
- tools/testing/kunit/kunit_kernel.py          |  3 ++-
- 4 files changed, 34 insertions(+), 3 deletions(-)
- create mode 100644 arch/um/configs/kunit_defconfig
- create mode 100644 tools/testing/kunit/configs/all_tests.config
+For a merge issue like this, I think he can handle it :)
 
-diff --git a/arch/um/configs/kunit_defconfig b/arch/um/configs/kunit_defconfig
-new file mode 100644
-index 0000000000000..bfe49689038f1
---- /dev/null
-+++ b/arch/um/configs/kunit_defconfig
-@@ -0,0 +1,8 @@
-+CONFIG_OF=y
-+CONFIG_OF_UNITTEST=y
-+CONFIG_OF_OVERLAY=y
-+CONFIG_I2C=y
-+CONFIG_I2C_MUX=y
-+CONFIG_KUNIT=y
-+CONFIG_KUNIT_TEST=y
-+CONFIG_KUNIT_EXAMPLE_TEST=y
-diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
-new file mode 100644
-index 0000000000000..bfe49689038f1
---- /dev/null
-+++ b/tools/testing/kunit/configs/all_tests.config
-@@ -0,0 +1,8 @@
-+CONFIG_OF=y
-+CONFIG_OF_UNITTEST=y
-+CONFIG_OF_OVERLAY=y
-+CONFIG_I2C=y
-+CONFIG_I2C_MUX=y
-+CONFIG_KUNIT=y
-+CONFIG_KUNIT_TEST=y
-+CONFIG_KUNIT_EXAMPLE_TEST=y
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index da11bd62a4b82..3e51dc4febfdc 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -11,6 +11,7 @@ import argparse
- import sys
- import os
- import time
-+import shutil
- 
- from collections import namedtuple
- from enum import Enum, auto
-@@ -21,7 +22,7 @@ import kunit_parser
- 
- KunitResult = namedtuple('KunitResult', ['status','result'])
- 
--KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir'])
-+KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
- 
- class KunitStatus(Enum):
- 	SUCCESS = auto()
-@@ -29,8 +30,16 @@ class KunitStatus(Enum):
- 	BUILD_FAILURE = auto()
- 	TEST_FAILURE = auto()
- 
-+def create_default_kunitconfig():
-+	if not os.path.exists(kunit_kernel.KUNITCONFIG_PATH):
-+		shutil.copyfile('arch/um/configs/kunit_defconfig',
-+				kunit_kernel.KUNITCONFIG_PATH)
-+
- def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	      request: KunitRequest) -> KunitResult:
-+	if request.defconfig:
-+		create_default_kunitconfig()
-+
- 	config_start = time.time()
- 	success = linux.build_reconfig(request.build_dir)
- 	config_end = time.time()
-@@ -99,13 +108,18 @@ def main(argv, linux):
- 				'directory.',
- 				type=str, default=None, metavar='build_dir')
- 
-+	run_parser.add_argument('--defconfig',
-+				help='Uses a default kunitconfig.',
-+				action='store_true')
-+
- 	cli_args = parser.parse_args(argv)
- 
- 	if cli_args.subcommand == 'run':
- 		request = KunitRequest(cli_args.raw_output,
- 				       cli_args.timeout,
- 				       cli_args.jobs,
--				       cli_args.build_dir)
-+				       cli_args.build_dir,
-+				       cli_args.defconfig)
- 		result = run_tests(linux, request)
- 		if result.status != KunitStatus.SUCCESS:
- 			sys.exit(1)
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index 07c0abf2f47df..bf38768353313 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -14,6 +14,7 @@ import os
- import kunit_config
- 
- KCONFIG_PATH = '.config'
-+KUNITCONFIG_PATH = 'kunitconfig'
- 
- class ConfigError(Exception):
- 	"""Represents an error trying to configure the Linux kernel."""
-@@ -81,7 +82,7 @@ class LinuxSourceTree(object):
- 
- 	def __init__(self):
- 		self._kconfig = kunit_config.Kconfig()
--		self._kconfig.read_from_file('kunitconfig')
-+		self._kconfig.read_from_file(KUNITCONFIG_PATH)
- 		self._ops = LinuxSourceTreeOperations()
- 
- 	def clean(self):
--- 
-2.22.0.410.gd8fdbe21b5-goog
+thanks,
 
+greg k-h
