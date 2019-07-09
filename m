@@ -7,57 +7,59 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59967C73C42
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE51C73C42
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1714E21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE87721537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RMvPMwwg"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jM4R7WXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfGIMDQ (ORCPT
+        id S1726803AbfGIMDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:03:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51649 "EHLO
+        Tue, 9 Jul 2019 08:03:39 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54571 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfGIMDQ (ORCPT
+        with ESMTP id S1726030AbfGIMDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:03:16 -0400
+        Tue, 9 Jul 2019 08:03:39 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x69C1L7T1901787
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x69C268W1901887
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 9 Jul 2019 05:01:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x69C1L7T1901787
+        Tue, 9 Jul 2019 05:02:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x69C268W1901887
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562673683;
-        bh=sUzCWjUoaw1Ji9CMqL/BG3l9OM/B2xGXVBEMerddFVE=;
+        s=2019061801; t=1562673727;
+        bh=8Vbxk8QdqLEFV6UvNTwaY5xser5lGsQ19iYB/COOvr0=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=RMvPMwwgwgesiPpaJDa5qTCxik5VJUZfykZ4VNA2QZdtvZ9r2F9arOcnEmI8denDc
-         CloJhXvlTGwYn+7LnFAY8Z//rdloCEpC6szgCSwjrOvlZSzjHgv40w0LRN4lUtwEzS
-         nhf/DMDj9Wya0nlrUT0KzY9ebivc5A0Cww7xEh+N2GzsXKSf0HjrWDH19FdNymGxyh
-         pOR/58pt5d8Jn57V3H7MRu5Xx+nouXYrnlHX3VXSBQrUyw0cm7LMSkyb9iQY25L2fu
-         h9r4BBkzYooLLK4Z4U3EQprqMb2C4GrPM+tqBxB3wfHdhcnkp0MidjGeFxQrjuhvC1
-         NVDmR+UUOQ/vw==
+        b=jM4R7WXrOv1gkqXDq6s6AuTjqv+k5eyB+TyU+Qvl0qC6sJxoKQlLB/T+qYg5N9ldb
+         femitzxQ0dY47ESWsCVBAsoGW/mQ0C2WZzpIWYZfa/ejpSHWLFqP0spM35T6KBFvPk
+         Tv1bL6xTcNPzH0HXmf78h2RbBoG8qdnpnKm9uNhxI+FHAtv2MbarirGuAUE1ZzuMCU
+         iooMXmv9KtLBl3s+7jUbhy1quZKAMOFZRt0NPjDpdoxUTLMR9e3DCbfofWAhpvWBRG
+         BEP4BtaQJHl0TTcuD3zlmKob7RX2I+hFwMhNnHQA9hr8JrHOcx4ChibjNSgz4UOJRE
+         S04oNd/X/7l5Q==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x69C1KFC1901784;
-        Tue, 9 Jul 2019 05:01:20 -0700
-Date:   Tue, 9 Jul 2019 05:01:20 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x69C25ug1901884;
+        Tue, 9 Jul 2019 05:02:05 -0700
+Date:   Tue, 9 Jul 2019 05:02:05 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-87b512def792579641499d9bef1d640994ea9c18@git.kernel.org>
-Cc:     kasong@redhat.com, peterz@infradead.org, mingo@kernel.org,
-        songliubraving@fb.com, rostedt@goodmis.org, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, daniel@iogearbox.net, bp@alien8.de,
-        ast@kernel.org, hpa@zytor.com, tglx@linutronix.de
-Reply-To: jpoimboe@redhat.com, mingo@kernel.org, kasong@redhat.com,
-          peterz@infradead.org, rostedt@goodmis.org, songliubraving@fb.com,
-          tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-          ast@kernel.org, bp@alien8.de, daniel@iogearbox.net
-In-Reply-To: <0ba2ca30442b16b97165992381ce643dc27b3d1a.1561685471.git.jpoimboe@redhat.com>
-References: <0ba2ca30442b16b97165992381ce643dc27b3d1a.1561685471.git.jpoimboe@redhat.com>
+Message-ID: <tip-e55a73251da335873a6e87d68fb17e5aabb8978e@git.kernel.org>
+Cc:     ast@kernel.org, hpa@zytor.com, rostedt@goodmis.org,
+        jpoimboe@redhat.com, kasong@redhat.com, mingo@kernel.org,
+        peterz@infradead.org, bp@alien8.de, songliubraving@fb.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        daniel@iogearbox.net
+Reply-To: daniel@iogearbox.net, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          peterz@infradead.org, songliubraving@fb.com, bp@alien8.de,
+          kasong@redhat.com, jpoimboe@redhat.com, rostedt@goodmis.org,
+          hpa@zytor.com, ast@kernel.org
+In-Reply-To: <881939122b88f32be4c374d248c09d7527a87e35.1561685471.git.jpoimboe@redhat.com>
+References: <881939122b88f32be4c374d248c09d7527a87e35.1561685471.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/debug] objtool: Add support for C jump tables
-Git-Commit-ID: 87b512def792579641499d9bef1d640994ea9c18
+Subject: [tip:x86/debug] bpf: Fix ORC unwinding in non-JIT BPF code
+Git-Commit-ID: e55a73251da335873a6e87d68fb17e5aabb8978e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,120 +73,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  87b512def792579641499d9bef1d640994ea9c18
-Gitweb:     https://git.kernel.org/tip/87b512def792579641499d9bef1d640994ea9c18
+Commit-ID:  e55a73251da335873a6e87d68fb17e5aabb8978e
+Gitweb:     https://git.kernel.org/tip/e55a73251da335873a6e87d68fb17e5aabb8978e
 Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Thu, 27 Jun 2019 20:50:46 -0500
+AuthorDate: Thu, 27 Jun 2019 20:50:47 -0500
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 9 Jul 2019 13:55:46 +0200
+CommitDate: Tue, 9 Jul 2019 13:55:57 +0200
 
-objtool: Add support for C jump tables
+bpf: Fix ORC unwinding in non-JIT BPF code
 
-Objtool doesn't know how to read C jump tables, so it has to whitelist
-functions which use them, causing missing ORC unwinder data for such
-functions, e.g. ___bpf_prog_run().
+Objtool previously ignored ___bpf_prog_run() because it didn't understand
+the jump table.  This resulted in the ORC unwinder not being able to unwind
+through non-JIT BPF code.
 
-C jump tables are very similar to GCC switch jump tables, which objtool
-already knows how to read.  So adding support for C jump tables is easy.
-It just needs to be able to find the tables and distinguish them from
-other data.
+Now that objtool knows how to read jump tables, remove the whitelist and
+annotate the jump table so objtool can recognize it.
 
-To allow the jump tables to be found, create an __annotate_jump_table
-macro which can be used to annotate them.
+Also add an additional "const" to the jump table definition to clarify that
+the text pointers are constant.  Otherwise GCC sets the section writable
+flag and the assembler spits out warnings.
 
-The annotation is done by placing the jump table in an
-.rodata..c_jump_table section.  The '.rodata' prefix ensures that the data
-will be placed in the rodata section by the vmlinux linker script.  The
-double periods are part of an existing convention which distinguishes
-kernel sections from GCC sections.
-
+Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+Reported-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
 Cc: Kairui Song <kasong@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lkml.kernel.org/r/0ba2ca30442b16b97165992381ce643dc27b3d1a.1561685471.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/881939122b88f32be4c374d248c09d7527a87e35.1561685471.git.jpoimboe@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/compiler.h |  5 +++++
- tools/objtool/check.c    | 27 ++++++++++++++++++++-------
- 2 files changed, 25 insertions(+), 7 deletions(-)
+ kernel/bpf/core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 8aaf7cd026b0..f0fd5636fddb 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -116,9 +116,14 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 	".pushsection .discard.unreachable\n\t"				\
- 	".long 999b - .\n\t"						\
- 	".popsection\n\t"
-+
-+/* Annotate a C jump table to allow objtool to follow the code flow */
-+#define __annotate_jump_table __section(".rodata..c_jump_table")
-+
- #else
- #define annotate_reachable()
- #define annotate_unreachable()
-+#define __annotate_jump_table
- #endif
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 080e2bb644cc..1e12ac382a90 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ {
+ #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+ #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+-	static const void *jumptable[256] = {
++	static const void * const jumptable[256] __annotate_jump_table = {
+ 		[0 ... 255] = &&default_label,
+ 		/* Now overwrite non-defaults ... */
+ 		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
+@@ -1558,7 +1558,6 @@ out:
+ 		BUG_ON(1);
+ 		return 0;
+ }
+-STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
  
- #ifndef ASM_UNREACHABLE
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 172f99195726..27818a93f0b1 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -18,6 +18,8 @@
- 
- #define FAKE_JUMP_OFFSET -1
- 
-+#define C_JUMP_TABLE_SECTION ".rodata..c_jump_table"
-+
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-@@ -1035,9 +1037,15 @@ static struct rela *find_switch_table(struct objtool_file *file,
- 
- 		/*
- 		 * Make sure the .rodata address isn't associated with a
--		 * symbol.  gcc jump tables are anonymous data.
-+		 * symbol.  GCC jump tables are anonymous data.
-+		 *
-+		 * Also support C jump tables which are in the same format as
-+		 * switch jump tables.  For objtool to recognize them, they
-+		 * need to be placed in the C_JUMP_TABLE_SECTION section.  They
-+		 * have symbols associated with them.
- 		 */
--		if (find_symbol_containing(rodata_sec, table_offset))
-+		if (find_symbol_containing(rodata_sec, table_offset) &&
-+		    strcmp(rodata_sec->name, C_JUMP_TABLE_SECTION))
- 			continue;
- 
- 		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
-@@ -1277,13 +1285,18 @@ static void mark_rodata(struct objtool_file *file)
- 	bool found = false;
- 
- 	/*
--	 * This searches for the .rodata section or multiple .rodata.func_name
--	 * sections if -fdata-sections is being used. The .str.1.1 and .str.1.8
--	 * rodata sections are ignored as they don't contain jump tables.
-+	 * Search for the following rodata sections, each of which can
-+	 * potentially contain jump tables:
-+	 *
-+	 * - .rodata: can contain GCC switch tables
-+	 * - .rodata.<func>: same, if -fdata-sections is being used
-+	 * - .rodata..c_jump_table: contains C annotated jump tables
-+	 *
-+	 * .rodata.str1.* sections are ignored; they don't contain jump tables.
- 	 */
- 	for_each_sec(file, sec) {
--		if (!strncmp(sec->name, ".rodata", 7) &&
--		    !strstr(sec->name, ".str1.")) {
-+		if ((!strncmp(sec->name, ".rodata", 7) && !strstr(sec->name, ".str1.")) ||
-+		    !strcmp(sec->name, C_JUMP_TABLE_SECTION)) {
- 			sec->rodata = true;
- 			found = true;
- 		}
+ #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+ #define DEFINE_BPF_PROG_RUN(stack_size) \
