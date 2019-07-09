@@ -2,157 +2,88 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EC1C73C56
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFEAC73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82894214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48272214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 20:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562703500;
-	bh=crdGPQ/iD9mYVu0eYQ4YGZ1dxC8m0vkoOtgzPp11MLo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=xkrK70oulhon9oL8uhuUkxjzijso/Hy41bPtIYHpPxuQjzUZV2A/j1ygZAUYd/yCr
-	 jTbeCrBmXyHPmGzMRY5QC5cM/Bx6H5ymDRZdzfIuSRIfX94NOyj+NPelIViy+grYrC
-	 s7CJtsGdNWm8U4C6NnogpWGIQpArknQdQjvk5Cq0=
+	s=default; t=1562703505;
+	bh=Zyh5r/5EBCY4ciidDmlCs4cfQlXb8Lq5dDHE2YULHMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s7qewlGMZueO1R9FlTG8uAGDEXezPbiUPArMN+UxzxacWihVsI8tv18SEof6mxKP5
+	 7G2Z/yEOJp+txowjw2u/Z9givtCy1bMVCP53PF1/zmBJQFVSPiyjGxo8X+XmvDhKDe
+	 KIcluP0CvrepQcu4lPQdZwwSj38+V0W7mhxcxfcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfGIUST (ORCPT
+        id S1729736AbfGIUSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 16:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbfGIUSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 16:18:18 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744782073D;
-        Tue,  9 Jul 2019 20:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562703497;
-        bh=crdGPQ/iD9mYVu0eYQ4YGZ1dxC8m0vkoOtgzPp11MLo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZtDCAB+kldnnbEKMM/qHETC/OcIa+r6yFdV/RdQnjlvJLsdjorCUMVQQBAKZXYqP5
-         UqDFQeT+OenpnPXmDhmq4feNMVtshJybs5NvZ6tzgnSqPVPnN5QlqCF+PY5c48llwY
-         gJTt2DvrFWurelfG56S9cyxIq32cgeK9dsCLyN/k=
-Date:   Tue, 9 Jul 2019 13:18:14 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 4 open syzbot bugs in sound subsystem
-Message-ID: <20190709201814.GJ641@sol.localdomain>
-Mail-Followup-To: alsa-devel@alsa-project.org,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        Tue, 9 Jul 2019 16:18:24 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35393 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfGIUSX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 16:18:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id m24so36493160ioo.2;
+        Tue, 09 Jul 2019 13:18:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6NbN5JKfhtthh8rHQeJ+/J+roRFzMU2Xl0uQ4XuNSKE=;
+        b=XUnw5odP/R3U8VGWVqf3R0JXkg14pbS+/woBtg1lNMjDxcNG8a4DEY81aAoK5+y5bo
+         NBZ9PWS2/9cTKHr9R9AIKItONBuPiTo1gN/GiCUDFsMWxhrHx5CKxi1FEaTBhZVAf4Iu
+         /WS97fzrBohss2VRA2tT8gclPYgrrJAe1jR5+koe2pT6IeQLfP8ApA4TZTUxFnNEobJv
+         NSCnGbGMUQyy1pYE1Pt8cnuTzJXjYkUireFLvh9eshW860MulRMtYPv3uGY61Iqx6uUj
+         H8kiRTj/8QxNMzthfnr9bPl3PorCRwHTSKPOkxpLWRjV11q+xchi6c75H63dhQ3EKvIu
+         7Dig==
+X-Gm-Message-State: APjAAAUFPux6KrjE/1xNCCbg7/oSZziFjCAIVHdUCTabAuoiZdQ5uzW2
+        C03+JxwhK4nJ8LO5NieCoA==
+X-Google-Smtp-Source: APXvYqw/ZIS8sL7/LEDguheL73Ps4hwNdYccJgnnmSIUOUBhRrcMKya7HG/yRUQA4qaafy1VzHHMLA==
+X-Received: by 2002:a5d:964d:: with SMTP id d13mr28379833ios.224.1562703502330;
+        Tue, 09 Jul 2019 13:18:22 -0700 (PDT)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t4sm17179836iop.0.2019.07.09.13.18.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 13:18:21 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 14:18:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson.Huang@nxp.com
+Cc:     catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com,
+        sboyd@kernel.org, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
+        ping.bai@nxp.com, daniel.baluta@nxp.com, peng.fan@nxp.com,
+        abel.vesa@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 2/4] dt-bindings: clock: imx8mm: Add system counter clock
+Message-ID: <20190709201820.GA25832@bogus>
+References: <20190621070720.12395-1-Anson.Huang@nxp.com>
+ <20190621070720.12395-2-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190621070720.12395-2-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+On Fri, 21 Jun 2019 15:07:18 +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Add i.MX8MM system counter clock macro definition.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  include/dt-bindings/clock/imx8mm-clock.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 4 of them as possibly being bugs in the sound subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
-
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the sound subsystem, please let me know,
-and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              INFO: rcu detected stall in snd_seq_write
-Last occurred:      72 days ago
-Reported:           316 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=33501520944e11adedf1c454eec4cb818bee16c8
-Original thread:    https://lkml.kernel.org/lkml/000000000000e5050205746dcbb0@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-The original thread for this bug received 1 reply, 315 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e5050205746dcbb0@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: suspicious RCU usage in line6_pcm_acquire
-Last occurred:      44 days ago
-Reported:           75 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a0ea128a37bfe56208042c02d080873dcbdf69a0
-Original thread:    https://lkml.kernel.org/lkml/0000000000007cb1ee0587591549@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a sound USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+06b7a5a8c4acc0445995@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000007cb1ee0587591549@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in wake_up_if_idle
-Last occurred:      117 days ago
-Reported:           253 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=b1e300cd7b124fc83dd4199d4d1df26310111b0f
-Original thread:    https://lkml.kernel.org/lkml/00000000000066ab7105795f245e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+2c1253bc508adef78a7f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000066ab7105795f245e@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in snd_seq_write
-Last occurred:      110 days ago
-Reported:           315 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=9366cef8455b032553567ce096a5b31d8307b7dc
-Original thread:    https://lkml.kernel.org/lkml/0000000000001f74de0574710d3e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001f74de0574710d3e@google.com
-
+Reviewed-by: Rob Herring <robh@kernel.org>
