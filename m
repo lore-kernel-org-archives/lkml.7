@@ -2,114 +2,92 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7EDC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1E5C73C53
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358612080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562697625;
-	bh=koCanOkVczvS52T73JPshYve2oe1v8MC5CVzIbc6FFw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oeLejsVkRYh3dB0GGPig7gT8B9rKSk/NB8WBx9nCka8yPYXUduR/T+0Jyz2r/UPZu
-	 UMTqhTQ08npN3KLGZUYJyNW6AOFlEQOuJ3mAGXBpLwFIC2uSRmniKET7i2j8TjeZ7I
-	 SjeBW2IRerluC7a7Z8qCcjyqnAcQC6q1kHbgZ6JI=
+	by mail.kernel.org (Postfix) with ESMTP id 2F76D2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:40:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFkVmif1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfGISkY (ORCPT
+        id S1728987AbfGISkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfGISkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:40:23 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4812A208C4;
-        Tue,  9 Jul 2019 18:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562697623;
-        bh=koCanOkVczvS52T73JPshYve2oe1v8MC5CVzIbc6FFw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Rg4Kf+gWwQB7wGTO2ZJxE7BgB+ir2DZV1nIP7CbvwvdjxUxvCug7xMpH3KfH0n2o+
-         ufWwlDpcVBFPYzl49Vpcll+lEFdbBJAUXE62gdJHMT2TSAT8hbrryMOYIKzQDC04no
-         rsaJH+G7kjHSg0EM5NflHr78qmgCv9XXNXon6Irw=
-Received: by mail-qt1-f178.google.com with SMTP id j19so22627980qtr.12;
-        Tue, 09 Jul 2019 11:40:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAWajnfUl5VpdaKr4IRi8x0vHvfyc69vFe4ViDfbg+FeHBVJQ6jD
-        LhAxuh59UGIfRGZrnIqSBgScNkuHvZA8ZUbI1g==
-X-Google-Smtp-Source: APXvYqzVdHUQy7kNe51NTmoxLixeCI0ZKWKOgMr6PxrBeJUBchUQj/myky27Tg2C8vC5QI9tQkIWqsTc+fws8sN66A8=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr19918584qtb.224.1562697622534;
- Tue, 09 Jul 2019 11:40:22 -0700 (PDT)
+        Tue, 9 Jul 2019 14:40:51 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46787 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfGISkv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 14:40:51 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c2so8959808plz.13;
+        Tue, 09 Jul 2019 11:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r5rDK71XWscMn1oNPuapvmgB59JToguqPL3GDl1cLlY=;
+        b=bFkVmif1fqBs+lTwEumGgLe28fP/vzIf+cS4HWD8msXxTNkbcUbYUclnEMjDP5yn97
+         0Ua1cdywTmJ9BcZX8XW9OHxs7xZZijsmxU06XBIbC7tWsn6s8nHB8zKwhMpZf7IZLI5Z
+         pwdi2Giv/TgYFupLTIS8oh3PAl7Y5qevzvhKX6h8finJVcw4G1YDXr9bTMhpWet7ke8P
+         rJ/7f4LPWJd//mUisr0l5eKKehXcu8odjWDbgqaO1xtSq9e3VnfW9bvX4duF3PMuUA8z
+         om+mKdKzyu6I5oLEanvJPwuUm/m/KWGTA4UDiDidJ/HPs4d+HHZljxvIMFivu4a5PfFp
+         l65w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r5rDK71XWscMn1oNPuapvmgB59JToguqPL3GDl1cLlY=;
+        b=rnONjkO8LrNvStJrthiGlOePzOVAXmpH+TgdHMb0SkWBQymkNgw6/VVTLkVyGpJgOM
+         GPXH+brhsSl7RCxI+ldCcvS/Vu70OHp7UcbQ8JtQMW6kHmOW0OLig2c7TAaEQkb4uRvj
+         8q92aDnEjMjVF1NXWNg6Hwv1fyyCwGq5vA3NxyTE1ynW66Hr3t4MXvecErwWcOt+4+yg
+         iS6AfXrTuN/NkMRdQwff8UWYute4MhWqgPJvLhqsC5wrvlmqIgProxxhBbh1pcnocn4R
+         Bw3HM5w1YXgCYoMIkcWnXHNC+9hnRdLYDzKL1LnOWcaxD8JTfPzqxICWdNazPXtKhf9k
+         TEZA==
+X-Gm-Message-State: APjAAAUV/T7kGbwwvxDQls02WadUjFKvTihwxqCVAcfT5jolY6jzoD+6
+        1MuWxzkYyPbi4onuOtucUBc=
+X-Google-Smtp-Source: APXvYqxD7/+vhEeaoia6CjVRqzyXtQKTseTX4KV0BEpkrgE9X4xtcNx2zCloiDY8nelF5rL+69epgg==
+X-Received: by 2002:a17:902:306:: with SMTP id 6mr34319588pld.148.1562697650385;
+        Tue, 09 Jul 2019 11:40:50 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 14sm45553226pfj.36.2019.07.09.11.40.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 11:40:49 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 11:40:48 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/73] 4.4.185-stable review
+Message-ID: <20190709184048.GA2656@roeck-us.net>
+References: <20190708150513.136580595@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20190707132339.GF13340@arks.localdomain> <27a3468f-e7b4-e334-5956-8db87d04ff8c@suse.de>
-In-Reply-To: <27a3468f-e7b4-e334-5956-8db87d04ff8c@suse.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 9 Jul 2019 12:40:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLsO2MBOXUj3HT6=08VNsH7Ak_iJnxzdSOK3YF5+R387w@mail.gmail.com>
-Message-ID: <CAL_JsqLsO2MBOXUj3HT6=08VNsH7Ak_iJnxzdSOK3YF5+R387w@mail.gmail.com>
-Subject: Re: [PATCH 5/6] dt-bindings: arm: Document RTD1296
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Aleix Roca Nonell <kernelrocks@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708150513.136580595@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 7, 2019 at 7:31 AM Andreas F=C3=A4rber <afaerber@suse.de> wrote=
-:
->
-> Am 07.07.19 um 15:23 schrieb Aleix Roca Nonell:
-> > Add bindings for Relatek RTD1296 SoC. And the Bannana Pi BPI-W2 board.
->
-> "Realtek", "Banana"
->
-> >
-> > Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/realtek.txt | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/realtek.txt b/Docume=
-ntation/devicetree/bindings/arm/realtek.txt
-> > index 95839e19ae92..78da1004d38c 100644
-> > --- a/Documentation/devicetree/bindings/arm/realtek.txt
-> > +++ b/Documentation/devicetree/bindings/arm/realtek.txt
-> > @@ -20,3 +20,16 @@ Root node property compatible must contain, dependin=
-g on board:
-> >  Example:
-> >
-> >      compatible =3D "zidoo,x9s", "realtek,rtd1295";
-> > +
-> > +
-> > +RTD1296 SoC
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Required root node properties:
-> > +
-> > + - compatible :  must contain "realtek,rtd1296"
->
-> I'm pretty sure that I had such a patch on the list already, so this is
-> lacking my authorship.
->
-> Also, Rob has been working to convert these to YAML, so we should
-> probably complete that first and then add RTD1296 properly.
+On Mon, Jul 08, 2019 at 05:12:10PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.185 release.
+> There are 73 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
+> Anything received after that time might be too late.
+> 
 
-I'm just waiting for you to either ack it or apply it.
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 307 pass: 307 fail: 0
 
-Rob
+Guenter
