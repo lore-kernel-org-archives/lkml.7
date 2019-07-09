@@ -2,131 +2,95 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020AAC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D6CC606D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B1B20644
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27B920644
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 07:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HzjW6hmk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMK7sXTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfGIHPI (ORCPT
+        id S1726486AbfGIHQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 03:15:08 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:59393 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfGIHPI (ORCPT
+        Tue, 9 Jul 2019 03:16:55 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34095 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfGIHQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 03:15:08 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x697ESep019286;
-        Tue, 9 Jul 2019 16:14:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x697ESep019286
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562656469;
-        bh=0tb2WfkcAoePIPurQ/sqmPHgIwP8421Q7FxdbjzURyo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HzjW6hmkzFEYcxbgep9Z5Tf5hgi9iPSB3s1e7lxHXyGcScNehXBqCl+It4S7BWTke
-         lHUBrcjdMA+vfJE+7uBpJ/qJM5bPDo05V4boQYjT8bsfbHuTXIuZS4v8lRMUKeQQYD
-         6nMnrMxx1gCRduVjE7PiTc9vwAD69ByzmiRYwgvN3MhomguT51hqzUz3juEQ1mov9+
-         8a/Edq1NgV3YkT9cAFaJns6bu5fmnBrMhiYZ7J2sQhFfYBJ3RWMsYlak3IXOPnJUn4
-         KkaAmg68QnlG0azwQPRidUPR/Uh4nwNVms7B+RP/7Wl0f/2FurKeYZPnkFS1+p5lts
-         D6pBiuEciabKg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 01/11] kbuild: do not create empty modules.order in the prepare stage
-Date:   Tue,  9 Jul 2019 16:14:19 +0900
-Message-Id: <20190709071419.17150-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jul 2019 03:16:54 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p17so18524896ljg.1;
+        Tue, 09 Jul 2019 00:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7/1AULRy8y1HiEx9Bz+oPrzaAgcFgi9QHXRFRreorpM=;
+        b=kMK7sXTRhDn09+Lq0No8DlJyEH4hovFa/bG6ty4U1rmxmSPvu93oNDIpIZMu6ynoKZ
+         /Pz11Qv196Y27/HwGj+uqzCDjooH8GSWB5/X0iQIb3iSsbaJqFY89vjbi4TO70a+KYXp
+         o8WeyT0EapFDFszpJzcIEGtIj+FHRpAKzThFEWCfOIC4AY2+CC8dg3S1S/kWQBdlmbjx
+         yTjC1l7pqibYcatDnXYhym+U1buoH9pREmAiVBHWBTU6aX3wTeGmfS5iCL0gdikilocn
+         pWyuEbT9bnBuPjc2B6NeqJ4Gr24abjPN0rN9rois9X7ykigPNP5Gl7+W1epyp9aQMoUV
+         C6vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7/1AULRy8y1HiEx9Bz+oPrzaAgcFgi9QHXRFRreorpM=;
+        b=K77F6rc7+u0w49SEBnCL60owZ/MbI9oNg0fq2Q6CadA15VB3qk0OITH5F53bxhn3uC
+         Wy/V/7pzE+C2a3uYpbprTc4ABwAy0qJzvA045mHSqA9L/wiDPdwJnxaepCcEcW6xH6Q8
+         bGmZkMqGPT4Aw4yFinzW9P/+SiCX4pzuLWoMVcrLlbRnIfjV6501qiC+2BtZWwyPzRrN
+         rkJVqzVQJaVhyYAJxtsf+AG5Ab17sEXY6ljsHu3G0RcH2FOLNl8ZNy8vGoqvYswmLAmB
+         4dm6N9dNzoUi1wYMSIqSCpDRKqMk00mLL7QCf7MO88MVSQm8dIhIR7fxRE/No1IsZiVn
+         dm3w==
+X-Gm-Message-State: APjAAAXGJRma1jtz3faKCgtIcJYe7q8kIZv7TKuTQnLAxeMzqzU+6/mX
+        Aes+MpKGOMSV0Vtt7lhjrv/wNb3jrbWpH6cqomw=
+X-Google-Smtp-Source: APXvYqwS8zbNwxZFvKHFNs76fvIN7QW6fSuukg7jtUVNSzJLauZr1E64Ec4qpC9nnhFbGFXWvTHcmX6bxEVoRGnVPlg=
+X-Received: by 2002:a2e:5b94:: with SMTP id m20mr12730498lje.7.1562656612479;
+ Tue, 09 Jul 2019 00:16:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190708150514.376317156@linuxfoundation.org>
+In-Reply-To: <20190708150514.376317156@linuxfoundation.org>
+From:   Jack Wang <jack.wang.usish@gmail.com>
+Date:   Tue, 9 Jul 2019 09:16:41 +0200
+Message-ID: <CA+res+RBxqkAJ8o+_Hrgr9-qnqqbn_iZf=GRnrUXX8rcYrMqeQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/56] 4.14.133-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, $(objtree)/modules.order is touched in two places.
+>
+> This is the start of the stable review cycle for the 4.14.133 release.
+> There are 56 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.133-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-In the 'prepare0' rule, scripts/Makefile.build creates an empty
-modules.order while processing 'obj=.'
+Merged and tested with my x86_64 systems, no regression found.
 
-In the 'modules' rule, the top-level Makefile overwrites it with
-the correct list of modules.
-
-While this might be a good side-effect that modules.order is made
-empty every time (probably this is not intended functionality),
-I personally do not like this behavior.
-
-Create modules.order only when it is sensible to do so.
-
-Going forward, $(objtree)/modules.order lists the modules that
-was built in the last successful build.
-
-This also avoids creating pointless files:
-
-  scripts/basic/modules.order
-  scripts/dtc/modules.order
-  scripts/gcc-plugins/modules.order
-  scripts/genksyms/modules.order
-  scripts/mod/modules.order
-  scripts/modules.order
-  scripts/selinux/genheaders/modules.order
-  scripts/selinux/mdp/modules.order
-  scripts/selinux/modules.order
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2:
-  - inverted the logic "preparing" -> need-modorder
- 
-
- Makefile               | 4 ++--
- scripts/Makefile.build | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 5c75ea7177f6..d8421d245f75 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1076,7 +1076,7 @@ $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
- 
- PHONY += $(vmlinux-dirs)
- $(vmlinux-dirs): prepare
--	$(Q)$(MAKE) $(build)=$@ need-builtin=1
-+	$(Q)$(MAKE) $(build)=$@ need-builtin=1 need-modorder=1
- 
- filechk_kernel.release = \
- 	echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
-@@ -1611,7 +1611,7 @@ $(objtree)/Module.symvers:
- module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
- PHONY += $(module-dirs) modules
- $(module-dirs): prepare $(objtree)/Module.symvers
--	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
-+	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@) need-modorder=1
- 
- modules: $(module-dirs)
- 	@$(kecho) '  Building modules, stage 2.';
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 776842b7e6a3..e9b3d88257dd 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -63,7 +63,7 @@ ifneq ($(strip $(real-obj-y) $(need-builtin)),)
- builtin-target := $(obj)/built-in.a
- endif
- 
--ifdef CONFIG_MODULES
-+ifeq ($(CONFIG_MODULES)$(need-modorder),y1)
- modorder-target := $(obj)/modules.order
- endif
- 
--- 
-2.17.1
-
+Regards,
+Jack Wang @ 1 & 1 IONOS Cloud GmbH
