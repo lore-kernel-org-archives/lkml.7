@@ -2,68 +2,118 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB64C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06918C606D4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306F3205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562647510;
-	bh=Z/DALeXxP48tPOTPRGt1LvGQJsykPrbwtQw663U8XCU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=rjrYcdvqYeBlSG9EZyNraZsrgvlAmtUH4bN4S91/YT2OPB4NIPcehAYvCklpadqUo
-	 R+EAzPjAT6xkSKzccFKiJxoK2fU6bglah0tAxQUz2ETeybaCtagYXfbSH4Z2uc3BAW
-	 /ZiQPf/9KwoKRCRGTNtX1tRpbezJuqst0l6YIFWo=
+	by mail.kernel.org (Postfix) with ESMTP id D01B3205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 04:45:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XfZKXd7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfGIEpI (ORCPT
+        id S1727624AbfGIEpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 00:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727570AbfGIEpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 00:45:07 -0400
-Subject: Re: [GIT PULL] cgroup changes for v5.3-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562647506;
-        bh=Z/DALeXxP48tPOTPRGt1LvGQJsykPrbwtQw663U8XCU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=pWxIkp4Z0kO/uy3W0l60X8KdO9B6k8PllBSnWb5tkCa91GLgtqjyYuZXBWHnMqa+d
-         c+sa8xqUgYl3PlIrDUYHgObv3ZFXhf5o3ElOBazH/AFuEHluAcJHxlhW6cR60z7kk9
-         LEXmARyxNeoZh13a7F2VEWm4seQjZDCU7IrVyiq4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190708171005.GG657710@devbig004.ftw2.facebook.com>
-References: <20190708171005.GG657710@devbig004.ftw2.facebook.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190708171005.GG657710@devbig004.ftw2.facebook.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.3
-X-PR-Tracked-Commit-Id: 99c8b231ae6c6ca4ca2fd1c0b3701071f589661f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 92c1d6522135050cb377a18cc6e30d08dfb87efb
-Message-Id: <156264750642.18377.15747597949297379139.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 04:45:06 +0000
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
+        Tue, 9 Jul 2019 00:45:11 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46962 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfGIEpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 00:45:09 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i8so8753907pgm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jul 2019 21:45:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w8T1boIzFFoSOnmUYhW8pmkZUoG7ex2MB+rDKpzf8fs=;
+        b=XfZKXd7gmjz5FPaPLVypAzfMeQL7XUAQdYsunJCY3edTML1McnkNitbWb6ADc6SBhM
+         Qo0eMq66Gu9Gv56plq3V0zoMDHhQApGnazKdIpO84Qk9i6oqX32jNLCetDrieaCdg+v8
+         EJrv1Cy3o3HIijQtdKVW1jbOnR62iGkmeLqCOrMOtR7lQwTf7qKtB6WW50HzQHvyaW6e
+         w7Oiq41vBHBavgTsowi5sXY3Wm/rL+7C+KAK/1lwea//U4oQmdcylRmlpNm8diu/JF3+
+         M9vnE/7+ELnEwQikJXNppyxGHxZjtjIm3Nz+RMt9X0D6uI/jIQg0NYt6YEOV8gY8gTXt
+         zIUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w8T1boIzFFoSOnmUYhW8pmkZUoG7ex2MB+rDKpzf8fs=;
+        b=mqMpvpvfUYoKFcyUdP/9meFgkghVneUb0pyuQUo4mTNuz5CulwUL/mHwGb+QsmOwrp
+         7WTSDL5wrHTcq63iFY1Xzek3PA/W//JC35L/EDa8dIRYjZ6ew2iqR1PYkloqTfzAcXOe
+         9Qnosx9YpMKSS44xX8zvck1yPUlWNe8+xl9pRc5hOkVvCU5XlBwuIHlmAI3tMJQgtJig
+         hChNpkjuaDypMex7w1I/U3/3V+EwG98JsgweWlOhBaF7htAWDK2Ky3SM4S59uxGJjhiY
+         1+gTjIlmyXtPcZnFjlNh8S34n04K4geDS7OI7zMmx2qOl8pDeu0Tsb2STz1ouAg/Ndim
+         wvBA==
+X-Gm-Message-State: APjAAAX2aSOW5j0i42V4aHGXwihQqowJMiPWJ4YjXwDSahWTO7TNYH8x
+        S7228kLnshWAbBFt3uoXvXMERg==
+X-Google-Smtp-Source: APXvYqxS1+TfUWQ4K5tWV/rky+PwoP/Nuue4PVUm0srLpT8NGOpInpCXQV6wKkHekUNntK1m1G9cwg==
+X-Received: by 2002:a63:e953:: with SMTP id q19mr28343284pgj.313.1562647508410;
+        Mon, 08 Jul 2019 21:45:08 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id 14sm38828425pfj.36.2019.07.08.21.45.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jul 2019 21:45:06 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 10:15:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Assign highest opp as suspend opp
+Message-ID: <20190709044504.gyljwwnxdt5niur5@vireshk-i7>
+References: <20190704061403.8249-1-Anson.Huang@nxp.com>
+ <20190704061403.8249-2-Anson.Huang@nxp.com>
+ <DB7PR04MB50519C02D90675070F21501DEEFA0@DB7PR04MB5051.eurprd04.prod.outlook.com>
+ <20190708082511.py7gnjbqyp7bnhqx@vireshk-i7>
+ <DB3PR0402MB391622133CD116FDE26A4F9AF5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190708084957.waiwdun327pgvfv4@vireshk-i7>
+ <DB3PR0402MB39164E2F386181255ED37F45F5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB39164E2F386181255ED37F45F5F60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jul 2019 10:10:05 -0700:
+On 08-07-19, 08:54, Anson Huang wrote:
+> Each OPP has "opp-supported-hw" property as below, the first value needs to be
+> checked with speed grading fuse, and the second one needs to be checked with
+> market segment fuse, ONLY both of them passed, then this OPP is supported. It
+> calls dev_pm_opp_set_supported_hw() to tell OPP framework to parse the OPP
+> table, this is my understanding.
+> 
+> opp-supported-hw = <0x8>, <0x3>;
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.3
+Right, so that's what I was expecting.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/92c1d6522135050cb377a18cc6e30d08dfb87efb
+One thing we can do is change the binding of OPP core a bit to allow
+multiple OPP nodes to contain the "opp-suspend" property and select
+the one finally with the highest frequency. That would be a better as
+a generic solution IMO.
 
-Thank you!
+And then a small OPP core patch will fix it.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+viresh
