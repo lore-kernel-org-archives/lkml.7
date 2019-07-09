@@ -2,114 +2,110 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2841CC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F43CC606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE00520656
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562637869;
-	bh=YZpg5fpi6lXC0GaYIGh+WMozdfyUT/OwKOBcLtEzHr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=daFsW3yFXVt3vd+2jFQ27hvs9BhZEwqZfdQHG0b2VHLngDc5XKB/75K//Td4wPaoV
-	 5JIU77qrT11N3fUE/vrjJ/tgckjV5oZKjhnRYc9EXGQw37Mf0pBBOLPvu08FZCTEZD
-	 y8rZjPLsnZ1cNqiOj40YQ4iOlQ9ccjWUMPGBEdo4=
+	by mail.kernel.org (Postfix) with ESMTP id CAB27216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 02:06:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kfr1/PGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfGICE3 (ORCPT
+        id S1726928AbfGICGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 22:04:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46552 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfGICE2 (ORCPT
+        Mon, 8 Jul 2019 22:06:23 -0400
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:42359 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfGICGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 22:04:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so39690982iol.13;
-        Mon, 08 Jul 2019 19:04:28 -0700 (PDT)
+        Mon, 8 Jul 2019 22:06:23 -0400
+Received: by mail-ot1-f46.google.com with SMTP id l15so18274513otn.9;
+        Mon, 08 Jul 2019 19:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eYj1Urt4ysIwReYjMONvvY2aZqx7qW5Uw8WC3wX0qTM=;
+        b=Kfr1/PGaDTHZN+rc71J4dPZNBWAv4j4riuKHstTdGOUsVcFydKW0hO0SoalCguALTJ
+         d1cMyr9glOWx3Ol2ooCuBlqbk3DkWf86IdkZcOkMDiJPPT13HKh0I7Syx1E30SeSxT7g
+         J4v03dIzz/P8o9pOJOe5bUjRdpnPGcWC9Mga+h/6L/iiVL60ci1KZbBfwEF571y5+IOi
+         Y+RggHRAdUk1Y5uYJ//1b0SRgAkZKVUcI3mjVrqWqO0TInjS+wY252phx6ZyJH09U4r2
+         jWP96H7vtBlFcV3uXTJ/fotr2Gkqsnv2jACBEMrr931A0hK34o1/Vt0jAUTlTA7fIoXC
+         LtyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JXZUHBir01wKZU7m72S+FiHr/yCGvCa1uAUPwxtao4g=;
-        b=Q9QE3E6rwb+uVw8djey06dXZuHIaycSrKNtzeihPUhu+cuc0ew0LmXHCzcZmYKFXRY
-         uOGNe0cyIe9F109V6aKAAuQsCFIgVO79ro3ta7yo6qgSz0CpEzg1gpzxKa162eKdhSn6
-         qCZ0tqZQG34aZaiLGtRGaM34+Jzy5b2+ixnX/dNflgZhhqv5VvJiZDj56obtm+VvstDh
-         BsELPCAGaKM8JGVMPPUlp7nQdzzj8OnuK1lqKd7cz4OnRanmEco+wZDLIJE0UJab2kb2
-         BIYT98dbqqbbLw2yOlwpatXs3IdelWnhhrBirkc2WkVyU/Uz3d+Jo0WadSEVr6cM90+y
-         6fIA==
-X-Gm-Message-State: APjAAAXpIZmd0cm3Mku7QTyY4yvqWIZU1Pba6DiymDIe8QHOrEuToHno
-        TxW+Igaq7eY0Z6aD+Nfb0Q==
-X-Google-Smtp-Source: APXvYqyP35uiyARAwCEQK3dA40fjTAx3jOq6/vIt3BedPGtqqb9uB7dRGP8Nsa9kwgwwSopcG1TmEQ==
-X-Received: by 2002:a5e:8f08:: with SMTP id c8mr1224295iok.52.1562637867706;
-        Mon, 08 Jul 2019 19:04:27 -0700 (PDT)
-Received: from localhost ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r7sm17663560ioa.71.2019.07.08.19.04.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 19:04:27 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 20:04:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
-Message-ID: <20190709020425.GA7984@bogus>
-References: <20190607154410.10633-1-paul@crapouillou.net>
- <20190607154410.10633-2-paul@crapouillou.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eYj1Urt4ysIwReYjMONvvY2aZqx7qW5Uw8WC3wX0qTM=;
+        b=XvIqI7ufGlV7s6hnpBrG4M8v5zFrX7EmVq8T/IgtMrLEInar+0Rgh/W2kiS59JPU89
+         ejUE7HD3X7vai5e5+csN3nMlYMKwy65LOSgS9BfP4QD38eZJ/n0ZFbU2sBdkc88ri4ua
+         IlSJUfv3OEWOde+L+XCq4ezy7MtBxEv535jaGms5xyClYPzP9k1TRoLanN6fHhKQYPn0
+         vM/+3IGzh0eQ9akhNH1W27HDz4MgOYrU9AmeMyyhWpkIMRWBMQT8V6L7ptwj0ze3ynun
+         76R7RwrGvVLqIMdzzNi8u8jVQGqNah5DWaGP/yA2xyJ+7koOoBPXNWTKhf60HAngnV0Y
+         Vffg==
+X-Gm-Message-State: APjAAAUDGjte5a4ybB4rI9wZ75zNIuBmrhLjhpa724AAJfZVnI+5Szeo
+        HaGNr1igDG6+F/6xlZEMev7Cq/rx1aENFI/QrCI=
+X-Google-Smtp-Source: APXvYqwZZGXm4qZQ5vlJLgNOFcE9Od7u3DJSijuuWu8K/Rkg/4jLqywIFFvortUDZfDdG6JgF5cm/7G/iQCxw1EIPng=
+X-Received: by 2002:a9d:62c4:: with SMTP id z4mr2358135otk.56.1562637982324;
+ Mon, 08 Jul 2019 19:06:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607154410.10633-2-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
+ <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
+ <20190626145413.GE6753@char.us.oracle.com> <1561575536.25880.10.camel@amazon.de>
+ <alpine.DEB.2.21.1906262119430.32342@nanos.tec.linutronix.de> <7f721d94-aa19-20a4-6930-9ed4d1cd4834@oracle.com>
+In-Reply-To: <7f721d94-aa19-20a4-6930-9ed4d1cd4834@oracle.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 9 Jul 2019 10:06:09 +0800
+Message-ID: <CANRm+CyCwz7V3fvx48FXiSXkDer1B6bMGwzvoA9vgccxK6gqZw@mail.gmail.com>
+Subject: Re: cputime takes cstate into consideration
+To:     Ankur Arora <ankur.a.arora@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Raslan, KarimAllah" <karahmed@amazon.de>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 05:44:05PM +0200, Paul Cercueil wrote:
-> Right now none of the Ingenic-based boards probe this driver from
-> devicetree. This driver defined three compatible strings for the exact
-> same behaviour. Before these strings are used, we can remove two of
-> them.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: Rebase on v5.2-rc3
-> 
->  Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> index 7d9d3f90641b..493bec80d59b 100644
-> --- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> @@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
->  =============================
->  
->  Required properties:
-> -- compatible: One of:
-> -  * "ingenic,jz4740-pwm"
-> -  * "ingenic,jz4770-pwm"
-> -  * "ingenic,jz4780-pwm"
-> +- compatible: Should be "ingenic,jz4740-pwm"
-
-Are you sure all 3 chips are exactly the same features and bugs?
-
-The correct thing to do here generally is the 4770 and 4780 would also 
-have ingenic,jz4740-pwm as a fallback compatible. Then the driver can 
-match on that until you find some difference and can use the more 
-specific compatible.
-
->  - #pwm-cells: Should be 3. See pwm.txt in this directory for a description
->    of the cells format.
->  - clocks : phandle to the external clock.
-> -- 
-> 2.21.0.593.g511ec345e18
-> 
+also Cc Frederic,
+On Tue, 9 Jul 2019 at 10:00, Ankur Arora <ankur.a.arora@oracle.com> wrote:
+>
+> On 2019-06-26 12:23 p.m., Thomas Gleixner wrote:
+> > On Wed, 26 Jun 2019, Raslan, KarimAllah wrote:
+> >> On Wed, 2019-06-26 at 10:54 -0400, Konrad Rzeszutek Wilk wrote:
+> >>> There were some ideas that Ankur (CC-ed) mentioned to me of using the perf
+> >>> counters (in the host) to sample the guest and construct a better
+> >>> accounting idea of what the guest does. That way the dashboard
+> >>> from the host would not show 100% CPU utilization.
+> >>
+> >> You can either use the UNHALTED cycles perf-counter or you can use MPERF/APERF
+> >> MSRs for that. (sorry I got distracted and forgot to send the patch)
+> >
+> > Sure, but then you conflict with the other people who fight tooth and nail
+> > over every single performance counter.
+> How about using Intel PT PwrEvt extensions? This should allow us to
+> precisely track idle residency via just MWAIT and TSC packets. Should
+> be pretty cheap too. It's post Cascade Lake though.
+>
+> Ankur
+>
+> >
+> > Thanks,
+> >
+> >       tglx
+> >
+>
