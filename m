@@ -2,83 +2,174 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0FBC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D88C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE54214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEAF2173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562680109;
+	bh=JN693HyMmOmzS0bNwb+eUOUnWSLeYN3drCnU1nNmjsQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Ucg/Jw7vWJ201H9N2GADCW9KLG7Vf5VclxpELx86gda+drd6enPqkpwkgL5Gh//PL
+	 vBNzrgEtksNZhTpN1HvHbhmath2sfv0SyEhsrGNl5e/mu/laIDs8xQahPmt9NBUuzo
+	 rXBdf6lj1UOlZ0Dv/aVXufNlDByGecrf9CrSIpcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfGINqP (ORCPT
+        id S1726814AbfGINs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:46:15 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:35421 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725947AbfGINqP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:46:15 -0400
-Received: from [IPv6:2001:983:e9a7:1:10f:829c:8d05:60ea] ([IPv6:2001:983:e9a7:1:10f:829c:8d05:60ea])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id kqRbhm0bA0SBqkqRch39E3; Tue, 09 Jul 2019 15:46:12 +0200
-Subject: Re: [PATCH 0/5]Add support for mt2701 JPEG ENC support
-To:     Xia Jiang <xia.jiang@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com
-References: <20190709032103.10291-1-xia.jiang@mediatek.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <79316488-30fd-7ff3-7598-d29f85f663ab@xs4all.nl>
-Date:   Tue, 9 Jul 2019 15:46:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 9 Jul 2019 09:48:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbfGINs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:48:28 -0400
+Received: from lerouge.home (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 065BC214AF;
+        Tue,  9 Jul 2019 13:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562680107;
+        bh=JN693HyMmOmzS0bNwb+eUOUnWSLeYN3drCnU1nNmjsQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JLLzYdqc+adtmRDqO0x7oEpeqr651kv5hcj12INlJwHZbI/9PSb6UbzkqLoNZSise
+         RsJG8mJoFsGOtwm6gW0OinHnbKKvoAv3K7J2CmBnZL5YdLykhgDf0NiYPMFYPD4XLF
+         A8rpciLFB+6KGALGLVpZeudMguT5+Ni3d1dIOl9w=
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 0/2] perf/hw_breakpoint: Fix breakpoint overcommit issue
+Date:   Tue,  9 Jul 2019 15:48:19 +0200
+Message-Id: <20190709134821.8027-1-frederic@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190709032103.10291-1-xia.jiang@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJOEIUcU2sXWd9bC50a4eYZ5LTEqfEC1JRULW/bkWFrKdVBQ/lekp5KR2UKQdl9uV4VWVClgZWcLqUO4U/SIIm7ISiTjndpkJheBiYNaEAFvQfVeC1hE
- qDSQfIJmk/pjXs8utQp3DTtOqUIptglNMx5+x4W/J5vYwRdieV76rYwt1uzqXQP6js809vDQcbILwA5sHqYWI/2J/6a9b45DeDh3orTZ/MxP8kPO9df14mwJ
- S1MxCRveuwBZtb6R/KFayiMT4RsCwFGoULDHt6TnGD9ginkNVzqp/JANQXm3ffjpGyQ1B89xPCMKOXpqGVRCjFN5k+PEhwSEztmjFZeK0NzNE2i/wB5ClqDe
- RDVeE6Da5JzSxbV288V5nLRHHD6Iiw12bgt4gA4/tVRdbP21dSIhdfhVjemZJW0GaP9t/FwrwVa8YWaW5MKuFSuJDMJGTiu3OKl1FSShYw12gq2WUYai9KS5
- Uve2BsE7IGAhi4w20a4KGIzBzy/c++Y+EoLyagdfByRhV2fiHdnmHVYINifeHHB/H/FnuteLO9LZyev32Lf9q+ICby6ut90xUSvvun/Rww+WE7yrbYjgWhRf
- fU5md9AtQ7NlMAtoIsmAr3MWw3oCPUzteY4AB6RKmjSJLgbw/RSmV51M+EYKlibLPDQZJFw/AKh1dPHyyk0cHGJ4novIdqenBjG0Au0Zqz+D5aduPGNIgDoH
- 1Zb5Qe7V6I8=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/19 5:20 AM, Xia Jiang wrote:
-> This patchset add support for mt2701 JPEG ENC support.
-> 
-> This is the compliance test result for jpeg dec and enc.
-> 
-> The JPEG dec log:
-> ------------------------------------------------------------
-> v4l2-compliance -d /dev/video0
-> v4l2-compliance SHA: 08fed4d0edb1492b91d9d1054c36fed95c372eaa, 32 bits
 
-Hmm, the SHA indicates that you are using an old v4l2-compliance version.
-Please get the latest code from the v4l-utils git repo.
+Syzbot has found a breakpoint overcommit issue:
 
-<snip>
+https://lore.kernel.org/lkml/000000000000639f6a0584d11b82@google.com/
 
-> Buffer ioctls:
->                 fail: v4l2-test-buffers.cpp(713): q.create_bufs(node, 1, &fmt) != EINVAL
+It took me a long time to find out what the actual root problem was. Also
+its reproducer only worked on a few month old kernel but it didn't feel like
+the issue was actually solved.
 
-This should be fixed: this test tries to create a buffer of half the minimum
-size, and the driver doesn't check that it is too small.
+I eventually cooked a reproducer that works with latest upstream, see in
+the end of this message.
 
-Ditto for the encoder.
+The fix is just a few liner but implies to shut down the context swapping
+optimization for contexts containing breakpoints.
 
-Regards,
+Also I feel like uprobes may be concerned as well as it seems to make use
+of event.hw->target after pmu::init().
 
-	Hans
+git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
+	perf/pin
+
+HEAD: 35b749650cc72402ae47beb5e0048c36636a4002
+
+Thanks,
+	Frederic
+---
+
+Frederic Weisbecker (2):
+      perf: Allow a pmu to pin context
+      perf/hw_breakpoints: Pin perf contexts of breakpoints
+
+
+ include/linux/perf_event.h    | 2 ++
+ kernel/events/core.c          | 6 ++++++
+ kernel/events/hw_breakpoint.c | 1 +
+ 3 files changed, 9 insertions(+)
+
+---
+
+#define _GNU_SOURCE
+#include <linux/perf_event.h>
+#include <linux/hw_breakpoint.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+static struct perf_event_attr attr = {
+	.type = PERF_TYPE_BREAKPOINT,
+	.size = sizeof(attr),
+	.config = 0,
+	.sample_period = 1,
+	.sample_type = PERF_SAMPLE_IP,
+	.read_format = PERF_FORMAT_ID,
+	.inherit = 1,
+	.pinned = 1,
+	.wakeup_events = 1,
+	.bp_type = HW_BREAKPOINT_W,
+	.bp_addr = 0,
+	.bp_len = 8,
+};
+
+static void loop(int secs)
+{
+	struct timespec tp;
+	int start;
+
+	clock_gettime(CLOCK_MONOTONIC, &tp);
+	start = tp.tv_sec;
+
+	for (;;) {
+		clock_gettime(CLOCK_MONOTONIC, &tp);
+		if (tp.tv_sec - start >= secs)
+			return;
+	}
+}
+
+int main(int argc, char **argv)
+{
+	int fd, i, status;
+	pid_t child1, child2;
+
+	for (i = 0; i < 4; i++) {
+		fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
+		if (fd < 0)
+			perror("perf_event_open");
+	}
+
+	child1 = fork();
+	if (child1 == 0) {
+		loop(1);
+		return 0;
+	}
+
+	child2 = fork();
+	if (child2 == 0) {
+		loop(2);
+		fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
+		if (fd < 0)
+			perror("perf_event_open");
+
+		return 0;
+	}
+
+	return 0;
+}
+
