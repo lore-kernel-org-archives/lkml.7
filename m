@@ -2,70 +2,117 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107D2C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969DFC606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD882173C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA242166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562636764;
-	bh=1/ncZ0bkdCQFqOC4y5Exnfr4ePSYLP1FsVliwhs4oWg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=jDn+ZgpN04Ee5ftupPC8xLt9BUqEufe88FRyiaHjFt09d/swDgUzZ17AyxvAdFN9r
-	 V8fwfs0g7WrdZPcMdZKy08qIsHP9ZcviMRO7QQg4jlx5XBao/v/wN3vZOHBZw9zZa+
-	 nyD0p3GFCSjA+DUBXmm1J/5muBjaCXICx0UZRGoM=
+	s=default; t=1562636917;
+	bh=9jIK3f/nertqbJ29ZT44Fr97f+Z69TiMs+QyJKaA7OQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=csZzY4ZLSezPCiQEXMveWezYaU7B8h11qT9quFImVFI/OXPk1SNuyytytZrfm95ke
+	 Pkxl0/DR29cKFTmDOKq77JjVMsXhliKcwDmXKMZXd7r7oPZQQ5po6YQWAlud2/8u3t
+	 Hal8/dfog2yuc/eBKytXStJssUn07dSfof8K4JFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfGIBqE (ORCPT
+        id S1726917AbfGIBsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbfGIBpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:45:07 -0400
-Subject: Re: [GIT PULL] RAS changes for v5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562636706;
-        bh=1/ncZ0bkdCQFqOC4y5Exnfr4ePSYLP1FsVliwhs4oWg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=JIshwz06zrsJTQTYCrkxb3VYrEv2yn+g2boR1AP2HXb+supcJpWMugW47jZJ5QWrE
-         sk2aPlvKavPiBmXvgmYPMMSr/uNXb16RqgSvhPj/NgFhYcs7M2F4GkyelVWGQgYmbN
-         4t1bvO+0F+QdyQmt4LSW+cE8QpUUBIqrx0/DM18M=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190708095102.GA59026@gmail.com>
-References: <20190708095102.GA59026@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190708095102.GA59026@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
-X-PR-Tracked-Commit-Id: 6e4f929ea8b2097b0052f6674de839a3c9d477e9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 090bc5a2a91499c1fd64b78d125daa6ca5531d38
-Message-Id: <156263670639.17382.12967288876934673525.pr-tracker-bot@kernel.org>
-Date:   Tue, 09 Jul 2019 01:45:06 +0000
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
+        Mon, 8 Jul 2019 21:48:36 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42346 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfGIBsg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:48:36 -0400
+Received: by mail-io1-f65.google.com with SMTP id u19so39671009ior.9;
+        Mon, 08 Jul 2019 18:48:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GvfjGGlw3UxBPItY7HGBbTvYAxu5k/MIEMpMCZvF99I=;
+        b=UTaJYLljlZRjSzoNqmRsxcW5o04wdkEn61vm2x2yoJQZNWFEPz/TXS6F6f10E2I828
+         TWYm8pLJKD3K7eQWrcBFemgo6df+9o8hXMgPQjGxX1QiefPirXKZRO4SKmosuOydeHD9
+         gjvbf//mAUMVOZ46MMCgjpLg5EI3znf4dzDcPqcO0b28PNJYv5iHHSVwtjVt0fZPsR3T
+         zK22YQVpMUlsMW9CWNkb0JQg21Mkct0kjXJ0Vzdg4TeqP8M95FJ4qct0sHE0a7G/I1jY
+         Zt5X2HIs5GNssXAG/WYrtT/pxtRRRDNyS1Lqbto+qwxpp0CXlml3MyYBXki+Tpv7xFDe
+         L/HQ==
+X-Gm-Message-State: APjAAAXFyqpmeqfTpnmXG+jSqZJWNOa8J7rOMp+GF239vQYqHquz10Lr
+        jcmsOsuQQbCC2cfdDEBS7A==
+X-Google-Smtp-Source: APXvYqx8/pBZlcjplRHgCgiL8IcLhiig4B4YXatyJvJH9FgiUfObN2umu8Y0q9OyU8ZtGCD+ohGRiQ==
+X-Received: by 2002:a5d:8c97:: with SMTP id g23mr22369768ion.250.1562636914903;
+        Mon, 08 Jul 2019 18:48:34 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l5sm25436032ioq.83.2019.07.08.18.48.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 18:48:34 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 19:48:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] scsi: ufs: Allow resetting the UFS device
+Message-ID: <20190709014832.GA14402@bogus>
+References: <20190606010249.3538-1-bjorn.andersson@linaro.org>
+ <20190606010249.3538-3-bjorn.andersson@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606010249.3538-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jul 2019 11:51:02 +0200:
+On Wed, Jun 05, 2019 at 06:02:48PM -0700, Bjorn Andersson wrote:
+> Acquire the device-reset GPIO and toggle this to reset the UFS device
+> during initialization and host reset.
+> 
+> Based on downstream support implemented by Subhash Jadavani
+> <subhashj@codeaurora.org>.
+> 
+> Tested-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v1:
+> - Added gpio to DT binding document
+> - Fixed spelling of UFS
+> 
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  2 +
+>  drivers/scsi/ufs/ufshcd.c                     | 44 +++++++++++++++++++
+>  drivers/scsi/ufs/ufshcd.h                     |  4 ++
+>  3 files changed, 50 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index a74720486ee2..d562d8b4919c 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -54,6 +54,8 @@ Optional properties:
+>  			  PHY reset from the UFS controller.
+>  - resets            : reset node register
+>  - reset-names       : describe reset node register, the "rst" corresponds to reset the whole UFS IP.
+> +- device-reset-gpios	: A phandle and gpio specifier denoting the GPIO connected
+> +			  to the RESET pin of the UFS memory device.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
+A sign we should have a child node for the device...
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/090bc5a2a91499c1fd64b78d125daa6ca5531d38
+Doesn't using 'reset-gpios' work as I doubt one would have a GPIO reset 
+for the host controller.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Rob
