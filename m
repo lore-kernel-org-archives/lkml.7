@@ -2,339 +2,173 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984FBC73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505CAC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617C921707
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A91220861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfGINAC (ORCPT
+        id S1726779AbfGINFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:00:02 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42518 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGINAB (ORCPT
+        Tue, 9 Jul 2019 09:05:38 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35087 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfGINFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:00:01 -0400
-Received: from laptop.home (unknown [IPv6:2a01:cb19:8ad6:900:42dd:dd1c:19ee:7c60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: aragua)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 56FCC28AC6F;
-        Tue,  9 Jul 2019 13:59:57 +0100 (BST)
-From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     kernel@collabora.com, Gwendal Grignou <gwendal@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [PATCH 1/1] counter: cros_ec: Add synchronization sensor
-Date:   Tue,  9 Jul 2019 14:59:42 +0200
-Message-Id: <2f7d1c7582ad4005b16e5c8273bcd0100431ff1d.1562676020.git.fabien.lahoudere@collabora.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <cover.1562676020.git.fabien.lahoudere@collabora.com>
-References: <cover.1562676020.git.fabien.lahoudere@collabora.com>
+        Tue, 9 Jul 2019 09:05:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j19so1357838otq.2;
+        Tue, 09 Jul 2019 06:05:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yDkyo3+Dccscyvat5dQl/nWwc7njks1SU13Nt8uYXo0=;
+        b=o8XaIEF49l6zxZrsaDNS0SGe3todgaxAot82Gk0hQZPuV1NN593rmkTU2D70G/EML/
+         1iKdYQ++3V2dQbxGTS3i/c9Evwcn/pomxfqzTeGohcIvN5ioEnNA7ZHuJh1IjJJAUgtE
+         ikQCprLTBfRVEdxuEwPLOcbma6gdfYXADzMgd94LVo9i8Qc6c8XmnARY2E59rtmuUD7r
+         lgrbOrmRKPEGnlHq4ELtKZ4QmYTdmUoGr/DGQxNnoAJoZK8ZwWjW/6XvpH+DugCOQ5+j
+         a83tH79oQWxHzW0gHbqV8cf/01HwwJRRB2pqpw2dnITPNjx0stmQUM0KF/040d7QXw3U
+         KRbg==
+X-Gm-Message-State: APjAAAXRaZ5Nnakrohi8OeEjxQzEQPewvgvLOz2nnyfwMxyFXAiQI9TY
+        igvEXULOGzsPVAhijktCHmZTkySPA2/U3VBq9LU=
+X-Google-Smtp-Source: APXvYqyP+O1IKeQS6X70Kvdb/lw+/tB1Nqscmj4QYnEGi/QzjPO6yk3rZPwXvI0VCPvpsiH7TFqgYOfpRyk0aFz32Cg=
+X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr1789780otc.250.1562677536141;
+ Tue, 09 Jul 2019 06:05:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAMuHMdUH46_yvYc840uvMoOOqXuU3mDOjaT65vZ=6WKGq7-Kqg@mail.gmail.com>
+ <CAK7LNASuEQqb7w8qD9ZKx-LKp0+CqvybEqFtYxVk5d0YJt-Nfg@mail.gmail.com>
+ <CAMuHMdVmmgW24vStkicXfA3hokcPYWo_r5bW=WFRs4zdP3SQyQ@mail.gmail.com> <CAK7LNATxCkEZKWknO40k-sArbwxzOjdyQdehSmdCNYjLBb7MQA@mail.gmail.com>
+In-Reply-To: <CAK7LNATxCkEZKWknO40k-sArbwxzOjdyQdehSmdCNYjLBb7MQA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 9 Jul 2019 15:05:25 +0200
+Message-ID: <CAMuHMdU7OY=FwWke6LqKtsMssN1ACJe15ODOp+tdkcZWoFaovw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: check arch/$(SRCARCH)/include/generated before
+ out-of-tree build
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gwendal Grignou <gwendal@chromium.org>
+Hi Yamada-san,
 
-EC returns a counter when there is an event on camera vsync.
-This patch comes from chromeos kernel 4.4
+On Tue, Jul 9, 2019 at 2:59 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> On Tue, Jul 9, 2019 at 9:45 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Jul 9, 2019 at 2:22 PM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> > > On Tue, Jul 9, 2019 at 5:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Sun, Apr 7, 2019 at 12:45 PM Masahiro Yamada
+> > > > <yamada.masahiro@socionext.com> wrote:
+> > > > > After cross-compiling the kernel, "make mrproper" should be executed
+> > > > > with the proper ARCH= option. Otherwise, stale objects will remain
+> > > > > under arch/$(SRCARCH)/.
+> > > > >
+> > > > > One bad scenario is like this:
+> > > > >
+> > > > >   $ make ARCH=arm defconfig all   # cross-compile the kernel for arm
+> > > > >   $ make mrproper                 # mrproper for host-arch (i.e. x86)
+> > > > >   $ make ARCH=arm O=build_dir defconfig all
+> > > > >
+> > > > > If you miss ARCH= for mrproper and cross-compile the kernel with O=
+> > > > > and ARCH= options, Kbuild will happily start to build, but may fail
+> > > > > due to stale objects in the srctree.
+> > > > >
+> > > > > If $(srctree)/arch/$(SRCARCH)/include/generated/ exists, let's stop
+> > > > > the out-of-tree build. To detect this, mrproper should clean only
+> > > > > arch/$(SRCARCH)/include/generated/.
+> > > > >
+> > > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > > ---
+> > > > >
+> > > > >  Makefile | 6 ++++--
+> > > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/Makefile b/Makefile
+> > > > > index 10643c3..17945ce 100644
+> > > > > --- a/Makefile
+> > > > > +++ b/Makefile
+> > > > > @@ -1091,7 +1091,9 @@ PHONY += prepare archprepare prepare1 prepare3
+> > > > >  prepare3: include/config/kernel.release
+> > > > >  ifneq ($(srctree),.)
+> > > > >         @$(kecho) '  Using $(srctree) as source for kernel'
+> > > > > -       $(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
+> > > > > +       $(Q)if [ -f $(srctree)/.config -o \
+> > > > > +                -d $(srctree)/include/config -o \
+> > > > > +                -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
+> > > > >                 echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
+> > > > >                 echo >&2 "  in the '$(srctree)' directory.";\
+> > > >
+> > > > This took me a bit to find out what was wrong...
+> > > >
+> > > > Usually I don't run "make mrproper", as it removes files I may want to
+> > > > keep (e.g. tags).  Hence I ran "git ls-files -o | grep m68k | xargs rm"
+> > > > (I usually build in separate output directories), confirmed with "git
+> > > > ls-files -o" there were no remaining build artefacts, and was surprised
+> > > > to discover I still got the error message above?!?
+> > > >
+> > > > Apparently arch/m68k/include/generated was still present, but as "git
+> > > > ls-files -o" only shows files, not directories, it was not listed.
+> > > > Perhaps the directory checks above can be changed to directory exists
+> > > > _and_ is not empty?
+> > >
+> > > No.
+> > >
+> > > Since you did not run mrproper,
+> > > Kbuild _correctly_ showed error.
+> > > This is the expected and correct behavior. :)
+> > >
+> > > The upstream kernel is not a place
+> > > to be customized for your workflow. Sorry.
+> > >
+> > >
+> > > Every developer has a set of handy custom commands.
+> > >
+> > > Since you are already running a long command,
+> > > why don't you add one more line, and put in ~/.bash_aliases or somewhere?
+> > >
+> > > my_mrproper()
+> > > {
+> > >     git ls-files -o | grep m68k | xargs rm
+> > >     rm -rf arch/m68k/include/generated
+> > > }
+> >
+> > Please note this was not part of my standard workflow, so I don't have a
+> > script for it.  I just happened to had done a quick test build in my
+> > kernel source tree repository before, and had forgotten about that.
+> >
+> > So IMHO this is more of a usability issue: it is difficult to find out
+> > what is wrong, and how to solve it, as "git ls-files -o" doesn't give a
+> > clue.  And running "make mrproper" doesn't help.
+> >
+> > Perhaps the message should be changed to
+> >
+> >     $(srctree) is not clean, please run 'make ARCH=$(SRCARCH) mrproper'"
+>
+> Fair enough, but 'make ARCH=$(ARCH) mrproper' please.
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+OK.
 
-CROS EC sync sensor was originally designed as an IIO device.
-Now that the counter subsystem will replace IIO_COUNTER, we
-have to implement a new way to get sync count.
+> Will you send a patch?
 
-Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
----
- drivers/counter/Kconfig                       |   9 +
- drivers/counter/Makefile                      |   1 +
- drivers/counter/cros_ec_sensors_sync.c        | 200 ++++++++++++++++++
- .../cros_ec_sensors/cros_ec_sensors_core.c    |   1 +
- drivers/mfd/cros_ec_dev.c                     |   3 +
- 5 files changed, 214 insertions(+)
- create mode 100644 drivers/counter/cros_ec_sensors_sync.c
+Sure, thanks!
 
-diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
-index 2967d0a9ff91..22287f5715e5 100644
---- a/drivers/counter/Kconfig
-+++ b/drivers/counter/Kconfig
-@@ -59,4 +59,13 @@ config FTM_QUADDEC
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ftm-quaddec.
- 
-+config IIO_CROS_EC_SENSORS_SYNC
-+	tristate "ChromeOS EC Counter Sensors"
-+	depends on IIO_CROS_EC_SENSORS_CORE && IIO
-+	help
-+	  Module to handle synchronisation sensors presented by the ChromeOS EC
-+	  Sensor hub.
-+	  Synchronisation sensors are counter sensors triggered when events
-+	  occurs from other subsystems.
-+
- endif # COUNTER
-diff --git a/drivers/counter/Makefile b/drivers/counter/Makefile
-index 40d35522937d..6fe4c98a446f 100644
---- a/drivers/counter/Makefile
-+++ b/drivers/counter/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
- obj-$(CONFIG_STM32_TIMER_CNT)	+= stm32-timer-cnt.o
- obj-$(CONFIG_STM32_LPTIMER_CNT)	+= stm32-lptimer-cnt.o
- obj-$(CONFIG_FTM_QUADDEC)	+= ftm-quaddec.o
-+obj-$(CONFIG_IIO_CROS_EC_SENSORS_SYNC) += cros_ec_sensors_sync.o
-diff --git a/drivers/counter/cros_ec_sensors_sync.c b/drivers/counter/cros_ec_sensors_sync.c
-new file mode 100644
-index 000000000000..715a4860cade
---- /dev/null
-+++ b/drivers/counter/cros_ec_sensors_sync.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver of counter increaseded after events on interrupt line in EC.
-+ *
-+ * Copyright 2018 Google, Inc
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/counter.h>
-+#include <linux/iio/common/cros_ec_sensors_core.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/cros_ec.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define DRV_NAME "cros-ec-sync"
-+
-+/*
-+ * One channel for counter, the other for timestamp.
-+ */
-+#define MAX_CHANNELS (1 + 1)
-+
-+/* State data for ec_sensors iio driver. */
-+struct cros_ec_sensors_sync_state {
-+	/* Shared by all sensors */
-+	struct cros_ec_sensors_core_state core;
-+	struct counter_device counter;
-+	struct iio_chan_spec channels[MAX_CHANNELS];
-+};
-+
-+static int cros_ec_sensors_sync_read(struct iio_dev *indio_dev,
-+				     struct iio_chan_spec const *chan,
-+				     int *val, int *val2, long mask)
-+{
-+	struct cros_ec_sensors_sync_state *st = iio_priv(indio_dev);
-+	u16 data;
-+	int ret;
-+	int idx = chan->scan_index;
-+
-+	mutex_lock(&st->core.cmd_lock);
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = cros_ec_sensors_read_cmd(indio_dev, BIT(idx), &data);
-+		if (ret < 0)
-+			break;
-+		ret = IIO_VAL_INT;
-+		*val = data;
-+		break;
-+	default:
-+		ret = cros_ec_sensors_core_read(&st->core, chan, val, val2,
-+						mask);
-+		break;
-+	}
-+	mutex_unlock(&st->core.cmd_lock);
-+	return ret;
-+}
-+
-+static int cros_ec_sensors_write(struct iio_dev *indio_dev,
-+				 struct iio_chan_spec const *chan,
-+				 int val, int val2, long mask)
-+{
-+	struct cros_ec_sensors_sync_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&st->core.cmd_lock);
-+
-+	ret = cros_ec_sensors_core_write(&st->core, chan, val, val2, mask);
-+
-+	mutex_unlock(&st->core.cmd_lock);
-+	return ret;
-+}
-+
-+static struct iio_info cros_ec_sensors_sync_info = {
-+	.read_raw = &cros_ec_sensors_sync_read,
-+	.write_raw = &cros_ec_sensors_write,
-+	.read_avail = &cros_ec_sensors_core_read_avail,
-+};
-+
-+static struct counter_count cros_ec_sync_counts = {
-+	.id = 0,
-+	.name = "Cros EC sync counter",
-+};
-+
-+static int cros_ec_sync_cnt_read(struct counter_device *counter,
-+				struct counter_count *count,
-+				struct counter_count_read_value *val)
-+{
-+	s16 cnt;
-+	int ret;
-+	struct iio_dev * indio_dev = counter->priv;
-+	struct cros_ec_sensors_sync_state *const st = iio_priv(indio_dev);
-+	unsigned long data;
-+
-+	mutex_lock(&st->core.cmd_lock);
-+	ret = cros_ec_sensors_read_cmd(indio_dev, BIT(0), &cnt);
-+	mutex_unlock(&st->core.cmd_lock);
-+	if (ret != 0) {
-+		dev_warn(&indio_dev->dev, "Unable to read sensor data\n");
-+		return ret;
-+	}
-+
-+	data = (unsigned long) cnt;
-+	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &data);
-+
-+	return 0;
-+}
-+
-+static const struct counter_ops cros_ec_sync_cnt_ops = {
-+	.count_read = cros_ec_sync_cnt_read,
-+};
-+
-+static int cros_ec_sensors_sync_probe(struct platform_device *pdev)
-+{
-+	struct cros_ec_sensors_sync_state *state;
-+	struct device *dev = &pdev->dev;
-+	struct iio_chan_spec *channel;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*state));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	ret = cros_ec_sensors_core_init(pdev, indio_dev, true);
-+	if (ret)
-+		return ret;
-+
-+	indio_dev->info = &cros_ec_sensors_sync_info;
-+	state = iio_priv(indio_dev);
-+
-+	if (state->core.type != MOTIONSENSE_TYPE_SYNC)
-+		return -EINVAL;
-+
-+	/* Initialize IIO device */
-+	channel = state->channels;
-+	channel->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-+	channel->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_FREQUENCY);
-+	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
-+	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
-+	channel->scan_type.shift = 0;
-+	channel->scan_index = 0;
-+	channel->ext_info = cros_ec_sensors_ext_info;
-+	channel->scan_type.sign = 'u';
-+	channel->type = IIO_COUNT;
-+	state->core.calib[0] = 0;
-+
-+	/* Timestamp */
-+	channel++;
-+	channel->type = IIO_TIMESTAMP;
-+	channel->channel = -1;
-+	channel->scan_index = 1;
-+	channel->scan_type.sign = 's';
-+	channel->scan_type.realbits = 64;
-+	channel->scan_type.storagebits = 64;
-+
-+	indio_dev->channels = state->channels;
-+	indio_dev->num_channels = MAX_CHANNELS;
-+
-+	state->core.read_ec_sensors_data = cros_ec_sensors_read_cmd;
-+
-+	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-+					      cros_ec_sensors_capture, NULL);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_iio_device_register(dev, indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	/* Initialize counter device */
-+	state->counter.name = dev_name(&pdev->dev);
-+	state->counter.parent = &pdev->dev;
-+	state->counter.counts = &cros_ec_sync_counts;
-+	state->counter.num_counts = 1;
-+	state->counter.priv = indio_dev;
-+	state->counter.ops = &cros_ec_sync_cnt_ops;
-+
-+	return devm_counter_register(&pdev->dev, &state->counter);
-+}
-+
-+static const struct platform_device_id cros_ec_sensors_sync_ids[] = {
-+	{ .name = DRV_NAME, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(platform, cros_ec_sensors_sync_ids);
-+
-+static struct platform_driver cros_ec_sensors_sync_platform_driver = {
-+	.driver = {
-+		.name	= DRV_NAME,
-+		.pm	= &cros_ec_sensors_pm_ops,
-+	},
-+	.probe		= cros_ec_sensors_sync_probe,
-+	.id_table	= cros_ec_sensors_sync_ids,
-+};
-+module_platform_driver(cros_ec_sensors_sync_platform_driver);
-+
-+MODULE_DESCRIPTION("ChromeOS EC synchronisation sensor driver");
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-index 805652250960..2bf183425eaf 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-@@ -22,6 +22,7 @@
- static char *cros_ec_loc[] = {
- 	[MOTIONSENSE_LOC_BASE] = "base",
- 	[MOTIONSENSE_LOC_LID] = "lid",
-+	[MOTIONSENSE_LOC_CAMERA] = "camera",
- 	[MOTIONSENSE_LOC_MAX] = "unknown",
- };
- 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 41dccced5026..1c5c2c38af88 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -332,6 +332,9 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
- 		case MOTIONSENSE_TYPE_ACTIVITY:
- 			sensor_cells[id].name = "cros-ec-activity";
- 			break;
-+		case MOTIONSENSE_TYPE_SYNC:
-+			sensor_cells[id].name = "cros-ec-sync";
-+			break;
- 		default:
- 			dev_warn(ec->dev, "unknown type %d\n", resp->info.type);
- 			continue;
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.19.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
