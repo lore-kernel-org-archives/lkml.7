@@ -2,98 +2,269 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E212C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 17:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B7BC73C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 17:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8212087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 17:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018EF2082A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 17:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="gufTxBzN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="xks7+qKO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUn1o+Ca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfGIRhy (ORCPT
+        id S1726690AbfGIRk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 13:37:54 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:60058 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfGIRhy (ORCPT
+        Tue, 9 Jul 2019 13:40:57 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43957 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfGIRk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 13:37:54 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id C754C161342;
-        Tue,  9 Jul 2019 13:37:51 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=ZPzL96906deSPszntNDHK2QFX3M=; b=gufTxB
-        zNSe+0divwYcBXwLhl9W3sFW7BjvHwmRzFddQ05k36d7tv2a25UjIIOxanJXoOtD
-        ynWmKEeObbiHF4Wvmzj5VKMD2JqVBTuU5B/1bWCi1zttldwtRQOxwxGPf3VwFHae
-        ZTVdmAa/irDQ+ccsim1Jzz0QckHhqwsrggLFU=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id BE41C161341;
-        Tue,  9 Jul 2019 13:37:51 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=JUWCum9pcbTPQLn3Li5UWdFaYelziHmHH3PL7HgMqUA=; b=xks7+qKO5WD+kKbJjFOF8VQyA5IpsnEK4OFwGE8D3PZDdxs5jke6gTQYNTNVpTuw+9lZxor+rnj4Og4V3l/KkAFJFxOEdbqgqYP59TtxNtwcnTTVeAbnmcjK6S4EqKV6l5owBWQteKjscyC6KqLyM/GwiQFONIgs423mD66FaEE=
-Received: from yoda.home (unknown [70.82.130.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 43457161340;
-        Tue,  9 Jul 2019 13:37:51 -0400 (EDT)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 5E86E2DA0192;
-        Tue,  9 Jul 2019 13:37:50 -0400 (EDT)
-Date:   Tue, 9 Jul 2019 13:37:50 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH 08/11] kbuild: create *.mod with full directory path and
- remove MODVERDIR
-In-Reply-To: <20190709042416.27554-9-yamada.masahiro@socionext.com>
-Message-ID: <nycvar.YSQ.7.76.1907091332150.4190@knanqh.ubzr>
-References: <20190709042416.27554-1-yamada.masahiro@socionext.com> <20190709042416.27554-9-yamada.masahiro@socionext.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Tue, 9 Jul 2019 13:40:56 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m14so16634260qka.10;
+        Tue, 09 Jul 2019 10:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KaXFjL0Bq/Ll+4OsPHIbth6j2gGxDomZsAOX/Z1XXXs=;
+        b=VUn1o+CakjYdO9JM6RHoG3gX7/7OiZeO8s4EIAI2IJJUSqoWT/jntWD6Egk0xRsO2j
+         6YWVI7SKiIQ1kwWtMNY3qNNBiyI6jNPjj8b/jXl21k2+7kXqb90Qk7sIdikVSNkAGJlQ
+         I5Q0eNgP6AxYUXgqd1fOD0MS5/Ir098elHlvGrp60YiSM3WwL1ZdB3Eah7eqxgM5XROi
+         24eWJXT8oUyyrhN0Ijv0eTdElqHJEqRL+s5605MR3xKYnSavi4m7I+8g04Fq1e4rdgnH
+         LscJ7EoSJHK2h2dEsVuRM51/rDt7R98HWnNHFkRtkfDeftNGvDwA1gkIc0m8RC7RFcKW
+         AL8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KaXFjL0Bq/Ll+4OsPHIbth6j2gGxDomZsAOX/Z1XXXs=;
+        b=sg7256kjec16+uMwhSX00vCNJV4LrRp2LFl2ZHPT9mJ3jDkRBSBWUjCWe70yg7rS/6
+         bSITYaqC/i+A97FRlf7MO4JXaJos2Ohu/TeTJpVJ14Hrp+K/2cZLwpDddng7NrcTqpPt
+         maN5HvTZj6l8Vj3va/uJ+XTFubmpfNYvSemhuUMxkMh9+xTuo6b5IdGTAEBPnEIOGnOW
+         7VFHfzBQPuJ81r/sTo8NG4+EQDLxbphi5hewOYSfI9ezmdOqPht2GLYiZSVnFrBz19WV
+         +c4mD6Gk/ludoByt7IkLcCoPVZ/X+Q59bGQuToMDyloOn/0QzTf65KIPokHJCbEiYDNn
+         uTDQ==
+X-Gm-Message-State: APjAAAW5IiGC+2WAWKR85jd0fWWciHxd3cI7vS2cgbx9WJziAvNQ+Jbr
+        9XTR68aWqEslJgYWuLXdkXVlZgRpUGlKAMx6gSQ=
+X-Google-Smtp-Source: APXvYqyibMJbXm9Alo8OLT3WRTcDDkUx/HvVnnjCSs6UcJAHxInXJmFTgPtzV0XSTmEzeKFa1M3rdHtI/7Sedpr0JjA=
+X-Received: by 2002:a37:9b48:: with SMTP id d69mr18180458qke.449.1562694054353;
+ Tue, 09 Jul 2019 10:40:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 466A70CC-A270-11E9-96DF-46F8B7964D18-78420484!pb-smtp1.pobox.com
+References: <cover.1562359091.git.a.s.protopopov@gmail.com>
+ <e183c0af99056f8ea4de06acb358ace7f3a3d6ae.1562359091.git.a.s.protopopov@gmail.com>
+ <734dd45a-95b0-a7fd-9e1d-0535ef4d3e12@iogearbox.net> <CAEf4BzaGGVv2z8jB8MnT7=gnn4nG0cp7DGYxfnnnpohOT=ujCA@mail.gmail.com>
+ <CAGn_itw=BqWXn7ibg6M7j4r2T5CMo0paBhBoQQv7b+x7D2g2ww@mail.gmail.com>
+In-Reply-To: <CAGn_itw=BqWXn7ibg6M7j4r2T5CMo0paBhBoQQv7b+x7D2g2ww@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 9 Jul 2019 10:40:43 -0700
+Message-ID: <CAEf4BzYaiH_GhSJJjkGv4dGF7CbBrusTyShPP9DXvXjCLcmK+w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf, libbpf: add a new API bpf_object__reuse_maps()
+To:     Anton Protopopov <a.s.protopopov@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jul 2019, Masahiro Yamada wrote:
+On Mon, Jul 8, 2019 at 1:37 PM Anton Protopopov
+<a.s.protopopov@gmail.com> wrote:
+>
+> =D0=BF=D0=BD, 8 =D0=B8=D1=8E=D0=BB. 2019 =D0=B3. =D0=B2 13:54, Andrii Nak=
+ryiko <andrii.nakryiko@gmail.com>:
+> >
+> > On Fri, Jul 5, 2019 at 2:53 PM Daniel Borkmann <daniel@iogearbox.net> w=
+rote:
+> > >
+> > > On 07/05/2019 10:44 PM, Anton Protopopov wrote:
+> > > > Add a new API bpf_object__reuse_maps() which can be used to replace=
+ all maps in
+> > > > an object by maps pinned to a directory provided in the path argume=
+nt.  Namely,
+> > > > each map M in the object will be replaced by a map pinned to path/M=
+.name.
+> > > >
+> > > > Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+> > > > ---
+> > > >  tools/lib/bpf/libbpf.c   | 34 ++++++++++++++++++++++++++++++++++
+> > > >  tools/lib/bpf/libbpf.h   |  2 ++
+> > > >  tools/lib/bpf/libbpf.map |  1 +
+> > > >  3 files changed, 37 insertions(+)
+> > > >
+> > > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > > > index 4907997289e9..84c9e8f7bfd3 100644
+> > > > --- a/tools/lib/bpf/libbpf.c
+> > > > +++ b/tools/lib/bpf/libbpf.c
+> > > > @@ -3144,6 +3144,40 @@ int bpf_object__unpin_maps(struct bpf_object=
+ *obj, const char *path)
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > +int bpf_object__reuse_maps(struct bpf_object *obj, const char *pat=
+h)
+> >
+> > As is, bpf_object__reuse_maps() can be easily implemented by user
+> > applications, as it's only using public libbpf APIs, so I'm not 100%
+> > sure we need to add method like that to libbpf.
+>
+> The bpf_object__reuse_maps() can definitely be implemented by user
+> applications, however, to use it a user also needs to re-implement the
+> bpf_prog_load_xattr funciton, so it seemed to me that adding this
+> functionality to the library is a better way.
 
-> --- a/scripts/adjust_autoksyms.sh
-> +++ b/scripts/adjust_autoksyms.sh
-> @@ -47,13 +47,10 @@ cat > "$new_ksyms_file" << EOT
->   */
->  
->  EOT
-> -[ "$(ls -A "$MODVERDIR")" ] &&
-> -for mod in "$MODVERDIR"/*.mod; do
-> -	sed -n -e '3{s/ /\n/g;/^$/!p;}' "$mod"
-> -done | sort -u |
-> -while read sym; do
-> -	echo "#define __KSYM_${sym} 1"
-> -done >> "$new_ksyms_file"
-> +sed 's/ko$/mod/' modules.order |
-> +xargs -r -n1 sed -n -e '3{s/ /\n/g;/^$/!p;}' |
-> +sort -u |
-> +sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+I'm still not convinced. Looking at bpf_prog_load_xattr, I think some
+of what it's doing should be part of bpf_object__object_xattr anyway
+(all the expected type setting for programs).
 
-Did you consider the case when CONFIG_MODULES=y but no modules are 
-selected? Also -r to xargs is a GNU extension and there were some 
-efforts to remove theur use in the past (no idea if this is still a 
-concern).
-
-Other than that, looks good to me.
-
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
+Besides that, there isn't much more than just bpf_object__open and
+bpf_object__load, to be honest. By doing open and load explicitly,
+user gets an opportunity to do whatever adjustment they need: reuse
+maps, adjust map sizes, etc. So I think we should improve
+bpf_object__open to "guess" program attach types and add map
+definition flags to allow reuse declaratively.
 
 
-Nicolas
+>
+> >
+> > > > +{
+> > > > +     struct bpf_map *map;
+> > > > +
+> > > > +     if (!obj)
+> > > > +             return -ENOENT;
+> > > > +
+> > > > +     if (!path)
+> > > > +             return -EINVAL;
+> > > > +
+> > > > +     bpf_object__for_each_map(map, obj) {
+> > > > +             int len, err;
+> > > > +             int pinned_map_fd;
+> > > > +             char buf[PATH_MAX];
+> > >
+> > > We'd need to skip the case of bpf_map__is_internal(map) since they ar=
+e always
+> > > recreated for the given object.
+> > >
+> > > > +             len =3D snprintf(buf, PATH_MAX, "%s/%s", path, bpf_ma=
+p__name(map));
+> > > > +             if (len < 0) {
+> > > > +                     return -EINVAL;
+> > > > +             } else if (len >=3D PATH_MAX) {
+> > > > +                     return -ENAMETOOLONG;
+> > > > +             }
+> > > > +
+> > > > +             pinned_map_fd =3D bpf_obj_get(buf);
+> > > > +             if (pinned_map_fd < 0)
+> > > > +                     return pinned_map_fd;
+> > >
+> > > Should we rather have a new map definition attribute that tells to re=
+use
+> > > the map if it's pinned in bpf fs, and if not, we create it and later =
+on
+> > > pin it? This is what iproute2 is doing and which we're making use of =
+heavily.
+> >
+> > I'd like something like that as well. This would play nicely with
+> > recently added BTF-defined maps as well.
+> >
+> > I think it should be not just pin/don't pin flag, but rather pinning
+> > strategy, to accommodate various typical strategies of handling maps
+> > that are already pinned. So something like this:
+> >
+> > 1. BPF_PIN_NOTHING - default, don't pin;
+> > 2. BPF_PIN_EXCLUSIVE - pin, but if map is already pinned - fail;
+> > 3. BPF_PIN_SET - pin; if existing map exists, reset its state to be
+> > exact state of object's map;
+> > 4. BPF_PIN_MERGE - pin, if map exists, fill in NULL entries only (this
+> > is how Cilium is pinning PROG_ARRAY maps, if I understand correctly);
+> > 5. BPF_PIN_MERGE_OVERWRITE - pin, if map exists, overwrite non-NULL val=
+ues.
+> >
+> > This list is only for illustrative purposes, ideally people that have
+> > a lot of experience using pinning for real-world use cases would chime
+> > in on what strategies are useful and make sense.
+>
+> My case was simply to reuse existing maps when reloading a program.
+> Does it make sense for you to add only the simplest cases of listed above=
+?
+
+Of course, it's enum, so we can start with few clearly useful ones and
+then expand more if we ever have a need. But I think we still need a
+bit wider discussion and let people who use pinning to chime in.
+
+>
+> Also, libbpf doesn't use standard naming conventions for pinning maps.
+
+We talked about this in another thread related to BTF-defined maps. I
+think the way to go with this is to actually define a default pinning
+root path, but allow to override it on bpf_object__open, if user needs
+a different one.
+
+> Does it make sense to provide a list of already open maps to the
+> bpf_prog_load_xattr function as an attribute? In this case a user
+> can execute his own policy on pinning, but still will have an option
+> to reuse, reset, and merge maps.
+
+As explained above, I don't think there isn't much added value in
+bpf_prog_load, so I'd advise to just switch to explicit
+bpf_object__open + bpf_object__load and get maximum control and
+flexibility.
+
+>
+> >
+> > > In bpf_object__reuse_maps() bailing out if bpf_obj_get() fails is per=
+haps
+> > > too limiting for a generic API as new version of an object file may c=
+ontain
+> > > new maps which are not yet present in bpf fs at that point.
+> > >
+> > > > +             err =3D bpf_map__reuse_fd(map, pinned_map_fd);
+> > > > +             if (err)
+> > > > +                     return err;
+> > > > +     }
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > >  int bpf_object__pin_programs(struct bpf_object *obj, const char *p=
+ath)
+> > > >  {
+> > > >       struct bpf_program *prog;
+> > > > diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> > > > index d639f47e3110..7fe465a1be76 100644
+> > > > --- a/tools/lib/bpf/libbpf.h
+> > > > +++ b/tools/lib/bpf/libbpf.h
+> > > > @@ -82,6 +82,8 @@ int bpf_object__variable_offset(const struct bpf_=
+object *obj, const char *name,
+> > > >  LIBBPF_API int bpf_object__pin_maps(struct bpf_object *obj, const =
+char *path);
+> > > >  LIBBPF_API int bpf_object__unpin_maps(struct bpf_object *obj,
+> > > >                                     const char *path);
+> > > > +LIBBPF_API int bpf_object__reuse_maps(struct bpf_object *obj,
+> > > > +                                   const char *path);
+> > > >  LIBBPF_API int bpf_object__pin_programs(struct bpf_object *obj,
+> > > >                                       const char *path);
+> > > >  LIBBPF_API int bpf_object__unpin_programs(struct bpf_object *obj,
+> > > > diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+> > > > index 2c6d835620d2..66a30be6696c 100644
+> > > > --- a/tools/lib/bpf/libbpf.map
+> > > > +++ b/tools/lib/bpf/libbpf.map
+> > > > @@ -172,5 +172,6 @@ LIBBPF_0.0.4 {
+> > > >               btf_dump__new;
+> > > >               btf__parse_elf;
+> > > >               bpf_object__load_xattr;
+> > > > +             bpf_object__reuse_maps;
+> > > >               libbpf_num_possible_cpus;
+> > > >  } LIBBPF_0.0.3;
+> > > >
+> > >
