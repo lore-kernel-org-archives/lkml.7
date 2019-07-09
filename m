@@ -2,78 +2,87 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87496C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4059BC606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F08C216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA522171F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 01:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562637467;
+	bh=3aePCBfUrtlTh1MWtxMgeK8de64/Q8/C3XgQdor3ABw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Mup/seHCasrq8pO1onbleKm43HqRdkMv6qW4RndFI8NBou6KsoceBwVIzNW3ds+Tn
+	 9uu9NWBEvHwqC/YJhexLZrfX0T4eJx5moc4GLFQ9yXQ3k6Dy0Pyv1BBpul/bk/j7SA
+	 ifHLFbir6cM1hJfKYuoHNI+ksPVXeynWYGSHJxJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfGIB4C convert rfc822-to-8bit (ORCPT
+        id S1726984AbfGIB5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 21:56:02 -0400
-Received: from app2.whu.edu.cn ([202.114.64.89]:39874 "EHLO whu.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725886AbfGIB4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 21:56:02 -0400
-Received: from MI20170214RZUL (unknown [111.202.192.3])
-        by email2 (Coremail) with SMTP id AgBjCgBnNvQr9CNdzSxlAA--.254S3;
-        Tue, 09 Jul 2019 09:55:56 +0800 (CST)
-From:   "Peng Wang" <rocking@whu.edu.cn>
-To:     "'Tejun Heo'" <tj@kernel.org>
-Cc:     <lizefan@huawei.com>, <hannes@cmpxchg.org>,
-        <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190708130132.5582-1-rocking@whu.edu.cn> <20190708144121.GA657710@devbig004.ftw2.facebook.com>
-In-Reply-To: <20190708144121.GA657710@devbig004.ftw2.facebook.com>
-Subject: RE: [PATCH] cgroup: simplify code for cgroup_subtree_control_write()
-Date:   Tue, 9 Jul 2019 09:55:54 +0800
-Message-ID: <000301d535f9$71f1ab90$55d502b0$@whu.edu.cn>
+        Mon, 8 Jul 2019 21:57:45 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:47053 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbfGIB5p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 21:57:45 -0400
+Received: by mail-io1-f68.google.com with SMTP id i10so39664719iol.13;
+        Mon, 08 Jul 2019 18:57:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZP1aQ1FRsdW6CYNzwwPiQpzEbHZzUvAyhoX9YSSaQ8E=;
+        b=Pj5M3AD78QaZshEfXnb9rjL+RS8as6TR7QPuCodzgpgVVZbBycRbqKxAMAMpk5L3md
+         x67MoxYbyc0vcNOK7QXUvnIFyfye0Kd+j63ya4FVV+MIT0dot7e0HzySdzqDu52tFEB2
+         FdUIWGM3jv5dWa7nymY2yhyeLwGAJ4uLiU6gON1ACaa2utMG8SEnuv90hHGUGDgif+qo
+         4d3/ETstKchRgRYyL4pw13QgGKjGDYp50w3X7p0q27yJKMayX60iK1cT5xZ2uXbBHZA7
+         FDJqGmPWDWiC5v67wIQbkgNNzQQdObEf9zvOX7rpzyht6AcU+3YESxfPiMfxwdfGpPUG
+         /U+A==
+X-Gm-Message-State: APjAAAUhf+906NEOMupc0i/PnUJn7F/T8cWTV0PlIMcU+aDPeeW9b8gr
+        iFmir75NETIDu2MM9160gg==
+X-Google-Smtp-Source: APXvYqy9KkVJUxhfqZmRZ3M91SDJ+27dNBdX1LPZspTOOblB090f3hd6q5gx6KxFeVB4+stJbHMfyQ==
+X-Received: by 2002:a02:b10b:: with SMTP id r11mr23643555jah.140.1562637464244;
+        Mon, 08 Jul 2019 18:57:44 -0700 (PDT)
+Received: from localhost ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t14sm17885628ioi.60.2019.07.08.18.57.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 08 Jul 2019 18:57:43 -0700 (PDT)
+Date:   Mon, 8 Jul 2019 19:57:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, tomi.valkeinen@ti.com,
+        imirkin@alum.mit.edu, marek.belisko@gmail.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, letux-kernel@openphoenux.org,
+        devicetree@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v3 3/5] dt-bindings: drm/panel: simple: add
+ ortustech,com37h3m05dtc panel
+Message-ID: <20190709015742.GA2590@bogus>
+References: <cover.1559905870.git.hns@goldelico.com>
+ <a650cb8df1bdf58ec3c8a182532692db16b77f70.1559905870.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQE94/eHFYIYcEzptv5v1lkJv7sJaAH+JMagp+A37hA=
-Content-Language: zh-cn
-X-CM-TRANSID: AgBjCgBnNvQr9CNdzSxlAA--.254S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY87k0a2IF6r1xM7kC6x804xWl14x267AK
-        xVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
-        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j
-        6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F
-        4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvE
-        ncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I
-        8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xS
-        Y4AK67AK6w4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
-        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7sRN
-        b10UUUUUU==
-X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a650cb8df1bdf58ec3c8a182532692db16b77f70.1559905870.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, July 8, 2019 10:41 PM, Tejun Heo wrote:
-> On Mon, Jul 08, 2019 at 09:01:32PM +0800, Peng Wang wrote:
-> > Process "enable" and "disable" earlier to simplify code.
+On Fri,  7 Jun 2019 13:11:09 +0200, "H. Nikolaus Schaller" wrote:
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../display/panel/ortustech,com37h3m05dtc.txt        | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ortustech,com37h3m05dtc.txt
 > 
-> I don't think this is correct and even if it were the value of this
-> change is close to none, so nack on this one.
 
-OK. 
-Although I have tested this patch for common case, It's just somewhat trivial.
-
-Thanks for your time :-).
-
-> 
-> Thanks.
-> 
-> --
-> tejun
-
+Reviewed-by: Rob Herring <robh@kernel.org>
