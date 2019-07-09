@@ -2,94 +2,83 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18431C606D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A10DC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC63A216FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562655421;
-	bh=dEkw4tLIQfW07iinojJG510qYCl6qWkBON8wmYXyHEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Aprl5SdNBwyJZjqW6a6F4XQAZIW39A/FfIlMBTI33zDUfGrWcfaZMjBPlahoHrI0Z
-	 KcK7EePLLqF5l86ao0tP5glUBZnIHjRvuwpY2wt0NUZBWlbldoVbxrb5xFp0yciWa2
-	 Pyb9xpAKKXAfGLRDRnZCabef8jjXrWq/gXp5QKIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 71ACC21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 06:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfGIG47 (ORCPT
+        id S1726055AbfGIG6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 02:56:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53922 "EHLO mail.kernel.org"
+        Tue, 9 Jul 2019 02:58:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49998 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbfGIG47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 02:56:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 092EC21537;
-        Tue,  9 Jul 2019 06:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562655418;
-        bh=dEkw4tLIQfW07iinojJG510qYCl6qWkBON8wmYXyHEY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n9pQhMyjobyRvH/7tJxUz447tG4OxO9++Dko5oZjDvWMZb2hx6NrPe/3ZJZ2XUiqH
-         TS8p6tYzJMPKahg8/9kU6v2xt/jrHuo3A6qdj3I+vOBraiXbVU/ccL3Um9eGOjRssB
-         61p7tEl74MNuhTi3wkspJ3AhAOA3HMgxXo7nt0R8=
-Date:   Tue, 9 Jul 2019 08:56:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.1 00/96] 5.1.17-stable review
-Message-ID: <20190709065656.GB13978@kroah.com>
-References: <20190708150526.234572443@linuxfoundation.org>
- <CA+G9fYuUEib3uaKkTSf4Sfqv9DEUyXjx+nKcdPN70w15JU6AFQ@mail.gmail.com>
+        id S1725818AbfGIG6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 02:58:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 23:58:15 -0700
+X-IronPort-AV: E=Sophos;i="5.63,469,1557212400"; 
+   d="scan'208";a="159369367"
+Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jul 2019 23:58:13 -0700
+From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        =?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Micha=C5=82=20Wajdeczko?= <michal.wajdeczko@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+Subject: [PATCH] drm/i915: Fix reporting of size of created GEM object
+Date:   Tue,  9 Jul 2019 08:58:00 +0200
+Message-Id: <20190709065800.2354-1-janusz.krzysztofik@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuUEib3uaKkTSf4Sfqv9DEUyXjx+nKcdPN70w15JU6AFQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 10:13:17AM +0530, Naresh Kamboju wrote:
-> On Mon, 8 Jul 2019 at 21:02, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.1.17 release.
-> > There are 96 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.17-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+Commit e163484afa8d ("drm/i915: Update size upon return from
+GEM_CREATE") (re)introduced reporting of actual size of created GEM
+objects, possibly rounded up on object alignment.  Unfortunately, its
+implementation resulted in a possible use-after-free bug.  The bug has
+been fixed by commit 929eec99f5fd ("drm/i915: Avoid use-after-free in
+reporting create.size") at the cost of possibly incorrect value being
+reported as actual object size.
 
-Great, thanks for testing all of these!
+Safely restore correct reporting by capturing actual size of created
+GEM object before a reference to the object is put.
 
-greg k-h
+Fixes: 929eec99f5fd ("drm/i915: Avoid use-after-free in reporting create.size")
+Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
+---
+ drivers/gpu/drm/i915/i915_gem.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+index 7ade42b8ec99..16bae5870d6f 100644
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -171,6 +171,7 @@ i915_gem_create(struct drm_file *file,
+ 	obj = i915_gem_object_create_shmem(dev_priv, size);
+ 	if (IS_ERR(obj))
+ 		return PTR_ERR(obj);
++	size = obj->base.size;
+ 
+ 	ret = drm_gem_handle_create(file, &obj->base, &handle);
+ 	/* drop reference from allocate - handle holds it now */
+-- 
+2.21.0
+
