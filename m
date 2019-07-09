@@ -2,76 +2,59 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E583AC606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A75AC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FBC20665
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:22:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="EYqSBY5R"
+	by mail.kernel.org (Postfix) with ESMTP id 7042E20645
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562667907;
+	bh=s6cE65Eljr/iHn5WA9WGd58naGDekFmphC0KLU2gGdU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aAuojPmp4ehQEJstMJ3DcNNFBsDGd3M51RqoSiSf2eJvZVb+ygItXUhbCxDN/tqmS
+	 2xcmBmnTlx85HZDVUyAOC14+SyTRBaTZXZAEWksMSwcMIMAFHYH25PpR/IGjyb8YbJ
+	 85np65fD+RBiBvXAYvzosJc/tnQjzpSqRL1cmAjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfGIKW1 (ORCPT
+        id S1726165AbfGIKZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 06:22:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37232 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfGIKW1 (ORCPT
+        Tue, 9 Jul 2019 06:25:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57844 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGIKZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 06:22:27 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 19so9080011pfa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 03:22:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ys5VCG//C+7d/Mv4iPcZy1mrBP7z7sVwq8ShwHAlzGY=;
-        b=EYqSBY5RYT3l0wkuw1OiniPSthEwR1m6QScRVqkNRuncNcPiHi18uDfiPzlQ64tyOT
-         tFnG4+QleLyJ5BINvC4LqWUj6LzpVUIwfmTehOtXgG+QCpSO2kmuYWp4LBvDqw4TAycS
-         rUPJnPjVy196wMzOuZn7AILaZrq5Otwr4AfORpaIWUOi8XFXWgYvtdPXoso5l+txhymh
-         3kr4MOeTNuPTCctGwVMZnXh4EeeJGe2tiGybWZlLLrOrRpCTaKMwQpUdPkM8bettx8Wr
-         fS9nzTh9CWZuuNv6NWzmVBkaHo/g7OgOJFLMdKB7JtjNZvusIkI0fUWh6GaLzdxhiZM+
-         WRLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ys5VCG//C+7d/Mv4iPcZy1mrBP7z7sVwq8ShwHAlzGY=;
-        b=X7h7Mw2806ek8sAjoo45QJX1fXD/XO4RRluhNMnzQAlm6XlJyHxn4P5sGnECe4vMUQ
-         Xhz/dF9EtzpIFSvUDfTadtj6ggKxsdmJKhzjADMmxNgh3Bjz54B8t7QqCHTWrNjfnLBN
-         aAKXQrRm4lffXMBY/hYDEFjYxwCqmZSaSMJZJlXxZl8bJMFQFg+yfhyNy4Rz5srK2AMh
-         eAdtsijaZJGstnJPbnNCFnkex9Q4BYZXdp1nnL0OP4W9qwt6AC3O9cVOnZ65TV03iY3C
-         y+BEgHYhpVHN835WmkLSbxCeZEt4eH9sAX4xBL40KEjY07D+v9DAxQxIC7PC3HgowFuF
-         20Zg==
-X-Gm-Message-State: APjAAAVrOvXbTyvqJD0I3041VKZm4CJYJ7SwWZW+fGKlQb3vfrjLzDDG
-        DW7A7LibGAC8+MjlK6uiJQiOcQ==
-X-Google-Smtp-Source: APXvYqy4rOzsSukM8QjFevK1EGTmIXDq4LXaDasAKMlIyOuWJyyfPkpJ2F67P17lv+jigztmLW01bw==
-X-Received: by 2002:a65:56c1:: with SMTP id w1mr25026367pgs.395.1562667746195;
-        Tue, 09 Jul 2019 03:22:26 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id j1sm40161849pgl.12.2019.07.09.03.22.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 03:22:25 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        David Laight <David.Laight@aculab.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH v2 2/2] rtw88: pci: Use DMA sync instead of remapping in RX ISR
-Date:   Tue,  9 Jul 2019 18:21:01 +0800
-Message-Id: <20190709102059.7036-2-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708063252.4756-1-jian-hong@endlessm.com>
-References: <20190708063252.4756-1-jian-hong@endlessm.com>
+        Tue, 9 Jul 2019 06:25:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SFTO/dK8SIeELbyjmWLxRQjDXjnyydcKlq+hFQch7Xk=; b=kaTYe12YjtXiZyDx7eArbT8N7
+        tp56ndNM22Z2sEqW/o4XYuU6REDbGGlDQI5mCtzdOxLjv6DvzQ/CIihog3RU2TnN4SrBGWw9MlMlZ
+        9abWY6HKcIcoVSxcrvJlZCFIer9cOy8LCJNoJ+X4rW9PPbafjDudIr+ItpYbHhjrUz0Cwl1oyjzKB
+        d3We1Q5OD1sKsaMU2I2ydIWQGKIMHV/X7Uf7Suhs1wPxnY8TKvMMIdg5TMQMX7i0Hh3pNCubP6/8q
+        aNZc0XZL2HJp3NuOF015JQOppeJWT2w44lwvGjOw7CvgkSFTxMqEuKGZePyekzkxWFgB83rGxr8Dk
+        2T6JX4geg==;
+Received: from 177.43.30.58.dynamic.adsl.gvt.net.br ([177.43.30.58] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hknJ3-0005Wy-CQ; Tue, 09 Jul 2019 10:25:05 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hknJ1-0001Ts-5f; Tue, 09 Jul 2019 07:25:03 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] docs: pdf: add all Documentation/*/index.rst to PDF output
+Date:   Tue,  9 Jul 2019 07:25:02 -0300
+Message-Id: <534357e57c539b421a745536dcf95cef78252b1e.1562667900.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,74 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since each skb in RX ring is reused instead of new allocation, we can
-treat the DMA in a more efficient way by DMA synchronization.
+Currently, all index files should be manually added to the
+latex_documents array at conf.py.
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+While this allows fine-tuning some LaTeX specific things, like
+the name of the output file and the name of the document, it
+is not uncommon to forget adding new documents there.
+
+So, add a logic that will seek for all Documentation/*/index.rst.
+If the index is not yet at latex_documents, it includes using
+a reasonable default.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/pci.c | 35 ++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 3 deletions(-)
+ Documentation/conf.py | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index e9fe3ad896c8..28ca76f71dfe 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -206,6 +206,35 @@ static int rtw_pci_reset_rx_desc(struct rtw_dev *rtwdev, struct sk_buff *skb,
- 	return 0;
- }
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index a502baecbb85..191bd380c523 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -410,6 +410,21 @@ latex_documents = [
+      'The kernel development community', 'manual'),
+ ]
  
-+static int rtw_pci_sync_rx_desc_cpu(struct rtw_dev *rtwdev, dma_addr_t dma)
-+{
-+	struct device *dev = rtwdev->dev;
-+	int buf_sz = RTK_PCI_RX_BUF_SIZE;
++# Add all other index files from Documentation/ subdirectories
++for fn in os.listdir('.'):
++    doc = os.path.join(fn, "index")
++    if os.path.exists(doc + ".rst"):
++        has = False
++        for l in latex_documents:
++            if l[0] == doc:
++                has = True
++                break
++        if not has:
++            latex_documents.append((doc, fn + '.tex',
++                                    'Linux %s Documentation' % fn.capitalize(),
++                                    'The kernel development community',
++                                    'manual'))
 +
-+	dma_sync_single_for_cpu(dev, dma, buf_sz, PCI_DMA_FROMDEVICE);
-+
-+	return 0;
-+}
-+
-+static int rtw_pci_sync_rx_desc_device(struct rtw_dev *rtwdev, dma_addr_t dma,
-+				       struct rtw_pci_rx_ring *rx_ring,
-+				       u32 idx, u32 desc_sz)
-+{
-+	struct device *dev = rtwdev->dev;
-+	struct rtw_pci_rx_buffer_desc *buf_desc;
-+	int buf_sz = RTK_PCI_RX_BUF_SIZE;
-+
-+	dma_sync_single_for_device(dev, dma, buf_sz, PCI_DMA_FROMDEVICE);
-+
-+	buf_desc = (struct rtw_pci_rx_buffer_desc *)(rx_ring->r.head +
-+						     idx * desc_sz);
-+	memset(buf_desc, 0, sizeof(*buf_desc));
-+	buf_desc->buf_size = cpu_to_le16(RTK_PCI_RX_BUF_SIZE);
-+	buf_desc->dma = cpu_to_le32(dma);
-+
-+	return 0;
-+}
-+
- static int rtw_pci_init_rx_ring(struct rtw_dev *rtwdev,
- 				struct rtw_pci_rx_ring *rx_ring,
- 				u8 desc_size, u32 len)
-@@ -782,8 +811,7 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
- 		rtw_pci_dma_check(rtwdev, ring, cur_rp);
- 		skb = ring->buf[cur_rp];
- 		dma = *((dma_addr_t *)skb->cb);
--		pci_unmap_single(rtwpci->pdev, dma, RTK_PCI_RX_BUF_SIZE,
--				 PCI_DMA_FROMDEVICE);
-+		rtw_pci_sync_rx_desc_cpu(rtwdev, dma);
- 		rx_desc = skb->data;
- 		chip->ops->query_rx_desc(rtwdev, rx_desc, &pkt_stat, &rx_status);
- 
-@@ -818,7 +846,8 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
- 
- next_rp:
- 		/* new skb delivered to mac80211, re-enable original skb DMA */
--		rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc_sz);
-+		rtw_pci_sync_rx_desc_device(rtwdev, dma, ring, cur_rp,
-+					    buf_desc_sz);
- 
- 		/* host read next element in ring */
- 		if (++cur_rp >= ring->r.len)
+ # The name of an image file (relative to this directory) to place at the top of
+ # the title page.
+ #latex_logo = None
 -- 
-2.22.0
+2.21.0
 
