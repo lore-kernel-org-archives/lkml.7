@@ -2,128 +2,89 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588CFC606D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F6C606DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBFC2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419B12080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 10:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfGIJ7Y (ORCPT
+        id S1726767AbfGIKCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:59:24 -0400
-Received: from mx01.quantatw.com ([219.87.191.90]:31098 "EHLO
-        mx01.quantatw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfGIJ7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:59:23 -0400
-X-Greylist: delayed 619 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jul 2019 05:59:22 EDT
-Received: from unknown (HELO mailbx06.quanta.corp) ([10.243.91.101])
-  by mx01.quantatw.com with ESMTP; 09 Jul 2019 17:49:00 +0800
-Received: from mailbx05.quanta.corp (10.243.91.100) by mailbx06.quanta.corp
- (10.243.91.101) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Jul 2019
- 17:48:59 +0800
-Received: from mailbx05.quanta.corp ([192.168.0.5]) by mailbx05.quanta.corp
- ([192.168.0.5]) with mapi id 15.01.1713.004; Tue, 9 Jul 2019 17:48:59 +0800
-From:   =?big5?B?R2VvcmdlIEh1bmcgKKx4qb63cSk=?= <George.Hung@quantatw.com>
-To:     Rob Herring <robh@kernel.org>, George Hung <ghung.quanta@gmail.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tali Perry <tali.perry1@gmail.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "wak@google.com" <wak@google.com>,
-        "benjaminfair@google.com" <benjaminfair@google.com>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "tomer.maimon@nuvoton.com" <tomer.maimon@nuvoton.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "Avi.Fishman@nuvoton.com" <Avi.Fishman@nuvoton.com>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        "Patrick Venture" <venture@google.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Subject: RE: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
-Thread-Topic: [PATCH 5.2 v2 2/2] dt-binding: edac: add NPCM ECC documentation
-Thread-Index: AQHVNfd78GrHFC2ty02NT0e+R3uriabCCCsA
-Date:   Tue, 9 Jul 2019 09:48:59 +0000
-Message-ID: <0c90f9376c0e425c9a226379f7e5bfad@quantatw.com>
-References: <20190605141253.38554-1-ghung.quanta@gmail.com>
- <20190605141253.38554-2-ghung.quanta@gmail.com>
- <20190709014058.GA30269@bogus>
-In-Reply-To: <20190709014058.GA30269@bogus>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.243.91.252]
-x-tm-as-product-ver: SMEX-12.0.0.1727-8.200.1013-24746.005
-x-tm-as-result: No--21.007500-0.000000-31
-x-tm-as-matchedid: 140026-150567-700225-703140-701090-703503-704039-139010-1
-        39006-188199-702601-702887-702754-702304-702058-702617-823290-705012-703129
-        -106660-703408-700069-701429-702604-705249-110462-701342-704841-863519-1880
-        19-703017-702395-703213-701478-704585-701337-703958-700737-704384-704397-70
-        2392-700786-703880-148004-148133-20043-42000-42003-63
-x-tm-as-user-approved-sender: Yes
-x-tm-as-user-blocked-sender: No
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+        Tue, 9 Jul 2019 06:02:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48546 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726623AbfGIKCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 06:02:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 96B1CAC2D;
+        Tue,  9 Jul 2019 10:02:05 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     axboe@kernel.dk
+Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH v2 1/3] ata: Documentation, fix function names
+Date:   Tue,  9 Jul 2019 12:02:01 +0200
+Message-Id: <20190709100203.19049-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLA0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogb3BlbmJt
-Yw0KPiBbbWFpbHRvOm9wZW5ibWMtYm91bmNlcytnZW9yZ2UuaHVuZz1xdWFudGF0dy5jb21AbGlz
-dHMub3psYWJzLm9yZ10gT24NCj4gQmVoYWxmIE9mIFJvYiBIZXJyaW5nDQo+IFNlbnQ6IFR1ZXNk
-YXksIEp1bHkgMDksIDIwMTkgOTo0MSBBTQ0KPiBUbzogR2VvcmdlIEh1bmcNCj4gQ2M6IE1hcmsg
-UnV0bGFuZDsgTGludXMgV2FsbGVpajsgVGFsaSBQZXJyeTsgcGF1bG1ja0BsaW51eC5pYm0uY29t
-Ow0KPiB3YWtAZ29vZ2xlLmNvbTsgYmVuamFtaW5mYWlyQGdvb2dsZS5jb207IG9wZW5ibWNAbGlz
-dHMub3psYWJzLm9yZzsNCj4gdG9tZXIubWFpbW9uQG51dm90b24uY29tOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgQm9yaXNsYXYgUGV0a292Ow0KPiBBdmkuRmlzaG1hbkBudXZvdG9uLmNv
-bTsgSm9uYXRoYW4gQ2FtZXJvbjsgTWF1cm8gQ2FydmFsaG8gQ2hlaGFiOw0KPiBsaW51eC1lZGFj
-OyBQYXRyaWNrIFZlbnR1cmU7IE5pY29sYXMgRmVycmU7IGxpbnV4LWtlcm5lbDsgSmFtZXMgTW9y
-c2U7IEdyZWcNCj4gS3JvYWgtSGFydG1hbjsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldA0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIDUuMiB2MiAyLzJdIGR0LWJpbmRpbmc6IGVkYWM6IGFkZCBOUENNIEVDQw0K
-PiBkb2N1bWVudGF0aW9uDQo+IA0KPiBPbiBXZWQsIEp1biAwNSwgMjAxOSBhdCAxMDoxMjo1M1BN
-ICswODAwLCBHZW9yZ2UgSHVuZyB3cm90ZToNCj4gPiBBZGQgZGV2aWNlIHRyZWUgZG9jdW1lbnRh
-dGlvbiBmb3IgTnV2b3RvbiBCTUMgRUNDDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBHZW9yZ2Ug
-SHVuZyA8Z2h1bmcucXVhbnRhQGdtYWlsLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2JpbmRpbmdz
-L2VkYWMvbnBjbTd4eC1zZHJhbS1lZGFjLnR4dCAgICAgICAgfCAxNw0KPiArKysrKysrKysrKysr
-KysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9u
-cGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+
-ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFt
-LWVkYWMudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAw
-MDAuLmRkNGRhYzU5YTViZA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWRhYy9ucGNtN3h4LXNkcmFtLWVkYWMudHh0DQo+ID4g
-QEAgLTAsMCArMSwxNyBAQA0KPiA+ICtOdXZvdG9uIE5QQ003eHggU29DIEVEQUMgZGV2aWNlIGRy
-aXZlcg0KPiA+ICsNCj4gPiArVGhlIE51dm90b24gTlBDTTd4eCBTb0Mgc3VwcG9ydHMgRERSNCBt
-ZW1vcnkgd2l0aC93aXRob3V0IEVDQyBhbmQNCj4gdGhlDQo+ID4gK2RyaXZlciB1c2VzIHRoZSBF
-REFDIGZyYW1ld29yayB0byBpbXBsZW1lbnQgdGhlIEVDQyBkZXRlY3Rpb24gYW5kDQo+IGNvcnJ0
-ZWN0aW9uLg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRp
-YmxlOglzaG91bGQgYmUgIm51dm90b24sbnBjbTd4eC1zZHJhbS1lZGFjIg0KPiANCj4gSXMgdGhp
-cyBmb3IgdGhlIHdob2xlIFNEUkFNIGNvbnRyb2xsZXIgb3IganVzdCBFQ0MgcmVsYXRlZCByZWdp
-c3RlcnM/DQo+IEluIHRoZSBmb3JtZXIgY2FzZSwgdGhlIG5hbWluZyBzaG91bGQganVzdCByZWZs
-ZWN0IHRoZSBibG9jayBuYW1lIGFuZCBub3QgYQ0KPiBMaW51eCB0ZXJtLg0KDQpTb3JyeSBmb3Ig
-Y29uZnVzZWQgbmFtaW5nLCB0aGUgYWRkcmVzcyBzcGFjZSBpcyBmb3IgdGhlIHdob2xlIG1lbW9y
-eSBjb250cm9sbGVyIHJlZ2lzdGVycyBpbmRlZWQsDQpidXQgdGhlIGRyaXZlciBvbmx5IHVzZXMg
-dGhlIEVDQyByZWxhdGVkIHJlZ2lzdGVycy4NClNob3VsZCBJIGNoYW5nZSB0aGUgbmFtZSB0byAi
-bnV2b3RvbixucGNtN3h4LWVkYWMiID8NCg0KPiANCj4gPiArLSByZWc6CQlNZW1vcnkgY29udHJv
-bGxlciByZWdpc3RlciBzZXQgc2hvdWxkIGJlIDwweGYwODI0MDAwDQo+IDB4MTAwMD4NCj4gPiAr
-LSBpbnRlcnJ1cHRzOglzaG91bGQgYmUgTUMgaW50ZXJydXB0ICMyNQ0KPiA+ICsNCj4gPiArRXhh
-bXBsZToNCj4gPiArDQo+ID4gKwltYzogbWVtb3J5LWNvbnRyb2xsZXJAZjA4MjQwMDAgew0KPiA+
-ICsJCWNvbXBhdGlibGUgPSAibnV2b3RvbixucGNtN3h4LXNkcmFtLWVkYWMiOw0KPiA+ICsJCXJl
-ZyA9IDwweGYwODI0MDAwIDB4MTAwMD47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDwwIDI1IDQ+Ow0K
-PiA+ICsJfTsNCj4gPiAtLQ0KPiA+IDIuMjEuMA0KPiA+DQo=
+ata_qc_prep no longer exists, there are ata_bmdma_qc_prep and
+ata_bmdma_dumb_qc_prep instead. And most drivers do not use them, so
+reword the paragraph.
+
+ata_qc_issue_prot was renamed to ata_sff_qc_issue. ->tf_load is now
+->sff_tf_load. Fix them.
+
+And fix spelling supercede -> supersede.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
+---
+ Documentation/driver-api/libata.rst | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/driver-api/libata.rst b/Documentation/driver-api/libata.rst
+index 70e180e6b93d..c2ee38098e85 100644
+--- a/Documentation/driver-api/libata.rst
++++ b/Documentation/driver-api/libata.rst
+@@ -254,19 +254,19 @@ High-level taskfile hooks
+     int (*qc_issue) (struct ata_queued_cmd *qc);
+ 
+ 
+-Higher-level hooks, these two hooks can potentially supercede several of
++Higher-level hooks, these two hooks can potentially supersede several of
+ the above taskfile/DMA engine hooks. ``->qc_prep`` is called after the
+ buffers have been DMA-mapped, and is typically used to populate the
+-hardware's DMA scatter-gather table. Most drivers use the standard
+-:c:func:`ata_qc_prep` helper function, but more advanced drivers roll their
+-own.
++hardware's DMA scatter-gather table. Some drivers use the standard
++:c:func:`ata_bmdma_qc_prep` and :c:func:`ata_bmdma_dumb_qc_prep` helper
++functions, but more advanced drivers roll their own.
+ 
+ ``->qc_issue`` is used to make a command active, once the hardware and S/G
+ tables have been prepared. IDE BMDMA drivers use the helper function
+-:c:func:`ata_qc_issue_prot` for taskfile protocol-based dispatch. More
++:c:func:`ata_sff_qc_issue` for taskfile protocol-based dispatch. More
+ advanced drivers implement their own ``->qc_issue``.
+ 
+-:c:func:`ata_qc_issue_prot` calls ``->tf_load()``, ``->bmdma_setup()``, and
++:c:func:`ata_sff_qc_issue` calls ``->sff_tf_load()``, ``->bmdma_setup()``, and
+ ``->bmdma_start()`` as necessary to initiate a transfer.
+ 
+ Exception and probe handling (EH)
+-- 
+2.22.0
+
