@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE36C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9C5C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 356B7216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0E42086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfGIDbg (ORCPT
+        id S1727431AbfGIDbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:31:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51558 "EHLO huawei.com"
+        Mon, 8 Jul 2019 23:31:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51534 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726294AbfGIDbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725886AbfGIDbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jul 2019 23:31:31 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8C2E6A83445D307F6E29;
+        by Forcepoint Email with ESMTP id 717AA6D18746615EEB9D;
         Tue,  9 Jul 2019 11:31:29 +0800 (CST)
 Received: from huawei.com (10.67.189.167) by DGGEMS402-HUB.china.huawei.com
  (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 9 Jul 2019
- 11:31:21 +0800
+ 11:31:23 +0800
 From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 To:     <davem@davemloft.net>, <robh+dt@kernel.org>,
         <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
@@ -34,9 +34,9 @@ CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <leeyou.li@huawei.com>,
         <nixiaoming@huawei.com>, <jianping.liu@huawei.com>,
         <xiekunxun@huawei.com>
-Subject: [PATCH v2 03/10] net: hisilicon: Cleanup for cast to restricted __be32
-Date:   Tue, 9 Jul 2019 11:31:04 +0800
-Message-ID: <1562643071-46811-4-git-send-email-xiaojiangfeng@huawei.com>
+Subject: [PATCH v2 09/10] net: hisilicon: Add an rx_desc to adapt HI13X1_GMAC
+Date:   Tue, 9 Jul 2019 11:31:10 +0800
+Message-ID: <1562643071-46811-10-git-send-email-xiaojiangfeng@huawei.com>
 X-Mailer: git-send-email 1.8.5.6
 In-Reply-To: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
 References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
@@ -49,38 +49,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the following warning from sparse:
-hip04_eth.c:533:23: warning: cast to restricted __be16
-hip04_eth.c:533:23: warning: cast to restricted __be16
-hip04_eth.c:533:23: warning: cast to restricted __be16
-hip04_eth.c:533:23: warning: cast to restricted __be16
-hip04_eth.c:534:23: warning: cast to restricted __be32
-hip04_eth.c:534:23: warning: cast to restricted __be32
-hip04_eth.c:534:23: warning: cast to restricted __be32
-hip04_eth.c:534:23: warning: cast to restricted __be32
-hip04_eth.c:534:23: warning: cast to restricted __be32
-hip04_eth.c:534:23: warning: cast to restricted __be32
+HI13X1 changed the offsets and bitmaps for rx_desc
+registers in the same peripheral device on different
+models of the hip04_eth.
 
 Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 31f13cf..d8f0619 100644
+index c578934..780fc46 100644
 --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
 +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -530,8 +530,8 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
- 		priv->rx_phys[priv->rx_head] = 0;
+@@ -171,11 +171,20 @@ struct tx_desc {
+ } __aligned(64);
  
- 		desc = (struct rx_desc *)skb->data;
--		len = be16_to_cpu(desc->pkt_len);
--		err = be32_to_cpu(desc->pkt_err);
-+		len = be16_to_cpu((__force __be16)desc->pkt_len);
-+		err = be32_to_cpu((__force __be32)desc->pkt_err);
+ struct rx_desc {
++#if defined(CONFIG_HI13X1_GMAC)
++	u32 reserved1[3];
++	u16 pkt_len;
++	u16 reserved_16;
++	u32 reserved2[6];
++	u32 pkt_err;
++	u32 reserved3[5];
++#else
+ 	u16 reserved_16;
+ 	u16 pkt_len;
+ 	u32 reserve1[3];
+ 	u32 pkt_err;
+ 	u32 reserve2[4];
++#endif
+ };
  
- 		if (0 == len) {
- 			dev_kfree_skb_any(skb);
+ struct hip04_priv {
 -- 
 1.8.5.6
 
