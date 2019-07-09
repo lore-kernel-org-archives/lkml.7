@@ -2,103 +2,69 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1366C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67958C73C5C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB712073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454742073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfGIV3H (ORCPT
+        id S1729513AbfGIV3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:29:07 -0400
-Received: from verein.lst.de ([213.95.11.211]:45686 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbfGIV3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:29:07 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id E0B2468B02; Tue,  9 Jul 2019 23:29:04 +0200 (CEST)
-Date:   Tue, 9 Jul 2019 23:29:04 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Max Gurtovoy <maxg@mellanox.com>
-Cc:     Marta Rybczynska <mrybczyn@kalray.eu>, kbusch@kernel.org,
-        axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Samuel Jones <sjones@kalray.eu>,
-        Jean-Baptiste Riaux <jbriaux@kalray.eu>
-Subject: Re: [PATCH v2] nvme: fix multipath crash when ANA desactivated
-Message-ID: <20190709212904.GB9636@lst.de>
-References: <1575872828.30576006.1562335512322.JavaMail.zimbra@kalray.eu> <989987da-6711-0abc-785c-6574b3bb768c@mellanox.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <989987da-6711-0abc-785c-6574b3bb768c@mellanox.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Tue, 9 Jul 2019 17:29:46 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45892 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGIV3p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 17:29:45 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E7BF01420F59B;
+        Tue,  9 Jul 2019 14:29:44 -0700 (PDT)
+Date:   Tue, 09 Jul 2019 14:29:44 -0700 (PDT)
+Message-Id: <20190709.142944.544358620632880764.davem@davemloft.net>
+To:     xiaojiangfeng@huawei.com
+Cc:     robh+dt@kernel.org, yisen.zhuang@huawei.com,
+        salil.mehta@huawei.com, mark.rutland@arm.com,
+        dingtianhong@huawei.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        leeyou.li@huawei.com, nixiaoming@huawei.com,
+        jianping.liu@huawei.com, xiekunxun@huawei.com
+Subject: Re: [PATCH v2 00/10] net: hisilicon: Add support for HI13X1 to
+ hip04_eth
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
+References: <1562643071-46811-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 09 Jul 2019 14:29:45 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 06, 2019 at 01:06:44PM +0300, Max Gurtovoy wrote:
->> +	/* check if multipath is enabled and we have the capability */
->> +	if (!multipath)
->> +		return 0;
->> +	if (!ctrl->subsys || ((ctrl->subsys->cmic & (1 << 3)) != 0))
->
-> shouldn't it be:
->
-> if (!ctrl->subsys || ((ctrl->subsys->cmic & (1 << 3)) == 0))
->
-> or
->
-> if (!ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
->
->
-> Otherwise, you don't really do any initialization and return 0 in case you have the capability, right ?
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Date: Tue, 9 Jul 2019 11:31:01 +0800
 
-Yes.  FYI, my idea how to fix this would be something like:
+> The main purpose of this patch series is to extend the
+> hip04_eth driver to support HI13X1_GMAC.
+> 
+> The offset and bitmap of some registers of HI13X1_GMAC
+> are different from hip04_eth common soc. In addition,
+> the definition of send descriptor and parsing descriptor
+> are different from hip04_eth common soc. So the macro
+> of the register offset is redefined to adapt the HI13X1_GMAC.
+> 
+> Clean up the sparse warning by the way.
+> 
+> Change since v1:
+> * Add a cover letter.
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index a9a927677970..cdb3e5baa329 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -12,11 +12,6 @@ module_param(multipath, bool, 0444);
- MODULE_PARM_DESC(multipath,
- 	"turn on native support for multiple controllers per subsystem");
- 
--inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
--{
--	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
--}
--
- /*
-  * If multipathing is enabled we need to always use the subsystem instance
-  * number for numbering our devices to avoid conflicts between subsystems that
-@@ -622,7 +617,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- {
- 	int error;
- 
--	if (!nvme_ctrl_use_ana(ctrl))
-+	if (!multipath || !ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
- 		return 0;
- 
- 	ctrl->anacap = id->anacap;
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 716a876119c8..14eca76bec5c 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -485,7 +485,10 @@ extern const struct attribute_group *nvme_ns_id_attr_groups[];
- extern const struct block_device_operations nvme_ns_head_ops;
- 
- #ifdef CONFIG_NVME_MULTIPATH
--bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl);
-+static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
-+{
-+	return ctrl->ana_log_buf != NULL;
-+}
- void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
- 			struct nvme_ctrl *ctrl, int *flags);
- void nvme_failover_req(struct request *req);
+Series applied, thanks.
