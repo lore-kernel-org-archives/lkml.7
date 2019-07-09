@@ -2,81 +2,78 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8528C73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A337C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0AA21537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F1121537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 16:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfGIQpH (ORCPT
+        id S1726560AbfGIQqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 12:45:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:47154 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbfGIQpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 12:45:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42EAD2B;
-        Tue,  9 Jul 2019 09:45:06 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58C3C3F59C;
-        Tue,  9 Jul 2019 09:45:05 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 17:45:03 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     kishon@ti.com, bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: pci-dra7xx: Add missing include file
-Message-ID: <20190709164503.GB19709@e121166-lin.cambridge.arm.com>
-References: <20190614154044.4972-1-yuehaibing@huawei.com>
+        Tue, 9 Jul 2019 12:46:19 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52216 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725816AbfGIQqT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 12:46:19 -0400
+Received: from callcc.thunk.org ([199.116.118.215])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x69Gk3nw014432
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 9 Jul 2019 12:46:05 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id EDC7742002E; Tue,  9 Jul 2019 12:46:02 -0400 (EDT)
+Date:   Tue, 9 Jul 2019 12:46:02 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, kys@microsoft.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: exfat filesystem
+Message-ID: <20190709164602.GA8127@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, kys@microsoft.com,
+        Sasha Levin <sashal@kernel.org>
+References: <21080.1562632662@turing-police>
+ <20190709045020.GB23646@mit.edu>
+ <20190709112136.GI32320@bombadil.infradead.org>
+ <20190709153039.GA3200@mit.edu>
+ <20190709154834.GJ32320@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614154044.4972-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190709154834.GJ32320@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 11:40:44PM +0800, YueHaibing wrote:
-> Fix build error:
+On Tue, Jul 09, 2019 at 08:48:34AM -0700, Matthew Wilcox wrote:
 > 
-> drivers/pci/controller/dwc/pci-dra7xx.c:
->  In function dra7xx_pcie_probe:
-> drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
->  error: implicit declaration of function devm_gpiod_get_optional;
->  did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
-> 
->   reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
->  1 file changed, 1 insertion(+)
+> Interesting analysis.  It seems to me that the correct forms would be
+> observed if someone suitably senior at Microsoft accepted the work from
+> Valdis and submitted it with their sign-off.  KY, how about it?
 
-Applied to pci/dwc for v5.3, thanks.
+It might be that the simplest way to do this is just to have someone
+from Microsoft send the pull request (with a signed tag) to Linus.
+There are any number ways to arrange this but the PGP-signed tag might
+be sufficient.  Alternatively, some kind of declaration from a
+Microsoft lawyer to OIN might be sufficient.  This is where asking the
+LF if they can bring together a meeting of the minds of LF, OIN, and
+Microsoft lawyers might make things much easier.
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index 419451e..4234ddb 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -26,6 +26,7 @@
->  #include <linux/types.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/regmap.h>
-> +#include <linux/gpio/consumer.h>
->  
->  #include "../../pci.h"
->  #include "pcie-designware.h"
-> -- 
-> 2.7.4
-> 
-> 
+						- Ted
