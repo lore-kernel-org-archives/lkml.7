@@ -2,64 +2,67 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE51C73C42
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F389C73C43
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE87721537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C9221537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:04:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jM4R7WXr"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dn6Irr6W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfGIMDj (ORCPT
+        id S1726823AbfGIMEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:03:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54571 "EHLO
+        Tue, 9 Jul 2019 08:04:14 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41425 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfGIMDj (ORCPT
+        with ESMTP id S1726030AbfGIMEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:03:39 -0400
+        Tue, 9 Jul 2019 08:04:14 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x69C268W1901887
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x69C3arr1902264
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 9 Jul 2019 05:02:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x69C268W1901887
+        Tue, 9 Jul 2019 05:03:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x69C3arr1902264
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562673727;
-        bh=8Vbxk8QdqLEFV6UvNTwaY5xser5lGsQ19iYB/COOvr0=;
+        s=2019061801; t=1562673817;
+        bh=uURZ37HfIgMAvVVbO7RjyevVofVShrjM/dTDNFpp52g=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=jM4R7WXrOv1gkqXDq6s6AuTjqv+k5eyB+TyU+Qvl0qC6sJxoKQlLB/T+qYg5N9ldb
-         femitzxQ0dY47ESWsCVBAsoGW/mQ0C2WZzpIWYZfa/ejpSHWLFqP0spM35T6KBFvPk
-         Tv1bL6xTcNPzH0HXmf78h2RbBoG8qdnpnKm9uNhxI+FHAtv2MbarirGuAUE1ZzuMCU
-         iooMXmv9KtLBl3s+7jUbhy1quZKAMOFZRt0NPjDpdoxUTLMR9e3DCbfofWAhpvWBRG
-         BEP4BtaQJHl0TTcuD3zlmKob7RX2I+hFwMhNnHQA9hr8JrHOcx4ChibjNSgz4UOJRE
-         S04oNd/X/7l5Q==
+        b=dn6Irr6WMw8dBRn2unL2eS4nJN1J/IAYAUMi/p2WIKxmLuKUh0Us0Z0UtU6mFBLZX
+         UPXlP/IKXHp2nD5KE9aIR0epeZH9ihi76Tjc5TZqyJHQUCim1GbEkJXr6BfuBn6bPb
+         Mml03ooq6QAuZsnHsC1jiuVzFOqaM6i2OYuoBNJ+NV+Dzh2IllExQzPf/iSbBfWXgh
+         PNHESpVagF4e/PZvWmxaam4qvaT9cPZHTm1bhlEoOaTFdp9KausS5c3Sss20RyAn4E
+         QU1BbGeprX9/oHCC9N1n3/onw88hgWHYEVnl++oL49d12X7tmmtyumCv3/8tGsBCQJ
+         MRfd+ggk9APMg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x69C25ug1901884;
-        Tue, 9 Jul 2019 05:02:05 -0700
-Date:   Tue, 9 Jul 2019 05:02:05 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x69C3YGo1902260;
+        Tue, 9 Jul 2019 05:03:34 -0700
+Date:   Tue, 9 Jul 2019 05:03:34 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-e55a73251da335873a6e87d68fb17e5aabb8978e@git.kernel.org>
-Cc:     ast@kernel.org, hpa@zytor.com, rostedt@goodmis.org,
-        jpoimboe@redhat.com, kasong@redhat.com, mingo@kernel.org,
-        peterz@infradead.org, bp@alien8.de, songliubraving@fb.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        daniel@iogearbox.net
-Reply-To: daniel@iogearbox.net, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          peterz@infradead.org, songliubraving@fb.com, bp@alien8.de,
-          kasong@redhat.com, jpoimboe@redhat.com, rostedt@goodmis.org,
-          hpa@zytor.com, ast@kernel.org
-In-Reply-To: <881939122b88f32be4c374d248c09d7527a87e35.1561685471.git.jpoimboe@redhat.com>
-References: <881939122b88f32be4c374d248c09d7527a87e35.1561685471.git.jpoimboe@redhat.com>
+From:   tip-bot for Ross Zwisler <tipbot@zytor.com>
+Message-ID: <tip-013c66edf207ddb78422b8b636f56c87939c9e34@git.kernel.org>
+Cc:     zwisler@google.com, zwisler@chromium.org,
+        johannes.hirte@datenkhaos.de, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, groeck@google.com, stable@vger.kernel.org,
+        mingo@kernel.org, linux-kernel@vger.kernel.org,
+        keescook@chromium.org, klaus.kusche@computerix.info,
+        groeck@chromium.org
+Reply-To: linux-kernel@vger.kernel.org, keescook@chromium.org,
+          groeck@google.com, stable@vger.kernel.org, mingo@kernel.org,
+          groeck@chromium.org, klaus.kusche@computerix.info,
+          zwisler@google.com, tglx@linutronix.de,
+          johannes.hirte@datenkhaos.de, zwisler@chromium.org, bp@alien8.de,
+          hpa@zytor.com
+In-Reply-To: <20190701155208.211815-1-zwisler@google.com>
+References: <20190701155208.211815-1-zwisler@google.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/debug] bpf: Fix ORC unwinding in non-JIT BPF code
-Git-Commit-ID: e55a73251da335873a6e87d68fb17e5aabb8978e
+Subject: [tip:x86/urgent] Revert "x86/build: Move _etext to actual end of
+ .text"
+Git-Commit-ID: 013c66edf207ddb78422b8b636f56c87939c9e34
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,60 +76,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e55a73251da335873a6e87d68fb17e5aabb8978e
-Gitweb:     https://git.kernel.org/tip/e55a73251da335873a6e87d68fb17e5aabb8978e
-Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Thu, 27 Jun 2019 20:50:47 -0500
+Commit-ID:  013c66edf207ddb78422b8b636f56c87939c9e34
+Gitweb:     https://git.kernel.org/tip/013c66edf207ddb78422b8b636f56c87939c9e34
+Author:     Ross Zwisler <zwisler@chromium.org>
+AuthorDate: Mon, 1 Jul 2019 09:52:08 -0600
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 9 Jul 2019 13:55:57 +0200
+CommitDate: Tue, 9 Jul 2019 13:57:31 +0200
 
-bpf: Fix ORC unwinding in non-JIT BPF code
+Revert "x86/build: Move _etext to actual end of .text"
 
-Objtool previously ignored ___bpf_prog_run() because it didn't understand
-the jump table.  This resulted in the ORC unwinder not being able to unwind
-through non-JIT BPF code.
+This reverts commit 392bef709659abea614abfe53cf228e7a59876a4.
 
-Now that objtool knows how to read jump tables, remove the whitelist and
-annotate the jump table so objtool can recognize it.
+Per the discussion here:
 
-Also add an additional "const" to the jump table definition to clarify that
-the text pointers are constant.  Otherwise GCC sets the section writable
-flag and the assembler spits out warnings.
+  https://lkml.kernel.org/r/201906201042.3BF5CD6@keescook
 
-Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-Reported-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+the above referenced commit breaks kernel compilation with old GCC
+toolchains as well as current versions of the Gold linker.
+
+Revert it to fix the regression and to keep the ability to compile the
+kernel with these tools.
+
+Signed-off-by: Ross Zwisler <zwisler@google.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Kairui Song <kasong@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Cc: <stable@vger.kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lkml.kernel.org/r/881939122b88f32be4c374d248c09d7527a87e35.1561685471.git.jpoimboe@redhat.com
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Johannes Hirte <johannes.hirte@datenkhaos.de>
+Cc: Klaus Kusche <klaus.kusche@computerix.info>
+Cc: samitolvanen@google.com
+Cc: Guenter Roeck <groeck@google.com>
+Link: https://lkml.kernel.org/r/20190701155208.211815-1-zwisler@google.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/bpf/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 080e2bb644cc..1e12ac382a90 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- {
- #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
- #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
--	static const void *jumptable[256] = {
-+	static const void * const jumptable[256] __annotate_jump_table = {
- 		[0 ... 255] = &&default_label,
- 		/* Now overwrite non-defaults ... */
- 		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
-@@ -1558,7 +1558,6 @@ out:
- 		BUG_ON(1);
- 		return 0;
- }
--STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 0850b5149345..4d1517022a14 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -141,10 +141,10 @@ SECTIONS
+ 		*(.text.__x86.indirect_thunk)
+ 		__indirect_thunk_end = .;
+ #endif
+-	} :text = 0x9090
  
- #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
- #define DEFINE_BPF_PROG_RUN(stack_size) \
+-	/* End of text section */
+-	_etext = .;
++		/* End of text section */
++		_etext = .;
++	} :text = 0x9090
+ 
+ 	NOTES :text :note
+ 
