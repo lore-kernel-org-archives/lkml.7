@@ -2,120 +2,105 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E73C48BE9
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E47DC004EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E7220844
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pAXArl2R"
+	by mail.kernel.org (Postfix) with ESMTP id 28D5F21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfGILYA (ORCPT
+        id S1726793AbfGILZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 07:24:00 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44742 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfGILYA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 07:24:00 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x69BNlHP023028;
-        Tue, 9 Jul 2019 06:23:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562671427;
-        bh=b8hnSaDtAsosEIqS3Wtlk/YzhxSQT2YsI/k+98clIo4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pAXArl2RZan427WEUzWy9FensFk4A0hpvp9/x8sbuF1yxrtUBLgCbUTKad7XwGZNf
-         TqwzAlaNy9ga3jmP4K7U+LemryiE61ZvgIefs6CvPvKfpcTiyUWrWF5VHcwQWL7Spb
-         pwr0Ui2qd4Km4UgVISbtWeSe1wE3RDPm8ER/MX0Y=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x69BNlV0097963
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 Jul 2019 06:23:47 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 9 Jul
- 2019 06:23:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 9 Jul 2019 06:23:47 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x69BNeuB048589;
-        Tue, 9 Jul 2019 06:23:41 -0500
-Subject: Re: [PATCH] PCI: dwc: pci-dra7xx: Add missing include file
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        YueHaibing <yuehaibing@huawei.com>
-CC:     <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20190614154044.4972-1-yuehaibing@huawei.com>
- <20190705152905.GA6284@e121166-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <619055c4-7d18-a77e-f7c6-267e4340bc4e@ti.com>
-Date:   Tue, 9 Jul 2019 16:52:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190705152905.GA6284@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 9 Jul 2019 07:25:29 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:16988 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfGILZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 07:25:29 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 31C573A19DFEBA308556;
+        Tue,  9 Jul 2019 19:25:25 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x69BEa6p016939;
+        Tue, 9 Jul 2019 19:14:36 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019070919144793-2212252 ;
+          Tue, 9 Jul 2019 19:14:47 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Scott Wood <oss@buserror.net>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 1/2] powerpc/83xx: fix use-after-free in mpc831x_usb_cfg()
+Date:   Tue, 9 Jul 2019 19:12:47 +0800
+Message-Id: <1562670768-23178-2-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1562670768-23178-1-git-send-email-wen.yang99@zte.com.cn>
+References: <1562670768-23178-1-git-send-email-wen.yang99@zte.com.cn>
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-09 19:14:48,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-09 19:14:39,
+        Serialize complete at 2019-07-09 19:14:39
+X-MAIL: mse-fl1.zte.com.cn x69BEa6p016939
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The immr_node variable is still being used after the of_node_put() call,
+which may result in use-after-free.
+Fix this issue by calling of_node_put() after the last usage.
 
+Fixes: fd066e850351 ("powerpc/mpc8308: fix USB DR controller initialization")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Scott Wood <oss@buserror.net>
+Cc: Kumar Gala <galak@kernel.crashing.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Markus Elfring <Markus.Elfring@web.de>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/powerpc/platforms/83xx/usb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 05/07/19 8:59 PM, Lorenzo Pieralisi wrote:
-> On Fri, Jun 14, 2019 at 11:40:44PM +0800, YueHaibing wrote:
->> Fix build error:
->>
->> drivers/pci/controller/dwc/pci-dra7xx.c:
->>  In function dra7xx_pcie_probe:
->> drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
->>  error: implicit declaration of function devm_gpiod_get_optional;
->>  did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
->>
->>   reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
-> 
-> Adding the reason (in particular the config options) that triggers
-> this error would not hurt.
-> 
-> Kishon please let me know if I can merge it (ACK it if so).
+diff --git a/arch/powerpc/platforms/83xx/usb.c b/arch/powerpc/platforms/83xx/usb.c
+index 3d247d7..19dcef5 100644
+--- a/arch/powerpc/platforms/83xx/usb.c
++++ b/arch/powerpc/platforms/83xx/usb.c
+@@ -158,11 +158,10 @@ int mpc831x_usb_cfg(void)
+ 
+ 	iounmap(immap);
+ 
+-	of_node_put(immr_node);
+-
+ 	/* Map USB SOC space */
+ 	ret = of_address_to_resource(np, 0, &res);
+ 	if (ret) {
++		of_node_put(immr_node);
+ 		of_node_put(np);
+ 		return ret;
+ 	}
+@@ -203,6 +202,7 @@ int mpc831x_usb_cfg(void)
+ 
+ out:
+ 	iounmap(usb_regs);
++	of_node_put(immr_node);
+ 	of_node_put(np);
+ 	return ret;
+ }
+-- 
+2.9.5
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Thanks,
-> Lorenzo
-> 
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
->>  1 file changed, 1 insertion(+)
-> 
-> 
->>
->> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
->> index 419451e..4234ddb 100644
->> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
->> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
->> @@ -26,6 +26,7 @@
->>  #include <linux/types.h>
->>  #include <linux/mfd/syscon.h>
->>  #include <linux/regmap.h>
->> +#include <linux/gpio/consumer.h>
->>  
->>  #include "../../pci.h"
->>  #include "pcie-designware.h"
->> -- 
->> 2.7.4
->>
->>
