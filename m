@@ -2,133 +2,86 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2863C004EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B80C73C81
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB394214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pEUPLdfB"
+	by mail.kernel.org (Postfix) with ESMTP id 5A7792082A
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 11:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfGILvl (ORCPT
+        id S1726449AbfGILyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 07:51:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:52844 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfGILvl (ORCPT
+        Tue, 9 Jul 2019 07:54:03 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42026 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGILyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 07:51:41 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69BnWKa014504;
-        Tue, 9 Jul 2019 11:50:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=xtBXsTaJ7dIMqNvrbwXEX92Vq1lmGGW+oyu54odZQc0=;
- b=pEUPLdfBRoms5xAoDhCqEkMUqR0uWVmyUahw9Zl3O+pgyWQ8l0C/PqTC7FI/1igtx100
- GhuB7jhGhb9HhaVZw5Fs7Zc54RqedYAPXcQptenp6AchPjPg8fw8PUsAZNfktFiI+IX8
- ovepCSnZ5s4panBc6Wf1pHhK+h/vs+NjUtr8TtQmL/VGK/1zp0ygByQFdDfgd5XIeeAu
- oKv44wtnx9sn7NpdBDvk9D23WDOn/pUgYH8EFmMFDq6eTIcRmbrSasfCrw08dFIRdRU5
- 7jq3jycQ9PtZLEA6/glPjLgjoTgxcjJlUcu3V9ozUrqXcXbt/DR7Vh2PdPFWWmI9XdTQ qA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2tjm9qksj4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 11:50:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x69Blnl9160141;
-        Tue, 9 Jul 2019 11:50:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2tmmh2wve0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 09 Jul 2019 11:50:53 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x69BoqbV023270;
-        Tue, 9 Jul 2019 11:50:52 GMT
-Received: from dm-oel.no.oracle.com (/10.172.157.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Jul 2019 04:50:52 -0700
-From:   Dag Moxnes <dag.moxnes@oracle.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
-        parav@mellanox.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] RDMA/core: Fix race when resolving IP address
-Date:   Tue,  9 Jul 2019 13:50:26 +0200
-Message-Id: <1562673026-31996-1-git-send-email-dag.moxnes@oracle.com>
-X-Mailer: git-send-email 1.7.1
+        Tue, 9 Jul 2019 07:54:03 -0400
+Received: from laptop.home (unknown [IPv6:2a01:cb19:8ad6:900:42dd:dd1c:19ee:7c60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BD54728ABEB;
+        Tue,  9 Jul 2019 12:54:00 +0100 (BST)
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/1] Expose cros_ec_sensors frequency range via iio sysfs
+Date:   Tue,  9 Jul 2019 13:53:44 +0200
+Message-Id: <cover.1562672771.git.fabien.lahoudere@collabora.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907090146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9312 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907090146
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the neighbour lock when copying the MAC address from the neighbour
-data struct in dst_fetch_ha.
+Chromebooks EC sensors must expose a range of frequencies for each sensors using
+the standard ABI sampling_frquency_available.
 
-When not using the lock, it is possible for the function to race with
-neigh_update(), causing it to copy an torn MAC address:
+This patch needs https://lkml.org/lkml/2019/7/2/345
 
-rdma_resolve_addr()
-  rdma_resolve_ip()
-    addr_resolve()
-      addr_resolve_neigh()
-        fetch_ha()
-          dst_fetch_ha()
-	     memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN)
+Changes since v3:
+- Split patch 6
+- Drop clean up patches
+- Fix minor changes
 
-and
+Changes since v2:
+- use read_avail callback
+- rework core functions to avoid code duplication
 
-net_ioctl()
-  arp_ioctl()
-    arp_rec_delete()
-      arp_invalidate()
-        neigh_update()
-          __neigh_update()
-	    memcpy(&neigh->ha, lladdr, dev->addr_len)
+Changes since v1:
+- Add a cover letter
+- Add Nick Vaccaro SoB to patch 1
+- Drop fifo size related code
 
-It is possible to provoke this error by calling rdma_resolve_addr() in a
-tight loop, while deleting the corresponding ARP entry in another tight
-loop.
+Fabien Lahoudere (1):
+  iio: common: cros_ec_sensors: Expose cros_ec_sensors frequency range
+    via iio sysfs
 
-Fixes: 51d45974515c ("infiniband: addr: Consolidate code to fetch neighbour hardware address from dst.")
-Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- drivers/infiniband/core/addr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../common/cros_ec_sensors/cros_ec_sensors.c  |  3 +
+ .../cros_ec_sensors/cros_ec_sensors_core.c    | 65 +++++++++++++++++++
+ drivers/iio/light/cros_ec_light_prox.c        |  3 +
+ .../linux/iio/common/cros_ec_sensors_core.h   | 21 ++++++
+ 4 files changed, 92 insertions(+)
 
-diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
-index 2f7d141598..9b76a8fcdd 100644
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -337,7 +337,7 @@ static int dst_fetch_ha(const struct dst_entry *dst,
- 		neigh_event_send(n, NULL);
- 		ret = -ENODATA;
- 	} else {
--		memcpy(dev_addr->dst_dev_addr, n->ha, MAX_ADDR_LEN);
-+		neigh_ha_snapshot(dev_addr->dst_dev_addr, n, dst->dev);
- 	}
- 
- 	neigh_release(n);
 -- 
-2.20.1
+2.19.2
 
