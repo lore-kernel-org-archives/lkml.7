@@ -2,132 +2,146 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEF8C606B0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA96CC606CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CE121537
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90BEC21537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 03:46:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZMEHdqxb"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V3cyEHLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfGIDik (ORCPT
+        id S1727163AbfGIDqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jul 2019 23:38:40 -0400
-Received: from mail-eopbgr00063.outbound.protection.outlook.com ([40.107.0.63]:43424
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726341AbfGIDij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jul 2019 23:38:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OX4rKEGLdam9UCJUPoJejNFiKqVs/jmJB0trusfsHI1ZkPBO4T6itYcuY2kAXkwGSqKVE+0ScVMtlg7MED1CznAfQi+cTvIDiGqijBICqovhpIxDgy9tFoPzZuzLtPT6wCYo3v7dTg/Qz4rbF+iuNCCV6U63uqHZfCvKG1IkaarLzR0tEDb1PKTs4nCb1QRfasAdH6sVNHTBMroYAnAiJ8Jje0NyRYfb5OLcgsLwp7BpWMJlJzbn1JGAOnTBhuPAaZI7CV1IUOlcSkO3N0Uk6luQlT+Qmynt/h0nGMimbVORKgqc4jhHzeHxoMPXw7WInk+kQ3jnm1dSTqlzE7Nlmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=huOkNqQOkNf6RW6RjMupOGnDJsrlFbyhC+whMPQAauQ=;
- b=CSsP88CyhAE20u3AG19tVjDVTNRFpJe50F9Fsjs9eTnDAVePoRQZ7+W1aA2kaqQCAVI+l/MwfUpgxTzXP6854RGXij9MDJsXsdUI6huS1qw61SgV6JINYviqrGjcmxfNqfl7MZdXG844/EmwFGrpCkPq2hWHD163rGRHvYF4VvqIEirsRXtqt7uqBkLFuDIw45AFFAHIOsK9UKTW1x9suFKNRLmSpfTtKh2CClOEdB5JM9l5An03ak4zww8QG79PxPLVQBfa06iYGbfDHdPzMLoCPPvLZsQwoWE+0Ml8RWHrRmcrorE83RPnk+qQG6yc7wbVzEtEcU39DeiDuCdZFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=huOkNqQOkNf6RW6RjMupOGnDJsrlFbyhC+whMPQAauQ=;
- b=ZMEHdqxbQDIeXs3XL+z3x1u0PwbquukEdLIQCm58r3ycjR6ArJlYBIiEhJrLl2gOC+/9zwiiXr0JQAgyOafCHy2BE43TCH1r6nW3CDzPGnN3RFfVqud6VWMuu8lzky94xRLN439lf0nYbDUxbC78N9r1pd18JEeuSp2nWuYnt1k=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1SPR01MB0007.eurprd04.prod.outlook.com (20.179.193.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Tue, 9 Jul 2019 03:38:36 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::218e:ee37:1e81:e157]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::218e:ee37:1e81:e157%3]) with mapi id 15.20.2052.019; Tue, 9 Jul 2019
- 03:38:36 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 2/2] ASoC: fsl_esai: recover the channel swap after
- xrun
-Thread-Topic: [PATCH V2 2/2] ASoC: fsl_esai: recover the channel swap after
- xrun
-Thread-Index: AdU2B0WWYdAyRfftRKe3kHbe3589Jg==
-Date:   Tue, 9 Jul 2019 03:38:36 +0000
-Message-ID: <VE1PR04MB64797B5172DB5EC9EBA8232BE3F10@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4a88d812-30ba-4402-14d6-08d7041eecad
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1SPR01MB0007;
-x-ms-traffictypediagnostic: VE1SPR01MB0007:
-x-microsoft-antispam-prvs: <VE1SPR01MB0007B4D85981DDDCE2999FCBE3F10@VE1SPR01MB0007.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(396003)(346002)(39860400002)(199004)(189003)(478600001)(7736002)(1411001)(6506007)(4326008)(6436002)(5660300002)(99286004)(2906002)(66066001)(52536014)(229853002)(74316002)(8936002)(186003)(26005)(54906003)(14444005)(256004)(7696005)(316002)(305945005)(102836004)(9686003)(6246003)(81166006)(81156014)(33656002)(486006)(55016002)(25786009)(86362001)(6116002)(3846002)(53936002)(8676002)(68736007)(476003)(6916009)(73956011)(76116006)(66446008)(66476007)(66556008)(64756008)(14454004)(66946007)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1SPR01MB0007;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fAQ1lR7BTNuLiwG/an5SbhBxMlFnnxWvWLDDc56aHop6NRQZ75/n21L46B+hyREojhWrBtjLQ/NFQrcIMfeSyvnsWQMBZjcGmLgEvQzuO/Y/ccFNL+vEWTE2FIak+BOtj0R9IpdA8l65OCQsf8asEhaUeGiSBDiuV+SShTQUPFBPyyfmQp+dkLeDlyniuEWeihK37RJ1kXroTJoHyRdT1C0M7kVj0Ph3dC3Xtm/nBp/NsxoyK3SGCh4EWC5Yn51w5+7JzEGU1jZI85BVvnRVtNcvHIlMgIl69osViUMhT3sCtRtLgY+ic07p68MUOllI7ZaIRfqWMi8oQ8Wwtrq+Nsaehb1H2v1ouBcXd0x+JK1lg58I8+2PtR2SELkeuHXBo88ij38SkNuUSc3td3WJ0CAh8Eyp4qVxGOi2MTvCYvg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Jul 2019 23:46:49 -0400
+Received: from ozlabs.org ([203.11.71.1]:52477 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbfGIDqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jul 2019 23:46:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jStB5NYqz9sBt;
+        Tue,  9 Jul 2019 13:46:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562644006;
+        bh=nHzLCbzwOV9uhVfOZRGsKJkoxc4O3gqIAXYqO/91fd8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=V3cyEHLM+b1ErXqO42BE4qh31+NWL8ijE4USSnd2m9UrdsJV4kD5EwYh5icdQ5SXI
+         5YuWiqBfdFUgyEW8mxd4ZhSu46fanoC5uVeBF+XO8aMuEVATqWwIheIaGx1Wmyjsk0
+         P6tF7hv+xXZQpz8rOiePEnb+JcYBCP4yy/gd0zW5+/2r22qfTeYuk8poUlv5cDm0aI
+         vZFhm/JMtv4OCvColW+1EUXIKvCupjp4c6MBwakTssrGz+Ureo/ucZ3Y9W/5XHUu0G
+         CMPGGx+z+GHlEdipTMSCo+ajTo+84Vu/ag5pyznX41si4D/RbIHtfCGsdg3mAxT7r9
+         rw71y6HCVLPPg==
+Date:   Tue, 9 Jul 2019 13:46:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the tip tree
+Message-ID: <20190709134642.626a24ad@canb.auug.org.au>
+In-Reply-To: <20190625160432.533aa140@canb.auug.org.au>
+References: <20190625160432.533aa140@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a88d812-30ba-4402-14d6-08d7041eecad
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 03:38:36.0761
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: shengjiu.wang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1SPR01MB0007
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/+ae4Rc7ixR6m4km5K/=mPG7"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/+ae4Rc7ixR6m4km5K/=mPG7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > > > +
-> > > > +     /* restore registers by regcache_sync */
-> > > > +     fsl_esai_register_restore(esai_priv);
-> > > > +
-> > > > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-> > > > +                        ESAI_xCR_xPR_MASK, 0);
-> > > > +     regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-> > > > +                        ESAI_xCR_xPR_MASK, 0);
-> > >
-> > > And just for curious, can (or shall) we stuff this personal reset to
-> > > the reset() function? I found this one is a part of the reset
-> > > routine being mentioned in the RM -- it was done after ESAI reset is
-> done via ECR register.
-> > >
-> >
-> > There is a problem to do this, TPR/RPR need to be clear after
-> > configure the control register. (TCCR, TCR). So it seems not only one
-> > place (reset function) need to be changed.
+Hi all,
+
+On Tue, 25 Jun 2019 16:04:32 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
 >=20
-> Do you know (or remember) why we suddenly involve this TPR/PRP?
-> The driver has no problem so far, even if we don't have them.
+> drivers/net/wireless/intersil/p54/txrx.c: In function 'p54_rx_data':
+> drivers/net/wireless/intersil/p54/txrx.c:386:28: error: implicit declarat=
+ion of function 'ktime_get_boot_ns'; did you mean 'ktime_get_raw_ns'? [-Wer=
+ror=3Dimplicit-function-declaration]
+>    rx_status->boottime_ns =3D ktime_get_boot_ns();
+>                             ^~~~~~~~~~~~~~~~~
+>                             ktime_get_raw_ns
 >=20
-> The "personal reset" sounds like a feature that we would use to reset TX =
-or
-> RX individually, while this hw_reset() does a full reset for both TX and =
-RX.
-> So I wonder whether they're necessary.
+> Caused by commit
+>=20
+>   c11c75ec784e ("p54: Support boottime in scan results")
+>=20
+> from the wireless-drivers-next tree interacting with commit
+>=20
+>   9285ec4c8b61 ("timekeeping: Use proper clock specifier names in functio=
+ns")
+>=20
+> from the tip tree.
+>=20
+> I have added the following merge fix patch:
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 25 Jun 2019 15:55:36 +1000
+> Subject: [PATCH] p54: fix up for ktime_get_boot_ns() name change
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/net/wireless/intersil/p54/txrx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/wireless/intersil/p54/txrx.c b/drivers/net/wirel=
+ess/intersil/p54/txrx.c
+> index be6968454282..873fea59894f 100644
+> --- a/drivers/net/wireless/intersil/p54/txrx.c
+> +++ b/drivers/net/wireless/intersil/p54/txrx.c
+> @@ -383,7 +383,7 @@ static int p54_rx_data(struct p54_common *priv, struc=
+t sk_buff *skb)
+> =20
+>  	fc =3D ((struct ieee80211_hdr *)skb->data)->frame_control;
+>  	if (ieee80211_is_probe_resp(fc) || ieee80211_is_beacon(fc))
+> -		rx_status->boottime_ns =3D ktime_get_boot_ns();
+> +		rx_status->boottime_ns =3D ktime_get_boottime_ns();
+> =20
+>  	if (unlikely(priv->hw->conf.flags & IEEE80211_CONF_PS))
+>  		p54_pspoll_workaround(priv, skb);
 
-The hw_reset flow is suggested by design team, so involve TRP/RPP is from
-them, I don't know the detail.
+This patch is now needed in the merge between the net-next tree and
+Linus' tree.
 
-Best regards
-Wang shengjiu =20
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+ae4Rc7ixR6m4km5K/=mPG7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0kDiIACgkQAVBC80lX
+0GzYZgf9HOLssZn+Arsy5zw2mfgZzL6iIJTq68XoSSRDf65s/4MCU2z0I7QMcG70
+a4b0mUsOI1av46cVqOuDYoB9j1LpQoRg8BI5Tq1pu+/z1AJ41Slzmg86kwrB/HPy
+uua7aNow181mziJUIa4RMWPHUI4I4+W4RMpUIP3M51GEtd6Nyvwk7csf+XpcDuOn
+2OY7oRgY5RIba6ahi/e+Jgll05qZQMx1I5KHKcA5B9x6UB+TccyMv4dkVjG2CH0a
+F4bbL1okSgAkd3aB5mqUrGyzC2eQsVdoxO5HqN737mzdUHHwLEChWX1oPgJj4pSr
+dm0shAudcD5hGyh9+/YVhH2ohs8v+g==
+=fM1z
+-----END PGP SIGNATURE-----
+
+--Sig_/+ae4Rc7ixR6m4km5K/=mPG7--
