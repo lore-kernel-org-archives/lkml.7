@@ -2,111 +2,87 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E54C73C42
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7127C73C44
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F60C20861
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761E820861
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 12:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KfuIHfV3"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EJlZCQji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfGIMT2 (ORCPT
+        id S1726335AbfGIMUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 08:19:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38406 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfGIMT2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 08:19:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MyOM/2+Oky6LA/ruPYXuAPmONroqpqYRgUXxYrFYTtU=; b=KfuIHfV3koXqt/Jts8MD8/W13
-        kcWhPz76IGYboyZ91/lOMi79ryn1hSa5CrP8xODQz7iu6znhrFfbKx9pGQQ3K2XV4OS3LhllSSx9P
-        jSCCnwXHtnqWh/mEXk4b3twzA4+txHM9evX3i0hVznLo13nEqPhIxDGP2muJu2JOUDo2SOMe+y670
-        HUO0FO9aunk8oyURXUG3rkcVJ7PaDMBJB5Xb8cMhzQ+QnBhlqLALcqOPUPC6Nje3HmHmLpFnB3aY3
-        Sdn2AnUFb07o379hd7WwHPgavnSx8vu+T9E+N+uo7cdDQX2KqDyX1ZLzUTKDjBnvS6aQPW/2uIz4+
-        EPEycpoWw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkp5W-0003r6-Kz; Tue, 09 Jul 2019 12:19:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E28E320976D87; Tue,  9 Jul 2019 14:19:12 +0200 (CEST)
-Date:   Tue, 9 Jul 2019 14:19:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, ak@linux.intel.com, kan.liang@intel.com,
-        mingo@redhat.com, rkrcmar@redhat.com, like.xu@intel.com,
-        jannh@google.com, arei.gonglei@huawei.com, jmattson@google.com
-Subject: Re: [PATCH v7 08/12] KVM/x86/vPMU: Add APIs to support host
- save/restore the guest lbr stack
-Message-ID: <20190709121912.GY3402@hirez.programming.kicks-ass.net>
-References: <1562548999-37095-1-git-send-email-wei.w.wang@intel.com>
- <1562548999-37095-9-git-send-email-wei.w.wang@intel.com>
- <20190708144831.GN3402@hirez.programming.kicks-ass.net>
- <5D240435.2040801@intel.com>
- <20190709093917.GS3402@hirez.programming.kicks-ass.net>
- <5D247BC2.70104@intel.com>
+        Tue, 9 Jul 2019 08:20:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55623 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfGIMUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 08:20:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jhGr3PWfz9sMr;
+        Tue,  9 Jul 2019 22:20:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562674820;
+        bh=HoygXb3/Zo6Iy6m7TvCJiEIzVG8U8NQlgvLlTjIgFRk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EJlZCQjiwVJbUoyiH/6xvaU+bilP3uWZ7eeqf6tNeOiZvVv6E+I3cdjFc8MMprOMr
+         EYb1v2hYyIrpvWXw4LdFroayF6yQl3ERGVJ0BRMB2eNsYrIdEBp9jpakZiajbt78vV
+         Nh6jW6rEUMMJyKkNNNqYNqRqOxsplDfUtzbp9mOBUCIz6u40WE/tt0iax7d1sl4+mq
+         izboagDTxjnRb7RrCrCWdwaZ2BtEk92SIElkzBmwvo336Y0LBUdPni0gYysmgVhEvJ
+         zW6EsMUkgrYzkQWjTC1EyNxvk8QHN1qrK760myabEF48ZPdmN4eCUvFlfXiYg0v/sJ
+         O2tqkRzQ1gQ2A==
+Date:   Tue, 9 Jul 2019 22:20:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the kbuild tree
+Message-ID: <20190709222019.5359e707@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D247BC2.70104@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/lAHwKFOoHd3kTbOgLtIp/GK"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 07:34:26PM +0800, Wei Wang wrote:
+--Sig_/lAHwKFOoHd3kTbOgLtIp/GK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > But what about the counter scheduling rules;
-> 
-> The counter is emulated independent of the lbr emulation.
+Hi all,
 
-> > what happens when a CPU
-> > event claims the LBR before the task event can claim it? CPU events have
-> > precedence over task events.
-> 
-> I think the precedence (cpu pined and task pined) is for the counter
-> multiplexing,
-> right?
+Commit
 
-No; for all scheduling. The order is:
+  8eaeddd155af ("kbuild: header-test: Exclude more headers for um and paris=
+c")
 
-  CPU-pinned
-  Task-pinned
-  CPU-flexible
-  Task-flexible
+is missing a Signed-off-by from its author and committer.
 
-The way you created the event it would land in 'task-flexible', but even
-if you make it task-pinned, a CPU (or CPU-pinned) event could claim the
-LBR before your fake event.
+--=20
+Cheers,
+Stephen Rothwell
 
-> For the lbr feature, could we thought of it as first come, first served?
-> For example, if we have 2 host threads who want to use lbr at the same time,
-> I think one of them would simply fail to use.
->
-> So if guest first gets the lbr, host wouldn't take over unless some
-> userspace command (we added to QEMU) is executed to have the vCPU
-> actively stop using lbr.
+--Sig_/lAHwKFOoHd3kTbOgLtIp/GK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Doesn't work that way.
+-----BEGIN PGP SIGNATURE-----
 
-Say you start KVM with LBR emulation, it creates this task event, it
-gets the LBR (nobody else wants it) and the guest works and starts using
-the LBR.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0khoMACgkQAVBC80lX
+0Gyqfgf/eRUoUbdzGWq+N08wWLBPCbzjPv0tXnpn9lc9ttbdCTizlrG2gkTPW/yE
+rORFZmWu52WeobEoDXZ6WX/0cHAdAt8b6ICLwY1mF/MfRNiKhZpjLt3Y+UOEXRYw
+LKMWDKd1Ze6GKIcI62a2zGMNGIqZvUJeOQ5I9fzDzQnHucQa4Oh4D0UwNay1Z0sr
+r8T/k3LmBSiipY6u549xM4UIxBshGg504AMhxrdqRmBI3GrQLmKuPu6tpDd2IC4L
+wPF9OlVlj2W3SylACz0E7/Z6Ay97rGSrpSkPbzjrJdWof+jr4auiQ3FCWXsviDlK
+9CwRTGLmd2kr7LQkS97aKjvViUO2aA==
+=Xsmp
+-----END PGP SIGNATURE-----
 
-Then the host creates a CPU LBR event and the vCPU suddenly gets denied
-the LBR and the guest no longer functions correctly.
-
-Or you should fail to VMENTER, in which case you starve the guest, but
-at least it doesn't malfunction.
-
+--Sig_/lAHwKFOoHd3kTbOgLtIp/GK--
