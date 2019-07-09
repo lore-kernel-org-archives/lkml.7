@@ -2,197 +2,163 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4683DC606D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45763C606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC97216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CF5216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 09:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfGIJAw convert rfc822-to-8bit (ORCPT
+        id S1726081AbfGIJGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 05:00:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63540 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726025AbfGIJAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 05:00:52 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x698uubL092054
-        for <linux-kernel@vger.kernel.org>; Tue, 9 Jul 2019 05:00:50 -0400
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.81])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmq3yt196-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 05:00:50 -0400
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-kernel@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Tue, 9 Jul 2019 09:00:49 -0000
-Received: from us1a3-smtp03.a3.dal06.isc4sb.com (10.106.154.98)
-        by smtp.notes.na.collabserv.com (10.106.227.88) with smtp.notes.na.collabserv.com ESMTP;
-        Tue, 9 Jul 2019 09:00:41 -0000
-Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
-          by us1a3-smtp03.a3.dal06.isc4sb.com
-          with ESMTP id 2019070909004074-237333 ;
-          Tue, 9 Jul 2019 09:00:40 +0000 
-In-Reply-To: <20190709064346.GF7034@mtr-leonro.mtl.com>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Leon Romanovsky" <leon@kernel.org>
-Cc:     "Stephen Rothwell" <sfr@canb.auug.org.au>,
-        "Doug Ledford" <dledford@redhat.com>,
-        "Jason Gunthorpe" <jgg@mellanox.com>,
-        "David Miller" <davem@davemloft.net>,
-        "Networking" <netdev@vger.kernel.org>,
-        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Date:   Tue, 9 Jul 2019 09:00:40 +0000
+        Tue, 9 Jul 2019 05:06:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34872 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725989AbfGIJGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 05:06:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 75E29ADBF;
+        Tue,  9 Jul 2019 09:06:10 +0000 (UTC)
+Date:   Tue, 9 Jul 2019 11:06:09 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH POC] printk_ringbuffer: Alternative implementation of
+ lockless printk ringbuffer
+Message-ID: <20190709090609.shx7j2mst7wlkbqm@pathway.suse.cz>
+References: <20190621140516.h36g4in26pe3rmly@pathway.suse.cz>
+ <20190704103321.10022-1-pmladek@suse.com>
+ <20190704103321.10022-1-pmladek@suse.com>
+ <87r275j15h.fsf@linutronix.de>
+ <20190708152311.7u6hs453phhjif3q@pathway.suse.cz>
+ <20190708152311.7u6hs453phhjif3q@pathway.suse.cz>
+ <874l3wng7g.fsf@linutronix.de>
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20190709064346.GF7034@mtr-leonro.mtl.com>,<20190709135636.4d36e19f@canb.auug.org.au>
-X-Mailer: IBM iNotes ($HaikuForm 1054) | IBM Domino Build
- SCN1812108_20180501T0841_FP55 May 22, 2019 at 11:09
-X-LLNOutbound: False
-X-Disclaimed: 56111
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 19070909-7093-0000-0000-00000C001049
-X-IBM-SpamModules-Scores: BY=0; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.009927
-X-IBM-SpamModules-Versions: BY=3.00011400; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01229610; UDB=6.00647592; IPR=6.01010869;
- BA=6.00006352; NDR=6.00000001; ZLA=6.00000005; ZF=6.00000009; ZB=6.00000000;
- ZP=6.00000000; ZH=6.00000000; ZU=6.00000002; MB=3.00027647; XFM=3.00000015;
- UTC=2019-07-09 09:00:47
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2019-07-09 02:46:09 - 6.00010142
-x-cbparentid: 19070909-7094-0000-0000-00008DFF1023
-Message-Id: <OF3548A4E6.BB93884C-ON00258432.00308557-00258432.00318024@notes.na.collabserv.com>
-Subject: Re:  Re: linux-next: build failure after merge of the net-next tree
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_04:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874l3wng7g.fsf@linutronix.de>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------"Leon Romanovsky" <leon@kernel.org> wrote: -----
-
->To: "Stephen Rothwell" <sfr@canb.auug.org.au>
->From: "Leon Romanovsky" <leon@kernel.org>
->Date: 07/09/2019 08:43AM
->Cc: "Doug Ledford" <dledford@redhat.com>, "Jason Gunthorpe"
-><jgg@mellanox.com>, "David Miller" <davem@davemloft.net>,
->"Networking" <netdev@vger.kernel.org>, "Linux Next Mailing List"
-><linux-next@vger.kernel.org>, "Linux Kernel Mailing List"
-><linux-kernel@vger.kernel.org>, "Bernard Metzler"
-><bmt@zurich.ibm.com>
->Subject: [EXTERNAL] Re: linux-next: build failure after merge of the
->net-next tree
->
->On Tue, Jul 09, 2019 at 01:56:36PM +1000, Stephen Rothwell wrote:
->> Hi all,
->>
->> After merging the net-next tree, today's linux-next build (x86_64
->> allmodconfig) failed like this:
->>
->> drivers/infiniband/sw/siw/siw_cm.c: In function
->'siw_create_listen':
->> drivers/infiniband/sw/siw/siw_cm.c:1978:3: error: implicit
->declaration of function 'for_ifa'; did you mean 'fork_idle'?
->[-Werror=implicit-function-declaration]
->>    for_ifa(in_dev)
->>    ^~~~~~~
->>    fork_idle
->> drivers/infiniband/sw/siw/siw_cm.c:1978:18: error: expected ';'
->before '{' token
->>    for_ifa(in_dev)
->>                   ^
->>                   ;
->>    {
->>    ~
->>
->> Caused by commit
->>
->>   6c52fdc244b5 ("rdma/siw: connection management")
->>
->> from the rdma tree.  I don't know why this didn't fail after I
->mereged
->> that tree.
->
->I had the same question, because I have this fix for a couple of days
->already.
->
->From 56c9e15ec670af580daa8c3ffde9503af3042d67 Mon Sep 17 00:00:00
->2001
->From: Leon Romanovsky <leonro@mellanox.com>
->Date: Sun, 7 Jul 2019 10:43:42 +0300
->Subject: [PATCH] Fixup to build SIW issue
->
->Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
->---
-> drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
-> 1 file changed, 2 insertions(+), 3 deletions(-)
->
->diff --git a/drivers/infiniband/sw/siw/siw_cm.c
->b/drivers/infiniband/sw/siw/siw_cm.c
->index 8e618cb7261f..c883bf514341 100644
->--- a/drivers/infiniband/sw/siw/siw_cm.c
->+++ b/drivers/infiniband/sw/siw/siw_cm.c
->@@ -1954,6 +1954,7 @@ static void siw_drop_listeners(struct iw_cm_id
->*id)
-> int siw_create_listen(struct iw_cm_id *id, int backlog)
+On Tue 2019-07-09 03:34:43, John Ogness wrote:
+> On 2019-07-08, Petr Mladek <pmladek@suse.com> wrote:
+> >> 1. The code claims that the cmpxchg(seq_newest) in prb_reserve_desc()
+> >> guarantees that "The descriptor is ours until the COMMITTED bit is
+> >> set."  This is not true if in that wind seq_newest wraps, allowing
+> >> another writer to gain ownership of the same descriptor. For small
+> >> descriptor arrays (such as in my test module), this situation is
+> >> quite easy to reproduce.
+> >
+> Let me inline the function are talking about and add commentary to
+> illustrate what I am saying:
+> 
+> static int prb_reserve_desc(struct prb_reserved_entry *entry)
 > {
-> 	struct net_device *dev = to_siw_dev(id->device)->netdev;
->+	const struct in_ifaddr *ifa;
-> 	int rv = 0, listeners = 0;
->
-> 	siw_dbg(id->device, "id 0x%p: backlog %d\n", id, backlog);
->@@ -1975,8 +1976,7 @@ int siw_create_listen(struct iw_cm_id *id, int
->backlog)
-> 			id, &s_laddr.sin_addr, ntohs(s_laddr.sin_port),
-> 			&s_raddr->sin_addr, ntohs(s_raddr->sin_port));
->
->-		for_ifa(in_dev)
->-		{
->+		in_dev_for_each_ifa_rcu(ifa, in_dev) {
-> 			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
-> 			    s_laddr.sin_addr.s_addr == ifa->ifa_address) {
-> 				s_laddr.sin_addr.s_addr = ifa->ifa_address;
->@@ -1988,7 +1988,6 @@ int siw_create_listen(struct iw_cm_id *id, int
->backlog)
-> 					listeners++;
-> 			}
+> 	unsigned long seq, seq_newest, seq_prev_wrap;
+> 	struct printk_ringbuffer *rb = entry->rb;
+> 	struct prb_desc *desc;
+> 	int err;
+> 
+> 	/* Get descriptor for the next sequence number. */
+> 	do {
+> 		seq_newest = READ_ONCE(rb->seq_newest);
+> 		seq = (seq_newest + 1) & PRB_SEQ_MASK;
+> 		seq_prev_wrap = (seq - PRB_DESC_SIZE(rb)) & PRB_SEQ_MASK;
+> 
+> 		/*
+> 		 * Remove conflicting descriptor from the previous wrap
+> 		 * if ever used. It might fail when the related data
+> 		 * have not been committed yet.
+> 		 */
+> 		if (seq_prev_wrap == READ_ONCE(rb->seq_oldest)) {
+> 			err = prb_remove_desc_oldest(rb, seq_prev_wrap);
+> 			if (err)
+> 				return err;
 > 		}
->-		endfor_ifa(in_dev);
-> 		in_dev_put(in_dev);
-> 	} else if (id->local_addr.ss_family == AF_INET6) {
-> 		struct inet6_dev *in6_dev = in6_dev_get(dev);
->--
->2.21.0
->
->
->>
->> I have marked that driver as depending on BROKEN for today.
->>
->> --
->> Cheers,
->> Stephen Rothwell
->
->
->
-I am very sorry for that issues. Things are moving fast, and I
-didn't realize 'for_ifa' recently went away. I agree with Leon,
-his patch fixes the issue. So, please, let's apply that one.
+> 	} while (cmpxchg(&rb->seq_newest, seq_newest, seq) != seq_newest);
+> 
+> I am referring to this point in the code, after the
+> cmpxchg(). seq_newest has been incremented but the descriptor is still
+> in the unused state and seq is still 1 wrap behind. If an NMI occurs
+> here and the NMI (or some other CPU) inserts enough entries to wrap the
+> descriptor array, this descriptor will be reserved again, even though it
+> has already been reserved.
 
-Leon, many thanks for providing the fix.
+Not really, the NMI will not reach the cmpxchg() in this case.
+prb_remove_desc_oldest() will return error. It will not
+be able to remove the conflicting descriptor because it will
+still be occupied by a two-wraps-old descriptor.
 
-Thanks very much,
-Bernard.
+BTW: I did meet these problems in some early variatns. But everything
+started working at some point. I always looked how you solved
+a particular situation in the link-based approach. Then I
+somehow translated it into the pure-array variant.
 
+
+> > BTW: There is one potential problem with my alternative approach.
+> >
+> >      The descriptors and the related data blocks might get reserved
+> >      in different order. Now, the descriptor might get reused only
+> >      when the related datablock is moved outside the valid range.
+> >      This operation might move also other data blocks outside
+> >      the range and invalidate descriptors that were reserved later.
+> >      As a result we might need to invalidate more messages in
+> >      the log buffer then would be really necessary.
+> >
+> >      If I get it properly, this problem does not exist with the
+> >      implementation using links. It is because the descriptors are
+> >      linked in the same order as the reserved data blocks.
+> 
+> Descriptors in the committed list are ordered in commit order (not the
+> reserve order). However, if there are not enough descriptors
+> (i.e. avgdatabits is higher than the true average) this problem exists
+> with the list approach as well.
+
+Thanks for the explanation.
+
+> >      I am not sure how big the problem, with more invalidated messages,
+> >      would be in reality. I am not sure if it would be worth
+> >      a more complicated implementation.
+> 
+> I am also not sure how big the problem is in a practical sense. However
+> to help avoid this issue, I will increase the descbits:avgdatabits ratio
+> for v3.
+
+Yup, it sounds reasonable. The number of reserved but not committed
+descriptors is basically limited by the number of CPUs.
+
+The only unknown variable is the length of the messages. Which brings
+another problem. We might need a solution for continuous lines.
+People would want it. Also storing one line in many entries would
+be quite inefficient. But let's discuss this later when
+printk() gets converted into the lockless ring buffer.
+
+
+> >      Anyway, I still need to fully understand the linked approach
+> >      first.
+> 
+> You may want to wait for v3. I've now split the ringbuffer into multiple
+> generic data structures (as unintentionally suggested[0] by PeterZ),
+> which helps to clarify the role of each data structure and also isolates
+> the memory barriers so that it is clear which data structure requires
+> which memory barriers.
+
+Sure, I am interested to see v3.
+
+Best Regards,
+Petr
