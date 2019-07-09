@@ -2,198 +2,173 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DAEC73C53
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82C4C73C5C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB2220656
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562708836;
-	bh=NXp7FiXBy0jAkEE1QQLlJbfmjifSHIlflhSKhIqgdFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lgte1sbGBoxFJ+l7FGpRwv8jHswFD8nRNgt7NdiPgRWEkdJMCN+g+9s368YwEA0FQ
-	 fDIGTSLotHKZGo5wpGy9GR4DRAtyJgWOb8bcKPzy8jGWwFxqqyHgqbPp0wwrjF1Aao
-	 Xf+ADm42mHZhC95f8ptuCJfNlYzktyrvZ9YB6+GY=
+	by mail.kernel.org (Postfix) with ESMTP id 9F97B20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 21:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WuGNttqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbfGIVrP (ORCPT
+        id S1729658AbfGIVsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 17:47:15 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35338 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729552AbfGIVrO (ORCPT
+        Tue, 9 Jul 2019 17:48:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43533 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729019AbfGIVsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 17:47:14 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so287749ioo.2;
-        Tue, 09 Jul 2019 14:47:14 -0700 (PDT)
+        Tue, 9 Jul 2019 17:48:32 -0400
+Received: by mail-qt1-f194.google.com with SMTP id w17so208101qto.10;
+        Tue, 09 Jul 2019 14:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pObonpCVhBSmmiSRgLF61Ki0eXVsuxi+cPBVrWAPOgE=;
+        b=WuGNttqWLWY2ZilDDq/cmXWwieqNlqYaoKgGTV0hs6MhLCzsar9IieghREaCh12pYO
+         mcSt3MXg/FQYOVdTIgRq0nWk69auT0nVFM8ENzugPJBpWwUvOlEc4qdUXsFnytl52WPD
+         fnyQQ34giXP4UTEt3hul2/BNMfkG9JnY9IOuYkleXLWm2gzUkV+4fti5PAkbjdTpmLHg
+         LSfhIRit46IAjUz16kYPCPSxwvr6J3u3V3sskmTndoVu+bktVyIuaQjEuURE5ivelgmw
+         wQsqDZ+0b+cILcmlUzAdcrWl+Chr4ij+F9O7xc33ez5NfLN4VxHvSftK6Pxlrk4JyX+z
+         GjtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fp2QaEC9w/eoPJPJ2uirJ4Jgi05QvJmCljUYdY+Ygew=;
-        b=maBlaT8+ENM4B2a5I89CDK1zediAFBpd5HPEc3ypdmyw0fiUHAT7NPrDTUGKdN9Qnm
-         TYFbfyNquvfSvuu9x0VW8G+sC7m9pZd7tf7u8cOL7YqWM/5yTDWTxaS/ytdQrbs3fuKS
-         TyjgOc2f3FBo3wpqjWXOxedVRP89L2OqZm6wqsfbT+NnwKesOGfiseAE67bz/qfT7Jlo
-         xR6dZQhllJ4ojc+nNJjYb/mFeGAGPVDJo3XgY2yUcp3Uj2YM07zeThWt1lacNOMk0O9p
-         bKO1l2OptJ0wltYjL5m9bEP8rCFvUbuBiAx9zHDunkmEitcJoxp/qMHOrmTcJ4gYCY1i
-         yBUA==
-X-Gm-Message-State: APjAAAV06ZZrspmVDiDiLJnsBH0hZiVhMn6o1M8gIhBdTw/nTloIVcdt
-        U7G+evAW6M4UX0QVVnqgmQ==
-X-Google-Smtp-Source: APXvYqwDAnjg5Tt3ibEL5NhcurpWnU/VEvZ9JKJRUwfsH2vEvBMPUMqe1ezOcu/WXvYDK3d5LwKUTQ==
-X-Received: by 2002:a6b:d81a:: with SMTP id y26mr594024iob.126.1562708833703;
-        Tue, 09 Jul 2019 14:47:13 -0700 (PDT)
-Received: from localhost ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id r7sm20183111ioa.71.2019.07.09.14.47.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 14:47:12 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 15:47:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     Kevin Hilman <khilman@kernel.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        HenryC Chen <HenryC.Chen@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: soc: add mtk svs dt-bindings
-Message-ID: <20190709214711.GA9818@bogus>
-References: <20190621084348.16834-1-roger.lu@mediatek.com>
- <20190621084348.16834-2-roger.lu@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pObonpCVhBSmmiSRgLF61Ki0eXVsuxi+cPBVrWAPOgE=;
+        b=Nu91DPkhqEsZBDKkzejFC4Xq8AY0oahXriuSMBrjmO4FdUccD6hKTiueM1hgXTMAlD
+         3gtXAB1rhLD1FYv7V3dlkLIWohDF55BZZVwZQ8DcnwdcXh19ghMQrHH7jReHRjwI+MAq
+         wxyE/oqtLWqBoQwSpDorLBPK/rBuC1gei3xm6+X0TsgX63mtVAjdA98ahvwuSVRE1ExJ
+         Mt1oXjkCFayQ7YyKGaVf19l8F48HIMYyw+vEei3f+pBK/Bx+bYAMIU52TWIM3IzpfgF7
+         wNafY4TkZKKrUmDMirJRd9QRzTen+FmTxKR3UAkh3le3dTnVuxY/nTi4dUzVcUPNg2VF
+         bg1A==
+X-Gm-Message-State: APjAAAV9sJaG+hvBncMzONFQkHc5ovGomrDUdyikt6MdnEWFGi4PnHlC
+        Atqbd8vHqArr+yELMiZ7Z7rKM9GAW1MfP/4I2XNSM+jQOXI=
+X-Google-Smtp-Source: APXvYqyywjCWmRSpegmDraZaGC6H19pvew0Xiws8Ie8gSnqctiNwYxTuBCPdVFk8g5+yZmE855EOfG09T0cwXg0mVKw=
+X-Received: by 2002:ac8:1c2d:: with SMTP id a42mr20603885qtk.311.1562708910876;
+ Tue, 09 Jul 2019 14:48:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621084348.16834-2-roger.lu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190708195613.205729-1-dianders@chromium.org>
+ <CAJKOXPf9OTPaheUdiZtaDGU0sE2vsdRiLx5nptMt_EVKU7GObA@mail.gmail.com> <CAD=FV=WquwqKjUKh5=M6tbTrD3svVTGWLU3iSTzD-uXBX73YWA@mail.gmail.com>
+In-Reply-To: <CAD=FV=WquwqKjUKh5=M6tbTrD3svVTGWLU3iSTzD-uXBX73YWA@mail.gmail.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Tue, 9 Jul 2019 23:48:19 +0200
+Message-ID: <CAFqH_52Vhonb0ui5eXVHtyt+3td=_9pLZBWTBsHBgt34bX=H+Q@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc: Fix occasional hang after tuning on eMMC
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alim Akhtar <alim.akhtar@gmail.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 04:43:47PM +0800, Roger Lu wrote:
-> Document the binding for enabling mtk svs on MediaTek SoC.
-> 
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> ---
->  .../devicetree/bindings/power/mtk-svs.txt     | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> new file mode 100644
-> index 000000000000..6a71992ef162
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> @@ -0,0 +1,88 @@
-> +* Mediatek Smart Voltage Scaling (MTK SVS)
-> +
-> +This describes the device tree binding for the MTK SVS controller (bank)
-> +which helps provide the optimized CPU/GPU/CCI voltages. This device also
-> +needs thermal data to calculate thermal slope for accurately compensate
-> +the voltages when temperature change.
-> +
-> +Required properties:
-> +- compatible:
-> +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
-> +- reg: Address range of the MTK SVS controller.
-> +- interrupts: IRQ for the MTK SVS controller.
-> +- clocks, clock-names: Clocks needed for the svs controller. required
-> +                       clocks are:
-> +		       "main_clk": Main clock needed for register access
+Hi,
 
-'_clk' is redundant and can be dropped.
+Missatge de Doug Anderson <dianders@chromium.org> del dia dt., 9 de
+jul. 2019 a les 18:38:
+>
+> Hi,
+>
+> On Tue, Jul 9, 2019 at 2:07 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Tue, 9 Jul 2019 at 00:48, Douglas Anderson <dianders@chromium.org> wrote:
+> > >
+> > > In commit 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after
+> > > response errors.") we fixed a tuning-induced hang that I saw when
+> > > stress testing tuning on certain SD cards.  I won't re-hash that whole
+> > > commit, but the summary is that as a normal part of tuning you need to
+> > > deal with transfer errors and there were cases where these transfer
+> > > errors was putting my system into a bad state causing all future
+> > > transfers to fail.  That commit fixed handling of the transfer errors
+> > > for me.
+> > >
+> > > In downstream Chrome OS my fix landed and had the same behavior for
+> > > all SD/MMC commands.  However, it looks like when the commit landed
+> > > upstream we limited it to only SD tuning commands.  Presumably this
+> > > was to try to get around problems that Alim Akhtar reported on exynos
+> > > [1].
+> > >
+> > > Unfortunately while stress testing reboots (and suspend/resume) on
+> > > some rk3288-based Chromebooks I found the same problem on the eMMC on
+> > > some of my Chromebooks (the ones with Hynix eMMC).  Since the eMMC
+> > > tuning command is different (MMC_SEND_TUNING_BLOCK_HS200
+> > > vs. MMC_SEND_TUNING_BLOCK) we were basically getting back into the
+> > > same situation.
+> > >
+> > > I'm hoping that whatever problems exynos was having in the past are
+> > > somehow magically fixed now and we can make the behavior the same for
+> > > all commands.
+> > >
+> > > [1] https://lkml.kernel.org/r/CAGOxZ53WfNbaMe0_AM0qBqU47kAfgmPBVZC8K8Y-_J3mDMqW4A@mail.gmail.com
+> > >
+> > > Fixes: 46d179525a1f ("mmc: dw_mmc: Wait for data transfer after response errors.")
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > Cc: Alim Akhtar <alim.akhtar@gmail.com>
+> > > Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > ---
+> > > Marek (or anyone else using exynos): is it easy for you to test this
+> > > and check if things are still broken when we land this patch?  If so,
+> > > I guess we could have a quirk to have different behavior for just
+> > > Rockchip SoCs but I'd rather avoid that if possible.
+> > >
+> > > NOTE: I'm not hoping totally in vain here.  It is possible that some
+> > > of the CTO/DTO timers that landed could be the magic that would get
+> > > exynos unstuck.
+> >
+> > I have eMMC module attached to Odroid U3 (Exynos4412,
+> > samsung,exynos4412-dw-mshc). What is the testing procedure? With your
+> > patch it boots fine:
+> > [    3.698637] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+> > req 52000000Hz, actual 50000000HZ div = 0)
+> > [    3.703900] mmc1: new DDR MMC card at address 0001
+> > [    3.728458] mmcblk1: mmc1:0001 008G92 7.28 GiB
+>
+> To really test it, it'd be nice to see some HS200 eMMC cards enumerate
+> OK.  Specifically the patch adjusts the error handling and the place
+> where that happens mostly is during tuning.
+>
+> I'll also try to find some time today to check a peach_pit or a
+> peach_pi.  I think I saw one in the pile near my desk so if it isn't
+> in too bad of a shape I can give mainline a shot on it.
+>
 
-> +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
-> +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
-> +
-> +Subnodes:
-> +- svs_cpu_little: SVS bank device node of little CPU
-> +  compatible: "mediatek,mt8183-svs-cpu-little"
-> +  operating-points-v2: OPP table hooked by SVS little CPU bank.
-> +		       SVS will optimze this OPP table voltage part.
-> +  vcpu-little-supply: PMIC buck of little CPU
-> +- svs_cpu_big: SVS bank device node of big CPU
-> +  compatible: "mediatek,mt8183-svs-cpu-big"
-> +  operating-points-v2: OPP table hooked by SVS big CPU bank.
-> +		       SVS will optimze this OPP table voltage part.
-> +  vcpu-big-supply: PMIC buck of big CPU
-> +- svs_cci: SVS bank device node of CCI
-> +  compatible: "mediatek,mt8183-svs-cci"
-> +  operating-points-v2: OPP table hooked by SVS CCI bank.
-> +		       SVS will optimze this OPP table voltage part.
-> +  vcci-supply: PMIC buck of CCI
-> +- svs_gpu: SVS bank device node of GPU
-> +  compatible: "mediatek,mt8183-svs-gpu"
-> +  operating-points-v2: OPP table hooked by SVS GPU bank.
-> +		       SVS will optimze this OPP table voltage part.
-> +  vgpu-spply: PMIC buck of GPU
+I did a normal boot on peach_pi [1] and odroidxu3 [2] with that patch
+applied, and the eMMC attached on both was detected as
 
-typo
+ [    2.294798] mmc0: new HS400 MMC card at address 0001
 
-> +
-> +Example:
-> +
-> +	svs: svs@1100b000 {
-> +		compatible = "mediatek,mt8183-svs";
-> +		reg = <0 0x1100b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
-> +		clocks = <&infracfg CLK_INFRA_THERM>;
-> +		clock-names = "main_clk";
-> +		nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
-> +		nvmem-cell-names = "svs-calibration-data", "calibration-data";
-> +
-> +		svs_cpu_little: svs_cpu_little {
-> +			compatible = "mediatek,mt8183-svs-cpu-little";
-> +			operating-points-v2 = <&cluster0_opp>;
-> +		};
-> +
-> +		svs_cpu_big: svs_cpu_big {
-> +			compatible = "mediatek,mt8183-svs-cpu-big";
-> +			operating-points-v2 = <&cluster1_opp>;
-> +		};
-> +
-> +		svs_cci: svs_cci {
-> +			compatible = "mediatek,mt8183-svs-cci";
-> +			operating-points-v2 = <&cci_opp>;
-> +		};
-> +
-> +		svs_gpu: svs_gpu {
-> +			compatible = "mediatek,mt8183-svs-gpu";
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-> +			operating-points-v2 = <&gpu_opp_table>;
-> +		};
+I can do some stress tests tomorrow on those boards if that helps.
 
-This all looks like redundant data which can be found in the cpu, gpu, 
-etc. nodes. Can't you parse those nodes to get the information?
+Cheers,
+~ Enric
 
-> +	};
-> +
-> +	&svs_cpu_little {
-> +		vcpu-little-supply = <&mt6358_vproc12_reg>;
+[1] https://storage.kernelci.org/chrome-platform/for-kernelci/ib-mfd-cros-v5.3-87-g0fe7e9d7d5a3/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.html
+[2] https://storage.kernelci.org/chrome-platform/for-kernelci/ib-mfd-cros-v5.3-87-g0fe7e9d7d5a3/arm/multi_v7_defconfig/gcc-8/lab-collabora/boot-exynos5422-odroidxu3.html
 
-Don't split examples like this. Just should one flat example.
-
-> +	};
-> +
-> +	&svs_cpu_big {
-> +		vcpu-big-supply = <&mt6358_vproc11_reg>;
-> +	};
-> +
-> +	&svs_cci {
-> +		vcci-supply = <&mt6358_vproc12_reg>;
-> +	};
-> +
-> +	&svs_gpu {
-> +		vgpu-spply = <&mt6358_vgpu_reg>;
-> +	};
-> -- 
-> 2.18.0
-> 
+> -Doug
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
