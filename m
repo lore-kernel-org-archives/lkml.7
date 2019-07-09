@@ -2,254 +2,210 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B033C606D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 625CAC606B0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3061F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:31:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="j22ahYrE"
+	by mail.kernel.org (Postfix) with ESMTP id 3864321537
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 05:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfGIFb2 (ORCPT
+        id S1726133AbfGIFdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 01:31:28 -0400
-Received: from mail-eopbgr820117.outbound.protection.outlook.com ([40.107.82.117]:5824
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727311AbfGIFb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 01:31:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ryjatj8aDdBGA7uEDawYUpHg5t1u9oeEB49loFPFnJQ736Q9UYAplz2GR5T8CeKTthT3MdyG0Tgkw/mhrxpKJ9MVcgdJu7mU6aEo8SSfhlmaD0UvB6uPGDzDMt14/5yGDjiGRhytzrcDpjCIMn2eNRjA6t/nYyDjM4n8K5RmiWLvLUvyGPKXQm0R9P8sDU+3WjhTllW2crnNoqX3m9Xz3zSuSoxs/Wm8pG9CadRFjkHKcE4c8HCmiReg4+uDQBrXybCTtdWs3yoPLPHPyN2bJqReITEz5p/vtrayXIDYIRxBweXl7H6AVURoeY9rzEL/JkVRSuo3nFd0yR9XSYsNSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3+O3P1q1GNQyUZ6Moom7ipu8lndqLQcgedwqXhVXSdE=;
- b=fQY7/5C2w/O7rCaZ5rQJTGPP2SUStEzXEkKqbREKOfQIqgs5zW3gH+EZNURPWygUCWdk7GCTpORRBmX48B7NmTsyUQNS7t5hFEs/1RrmP5xMJhx/JL7YZDVE86DfkB2AZTHFaUar8Zl8r/zAQEN893mtm7CeCp+BOH2XCVcbTA7wSzgh1po/MzftqIUJDaDmhRuoWrjKV6r+XmgvlGBwgcWRjN3GXFvfKFQVn14c6p8GByAt8KldTJKQdObO3FBsaCSg3exv3W8qSzkrwYZxvyAr2hvAVw0jQjknjeFvGHtYshf7ALro1Tcx6D2Wpj5u7KmxDB5R14F9Ns++ZP1rkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3+O3P1q1GNQyUZ6Moom7ipu8lndqLQcgedwqXhVXSdE=;
- b=j22ahYrE3gTHoaJSLflg4eshxd/0wCv4Ndq0BIMXYNX7MQdjIo7I82cJdATKPsalyGrm18GQkEdSnO9CL/RNNB/6oQUGEVHJKKX4BeOL4FDtHPREwEUncXtUAxeL0EBedMPqdnlWj0Wkm3lFPFWDVhNFSLwMMtx5bKRXCJnmIHs=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB1040.namprd21.prod.outlook.com (52.132.115.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.3; Tue, 9 Jul 2019 05:29:27 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::60d7:a692:61f4:e6ab]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::60d7:a692:61f4:e6ab%3]) with mapi id 15.20.2094.001; Tue, 9 Jul 2019
- 05:29:27 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH 3/7] Drivers: hv: vmbus: Split hv_synic_init/cleanup into regs
- and timer settings
-Thread-Topic: [PATCH 3/7] Drivers: hv: vmbus: Split hv_synic_init/cleanup into
- regs and timer settings
-Thread-Index: AQHVNhdG/NzuAifub0WMnyiBKyXMnw==
-Date:   Tue, 9 Jul 2019 05:29:27 +0000
-Message-ID: <1562650084-99874-4-git-send-email-decui@microsoft.com>
-References: <1562650084-99874-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1562650084-99874-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR15CA0060.namprd15.prod.outlook.com
- (2603:10b6:301:4c::22) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8fb37e67-7826-421f-fe40-08d7042e6909
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1040;
-x-ms-traffictypediagnostic: SN6PR2101MB1040:|SN6PR2101MB1040:
-x-microsoft-antispam-prvs: <SN6PR2101MB1040F6B0C6026C7F32D4C70EBFF10@SN6PR2101MB1040.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0093C80C01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(376002)(396003)(136003)(39860400002)(199004)(189003)(6436002)(10290500003)(43066004)(2906002)(2501003)(4720700003)(316002)(54906003)(110136005)(6486002)(22452003)(64756008)(1511001)(66556008)(256004)(66446008)(66476007)(478600001)(73956011)(476003)(66946007)(52116002)(66066001)(305945005)(8676002)(81156014)(81166006)(5660300002)(76176011)(486006)(4326008)(36756003)(6116002)(3846002)(71190400001)(71200400001)(25786009)(99286004)(8936002)(50226002)(446003)(107886003)(10090500001)(2616005)(6512007)(14454004)(26005)(11346002)(53936002)(68736007)(186003)(3450700001)(7736002)(386003)(6506007)(102836004)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1040;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BoOypzu70Bod4E4DWcMDqDhHxu/o6RQg9X+7LWUpO22U+00DHHjIoYy+CaYPW4UumSm7FSALA6XKply44qyzVqnOpRQht7XGpOtt9Du3/xA9TP1IHv/qD+FBUkZBpICndN8Eb3mvdAAiwUWPe86XMbgnJGO9as/e4Qb17gYe5j0nWw4+IT0G1Ms/UEyMoPRht93mQYbuXNB6Mn4L5M6M5olPi2gs6zRjdzuCImhY+MeFId6950uWoYJqmDVNIow5xw2jgQA5KxOds8pKTt6vZLwj+7RhTpgwO56Z2QxigNtwvrb6HEictELlmZhwFcf+SX+uN3s9T+CG9r1qFYzPx39ggTzgso0kKQZDo0f9FCwbIHXy4+QaVo8TKFTNf7bquCvPCDN6a5bLBwJkh/fBPLyX17mUidjrx8rjc0oNkcQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 9 Jul 2019 01:33:25 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43680 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725886AbfGIFdY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 01:33:24 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x695XGdW162122
+        for <linux-kernel@vger.kernel.org>; Tue, 9 Jul 2019 01:33:23 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tmk9vjx3f-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 01:33:20 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Tue, 9 Jul 2019 06:33:03 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 9 Jul 2019 06:32:59 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x695WwWw57212984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Jul 2019 05:32:58 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 478B34C040;
+        Tue,  9 Jul 2019 05:32:58 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 138C04C044;
+        Tue,  9 Jul 2019 05:32:53 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.102.2.29])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Jul 2019 05:32:52 +0000 (GMT)
+Subject: Re: [PATCH v3 1/3] cpuidle-powernv : forced wakeup for stop states
+To:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, rjw@rjwysocki.net
+References: <20190704091827.19555-1-huntbag@linux.vnet.ibm.com>
+ <20190704091827.19555-2-huntbag@linux.vnet.ibm.com>
+ <1562493994.wseoth6w1s.astroid@bobo.none>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Date:   Tue, 9 Jul 2019 11:02:50 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fb37e67-7826-421f-fe40-08d7042e6909
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jul 2019 05:29:27.6711
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lkmldc@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1040
+In-Reply-To: <1562493994.wseoth6w1s.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19070905-4275-0000-0000-0000034A6987
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070905-4276-0000-0000-0000385A9281
+Message-Id: <bf598a94-cf36-3a5d-6b7f-0de8fa43ff74@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907090067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is only one functional change: the unnecessary check
-"if (sctrl.enable !=3D 1) return -EFAULT;" is removed, because when we're i=
-n
-hv_synic_cleanup(), we're absolutely sure sctrl.enable must be 1.
+Hi Nick,
 
-The new functions hv_synic_disable/enable_regs() will be used by a later pa=
-tch
-to support hibernation.
+Will post next version with the changes you have suggested.
+There is a comment below.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- drivers/hv/hv.c           | 66 ++++++++++++++++++++++++++-----------------=
-----
- drivers/hv/hyperv_vmbus.h |  2 ++
- 2 files changed, 39 insertions(+), 29 deletions(-)
+On 07/07/2019 03:43 PM, Nicholas Piggin wrote:
+> Abhishek Goel's on July 4, 2019 7:18 pm:
+>> Currently, the cpuidle governors determine what idle state a idling CPU
+>> should enter into based on heuristics that depend on the idle history on
+>> that CPU. Given that no predictive heuristic is perfect, there are cases
+>> where the governor predicts a shallow idle state, hoping that the CPU will
+>> be busy soon. However, if no new workload is scheduled on that CPU in the
+>> near future, the CPU may end up in the shallow state.
+>>
+>> This is problematic, when the predicted state in the aforementioned
+>> scenario is a shallow stop state on a tickless system. As we might get
+>> stuck into shallow states for hours, in absence of ticks or interrupts.
+>>
+>> To address this, We forcefully wakeup the cpu by setting the
+>> decrementer. The decrementer is set to a value that corresponds with the
+>> residency of the next available state. Thus firing up a timer that will
+>> forcefully wakeup the cpu. Few such iterations will essentially train the
+>> governor to select a deeper state for that cpu, as the timer here
+>> corresponds to the next available cpuidle state residency. Thus, cpu will
+>> eventually end up in the deepest possible state.
+>>
+>> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+>> ---
+>>
+>> Auto-promotion
+>>   v1 : started as auto promotion logic for cpuidle states in generic
+>> driver
+>>   v2 : Removed timeout_needed and rebased the code to upstream kernel
+>> Forced-wakeup
+>>   v1 : New patch with name of forced wakeup started
+>>   v2 : Extending the forced wakeup logic for all states. Setting the
+>> decrementer instead of queuing up a hrtimer to implement the logic.
+>>   v3 : Cleanly handle setting/resetting of decrementer so as to not break
+>> irq work
+>>
+>>   arch/powerpc/include/asm/time.h   |  2 ++
+>>   arch/powerpc/kernel/time.c        | 40 +++++++++++++++++++++++++++++++
+>>   drivers/cpuidle/cpuidle-powernv.c | 32 +++++++++++++++++++++++++
+>>   3 files changed, 74 insertions(+)
+>>
+>> diff --git a/arch/powerpc/include/asm/time.h b/arch/powerpc/include/asm/time.h
+>> index 54f4ec1f9..a3bd4f3c0 100644
+>> --- a/arch/powerpc/include/asm/time.h
+>> +++ b/arch/powerpc/include/asm/time.h
+>> @@ -188,6 +188,8 @@ static inline unsigned long tb_ticks_since(unsigned long tstamp)
+>>   extern u64 mulhdu(u64, u64);
+>>   #endif
+>>   
+>> +extern int set_dec_before_idle(u64 timeout);
+>> +extern void reset_dec_after_idle(void);
+>>   extern void div128_by_32(u64 dividend_high, u64 dividend_low,
+>>   			 unsigned divisor, struct div_result *dr);
+>>   
+>> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+>> index 694522308..814de3469 100644
+>> --- a/arch/powerpc/kernel/time.c
+>> +++ b/arch/powerpc/kernel/time.c
+>> @@ -576,6 +576,46 @@ void arch_irq_work_raise(void)
+>>   
+>>   #endif /* CONFIG_IRQ_WORK */
+>>   
+>> +/*
+>> + * Returns 1 if we have reprogrammed the decrementer for idle.
+>> + * Returns 0 if the decrementer is unchanged.
+>> + */
+>> +int set_dec_before_idle(u64 timeout)
+>> +{
+>> +	u64 *next_tb = this_cpu_ptr(&decrementers_next_tb);
+>> +	u64 now = get_tb_or_rtc();
+>> +
+>> +	/*
+>> +	 * Ensure that the timeout is at least one microsecond
+>> +	 * before the current decrement value. Else, we will
+>> +	 * unnecesarily wakeup again within a microsecond.
+>> +	 */
+>> +	if (now + timeout + 512 > *next_tb)
+> I would pass this 512 in as a parameter and put the comment in the
+> idle code. Timer code does not know/care.
+>
+> Maybe return bool and call it try_set_dec_before_idle.
+>> +		return 0;
+>> +
+>> +	set_dec(timeout);
+> This needs to have
+>
+>    if (test_irq_work_pending())
+>        set_dec(1);
+>
+> here AFAIKS
+>
+>> +
+>> +	return 1;
+>> +}
+>> +
+>> +void reset_dec_after_idle(void)
+>> +{
+>> +	u64 now;
+>> +	u64 *next_tb;
+>> +
+>> +	if (test_irq_work_pending())
+>> +		return;
+>> +
+>> +	now = get_tb_or_rtc();
+>> +	next_tb = this_cpu_ptr(&decrementers_next_tb);
+>> +	if (now >= *next_tb)
+>> +		return;
+> Are you sure it's okay to escape early in this case?
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 6188fb7..fcc5279 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -154,7 +154,7 @@ void hv_synic_free(void)
-  * retrieve the initialized message and event pages.  Otherwise, we create=
- and
-  * initialize the message and event pages.
-  */
--int hv_synic_init(unsigned int cpu)
-+void hv_synic_enable_regs(unsigned int cpu)
- {
- 	struct hv_per_cpu_context *hv_cpu
- 		=3D per_cpu_ptr(hv_context.cpu_context, cpu);
-@@ -196,6 +196,11 @@ int hv_synic_init(unsigned int cpu)
- 	sctrl.enable =3D 1;
-=20
- 	hv_set_synic_state(sctrl.as_uint64);
-+}
-+
-+int hv_synic_init(unsigned int cpu)
-+{
-+	hv_synic_enable_regs(cpu);
-=20
- 	hv_stimer_init(cpu);
-=20
-@@ -205,20 +210,45 @@ int hv_synic_init(unsigned int cpu)
- /*
-  * hv_synic_cleanup - Cleanup routine for hv_synic_init().
-  */
--int hv_synic_cleanup(unsigned int cpu)
-+void hv_synic_disable_regs(unsigned int cpu)
- {
- 	union hv_synic_sint shared_sint;
- 	union hv_synic_simp simp;
- 	union hv_synic_siefp siefp;
- 	union hv_synic_scontrol sctrl;
-+
-+	hv_get_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
-+
-+	shared_sint.masked =3D 1;
-+
-+	/* Need to correctly cleanup in the case of SMP!!! */
-+	/* Disable the interrupt */
-+	hv_set_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
-+
-+	hv_get_simp(simp.as_uint64);
-+	simp.simp_enabled =3D 0;
-+	simp.base_simp_gpa =3D 0;
-+
-+	hv_set_simp(simp.as_uint64);
-+
-+	hv_get_siefp(siefp.as_uint64);
-+	siefp.siefp_enabled =3D 0;
-+	siefp.base_siefp_gpa =3D 0;
-+
-+	hv_set_siefp(siefp.as_uint64);
-+
-+	/* Disable the global synic bit */
-+	hv_get_synic_state(sctrl.as_uint64);
-+	sctrl.enable =3D 0;
-+	hv_set_synic_state(sctrl.as_uint64);
-+}
-+
-+int hv_synic_cleanup(unsigned int cpu)
-+{
- 	struct vmbus_channel *channel, *sc;
- 	bool channel_found =3D false;
- 	unsigned long flags;
-=20
--	hv_get_synic_state(sctrl.as_uint64);
--	if (sctrl.enable !=3D 1)
--		return -EFAULT;
--
- 	/*
- 	 * Search for channels which are bound to the CPU we're about to
- 	 * cleanup. In case we find one and vmbus is still connected we need to
-@@ -249,29 +279,7 @@ int hv_synic_cleanup(unsigned int cpu)
-=20
- 	hv_stimer_cleanup(cpu);
-=20
--	hv_get_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
--
--	shared_sint.masked =3D 1;
--
--	/* Need to correctly cleanup in the case of SMP!!! */
--	/* Disable the interrupt */
--	hv_set_synint_state(VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
--
--	hv_get_simp(simp.as_uint64);
--	simp.simp_enabled =3D 0;
--	simp.base_simp_gpa =3D 0;
--
--	hv_set_simp(simp.as_uint64);
--
--	hv_get_siefp(siefp.as_uint64);
--	siefp.siefp_enabled =3D 0;
--	siefp.base_siefp_gpa =3D 0;
--
--	hv_set_siefp(siefp.as_uint64);
--
--	/* Disable the global synic bit */
--	sctrl.enable =3D 0;
--	hv_set_synic_state(sctrl.as_uint64);
-+	hv_synic_disable_regs(cpu);
-=20
- 	return 0;
- }
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 362e70e..26ea161 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -171,8 +171,10 @@ extern int hv_post_message(union hv_connection_id conn=
-ection_id,
-=20
- extern void hv_synic_free(void);
-=20
-+extern void hv_synic_enable_regs(unsigned int cpu);
- extern int hv_synic_init(unsigned int cpu);
-=20
-+extern void hv_synic_disable_regs(unsigned int cpu);
- extern int hv_synic_cleanup(unsigned int cpu);
-=20
- /* Interface */
---=20
-1.8.3.1
+Yeah, It looks safe. In power9_idle_type, we call irq_set_pending_from_srr1
+which sets the irq_happened. If reason is IRQ_DEC, in __check_irq_replay,
+decrementer_check_overflow will be called which will set dec to a positive
+valid value.
+Also, we typically disable MSR EE before entering stop. And if a decrementer
+wakes us up, before we enable EE, check for pending interrupt will be done.
+And we finally reset dec to a positive value before we set EE=1.
+> Thanks,
+> Nick
+>
+
+Thanks,
+Abhishek
 
