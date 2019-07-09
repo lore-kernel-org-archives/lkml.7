@@ -2,177 +2,122 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63402C73C46
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4A6C73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A0A2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3515220665
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 18:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pujEg630"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dY0SKwLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfGISXM (ORCPT
+        id S1726780AbfGISZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 14:23:12 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43718 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbfGISXL (ORCPT
+        Tue, 9 Jul 2019 14:25:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45191 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbfGISZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 14:23:11 -0400
-Received: by mail-pl1-f193.google.com with SMTP id cl9so10484863plb.10;
-        Tue, 09 Jul 2019 11:23:10 -0700 (PDT)
+        Tue, 9 Jul 2019 14:25:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o13so9853807pgp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 11:25:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=LCMLgHJ1KXlp99Gv2wkxAzbZDPVeSL8C2PTBny9wQ7g=;
-        b=pujEg6308qU0RMwp+4YjFwJaOlPrDWNNTdKt100PKX/zrDybn2fzbTR8Wwgj+9Sbyd
-         FRZeq5sWEoE2IvgiqW2Chy6WH+NwiaOUtYyb75bk1CSI7V9oo/Zv4YWbgAniYM8W/P98
-         DBC2DARiffAlT9NG1cjNNKft/7+f0tkHvYHD1ISY3haeZEsAnXKn+qN4fkw9J6QPFh3p
-         /0WDsSsHUxWLKQiKKk389rHhtclMXyPPHQ4XdvHXLqjJOqobrUEh6qlGJiSYGMbeGuW2
-         8jpHv2NHWbtMUcWb8cWP72ApS9QZZsfMW3frL2PkbBJRqA5uLeaYD27j3uG/SQM9pT8t
-         /pXg==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=F53dI+T31MQO7QsmvZEQqUD+Bsf7Au5f6Ym6GihKyBU=;
+        b=dY0SKwLV9k80CMp0A2x+iTnnhV5A92BoDgH5N8dKXZsQJo/haO6q4csQICb21yuckh
+         UoHQx1dad/dqKIH5no1Q0PzDgicSMi7Y5RCJHrokKzaFn1A0jUIaCZEyYPEx/1O50Qqj
+         EaVisjg4hQjAn7fvBEoThlflmA8uYcC+eluRgi0rKci9zKgK9q9hW49KSneUgU1uZFTX
+         qUfI+GJsUpt2ojpAt1tD1dNxRyHN3xUFdvEW9T1s38tIAtBJ2Leab/lwjLq9eZWs75TB
+         yMg2KLtL3F4aaIrioY7PRjrarbnUbrJMOcIs4N1wN6MtlaB47ttLlWxH++h7D2shfR+O
+         b55g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=LCMLgHJ1KXlp99Gv2wkxAzbZDPVeSL8C2PTBny9wQ7g=;
-        b=dDDBMeCx8pQwWO3E2clJHJ3u3rVzWjsMnKNkzZP2PzDhJRc8ZD1nE2BgluHi0anpbK
-         wvmEsDZn7DTRh7WdtTzoEGOaxlmeJSFuHDQZYrlgSNbRN5Y1BLtL0wkE/bvxQkRzXMOF
-         2Xakk+74dglH5Iyq/CQJXZ1VvpTvt9mTpFtH4AvS5OC7XrhRGweJpgHkWoM2hm0SBEgc
-         /XYHOlp6SzjI+nM5csurX3I8NFQnaNqGjkvqJIXDrXJHHyce/6rAK4RtQMFzI5Do8UlT
-         1mv7yCm1a3C2hOAl+C9o83h8s+B+Dc1QBv6udKdRx6G4jMnY3fG5Qs5ztzI0oxmW78RE
-         XpKA==
-X-Gm-Message-State: APjAAAXuETXtQEXOwKx7iVZAvbchvHEWDuCrcYGT3vv7nLWP4oCMw+mu
-        Lb/lpKoTwN03fFX+/AfNTyGJHjbn
-X-Google-Smtp-Source: APXvYqzS72n4+wpP4CGHtXqb0vKR0fQMrpbZKIus1+TruDS9xGrw1cfE/ybkj05w7VuXsKD/5dOYOA==
-X-Received: by 2002:a17:902:28:: with SMTP id 37mr31614085pla.188.1562696590472;
-        Tue, 09 Jul 2019 11:23:10 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m4sm18377689pgs.71.2019.07.09.11.23.09
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=F53dI+T31MQO7QsmvZEQqUD+Bsf7Au5f6Ym6GihKyBU=;
+        b=TGmZRpKBrjXJJmFwttiXVCunPHSkuxzlgr6zIs/Kouz4gMx5tPDpAjNsbZWVylKBsZ
+         KDZQcNKNN8o/UZnprSCSo2oYcghk/9BBUeLDR80o2WKrog55p2kOBOt/9Tzp3gTZBE1/
+         04Hm1hQ1A2+Jbh3WXraPE3xzc/NHNWv/OKzCukqH8TeXW2fqcg7arUW98m7CAA/NJiJz
+         TSwSDQEPeOmqTMTexoXmttXNqWdoYSByiOlzYQ3oBOF8pQRfw7op0paJvrALF4LF/t/P
+         3s/f/ATOLxtk24d9sjOOiC7r1sd89M3m4j17qC45sAUmSOydQYAEYTSut/UmidATgmoH
+         lnvg==
+X-Gm-Message-State: APjAAAXToIklEQeWkWIPyA0o6Q4XCIkzCXyw/dE02xHcbImY0Bc0ik7w
+        07IuA1Ay+Dq9gDpp2L4ucKI=
+X-Google-Smtp-Source: APXvYqxPF2ZglfLFUEIjNK+xpEPSth8BelId/59gN0t4fpsSCcw0Ul22LI6xyEHQdp/Z7aYDfK8lIw==
+X-Received: by 2002:a65:5888:: with SMTP id d8mr31623341pgu.124.1562696750983;
+        Tue, 09 Jul 2019 11:25:50 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id x13sm13084575pfn.6.2019.07.09.11.25.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 11:23:09 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hwmon updates for hwmon-for-v5.3
-Date:   Tue,  9 Jul 2019 11:23:08 -0700
-Message-Id: <1562696588-26554-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        Tue, 09 Jul 2019 11:25:50 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 23:55:43 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Shunli Wang <shunli.wang@mediatek.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sound: soc: codecs: mt6358: change return type of
+ mt6358_codec_init_reg
+Message-ID: <20190709182543.GA6611@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+As mt6358_codec_init_reg function always returns 0 , change return type
+from int to void.
 
-Please pull hwmon updates for Linux hwmon-for-v5.3 from signed tag:
+fixes below issue reported by coccicheck
+sound/soc/codecs/mt6358.c:2260:5-8: Unneeded variable: "ret". Return "0"
+on line 2289
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.3
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ sound/soc/codecs/mt6358.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Thanks,
-Guenter
-------
+diff --git a/sound/soc/codecs/mt6358.c b/sound/soc/codecs/mt6358.c
+index 50b3fc5..c17250a 100644
+--- a/sound/soc/codecs/mt6358.c
++++ b/sound/soc/codecs/mt6358.c
+@@ -2255,10 +2255,8 @@ static struct snd_soc_dai_driver mt6358_dai_driver[] = {
+ 	},
+ };
+ 
+-static int mt6358_codec_init_reg(struct mt6358_priv *priv)
++static void mt6358_codec_init_reg(struct mt6358_priv *priv)
+ {
+-	int ret = 0;
+-
+ 	/* Disable HeadphoneL/HeadphoneR short circuit protection */
+ 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON0,
+ 			   RG_AUDHPLSCDISABLE_VAUDP15_MASK_SFT,
+@@ -2285,8 +2283,6 @@ static int mt6358_codec_init_reg(struct mt6358_priv *priv)
+ 	/* set gpio */
+ 	playback_gpio_reset(priv);
+ 	capture_gpio_reset(priv);
+-
+-	return ret;
+ }
+ 
+ static int mt6358_codec_probe(struct snd_soc_component *cmpnt)
+-- 
+2.7.4
 
-The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
-
-  Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.3
-
-for you to fetch changes up to 9f7546570bcb20debfaa97bcf720fa0fcb8fc05a:
-
-  hwmon: (ina3221) Add of_node_put() before return (2019-07-08 18:11:32 -0700)
-
-----------------------------------------------------------------
-hwmon updates for v5.3
-
-New drivers for Infineon PXE1610 and IRPS5401
-Minor improvements, cleanup, and fixes in several drivers
-
-----------------------------------------------------------------
-Adamski, Krzysztof (Nokia - PL/Wroclaw) (1):
-      hwmon: (pmbus/adm1275) support PMBUS_VIRT_*_SAMPLES
-
-Alexander Soldatov (1):
-      hwmon: (occ) Add temp sensor value check
-
-Arnd Bergmann (1):
-      hwmon: (max6650) Fix unused variable warning
-
-Boyang Yu (1):
-      hwmon: (lm90) Fix max6658 sporadic wrong temperature reading
-
-Christian Schneider (2):
-      hwmon: (gpio-fan) move fan_alarm_init after devm_hwmon_device_register_with_groups
-      hwmon: (gpio-fan) fix sysfs notifications and udev events for gpio-fan alarms
-
-Greg Kroah-Hartman (1):
-      hwmon: (asus_atk0110) no need to check return value of debugfs_create functions
-
-Guenter Roeck (17):
-      hwmon: (gpio-fan) Check return value from devm_add_action_or_reset
-      hwmon: (pwm-fan) Check return value from devm_add_action_or_reset
-      hwmon: (core) Add comment describing how hwdev is freed in error path
-      hwmon: (max6650) Use devm function to register thermal device
-      hwmon: (max6650) Introduce pwm_to_dac and dac_to_pwm
-      hwmon: (max6650) Improve error handling in max6650_init_client
-      hwmon: (max6650) Declare valid as boolean
-      hwmon: (max6650) Cache alarm_en register
-      hwmon: (max6650) Simplify alarm handling
-      hwmon: (max6650) Convert to use devm_hwmon_device_register_with_info
-      hwmon: (max6650) Read non-volatile registers only once
-      hwmon: (max6650) Improve error handling in max6650_update_device
-      hwmon: (max6650) Fix minor formatting issues
-      hwmon: (pmbus/adm1275) Fix power sampling support
-      hwmon: Convert remaining drivers to use SPDX identifier
-      hwmon: (lm90) Cache configuration register value
-      hwmon: (lm90) Introduce function to update configuration register
-
-Masahiro Yamada (1):
-      hwmon: (smsc47m1) fix (suspicious) outside array bounds warnings
-
-Nishka Dasgupta (1):
-      hwmon: (ina3221) Add of_node_put() before return
-
-Robert Hancock (1):
-      hwmon: (pmbus) Add Infineon IRPS5401 driver
-
-Vijay Khemka (2):
-      hwmon: (pmbus) Add Infineon PXE1610 VR driver
-      hwmon: (pmbus) Document Infineon PXE1610 driver
-
-Wolfram Sang (1):
-      hwmon: (lm90) simplify getting the adapter of a client
-
-amy.shih (3):
-      hwmon: (nct7904) Fix the incorrect value of tcpu_mask in nct7904_data struct.
-      hwmon: (nct7904) Add error handling in probe function.
-      hwmon: (nct7904) Changes comments in probe function.
-
- Documentation/hwmon/pxe1610    |  90 ++++++
- drivers/hwmon/adm1029.c        |  10 -
- drivers/hwmon/asus_atk0110.c   |  23 +-
- drivers/hwmon/gpio-fan.c       |  22 +-
- drivers/hwmon/hwmon.c          |   6 +
- drivers/hwmon/ina3221.c        |   4 +-
- drivers/hwmon/lm90.c           | 106 +++---
- drivers/hwmon/max6650.c        | 710 +++++++++++++++++++++--------------------
- drivers/hwmon/nct7904.c        |  81 ++++-
- drivers/hwmon/occ/common.c     |   6 +
- drivers/hwmon/pmbus/Kconfig    |  18 ++
- drivers/hwmon/pmbus/Makefile   |   2 +
- drivers/hwmon/pmbus/adm1275.c  | 105 +++++-
- drivers/hwmon/pmbus/irps5401.c |  67 ++++
- drivers/hwmon/pmbus/pxe1610.c  | 139 ++++++++
- drivers/hwmon/pwm-fan.c        |  10 +-
- drivers/hwmon/scpi-hwmon.c     |  10 +-
- drivers/hwmon/smsc47m1.c       |   2 +
- 18 files changed, 954 insertions(+), 457 deletions(-)
- create mode 100644 Documentation/hwmon/pxe1610
- create mode 100644 drivers/hwmon/pmbus/irps5401.c
- create mode 100644 drivers/hwmon/pmbus/pxe1610.c
