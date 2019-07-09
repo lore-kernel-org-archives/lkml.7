@@ -2,213 +2,88 @@ Return-Path: <SRS0=gj9M=VG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0E1C73C47
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECDEC73C46
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE386214AF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562679944;
-	bh=pFpOkJHiAYbGncovzMXBIx9dzH17tRDacavgDnffM50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Beb3uvV4drPPf7WV+zIFhhp2IAiaFA7f6fup+GUQ4kqCW5m05SgbbiSnjJmH1dlg0
-	 uqf4myUymd1bSZdJYIWnjWrd+PnWkxrQQfyvM7sVi0EDGh05G0mX5Ss8IFsDCSXpYY
-	 U1cEUYSgCJI5l4AxEWmYV9/EaP+4jCtFDzLhae7g=
+	by mail.kernel.org (Postfix) with ESMTP id CEC7D214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jul 2019 13:45:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VoB4E+NL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfGINpm (ORCPT
+        id S1727057AbfGINps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 09:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfGINpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 09:45:42 -0400
-Received: from localhost (249.sub-174-234-174.myvzw.com [174.234.174.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39DB3214AF;
-        Tue,  9 Jul 2019 13:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562679940;
-        bh=pFpOkJHiAYbGncovzMXBIx9dzH17tRDacavgDnffM50=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cTwocF9iNQ/MOODLXMFPNInDXPHulYy4PTGwfoOKiR9X6a36MeEmx88KBCV69gbjY
-         HrJtzhMImMqasu++slJvQEkzNZHGf6b32cvpE3dyMvgxRBw0xCDenNROkPdvJmotrN
-         n5qNV764+21kArt71upxYFtC3GGq8N7nqucvZ5G4=
-Date:   Tue, 9 Jul 2019 08:45:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
- supports wakeup from D0
-Message-ID: <20190709134538.GA35486@google.com>
-References: <20190522181157.GC79339@google.com>
- <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
- <20190522205231.GD79339@google.com>
- <010C1D41-C66D-45C0-8AFF-6F746306CE29@canonical.com>
- <20190527165747.GF79339@google.com>
- <20190605115724.GE84290@google.com>
- <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
+        Tue, 9 Jul 2019 09:45:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54794 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfGINps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 09:45:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nZgy+BqTOIJcy5TYK73FngoSKvFB8Vl2NL5heGDPFZ0=; b=VoB4E+NLP8Zw1Wncbb5g7l3dm
+        Z5zyGW5ZfgY7bwlPzA6af9a50zladxhORhX1WZ+g4HISfOcrmBTznGZMcAmBeWTaKDFVDapbDa9v+
+        qtEjJ2saH3h8aaWWzezwgJHKSwpvce5hCPHCazlYIqdlqopBiqJcntaHLjrfdmDEY1G68q/+jU7g5
+        lyqxH8vaeabC5nXFAcg164XCh9PbZelPsbqlBB06WIwFgiawed7+Z6ZWbc8AdlcwxagmQEuiAdiJZ
+        evVAwsW/RE7q/CJ9Y5sQIx5t01QxCp90nVcBu5Ei5BUk++prXdC/aaxyQj8nTvhBGnlMvBmz2vORj
+        Be58gfdTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkqRE-0005sg-6F; Tue, 09 Jul 2019 13:45:44 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7A08620976D60; Tue,  9 Jul 2019 15:45:42 +0200 (CEST)
+Date:   Tue, 9 Jul 2019 15:45:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yuyang Du <duyuyang@gmail.com>
+Cc:     will.deacon@arm.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, frederic@kernel.org, arnd@arndb.de,
+        cai@lca.pw
+Subject: Re: [PATCH] locking/lockdep: Fix lock used or unused stats error
+Message-ID: <20190709134542.GE3402@hirez.programming.kicks-ass.net>
+References: <20190709101522.9117-1-duyuyang@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7E5CD0E5-2C23-4339-9660-74994FC5C111@canonical.com>
+In-Reply-To: <20190709101522.9117-1-duyuyang@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 03:02:01PM +0800, Kai-Heng Feng wrote:
-> at 19:57, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Mon, May 27, 2019 at 11:57:47AM -0500, Bjorn Helgaas wrote:
-
-> > > I'm wondering if this platform has a firmware defect.  Here's my
-> > > thinking.  The xHC is a Root Complex Integrated Endpoint, so its PME
-> > > signaling is a little unusual.
-> > > 
-> > > The typical scenario is that a PCIe device is below a Root Port.  In
-> > > that case, it would send a PME Message upstream to the Root Port.  Per
-> > > PCIe r4.0, sec 6.1.6, when configured for native PME support (for ACPI
-> > > systems, I assume this means "when firmware has granted PME control to
-> > > the OS via _OSC"), the Root Port would generate a normal PCI INTx or
-> > > MSI interrupt:
-> > > 
-> > >   PCI Express-aware software can enable a mode where the Root Complex
-> > >   signals PME via an interrupt. When configured for native PME
-> > >   support, a Root Port receives the PME Message and sets the PME
-> > >   Status bit in its Root Status register. If software has set the PME
-> > >   Interrupt Enable bit in the Root Control register to 1b, the Root
-> > >   Port then generates an interrupt.
-> > > 
-> > > But on this platform the xHC is a Root Complex Integrated Endpoint, so
-> > > there is no Root Port upstream from it, and that mechanism can't be
-> > > used.  Per PCIe r4.0, sec 1.3.2.3, RCiEPs signal PME via "the same
-> > > mechanism as PCI systems" or via Root Complex Event Collectors:
-> > > 
-> > >   An RCiEP must signal PME and error conditions through the same
-> > >   mechanisms used on PCI systems. If a Root Complex Event Collector is
-> > >   implemented, an RCiEP may optionally signal PME and error conditions
-> > >   through a Root Complex Event Collector.
-> > > 
-> > > This platform has no Root Complex Event Collectors, so the xHC should
-> > > signal PME via the same mechanism as PCI systems, i.e., asserting a
-> > > PME# signal.  I think this means the OS cannot use native PCIe PME
-> > > control because it doesn't know what interrupt PME# is connected to.
-> > > The PCI Firmware Spec r3.2, sec 4.5.1 (also quoted in ACPI v6.2, sec
-> > > 6.2.11.3), says:
-> > > 
-> > >   PCI Express Native Power Management Events control
-> > > 
-> > >   The firmware sets this bit to 1 to grant control over PCI Express
-> > >   native power management event interrupts (PMEs). If firmware
-> > >   allows the operating system control of this feature, then in the
-> > >   context of the _OSC method, it must ensure that all PMEs are
-> > >   routed to root port interrupts as described in the PCI Express
-> > >   Base Specification.
-> > > 
-> > > This platform cannot route all PMEs to Root Port interrupts because
-> > > the xHC RCiEP cannot report PME via a Root Port, so I think its _OSC
-> > > method should not grant control of PCIe Native Power Management Events
-> > > to the OS, and I think that would mean we have to use the ACPI
-> > > mechanism for PME on this platform.
-> > > 
-> > > Can you confirm or deny any of this line of reasoning?  I'm wondering
-> > > if there's something wrong with the platform's _OSC, so Linux thinks
-> > > it can use native PME, but that doesn't work for this device.
-> > > 
-> > > > It’s a platform in development so the name can’t be disclosed.
-> > > 
-> > > Please attach a complete dmesg log to the bugzilla.  You can remove
-> > > identifying details like the platform name, but I want to see the
-> > > results of the _OSC negotiation.
-> > 
-> > Thanks for the dmesg log
-> > (https://bugzilla.kernel.org/attachment.cgi?id=283109).  It shows:
-> > 
-> >   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
-> >   acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug LTR]
-> >   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME AER PCIeCapability]
-> > 
-> > I think it is incorrect for the platform to give the OS native control
-> > over PME because the OS has no way to know how the RCiEP PMEs are
-> > routed.  But it would be interesting to know how BIOSes on other
-> > platforms with RCiEPs handle this, and I did post a question to the
-> > PCI-SIG to see if there's any guidance there.
+On Tue, Jul 09, 2019 at 06:15:22PM +0800, Yuyang Du wrote:
+> The stats variable nr_unused_locks is incremented every time a new lock
+> class is register and decremented when the lock is first used in
+> __lock_acquire(). And after all, it is shown and checked in lockdep_stats.
 > 
-> Is there any update from PCI-SIG?
+> However, under configurations that either CONFIG_TRACE_IRQFLAGS or
+> CONFIG_PROVE_LOCKING is not defined:
+> 
+> The commit:
+> 
+>   091806515124b20 ("locking/lockdep: Consolidate lock usage bit initialization")
+> 
+> missed marking the LOCK_USED flag at IRQ usage initialization because
+> as mark_usage() is not called. And the commit:
+> 
+>   886532aee3cd42d ("locking/lockdep: Move mark_lock() inside
+> CONFIG_TRACE_IRQFLAGS && CONFIG_PROVE_LOCKING")
+> 
+> further made mark_lock() not defined such that the LOCK_USED cannot be
+> marked at all when the lock is first acquired.
+> 
+> As a result, we fix this by not showing and checking the stats under such
+> configurations for lockdep_stats.
+> 
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 
-Yes, but I did a terrible job asking the question, so we didn't
-really get an answer for this situation.  The thread on the forum is
-https://forum.pcisig.com/viewtopic.php?f=85&t=1081 (requires PCI-SIG
-login, unfortunately).  My question was:
-
-  Given an RCiEP that supports PME, can firmware grant control over
-  native power management events to the OS?
-
-  The PCI Firmware spec, r3.2, sec 4.5.1, says:
-
-    PCI Express Native Power Management Events control
-
-    The firmware sets this bit to 1 to grant control over PCI Express
-    native power management event interrupts (PMEs). If firmware
-    allows the operating system control of this feature, then in the
-    context of the _OSC method, it must ensure that all PMEs are
-    routed to root port interrupts as described in the PCI Express
-    Base Specification.
-
-  I don't think there's a mechanism for RCiEPs to route PMEs to a Root
-  Port interrupt.
-
-  PCIe r4.0, sec 1.3.2.3, says:
-
-    An RCiEP must signal PME and error conditions through the same
-    mechanisms used on PCI systems. If a Root Complex Event Collector
-    is implemented, an RCiEP may optionally signal PME and error
-    conditions through a Root Complex Event Collector.
-
-  If the OS can be granted native PME control, how does it learn where
-  the RCiEP PME is routed?
-
-And the response from Robert Gough:
-
-  The routing of root complex devices- Root Ports and Root Complex
-  Integrated Endpionts- to Event Collectors is described in the Event
-  Collector's RCEC Endpoint Association Capability Structure.
-
-  In order for OSPM to process PMEs routed to an Event Collector, the
-  source of the PME is found in the PME Requester ID field within the
-  Root Status register of the Event Collector, in the same way that
-  PME messages from children of Root Ports are serviced.
-
-I just posted this follow-up question:
-
-  Thanks, that clarifies one piece. The PCI Firmware spec, r3.2, sec
-  4.5.1, says that if firmware allows OSPM control of PME, all PMEs
-  should be routed to Root Port interrupts. Your answer suggests that
-  this should be updated to say something like "all PMEs are routed to
-  Root Port *or RCEC* interrupts".
-
-  The piece I still don't understand is what happens when firmware
-  allows OSPM control of PME in a system with an RCiEP but no RCEC.
-  Where are PMEs from the RCiEP routed, and how does OSPM discover
-  that? Or is it simply illegal for firmware to allow OSPM control of
-  PME in that case?
-
-The system we're looking at doesn't have any RCECs, so I don't think
-the Root Complex Event Collector Endpoint Association Capability (what
-a mouthful :)) is applicable, but I don't think Linux currently has
-any support for it, so I think we're likely to trip over similar
-issues on systems that do have RCECs.
-
-It would be good if somebody added support for that capability.
-
-Bjorn
+Thanks!
