@@ -2,122 +2,115 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E45C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221A1C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD8420838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B2F20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPGy1Jrm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYGD6l44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfGJTFI (ORCPT
+        id S1728049AbfGJTGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:05:08 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34885 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfGJTFH (ORCPT
+        Wed, 10 Jul 2019 15:06:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34680 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbfGJTGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:05:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y4so3630029wrm.2;
-        Wed, 10 Jul 2019 12:05:05 -0700 (PDT)
+        Wed, 10 Jul 2019 15:06:33 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w9so5301522wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 12:06:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QpN5CHwpzVqFTlvbsrr+q70h5+rFXHepQXU4UwgW+ak=;
-        b=iPGy1Jrmt2gRxtF412YFifkUTN9fK7qKNXNPavYbpyRr3ZQ8LCSQBTWs9DNI5a7qBj
-         1f42sTxWjq7PCoeTG3rGjaBr9eo4WoqGdTuhHO2somI7t8Vspvudrwu57a+wy2GZj+pj
-         AzTFnz6zHKdD0YtnWo+Es9N/jsq+n8rmlNCzLY95WxC6GGA2oxgU/C8fJiBgdlMve0sz
-         DpaSU6WLDNviqMvV4fuUs/PYlL1lu2vxv+l4lRQ5sRszzJvNx38VzxlhJ1EFGAWIpDJZ
-         CWhms+nFQhkNKGPgMNC/NLfDrtcF27mVxrxrXeVLvxXM1UF4HJpDIWbItUV1eUnKzqzQ
-         u8hg==
+        bh=ahAFNDw3YnaumJC5YUU159SXkDcebAJzvmRPCMuE2B0=;
+        b=IYGD6l44OnouJsX8eAShejGMGjJCPGZTzH6CFET8s9ZeYw4XYmNFmhNg+mNyAX992D
+         R/sgu2vPFcBTtZ/u2Sff00a/hKYvEkjIzcr+Oq7mDhJ1ej+qS75KXOXfZRDTUVVVnP1R
+         bysT/yU3xBYIP/Pvduzlbfb5A2wWlKRIrJseHMknRx8/AWgZkYcsOWC8TheUbhhU+0Bm
+         hCnk9Lo1VQ6QXtF2YQ3xYRCpSW2E4H9s+FYVRqCR37WOu33RrjJeBqakAB9MwayN5W6B
+         EazrJuoAHAhX0ll0uZ/X0vqTVnxOPD0ZKxM4Jd98QqjndxWFNg7VRxPExtuHAUXjV/oT
+         NB/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=QpN5CHwpzVqFTlvbsrr+q70h5+rFXHepQXU4UwgW+ak=;
-        b=X2fqjZ1OEoMsgxFISrQKob9nK4ulby9m/Hm0WOnZdEvGNmZqlLWGNWxkqyDvBB+m96
-         c10EmN0T5/Y5j9uwsXQVTPtw/j8IHjif4P86pDJEJ8Uhnd4v6mLWFjGK0SVi1cc3QEO3
-         Jn/9/9XqW+l0vqNIB6gfs6nwvPOtzSO4YmaFBvTkaEZ+Ly4inWYUDfDK7IVRIsvtSyKt
-         PVHgs7Hk9AV5p2Wu9aE3fS/4yYUiY70/4641Ik9ujR9GAkX7alzxyzCb3VEP04lOjBh0
-         Qn6MRBf5Jo3C5e5tJjDXUSiCCYnbKH6QU3tet8YOVRrSUrj4vksasjViIrIvi55pILnN
-         duqQ==
-X-Gm-Message-State: APjAAAVPb0sB4kJAtTPYLVYY/baXoRlUlXQ79MHMT+pAyhX7Ys524ixa
-        fnNFa14WqXxdXCQLjf0suJMGxIalfxCVxg==
-X-Google-Smtp-Source: APXvYqyLA5hi4rqSfStW9zfDiOCykfIKuz4yycIzUOpHzjDAzYmb0ho1+ZaBmLj+T0pW1JsF0/IzFQ==
-X-Received: by 2002:adf:f904:: with SMTP id b4mr34063592wrr.291.1562785504941;
-        Wed, 10 Jul 2019 12:05:04 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id b2sm3727191wrp.72.2019.07.10.12.05.04
+        bh=ahAFNDw3YnaumJC5YUU159SXkDcebAJzvmRPCMuE2B0=;
+        b=Cb2FaYVLWXPjWmRwZZrT3chjfNlPCZwVECCcbEM9IJsfbpO+VzVd9fi4rppmepa40o
+         RP3saUB3wr1tU4Tcx0CJIfGiC4zJ+WRzhpOoi/o3PjsQxNpGaoVCw4ZhwrL+KYXLNeb2
+         n3i8x5IlMcRMza8GJDYwREtr0SKgadReRv+Tn/4/fVykXTg58F7P8H4UOpxlYqIGErwG
+         WW7I7GsXP1n/P+gTbPTL1EZ28Xz0eF6ax17s2l/HyxDoGOCIDRxotnrgy8gVVWS4//d9
+         3znFHXOjuxAg+NPfPCoziX4xLk8eOzI2+JiS1BXu1syOna7M3UkWiN0wUpQ1rv04J0C+
+         4igQ==
+X-Gm-Message-State: APjAAAVI5E4MlapU7DQ+CD/+WbfY4v9XShe84RuJYXpL6oD5mljt/g2i
+        YSV0MRCRD1L243Hwbw5FqVU=
+X-Google-Smtp-Source: APXvYqzhlDMeVFAI73XwFECAAb6SYmFQQKLhVVxISeDmq0B8r5ie+QmPb4ZEQiMQDypfEaty0CMI7g==
+X-Received: by 2002:a1c:7e14:: with SMTP id z20mr6357789wmc.83.1562785591085;
+        Wed, 10 Jul 2019 12:06:31 -0700 (PDT)
+Received: from localhost.localdomain (bzq-79-177-233-205.red.bezeqint.net. [79.177.233.205])
+        by smtp.gmail.com with ESMTPSA id o11sm3308588wmh.37.2019.07.10.12.06.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 12:05:04 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] net/mlx5e: Move priv variable into case statement in mlx5e_setup_tc
-Date:   Wed, 10 Jul 2019 12:05:02 -0700
-Message-Id: <20190710190502.104010-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 10 Jul 2019 12:06:30 -0700 (PDT)
+From:   Carmeli Tamir <carmeli.tamir@gmail.com>
+To:     keescook@chromium.org, casey@schaufler-ca.com,
+        james.morris@microsoft.com, efremov@ispras.ru,
+        viro@zeniv.linux.org.uk, dhowells@redhat.com,
+        linux-kernel@vger.kernel.org, carmeli.tamir@gmail.com
+Subject: [PATCH] security/lsm_hooks: Updated set/remove xattr documentation
+Date:   Wed, 10 Jul 2019 15:06:07 -0400
+Message-Id: <20190710190607.5026-1-carmeli.tamir@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is an unused variable warning on arm64 defconfig when
-CONFIG_MLX5_ESWITCH is unset:
+The inode_setxattr and inode_removexattr hooks check for CAP_SYS_ADMIN
+capability when no LSMs exist. When LSMs exist, the hook expects
+them to check for capabilities - which SMACK and SELinux indeed do.
 
-drivers/net/ethernet/mellanox/mlx5/core/en_main.c:3467:21: warning:
-unused variable 'priv' [-Wunused-variable]
-        struct mlx5e_priv *priv = netdev_priv(dev);
-                           ^
-1 warning generated.
+This behavior is only mentioned in a comment in the 
+hooks' implementation. This patch makes it clearer for 
+LSM programmers that when implememting these hooks they are
+responsible for the CAP check.
 
-Move it down into the case statement where it is used.
-
-Fixes: 4e95bc268b91 ("net: flow_offload: add flow_block_cb_setup_simple()")
-Link: https://github.com/ClangBuiltLinux/linux/issues/597
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Carmeli Tamir <carmeli.tamir@gmail.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/lsm_hooks.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 6d0ae87c8ded..651eb714eb5b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -3464,15 +3464,16 @@ static LIST_HEAD(mlx5e_block_cb_list);
- static int mlx5e_setup_tc(struct net_device *dev, enum tc_setup_type type,
- 			  void *type_data)
- {
--	struct mlx5e_priv *priv = netdev_priv(dev);
--
- 	switch (type) {
- #ifdef CONFIG_MLX5_ESWITCH
--	case TC_SETUP_BLOCK:
-+	case TC_SETUP_BLOCK: {
-+		struct mlx5e_priv *priv = netdev_priv(dev);
-+
- 		return flow_block_cb_setup_simple(type_data,
- 						  &mlx5e_block_cb_list,
- 						  mlx5e_setup_tc_block_cb,
- 						  priv, priv, true);
-+	}
- #endif
- 	case TC_SETUP_QDISC_MQPRIO:
- 		return mlx5e_setup_tc_mqprio(dev, type_data);
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 47f58cfb6a19..d16c88a31ea9 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -377,7 +377,8 @@
+  *	Return 0 if permission is granted.
+  * @inode_setxattr:
+  *	Check permission before setting the extended attributes
+- *	@value identified by @name for @dentry.
++ *	@value identified by @name for @dentry. Note that the hook
++ *	is responsible to check for capabilities.
+  *	Return 0 if permission is granted.
+  * @inode_post_setxattr:
+  *	Update inode security field after successful setxattr operation.
+@@ -392,7 +393,8 @@
+  *	Return 0 if permission is granted.
+  * @inode_removexattr:
+  *	Check permission before removing the extended attribute
+- *	identified by @name for @dentry.
++ *	identified by @name for @dentry. Note that the hook
++ *	is responsible to check for capabilities.
+  *	Return 0 if permission is granted.
+  * @inode_getsecurity:
+  *	Retrieve a copy of the extended attribute representation of the
 -- 
-2.22.0
+2.21.0
 
