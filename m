@@ -2,128 +2,74 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51842C74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DB1C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25305214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:35:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hXsDIh9e"
+	by mail.kernel.org (Postfix) with ESMTP id B067C208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfGJPfu (ORCPT
+        id S1728252AbfGJPgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:35:50 -0400
-Received: from mail-eopbgr00076.outbound.protection.outlook.com ([40.107.0.76]:56238
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726617AbfGJPfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:35:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lsUHmJJKhzdoUZUUGxzDx6Rwz+CmAcdS3XsqHRxqfMgF489Q6peOisVWTZzqFDbBy0NJHKwU3hiEOq8h7YIEs9hlN4IV1wR+hkb/kcYY4F87qehJtf3PZverZEpX5mfkA/e48NuP8EPA5+NCNjL9+2natbY0mQpBHBkW8X+ry2s8i1P19kJr+slZTlFmCftHPWGz6tVFz0zQTyvDd9WEYG/uZowpp9nEz+JNqv98DosPjj4SsGM+gKUgeA2MGQmBPo13n7pox25fIKSqlcalmQz3VMGU1uZ6tcW7XAjuDw/OFKJpeLoPHtRHyHsE7ua5bRoy+I5Fum6DPOe22dNUIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mlx9Pvv3DxWHJV3RdMLtjjLG8N0XsMJjIpGhND/qn8k=;
- b=iA3BjTTw51XvKu7/wpkycO20wwQFDyvKCX5WKV6IuG4+aXLvEzuu2WGvbn1QVLNg7RvJLe7TXSopbfWhj0FCadfN3tTVy/58UbB8bDDao2EKZECn3f11PbpjpREZSf5I7rfPFa/2ygXnioWHrzlS9nVsgiOS70D5lUgsSbF4QyTeDmWFFQxQ2yhwk7o25Temk+TNPPUs3Q5ZkGojS2oi9R2LD5+PVTEEDtTgxFPHu/1IKBVHoRDkWWqLaTwkSjkslTliM75oPTP+HKTfxWizAyLaiBPLjGHq+zJ3b96W5v4V0k/jDej2jc5OkXBdzChraB/D5CzTHjR1dNZSWZL0pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mlx9Pvv3DxWHJV3RdMLtjjLG8N0XsMJjIpGhND/qn8k=;
- b=hXsDIh9e/b/Na4WnHjLL0DvO7qnchl5t0MtdtLOhau5MmnOgU9Jak7x6DOO9wlHVx5lzageijti8X1wxB+ymvnnGG2QfCoAvMYfXzydfk75EIRZny/rRbnllx4XVKK62C5dE6OBs7hNRExlOSGVN4UO1tuUMRFlOD9OnSyq34MU=
-Received: from AM6PR04MB4967.eurprd04.prod.outlook.com (20.177.33.210) by
- AM6PR04MB5335.eurprd04.prod.outlook.com (52.135.167.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Wed, 10 Jul 2019 15:35:46 +0000
-Received: from AM6PR04MB4967.eurprd04.prod.outlook.com
- ([fe80::b445:1241:947a:ab83]) by AM6PR04MB4967.eurprd04.prod.outlook.com
- ([fe80::b445:1241:947a:ab83%5]) with mapi id 15.20.2073.008; Wed, 10 Jul 2019
- 15:35:46 +0000
-From:   Han Xu <han.xu@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Ashish Kumar <ashish.kumar@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [EXT] Re: [PATCH 1/3] spi: spi-nxp-fspi: dynamically alloc AHB
- memory for FSPI
-Thread-Topic: [EXT] Re: [PATCH 1/3] spi: spi-nxp-fspi: dynamically alloc AHB
- memory for FSPI
-Thread-Index: AQHVNsj1Ce/O2KTUu0Gwz2jtSdXX0abD91IAgAADTcA=
-Date:   Wed, 10 Jul 2019 15:35:46 +0000
-Message-ID: <AM6PR04MB49672BE152440416ACCE275197F00@AM6PR04MB4967.eurprd04.prod.outlook.com>
-References: <20190710023128.13115-1-han.xu@nxp.com>
- <20190710023128.13115-2-han.xu@nxp.com> <20190710151628.GF14859@sirena.co.uk>
-In-Reply-To: <20190710151628.GF14859@sirena.co.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=han.xu@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 24311538-076d-473f-3f69-08d7054c4743
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB5335;
-x-ms-traffictypediagnostic: AM6PR04MB5335:
-x-microsoft-antispam-prvs: <AM6PR04MB53352DD43BC126F9FAE8418797F00@AM6PR04MB5335.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(376002)(136003)(366004)(189003)(199004)(13464003)(68736007)(54906003)(256004)(8936002)(71200400001)(6246003)(71190400001)(4744005)(486006)(86362001)(81166006)(81156014)(9686003)(66066001)(53546011)(6506007)(26005)(186003)(2906002)(102836004)(53936002)(316002)(11346002)(446003)(6436002)(14454004)(52536014)(33656002)(76116006)(25786009)(7696005)(6916009)(7736002)(99286004)(476003)(66556008)(66446008)(229853002)(305945005)(3846002)(76176011)(44832011)(8676002)(6116002)(55016002)(64756008)(66946007)(478600001)(66476007)(74316002)(4326008)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5335;H:AM6PR04MB4967.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BJpQSy3JJHKN7LOuMKTDAwCfA/5hKaPVwlPxAlnnKYVmpkcZpj+N1hMSoXlpIw1y0ohm9HpJAVqCtmz5SvM1jUxKTfNd9engjIIG/HdWbQ/1MxcQGWuSt/saogAy05Wa/YEHI934AgzC2+brVrxDActW2Z1VT2FpQgBpgMrk2U5oxuBoiq1xUEx3F0GBsvD1fL3+WS6314iSvr4Zg3z9h/3/VAMl0qejj8J+JgVxUpQt3k+q1heyTF3sMFTfwfGJrOefgafTTV72YpnniRp/4HoSF0yMu9IzyPu3w+urF+HEFxufsWvC6HqQJg+ILrJxIyuDKmWhGvpapluJ6nQGgYFmXD8zsNT+gJ6jgzjHW3FrvWy8pZZHlsvqWhj0OHg7Ax0WTSFMWs+SgrNUvVXH74x7mMRZxEFuKCfhTYH8i5s=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 10 Jul 2019 11:36:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbfGJPgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:36:12 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 979A320844;
+        Wed, 10 Jul 2019 15:36:10 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 11:36:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sodagudi Prasad <psodagud@codeaurora.org>
+Cc:     tglx@linutronix.de, pasha.tatashin@oracle.com,
+        gregkh@linuxfoundation.org, sboyd@codeaurora.org,
+        john.stultz@linaro.org, chang-an.chen@mediatek.com,
+        mingo@kernel.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        linux-kernel@vger.kernel.org, tsoni@codeaurora.org
+Subject: Re: sched_clock and device suspend/resume
+Message-ID: <20190710113609.7b63c5d6@gandalf.local.home>
+In-Reply-To: <1d6ef4687c87dd4d2ec88d0d593a9c1d@codeaurora.org>
+References: <1d6ef4687c87dd4d2ec88d0d593a9c1d@codeaurora.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24311538-076d-473f-3f69-08d7054c4743
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 15:35:46.6278
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: han.xu@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5335
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+[ Resending as your Cc was screwed up and caused my reply to mess up
+  the Cc list ]
 
-> -----Original Message-----
-> From: Mark Brown <broonie@kernel.org>
-> Sent: Wednesday, July 10, 2019 10:16 AM
-> To: Han Xu <han.xu@nxp.com>
-> Cc: Ashish Kumar <ashish.kumar@nxp.com>; linux-spi@vger.kernel.org; linux=
--
-> kernel@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> Subject: [EXT] Re: [PATCH 1/3] spi: spi-nxp-fspi: dynamically alloc AHB m=
-emory
-> for FSPI
->=20
-> On Wed, Jul 10, 2019 at 10:31:26AM +0800, han.xu@nxp.com wrote:
-> > From: Han Xu <han.xu@nxp.com>
-> >
-> > dynamically alloc AHB memory for FSPI controller
->=20
-> Why?  This is currently done at probe which is what you'd expect to happe=
-n
-> here, there's no explanation as to why this change is being made.
+On Wed, 10 Jul 2019 08:20:37 -0700
+Sodagudi Prasad <psodagud@codeaurora.org> wrote:
 
-Explained in cover letter, It failed to alloc the whole memory mapping area=
- during
-probe on some platforms, since the AHB memory area could be pretty large. T=
-he
-error may look like:
+> Another option is printing the epoch/cycles information in every print 
+> statement similar to thread id or processor id added 
+> recently(CONFIG_PRINTK_CALLER). This can be avoided if we start 
+> accounting suspend time in sched_clock.
 
-[    1.129404] fsl-quadspi 1550000.spi: ioremap failed for resource [mem 0x=
-40000000-0x7fffffff]
+Or another option is add a new clock that printk and tracing can use.
+tracing already can switch between clocks trivially.
 
+sched_clock_continuous() ? (I know, horrible name), that simply keeps
+track of the time delta at suspend and returns:
+
+	sched_clock() + delta;
+
+This will prevent other issues happening by modifying sched_clock(),
+specifically, screwing up the scheduler (what sched_clock()'s main
+purpose is for). We don't want the scheduler to think that a process
+was running for hours when it has spent most of that time in the
+suspend state. Which is probably your answer to why it was designed
+that way.
+
+-- Steve
