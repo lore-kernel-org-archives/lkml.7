@@ -2,140 +2,138 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E677C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B334C74A3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3E92086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A1620645
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562787987;
+	bh=8Wheg7fkojhFCTFeSxARuXmwozeoF6si9Jhn2gqN/jE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mcfKQEzD4JRJwKrQWIsJO0LDgRWqPWvLr/ELSdsIwLsISu5JNP1pmAmKSN+2HI/+M
+	 XSU04NTmlfgUFu1hs++6TI3/p0Tj7EMoRVauRSJUUut9arJIMn+pBU+7ilLzjTpHNs
+	 YzHqzyJGZw2YwD8p8bOLv+jyrg0dwLzmTDdEr+b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfGJTqL (ORCPT
+        id S1728124AbfGJTq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:46:11 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44565 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfGJTqL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:46:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b7so3347247otl.11;
-        Wed, 10 Jul 2019 12:46:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BxExLGJghxg2B7i0n80p9r0YFAgFtHpoh5hsuKWRqGo=;
-        b=qPBc9CMgcL/XbAUYVJgN0YLzm+NDzoifWbh5GWizrBxc/jJ1aQifURzCVJb8LlLKqE
-         0ullmBz8JamJLPCp6PB8CxkF9tMXI2V0/1BTbMIkfgNHolwcxbwI6aUw2ZeJtxNBp89E
-         gNB5BOOi1KilH2RVWXIUld2aCq10PoUurUgtqgFDJvX2UU+fkeza36zB44dXKdrbXhaj
-         094z74YXnuBph3pE1shFjvzDs5ZvOAnTK5oVIbSlJgqPoeUGrAsu0mvmoGnbipSpgMLm
-         A36AmCLrtN0g6wbI+izHweBazEYIWKrawsM1HBOp/VAvngQxIX3yVkh2W+uC7eCdsOd7
-         +/xA==
-X-Gm-Message-State: APjAAAWB0kvFPnxafVoAv4DEfD3Bbp34NHkSqm52v4EfH1l1aJW8VAN4
-        3sUbqaKRfxYyi9wDy0c9bSDal01X
-X-Google-Smtp-Source: APXvYqyQiCAjT4jf+G106JWtRDemkIo7F58D7Pe2nU3yH51Ea38cafrX9icsaGbptVMcjioOqwcZnQ==
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr40810otp.189.1562787970236;
-        Wed, 10 Jul 2019 12:46:10 -0700 (PDT)
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com. [209.85.210.49])
-        by smtp.gmail.com with ESMTPSA id q82sm946837oif.30.2019.07.10.12.46.09
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 12:46:09 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id q20so3394318otl.0;
-        Wed, 10 Jul 2019 12:46:09 -0700 (PDT)
-X-Received: by 2002:a9d:4d81:: with SMTP id u1mr34994otk.221.1562787969461;
- Wed, 10 Jul 2019 12:46:09 -0700 (PDT)
+        Wed, 10 Jul 2019 15:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfGJTqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:46:25 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D847E20645;
+        Wed, 10 Jul 2019 19:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562787984;
+        bh=8Wheg7fkojhFCTFeSxARuXmwozeoF6si9Jhn2gqN/jE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U8yQ5jzmPYkedYE9eKLlK6r/w0o6fbkuw6aQbZ32bajHQdbDyDuiA98yJfeBrTJ6G
+         9t9iwMUnGVGtKgkQyIGsGEnGkWyMLrzPLRQ7tkqlMCE404ujVuWcrSKTBrGV8qg0JS
+         ijG3JQaD52WEZZHNznlcoOP7z3WhRvagWtC/zdtE=
+Date:   Wed, 10 Jul 2019 12:46:22 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        keyrings@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        linux-nfs@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
+        linux-afs@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
+Message-ID: <20190710194620.GA83443@gmail.com>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        James Morris James Morris <jmorris@namei.org>,
+        keyrings@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        linux-nfs@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
+        linux-afs@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <28477.1562362239@warthog.procyon.org.uk>
+ <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190710110424.4254-1-biwen.li@nxp.com> <20190710110424.4254-2-biwen.li@nxp.com>
-In-Reply-To: <20190710110424.4254-2-biwen.li@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 10 Jul 2019 14:45:58 -0500
-X-Gmail-Original-Message-ID: <CADRPPNQ8nZQYq1ZXZ368LLeKnyrXpjB_X8XaHVhW890bw-tU6A@mail.gmail.com>
-Message-ID: <CADRPPNQ8nZQYq1ZXZ368LLeKnyrXpjB_X8XaHVhW890bw-tU6A@mail.gmail.com>
-Subject: Re: [v2,2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-To:     Biwen Li <biwen.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 6:35 AM Biwen Li <biwen.li@nxp.com> wrote:
->
-> The patch adds binding for ftm alarm driver
->
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+On Wed, Jul 10, 2019 at 11:35:07AM -0700, Linus Torvalds wrote:
+> On Fri, Jul 5, 2019 at 2:30 PM David Howells <dhowells@redhat.com> wrote:
+> >
+> > Here's my fourth block of keyrings changes for the next merge window.  They
+> > change the permissions model used by keys and keyrings to be based on an
+> > internal ACL by the following means:
+> 
+> It turns out that this is broken, and I'll probably have to revert the
+> merge entirely.
+> 
+> With this merge in place, I can't boot any of the machines that have
+> an encrypted disk setup. The boot just stops at
+> 
+>   systemd[1]: Started Forward Password Requests to Plymouth Directory Watch.
+>   systemd[1]: Reached target Paths.
+> 
+> and never gets any further. I never get the prompt for a passphrase
+> for the disk encryption.
+> 
+> Apparently not a lot of developers are using encrypted volumes for
+> their development machines.
+> 
+> I'm not sure if the only requirement is an encrypted volume, or if
+> this is also particular to a F30 install in case you need to be able
+> to reproduce. But considering that you have a redhat email address,
+> I'm sure you can find a F30 install somewhere with an encrypted disk.
+> 
+> David, if you can fix this quickly, I'll hold off on the revert of it
+> all, but I can wait only so long. I've stopped merging stuff since I
+> noticed my machines don't work (this merge window has not been
+> pleasant so far - in addition to this issue I had another entirely
+> unrelated boot failure which made bisecting this one even more fun).
+> 
+> So if I don't see a quick fix, I'll just revert in order to then
+> continue to do pull requests later today. Because I do not want to do
+> further pulls with something that I can't boot as a base.
+> 
+>                  Linus
 
-Looks like I commented the older version just now.  Adding Rob to this
-version too.
+This also broke 'keyctl new_session' and hence all the fscrypt tests
+(https://lkml.kernel.org/lkml/20190710011559.GA7973@sol.localdomain/), and it
+also broke loading in-kernel X.509 certificates
+(https://lore.kernel.org/lkml/27671.1562384658@turing-police/T/#u).
 
-> ---
-> Change in v2:
->     - replace ls1043a with ls1088a as example
->     - add rcpm node and fsl,rcpm-wakeup property
->
->  .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
->
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> new file mode 100644
-> index 0000000..010984a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> @@ -0,0 +1,40 @@
-> +Freescale FlexTimer Module (FTM) Alarm
-> +
-> +Note: The driver need work with RCPM driver to wake up system in sleep.
-> +
-> +Required properties:
-> +
-> +- compatible : Should be "fsl,ftm-alarm" or "fsl,<chip>-ftm-alarm", the
-> +              supported chips include
-> +              "fsl,ls1012a-ftm-alarm"
-> +              "fsl,ls1021a-ftm-alarm"
-> +              "fsl,ls1028a-ftm-alarm"
-> +              "fsl,ls1043a-ftm-alarm"
-> +              "fsl,ls1046a-ftm-alarm"
-> +              "fsl,ls1088a-ftm-alarm"
-> +              "fsl,ls208xa-ftm-alarm"
-> +- reg : Specifies base physical address and size of the register sets for the
-> +  FlexTimer Module and base physical address of IP Powerdown Exception Control
-> +  Register.
-> +- reg-names: names of the mapped memory regions listed in regs property.
-> +  should include the following entries:
-> +  "ftm":    Address of the register sets for FlexTimer Module
-> +- interrupts : Should be the FlexTimer Module interrupt.
-> +- fsl,rcpm-wakeup property and rcpm node : Please refer
-> +       Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+I'm *guessing* these are all some underlying issue where keyrings aren't being
+given all the needed permissions anymore.
 
-Looks better.
+But just FYI, David had said he's on vacation with no laptop or email access for
+2 weeks starting from Sunday (3 days ago).  So I don't think you can expect a
+quick fix from him.
 
-> +- big-endian: If the host controller is big-endian mode, specify this property.
-> +  The default endian mode is little-endian.
+I was planning to look into this to fix the fscrypt tests, but it might be a few
+days before I get to it.  And while I'm *guessing* it will be a simple fix, it
+might not be.  So I can't speak for David, but personally I'm fine with the
+commits being reverted for now.
 
-Same comment about optional property.
+I'm also unhappy that the new keyctl KEYCTL_GRANT_PERMISSION doesn't have any
+documentation or tests.  (Which seems to be a common problem with David's
+work...  None of the new mount syscalls in v5.2 have any tests, for example, and
+the man pages are still work-in-progress and last sent out for review a year
+ago, despite API changes that occurred before the syscalls were merged.)
 
-> +
-> +Example:
-> +rcpm: rcpm@1e34050 {
-> +       compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> +       reg = <0x0 0x1e34050 0x0 0x4>;
-> +       fsl,#rcpm-wakeup-cells = <1>;
-> +}
-> +
-> +ftm_alarm0: timer@2800000 {
-> +       compatible = "fsl,ftm-alarm";
-> +       reg = <0x0 0x2800000 0x0 0x10000>;
-> +       fsl,rcpm-wakeup = <&rcpm 0x0 0x4000>;
-> +       interrupts = <0 44 4>;
-> +}
-> --
-> 2.7.4
->
+- Eric
