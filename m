@@ -2,157 +2,118 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB0FC74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73EEC74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D022087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:28:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdE1Snln"
+	by mail.kernel.org (Postfix) with ESMTP id AE09B208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfGJS2x (ORCPT
+        id S1728298AbfGJS3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 14:28:53 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45720 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfGJS2x (ORCPT
+        Wed, 10 Jul 2019 14:29:05 -0400
+Received: from m4a0041g.houston.softwaregrp.com ([15.124.2.87]:42463 "EHLO
+        m4a0041g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727242AbfGJS3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:28:53 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so1617864pgp.12;
-        Wed, 10 Jul 2019 11:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X2wPmom3sJSwZ6VYG/6JKsbwq16BGxAUHYVA29t4WUs=;
-        b=bdE1SnlndmJmWXI4tshCAMHf1y6EjPIbK8Fbzi7N09M0t7c7CXz9jPaAF+U4zpK2Ar
-         qgCiZ/PtW4leBd9a9AxyI8AX8KAj2qjw9PES2Zr2jdM0CYFXuuMwafu1VW3XyuIX85ze
-         WyeGDguVLVu37gQ+z7B90eyFqfNkom1MP3LikG5lNXvgTOw7RM96ogRtu5S7/ndJUKBX
-         SFSf82JGBHHIEmapCMaggiqsSGmD80h/HwjFTvWjD5i1CXq8qlzCKfCl22YLtstT+vsh
-         abGOlhy9STPiO77wHf6EZUAMV63/A7eAJBWH/kg8JCzyNogW1v4N+kxJ1fDAn8+Wu7uz
-         ddfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X2wPmom3sJSwZ6VYG/6JKsbwq16BGxAUHYVA29t4WUs=;
-        b=mJhQbxV02/aZS4ZIhBRHQEWogTHEUOezzeSGhJqHTFL9MsLOlbmzrGdjRNMq4OoHid
-         x8p7NBNPgkDKsRroQ+SgbXhb/D98N5DQmCIw9/0VNdCD+BZBhfVSfFrneJE5diTiAoPM
-         cAAstayO7G4fm5MARvtbaKlOLV6+P3oCQw50OEObYhV5tu9gBugAqM47oClGvl2d16MZ
-         wKebb76nMwIXIP5oVbyCymCX2GAUGj3nTO6azCyGfu+b/vShLSOcB7ORzAKOOqPaYe7H
-         Hpm6J+wC+28/gByQzJ3658xnQtwHSLGpV7Td3GJDN7qJkvBmiggwCGf5UFS2wU/mKGzR
-         e6cg==
-X-Gm-Message-State: APjAAAVIWcVPBAzMksrxkN+KVc0WO4jd7TvNWr5sXRhhD4oFjFYHDYOW
-        tQkUfpchd5M+aYBRjWswLjM=
-X-Google-Smtp-Source: APXvYqzxVJwORPZh7pa+tFmbtMmG7GfDyUMvQifbBp9D3WGXW+RU3JFqDMMKkm/CNidWkfL1FXSk/Q==
-X-Received: by 2002:a65:454c:: with SMTP id x12mr38500524pgr.354.1562783332011;
-        Wed, 10 Jul 2019 11:28:52 -0700 (PDT)
-Received: from localhost ([2620:15c:f:fd00:4c3b:936:8dc5:a2ad])
-        by smtp.gmail.com with ESMTPSA id d16sm2943054pgb.4.2019.07.10.11.28.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 11:28:51 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     iommu@lists.linux-foundation.org
-Cc:     linux-arm-msm@vger.kernel.org, aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Joe Perches <joe@perches.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] iommu: add support for drivers that manage iommu explicitly
-Date:   Wed, 10 Jul 2019 11:28:30 -0700
-Message-Id: <20190710182844.25032-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190702202631.32148-2-robdclark@gmail.com>
-References: <20190702202631.32148-2-robdclark@gmail.com>
+        Wed, 10 Jul 2019 14:29:04 -0400
+X-Greylist: delayed 1729 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 14:28:58 EDT
+Received: FROM m4a0041g.houston.softwaregrp.com (15.120.17.147) BY m4a0041g.houston.softwaregrp.com WITH ESMTP;
+ Wed, 10 Jul 2019 18:28:48 +0000
+Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
+ M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Wed, 10 Jul 2019 17:47:34 +0000
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (15.124.8.13) by
+ M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Wed, 10 Jul 2019 17:47:34 +0000
+Received: from BN6PR18MB1172.namprd18.prod.outlook.com (10.172.207.147) by
+ BN6PR18MB1266.namprd18.prod.outlook.com (10.172.210.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Wed, 10 Jul 2019 17:47:32 +0000
+Received: from BN6PR18MB1172.namprd18.prod.outlook.com
+ ([fe80::38f3:d27c:6480:d073]) by BN6PR18MB1172.namprd18.prod.outlook.com
+ ([fe80::38f3:d27c:6480:d073%3]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
+ 17:47:31 +0000
+From:   Lee Duncan <LDuncan@suse.com>
+To:     Yang Bin <yang.bin18@zte.com.cn>
+CC:     "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "cleech@redhat.com" <cleech@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "wang.liang82@zte.com.cn" <wang.liang82@zte.com.cn>,
+        "wang.yi59@zte.com.cn" <wang.yi59@zte.com.cn>,
+        "xue.zhihong@zte.com.cn" <xue.zhihong@zte.com.cn>
+Subject: Re: [PATCH] Check sk before sendpage
+Thread-Topic: [PATCH] Check sk before sendpage
+Thread-Index: AQHVNvHttUE0icmf0Uic+RrHE7gyJ6bEISiA
+Date:   Wed, 10 Jul 2019 17:47:31 +0000
+Message-ID: <1bc364ff-5bff-47ac-611a-f75c43f4bd1b@suse.com>
+References: <1562743809-31133-1-git-send-email-yang.bin18@zte.com.cn>
+In-Reply-To: <1562743809-31133-1-git-send-email-yang.bin18@zte.com.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: DB6PR07CA0011.eurprd07.prod.outlook.com
+ (2603:10a6:6:2d::21) To BN6PR18MB1172.namprd18.prod.outlook.com
+ (2603:10b6:404:eb::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=LDuncan@suse.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [73.25.22.216]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 556321fc-1cb4-4059-7736-08d7055eaea7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR18MB1266;
+x-ms-traffictypediagnostic: BN6PR18MB1266:
+x-microsoft-antispam-prvs: <BN6PR18MB1266F6A8BC0BF729D3DB010DDAF00@BN6PR18MB1266.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0094E3478A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(199004)(189003)(68736007)(8676002)(31686004)(316002)(6486002)(478600001)(14454004)(31696002)(186003)(5660300002)(36756003)(4326008)(6916009)(86362001)(25786009)(6436002)(6506007)(80792005)(66556008)(81166006)(26005)(7736002)(81156014)(486006)(2906002)(71200400001)(71190400001)(53546011)(229853002)(446003)(64756008)(76176011)(66946007)(386003)(99286004)(6116002)(54906003)(476003)(102836004)(6512007)(66476007)(6246003)(53936002)(11346002)(8936002)(2616005)(256004)(7416002)(4744005)(52116002)(66066001)(305945005)(66446008)(3846002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR18MB1266;H:BN6PR18MB1172.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LrqtibLnWL2tJF5btRWJ0Cw7rDxKCZNDs9c8kU/nRpW58exwVDexAD0PkRGRFNqDrIOIcgeCYDvVGZmzz8nIAlL/ss4TCCgjly0j4/B/z+Fj/qj/TjA+ocO1a7EuzRkIq9OGvR4xo00qykDorRRO0DxrMrjkcz5PpDCkMV9BL/YzPa3/6ujfqJ4WYkf290/2aRHj3qJcGDlZrDOC7W6x6/EutEsvBxGzDvbPtZn5VypuqJcUSgR5/cALGKn7ib+l5+SUGNzjl4PAIeOM1oLKgTK+VLY0Oy4sk4dt8McCDGcj8tGOld1rm5Jb5zx5/GbWPLvh34oJ1ctCouDPzR0jzl6176ZvEgc+BlfI6VZJBRBCZyb6QogKDvkOFbeQ9rgYb0R6bGI1fmWbjN9lT3ZbJkwgOpfNKLSsXxIAc+t+ccU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F3B3AF6B642FCC40B3B4B1F936A8554A@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 556321fc-1cb4-4059-7736-08d7055eaea7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 17:47:31.7946
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LDuncan@suse.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR18MB1266
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
-
-Avoid attaching any non-driver managed domain if the driver indicates
-that it manages the iommu directly.
-
-This avoids a problem on devices where the bootloader takes the SMMU out
-of bypass and enables scanout, such as is the case on snapdragon aarch64
-laptops and newer snapdragon android devices.  Attaching an IDENTITY or
-DMA domain before the driver has a chance to intervene will break efifb
-scanout and start triggering iommu faults.
-
-If the driver manages the iommu directly (as does drm/msm), it can
-shut down scanout when it is ready to take over the display, before
-attaching an UNMANAGED domain.
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
-v2. Move the check into arm_smmu_attach_dev() (as I *think* this is
-    what Robin preferred; update commit msg to focus on the display
-    related issue that this solves.
-
-We also need Bjorn's patch set to inherit SMR and CB config during
-init:
-
-https://www.spinics.net/lists/arm-kernel/msg732246.html
-
- drivers/iommu/arm-smmu.c | 11 +++++++++++
- include/linux/device.h   |  3 ++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 1a5efa7c8767..4a80710124db 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1411,6 +1411,17 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		return -ENXIO;
- 	}
- 
-+	/*
-+	 * If driver is going to manage iommu directly, then avoid
-+	 * attaching any non driver managed domain.  There could
-+	 * be already active dma underway (ie. scanout in case of
-+	 * bootloader enabled display), and interfering with that
-+	 * will make things go *boom*
-+	 */
-+	if ((domain->type != IOMMU_DOMAIN_UNMANAGED) &&
-+	    dev->driver && dev->driver->driver_manages_iommu)
-+		return 0;
-+
- 	/*
- 	 * FIXME: The arch/arm DMA API code tries to attach devices to its own
- 	 * domains between of_xlate() and add_device() - we have no way to cope
-diff --git a/include/linux/device.h b/include/linux/device.h
-index e138baabe01e..d98aa4d3c8c3 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -282,7 +282,8 @@ struct device_driver {
- 	struct module		*owner;
- 	const char		*mod_name;	/* used for built-in modules */
- 
--	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
-+	bool suppress_bind_attrs:1;	/* disables bind/unbind via sysfs */
-+	bool driver_manages_iommu:1;	/* driver manages IOMMU explicitly */
- 	enum probe_type probe_type;
- 
- 	const struct of_device_id	*of_match_table;
--- 
-2.20.1
-
+T24gNy8xMC8xOSAxMjozMCBBTSwgWWFuZyBCaW4gd3JvdGU6DQoNCj4gRnJvbTogIiBZYW5nIEJp
+biAiPHlhbmcuYmluMThAenRlLmNvbS5jbj4NCj4NCj4gQmVmb3JlIHhtaXQsaXNjc2kgbWF5IGRp
+c2Nvbm5lY3QganVzdCBub3cuDQo+IFNvIG11c3QgY2hlY2sgY29ubmVjdGlvbiBzb2NrIE5VTEwg
+b3Igbm90LG9yIGtlcm5lbCB3aWxsIGNyYXNoIGZvcg0KPiBhY2Nlc3NpbmcgTlVMTCBwb2ludGVy
+Lg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBZYW5nIEJpbiA8eWFuZy5iaW4xOEB6dGUuY29tLmNuPg0K
+PiAtLS0NCj4gIGRyaXZlcnMvc2NzaS9pc2NzaV90Y3AuYyB8IDMgKysrDQo+ICAxIGZpbGUgY2hh
+bmdlZCwgMyBpbnNlcnRpb25zKCspDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvaXNj
+c2lfdGNwLmMgYi9kcml2ZXJzL3Njc2kvaXNjc2lfdGNwLmMNCj4gaW5kZXggN2JlZGJlOC4uYTU5
+YzQ5ZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zY3NpL2lzY3NpX3RjcC5jDQo+ICsrKyBiL2Ry
+aXZlcnMvc2NzaS9pc2NzaV90Y3AuYw0KPiBAQCAtMjY0LDYgKzI2NCw5IEBAIHN0YXRpYyBpbnQg
+aXNjc2lfc3dfdGNwX3htaXRfc2VnbWVudChzdHJ1Y3QgaXNjc2lfdGNwX2Nvbm4gKnRjcF9jb25u
+LA0KPiAgCXVuc2lnbmVkIGludCBjb3BpZWQgPSAwOw0KPiAgCWludCByID0gMDsNCj4gIA0KPiAr
+CWlmICghc2spDQo+ICsJCXJldHVybiAtRU5PVENPTk47DQo+ICsNCj4gIAl3aGlsZSAoIWlzY3Np
+X3RjcF9zZWdtZW50X2RvbmUodGNwX2Nvbm4sIHNlZ21lbnQsIDAsIHIpKSB7DQo+ICAJCXN0cnVj
+dCBzY2F0dGVybGlzdCAqc2c7DQo+ICAJCXVuc2lnbmVkIGludCBvZmZzZXQsIGNvcHk7DQo+DQoN
+CklmIHRoZSBzb2NrZXQgY2FuIGJlIGNsb3NlZCByaWdodCBiZWZvcmUgaXNjc2lfc3dfdGNwX3ht
+aXRfc2VnbWVudCgpIGlzDQpjYWxsZWQsIGNhbiBpdCBiZSBjYWxsZWQgaW4gdGhlIG1pZGRsZSBv
+ZiBzZW5kaW5nIHNlZ21lbnRzPyAoSW4gd2hpY2gNCmNhc2UgdGhlIGNoZWNrIHdvdWxkIGhhdmUg
+dG8gYmUgaW4gdGhlIHdoaWxlIGxvb3AuKQ0KDQotLSANCg0KTGVlIER1bmNhbg0KDQo=
