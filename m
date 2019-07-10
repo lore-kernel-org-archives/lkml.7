@@ -6,69 +6,70 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313D4C73C63
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F78C73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F2020651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC38420651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbfGJBvV (ORCPT
+        id S1726002AbfGJBv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 21:51:21 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60012 "EHLO huawei.com"
+        Tue, 9 Jul 2019 21:51:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45100 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfGJBvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 21:51:21 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 42780A4204CD8B2F87CC;
-        Wed, 10 Jul 2019 09:51:18 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 10 Jul 2019 09:51:10 +0800
+        id S1725807AbfGJBv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 21:51:27 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 48FCA33D463FEB7EBE02;
+        Wed, 10 Jul 2019 09:51:24 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 10 Jul 2019
+ 09:51:18 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <David1.Zhou@amd.com>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <Feifei.Xu@amd.com>,
-        <Likun.Gao@amd.com>, <James.Zhu@amd.com>, <shirish.s@amd.com>,
-        <evan.quan@amd.com>, <ray.huang@amd.com>, <Rex.Zhu@amd.com>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] drm/amdgpu: remove duplicated include from gfx_v9_0.c
-Date:   Wed, 10 Jul 2019 01:57:20 +0000
-Message-ID: <20190710015720.107326-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+To:     <bmt@zurich.ibm.com>, <dledford@redhat.com>, <jgg@ziepe.ca>
+CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] RDMA/siw: Print error code while kthread_create failed
+Date:   Wed, 10 Jul 2019 09:50:09 +0800
+Message-ID: <20190710015009.57120-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicated include.
+In iw_create_tx_threads(), if we failed to create kthread,
+we should print the 'rv', this fix gcc warning:
 
+drivers/infiniband/sw/siw/siw_main.c: In function 'siw_create_tx_threads':
+drivers/infiniband/sw/siw/siw_main.c:91:11: warning:
+ variable 'rv' set but not used [-Wunused-but-set-variable]
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/infiniband/sw/siw/siw_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index 5ba332376710..822f45161240 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -39,7 +39,6 @@
- #include "vega10_enum.h"
- #include "hdp/hdp_4_0_offset.h"
- 
--#include "soc15.h"
- #include "soc15_common.h"
- #include "clearstate_gfx9.h"
- #include "v9_structs.h"
-
-
-
+diff --git a/drivers/infiniband/sw/siw/siw_main.c b/drivers/infiniband/sw/siw/siw_main.c
+index fd2552a..2a70830d 100644
+--- a/drivers/infiniband/sw/siw/siw_main.c
++++ b/drivers/infiniband/sw/siw/siw_main.c
+@@ -101,7 +101,8 @@ static int siw_create_tx_threads(void)
+ 		if (IS_ERR(siw_tx_thread[cpu])) {
+ 			rv = PTR_ERR(siw_tx_thread[cpu]);
+ 			siw_tx_thread[cpu] = NULL;
+-			pr_info("Creating TX thread for CPU %d failed", cpu);
++			pr_info("Creating TX thread for CPU%d failed %d\n",
++				cpu, rv);
+ 			continue;
+ 		}
+ 		kthread_bind(siw_tx_thread[cpu], cpu);
+-- 
+2.7.4
 
 
