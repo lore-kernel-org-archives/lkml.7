@@ -2,173 +2,129 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62593C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E071CC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F382064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562791941;
-	bh=1Z5MnhcCnJucV2BxszFw5vX5BU+wdUVCFPVBR7g2QiI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xjmKPgegucL1LuLsqMA4UyySB9gx0eyPrjMB+tHYeeL1UuyVc/YXsFyETE0QWJzNO
-	 SviMe5km0+XCPucxOzJhJpbcZIibBkXBr7BLAGgeoCd6ShxGaeNEHgzLPCPZIFJIu7
-	 8dybeDP2u94DbEll7B/s+NnxfWz+amPsBQnumlVc=
+	by mail.kernel.org (Postfix) with ESMTP id B75CB20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:56:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivw+OD5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfGJUwT (ORCPT
+        id S1727494AbfGJU4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 16:52:19 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39739 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbfGJUvo (ORCPT
+        Wed, 10 Jul 2019 16:56:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44028 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfGJU4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 16:51:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j2so1641406pfe.6;
-        Wed, 10 Jul 2019 13:51:44 -0700 (PDT)
+        Wed, 10 Jul 2019 16:56:08 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f25so1786474pgv.10;
+        Wed, 10 Jul 2019 13:56:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JIWlTDHRU3mjWfgflvhaa5vcE8JQAEkvNv7BJwQpcU4=;
-        b=ko2iX2X5bcEWp600/qku8sen9UEgNgcKUWlCMJOwU399AGW5/bivrtNQrJL7HGj2sQ
-         wDG9sMPdOFKvirT8KNF44f6g0g/iKzIQb6amaxQnVhfpuMYetdJX0pVfWRX/WPJfEkkR
-         TyRhm0RdqBqowpzAyqV0Iq4FMbxplDiz2ny2QbYdge8ld2AYWulXV97GHTgygzhhg3H8
-         xPG2mAJMvftGLkQgXk6YCclBNKT6qwbGguLE/Y3jCFSjT2WkSHYdk8Gv0PU82XmvKImR
-         bPsEa4rFWcxAECpK3Scjg2Vi4qwdC/zVz4qYsWW1hR4vbIGkXPPm7zraSBf3mYe6d2qk
-         +ltw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4GDlvVIbuEMSjpog68D853qJdshnlOic8vHoIJzFbR8=;
+        b=ivw+OD5nX4iQuO1JTrBDV5FzrEry3ElHLfV4wuZyAJCyH++EJYSwauxZJRmw1Y5Cw6
+         mP9bOLVYebi+a77jr2fYBmyYQDa9SMtCkL9GtaLdq865LJtjeKFJ7x9TkQuMZIPHXrAI
+         ZIsHQwNv+Fq93FOnnHwGxQnhXPGDrSPGUsfQVzHNzImw70uTHIKnaP+RWbZGvJcUwnq+
+         tIbXt5ux8DyT5ZITZ2LQG8Vxfsl6EU6T7S8rFhj4kAuJc9Tb4GWlyTa+jIrmum0efIWD
+         mE0Y8ozfhhrliHgMITG/V5D2LVNnxmYp2lSyciEY8NgdbsrakEyTDYYvw40ijWy6Yy//
+         FKsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=JIWlTDHRU3mjWfgflvhaa5vcE8JQAEkvNv7BJwQpcU4=;
-        b=S+PjI8odAruFrLh3jHeb6q6WmHc9SPnv+TJNgNqWcCNPD8piVngV6gi7FWD+wJzd3R
-         qLHJEk/cWaik2RbgWij94R0ZA0udRQoJGXskj3anvBxFERKC9WlifmYzukJuz13Iaf+y
-         +sKhV5JfzMCgxNx3qw7R65R8n9jfVBz2qjIfVq22zjTvHUbh0IkX8rT9/RBjGhKYLyku
-         fvrmu4rDFSc5BY34jAw/UG0mzh0SWuC8hlK8jXq0GFPUQ0V4F10JsS7jmX0CpIlAP4TS
-         Wv001uAecSjCr14IxrlN86dWzN86iwH2Nhn82GOSfUTrZKIHPSI8N5IlGMjv6ZtU1XUw
-         GfVA==
-X-Gm-Message-State: APjAAAWXybMcQ+lT0iO2rWD1+2cKBzPe6JnWyb047GRV0vHw1YT9fZs4
-        pW7C7xgp+Op1HeEZQCLiG2+LtLVXuZc=
-X-Google-Smtp-Source: APXvYqzLUmGA4IjAo8d3P7aJvfwjy6fUo5BUTNFCtXR8zdG1EiK9k+yHvl6tJ056YMBZwoIZZxkm3g==
-X-Received: by 2002:a65:654f:: with SMTP id a15mr206363pgw.73.1562791903957;
-        Wed, 10 Jul 2019 13:51:43 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:2bbe])
-        by smtp.gmail.com with ESMTPSA id g62sm3271010pje.11.2019.07.10.13.51.43
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4GDlvVIbuEMSjpog68D853qJdshnlOic8vHoIJzFbR8=;
+        b=LkYT5If7SBOx81vK67F5VYUThfqSDr7vZa5l6rv7Z+drTqJo15PQVgPpc7/0fLhfmc
+         K1BXW3TkpPcqEHyf9Jen9UbusBoeAAHaljZq0OcLu0x53nmNbjOQLqx2/OFCyQmuWryN
+         PLo6SH/VAKyH8X5WRApfwWr7Vxps231r+9Be5onUUh0/0TVkylPjbacfk1lohXbfgi+O
+         XT6eUG02JrHwNLf/H6OOhZl0hs3+330G3qyswWLRH1qqpjiGkrsHH2T35DnN09BnMvaC
+         6PlLBSLPqPbaIhoZ0IA7qnOztjAOFQc5egoxeCw1X+UQ1BsBl1BDjkFZJsZQerhwR7LJ
+         LAoQ==
+X-Gm-Message-State: APjAAAXJ6uTp1S/5zsW/wHcDQJsKTX98FxVcoEp1xEQMGD9k0bQuX/1H
+        vsuqs6q+sZ4IGFcy9kbKjhA=
+X-Google-Smtp-Source: APXvYqz9wvasYcGFZOAF/O+EHv/0f99oo5XH+0E6bgjvB2lvBle5sQTAm3dgUwqxMFDZFcC/TXPdqA==
+X-Received: by 2002:a63:2c8e:: with SMTP id s136mr205549pgs.277.1562792167340;
+        Wed, 10 Jul 2019 13:56:07 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v14sm2462422pfm.164.2019.07.10.13.56.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 13:51:43 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
-        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 04/10] block/rq_qos: add rq_qos_merge()
-Date:   Wed, 10 Jul 2019 13:51:22 -0700
-Message-Id: <20190710205128.1316483-5-tj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190710205128.1316483-1-tj@kernel.org>
-References: <20190710205128.1316483-1-tj@kernel.org>
+        Wed, 10 Jul 2019 13:56:06 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 13:56:05 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     linux-hwmon@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Alexander Amelkin <a.amelkin@yadro.com>,
+        Lei YU <mine260309@gmail.com>,
+        Alexander Soldatov <a.soldatov@yadro.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon (occ): Add temp sensor value check
+Message-ID: <20190710205605.GA7749@roeck-us.net>
+References: <20190710072606.4849-1-joel@jms.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710072606.4849-1-joel@jms.id.au>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a merge hook for rq_qos.  This will be used by io.weight.
+On Wed, Jul 10, 2019 at 04:56:06PM +0930, Joel Stanley wrote:
+> From: Alexander Soldatov <a.soldatov@yadro.com>
+> 
+> The occ driver supports two formats for the temp sensor value.
+> 
+> The OCC firmware for P8 supports only the first format, for which
+> no range checking or error processing is performed in the driver.
+> Inspecting the OCC sources for P8 reveals that OCC may send
+> a special value 0xFFFF to indicate that a sensor read timeout
+> has occurred, see
+> 
+> https://github.com/open-power/occ/blob/master_p8/src/occ/cmdh/cmdh_fsp_cmds.c#L395
+> 
+> That situation wasn't handled in the driver. This patch adds invalid
+> temp value check for the sensor data format 1 and handles it the same
+> way as it is done for the format 2, where EREMOTEIO is reported for
+> this case.
+> 
+> Fixes: 54076cb3b5ff ("hwmon (occ): Add sensor attributes and register hwmon device")
+> Signed-off-by: Alexander Soldatov <a.soldatov@yadro.com>
+> Signed-off-by: Alexander Amelkin <a.amelkin@yadro.com>
+> Reviewed-by: Alexander Amelkin <a.amelkin@yadro.com>
+> Reviewed-by: Eddie James <eajames@linux.ibm.com>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- block/blk-core.c   | 4 ++++
- block/blk-rq-qos.c | 9 +++++++++
- block/blk-rq-qos.h | 9 +++++++++
- 3 files changed, 22 insertions(+)
+Applied.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 260e36a2c343..4696a89ca039 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -601,6 +601,7 @@ bool bio_attempt_back_merge(struct request *req, struct bio *bio,
- 		return false;
- 
- 	trace_block_bio_backmerge(req->q, req, bio);
-+	rq_qos_merge(req->q, req, bio);
- 
- 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
- 		blk_rq_set_mixed_merge(req);
-@@ -622,6 +623,7 @@ bool bio_attempt_front_merge(struct request *req, struct bio *bio,
- 		return false;
- 
- 	trace_block_bio_frontmerge(req->q, req, bio);
-+	rq_qos_merge(req->q, req, bio);
- 
- 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
- 		blk_rq_set_mixed_merge(req);
-@@ -647,6 +649,8 @@ bool bio_attempt_discard_merge(struct request_queue *q, struct request *req,
- 	    blk_rq_get_max_sectors(req, blk_rq_pos(req)))
- 		goto no_merge;
- 
-+	rq_qos_merge(q, req, bio);
-+
- 	req->biotail->bi_next = bio;
- 	req->biotail = bio;
- 	req->__data_len += bio->bi_iter.bi_size;
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 659ccb8b693f..7debcaf1ee53 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -83,6 +83,15 @@ void __rq_qos_track(struct rq_qos *rqos, struct request *rq, struct bio *bio)
- 	} while (rqos);
- }
- 
-+void __rq_qos_merge(struct rq_qos *rqos, struct request *rq, struct bio *bio)
-+{
-+	do {
-+		if (rqos->ops->merge)
-+			rqos->ops->merge(rqos, rq, bio);
-+		rqos = rqos->next;
-+	} while (rqos);
-+}
-+
- void __rq_qos_done_bio(struct rq_qos *rqos, struct bio *bio)
- {
- 	do {
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index 2300e038b9fa..8e426a8505b6 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -35,6 +35,7 @@ struct rq_qos {
- struct rq_qos_ops {
- 	void (*throttle)(struct rq_qos *, struct bio *);
- 	void (*track)(struct rq_qos *, struct request *, struct bio *);
-+	void (*merge)(struct rq_qos *, struct request *, struct bio *);
- 	void (*issue)(struct rq_qos *, struct request *);
- 	void (*requeue)(struct rq_qos *, struct request *);
- 	void (*done)(struct rq_qos *, struct request *);
-@@ -135,6 +136,7 @@ void __rq_qos_issue(struct rq_qos *rqos, struct request *rq);
- void __rq_qos_requeue(struct rq_qos *rqos, struct request *rq);
- void __rq_qos_throttle(struct rq_qos *rqos, struct bio *bio);
- void __rq_qos_track(struct rq_qos *rqos, struct request *rq, struct bio *bio);
-+void __rq_qos_merge(struct rq_qos *rqos, struct request *rq, struct bio *bio);
- void __rq_qos_done_bio(struct rq_qos *rqos, struct bio *bio);
- 
- static inline void rq_qos_cleanup(struct request_queue *q, struct bio *bio)
-@@ -185,6 +187,13 @@ static inline void rq_qos_track(struct request_queue *q, struct request *rq,
- 		__rq_qos_track(q->rq_qos, rq, bio);
- }
- 
-+static inline void rq_qos_merge(struct request_queue *q, struct request *rq,
-+				struct bio *bio)
-+{
-+	if (q->rq_qos)
-+		__rq_qos_merge(q->rq_qos, rq, bio);
-+}
-+
- void rq_qos_exit(struct request_queue *);
- 
- #endif
--- 
-2.17.1
+Thanks,
+Guenter
 
+> ---
+>  drivers/hwmon/occ/common.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
+> index cccf91742c1a..a7d2b16dd702 100644
+> --- a/drivers/hwmon/occ/common.c
+> +++ b/drivers/hwmon/occ/common.c
+> @@ -241,6 +241,12 @@ static ssize_t occ_show_temp_1(struct device *dev,
+>  		val = get_unaligned_be16(&temp->sensor_id);
+>  		break;
+>  	case 1:
+> +		/*
+> +		 * If a sensor reading has expired and couldn't be refreshed,
+> +		 * OCC returns 0xFFFF for that sensor.
+> +		 */
+> +		if (temp->value == 0xFFFF)
+> +			return -EREMOTEIO;
+>  		val = get_unaligned_be16(&temp->value) * 1000;
+>  		break;
+>  	default:
