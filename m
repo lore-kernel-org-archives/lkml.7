@@ -2,112 +2,109 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0942C74A23
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA2DC74A23
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFC32086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF9120651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:27:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eBMeHMKy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PdeAjWx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfGJO0o (ORCPT
+        id S1727907AbfGJO1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:26:44 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:46904 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfGJO0n (ORCPT
+        Wed, 10 Jul 2019 10:27:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41440 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfGJO1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:26:43 -0400
-Received: by mail-lf1-f41.google.com with SMTP id z15so1722596lfh.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 07:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nv9p/G+s9XtbbbTHB54r/CSbDNWoOb77fcrWutVfYq8=;
-        b=eBMeHMKybkIEBqDr6w99KrnEXGyDkPz9sItt1EtsmxnQD7Gnwk4wtQy03KZnCF+86K
-         q9+1vvKZxI6oR64bYdA05nmnBZ9riEKWeLM6dPEP0dzyNPXobbRLxHqxAq18KGQBFY7q
-         HpQs4KXs5sVRXuRO0XnOmYQK8bqn8MR27ymwxrBKRpTxTUlPjcqnpeiMhlc/d+75lYKH
-         7ibShzSop6ZSjxPWxWZH3zkjsH/pr5kFYze0THExtPDeoEnl++fzgOQHMeGIaYwTSPGg
-         NRaF2ROCpDiEqJZtIbCH7PQend6jhJOY5fgAS+XFw52G4OB6MACNOv376QT/lD9zDojV
-         aSZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=nv9p/G+s9XtbbbTHB54r/CSbDNWoOb77fcrWutVfYq8=;
-        b=k+c/D3LT6hay0RhxQjIjD5Urbhl8028x80JUhTaXVr4ZpJoCs6PzGdTP6BBpqsJUxz
-         K0lA8QtraYm8cPeK6AcKunDIH57wmuZhPbScx175RmwLEdegepkezJ8EFHnglAbsQNxZ
-         hiDJJQgppyVV1UgifckokEzSLq3TrRgImOjGsmiVY3SsbC+iNHL6gJIhz4klQaTemRtv
-         RYdB64+37pWK290M3DDIVQdgILf8pJxkn2r6xlINegbM/qr/LFqIFG96FVGUuVuNEgpg
-         GrrajmiWt9WeXKzBzfmyjfdGH5iGwJf6syOVbOXhbEXU78fxMx+IgnQsqyl+iBbD031i
-         13VA==
-X-Gm-Message-State: APjAAAWOy5F27VEdot95IH2EnrwCpj8z07iNclm+QhJwHJU537UqUnv3
-        POtulzRFnupP8C4gUJQOufs34Q==
-X-Google-Smtp-Source: APXvYqwm5UNfCj55WhIv27Loj6GM6O6ploYa29fsoHfI11MRiIhU8qT1ozyqldFfaWQMFLXIXxwmyg==
-X-Received: by 2002:a19:4f42:: with SMTP id a2mr14942041lfk.23.1562768801531;
-        Wed, 10 Jul 2019 07:26:41 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id n24sm501910ljc.25.2019.07.10.07.26.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jul 2019 07:26:41 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 17:26:39 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [net-next] davinci_cpdma: don't cast dma_addr_t to
- pointer
-Message-ID: <20190710142637.GA5375@khorivan>
-Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190710080106.24237-1-arnd@arndb.de>
+        Wed, 10 Jul 2019 10:27:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RlXhAkaMUAdGOUFAYrqz8nfH2erzY8x7rCdtY4iPiGs=; b=PdeAjWx0z/Z2HRIX9fIQXsgSp
+        0FfZL97fOFsyolzkLrlxkK7Hxm9I8/Z1HSpUzXgjpAs8V8w75sCFYrQ1/Y0tqjoYfe7YAKeQRkjT+
+        dT+CCglesn8W5g8qdGMO7mIAnQXhOjFVB1iJgM5lcfe7HME0xGegljFhFUIl6Xtxq8Dr/HFGubLiM
+        Qng0pLVJNE0Q/3ojwNvwNecgCzz7xqfdWiEt8E8gsGSJy/e7KQRN5XdsVYanqtdAs3D7P5suYUZxi
+        Lw4fV3U4FNSLzMB+97/QTFtVh5TL1qniaKDKzDrAOWg0ECTGP4CBKG+53ZPXsiWlkMr1QgFR8Lll0
+        lskCi+l+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlDYd-0006FG-0I; Wed, 10 Jul 2019 14:26:57 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 47DA220977440; Wed, 10 Jul 2019 16:26:53 +0200 (CEST)
+Date:   Wed, 10 Jul 2019 16:26:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Xi Ruoyao <xry111@mengyan1223.wang>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+Message-ID: <20190710142653.GJ3419@hirez.programming.kicks-ass.net>
+References: <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de>
+ <201907091727.91CC6C72D8@keescook>
+ <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang>
+ <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>
+ <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
+ <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
+ <768463eb26a2feb0fcc374fd7f9cc28b96976917.camel@mengyan1223.wang>
+ <20190710134433.GN3402@hirez.programming.kicks-ass.net>
+ <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190710080106.24237-1-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:00:33AM +0200, Arnd Bergmann wrote:
->dma_addr_t may be 64-bit wide on 32-bit architectures, so it is not
->valid to cast between it and a pointer:
->
->drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_submit_si':
->drivers/net/ethernet/ti/davinci_cpdma.c:1047:12: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
->drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_idle_submit_mapped':
->drivers/net/ethernet/ti/davinci_cpdma.c:1114:12: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->drivers/net/ethernet/ti/davinci_cpdma.c: In function 'cpdma_chan_submit_mapped':
->drivers/net/ethernet/ti/davinci_cpdma.c:1164:12: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->
->Solve this by using two separate members in 'struct submit_info'.
->Since this avoids the use of the 'flag' member, the structure does
->not even grow in typical configurations.
->
->Fixes: 6670acacd59e ("net: ethernet: ti: davinci_cpdma: add dma mapped submit")
->Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jul 10, 2019 at 04:22:51PM +0200, Jiri Kosina wrote:
+> On Wed, 10 Jul 2019, Peter Zijlstra wrote:
+> 
+> > If we mark the key as RO after init, and then try and modify the key to
+> > link module usage sites, things might go bang as described.
+> > 
+> > Thanks!
+> > 
+> > 
+> > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> > index 27d7864e7252..5bf7a8354da2 100644
+> > --- a/arch/x86/kernel/cpu/common.c
+> > +++ b/arch/x86/kernel/cpu/common.c
+> > @@ -366,7 +366,7 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
+> >  	cr4_clear_bits(X86_CR4_UMIP);
+> >  }
+> >  
+> > -DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+> > +DEFINE_STATIC_KEY_FALSE(cr_pinning);
+> 
+> Good catch, I guess that is going to fix it.
+> 
+> At the same time though, it sort of destroys the original intent of Kees' 
+> patch, right? The exploits will just have to call static_key_disable() 
+> prior to calling native_write_cr4() again, and the protection is gone.
 
-Despite "flags" could be used for smth else (who knows), looks ok.
-Reviewed-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+This is fixable by moving native_write_cr*() out-of-line, such that they
+never end up in a module.
 
--- 
-Regards,
-Ivan Khoronzhuk
