@@ -2,119 +2,100 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7E3C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F80C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10AC52087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18CC2216E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:26:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nHTREbiy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfGJSYo (ORCPT
+        id S1728274AbfGJS01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 14:24:44 -0400
-Received: from relay.sw.ru ([185.231.240.75]:47462 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727460AbfGJSYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:24:44 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hlHGV-0006Kk-L9; Wed, 10 Jul 2019 21:24:27 +0300
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-To:     Walter Wu <walter-zh.wu@mediatek.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
- <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
- <1560447999.15814.15.camel@mtksdccf07> <1560479520.15814.34.camel@mtksdccf07>
- <1560744017.15814.49.camel@mtksdccf07>
- <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
- <1560774735.15814.54.camel@mtksdccf07> <1561974995.18866.1.camel@mtksdccf07>
- <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
- <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
- <1562640832.9077.32.camel@mtksdccf07>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
-Date:   Wed, 10 Jul 2019 21:24:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 14:26:27 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35091 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727330AbfGJS01 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 14:26:27 -0400
+Received: by mail-qk1-f193.google.com with SMTP id r21so2705283qke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 11:26:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g2+6yeYN+3vI29rODOmLOhqDB3fSrrUGXJ7yMKJfWBA=;
+        b=nHTREbiykhoxsXUKbKVDSyCrN9c1C+4e+EPeTqBJfniHHpLXBTAQ5/6FJhrlG0OmNy
+         LDI2ZrHB/YWFEeYno4nlYcqMMaDxG4p4vYKjpcHX4m0wvU+VutA5sAu+1FKcIboPjp41
+         LejgcDFeqRGHyOLQu/6AQE5ocMW13bW9Apj1L5NtqlCf8ihRJuu3a3cuo6+EbaX/DnmJ
+         s3LWaYjPB56WRS2bDdv1euUVESWEecbR6ZQ5ML+GERIcgeHFPSCmtJrvsVHaB7w2/Zdc
+         cduq0R8tdGcJAstHZW75gbZNvWoWVS5SwWgfu5xj0kvrk0lUcMqvbZ71FudVk1n/0vRZ
+         cGOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g2+6yeYN+3vI29rODOmLOhqDB3fSrrUGXJ7yMKJfWBA=;
+        b=CgGgkINm8lsQxT0YctlpGS7thaO4u2vLpvpkyvc2SHly/je+GU/TAzKw9rTqcT1mPH
+         SdJkPCd9PJnSB/ku4dK8a+yKfNyhVukfX2bKXlk4tnXktAnlURIAGr00x+410RQ6PjYK
+         cv+ZDXT6L8zMIf1Zd1htdINP0UsYWfLRpAoYnBUt8Lw1AibiCWeyLx3WfftyyX7r7aez
+         dkMdb/lzESCArZ2/2uFc7HxKYCkeMo8TKy7C+4s0kel6T3ZYLgBdp5NR7JzkZlqWb8/p
+         MtQ6y0Czodsb2JVGwURdb6qSKeKEQZxUpsQnU9XwtrYUfvVp98lQ3BUPllDGvRPUB3l8
+         0Z6Q==
+X-Gm-Message-State: APjAAAX+gnB8G0QT28tLy4bvaKGfI7c4UXqwgkmSmPzmDcpJixnWoxOV
+        mcAuctEMNStK81SQ7UOVrVEA4g==
+X-Google-Smtp-Source: APXvYqwfZcwhFY9pJB/xMLdQlIh6iSHBKEb0/JDEEeFmpBZa/4TMmX4e2vCJC6uxFdd/4HVuFcZjsg==
+X-Received: by 2002:a37:4e8f:: with SMTP id c137mr24147053qkb.127.1562783186289;
+        Wed, 10 Jul 2019 11:26:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id w16sm1303926qki.36.2019.07.10.11.26.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jul 2019 11:26:25 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hlHIO-00023S-VL; Wed, 10 Jul 2019 15:26:24 -0300
+Date:   Wed, 10 Jul 2019 15:26:24 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+Message-ID: <20190710182624.GG4051@ziepe.ca>
+References: <20190710174800.34451-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1562640832.9077.32.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710174800.34451-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/9/19 5:53 AM, Walter Wu wrote:
-> On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
->>
->> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
->>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-
->>>
->>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
->>> promise any dates because the next week I am on a conference, then
->>> again a backlog and an intern starting...
->>>
->>> Andrey, do you still have concerns re this patch? This change allows
->>> to print the free stack.
->>
->> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
->> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
->> Same for previously used tags for better use-after-free identification.
->>
+On Wed, Jul 10, 2019 at 10:48:00AM -0700, Nathan Chancellor wrote:
+> clang warns several times:
 > 
-> Hi Andrey,
+> drivers/infiniband/sw/siw/siw_cq.c:31:4: warning: implicit conversion
+> from enumeration type 'enum siw_wc_status' to different enumeration type
+> 'enum siw_opcode' [-Wenum-conversion]
+>         { SIW_WC_SUCCESS, IB_WC_SUCCESS },
+>         ~ ^~~~~~~~~~~~~~
 > 
-> We ever tried to use object itself to determine use-after-free
-> identification, but tag-based KASAN immediately released the pointer
-> after call kfree(), the original object will be used by another
-> pointer, if we use object itself to determine use-after-free issue, then
-> it has many false negative cases. so we create a lite quarantine(ring
-> buffers) to record recent free stacks in order to avoid those false
-> negative situations.
+> Fixes: b0fff7317bb4 ("rdma/siw: completion queue methods")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/596
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/infiniband/sw/siw/siw_cq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm telling that *more* than one free stack and also tags per object can be stored.
-If object reused we would still have information about n-last usages of the object.
-It seems like much easier and more efficient solution than patch you proposing.
+Weird that gcc doesn't warn on this by default..
 
-As for other concern about this particular patch
- - It wasn't tested. There is deadlock (sleep in atomic) on the report path which would have been noticed it tested.
-   Also GFP_NOWAIT allocation which fails very noisy and very often, especially in memory constraint enviromnent where tag-based KASAN supposed to be used.
+Applied to for-next, thanks
 
- - Inefficient usage of memory:
-	48 bytes (sizeof (qlist_object) + sizeof(kasan_alloc_meta)) per kfree() call seems like a lot. It could be less.
-
-	The same 'struct kasan_track' stored twice in two different places (in object and in quarantine).
-	Basically, at least some part of the quarantine always duplicates information that we already know about
-	recently freed object. 
-
-	Since now we call kmalloc() from kfree() path, every unique kfree() stacktrace now generates additional unique stacktrace that
-	takes space in stackdepot.
-
+Jason
