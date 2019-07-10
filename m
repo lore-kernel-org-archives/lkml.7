@@ -2,93 +2,83 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4233C73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E94AC73C68
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BE42083D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5496A20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:14:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xu/Tm5Ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfGJFHo convert rfc822-to-8bit (ORCPT
+        id S1726215AbfGJFO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:07:44 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:37513 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfGJFHo (ORCPT
+        Wed, 10 Jul 2019 01:14:56 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:23257 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfGJFO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:07:44 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x6A57QYq030900, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS11.realtek.com.tw[172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x6A57QYq030900
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 10 Jul 2019 13:07:27 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS11.realtek.com.tw ([fe80::7c6d:ced5:c4ff:8297%15]) with mapi id
- 14.03.0439.000; Wed, 10 Jul 2019 13:07:26 +0800
-From:   Tony Chuang <yhchuang@realtek.com>
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Huang <tehuang@realtek.com>
-Subject: RE: [PATCH 09/12] rtw88: Fix misuse of GENMASK macro
-Thread-Topic: [PATCH 09/12] rtw88: Fix misuse of GENMASK macro
-Thread-Index: AQHVNt0EKBOEadT3XU2T7xXrxoiWeabDTLwA
-Date:   Wed, 10 Jul 2019 05:07:26 +0000
-Message-ID: <F7CD281DE3E379468C6D07993EA72F84D18644DC@RTITMBSVM04.realtek.com.tw>
-References: <cover.1562734889.git.joe@perches.com>
- <0de52d891d7925b02f4f0fe2c750d076e55434d9.1562734889.git.joe@perches.com>
-In-Reply-To: <0de52d891d7925b02f4f0fe2c750d076e55434d9.1562734889.git.joe@perches.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.68.183]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Wed, 10 Jul 2019 01:14:56 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x6A5DREA030499;
+        Wed, 10 Jul 2019 14:13:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6A5DREA030499
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1562735608;
+        bh=1BDNIyvXOAp0AhR4Ns6txoUKEiiNIiaFMGdXhnp1IlA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xu/Tm5EfBojLuxqcXEj6YrZ+KlsaQOyl37TSrPSoWJSlWQGwyHhX0E4DWraNxAeT/
+         /TmFjanhNNaJ9kcpkW6bNu7CAjvYfIdt8hKAJfYe2qpFlbquFqQCuPypciPd1X+YaY
+         MwlOc/whgDiycb9L/0Dp5q1Stq7GGYr6W3ocDO4ID0hVkjhbJIu//IPqwpaxezSdkb
+         6Z3O5AmttAuNKsoisx1H57RbPiyyvgFiq6yYvvSLMC8jZKwLUK+s7eE0zwjcWGmU/I
+         dnbio/j9JL2ASOMq7aLzEB8o2sRHOQT5XAlKgaaPOS0s565C5uQY8c4DwqV1c22WTJ
+         cjJTUmYAP/bBA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     arm@kernel.org, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: stm32: use "depends on" instead of "if" after prompt
+Date:   Wed, 10 Jul 2019 14:13:20 +0900
+Message-Id: <20190710051320.8738-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH 09/12] rtw88: Fix misuse of GENMASK macro
-> 
-> Arguments are supposed to be ordered high then low.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/net/wireless/realtek/rtw88/rtw8822b.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-> b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-> index 1172f6c0605b..d61d534396c7 100644
-> --- a/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-> +++ b/drivers/net/wireless/realtek/rtw88/rtw8822b.c
-> @@ -997,7 +997,7 @@ static void rtw8822b_do_iqk(struct rtw_dev *rtwdev)
->  	rtw_write_rf(rtwdev, RF_PATH_A, RF_DTXLOK, RFREG_MASK, 0x0);
-> 
->  	reload = !!rtw_read32_mask(rtwdev, REG_IQKFAILMSK, BIT(16));
-> -	iqk_fail_mask = rtw_read32_mask(rtwdev, REG_IQKFAILMSK,
-> GENMASK(0, 7));
-> +	iqk_fail_mask = rtw_read32_mask(rtwdev, REG_IQKFAILMSK,
-> GENMASK(7, 0));
->  	rtw_dbg(rtwdev, RTW_DBG_PHY,
->  		"iqk counter=%d reload=%d do_iqk_cnt=%d
-> n_iqk_fail(mask)=0x%02x\n",
->  		counter, reload, ++do_iqk_cnt, iqk_fail_mask);
-> --
+This appeared after the global fixups by commit e32465429490 ("ARM: use
+"depends on" for SoC configs instead of "if" after prompt"). Fix it now.
 
-That's correct. Thanks.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Acked-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+ arch/arm/mach-stm32/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Yan-Hsuan
+diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
+index 05d6b5aada80..57699bd8f107 100644
+--- a/arch/arm/mach-stm32/Kconfig
++++ b/arch/arm/mach-stm32/Kconfig
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menuconfig ARCH_STM32
+-	bool "STMicroelectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
++	bool "STMicroelectronics STM32 family"
++	depends on ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
+ 	select ARMV7M_SYSTICK if ARM_SINGLE_ARMV7M
+ 	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
+ 	select ARM_GIC if ARCH_MULTI_V7
+-- 
+2.17.1
+
