@@ -2,118 +2,233 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73EEC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDDDC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE09B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC522087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UISwE8VL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfGJS3F (ORCPT
+        id S1728200AbfGJSaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 14:29:05 -0400
-Received: from m4a0041g.houston.softwaregrp.com ([15.124.2.87]:42463 "EHLO
-        m4a0041g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727242AbfGJS3E (ORCPT
+        Wed, 10 Jul 2019 14:30:02 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:39526 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727315AbfGJSaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:29:04 -0400
-X-Greylist: delayed 1729 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 14:28:58 EDT
-Received: FROM m4a0041g.houston.softwaregrp.com (15.120.17.147) BY m4a0041g.houston.softwaregrp.com WITH ESMTP;
- Wed, 10 Jul 2019 18:28:48 +0000
-Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
- M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 10 Jul 2019 17:47:34 +0000
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (15.124.8.13) by
- M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Wed, 10 Jul 2019 17:47:34 +0000
-Received: from BN6PR18MB1172.namprd18.prod.outlook.com (10.172.207.147) by
- BN6PR18MB1266.namprd18.prod.outlook.com (10.172.210.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Wed, 10 Jul 2019 17:47:32 +0000
-Received: from BN6PR18MB1172.namprd18.prod.outlook.com
- ([fe80::38f3:d27c:6480:d073]) by BN6PR18MB1172.namprd18.prod.outlook.com
- ([fe80::38f3:d27c:6480:d073%3]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
- 17:47:31 +0000
-From:   Lee Duncan <LDuncan@suse.com>
-To:     Yang Bin <yang.bin18@zte.com.cn>
-CC:     "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "cleech@redhat.com" <cleech@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "wang.liang82@zte.com.cn" <wang.liang82@zte.com.cn>,
-        "wang.yi59@zte.com.cn" <wang.yi59@zte.com.cn>,
-        "xue.zhihong@zte.com.cn" <xue.zhihong@zte.com.cn>
-Subject: Re: [PATCH] Check sk before sendpage
-Thread-Topic: [PATCH] Check sk before sendpage
-Thread-Index: AQHVNvHttUE0icmf0Uic+RrHE7gyJ6bEISiA
-Date:   Wed, 10 Jul 2019 17:47:31 +0000
-Message-ID: <1bc364ff-5bff-47ac-611a-f75c43f4bd1b@suse.com>
-References: <1562743809-31133-1-git-send-email-yang.bin18@zte.com.cn>
-In-Reply-To: <1562743809-31133-1-git-send-email-yang.bin18@zte.com.cn>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: DB6PR07CA0011.eurprd07.prod.outlook.com
- (2603:10a6:6:2d::21) To BN6PR18MB1172.namprd18.prod.outlook.com
- (2603:10b6:404:eb::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=LDuncan@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [73.25.22.216]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 556321fc-1cb4-4059-7736-08d7055eaea7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR18MB1266;
-x-ms-traffictypediagnostic: BN6PR18MB1266:
-x-microsoft-antispam-prvs: <BN6PR18MB1266F6A8BC0BF729D3DB010DDAF00@BN6PR18MB1266.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(199004)(189003)(68736007)(8676002)(31686004)(316002)(6486002)(478600001)(14454004)(31696002)(186003)(5660300002)(36756003)(4326008)(6916009)(86362001)(25786009)(6436002)(6506007)(80792005)(66556008)(81166006)(26005)(7736002)(81156014)(486006)(2906002)(71200400001)(71190400001)(53546011)(229853002)(446003)(64756008)(76176011)(66946007)(386003)(99286004)(6116002)(54906003)(476003)(102836004)(6512007)(66476007)(6246003)(53936002)(11346002)(8936002)(2616005)(256004)(7416002)(4744005)(52116002)(66066001)(305945005)(66446008)(3846002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR18MB1266;H:BN6PR18MB1172.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LrqtibLnWL2tJF5btRWJ0Cw7rDxKCZNDs9c8kU/nRpW58exwVDexAD0PkRGRFNqDrIOIcgeCYDvVGZmzz8nIAlL/ss4TCCgjly0j4/B/z+Fj/qj/TjA+ocO1a7EuzRkIq9OGvR4xo00qykDorRRO0DxrMrjkcz5PpDCkMV9BL/YzPa3/6ujfqJ4WYkf290/2aRHj3qJcGDlZrDOC7W6x6/EutEsvBxGzDvbPtZn5VypuqJcUSgR5/cALGKn7ib+l5+SUGNzjl4PAIeOM1oLKgTK+VLY0Oy4sk4dt8McCDGcj8tGOld1rm5Jb5zx5/GbWPLvh34oJ1ctCouDPzR0jzl6176ZvEgc+BlfI6VZJBRBCZyb6QogKDvkOFbeQ9rgYb0R6bGI1fmWbjN9lT3ZbJkwgOpfNKLSsXxIAc+t+ccU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F3B3AF6B642FCC40B3B4B1F936A8554A@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 10 Jul 2019 14:30:02 -0400
+Received: by mail-yw1-f66.google.com with SMTP id x74so1131486ywx.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 11:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c+r8Si1/xsvr/kvF0Vd+C34ZR6g5MzaCPwwwwZS7UmU=;
+        b=UISwE8VLrQE18tscTLVjTu4xfQSpU+Ngw5t+WgzRdUNsnTYWOTuDHJaO1Mm174HOa9
+         V0Qn2OG/+VKb1yZFCBYg/97ApKmCSfsi/WJ5YbGYHfUmnNpA7FsqsWKWHhgk46kpSZyR
+         z5ih3MsJI4tZMGw0ibr6s4wsJinWrM18EKhFy828Djih7f+bt4AT688Z2WSbFlL6zyyY
+         Y0AaAjiPi9jCN7pzE0TY7PFp3yErbKtBJZUzXBGUjNNMrhgXOwwm15vMwGdqiJyLrOTI
+         D8rQBbTzdD3rJbrXWCVcAhWtQttOyLd3f3mL99dqYokEW5oJqLDAomLG+PYTDXkMMOj0
+         TPNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c+r8Si1/xsvr/kvF0Vd+C34ZR6g5MzaCPwwwwZS7UmU=;
+        b=neNi+SpQ49aH0uLozqaQaOTx3+ThESXIB7G4Pt+dIde2LS9IJb15lJQmesiwJ2PVHX
+         jboxhKUSWd3jAfdB/mAhdSsTPPvssnowFKcndgLwaBdh+am2QUhICFV53xEKSZHaxI93
+         8J7zuVlHHKd1tTsKDaUyngSnURi4ooOKF5VgLbkE+oKqJfj8Kg+1O7NQ0YcTUA325k6/
+         /DNG7wpRcim1LX4+wJpEfr+mPxskZfxpr/HtrDr37NpI9bEIVcgjrstLntXpBQIOgnW6
+         uwUwYWugsLYYRgIm1BFxZ8Xkb2phivDDWUoPFfu24imCKt2WONqRchvMbc81E6R6ZA+t
+         goQw==
+X-Gm-Message-State: APjAAAVQP0Fmpveoe7HHe73hnjmVdHWJYxrW762Mr/nBJl4USgkbLhut
+        iDRACQKuPZsmWCK2PPTFL7Kfs/I3GOCbGT5ll4h3Jg==
+X-Google-Smtp-Source: APXvYqzXmDnInD7oBIfKeMDVYoRiXgQhXnLoOXS9ddftPuk/y94pUc7FWGWjBNflVWsCOllIvgXB6WbFdmk0hPRfkW0=
+X-Received: by 2002:a81:ae0e:: with SMTP id m14mr20723285ywh.308.1562783400564;
+ Wed, 10 Jul 2019 11:30:00 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 556321fc-1cb4-4059-7736-08d7055eaea7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 17:47:31.7946
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LDuncan@suse.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR18MB1266
-X-OriginatorOrg: suse.com
+References: <20190605100630.13293-1-teawaterz@linux.alibaba.com> <20190605100630.13293-2-teawaterz@linux.alibaba.com>
+In-Reply-To: <20190605100630.13293-2-teawaterz@linux.alibaba.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 10 Jul 2019 11:29:49 -0700
+Message-ID: <CALvZod41ywjh56T1E1cPJcuYDCydvpnqq3AhyJVny655Tj7jjQ@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] zswap: Use movable memory if zpool support
+ allocate movable memory
+To:     Hui Zhu <teawaterz@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Streetman <ddstreet@ieee.org>,
+        Minchan Kim <minchan@kernel.org>, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com,
+        Seth Jennings <sjenning@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8xMC8xOSAxMjozMCBBTSwgWWFuZyBCaW4gd3JvdGU6DQoNCj4gRnJvbTogIiBZYW5nIEJp
-biAiPHlhbmcuYmluMThAenRlLmNvbS5jbj4NCj4NCj4gQmVmb3JlIHhtaXQsaXNjc2kgbWF5IGRp
-c2Nvbm5lY3QganVzdCBub3cuDQo+IFNvIG11c3QgY2hlY2sgY29ubmVjdGlvbiBzb2NrIE5VTEwg
-b3Igbm90LG9yIGtlcm5lbCB3aWxsIGNyYXNoIGZvcg0KPiBhY2Nlc3NpbmcgTlVMTCBwb2ludGVy
-Lg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBZYW5nIEJpbiA8eWFuZy5iaW4xOEB6dGUuY29tLmNuPg0K
-PiAtLS0NCj4gIGRyaXZlcnMvc2NzaS9pc2NzaV90Y3AuYyB8IDMgKysrDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMyBpbnNlcnRpb25zKCspDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvaXNj
-c2lfdGNwLmMgYi9kcml2ZXJzL3Njc2kvaXNjc2lfdGNwLmMNCj4gaW5kZXggN2JlZGJlOC4uYTU5
-YzQ5ZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zY3NpL2lzY3NpX3RjcC5jDQo+ICsrKyBiL2Ry
-aXZlcnMvc2NzaS9pc2NzaV90Y3AuYw0KPiBAQCAtMjY0LDYgKzI2NCw5IEBAIHN0YXRpYyBpbnQg
-aXNjc2lfc3dfdGNwX3htaXRfc2VnbWVudChzdHJ1Y3QgaXNjc2lfdGNwX2Nvbm4gKnRjcF9jb25u
-LA0KPiAgCXVuc2lnbmVkIGludCBjb3BpZWQgPSAwOw0KPiAgCWludCByID0gMDsNCj4gIA0KPiAr
-CWlmICghc2spDQo+ICsJCXJldHVybiAtRU5PVENPTk47DQo+ICsNCj4gIAl3aGlsZSAoIWlzY3Np
-X3RjcF9zZWdtZW50X2RvbmUodGNwX2Nvbm4sIHNlZ21lbnQsIDAsIHIpKSB7DQo+ICAJCXN0cnVj
-dCBzY2F0dGVybGlzdCAqc2c7DQo+ICAJCXVuc2lnbmVkIGludCBvZmZzZXQsIGNvcHk7DQo+DQoN
-CklmIHRoZSBzb2NrZXQgY2FuIGJlIGNsb3NlZCByaWdodCBiZWZvcmUgaXNjc2lfc3dfdGNwX3ht
-aXRfc2VnbWVudCgpIGlzDQpjYWxsZWQsIGNhbiBpdCBiZSBjYWxsZWQgaW4gdGhlIG1pZGRsZSBv
-ZiBzZW5kaW5nIHNlZ21lbnRzPyAoSW4gd2hpY2gNCmNhc2UgdGhlIGNoZWNrIHdvdWxkIGhhdmUg
-dG8gYmUgaW4gdGhlIHdoaWxlIGxvb3AuKQ0KDQotLSANCg0KTGVlIER1bmNhbg0KDQo=
+Cc: akpm@linux-foundation.org
+
+The email starts at
+
+http://lkml.kernel.org/r/20190605100630.13293-2-teawaterz@linux.alibaba.com
+
+On Wed, Jun 5, 2019 at 3:06 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
+>
+> This is the third version that was updated according to the comments
+> from Sergey Senozhatsky https://lkml.org/lkml/2019/5/29/73 and
+> Shakeel Butt https://lkml.org/lkml/2019/6/4/973
+>
+> zswap compresses swap pages into a dynamically allocated RAM-based
+> memory pool.  The memory pool should be zbud, z3fold or zsmalloc.
+> All of them will allocate unmovable pages.  It will increase the
+> number of unmovable page blocks that will bad for anti-fragment.
+>
+> zsmalloc support page migration if request movable page:
+>         handle = zs_malloc(zram->mem_pool, comp_len,
+>                 GFP_NOIO | __GFP_HIGHMEM |
+>                 __GFP_MOVABLE);
+>
+> And commit "zpool: Add malloc_support_movable to zpool_driver" add
+> zpool_malloc_support_movable check malloc_support_movable to make
+> sure if a zpool support allocate movable memory.
+>
+> This commit let zswap allocate block with gfp
+> __GFP_HIGHMEM | __GFP_MOVABLE if zpool support allocate movable memory.
+>
+> Following part is test log in a pc that has 8G memory and 2G swap.
+>
+> Without this commit:
+> ~# echo lz4 > /sys/module/zswap/parameters/compressor
+> ~# echo zsmalloc > /sys/module/zswap/parameters/zpool
+> ~# echo 1 > /sys/module/zswap/parameters/enabled
+> ~# swapon /swapfile
+> ~# cd /home/teawater/kernel/vm-scalability/
+> /home/teawater/kernel/vm-scalability# export unit_size=$((9 * 1024 * 1024 * 1024))
+> /home/teawater/kernel/vm-scalability# ./case-anon-w-seq
+> 2717908992 bytes / 4826062 usecs = 549973 KB/s
+> 2717908992 bytes / 4864201 usecs = 545661 KB/s
+> 2717908992 bytes / 4867015 usecs = 545346 KB/s
+> 2717908992 bytes / 4915485 usecs = 539968 KB/s
+> 397853 usecs to free memory
+> 357820 usecs to free memory
+> 421333 usecs to free memory
+> 420454 usecs to free memory
+> /home/teawater/kernel/vm-scalability# cat /proc/pagetypeinfo
+> Page block order: 9
+> Pages per block:  512
+>
+> Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
+> Node    0, zone      DMA, type    Unmovable      1      1      1      0      2      1      1      0      1      0      0
+> Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      3
+> Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone    DMA32, type    Unmovable      6      5      8      6      6      5      4      1      1      1      0
+> Node    0, zone    DMA32, type      Movable     25     20     20     19     22     15     14     11     11      5    767
+> Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone   Normal, type    Unmovable   4753   5588   5159   4613   3712   2520   1448    594    188     11      0
+> Node    0, zone   Normal, type      Movable     16      3    457   2648   2143   1435    860    459    223    224    296
+> Node    0, zone   Normal, type  Reclaimable      0      0     44     38     11      2      0      0      0      0      0
+> Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+>
+> Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
+> Node 0, zone      DMA            1            7            0            0            0            0
+> Node 0, zone    DMA32            4         1652            0            0            0            0
+> Node 0, zone   Normal          931         1485           15            0            0            0
+>
+> With this commit:
+> ~# echo lz4 > /sys/module/zswap/parameters/compressor
+> ~# echo zsmalloc > /sys/module/zswap/parameters/zpool
+> ~# echo 1 > /sys/module/zswap/parameters/enabled
+> ~# swapon /swapfile
+> ~# cd /home/teawater/kernel/vm-scalability/
+> /home/teawater/kernel/vm-scalability# export unit_size=$((9 * 1024 * 1024 * 1024))
+> /home/teawater/kernel/vm-scalability# ./case-anon-w-seq
+> 2717908992 bytes / 4689240 usecs = 566020 KB/s
+> 2717908992 bytes / 4760605 usecs = 557535 KB/s
+> 2717908992 bytes / 4803621 usecs = 552543 KB/s
+> 2717908992 bytes / 5069828 usecs = 523530 KB/s
+> 431546 usecs to free memory
+> 383397 usecs to free memory
+> 456454 usecs to free memory
+> 224487 usecs to free memory
+> /home/teawater/kernel/vm-scalability# cat /proc/pagetypeinfo
+> Page block order: 9
+> Pages per block:  512
+>
+> Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
+> Node    0, zone      DMA, type    Unmovable      1      1      1      0      2      1      1      0      1      0      0
+> Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      3
+> Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone    DMA32, type    Unmovable     10      8     10      9     10      4      3      2      3      0      0
+> Node    0, zone    DMA32, type      Movable     18     12     14     16     16     11      9      5      5      6    775
+> Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      1
+> Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone   Normal, type    Unmovable   2669   1236    452    118     37     14      4      1      2      3      0
+> Node    0, zone   Normal, type      Movable   3850   6086   5274   4327   3510   2494   1520    934    438    220    470
+> Node    0, zone   Normal, type  Reclaimable     56     93    155    124     47     31     17      7      3      0      0
+> Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
+> Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
+>
+> Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
+> Node 0, zone      DMA            1            7            0            0            0            0
+> Node 0, zone    DMA32            4         1650            2            0            0            0
+> Node 0, zone   Normal           79         2326           26            0            0            0
+>
+> You can see that the number of unmovable page blocks is decreased
+> when the kernel has this commit.
+>
+> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+> ---
+>  mm/zswap.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index a4e4d36ec085..c6bf92bf5890 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -1006,6 +1006,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+>         char *buf;
+>         u8 *src, *dst;
+>         struct zswap_header zhdr = { .swpentry = swp_entry(type, offset) };
+> +       gfp_t gfp;
+>
+>         /* THP isn't supported */
+>         if (PageTransHuge(page)) {
+> @@ -1079,9 +1080,10 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+>
+>         /* store */
+>         hlen = zpool_evictable(entry->pool->zpool) ? sizeof(zhdr) : 0;
+> -       ret = zpool_malloc(entry->pool->zpool, hlen + dlen,
+> -                          __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM,
+> -                          &handle);
+> +       gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
+> +       if (zpool_malloc_support_movable(entry->pool->zpool))
+> +               gfp |= __GFP_HIGHMEM | __GFP_MOVABLE;
+> +       ret = zpool_malloc(entry->pool->zpool, hlen + dlen, gfp, &handle);
+>         if (ret == -ENOSPC) {
+>                 zswap_reject_compress_poor++;
+>                 goto put_dstmem;
+> --
+> 2.21.0 (Apple Git-120)
+>
