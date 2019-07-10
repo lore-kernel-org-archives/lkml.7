@@ -2,101 +2,170 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9B9C73C74
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76021C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C776020838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46FEB20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:06:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AojIX4zX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQzho3+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfGJGAz (ORCPT
+        id S1726180AbfGJGGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 02:00:55 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49155 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbfGJGAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 02:00:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45k7pX18Ndz9s3Z;
-        Wed, 10 Jul 2019 16:00:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562738452;
-        bh=QS1TYk+jPpzFLZYgrElcWfPd8Iy8zqMpGdy+TeAxg2A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AojIX4zX6lK74pdPSLgR2nbDRUS7WMgbWDbOFlcDKE3uer56SlVS5h+TNxhNO3rgr
-         RMDVHpnrzdZtNpUr5dwCvSgDUbct8v/BEcW3sLlsIe5ZsONrEdjOR5UK+kDREwst+5
-         IhqMysx1wi91BlAx7QtN3Inh/9xr5/N46SmkDwkXueqZ5GOqSyEbaM0/DUSG8BLiqg
-         dkZYo1XkBoAUgzLtfJTLhXTHg3ZYyDZlXaEHjdqHySqeuFsZ0Ases84dVCqAWumvKf
-         SvQRMZLUbkIDdp28krazNTAzL1ZvooOIwpjXTN+u3pUpWPxCc/rUBVtxOXDa0cT+yw
-         1IjbGRNMomhRg==
-Date:   Wed, 10 Jul 2019 16:00:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Winkler, Tomas" <tomas.winkler@intel.com>
-Cc:     Greg KH <greg@kroah.com>, "Arnd Bergmann" <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Lubart, Vitaly" <vitaly.lubart@intel.com>
-Subject: Re: linux-next: manual merge of the char-misc tree with the
- driver-core tree
-Message-ID: <20190710160051.5b192606@canb.auug.org.au>
-In-Reply-To: <5B8DA87D05A7694D9FA63FD143655C1B9DC6C94D@hasmsx108.ger.corp.intel.com>
-References: <20190620153552.1392079c@canb.auug.org.au>
-        <20190709095109.3b75679b@canb.auug.org.au>
-        <5B8DA87D05A7694D9FA63FD143655C1B9DC6C94D@hasmsx108.ger.corp.intel.com>
+        Wed, 10 Jul 2019 02:06:55 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37849 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfGJGGz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 02:06:55 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w13so865155eds.4;
+        Tue, 09 Jul 2019 23:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IFatqQJxhkN2PVVhb4XlYYtBpS9gE8ekJeo/gQnleEk=;
+        b=fQzho3+Lw2LoydF/Sp7rS07AP+nleH06X3WjYF4dRlMlzA78nX4bY23fZcKZAVvtvs
+         7zTvzU4k+cqG5aeywOAUg6L5IyOOs+H+ex8x4HzmOZzeGfgkK8m+3ZKJma/+rHurvq7a
+         nDssc5Gp/fp01mnwl7jjizAVT29udQz84u33YW9onDuo3o48fUchRUFGhM70hfnu+dBC
+         Vf1aYs7U5ikbjdNXfXZrQV6aq/SkVbIMu5RL8vOH5+KIyAwWZSz33tnpRQCco/qNJell
+         6EVgIvnCDJuxI53wnV+HZaExPkPFdX2Tmxhl+3Ax2SqRBUatbv5/Nw1tqy5ECUfgLEVy
+         opEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IFatqQJxhkN2PVVhb4XlYYtBpS9gE8ekJeo/gQnleEk=;
+        b=W3ciJ5k6mFy3jyuG3J21cjWmTqU/avauVq+nk21BioEGVApLonGvHyhisbCNmtg+vf
+         BenZ9oop/+CZvm34swflIrCIEzm21A6tCNrlV8UwkaNtimW8ThZ3kJ4fhCUe0lwnO1Z9
+         +YHIwo7ODkpCLjStWskAmeF0rd/feM7EcyY/p6XSdOmLF8qqG5QoGpVcmzHmDrBruwg7
+         BJ1xKRpu3eGPswikMwBVJUbdxgXnQkifxC29QQVI6Yiixp+Q+5XM+mYr/+oIiZvCL5uM
+         MH2H4BEebIo5aOna5JErUyBhUjQlEy4l2EJ/eDu8G7TZqfDHEeuqzncODCYZXa/BYWh3
+         P1Qg==
+X-Gm-Message-State: APjAAAXvCOQ6Ih82rIvCxpMROmd+b6Wjlq0HMpTYpbay0J2abs1GzhW5
+        FCR3HbjVFD2WMnu9TXydxw8=
+X-Google-Smtp-Source: APXvYqxvsBNzi4e0esOHtdk4gNpqSj0iwFmJJoE3PDppDGHZZJY37vpr6ln+4h7g5K93uGFVcfd58A==
+X-Received: by 2002:a50:974b:: with SMTP id d11mr29673586edb.24.1562738812536;
+        Tue, 09 Jul 2019 23:06:52 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id m16sm830343wrv.89.2019.07.09.23.06.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 23:06:52 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH net-next v3] net/mlx5e: Convert single case statement switch statements into if statements
+Date:   Tue,  9 Jul 2019 23:06:15 -0700
+Message-Id: <20190710060614.6155-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190710044748.3924-1-natechancellor@gmail.com>
+References: <20190710044748.3924-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/1JauvoM9pHm9Os9uhPJxkTc"; protocol="application/pgp-signature"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1JauvoM9pHm9Os9uhPJxkTc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+During the review of commit 1ff2f0fa450e ("net/mlx5e: Return in default
+case statement in tx_post_resync_params"), Leon and Nick pointed out
+that the switch statements can be converted to single if statements
+that return early so that the code is easier to follow.
 
-Hi Tomas,
+Suggested-by: Leon Romanovsky <leon@kernel.org>
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
-On Tue, 9 Jul 2019 07:12:34 +0000 "Winkler, Tomas" <tomas.winkler@intel.com=
-> wrote:
->
-> Actually I've asked Greg this git expertise question: how the
-> **exact** conflict resolution is carried between git trees (before it
-> is finally resolved in upstream for all.). For next time If anyone
-> has the answer, please let me know.
+v1 -> v2:
 
-When I see a conflict, I fix it up and report it, then "git rerere"
-will remember the resolution for me so that the next day it is fixed up
-automatically.  When Linus merges the same trees he will do the same
-(or a similar) merge resolution.  I depend on the maintainers to inform
-Linus if the conflict is any anyway difficult to resolve.
+* Refactor switch statements into if statements
 
---=20
-Cheers,
-Stephen Rothwell
+v2 -> v3:
 
---Sig_/1JauvoM9pHm9Os9uhPJxkTc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+* Rebase on net-next after v1 was already applied, patch just refactors
+  switch statements to if statements.
 
------BEGIN PGP SIGNATURE-----
+ .../mellanox/mlx5/core/en_accel/ktls_tx.c     | 34 ++++++-------------
+ 1 file changed, 11 insertions(+), 23 deletions(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0lfxMACgkQAVBC80lX
-0GylYAgAiDaCEKvhJeM7K6qo7sJNDK/yUzqM9NC8FBwsIRVAwUjZH1XarjFi8334
-EVJbXZ1WxPW1I04QgqejLjwMG8P/i6qDtrLjBaIYrU0bIFk2GgBlmTdkRHt2szsp
-BrUn7ByJuGOvK0/l0HQhOO+RH876fj64WmP15bcpVrDmJ9FKBONt2sulA7NI8KmO
-lkUrtOb4oqIsuDE7RbOSUMODnc0BOPPyByBMbaDU4mexXb46cKT3Wxr0pjE8QE3R
-tajIAZF0z3boxBgmy95HEjglMUh5sWP822pWfV6Tor6+yzEh4z3JXyDIV4G+s0AR
-8a21p3I6LsuSo1m7ExM7BjpKEGm/UQ==
-=QlJ5
------END PGP SIGNATURE-----
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+index 5c08891806f0..ea032f54197e 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+@@ -25,23 +25,17 @@ static void
+ fill_static_params_ctx(void *ctx, struct mlx5e_ktls_offload_context_tx *priv_tx)
+ {
+ 	struct tls_crypto_info *crypto_info = priv_tx->crypto_info;
++	struct tls12_crypto_info_aes_gcm_128 *info;
+ 	char *initial_rn, *gcm_iv;
+ 	u16 salt_sz, rec_seq_sz;
+ 	char *salt, *rec_seq;
+ 	u8 tls_version;
+ 
+-	switch (crypto_info->cipher_type) {
+-	case TLS_CIPHER_AES_GCM_128: {
+-		struct tls12_crypto_info_aes_gcm_128 *info =
+-			(struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
+-
+-		EXTRACT_INFO_FIELDS;
+-		break;
+-	}
+-	default:
+-		WARN_ON(1);
++	if (WARN_ON(crypto_info->cipher_type != TLS_CIPHER_AES_GCM_128))
+ 		return;
+-	}
++
++	info = (struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
++	EXTRACT_INFO_FIELDS;
+ 
+ 	gcm_iv      = MLX5_ADDR_OF(tls_static_params, ctx, gcm_iv);
+ 	initial_rn  = MLX5_ADDR_OF(tls_static_params, ctx, initial_record_number);
+@@ -234,24 +228,18 @@ tx_post_resync_params(struct mlx5e_txqsq *sq,
+ 		      u64 rcd_sn)
+ {
+ 	struct tls_crypto_info *crypto_info = priv_tx->crypto_info;
++	struct tls12_crypto_info_aes_gcm_128 *info;
+ 	__be64 rn_be = cpu_to_be64(rcd_sn);
+ 	bool skip_static_post;
+ 	u16 rec_seq_sz;
+ 	char *rec_seq;
+ 
+-	switch (crypto_info->cipher_type) {
+-	case TLS_CIPHER_AES_GCM_128: {
+-		struct tls12_crypto_info_aes_gcm_128 *info =
+-			(struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
+-
+-		rec_seq = info->rec_seq;
+-		rec_seq_sz = sizeof(info->rec_seq);
+-		break;
+-	}
+-	default:
+-		WARN_ON(1);
++	if (WARN_ON(crypto_info->cipher_type != TLS_CIPHER_AES_GCM_128))
+ 		return;
+-	}
++
++	info = (struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
++	rec_seq = info->rec_seq;
++	rec_seq_sz = sizeof(info->rec_seq);
+ 
+ 	skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
+ 	if (!skip_static_post)
+-- 
+2.22.0
 
---Sig_/1JauvoM9pHm9Os9uhPJxkTc--
