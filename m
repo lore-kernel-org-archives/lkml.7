@@ -2,105 +2,201 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACFAC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DE0C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA98F2087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF29120844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="UZK6Vmsl"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="WhjhX2wK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfGJRvf (ORCPT
+        id S1728123AbfGJRwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:51:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40501 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbfGJRve (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:51:34 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so1589085pla.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 10:51:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uKVGZA2rdeScy3bwyoxpCnlfJ0pW69jxWknu9B37i2E=;
-        b=UZK6Vmsl0GscAoMkvtUuBih99iOojK11B4bvX2Y3xO14yXORhC/0bcYZdxrAsSPYm0
-         3cghVrqwrNceZtWVPS2OmuOTg8jqhlsmP74StkkSqNt3ZRtstSVQ2rqC4oa52GhxYWYP
-         szwnVtXKZPWmkwhy+poSNKK7HVBlvyd6PMe0AaVqrSmXPBtUAl6kBVIteBLTp/hzC6Ca
-         k1HlOYguhdbAY0QSGQauUptYzwBBp44xNU1GSIkDnJl7S8EffJ29kXDie/6fcE2Xx+9R
-         LzD9VvJHiopZz0iXo4NPCaCU19GtW2sXRJBRyMMl3LJh1svVA5UnfRFEThRroQv5H/BN
-         8IaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uKVGZA2rdeScy3bwyoxpCnlfJ0pW69jxWknu9B37i2E=;
-        b=SbfWmoQo5ocgK5L78yDimnNg7YlK3hA3bXHYob1qd1quuOw94mv+sNp0E3ye5dJWaj
-         ogsleDd3WNzTzR3bhd3uhkM/jT1p0dGeYa6EYqfD7YTT0F7yExFqTgJXYgKlU4tikDX1
-         LUD4opOu1l6mLF3zrsrPOVmaa4TCjnyia7MAr/POoqXSViGVERLpP7ZkenUqur0ZCMl1
-         cygnJAS6GUciW0RnAi+hL0lcljugDiEGcvbhNll+377HNCj/QgKUZ0jG58CGj5P2f5sw
-         NJn4Iu+HGkiNF1LosQc5IVrU8uD/lDsxmSGVuf2lI3A+xzxLdbgo+OHWGZGnyIoUbAbf
-         xF7g==
-X-Gm-Message-State: APjAAAUEyuF6Je7rSS1wOJD8PzLrwXxWmL9JPYIYQMf7+v3E78kQ+qwz
-        mwqcAM09ecb2seTVpOBBUeGYDQ==
-X-Google-Smtp-Source: APXvYqxf3k6wj0r1DWMxtICEKSsf7cXHz1s9bD0kZqyeu5LkX+cE8uIy0dD31APMZFjW0w+y3Coc3A==
-X-Received: by 2002:a17:902:1486:: with SMTP id k6mr39639657pla.177.1562781093710;
-        Wed, 10 Jul 2019 10:51:33 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:5b9d])
-        by smtp.gmail.com with ESMTPSA id j15sm2877546pfr.146.2019.07.10.10.51.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 10:51:32 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 13:51:31 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, matthew.wilcox@oracle.com,
-        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
-        william.kucharski@oracle.com, akpm@linux-foundation.org,
-        hdanton@sina.com
-Subject: Re: [PATCH v9 1/6] filemap: check compound_head(page)->mapping in
- filemap_fault()
-Message-ID: <20190710175131.GB11197@cmpxchg.org>
-References: <20190625001246.685563-1-songliubraving@fb.com>
- <20190625001246.685563-2-songliubraving@fb.com>
+        Wed, 10 Jul 2019 13:52:22 -0400
+Received: from mail-eopbgr150044.outbound.protection.outlook.com ([40.107.15.44]:24238
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727408AbfGJRwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:52:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vc7Jp0Wlbf6OzPHbtl28tNHq8sRgqzMBeSHd9wn7pVY=;
+ b=WhjhX2wK5XkML+iWCREX2dtjsTBlXd+aOkYDLwdlz1o9V++RxuBKa2bn+EeWmRmmwLP8pff06WzIyzq2k43JSByCMD5ojZHaCB5s9pOfVoJguDlggLfvTgvnJHegDQ+QA3XamIQuCwo8rwpeYr55hh01+2EIBWCGHu/ZiHB3oFQ=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5903.eurprd05.prod.outlook.com (20.178.125.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Wed, 10 Jul 2019 17:52:17 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
+ 17:52:17 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Leon Romanovsky <leon@kernel.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Doug Ledford <dledford@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Thread-Topic: linux-next: build failure after merge of the net-next tree
+Thread-Index: AQHVNgpSNqxsVllq5U23Am+RwOaE5KbB1zsAgAJNFwA=
+Date:   Wed, 10 Jul 2019 17:52:17 +0000
+Message-ID: <20190710175212.GM2887@mellanox.com>
+References: <20190709135636.4d36e19f@canb.auug.org.au>
+ <20190709064346.GF7034@mtr-leonro.mtl.com>
+In-Reply-To: <20190709064346.GF7034@mtr-leonro.mtl.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: QB1PR01CA0010.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:2d::23) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a5bcd310-b785-497e-8ba3-08d7055f5968
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB5903;
+x-ms-traffictypediagnostic: VI1PR05MB5903:
+x-microsoft-antispam-prvs: <VI1PR05MB590395EE512D3F73A096D59CCFF00@VI1PR05MB5903.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
+x-forefront-prvs: 0094E3478A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(366004)(346002)(39860400002)(53754006)(199004)(189003)(1076003)(5660300002)(14454004)(66446008)(6116002)(76176011)(54906003)(110136005)(26005)(386003)(6506007)(53546011)(3846002)(99286004)(66476007)(52116002)(66556008)(64756008)(86362001)(66946007)(102836004)(478600001)(316002)(6246003)(2906002)(53936002)(486006)(476003)(2616005)(4326008)(68736007)(66066001)(229853002)(186003)(81166006)(81156014)(8936002)(8676002)(7736002)(71190400001)(256004)(6512007)(6486002)(36756003)(14444005)(11346002)(446003)(25786009)(33656002)(71200400001)(6436002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5903;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6tB3yH4JflnOpESEmCKv2qAt1HyWxX+XuWUPuw2xg2aCOyJ6qE0RliW1cZCwPhR+i/Uij0zGtXuVGGsa9ou17jNrccDAva3C3lW/RrysAERXYHOVI++MWEETghi+qPC0JG7NZmSeWYHz08gWRCA6jSk+VgNLvWga4Jyj/RVcfuHn+ATzm5LxVqAZgIYOMjYcy+ldtcaJteg/y2DuQlQyKGzkFhXocnsMNQXmfgMClk/Lkk8Wv+TdKR7E7yMk3Ih+3/Gzi+VR5GiQsfmJUx4Hyg0GsizCzNL4UBcnMDY5plAY/Zyct1FxrKeHCRu3nEOH2hqGH4xM8x481kipz9tCZI7iN7+zs0CaBhRLNL8fRZ3NsGXNAdYxVxc+4bJsZXESUdSvjLcq/OVmGpvb8Jb/1HRq064+EK22m4oTiYnzV4U=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0A009C5F7EF45F44B725B00AE5D926EA@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625001246.685563-2-songliubraving@fb.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5bcd310-b785-497e-8ba3-08d7055f5968
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 17:52:17.8438
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5903
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 05:12:41PM -0700, Song Liu wrote:
-> Currently, filemap_fault() avoids trace condition with truncate by
-> checking page->mapping == mapping. This does not work for compound
-> pages. This patch let it check compound_head(page)->mapping instead.
-> 
-> Acked-by: Rik van Riel <riel@surriel.com>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> ---
->  mm/filemap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index df2006ba0cfa..f5b79a43946d 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -2517,7 +2517,7 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
->  		goto out_retry;
->  
->  	/* Did it get truncated? */
-> -	if (unlikely(page->mapping != mapping)) {
-> +	if (unlikely(compound_head(page)->mapping != mapping)) {
+On Tue, Jul 09, 2019 at 09:43:46AM +0300, Leon Romanovsky wrote:
+> On Tue, Jul 09, 2019 at 01:56:36PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > After merging the net-next tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >
+> > drivers/infiniband/sw/siw/siw_cm.c: In function 'siw_create_listen':
+> > drivers/infiniband/sw/siw/siw_cm.c:1978:3: error: implicit declaration =
+of function 'for_ifa'; did you mean 'fork_idle'? [-Werror=3Dimplicit-functi=
+on-declaration]
+> >    for_ifa(in_dev)
+> >    ^~~~~~~
+> >    fork_idle
+> > drivers/infiniband/sw/siw/siw_cm.c:1978:18: error: expected ';' before =
+'{' token
+> >    for_ifa(in_dev)
+> >                   ^
+> >                   ;
+> >    {
+> >    ~
+> >
+> > Caused by commit
+> >
+> >   6c52fdc244b5 ("rdma/siw: connection management")
+> >
+> > from the rdma tree.  I don't know why this didn't fail after I mereged
+> > that tree.
+>=20
+> I had the same question, because I have this fix for a couple of days alr=
+eady.
+>=20
+> From 56c9e15ec670af580daa8c3ffde9503af3042d67 Mon Sep 17 00:00:00 2001
+> From: Leon Romanovsky <leonro@mellanox.com>
+> Date: Sun, 7 Jul 2019 10:43:42 +0300
+> Subject: [PATCH] Fixup to build SIW issue
+>=20
+> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+>  drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/s=
+iw/siw_cm.c
+> index 8e618cb7261f..c883bf514341 100644
+> +++ b/drivers/infiniband/sw/siw/siw_cm.c
+> @@ -1954,6 +1954,7 @@ static void siw_drop_listeners(struct iw_cm_id *id)
+>  int siw_create_listen(struct iw_cm_id *id, int backlog)
+>  {
+>  	struct net_device *dev =3D to_siw_dev(id->device)->netdev;
+> +	const struct in_ifaddr *ifa;
+>  	int rv =3D 0, listeners =3D 0;
+>=20
+>  	siw_dbg(id->device, "id 0x%p: backlog %d\n", id, backlog);
+> @@ -1975,8 +1976,7 @@ int siw_create_listen(struct iw_cm_id *id, int back=
+log)
+>  			id, &s_laddr.sin_addr, ntohs(s_laddr.sin_port),
+>  			&s_raddr->sin_addr, ntohs(s_raddr->sin_port));
+>=20
+> -		for_ifa(in_dev)
+> -		{
+> +		in_dev_for_each_ifa_rcu(ifa, in_dev) {
+>  			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
 
-There is another check like these in pagecache_get_page(), which is
-used by find_lock_page() and thus the truncate code (partial page
-truncate calls, but this could happen against read-only cache).
+Hum. There is no rcu lock held here and we can't use RCU anyhow as
+siw_listen_address will sleep.
+
+I think this needs to use rtnl, as below. Bernard, please urgently
+confirm. Thanks
+
+diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw=
+/siw_cm.c
+index 8e618cb7261f62..ee98e96a5bfaba 100644
+--- a/drivers/infiniband/sw/siw/siw_cm.c
++++ b/drivers/infiniband/sw/siw/siw_cm.c
+@@ -1965,6 +1965,7 @@ int siw_create_listen(struct iw_cm_id *id, int backlo=
+g)
+ 	 */
+ 	if (id->local_addr.ss_family =3D=3D AF_INET) {
+ 		struct in_device *in_dev =3D in_dev_get(dev);
++		const struct in_ifaddr *ifa;
+ 		struct sockaddr_in s_laddr, *s_raddr;
+=20
+ 		memcpy(&s_laddr, &id->local_addr, sizeof(s_laddr));
+@@ -1975,8 +1976,8 @@ int siw_create_listen(struct iw_cm_id *id, int backlo=
+g)
+ 			id, &s_laddr.sin_addr, ntohs(s_laddr.sin_port),
+ 			&s_raddr->sin_addr, ntohs(s_raddr->sin_port));
+=20
+-		for_ifa(in_dev)
+-		{
++		rtnl_lock();
++		in_dev_for_each_ifa_rtnl(ifa, in_dev) {
+ 			if (ipv4_is_zeronet(s_laddr.sin_addr.s_addr) ||
+ 			    s_laddr.sin_addr.s_addr =3D=3D ifa->ifa_address) {
+ 				s_laddr.sin_addr.s_addr =3D ifa->ifa_address;
+@@ -1988,7 +1989,7 @@ int siw_create_listen(struct iw_cm_id *id, int backlo=
+g)
+ 					listeners++;
+ 			}
+ 		}
+-		endfor_ifa(in_dev);
++		rtnl_unlock();
+ 		in_dev_put(in_dev);
+ 	} else if (id->local_addr.ss_family =3D=3D AF_INET6) {
+ 		struct inet6_dev *in6_dev =3D in6_dev_get(dev);
