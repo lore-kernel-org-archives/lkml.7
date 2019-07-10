@@ -2,92 +2,129 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E94FC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DEEC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02EDF2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C1B2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XggheSc/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rDfFFK3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfGJKBk (ORCPT
+        id S1727508AbfGJKCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:01:40 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36215 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfGJKBk (ORCPT
+        Wed, 10 Jul 2019 06:02:14 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:45324 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfGJKCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:01:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r7so872596pfl.3;
-        Wed, 10 Jul 2019 03:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oWhtY7VF/0YooGxc360oDSKbTlfpEs5lWHS7BPIJPpE=;
-        b=XggheSc/+S6dLAW40vhmTzXkKUDOqr9tyfJ5zD3xq/tu1SgkFHnK+aFANAOmfCWS3S
-         2bJUU8amJzfZXEmb4XfDXVH2KUML2cmstd17z7NvMXJsifB+Bea1qtnpjm4bqq9zSfq1
-         uolPrZr5tJZu0Lbm1O+eC6qzDKh14uU7fnYs0QbAipXykXS5tUbEi4TLDyWCBFlQ4mnt
-         ZNCrC1tPYzV31MNzFKS8E05R08OZhTD5pfYbbe1Lj+0oqUndnKdU7s/hOS24XVYPmwtC
-         9Bo3Oz9WZI+n+t86yC+MXN9pCt+JIYiCC/yg2+gBYgV3zRON2EcXRuuNBof1XX3/vKxn
-         hDYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oWhtY7VF/0YooGxc360oDSKbTlfpEs5lWHS7BPIJPpE=;
-        b=aZ/qkHlRGnVOI+x4/6jIGIhNoiQtGVOCfhm5P6k7mvwAIseA1arS1rJBaMhYCIjQl/
-         xEtTrd2JPaNw/2XS71vjOb2Q84IZnwZ/QPzvC8kKph+E5h9SPQYEqFFB0p+TS4bKME/0
-         ubULt8ZxuiNdUyi08wUHAuJ5Lchme6YTARxzYtVyn+w6IGy49R6tBxJvquX0xITwTGYt
-         MzcqVPBJoXsEW66sXRa+KDg0vMbs7imnllq7iBVJATHBrIKHFKc0EfSILNFik4KpaLqq
-         JkTIvAocc7Sn+E7oaSirvMAFwHjFoBNuDWXyS9MDJqsxLlrAoaZEKeTAZJ78+XTBGa6n
-         QkyA==
-X-Gm-Message-State: APjAAAV7kKOhx7hk3+X8gbenQoHfd0HuZzEwrcwalnN7wvUtm05EQ/y6
-        9pQ6dRC4uNIFWIP9aCcnC7yZxJOiPuL9+A==
-X-Google-Smtp-Source: APXvYqxZX+YQAsBXt0Kso/g+3zS8tfNPCvsalPjlDDWX3WD2ie+I3ehs36sH4zgMVmOJ2Hyy5xJwPw==
-X-Received: by 2002:a17:90a:77c5:: with SMTP id e5mr5735940pjs.109.1562752898936;
-        Wed, 10 Jul 2019 03:01:38 -0700 (PDT)
-Received: from sheetal-Inspiron-5537.domain.name ([103.68.35.254])
-        by smtp.googlemail.com with ESMTPSA id c5sm1704424pgq.80.2019.07.10.03.01.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 03:01:37 -0700 (PDT)
-From:   sheetalsingala <2396sheetal@gmail.com>
-To:     marcel@holtman.org
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sheetalsingala <2396sheetal@gmail.com>
-Subject: [PATCH 2/2] Fixed a brace styling issue
-Date:   Wed, 10 Jul 2019 15:31:26 +0530
-Message-Id: <20190710100126.1519-1-2396sheetal@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Jul 2019 06:02:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zblxB+iVfb9FLiCBbkBYMri8q4AqXRvs6Ywv9o/5Rqo=; b=rDfFFK3SXpPlFtSdWkR0y+toF
+        qfKmQRCwn2mnd3Ev4B+mSw7jcfHGvP1kVsRmFqTbTiCYpzqPTvHI8Lvb9pEdG6VU81WAxDavas5kh
+        BVEQFPWlZKBH3RLHLQ7VV4hE6QYFGYdW+zrMWdfpPOoLrO0xpNSF9BfBq91O/ieUJbm2bc3Ce5cGE
+        5c2WtrAMR4XqhIjxdmb9zcJdNCxrY5LJ5a5WVktWI1GEtCs7tB1ZTrF2G4s0maBBUJrjlf6H8WZjC
+        vNAQxpmNZaRk0tJURIDrrp8PZILiXQiR8OQWPp7aGT7uvjGxtSkmhfQvKmE7lh6Nr96tL4ce+HeeT
+        aLnd7PoOw==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59428)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hl9QN-00060D-V4; Wed, 10 Jul 2019 11:02:08 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hl9QM-0003o7-6B; Wed, 10 Jul 2019 11:02:06 +0100
+Date:   Wed, 10 Jul 2019 11:02:06 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Question about ARM FASTFPE
+Message-ID: <20190710100206.yls4piu36wciefbz@shell.armlinux.org.uk>
+References: <CAK7LNASSCvLSXVikR7GenXyb8KywpWKVc1Z=5v3c93rxJ+G73w@mail.gmail.com>
+ <20190710082335.uzusesefimzpjd3f@shell.armlinux.org.uk>
+ <CAK7LNAQpiY4CBawEFhQHeTPSrbrRkNoYCtK4jBak+skyyMqESA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQpiY4CBawEFhQHeTPSrbrRkNoYCtK4jBak+skyyMqESA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed a coding style issue
+On Wed, Jul 10, 2019 at 06:54:06PM +0900, Masahiro Yamada wrote:
+> On Wed, Jul 10, 2019 at 5:23 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Wed, Jul 10, 2019 at 01:30:24PM +0900, Masahiro Yamada wrote:
+> > > Hi.
+> > >
+> > > I have a question about the following code
+> > > in arch/arm/Makefile:
+> > >
+> > >
+> > > # Do we have FASTFPE?
+> > > FASTFPE :=arch/arm/fastfpe
+> > > ifeq ($(FASTFPE),$(wildcard $(FASTFPE)))
+> > > FASTFPE_OBJ :=$(FASTFPE)/
+> > > endif
+> > >
+> > >
+> > > Since arch/arm/fastfpe does not exist in the upstream tree,
+> > > I guess this is a hook to compile downstream source code.
+> > >
+> > > If a user puts arch/arm/fastfpe/ into their local source tree,
+> > > Kbuild is supposed to compile the files in it.
+> > >
+> > > Is this correct?
+> > >
+> > >
+> > > If so, I am afraid this would not work for O= building.
+> > >
+> > > $(wildcard ...) checks if this directory exists in the *objtree*,
+> > > while scripts/Makefile.build needs to include
+> > > arch/arm/fastfpe/Makefile from *srctree*.
+> > >
+> > > I think the correct code should be like follows:
+> > >
+> > > # Do we have FASTFPE?
+> > > FASTFPE :=arch/arm/fastfpe
+> > > ifneq ($(wildcard $(srctree)/$(FASTFPE)),)
+> > > FASTFPE_OBJ :=$(FASTFPE)/
+> > > endif
+> > >
+> > >
+> > > Having said that, I am not sure this code is worth fixing.
+> > >
+> > > This code was added around v2.5.1.9,
+> >
+> > ... as a _result_ of a discussion and deciding not to upstream it,
+> > but to still allow its use.  Fastfpe is faster than nwfpe (so has
+> > a definite advantage for FP intensive applications) but we decided
+> > we didn't want two FP emulation codes in the kernel.  However, if
+> > someone wants to use it, it has to be built into the kernel, it
+> > can't be modular.
+> 
+> 
+> IMHO, the entry in Makefile and Kconfig should be removed
+> from upstream, then moved to a part of the fastfpe local patch.
 
-Signed-off-by: Sheetal Singala <2396sheetal@gmail.com>
----
- drivers/bluetooth/btintel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Nope.  It means that rather than it being merely a drop-in, it has
+to be maintained against changes to both these files.  Sorry, that's
+more work.
 
-diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
-index bb99c8653aab..4a8b812605f3 100644
---- a/drivers/bluetooth/btintel.c
-+++ b/drivers/bluetooth/btintel.c
-@@ -18,7 +18,7 @@
- 
- #define VERSION "0.1"
- 
--#define BDADDR_INTEL (&(bdaddr_t) {{0x00, 0x8b, 0x9e, 0x19, 0x03, 0x00}})
-+#define BDADDR_INTEL (&(bdaddr_t) {0x00, 0x8b, 0x9e, 0x19, 0x03, 0x00})
- 
- int btintel_check_bdaddr(struct hci_dev *hdev)
- {
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
