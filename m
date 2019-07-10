@@ -2,195 +2,206 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3830C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20348C74A22
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE47520838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5DB20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+0BwmK4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="44QOVwEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfGJNO0 (ORCPT
+        id S1727281AbfGJNU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:14:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42548 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJNO0 (ORCPT
+        Wed, 10 Jul 2019 09:20:58 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49210 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfGJNU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:14:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t132so1243129pgb.9;
-        Wed, 10 Jul 2019 06:14:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VLGpVWCepPkViNPlTkxuFahJxt3WaXWMIUHUVNkKRfo=;
-        b=A+0BwmK4oAsgVef3DhVlqKulKgYebIo9OKP8qfDYLkZlxPiAd3yrKqrRq6NvoDvV/I
-         PH6wpAD9Su78O/ZS4ZU44XGzJWftifeY/yJwIzzlS3BjZUvKlJ2K5cU4tgN1FJbpJ3cr
-         GXjzau9lJ4+cwNLR/FZC/4ZtpbvuX9csG3Y502W0686CNEnuD7hZxTqQSXtYm7GSwpj8
-         utIQZ7EF0Pe5Mv20VbwEDZRrQ5vW3Sg367cCB1gO9QgBvQ9lQW0HROudGouXaUsVEhFj
-         qyxUkNSjmQ8QQRq3nSsyucroBhlvPWtGim/Can6mINjW4drLd2Npo3g2w/MnKZmPtLBq
-         BxBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VLGpVWCepPkViNPlTkxuFahJxt3WaXWMIUHUVNkKRfo=;
-        b=pYs7NQ7CeHdlTclfHflJ0isWLCfuOROWt55VBeelSQdYEmBXY3C5rINr4j6tniP8ST
-         TJV42mgy071vx2immjxIB9K4hZTWBaMntU+NkP+UYZ0mURj8wmJJ5Gew3l5sn5iPvlCn
-         vLOho5n+6VpwU/YdlIKFiNClLgh10wscYij54sAabfL0KD9ZfFkA/aoSjn/J8OI8R4JG
-         wsq5gsrYbzdcNQ234JINUi3vv4jgTYkCRsnbi6xfRIU4M6GqtGZXUzRy8F2TVEa9/+Kd
-         Vw9H2OYGZ29pbcLZFllMq5xu6EH0LRweh/PlaE/waff1V7afnuytaCqhb53TJkDHKG9x
-         G6XA==
-X-Gm-Message-State: APjAAAX6C2n+IoztkIPZDBVsFDGt3kLhq/hutUwCJacIbqVO4N7CSTzd
-        9RHKNSvagfI/pqMdzJ76tCEjDpMighic+Q==
-X-Google-Smtp-Source: APXvYqxzWYXUwjttKWD0MSuruhNwge1FOyOY/bWZc4n43lF4RblamDYxNzK6ccAh/vcxymQNvyfCXA==
-X-Received: by 2002:a17:90a:220a:: with SMTP id c10mr7084689pje.33.1562764465081;
-        Wed, 10 Jul 2019 06:14:25 -0700 (PDT)
-Received: from localhost.localdomain ([116.66.213.65])
-        by smtp.gmail.com with ESMTPSA id x25sm489273pfa.90.2019.07.10.06.14.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 10 Jul 2019 06:14:24 -0700 (PDT)
-From:   yangxingwu <xingwu.yang@gmail.com>
-To:     davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pablo@netfilter.org, kadlec@blackhole.kfki.hu, fw@strlen.de,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        yangxingwu <xingwu.yang@gmail.com>
-Subject: [PATCH] ipv6: Use ipv6_authlen for len
-Date:   Wed, 10 Jul 2019 21:14:10 +0800
-Message-Id: <20190710131410.75825-1-xingwu.yang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Wed, 10 Jul 2019 09:20:57 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ADInaE107782;
+        Wed, 10 Jul 2019 13:20:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=/5yLM4mbjzRmIXEHs2SJpsLnDoPmJ/wHA+9zC34Et+A=;
+ b=44QOVwEm79DAncWafsxnHgQ4xniDJlHQMOsEiknXsA7lyLpqB7KM2/dWkubOaTVPDAc9
+ IDm3SwNOrJtBwffuEY29Vs2VbyiFaMLSZ5BnDazCpwuliRyaqykaTT6N4CBXkJf1KRIG
+ HNNMG2Bn9OKjYnxr8tvxthTRPWW0iCEC8A8XIGCwbfceBkM9qrqES3XtyQ49WE8EkstY
+ ow7sw18v7F5Wzh8B/FD2o8HsHgFsqVwIQ2Uu9dohWBbNlEPpTY/LJSdnYXA6pY1VArko
+ zjwKYMVTP+P/Q/U67OmDnOm+3CoEaMkRKs73qbGBfRm4Cx6Qu8y/vaf7AiU4TbVyx31Y tg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tjkkpt3jy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jul 2019 13:20:08 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ADIEJx030597;
+        Wed, 10 Jul 2019 13:20:07 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2tnc8suxcx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jul 2019 13:20:07 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6ADK6dQ000835;
+        Wed, 10 Jul 2019 13:20:06 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Jul 2019 06:20:05 -0700
+Subject: Re: [PATCH v6 4/4] x86/xen: Add "nopv" support for HVM guest
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     xen-devel@lists.xenproject.org, jgross@suse.com,
+        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de
+References: <1562490908-17882-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1562490908-17882-5-git-send-email-zhenzhong.duan@oracle.com>
+ <86b0dbb9-74a7-6883-e6d7-210bd35a6944@oracle.com>
+ <6cbd7b78-3d8d-64ae-fd2e-82244dbe6a1e@oracle.com>
+ <3d7db7c6-cea3-9dce-0519-a1c600b33273@oracle.com>
+ <33876a98-9b6b-a1b9-e72f-352c3f95db89@oracle.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <71b06655-79d2-97ae-cb6d-e0e606c8237f@oracle.com>
+Date:   Wed, 10 Jul 2019 09:21:08 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <33876a98-9b6b-a1b9-e72f-352c3f95db89@oracle.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907100156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9313 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907100156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The length of AH header is computed manually as (hp->hdrlen+2)<<2.
-However, in include/linux/ipv6.h, a macro named ipv6_authlen is
-already defined for exactly the same job. This commit replaces
-the manual computation code with the macro.
+On 7/9/19 10:07 PM, Zhenzhong Duan wrote:
+> On 2019/7/9 22:54, Boris Ostrovsky wrote:
+>> On 7/9/19 12:20 AM, Zhenzhong Duan wrote:
+>>> -const __initconst struct hypervisor_x86 x86_hyper_xen_hvm = {
+>>> +static uint32_t __init xen_platform_hvm(void)
+>>> +{
+>>> +       uint32_t xen_domain = xen_cpuid_base();
+>>> +       struct x86_hyper_init *h = &x86_hyper_xen_hvm.init;
+>>> +
+>>> +       if (xen_pv_domain())
+>>> +               return 0;
+>>> +
+>>> +       if (xen_pvh_domain() && nopv) {
+>>> +               /* Guest booting via the Xen-PVH boot entry goes
+>>> here */
+>>> +               pr_info("\"nopv\" parameter is ignored in PVH
+>>> guest\n");
+>>> +               nopv = false;
+>>> +       } else if (nopv && xen_domain) {
+>>> +               /*
+>>> +                * Guest booting via normal boot entry (like via
+>>> grub2) goes
+>>> +                * here.
+>>> +                *
+>>> +                * Use interface functions for bare hardware if nopv,
+>>> +                * xen_hvm_guest_late_init is an exception as we
+>>> need to
+>>> +                * detect PVH and panic there.
+>>> +                */
+>>> +               memcpy(h, (void *)&x86_init.hyper,
+>>> sizeof(x86_init.hyper));
+>>
+>> And this worked? I'd think it would fail since h points to RO section.
+> Yes, I have below changes in the patch.
+>
+> -const __initconst struct hypervisor_x86 x86_hyper_xen_hvm = {
+> +struct hypervisor_x86 x86_hyper_xen_hvm __initdata = {
 
-Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
----
- net/ipv6/ah6.c                          | 4 ++--
- net/ipv6/exthdrs_core.c                 | 2 +-
- net/ipv6/ip6_tunnel.c                   | 2 +-
- net/ipv6/netfilter/ip6t_ah.c            | 2 +-
- net/ipv6/netfilter/ip6t_ipv6header.c    | 2 +-
- net/ipv6/netfilter/nf_conntrack_reasm.c | 2 +-
- net/ipv6/netfilter/nf_log_ipv6.c        | 2 +-
- 7 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/net/ipv6/ah6.c b/net/ipv6/ah6.c
-index 68b9e92..626c64b 100644
---- a/net/ipv6/ah6.c
-+++ b/net/ipv6/ah6.c
-@@ -464,7 +464,7 @@ static void ah6_input_done(struct crypto_async_request *base, int err)
- 	struct ah_data *ahp = x->data;
- 	struct ip_auth_hdr *ah = ip_auth_hdr(skb);
- 	int hdr_len = skb_network_header_len(skb);
--	int ah_hlen = (ah->hdrlen + 2) << 2;
-+	int ah_hlen = ipv6_authlen(ah);
- 
- 	if (err)
- 		goto out;
-@@ -546,7 +546,7 @@ static int ah6_input(struct xfrm_state *x, struct sk_buff *skb)
- 	ahash = ahp->ahash;
- 
- 	nexthdr = ah->nexthdr;
--	ah_hlen = (ah->hdrlen + 2) << 2;
-+	ah_hlen = ipv6_authlen(ah);
- 
- 	if (ah_hlen != XFRM_ALIGN8(sizeof(*ah) + ahp->icv_full_len) &&
- 	    ah_hlen != XFRM_ALIGN8(sizeof(*ah) + ahp->icv_trunc_len))
-diff --git a/net/ipv6/exthdrs_core.c b/net/ipv6/exthdrs_core.c
-index 11a43ee..b358f1a 100644
---- a/net/ipv6/exthdrs_core.c
-+++ b/net/ipv6/exthdrs_core.c
-@@ -266,7 +266,7 @@ int ipv6_find_hdr(const struct sk_buff *skb, unsigned int *offset,
- 		} else if (nexthdr == NEXTHDR_AUTH) {
- 			if (flags && (*flags & IP6_FH_F_AUTH) && (target < 0))
- 				break;
--			hdrlen = (hp->hdrlen + 2) << 2;
-+			hdrlen = ipv6_authlen(hp);
- 		} else
- 			hdrlen = ipv6_optlen(hp);
- 
-diff --git a/net/ipv6/ip6_tunnel.c b/net/ipv6/ip6_tunnel.c
-index b80fde1..3134fbb 100644
---- a/net/ipv6/ip6_tunnel.c
-+++ b/net/ipv6/ip6_tunnel.c
-@@ -416,7 +416,7 @@ __u16 ip6_tnl_parse_tlv_enc_lim(struct sk_buff *skb, __u8 *raw)
- 				break;
- 			optlen = 8;
- 		} else if (nexthdr == NEXTHDR_AUTH) {
--			optlen = (hdr->hdrlen + 2) << 2;
-+			optlen = ipv6_authlen(hdr);
- 		} else {
- 			optlen = ipv6_optlen(hdr);
- 		}
-diff --git a/net/ipv6/netfilter/ip6t_ah.c b/net/ipv6/netfilter/ip6t_ah.c
-index 0228ff3..4e15a14 100644
---- a/net/ipv6/netfilter/ip6t_ah.c
-+++ b/net/ipv6/netfilter/ip6t_ah.c
-@@ -55,7 +55,7 @@ static bool ah_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		return false;
- 	}
- 
--	hdrlen = (ah->hdrlen + 2) << 2;
-+	hdrlen = ipv6_authlen(ah);
- 
- 	pr_debug("IPv6 AH LEN %u %u ", hdrlen, ah->hdrlen);
- 	pr_debug("RES %04X ", ah->reserved);
-diff --git a/net/ipv6/netfilter/ip6t_ipv6header.c b/net/ipv6/netfilter/ip6t_ipv6header.c
-index fd439f8..0fc6326 100644
---- a/net/ipv6/netfilter/ip6t_ipv6header.c
-+++ b/net/ipv6/netfilter/ip6t_ipv6header.c
-@@ -71,7 +71,7 @@
- 		if (nexthdr == NEXTHDR_FRAGMENT)
- 			hdrlen = 8;
- 		else if (nexthdr == NEXTHDR_AUTH)
--			hdrlen = (hp->hdrlen + 2) << 2;
-+			hdrlen = ipv6_authlen(hp);
- 		else
- 			hdrlen = ipv6_optlen(hp);
- 
-diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
-index 84322ce..16de015 100644
---- a/net/ipv6/netfilter/nf_conntrack_reasm.c
-+++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -421,7 +421,7 @@ static int nf_ct_frag6_reasm(struct frag_queue *fq, struct sk_buff *skb,
- 		if (skb_copy_bits(skb, start, &hdr, sizeof(hdr)))
- 			BUG();
- 		if (nexthdr == NEXTHDR_AUTH)
--			hdrlen = (hdr.hdrlen+2)<<2;
-+			hdrlen = ipv6_authlen(&hdr);
- 		else
- 			hdrlen = ipv6_optlen(&hdr);
- 
-diff --git a/net/ipv6/netfilter/nf_log_ipv6.c b/net/ipv6/netfilter/nf_log_ipv6.c
-index 549c511..f53bd8f 100644
---- a/net/ipv6/netfilter/nf_log_ipv6.c
-+++ b/net/ipv6/netfilter/nf_log_ipv6.c
-@@ -155,7 +155,7 @@ static void dump_ipv6_packet(struct net *net, struct nf_log_buf *m,
- 
- 			}
- 
--			hdrlen = (hp->hdrlen+2)<<2;
-+			hdrlen = ipv6_authlen(hp);
- 			break;
- 		case IPPROTO_ESP:
- 			if (logflags & NF_LOG_IPOPT) {
--- 
-1.8.3.1
+But hypervisors[] stays__initconst so that I thought could be a problem.
+But apparently it's not.
+
+>
+>>
+>>
+>>> +               memcpy(&x86_hyper_xen_hvm.runtime, (void
+>>> *)&x86_platform.hyper,
+>>> +                      sizeof(x86_platform.hyper));
+>>> +               h->guest_late_init = xen_hvm_guest_late_init;
+>>
+>> To me this still doesn't look right --- you are making assumptions about
+>> x86_platform/x86_init.hyper and I don't think you can assume they have
+>> not been set to point to another hypervisor, for example.
+>
+> You mean copy_array() calls in init_hypervisor_platform()? But that
+> happens after
+>
+> detect_hypervisor_vendor() shoose out the prefered hypervisor. In
+> detect stage,
+>
+> x86_platform/x86_init.hyper has default value for bare hardware, or I
+> missed something?
+
+
+Right. My point though is that this ordering is opaque to
+hypervisor-specific code and can change. The same is true about making
+assumptions about x86_platform/x86_init.hyper values.
+
+-boris
+
 
