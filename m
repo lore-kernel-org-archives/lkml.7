@@ -2,144 +2,278 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D876C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80CAC74A3E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03355208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:51:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="un30DGda"
+	by mail.kernel.org (Postfix) with ESMTP id B265B20844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562791896;
+	bh=uxH6KD0C/fr6/zAXtzoDAH2WTrh50Y1a0B2KgetZ7tA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ijsgwsycVDlwyKXh8OR2H1XEiCE9p7+/GGYj+46BzCEYWIRWUj3OIgFMALOFbq5pd
+	 5IbmtHHqHDcrJDdpvkK8LSwNLXg0vcDNv8zP9HOkiBBP8/t+o9EmYvRbnHn+xXX86s
+	 aCvdkrsSLVYylSEd5p8h8fR4inCYWudhLIj5TPI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfGJUvB (ORCPT
+        id S1727860AbfGJUvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 16:51:01 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:39759 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfGJUvB (ORCPT
+        Wed, 10 Jul 2019 16:51:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37018 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfGJUvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 16:51:01 -0400
-Received: by mail-yw1-f67.google.com with SMTP id x74so1272105ywx.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 13:51:00 -0700 (PDT)
+        Wed, 10 Jul 2019 16:51:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g15so1798250pgi.4;
+        Wed, 10 Jul 2019 13:51:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qtC5egLkr6FDak2iWiMiUha4yDwOlLCqb/iy6dvufbg=;
-        b=un30DGdaaLTQqc9ulK9wePQZNwiEhBjveMWrvXlg8hVi2xvd+N8P2TXZEoi0WRxMdO
-         llLXQjc8o0YK/GKoMM6Mks5D9YzdX5CrXqHUuepOEt99nRpwRW2rjT+WTCSeOQeeYhNY
-         HkQJ/viI0xOIijcFCm8BT6F198ZZtsZfO85NmX7p8L3RZpoZF05hYiP5r80MbRionfnI
-         KWsMsDligc3KwH/zocEMYeQo0LG5TkO/fPLkkVqoP7ez4YTr4+pklJjpeAOmu3yBa4NT
-         XJlnM40YCOwVJubuwzLuIBGosoCyia3oKOEQxKKrSm5FRr2HoaOvlNKs3gNAdhg2r2WH
-         x7Tw==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=CvZE8fnJezhAyMxqeAIRKgAjF8cMHDm7PT8K7Ek+hOE=;
+        b=DQawfYEbXUtxURVUOcgUx0iJqhamXmbVlpefnJycQXXDtty5rO/aqwpmaThddJ4mHV
+         iM1kbRldtpLnv+uPXGVI/JcWHuub22y1ojge5FDshApcloGK1dIvzvPj3ip+widkIA/Y
+         160/xlqb7LGTf+Iisvxz+oFF1l9taXBkaEyuEf9Y6xM1mft68LZl6yqNjqV4h6c3nCRY
+         0oJNAmo3ddhBueZ5xBkEiPbLZxPONG2BbSsX3rPM6I4O+RpBKfvcZ9RwuwD7d18AJYjF
+         c9cfKwiaMboQpDBqY2EPOW0zjadlwnNVml7I587CkE6kBCCxiDtiXKqfdX9Rk8KBAz3B
+         +yAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qtC5egLkr6FDak2iWiMiUha4yDwOlLCqb/iy6dvufbg=;
-        b=l/QTW3WNA6kcT3usiIyOagkqmTha9/Y7wDWK0OhT2QfFHH3AN05bDJmCVxA9ibRYxj
-         pMxsZK0nuvy7yx7lDr71bQQy+XRBxfge3DUQX1MAQQsKODFTsvPxGnrsYuRYA6bBKEbf
-         P8I1vK+As5RJhUBVo3p10JQLhwm1r9X4RN0PYwFSrG5TSyueguMlCG6sNfvyddkPBMfC
-         AjxZWqFaA2zCw+QxKhEFtFDmcM2l/a5+n45sQcjAivJEYwoYHn8OXoDb3/c80JtCLDfS
-         Z9wegMDglMxLWIjYB852sdAZ10da8UbA3xeZEOZ1mAN3pLzofRAHblo4HeHplDpkzdCE
-         SArQ==
-X-Gm-Message-State: APjAAAXDW06FzEHHp+uWLIFOYSGIlyU3+qyqXcrabRXnF/QTSh5jBqV8
-        NSmS7+LjyFhF0+4HT5F1RTHv2Clz+nUCOPOrIVkTNA==
-X-Google-Smtp-Source: APXvYqxrw4tF1qH2dtA3sf+vEsBsubI1n/tNaDi+JHo5Z4S27DzhSyZT3l5HStwbMbR0DBnVdtBXrRSGebZ3IdMezPk=
-X-Received: by 2002:a0d:c345:: with SMTP id f66mr19381788ywd.10.1562791859824;
- Wed, 10 Jul 2019 13:50:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190708134808.e89f3bfadd9f6ffd7eff9ba9@gmail.com>
-In-Reply-To: <20190708134808.e89f3bfadd9f6ffd7eff9ba9@gmail.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 10 Jul 2019 13:50:48 -0700
-Message-ID: <CALvZod7Qfj+Jer1TK4P-HmoQ0now=w2JK7NNrfC6ae8R0cOLcA@mail.gmail.com>
-Subject: Re: [PATCH] mm/z3fold.c: don't try to use buddy slots after free
-To:     Vitaly Wool <vitalywool@gmail.com>
-Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Henry Burns <henryburns@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Adams <jwadams@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=CvZE8fnJezhAyMxqeAIRKgAjF8cMHDm7PT8K7Ek+hOE=;
+        b=NVHdvQ0ccqO+JI6FUIKNmw4jWoOIOGKEwtN3kl4K//spc6joktYcV9i58znYrVwbiH
+         H28nSXCXMNATkNBPsWgp1zVu7POZk01Ok6zWKYavaF1jD0/iU+Oqpcy5SsUlXG81wxlv
+         nf6dMNBEBaiz4Mb9VY8CnLaZWMHxiutVouOp0ALOxIOp9s6wGEx/qYIGTGUSJELEZ8ox
+         S+hNj6IicLsPA1s/Nh4plPxaY/ibTJIwg5a6k/M0Xjw91tWqBSYbuuIc/stk2EtAoqr2
+         5j2xn2hIOAkjaaAtrL6tidT6/3x3qyPFQcf2BX51m24SFxaiOIqRTMh6DWLK0k0eqbQw
+         4bjg==
+X-Gm-Message-State: APjAAAWrDpocjdXiknq7+gIX7Dm7VspvMurZnn6jxrVhxoRUBJ2gFvhs
+        Zv+q5RVeXOEDazB+RsPCO30=
+X-Google-Smtp-Source: APXvYqy+i9l1eritxzC3MX4GTWx5k40hH8zeIKzOLt74WPzldLLMksGAs5+GPjLlIggI1jQZOHkoPg==
+X-Received: by 2002:a63:1208:: with SMTP id h8mr172872pgl.377.1562791893860;
+        Wed, 10 Jul 2019 13:51:33 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:2bbe])
+        by smtp.gmail.com with ESMTPSA id v12sm2832000pjk.13.2019.07.10.13.51.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 13:51:32 -0700 (PDT)
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
+        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org
+Subject: [PATCHSET v2 block/for-linus] IO cost model based work-conserving porportional controller
+Date:   Wed, 10 Jul 2019 13:51:18 -0700
+Message-Id: <20190710205128.1316483-1-tj@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 4:48 AM Vitaly Wool <vitalywool@gmail.com> wrote:
->
-> From fd87fdc38ea195e5a694102a57bd4d59fc177433 Mon Sep 17 00:00:00 2001
-> From: Vitaly Wool <vitalywool@gmail.com>
-> Date: Mon, 8 Jul 2019 13:41:02 +0200
-> [PATCH] mm/z3fold: don't try to use buddy slots after free
->
-> As reported by Henry Burns:
->
-> Running z3fold stress testing with address sanitization
-> showed zhdr->slots was being used after it was freed.
->
-> z3fold_free(z3fold_pool, handle)
->   free_handle(handle)
->     kmem_cache_free(pool->c_handle, zhdr->slots)
->   release_z3fold_page_locked_list(kref)
->     __release_z3fold_page(zhdr, true)
->       zhdr_to_pool(zhdr)
->         slots_to_pool(zhdr->slots)  *BOOM*
->
-> To fix this, add pointer to the pool back to z3fold_header and modify
-> zhdr_to_pool to return zhdr->pool.
->
-> Fixes: 7c2b8baa61fe  ("mm/z3fold.c: add structure for buddy handles")
->
-> Reported-by: Henry Burns <henryburns@google.com>
-> Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
+Hello,
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Changes from v1[1]:
 
-> ---
->  mm/z3fold.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/z3fold.c b/mm/z3fold.c
-> index 985732c8b025..e1686bf6d689 100644
-> --- a/mm/z3fold.c
-> +++ b/mm/z3fold.c
-> @@ -101,6 +101,7 @@ struct z3fold_buddy_slots {
->   * @refcount:          reference count for the z3fold page
->   * @work:              work_struct for page layout optimization
->   * @slots:             pointer to the structure holding buddy slots
-> + * @pool:              pointer to the containing pool
->   * @cpu:               CPU which this page "belongs" to
->   * @first_chunks:      the size of the first buddy in chunks, 0 if free
->   * @middle_chunks:     the size of the middle buddy in chunks, 0 if free
-> @@ -114,6 +115,7 @@ struct z3fold_header {
->         struct kref refcount;
->         struct work_struct work;
->         struct z3fold_buddy_slots *slots;
-> +       struct z3fold_pool *pool;
->         short cpu;
->         unsigned short first_chunks;
->         unsigned short middle_chunks;
-> @@ -320,6 +322,7 @@ static struct z3fold_header *init_z3fold_page(struct page *page,
->         zhdr->start_middle = 0;
->         zhdr->cpu = -1;
->         zhdr->slots = slots;
-> +       zhdr->pool = pool;
->         INIT_LIST_HEAD(&zhdr->buddy);
->         INIT_WORK(&zhdr->work, compact_page_work);
->         return zhdr;
-> @@ -426,7 +429,7 @@ static enum buddy handle_to_buddy(unsigned long handle)
->
->  static inline struct z3fold_pool *zhdr_to_pool(struct z3fold_header *zhdr)
->  {
-> -       return slots_to_pool(zhdr->slots);
-> +       return zhdr->pool;
->  }
->
->  static void __release_z3fold_page(struct z3fold_header *zhdr, bool locked)
-> --
-> 2.17.1
+* Prerequisite patchsets had cosmetic changes and merged.  Refreshed
+  on top.
+
+* Renamed from ioweight to iocost.  All source code and tools are
+  updated accordingly.  Control knobs io.weight.qos and
+  io.weight.cost_model are renamed to io.cost.qos and io.cost.model
+  respectively.  This is a more fitting name which won't become a
+  misnomer when, for example, cost based io.max is added.
+
+* Various bug fixes and improvements.  A few bugs were discovered
+  while testing against high-iops nvme device.  Auto parameter
+  selection improved and verified across different classes of SSDs.
+
+* Dropped bpf iocost support for now.
+
+* Added coef generation script.
+
+* Verified on high-iops nvme device.  Result is included below.
+
+One challenge of controlling IO resources is the lack of trivially
+observable cost metric.  This is distinguished from CPU and memory
+where wallclock time and the number of bytes can serve as accurate
+enough approximations.
+
+Bandwidth and iops are the most commonly used metrics for IO devices
+but depending on the type and specifics of the device, different IO
+patterns easily lead to multiple orders of magnitude variations
+rendering them useless for the purpose of IO capacity distribution.
+While on-device time, with a lot of clutches, could serve as a useful
+approximation for non-queued rotational devices, this is no longer
+viable with modern devices, even the rotational ones.
+
+While there is no cost metric we can trivially observe, it isn't a
+complete mystery.  For example, on a rotational device, seek cost
+dominates while a contiguous transfer contributes a smaller amount
+proportional to the size.  If we can characterize at least the
+relative costs of these different types of IOs, it should be possible
+to implement a reasonable work-conserving proportional IO resource
+distribution.
+
+This patchset implements IO cost model based work-conserving
+proportional controller.  It currently has a simple linear cost model
+builtin where each IO is classified as sequential or random and given
+a base cost accordingly and additional size-proportional cost is added
+on top.  Each IO is given a cost based on the model and the controller
+issues IOs for each cgroup according to their hierarchical weight.
+
+By default, the controller adapts its overall IO rate so that it
+doesn't build up buffer bloat in the request_queue layer, which
+guarantees that the controller doesn't lose significant amount of
+total work.  However, this may not provide sufficient differentiation
+as the underlying device may have a deep queue and not be fair in how
+the queued IOs are serviced.  The controller provides extra QoS
+control knobs which allow tightening control feedback loop as
+necessary.
+
+For more details on the control mechanism, implementation and
+interface, please refer to the comment at the top of
+block/blk-iocost.c and Documentation/admin-guide/cgroup-v2.rst changes
+in the "blkcg: implement blk-iocost" patch.
+
+Here are some test results.  Each test run goes through the following
+combinations with each combination running for a minute.  All tests
+are performed against regular files on btrfs w/ deadline as the IO
+scheduler.  Random IOs are direct w/ queue depth of 64.  Sequential
+are normal buffered IOs.
+
+	high priority (weight=500)	low priority (weight=100)
+
+	Rand read			None
+	ditto				Rand read
+	ditto				Seq  read
+	ditto				Rand write
+	ditto				Seq  write
+	Seq  read			None
+	ditto				Rand read
+	ditto				Seq  read
+	ditto				Rand write
+	ditto				Seq  write
+	Rand write			None
+	ditto				Rand read
+	ditto				Seq  read
+	ditto				Rand write
+	ditto				Seq  write
+	Seq  write			None
+	ditto				Rand read
+	ditto				Seq  read
+	ditto				Rand write
+	ditto				Seq  write
+
+* 7200RPM SATA hard disk
+  * No IO control
+    https://photos.app.goo.gl/1KBHn7ykpC1LXRkB8
+  * iocost, QoS: None
+    https://photos.app.goo.gl/MLNQGxCtBQ8wAmjm7
+  * iocost, QoS: rpct=95.00 rlat=40000 wpct=95.00 wlat=40000 min=25.00 max=200.00
+    https://photos.app.goo.gl/XqXHm3Mkbm9w6Db46
+* NCQ-blacklisted SATA SSD (QD==1)
+  * No IO control
+    https://photos.app.goo.gl/wCTXeu2uJ6LYL4pk8
+  * iocost, QoS: None
+    https://photos.app.goo.gl/T2HedKD2sywQgj7R9
+  * iocost, QoS: rpct=95.00 rlat=20000 wpct=95.00 wlat=20000 min=50.00 max=200.00
+    https://photos.app.goo.gl/urBTV8XQc1UqPJJw7
+* SATA SSD (QD==32)
+  * No IO control
+    https://photos.app.goo.gl/TjEVykuVudSQcryh6
+  * iocost, QoS: None
+    https://photos.app.goo.gl/iyQBsky7bmM54Xiq7
+  * iocost, QoS: rpct=95.00 rlat=10000 wpct=95.00 wlat=20000 min=50.00 max=400.00
+    https://photos.app.goo.gl/q1a6URLDxPLMrnHy5
+* NVME SSD (ran with 8 concurrent fio jobs to achieve saturation)
+  * No IO control
+    https://photos.app.goo.gl/S6xjEVTJzcfb3w1j7
+  * iocost, QoS: None
+    https://photos.app.goo.gl/SjQUUotJBAGr7vqz7
+  * iocost, QoS: rpct=95.00 rlat=5000 wpct=95.00 wlat=5000 min=1.00 max=10000.00
+    https://photos.app.goo.gl/RsaYBd2muX7CegoN7
+
+Even without explicit QoS configuration, read-heavy scenarios can
+obtain acceptable differentiation.  However, when write-heavy, the
+deep buffering on the device side makes it difficult to maintain
+control.  With QoS parameters set, the differentiation is acceptable
+across all combinations.
+
+The implementation comes with default cost model parameters which are
+selected automatically which should provide acceptable behavior across
+most common devices.  The parameters for hdd and consumer-grade SSDs
+seem pretty robust.  The default parameter set and selection criteria
+for highend SSDs might need further adjustments.
+
+It is fairly easy to configure the QoS parameters and, if needed, cost
+model coefficients.  We'll follow up with tooling and further
+documentation.  Also, the last RFC patch in the series implements
+support for bpf-based custom cost function.  Originally we thought
+that we'd need per-device-type cost functions but the simple linear
+model now seem good enough to cover all common device classes.  In
+case custom cost functions become necessary, we can fully develop the
+bpf based extension and also easily add different builtin cost models.
+
+Andy Newell did the heavy lifting of analyzing IO workloads and device
+characteristics, exploring various cost models, determining the
+default model and parameters to use.
+
+Josef Bacik implemented a prototype which explored the use of
+different types of cost metrics including on-device time and Andy's
+linear model.
+
+This patchset is on top of block/for-linus 3a10f999ffd4
+("blk-throttle: fix zero wait time for iops throttled group")
+and contains the following ten patches.
+
+ 0001-blkcg-pass-q-and-blkcg-into-blkcg_pol_alloc_pd_fn.patch
+ 0002-blkcg-make-cpd_init_fn-optional.patch
+ 0003-blkcg-separate-blkcg_conf_get_disk-out-of-blkg_conf_.patch
+ 0004-block-rq_qos-add-rq_qos_merge.patch
+ 0005-block-rq_qos-implement-rq_qos_ops-queue_depth_change.patch
+ 0006-blkcg-s-RQ_QOS_CGROUP-RQ_QOS_LATENCY.patch
+ 0007-blk-mq-add-optional-request-pre_start_time_ns.patch
+ 0008-blkcg-implement-blk-iocost.patch
+ 0009-blkcg-add-tools-cgroup-iocost_monitor.py.patch
+ 0010-blkcg-add-tools-cgroup-iocost_coef_gen.py.patch
+
+0001-0007 are prep patches.  0008 implements blk-iocost.  0009 adds
+monitoring script.  0010 adds linear model coef generation script.
+
+The patchset is also available in the following git branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-iocost
+
+diffstat follows, Thanks.
+
+ Documentation/admin-guide/cgroup-v2.rst |   97 +
+ block/Kconfig                           |    9 
+ block/Makefile                          |    1 
+ block/bfq-cgroup.c                      |    5 
+ block/blk-cgroup.c                      |   71 
+ block/blk-core.c                        |    4 
+ block/blk-iocost.c                      | 2394 ++++++++++++++++++++++++++++++++
+ block/blk-iolatency.c                   |    8 
+ block/blk-mq.c                          |   11 
+ block/blk-rq-qos.c                      |   18 
+ block/blk-rq-qos.h                      |   28 
+ block/blk-settings.c                    |    2 
+ block/blk-throttle.c                    |    6 
+ block/blk-wbt.c                         |   18 
+ block/blk-wbt.h                         |    4 
+ include/linux/blk-cgroup.h              |    4 
+ include/linux/blk_types.h               |    3 
+ include/linux/blkdev.h                  |    7 
+ include/trace/events/iocost.h           |  174 ++
+ tools/cgroup/iocost_coef_gen.py         |  178 ++
+ tools/cgroup/iocost_monitor.py          |  270 +++
+ 21 files changed, 3259 insertions(+), 53 deletions(-)
+
+--
+tejun
+
+[1] http://lkml.kernel.org/r/20190614015620.1587672-1-tj@kernel.org
+
