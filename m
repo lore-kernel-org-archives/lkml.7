@@ -2,99 +2,133 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3C0C73C64
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D59C71142
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8631320651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5199A20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfGJNGI (ORCPT
+        id S1727348AbfGJNGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:06:08 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:50147 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727294AbfGJNGH (ORCPT
+        Wed, 10 Jul 2019 09:06:20 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:44547 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfGJNGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:06:07 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MiakT-1iNqtO0ZXD-00fl0x; Wed, 10 Jul 2019 15:05:57 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] acpi: blacklist: fix clang warning for unused dmi table
-Date:   Wed, 10 Jul 2019 15:05:43 +0200
-Message-Id: <20190710130555.1829974-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 10 Jul 2019 09:06:20 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8E1BF60010;
+        Wed, 10 Jul 2019 13:06:15 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 15:06:15 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
+Message-ID: <20190710130615.gvi2jwgr2cds66xr@flea>
+References: <20190709145151.23086-1-digetx@gmail.com>
+ <20190710101229.54ufuhmh22dfxclr@flea>
+ <4ad69d15-07f8-9753-72d6-a51402c94c20@gmail.com>
+ <20190710125552.qvmnh6qs63ikiu2k@flea>
+ <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TmvFT3BGlOgpGE2mtyEuTZ8x+od2j9ySy54G1qqhRB0bbL6N4mO
- AuvRIBUOyxgyarVUUyZUjwOYiGbyzwb1XGM707MnAPDE3U/qOrenx4d9UgKtTlHAymlBBLM
- TT3LthCTFxVUTaLHM9IkNb5yzyxOPm8vqKF0I7oX2xtQECEzVXZJRKiTJ3GminbeyMUAreG
- uuGaRw1YeIbwPsP9a0psw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6H605534wpk=:pqhQ41ZMeC+ODWYjzWhZbL
- r/dyLemTAKDB+b1qxzol/EwkB9IAmA93rly9NRpHPN84zd/S5vrrrq3kFLRVaFYq+cptvNbtY
- cBdARv3WCTtgiXAryiCfg0OT9gJMrM8VnQQPsEI4yaQpfe/URDo4is8y9/hToOAu0FcV2t/3A
- zAFUApIlUFjyQfqdFk/+eefKly4Kp9hIutl6OUTlZvPZ8KVw/ItrFVvndZ3Xc7nY8gT7PNzwI
- KxVEo9TgsujwORHUOU8oJQPLOJ4fsR7UtzlYtwScaifBF+cv8k/7JdRgWmf3OKvEkLYS5n+CS
- Z7ItWoP9cWAIKoJHhs0GVuupu2pDD+xKxkIKE3BCBol7U/UFQv9ksxoycPICw9sLZSAhMlqmA
- iKP2rTgFbbeqSUSx5bUvaB4NIY1ElIn+t0HDF6A7g+aDS5WH1qofqzDNaaV0EBQ/31/RdETK6
- U4jrxPT9SbUjcL7mLoSr9Scu7ukJXaIHUwYNEbS1xRRXa56e6dZxOz8Pk30VSqlEwuLXGd2L7
- bgow5B59atChisWJ3jeIFTty8s9wiad38SeR2Kb+Xdz0grXfSn0MUKaZqEXkZdg0We3tywA3n
- B90FPQDaGBkABVXzE3LxZOWejitRJtERRI0wbTo3YWWG/l25bUwYG+Xr6/6mtep9HO8iz/tBS
- IM/9NXYzvRa8vKtQTVk4Ts0CA0ZGwMw8UEuRsJ3oT+NEuoC4I0Wx52r2i2/onB27Njczi+Sno
- P4xwsOUnTkjU+hNgOtmKnkP0/aoZGBX+5nVnnA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fs2o7js5tfex73gh"
+Content-Disposition: inline
+In-Reply-To: <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_DMI is disabled, we only have a tentative declaration,
-which causes a warning from clang:
 
-drivers/acpi/blacklist.c:20:35: error: tentative array definition assumed to have one element [-Werror]
-static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
+--fs2o7js5tfex73gh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As the variable is not actually used here, hide it entirely
-in an #ifdef to shut up the warning.
+On Wed, Jul 10, 2019 at 03:59:55PM +0300, Dmitry Osipenko wrote:
+> 10.07.2019 15:55, Maxime Ripard =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Wed, Jul 10, 2019 at 03:42:28PM +0300, Dmitry Osipenko wrote:
+> >> 10.07.2019 13:12, Maxime Ripard =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> On Tue, Jul 09, 2019 at 05:51:51PM +0300, Dmitry Osipenko wrote:
+> >>>> The named mode could be invalid and then cmdline parser misses to va=
+lidate
+> >>>> mode's dimensions, happily adding 0x0 mode as a valid mode. One case=
+ where
+> >>>> this happens is NVIDIA Tegra devices that are using downstream bootl=
+oader
+> >>>> which adds "video=3Dtegrafb" to the kernel's cmdline and thus upstre=
+am Tegra
+> >>>> DRM driver fails to probe because of the invalid mode.
+> >>>>
+> >>>> Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command =
+line")
+> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >>>
+> >>> Applied to drm-misc-next-fixes
+> >>>
+> >>> Thanks for figuring this out!
+> >>
+> >> Thank you very much! So the driver now doesn't fail to probe because
+> >> of the cmdline, but what else I noticed is that the framebuffer
+> >> console is now rotated by 90=C2=B0 on a 800x1280 panel, while display =
+in
+> >> Xorg is vertical as it was before. Seems something else is still
+> >> missing, reverting "drm/modes: Rewrite the command line parser"
+> >> returns the framebuffer's console orientation into the original
+> >> state.
+> >
+> > What is the whole command line passed by the bootloader ?
+>
+> tegraid=3D30.1.3.0.0 mem=3D1022M@2048M android.commchip=3D0 vmalloc=3D512=
+M androidboot.serialno=3D015d3f18c9081210 video=3Dtegrafb no_console_suspen=
+d=3D1 console=3Dnone
+> debug_uartport=3Dhsport usbcore.old_scheme_first=3D1 lp0_vec=3D8192@0xbdd=
+f9000 tegra_fbmem=3D8195200@0xabe01000 core_edp_mv=3D0 audio_codec=3Drt5640=
+ board_info=3Df41:a00:1:44:2
+> root=3D/dev/sda1 rw rootwait tegraboot=3Dsdmmc gpt gpt_sector=3D61079551 =
+androidboot.bootloader=3D4.23 androidboot.baseband=3D1231_0.18.0_0409
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/acpi/blacklist.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks.
 
-diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
-index ad2c565f5cbe..a86a770c9b79 100644
---- a/drivers/acpi/blacklist.c
-+++ b/drivers/acpi/blacklist.c
-@@ -17,7 +17,9 @@
- 
- #include "internal.h"
- 
-+#ifdef CONFIG_DMI
- static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
-+#endif
- 
- /*
-  * POLICY: If *anything* doesn't work, put it on the blacklist.
-@@ -61,7 +63,9 @@ int __init acpi_blacklisted(void)
- 	}
- 
- 	(void)early_acpi_osi_init();
-+#ifdef CONFIG_DMI
- 	dmi_check_system(acpi_rev_dmi_table);
-+#endif
- 
- 	return blacklisted;
- }
--- 
-2.20.0
+It still doesn't really make sense to me why that video=3Dtegrafb should
+be considered valid.
 
+However, I don't see anything rotation related in the commit you
+list. Are you sure it's really the offending one and not another one?
+
+Also, do you have the option to recompile a kernel so that we can add
+some debug?
+
+maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--fs2o7js5tfex73gh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSXixwAKCRDj7w1vZxhR
+xZJ8APwKATjjI3jXmnH2a50E0m2yRtsFtO2lofNbWAy/uAcoJAEA/td86ptP2WBi
+yXQ06TZAJjZz+wKKZu0NeagAYnoHSAQ=
+=5a5o
+-----END PGP SIGNATURE-----
+
+--fs2o7js5tfex73gh--
