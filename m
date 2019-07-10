@@ -2,140 +2,88 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94420C74A3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C617EC74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D24E208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CADA20859
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:54:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbOV08DQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XGpHipit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfGJXwD (ORCPT
+        id S1727708AbfGJXyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 19:52:03 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39916 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfGJXwD (ORCPT
+        Wed, 10 Jul 2019 19:54:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44726 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfGJXyC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 19:52:03 -0400
-Received: by mail-qt1-f195.google.com with SMTP id l9so4450673qtu.6;
-        Wed, 10 Jul 2019 16:52:02 -0700 (PDT)
+        Wed, 10 Jul 2019 19:54:02 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t14so2000219plr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 16:54:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lshyIJu954v2r/7XKXLH1/amde3r4n1sA3qGLei0xOw=;
-        b=RbOV08DQF30yaBGCedUyuFI4e87n2/cGIvwajOkKhV6VPJaZJKAK1fsyEDE7Ig7vgh
-         eWrQJN0kGIozDdlvYa0O/839xFHhIu6yLXuTp6mGBaMLTuCjMLwrzAv4Dv8p6ABLO7mM
-         qQHJi6Il7/B7gPjzpxD/sCRYT4F0y/TY8PP3XZU+OrdI/30rWBH7ouhdJsr1zcxrFLxj
-         FGKWp3x5LKW6/z1OUqiVc9OTXPsBnp2mIP+ff651wjdrM0YpqR5BSx91fXe81DukuaTj
-         l+DtEABNrftVsinFEL/u5JUdg4b10bFf761mBhARk1WgVTfDk3DOB78ek6RYY3BdJFN7
-         FbLw==
+        bh=gFYw+HMYMcy9WDWAf7lBOqFHKuuJ9aebWvblsMHgVuM=;
+        b=XGpHipitrwxuJAmZlyG7V9JPyfM7owm246snIlqAPmAbAGT+TpB3cvC9uq4gTBgrkV
+         54fTAwAckeuotsLh92QIwHqxvTZNNTPCZ0lmxln7WYBOTrxmrmQ3abMb5TH3hluGcp+S
+         ZW0JmODXSrqZ2HPxVd2O3lOzgv/nYxYOxDG8oHV5FFvgn+Emb1SOCD9hhTKZa6xsSbJp
+         thfo7s046j0jn5t7c+8rn3VyYLqq2Ly5TJcrpLWS11PBcE6Cj/jAXFb5YI5BsUiRu1HR
+         H1JTxEpV93MAyHHghvXcZhh/I78XBRv0j5w7+vGTnMg8Deoz7yvSMnUhIgzRMRrT13mN
+         fu0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lshyIJu954v2r/7XKXLH1/amde3r4n1sA3qGLei0xOw=;
-        b=FdTnO2NlQIkqkZkpvxYYRi6XkyBjzjffUQqbkBeBV7pxiLhpB1c/24Gprh5npbpFOT
-         gPf/7sDXkgdXbSWtiQqOhvR3HvdGZbeNXTRjgTvSQ86VLPfIZt649ZFpfkg/XcYiS7vB
-         yE0AGiDNVZUyn7ZwyUlhvOYwOB3X/g0r+xyLgbDOSQd+HBbbBUrxjzXqf0n/FaZ4YHP3
-         H9uJ8RokwV3llmTuobx2S21M04yVrWIC/6dsrHlXd0E5QcfbCie3viIdNNiJeR/5Zj2x
-         gl6c0g85VjGnrRbGhabLEcX1i85prL79XVYzfK4GivSqzfgdkBzAzeKZW6IjrrCu8/6Y
-         WukA==
-X-Gm-Message-State: APjAAAVXwUvI1hWmY3RPyLUA41nDLtRUMkZHBDyjoHKo88oPos0Tz8pT
-        CSmcmhwke+HbBbvOrcycBJu4PujsjWHyQDEfZ6Q=
-X-Google-Smtp-Source: APXvYqxe/l7pZ4dnvE7+PRMPc4A4wDIw6MCWFNLCzSz9fy+bNipjZmRwefK+gwpAGRiEg3Ah0EJwYwPYYO1pmfWzj20=
-X-Received: by 2002:ac8:2d56:: with SMTP id o22mr561834qta.171.1562802721973;
- Wed, 10 Jul 2019 16:52:01 -0700 (PDT)
+        bh=gFYw+HMYMcy9WDWAf7lBOqFHKuuJ9aebWvblsMHgVuM=;
+        b=uN4R4UHptfwINvXyyjN8OsTw+ie65oZSXszodOIH2LFAKxA5m/X8OCeU2dut7qGTeQ
+         zm7PSPS1t6VxYWE7LsO2phAFDdQke/6eNADs2WOnMoeku5MtUdfoFSNilM9nEdVLcpo+
+         FhA3958oFNtV99opks7Bovtnywc5GC9JOjDdW5pNxux+ZhPNgEjaW+ztZdIrglte7e5Q
+         OTMOKdPl/9BqC5ipuysLNjdlN1S4AuP1fhj3/uWkhfF+u3ZbGbGrA8ExQK9bowkoQDAd
+         kaqbxbvl0JvE60HU3TRRqDHVgaMVrSavN/M2RHkZuJZtLAzygitbyqjXKGFqU79LMPeh
+         rXmA==
+X-Gm-Message-State: APjAAAW5Sjyqnx53GdPXBcwE3PgxR0BNGPoRUOIwThh/54LzKP078d7v
+        5znXU9X/bqEKI+egvaivq0106K7lOU5Q7yDlEICDJA==
+X-Google-Smtp-Source: APXvYqzp1hs90Rwc0aIZR4yrq/LXA6p5+K72VfDeYJ0yPeISfrkbaXGgGHoaXuTZjUxbjZu9JiVnGVXwU9LrMXwKpk8=
+X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr990493pld.119.1562802841570;
+ Wed, 10 Jul 2019 16:54:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-3-krzesimir@kinvolk.io>
-In-Reply-To: <20190708163121.18477-3-krzesimir@kinvolk.io>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 10 Jul 2019 16:51:51 -0700
-Message-ID: <CAEf4BzYra9njHOB8t6kxRu6n5NJdjjAG541OLt8ci=0zbbcUSg@mail.gmail.com>
-Subject: Re: [bpf-next v3 02/12] selftests/bpf: Avoid a clobbering of errno
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org
+References: <20190710174800.34451-1-natechancellor@gmail.com> <20190710182624.GG4051@ziepe.ca>
+In-Reply-To: <20190710182624.GG4051@ziepe.ca>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 10 Jul 2019 16:53:50 -0700
+Message-ID: <CAKwvOd=yJQgzjQBKW7=en_YnF6OCAg0MXy5c6c9tBLSjGgorPA@mail.gmail.com>
+Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> wrote:
+On Wed, Jul 10, 2019 at 11:26 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 >
-> Save errno right after bpf_prog_test_run returns, so we later check
-> the error code actually set by bpf_prog_test_run, not by some libcap
-> function.
->
-> Changes since v1:
-> - Fix the "Fixes:" tag to mention actual commit that introduced the
->   bug
->
-> Changes since v2:
-> - Move the declaration so it fits the reverse christmas tree style.
->
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Fixes: 832c6f2c29ec ("bpf: test make sure to run unpriv test cases in test_verifier")
-> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> ---
->  tools/testing/selftests/bpf/test_verifier.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-> index b8d065623ead..3fe126e0083b 100644
-> --- a/tools/testing/selftests/bpf/test_verifier.c
-> +++ b/tools/testing/selftests/bpf/test_verifier.c
-> @@ -823,16 +823,18 @@ static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
->         __u8 tmp[TEST_DATA_LEN << 2];
->         __u32 size_tmp = sizeof(tmp);
->         uint32_t retval;
-> +       int saved_errno;
->         int err;
->
->         if (unpriv)
->                 set_admin(true);
->         err = bpf_prog_test_run(fd_prog, 1, data, size_data,
->                                 tmp, &size_tmp, &retval, NULL);
+> On Wed, Jul 10, 2019 at 10:48:00AM -0700, Nathan Chancellor wrote:
+> > clang warns several times:
+> >
+> > drivers/infiniband/sw/siw/siw_cq.c:31:4: warning: implicit conversion
+> > from enumeration type 'enum siw_wc_status' to different enumeration type
+> > 'enum siw_opcode' [-Wenum-conversion]
+> Weird that gcc doesn't warn on this by default..
 
-Given err is either 0 or -1, how about instead making err useful right
-here without extra variable?
-
-if (bpf_prog_test_run(...))
-        err = errno;
-
-> +       saved_errno = errno;
->         if (unpriv)
->                 set_admin(false);
->         if (err) {
-> -               switch (errno) {
-> +               switch (saved_errno) {
->                 case 524/*ENOTSUPP*/:
-
-ENOTSUPP is defined in include/linux/errno.h, is there any problem
-with using this in selftests?
-
->                         printf("Did not run the program (not supported) ");
->                         return 0;
-> --
-> 2.20.1
->
+Based on the sheer number of -Wenum-conversion that Nathan has fixed,
+I don't think gcc has -Wenum-conversion (or it's somehow disabled just
+for gcc).
+-- 
+Thanks,
+~Nick Desaulniers
