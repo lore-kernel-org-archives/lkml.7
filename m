@@ -2,146 +2,120 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA39C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDD0C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A662087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86CA2087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="daN8MuF1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MlbQLz+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfGJV2H (ORCPT
+        id S1727803AbfGJVct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:28:07 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34362 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfGJV2H (ORCPT
+        Wed, 10 Jul 2019 17:32:49 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:35355 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfGJVct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:28:07 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so1692105pfo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 14:28:06 -0700 (PDT)
+        Wed, 10 Jul 2019 17:32:49 -0400
+Received: by mail-pl1-f202.google.com with SMTP id s21so1969008plr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 14:32:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=2/LQ+syV8algN2h7OJBFggoQfWNkjHh3ATrB2VsxuKc=;
-        b=daN8MuF1/lEGfilGDX6IF+SUiDKa9qpZAq8GG3koP/7y04fK++4Bl5JwtbyEu4fRWw
-         JxFekoZVPITR2x4/Ygb4Mf1Bq3ym8zT8Nag4L/ZzC2S2E+BjL/5zdX0J2Et+TVa+GtbS
-         B23SiD5fg5Vogz8Glol23Wsb0tnyEwDbE/5/QCXkstf5X9Yu8rWdcg3NImLDdqIINf0R
-         /YMHnRxm0orEoeLSZzUr2MQ4Of5iIo3RNkXb+nKrQBdJdDAj/f7qqmuIdiC3/FwjWJ5u
-         5MST2J+yggJWzGX50XBQteW2dBMf7SizdIQWNn8MnYROs3SW6eT0cHQ/OSOGgn08O3Ck
-         E9Lg==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=D4vxIycjAa/oRBETN9HeGCijuet8TadWyyhq7cpzL/s=;
+        b=MlbQLz+2fkGnqHycT99BCVEXFcIhY0NwQnphKHCTU8Gz9tipQo+9WHu51grPurjhXe
+         a2mJ8ImxNmgAbiTIYRG/nSGwe2kz43z1U4ZFd89xe0Qe96E9FIxdd44b8vQ+Qtm9V9b5
+         HXkWdEoy/bQqkyx07h4E6LUexLwmJCyUDimPcIRIL4qOhQYwmfLIrt3mAISYUmIFbA4S
+         uN7O6+RFujww9gENEH3kpQJwwTNEUg7kBMszggQSnFpNEPgoXxJgqD+B8MPrcpHgxie9
+         owYX9XCkjhjvjOD8la1tz+HhhRIty/YyOGFWGKeYu2TZ7aDtu9hj+njqVG0AF4Gd16+w
+         Tt2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=2/LQ+syV8algN2h7OJBFggoQfWNkjHh3ATrB2VsxuKc=;
-        b=awn75KjupT1RUED4RiSzc01qXPfDMhzGGCQuxMFXcWoQnrRAcW0D1ODR+/Vhk7tgVG
-         XTqt5rrlTtm66Fs4Tydvg9OSCC4YQXaYxvA5gQJEY974z16lbiYkxveKZ3R17FEp4/QY
-         KsiN/cVA1Eq2GaTCqANlvk4MhXMN1OJ7SPOv+oSF9TQisUzdVq4BnJlNCG1yrTBMV62t
-         ljhZWrkocGY34NUhJz8huL2FM+NxkAoQtQyXajZ1/bWL2a29vA5F2xl04LaUlSNkYLu4
-         34jWJh031HZDnuaGUXvED8molaR9MyhAK+1OSnNPR9FhCNeryfjMmFlCAAMHHk9UAGHz
-         tONQ==
-X-Gm-Message-State: APjAAAUA9w+MDNkVnZp/+wa8b6YgCaUQslfKnjS7MlLvcNi/z1Uga6+l
-        p7xqjWMn6iJ44Pzia5ynISghVg==
-X-Google-Smtp-Source: APXvYqy3KbwmvZ8Ja3wu6WerM1ugQjC9s4Qj0nEwijNHOzchNo+fuXoacPeYA+nP96bUoYEgkDaDxA==
-X-Received: by 2002:a17:90a:c588:: with SMTP id l8mr558340pjt.16.1562794085970;
-        Wed, 10 Jul 2019 14:28:05 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id w18sm3209783pfj.37.2019.07.10.14.28.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 14:28:05 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 14:28:04 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-cc:     Cfir Cohen <cfir@google.com>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [patch] crypto: ccp - Fix SEV_VERSION_GREATER_OR_EQUAL
-Message-ID: <alpine.DEB.2.21.1907101426290.2777@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=D4vxIycjAa/oRBETN9HeGCijuet8TadWyyhq7cpzL/s=;
+        b=IjmKPkinF4/v/nuKBa3cgfIxgQhERCdCwM3zKepyNMMMz7aeWW2+zeQHLbZGllPu6C
+         Enl32bM3vzkH3Wx56+PIXb6tMQe+zGrfdcyL46axpxjBf1JH8dzWg5OQGKhWi6FL62LN
+         wFo1W8DUg22xcALMj/nDHsejrsTSBVdL31udGdqUh9xTI0EUYcTMyugxOFZixI4zSyFU
+         E265eTHsKRlpKPwlPfw42SRNv5CwLz/OV1HbsMAZTQon4a9Gsk+GdAMKe/TWNazFs6T3
+         J269E40V05RyAQoyK1UBvnLDy3LGcxH528atuUwcZ7hebHlpQnNNRHSGkD1k46dtyJAJ
+         eJBw==
+X-Gm-Message-State: APjAAAVUR9iRE2h/opVmRU9lU1U4srkWAt117s99P37AcsSzcMF0Xa2K
+        yi1NWCsjClAvjTGikoltMKKQvlyTWL1RkOcS
+X-Google-Smtp-Source: APXvYqxkWs1ql8glIONr4J4jL2IwaFcEo5teu2KgnAVys+7+MAYwgY/fHlQzByp8VzJ9+OIkKY/Au1eLlsXi9afg
+X-Received: by 2002:a65:65c5:: with SMTP id y5mr407700pgv.342.1562794368035;
+ Wed, 10 Jul 2019 14:32:48 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 14:32:38 -0700
+Message-Id: <20190710213238.91835-1-henryburns@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH] mm/z3fold.c: remove z3fold_migration trylock
+From:   Henry Burns <henryburns@google.com>
+To:     Vitaly Wool <vitalywool@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vitaly Vul <vitaly.vul@sony.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Snild Dolkow <snild@sony.com>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Henry Burns <henryburns@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SEV_VERSION_GREATER_OR_EQUAL() will fail if upgrading from 2.2 to 3.1, for
-example, because the minor version is not equal to or greater than the
-major.
+z3fold_page_migrate() will never succeed because it attempts to acquire a
+lock that has already been taken by migrate.c in __unmap_and_move().
 
-Fix this and move to a static inline function for appropriate type
-checking.
+__unmap_and_move() migrate.c
+  trylock_page(oldpage)
+  move_to_new_page(oldpage_newpage)
+    a_ops->migrate_page(oldpage, newpage)
+      z3fold_page_migrate(oldpage, newpage)
+        trylock_page(oldpage)
 
-Fixes: edd303ff0e9e ("crypto: ccp - Add DOWNLOAD_FIRMWARE SEV command")
-Reported-by: Cfir Cohen <cfir@google.com>
-Signed-off-by: David Rientjes <rientjes@google.com>
+
+Signed-off-by: Henry Burns <henryburns@google.com>
 ---
- drivers/crypto/ccp/psp-dev.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ mm/z3fold.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
---- a/drivers/crypto/ccp/psp-dev.c
-+++ b/drivers/crypto/ccp/psp-dev.c
-@@ -24,10 +24,6 @@
- #include "sp-dev.h"
- #include "psp-dev.h"
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 985732c8b025..9fe9330ab8ae 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -1335,16 +1335,11 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+ 	zhdr = page_address(page);
+ 	pool = zhdr_to_pool(zhdr);
  
--#define SEV_VERSION_GREATER_OR_EQUAL(_maj, _min)	\
--		((psp_master->api_major) >= _maj &&	\
--		 (psp_master->api_minor) >= _min)
+-	if (!trylock_page(page))
+-		return -EAGAIN;
 -
- #define DEVICE_NAME		"sev"
- #define SEV_FW_FILE		"amd/sev.fw"
- #define SEV_FW_NAME_SIZE	64
-@@ -47,6 +43,15 @@ MODULE_PARM_DESC(psp_probe_timeout, " default timeout value, in seconds, during
- static bool psp_dead;
- static int psp_timeout;
- 
-+static inline bool sev_version_greater_or_equal(u8 maj, u8 min)
-+{
-+	if (psp_master->api_major > maj)
-+		return true;
-+	if (psp_master->api_major >= maj && psp_master->api_minor >= min)
-+		return true;
-+	return false;
-+}
-+
- static struct psp_device *psp_alloc_struct(struct sp_device *sp)
- {
- 	struct device *dev = sp->dev;
-@@ -588,7 +593,7 @@ static int sev_ioctl_do_get_id2(struct sev_issue_cmd *argp)
- 	int ret;
- 
- 	/* SEV GET_ID is available from SEV API v0.16 and up */
--	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
-+	if (!sev_version_greater_or_equal(0, 16))
- 		return -ENOTSUPP;
- 
- 	if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
-@@ -651,7 +656,7 @@ static int sev_ioctl_do_get_id(struct sev_issue_cmd *argp)
- 	int ret;
- 
- 	/* SEV GET_ID available from SEV API v0.16 and up */
--	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
-+	if (!sev_version_greater_or_equal(0, 16))
- 		return -ENOTSUPP;
- 
- 	/* SEV FW expects the buffer it fills with the ID to be
-@@ -1053,7 +1058,7 @@ void psp_pci_init(void)
- 		psp_master->sev_state = SEV_STATE_UNINIT;
+ 	if (!z3fold_page_trylock(zhdr)) {
+-		unlock_page(page);
+ 		return -EAGAIN;
  	}
+ 	if (zhdr->mapped_count != 0) {
+ 		z3fold_page_unlock(zhdr);
+-		unlock_page(page);
+ 		return -EBUSY;
+ 	}
+ 	new_zhdr = page_address(newpage);
+@@ -1376,7 +1371,6 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+ 	queue_work_on(new_zhdr->cpu, pool->compact_wq, &new_zhdr->work);
  
--	if (SEV_VERSION_GREATER_OR_EQUAL(0, 15) &&
-+	if (sev_version_greater_or_equal(0, 15) &&
- 	    sev_update_firmware(psp_master->dev) == 0)
- 		sev_get_api_version();
- 
+ 	page_mapcount_reset(page);
+-	unlock_page(page);
+ 	put_page(page);
+ 	return 0;
+ }
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
