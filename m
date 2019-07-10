@@ -2,188 +2,132 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B25C73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD99CC73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DACD20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8968A20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mengyan1223.wang header.i=@mengyan1223.wang header.b="Rz+8KWX7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wx5xqLWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfGJFo1 (ORCPT
+        id S1727077AbfGJFtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:44:27 -0400
-Received: from mengyan1223.wang ([89.208.246.23]:37690 "EHLO mengyan1223.wang"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfGJFo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:44:26 -0400
-Received: from xry111-laptop.lan (unknown [IPv6:2001:250:1006:dff0:7508:eb03:297c:cb52])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: xry111@mengyan1223.wang)
-        by mengyan1223.wang (Postfix) with ESMTPSA id 6C33565B54;
-        Wed, 10 Jul 2019 01:44:22 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mengyan1223.wang;
-        s=mail; t=1562737465;
-        bh=GRrheC6yZnCgSZrciA+fCazzXFyCSHlC1LBmIR19mkE=;
-        h=Subject:From:To:Cc:Date:From;
-        b=Rz+8KWX7f0FdUlr+XjwifZ/ttPMAjn4MbNQ/tnEa8I8DF17+ZC28IbqW87nkEt41N
-         l8FVK+E1CF31SUbumpRccJWXFUk+gN2I0WlJv+sh7CmO/G2JopQNvqN7kyoUN/bPPg
-         EeWP6/fPByE2hcC4AcTtFLi0Ai6ZjnBtnYm+6vvebiVUwWNnQRerzZJvTMZd/ZUTZw
-         lHcLxyVOusWTvqbESVrQQLVJQ7qO7+I25zBf4PUFus/7vJ/nt+DRb3F7rLP2JQbtfF
-         zAA9YrjGBm7Q0GE/a6RbFTYknTb7XPMTdIBafz31ELkMJynrpQnjTpoUceHhyaLWcI
-         b1Pt90gwSAqCw==
-Message-ID: <e5baec48e5c362256a631a2d55fbc30251ab5e83.camel@mengyan1223.wang>
-Subject: kernel oops loading i915 after "x86/asm: Pin sensitive CR4 bits"
- (873d50d58)
-From:   Xi Ruoyao <xry111@mengyan1223.wang>
-To:     Kees Cook <keescook@chromium.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        David Airlie <airlied@linux.ie>, Jessica Yu <jeyu@kernel.org>
-Cc:     kernel-hardening@lists.openwall.com,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 10 Jul 2019 13:44:17 +0800
-Content-Type: multipart/mixed; boundary="=-8sC1bMl1WM6oK8eaXuPt"
-User-Agent: Evolution 3.32.3 
+        Wed, 10 Jul 2019 01:49:03 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40613 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfGJFtC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:49:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k8so756057eds.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 22:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nNLQU0fvKqxQOdeOY7h0M4gaPPqFsFH7eX9dZuYhlJo=;
+        b=Wx5xqLWopuzrZN6/Fti0L/HiygA8LcbAeuOEgB1MaLtDXVdcAVuu97fpw/JTnnlMZz
+         NvAxhx0cPL9GBbxAeIy9TUW2x6Yw5q8CDhRK8nQ+zCyZ2Zq/uMCIrLLhi0fkcoB36CJs
+         8k/tSYVi8Mfd1a41oiAkCcv8lmjbXgIrRdtxGGAlSrh3xntE8aYWm7Y57cg9lXAXuTr+
+         l7bFLAo7Lvlsj6eed6w3trYXMK+v9fcQnmYQSGeJhj/CIXj3IDmFsInm4cWgPPG/xAzm
+         KTBbmrpDFAAAAbNoXObxFn0bRfY3TGkBX7rkv0pjHytlvxb/xoHYSTH3HVut+8JAiPdq
+         yJlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nNLQU0fvKqxQOdeOY7h0M4gaPPqFsFH7eX9dZuYhlJo=;
+        b=R+iZbzFO481bnf2m0UioDZGRoInoyy5v93Mwc0xTWnaZKLsdiW6IczvrdJ/vYaIcUN
+         Nc1D8PqtZZ32LawmsWFUoWOn/EfAbdLY2D54uGnd/yRpxCzjraATYETrvRgFV/knEEm+
+         gvQdR2S+HPuVJMtvy3l2hZ+jsJ5QnQP9uu8O5Q22i+coAC0FQo6ZT7a2JluI2PYoMwWB
+         mEuS/gCubBGknPsoSFfuSqQ694p4JOk1B9Fzv1vG7WYf0XCng6iMW2iqGqm8E5fWLA0R
+         8OSIZo9q1cVvs5TkvJ3gcBVY/2BQMDvt/gN+IQ2UDGmIrte7y3hm27GKnxsiEYu8qeYU
+         l4Jw==
+X-Gm-Message-State: APjAAAWflpLqq77FCNJC9HtN87H77rCqUj1Xf6rh5izfcLOVBoGq2C3T
+        fWvlfzC3uaKxQ8gegFpTw73eyPgjrCN/B8CxrsA=
+X-Google-Smtp-Source: APXvYqx5k1mBwxHKRaGd1as7NViJbwd5PtzsB2OpDgEGGDnqTUDJbGWp6BtFmMPnBGSQKSDdrhHaBPWs7ABr8c4MFmw=
+X-Received: by 2002:a50:ec0e:: with SMTP id g14mr2922382edr.210.1562737740861;
+ Tue, 09 Jul 2019 22:49:00 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190708115349.GA14779@gmail.com>
+In-Reply-To: <20190708115349.GA14779@gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 9 Jul 2019 22:48:49 -0700
+Message-ID: <CANcMJZAYhqdO5sGbwW7GszL9NtNgMy0+uMe+bVSQHqyewQcy_g@mail.gmail.com>
+Subject: Re: [GIT PULL] scheduler changes for v5.3
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 8, 2019 at 9:33 AM Ingo Molnar <mingo@kernel.org> wrote:
+> Please pull the latest sched-core-for-linus git tree from:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-for-linus
+....
+> Peter Zijlstra (1):
+>       sched/core: Optimize try_to_wake_up() for local wakeups
 
---=-8sC1bMl1WM6oK8eaXuPt
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Hey Peter, Ingo,
+   Since this change landed in Linus' tree, I've been seeing a lot of
+the following dmesg noise when running AOSP on the HiKey960 board.
 
-Hello,
+[  173.162712] CPU: 2 PID: 731 Comm: ndroid.systemui Tainted: G S
+          5.2.0-rc5-00110-g6751c43d94d6 #447
+[  173.162721] Hardware name: HiKey960 (DT)
+[  173.171194] caller is try_to_wake_up+0x3e4/0x788
+[  173.179605] Call trace:
+[  173.179617]  dump_backtrace+0x0/0x140
+[  173.179626]  show_stack+0x14/0x20
+[  173.179638]  dump_stack+0x9c/0xc4
+[  173.179649]  debug_smp_processor_id+0x148/0x150
+[  173.179659]  try_to_wake_up+0x3e4/0x788
+[  173.179669]  wake_up_q+0x5c/0x98
+[  173.179681]  futex_wake+0x170/0x1a8
+[  173.179696]  do_futex+0x560/0xf30
+[  173.284541]  __arm64_sys_futex+0xfc/0x148
+[  173.288570]  el0_svc_common.constprop.0+0x64/0x188
+[  173.293371]  el0_svc_handler+0x28/0x78
+[  173.297131]  el0_svc+0x8/0xc
+[  173.300045] CPU: 0 PID: 1258 Comm: Binder:363_5 Tainted: G S
+        5.2.0-rc5-00110-g6751c43d94d6 #447
+[  173.301130] BUG: using smp_processor_id() in preemptible [00000000]
+code: ndroid.systemui/731
+[  173.310074] Hardware name: HiKey960 (DT)
+[  173.310084] Call trace:
+[  173.310112]  dump_backtrace+0x0/0x140
+[  173.310131]  show_stack+0x14/0x20
+[  173.318685] caller is try_to_wake_up+0x3e4/0x788
+[  173.322583]  dump_stack+0x9c/0xc4
+[  173.322595]  debug_smp_processor_id+0x148/0x150
+[  173.322605]  try_to_wake_up+0x3e4/0x788
+[  173.322615]  wake_up_q+0x5c/0x98
+[  173.322628]  futex_wake+0x170/0x1a8
+[  173.322641]  do_futex+0x560/0xf30
+[  173.358367]  __arm64_sys_futex+0xfc/0x148
+[  173.362397]  el0_svc_common.constprop.0+0x64/0x188
+[  173.367199]  el0_svc_handler+0x28/0x78
+[  173.370956]  el0_svc+0x8/0xc
 
-When I try to build and run the latest mainline kernel, it Oops loading i915
-module:
+Reverting aacedf26fb76 ("sched/core: Optimize try_to_wake_up() for
+local wakeups") seems to quiet down these warnings.
 
-BUG: unable to handle page fault for address: ffffffff9edc1598
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0003) - permissions violation
-PGD 1a20c067 P4D 1a20c067 PUD 1a20d063 PMD 8000000019e000e1 
-Oops: 0003 [#1] SMP PTI
+I've just bisected this down (and am about to crash for the night), so
+I've not had much time to look at what a fix might be, but I wanted to
+raise it with you.
 
-The complete log is attached.
+If you have suggestions for patches to try, I'll happily do so in the morning!
 
-Bisection tells "x86/asm: Pin sensitive CR4 bits" (873d50d58) is the first "bad"
-commit.  I can revert it and also "x86/asm: Pin sensitive CR0 bits" (8dbec27a2)
-to make the kernel "seems to" work.
-
-I'm not a kernel expert so I can't tell if there is a bug in Kees' patch, or his
-patch exploits a bug in i915 or module loader.
-
-My CPU is an i3-3217u.  If a kdump is helpful I'll try to gather it.
--- 
-Xi Ruoyao <xry111@mengyan1223.wang>
-School of Aerospace Science and Technology, Xidian University
-
---=-8sC1bMl1WM6oK8eaXuPt
-Content-Disposition: attachment; filename="log"
-Content-Type: text/plain; name="log"; charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-SnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiBCVUc6IHVuYWJsZSB0byBoYW5k
-bGUgcGFnZSBmYXVsdCBmb3IgYWRkcmVzczogZmZmZmZmZmY5ZWRjMTU5OApKdWwgMTAgMTI6NTg6
-NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6ICNQRjogc3VwZXJ2aXNvciB3cml0ZSBhY2Nlc3MgaW4g
-a2VybmVsIG1vZGUKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiAjUEY6IGVy
-cm9yX2NvZGUoMHgwMDAzKSAtIHBlcm1pc3Npb25zIHZpb2xhdGlvbgpKdWwgMTAgMTI6NTg6NTIg
-eHJ5MTExLWxhcHRvcCBrZXJuZWw6IFBHRCAxYTIwYzA2NyBQNEQgMWEyMGMwNjcgUFVEIDFhMjBk
-MDYzIFBNRCA4MDAwMDAwMDE5ZTAwMGUxIApKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBr
-ZXJuZWw6IE9vcHM6IDAwMDMgWyMxXSBTTVAgUFRJCkp1bCAxMCAxMjo1ODo1MiB4cnkxMTEtbGFw
-dG9wIGtlcm5lbDogQ1BVOiAyIFBJRDogMTUxIENvbW06IHN5c3RlbWQtdWRldmQgTm90IHRhaW50
-ZWQgNS4yLjArICM1NApKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IEhhcmR3
-YXJlIG5hbWU6IExFTk9WTyAyMDE3NS9JTlZBTElELCBCSU9TIDY2Q041NFdXIDAxLzIxLzIwMTMK
-SnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiBSSVA6IDAwMTA6c3RhdGljX2tl
-eV9zZXRfbW9kLmlzcmEuMCsweDEwLzB4MzAKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Ag
-a2VybmVsOiBDb2RlOiA0OCA4YiAzNyA4MyBlNiAwMyA0OCAwOSBjNiA0OCA4OSAzNyBjMyA2NiA2
-NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMCAwMCA2NiA5MCA0OCA4OSBmMCBhOCAwMyA3NSAwZCA0
-OCA4YiAzNyA4MyBlNiAwMyA0OCAwOSBjNiA8NDg+IDg5IDM3IGMzIDBmIDBiIDQ4IDhiIDM3IDgz
-IGU2IDAzIDQ4IDA5IGM2IDQ4IDg5IDM3IGMzIDY2IDY2IDJlCkp1bCAxMCAxMjo1ODo1MiB4cnkx
-MTEtbGFwdG9wIGtlcm5lbDogUlNQOiAwMDAwOmZmZmZhNjA2YzAzMmJjOTggRUZMQUdTOiAwMDAx
-MDI4NgpKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IFJBWDogZmZmZjk5ODFk
-ZGNlMzBhMCBSQlg6IGZmZmZmZmZmOWVkYzE1OTAgUkNYOiAwMDAwMDAwMDAwMDAwMDAwCkp1bCAx
-MCAxMjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5lbDogUkRYOiAwMDAwMDAwMDAwMDAwMDIwIFJT
-STogZmZmZjk5ODFkZGNlMzBhMCBSREk6IGZmZmZmZmZmOWVkYzE1OTgKSnVsIDEwIDEyOjU4OjUy
-IHhyeTExMS1sYXB0b3Aga2VybmVsOiBSQlA6IGZmZmZmZmZmYzA2ZjQwMDAgUjA4OiBmZmZmOTk4
-MWU2MDAzOTgwIFIwOTogZmZmZjk5ODFkZGNlMzBhMApKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxh
-cHRvcCBrZXJuZWw6IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IDAwMDAwMDAwMDAwMjhiNTYg
-UjEyOiBmZmZmZmZmZmMwNmY4ODgwCkp1bCAxMCAxMjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5l
-bDogUjEzOiBmZmZmOTk4MWRkY2UzMDgwIFIxNDogZmZmZmZmZmZjMDZmNDAwOCBSMTU6IGZmZmZm
-ZmZmYzA2ZjZkYzAKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiBGUzogIDAw
-MDA3Zjk5MmRkOWE2ODAoMDAwMCkgR1M6ZmZmZjk5ODFlNzA4MDAwMCgwMDAwKSBrbmxHUzowMDAw
-MDAwMDAwMDAwMDAwCkp1bCAxMCAxMjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5lbDogQ1M6ICAw
-MDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMwpKdWwgMTAgMTI6NTg6
-NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IENSMjogZmZmZmZmZmY5ZWRjMTU5OCBDUjM6IDAwMDAw
-MDAyMjMzYWEwMDEgQ1I0OiAwMDAwMDAwMDAwMTYwNmUwCkp1bCAxMCAxMjo1ODo1MiB4cnkxMTEt
-bGFwdG9wIGtlcm5lbDogQ2FsbCBUcmFjZToKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Ag
-a2VybmVsOiAganVtcF9sYWJlbF9tb2R1bGVfbm90aWZ5KzB4MWU3LzB4MmIwCkp1bCAxMCAxMjo1
-ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5lbDogIG5vdGlmaWVyX2NhbGxfY2hhaW4rMHg0NC8weDcw
-Ckp1bCAxMCAxMjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5lbDogIGJsb2NraW5nX25vdGlmaWVy
-X2NhbGxfY2hhaW4rMHg0My8weDYwCkp1bCAxMCAxMjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5l
-bDogIGxvYWRfbW9kdWxlKzB4MWJjYi8weDI0OTAKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0
-b3Aga2VybmVsOiAgPyB2ZnNfcmVhZCsweDExZi8weDE1MApKdWwgMTAgMTI6NTg6NTIgeHJ5MTEx
-LWxhcHRvcCBrZXJuZWw6ICA/IF9fZG9fc3lzX2Zpbml0X21vZHVsZSsweGJmLzB4ZTAKSnVsIDEw
-IDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiAgX19kb19zeXNfZmluaXRfbW9kdWxlKzB4
-YmYvMHhlMApKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6ICBkb19zeXNjYWxs
-XzY0KzB4NDMvMHgxMTAKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiAgZW50
-cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NDQvMHhhOQpKdWwgMTAgMTI6NTg6NTIgeHJ5
-MTExLWxhcHRvcCBrZXJuZWw6IFJJUDogMDAzMzoweDdmOTkyZTJlZWFmOQpKdWwgMTAgMTI6NTg6
-NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IENvZGU6IDAwIGMzIDY2IDJlIDBmIDFmIDg0IDAwIDAw
-IDAwIDAwIDAwIDBmIDFmIDQ0IDAwIDAwIDQ4IDg5IGY4IDQ4IDg5IGY3IDQ4IDg5IGQ2IDQ4IDg5
-IGNhIDRkIDg5IGMyIDRkIDg5IGM4IDRjIDhiIDRjIDI0IDA4IDBmIDA1IDw0OD4gM2QgMDEgZjAg
-ZmYgZmYgNzMgMDEgYzMgNDggOGIgMGQgNjcgNzMgMGQgMDAgZjcgZDggNjQgODkgMDEgNDgKSnVs
-IDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiBSU1A6IDAwMmI6MDAwMDdmZmNhMjIw
-ZDI4OCBFRkxBR1M6IDAwMDAwMjQ2IE9SSUdfUkFYOiAwMDAwMDAwMDAwMDAwMTM5Ckp1bCAxMCAx
-Mjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5lbDogUkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDog
-MDAwMDAwMDAwMDliOGRhMCBSQ1g6IDAwMDA3Zjk5MmUyZWVhZjkKSnVsIDEwIDEyOjU4OjUyIHhy
-eTExMS1sYXB0b3Aga2VybmVsOiBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAwN2Y5OTJl
-NDY0ODg1IFJESTogMDAwMDAwMDAwMDAwMDAxMApKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRv
-cCBrZXJuZWw6IFJCUDogMDAwMDAwMDAwMDAyMDAwMCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5
-OiAwMDAwMDAwMDAwOWM0NWMwCkp1bCAxMCAxMjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5lbDog
-UjEwOiAwMDAwMDAwMDAwMDAwMDEwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDA3Zjk5
-MmU0NjQ4ODUKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiBSMTM6IDAwMDAw
-MDAwMDAwMDAwMDAgUjE0OiAwMDAwMDAwMDAwOWFjYzUwIFIxNTogMDAwMDAwMDAwMDliOGRhMApK
-dWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IE1vZHVsZXMgbGlua2VkIGluOiBr
-dm1faW50ZWwoKykga3ZtIGlycWJ5cGFzcyBoaWRfc2Vuc29yX2h1YiBjcmMzMl9wY2xtdWwgbWZk
-X2NvcmUgaTJjX2k4MDEgc25kX2hkYV9pbnRlbCBpOTE1KCspIGludGVsX2d0dCBzbmRfaGRhX2Nv
-ZGVjIGkyY19hbGdvX2JpdCBzbmRfaHdkZXAgc25kX2hkYV9jb3JlIGRybV9rbXNfaGVscGVyIHNu
-ZF9wY20gc3lzY29weWFyZWEgc3lzZmlsbHJlY3Qgc3lzaW1nYmx0IGZiX3N5c19mb3BzIGRybSBo
-aWRfbXVsdGl0b3VjaCBpZGVhcGFkX2xhcHRvcCBzcGFyc2Vfa2V5bWFwIGhpZF9nZW5lcmljIHdt
-aSBlZml2YXJmcwpKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IENSMjogZmZm
-ZmZmZmY5ZWRjMTU5OApKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IC0tLVsg
-ZW5kIHRyYWNlIGRiZWI3ZTY2ZGFhOWJkY2EgXS0tLQpKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxh
-cHRvcCBrZXJuZWw6IFJJUDogMDAxMDpzdGF0aWNfa2V5X3NldF9tb2QuaXNyYS4wKzB4MTAvMHgz
-MApKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IENvZGU6IDQ4IDhiIDM3IDgz
-IGU2IDAzIDQ4IDA5IGM2IDQ4IDg5IDM3IGMzIDY2IDY2IDJlIDBmIDFmIDg0IDAwIDAwIDAwIDAw
-IDAwIDY2IDkwIDQ4IDg5IGYwIGE4IDAzIDc1IDBkIDQ4IDhiIDM3IDgzIGU2IDAzIDQ4IDA5IGM2
-IDw0OD4gODkgMzcgYzMgMGYgMGIgNDggOGIgMzcgODMgZTYgMDMgNDggMDkgYzYgNDggODkgMzcg
-YzMgNjYgNjYgMmUKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiBSU1A6IDAw
-MDA6ZmZmZmE2MDZjMDMyYmM5OCBFRkxBR1M6IDAwMDEwMjg2Ckp1bCAxMCAxMjo1ODo1MiB4cnkx
-MTEtbGFwdG9wIGtlcm5lbDogUkFYOiBmZmZmOTk4MWRkY2UzMGEwIFJCWDogZmZmZmZmZmY5ZWRj
-MTU5MCBSQ1g6IDAwMDAwMDAwMDAwMDAwMDAKSnVsIDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Ag
-a2VybmVsOiBSRFg6IDAwMDAwMDAwMDAwMDAwMjAgUlNJOiBmZmZmOTk4MWRkY2UzMGEwIFJESTog
-ZmZmZmZmZmY5ZWRjMTU5OApKdWwgMTAgMTI6NTg6NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IFJC
-UDogZmZmZmZmZmZjMDZmNDAwMCBSMDg6IGZmZmY5OTgxZTYwMDM5ODAgUjA5OiBmZmZmOTk4MWRk
-Y2UzMGEwCkp1bCAxMCAxMjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5lbDogUjEwOiAwMDAwMDAw
-MDAwMDAwMDAwIFIxMTogMDAwMDAwMDAwMDAyOGI1NiBSMTI6IGZmZmZmZmZmYzA2Zjg4ODAKSnVs
-IDEwIDEyOjU4OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiBSMTM6IGZmZmY5OTgxZGRjZTMwODAg
-UjE0OiBmZmZmZmZmZmMwNmY0MDA4IFIxNTogZmZmZmZmZmZjMDZmNmRjMApKdWwgMTAgMTI6NTg6
-NTIgeHJ5MTExLWxhcHRvcCBrZXJuZWw6IEZTOiAgMDAwMDdmOTkyZGQ5YTY4MCgwMDAwKSBHUzpm
-ZmZmOTk4MWU3MDgwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAKSnVsIDEwIDEyOjU4
-OjUyIHhyeTExMS1sYXB0b3Aga2VybmVsOiBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1Iw
-OiAwMDAwMDAwMDgwMDUwMDMzCkp1bCAxMCAxMjo1ODo1MiB4cnkxMTEtbGFwdG9wIGtlcm5lbDog
-Q1IyOiBmZmZmZmZmZjllZGMxNTk4IENSMzogMDAwMDAwMDIyMzNhYTAwMSBDUjQ6IDAwMDAwMDAw
-MDAxNjA2ZTAK
-
-
---=-8sC1bMl1WM6oK8eaXuPt--
-
+thanks
+-john
