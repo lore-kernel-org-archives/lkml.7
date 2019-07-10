@@ -2,89 +2,115 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E58C73C64
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC692C73C64
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F9220651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C7A20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfGJMLZ (ORCPT
+        id S1727289AbfGJMMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:11:25 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:36118 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfGJMLZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:11:25 -0400
-Received: from ramsan ([84.194.98.4])
-        by baptiste.telenet-ops.be with bizsmtp
-        id b0BN2000K05gfCL010BNyC; Wed, 10 Jul 2019 14:11:22 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hlBRS-0004Ke-82; Wed, 10 Jul 2019 14:11:22 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hlBRS-0002us-6o; Wed, 10 Jul 2019 14:11:22 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [git pull] m68k updates for 5.3 (take two)
-Date:   Wed, 10 Jul 2019 14:11:20 +0200
-Message-Id: <20190710121120.11156-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Jul 2019 08:12:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36076 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725911AbfGJMMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 08:12:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9FB0EAC1E;
+        Wed, 10 Jul 2019 12:12:36 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id F3A27E0E06; Wed, 10 Jul 2019 14:12:31 +0200 (CEST)
+Date:   Wed, 10 Jul 2019 14:12:31 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 04/15] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190710121231.GA5700@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
+ <20190702122521.GN2250@nanopsycho>
+ <20190702145241.GD20101@unicorn.suse.cz>
+ <20190703084151.GR2250@nanopsycho>
+ <20190708172729.GC24474@unicorn.suse.cz>
+ <20190708192629.GD2282@nanopsycho.orion>
+ <20190708202219.GE24474@unicorn.suse.cz>
+ <20190709134212.GD2301@nanopsycho.orion>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709134212.GD2301@nanopsycho.orion>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi Linus,
+On Tue, Jul 09, 2019 at 03:42:12PM +0200, Jiri Pirko wrote:
+> Mon, Jul 08, 2019 at 10:22:19PM CEST, mkubecek@suse.cz wrote:
+> >On Mon, Jul 08, 2019 at 09:26:29PM +0200, Jiri Pirko wrote:
+> >> Mon, Jul 08, 2019 at 07:27:29PM CEST, mkubecek@suse.cz wrote:
+> >> >
+> >> >There are two reasons for this design. First is to reduce the number of
+> >> >requests needed to get the information. This is not so much a problem of
+> >> >ethtool itself; the only existing commands that would result in multiple
+> >> >request messages would be "ethtool <dev>" and "ethtool -s <dev>". Maybe
+> >> >also "ethtool -x/-X <dev>" but even if the indirection table and hash
+> >> >key have different bits assigned now, they don't have to be split even
+> >> >if we split other commands. It may be bigger problem for daemons wanting
+> >> >to keep track of system configuration which would have to issue many
+> >> >requests whenever a new device appears.
+> >> >
+> >> >Second reason is that with 8-bit genetlink command/message id, the space
+> >> >is not as infinite as it might seem. I counted quickly, right now the
+> >> >full series uses 14 ids for kernel messages, with split you propose it
+> >> >would most likely grow to 44. For full implementation of all ethtool
+> >> >functionality, we could get to ~60 ids. It's still only 1/4 of the
+> >> >available space but it's not clear what the future development will look
+> >> >like. We would certainly need to be careful not to start allocating new
+> >> >commands for single parameters and try to be foreseeing about what can
+> >> >be grouped together. But we will need to do that in any case.
+> >> >
+> >> >On kernel side, splitting existing messages would make some things a bit
+> >> >easier. It would also reduce the number of scenarios where only part of
+> >> >requested information is available or only part of a SET request fails.
+> >> 
+> >> Okay, I got your point. So why don't we look at if from the other angle.
+> >> Why don't we have only single get/set command that would be in general
+> >> used to get/set ALL info from/to the kernel. Where we can have these
+> >> bits (perhaps rather varlen bitfield) to for user to indicate which data
+> >> is he interested in? This scales. The other commands would be
+> >> just for action.
+> >> 
+> >> Something like RTM_GETLINK/RTM_SETLINK. Makes sense?
+> >
+> >It's certainly an option but at the first glance it seems as just moving
+> >what I tried to avoid one level lower. It would work around the u8 issue
+> >(but as Johannes pointed out, we can handle it with genetlink when/if
+> >the time comes). We would almost certainly have to split the replies
+> >into multiple messages to keep the packet size reasonable. I'll have to
+> >think more about the consequences for both kernel and userspace.
+> >
+> >My gut feeling is that out of the two extreme options (one universal
+> >message type and message types corresponding to current infomask bits),
+> >the latter is more appealing. After all, ethtool has been gathering
+> >features that would need those ~60 message types for 20 years.
+> 
+> Yeah, but I think that we have to do one or another. Anything in between
+> makes the code complex and uapi confusing. Let's start clean :)
 
-The following changes since commit 69878ef47562f32e02d0b7975c990e1c0339320d:
+I'll split the messages for v7.
 
-  m68k: Implement arch_dma_prep_coherent() (2019-07-01 11:17:00 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.3-tag2
-
-for you to fetch changes up to f28a1f16135c9c6366f3d3f20f2e58aefc99afa0:
-
-  m68k: Don't select ARCH_HAS_DMA_PREP_COHERENT for nommu or coldfire (2019-07-09 09:13:24 +0200)
-
-----------------------------------------------------------------
-m68k updates for v5.3 (take two)
-
-  - Don't select ARCH_HAS_DMA_PREP_COHERENT for nommu or coldfire.
-
-This is a fix for an issue detected in next, to avoid introducing build
-failures when merging Christoph's dma-mapping tree later.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Christoph Hellwig (1):
-      m68k: Don't select ARCH_HAS_DMA_PREP_COHERENT for nommu or coldfire
-
- arch/m68k/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Michal
