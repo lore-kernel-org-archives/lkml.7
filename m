@@ -2,121 +2,97 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07787C73C66
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36397C73C66
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B0E2082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hzt+iDud"
+	by mail.kernel.org (Postfix) with ESMTP id 02A4A2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562726773;
+	bh=jzS0lWGubRhHz6e7Xx7OxsahUS3AdhKlhXd4MJKB7us=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y08Uz0TFPJF36HVrOLZGZPf/U2K00iPTiLYFps8AyUMfVcvNjrH13lKrYZ/TiMDzr
+	 GWTUPwDvtbqG33qnvwOwboa88eZoB8BGEAG6mKcuoNPfU/VD4htf7/65g32fwMYGHc
+	 ZMXuPNvPDfi7KBwIzWbsuJolzBQ6HuDrP+6F+aYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbfGJCoG (ORCPT
+        id S1726658AbfGJCqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 22:44:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42749 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfGJCoG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 22:44:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay6so396269plb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 19:44:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=6+LJGvw+qjKoO8SZDZ3CnbeCqyYBeV92bc9prl1ddmQ=;
-        b=Hzt+iDudzrsOkLAbFzQPF4ucXk+e+dS1MtkefrhpjARbtkPySZkO4PjJ7X3K7n/IER
-         34d0otLaIpDweuSre9qtRGsTKofIMhe7/neLDAE+Uas0A5V6pbK3jXaPX4K2Pjo67Uj4
-         wU1NifVOAgDX3xJYBlCIE9psPsRdF7IFzc4+COT5iDph1XtFkFhNvPKOUoPI+IK19q0E
-         ivRkw7BrYOe/uUCpgWKtHcVzZFbAUl/wlErOctpAreBNdXzAyVcMFcEPmr1SuWteS2kQ
-         NkPvfb3d2WUcxttWq6JQzdUc+jJQLMMMVhI58SZaOk1h8x5JyDnPuidFd2KGjKLdNnve
-         4N5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=6+LJGvw+qjKoO8SZDZ3CnbeCqyYBeV92bc9prl1ddmQ=;
-        b=dmzYB8TL2Mw4NkTJfXvJCV3fJ77izNH/o9PZu1jP8o+mbQGKSc6e2pc63SeX27PoOg
-         WxYgne6VLKoHA/Tj1i8D/P8DsxJIpvUDtv6F+75+/314zE5R3QNJDvU4aGAprSSVmTZc
-         sBUBnFivta7qviksdoxto/UPWYEEl+EAkDkcatFhQUKYiU0jPAlP/q5gZwPPXuGGP4AK
-         5CaOTtw3HC79u3MdpWx7pB8/6UQf0FhlJ9HAIftYim/msC0pb8CN1ew7wlL6Qi7Z5VkP
-         5R1O1Yi9F92K2InLAiqaXdsx+7kolzQ62Y6dgwRbu8x9DKGrKujeibmHmxWfFG6TNIJG
-         Za1A==
-X-Gm-Message-State: APjAAAVdGMSd98Gj4UzX8B1U/MqSWLQvK5iSpoxqkEOBh6Fd+LhV1zpp
-        REzyW8kumjNCnDichIeHPuw5Zw==
-X-Google-Smtp-Source: APXvYqzOg8rEPuco6fwSJeluxLLtj6pJ6MbzfjL9lhXvq8fqmKHjrof5XeFuQ1s1JzW87T/TC1BWBw==
-X-Received: by 2002:a17:902:e613:: with SMTP id cm19mr33894730plb.299.1562726644795;
-        Tue, 09 Jul 2019 19:44:04 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id o2sm349868pgp.74.2019.07.09.19.44.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 19:44:04 -0700 (PDT)
-Date:   Tue, 9 Jul 2019 19:44:03 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [patch] x86/boot: Fix memory leak in default_get_smp_config()
-Message-ID: <alpine.DEB.2.21.1907091942570.28240@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
+        Tue, 9 Jul 2019 22:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfGJCqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 22:46:11 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C77F2080C;
+        Wed, 10 Jul 2019 02:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562726770;
+        bh=jzS0lWGubRhHz6e7Xx7OxsahUS3AdhKlhXd4MJKB7us=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ch1ucHt0/BU44a0NIoj8vKCczzUNhMuM6VJPjqbrpNUcFEjvZHa2pGeouyVvqUN7P
+         8YSJhi/BDBMoOlQJEbuQujnEWSr0eHFovYYtsrltNncNCEiYVbkgTTeM6+kNX6G/Db
+         i+Nvpln/2E6HiKPBjliaDDum/g3nPqI3VQRwgzho=
+Date:   Wed, 10 Jul 2019 11:46:04 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: kprobes sanity test fails on next-20190708
+Message-Id: <20190710114604.8e753774a93ece9d3e753646@kernel.org>
+In-Reply-To: <20190709114045.091c94f3@gandalf.local.home>
+References: <20190708141136.GA3239@localhost.localdomain>
+        <a19faa89-d318-fe21-9952-b0f842240ba5@arm.com>
+        <CADYN=9LBQ4NYFe8BPguJmxJFMiAJ405AZNU7W6gHXLSrZOSgTA@mail.gmail.com>
+        <20190709213657.1447f508bd6b72495ec225d9@gmail.com>
+        <20190709112548.25edc9a7@gandalf.local.home>
+        <20190709153755.GB10123@lakrids.cambridge.arm.com>
+        <20190709114045.091c94f3@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When default_get_smp_config() is called with early == 1 and mpf->feature1
-is non-zero, mpf is leaked because the return path does not do
-early_memunmap().
+On Tue, 9 Jul 2019 11:40:45 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Fix this and share a common exit routine.
+> On Tue, 9 Jul 2019 16:37:55 +0100
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> > > I agree. I pushed to my repo in the for-next branch. Care to test that?
+> > > 
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git  
+> > 
+> > I've just given that a spin with KPROBES and KPROBES_SANITY_TEST
+> > selected, and it boots cleanly for me. FWIW:
+> > 
+> > Tested-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> Thanks, then I'm guessing no more changes need to be made.
+> 
+> I usually don't rebase my for-next branch for tags, but since I just
+> pushed it, I guess I can add this one ;-)
 
-Fixes: 5997efb96756 ("x86/boot: Use memremap() to map the MPF and MPC
-data")
-Reported-by: Cfir Cohen <cfir@google.com>
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- arch/x86/kernel/mpparse.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Thanks Steve!
 
-diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-index f1c5eb99d445..7a7055056b0d 100644
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -547,17 +547,15 @@ void __init default_get_smp_config(unsigned int early)
- 			 * local APIC has default address
- 			 */
- 			mp_lapic_addr = APIC_DEFAULT_PHYS_BASE;
--			return;
-+			goto out;
- 		}
- 
- 		pr_info("Default MP configuration #%d\n", mpf->feature1);
- 		construct_default_ISA_mptable(mpf->feature1);
- 
- 	} else if (mpf->physptr) {
--		if (check_physptr(mpf, early)) {
--			early_memunmap(mpf, sizeof(*mpf));
--			return;
--		}
-+		if (check_physptr(mpf, early))
-+			goto out;
- 	} else
- 		BUG();
- 
-@@ -566,7 +564,7 @@ void __init default_get_smp_config(unsigned int early)
- 	/*
- 	 * Only use the first configuration found.
- 	 */
--
-+out:
- 	early_memunmap(mpf, sizeof(*mpf));
- }
- 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
