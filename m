@@ -2,103 +2,104 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08F7C74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C634BC74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7787D208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AD5208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfGJVTw (ORCPT
+        id S1727737AbfGJVUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:19:52 -0400
-Received: from www62.your-server.de ([213.133.104.62]:45558 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfGJVTw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:19:52 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hlK08-0002zM-9q; Wed, 10 Jul 2019 23:19:44 +0200
-Received: from [178.193.45.231] (helo=linux.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hlK08-00021W-2p; Wed, 10 Jul 2019 23:19:44 +0200
-Subject: Re: [PATCH V2 1/1 (was 0/1 by accident)] tools/dtrace: initial
- implementation of DTrace
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
+        Wed, 10 Jul 2019 17:20:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35912 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727220AbfGJVUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 17:20:19 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C4F8F30B259D;
+        Wed, 10 Jul 2019 21:20:18 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-122-237.rdu2.redhat.com [10.10.122.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 153CB60BFB;
+        Wed, 10 Jul 2019 21:20:17 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Chris Mason <clm@fb.com>, brendan.d.gregg@gmail.com,
-        davem@davemloft.net
-References: <201907101537.x6AFboMR015946@aserv0122.oracle.com>
- <201907101542.x6AFgOO9012232@userv0121.oracle.com>
- <20190710181227.GA9925@oracle.com>
- <c7f15d1d-1696-4d95-1729-4c4e97bdc43e@iogearbox.net>
- <20190710143048.3923d1d9@lwn.net>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <1de27d29-65bb-89d3-9fca-7c452cd66934@iogearbox.net>
-Date:   Wed, 10 Jul 2019 23:19:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Michael Forney <mforney@mforney.org>
+Subject: [PATCH] objtool: Rename elf_open() to prevent conflict with libelf from elftoolchain
+Date:   Wed, 10 Jul 2019 16:20:11 -0500
+Message-Id: <7ce2d1b35665edf19fd0eb6fbc0b17b81a48e62f.1562793604.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190710143048.3923d1d9@lwn.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25506/Wed Jul 10 10:11:44 2019)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 10 Jul 2019 21:20:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/10/2019 10:30 PM, Jonathan Corbet wrote:
-> On Wed, 10 Jul 2019 21:32:25 +0200
-> Daniel Borkmann <daniel@iogearbox.net> wrote:
-> 
->> Looks like you missed Brendan Gregg's prior feedback from v1 [0]. I haven't
->> seen a strong compelling argument for why this needs to reside in the kernel
->> tree given we also have all the other tracing tools and many of which also
->> rely on BPF such as bcc, bpftrace, ply, systemtap, sysdig, lttng to just name
->> a few.
-> 
-> So I'm just watching from the sidelines here, but I do feel the need to
-> point out that Kris appears to be trying to follow the previous feedback
-> he got from Alexei, where creating tools/dtrace is exactly what he was
-> told to do:
-> 
->   https://lwn.net/ml/netdev/20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com/
-> 
-> Now he's being told the exact opposite.  Not the best experience for
-> somebody who is trying to make the kernel better.
+From: Michael Forney <mforney@mforney.org>
 
-Ugh, agree, sorry for the misleading direction. Alexei is currently offgrid
-this week, he might comment later.
+The elftoolchain version of libelf has a function named elf_open().
 
-It has nothing to do with making the _kernel_ better, it's a /user space/ front
-end for the existing kernel infrastructure like many of the other tracers out
-there. Don't get me wrong, adding the missing /kernel parts/ for it is a totally
-different subject [and _that_ is what is making the kernel better, not the former].
-Hypothetical question: does it make the _kernel_ better if we suddenly add a huge
-and complex project like tools/mysql/ to the kernel tree? Nope.
+The function name isn't quite accurate anyway, since it also reads all
+the ELF data.  Rename it to elf_read(), which is more accurate.
 
-> There are still people interested in DTrace out there.  How would you
-> recommend that Kris proceed at this point?
+[ jpoimboe: rename to elf_read(); write commit description ]
 
-My recommendation to proceed is to maintain the dtrace user space tooling in
-its own separate project like the vast majority of all the other tracing projects
-(see also the other advantages that Steven pointed out from his experience), and
-extend the kernel bits whenever needed.
+Signed-off-by: Michael Forney <mforney@mforney.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ tools/objtool/check.c | 2 +-
+ tools/objtool/elf.c   | 2 +-
+ tools/objtool/elf.h   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
-Daniel
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 172f99195726..de8f40730b37 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2407,7 +2407,7 @@ int check(const char *_objname, bool orc)
+ 
+ 	objname = _objname;
+ 
+-	file.elf = elf_open(objname, orc ? O_RDWR : O_RDONLY);
++	file.elf = elf_read(objname, orc ? O_RDWR : O_RDONLY);
+ 	if (!file.elf)
+ 		return 1;
+ 
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index e99e1be19ad9..1121926bdc1b 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -401,7 +401,7 @@ static int read_relas(struct elf *elf)
+ 	return 0;
+ }
+ 
+-struct elf *elf_open(const char *name, int flags)
++struct elf *elf_read(const char *name, int flags)
+ {
+ 	struct elf *elf;
+ 	Elf_Cmd cmd;
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index e44ca5d51871..2fe0b0aa741d 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -74,7 +74,7 @@ struct elf {
+ };
+ 
+ 
+-struct elf *elf_open(const char *name, int flags);
++struct elf *elf_read(const char *name, int flags);
+ struct section *find_section_by_name(struct elf *elf, const char *name);
+ struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset);
+ struct symbol *find_symbol_by_name(struct elf *elf, const char *name);
+-- 
+2.20.1
+
