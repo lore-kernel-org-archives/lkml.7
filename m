@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26665C74A23
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BCEC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4AF20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7831F20861
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfGJNoU (ORCPT
+        id S1727682AbfGJNoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:44:20 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:51721 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfGJNoS (ORCPT
+        Wed, 10 Jul 2019 09:44:23 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:34403 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727577AbfGJNoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:44:18 -0400
+        Wed, 10 Jul 2019 09:44:20 -0400
 Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
         (Authenticated sender: gregory.clement@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A532C240008;
-        Wed, 10 Jul 2019 13:44:13 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 01B67100007;
+        Wed, 10 Jul 2019 13:44:15 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         Mike Turquette <mturquette@baylibre.com>,
@@ -38,9 +38,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Antoine Tenart <antoine.tenart@bootlin.com>,
         =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
         Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: [PATCH v7 2/6] clk: mvebu: add helper file for Armada AP and CP clocks
-Date:   Wed, 10 Jul 2019 15:43:42 +0200
-Message-Id: <20190710134346.30239-3-gregory.clement@bootlin.com>
+Subject: [PATCH v7 3/6] clk: mvebu: add CPU clock driver for Armada 7K/8K
+Date:   Wed, 10 Jul 2019 15:43:43 +0200
+Message-Id: <20190710134346.30239-4-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190710134346.30239-1-gregory.clement@bootlin.com>
 References: <20190710134346.30239-1-gregory.clement@bootlin.com>
@@ -51,297 +51,312 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clock drivers for Armada AP and Armada CP use the same function to
-generate unique clock name. A third drivers is coming with the same
-need, so it's time to move this function in a common file.
+The CPU frequency is managed at the AP level for the Armada 7K/8K. The
+CPU frequency is modified by cluster: the CPUs of the same cluster have
+the same frequency.
+
+This patch adds the clock driver that will be used by CPUFreq, it is
+based on the work of Omri Itach <omrii@marvell.com>.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- drivers/clk/mvebu/Kconfig                   |  5 ++++
- drivers/clk/mvebu/Makefile                  |  1 +
- drivers/clk/mvebu/ap806-system-controller.c | 24 ++++------------
- drivers/clk/mvebu/armada_ap_cp_helper.c     | 30 +++++++++++++++++++
- drivers/clk/mvebu/armada_ap_cp_helper.h     | 11 +++++++
- drivers/clk/mvebu/cp110-system-controller.c | 32 ++++++---------------
- 6 files changed, 61 insertions(+), 42 deletions(-)
- create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
- create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
+ drivers/clk/mvebu/Kconfig      |   3 +
+ drivers/clk/mvebu/Makefile     |   1 +
+ drivers/clk/mvebu/ap-cpu-clk.c | 259 +++++++++++++++++++++++++++++++++
+ 3 files changed, 263 insertions(+)
+ create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
 
 diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index fddc8ac5faff..5492fae3f0ab 100644
+index 5492fae3f0ab..9d0b2f7cee21 100644
 --- a/drivers/clk/mvebu/Kconfig
 +++ b/drivers/clk/mvebu/Kconfig
-@@ -7,6 +7,9 @@ config MVEBU_CLK_CPU
- config MVEBU_CLK_COREDIV
+@@ -39,6 +39,9 @@ config ARMADA_AP806_SYSCON
  	bool
+ 	select ARMADA_AP_CP_HELPER
  
-+config ARMADA_AP_CP_HELPER
++config ARMADA_AP_CPU_CLK
 +	bool
 +
- config ARMADA_370_CLK
- 	bool
- 	select MVEBU_CLK_COMMON
-@@ -34,9 +37,11 @@ config ARMADA_XP_CLK
- 
- config ARMADA_AP806_SYSCON
- 	bool
-+	select ARMADA_AP_CP_HELPER
- 
  config ARMADA_CP110_SYSCON
  	bool
-+	select ARMADA_AP_CP_HELPER
- 
- config DOVE_CLK
- 	bool
+ 	select ARMADA_AP_CP_HELPER
 diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
-index 93ac3685271f..6638ad962ec1 100644
+index 6638ad962ec1..04464cef0f06 100644
 --- a/drivers/clk/mvebu/Makefile
 +++ b/drivers/clk/mvebu/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_MVEBU_CLK_COMMON)	+= common.o
- obj-$(CONFIG_MVEBU_CLK_CPU) 	+= clk-cpu.o
- obj-$(CONFIG_MVEBU_CLK_COREDIV)	+= clk-corediv.o
-+obj-$(CONFIG_ARMADA_AP_CP_HELPER) += armada_ap_cp_helper.o
- 
- obj-$(CONFIG_ARMADA_370_CLK)	+= armada-370.o
- obj-$(CONFIG_ARMADA_375_CLK)	+= armada-375.o
-diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
-index ea54a874bbda..0a58824ff053 100644
---- a/drivers/clk/mvebu/ap806-system-controller.c
-+++ b/drivers/clk/mvebu/ap806-system-controller.c
-@@ -10,11 +10,11 @@
- 
- #define pr_fmt(fmt) "ap806-system-controller: " fmt
- 
-+#include "armada_ap_cp_helper.h"
- #include <linux/clk-provider.h>
- #include <linux/mfd/syscon.h>
- #include <linux/init.h>
- #include <linux/of.h>
--#include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- 
-@@ -30,18 +30,6 @@ static struct clk_onecell_data ap806_clk_data = {
- 	.clk_num = AP806_CLK_NUM,
- };
- 
--static char *ap806_unique_name(struct device *dev, struct device_node *np,
--			       char *name)
--{
--	const __be32 *reg;
--	u64 addr;
--
--	reg = of_get_property(np, "reg", NULL);
--	addr = of_translate_address(np, reg);
--	return devm_kasprintf(dev, GFP_KERNEL, "%llx-%s",
--			(unsigned long long)addr, name);
--}
--
- static int ap806_syscon_common_probe(struct platform_device *pdev,
- 				     struct device_node *syscon_node)
- {
-@@ -109,7 +97,7 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 	cpuclk_freq *= 1000 * 1000;
- 
- 	/* CPU clocks depend on the Sample At Reset configuration */
--	name = ap806_unique_name(dev, syscon_node, "cpu-cluster-0");
-+	name = ap_cp_unique_name(dev, syscon_node, "cpu-cluster-0");
- 	ap806_clks[0] = clk_register_fixed_rate(dev, name, NULL,
- 						0, cpuclk_freq);
- 	if (IS_ERR(ap806_clks[0])) {
-@@ -117,7 +105,7 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 		goto fail0;
- 	}
- 
--	name = ap806_unique_name(dev, syscon_node, "cpu-cluster-1");
-+	name = ap_cp_unique_name(dev, syscon_node, "cpu-cluster-1");
- 	ap806_clks[1] = clk_register_fixed_rate(dev, name, NULL, 0,
- 						cpuclk_freq);
- 	if (IS_ERR(ap806_clks[1])) {
-@@ -126,7 +114,7 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 	}
- 
- 	/* Fixed clock is always 1200 Mhz */
--	fixedclk_name = ap806_unique_name(dev, syscon_node, "fixed");
-+	fixedclk_name = ap_cp_unique_name(dev, syscon_node, "fixed");
- 	ap806_clks[2] = clk_register_fixed_rate(dev, fixedclk_name, NULL,
- 						0, 1200 * 1000 * 1000);
- 	if (IS_ERR(ap806_clks[2])) {
-@@ -135,7 +123,7 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 	}
- 
- 	/* MSS Clock is fixed clock divided by 6 */
--	name = ap806_unique_name(dev, syscon_node, "mss");
-+	name = ap_cp_unique_name(dev, syscon_node, "mss");
- 	ap806_clks[3] = clk_register_fixed_factor(NULL, name, fixedclk_name,
- 						  0, 1, 6);
- 	if (IS_ERR(ap806_clks[3])) {
-@@ -144,7 +132,7 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 	}
- 
- 	/* SDIO(/eMMC) Clock is fixed clock divided by 3 */
--	name = ap806_unique_name(dev, syscon_node, "sdio");
-+	name = ap_cp_unique_name(dev, syscon_node, "sdio");
- 	ap806_clks[4] = clk_register_fixed_factor(NULL, name,
- 						  fixedclk_name,
- 						  0, 1, 3);
-diff --git a/drivers/clk/mvebu/armada_ap_cp_helper.c b/drivers/clk/mvebu/armada_ap_cp_helper.c
+@@ -13,6 +13,7 @@ obj-$(CONFIG_ARMADA_37XX_CLK)	+= armada-37xx-tbg.o
+ obj-$(CONFIG_ARMADA_37XX_CLK)	+= armada-37xx-periph.o
+ obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o mv98dx3236.o
+ obj-$(CONFIG_ARMADA_AP806_SYSCON) += ap806-system-controller.o
++obj-$(CONFIG_ARMADA_AP_CPU_CLK) += ap-cpu-clk.o
+ obj-$(CONFIG_ARMADA_CP110_SYSCON) += cp110-system-controller.o
+ obj-$(CONFIG_DOVE_CLK)		+= dove.o dove-divider.o
+ obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
+diff --git a/drivers/clk/mvebu/ap-cpu-clk.c b/drivers/clk/mvebu/ap-cpu-clk.c
 new file mode 100644
-index 000000000000..6a930f697ee5
+index 000000000000..e4cecb456884
 --- /dev/null
-+++ b/drivers/clk/mvebu/armada_ap_cp_helper.c
-@@ -0,0 +1,30 @@
++++ b/drivers/clk/mvebu/ap-cpu-clk.c
+@@ -0,0 +1,259 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Marvell Armada AP and CP110 helper
++ * Marvell Armada AP CPU Clock Controller
 + *
 + * Copyright (C) 2018 Marvell
 + *
++ * Omri Itach <omrii@marvell.com>
 + * Gregory Clement <gregory.clement@bootlin.com>
-+ *
 + */
 +
-+#include "armada_ap_cp_helper.h"
-+#include <linux/device.h>
++#define pr_fmt(fmt) "ap-cpu-clk: " fmt
++
++#include <linux/clk-provider.h>
++#include <linux/clk.h>
++#include <linux/mfd/syscon.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
-+
-+char *ap_cp_unique_name(struct device *dev, struct device_node *np,
-+			const char *name)
-+{
-+	const __be32 *reg;
-+	u64 addr;
-+
-+	/* Do not create a name if there is no clock */
-+	if (!name)
-+		return NULL;
-+
-+	reg = of_get_property(np, "reg", NULL);
-+	addr = of_translate_address(np, reg);
-+	return devm_kasprintf(dev, GFP_KERNEL, "%llx-%s",
-+			      (unsigned long long)addr, name);
-+}
-diff --git a/drivers/clk/mvebu/armada_ap_cp_helper.h b/drivers/clk/mvebu/armada_ap_cp_helper.h
-new file mode 100644
-index 000000000000..810af1e5dfa4
---- /dev/null
-+++ b/drivers/clk/mvebu/armada_ap_cp_helper.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+
-+#ifndef __ARMADA_AP_CP_HELPER_H
-+#define __ARMADA_AP_CP_HELPER_H
-+
-+struct device;
-+struct device_node;
-+
-+char *ap_cp_unique_name(struct device *dev, struct device_node *np,
-+			const char *name);
-+#endif
-diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-index b6de283f45e3..808463276145 100644
---- a/drivers/clk/mvebu/cp110-system-controller.c
-+++ b/drivers/clk/mvebu/cp110-system-controller.c
-@@ -26,11 +26,11 @@
- 
- #define pr_fmt(fmt) "cp110-system-controller: " fmt
- 
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +#include "armada_ap_cp_helper.h"
- #include <linux/clk-provider.h>
- #include <linux/mfd/syscon.h>
- #include <linux/init.h>
- #include <linux/of.h>
--#include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-@@ -212,22 +212,6 @@ static struct clk_hw *cp110_of_clk_get(struct of_phandle_args *clkspec,
- 	return ERR_PTR(-EINVAL);
- }
- 
--static char *cp110_unique_name(struct device *dev, struct device_node *np,
--			       const char *name)
--{
--	const __be32 *reg;
--	u64 addr;
--
--	/* Do not create a name if there is no clock */
--	if (!name)
--		return NULL;
--
--	reg = of_get_property(np, "reg", NULL);
--	addr = of_translate_address(np, reg);
--	return devm_kasprintf(dev, GFP_KERNEL, "%llx-%s",
--			      (unsigned long long)addr, name);
--}
--
- static int cp110_syscon_common_probe(struct platform_device *pdev,
- 				     struct device_node *syscon_node)
- {
-@@ -261,7 +245,7 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 	cp110_clk_data->num = CP110_CLK_NUM;
- 
- 	/* Register the PLL0 which is the root of the hw tree */
--	pll0_name = cp110_unique_name(dev, syscon_node, "pll0");
-+	pll0_name = ap_cp_unique_name(dev, syscon_node, "pll0");
- 	hw = clk_hw_register_fixed_rate(NULL, pll0_name, NULL, 0,
- 					1000 * 1000 * 1000);
- 	if (IS_ERR(hw)) {
-@@ -272,7 +256,7 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 	cp110_clks[CP110_CORE_PLL0] = hw;
- 
- 	/* PPv2 is PLL0/3 */
--	ppv2_name = cp110_unique_name(dev, syscon_node, "ppv2-core");
-+	ppv2_name = ap_cp_unique_name(dev, syscon_node, "ppv2-core");
- 	hw = clk_hw_register_fixed_factor(NULL, ppv2_name, pll0_name, 0, 1, 3);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
-@@ -282,7 +266,7 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 	cp110_clks[CP110_CORE_PPV2] = hw;
- 
- 	/* X2CORE clock is PLL0/2 */
--	x2core_name = cp110_unique_name(dev, syscon_node, "x2core");
-+	x2core_name = ap_cp_unique_name(dev, syscon_node, "x2core");
- 	hw = clk_hw_register_fixed_factor(NULL, x2core_name, pll0_name,
- 					  0, 1, 2);
- 	if (IS_ERR(hw)) {
-@@ -293,7 +277,7 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 	cp110_clks[CP110_CORE_X2CORE] = hw;
- 
- 	/* Core clock is X2CORE/2 */
--	core_name = cp110_unique_name(dev, syscon_node, "core");
-+	core_name = ap_cp_unique_name(dev, syscon_node, "core");
- 	hw = clk_hw_register_fixed_factor(NULL, core_name, x2core_name,
- 					  0, 1, 2);
- 	if (IS_ERR(hw)) {
-@@ -303,7 +287,7 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 
- 	cp110_clks[CP110_CORE_CORE] = hw;
- 	/* NAND can be either PLL0/2.5 or core clock */
--	nand_name = cp110_unique_name(dev, syscon_node, "nand-core");
-+	nand_name = ap_cp_unique_name(dev, syscon_node, "nand-core");
- 	if (nand_clk_ctrl & NF_CLOCK_SEL_400_MASK)
- 		hw = clk_hw_register_fixed_factor(NULL, nand_name,
- 						   pll0_name, 0, 2, 5);
-@@ -318,7 +302,7 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 	cp110_clks[CP110_CORE_NAND] = hw;
- 
- 	/* SDIO clock is PLL0/2.5 */
--	sdio_name = cp110_unique_name(dev, syscon_node, "sdio-core");
-+	sdio_name = ap_cp_unique_name(dev, syscon_node, "sdio-core");
- 	hw = clk_hw_register_fixed_factor(NULL, sdio_name,
- 					  pll0_name, 0, 2, 5);
- 	if (IS_ERR(hw)) {
-@@ -330,7 +314,7 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 
- 	/* create the unique name for all the gate clocks */
- 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++)
--		gate_name[i] =	cp110_unique_name(dev, syscon_node,
-+		gate_name[i] =	ap_cp_unique_name(dev, syscon_node,
- 						  gate_base_names[i]);
- 
- 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++) {
++
++#define AP806_CPU_CLUSTER0		0
++#define AP806_CPU_CLUSTER1		1
++#define AP806_CPUS_PER_CLUSTER		2
++#define APN806_CPU1_MASK		0x1
++
++#define APN806_CLUSTER_NUM_OFFSET	8
++#define APN806_CLUSTER_NUM_MASK		BIT(APN806_CLUSTER_NUM_OFFSET)
++
++#define APN806_MAX_DIVIDER		32
++
++/* AP806 CPU DFS register mapping*/
++#define AP806_CA72MP2_0_PLL_CR_0_REG_OFFSET		0x278
++#define AP806_CA72MP2_0_PLL_CR_1_REG_OFFSET		0x280
++#define AP806_CA72MP2_0_PLL_CR_2_REG_OFFSET		0x284
++#define AP806_CA72MP2_0_PLL_SR_REG_OFFSET		0xC94
++
++#define AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET		0x14
++#define AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_OFFSET		0
++#define AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_MASK \
++			(0x3f << AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_OFFSET)
++#define AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_OFFSET	24
++#define AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_MASK \
++			(0x1 << AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_OFFSET)
++#define AP806_PLL_CR_0_CPU_CLK_RELOAD_RATIO_OFFSET	16
++#define AP806_CA72MP2_0_PLL_RATIO_STATE			11
++
++#define STATUS_POLL_PERIOD_US		1
++#define STATUS_POLL_TIMEOUT_US		1000000
++
++#define to_ap_cpu_clk(_hw) container_of(_hw, struct ap_cpu_clk, hw)
++
++/*
++ * struct ap806_clk: CPU cluster clock controller instance
++ * @cluster: Cluster clock controller index
++ * @clk_name: Cluster clock controller name
++ * @dev : Cluster clock device
++ * @hw: HW specific structure of Cluster clock controller
++ * @pll_cr_base: CA72MP2 Register base (Device Sample at Reset register)
++ */
++struct ap_cpu_clk {
++	unsigned int cluster;
++	const char *clk_name;
++	struct device *dev;
++	struct clk_hw hw;
++	struct regmap *pll_cr_base;
++};
++
++static unsigned long ap_cpu_clk_recalc_rate(struct clk_hw *hw,
++					    unsigned long parent_rate)
++{
++	struct ap_cpu_clk *clk = to_ap_cpu_clk(hw);
++	unsigned int cpu_clkdiv_reg;
++	int cpu_clkdiv_ratio;
++
++	cpu_clkdiv_reg = AP806_CA72MP2_0_PLL_CR_0_REG_OFFSET +
++		(clk->cluster * AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET);
++	regmap_read(clk->pll_cr_base, cpu_clkdiv_reg, &cpu_clkdiv_ratio);
++	cpu_clkdiv_ratio &= AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_MASK;
++	cpu_clkdiv_ratio >>= AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_OFFSET;
++
++	return parent_rate / cpu_clkdiv_ratio;
++}
++
++static int ap_cpu_clk_set_rate(struct clk_hw *hw, unsigned long rate,
++			       unsigned long parent_rate)
++{
++	struct ap_cpu_clk *clk = to_ap_cpu_clk(hw);
++	int ret, reg, divider = parent_rate / rate;
++	unsigned int cpu_clkdiv_reg, cpu_force_reg, cpu_ratio_reg, stable_bit;
++
++	cpu_clkdiv_reg = AP806_CA72MP2_0_PLL_CR_0_REG_OFFSET +
++		(clk->cluster * AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET);
++	cpu_force_reg = AP806_CA72MP2_0_PLL_CR_1_REG_OFFSET +
++		(clk->cluster * AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET);
++	cpu_ratio_reg = AP806_CA72MP2_0_PLL_CR_2_REG_OFFSET +
++		(clk->cluster * AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET);
++
++	regmap_update_bits(clk->pll_cr_base, cpu_clkdiv_reg,
++			   AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_MASK, divider);
++
++	regmap_update_bits(clk->pll_cr_base, cpu_force_reg,
++			   AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_MASK,
++			   AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_MASK);
++
++	regmap_update_bits(clk->pll_cr_base, cpu_ratio_reg,
++			   BIT(AP806_PLL_CR_0_CPU_CLK_RELOAD_RATIO_OFFSET),
++			   BIT(AP806_PLL_CR_0_CPU_CLK_RELOAD_RATIO_OFFSET));
++
++	stable_bit = BIT(clk->cluster * AP806_CA72MP2_0_PLL_RATIO_STATE),
++
++	ret = regmap_read_poll_timeout(clk->pll_cr_base,
++				       AP806_CA72MP2_0_PLL_SR_REG_OFFSET, reg,
++				       reg & stable_bit, STATUS_POLL_PERIOD_US,
++				       STATUS_POLL_TIMEOUT_US);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(clk->pll_cr_base, cpu_ratio_reg,
++			   BIT(AP806_PLL_CR_0_CPU_CLK_RELOAD_RATIO_OFFSET), 0);
++
++	return 0;
++}
++
++static long ap_cpu_clk_round_rate(struct clk_hw *hw, unsigned long rate,
++				  unsigned long *parent_rate)
++{
++	int divider = *parent_rate / rate;
++
++	divider = min(divider, APN806_MAX_DIVIDER);
++
++	return *parent_rate / divider;
++}
++
++static const struct clk_ops ap_cpu_clk_ops = {
++	.recalc_rate	= ap_cpu_clk_recalc_rate,
++	.round_rate	= ap_cpu_clk_round_rate,
++	.set_rate	= ap_cpu_clk_set_rate,
++};
++
++static int ap_cpu_clock_probe(struct platform_device *pdev)
++{
++	int ret, nclusters = 0, cluster_index = 0;
++	struct device *dev = &pdev->dev;
++	struct device_node *dn, *np = dev->of_node;
++	struct clk_hw_onecell_data *ap_cpu_data;
++	struct ap_cpu_clk *ap_cpu_clk;
++	struct regmap *regmap;
++
++	regmap = syscon_node_to_regmap(np->parent);
++	if (IS_ERR(regmap)) {
++		pr_err("cannot get pll_cr_base regmap\n");
++		return PTR_ERR(regmap);
++	}
++
++	/*
++	 * AP806 has 4 cpus and DFS for AP806 is controlled per
++	 * cluster (2 CPUs per cluster), cpu0 and cpu1 are fixed to
++	 * cluster0 while cpu2 and cpu3 are fixed to cluster1 whether
++	 * they are enabled or not.  Since cpu0 is the boot cpu, then
++	 * cluster0 must exist.  If cpu2 or cpu3 is enabled, cluster1
++	 * will exist and the cluster number is 2; otherwise the
++	 * cluster number is 1.
++	 */
++	nclusters = 1;
++	for_each_of_cpu_node(dn) {
++		int cpu, err;
++
++		err = of_property_read_u32(dn, "reg", &cpu);
++		if (WARN_ON(err))
++			return err;
++
++		/* If cpu2 or cpu3 is enabled */
++		if (cpu & APN806_CLUSTER_NUM_MASK) {
++			nclusters = 2;
++			break;
++		}
++	}
++	/*
++	 * DFS for AP806 is controlled per cluster (2 CPUs per cluster),
++	 * so allocate structs per cluster
++	 */
++	ap_cpu_clk = devm_kcalloc(dev, nclusters, sizeof(*ap_cpu_clk),
++				  GFP_KERNEL);
++	if (!ap_cpu_clk)
++		return -ENOMEM;
++
++	ap_cpu_data = devm_kzalloc(dev, sizeof(*ap_cpu_data) +
++				sizeof(struct clk_hw *) * nclusters,
++				GFP_KERNEL);
++	if (!ap_cpu_data)
++		return -ENOMEM;
++
++	for_each_of_cpu_node(dn) {
++		char *clk_name = "cpu-cluster-0";
++		struct clk_init_data init;
++		const char *parent_name;
++		struct clk *parent;
++		int cpu, err;
++
++		err = of_property_read_u32(dn, "reg", &cpu);
++		if (WARN_ON(err))
++			return err;
++
++		cluster_index = cpu & APN806_CLUSTER_NUM_MASK;
++		cluster_index >>= APN806_CLUSTER_NUM_OFFSET;
++
++		/* Initialize once for one cluster */
++		if (ap_cpu_data->hws[cluster_index])
++			continue;
++
++		parent = of_clk_get(np, cluster_index);
++		if (IS_ERR(parent)) {
++			dev_err(dev, "Could not get the clock parent\n");
++			return -EINVAL;
++		}
++		parent_name =  __clk_get_name(parent);
++		clk_name[12] += cluster_index;
++		ap_cpu_clk[cluster_index].clk_name =
++			ap_cp_unique_name(dev, np->parent, clk_name);
++		ap_cpu_clk[cluster_index].cluster = cluster_index;
++		ap_cpu_clk[cluster_index].pll_cr_base = regmap;
++		ap_cpu_clk[cluster_index].hw.init = &init;
++		ap_cpu_clk[cluster_index].dev = dev;
++
++		init.name = ap_cpu_clk[cluster_index].clk_name;
++		init.ops = &ap_cpu_clk_ops;
++		init.num_parents = 1;
++		init.parent_names = &parent_name;
++
++		ret = devm_clk_hw_register(dev, &ap_cpu_clk[cluster_index].hw);
++		if (ret)
++			return ret;
++		ap_cpu_data->hws[cluster_index] = &ap_cpu_clk[cluster_index].hw;
++	}
++
++	ap_cpu_data->num = cluster_index + 1;
++
++	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, ap_cpu_data);
++	if (ret)
++		dev_err(dev, "failed to register OF clock provider\n");
++
++	return ret;
++}
++
++static const struct of_device_id ap_cpu_clock_of_match[] = {
++	{ .compatible = "marvell,ap806-cpu-clock", },
++	{ }
++};
++
++static struct platform_driver ap_cpu_clock_driver = {
++	.probe = ap_cpu_clock_probe,
++	.driver		= {
++		.name	= "marvell-ap-cpu-clock",
++		.of_match_table = ap_cpu_clock_of_match,
++		.suppress_bind_attrs = true,
++	},
++};
++builtin_platform_driver(ap_cpu_clock_driver);
 -- 
 2.20.1
 
