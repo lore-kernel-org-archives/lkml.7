@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200CDC74A3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553E7C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F1F20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E392087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SlJBN11p"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="K5bWlwn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbfGJVwG (ORCPT
+        id S1727875AbfGJVwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:52:06 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39976 "EHLO
+        Wed, 10 Jul 2019 17:52:10 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39998 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727752AbfGJVwE (ORCPT
+        with ESMTP id S1726708AbfGJVwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:52:04 -0400
+        Wed, 10 Jul 2019 17:52:06 -0400
 Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2A34F31C;
-        Wed, 10 Jul 2019 23:52:01 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0E9C61031;
+        Wed, 10 Jul 2019 23:52:03 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1562795521;
-        bh=1ViAwmntyEFjf2y6O088ww3Zj3YwtPrX0lSOLg0/11Y=;
+        s=mail; t=1562795523;
+        bh=ynOWdlGpPUjEVj8ncm9RdYGaEipRCuvXbH+WF5QWdao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SlJBN11pV0zXcDXzrQx+YV0qhPRt+Ufhlj2IcF5LkvSnmbLV/hLgtCSD4EQspGao9
-         JHCdaFd/zaymd6Qrd/L8YewB4ZSa65RY2cz4PfIFCvvSA4HaprwhLTgsY8Nm4EtvvO
-         ExxD+jDSeHFdoLdKB/TCLeiKaUqUwn3vkwWRappI=
+        b=K5bWlwn6kP4Asuco+wGWtFba9RJoHyQHUxfG21ucRPlXfzcwOpHTJEuKTZi2oko9E
+         NViYl3ydokvamQc8mG09D80AecXhQFC4bGa5GpRD5UYf1gN5prPLs/6LO84StEKojG
+         wjFeG/mEZWXyxtAHcEzMBkNXKoV5idpugxU3AxDs=
 From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 To:     linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org
 Cc:     Wolfram Sang <wsa@the-dreams.de>,
         Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Pawe? Chmiel" <pawel.mikolaj.chmiel@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/6] media: radio: si470x: Convert to new i2c device probe()
-Date:   Wed, 10 Jul 2019 22:51:45 +0100
-Message-Id: <20190710215149.9208-3-kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH 4/6] media: i2c: s5c73m3: Convert to new i2c device probe()
+Date:   Wed, 10 Jul 2019 22:51:47 +0100
+Message-Id: <20190710215149.9208-5-kieran.bingham+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
 References: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
@@ -66,31 +63,31 @@ easily convert it to utilise the simplfied i2c driver registration.
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- drivers/media/radio/si470x/radio-si470x-i2c.c | 5 ++---
+ drivers/media/i2c/s5c73m3/s5c73m3-core.c | 5 ++---
  1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/radio/si470x/radio-si470x-i2c.c b/drivers/media/radio/si470x/radio-si470x-i2c.c
-index 7d53422b3b56..7541698a0be1 100644
---- a/drivers/media/radio/si470x/radio-si470x-i2c.c
-+++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
-@@ -330,8 +330,7 @@ static irqreturn_t si470x_i2c_interrupt(int irq, void *dev_id)
- /*
-  * si470x_i2c_probe - probe for the device
-  */
--static int si470x_i2c_probe(struct i2c_client *client,
--			    const struct i2c_device_id *id)
-+static int si470x_i2c_probe(struct i2c_client *client)
+diff --git a/drivers/media/i2c/s5c73m3/s5c73m3-core.c b/drivers/media/i2c/s5c73m3/s5c73m3-core.c
+index 7633aebd8c06..5b4c4a3547c9 100644
+--- a/drivers/media/i2c/s5c73m3/s5c73m3-core.c
++++ b/drivers/media/i2c/s5c73m3/s5c73m3-core.c
+@@ -1650,8 +1650,7 @@ static int s5c73m3_get_platform_data(struct s5c73m3 *state)
+ 	return 0;
+ }
+ 
+-static int s5c73m3_probe(struct i2c_client *client,
+-				const struct i2c_device_id *id)
++static int s5c73m3_probe(struct i2c_client *client)
  {
- 	struct si470x_device *radio;
- 	int retval = 0;
-@@ -544,7 +543,7 @@ static struct i2c_driver si470x_i2c_driver = {
- 		.pm		= &si470x_i2c_pm,
- #endif
+ 	struct device *dev = &client->dev;
+ 	struct v4l2_subdev *sd;
+@@ -1806,7 +1805,7 @@ static struct i2c_driver s5c73m3_i2c_driver = {
+ 		.of_match_table = of_match_ptr(s5c73m3_of_match),
+ 		.name	= DRIVER_NAME,
  	},
--	.probe			= si470x_i2c_probe,
-+	.probe_new		= si470x_i2c_probe,
- 	.remove			= si470x_i2c_remove,
- 	.id_table		= si470x_i2c_id,
+-	.probe		= s5c73m3_probe,
++	.probe_new	= s5c73m3_probe,
+ 	.remove		= s5c73m3_remove,
+ 	.id_table	= s5c73m3_id,
  };
 -- 
 2.20.1
