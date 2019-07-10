@@ -2,93 +2,155 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450D9C74A33
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86919C74A33
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192632087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8ZQ7pbL"
+	by mail.kernel.org (Postfix) with ESMTP id 65D7C2087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfGJRHz (ORCPT
+        id S1727905AbfGJRJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:07:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54044 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfGJRHz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:07:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so3055959wmj.3;
-        Wed, 10 Jul 2019 10:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lYbiPKCwZLJ76GitqHRMfm5sXc+OxSYA3Irna9XDNy0=;
-        b=h8ZQ7pbLw8ZjE/6no6LLOrr49HZPtwF2sWqeywXEPT0Z1A0hjPjJ3b79wcltgNPIbc
-         GJDIizXA5RncZ3meryBqU+eJ4GCjtLvvKqLA0FW+aLqQ79fv16Ur1fTJ6/ZUG6bwJyQ4
-         e9IsX/vB2cf6Bi2kgriZ7/8g4dF4DufTFK7gX1FY03JIihi+MPN/U7V2pHrNPXnx2Egx
-         HtFs5PPAAyxm7WuGhhg4X9rG4PgjogFHQ3HYeCds+NLvwTvEfz0tvtdNBfJos+0TX2CL
-         aaXGitWwaVt54O/37O9TG2nQoSE8aH2YbAeF34orWbzzK1j9UQPdyJGLRlhGbvW3c+mT
-         gvMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lYbiPKCwZLJ76GitqHRMfm5sXc+OxSYA3Irna9XDNy0=;
-        b=WnJrdBYrNOdXlh8n9xpDIbr1miCq39H9pUMI7Ty38tR7MW5dFtxVgmZZ2trOl1zgDM
-         zWcIyEKzEwOUQUpbBUsLHF3kjJttdS2xiEv8W3XWb36T5OUVBzU9SiEOsPOPOdDQLWLl
-         Us2GQAR0rmukEvl8wb4VNIK6+5BZXbZl3jB2ckEARwUGF/LXNavQWfF/Vb/QoQr00bSP
-         PSa1Z/O8WS7oLbwxlgDb4UBdK+imMAVmxasEN1KEWVR02G5WNUQFYgvGjMFG7hfSmMl3
-         SGK4e4jEaMr0iwOAa8FyqS8vWghB5ixlgHaZ3FYB08YrOPGhRLGwG0lMLnOSlE2SoD/2
-         cOCw==
-X-Gm-Message-State: APjAAAXgC5UkjP+J3GdoAOTCWygkDl3FhW3OUx/5pFCCITORfprcmwHo
-        iUBeevDXQhKBgZjK3oY9qvA=
-X-Google-Smtp-Source: APXvYqz38Rrp4/pk7sX6KGVerc3He23b6GY0puXH6Ug3AOUVPVqKd4oN78+g1Dp5yUiLb8yV/fbuQA==
-X-Received: by 2002:a05:600c:2243:: with SMTP id a3mr6056440wmm.83.1562778473176;
-        Wed, 10 Jul 2019 10:07:53 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id y6sm3121453wmd.16.2019.07.10.10.07.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 10:07:52 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 10:07:51 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Kamenee Arumugam <kamenee.arumugam@intel.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2] IB/rdmavt: Fix variable shadowing issue in
- rvt_create_cq
-Message-ID: <20190710170751.GB80444@archlinux-threadripper>
-References: <20190709221312.7089-1-natechancellor@gmail.com>
- <20190709230552.61842-1-natechancellor@gmail.com>
- <20190710170216.GA15103@ziepe.ca>
+        Wed, 10 Jul 2019 13:09:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727123AbfGJRJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:09:27 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F38A620844;
+        Wed, 10 Jul 2019 17:09:25 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 13:09:24 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Matt Helsley <mhelsley@vmware.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 00/13] Cleanup recordmcount and begin objtool
+ conversion
+Message-ID: <20190710130924.16aee549@gandalf.local.home>
+In-Reply-To: <cover.1560285597.git.mhelsley@vmware.com>
+References: <cover.1560285597.git.mhelsley@vmware.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710170216.GA15103@ziepe.ca>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 02:02:16PM -0300, Jason Gunthorpe wrote:
-> 
-> Applied to for-next with Mike's ack
-> 
-> Thanks,
-> Jason
 
-Thank you Jason, much appreciated!
+Josh,
 
-Nathan
+Can you have a look at these? I can apply them if you think they are OK.
+
+-- Steve
+
+
+On Tue, 11 Jun 2019 15:21:42 -0700
+Matt Helsley <mhelsley@vmware.com> wrote:
+
+> This series cleans up recordmcount and then makes it into
+> an objtool subcommand.
+> 
+> The series starts with 8 cleanup patches which make recordmcount
+> easier to review and integrate with objtool. The final 5 patches
+> show the beginning steps of converting recordmcount to use objtool's
+> ELF code rather than its own open-coded methods of accessing ELF
+> files.
+> 
+> ---
+> 
+> v2:
+> 	Fix whitespace before line continuation
+> 
+> 	Add ftrace/mcount/record.h to objtool_dep
+> 
+> 	Rename the Makefile variable BUILD_C_RECORDMCOUNT to
+> 	    better reflect its purpose
+> 
+> 	Similar: rename recordmcount_source => recordmcount_dep
+> 	    When using objtool we can just depend on the
+> 	    binary rather than the source the binary is
+> 	    built from. This should address Josh's feedback and
+> 	    make the Makefile code a bit clearer
+> 
+> 	Add a comment to make reading the Makefile a little
+> 	    easier
+> 
+> 	Rebased to latest mainline -rc
+> 
+> 	Collected some build time measurements
+> 
+> Build times measurements -- median of multiple runs in a VM measured
+> with "time":
+> 
+> 	mainline (5.2.0-rc4) build times (median of 3 runs):
+> 		real    2m58.379s
+> 		user    2m29.621s
+> 		sys     1m35.116s
+> 
+> 	Post recordmcount-cleanup build times (median of 5 runs):
+> 		real    2m51.973s
+> 		user    2m29.094s
+> 		sys     1m33.688s
+> 		
+> 	objtool mcount build times (median of 7 runs):
+> 		real	2m57.92s
+> 		user	2m33.73s
+> 		sys	1m37.06s
+> 
+> Note: I saw some significant variation especially in the "real" time
+> 	measurements probably because it was in a VM on a machine with
+> 	various "idle" GUI tasks running. This is why I took the median
+> 	rather than the mean. Though I haven't run the statistics, my
+> 	sense is the numbers don't support concluding that things really
+> 	got any faster or slower.
+> 
+> I'm working on a separate, follow-on RFC set which implements the
+> pseudo-pipe idea.
+> 
+> Matt Helsley (13):
+>   recordmcount: Remove redundant strcmp
+>   recordmcount: Remove uread()
+>   recordmcount: Remove unused fd from uwrite() and ulseek()
+>   recordmcount: Rewrite error/success handling
+>   recordmcount: Kernel style function signature formatting
+>   recordmcount: Kernel style formatting
+>   recordmcount: Remove redundant cleanup() calls
+>   recordmcount: Clarify what cleanup() does
+>   objtool: Prepare to merge recordmcount
+>   objtool: Make recordmcount into an objtool subcmd
+>   objtool: recordmcount: Start using objtool's elf wrapper
+>   objtool: recordmcount: Search for __mcount_loc before walking the
+>     sections
+>   objtool: recordmcount: Convert do_func() relhdrs
+> 
+>  Makefile                                   |   6 +-
+>  scripts/.gitignore                         |   1 -
+>  scripts/Makefile                           |   1 -
+>  scripts/Makefile.build                     |  27 +-
+>  tools/objtool/.gitignore                   |   1 +
+>  tools/objtool/Build                        |   1 +
+>  tools/objtool/Makefile                     |   1 +
+>  tools/objtool/builtin-mcount.c             |  72 +++++
+>  tools/objtool/builtin-mcount.h             |  23 ++
+>  tools/objtool/builtin.h                    |   1 +
+>  tools/objtool/objtool.c                    |   1 +
+>  {scripts => tools/objtool}/recordmcount.c  | 350 ++++++++++-----------
+>  {scripts => tools/objtool}/recordmcount.h  | 197 +++++++-----
+>  {scripts => tools/objtool}/recordmcount.pl |   0
+>  14 files changed, 407 insertions(+), 275 deletions(-)
+>  create mode 100644 tools/objtool/builtin-mcount.c
+>  create mode 100644 tools/objtool/builtin-mcount.h
+>  rename {scripts => tools/objtool}/recordmcount.c (78%)
+>  rename {scripts => tools/objtool}/recordmcount.h (78%)
+>  rename {scripts => tools/objtool}/recordmcount.pl (100%)
+> 
+
