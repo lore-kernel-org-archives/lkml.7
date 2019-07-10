@@ -2,174 +2,184 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5126BC74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A922C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A552086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562769420;
-	bh=JpLBi/wvSqPSVyE7XiTBNxyTryULw8xtjJ4a7enA2+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CZOHcyjY66guc+fDebiJeOladyZ9wX3UZ/JuSb2md82K+0BixfBQRpbjS61M4aLUf
-	 8dI9VoqiWe4n54TaYdzO0HPqB/uARStRdYUJBjXLN9ALE0AczumrHCUYqMrGYmMBtq
-	 GiwLcuSIAw0Md2L3WSv2ykjNDqADugv7wrMcctnw=
+	by mail.kernel.org (Postfix) with ESMTP id 39F7C2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="V5CYjHhY";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="NKDM7a15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfGJOg6 (ORCPT
+        id S1727785AbfGJOhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:36:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbfGJOg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:36:58 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1998D20651;
-        Wed, 10 Jul 2019 14:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562769417;
-        bh=JpLBi/wvSqPSVyE7XiTBNxyTryULw8xtjJ4a7enA2+4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cBR7Me1MIN0v9K0+Jn0Agboor87D+JAELf7o39AuQiGedDSI9g6Hb3ynHzfYMpP57
-         r6gKH89Gk5AevaNGtflTPMQvg26XFy4vcVl7Ctahl8iLClpyT/LXiS4XccwGZ3nojX
-         wsVgfmjZewYJnpQsbQzxPL59Mn3/jUtRue0cowJ4=
-Date:   Wed, 10 Jul 2019 15:36:50 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com,
-        youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>,
-        anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v8 07/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
- Mode
-Message-ID: <20190710143649.w5dplhzdpi3bxp7e@willie-the-truck>
-References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
- <1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
+        Wed, 10 Jul 2019 10:37:09 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:58980 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726380AbfGJOhJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 10:37:09 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6AEWcFf030919;
+        Wed, 10 Jul 2019 07:36:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=JSHQ4f+RcZgf1UXAMrPAw9lan7skEb9rxYJP5IiDz1g=;
+ b=V5CYjHhY9C5vyTWta4mF1o4ZI8wSDjH10DUzIF1sMIj6Ah7wLlNZOrm2c6oOV6j4OWEW
+ KAk/cv28BfzGxXLkwmza78+G9WZBCV95N4QWA8OzWkg6HHE8p+74sXIyFtugHATSn6gs
+ 4HsuNyd6wIDcysakJmp458SX8g5T6ggP3Pt2jhGcemGE59+lMEcE1Qum61HtfjNXpL+Y
+ KD+U2il/23Cw4P4byRrLE1xBrrXrpDqJKgyZ+qtjex1AAYZTTITT2lS1RNzpYebNZ84C
+ XM2EI5ONDBmMkIX+ll/XTZkAWpIaSpeQe3FFIdNKmMsAc7sIprReymP7dzSpw5JeDdQ8 pQ== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2051.outbound.protection.outlook.com [104.47.38.51])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2tjr6vr3pu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jul 2019 07:36:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JSHQ4f+RcZgf1UXAMrPAw9lan7skEb9rxYJP5IiDz1g=;
+ b=NKDM7a15AUpWb+Hyd4/Iay7uVihyaHph4x3gelFWh7XQJkQc0kDqO1h+66A4HvetucVCRk0S5kKa1jkZgW0+doVkWj9boyNk2UzDdaWwKhWIRoJPSRgPObwzds0AasvRU7vD7qpGPUn2TMVvSm25KNgOffj2ZtKsYtV30OTSVgA=
+Received: from BYAPR07CA0028.namprd07.prod.outlook.com (2603:10b6:a02:bc::41)
+ by MWHPR07MB3117.namprd07.prod.outlook.com (2603:10b6:300:ea::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2052.16; Wed, 10 Jul
+ 2019 14:36:42 +0000
+Received: from BY2NAM05FT034.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e52::206) by BYAPR07CA0028.outlook.office365.com
+ (2603:10b6:a02:bc::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2073.10 via Frontend
+ Transport; Wed, 10 Jul 2019 14:36:42 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 158.140.1.28 as permitted sender)
+Received: from sjmaillnx1.cadence.com (158.140.1.28) by
+ BY2NAM05FT034.mail.protection.outlook.com (10.152.100.171) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2052.8 via Frontend Transport; Wed, 10 Jul 2019 14:36:41 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x6AEabDs004523
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 10 Jul 2019 07:36:39 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Wed, 10 Jul 2019 16:36:37 +0200
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 10 Jul 2019 16:36:37 +0200
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x6AEaWq9031868;
+        Wed, 10 Jul 2019 15:36:35 +0100
+From:   Parshuram Thombare <pthombar@cadence.com>
+To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
+        <davem@davemloft.net>, <f.fainelli@gmail.com>
+CC:     <linux@armlinux.org.uk>, <netdev@vger.kernel.org>,
+        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <rafalc@cadence.com>, <piotrs@cadence.com>, <aniljoy@cadence.com>,
+        <arthurm@cadence.com>, <stevenh@cadence.com>,
+        <pthombar@cadence.com>, <mparab@cadence.com>
+Subject: [PATCH v6 0/5] net: macb: cover letter
+Date:   Wed, 10 Jul 2019 15:36:31 +0100
+Message-ID: <1562769391-31803-1-git-send-email-pthombar@cadence.com>
+X-Mailer: git-send-email 2.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(979002)(4636009)(396003)(136003)(39850400004)(376002)(346002)(2980300002)(199004)(189003)(36092001)(246002)(186003)(336012)(14444005)(26826003)(7636002)(478600001)(305945005)(26005)(36756003)(316002)(76130400001)(50226002)(2906002)(126002)(7126003)(476003)(486006)(54906003)(53416004)(16586007)(8676002)(48376002)(2616005)(50466002)(107886003)(86362001)(8936002)(70586007)(7696005)(110136005)(6666004)(4326008)(47776003)(426003)(2201001)(5660300002)(356004)(51416003)(70206006)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR07MB3117;H:sjmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.Cadence.COM;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7d381fc9-fb00-4257-5eaf-08d705440655
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:MWHPR07MB3117;
+X-MS-TrafficTypeDiagnostic: MWHPR07MB3117:
+X-Microsoft-Antispam-PRVS: <MWHPR07MB3117B19FC5818E202ACA6643C1F00@MWHPR07MB3117.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 0094E3478A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: vpaBZO3PXT2yCsTeLpy3PlLsbZfrmu1G63gchvVj7QYen4FoFdD5KO51mr0svU9IUKpZrIQBvp2XJfmC60c0XJ9lnHydSE1x9gUrFvwFgXwHAgoQPcZT6riY8GRwrxvkwSgHVUEhXQJ3McXCoIABZuFaJcYACRA58IYUE4sJdhOOyh+9TEoiDkxnFny/iQK4WPfazJBD6VAwuuUIm1hnnxa/33lOBn11chBFbspALsdQsIv7caVZXuxqdGTDs1nhJO3qQmbNj9+GhMeTf9goR8dgc8u4VZ6+ZHhtZz0d+VwhoiFreQNdIVTA6UQQ0TwDjH7DzrFGodzXo59dpyjSZPx3A6g1SGOu1qiwXN1xc6PPP7tFH/59cjQtO0a4i7Kjmv0ScWlLimt36FIdO0il7p4jjClFkTJIc0mqkTSHg4w=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2019 14:36:41.7807
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d381fc9-fb00-4257-5eaf-08d705440655
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR07MB3117
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-10_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907100168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 10:09:13AM +0800, Yong Wu wrote:
-> MediaTek extend the arm v7s descriptor to support the dram over 4GB.
-> 
-> In the mt2712 and mt8173, it's called "4GB mode", the physical address
-> is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
-> is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
-> bit32 is always enabled. thus, in the M4U, we always enable the bit9
-> for all PTEs which means to enable bit32 of physical address.
-> 
-> but in mt8183, M4U support the dram from 0x4000_0000 to 0x3_ffff_ffff
-> which isn't remaped. We extend the PTEs: the bit9 represent bit32 of
-> PA and the bit4 represent bit33 of PA. Meanwhile the iova still is
-> 32bits.
+Hello !
 
-What happens if bit4 is set in the pte for mt2712 or mt8173? Perhaps the
-io-pgtable backend should be allowing oas > 32 when
-IO_PGTABLE_QUIRK_ARM_MTK_4GB is set, and then enforcing that itself.
+This is 6th version of patch set containing following patches
+for Cadence ethernet controller driver.
 
-> In order to unify code, in the "4GB mode", we add the bit32 for the
-> physical address manually in our driver.
-> 
-> Correspondingly, Adding bit32 and bit33 for the PA in the iova_to_phys
-> has to been moved into v7s.
-> 
-> Regarding whether the pagetable address could be over 4GB, the mt8183
-> support it while the previous mt8173 don't. thus keep it as is.
-> 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> ---
-> Comparing with the previous one:
-> 1). Add a new patch "iommu/mediatek: Fix iova_to_phys PA start for 4GB
-> mode" before this one. Thus rebase it.
-> A little difference: in the 4gb mode, we add bit32 for PA. and the PA got
-> from iova_to_phys always have bit32 here, thus we should adjust it to locate
-> the valid pa.
-> 2). Add this code suggested from Evan.
->  if (!data->plat_data->has_4gb_mode)
-> 	       data->enable_4GB = false;
-> ---
->  drivers/iommu/io-pgtable-arm-v7s.c | 31 ++++++++++++++++++++++++-------
->  drivers/iommu/mtk_iommu.c          | 29 ++++++++++++++++++-----------
->  drivers/iommu/mtk_iommu.h          |  1 +
->  3 files changed, 43 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-> index 94c38db..4077822 100644
-> --- a/drivers/iommu/io-pgtable-arm-v7s.c
-> +++ b/drivers/iommu/io-pgtable-arm-v7s.c
-> @@ -123,7 +123,9 @@
->  #define ARM_V7S_TEX_MASK		0x7
->  #define ARM_V7S_ATTR_TEX(val)		(((val) & ARM_V7S_TEX_MASK) << ARM_V7S_TEX_SHIFT)
->  
-> -#define ARM_V7S_ATTR_MTK_4GB		BIT(9) /* MTK extend it for 4GB mode */
-> +/* MediaTek extend the two bits below for over 4GB mode */
-> +#define ARM_V7S_ATTR_MTK_PA_BIT32	BIT(9)
-> +#define ARM_V7S_ATTR_MTK_PA_BIT33	BIT(4)
->  
->  /* *well, except for TEX on level 2 large pages, of course :( */
->  #define ARM_V7S_CONT_PAGE_TEX_SHIFT	6
-> @@ -190,13 +192,22 @@ static dma_addr_t __arm_v7s_dma_addr(void *pages)
->  static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
->  				    struct io_pgtable_cfg *cfg)
->  {
-> -	return paddr & ARM_V7S_LVL_MASK(lvl);
-> +	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
-> +
-> +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB) {
-> +		if (paddr & BIT_ULL(32))
-> +			pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
-> +		if (paddr & BIT_ULL(33))
-> +			pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
-> +	}
-> +	return pte;
->  }
->  
->  static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
->  				  struct io_pgtable_cfg *cfg)
->  {
->  	arm_v7s_iopte mask;
-> +	phys_addr_t paddr;
->  
->  	if (ARM_V7S_PTE_IS_TABLE(pte, lvl))
->  		mask = ARM_V7S_TABLE_MASK;
-> @@ -205,7 +216,14 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
->  	else
->  		mask = ARM_V7S_LVL_MASK(lvl);
->  
-> -	return pte & mask;
-> +	paddr = pte & mask;
-> +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB) {
-> +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
-> +			paddr |= BIT_ULL(32);
-> +		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
-> +			paddr |= BIT_ULL(33);
-> +	}
-> +	return paddr;
+1. 0001-net-macb-add-phylink-support.patch
+   Replace phylib API's with phylink API's.
+2. 0002-net-macb-add-support-for-sgmii-MAC-PHY-interface.patch
+   This patch add support for SGMII mode.
+3. 0004-net-macb-add-support-for-c45-PHY.patch
+   This patch is to support C45 PHY.
+4. 0005-net-macb-add-support-for-high-speed-interface
+   This patch add support for 10G USXGMII PCS in fixed mode.
 
-I think this relies on CONFIG_PHYS_ADDR_T_64BIT, which isn't always set on
-32-bit ARM.
+Changes in v2:
+1. Dropped patch configuring TI PHY DP83867 from
+   Cadence PCI wrapper driver.
+2. Removed code registering emulated PHY for fixed mode. 
+3. Code reformatting as per Andrew's and Florian's suggestions.
 
-Will
+Changes in v3:
+Based on Russell's suggestions
+1. Configure MAC in mac_config only for non in-band modes
+2. Handle dynamic phy_mode changes in mac_config
+3. Move MAC configurations to mac_config
+4. Removed seemingly redundant check for phylink handle
+5. Removed code from mac_an_restart and mac_link_state
+   now just return -EOPNOTSUPP
+
+Changes in v4:
+1. Removed PHY_INTERFACE_MODE_2500BASEX, PHY_INTERFACE_MODE_1000BASEX and
+   2.5G PHY_INTERFACE_MODE_SGMII phy modes from supported modes
+
+Changes in v5:
+1. Code refactoring
+
+Changes in v6:
+1. Allow phylink to validate particular phy_mode support by hardware.
+2. Remove device tree parameter and 5G serdes rate for USXGMII
+
+Regards,
+Parshuram Thombare
+
+Parshuram Thombare (4):
+  net: macb: add phylink support
+  net: macb: add support for sgmii MAC-PHY interface
+  net: macb: add support for c45 PHY
+  net: macb: add support for high speed interface
+
+ drivers/net/ethernet/cadence/Kconfig     |   2 +-
+ drivers/net/ethernet/cadence/macb.h      | 115 ++++-
+ drivers/net/ethernet/cadence/macb_main.c | 543 ++++++++++++++++-------
+ 3 files changed, 483 insertions(+), 177 deletions(-)
+
+-- 
+2.17.1
+
