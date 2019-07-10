@@ -2,255 +2,166 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BE3C73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A29AC73C68
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3664220838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F1720838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2g5VotB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q3XLbdwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfGJFSl (ORCPT
+        id S1726298AbfGJFTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:18:41 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37842 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfGJFSl (ORCPT
+        Wed, 10 Jul 2019 01:19:06 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18097 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfGJFTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:18:41 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y26so1139498qto.4
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 22:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HNQkK0ST9s71G0a9f85FFAYCOVdBLHg3XcIO+dqr2X4=;
-        b=O2g5VotBP10fMKZPgJwrl14W54e5CLPfJWdax/0pI8Vmh2FJE9Vu8f6efgnf+IJn9q
-         Y/SwUyQOoSYEorIz0bZpp2MxqM+iNK+rP9oS5WgSbiIICvkjI7qClW/C1ymaPGLa/mJW
-         9i1FfnEwsb+J+CD9Ck1gr3rAjEfy6fSQDXHT58SfpAb/rr9Dj3ZLZJHX/seemH2ED2mo
-         GMxd1X75cBWFzN2jvRUTmpaLsFcpTCrtDNDIegFqzNKVyjWB5dWSWhEfaGDNhuh57hvD
-         IOCDafvX7auwCq4dM8lMII18OKc4/76+SQjIaViY4h7Cd8hlszssIiPkDishzo/Vb9L4
-         WgTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HNQkK0ST9s71G0a9f85FFAYCOVdBLHg3XcIO+dqr2X4=;
-        b=kLKEQiXJ4PGA3ki1AkIgsEAosUOeXvQNSPUZwfgrAIXx4OmAC8Fv6jd7EsS+9w30Kf
-         dBZwT1swA9oc/tDwd8/HypqBntOeeluxnvlLPqMRdlHF2tipvtsYvVH/lYd22s0t2kAk
-         Mza6LG4z0yTVNKoV9AzP9lCTviFkFRKozImleFYP1I1GPowVdUxHXMhhcNdEDb9Z7bh4
-         LLAr2btgLkmyXeTnxIZxmY30pI0d9HyRl8Xy2wjwQmT/pr5gLKO+K9XdPL3XZ6fyJ/ef
-         bkd0zfKNZMGcplRg+Wbmwao93DCtj2XKR4hxKh63diL0hF69pNmi+OD9/r0PDfGLNrNL
-         2eZA==
-X-Gm-Message-State: APjAAAXxV56cS6RPhILZq4W3zvCZLFRnF1nu01B8qpv1F4PBxbVCpv0m
-        I7336ktUj2fSGiMSZuPyolI=
-X-Google-Smtp-Source: APXvYqxnd2FsHhnH7JNDcKRdjHc2z8EN/xM/DXouN3lXFnYf/FJlB1CoeOAhuyaSAUYNB+3du6O9tw==
-X-Received: by 2002:ac8:376e:: with SMTP id p43mr22240807qtb.354.1562735920167;
-        Tue, 09 Jul 2019 22:18:40 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id h26sm697866qta.58.2019.07.09.22.18.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 22:18:39 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id D4D8320C86;
-        Wed, 10 Jul 2019 01:18:37 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 10 Jul 2019 01:18:37 -0400
-X-ME-Sender: <xms:LHUlXYlDYRXOGfBmeZECfx4rcNmuGD2sM0YUPzACzuUWba2DZX0zzg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeehgdeflecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehgtderredtredvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecukfhppeeghe
-    drfedvrdduvdekrddutdelnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhm
-    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekhe
-    ehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghm
-    vgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:LHUlXdHgYZzoE70qj9uh3HtxXVFS4jeOevBE7jptHkmvNLEDC3GUPw>
-    <xmx:LHUlXYUe6NzT7gX66iDa5yqBjys1M2rGYbzU9BpD7qGWwz6XrwUHVg>
-    <xmx:LHUlXcxyJUcSMUn4kAIFxcHUEQySanic1HiUSgo6LvNVR_WNKHqcUw>
-    <xmx:LXUlXTbqZmnV5ArfYTeSjWG-sXB0ImvGOBqAHNKkBymD49bQLT8ndSPl3Uw>
-Received: from localhost (unknown [45.32.128.109])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8A4D0380075;
-        Wed, 10 Jul 2019 01:18:35 -0400 (EDT)
-Date:   Wed, 10 Jul 2019 13:18:30 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Yuyang Du <duyuyang@gmail.com>
-Cc:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org,
-        bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        longman@redhat.com, paulmck@linux.vnet.ibm.com
-Subject: Re: [PATCH v3 17/30] locking/lockdep: Add read-write type for a lock
- dependency
-Message-ID: <20190710051830.GB14490@tardis>
-References: <20190628091528.17059-1-duyuyang@gmail.com>
- <20190628091528.17059-18-duyuyang@gmail.com>
+        Wed, 10 Jul 2019 01:19:06 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d25754c0000>; Tue, 09 Jul 2019 22:19:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 09 Jul 2019 22:19:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 09 Jul 2019 22:19:03 -0700
+Received: from [10.24.44.109] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 05:18:56 +0000
+Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
+ features
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190701124010.7484-1-vidyas@nvidia.com>
+ <20190701124010.7484-2-vidyas@nvidia.com> <20190709141427.GB35486@google.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <d76dbaf9-6193-9ba6-a183-c60c4cedf1ff@nvidia.com>
+Date:   Wed, 10 Jul 2019 10:48:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
-Content-Disposition: inline
-In-Reply-To: <20190628091528.17059-18-duyuyang@gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190709141427.GB35486@google.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562735949; bh=yxF/cnGRW+W6waCVCeurAKL/HMafBLOVE75sBLZ2LHU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Q3XLbdwj7QbrVih65s3Gt3jmVoPIne6/uZ51ADt6hsq7rsK3b1JgOX44dlNbXOXCj
+         nyb71fcyLHHWa8+17h7Qr8IVhCZ6EKt8Fvq65mmTOuvbZo7WZvwQxWkUMG9oZuCDYF
+         tFFwWqutchhzePIcXcd6+2hD11KtA9Uf38aAYeWj6AG8p1tM9wDkYACF4CaW83K1cV
+         oa7Qw8g4i1AYUChnAZSwGys3PgtyapKw8/yS94UXq49rhbXJcKiLZ1fvzXA8bCGIGe
+         cLYln0zRRvHRJt5iRcMZ/1UJzRrLwOP2vfJjdEnTxS32vcCUVvi4Y6QC8j6prE6V8G
+         gJZmygVitq8HQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/9/2019 7:44 PM, Bjorn Helgaas wrote:
+> On Mon, Jul 01, 2019 at 06:09:59PM +0530, Vidya Sagar wrote:
+>> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
+>> features.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> 
+> Please include spec references in the commit log, e.g., PCIe r5.0, sec
+> 7.7.4, for Data Link Feature and sec 7.7.5 for Physical Layer 16 GT/s.
+Done.
 
---Pd0ReVV5GZGQvF3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+>>   include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
+>>   1 file changed, 21 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>> index f28e562d7ca8..1c79f6a097d2 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -713,7 +713,9 @@
+>>   #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+>>   #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>>   #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+>> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
+>> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+>> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
+> 
+> Maybe PCI_EXT_CAP_ID_PL_16GT so there's a little more hint of what
+> this is for?
+Ok. I'll add 16GT.
 
-On Fri, Jun 28, 2019 at 05:15:15PM +0800, Yuyang Du wrote:
-> Direct dependencies need to keep track of their read-write lock types.
-> Two bit fields, which share the distance field, are added to lock_list
-> struct so the types are stored there.
->=20
-> With a dependecy lock1 -> lock2, lock_type1 has the type for lock1 and
-> lock_type2 has the type for lock2, where the values are one of the
-> lock_type enums.
->=20
-> Signed-off-by: Yuyang Du <duyuyang@gmail.com>
-> ---
->  include/linux/lockdep.h  | 15 ++++++++++++++-
->  kernel/locking/lockdep.c | 25 +++++++++++++++++++++++--
->  2 files changed, 37 insertions(+), 3 deletions(-)
->=20
-> diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-> index eb26e93..fd619ac 100644
-> --- a/include/linux/lockdep.h
-> +++ b/include/linux/lockdep.h
-> @@ -185,6 +185,8 @@ static inline void lockdep_copy_map(struct lockdep_ma=
-p *to,
->  		to->class_cache[i] =3D NULL;
->  }
-> =20
-> +#define LOCK_TYPE_BITS	2
-> +
->  /*
->   * Every lock has a list of other locks that were taken after or before
->   * it as lock dependencies. These dependencies constitute a graph, which
-> @@ -207,7 +209,17 @@ struct lock_list {
->  	struct list_head		chains;
->  	struct lock_class		*class[2];
->  	struct lock_trace		trace;
-> -	int				distance;
-> +
-> +	/*
-> +	 * The lock_type fields keep track of the lock type of this
-> +	 * dependency.
-> +	 *
-> +	 * With L1 -> L2, lock_type1 stores the lock type of L1, and
-> +	 * lock_type2 stores that of L2.
-> +	 */
-> +	unsigned int			lock_type1 : LOCK_TYPE_BITS,
-> +					lock_type2 : LOCK_TYPE_BITS,
+> 
+>> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
+>>   
+>>   #define PCI_EXT_CAP_DSN_SIZEOF	12
+>>   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+>> @@ -1053,4 +1055,22 @@
+>>   #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>>   #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+>>   
+>> +/* Data Link Feature */
+>> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
+>> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
+>> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+>> +#define PCI_DLF_STS		0x08	/* Status Register */
+>> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
+>> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
+> 
+> I'm a little bit ambivalent about adding #defines that aren't used.  I
+> personally would probably just add the things we use, so the header
+> file gives a clue about what's currently implemented.  But I guess
+> either way is fine.
+Fine. I'll remove all unused defines in the next patch.
 
-Bad names ;-) Maybe fw_dep_type and bw_dep_type? Which seems to be
-aligned with the naming schema other functions.
+> 
+>> +/* Physical Layer 16.0 GT/s */
+>> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
+>> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
+>> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
+>> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
+> 
+> Use lower-case hex consistently here.  There's no global consistency
+> in this file, but we can at least be consistent in each section.  But
+> I'm even more hesitant about included unused #defines for "reserved"
+> fields, so if you drop this it would take care of both :)
+Done.
 
-Regards,
-Boqun
+> 
+>> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
+> 
+> This is the only register you actually use.  You defined a local
+> PL16G_CAP_OFF_DSP_16G_TX_PRESET_MASK for this register.  Shouldn't
+> that be defined here instead of in
+> drivers/pci/controller/dwc/pcie-tegra194.c?
+I'll take care of it in the next patch.
 
-> +					distance   : 32 - 2*LOCK_TYPE_BITS;
-> =20
->  	/*
->  	 * The parent field is used to implement breadth-first search.
-> @@ -362,6 +374,7 @@ enum lock_type {
->  	LOCK_TYPE_WRITE		=3D 0,
->  	LOCK_TYPE_READ,
->  	LOCK_TYPE_RECURSIVE,
-> +	NR_LOCK_TYPE,
->  };
-> =20
->  /*
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 3c97d71..1805017 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -1307,9 +1307,17 @@ static struct lock_list *alloc_list_entry(void)
->   */
->  static int add_lock_to_list(struct lock_class *lock1, struct lock_class =
-*lock2,
->  			    unsigned long ip, int distance,
-> -			    struct lock_trace *trace, struct lock_chain *chain)
-> +			    struct lock_trace *trace, struct lock_chain *chain,
-> +			    int lock_type1, int lock_type2)
->  {
->  	struct lock_list *entry;
-> +
-> +	/*
-> +	 * The distance bit field in struct lock_list must be large
-> +	 * enough to hold the maximum lock depth.
-> +	 */
-> +	BUILD_BUG_ON((1 << (32 - 2*LOCK_TYPE_BITS)) < MAX_LOCK_DEPTH);
-> +
->  	/*
->  	 * Lock not present yet - get a new dependency struct and
->  	 * add it to the list:
-> @@ -1322,6 +1330,8 @@ static int add_lock_to_list(struct lock_class *lock=
-1, struct lock_class *lock2,
->  	entry->class[1] =3D lock2;
->  	entry->distance =3D distance;
->  	entry->trace =3D *trace;
-> +	entry->lock_type1 =3D lock_type1;
-> +	entry->lock_type2 =3D lock_type2;
-> =20
->  	/*
->  	 * Both allocation and removal are done under the graph lock; but
-> @@ -1465,6 +1475,16 @@ static inline struct list_head *get_dep_list(struc=
-t lock_list *lock, int forward
->  	return &class->dep_list[forward];
->  }
-> =20
-> +static inline int get_lock_type1(struct lock_list *lock)
-> +{
-> +	return lock->lock_type1;
-> +}
-> +
-> +static inline int get_lock_type2(struct lock_list *lock)
-> +{
-> +	return lock->lock_type2;
-> +}
-> +
->  /*
->   * Forward- or backward-dependency search, used for both circular depend=
-ency
->   * checking and hardirq-unsafe/softirq-unsafe checking.
-> @@ -2503,7 +2523,8 @@ static inline void inc_chains(void)
->  	 * dependency list of the previous lock <prev>:
->  	 */
->  	ret =3D add_lock_to_list(hlock_class(prev), hlock_class(next),
-> -			       next->acquire_ip, distance, trace, chain);
-> +			       next->acquire_ip, distance, trace, chain,
-> +			       prev->read, next->read);
->  	if (!ret)
->  		return 0;
-> =20
-> --=20
-> 1.8.3.1
->=20
+> 
+>>   #endif /* LINUX_PCI_REGS_H */
+>> -- 
+>> 2.17.1
+>>
 
---Pd0ReVV5GZGQvF3a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEj5IosQTPz8XU1wRHSXnow7UH+rgFAl0ldSIACgkQSXnow7UH
-+rjUfggAs1tL8SMEN1es3pqMdMCh4YkM/Q+DN5cPWAvNlxYbK0LyCsB988gqbRat
-kI7VxYNptg622sloQjAToQkRsgU8CtjnpZHAvZRa16KmCz6xgXK0GkoM8IE5eQwH
-ICZDAEEuUyXknzRKlMNlhZmkmXwfEidPni+wVUb2Lhaa4N2rGQIFNjphlKYVVzEp
-EMw9gvEgyZ64Bu8517WvRKWCOS8AmaoMGWSODKjUEpHcp7PWIqILoSiyE9tvE5kh
-nVvcIcgzf+fUu8qM4qEFgwVInfLiFa/YMx7HWv5nJ3RWbDS5OVulg3zJn9DYGeF/
-8QSvp2ieavFbUfCjoSeqydd+je6rYw==
-=akAy
------END PGP SIGNATURE-----
-
---Pd0ReVV5GZGQvF3a--
