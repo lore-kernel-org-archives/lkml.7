@@ -2,110 +2,224 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E904AC74A25
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B79BC74A23
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF18C20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562766644;
-	bh=BAkUJjbt16QmJo5dgfrz95vBRU7FG87R0fS1o5ZT8KY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Eir1W4NnTsRE93kHVof5/rl5P3am1I2WtL3etxk0NNU508Zi3UIsipYN6s5Q/7OpF
-	 neKA3CAM5IDzMziE2HAinus1dI8Gjn23/nD/hu3Ek8cdLCb24al8zeW8QQaCVavb8l
-	 VWuaO0BNiccTQl+spmzrGKXzSy1Nc+drLwx7RYO4=
+	by mail.kernel.org (Postfix) with ESMTP id D131C20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:50:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqkXfKOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfGJNun (ORCPT
+        id S1727741AbfGJNur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfGJNun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:50:43 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 313C5208E4;
-        Wed, 10 Jul 2019 13:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562766642;
-        bh=BAkUJjbt16QmJo5dgfrz95vBRU7FG87R0fS1o5ZT8KY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kS1q2SBNDqfDxOT5fhNxw2JPlBAhO2F8+BGrMWgxC4E+G7wdF1PMeVXKASi5Gqdb5
-         hzFtQfwBaSwBpBsm0QcJhayGQbD0IaIrEcMt3HFIB872S/E6fb1eetdaF7STkr6qtq
-         wp+j4+qTAwJod/Qg7IGsVmEsjze4iph9q5OcPp8U=
-Received: by mail-qk1-f172.google.com with SMTP id v22so1897839qkj.8;
-        Wed, 10 Jul 2019 06:50:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAWTojJ1CH4GGe44WipKANQrrqzMxIbBSJ9aQ/fXWMKSWfa51M0H
-        cFlTFmof8cGgvz/T8ElMz6lPvREub+qw1yGX4A==
-X-Google-Smtp-Source: APXvYqzqcyHECUE8Dw6jw3/udA2D+zm3IIa+/nL9hdsG+Jcrsvvf8zl/zsy5GkeSWvYskt3SEh1F3f67UnbWQyNMo3w=
-X-Received: by 2002:a37:a010:: with SMTP id j16mr24177941qke.152.1562766641368;
- Wed, 10 Jul 2019 06:50:41 -0700 (PDT)
+        Wed, 10 Jul 2019 09:50:47 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52511 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfGJNuq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 09:50:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s3so2411845wms.2;
+        Wed, 10 Jul 2019 06:50:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fabHZPAYJZma6uZryzQKLNaNjNwU8sofqj/+wik4T2k=;
+        b=NqkXfKOLIq7U4KThby4Itc6DV+yYyHJdxfNkJDr9pC3ssR20yR+jWUDuMxrM6CPhA5
+         WMVkRi9uQm07tiiEpBrv9AQ7fx29bBTw139/n+sIq2vV+mM/62pp7DpMA2aRmyPN8LaY
+         WOz/WO3vkcJlR3+OeCKQkV7LcLOnhx5/O7xN1XQkR7R3aIYuSkKIxEmoHZ2fgVuARyxs
+         RXHlJMPhQNJRtscO32XtKpueRmpxKX9NdLIICkyxuEwrsk0wZ9k26xoVFQ2kFaF/ufXa
+         6A6nCLrpPRa6UqwapHmeSUV83Di1xSC8X6FTo0/0tU1tyQa1BmjrfthmfwqAJSVp3tnl
+         U2jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fabHZPAYJZma6uZryzQKLNaNjNwU8sofqj/+wik4T2k=;
+        b=ibs+u44abRPaYzHLfe/4VNcIMgs/wtnhUQwbXp9RxdbFgeBktfaCIzIiiDO1BgrCN9
+         gs9Lp2SfmzzzghT6IBBe0W1vO5mLX/FAignPisrqD/jmLZGN+y/km/EQq9EtYvnA2PhK
+         OquydebkyYEVqElz3jT95xfWuKn0B9GjtIZL2bl5TStJvBNPE+mOrTbiLE+4uDohu+Tf
+         YsgSOHPeGHd68gnGRJQo4VaJvNX0mAOsTGr5bjganY91pEBoJcGi77zy/mmW66Ogy9rK
+         i+v1JT+QJIgFNLqCUbyneba9MMxfPr0fHYYkSSgJPZqxNh7BjzwqeuBxotO5ZSF/Hlwd
+         4QTA==
+X-Gm-Message-State: APjAAAUWX8JalFFNIwdACIkDSa1z2DsRsBgsV8Rn6Au08YLtXZfk9kc9
+        gvjJOSCCaz3nW7cK9Bbg07s=
+X-Google-Smtp-Source: APXvYqx//KKGXi4rYljlu6Pvc/VnAMSzbQROUXgKVYP9kg/dejzjiZZIg4eM8GL2pSqYVrzPbbugXg==
+X-Received: by 2002:a1c:238e:: with SMTP id j136mr5443337wmj.144.1562766644432;
+        Wed, 10 Jul 2019 06:50:44 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id j10sm3406009wrd.26.2019.07.10.06.50.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jul 2019 06:50:43 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 15:50:42 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Steve Magnani <steve.magnani@digidescorp.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        =?utf-8?Q?Vojt=C4=9Bch?= Vladyka <vojtech.vladyka@foxyco.cz>,
+        linux-fsdevel@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] udf: 2.01 interoperability issues with Windows 10
+Message-ID: <20190710135042.cfvx465cedie36sh@pali>
+References: <96e1ea00-ac12-015d-5c54-80a83f08b898@digidescorp.com>
+ <20190709185638.pcgdbdqoqgur6id3@pali>
+ <958ea915-3568-8f5a-581c-e5f0a673d30f@digidescorp.com>
+ <20190709210457.kzjnigu6fwgxxq27@pali>
+ <2994ee3a-9e38-0ed0-652a-e85de704f8d1@digidescorp.com>
 MIME-Version: 1.0
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-5-git-send-email-luis.oliveira@synopsys.com>
- <20190709142000.GA995@bogus> <MN2PR12MB371024C55C5B48A91EECE7A0CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
-In-Reply-To: <MN2PR12MB371024C55C5B48A91EECE7A0CBF10@MN2PR12MB3710.namprd12.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 10 Jul 2019 07:50:30 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJVfcrQBOgMK_iNYOZpEMfWcjS=_j++LPyu7bnLinMpfw@mail.gmail.com>
-Message-ID: <CAL_JsqJVfcrQBOgMK_iNYOZpEMfWcjS=_j++LPyu7bnLinMpfw@mail.gmail.com>
-Subject: Re: [v4 4/6] dt-bindings: phy: Document the Synopsys MIPI DPHY Rx bindings
-To:     Luis de Oliveira <Luis.Oliveira@synopsys.com>
-Cc:     "mchehab@kernel.org" <mchehab@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2994ee3a-9e38-0ed0-652a-e85de704f8d1@digidescorp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 10:29 AM Luis de Oliveira
-<Luis.Oliveira@synopsys.com> wrote:
->
-> From: Rob Herring <robh@kernel.org>
-> Date: Tue, Jul 09, 2019 at 15:20:00
->
-> > On Tue, Jun 11, 2019 at 09:20:53PM +0200, Luis Oliveira wrote:
-> > > Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
-> > > RX mode.
-> > >
-> > > Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
-> > > ---
-> > > Changelog
-> > > v3-v4
-> > > - @Laurent I know I told you I could remove the snps,dphy-frequency on V3 but
-> > >   it is really useful for me here. I removed all other the proprietary
-> > >   properties except this one. Do you still think it must be removed?
-> > > - Frequency units @Rob
-> >
-> > Frequency units means append '-khz' to the property name. That also
-> > makes the 'frequency' part redundant, so maybe name it more around what
-> > the frequency is. The frequency for what?
-> >
-> > Rob
-> >
->
-> This is the D-PHY high speed frequency configuration that corresponds to
-> the high speed data transfer of the bus.
-> Basically is the transmission speed per lane.
-> Do you think I can use "link-frequencies" (present in
-> video-interfaces.txt) with one frequency?
+On Wednesday 10 July 2019 08:24:09 Steve Magnani wrote:
+> 
+> On 7/9/19 4:04 PM, Pali Rohár wrote:
+> > On Tuesday 09 July 2019 15:14:38 Steve Magnani wrote:
+> > > On 7/9/19 1:56 PM, Pali Rohár wrote:
+> > > > Can grub2 recognize such disks?
+> > > I'm not sure what you're asking here. The physical interface to this drive is USB,
+> > It is USB mass storage device? If yes, then grub2 should be able to
+> > normally use. Read its content, etc... You can use "ls" grub command to
+> > list content of disk with supported filesystem.
+> 
+> Yes, Mass Storage Bulk-Only Transport.
+> 
+> > 
+> > > and it's not designed for general-purpose storage (or booting). That said, if you
+> > > have some grub2 commands you want me to run against this drive/partition let me know.
+> > There is also some way for using grub's fs implementation to read disk
+> > images. It is primary used by grub's automated tests. I do not know
+> > right now how to use, I need to look grub documentation. But I have
+> > already used it during implementation of UDF UUID in grub.
+> 
+> Grub is not recognizing my USB drive, i.e. 'ls' does not show usb0 as an option.
+> I tried 'insmod usb' but that made no difference. Maybe grub does not support my
+> USB 3.0 host controller, I will retry on a USB2 port when I have a chance.
 
-Seems reasonable.
+In some cases, BIOS/UEFI firmware supports USB mass storage devices and
+then grub see them... So it depends on how grub access to disk. Pre-boot
+environment is always fragile...
 
-Rob
+> > > > Also can you check if libparted from git master branch can recognize
+> > > > such disk? In following commit I added support for recognizing UDF
+> > > > filesystem in libparted, it is only in git master branch, not released:
+> > > > 
+> > > > http://git.savannah.gnu.org/cgit/parted.git/commit/?id=8740cfcff3ea839dd6dc8650dec0a466e9870625
+> > > Build failed:
+> > >    In file included from pt-tools.c:114:0:
+> > >    pt-tools.c: In function 'pt_limit_lookup':
+> > >    pt-limit.gperf:78:1: error: function might be candidate for attribute 'pure' [-Werror=suggest-attribute=pure]
+> > > 
+> > > If you send me some other SHA to try I can attempt a rebuild.
+> > Try to use top of master branch. That mentioned commit is already in git
+> > master.
+> > 
+> > And if it still produce that error, compile without -Werror flag (or add
+> > -Wno-error).
+> 
+> I had to configure with CFLAGS=-Wno-error.
+> 
+> It does not recognize Windows-formatted 4K-sector media:
+>   Disk /dev/sdb: 17.6TB
+>   Sector size (logical/physical): 4096B/4096B
+>   Partition Table: msdos
+>   Disk Flags:
+> 
+>   Number  Start   End     Size    Type     File system  Flags
+>    1      1049kB  17.6TB  17.6TB  primary
+> 
+
+Ok, so it means that GUI/TUI tools based on libparted would have
+problems with these disks too.
+
+So ISSUE 1 is big problem for Linux.
+
+> It does recognize mkudffs-formatted media.
+
+That is expected.
+
+> > 
+> > > > ISSUE 2: Inability of Windows chkdsk to analyze 4K-sector media
+> > > >            formatted by mkudffs.
+> > > > This is really bad :-(
+> > > > 
+> > > > > It would be possible to work around this by tweaking mkudffs to
+> > > > > insert dummy BOOT2 components in between the BEA/NSR/TEA:
+> > > > > 
+> > > > >     0000: 00 42 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .BEA01..........
+> > > > >     0800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
+> > > > >     1000: 00 4e 53 52 30 33 01 00 00 00 00 00 00 00 00 00  .NSR03..........
+> > > > >     1800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
+> > > > >     2000: 00 54 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .TEA01..........
+> > > > > 
+> > > > > That would introduce a slight ECMA-167 nonconformity, but Linux
+> > > > > does not object and Windows actually performs better. I would
+> > > > > have to tweak udffsck though since I believe this could confuse
+> > > > > its automatic detection of medium block size.
+> > > > I would like to avoid this hack. If chkdsk is unable to detect such
+> > > > filesystem, it is really a good idea to let it do try doing filesystem
+> > > > checks and recovery? You are saying that udfs.sys can recognize such
+> > > > disk and mount it. I think this should be enough.
+> > > Fair enough, but it's also reasonable to assume the bugginess is
+> > > limited to the VRS corner case. AFAIK that's the only place in ECMA-167
+> > > where there is a difference in layout specific to 4K sectors.
+> > > With the BOOT2 band-aid chkdsk is able to analyze filesystems on 4Kn media.
+> > Main problem with this hack is that it breaks detection of valid UDF
+> > filesystems which use VRS for block size detection. I do not know which
+> > implementation may use VRS for block size detection, but I do not see
+> > anything wrong in this approach.
+> 
+> I went through this with udffsck. The VRS is not very helpful in
+> determining block size because the only time the block size can be
+> determined conclusively is when the interval between VRS components
+> is > 2048 bytes. With an interval of 2048 bytes, the only conclusion
+> that can be drawn is that blocks are no larger than 2048 bytes.
+
+Yes, I know. But for >2048 block sizes it can be used and is allowed by
+specification.
+
+> > > I use chkdsk frequently to double-check UDF generation firmware
+> > Vojtěch wrote in his thesis that MS's chkdsk sometimes put UDF
+> > filesystem into more broken state as before.
+> 
+> Yes, I have personally experienced this. I don't have chkdsk do
+> repairs any more. In my case the problem may be that chkdsk
+> poorly handles the cascading corruption that resulted from this:
+> 
+>     https://lkml.org/lkml/2019/2/8/740
+> 
+> > > I am writing, and also udffsck work-in-progress.
+> > Have you used some Vojtěch's parts? Or are you writing it from scratch?
+> > 
+> A udffsck discussion should probably continue in another thread.
+> Here let me just say that I have been enhancing Vojtěch's code,
+> in this fork:
+> 
+>   https://github.com/smagnani/udftools
+> 
+> ...as time permits. Since winter ended the time I have available
+> for this has plummeted, so progress is very slow. But this recent
+> kernel driver patch grew out of work to make sure that udffsck
+> handles the UDF "file tail" properly:
+> 
+>   https://lkml.org/lkml/2019/6/4/551
+>   https://lkml.org/lkml/2019/6/30/181
+
+Great, thank you for update.
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
