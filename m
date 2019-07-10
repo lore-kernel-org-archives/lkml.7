@@ -2,90 +2,99 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C41C73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75384C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628842064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3849F20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562743448;
+	bh=07abPqHi0bx/2V6DX3mR/4wGcFkZzvDnRhGgdklDc9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=upp9BGXI3km3HkmfmaD7ba7gvQQmKg3EyRIV3hQqkFhiEHDKaB+hedfbIOUuWF6/z
+	 p68ytf30Wf9S1raVwC5iHg+REFizh9R98Thlb9scUhgVC+108srpS4Pb4nckwkk30I
+	 d44uVhIDfAd7RQqZW7RYHJYwOofkbgzzkDC47crg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfGJHXx (ORCPT
+        id S1727188AbfGJHYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:23:53 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56595 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfGJHXw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:23:52 -0400
-X-Originating-IP: 86.250.200.211
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 8E37BC000D;
-        Wed, 10 Jul 2019 07:23:49 +0000 (UTC)
-Date:   Wed, 10 Jul 2019 09:23:49 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] staging: media: cedrus: Fix misuse of GENMASK macro
-Message-ID: <20190710072349.GA24674@aptenodytes>
-References: <cover.1562734889.git.joe@perches.com>
- <cd543a5f26b031a0bbd3baa55e1f15813f59f107.1562734889.git.joe@perches.com>
+        Wed, 10 Jul 2019 03:24:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbfGJHYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 03:24:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AB5D2064A;
+        Wed, 10 Jul 2019 07:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562743445;
+        bh=07abPqHi0bx/2V6DX3mR/4wGcFkZzvDnRhGgdklDc9s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ILoG/RDAWFrlvtKlF4riZ3+q0NwHP0NTPHSafg2g1jlb+pFkcu4Yr1MwLFQkNXfaG
+         ajRFr0akoFFeR/6yAeoxlU81kjldRDFkLSTc8TE4nnVwjFMWMtWlkm8hWzkUWZKq3+
+         k0N0rAxCHR9nfeoIhxP6mfcZioHe+CTzDkMVP3Oo=
+Date:   Wed, 10 Jul 2019 09:24:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.1 00/96] 5.1.17-stable review
+Message-ID: <20190710072403.GB12087@kroah.com>
+References: <20190708150526.234572443@linuxfoundation.org>
+ <65c41248-f391-1231-c2b3-9c65922a696e@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd543a5f26b031a0bbd3baa55e1f15813f59f107.1562734889.git.joe@perches.com>
+In-Reply-To: <65c41248-f391-1231-c2b3-9c65922a696e@nvidia.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue 09 Jul 19, 22:04, Joe Perches wrote:
-> Arguments are supposed to be ordered high then low.
+On Wed, Jul 10, 2019 at 07:14:05AM +0100, Jon Hunter wrote:
 > 
-> Signed-off-by: Joe Perches <joe@perches.com>
-
-Good catch, thanks!
-
-Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Cheers,
-
-Paul
-
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus_regs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 08/07/2019 16:12, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.1.17 release.
+> > There are 96 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed 10 Jul 2019 03:03:52 PM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.17-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> index 3e9931416e45..ddd29788d685 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> @@ -110,7 +110,7 @@
->  #define VE_DEC_MPEG_MBADDR			(VE_ENGINE_DEC_MPEG + 0x10)
->  
->  #define VE_DEC_MPEG_MBADDR_X(w)			(((w) << 8) & GENMASK(15, 8))
-> -#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(0, 7))
-> +#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(7, 0))
->  
->  #define VE_DEC_MPEG_CTRL			(VE_ENGINE_DEC_MPEG + 0x14)
->  
-> -- 
-> 2.15.0
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.1:
+>     12 builds:	12 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     32 tests:	32 pass, 0 fail
+> 
+> Linux version:	5.1.17-rc1-gb64119f8dffe
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
 > 
 
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Thanks for testing all of these and letting me know.
+
+greg k-h
