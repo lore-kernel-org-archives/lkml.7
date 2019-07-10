@@ -2,152 +2,77 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00418C606B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCC4C606B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC35D20844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Yv02FiX2"
+	by mail.kernel.org (Postfix) with ESMTP id AE31F20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfGJIoP (ORCPT
+        id S1727594AbfGJIq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:44:15 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37437 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfGJIoP (ORCPT
+        Wed, 10 Jul 2019 04:46:59 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:45802 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbfGJIq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:44:15 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so770367pfa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 01:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZxB6K90WEOCOsXFUiDbe1sddkLrl4+FMawAXBSkTyfs=;
-        b=Yv02FiX2qw7jZOKTrsoiIMkDDSP78zsxI2V+pkdLGpN8sQ2V9lYpCBTujbjLOd4+XX
-         cDHNZGrU/OY6+FRbsNHKPd9Pi/5iY4BUy8RRb4v/YuXTqTo96k3IM3BvQBPijRhv5ykC
-         3M8lrau2R5HxxkFPUp0vn7kIiIuFkU0VmWVtqF8NQ8810MvhOKhoHVeynE63w6hpwNtX
-         zqpv0eFQplEjHM793bOPiK6GZZjpPSpLCWoz9X38kBQ8V6Pt15H4jijSHphDEN+Qtimw
-         aurOy9tnyBXRUbgisvNaPCNVSUb0EOgeJPbdyErfH7PHrnO69wdgHiS3AqX/zHyZLQcm
-         S23w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZxB6K90WEOCOsXFUiDbe1sddkLrl4+FMawAXBSkTyfs=;
-        b=r6jrlS7zVhI9OFxS1b+KzXctsgS1jFzp5SS4lPaKvPp62r2ioSKmAyBZwEGCcBShkR
-         T8CCY9KvmL8OhWUxEd0cVBXzZuaT3foole7KgTolhs9KlHbQ3VmNEtHXY0hoMLa1c9Ib
-         nYwQrYsDQbnBa5ib4eNgxWzCcStUTBX6s2jYvXpvH9sAnBV3IiXpIMHgGODG2OMWawln
-         qjwNEu9bg4XZiLjnVIaHMrRAOHxjSjddvIgeKrtAqu3PfI3UEGWjWzluiaFUydKefgx1
-         g/JQ1OFdbttS6jCm6Jx4Zkl7CMUxu0q8KPNG2zKICM7eN5DPFdrdjV7DiAuODQpUFYbM
-         sXtg==
-X-Gm-Message-State: APjAAAW7fBZeqMaqqSRY8WIpoLFUxhBoDms2ZhZY3mUL51Yd4VGL5JD4
-        UwsN4A4bHT6APrOfhMiG9CWHCQ==
-X-Google-Smtp-Source: APXvYqx6r3nK/XJfM+4IfR4WIlijQtiFKtASr2UXeXiYiziTXmlsNyQAr1EFL/V112AK8JqshhpfCw==
-X-Received: by 2002:a63:7d05:: with SMTP id y5mr32971869pgc.425.1562748254525;
-        Wed, 10 Jul 2019 01:44:14 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id v5sm1378133pgq.66.2019.07.10.01.44.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 01:44:14 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        David Laight <David.Laight@aculab.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>, stable@vger.kernel.org
-Subject: [PATCH v3 2/2] rtw88: pci: Use DMA sync instead of remapping in RX ISR
-Date:   Wed, 10 Jul 2019 16:38:27 +0800
-Message-Id: <20190710083825.7115-2-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190709161550.GA8703@infradead.org>
-References: <20190709161550.GA8703@infradead.org>
+        Wed, 10 Jul 2019 04:46:59 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 0A32472CCDD;
+        Wed, 10 Jul 2019 11:46:57 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 00D8C7CCE3A; Wed, 10 Jul 2019 11:46:56 +0300 (MSK)
+Date:   Wed, 10 Jul 2019 11:46:56 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Xi Ruoyao <xry111@mengyan1223.wang>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        David Airlie <airlied@linux.ie>, Jessica Yu <jeyu@kernel.org>,
+        kernel-hardening@lists.openwall.com,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: kernel oops loading i915 after "x86/asm: Pin sensitive CR4 bits"
+ (873d50d58)
+Message-ID: <20190710084656.GB5447@altlinux.org>
+References: <e5baec48e5c362256a631a2d55fbc30251ab5e83.camel@mengyan1223.wang>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5baec48e5c362256a631a2d55fbc30251ab5e83.camel@mengyan1223.wang>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since each skb in RX ring is reused instead of new allocation, we can
-treat the DMA in a more efficient way by DMA synchronization.
+Hi,
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: <stable@vger.kernel.org>
----
-v2:
- - New patch by following [PATCH v3 1/2] rtw88: pci: Rearrange the
-   memory usage for skb in RX ISR.
+On Wed, Jul 10, 2019 at 01:44:17PM +0800, Xi Ruoyao wrote:
+> Hello,
+> 
+> When I try to build and run the latest mainline kernel, it Oops loading i915
+> module:
+> 
+> BUG: unable to handle page fault for address: ffffffff9edc1598
+> #PF: supervisor write access in kernel mode
+> #PF: error_code(0x0003) - permissions violation
+> PGD 1a20c067 P4D 1a20c067 PUD 1a20d063 PMD 8000000019e000e1 
+> Oops: 0003 [#1] SMP PTI
+> 
+> The complete log is attached.
+> 
+> Bisection tells "x86/asm: Pin sensitive CR4 bits" (873d50d58) is the first "bad"
+> commit.  I can revert it and also "x86/asm: Pin sensitive CR0 bits" (8dbec27a2)
+> to make the kernel "seems to" work.
+> 
+> I'm not a kernel expert so I can't tell if there is a bug in Kees' patch, or his
+> patch exploits a bug in i915 or module loader.
 
-v3:
- - Remove rtw_pci_sync_rx_desc_cpu and call dma_sync_single_for_cpu in
-   rtw_pci_rx_isr directly.
- - Remove the return value of rtw_pci_sync_rx_desc_device.
- - Use DMA_FROM_DEVICE instead of PCI_DMA_FROMDEVICE.
+This seems to be a kernel bug introduced after v5.2, see
+https://lore.kernel.org/lkml/CAHk-=wjh+h_-fd-gJz=wor42ZNmqq46QnB90jyfzqmKLsLFWOg@mail.gmail.com/
 
- drivers/net/wireless/realtek/rtw88/pci.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index e9fe3ad896c8..485d30c06935 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -206,6 +206,23 @@ static int rtw_pci_reset_rx_desc(struct rtw_dev *rtwdev, struct sk_buff *skb,
- 	return 0;
- }
- 
-+static void rtw_pci_sync_rx_desc_device(struct rtw_dev *rtwdev, dma_addr_t dma,
-+					struct rtw_pci_rx_ring *rx_ring,
-+					u32 idx, u32 desc_sz)
-+{
-+	struct device *dev = rtwdev->dev;
-+	struct rtw_pci_rx_buffer_desc *buf_desc;
-+	int buf_sz = RTK_PCI_RX_BUF_SIZE;
-+
-+	dma_sync_single_for_device(dev, dma, buf_sz, DMA_FROM_DEVICE);
-+
-+	buf_desc = (struct rtw_pci_rx_buffer_desc *)(rx_ring->r.head +
-+						     idx * desc_sz);
-+	memset(buf_desc, 0, sizeof(*buf_desc));
-+	buf_desc->buf_size = cpu_to_le16(RTK_PCI_RX_BUF_SIZE);
-+	buf_desc->dma = cpu_to_le32(dma);
-+}
-+
- static int rtw_pci_init_rx_ring(struct rtw_dev *rtwdev,
- 				struct rtw_pci_rx_ring *rx_ring,
- 				u8 desc_size, u32 len)
-@@ -782,8 +799,8 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
- 		rtw_pci_dma_check(rtwdev, ring, cur_rp);
- 		skb = ring->buf[cur_rp];
- 		dma = *((dma_addr_t *)skb->cb);
--		pci_unmap_single(rtwpci->pdev, dma, RTK_PCI_RX_BUF_SIZE,
--				 PCI_DMA_FROMDEVICE);
-+		dma_sync_single_for_cpu(rtwdev->dev, dma, RTK_PCI_RX_BUF_SIZE,
-+					DMA_FROM_DEVICE);
- 		rx_desc = skb->data;
- 		chip->ops->query_rx_desc(rtwdev, rx_desc, &pkt_stat, &rx_status);
- 
-@@ -818,7 +835,8 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
- 
- next_rp:
- 		/* new skb delivered to mac80211, re-enable original skb DMA */
--		rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc_sz);
-+		rtw_pci_sync_rx_desc_device(rtwdev, dma, ring, cur_rp,
-+					    buf_desc_sz);
- 
- 		/* host read next element in ring */
- 		if (++cur_rp >= ring->r.len)
 -- 
-2.22.0
-
+ldv
