@@ -2,105 +2,166 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB5CC606CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701B7C71142
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7122064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PkSp2haE"
+	by mail.kernel.org (Postfix) with ESMTP id 4EF3920838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfGJMhc (ORCPT
+        id S1727444AbfGJMiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:37:32 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:34974 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJMhb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:37:31 -0400
-Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1E62731C;
-        Wed, 10 Jul 2019 14:37:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1562762249;
-        bh=rXmN/ZP1jKpCFxlT6ZQ3Ed8fIwsZSXGnqlc6PGjlcj8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PkSp2haE0jZmJsqrMwJ1rxk/Cok03Jt0bZbMIZ/5e19X7e8fcGgs51dJLcALqvA41
-         pAADSeNs5/vyArQ7vyiqt+t1x9fpsh4GaUv4Dg1kTyXlMn3fWBwaGULBbfBJ0KNOY5
-         BprfaHdPT11bG4UE3ij96ouj+9QPnuVv5rNOY2C0=
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-To:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] media: i2c: adv748x: Convert to new i2c device probe()
-Date:   Wed, 10 Jul 2019 13:37:19 +0100
-Message-Id: <20190710123719.3376-1-kieran.bingham+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 10 Jul 2019 08:38:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43906 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725956AbfGJMiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 08:38:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BBD4BAEAC;
+        Wed, 10 Jul 2019 12:38:03 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 126CEE0E06; Wed, 10 Jul 2019 14:38:03 +0200 (CEST)
+Date:   Wed, 10 Jul 2019 14:38:03 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v6 06/15] ethtool: netlink bitset handling
+Message-ID: <20190710123803.GB5700@unicorn.suse.cz>
+References: <cover.1562067622.git.mkubecek@suse.cz>
+ <cb614bebee1686293127194e8f7ced72955c7c7f.1562067622.git.mkubecek@suse.cz>
+ <20190703114933.GW2250@nanopsycho>
+ <20190703181851.GP20101@unicorn.suse.cz>
+ <20190704080435.GF2250@nanopsycho>
+ <20190704115236.GR20101@unicorn.suse.cz>
+ <20190709141817.GE2301@nanopsycho.orion>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709141817.GE2301@nanopsycho.orion>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The I2C core framework provides a simplified probe framework from commit
-b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new() call-back type").
+On Tue, Jul 09, 2019 at 04:18:17PM +0200, Jiri Pirko wrote:
+> 
+> I understand. So how about avoid the bitfield all together and just
+> have array of either bits of strings or combinations?
+> 
+> ETHTOOL_CMD_SETTINGS_SET (U->K)
+>     ETHTOOL_A_HEADER
+>         ETHTOOL_A_DEV_NAME = "eth3"
+>     ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>        ETHTOOL_A_SETTINGS_PRIV_FLAG
+>            ETHTOOL_A_FLAG_NAME = "legacy-rx"
+> 	   ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+> 
+> or the same with index instead of string
+> 
+> ETHTOOL_CMD_SETTINGS_SET (U->K)
+>     ETHTOOL_A_HEADER
+>         ETHTOOL_A_DEV_NAME = "eth3"
+>     ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>             ETHTOOL_A_FLAG_INDEX = 0
+>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+> 
+> 
+> For set you can combine both when you want to set multiple bits:
+> 
+> ETHTOOL_CMD_SETTINGS_SET (U->K)
+>     ETHTOOL_A_HEADER
+>         ETHTOOL_A_DEV_NAME = "eth3"
+>     ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>             ETHTOOL_A_FLAG_INDEX = 2
+>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>             ETHTOOL_A_FLAG_INDEX = 8
+>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>             ETHTOOL_A_FLAG_NAME = "legacy-rx"
+>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+> 
+> 
+> For get this might be a bit bigger message:
+> 
+> ETHTOOL_CMD_SETTINGS_GET_REPLY (K->U)
+>     ETHTOOL_A_HEADER
+>         ETHTOOL_A_DEV_NAME = "eth3"
+>     ETHTOOL_A_SETTINGS_PRIV_FLAGS
+>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>             ETHTOOL_A_FLAG_INDEX = 0
+>             ETHTOOL_A_FLAG_NAME = "legacy-rx"
+>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>             ETHTOOL_A_FLAG_INDEX = 1
+>             ETHTOOL_A_FLAG_NAME = "vf-ipsec"
+>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
+>         ETHTOOL_A_SETTINGS_PRIV_FLAG
+>             ETHTOOL_A_FLAG_INDEX = 8
+>             ETHTOOL_A_FLAG_NAME = "something-else"
+>  	    ETHTOOL_A_FLAG_VALUE   (NLA_FLAG)
 
-Convert the ADV748x to utilise this simplfied i2c driver registration.
+This is perfect for "one shot" applications but not so much for long
+running ones, either "ethtool --monitor" or management or monitoring
+daemons. Repeating the names in every notification message would be
+a waste, it's much more convenient to load the strings only once and
+cache them. Even if we omit the names in notifications (and possibly the
+GET replies if client opts for it), this format still takes 12-16 bytes
+per bit.
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
----
- drivers/media/i2c/adv748x/adv748x-core.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+So the problem I'm trying to address is that there are two types of
+clients with very different mode of work and different preferences.
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index 097e94279cf7..ae2b6eb93e09 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -677,8 +677,7 @@ static void adv748x_dt_cleanup(struct adv748x_state *state)
- 		of_node_put(state->endpoints[i]);
- }
- 
--static int adv748x_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int adv748x_probe(struct i2c_client *client)
- {
- 	struct adv748x_state *state;
- 	int ret;
-@@ -806,13 +805,6 @@ static int adv748x_remove(struct i2c_client *client)
- 	return 0;
- }
- 
--static const struct i2c_device_id adv748x_id[] = {
--	{ "adv7481", 0 },
--	{ "adv7482", 0 },
--	{ },
--};
--MODULE_DEVICE_TABLE(i2c, adv748x_id);
--
- static const struct of_device_id adv748x_of_table[] = {
- 	{ .compatible = "adi,adv7481", },
- 	{ .compatible = "adi,adv7482", },
-@@ -825,9 +817,8 @@ static struct i2c_driver adv748x_driver = {
- 		.name = "adv748x",
- 		.of_match_table = adv748x_of_table,
- 	},
--	.probe = adv748x_probe,
-+	.probe_new = adv748x_probe,
- 	.remove = adv748x_remove,
--	.id_table = adv748x_id,
- };
- 
- module_i2c_driver(adv748x_driver);
--- 
-2.20.1
+Looking at the bitset.c, I would rather say that most of the complexity
+and ugliness comes from dealing with both unsigned long based bitmaps
+and u32 based ones. Originally, there were functions working with
+unsigned long based bitmaps and the variants with "32" suffix were
+wrappers around them which converted u32 bitmaps to unsigned long ones
+and back. This became a problem when kernel started issuing warnings
+about variable length arrays as getting rid of them meant two kmalloc()
+and two kfree() for each u32 bitmap operation, even if most of the
+bitmaps are in rather short in practice.
 
+Maybe the wrapper could do something like
+
+int ethnl_put_bitset32(const u32 *value, const u32 *mask,
+		       unsigned int size,  ...)
+{
+	unsigned long fixed_value[2], fixed_mask[2];
+	unsigned long *tmp_value = fixed_value;
+	unsigned long *tmp_mask = fixed_mask;
+
+	if (size > sizeof(fixed_value) * BITS_PER_BYTE) {
+		tmp_value = bitmap_alloc(size);
+		if (!tmp_value)
+			return -ENOMEM;
+		tmp_mask = bitmap_alloc(size);
+		if (!tmp_mask) {
+			kfree(tmp_value);
+			return -ENOMEM;
+		}
+	}
+
+	bitmap_from_arr32(tmp_value, value, size);
+	bitmap_from_arr32(tmp_mask, mask, size);
+	ret = ethnl_put_bitset(tmp_value, tmp_mask, size, ...);
+}
+
+This way we would make bitset.c code cleaner while avoiding allocating
+short bitmaps (which is the most common case). 
+
+Michal
