@@ -2,181 +2,277 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9D9C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 22:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6634AC74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0ACD21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 22:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2723721019
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hqkoo2XX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JqyQFu/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbfGJW4y (ORCPT
+        id S1727595AbfGJXEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 18:56:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40036 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727705AbfGJW4y (ORCPT
+        Wed, 10 Jul 2019 19:04:16 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:43997 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfGJXEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 18:56:54 -0400
-Received: by mail-io1-f65.google.com with SMTP id h6so8351948iom.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 15:56:53 -0700 (PDT)
+        Wed, 10 Jul 2019 19:04:15 -0400
+Received: by mail-pg1-f201.google.com with SMTP id f18so2352375pgb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 16:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wvZvVibciLuoN0XPHn1GQTPO0jZSmghihu4pRgb43gE=;
-        b=Hqkoo2XXLEooMC5VZ+gOGg3gxQkocTVvzTmDsnDANF3OvZLlo/WQja4ye0rFzpf83e
-         shsMhGUJvVUA4YU0xi/vv+i+XuO2LxUMqoRYnyGtJibDxbKwyeL16AR1P0KokEbKVpus
-         TtaPbc8kH0P9xgP/1HkX6qrifSz9Mm/YfZAik=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=ZtSCYRHrfuqeQFIWIan5FMIhgUsXnRQXRzmzNcRVTvA=;
+        b=JqyQFu/936dQlgKHtsm7+vkRRQ2FEGjcK3zyQ9FtJTEogsQurFNSrSQfqiihOFvzgu
+         Rtc9EflergHRlqVhiQVuq4nVY6xEROwEZtJS2dBlrVKGjSCsqJmnesNfSlGsIw1jEyJ+
+         5UQ6ljtGbHhdwtwJzNUMXzuKU9OQpDDcfuvGpOQmTm429CJovYJNlxYoWAlDZqKWBBoX
+         MYYrRFAtRJu1HRDuUNOSq5MO5o+EFmKQKJG5XDs2iM/kKNvBrIWDyE62CzhcMZBqp2CK
+         pwjyNgBO8PHHICfiCD5KEfHRr7Is0xnKFyALCSFmVBjzMr9Iqkam5xNclyDDqCyTK8/k
+         kvsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wvZvVibciLuoN0XPHn1GQTPO0jZSmghihu4pRgb43gE=;
-        b=FGlWkY8BuHXcuXLVB147SUGpQtk6Mb3ys2vcT8GCIDdCsyWfwtCQn2a7m/5cvQ8KY6
-         71TT9K1PQkvkMu3aSZG5NJBqIdW1pBdOa/sA7issjs+fJwMpjY8PHzOKJBlRmJadv+MO
-         LSXgV+pz8zp6QNAvS9t9GRVpMmuvVm52ZYXjIDqD0Pg7pgnq/y25R3efPE1EBOXtJQf9
-         CVoOgXa/8R4pTV11DTHPBk2cXMdTFLfxbfD8XYVHn14reWP28yOaig/+X+hYwbBFFeRE
-         75GldE7b/RCqa9h2FZaI1xYjDBMqVoJJTQR9IXyJLcHjIeIsTWIGoRJ80qVfjMTksfd1
-         oQsw==
-X-Gm-Message-State: APjAAAWwwYbDPN3S5sQL9Ug6NsSlUUiGNGjdzl3BMxoQI0svfRt+13rh
-        Q6DlsKv2uVtBfNR0cmJpsXYcoZ1KjQw=
-X-Google-Smtp-Source: APXvYqzieaTarY0l9Cjys1irHjDHVNMkkxiwJ1zMj5UqM/lZ3QIXQhzvyGnP29vxGwjhcUetlx7drw==
-X-Received: by 2002:a5e:9314:: with SMTP id k20mr670084iom.235.1562799412852;
-        Wed, 10 Jul 2019 15:56:52 -0700 (PDT)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
-        by smtp.gmail.com with ESMTPSA id z26sm3745733ioi.85.2019.07.10.15.56.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 15:56:51 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id f4so8378734ioh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 15:56:51 -0700 (PDT)
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr670314iop.58.1562799411159;
- Wed, 10 Jul 2019 15:56:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190401171724.215780-1-dianders@chromium.org>
- <20190401171724.215780-3-dianders@chromium.org> <20190630202246.GB15102@ravnborg.org>
- <20190630205514.GA17046@ravnborg.org> <CAD=FV=WH4kmhQA0kbKcAUx=oOeqTZiQOFCXYpVWwq+mG7Y7ofA@mail.gmail.com>
- <20190708175606.GB3511@ravnborg.org>
-In-Reply-To: <20190708175606.GB3511@ravnborg.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 10 Jul 2019 15:56:39 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VdkPLwyGhSnrHCcduQAPwby35Mqhk_r=O595bMoMT=6w@mail.gmail.com>
-Message-ID: <CAD=FV=VdkPLwyGhSnrHCcduQAPwby35Mqhk_r=O595bMoMT=6w@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] drm/panel: simple: Add ability to override typical timing
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
-        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=ZtSCYRHrfuqeQFIWIan5FMIhgUsXnRQXRzmzNcRVTvA=;
+        b=FRgDRMHYWLgVwwtOco2t1J4pSxXgBB+bIc0+rk/omxhoBZ+I23tKsQIqWR17lmcyQ5
+         fhMg+YxQZM+P3cAyaQwSeXttQq9MWYjaIqHFUvenW6uWlc1iftnIfOXlgqhud7u5bFrz
+         baspN+8D/WBIqX8kLQyOYWhQ8hAbyTyzVdbIVhii35u43NqWCcAJVl3Qhm9L/mMCpz58
+         lJPZNY+YDYPZBh6ghJb1rKz4BBmE4wI2Z9Th+7Iyt4uB97TI89tdbUBfSq7NHtrQUrzW
+         pIPt/9Mti2oxSz45HVQ0kDKiU7Kis6C6GwlQezKbsaIgjBIuLuqr+tIflRihe/gy6HOD
+         njMQ==
+X-Gm-Message-State: APjAAAUBdC2adqmvmunJqGRD3Gf8So+/wCXWf94pQov9TzMNFWSegX2s
+        noeyLnnnpsoreRBxbJy+uzPu4ArNlFG/tsQ=
+X-Google-Smtp-Source: APXvYqz9nxqbgKTcnIyVtM9Cf2IExoluezUtYMDtu1yz90v1LYMQi3QOULdrycwXTXmb6qiPPCYRQd+1ZiwieEk=
+X-Received: by 2002:a63:d748:: with SMTP id w8mr764999pgi.157.1562799854045;
+ Wed, 10 Jul 2019 16:04:14 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 16:04:10 -0700
+Message-Id: <20190710230410.9386-1-atifniyaz@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH] input: API for Setting a Timestamp from a Driver
+From:   Atif Niyaz <atifniyaz@google.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Atif Niyaz <atifniyaz11@gmail.com>,
+        Siarhei Vishniakou <svv@google.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Atif Niyaz <atifniyaz@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Currently, evdev stamps time with timestamps acquired in
+evdev_events. However, this timestamping may not be accurate in terms of
+measuring when the actual event happened. This API allows any 3rd party
+driver to be able to call input_set_timestamp, and provide a timestamp
+that can be utilized in order to provide a more accurate sense of time
+for the event
 
-On Mon, Jul 8, 2019 at 10:56 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> On Mon, Jul 01, 2019 at 09:39:06AM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Sun, Jun 30, 2019 at 1:55 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > >
-> > > Hi Douglas.
-> > >
-> > > > > +
-> > > > > +   /* Only add timings if override was not there or failed to validate */
-> > > > > +   if (num == 0 && panel->desc->num_timings)
-> > > > > +           num = panel_simple_get_timings_modes(panel);
-> > > > > +
-> > > > > +   /*
-> > > > > +    * Only add fixed modes if timings/override added no mode.
-> > > >
-> > > > This part I fail to understand.
-> > > > If we have a panel where we in panel-simple have specified the timings,
-> > > > and done so using display_timing so with proper {min, typ, max} then it
-> > > > should be perfectly legal to specify a more precise variant in the DT
-> > > > file.
-> > > > Or what did I miss here?
-> > >
-> > > Got it now.
-> > > If display_mode is used for timings this is what you call "fixed mode".
-> > > Hmm, if I got confused someone else may also be confused by this naming.
-> >
-> > The name "fixed mode" comes from the old code, though I guess in the
-> > old code it used to refer to a mode that came from either the
-> > display_timing or the display_mode.
-> >
-> > How about if I call it "panel_simple_get_from_fixed_display_mode"?
-> > ...or if you have another suggestion feel free to chime in.
-> What we really want to distingush here is the use of display_mode
-> and display_timings (if I got the names right).
-> That display_mode specify a fixed timing and display_timing specify
-> a valid range is something in the semantics of the two types.
-> So naming that refer to display_mode versus display_timing will make the
-> code simpler to understand. and then a nice comment that when
-> display_mode
-> is used one looses the possibility to use override_mode.
-> That would be fine to have in the struct in the driver.
+Signed-off-by: Atif Niyaz <atifniyaz@google.com>
+---
+ drivers/input/evdev.c | 42 ++++++++++++++++--------------------------
+ drivers/input/input.c | 17 +++++++++++++++++
+ include/linux/input.h | 38 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 71 insertions(+), 26 deletions(-)
 
-OK, I can change the names here and try to find a good place to add a comment.
+diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
+index 867c2cfd0038..a331efa0a3f6 100644
+--- a/drivers/input/evdev.c
++++ b/drivers/input/evdev.c
+@@ -25,13 +25,6 @@
+ #include <linux/cdev.h>
+ #include "input-compat.h"
+ 
+-enum evdev_clock_type {
+-	EV_CLK_REAL = 0,
+-	EV_CLK_MONO,
+-	EV_CLK_BOOT,
+-	EV_CLK_MAX
+-};
+-
+ struct evdev {
+ 	int open;
+ 	struct input_handle handle;
+@@ -53,7 +46,7 @@ struct evdev_client {
+ 	struct fasync_struct *fasync;
+ 	struct evdev *evdev;
+ 	struct list_head node;
+-	unsigned int clk_type;
++	input_clk_t clk_type;
+ 	bool revoked;
+ 	unsigned long *evmasks[EV_CNT];
+ 	unsigned int bufsize;
+@@ -150,16 +143,18 @@ static void __evdev_flush_queue(struct evdev_client *client, unsigned int type)
+ static void __evdev_queue_syn_dropped(struct evdev_client *client)
+ {
+ 	struct input_event ev;
+-	ktime_t time;
+ 	struct timespec64 ts;
++	ktime_t *time = input_get_timestamp(client->evdev->handle.dev);
+ 
+-	time = client->clk_type == EV_CLK_REAL ?
+-			ktime_get_real() :
+-			client->clk_type == EV_CLK_MONO ?
+-				ktime_get() :
+-				ktime_get_boottime();
++	switch (client->clk_type) {
++	case INPUT_CLK_REAL:
++	case INPUT_CLK_MONO:
++		ts = ktime_to_timespec64(time[client->clk_type]);
++		break;
++	default:
++		ts = ktime_to_timespec64(time[INPUT_CLK_BOOT]);
++	}
+ 
+-	ts = ktime_to_timespec64(time);
+ 	ev.input_event_sec = ts.tv_sec;
+ 	ev.input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
+ 	ev.type = EV_SYN;
+@@ -185,21 +180,21 @@ static void evdev_queue_syn_dropped(struct evdev_client *client)
+ 	spin_unlock_irqrestore(&client->buffer_lock, flags);
+ }
+ 
+-static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
++static int evdev_set_clk_type(struct evdev_client *client, clockid_t clkid)
+ {
+ 	unsigned long flags;
+-	unsigned int clk_type;
++	input_clk_t clk_type;
+ 
+ 	switch (clkid) {
+ 
+ 	case CLOCK_REALTIME:
+-		clk_type = EV_CLK_REAL;
++		clk_type = INPUT_CLK_REAL;
+ 		break;
+ 	case CLOCK_MONOTONIC:
+-		clk_type = EV_CLK_MONO;
++		clk_type = INPUT_CLK_MONO;
+ 		break;
+ 	case CLOCK_BOOTTIME:
+-		clk_type = EV_CLK_BOOT;
++		clk_type = INPUT_CLK_BOOT;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -307,12 +302,7 @@ static void evdev_events(struct input_handle *handle,
+ {
+ 	struct evdev *evdev = handle->private;
+ 	struct evdev_client *client;
+-	ktime_t ev_time[EV_CLK_MAX];
+-
+-	ev_time[EV_CLK_MONO] = ktime_get();
+-	ev_time[EV_CLK_REAL] = ktime_mono_to_real(ev_time[EV_CLK_MONO]);
+-	ev_time[EV_CLK_BOOT] = ktime_mono_to_any(ev_time[EV_CLK_MONO],
+-						 TK_OFFS_BOOT);
++	ktime_t *ev_time = input_get_timestamp(handle->dev);
+ 
+ 	rcu_read_lock();
+ 
+diff --git a/drivers/input/input.c b/drivers/input/input.c
+index 7f3c5fcb9ed6..ae8b0ee58120 100644
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -1894,6 +1894,23 @@ void input_free_device(struct input_dev *dev)
+ }
+ EXPORT_SYMBOL(input_free_device);
+ 
++/**
++ * input_get_timestamp - get timestamp for input events
++ * @dev: input device to get timestamp from
++ *
++ * A valid timestamp is a timestamp of non-zero value.
++ */
++ktime_t *input_get_timestamp(struct input_dev *dev)
++{
++	const ktime_t invalid_timestamp = ktime_set(0, 0);
++
++	if (!ktime_compare(dev->timestamp[INPUT_CLK_MONO], ktime_zero)) {
++		input_set_timestamp(dev, ktime_get());
++	}
++	return dev->timestamp;
++}
++EXPORT_SYMBOL(input_get_timestamp);
++
+ /**
+  * input_set_capability - mark device as capable of a certain event
+  * @dev: device that is capable of emitting or accepting event
+diff --git a/include/linux/input.h b/include/linux/input.h
+index 510e78558c10..3929b62ccbe5 100644
+--- a/include/linux/input.h
++++ b/include/linux/input.h
+@@ -33,6 +33,14 @@ struct input_value {
+ 	__s32 value;
+ };
+ 
++enum input_clock_type {
++	INPUT_CLK_REAL = 0,
++	INPUT_CLK_MONO,
++	INPUT_CLK_BOOT,
++	INPUT_CLK_MAX
++};
++typedef enum input_clock_type input_clk_t;
++
+ /**
+  * struct input_dev - represents an input device
+  * @name: name of the device
+@@ -114,6 +122,8 @@ struct input_value {
+  * @vals: array of values queued in the current frame
+  * @devres_managed: indicates that devices is managed with devres framework
+  *	and needs not be explicitly unregistered or freed.
++ * @timestamp: storage for a timestamp set by input_set_timestamp called
++ *  by a driver
+  */
+ struct input_dev {
+ 	const char *name;
+@@ -184,6 +194,8 @@ struct input_dev {
+ 	struct input_value *vals;
+ 
+ 	bool devres_managed;
++
++	ktime_t timestamp[INPUT_CLK_MAX];
+ };
+ #define to_input_dev(d) container_of(d, struct input_dev, dev)
+ 
+@@ -382,6 +394,32 @@ void input_close_device(struct input_handle *);
+ 
+ int input_flush_device(struct input_handle *handle, struct file *file);
+ 
++/**
++ * input_set_timestamp - set timestamp for input events
++ * @dev: input device to set timestamp for
++ * @timestamp: the time at which the event has occurred
++ *   in CLOCK_MONOTONIC
++ *
++ * This function is intended to provide to the input system a more
++ * accurate time of when an event actually occurred. The driver should
++ * call this function as soon as a timestamp is acquired ensuring
++ * clock conversions in input_set_timestamp are done correctly.
++ *
++ * The system entering a suspend between timestamp acquisition and
++ * calling input_set_timestamp can result in inaccurate conversions.
++ *
++ */
++static inline void input_set_timestamp(struct input_dev *dev,
++	ktime_t timestamp)
++{
++	dev->timestamp[INPUT_CLK_MONO] = timestamp;
++	dev->timestamp[INPUT_CLK_REAL] = ktime_mono_to_real(timestamp);
++	dev->timestamp[INPUT_CLK_BOOT] = ktime_mono_to_any(
++		timestamp, TK_OFFS_BOOT);
++}
++
++ktime_t *input_get_timestamp(struct input_dev *dev);
++
+ void input_event(struct input_dev *dev, unsigned int type, unsigned int code, int value);
+ void input_inject_event(struct input_handle *handle, unsigned int type, unsigned int code, int value);
+ 
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-
-> > NOTE: Since this feedback is minor and this patch has been outstanding
-> > for a while (and is blocking other work), I am assuming that the best
-> > path forward is for Heiko to land this patch with Thierry's Ack and
-> > I'll send a follow-up.  Please yell if you disagree.
-> Let's give the patches a spin more as we have passed the possibility for
-> the current merge window.
-
-Any way I can convince you to change your mind here?  There are no
-functional changes requested so far in your feedback and no bugs--it's
-just a few variable names and comments.  By landing the existing
-patches as-is:
-
-1. We stop spamming all the people CCed on this whole series (which
-includes device tree patches) that might be interested in the series
-as a whole but aren't interested in details.
-
-2. We can debate the bikeshed-type issues on their own merit and I
-don't have to debate removing existing Acks / Reviewed-by / Tested-by
-tags as I make changes.
-
-3. Even if it's not a good time to land the patches right now we know
-that these patches will be ready to land as soon as the window opens.
-As I mentioned earlier these patches are blocking other work [1] and
-landing that patch is actually preventing Matthias from submitting
-another series of patches to add support for rk3288-veyron-tiger and
-rk3288-veyron-fievel.  Certainly I know that upstream doesn't make a
-policy of landing things just to suit the timelines of a downstream
-project, but in this case there seems very little downsides to landing
-the existing patches and taking a later cleanup patch.
-
-
-> I am on vacation at the moment and thus slow in responses, but will be back
-> at the home office next week and will be more responsive again.
->
->         Sam - who is enjoying the alps in Austria
-
-Hope you have had a great vacation!
-
-[1] https://lkml.kernel.org/r/20190625222629.154619-1-mka@chromium.org
-
--Doug
