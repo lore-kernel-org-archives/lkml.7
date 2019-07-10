@@ -2,77 +2,98 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE56FC74A28
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B5EC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F1D20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:24:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="pVHBABQl"
+	by mail.kernel.org (Postfix) with ESMTP id 7F5A02086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562768696;
+	bh=xAScrm2/DGxrVjf72GPnATr7VaBqtNOzpq4YDgGC4N8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k3NUlMdYzpl0JKvHylxce4C4oThV+0+dMKRQ0b9RG29kHs1cldmO6JQZV5guT1Rxj
+	 0AKctUnErzU/y/s7Kf4duxXYTPYvHG/z46fXBZOrwtUActr5eIzRGDrLotg0LhhVGB
+	 4NqznL1Y/VoR5Qg9wDYpE3AAseuSrtuhZA0YBL6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfGJOYV (ORCPT
+        id S1727868AbfGJOYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:24:21 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:59424 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725911AbfGJOYV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:24:21 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 84F472E148C;
-        Wed, 10 Jul 2019 17:24:17 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id P99c9oXlfq-OGtaLe0V;
-        Wed, 10 Jul 2019 17:24:17 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1562768657; bh=uyHdLmnNK6wDjc0FbiZHSr4crktRu3Qh+meXtiizJCA=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=pVHBABQlzV1NxxP+TDNxdXd1oAjFvsQubsq0/n8lPjX7gYejh2cdj9CGgt87MAY6s
-         oV89O1eIFr9zBpXb+vmGuEaQ/JhiseBjUArrxtZha1U1f24xbfMEXZUj9hivWwmsgX
-         aOBxGayo32RadXonR90WJBUiMFD2Im4fEaqsOwXY=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:fce8:911:2fe8:4dfb])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id wy86eJmWtT-OGw4BaM7;
-        Wed, 10 Jul 2019 17:24:16 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] blk-throttle: fix zero wait time for iops throttled group
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Liu Bo <bo.liu@linux.alibaba.com>, stable@vger.kernel.org
-References: <156259979778.2486.6296077059654653057.stgit@buzz>
- <30caacb5-4d45-016b-a97d-db8b37010218@kernel.dk>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <f4be51ff-e426-cc44-db94-3c26e2cfbca9@yandex-team.ru>
-Date:   Wed, 10 Jul 2019 17:24:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 10:24:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47116 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727373AbfGJOYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 10:24:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 98CBAAE62;
+        Wed, 10 Jul 2019 14:24:53 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 16:24:52 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Arun KS <arunks@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: remove the exporting of totalram_pages
+Message-ID: <20190710142452.GN29695@dhcp22.suse.cz>
+References: <20190710141031.15642-1-efremov@linux.com>
 MIME-Version: 1.0
-In-Reply-To: <30caacb5-4d45-016b-a97d-db8b37010218@kernel.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710141031.15642-1-efremov@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.07.2019 17:00, Jens Axboe wrote:
-> On 7/8/19 9:29 AM, Konstantin Khlebnikov wrote:
->> After commit 991f61fe7e1d ("Blk-throttle: reduce tail io latency when iops
->> limit is enforced") wait time could be zero even if group is throttled and
->> cannot issue requests right now. As a result throtl_select_dispatch() turns
->> into busy-loop under irq-safe queue spinlock.
->>
->> Fix is simple: always round up target time to the next throttle slice.
+On Wed 10-07-19 17:10:31, Denis Efremov wrote:
+> Previously totalram_pages was the global variable. Currently,
+> totalram_pages is the static inline function from the include/linux/mm.h
+> However, the function is also marked as EXPORT_SYMBOL, which is at best
+> an odd combination. Because there is no point for the static inline
+> function from a public header to be exported, this commit removes the
+> EXPORT_SYMBOL() marking. It will be still possible to use the function in
+> modules because all the symbols it depends on are exported.
 > 
-> Applied, thanks. In the future, please break lines at 72 chars in
-> commit messages, I fixed it up.
-> 
+> Fixes: ca79b0c211af6 ("mm: convert totalram_pages and totalhigh_pages variables to atomic")
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 
-Ok, but Documentation/process/submitting-patches.rst and
-scripts/checkpatch.pl recommends 75 chars per line.
+I have to confess I am not entirely sure what the export actually does in this
+case. I _think_ it will simply create a symbol and the code will be same
+as the static inline. But it certainly is not what we want/need.
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/page_alloc.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 8e3bc949ebcc..060303496094 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -224,8 +224,6 @@ int sysctl_lowmem_reserve_ratio[MAX_NR_ZONES] = {
+>  	[ZONE_MOVABLE] = 0,
+>  };
+>  
+> -EXPORT_SYMBOL(totalram_pages);
+> -
+>  static char * const zone_names[MAX_NR_ZONES] = {
+>  #ifdef CONFIG_ZONE_DMA
+>  	 "DMA",
+> -- 
+> 2.21.0
+
+-- 
+Michal Hocko
+SUSE Labs
