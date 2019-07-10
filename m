@@ -2,193 +2,122 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6694C73C64
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963C1C606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C802064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE5C2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 11:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XQEtbqgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfGJLkr (ORCPT
+        id S1726658AbfGJLqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 07:40:47 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:47661 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfGJLkr (ORCPT
+        Wed, 10 Jul 2019 07:46:54 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43051 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfGJLqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 07:40:47 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id CFA7B60004;
-        Wed, 10 Jul 2019 11:40:42 +0000 (UTC)
-Date:   Wed, 10 Jul 2019 13:40:42 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>,
-        Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Message-ID: <20190710114042.ybgavnxb4hgqrtor@flea>
-References: <20190607062802.m5wslx3imiqooq5a@flea>
- <CGME20190607094103epcas1p4babbb11ec050974a62f2af79bc64d752@epcas1p4.samsung.com>
- <20190607094030.GA12373@lst.de>
- <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
- <20190612152022.c3cfhp4cauhzhfyr@flea>
- <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
- <20190701095842.fvganvycce2cy7jn@flea>
- <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
- <20190709085532.cdqv7whuesrjs64c@flea>
- <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="escjyxb6ltmmy4x5"
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Wed, 10 Jul 2019 07:46:54 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so1100332plb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 04:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=E7GcSL06EKocZd6MAQEqpVHgYClPW57nk4fTdNrfLes=;
+        b=XQEtbqgI5cgEJf0rZPJ+RHECruns4dgTgAsoNFnDCAeOtr8qshkl1bxYaOmDTI+7Tf
+         08hxYyOWtxGv+GLwRdpl9Qa9wqEiMnY3yViyXALarV/xYLol5P7O4R4evCbtL+rJcwk+
+         ZksC3NWSwIftzuXX6zvV6wWc0g8CsClMQ/SC2aMm1tNrO2W0HdGXgXgcIAX5KPxlWN2I
+         bzGd3we/6D/5K2LQ9r+HsGZURomaGJcmE2TQSgljwmy4HhIgBoEQ8W1dIQqVAxEOPQXb
+         XFP2eJokrNakGV7KgMOMXDfa0AX0RBwuPtFS5c8ycWgDErNnqGlJn8X1XAzsmejFE0Se
+         /UEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=E7GcSL06EKocZd6MAQEqpVHgYClPW57nk4fTdNrfLes=;
+        b=Im5wOgQRT/hddnVrVogVvpsiHoU/XUycUcuAwMvc6XxlPdK9hVJoJ2y5+zypgsi4Fn
+         Fi253oTiFyw7y15oCHpDt6JptnVAldEM7qQvKlo+wQ2yLBsTtpdueeNHP63P5od2JCNX
+         Pg1xMT5VxbKK+Kvs8p9AX0M8iDOTEhdsdB/E6mvW1VeSJjSMBUl/4zvFBCUmkAOUXFDL
+         VDWstEoIijG6I9XV/PTVP5/64MiMSb3CDSsBqjKEZ9EUoQo1j2jdU9sKLqGljjpIJW/g
+         YIMcLX8+IY/KC/syXownjaw5gmUAFiLLdm4ONkqlQCycBTPL9QzTnFeOIrHYSTpK+vrE
+         Yu7w==
+X-Gm-Message-State: APjAAAXglyKajvSTWqbx4MXf8Qeidv0InA7qB811S6O+QUNYuMZiENNZ
+        TWs8YaORad18e1aE5wKmBKRDg8NtohDoyA==
+X-Google-Smtp-Source: APXvYqzwx+8EeHFffEXIFvoFOuecP4rBXizBq8vsKL6k/zuNVRpPi1MPCP7rAdrxe5n40/Df5lW9xw==
+X-Received: by 2002:a17:902:7687:: with SMTP id m7mr39014082pll.310.1562759212947;
+        Wed, 10 Jul 2019 04:46:52 -0700 (PDT)
+Received: from localhost ([49.248.170.152])
+        by smtp.gmail.com with ESMTPSA id q63sm2602413pfb.81.2019.07.10.04.46.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jul 2019 04:46:52 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org
+Subject: [PATCH] thermal: Add some error messages
+Date:   Wed, 10 Jul 2019 17:16:47 +0530
+Message-Id: <0d3d6111f8a8bd199f1a5a5cd8c4e83e4f0690be.1562757659.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1562757659.git.amit.kucheria@linaro.org>
+References: <cover.1562757659.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When registering a thermal zone device, we currently return -EINVAL in
+four cases. This makes it a little hard to debug the real cause of the
+failure.
 
---escjyxb6ltmmy4x5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Print some error messages to make it easier for developer to figure out
+what happened.
 
-On Tue, Jul 09, 2019 at 01:30:18PM -0700, Vasily Khoruzhick wrote:
-> On Tue, Jul 9, 2019 at 1:55 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Mon, Jul 08, 2019 at 05:49:21PM -0700, Vasily Khoruzhick wrote:
-> > > > > Maybe instead of edp-connector one would introduce integrator's specific
-> > > > > connector, for example with compatible "olimex,teres-edp-connector"
-> > > > > which should follow edp abstract connector rules? This will be at least
-> > > > > consistent with below presentation[1] - eDP requirements depends on
-> > > > > integrator. Then if olimex has standard way of dealing with panels
-> > > > > present in olimex/teres platforms the driver would then create
-> > > > > drm_panel/drm_connector/drm_bridge(?) according to these rules, I guess.
-> > > > > Anyway it still looks fishy for me :), maybe because I am not
-> > > > > familiarized with details of these platforms.
-> > > >
-> > > > That makes sense yes
-> > >
-> > > Actually, it makes no sense at all. Current implementation for anx6345
-> > > driver works fine as is with any panel specified assuming panel delays
-> > > are long enough for connected panel. It just doesn't use panel timings
-> > > from the driver. Creating a platform driver for connector itself looks
-> > > redundant since it can't be reused, it doesn't describe actual
-> > > hardware and it's just defeats purpose of DT by introducing
-> > > board-specific code.
-> >
-> > I'm not sure where you got the idea that the purpose of DT is to not
-> > have any board-specific code.
->
-> I believe DT was an attempt to move to declarative approach for
-> describing hardware. Yes, we have different compatibles for different
-> devices but they're specific to particular device rather than
-> particular board. Device interconnection is described in DT along with
-> some properties rather than in board-specific C-file.
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ drivers/thermal/thermal_core.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-You're right, but it's not incompatible with having some code to deal
-with some board quirk.
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 46cfb7de4eb28..95c3a4c649cf8 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -1238,17 +1238,26 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+ 	int count;
+ 	struct thermal_governor *governor;
+ 
+-	if (!type || strlen(type) == 0)
++	if (!type || strlen(type) == 0) {
++		pr_err("Error: No thermal zone type defined");
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+-	if (type && strlen(type) >= THERMAL_NAME_LENGTH)
++	if (type && strlen(type) >= THERMAL_NAME_LENGTH) {
++		pr_err("Error: Thermal zone name (%s) too long, should be under %d chars",
++		       type, THERMAL_NAME_LENGTH);
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+-	if (trips > THERMAL_MAX_TRIPS || trips < 0 || mask >> trips)
++	if (trips > THERMAL_MAX_TRIPS || trips < 0 || mask >> trips) {
++		pr_err("Error: Incorrect number of thermal trips");
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+-	if (!ops)
++	if (!ops) {
++		pr_err("Error: Thermal zone device ops not defined");
+ 		return ERR_PTR(-EINVAL);
++	}
+ 
+ 	if (trips > 0 && (!ops->get_trip_type || !ops->get_trip_temp))
+ 		return ERR_PTR(-EINVAL);
+-- 
+2.17.1
 
-> Introducing board-specific compatible for a connector isn't looking
-> right to me.
-
-If that board has a board-specific behaviour for it's connector, then
-what's the issue?
-
-You can't describe all the quirks in the all boards using purely
-properties.
-
-> > It's perfectly fine to have some, that's even why there's a compatible
-> > assigned to each and every board.
-> >
-> > What the DT is about is allowing us to have a generic behaviour that
-> > we can detect: we can have a given behaviour for a given board, and a
-> > separate one for another one, and this will be evaluated at runtime.
-> >
-> > This is *exactly* what this is about: we can have a compatible that
-> > sets a given, more specific, behaviour (olimex,teres-edp-connector)
-> > while saying that this is compatible with the generic behaviour
-> > (edp-connector). That way, any OS will know what quirk to apply if
-> > needed, and if not that it can use the generic behaviour.
-> >
-> > And we could create a generic driver, for the generic behaviour if
-> > needed.
-> >
-> > > There's another issue: if we introduce edp-connector we'll have to
-> > > specify power up delays somewhere (in dts? or in platform driver?), so
-> > > edp-connector doesn't really solve the issue of multiple panels with
-> > > same motherboard.
-> >
-> > And that's what that compatible is about :)
->
-> Sorry, I fail to see how it would be different from using existing
-> panels infrastructure and different panels compatibles. I think Rob's
-> idea was to introduce generic edp-connector.
-
-Again, there's no such thing as a generic edp-connector. The spec
-doesn't define anything related to the power sequence for example.
-
-> If we can't make it generic then let's use panel infrastructure.
-
-Which uses a device specific compatible. Really, I'm not sure what
-your objection and / or argument is here.
-
-In addition, when that was brought up in the discussion, you rejected
-it because it was inconvenient:
-https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1#comment_535206
-
-And I agree with you on that one.
-
-> > > I'd say DT overlays should be preferred solution here, not another
-> > > connector binding.
-> >
-> > Overlays are a way to apply a device tree dynamically. It's orthogonal
-> > to the binding.
->
-> It isn't orthogonal to original problem though.
-
-It is. The original problem is that you want to power up whatever is
-on the other side of a eDP link using an arbitrary regulator.
-
-This is a "how do I describe that in my DT" problem, and it really has
-nothing to do with how the DT is being passed to the kernel.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---escjyxb6ltmmy4x5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXSXOugAKCRDj7w1vZxhR
-xdG+AP9pfxb7uYcDFKG6xikGZewhXzpg/acmPfrETXLF2B1jZQD7Bc2oEF0IKqh7
-tiE8F0AU/5LApsNMhblCY9s+dkDrFwU=
-=gnu6
------END PGP SIGNATURE-----
-
---escjyxb6ltmmy4x5--
