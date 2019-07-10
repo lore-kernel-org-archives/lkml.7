@@ -2,125 +2,131 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E4FC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6125EC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A206520844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2481820844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:23:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5pcFIr4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ItYNfLB/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfGJIT2 (ORCPT
+        id S1727412AbfGJIXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:19:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41300 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfGJIT2 (ORCPT
+        Wed, 10 Jul 2019 04:23:45 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:44106 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfGJIXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:19:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q4so858131pgj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 01:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N6SercxtoSKSRCScJgllC9YsDuWHEtkF2Gy5vLajuYI=;
-        b=f5pcFIr4KEnuKujSw0PCI8+ne2ZPT/eTiNxYlV/Fjw+Q+q0Vu48E8I1wCOX1vQXJej
-         xust2dEsnBU/pTvXSaBLTG21oarZ2Xepwu3XxlB1zEXsusT4uDJeiTo4r/JZG9KPch2Y
-         qx84ao943+2eOxQcCjY+J34bWcbEyPxGT9yvre2IP8ZwcndXohe+JD6DrT+vScM6ndC0
-         dh2+0sJf0NLvFZq5iroWefzcT/bIm00EpY1cBiEsBQ0jiE0FP9Mkj0V831eO3Bqsa99r
-         9PicD7cGit2+UXfs/qVeNN7PYuDeIlfXWYSQP9nx1NMvYQ8nNGWusHe+seyTprY7EOlN
-         IWZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N6SercxtoSKSRCScJgllC9YsDuWHEtkF2Gy5vLajuYI=;
-        b=IGsPNDLN0czgkiqsuQAJUw3Pzz7OJ2e45ms1We4ydN85mZfyCnx0fgXvlXrruYtbRR
-         27pWK/WeUX8JrVNreD15kz8ZEkVAnYJ+ScMaaDIO+47shAGJ8qgDtBJ+WxXvK29CsVcV
-         hLp0iIlkL5tVccwNaMj9YLz48ia59CiCX6ca6/olD0sFzJB9Ro5Oje0TW0rSjLztg481
-         ZY3TwW7ha5uelGOiohhFgce75FK0iOw/gz0f8zr/P/0TPfsEbHUZpA4mKwghHNjG6ISC
-         FQSxxLw4nMkLLBh+s0OujqKfyS3IlMBzQgsrZ94rTADops+uY85gWEN9p36//FtH7+J/
-         gRBA==
-X-Gm-Message-State: APjAAAXLC13jP2P1ylo0NY+k9QTWyPP6K5En0WXgCZHXQuN6XFb/6oF0
-        5Oq9wuTb7qCAq+tdgM7TSjc=
-X-Google-Smtp-Source: APXvYqwbWG/EgQGeyQs7s7Fp/DdmsOs7K4ad8V6aBkUpsRLK8b9OdhhMxuEWNxE1nlhfrWj4c0gUcg==
-X-Received: by 2002:a17:90a:9505:: with SMTP id t5mr5443039pjo.96.1562746767357;
-        Wed, 10 Jul 2019 01:19:27 -0700 (PDT)
-Received: from localhost ([175.223.19.33])
-        by smtp.gmail.com with ESMTPSA id j15sm2809810pfn.150.2019.07.10.01.19.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 01:19:26 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 17:19:22 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        "sergey.senozhatsky@gmail.com" <sergey.senozhatsky@gmail.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] printk: Do not lose last line in kmsg dump
-Message-ID: <20190710081922.GA7020@jagdpanzerIV>
-References: <20190709081042.31551-1-vincent.whitchurch@axis.com>
- <20190709101230.GA16909@jagdpanzerIV>
- <20190709142939.luqhbd6x6bzdkydr@pathway.suse.cz>
- <20190710080402.ab3f4qfnvez6dhtc@axis.com>
+        Wed, 10 Jul 2019 04:23:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KHsCceUwFj0VCBCJ1Vn7vA7gOHS6l0320ELVzrYcy0s=; b=ItYNfLB/DBiyNIjWV16Va8Z1f
+        Fs9GQxDleXj1+NXT7leCxwbEop+GSMzry4rYr2+vRFeDNGvbaANfdKR7cOiHACIpGi7caj50WqLBl
+        K3/YuUwW3hWGeBzzSDwevFMfkuJef4r2awS5mR0Ze8tCsYJF2UURZQF99paE8Hp8ssBgJQRNJId+k
+        JlQenguNGzCYWSIrER9udcRetVnztBSUWq5oDr+6ChDphkOaJkEev4rlRhrJAA3VjeKvLsrQ7U3O2
+        ZipWkDIUtDJLqQmwvikvie6Y8nenzzue5nCGMMRE+HW8uRp65CBNhZKYRaQFfS7+wyAYurC+XLUKN
+        6kcufbp8w==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:59328)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hl7t3-0005Zi-VT; Wed, 10 Jul 2019 09:23:38 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hl7t1-0003km-Hp; Wed, 10 Jul 2019 09:23:35 +0100
+Date:   Wed, 10 Jul 2019 09:23:35 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        masahiroy@kernel.org
+Subject: Re: Question about ARM FASTFPE
+Message-ID: <20190710082335.uzusesefimzpjd3f@shell.armlinux.org.uk>
+References: <CAK7LNASSCvLSXVikR7GenXyb8KywpWKVc1Z=5v3c93rxJ+G73w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190710080402.ab3f4qfnvez6dhtc@axis.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAK7LNASSCvLSXVikR7GenXyb8KywpWKVc1Z=5v3c93rxJ+G73w@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (07/10/19 10:04), Vincent Whitchurch wrote:
-> > > [..]
-> > > 
-> > > > @@ -1318,7 +1318,7 @@ static size_t msg_print_text(const struct printk_log *msg, bool syslog,
-> > > >  		}
-> > > >  
-> > > >  		if (buf) {
-> > > > -			if (prefix_len + text_len + 1 >= size - len)
-> > > > +			if (prefix_len + text_len + 1 > size - len)
-> > > >  				break;
-> > > 
-> > > So with this patch the last byte of the buffer is 0xA. It's a bit
-> > > uncomfortable that `len', which we return from msg_print_text(),
-> > > now points one byte beyond the buffer:
-> > > 
-> > > 	buf[len++] = '\n';
-> > > 	return len;
-> > > 
-> > > This is not very common. Not sure what usually happens to kmsg_dump
-> > > buffers, but anyone who'd do a rather innocent
-> > > 
-> > > 	kmsg_dump(buf, &len);
-> > > 	buf[len] = 0x00;
-> > > 
-> > > will write to something which is not a kmsg buffer (in some cases).
-
-[..]
-
-> arch/powerpc/xmon/xmon.c
-> 2836:	while (kmsg_dump_get_line_nolock(&dumper, false, buf, sizeof(buf), &len)) {
-> 2837-		buf[len] = '\0';
+On Wed, Jul 10, 2019 at 01:30:24PM +0900, Masahiro Yamada wrote:
+> Hi.
 > 
-> arch/um/kernel/kmsg_dump.c
-> 29:	while (kmsg_dump_get_line(dumper, true, line, sizeof(line), &len)) {
-> 30-		line[len] = '\0';
+> I have a question about the following code
+> in arch/arm/Makefile:
 > 
-> I guess we should fix these first and leave this patch as is?
+> 
+> # Do we have FASTFPE?
+> FASTFPE :=arch/arm/fastfpe
+> ifeq ($(FASTFPE),$(wildcard $(FASTFPE)))
+> FASTFPE_OBJ :=$(FASTFPE)/
+> endif
+> 
+> 
+> Since arch/arm/fastfpe does not exist in the upstream tree,
+> I guess this is a hook to compile downstream source code.
+> 
+> If a user puts arch/arm/fastfpe/ into their local source tree,
+> Kbuild is supposed to compile the files in it.
+> 
+> Is this correct?
+> 
+> 
+> If so, I am afraid this would not work for O= building.
+> 
+> $(wildcard ...) checks if this directory exists in the *objtree*,
+> while scripts/Makefile.build needs to include
+> arch/arm/fastfpe/Makefile from *srctree*.
+> 
+> I think the correct code should be like follows:
+> 
+> # Do we have FASTFPE?
+> FASTFPE :=arch/arm/fastfpe
+> ifneq ($(wildcard $(srctree)/$(FASTFPE)),)
+> FASTFPE_OBJ :=$(FASTFPE)/
+> endif
+> 
+> 
+> Having said that, I am not sure this code is worth fixing.
+> 
+> This code was added around v2.5.1.9,
 
-We certainly need to fix something here, and I'd say that we
-better handle it on the msg_print_text() side. There might be
-more kmsg_dump_get_line() users doing `buf[len] = '\0'' in the
-future.
+... as a _result_ of a discussion and deciding not to upstream it,
+but to still allow its use.  Fastfpe is faster than nwfpe (so has
+a definite advantage for FP intensive applications) but we decided
+we didn't want two FP emulation codes in the kernel.  However, if
+someone wants to use it, it has to be built into the kernel, it
+can't be modular.
 
-	-ss
+> and the actual source code for arch/arm/fastfpe/
+> was never upstreamed.
+> 
+> 
+> In general, we do not care much about the downstream code support.
+> 
+> What should we do about this?
+> Fix and keep maintaining? Delete?
+> 
+> 
+> -- 
+> Best Regards
+> Masahiro Yamada
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
