@@ -2,101 +2,108 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6661C74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BACC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4250208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C402087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:48:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrfRaAD2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfGJRqE convert rfc822-to-8bit (ORCPT
+        id S1728058AbfGJRsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:46:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43121 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbfGJRqE (ORCPT
+        Wed, 10 Jul 2019 13:48:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37551 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727215AbfGJRsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:46:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f25so1575041pgv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 10:46:03 -0700 (PDT)
+        Wed, 10 Jul 2019 13:48:37 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so3400979wrr.4;
+        Wed, 10 Jul 2019 10:48:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H8fIYGOnbY2PFzbfnUK43tHMN478L4aKmgR2+ZvIFyU=;
+        b=QrfRaAD2NzhyjaCy8AgC3Q460qjKsJumT+IyPq9HD6bJLGc8cR/rFR15KrTc1yGKpR
+         nIQgJu/aQD+zMUsIh+l36K+BN20OGjBqcnbefTEATYWqi+3gOoGSsdMb8oCa7n79eWZW
+         A6xCyISMInyBuaIYus9jjQ1N/E8FlHuJP110RQ2ZOTYFIB7AXU2xCRtg3qhHQwIeWsOz
+         gLIjZrLaCOnStVswQrfIlquE3e13y05+wsIGDrw9f+Sen/uZHRBS5jlVQROyaYIzAOh/
+         YnN2rzodcHzb6V2OzeQjA5FXlVXPloGSXSCb+q+l7xciqeOm0ASKaOhrYmkoIr5CYqaa
+         vEjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BhKBNyGYuDW2lcc8q3UKIy1/Ot87NeMwn9SCW5GMqCM=;
-        b=Esf46IovtUTax+ZrbNQ6jnph6jHDcTUG9KdOZ4QUxZHgU6DsCKtgTciC5I4plH4KtD
-         k+u9j+4urOJOwCUaSYKuXdXdXPakn4FmToL4pyGyTjoA6+81oC/VTCcY11JidCPnNkH5
-         5Fd5dgtk4f69gihqF4i5hIPdtmAAWd93vOonsRZIZBH6ue2KiuuvTzfKvzgNvE+G0j6x
-         YAdwHAD5kIWwbZESuBHdoAtSW8pZUSJ7WUAlmjWfgbsHCCyk6beP4FM0k56hkaBhid0O
-         TDC0FqlTKUG9LMUJK5IauDoKBC4AwAVV1iLmud+dTOeC0D3fNBoVPn7KLVnlhCdud9IY
-         Hh6w==
-X-Gm-Message-State: APjAAAUonggeaocuN0zWV2zmab8qGVsv5gUGEFTlffjdl7rBrnmqEtJN
-        BStFamdcldjCYF4HDvgne40=
-X-Google-Smtp-Source: APXvYqxPI+HXvLvWR0UABwLpNihucLsVrRaMtIocJj++h+5ihAMD9gwgou7eyAZUM53sEiirvMZMkg==
-X-Received: by 2002:a17:90a:ad41:: with SMTP id w1mr8298926pjv.52.1562780763119;
-        Wed, 10 Jul 2019 10:46:03 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:fb9c:664d:d2ad:c9b5? ([2620:15c:2c1:200:fb9c:664d:d2ad:c9b5])
-        by smtp.gmail.com with ESMTPSA id r188sm8044323pfr.16.2019.07.10.10.46.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 10:46:01 -0700 (PDT)
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-References: <00000000000089a718058556e1d8@google.com>
- <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
- <20190710053030.GB2152@sol.localdomain>
- <b378a903-d0fc-a137-e6b9-dec55277cf16@acm.org>
- <20190710170057.GB801@sol.localdomain> <20190710172123.GC801@sol.localdomain>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
-Date:   Wed, 10 Jul 2019 10:46:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        bh=H8fIYGOnbY2PFzbfnUK43tHMN478L4aKmgR2+ZvIFyU=;
+        b=Wljlys2VQ84/xvKnpols6GM8+HSTTMNKbUuUGGJoFzDW5IqQgVXPwsK+c3xnMIfo3B
+         csjJLs4vi+ltZ2fUZuxSLWfT3YdpfqOV+z41VQsWo5gvMyaHVLsY9jXHpezZ2BGHTD6R
+         8vcjBnygPy3ay+fyFi1dTS9r8TKoanLFhqVObd/9/IW1Q9agnJE4DPXfWzqNahoPR/ky
+         m8a8edTnW3+U6mga5AGhfiRg061xlFCFEwNPmDJVv7PFh8kWJVdFzrHwVG85U2spuRnz
+         hQatxW41hxZAvb2FpvFQIXdcLl4NONGcUTOsct1nxC97gom8RXWyZXXpFOCR5xHZ3nI7
+         xPCQ==
+X-Gm-Message-State: APjAAAUvkm33CowPsZlKtqGjpNz8xJVvNDDzme/MDQbpZKOixu+R7UrD
+        lhw06dZSYQireipH+WP3Pxk=
+X-Google-Smtp-Source: APXvYqyYhmfI3q92p3NtWJwfqP9FVTkXjTcUvhddEfjVskY9dIeDfZmO5T3ij8BrMHQ32adyFskNdA==
+X-Received: by 2002:adf:dc51:: with SMTP id m17mr5346474wrj.256.1562780915011;
+        Wed, 10 Jul 2019 10:48:35 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id t1sm3891228wra.74.2019.07.10.10.48.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 10:48:34 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
+Date:   Wed, 10 Jul 2019 10:48:00 -0700
+Message-Id: <20190710174800.34451-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190710172123.GC801@sol.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/19 10:21 AM, Eric Biggers wrote:
-> With my simplified reproducer, on commit 669de8bda87b ("kernel/workqueue: Use
-> dynamic lockdep keys for workqueues") I see:
-> 
-> 	WARNING: CPU: 3 PID: 189 at kernel/locking/lockdep.c:747 register_lock_class+0x4f6/0x580
-> 
-> and then somewhat later:
-> 
-> 	BUG: MAX_LOCKDEP_KEYS too low!
-> 
-> If on top of that I cherry pick commit 28d49e282665 ("locking/lockdep: Shrink
-> struct lock_class_key"), I see instead:
-> 
-> 	BUG: MAX_STACK_TRACE_ENTRIES too low!
-> 
-> I also see that on mainline.
-> 
-> Alternatively, if I check out 669de8bda87b and revert it, I don't see anything.
+clang warns several times:
 
-Hi Eric,
+drivers/infiniband/sw/siw/siw_cq.c:31:4: warning: implicit conversion
+from enumeration type 'enum siw_wc_status' to different enumeration type
+'enum siw_opcode' [-Wenum-conversion]
+        { SIW_WC_SUCCESS, IB_WC_SUCCESS },
+        ~ ^~~~~~~~~~~~~~
 
-Is the rdma_ucm code the only code that triggers the "BUG:
-MAX_STACK_TRACE_ENTRIES too low!" complaint or is this complaint also
-triggered by other kernel code? I'm asking this because I think that
-fixing this would require to implement garbage collection for the
-stack_trace[] array in the lockdep code. That would make the lockdep
-code slower. I don't think that making the lockdep code slower would be
-welcome.
+Fixes: b0fff7317bb4 ("rdma/siw: completion queue methods")
+Link: https://github.com/ClangBuiltLinux/linux/issues/596
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/infiniband/sw/siw/siw_cq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bart.
+diff --git a/drivers/infiniband/sw/siw/siw_cq.c b/drivers/infiniband/sw/siw/siw_cq.c
+index e2a0ee40d5b5..e381ae9b7d62 100644
+--- a/drivers/infiniband/sw/siw/siw_cq.c
++++ b/drivers/infiniband/sw/siw/siw_cq.c
+@@ -25,7 +25,7 @@ static int map_wc_opcode[SIW_NUM_OPCODES] = {
+ };
+ 
+ static struct {
+-	enum siw_opcode siw;
++	enum siw_wc_status siw;
+ 	enum ib_wc_status ib;
+ } map_cqe_status[SIW_NUM_WC_STATUS] = {
+ 	{ SIW_WC_SUCCESS, IB_WC_SUCCESS },
+-- 
+2.22.0
 
