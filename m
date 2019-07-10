@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E609C74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E89C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B01B2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974DA2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562770997;
-	bh=dmapSBUedn56N9Tupt3bHzW6V4y7Yij7aY/sxyhGbiA=;
+	s=default; t=1562771003;
+	bh=93onSUUCrqRnvzJub5vKUqbhxMY7kljRhX7JDQeMEcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dxt8ktOQ6q+KNy2uaaR80pE06k9iV5HmFOarVrxJTxqrBMgPmSLU4uEFLjGlzIPv7
-	 j4HRFGQfkC/gppXs7d3HcbO8EnH4jdoEp5/eqs6sbZjA17mk2q8NXN+7O64a9uZNnU
-	 alfZCylldCLSBbL2UI4Tvge2piD6S835oWB7joa0=
+	b=gYvtppLvUwutp53dqeGnE19umQKQ5AzOz1LB44RHMKRbMg+pfyJwvodIT/KjMvphi
+	 d6bVfPFDOeyzuAEIkHSajUJzDdnQt2orlkVUU4iKwmUCCMAbdQb+176xbEuXOBgltY
+	 QYN6Qzx/hvRsaeEAYAZQU5x6kMQF1hnEdJR2QiIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfGJPDQ (ORCPT
+        id S1728155AbfGJPDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35096 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 11:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbfGJPDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:03:12 -0400
+        id S1728134AbfGJPDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:03:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EBBB21537;
-        Wed, 10 Jul 2019 15:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3DDE21537;
+        Wed, 10 Jul 2019 15:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562770991;
-        bh=dmapSBUedn56N9Tupt3bHzW6V4y7Yij7aY/sxyhGbiA=;
+        s=default; t=1562770997;
+        bh=93onSUUCrqRnvzJub5vKUqbhxMY7kljRhX7JDQeMEcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RH1yL1mezV1jL8luutItMPy4KsCGOvekCEn1BqZQYerGw42nGKUg6Nb8dmShqTIVM
-         rSeNRu6IRKcZfALp1WtJtAg5sEsmiQcOs/GfbmUB9RJcXZUDyORMzq6lBEVhXT08Ku
-         5GbFIwTPD2EW0JDrmmieRSxygVwqqFNZ3H6vSvGI=
+        b=rsm80q4XmfMOZSNv8C2dA8LIOJzW3ss6IBGtK+5WF7ZNotMvaeKODQenRDwarfU2W
+         DgKWnQIyTYkDxWElI8N3yqmRy0saxE3sugMnl1hdqQ9HWzVkt4LndcUttgryw2dJuE
+         do4eaucBcl4I3G3GWRJ9bZIsV06qP7LbkYNyawGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com,
-        Alexander Potapenko <glider@google.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 5/9] KVM: x86: degrade WARN to pr_warn_ratelimited
-Date:   Wed, 10 Jul 2019 11:02:55 -0400
-Message-Id: <20190710150301.7129-5-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 9/9] dmaengine: imx-sdma: fix use-after-free on probe error path
+Date:   Wed, 10 Jul 2019 11:02:59 -0400
+Message-Id: <20190710150301.7129-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190710150301.7129-1-sashal@kernel.org>
 References: <20190710150301.7129-1-sashal@kernel.org>
@@ -60,46 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 3f16a5c318392cbb5a0c7a3d19dff8c8ef3c38ee ]
+[ Upstream commit 2b8066c3deb9140fdf258417a51479b2aeaa7622 ]
 
-This warning can be triggered easily by userspace, so it should certainly not
-cause a panic if panic_on_warn is set.
+If probe() fails anywhere beyond the point where
+sdma_get_firmware() is called, then a kernel oops may occur.
 
-Reported-by: syzbot+c03f30b4f4c46bdf8575@syzkaller.appspotmail.com
-Suggested-by: Alexander Potapenko <glider@google.com>
-Acked-by: Alexander Potapenko <glider@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Problematic sequence of events:
+1. probe() calls sdma_get_firmware(), which schedules the
+   firmware callback to run when firmware becomes available,
+   using the sdma instance structure as the context
+2. probe() encounters an error, which deallocates the
+   sdma instance structure
+3. firmware becomes available, firmware callback is
+   called with deallocated sdma instance structure
+4. use after free - kernel oops !
+
+Solution: only attempt to load firmware when we're certain
+that probe() will succeed. This guarantees that the firmware
+callback's context will remain valid.
+
+Note that the remove() path is unaffected by this issue: the
+firmware loader will increment the driver module's use count,
+ensuring that the module cannot be unloaded while the
+firmware callback is pending or running.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+[vkoul: fixed braces for if condition]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 7fed1d6dd1a1..cea6568667c4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1447,7 +1447,7 @@ static int set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz, bool scale)
- 			vcpu->arch.tsc_always_catchup = 1;
- 			return 0;
- 		} else {
--			WARN(1, "user requested TSC rate below hardware speed\n");
-+			pr_warn_ratelimited("user requested TSC rate below hardware speed\n");
- 			return -1;
- 		}
- 	}
-@@ -1457,8 +1457,8 @@ static int set_tsc_khz(struct kvm_vcpu *vcpu, u32 user_tsc_khz, bool scale)
- 				user_tsc_khz, tsc_khz);
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index cb1b44d78a1f..357147c00f93 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -2039,27 +2039,6 @@ static int sdma_probe(struct platform_device *pdev)
+ 	if (pdata && pdata->script_addrs)
+ 		sdma_add_scripts(sdma, pdata->script_addrs);
  
- 	if (ratio == 0 || ratio >= kvm_max_tsc_scaling_ratio) {
--		WARN_ONCE(1, "Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
--			  user_tsc_khz);
-+		pr_warn_ratelimited("Invalid TSC scaling ratio - virtual-tsc-khz=%u\n",
-+			            user_tsc_khz);
- 		return -1;
+-	if (pdata) {
+-		ret = sdma_get_firmware(sdma, pdata->fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
+-	} else {
+-		/*
+-		 * Because that device tree does not encode ROM script address,
+-		 * the RAM script in firmware is mandatory for device tree
+-		 * probe, otherwise it fails.
+-		 */
+-		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
+-					      &fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware name\n");
+-		else {
+-			ret = sdma_get_firmware(sdma, fw_name);
+-			if (ret)
+-				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
+-		}
+-	}
+-
+ 	sdma->dma_device.dev = &pdev->dev;
+ 
+ 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
+@@ -2103,6 +2082,33 @@ static int sdma_probe(struct platform_device *pdev)
+ 		of_node_put(spba_bus);
  	}
  
++	/*
++	 * Kick off firmware loading as the very last step:
++	 * attempt to load firmware only if we're not on the error path, because
++	 * the firmware callback requires a fully functional and allocated sdma
++	 * instance.
++	 */
++	if (pdata) {
++		ret = sdma_get_firmware(sdma, pdata->fw_name);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
++	} else {
++		/*
++		 * Because that device tree does not encode ROM script address,
++		 * the RAM script in firmware is mandatory for device tree
++		 * probe, otherwise it fails.
++		 */
++		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
++					      &fw_name);
++		if (ret) {
++			dev_warn(&pdev->dev, "failed to get firmware name\n");
++		} else {
++			ret = sdma_get_firmware(sdma, fw_name);
++			if (ret)
++				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
++		}
++	}
++
+ 	return 0;
+ 
+ err_register:
 -- 
 2.20.1
 
