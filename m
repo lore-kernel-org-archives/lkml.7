@@ -2,101 +2,93 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CF9C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF60C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBDC20844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2320A20844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tWJ+nMiW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tTn+t77v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbfGJRxN (ORCPT
+        id S1728097AbfGJR6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:53:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33926 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbfGJRxM (ORCPT
+        Wed, 10 Jul 2019 13:58:37 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41006 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfGJR6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:53:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8fcd7IbnIeaKZRDWGNY647WsqvJ1v4ulGC4wdseyzjU=; b=tWJ+nMiWEt+cTSzgkEfK4ty17
-        p285HhZgqGVQOTNP8uv+ahVLDfACpGUHQpS+e2XwQQIF1SlEdaDwCLqCEg58g0GsCKAurrVl/mlQt
-        4aetyL5Lq1it5JU1B2tfyCgS3WFLlG01Y1lHnfunj9DizxuS90uq/WMRvxyqfgj4hxd1CbDulER0U
-        pNW8i1l3DgieGo+dXDOLd1SdeJKcnwuQdN1qWuw9ZhKZiIU/OpSRCR3Xy++YvGDlC2sQiZwwPa6qu
-        mG1thk1E8xOlMGjXeX0xOJ4X0Jv71AE71WiP2Dw7aZcvS+UWB3ygJqx+CnGcC3kLTVi92Fk52bpYH
-        s8lSmyJuA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlGmD-0006lK-Hh; Wed, 10 Jul 2019 17:53:09 +0000
-Subject: Re: [RFC PATCH] fanotify, inotify, dnotify, security: add security
- hook for fs notifications
-To:     Joe Perches <joe@perches.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>, paul@paul-moore.com
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
-        amir73il@gmail.com, jmorris@namei.org, sds@tycho.nsa.gov,
-        linux-kernel@vger.kernel.org
-References: <20190710133403.855-1-acgoide@tycho.nsa.gov>
- <4fd98c88-61a6-a155-5028-db22a778d3c1@schaufler-ca.com>
- <cb754dda-fbce-8169-4cd7-eef66e8d809e@infradead.org>
- <6ce2ce60b2435940bc8dfa07fa2553c4524d2db5.camel@perches.com>
- <079745c94c232591453dcb01c9d9406b721bb6bf.camel@perches.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <60654c12-0742-8653-231b-312f48e0149b@infradead.org>
-Date:   Wed, 10 Jul 2019 10:53:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <079745c94c232591453dcb01c9d9406b721bb6bf.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 10 Jul 2019 13:58:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so1442092pff.8;
+        Wed, 10 Jul 2019 10:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=1Yptoe5D085BWh+Bibq1x1Qze0BUntRJjyskqFEUkv4=;
+        b=tTn+t77vdNkoiG8Ypss8Jb1MN9bCLyC0qtR8XfCrzNdJsuOVuvNQ1DdLEOL4u005Ba
+         cvHdj6+6PfRyKhHzkljerHrTWMEJfGtZikAG5SfDWxACqVQE8+Y+eXa9vgTs0j1YF6Aq
+         /bMlRektpHJiHrSm510ZZ5mlnrI8SHO+tmimjswCuuqgyDF7E7IYHATkGjN8SvLAazha
+         QviZGyYzNYCC9M/jzuS2U2gyY7aQqLhwpwNlhWlxSG4yGM+z+3lDk1cl3bVfELADuaPX
+         63SX5w2hhXtLZlgH6EYie38nh4MEot/F8DynKZH6pqqn4fSJa3aW4lYui6YIg4Uclt5K
+         nrXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1Yptoe5D085BWh+Bibq1x1Qze0BUntRJjyskqFEUkv4=;
+        b=bdAsHaX0UrtUsbK74YJLb3pl0Dd9p7K76kIrus9+qfQxQR3hVxcluqgsgJZ0EvgLx/
+         OzYlXumNM3X8RQ0wctUnOA3i4fisJkn+nQcNPdanum/6y8zzpQVGkg7Ss3xhMrKe8xsa
+         CH/eMH4zEVNt//JJbYEl2eS0k/T4TZE61ud03BzA3gZER8ugRCtHJUEcmnnvVdtaCqEy
+         6+6QzO1Hpvi+uP9APZHB8CUjv9aisW39ZjyXk/q0VwZ07L8m0qf8iY7aPjeotWKLx5eH
+         8G9X3TdPHW/lMHYvBEfVHl0BOBTf4w1D4KJrsqLXkcGGz7M2qTpFIDzeGfl5i16isrPC
+         GgRg==
+X-Gm-Message-State: APjAAAWGnkiYLN3dMRHm552PaqLtXyPJpOc9K6dAcWZOY7INskZpnfAC
+        +15J9GAdTD9W7xtoRbQ3nMU=
+X-Google-Smtp-Source: APXvYqzRIoVFWzhS+1VgbH8QHWcdl6FPoGRrTAD67T9udDa+FcsMUPzpD2OL7tIqAgpvpAzvnDPj7A==
+X-Received: by 2002:a17:90b:8e:: with SMTP id bb14mr8433814pjb.19.1562781515699;
+        Wed, 10 Jul 2019 10:58:35 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([106.51.16.82])
+        by smtp.gmail.com with ESMTPSA id a6sm2460536pjs.31.2019.07.10.10.58.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 10 Jul 2019 10:58:34 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     adaplas@gmail.com, b.zolnierkie@samsung.com
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, sabyasachi.linux@gmail.com,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] video: fbdev: nvidia: Remove extra return
+Date:   Wed, 10 Jul 2019 23:33:15 +0530
+Message-Id: <1562781795-3494-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/19 10:22 AM, Joe Perches wrote:
-> On Wed, 2019-07-10 at 10:18 -0700, Joe Perches wrote:
->> On Wed, 2019-07-10 at 09:49 -0700, Randy Dunlap wrote:
->>> On 7/10/19 9:38 AM, Casey Schaufler wrote:
->>>> On 7/10/2019 6:34 AM, Aaron Goidel wrote:
->>>>> @@ -3261,6 +3262,26 @@ static int selinux_inode_removexattr(struct dentry *dentry, const char *name)
->>>>>  	return -EACCES;
->>>>>  }
->>>>>  
->>>>> +static int selinux_inode_notify(struct inode *inode, u64 mask)
->>>>> +{
->>>>> +	u32 perm = FILE__WATCH; // basic permission, can a watch be set?
->>>>
->>>> We don't use // comments in the Linux kernel.
->>>>
->>>
->>> I thought that we had recently moved into the 21st century on that issue,
->>> but I don't see it mentioned in coding-style.rst.  Maybe we need a Doc update.
->>>
->>> checkpatch allows C99 comments by default.
->>> Joe, do you recall about this?
->>
->> My recollection is it was something I thought was
->> just simple and useful so I added it to checkpatch
->> without going through the negative of the nominal
->> approvals required by modifying CodingStyle.
-> 
-> https://lkml.org/lkml/2016/7/8/625
-> 
+Minor cleanup to remove extra return statement.
 
-Aha, thanks, I don't recall seeing that one.
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+---
+ drivers/video/fbdev/nvidia/nv_backlight.c | 2 --
+ 1 file changed, 2 deletions(-)
 
+diff --git a/drivers/video/fbdev/nvidia/nv_backlight.c b/drivers/video/fbdev/nvidia/nv_backlight.c
+index e705a78..2ce5352 100644
+--- a/drivers/video/fbdev/nvidia/nv_backlight.c
++++ b/drivers/video/fbdev/nvidia/nv_backlight.c
+@@ -123,8 +123,6 @@ void nvidia_bl_init(struct nvidia_par *par)
+ 
+ 	printk("nvidia: Backlight initialized (%s)\n", name);
+ 
+-	return;
+-
+ error:
+ 	return;
+ }
 -- 
-~Randy
+1.9.1
+
