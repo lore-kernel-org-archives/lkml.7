@@ -2,112 +2,89 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35E2C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2835FC74A23
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A9A2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="S3pX6hE3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H1b1O1tj"
+	by mail.kernel.org (Postfix) with ESMTP id 08CDE2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfGJONq (ORCPT
+        id S1727834AbfGJOOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:13:46 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:42409 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727754AbfGJONo (ORCPT
+        Wed, 10 Jul 2019 10:14:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40972 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfGJOOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:13:44 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id D47BF22116;
-        Wed, 10 Jul 2019 10:13:43 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 10 Jul 2019 10:13:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=59zr7ar3J2+Mb
-        Uw+g9i3S5rctQUpSiUdlC6O+B+OKrU=; b=S3pX6hE3bn5MBplfmjzefPLZID+uY
-        PFlJ4EI7EX4/3kyQG4Bbd2YbXm2LlgO7VjeEj1GLq6De4txUfNDOvtk3YSo6Xv8z
-        AU+BZXLQpkBLpV9X9KG9fgYhrc20gU2tYSM5boVxyu5bT7dO6yQj7ovflss6+4Vc
-        3y7mZxg6pQT/YM8xk6cjyJZp3gJsmQXm4rRqL7JWMXztPoPJh1U1kShcKqsMJxjv
-        wFihh6y+ZUdkANIqFS9hkZ5SwuXoMdjdZv68cVl60gI/dAVY/9oJQ9brkc2uz1Fy
-        D9HPQer6D95bngJ2SCc9cn28jZWdnYpuJU7KoUn4y1hqDNnqyb3tExoNw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=59zr7ar3J2+MbUw+g9i3S5rctQUpSiUdlC6O+B+OKrU=; b=H1b1O1tj
-        Ep36ro92b9PTugCl9A4Wb+t/dd6jzm1np4XSq27K309m4oNjF/bWnd2LKskrnGs/
-        wn+xV0rsQUFpEwSOqD0Nnp2Q43iL54xy3diQNln5thWOXJxP2lL2HDnP1dOahVda
-        CEomX8fVZlpyxqW4h6qfJspJv67V/q8LUpT8OP8qvo/ir7tNiGY0VnkhFJGXXza/
-        FeGE/At4QwsMPdM8Xgz2xHIoYftrP0jthVu40CZVn2X2FWdAC6RFM9yMEIeEANOn
-        mP1pvvCuVTYYzIH32OLpitiNyV50dkNLtyTUvx2l2DBxV4Jt6LR446Z+3jro61He
-        400mgrleJik8mw==
-X-ME-Sender: <xms:l_IlXTyUs-Re8Kv_0Du6OnYYS7xXNDyUErM0adjKB3sC-0EF3J8sDw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeeigdejhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomheptehnughrvgif
-    ucflvghffhgvrhihuceorghnughrvgifsegrjhdrihgurdgruheqnecukfhppedugedrvd
-    drkeehrddvvdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgu
-    rdgruhenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:l_IlXXnynii_CsXIeNcZv6pZrz-TdTk4O-FPEZzbG6lSlT_gYCx6tA>
-    <xmx:l_IlXQH9EJ6Jf2i_MwULNw6yXZTg-l43TgsrRM2Kp13MdQ554SdoXQ>
-    <xmx:l_IlXfU-CoQqEQCjIwS_tv-GbvCeOWgLfD4p_LkFLuybsg0_uXRjSA>
-    <xmx:l_IlXYpTKuec_2edicKj8pgHylHEasU-KlfdoRIJzS6BbgeGGsUnaA>
-Received: from localhost.localdomain (ppp14-2-85-22.adl-apt-pir-bras31.tpg.internode.on.net [14.2.85.22])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0EFD5380074;
-        Wed, 10 Jul 2019 10:13:40 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     Joel Stanley <joel@jms.id.au>, ryanchen.aspeed@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 3/3] ARM: config: aspeed-g5: Enable EXT4, VFAT
-Date:   Wed, 10 Jul 2019 23:43:25 +0930
-Message-Id: <20190710141325.20888-4-andrew@aj.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190710141325.20888-1-andrew@aj.id.au>
-References: <20190710141325.20888-1-andrew@aj.id.au>
+        Wed, 10 Jul 2019 10:14:14 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q4so1325465pgj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 07:14:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R5Znt+RzWmSgRwaRtC1ltuLCBGeBBNo+VH1yafA+2Es=;
+        b=a20yKPK+lg9RRhA8UHFTiE+lGP8I5WqXWgg7RPgzXlNKRndpAJOMTu7rDfOPP3x15h
+         T1LfmNSYl8wb8FeIJ61PE9XKWXnNs/3QCJjXJkao+DkZrMQhGIWlaprQfvTeoSFxt540
+         gJsSQvFD48hgF+gT9tSKclVkbyDheGYkXOrUcUffX+A3zNrnHvF+Yr7ZWG4Iqig/2nO7
+         W9WHaD9mSJDWceB/oCyIDzJsK725wYmiXGI0XcL6w+/s5pXrFK7KOHhW0AYbdajRzur1
+         tuwWoZtxW3AqCEHdNWQE2kVkeuqq4dsyXOjINiuQjkOYaB0ajqT2fQVnCz4YfbMpIjDO
+         2sSg==
+X-Gm-Message-State: APjAAAVA7XYWhmbM0zdOIzhPcistR5WLekEQiM9DM8d36rSG6zc1BlA7
+        oRwj61BrQHPZD18nnkhl7C4=
+X-Google-Smtp-Source: APXvYqym7BBx12csZrMAHwFiJaOwwSQ/mUMl/VcG5ZgV3KypL/be6ske4tRVJyuzjK61zGAEQsDpXg==
+X-Received: by 2002:a63:d748:: with SMTP id w8mr36788640pgi.157.1562768053204;
+        Wed, 10 Jul 2019 07:14:13 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:5dd1:f8eb:b8a1:fefa:e83f])
+        by smtp.gmail.com with ESMTPSA id v12sm2252919pjk.13.2019.07.10.07.14.11
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 07:14:12 -0700 (PDT)
+Subject: Re: Reminder: 5 open syzbot bugs in lockdep subsystem
+To:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        syzkaller-bugs@googlegroups.com, jeffv@google.com
+References: <20190710055838.GC2152@sol.localdomain>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <f614ac47-34c3-fac4-c096-fd835ce6d35a@acm.org>
+Date:   Wed, 10 Jul 2019 07:14:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190710055838.GC2152@sol.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+On 7/9/19 10:58 PM, Eric Biggers wrote:
+> [This email was generated by a script.  Let me know if you have any suggestions
+> to make it better, or if you want it re-generated with the latest status.]
+> 
+> Of the currently open syzbot reports against the upstream kernel, I've manually
+> marked 5 of them as possibly being bugs in the lockdep subsystem.  I've listed
+> these reports below, sorted by an algorithm that tries to list first the reports
+> most likely to be still valid, important, and actionable.
+> 
+> Of these 5 bugs, 3 were seen in mainline in the last week.
+> 
+> Of these 5 bugs, 1 was bisected to a commit from the following person:
+> 
+> 	Bart Van Assche <bvanassche@acm.org>
 
-Popular filesystems now that we have eMMC support.
+(+jeffv)
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- arch/arm/configs/aspeed_g5_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+Hi Eric,
 
-diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
-index 9cb3cfd35a59..13db73e15539 100644
---- a/arch/arm/configs/aspeed_g5_defconfig
-+++ b/arch/arm/configs/aspeed_g5_defconfig
-@@ -217,8 +217,11 @@ CONFIG_FSI_MASTER_HUB=y
- CONFIG_FSI_MASTER_AST_CF=y
- CONFIG_FSI_SCOM=y
- CONFIG_FSI_SBEFIFO=y
-+CONFIG_EXT4_FS=y
- CONFIG_FANOTIFY=y
- CONFIG_OVERLAY_FS=y
-+CONFIG_VFAT_FS=y
-+CONFIG_FAT_DEFAULT_UTF8=y
- CONFIG_TMPFS=y
- CONFIG_JFFS2_FS=y
- # CONFIG_JFFS2_FS_WRITEBUFFER is not set
--- 
-2.20.1
+Several days ago I had already explained to you that the bisection 
+result that led to one of my commits did not make any sense to me. So I 
+do not appreciate this kind of fingerpointing. Please stop doing this.
 
+Bart.
