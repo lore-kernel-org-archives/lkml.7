@@ -2,71 +2,121 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32829C73C63
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07787C73C66
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3002082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B0E2082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:44:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hzt+iDud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfGJClZ (ORCPT
+        id S1726071AbfGJCoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 22:41:25 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:32880 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfGJClW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 22:41:22 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C3351200F3A;
-        Wed, 10 Jul 2019 04:41:20 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 52BD3200F3E;
-        Wed, 10 Jul 2019 04:41:17 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B0CB6402DB;
-        Wed, 10 Jul 2019 10:41:12 +0800 (SGT)
-From:   han.xu@nxp.com
-To:     han.xu@nxp.com, broonie@kernel.org, ashish.kumar@nxp.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-Subject: [PATCH 2/3] spi: spi-fsl-qspi: change i.MX7D RX FIFO size
-Date:   Wed, 10 Jul 2019 10:31:27 +0800
-Message-Id: <20190710023128.13115-3-han.xu@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190710023128.13115-1-han.xu@nxp.com>
-References: <20190710023128.13115-1-han.xu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 9 Jul 2019 22:44:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42749 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfGJCoG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 22:44:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay6so396269plb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 19:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=6+LJGvw+qjKoO8SZDZ3CnbeCqyYBeV92bc9prl1ddmQ=;
+        b=Hzt+iDudzrsOkLAbFzQPF4ucXk+e+dS1MtkefrhpjARbtkPySZkO4PjJ7X3K7n/IER
+         34d0otLaIpDweuSre9qtRGsTKofIMhe7/neLDAE+Uas0A5V6pbK3jXaPX4K2Pjo67Uj4
+         wU1NifVOAgDX3xJYBlCIE9psPsRdF7IFzc4+COT5iDph1XtFkFhNvPKOUoPI+IK19q0E
+         ivRkw7BrYOe/uUCpgWKtHcVzZFbAUl/wlErOctpAreBNdXzAyVcMFcEPmr1SuWteS2kQ
+         NkPvfb3d2WUcxttWq6JQzdUc+jJQLMMMVhI58SZaOk1h8x5JyDnPuidFd2KGjKLdNnve
+         4N5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=6+LJGvw+qjKoO8SZDZ3CnbeCqyYBeV92bc9prl1ddmQ=;
+        b=dmzYB8TL2Mw4NkTJfXvJCV3fJ77izNH/o9PZu1jP8o+mbQGKSc6e2pc63SeX27PoOg
+         WxYgne6VLKoHA/Tj1i8D/P8DsxJIpvUDtv6F+75+/314zE5R3QNJDvU4aGAprSSVmTZc
+         sBUBnFivta7qviksdoxto/UPWYEEl+EAkDkcatFhQUKYiU0jPAlP/q5gZwPPXuGGP4AK
+         5CaOTtw3HC79u3MdpWx7pB8/6UQf0FhlJ9HAIftYim/msC0pb8CN1ew7wlL6Qi7Z5VkP
+         5R1O1Yi9F92K2InLAiqaXdsx+7kolzQ62Y6dgwRbu8x9DKGrKujeibmHmxWfFG6TNIJG
+         Za1A==
+X-Gm-Message-State: APjAAAVdGMSd98Gj4UzX8B1U/MqSWLQvK5iSpoxqkEOBh6Fd+LhV1zpp
+        REzyW8kumjNCnDichIeHPuw5Zw==
+X-Google-Smtp-Source: APXvYqzOg8rEPuco6fwSJeluxLLtj6pJ6MbzfjL9lhXvq8fqmKHjrof5XeFuQ1s1JzW87T/TC1BWBw==
+X-Received: by 2002:a17:902:e613:: with SMTP id cm19mr33894730plb.299.1562726644795;
+        Tue, 09 Jul 2019 19:44:04 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id o2sm349868pgp.74.2019.07.09.19.44.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 19:44:04 -0700 (PDT)
+Date:   Tue, 9 Jul 2019 19:44:03 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [patch] x86/boot: Fix memory leak in default_get_smp_config()
+Message-ID: <alpine.DEB.2.21.1907091942570.28240@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Han Xu <han.xu@nxp.com>
+When default_get_smp_config() is called with early == 1 and mpf->feature1
+is non-zero, mpf is leaked because the return path does not do
+early_memunmap().
 
-The RX FIFO should be 128 byte rather than 512 byte. It's a typo on
-reference manual.
+Fix this and share a common exit routine.
 
-Signed-off-by: Han Xu <han.xu@nxp.com>
+Fixes: 5997efb96756 ("x86/boot: Use memremap() to map the MPF and MPC
+data")
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
 ---
- drivers/spi/spi-fsl-qspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/mpparse.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index 6a713f78a62e..1d08c60e5ae2 100644
---- a/drivers/spi/spi-fsl-qspi.c
-+++ b/drivers/spi/spi-fsl-qspi.c
-@@ -206,7 +206,7 @@ static const struct fsl_qspi_devtype_data imx6sx_data = {
- };
+diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+index f1c5eb99d445..7a7055056b0d 100644
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -547,17 +547,15 @@ void __init default_get_smp_config(unsigned int early)
+ 			 * local APIC has default address
+ 			 */
+ 			mp_lapic_addr = APIC_DEFAULT_PHYS_BASE;
+-			return;
++			goto out;
+ 		}
  
- static const struct fsl_qspi_devtype_data imx7d_data = {
--	.rxfifo = SZ_512,
-+	.rxfifo = SZ_128,
- 	.txfifo = SZ_512,
- 	.ahb_buf_size = SZ_1K,
- 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
--- 
-2.17.1
-
+ 		pr_info("Default MP configuration #%d\n", mpf->feature1);
+ 		construct_default_ISA_mptable(mpf->feature1);
+ 
+ 	} else if (mpf->physptr) {
+-		if (check_physptr(mpf, early)) {
+-			early_memunmap(mpf, sizeof(*mpf));
+-			return;
+-		}
++		if (check_physptr(mpf, early))
++			goto out;
+ 	} else
+ 		BUG();
+ 
+@@ -566,7 +564,7 @@ void __init default_get_smp_config(unsigned int early)
+ 	/*
+ 	 * Only use the first configuration found.
+ 	 */
+-
++out:
+ 	early_memunmap(mpf, sizeof(*mpf));
+ }
+ 
