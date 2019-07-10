@@ -2,137 +2,187 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62DFC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D4DC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7BE20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:25:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="XRoYyZXY"
+	by mail.kernel.org (Postfix) with ESMTP id D5FAB20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfGJJZS (ORCPT
+        id S1727052AbfGJJbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:25:18 -0400
-Received: from mout.web.de ([212.227.17.12]:54951 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbfGJJZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:25:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1562750690;
-        bh=UWQsBYlELnAYysk2mtM7AdDfEOErIPJ0ROaaHxCVQxs=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=XRoYyZXYDivkNcB/t/1j7EiIQApsYPOkhM/geeTahr2vEQEADhDHgnHBQq8Yc6p/L
-         YJko79Jp5XLc/ZhOI82urXCnKKykSMZmBtNxuKPMVazdcJ891WPv5IGc5xrCR3U1WU
-         TJNyNwUvsvJZyTR+0DO8hl3lmTZ5+Bd2C9N/PRkc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.42.76]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LzsGF-1iXj3B1Cqp-014zk9; Wed, 10
- Jul 2019 11:24:50 +0200
-Subject: Re: [1/2] powerpc/83xx: fix use-after-free in mpc831x_usb_cfg()
-To:     Wen Yang <wen.yang99@zte.com.cn>, linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Scott Wood <oss@buserror.net>,
-        Xue Zhihong <xue.zhihong@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <201907101533443009168@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <ef968d9a-785e-dbf7-dfe6-9572fc241e63@web.de>
-Date:   Wed, 10 Jul 2019 11:24:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 05:31:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46729 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfGJJbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:31:22 -0400
+Received: from mail-wr1-f69.google.com ([209.85.221.69])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1hl8wa-0008Nr-8p
+        for linux-kernel@vger.kernel.org; Wed, 10 Jul 2019 09:31:20 +0000
+Received: by mail-wr1-f69.google.com with SMTP id i6so691046wre.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 02:31:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=hHPquRzHtRgMtJsb7Rvs2e23qBtTkAoO0X1njgJaMYA=;
+        b=F9xev+V5G/pnuDezEpfzAoTarYoQSJEzJZSmjSkT83eq7Sw0rkGJ+Ic9BBZu1SwJAA
+         xpyscZQCGYe4V9V3K5fedYs87n091RH099dB2DJpKq8BCMHyV7pHTshsJG9w7joLV6o2
+         2a1eBLfr/cdHdbLseJvM1Q4ouv0qjB105P5L+ctmv5ydlFdM8FgLuGAWqiGDng6xyY7m
+         tEjfXtyF3y0bw2GSeU2ZkJEqQWtfRM7VoByoeirKzNTrRe+W24LlNL3RBwVB2eZYZM8/
+         U5fyr9W+DAhsO+8GxzxqXCz/txpfB+tsvdZq/AcSNy40UPjZZtMy9XSmEFHD2mw2OFIh
+         zAkg==
+X-Gm-Message-State: APjAAAXzhHOYXOmfoDwsrunc+vgkRasgJiQ+XzLjao8mdZPvfy3gaz8t
+        gC0o3gvdjvrMASCtFC1G9CbHkFJ4GFZzle2bSbOJYTv+wsMSf+APTcwYJOiPDZbNZeQHwcQ0+/K
+        OFs4RAHv4R42rcYIN4FqBi2NpxEf14vvgJJh9ZJGbLw==
+X-Received: by 2002:adf:de10:: with SMTP id b16mr40614wrm.296.1562751079582;
+        Wed, 10 Jul 2019 02:31:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqytLogyZohPzr1HFOmbE/x/1a7unmZGtecEIOhDViRcPJnLjsY03n0YB7/wA800VwKpDtmTzw==
+X-Received: by 2002:adf:de10:: with SMTP id b16mr40582wrm.296.1562751079307;
+        Wed, 10 Jul 2019 02:31:19 -0700 (PDT)
+Received: from localhost (host1-198-dynamic.8-87-r.retail.telecomitalia.it. [87.8.198.1])
+        by smtp.gmail.com with ESMTPSA id g12sm2220469wrv.9.2019.07.10.02.31.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 02:31:18 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 11:31:17 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Coly Li <colyli@suse.de>,
+        Kent Overstreet <kent.overstreet@gmail.com>
+Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] bcache: fix deadlock in bcache_allocator()
+Message-ID: <20190710093117.GA2792@xps-13>
 MIME-Version: 1.0
-In-Reply-To: <201907101533443009168@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:u8YF1F7kU0eryeuNCAgxxNLtq1skRg8kO+bDl9Qx1VNi5KbWU52
- da522RyNmIHaH5nwXU4VySQbrXiQ90rR7mAg65Dca2oSG6TJVOIyckD5vPH27HsvPNzpqtF
- K2G+GKRzevvkWBpuVT0TH6PwMTre/wxnDnrtvhHFiOVfnKs3eNH5pttzQ707WRdLo7nTS0X
- 8Tgp8R/Oakl9JGYopBZKQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jVmT6SyvKd0=:jEbVcml8nJtdSC97HCysHC
- SW+yUsScvjRFJEQi6t22gIrim5WE5ffuwlLP4L5LUvN37lttkAAC4QoNrPdX6jwNb/8qsWQtF
- /w3Xer4ieL4obybJDnQ567SvRdJVAqB9SutbrNDwW8ireuR3/7ODd9nlxgGgGTjNNLeHQmhnb
- 3lSj0Y0oj8Fo8JHp7rH/dibh+FO4sAGJrm7sfg32p+MdRknp+dwwyqIh1VXnJtDyGiMh1LW8N
- VBdhOaVMepRmEV8Z/qLZCzUgkF8U133PY021jG+b6ysDM3ov1swSIhv8Mie92oELoisOmls7y
- iV9MVUqpTXs1hayQIDtf6K8ma4yc9rD2A6ke7W4G/HWByQiuiLQGbZTES8UoKspqjwVLDNQ2Z
- FsInyzcFecqOsTJa2dEDRZsk95u0F51nSFSFXVOHf1Q+i1n9MOer3VQWPsYloCyir8HvcJy/h
- rErpqjY4+pQWkeU/jB6sfJK3T9IpEnD+kppalZdKjRQnph95evGKn2QI3g59bCi4RWorrC3QB
- dJRXmoqx7+veiFdHYzAyJig8K62Ax18/hZvUujdVT9u9GWLrWWDS7m2hcbWkpTCPtZch2HSTV
- xD6MRI8+Hj+vlz/lx2oay5mrZIrdahxV1Jdc7aAZBRlf3Wz2XnKc+FFfVnKgAxpINYzgndqx2
- +P+OOM2ZbGNHY+AF4kOnG3e22vJT9jxhqBK6rnV76GthSrjgJc+Z7w4Ugl0Fl+wSBd5QvHdM5
- sUb5zFqhk8Td6ui5oSYMx/HrAeqNkrEEk9xOxGI/pGIB4RKXYQXA/LLC3gSW7LAi8zUW4PrQF
- d3gqRtAXr9gGo6VdgKrGi5C+arvWoTwUEI/J3Grl89mRTPd5lKtjMhMIMpR96H30c4qgwhym2
- ETpaC/1Xk8QkUc8zOmhRDWWT+biYg9xtEjvCd0t7iD1wuyNNjQXyFRUk2o2yOxRac8XoQNOwB
- IddJQVb0Y/9AbpezJ0DMga4ZjQk7j/sCIhREQ0LbxgLeCGLsCu+mLfa5O5YmiOdUB2ICyyRFd
- vY9rOwYYPMn7aEcJbDkFUnFkSFZiKKfJPevIgJv5gMOe2tzNgvsitt5Bs93SpkJsftsUSwd8j
- W/JNwrvn2nQvJvY1CwMVgdNGyT2F6s74ugX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> we developed a coccinelle script to detect such problems.
+bcache_allocator() can call the following:
 
-How do you think about to give any attribution to this development software
-in your commit descriptions?
+ bch_allocator_thread()
+  -> bch_prio_write()
+     -> bch_bucket_alloc()
+        -> wait on &ca->set->bucket_wait
 
+But the wake up event on bucket_wait is supposed to come from
+bch_allocator_thread() itself => deadlock:
 
-> After a period of testing, we will send it to the LMKL mailing list later.
+ [ 242.888435] INFO: task bcache_allocato:9015 blocked for more than 120 seconds.
+ [ 242.893786] Not tainted 4.20.0-042000rc3-generic #201811182231
+ [ 242.896669] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ [ 242.900428] bcache_allocato D 0 9015 2 0x80000000
+ [ 242.900434] Call Trace:
+ [ 242.900448] __schedule+0x2a2/0x880
+ [ 242.900455] ? __schedule+0x2aa/0x880
+ [ 242.900462] schedule+0x2c/0x80
+ [ 242.900480] bch_bucket_alloc+0x19d/0x380 [bcache]
+ [ 242.900503] ? wait_woken+0x80/0x80
+ [ 242.900519] bch_prio_write+0x190/0x340 [bcache]
+ [ 242.900530] bch_allocator_thread+0x482/0xd10 [bcache]
+ [ 242.900535] kthread+0x120/0x140
+ [ 242.900546] ? bch_invalidate_one_bucket+0x80/0x80 [bcache]
+ [ 242.900549] ? kthread_park+0x90/0x90
+ [ 242.900554] ret_from_fork+0x35/0x40
 
-I am also curious then on how this area will evolve further.
+Fix by making the call to bch_prio_write() non-blocking, so that
+bch_allocator_thread() never waits on itself.
 
-Regards,
-Markus
+Moreover, make sure to wake up the garbage collector thread when
+bch_prio_write() is failing to allocate buckets.
+
+BugLink: https://bugs.launchpad.net/bugs/1784665
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+---
+ drivers/md/bcache/alloc.c  |  6 +++++-
+ drivers/md/bcache/bcache.h |  2 +-
+ drivers/md/bcache/super.c  | 13 +++++++++----
+ 3 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index f8986effcb50..0797587600c7 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -377,7 +377,11 @@ static int bch_allocator_thread(void *arg)
+ 			if (!fifo_full(&ca->free_inc))
+ 				goto retry_invalidate;
+ 
+-			bch_prio_write(ca);
++			if (bch_prio_write(ca, false) < 0) {
++				ca->invalidate_needs_gc = 1;
++				wake_up_gc(ca->set);
++				goto retry_invalidate;
++			}
+ 		}
+ 	}
+ out:
+diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
+index fdf75352e16a..dc5106b21260 100644
+--- a/drivers/md/bcache/bcache.h
++++ b/drivers/md/bcache/bcache.h
+@@ -979,7 +979,7 @@ bool bch_cached_dev_error(struct cached_dev *dc);
+ __printf(2, 3)
+ bool bch_cache_set_error(struct cache_set *c, const char *fmt, ...);
+ 
+-void bch_prio_write(struct cache *ca);
++int bch_prio_write(struct cache *ca, bool wait);
+ void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent);
+ 
+ extern struct workqueue_struct *bcache_wq;
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 1b63ac876169..6598b457df1a 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -525,7 +525,7 @@ static void prio_io(struct cache *ca, uint64_t bucket, int op,
+ 	closure_sync(cl);
+ }
+ 
+-void bch_prio_write(struct cache *ca)
++int bch_prio_write(struct cache *ca, bool wait)
+ {
+ 	int i;
+ 	struct bucket *b;
+@@ -560,8 +560,12 @@ void bch_prio_write(struct cache *ca)
+ 		p->magic	= pset_magic(&ca->sb);
+ 		p->csum		= bch_crc64(&p->magic, bucket_bytes(ca) - 8);
+ 
+-		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, true);
+-		BUG_ON(bucket == -1);
++		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, wait);
++		if (bucket == -1) {
++			if (!wait)
++				return -ENOMEM;
++			BUG_ON(1);
++		}
+ 
+ 		mutex_unlock(&ca->set->bucket_lock);
+ 		prio_io(ca, bucket, REQ_OP_WRITE, 0);
+@@ -589,6 +593,7 @@ void bch_prio_write(struct cache *ca)
+ 
+ 		ca->prio_last_buckets[i] = ca->prio_buckets[i];
+ 	}
++	return 0;
+ }
+ 
+ static void prio_read(struct cache *ca, uint64_t bucket)
+@@ -1903,7 +1908,7 @@ static int run_cache_set(struct cache_set *c)
+ 
+ 		mutex_lock(&c->bucket_lock);
+ 		for_each_cache(ca, c, i)
+-			bch_prio_write(ca);
++			bch_prio_write(ca, true);
+ 		mutex_unlock(&c->bucket_lock);
+ 
+ 		err = "cannot allocate new UUID bucket";
+-- 
+2.20.1
+
