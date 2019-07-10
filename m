@@ -2,217 +2,124 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7613EC74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB61C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F21A2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562773801;
-	bh=f3705MLDMz7ZVRIZ/2mbpGAvk6+s8V0oHG6b0/yE9pg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OCIkzRBKnumCI+TQT2jQ1UPUZgbNALZWmejPn9U0DB8N7h1g4IU++SI0JzoLMSk9m
-	 zo3QYHH+/Lz+KIl7lTyuSzbFLAnLGbqEGQqh9vNe5g0IL6vtdahgDJMoEf7daMX7Gr
-	 n6ItdxPcU56Hkewxc2X10sVIv7EzlR4DydBgDBQI=
+	by mail.kernel.org (Postfix) with ESMTP id 7ED872054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:53:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NDu1fs3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfGJPuA (ORCPT
+        id S1727793AbfGJPxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:50:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727290AbfGJPt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:49:59 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAE5E21473;
-        Wed, 10 Jul 2019 15:49:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562773799;
-        bh=f3705MLDMz7ZVRIZ/2mbpGAvk6+s8V0oHG6b0/yE9pg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dNr4F5HawxLIUhCtkX+gOEjtuf9BGR0CEIsliRqZH2O9ZtsdBVaq2kRHWU6Hi1+fo
-         XRZwgaoUmOgituexlwOZw6yF+zL0fvnshjkK4ofv79S4KQTO3bO3TnB7b8CachtiCF
-         KS0ZkAhzVzVQnnkBbUi8ZqjFD274etLB6JypO9QY=
-Received: by mail-qt1-f169.google.com with SMTP id n11so2948349qtl.5;
-        Wed, 10 Jul 2019 08:49:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAWrcwvR9UpUlCeNMPJCVSE8VsdGFQEhmZHf8U4qvuKWJOrtWGvG
-        ciR3kcFKYWRp+/Mh+DpumQmy3ylLAIcuujOaow==
-X-Google-Smtp-Source: APXvYqz6I/p/hMSsLLeh44Lioj37XHZzwUteYHfVHSa7jufX40UundN85FK+bOouu15+3Q3HfQJkSkXH5cMd8kt4WyU=
-X-Received: by 2002:ac8:36b9:: with SMTP id a54mr25025832qtc.300.1562773798149;
- Wed, 10 Jul 2019 08:49:58 -0700 (PDT)
+        Wed, 10 Jul 2019 11:53:13 -0400
+Received: from mail-ed1-f52.google.com ([209.85.208.52]:36706 "EHLO
+        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfGJPxN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:53:13 -0400
+Received: by mail-ed1-f52.google.com with SMTP id k21so2679688edq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 08:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OooCPJ+TfmCiIkPVCQN9rBe4Zl+T7uS7oe42m2m8dO8=;
+        b=NDu1fs3Jx5NnJxsIJXbuNNaTY9DeNvY++yCZH2Aqe/HCWCLe0jW0MSpBbjrkQ3HVdh
+         uxtulPIk/CNjS0NRv1JMzmYodopKY/+CANbJ9grsV8q3Sn48x93g5QYRcjv6aOZ7sxUN
+         99tk+HQN99ShqhLlvW4RAYTOM8pl+1SCJtKjilRR5H1lijlbXBbReR/YgW3ifQCsFIlV
+         znzAj3ymqFOeEuooUCLRv9BhhsUSrftPWhTW9SKEzhoTFv3JdKPwXjDmopcHpA9ABmb9
+         M+1GSzxxVDUtgogYv358LkymKGrRnRIgU61uxTZHbwe2dMH2ljUmEAlx5upSYZZnSaeE
+         mchg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OooCPJ+TfmCiIkPVCQN9rBe4Zl+T7uS7oe42m2m8dO8=;
+        b=okLnX5Eb4ufM7nB9PVRWDoOl9pDcFo8alm3CYrCSJfHlDvUtc+CVetSuglLBPejUrp
+         R+jCawzLwaNhX/Z//dgFloCJjiVi/aUe9hho3WnqEWFwjZ/VxAG5Uk2hL/+eNJdQKwSR
+         gPd1ycmIA5csLNqsHgXSsq67gK8cRjvKZ2NHtt90SVdz8nchr/+vuIbw5Yz5R0UUUK3n
+         2CpGxHhzHUax9qM0U4OsBenuk0pJWjQA6prbKxyOY3oxQauudRZDmpgfCBHrxkJaUp3D
+         o/WVBAgq6kNjMnGmg9lwBWBERt3aP1yquiWWaIUsJ62efnbWQnnh3tcY29wHLbdoSmNh
+         YZqA==
+X-Gm-Message-State: APjAAAX8ITv4VkNduZIJKYNoRGQzeOjI7Fo/2EnHA9VGU8/vR1aNvW3Z
+        5vzIM+YofQ+jPW63yqg59Px18a/hkBwNsTvkFjv24A==
+X-Google-Smtp-Source: APXvYqwRyg+PK6CmK98TU5RngQ5JLVQLW1ax1AQSLUknwWFZptyHZ0BZxbGoMORI2mU52aMjJ96sVgompk4jkkn7/ao=
+X-Received: by 2002:a17:906:b203:: with SMTP id p3mr27035845ejz.223.1562773991171;
+ Wed, 10 Jul 2019 08:53:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190710141611.21159-1-andrew@aj.id.au> <20190710141611.21159-2-andrew@aj.id.au>
-In-Reply-To: <20190710141611.21159-2-andrew@aj.id.au>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 10 Jul 2019 09:49:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKrYcUbn_02z9GQO6U4rz7k=p3kB7_G0tKmv25MMZZNQg@mail.gmail.com>
-Message-ID: <CAL_JsqKrYcUbn_02z9GQO6U4rz7k=p3kB7_G0tKmv25MMZZNQg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: Document Aspeed SD controller
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ryanchen.aspeed@gmail.com
+References: <20190709182014.16052-1-pasha.tatashin@soleen.com> <20190710065953.GA4744@localhost.localdomain>
+In-Reply-To: <20190710065953.GA4744@localhost.localdomain>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 10 Jul 2019 11:53:00 -0400
+Message-ID: <CA+CK2bAC2371999HMMCv6TCf1351u_nV4R1gBLc=79dpLakhHA@mail.gmail.com>
+Subject: Re: [v2 0/5] arm64: allow to reserve memory for normal kexec kernel
+To:     Dave Young <dyoung@redhat.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 8:16 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> The crashkernel reservation for kdump is a must, there are already a lot
+> of different problems need to consider, for example the low and high
+> memory issues, and a lot of other things.  I'm not convinced to enable
+> this for kexec reboot.
 >
-> The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the
-> SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> data bus if only a single slot is enabled.
+> This really looks to workaround the arm64 issue and move the
+> complication to kernel.
+
+I will be working on MMU arm64 kernel relocation solution.
+
+Pasha
+
 >
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  .../bindings/mmc/sdhci-of-aspeed.yaml         | 91 +++++++++++++++++++
-
-aspeed,sdhci.yaml
-
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-of-aspeed.yaml
+> > On, the other hand hibernate does something similar already, but there
+> > MMU never needs to be disabled, and also by the time machine_kexec()
+> > is called, allocator is not available, as we can't fail to do reboot,
+> > so page table must be pre-allocated during kernel load time.
+> >
+> > Note: the above time is relocation time only. Purgatory usually also
+> > computes checksum, but that is skipped, because --no-check is used when
+> > kernel image is loaded via kexec.
+> >
+> > Pavel Tatashin (5):
+> >   kexec: quiet down kexec reboot
+> >   kexec: add resource for normal kexec region
+> >   kexec: export common crashkernel/kexeckernel parser
+> >   kexec: use reserved memory for normal kexec reboot
+> >   arm64, kexec: reserve kexeckernel region
+> >
+> >  .../admin-guide/kernel-parameters.txt         |  7 ++
+> >  arch/arm64/kernel/setup.c                     |  5 ++
+> >  arch/arm64/mm/init.c                          | 83 ++++++++++++-------
+> >  include/linux/crash_core.h                    |  6 ++
+> >  include/linux/ioport.h                        |  1 +
+> >  include/linux/kexec.h                         |  6 +-
+> >  kernel/crash_core.c                           | 27 +++---
+> >  kernel/kexec_core.c                           | 50 +++++++----
+> >  8 files changed, 127 insertions(+), 58 deletions(-)
+> >
+> > --
+> > 2.22.0
+> >
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-of-aspeed.yaml b/Documentation/devicetree/bindings/mmc/sdhci-of-aspeed.yaml
-> new file mode 100644
-> index 000000000000..e98a2ac4d46d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-of-aspeed.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-
-The preferred license is (GPL-2.0 OR BSD-2-Clause) if that is okay with you.
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/sdhci-of-aspeed.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ASPEED SD/SDIO/eMMC Controller
-> +
-> +maintainers:
-> +  - Andrew Jeffery <andrew@aj.id.au>
-> +  - Ryan Chen <ryanchen.aspeed@gmail.com>
-> +
-> +description: |+
-> +  The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the SDIO
-> +  Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit data bus if
-> +  only a single slot is enabled.
-> +
-> +  The two slots are supported by a common configuration area. As the SDHCIs for
-> +  the slots are dependent on the common configuration area, they are described
-> +  as child nodes.
-> +
-> +properties:
-> +  compatible:
-> +    enum: [ aspeed,ast2400-sdc, aspeed,ast2500-sdc ]
-> +  reg:
-> +    description: Common configuration registers
-
-This should have a 'maxItems: 1'. Same for the child reg.
-
-> +  ranges: true
-> +  clocks:
-> +    maxItems: 1
-> +    description: The SD/SDIO controller clock gate
-> +  sdhci:
-
-This needs to be a pattern (under patternProperties) as these have
-unit-addresses.
-
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        allOf:
-> +          - enum: [ aspeed,ast2400-sdhci, aspeed,ast2500-sdhci ]
-> +          - const: sdhci
-
-This condition can never be true. What you need is s/allOf/items/.
-However, 'sdhci' is not really a useful compatible because every
-implementation has quirks, so I'd drop it.
-
-> +      reg:
-> +        description: The SDHCI registers
-> +      clocks:
-> +        maxItems: 1
-> +        description: The SD bus clock
-> +      slot:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [0, 1]
-
-Is this really needed? Offset 0x100 is slot 0 and offset 0x200 is slot
-1. Does that ever change?
-
-> +      interrupts:
-> +        maxItems: 1
-> +        description: The SD interrupt shared between both slots
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - clocks
-> +      - slot
-> +      - interrupts
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - ranges
-> +  - clocks
-
-#address-cells and #size-cells are required too.
-
-You should also add 'additionalProperties: false' here so other random
-properties can't be present.
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/aspeed-clock.h>
-> +    sdc@1e740000 {
-> +            compatible = "aspeed,ast2500-sdc";
-> +            reg = <0x1e740000 0x100>;
-> +            #address-cells = <1>;
-> +            #size-cells = <1>;
-> +            ranges;
-
-It's preferred to limit the range here and then the child addresses
-are 0x100 and 0x200.
-
-> +            clocks = <&syscon ASPEED_CLK_GATE_SDCLK>;
-> +
-> +            sdhci0: sdhci@1e740100 {
-> +                    compatible = "aspeed,ast2500-sdhci", "sdhci";
-> +                    reg = <0x1e740100 0x100>;
-> +                    slot = <0>;
-> +                    interrupts = <26>;
-> +                    sdhci,auto-cmd12;
-> +                    clocks = <&syscon ASPEED_CLK_SDIO>;
-> +            };
-> +
-> +            sdhci1: sdhci@1e740200 {
-> +                    compatible = "aspeed,ast2500-sdhci", "sdhci";
-> +                    reg = <0x1e740200 0x100>;
-> +                    slot = <1>;
-> +                    interrupts = <26>;
-> +                    sdhci,auto-cmd12;
-> +                    clocks = <&syscon ASPEED_CLK_SDIO>;
-> +            };
-> +    };
-> --
-> 2.20.1
->
+> Thanks
+> Dave
