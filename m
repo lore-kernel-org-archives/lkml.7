@@ -2,66 +2,81 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA508C74A23
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365BDC74A23
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F71121473
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151E820651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfGJNib (ORCPT
+        id S1727622AbfGJNjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:38:31 -0400
-Received: from aws.guarana.org ([13.237.110.252]:53788 "EHLO aws.guarana.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727184AbfGJNia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:38:30 -0400
-X-Greylist: delayed 407 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Jul 2019 09:38:29 EDT
-Received: by aws.guarana.org (Postfix, from userid 1006)
-        id E1A60BBE22; Wed, 10 Jul 2019 13:31:38 +0000 (UTC)
-Date:   Wed, 10 Jul 2019 13:31:38 +0000
-From:   Kevin Easton <kevin@guarana.org>
-To:     linux-wireless@vger.kernel.org
-Cc:     andreyknvl@google.com, davem@davemloft.net, kvalo@codeaurora.org,
-        libertas-dev@lists.infradead.org, linux-kernel@vger.kernel.org,
-        syzbot <syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com>,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: [PATCH] libertas: Add missing sentinel at end of if_usb.c fw_table
-Message-ID: <20190710133138.GA31901@ip-172-31-14-16>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Wed, 10 Jul 2019 09:39:41 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:60930 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfGJNjl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 09:39:41 -0400
+Received: from ramsan ([84.194.98.4])
+        by baptiste.telenet-ops.be with bizsmtp
+        id b1ff2000g05gfCL011ffzv; Wed, 10 Jul 2019 15:39:40 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hlCot-0005BA-TD; Wed, 10 Jul 2019 15:39:39 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hlCot-0006vc-Qf; Wed, 10 Jul 2019 15:39:39 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Bernard Metzler <bmt@zurich.ibm.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH -next] rdma/siw: Add missing dependencies on LIBCRC32C and DMA_VIRT_OPS
+Date:   Wed, 10 Jul 2019 15:39:30 +0200
+Message-Id: <20190710133930.26591-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sentinel tells the firmware loading process when to stop.
+If LIBCRC32C and DMA_VIRT_OPS are not enabled:
 
-Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
-Signed-off-by: Kevin Easton <kevin@guarana.org>
+    drivers/infiniband/sw/siw/siw_main.o: In function `siw_newlink':
+    siw_main.c:(.text+0x35c): undefined reference to `dma_virt_ops'
+    drivers/infiniband/sw/siw/siw_qp_rx.o: In function `siw_csum_update':
+    siw_qp_rx.c:(.text+0x16): undefined reference to `crc32c'
+
+Fix the first issue by adding a select of DMA_VIRT_OPS.
+Fix the second issue by replacing the unneeded dependency on
+CRYPTO_CRC32 by a dependency on LIBCRC32C.
+
+Reported-by: noreply@ellerman.id.au (first issue)
+Fixes: c0cf5bdde46c664d ("rdma/siw: addition to kernel build environment")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- drivers/net/wireless/marvell/libertas/if_usb.c | 3 ++-
+ drivers/infiniband/sw/siw/Kconfig | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
-index f1622f0ff8c9..fe3142d85d1e 100644
---- a/drivers/net/wireless/marvell/libertas/if_usb.c
-+++ b/drivers/net/wireless/marvell/libertas/if_usb.c
-@@ -50,7 +50,8 @@ static const struct lbs_fw_table fw_table[] = {
- 	{ MODEL_8388, "libertas/usb8388_v5.bin", NULL },
- 	{ MODEL_8388, "libertas/usb8388.bin", NULL },
- 	{ MODEL_8388, "usb8388.bin", NULL },
--	{ MODEL_8682, "libertas/usb8682.bin", NULL }
-+	{ MODEL_8682, "libertas/usb8682.bin", NULL },
-+	{ 0, NULL, NULL }
- };
- 
- static const struct usb_device_id if_usb_table[] = {
+diff --git a/drivers/infiniband/sw/siw/Kconfig b/drivers/infiniband/sw/siw/Kconfig
+index 94f684174ce3556e..b622fc62f2cd6d46 100644
+--- a/drivers/infiniband/sw/siw/Kconfig
++++ b/drivers/infiniband/sw/siw/Kconfig
+@@ -1,6 +1,7 @@
+ config RDMA_SIW
+ 	tristate "Software RDMA over TCP/IP (iWARP) driver"
+-	depends on INET && INFINIBAND && CRYPTO_CRC32
++	depends on INET && INFINIBAND && LIBCRC32C
++	select DMA_VIRT_OPS
+ 	help
+ 	This driver implements the iWARP RDMA transport over
+ 	the Linux TCP/IP network stack. It enables a system with a
 -- 
-2.11.0
- 
+2.17.1
+
