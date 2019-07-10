@@ -2,97 +2,88 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36397C73C66
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D334C73C66
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A4A2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562726773;
-	bh=jzS0lWGubRhHz6e7Xx7OxsahUS3AdhKlhXd4MJKB7us=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y08Uz0TFPJF36HVrOLZGZPf/U2K00iPTiLYFps8AyUMfVcvNjrH13lKrYZ/TiMDzr
-	 GWTUPwDvtbqG33qnvwOwboa88eZoB8BGEAG6mKcuoNPfU/VD4htf7/65g32fwMYGHc
-	 ZMXuPNvPDfi7KBwIzWbsuJolzBQ6HuDrP+6F+aYM=
+	by mail.kernel.org (Postfix) with ESMTP id 7120A2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:55:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GFGK3hC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfGJCqM (ORCPT
+        id S1726211AbfGJCzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 22:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbfGJCqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 22:46:11 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C77F2080C;
-        Wed, 10 Jul 2019 02:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562726770;
-        bh=jzS0lWGubRhHz6e7Xx7OxsahUS3AdhKlhXd4MJKB7us=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ch1ucHt0/BU44a0NIoj8vKCczzUNhMuM6VJPjqbrpNUcFEjvZHa2pGeouyVvqUN7P
-         8YSJhi/BDBMoOlQJEbuQujnEWSr0eHFovYYtsrltNncNCEiYVbkgTTeM6+kNX6G/Db
-         i+Nvpln/2E6HiKPBjliaDDum/g3nPqI3VQRwgzho=
-Date:   Wed, 10 Jul 2019 11:46:04 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: kprobes sanity test fails on next-20190708
-Message-Id: <20190710114604.8e753774a93ece9d3e753646@kernel.org>
-In-Reply-To: <20190709114045.091c94f3@gandalf.local.home>
-References: <20190708141136.GA3239@localhost.localdomain>
-        <a19faa89-d318-fe21-9952-b0f842240ba5@arm.com>
-        <CADYN=9LBQ4NYFe8BPguJmxJFMiAJ405AZNU7W6gHXLSrZOSgTA@mail.gmail.com>
-        <20190709213657.1447f508bd6b72495ec225d9@gmail.com>
-        <20190709112548.25edc9a7@gandalf.local.home>
-        <20190709153755.GB10123@lakrids.cambridge.arm.com>
-        <20190709114045.091c94f3@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 9 Jul 2019 22:55:25 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41640 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfGJCzZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 22:55:25 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so332999pff.8
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 19:55:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8+Q6mG3/ZGpry498ISHZ/wD38Uvq0i4LqqbAl3VOro8=;
+        b=GFGK3hC51Y3sfytxOq9sTL1KY7vI0GIEHKB47fPVXOglpWzC7zF5vNg6lY6wT+bu4C
+         EG2QJ6dswSmFDp6S5ysxUf3g3cFRG1yXH3PggO6fUVvKedboAeU4jD/IrsVkHfCUp7d/
+         lAgX8w4E3OGmxs704NpKKmARK49PGydVu5Lef6GZ8lqkYyBObnVe3JREruFv/WgQ1vFK
+         VDXTZ6+T8h+8e4VxNLsasG0L2hXyuS+mnLPSnYBTDUFqo4UyXttwkoANA16kzu1CLJ4l
+         S2Cy3DpjCbt2XIO7NKnZsvdQ6Qo3BVTnxb+9n2Z8+NslnR5ny/RbEgN16dTjp5EnxH/r
+         6/Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8+Q6mG3/ZGpry498ISHZ/wD38Uvq0i4LqqbAl3VOro8=;
+        b=ZwtXh6r0i7HWHBIvKw+JElUa4sLOszyG+MxfYHiuyZQl3komymHwOAZpnZWQFCuq93
+         b95z1VT672Btxc318VRQ8vkJZLETdwZH2FzWpsFGkTRbyNm/okiKd50bQjPnXKrECcN1
+         oJWfuJW+uoDAVhToQ8GsVva+QIvX9vOw1T0Cxa2cDld+xYpi0WqHI/EULKSw/dkb00Kj
+         IKG7GRN/JQTiLZGY4RVZYdVDPlfnwsHkWgPs5Du55gyzvq/JFdtpInH4d/A6GEzg+qLn
+         UoDpAOR/V+d4klvs+ECU/nV83HiZK9Tgt+AcJvlDObBurhXAKOVdVhDailhquNW/Cpzd
+         2DHA==
+X-Gm-Message-State: APjAAAV6U8aao11zVLApp83k+0aFtd+RBZ5NxV1o3I/DSRFgrrezklzT
+        gS61M/sc4GywFxdFBWVl7VswuQ==
+X-Google-Smtp-Source: APXvYqzhlKVhfG4T0dvotHjy4f9EMO1M1z7pK84PZoIFoHfU9WVJGMF7tNp9SSrVdK96JhYbGpWMyA==
+X-Received: by 2002:a63:5823:: with SMTP id m35mr19395657pgb.329.1562727324715;
+        Tue, 09 Jul 2019 19:55:24 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id g92sm421039pje.11.2019.07.09.19.55.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 19:55:23 -0700 (PDT)
+Subject: Re: [PATCH] blk-cgroup: turn on psi memstall stuff
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Josef Bacik <josef@toxicpanda.com>
+References: <20190709214129.GK657710@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4b0aaabd-a2f4-c6ce-2630-4a348cd46eb9@kernel.dk>
+Date:   Tue, 9 Jul 2019 20:55:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190709214129.GK657710@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jul 2019 11:40:45 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 9 Jul 2019 16:37:55 +0100
-> Mark Rutland <mark.rutland@arm.com> wrote:
+On 7/9/19 3:41 PM, Tejun Heo wrote:
+> From: Josef Bacik <jbacik@fb.com>
 > 
-> > > I agree. I pushed to my repo in the for-next branch. Care to test that?
-> > > 
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git  
-> > 
-> > I've just given that a spin with KPROBES and KPROBES_SANITY_TEST
-> > selected, and it boots cleanly for me. FWIW:
-> > 
-> > Tested-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> Thanks, then I'm guessing no more changes need to be made.
-> 
-> I usually don't rebase my for-next branch for tags, but since I just
-> pushed it, I guess I can add this one ;-)
+> With the psi stuff in place we can use the memstall flag to indicate
+> pressure that happens from throttling.
 
-Thanks Steve!
-
-
+Applied, thanks.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Jens Axboe
+
