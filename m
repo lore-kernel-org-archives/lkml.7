@@ -2,96 +2,131 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBB2C74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74432C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACFD20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492A9208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:40:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SBoocK3K"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ianG8POe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfGJVif (ORCPT
+        id S1727636AbfGJVkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:38:35 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37587 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfGJVif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:38:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45kXcP6ft9z9sN6;
-        Thu, 11 Jul 2019 07:38:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562794712;
-        bh=xQ3HrnTRQwPLFyO/CnTD4dLIFe8+jtE4NPO9L/af/aM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SBoocK3KkGhnC3PxZLfoug8FLuVs0OMpscW/cFQr0/3c8AfEADJGNkX0+N6RkfUbj
-         a6ppwgh2L8Ptl/FetHAHx7oKokCf2KFYzh/MWdqg7lTJU+a+Fh/9AEEtHTNpvWHMZW
-         gCR+s76nHI2GSzJxAF50mYjPontAKJ8sT1vQ5sFrI+/8Rq+Sct7bgno5jc5rcfC16W
-         BjBg6OBTL/PnrV5Fvxp1D0+520ZBizXuROLZuQf9wOF8Zlxb0Hv74GNjfuLhz4bVpw
-         kUx7DVF1a35vx0fbX4u0nUbR9VpogwnJqf05E6micr3RnSuk94v8OpKPXlmVI04LXy
-         NTg0BRD3/Zi/w==
-Date:   Thu, 11 Jul 2019 07:38:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Sage Weil <sage@newdream.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20190711073828.063b534c@canb.auug.org.au>
-In-Reply-To: <CAOi1vP8wsFDzmdwHw8HwvuycPnOChAjzAOLgajLHqxMadoWojQ@mail.gmail.com>
-References: <20190709165459.11b353d8@canb.auug.org.au>
-        <20190710100138.0aa36d47@canb.auug.org.au>
-        <CAOi1vP8wsFDzmdwHw8HwvuycPnOChAjzAOLgajLHqxMadoWojQ@mail.gmail.com>
+        Wed, 10 Jul 2019 17:40:08 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:34634 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfGJVkI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 17:40:08 -0400
+Received: by mail-yb1-f195.google.com with SMTP id x32so1304602ybh.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 14:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=klmpTKMRhJk0PWQQA2dmLgLN6yYzHWA+paLC90wMAwo=;
+        b=ianG8POesm7I23H2706WLKaOHcIeSM/jbJvK3rX1MbMAkRdwmns8fy1bKZC7i9oc3k
+         ohbiQFPpzrqOOrzzv+XhRdRFx+/2IAbaOBKTcRklRc+xSnIjtv158DtXLkElnFJIEZQM
+         TzWEnN+zO218EByyOBpYZTflZ2HqTf6TV6LFwmZjK1voTtyFxX18k/9gYaEuUuk3J4k+
+         K2qKaAYPaowUKNlcmGN4ToMAGbqL6DJO3BYiRM2quEj3iw0xeLuCN0mw/mYqFS+c4/GU
+         Zq2v67KPnQzfEEFsI1vt0c2DxD+a+avQP8g97zcsXYKmfHt8Zml5XHrtaheM02XN5BnG
+         PdBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=klmpTKMRhJk0PWQQA2dmLgLN6yYzHWA+paLC90wMAwo=;
+        b=UgHZJnBcEeZHw0BXUMpoo0boFVc3vgY+LBhdIu2JBv4ei3xtSiMCO4+x92V2R4x/CI
+         2MQwsyh7lCaAOYJ7HYBFcG+YNrQ5KEx4Yiy5FNt4n6UEin98u39qWXuiHt5OIfLnpaWk
+         P4lI0T3cBr8vFgOrQ+CQr3a/CoB+JrSsabVFZQxm4yAP0Ex3ZZc47rQqY3WbJi0IrKUd
+         APcLIW/2z62w2LqWf5yFu6qNrx4RWzYDYx/R1iv4HRiT+2pnP8pJAQa3bl6ieYxCKMlp
+         j0K8mnVKDDMmeiMohb+uwzyw4XvUyYwxeJVRE7MYlruMTiIsM4s8klfmF/cZq3qUAm9p
+         peOQ==
+X-Gm-Message-State: APjAAAXykgMo246Il3Ol6iwLVNogoegA0TDulIBmV1SbHHuNVTnWvfcP
+        ZMDEKtswOTEtDHwZLHHYuECLXDWwQ89Mlq3890/bNA==
+X-Google-Smtp-Source: APXvYqw4iXskw6yoB+U4UXJRAYJgfQB2zmNYQyo/PSJcnmTZ3tvplyN8EfCsh0Hao7Yc0XZMOxUHsuZHdRdZtD5D0sE=
+X-Received: by 2002:a25:7c05:: with SMTP id x5mr20528ybc.358.1562794807061;
+ Wed, 10 Jul 2019 14:40:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/qMqdXEy7FW0l3m2Xb.djr01"; protocol="application/pgp-signature"
+References: <20190710213238.91835-1-henryburns@google.com>
+In-Reply-To: <20190710213238.91835-1-henryburns@google.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 10 Jul 2019 14:39:55 -0700
+Message-ID: <CALvZod7kMX5Xika8nqywyXHuBKqTfSPP7uZ1-OU2M4kmHLiuUw@mail.gmail.com>
+Subject: Re: [PATCH] mm/z3fold.c: remove z3fold_migration trylock
+To:     Henry Burns <henryburns@google.com>
+Cc:     Vitaly Wool <vitalywool@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vitaly Vul <vitaly.vul@sony.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Snild Dolkow <snild@sony.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qMqdXEy7FW0l3m2Xb.djr01
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Ilya,
-
-On Wed, 10 Jul 2019 20:21:33 +0200 Ilya Dryomov <idryomov@gmail.com> wrote:
+On Wed, Jul 10, 2019 at 2:32 PM Henry Burns <henryburns@google.com> wrote:
 >
-> Yes, that is what I figured would happen.  I assume you would keep
-> carrying this fixup until the ceph tree is merged.
+> z3fold_page_migrate() will never succeed because it attempts to acquire a
+> lock that has already been taken by migrate.c in __unmap_and_move().
+>
+> __unmap_and_move() migrate.c
+>   trylock_page(oldpage)
+>   move_to_new_page(oldpage_newpage)
+>     a_ops->migrate_page(oldpage, newpage)
+>       z3fold_page_migrate(oldpage, newpage)
+>         trylock_page(oldpage)
+>
+>
+> Signed-off-by: Henry Burns <henryburns@google.com>
 
-Of course.
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
---=20
-Cheers,
-Stephen Rothwell
+Please add the Fixes tag as well.
 
---Sig_/qMqdXEy7FW0l3m2Xb.djr01
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0mWtQACgkQAVBC80lX
-0Gza1gf/aerGthD0YS4W/eCgBMMyml2K3lFzn8K5fWlvZymUolz/n6JTDNh6yR/n
-MU/9KsdNWl918aEBX1k3ioCtHTxDvbKtRsN76pxsZktEJXLCR7N78bFCN6x4UYTX
-09K5PCYPnh/nkMuFnecjx5w+fYtCsv2CjnM0BwcydcPSAGMZtkWqjWrzjMulYqeO
-Jc149ERGJF1JNVD7ZCyw7xtUsYdLKkYBL00nhn1usVRD+ygNC9a/f90TcZykbOn9
-R0jIbFBsjZfV4m3od3sN0f6jt0iHvyNJhDswDZ9qlMoRIYVaThse0vJrDwZTgwyL
-3C2wVLBc2qZ6t7DQmY6GRX0EApJU6w==
-=bauX
------END PGP SIGNATURE-----
-
---Sig_/qMqdXEy7FW0l3m2Xb.djr01--
+> ---
+>  mm/z3fold.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>
+> diff --git a/mm/z3fold.c b/mm/z3fold.c
+> index 985732c8b025..9fe9330ab8ae 100644
+> --- a/mm/z3fold.c
+> +++ b/mm/z3fold.c
+> @@ -1335,16 +1335,11 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+>         zhdr = page_address(page);
+>         pool = zhdr_to_pool(zhdr);
+>
+> -       if (!trylock_page(page))
+> -               return -EAGAIN;
+> -
+>         if (!z3fold_page_trylock(zhdr)) {
+> -               unlock_page(page);
+>                 return -EAGAIN;
+>         }
+>         if (zhdr->mapped_count != 0) {
+>                 z3fold_page_unlock(zhdr);
+> -               unlock_page(page);
+>                 return -EBUSY;
+>         }
+>         new_zhdr = page_address(newpage);
+> @@ -1376,7 +1371,6 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+>         queue_work_on(new_zhdr->cpu, pool->compact_wq, &new_zhdr->work);
+>
+>         page_mapcount_reset(page);
+> -       unlock_page(page);
+>         put_page(page);
+>         return 0;
+>  }
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
