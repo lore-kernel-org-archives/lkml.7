@@ -2,224 +2,170 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B79BC74A23
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD1AC74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D131C20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1582084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqkXfKOL"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Mzjz159E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfGJNur (ORCPT
+        id S1727763AbfGJNvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:50:47 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52511 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfGJNuq (ORCPT
+        Wed, 10 Jul 2019 09:51:11 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:43095 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727674AbfGJNvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:50:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s3so2411845wms.2;
-        Wed, 10 Jul 2019 06:50:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=fabHZPAYJZma6uZryzQKLNaNjNwU8sofqj/+wik4T2k=;
-        b=NqkXfKOLIq7U4KThby4Itc6DV+yYyHJdxfNkJDr9pC3ssR20yR+jWUDuMxrM6CPhA5
-         WMVkRi9uQm07tiiEpBrv9AQ7fx29bBTw139/n+sIq2vV+mM/62pp7DpMA2aRmyPN8LaY
-         WOz/WO3vkcJlR3+OeCKQkV7LcLOnhx5/O7xN1XQkR7R3aIYuSkKIxEmoHZ2fgVuARyxs
-         RXHlJMPhQNJRtscO32XtKpueRmpxKX9NdLIICkyxuEwrsk0wZ9k26xoVFQ2kFaF/ufXa
-         6A6nCLrpPRa6UqwapHmeSUV83Di1xSC8X6FTo0/0tU1tyQa1BmjrfthmfwqAJSVp3tnl
-         U2jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=fabHZPAYJZma6uZryzQKLNaNjNwU8sofqj/+wik4T2k=;
-        b=ibs+u44abRPaYzHLfe/4VNcIMgs/wtnhUQwbXp9RxdbFgeBktfaCIzIiiDO1BgrCN9
-         gs9Lp2SfmzzzghT6IBBe0W1vO5mLX/FAignPisrqD/jmLZGN+y/km/EQq9EtYvnA2PhK
-         OquydebkyYEVqElz3jT95xfWuKn0B9GjtIZL2bl5TStJvBNPE+mOrTbiLE+4uDohu+Tf
-         YsgSOHPeGHd68gnGRJQo4VaJvNX0mAOsTGr5bjganY91pEBoJcGi77zy/mmW66Ogy9rK
-         i+v1JT+QJIgFNLqCUbyneba9MMxfPr0fHYYkSSgJPZqxNh7BjzwqeuBxotO5ZSF/Hlwd
-         4QTA==
-X-Gm-Message-State: APjAAAUWX8JalFFNIwdACIkDSa1z2DsRsBgsV8Rn6Au08YLtXZfk9kc9
-        gvjJOSCCaz3nW7cK9Bbg07s=
-X-Google-Smtp-Source: APXvYqx//KKGXi4rYljlu6Pvc/VnAMSzbQROUXgKVYP9kg/dejzjiZZIg4eM8GL2pSqYVrzPbbugXg==
-X-Received: by 2002:a1c:238e:: with SMTP id j136mr5443337wmj.144.1562766644432;
-        Wed, 10 Jul 2019 06:50:44 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id j10sm3406009wrd.26.2019.07.10.06.50.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jul 2019 06:50:43 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 15:50:42 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Steve Magnani <steve.magnani@digidescorp.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        =?utf-8?Q?Vojt=C4=9Bch?= Vladyka <vojtech.vladyka@foxyco.cz>,
-        linux-fsdevel@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] udf: 2.01 interoperability issues with Windows 10
-Message-ID: <20190710135042.cfvx465cedie36sh@pali>
-References: <96e1ea00-ac12-015d-5c54-80a83f08b898@digidescorp.com>
- <20190709185638.pcgdbdqoqgur6id3@pali>
- <958ea915-3568-8f5a-581c-e5f0a673d30f@digidescorp.com>
- <20190709210457.kzjnigu6fwgxxq27@pali>
- <2994ee3a-9e38-0ed0-652a-e85de704f8d1@digidescorp.com>
+        Wed, 10 Jul 2019 09:51:11 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190710135109euoutp02fc88013de232375d04841c7c46827cd4~wEAGP6GeX1468214682euoutp02K
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 13:51:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190710135109euoutp02fc88013de232375d04841c7c46827cd4~wEAGP6GeX1468214682euoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1562766669;
+        bh=4absh/hBLS9UjuxzT1kCq57KXKyG6pUw5ycbD+qq0cM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Mzjz159ELtaZNCpqoesX25kinWg0yTp58kVTfj7U3kJxgSxpYJqtIqKX2FyAbcnll
+         IrLRXWsBVswLgZjPzB/e57d8yh5Ar31DpuFAWav8nk9A4C0GYTiWYX2qTag5jkY9Cx
+         c1b3qTnkzopRewzZmFL8jTZU3l6FVfpkpxdh/3Vc=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190710135108eucas1p1f28fd54a869e8784e661bcf66accaf5e~wEAFZijPC0688306883eucas1p1G;
+        Wed, 10 Jul 2019 13:51:08 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 98.F0.04298.C4DE52D5; Wed, 10
+        Jul 2019 14:51:08 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190710135107eucas1p1e82d9cdd577cdb9fc7455aa08e533f88~wEAEpXXoS0690306903eucas1p1H;
+        Wed, 10 Jul 2019 13:51:07 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190710135107eusmtrp2dde0bc7d0d6574d0a914642e08ad712f~wEAEbIw0U3023630236eusmtrp2R;
+        Wed, 10 Jul 2019 13:51:07 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-46-5d25ed4c7545
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id BE.4C.04146.B4DE52D5; Wed, 10
+        Jul 2019 14:51:07 +0100 (BST)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190710135106eusmtip1810244f21f3438fba8b8d052f8b6f0a5~wEADsr-_j1936719367eusmtip1C;
+        Wed, 10 Jul 2019 13:51:06 +0000 (GMT)
+Subject: Re: [PATCH 0/3] add coupled regulators for Exynos5422/5800
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
+Message-ID: <631ffd68-7aab-2483-8799-2019bf3bb444@partner.samsung.com>
+Date:   Wed, 10 Jul 2019 15:51:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2994ee3a-9e38-0ed0-652a-e85de704f8d1@digidescorp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAJKOXPc1rOyFujyWk4HwmQb6YEXd=CEHKwN8AH_pKxk-6CA08w@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHffZe9vri5HEqnlyYLAwK0qTABwxJKxvUh4I+RDVq1pta3tqr
+        MwvLItMWlkWUTvFCV8xSZ7kS9YMuZ+Ulu6iYkeQkMi28ppDa5rvIb/9z+XHO/3A4SjnI+HPx
+        SamCPkmXoGZ5uq51rnP9rrEg7YbvZStITUEVQ3qnvjGk1NrJkGtDPyjS1VUtJx0XRuXEPNTD
+        kPf1xSyZzLMiUtDVJCOPrZ/l5F5vt4x8Ov+QJaOzHTKS3WiVk4WeGprUDrayW7w0lSWVSGOu
+        uMxqau+e01x9WoE0tj6LTDNpDtjN7uc3HxUS4g2CPiTiMB83W94iS2nzOGW2GFEWKuKNyJ0D
+        vAmms2ysEfGcEj9EMDiXSzsLSjyFYCLPQypMImgdmWX+EQP2BhfxAEHbtN0VjCGYG72CjIjj
+        vPFW+NO41gn44LXQO/+bcfZQeJaGrJEXSyNYHAZfLe0yp1bgaMgva2GdmsZBUFeTSzm1L94H
+        r60ltNTjBa8K7UvaHe+B6xdyllgK+0G/vdSlV4FlrJhyDgN8mYOfrSa5tPY2qDIP05L2hhHb
+        U1d+JSy+kGDA6TBcflUuwRcdx8gZdwHh0GLrZpzOKIedqvoQKR0J9oX5JcOAPaFvzEvawRNu
+        1N2mpLQCci8ppe71ULLY7jqiCoyLT5h8pDYtc2Za5sa0zI3p/9wyRFcgPyFNTIwVxNAkIT1Y
+        1CWKaUmxwUeSE83I8XdvFmwTz9H0u5hmhDmk9lBwjh9UMjqDmJHYjICj1D6Kph2rtUrFUV3G
+        aUGffEifliCIzUjF0Wo/xRm3wQNKHKtLFU4IQoqg/1eVce7+jq953b84k1kYEBweszei+9fM
+        lxT1rjUHP/i6KRpO3in05VU5obWqoWPFL1NJ3cbMZ+vikt8dUw3dTD8+aXrbqAg26LLCjt86
+        G11ut8RvDWrKPlE9GjUcGNl2sz9g/D4fZbVo+VXaRwb19vzrNTubPxT5tgR+LORfDRhs4g1c
+        2bjgo6bFOF3oOkov6v4ClXHWNnMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMIsWRmVeSWpSXmKPExsVy+t/xu7reb1VjDU6uVbTYOGM9q8X1L89Z
+        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XaI3fZLZZev8hk
+        cbtxBZvFmx9nmSxa9x5ht/h3bSOLxeYHx9gcBD3WzFvD6LFpVSebx+Yl9R59W1Yxehy/sZ3J
+        4/MmuQC2KD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27
+        BL2MHwsPMxWc4KnYtL2LsYFxNlcXIyeHhICJxJ0ne9i6GLk4hASWMkpc3vGaESIhLdF4ejUT
+        hC0s8edaFxuILSTwmlFi1RKlLkYODmEBZ4k/ezVBwiICmhLX/35nBZnDLPCHRaKrcQYjxNDH
+        TBITfp0GG8omYC7xaPsZsKG8Am4SExYcBhvKIqAqsW1jBzOILSoQITHp2k4WiBpBiZMzn4DZ
+        nAKBEhOb2sF6mQXUJf7Mu8QMYYtL3HoyHyouL7H97RzmCYxCs5C0z0LSMgtJyywkLQsYWVYx
+        iqSWFuem5xYb6hUn5haX5qXrJefnbmIERvi2Yz8372C8tDH4EKMAB6MSD++Pe6qxQqyJZcWV
+        uYcYJTiYlUR497krxwrxpiRWVqUW5ccXleakFh9iNAV6biKzlGhyPjD55JXEG5oamltYGpob
+        mxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYHRfejJEepIry74Ndl6e32qcf8zXT8s6
+        qnfO6fQLrpPGZgfrPsyMzI+t2bXgf0uc4/3Ii8WKVi9jzh9J22Eqvjb71kY7EZsDIs/+2744
+        rLdbl0Xnj7uo0bw/v8UV1jHnsbxJkoybKaS5pmyuvuaWZY6vV3K92NtwgVny/trV8rMn3Tjl
+        kVbFuV6JpTgj0VCLuag4EQDsFWtaBgMAAA==
+X-CMS-MailID: 20190710135107eucas1p1e82d9cdd577cdb9fc7455aa08e533f88
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190708141158eucas1p17d4b50978dbe1e5c876ce6d8f433cc95
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190708141158eucas1p17d4b50978dbe1e5c876ce6d8f433cc95
+References: <CGME20190708141158eucas1p17d4b50978dbe1e5c876ce6d8f433cc95@eucas1p1.samsung.com>
+        <20190708141140.24379-1-k.konieczny@partner.samsung.com>
+        <CAJKOXPd+UZ2MdrTVfBv5UYzK5LgKNQHUFzRbRNeq271EaDSchg@mail.gmail.com>
+        <91f65527-3440-90fd-4096-5824fba1df78@partner.samsung.com>
+        <CAJKOXPc1rOyFujyWk4HwmQb6YEXd=CEHKwN8AH_pKxk-6CA08w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 10 July 2019 08:24:09 Steve Magnani wrote:
+On 10.07.2019 12:14, Krzysztof Kozlowski wrote:
+> On Wed, 10 Jul 2019 at 12:03, Kamil Konieczny
+> <k.konieczny@partner.samsung.com> wrote:
+>>
+>> On 10.07.2019 11:00, Krzysztof Kozlowski wrote:
+>>> On Mon, 8 Jul 2019 at 16:12, <k.konieczny@partner.samsung.com> wrote:
+>>>>
+>>>> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>>>>
+>>>> Hi,
+>>>>
+>>>> The main purpose of this patch series is to add coupled regulators for
+>>>> Exynos5422/5800 to keep constrain on voltage difference between vdd_arm
+>>>> and vdd_int to be at most 300mV. In exynos-bus instead of using
+>>>> regulator_set_voltage_tol() with default voltage tolerance it should be
+>>>> used regulator_set_voltage_triplet() with volatege range, and this is
+>>>> already present in opp/core.c code, so it can be reused. While at this,
+>>>> move setting regulators into opp/core.
+>>>>
+>>>> This patchset was tested on Odroid XU3.
+>>>>
+>>>> The last patch depends on two previous.
+>>>
+>>> So you break the ABI... I assume that patchset maintains
+>>> bisectability. However there is no explanation why ABI break is needed
+>>> so this does not look good...
+>>
+>> Patchset is bisectable, first one is simple and do not depends on others,
+>> second depends on first, last depends on first and second.
+>>
+>> What do you mean by breaking ABI ?
 > 
-> On 7/9/19 4:04 PM, Pali Rohár wrote:
-> > On Tuesday 09 July 2019 15:14:38 Steve Magnani wrote:
-> > > On 7/9/19 1:56 PM, Pali Rohár wrote:
-> > > > Can grub2 recognize such disks?
-> > > I'm not sure what you're asking here. The physical interface to this drive is USB,
-> > It is USB mass storage device? If yes, then grub2 should be able to
-> > normally use. Read its content, etc... You can use "ls" grub command to
-> > list content of disk with supported filesystem.
-> 
-> Yes, Mass Storage Bulk-Only Transport.
-> 
-> > 
-> > > and it's not designed for general-purpose storage (or booting). That said, if you
-> > > have some grub2 commands you want me to run against this drive/partition let me know.
-> > There is also some way for using grub's fs implementation to read disk
-> > images. It is primary used by grub's automated tests. I do not know
-> > right now how to use, I need to look grub documentation. But I have
-> > already used it during implementation of UDF UUID in grub.
-> 
-> Grub is not recognizing my USB drive, i.e. 'ls' does not show usb0 as an option.
-> I tried 'insmod usb' but that made no difference. Maybe grub does not support my
-> USB 3.0 host controller, I will retry on a USB2 port when I have a chance.
+> I mean, that Linux kernel stops working with existing DTBs... or am I
+> mistaken and there is no problem? Maybe I confused the order...
 
-In some cases, BIOS/UEFI firmware supports USB mass storage devices and
-then grub see them... So it depends on how grub access to disk. Pre-boot
-environment is always fragile...
-
-> > > > Also can you check if libparted from git master branch can recognize
-> > > > such disk? In following commit I added support for recognizing UDF
-> > > > filesystem in libparted, it is only in git master branch, not released:
-> > > > 
-> > > > http://git.savannah.gnu.org/cgit/parted.git/commit/?id=8740cfcff3ea839dd6dc8650dec0a466e9870625
-> > > Build failed:
-> > >    In file included from pt-tools.c:114:0:
-> > >    pt-tools.c: In function 'pt_limit_lookup':
-> > >    pt-limit.gperf:78:1: error: function might be candidate for attribute 'pure' [-Werror=suggest-attribute=pure]
-> > > 
-> > > If you send me some other SHA to try I can attempt a rebuild.
-> > Try to use top of master branch. That mentioned commit is already in git
-> > master.
-> > 
-> > And if it still produce that error, compile without -Werror flag (or add
-> > -Wno-error).
-> 
-> I had to configure with CFLAGS=-Wno-error.
-> 
-> It does not recognize Windows-formatted 4K-sector media:
->   Disk /dev/sdb: 17.6TB
->   Sector size (logical/physical): 4096B/4096B
->   Partition Table: msdos
->   Disk Flags:
-> 
->   Number  Start   End     Size    Type     File system  Flags
->    1      1049kB  17.6TB  17.6TB  primary
-> 
-
-Ok, so it means that GUI/TUI tools based on libparted would have
-problems with these disks too.
-
-So ISSUE 1 is big problem for Linux.
-
-> It does recognize mkudffs-formatted media.
-
-That is expected.
-
-> > 
-> > > > ISSUE 2: Inability of Windows chkdsk to analyze 4K-sector media
-> > > >            formatted by mkudffs.
-> > > > This is really bad :-(
-> > > > 
-> > > > > It would be possible to work around this by tweaking mkudffs to
-> > > > > insert dummy BOOT2 components in between the BEA/NSR/TEA:
-> > > > > 
-> > > > >     0000: 00 42 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .BEA01..........
-> > > > >     0800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
-> > > > >     1000: 00 4e 53 52 30 33 01 00 00 00 00 00 00 00 00 00  .NSR03..........
-> > > > >     1800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
-> > > > >     2000: 00 54 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .TEA01..........
-> > > > > 
-> > > > > That would introduce a slight ECMA-167 nonconformity, but Linux
-> > > > > does not object and Windows actually performs better. I would
-> > > > > have to tweak udffsck though since I believe this could confuse
-> > > > > its automatic detection of medium block size.
-> > > > I would like to avoid this hack. If chkdsk is unable to detect such
-> > > > filesystem, it is really a good idea to let it do try doing filesystem
-> > > > checks and recovery? You are saying that udfs.sys can recognize such
-> > > > disk and mount it. I think this should be enough.
-> > > Fair enough, but it's also reasonable to assume the bugginess is
-> > > limited to the VRS corner case. AFAIK that's the only place in ECMA-167
-> > > where there is a difference in layout specific to 4K sectors.
-> > > With the BOOT2 band-aid chkdsk is able to analyze filesystems on 4Kn media.
-> > Main problem with this hack is that it breaks detection of valid UDF
-> > filesystems which use VRS for block size detection. I do not know which
-> > implementation may use VRS for block size detection, but I do not see
-> > anything wrong in this approach.
-> 
-> I went through this with udffsck. The VRS is not very helpful in
-> determining block size because the only time the block size can be
-> determined conclusively is when the interval between VRS components
-> is > 2048 bytes. With an interval of 2048 bytes, the only conclusion
-> that can be drawn is that blocks are no larger than 2048 bytes.
-
-Yes, I know. But for >2048 block sizes it can be used and is allowed by
-specification.
-
-> > > I use chkdsk frequently to double-check UDF generation firmware
-> > Vojtěch wrote in his thesis that MS's chkdsk sometimes put UDF
-> > filesystem into more broken state as before.
-> 
-> Yes, I have personally experienced this. I don't have chkdsk do
-> repairs any more. In my case the problem may be that chkdsk
-> poorly handles the cascading corruption that resulted from this:
-> 
->     https://lkml.org/lkml/2019/2/8/740
-> 
-> > > I am writing, and also udffsck work-in-progress.
-> > Have you used some Vojtěch's parts? Or are you writing it from scratch?
-> > 
-> A udffsck discussion should probably continue in another thread.
-> Here let me just say that I have been enhancing Vojtěch's code,
-> in this fork:
-> 
->   https://github.com/smagnani/udftools
-> 
-> ...as time permits. Since winter ended the time I have available
-> for this has plummeted, so progress is very slow. But this recent
-> kernel driver patch grew out of work to make sure that udffsck
-> handles the UDF "file tail" properly:
-> 
->   https://lkml.org/lkml/2019/6/4/551
->   https://lkml.org/lkml/2019/6/30/181
-
-Great, thank you for update.
+It is not ABI break, it should work with existing DTBs
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
+
