@@ -2,117 +2,118 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AE5C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05DAC74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545C7208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562781767;
-	bh=KFGaAqqNpUWmU9c47f997s7PEzdV9jbLos0AqkAsUVI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AG1xKVBU8FJzZL8gI526UYfiYy9vtyccu9NTIaVRmYiiFBVtVgc8NDdiUQ6UKLa/3
-	 HpGuVRdgbuNnNW70sXrsZOQmQSpn4/J/vdZa3fomyXdwl/VTqTWTD8kyBR4S9Il5IP
-	 XUcxbrt3aZUycWI4b6jE8Eb0vSEMT9XDQHwSgjx4=
+	by mail.kernel.org (Postfix) with ESMTP id 957AA20844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfGJSCq (ORCPT
+        id S1727947AbfGJSED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 14:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfGJSCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:02:45 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3456F20844;
-        Wed, 10 Jul 2019 18:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562781765;
-        bh=KFGaAqqNpUWmU9c47f997s7PEzdV9jbLos0AqkAsUVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uwFFK4pGoZCSPrz+JNDCvPgIycc256Op50N1bPJzN5YbJf/EkSvOMyLjkWgzzor3j
-         E2XooU0qpWDyO/rPFNvKyblb8x6qsAQsbpmBSCdPfscjMCyf5gPXFu5u1B5DE3e+8S
-         xwjxYVEMGHv+LiQhi/zwX0In2Otdyo7XJt/pFFwA=
-Date:   Wed, 10 Jul 2019 11:02:43 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
-Message-ID: <20190710180242.GA193819@gmail.com>
-Mail-Followup-To: Bart Van Assche <bvanassche@acm.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-References: <00000000000089a718058556e1d8@google.com>
- <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
- <20190710053030.GB2152@sol.localdomain>
- <b378a903-d0fc-a137-e6b9-dec55277cf16@acm.org>
- <20190710170057.GB801@sol.localdomain>
- <20190710172123.GC801@sol.localdomain>
- <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
+        Wed, 10 Jul 2019 14:04:03 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46095 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfGJSEC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 14:04:02 -0400
+Received: by mail-io1-f68.google.com with SMTP id i10so6625043iol.13;
+        Wed, 10 Jul 2019 11:04:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N3Rsy7kAyosb+HN3kDlLYzc6alJagrduc8/wfJeEMl4=;
+        b=ZcJH7cgTR2F1AQX1hEIxy94uAs1QNVb8TpBN3w5XjOtSgq+ZB0bBJoq5RO41Vcv/Qn
+         sO8nqh78wpl8GgXnhT7rZDWxFateALFr1j/ljRjZIFSAQuGcfPddTURQMWtNmuHIkliZ
+         kyvdzY2XlWkpBY+l8LbnNDuzRXi1zcFm6SYuqTdaPMyazrkz+03KxPBDOfV/gF6kLGsg
+         U1YqkZ08Ltkc1axzZri23r1T0wWI3NzgW9tsNoTdd8uNM2CEsh4TCdSIvcdjIaF94SBj
+         ngpw5mdEoZavEgrYYHZrXbIcoaE3D1PsbZCOTQMvAHLdJ0dD+CpUOXPl9f1HInr4tH0b
+         41TA==
+X-Gm-Message-State: APjAAAVJM40NR+pTYIQND4u/35XKF6jPTQHsOJ6G7UDJv0fq6lGFXkve
+        fdxHacrUc7f9UwVLkY2Q4EnheJM71Tw=
+X-Google-Smtp-Source: APXvYqzmwoVF6DBM86qH85QKC87M29/TzezeE/UsOBO54T5p1VXzTpyDXQPiRIS7IQQ7hS2FEymNkw==
+X-Received: by 2002:a6b:8b8b:: with SMTP id n133mr5035866iod.183.1562781841945;
+        Wed, 10 Jul 2019 11:04:01 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id j25sm3781428ioj.67.2019.07.10.11.03.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 11:04:01 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: make exported variables non-static
+Date:   Wed, 10 Jul 2019 21:03:24 +0300
+Message-Id: <20190710180324.8131-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:46:00AM -0700, Bart Van Assche wrote:
-> On 7/10/19 10:21 AM, Eric Biggers wrote:
-> > With my simplified reproducer, on commit 669de8bda87b ("kernel/workqueue: Use
-> > dynamic lockdep keys for workqueues") I see:
-> > 
-> > 	WARNING: CPU: 3 PID: 189 at kernel/locking/lockdep.c:747 register_lock_class+0x4f6/0x580
-> > 
-> > and then somewhat later:
-> > 
-> > 	BUG: MAX_LOCKDEP_KEYS too low!
-> > 
-> > If on top of that I cherry pick commit 28d49e282665 ("locking/lockdep: Shrink
-> > struct lock_class_key"), I see instead:
-> > 
-> > 	BUG: MAX_STACK_TRACE_ENTRIES too low!
-> > 
-> > I also see that on mainline.
-> > 
-> > Alternatively, if I check out 669de8bda87b and revert it, I don't see anything.
-> 
-> Hi Eric,
-> 
-> Is the rdma_ucm code the only code that triggers the "BUG:
-> MAX_STACK_TRACE_ENTRIES too low!" complaint or is this complaint also
-> triggered by other kernel code? I'm asking this because I think that
-> fixing this would require to implement garbage collection for the
-> stack_trace[] array in the lockdep code. That would make the lockdep
-> code slower. I don't think that making the lockdep code slower would be
-> welcome.
-> 
-> Bart.
+The variables phy_basic_ports_array, phy_fibre_port_array and
+phy_all_ports_features_array are declared static and marked
+EXPORT_SYMBOL_GPL(), which is at best an odd combination.
+Because the variables were decided to be a part of API, this commit
+removes the static attributes and adds the declarations to the header.
 
-I already mentioned that io_uring triggers it too.
+Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/net/phy/phy_device.c | 6 +++---
+ include/linux/phy.h          | 3 +++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-Those are just 2 cases that syzbot happened to generate reproducers for.  I
-expect there are many others too, since many places in the kernel allocate
-workqueues.  AFAICS most are placed in static or global variables which avoids
-this issue, but there are still many cases where a workqueue is owned by some
-dynamic structure that can have a much shorter lifetime.
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index dcc93a873174..f94171e9aa45 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -56,19 +56,19 @@ EXPORT_SYMBOL_GPL(phy_10gbit_features);
+ __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_10gbit_fec_features) __ro_after_init;
+ EXPORT_SYMBOL_GPL(phy_10gbit_fec_features);
+ 
+-static const int phy_basic_ports_array[] = {
++const int phy_basic_ports_array[3] = {
+ 	ETHTOOL_LINK_MODE_Autoneg_BIT,
+ 	ETHTOOL_LINK_MODE_TP_BIT,
+ 	ETHTOOL_LINK_MODE_MII_BIT,
+ };
+ EXPORT_SYMBOL_GPL(phy_basic_ports_array);
+ 
+-static const int phy_fibre_port_array[] = {
++const int phy_fibre_port_array[1] = {
+ 	ETHTOOL_LINK_MODE_FIBRE_BIT,
+ };
+ EXPORT_SYMBOL_GPL(phy_fibre_port_array);
+ 
+-static const int phy_all_ports_features_array[] = {
++const int phy_all_ports_features_array[7] = {
+ 	ETHTOOL_LINK_MODE_Autoneg_BIT,
+ 	ETHTOOL_LINK_MODE_TP_BIT,
+ 	ETHTOOL_LINK_MODE_MII_BIT,
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 6424586fe2d6..ec54a788fc96 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -55,6 +55,9 @@ extern __ETHTOOL_DECLARE_LINK_MODE_MASK(phy_10gbit_full_features) __ro_after_ini
+ #define PHY_10GBIT_FEC_FEATURES ((unsigned long *)&phy_10gbit_fec_features)
+ #define PHY_10GBIT_FULL_FEATURES ((unsigned long *)&phy_10gbit_full_features)
+ 
++extern const int phy_basic_ports_array[3];
++extern const int phy_fibre_port_array[1];
++extern const int phy_all_ports_features_array[7];
+ extern const int phy_10_100_features_array[4];
+ extern const int phy_basic_t1_features_array[2];
+ extern const int phy_gbit_features_array[2];
+-- 
+2.21.0
 
-You can also check the other syzbot reports that look similar
-(https://lore.kernel.org/lkml/20190710055838.GC2152@sol.localdomain/).
-Two of them have C reproducers too.
-
-- Eric
