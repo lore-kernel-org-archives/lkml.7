@@ -2,116 +2,106 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86769C73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D514FC73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692972083D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A30B42083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562736145;
+	bh=yG9MOOky9cIIKLWWBpb40bH8p8EqcI4EC3OhoeA5xYg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FZs1zimH8DD0Qq6kPUr2adCZpHZt63Lm9283ExpICLM70uLBBRoVFmyHxqLizz884
+	 LCgJZRfKG3mFbFQkb5FWzpUEQ8ea8GA7h1v7F1IzZXdP9yNxTPkcjdD0OwCndu4v4r
+	 aYGN3FryFqcmXsqQWvQ3auu9hM1pNSfKlbT9KIhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfGJFWP (ORCPT
+        id S1726979AbfGJFWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:22:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46962 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 01:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbfGJFWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:22:14 -0400
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726098AbfGJFWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:22:24 -0400
+Received: from localhost (unknown [37.142.3.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 093D920665;
-        Wed, 10 Jul 2019 05:22:11 +0000 (UTC)
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Subject: [git pull] m68knommu changes for v5.3
-To:     torvalds@linux-foundation.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux/m68k <linux-m68k@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christoph Hellwig <hch@lst.de>
-Message-ID: <cf9d62c7-2b47-e234-ee35-2562b125a411@linux-m68k.org>
-Date:   Wed, 10 Jul 2019 15:22:09 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id 9141A20665;
+        Wed, 10 Jul 2019 05:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562736143;
+        bh=yG9MOOky9cIIKLWWBpb40bH8p8EqcI4EC3OhoeA5xYg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dhrijKo73nXgq0AeyoQfoW2qeSTr20RagZelBGmapoJcaiUKziOWhAWgwpd6b6+0Y
+         L7u3fZpD99BFkV/DQHkAItENtRZaJ+rnaXAOZH6tmX3dcKyaS9OEZE27Cwe+wFbymf
+         dL8zzhTH9O1NOcMPU+PCHuLkwEKnY5IWxdO5zSEg=
+Date:   Wed, 10 Jul 2019 08:22:19 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v2] net/mlx5e: Refactor switch statements to avoid using
+ uninitialized variables
+Message-ID: <20190710052219.GC7034@mtr-leonro.mtl.com>
+References: <20190708231154.89969-1-natechancellor@gmail.com>
+ <20190710044748.3924-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710044748.3924-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 09, 2019 at 09:47:49PM -0700, Nathan Chancellor wrote:
+> clang warns:
+>
+> drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:251:2:
+> warning: variable 'rec_seq_sz' is used uninitialized whenever switch
+> default is taken [-Wsometimes-uninitialized]
+>         default:
+>         ^~~~~~~
+> drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:255:46: note:
+> uninitialized use occurs here
+>         skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
+>                                                     ^~~~~~~~~~
+> drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:239:16: note:
+> initialize the variable 'rec_seq_sz' to silence this warning
+>         u16 rec_seq_sz;
+>                       ^
+>                        = 0
+> 1 warning generated.
+>
+> The default case statement should return in tx_post_resync_params like
+> in fill_static_params_ctx. However, as Nick and Leon point out, the
+> switch statements converted into if statements to clean up the code a
+> bit since there is only one cipher supported. Do that to clear up the
+> code.
+>
+> Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/590
+> Suggested-by: Leon Romanovsky <leon@kernel.org>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> v1 -> v2:
+>
+> * Refactor switch statements into if statements
+>
+>  .../mellanox/mlx5/core/en_accel/ktls_tx.c     | 33 +++++++------------
+>  1 file changed, 11 insertions(+), 22 deletions(-)
+>
 
-Hi Linus,
-
-Can you please pull the m68knommu git tree, for-next branch.
-
-A series of cleanups for the FLAT format binary loader, binfmt_flat,
-from Christoph. The end goal is to support no-MMU on RISC-V, and the
-last patch enables that.
-
-Regards
-Greg
-
-
-
-The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
-
-   Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git for-next
-
-for you to fetch changes up to ad97f9df0fee4ddc9ef056dda4dcbc6630d9f972:
-
-   riscv: add binfmt_flat support (2019-06-24 09:16:47 +1000)
-
-----------------------------------------------------------------
-Christoph Hellwig (17):
-       binfmt_flat: remove flat_reloc_valid
-       binfmt_flat: remove flat_set_persistent
-       binfmt_flat: provide a default version of flat_get_relocate_addr
-       binfmt_flat: remove flat_old_ram_flag
-       binfmt_flat: replace flat_argvp_envp_on_stack with a Kconfig variable
-       binfmt_flat: remove the uapi <linux/flat.h> header
-       binfmt_flat: remove the unused OLD_FLAT_FLAG_RAM definition
-       binfmt_flat: consolidate two version of flat_v2_reloc_t
-       binfmt_flat: use fixed size type for the on-disk format
-       binfmt_flat: add endianess annotations
-       binfmt_flat: add a ARCH_HAS_BINFMT_FLAT option
-       binfmt_flat: make support for old format binaries optional
-       binfmt_flat: provide an asm-generic/flat.h
-       binfmt_flat: remove the persistent argument from flat_get_addr_from_rp
-       binfmt_flat: move the MAX_SHARED_LIBS definition to binfmt_flat.c
-       binfmt_flat: don't offset the data start
-       riscv: add binfmt_flat support
-
-  arch/arm/Kconfig                                   |  2 +
-  arch/arm/include/asm/Kbuild                        |  1 +
-  arch/c6x/Kconfig                                   |  1 +
-  arch/c6x/include/asm/flat.h                        |  7 +-
-  arch/h8300/Kconfig                                 |  3 +
-  arch/h8300/include/asm/flat.h                      |  7 +-
-  arch/m68k/Kconfig                                  |  2 +
-  arch/m68k/include/asm/flat.h                       | 30 +------
-  arch/microblaze/Kconfig                            |  1 +
-  arch/microblaze/include/asm/flat.h                 |  7 +-
-  arch/riscv/Kconfig                                 |  1 +
-  arch/riscv/include/asm/Kbuild                      |  1 +
-  arch/sh/Kconfig                                    |  1 +
-  arch/sh/include/asm/flat.h                         |  7 +-
-  arch/xtensa/Kconfig                                |  1 +
-  arch/xtensa/include/asm/flat.h                     |  7 +-
-  fs/Kconfig.binfmt                                  | 18 +++-
-  fs/binfmt_flat.c                                   | 99 ++++++++++++++--------
-  .../arm/include/asm => include/asm-generic}/flat.h | 19 +----
-  include/linux/flat.h                               | 58 +++++++++----
-  include/uapi/linux/flat.h                          | 59 -------------
-  21 files changed, 145 insertions(+), 187 deletions(-)
-  rename {arch/arm/include/asm => include/asm-generic}/flat.h (55%)
-  delete mode 100644 include/uapi/linux/flat.h
+Thanks,
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
