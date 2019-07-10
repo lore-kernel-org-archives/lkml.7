@@ -2,150 +2,127 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B9DC74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AD0C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8301C2087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A69208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MVdICNhH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="okWIQmP9";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="okWIQmP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfGJRbI (ORCPT
+        id S1727463AbfGJRfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:31:08 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37771 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfGJRbI (ORCPT
+        Wed, 10 Jul 2019 13:35:37 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:43278 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726097AbfGJRfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:31:08 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d15so2539758qkl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 10:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8+Z+WSR46UzvdkgC8wngfOT/tO+CDaDaSsIktLEucgI=;
-        b=MVdICNhHcbnYzk3otHPJiYQfDbXtzsITjYTI/3VWaxA7oXrMn6xb0adaqhF2plGlxI
-         sH2HDwrZXZqpo7aCKgw/iiyvyvjMtUwRCMbXFORSRnn/7cT+7fdxYuwv3mqLqnlZgfH2
-         d/1JEgDtTepLx6BObkcSVaWLRonNfKSZNbz+kzjhELNU6duvv8DJ6IpOw/5b6U7nSOwQ
-         Tzs7LMH5YJ5cHDSr31v/wrFoSNCeeRIfpr6QnS/XEekSMmgNMGrdf0Ym6lyoQDkOf2K+
-         ArMo3plJByhTTrPCo3ll+3sr9YNhng/vjSH5Vk1qB+06KbJKQ8+GrL3ScU6lY9AnF0c8
-         6++A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8+Z+WSR46UzvdkgC8wngfOT/tO+CDaDaSsIktLEucgI=;
-        b=K7tzLrJSSAdQb1itaV6CgphtZOM2vUy7oCLMiefSmeEE1/qf4+2DfpKZ3TrPjiroV8
-         X/R+our3odyECH0jNU7nJpGREdpmdbzQC9GKW96lyl8Kn5P/ROm3Y4Amy5w9pEOeumBA
-         mV7ryXJhn6E7tIE0HhEQxbK1+yJOZd68rGbBb+JAOiH89oVU/ivF1QWMgKRX8d0R2/9h
-         VyLtCmJMUmlJGPN+DVMtcPqSlowm+060esDLWBFodMwed1R7+OLnqzzJBwC8dA+4JXip
-         aRkzAP3hBpZ/0M50TvdqpmDmiB5wuD0/JubkJkskQsIZemB1wJ4XANoQfmkXRVpumNb6
-         zlWw==
-X-Gm-Message-State: APjAAAVL4As3ecG9ryr9LIHMjqF9hPammp0SgR7F3g2T/qySiljMy7t9
-        7az16vXE2b7lEb2xhuYh77gQlw==
-X-Google-Smtp-Source: APXvYqwI2WIlAb7R9IEvpSf0tNhf/yICx/qFaLx6or6pR/hNo3BQEUfoscFTvpNZSXyDhoR1ry+o8Q==
-X-Received: by 2002:a37:a984:: with SMTP id s126mr24449341qke.267.1562779867024;
-        Wed, 10 Jul 2019 10:31:07 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id k2sm1137334qtq.87.2019.07.10.10.31.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jul 2019 10:31:06 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hlGQr-0004Ce-J2; Wed, 10 Jul 2019 14:31:05 -0300
-Date:   Wed, 10 Jul 2019 14:31:05 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>, dledford@redhat.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: Re: [PATCH] RDMA/siw: Print error code while kthread_create
- failed
-Message-ID: <20190710173105.GE4051@ziepe.ca>
-References: <20190710043554.GA7034@mtr-leonro.mtl.com>
- <20190710015009.57120-1-yuehaibing@huawei.com>
- <OFB29B4146.7E46891A-ON00258433.002BBAD4-00258433.002F6CB8@notes.na.collabserv.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OFB29B4146.7E46891A-ON00258433.002BBAD4-00258433.002F6CB8@notes.na.collabserv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 10 Jul 2019 13:35:37 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id CE1698EE24C;
+        Wed, 10 Jul 2019 10:35:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1562780136;
+        bh=B70gAXooxvZK/Lf3HwD7p1V8t+7FlnkHdVRJexmSkFw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=okWIQmP9GmOEZoBgruAKHEKyShJaVoqPbC0/vxxvqvwNL6cXmo1bjWaVEsOZc2GtZ
+         dDnwoHAnt2DPX5g+Eoa/v9aScrOrFOppGatpMky2n2yplzfXszVU9wy9swQsUxGQe2
+         yi5qacgvwVo31QseTxnEA5fsIinkjskyi8KvVqxM=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HoVGSRes2uiH; Wed, 10 Jul 2019 10:35:36 -0700 (PDT)
+Received: from jarvis.lan (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 566D48EE147;
+        Wed, 10 Jul 2019 10:35:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1562780136;
+        bh=B70gAXooxvZK/Lf3HwD7p1V8t+7FlnkHdVRJexmSkFw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=okWIQmP9GmOEZoBgruAKHEKyShJaVoqPbC0/vxxvqvwNL6cXmo1bjWaVEsOZc2GtZ
+         dDnwoHAnt2DPX5g+Eoa/v9aScrOrFOppGatpMky2n2yplzfXszVU9wy9swQsUxGQe2
+         yi5qacgvwVo31QseTxnEA5fsIinkjskyi8KvVqxM=
+Message-ID: <1562780135.3213.58.camel@HansenPartnership.com>
+Subject: Re: screen freeze with 5.2-rc6 Dell XPS-13 skylake  i915
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Paul Bolle <pebolle@tiscali.nl>, intel-gfx@lists.freedesktop.org
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 10 Jul 2019 10:35:35 -0700
+In-Reply-To: <5245d2b3d82f11d2f988a3154814eb42dcb835c5.camel@tiscali.nl>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <1562770874.3213.14.camel@HansenPartnership.com>
+         <93b8a186f4c8b4dae63845a20bd49ae965893143.camel@tiscali.nl>
+         <1562776339.3213.50.camel@HansenPartnership.com>
+         <5245d2b3d82f11d2f988a3154814eb42dcb835c5.camel@tiscali.nl>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 08:38:00AM +0000, Bernard Metzler wrote:
+On Wed, 2019-07-10 at 18:45 +0200, Paul Bolle wrote:
+> James Bottomley schreef op wo 10-07-2019 om 09:32 [-0700]:
+> > You seem to be getting it to happen much more often than I can.
+> > Last
+> > night, on the below pull request it took me a good hour to see the
+> > freeze.
+> 
+> Yes. Sometimes within a minute of resuming. Typing stuff into
+> evolution seems to help with triggering this. It's all a bit
+> mysterious, but this message alone frooze my laptop a few times.
+> Seriously!
+> 
+> > Sure, my current testing indicates it's somewhere inside this pull
+> > request:
+> > 
+> > Merge: 89c3b37af87e eb85d03e01c3
+> > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date:   Wed May 8 21:35:19 2019 -0700
+> > 
+> >     Merge tag 'drm-next-2019-05-09' of
+> > git://anongit.freedesktop.org/drm/drm
+> >     
+> >     Pull drm updates from Dave Airlie:
+> 
+> Lazy question: how does one determine the first and last commit
+> inside a merge request? Can I simply do
+>     good   a2d635decbfa9c1e4ae15cb05b68b2559f7f827c^
+>     bad    a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
+> 
+> for git bisect?
 
-> Right, I agree with Leon. Better remove all those printouts. We
-> already have a warning if we cannot start any thread. Also
-> stopping those threads is not worth spamming the console. I just
-> forgot to remove after Leon's comment. Would it be possible
-> to apply the following?
-> 
-> Thanks a lot!
-> Bernard.
-> 
-> From e4ca3d4dec86bb5731f8e3cb0cdd01e84b315d80 Mon Sep 17 00:00:00 2001
-> From: Bernard Metzler <bmt@zurich.ibm.com>
-> Date: Wed, 10 Jul 2019 10:03:17 +0200
-> Subject: [PATCH] remove kthread create/destroy printouts
-> 
-> Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
->  drivers/infiniband/sw/siw/siw_main.c  | 4 +---
->  drivers/infiniband/sw/siw/siw_qp_tx.c | 4 ----
->  2 files changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/drivers/infiniband/sw/siw/siw_main.c b/drivers/infiniband/sw/siw/siw_main.c
-> index fd2552a9091d..f55c4e80aea4 100644
-> +++ b/drivers/infiniband/sw/siw/siw_main.c
-> @@ -88,7 +88,7 @@ static void siw_device_cleanup(struct ib_device *base_dev)
->  
->  static int siw_create_tx_threads(void)
->  {
-> -	int cpu, rv, assigned = 0;
-> +	int cpu, assigned = 0;
->  
->  	for_each_online_cpu(cpu) {
->  		/* Skip HT cores */
-> @@ -99,9 +99,7 @@ static int siw_create_tx_threads(void)
->  			kthread_create(siw_run_sq, (unsigned long *)(long)cpu,
->  				       "siw_tx/%d", cpu);
->  		if (IS_ERR(siw_tx_thread[cpu])) {
-> -			rv = PTR_ERR(siw_tx_thread[cpu]);
->  			siw_tx_thread[cpu] = NULL;
-> -			pr_info("Creating TX thread for CPU %d failed", cpu);
->  			continue;
->  		}
->  		kthread_bind(siw_tx_thread[cpu], cpu);
-> diff --git a/drivers/infiniband/sw/siw/siw_qp_tx.c b/drivers/infiniband/sw/siw/siw_qp_tx.c
-> index 2c3d250ee57c..fff02b56d38a 100644
-> +++ b/drivers/infiniband/sw/siw/siw_qp_tx.c
-> @@ -1200,8 +1200,6 @@ int siw_run_sq(void *data)
->  	init_llist_head(&tx_task->active);
->  	init_waitqueue_head(&tx_task->waiting);
->  
-> -	pr_info("Started siw TX thread on CPU %u\n", nr_cpu);
-> -
->  	while (1) {
->  		struct llist_node *fifo_list = NULL;
->  
-> @@ -1239,8 +1237,6 @@ int siw_run_sq(void *data)
->  			siw_sq_resume(qp);
->  		}
->  	}
-> -	pr_info("Stopped siw TX thread on CPU %u\n", nr_cpu);
-> -
->  	return 0;
->  }
+I think so.  I actually did
 
-Okay, I took this patch to for-next, thanks
+	bad	a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
+	good	89c3b37af87ec183b666d83428cb28cc421671a6
 
-Jason
-  
+But I think ^ steps down in the main branch.  Note, I've only done a
+couple of hours run on what I think is the good commit ... and actually
+I'd already marked a2d635decbfa9c1e4ae15cb05b68b2559f7f827c as good
+until the screen froze just after I'd built the new bisect kernel, so
+there's still some chance 89c3b37af87ec183b666d83428cb28cc421671a6 is
+bad.
+
+> > So I was about to test out the i915 changes in that but since my
+> > laptop is what I use for daily work, it's a bit hard (can't freeze
+> > up on video calls for instance).
+> 
+> I usually use one of the ThinkPads from my embarrassing pile of
+> outdated hardware to do nasty bisects, but I'm not about to loose any
+> income if my much appreciated XPS 13 is out of order for a while.
+
+I can get back to it this afternoon, when I'm done with the meeting
+requirements and doing other dev stuff.
+
+James
+
