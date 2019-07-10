@@ -2,77 +2,86 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCC4C606B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28670C606B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE31F20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0223220838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfGJIq7 (ORCPT
+        id S1727607AbfGJIss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:46:59 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:45802 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbfGJIq7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:46:59 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 0A32472CCDD;
-        Wed, 10 Jul 2019 11:46:57 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 00D8C7CCE3A; Wed, 10 Jul 2019 11:46:56 +0300 (MSK)
-Date:   Wed, 10 Jul 2019 11:46:56 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Xi Ruoyao <xry111@mengyan1223.wang>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        David Airlie <airlied@linux.ie>, Jessica Yu <jeyu@kernel.org>,
-        kernel-hardening@lists.openwall.com,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: kernel oops loading i915 after "x86/asm: Pin sensitive CR4 bits"
- (873d50d58)
-Message-ID: <20190710084656.GB5447@altlinux.org>
-References: <e5baec48e5c362256a631a2d55fbc30251ab5e83.camel@mengyan1223.wang>
+        Wed, 10 Jul 2019 04:48:48 -0400
+Received: from guitar.tcltek.co.il ([192.115.133.116]:34471 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfGJIss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 04:48:48 -0400
+Received: from sapphire.tkos.co.il (unknown [192.168.100.188])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 0A8684400C6;
+        Wed, 10 Jul 2019 11:48:45 +0300 (IDT)
+Date:   Wed, 10 Jul 2019 11:48:43 +0300
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watchdog: digicolor_wdt: drop unused variable
+Message-ID: <20190710084843.53e36lykqpzenatk@sapphire.tkos.co.il>
+References: <20190710080904.317599-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e5baec48e5c362256a631a2d55fbc30251ab5e83.camel@mengyan1223.wang>
+In-Reply-To: <20190710080904.317599-1-arnd@arndb.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Arnd,
 
-On Wed, Jul 10, 2019 at 01:44:17PM +0800, Xi Ruoyao wrote:
-> Hello,
+On Wed, Jul 10, 2019 at 10:08:57AM +0200, Arnd Bergmann wrote:
+> The last cleanup patch left behind an unused variable
+> that should have been removed as well:
 > 
-> When I try to build and run the latest mainline kernel, it Oops loading i915
-> module:
+> drivers/watchdog/digicolor_wdt.c:121:6: error: unused variable 'ret' [-Werror,-Wunused-variable]
 > 
-> BUG: unable to handle page fault for address: ffffffff9edc1598
-> #PF: supervisor write access in kernel mode
-> #PF: error_code(0x0003) - permissions violation
-> PGD 1a20c067 P4D 1a20c067 PUD 1a20d063 PMD 8000000019e000e1 
-> Oops: 0003 [#1] SMP PTI
-> 
-> The complete log is attached.
-> 
-> Bisection tells "x86/asm: Pin sensitive CR4 bits" (873d50d58) is the first "bad"
-> commit.  I can revert it and also "x86/asm: Pin sensitive CR0 bits" (8dbec27a2)
-> to make the kernel "seems to" work.
-> 
-> I'm not a kernel expert so I can't tell if there is a bug in Kees' patch, or his
-> patch exploits a bug in i915 or module loader.
+> Fixes: cdad26977e3f ("watchdog: digicolor_wdt: drop warning after registering device")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-This seems to be a kernel bug introduced after v5.2, see
-https://lore.kernel.org/lkml/CAHk-=wjh+h_-fd-gJz=wor42ZNmqq46QnB90jyfzqmKLsLFWOg@mail.gmail.com/
+Acked-by: Baruch Siach <baruch@tkos.co.il>
 
+Thanks,
+baruch
+
+>  drivers/watchdog/digicolor_wdt.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/digicolor_wdt.c b/drivers/watchdog/digicolor_wdt.c
+> index 33cda95bd238..073d37867f47 100644
+> --- a/drivers/watchdog/digicolor_wdt.c
+> +++ b/drivers/watchdog/digicolor_wdt.c
+> @@ -118,7 +118,6 @@ static int dc_wdt_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct dc_wdt *wdt;
+> -	int ret;
+>  
+>  	wdt = devm_kzalloc(dev, sizeof(struct dc_wdt), GFP_KERNEL);
+>  	if (!wdt)
 
 -- 
-ldv
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
