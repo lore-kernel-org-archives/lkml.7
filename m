@@ -2,166 +2,116 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E60C73C63
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6E6C73C65
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66DF20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DbrMHflP";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="LBh7tE+z"
+	by mail.kernel.org (Postfix) with ESMTP id BDBBB2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562722349;
+	bh=VvkJu6WOWPBfEu1dXI4N1bsdh6tfES4g7an4kdrLwCA=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=SdB9iyOA0ISPHE88bGjbWyNNRpO67xEh+2VF6d96RdOAudJ6TtaAT/jxG+3lrMz6l
+	 aCyclhGWaVaK6Ud7oM5bSJM21QYYDsr30rUgABZBXfEXwAMc7q1aDCG6tBFSuqPb0R
+	 r9uSVtwNtYZ+RJXOQVQldUynN1EiX20Zq8re6b/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfGJBbP (ORCPT
+        id S1727096AbfGJBc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 21:31:15 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:4882 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726218AbfGJBbP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 21:31:15 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x6A1R57V014613;
-        Tue, 9 Jul 2019 18:31:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Yo+nMAgCISsh/6qPmf+HArUmccudeopyRCbaYu4G0a8=;
- b=DbrMHflP0n8NqEnbGKHZDaGlcV9ACq183IeOhOJGo1uGVd4yjs3gAciCON2xlT2rFuyA
- hY3IBKb6rC3ip5QVheeD5ifNJyGx8oHOBDnSUnQNU/G5UeRSmePsGRaOVT8+xNmZ/Lgo
- tdPzyi2VzCctTfQJVIGjD7V0L0nm8nm27rs= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2tmxrb1kmc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jul 2019 18:31:09 -0700
-Received: from prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 9 Jul 2019 18:31:07 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 9 Jul 2019 18:31:07 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 9 Jul 2019 18:31:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yo+nMAgCISsh/6qPmf+HArUmccudeopyRCbaYu4G0a8=;
- b=LBh7tE+zX4EqhzR9StgMDTu9O8jHN6X5SEDLD5AjwnKc7qxEZF2UyBvUOCgzGXY61D+IdKCAJyML93PSnEPiSGvLX1TMb+9s4Koa8B8ijSQskpepf9fU/My3n98hzhNP3wkiJvO9vkjgZzYl3rV/OJ25+/ITPEu5A6+VrFCkaRA=
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com (20.179.161.152) by
- DM6PR15MB3050.namprd15.prod.outlook.com (20.179.16.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Wed, 10 Jul 2019 01:31:05 +0000
-Received: from DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::fc39:8b78:f4df:a053]) by DM6PR15MB2635.namprd15.prod.outlook.com
- ([fe80::fc39:8b78:f4df:a053%3]) with mapi id 15.20.2073.008; Wed, 10 Jul 2019
- 01:31:05 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH RESEND] mm: show number of vmalloc pages in /proc/meminfo
-Thread-Topic: [PATCH RESEND] mm: show number of vmalloc pages in /proc/meminfo
-Thread-Index: AQHVNhuLGO3yqyJ4/UmBmYR/KZa3WabDEgsA
-Date:   Wed, 10 Jul 2019 01:31:05 +0000
-Message-ID: <20190710013100.GA21604@tower.DHCP.thefacebook.com>
-References: <20190514235111.2817276-1-guro@fb.com>
- <20190514235111.2817276-2-guro@fb.com>
- <CAEwNFnALK=aAnyBypHbvw4khRwbOeMN=5gtgLWY+3F3HEpb2Ng@mail.gmail.com>
-In-Reply-To: <CAEwNFnALK=aAnyBypHbvw4khRwbOeMN=5gtgLWY+3F3HEpb2Ng@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR04CA0196.namprd04.prod.outlook.com
- (2603:10b6:104:5::26) To DM6PR15MB2635.namprd15.prod.outlook.com
- (2603:10b6:5:1a6::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:164b]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 49f663c1-64c4-4000-e87c-08d704d646bf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR15MB3050;
-x-ms-traffictypediagnostic: DM6PR15MB3050:
-x-microsoft-antispam-prvs: <DM6PR15MB30505BA33DA27AB2DAA4D04DBEF00@DM6PR15MB3050.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(396003)(136003)(39860400002)(189003)(199004)(305945005)(7736002)(11346002)(6436002)(2906002)(53936002)(6116002)(186003)(99286004)(5660300002)(476003)(6506007)(14454004)(486006)(76176011)(386003)(446003)(52116002)(71190400001)(316002)(54906003)(86362001)(256004)(478600001)(81166006)(8676002)(66476007)(102836004)(8936002)(81156014)(53546011)(46003)(71200400001)(9686003)(25786009)(6246003)(68736007)(229853002)(33656002)(110136005)(6486002)(66556008)(66446008)(66946007)(64756008)(6512007)(4326008)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3050;H:DM6PR15MB2635.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: i+OCVHUoRVLGupd3HDiTdCOsxVffu0dnl2LRl9qOwscjFRp+PwgNyb+KALOtHvOQVwunz57AEu18Eg3HgHkmxeumHf9LzlkYfQpaTBYuyHR9YvWgIGnSRZQmC46kZoeLpYEONrZSfPEcuXzz5aaL2oOmexaOrRZUJBwmKrlwZhRbWt4ITsDhZA61j1QZ5ACmM0Y3vqBXZtuNztAIP22cdKwc/XmhPfvx+SR37m5oVeIbSrDf0IAtnQaCs1hDt4gfYyl+o1AUlVrYaiqm9b1WJu6tOi2sQntHRN/IaAtoGPKq/1TSdS8CQ/6VJ+rBlqtYt7BXvkhyW2dCCLavehIjNq3W70NNSy38qGlc/WGkBP0xEIOSEMiiGFhfRrESwOrpjnrJncwPlI+NSUUnCZeWuRZIomqNfouP19EuZkDihFU=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5D13729F1F2ACD44A07E9894FB8EA387@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 9 Jul 2019 21:32:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726924AbfGJBc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 21:32:28 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0993720693;
+        Wed, 10 Jul 2019 01:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562722347;
+        bh=VvkJu6WOWPBfEu1dXI4N1bsdh6tfES4g7an4kdrLwCA=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=DtoWRDRkCxD7i4ZZdT1HomDOhn5U/As2i9ORhrjUdmFpSCXRgEj1bS+2qnsQsAjh6
+         RUAfbt2s+VXBtz18kLBF1UshZTzq5llWZB5WfJdhmIthgxGeaxdvkbYgmO+A9BEppM
+         TtSx4F4Ld8FNoPXhi+R4xViAoE/b6ycg+Ux1Rf0s=
+Date:   Tue, 9 Jul 2019 18:32:25 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        David Woodhouse <dwmw2@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: next-20190705 - problems generating certs/x509_certificate_list
+Message-ID: <20190710013225.GB7973@sol.localdomain>
+Mail-Followup-To: David Howells <dhowells@redhat.com>,
+        keyrings@vger.kernel.org,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org
+References: <27671.1562384658@turing-police>
+ <20190709201712.GI641@sol.localdomain>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49f663c1-64c4-4000-e87c-08d704d646bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 01:31:05.6067
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3050
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-10_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907100016
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190709201712.GI641@sol.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 02:59:42PM +0900, Minchan Kim wrote:
-> Hi Roman,
->=20
->=20
-> On Wed, May 15, 2019 at 8:51 AM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > Vmalloc() is getting more and more used these days (kernel stacks,
-> > bpf and percpu allocator are new top users), and the total %
-> > of memory consumed by vmalloc() can be pretty significant
-> > and changes dynamically.
-> >
-> > /proc/meminfo is the best place to display this information:
-> > its top goal is to show top consumers of the memory.
-> >
-> > Since the VmallocUsed field in /proc/meminfo is not in use
-> > for quite a long time (it has been defined to 0 by the
-> > commit a5ad88ce8c7f ("mm: get rid of 'vmalloc_info' from
-> > /proc/meminfo")), let's reuse it for showing the actual
-> > physical memory consumption of vmalloc().
-> >
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> Acked-by: Minchan Kim <minchan@kernel.org>
->=20
-> How it's going on?
-> Android needs this patch since it has gathered vmalloc pages from
-> /proc/vmallocinfo. It's too slow.
->=20
+On Tue, Jul 09, 2019 at 01:17:14PM -0700, Eric Biggers wrote:
+> On Fri, Jul 05, 2019 at 11:44:18PM -0400, Valdis Klētnieks wrote:
+> > This worked fine in next-20190618, but in next-20190701 I'm seeing dmesg
+> > entries at boot:
+> > 
+> > dmesg | grep -i x.509
+> > [    8.345699] Loading compiled-in X.509 certificates
+> > [    8.366137] Problem loading in-kernel X.509 certificate (-13)
+> > [    8.507348] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+> > [    8.526556] cfg80211: Problem loading in-kernel X.509 certificate (-13)
+> > 
+> > I start debugging, and discover that certs/x509_certificate_list is a zero-length file.
+> > I rm it, and 'make V=1 certs/system_certificates.o', which tells me:
+> > 
+> > (....)
+> > make -f ./scripts/Makefile.headersinst obj=include/uapi
+> > make -f ./scripts/Makefile.headersinst obj=arch/x86/include/uapi
+> > make -f ./scripts/Makefile.build obj=certs certs/system_certificates.o
+> > ---- smoking gun alert
+> >   scripts/extract-cert "" certs/x509_certificate_list
+> > ----
+> >   gcc -Wp,-MD,certs/.system_certificates.o.d  -nostdinc -isystem /usr/lib/gcc/x86_64-redhat-linux/9/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/kconfig.h -D__KERNEL__ -D__ASSEMBLY__ -fno-PIE -m64 -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DCONFIG_AS_CFI_SECTIONS=1 -DCONFIG_AS_SSSE3=1 -DCONFIG_AS_AVX=1 -DCONFIG_AS_AVX2=1 -DCONFIG_AS_AVX512=1 -DCONFIG_AS_SHA1_NI=1 -DCONFIG_AS_SHA256_NI=1 -Wa,-gdwarf-2 -DCC_USING_FENTRY -I.   -c -o certs/system_certificates.o certs/system_certificates.S
+> > 
+> > I go look at extract-cert.c, and sure enough, if the first parameter is a null string
+> > it just goes and creates an empty file.
+> > 
+> > The Makefile says:
+> > 
+> > quiet_cmd_extract_certs  = EXTRACT_CERTS   $(patsubst "%",%,$(2))
+> >       cmd_extract_certs  = scripts/extract-cert $(2) $@
+> > 
+> > and damned if I know why $(2) is "". Diffed the config files from -0618 and -0705,
+> > not seeing anything relevant difference.
+> > 
+> > Any ideas?
+> > 
+> 
+> I'm seeing on mainline now:
+> 
+> [   10.915386] Problem loading in-kernel X.509 certificate (-13)
+> 
+> - Eric
 
-Andrew, can you, please, pick this one?
+This is caused by
 
-It has been in the mm tree already, but then it was dropped
-because of some other non-related patches in the series
-conflicted with some x86 changes. This patch is useful
-by itself, and doesn't depend on anything else.
+commit 2e12256b9a76584fa3a6da19210509d4775aee36
+Author: David Howells <dhowells@redhat.com>
+Date:   Thu Jun 27 23:03:07 2019 +0100
 
-Thanks!
+    keys: Replace uid/gid/perm permissions checking with an ACL
+
+- Eric
