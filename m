@@ -2,295 +2,142 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42A2C73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5084FC73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD1A2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B8C2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfGJHWq (ORCPT
+        id S1727134AbfGJHXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:22:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57942 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbfGJHWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:22:45 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7440430C543C;
-        Wed, 10 Jul 2019 07:22:45 +0000 (UTC)
-Received: from [10.72.12.42] (ovpn-12-42.pek2.redhat.com [10.72.12.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4650916BEA;
-        Wed, 10 Jul 2019 07:22:29 +0000 (UTC)
-Subject: Re: [RFC v2] vhost: introduce mdev based hardware vhost backend
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com, idos@mellanox.com,
-        Rob Miller <rob.miller@broadcom.com>,
-        Ariel Adam <aadam@redhat.com>
-References: <20190703115245.GA22374@___>
- <64833f91-02cd-7143-f12e-56ab93b2418d@redhat.com> <20190703130817.GA1978@___>
- <b01b8e28-8d96-31dd-56f4-ca7793498c55@redhat.com>
- <20190704062134.GA21116@___> <20190705084946.67b8f9f5@x1.home>
- <20190708061625.GA15936@___>
- <deae5ede-57e9-41e6-ea42-d84e07ca480a@redhat.com>
- <20190709063317.GA29300@___>
- <9aafdc4d-0203-b96e-c205-043db132eb06@redhat.com>
- <20190710062233.GA16212@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <1b49aa84-2c1f-eec2-2809-711e1f2dd7de@redhat.com>
-Date:   Wed, 10 Jul 2019 15:22:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 03:23:00 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32939 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfGJHW7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 03:22:59 -0400
+Received: by mail-oi1-f195.google.com with SMTP id u15so871141oiv.0;
+        Wed, 10 Jul 2019 00:22:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TNhWmN6/QiO2aT/qVjLLK+VPEsMniX5sP/eihsxi4qo=;
+        b=KDRfwLbXw2c4i0y0YBU7VNcQ+M02+hHom8sjU0T42fcuF9wWBAUAyV/AaH+19rTWAA
+         dCMWbLLbOm4QAnxptbIzu6sf6ClYNF6ofVrytQ3/07PcOX0yQ6+BKYVXaiHs27aQzweq
+         kxo1kfntlxPDzLxflSJuwPwO36i2CNi9EjFiDq+kiIfrR5XnaZ2hoQQZ4pUIj+9OEmqr
+         wlvSMuMq4o7GLnybkdLRr4B96yzEwpaSeKuAZLoU9DA/CW70t2SOQz3mpHh7ao5TFUcW
+         apD5f/ZSU89lij5TYhoIbk6nSDxvapQ3SqbcPUEbaQWxr+i2Cr5wdNFPhw7IEcVvRVgA
+         KXjg==
+X-Gm-Message-State: APjAAAUKI1zg5mlp6rob5Ym374YS1jcwxRsJu+mr8BEPoMO+sl2ZGsN4
+        eSgJLVCUZOm5v/YOiqDdwbGIHkiLCOFROq8p0HU=
+X-Google-Smtp-Source: APXvYqyn0dkttUnC8/6vf+zF9/ToNEXzP4zlEcN8COzv2vWS0ZD6UDY6SVdd5baBujmwlMgykLnOVZJyF9vs5pmKiG8=
+X-Received: by 2002:a05:6808:3c5:: with SMTP id o5mr2496751oie.102.1562743378632;
+ Wed, 10 Jul 2019 00:22:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190710062233.GA16212@___>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 10 Jul 2019 07:22:45 +0000 (UTC)
+References: <1561023046-20886-1-git-send-email-masonccyang@mxic.com.tw> <1561023046-20886-3-git-send-email-masonccyang@mxic.com.tw>
+In-Reply-To: <1561023046-20886-3-git-send-email-masonccyang@mxic.com.tw>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 10 Jul 2019 09:22:47 +0200
+Message-ID: <CAMuHMdUPmj0tAhJ18DhQEbYxP7g4MMBMe0U_2eQFQ7mOq4ZFLQ@mail.gmail.com>
+Subject: Re: [PATCH v14 2/2] dt-bindings: spi: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, juliensu@mxic.com.tw,
+        Simon Horman <horms@verge.net.au>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mason,
 
-On 2019/7/10 下午2:22, Tiwei Bie wrote:
-> On Wed, Jul 10, 2019 at 10:26:10AM +0800, Jason Wang wrote:
->> On 2019/7/9 下午2:33, Tiwei Bie wrote:
->>> On Tue, Jul 09, 2019 at 10:50:38AM +0800, Jason Wang wrote:
->>>> On 2019/7/8 下午2:16, Tiwei Bie wrote:
->>>>> On Fri, Jul 05, 2019 at 08:49:46AM -0600, Alex Williamson wrote:
->>>>>> On Thu, 4 Jul 2019 14:21:34 +0800
->>>>>> Tiwei Bie <tiwei.bie@intel.com> wrote:
->>>>>>> On Thu, Jul 04, 2019 at 12:31:48PM +0800, Jason Wang wrote:
->>>>>>>> On 2019/7/3 下午9:08, Tiwei Bie wrote:
->>>>>>>>> On Wed, Jul 03, 2019 at 08:16:23PM +0800, Jason Wang wrote:
->>>>>>>>>> On 2019/7/3 下午7:52, Tiwei Bie wrote:
->>>>>>>>>>> On Wed, Jul 03, 2019 at 06:09:51PM +0800, Jason Wang wrote:
->>>>>>>>>>>> On 2019/7/3 下午5:13, Tiwei Bie wrote:
->>>>>>>>>>>>> Details about this can be found here:
->>>>>>>>>>>>>
->>>>>>>>>>>>> https://lwn.net/Articles/750770/
->>>>>>>>>>>>>
->>>>>>>>>>>>> What's new in this version
->>>>>>>>>>>>> ==========================
->>>>>>>>>>>>>
->>>>>>>>>>>>> A new VFIO device type is introduced - vfio-vhost. This addressed
->>>>>>>>>>>>> some comments from here:https://patchwork.ozlabs.org/cover/984763/
->>>>>>>>>>>>>
->>>>>>>>>>>>> Below is the updated device interface:
->>>>>>>>>>>>>
->>>>>>>>>>>>> Currently, there are two regions of this device: 1) CONFIG_REGION
->>>>>>>>>>>>> (VFIO_VHOST_CONFIG_REGION_INDEX), which can be used to setup the
->>>>>>>>>>>>> device; 2) NOTIFY_REGION (VFIO_VHOST_NOTIFY_REGION_INDEX), which
->>>>>>>>>>>>> can be used to notify the device.
->>>>>>>>>>>>>
->>>>>>>>>>>>> 1. CONFIG_REGION
->>>>>>>>>>>>>
->>>>>>>>>>>>> The region described by CONFIG_REGION is the main control interface.
->>>>>>>>>>>>> Messages will be written to or read from this region.
->>>>>>>>>>>>>
->>>>>>>>>>>>> The message type is determined by the `request` field in message
->>>>>>>>>>>>> header. The message size is encoded in the message header too.
->>>>>>>>>>>>> The message format looks like this:
->>>>>>>>>>>>>
->>>>>>>>>>>>> struct vhost_vfio_op {
->>>>>>>>>>>>> 	__u64 request;
->>>>>>>>>>>>> 	__u32 flags;
->>>>>>>>>>>>> 	/* Flag values: */
->>>>>>>>>>>>>        #define VHOST_VFIO_NEED_REPLY 0x1 /* Whether need reply */
->>>>>>>>>>>>> 	__u32 size;
->>>>>>>>>>>>> 	union {
->>>>>>>>>>>>> 		__u64 u64;
->>>>>>>>>>>>> 		struct vhost_vring_state state;
->>>>>>>>>>>>> 		struct vhost_vring_addr addr;
->>>>>>>>>>>>> 	} payload;
->>>>>>>>>>>>> };
->>>>>>>>>>>>>
->>>>>>>>>>>>> The existing vhost-kernel ioctl cmds are reused as the message
->>>>>>>>>>>>> requests in above structure.
->>>>>>>>>>>> Still a comments like V1. What's the advantage of inventing a new protocol?
->>>>>>>>>>> I'm trying to make it work in VFIO's way..
->>>>>>>>>>>> I believe either of the following should be better:
->>>>>>>>>>>>
->>>>>>>>>>>> - using vhost ioctl,  we can start from SET_VRING_KICK/SET_VRING_CALL and
->>>>>>>>>>>> extend it with e.g notify region. The advantages is that all exist userspace
->>>>>>>>>>>> program could be reused without modification (or minimal modification). And
->>>>>>>>>>>> vhost API hides lots of details that is not necessary to be understood by
->>>>>>>>>>>> application (e.g in the case of container).
->>>>>>>>>>> Do you mean reusing vhost's ioctl on VFIO device fd directly,
->>>>>>>>>>> or introducing another mdev driver (i.e. vhost_mdev instead of
->>>>>>>>>>> using the existing vfio_mdev) for mdev device?
->>>>>>>>>> Can we simply add them into ioctl of mdev_parent_ops?
->>>>>>>>> Right, either way, these ioctls have to be and just need to be
->>>>>>>>> added in the ioctl of the mdev_parent_ops. But another thing we
->>>>>>>>> also need to consider is that which file descriptor the userspace
->>>>>>>>> will do the ioctl() on. So I'm wondering do you mean let the
->>>>>>>>> userspace do the ioctl() on the VFIO device fd of the mdev
->>>>>>>>> device?
->>>>>>>> Yes.
->>>>>>> Got it! I'm not sure what's Alex opinion on this. If we all
->>>>>>> agree with this, I can do it in this way.
->>>>>>>
->>>>>>>> Is there any other way btw?
->>>>>>> Just a quick thought.. Maybe totally a bad idea. I was thinking
->>>>>>> whether it would be odd to do non-VFIO's ioctls on VFIO's device
->>>>>>> fd. So I was wondering whether it's possible to allow binding
->>>>>>> another mdev driver (e.g. vhost_mdev) to the supported mdev
->>>>>>> devices. The new mdev driver, vhost_mdev, can provide similar
->>>>>>> ways to let userspace open the mdev device and do the vhost ioctls
->>>>>>> on it. To distinguish with the vfio_mdev compatible mdev devices,
->>>>>>> the device API of the new vhost_mdev compatible mdev devices
->>>>>>> might be e.g. "vhost-net" for net?
->>>>>>>
->>>>>>> So in VFIO case, the device will be for passthru directly. And
->>>>>>> in VHOST case, the device can be used to accelerate the existing
->>>>>>> virtualized devices.
->>>>>>>
->>>>>>> How do you think?
->>>>>> VFIO really can't prevent vendor specific ioctls on the device file
->>>>>> descriptor for mdevs, but a) we'd want to be sure the ioctl address
->>>>>> space can't collide with ioctls we'd use for vfio defined purposes and
->>>>>> b) maybe the VFIO user API isn't what you want in the first place if
->>>>>> you intend to mostly/entirely ignore the defined ioctl set and replace
->>>>>> them with your own.  In the case of the latter, you're also not getting
->>>>>> the advantages of the existing VFIO userspace code, so why expose a
->>>>>> VFIO device at all.
->>>>> Yeah, I totally agree.
->>>> I guess the original idea is to reuse the VFIO DMA/IOMMU API for this. Then
->>>> we have the chance to reuse vfio codes in qemu for dealing with e.g vIOMMU.
->>> Yeah, you are right. We have several choices here:
->>>
->>> #1. We expose a VFIO device, so we can reuse the VFIO container/group
->>>       based DMA API and potentially reuse a lot of VFIO code in QEMU.
->>>
->>>       But in this case, we have two choices for the VFIO device interface
->>>       (i.e. the interface on top of VFIO device fd):
->>>
->>>       A) we may invent a new vhost protocol (as demonstrated by the code
->>>          in this RFC) on VFIO device fd to make it work in VFIO's way,
->>>          i.e. regions and irqs.
->>>
->>>       B) Or as you proposed, instead of inventing a new vhost protocol,
->>>          we can reuse most existing vhost ioctls on the VFIO device fd
->>>          directly. There should be no conflicts between the VFIO ioctls
->>>          (type is 0x3B) and VHOST ioctls (type is 0xAF) currently.
->>>
->>> #2. Instead of exposing a VFIO device, we may expose a VHOST device.
->>>       And we will introduce a new mdev driver vhost-mdev to do this.
->>>       It would be natural to reuse the existing kernel vhost interface
->>>       (ioctls) on it as much as possible. But we will need to invent
->>>       some APIs for DMA programming (reusing VHOST_SET_MEM_TABLE is a
->>>       choice, but it's too heavy and doesn't support vIOMMU by itself).
->>>
->>> I'm not sure which one is the best choice we all want..
->>> Which one (#1/A, #1/B, or #2) would you prefer?
->>
->> #2 looks better. One concern is that we may end up with similar API as what
->> VFIO does.
-> Yeah, that's a major concern. If it's true, is it something
-> that's not acceptable?
-
-
-I think not, but I don't know if any other one that care this.
-
-
+On Thu, Jun 20, 2019 at 11:08 AM Mason Yang <masonccyang@mxic.com.tw> wrote:
+> Dcument the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
 >
->> And I do see some new RFC for VFIO to add more DMA API.
-> Is there any pointers?
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
 
+Thanks for your patch!
 
-I don't remember the details, but it should be something related to SVA 
-support in recent intel IOMMU.
+> index 0000000..e8edf99
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+> @@ -0,0 +1,43 @@
+> +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> +---------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible: should be an SoC-specific compatible value, followed by
+> +               "renesas,rcar-gen3-rpc" as a fallback.
+> +               supported SoC-specific values are:
+> +               "renesas,r8a77980-rpc"  (R-Car V3H)
+> +               "renesas,r8a77995-rpc"  (R-Car D3)
+> +- reg: should contain three register areas:
+> +       first for the base address of RPC-IF registers,
+> +       second for the direct mapping read mode and
+> +       third for the write buffer area.
+> +- reg-names: should contain "regs", "dirmap" and "wbuf"
+> +- clocks: should contain the clock phandle/specifier pair for the module clock.
+> +- clock-names: should contain "rpc"
+> +- power-domain: should contain the power domain phandle/secifier pair.
 
+power-domains
 
->
->> Consider it was still in the stage of RFC, does it make sense if we try this
->> way with some sample parents?
-> I think it makes sense.
+> +- resets: should contain the reset controller phandle/specifier pair.
+> +- #address-cells: should be 1
+> +- #size-cells: should be 0
+> +
+> +Example:
+> +
+> +       rpc: spi@ee200000 {
+> +               compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
+> +               reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
+> +                     <0 0xee208000 0 0x100>;
+> +               reg-names = "regs", "dirmap", "wbuf";
+> +               clocks = <&cpg CPG_MOD 917>;
+> +               clock-names = "rpc";
+> +               power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> +               resets = <&cpg 917>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               flash@0 {
 
+The subnode is not documented above.
 
-Just one more thought, for sample parents, vhost-net should be much more 
-easier in both implementation and testing.
+> +                       compatible = "jedec,spi-nor";
+> +                       reg = <0>;
+> +                       spi-max-frequency = <40000000>;
+> +                       spi-tx-bus-width = <1>;
+> +                       spi-rx-bus-width = <1>;
+> +               };
+> +       };
 
+Gr{oetje,eeting}s,
 
->
->>
->>>>>> The mdev interface does provide a general interface for creating and
->>>>>> managing virtual devices, vfio-mdev is just one driver on the mdev
->>>>>> bus.  Parav (Mellanox) has been doing work on mdev-core to help clean
->>>>>> out vfio-isms from the interface, aiui, with the intent of implementing
->>>>>> another mdev bus driver for using the devices within the kernel.
->>>>> Great to know this! I found below series after some searching:
->>>>>
->>>>> https://lkml.org/lkml/2019/3/8/821
->>>>>
->>>>> In above series, the new mlx5_core mdev driver will do the probe
->>>>> by calling mlx5_get_core_dev() first on the parent device of the
->>>>> mdev device. In vhost_mdev, maybe we can also keep track of all
->>>>> the compatible mdev devices and use this info to do the probe.
->>>> I don't get why this is needed. My understanding is if we want to go this
->>>> way, there're actually two parts. 1) Vhost mdev that implements the device
->>>> managements and vhost ioctl. 2) Vhost it self, which can accept mdev fd as
->>>> it backend through VHOST_NET_SET_BACKEND.
->>> I think with vhost-mdev (or with vfio-mdev if we agree to do vhost
->>> ioctls on vfio device fd directly), we don't need to open /dev/vhost-net
->>> (and there is no VHOST_NET_SET_BACKEND needed) at all. Either way,
->>> after getting the fd of the mdev, we just need to do vhost ioctls
->>> on it directly.
->>
->> The reason I ask is that vhost-net is designed to not tied to any kind of
->> backend. So it's better to have a single place to deal with ioctl. But it's
->> not must.
-> I think in vhost-mdev, there is a chance for us to have a
-> unified interface in /dev for all vhost mediated devices
-> (not limited to net) in the system (similar to the case of
-> /dev/vfio/) instead of making it a backend of vhost-net.
->
-> For the code organization, it's possible for us to refactor
-> drivers/vhost/ and let it provide some APIs for parent devices
-> to handle generic vhost ioctls.
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Yes, and separate the current kthread based software dataplane out of 
-the core APIs.
-
-Thanks
-
-
->
-> Thanks,
-> Tiwei
->
->> Thanks
->>
->>
->>>>> But we also need a way to allow vfio_mdev driver to distinguish
->>>>> and reject the incompatible mdev devices.
->>>> One issue for this series is that it doesn't consider DMA isolation at all.
->>>>
->>>>
->>>>>> It
->>>>>> seems like this vhost-mdev driver might be similar, using mdev but not
->>>>>> necessarily vfio-mdev to expose devices.  Thanks,
->>>>> Yeah, I also think so!
->>>> I've cced some driver developers for their inputs. I think we need a sample
->>>> parent drivers in the next version for us to understand the full picture.
->>>>
->>>>
->>>> Thanks
->>>>
->>>>
->>>>> Thanks!
->>>>> Tiwei
->>>>>
->>>>>> Alex
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
