@@ -2,86 +2,72 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7119BC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C673AC74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525EA2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02ED20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:23:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfGJRWl (ORCPT
+        id S1728028AbfGJRXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:22:41 -0400
-Received: from smtprelay0113.hostedemail.com ([216.40.44.113]:33968 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726229AbfGJRWk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:22:40 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 16DFE18224D67;
-        Wed, 10 Jul 2019 17:22:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bite23_338f1fa13e539
-X-Filterd-Recvd-Size: 2392
-Received: from XPS-9350 (unknown [172.56.44.31])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 10 Jul 2019 17:22:33 +0000 (UTC)
-Message-ID: <079745c94c232591453dcb01c9d9406b721bb6bf.camel@perches.com>
-Subject: Re: [RFC PATCH] fanotify, inotify, dnotify, security: add security
- hook for fs notifications
-From:   Joe Perches <joe@perches.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>, paul@paul-moore.com
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dhowells@redhat.com, jack@suse.cz,
-        amir73il@gmail.com, jmorris@namei.org, sds@tycho.nsa.gov,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 10 Jul 2019 10:22:03 -0700
-In-Reply-To: <6ce2ce60b2435940bc8dfa07fa2553c4524d2db5.camel@perches.com>
-References: <20190710133403.855-1-acgoide@tycho.nsa.gov>
-         <4fd98c88-61a6-a155-5028-db22a778d3c1@schaufler-ca.com>
-         <cb754dda-fbce-8169-4cd7-eef66e8d809e@infradead.org>
-         <6ce2ce60b2435940bc8dfa07fa2553c4524d2db5.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 10 Jul 2019 13:23:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63563 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727827AbfGJRXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:23:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 10:23:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,475,1557212400"; 
+   d="scan'208";a="167789024"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Jul 2019 10:23:02 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     dvhart@infradead.org, andy@infradead.org,
+        andriy.shevchenko@intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Prarit Bhargava <prarit@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        David Arcari <darcari@redhat.com>
+Subject: [RESEND][PATCH v2] tools/power/x86/intel-speed-select: Add .gitignore file
+Date:   Wed, 10 Jul 2019 10:23:00 -0700
+Message-Id: <20190710172300.70367-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-10 at 10:18 -0700, Joe Perches wrote:
-> On Wed, 2019-07-10 at 09:49 -0700, Randy Dunlap wrote:
-> > On 7/10/19 9:38 AM, Casey Schaufler wrote:
-> > > On 7/10/2019 6:34 AM, Aaron Goidel wrote:
-> > > > @@ -3261,6 +3262,26 @@ static int selinux_inode_removexattr(struct dentry *dentry, const char *name)
-> > > >  	return -EACCES;
-> > > >  }
-> > > >  
-> > > > +static int selinux_inode_notify(struct inode *inode, u64 mask)
-> > > > +{
-> > > > +	u32 perm = FILE__WATCH; // basic permission, can a watch be set?
-> > > 
-> > > We don't use // comments in the Linux kernel.
-> > > 
-> > 
-> > I thought that we had recently moved into the 21st century on that issue,
-> > but I don't see it mentioned in coding-style.rst.  Maybe we need a Doc update.
-> > 
-> > checkpatch allows C99 comments by default.
-> > Joe, do you recall about this?
-> 
-> My recollection is it was something I thought was
-> just simple and useful so I added it to checkpatch
-> without going through the negative of the nominal
-> approvals required by modifying CodingStyle.
+From: Prarit Bhargava <prarit@redhat.com>
 
-https://lkml.org/lkml/2016/7/8/625
+Add a .gitignore file for build include/ and final binary.
 
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: David Arcari <darcari@redhat.com>
+---
+ tools/power/x86/intel-speed-select/.gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 tools/power/x86/intel-speed-select/.gitignore
+
+diff --git a/tools/power/x86/intel-speed-select/.gitignore b/tools/power/x86/intel-speed-select/.gitignore
+new file mode 100644
+index 000000000000..f61145925ce9
+--- /dev/null
++++ b/tools/power/x86/intel-speed-select/.gitignore
+@@ -0,0 +1,2 @@
++include/
++intel-speed-select
+-- 
+2.17.2
 
