@@ -2,88 +2,112 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AD6C74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682F7C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8545B2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCE520645
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="riGAY/nt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbfGJPTN (ORCPT
+        id S1727737AbfGJPWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:19:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:35200 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfGJPTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:19:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CE0F2B;
-        Wed, 10 Jul 2019 08:19:11 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 078203F246;
-        Wed, 10 Jul 2019 08:19:08 -0700 (PDT)
-Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Bhupesh Sharma <bhsharma@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
- <CACi5LpNGWhTnXyM8gB0Tn=682+08s-ppfDpX2SawfxMvue1GTQ@mail.gmail.com>
- <CA+CK2bBrwBHhD-PFO_gVnDYoFi0Su6t456WNdtBWpOe4qM+oww@mail.gmail.com>
- <2d60f302-5161-638a-76cd-d7d79e5631fe@arm.com>
- <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <f9bea5bd-370a-47b5-8ad1-a30bd43d6cca@arm.com>
-Date:   Wed, 10 Jul 2019 16:19:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 10 Jul 2019 11:22:38 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59149 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfGJPWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:22:38 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6AFMBuv2475328
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 10 Jul 2019 08:22:11 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6AFMBuv2475328
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562772131;
+        bh=bNrjrjy4R5niEjju/4I+idJowXwPnzgihtU7QB7ZbD4=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=riGAY/ntE/7YHpRf8Xu67k/+BUeS11lzEn2WvREt1uBKPsU+bJV15Dn4YsVUgIhmv
+         kXDjyVzv9AuuOJks660RF/Ud+0PYIPDCV/rInGvaGtVnYGeiYSeraA1Vxs2Vy9wCil
+         Zd9mdoKZ5bQtv1WQu6/i1NoMhLvJ4jn3CnrDBedwxvkjB6dlYJt4gTqVoUW4mx9C90
+         QP/A8qzfdaMM833UTjWT7bYdsgQCxuTzSGIS3tiQHWGWUtxEWYOaBGUboqN9XOCQrD
+         tMtlWFCU1ttgIp/HYQ59fwSDR39LmCezq0KDfiRjY+YI9d7NJ39lmQNIvRbxkf1cmi
+         4MQtiBa94CE9A==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6AFMAW12475322;
+        Wed, 10 Jul 2019 08:22:10 -0700
+Date:   Wed, 10 Jul 2019 08:22:10 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnd Bergmann <tipbot@zytor.com>
+Message-ID: <tip-510c12149954eb9db6a30c2b9f7526af71afb7a4@git.kernel.org>
+Cc:     hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, arnd@arndb.de, mingo@kernel.org,
+          tglx@linutronix.de, hpa@zytor.com
+In-Reply-To: <20190710130206.1670830-1-arnd@arndb.de>
+References: <20190710130206.1670830-1-arnd@arndb.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/urgent] timekeeping/vsyscall: Use __iter_div_u64_rem()
+Git-Commit-ID: 510c12149954eb9db6a30c2b9f7526af71afb7a4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pasha,
+Commit-ID:  510c12149954eb9db6a30c2b9f7526af71afb7a4
+Gitweb:     https://git.kernel.org/tip/510c12149954eb9db6a30c2b9f7526af71afb7a4
+Author:     Arnd Bergmann <arnd@arndb.de>
+AuthorDate: Wed, 10 Jul 2019 15:01:53 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 10 Jul 2019 17:17:49 +0200
 
-On 09/07/2019 14:07, Pavel Tatashin wrote:
->>> Enabling MMU and D-Cache for relocation  would essentially require the
->>> same changes in kernel. Could you please share exactly why these were
->>> not accepted upstream into kexec-tools?
->>
->> Because '--no-checks' is a much simpler alternative.
->>
->> More of the discussion:
->> https://lore.kernel.org/linux-arm-kernel/5599813d-f83c-d154-287a-c131c48292ca@arm.com/
->>
->> While you can make purgatory a fully-fledged operating system, it doesn't really need to
->> do anything on arm64. Errata-workarounds alone are a reason not do start down this path.
-> 
-> Thank you James. I will summaries the information gathered from the
-> yesterday's/today's discussion and add it to the cover letter together
-> with ARM64 tag. I think, the patch series makes sense for ARM64 only,
-> unless there are other platforms that disable caching/MMU during
-> relocation.
+timekeeping/vsyscall: Use __iter_div_u64_rem()
 
-I'd prefer not to reserve additional memory for regular kexec just to avoid the relocation.
-If the kernel's relocation work is so painful we can investigate doing it while the MMU is
-enabled. If you can compare regular-kexec with kexec_file_load() you eliminate the
-purgatory part of the work.
+On 32-bit x86 when building with clang-9, the 'division' loop gets turned
+back into an inefficient division that causes a link error:
 
+kernel/time/vsyscall.o: In function `update_vsyscall':
+vsyscall.c:(.text+0xe3): undefined reference to `__udivdi3'
 
-Thanks,
+Use the existing __iter_div_u64_rem() function which is used to address the
+same issue in other places.
 
-James
+Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190710130206.1670830-1-arnd@arndb.de
+
+---
+ kernel/time/vsyscall.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index a80893180826..8cf3596a4ce6 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -104,11 +104,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+ 	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+ 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
+-	while (nsec >= NSEC_PER_SEC) {
+-		nsec = nsec - NSEC_PER_SEC;
+-		vdso_ts->sec++;
+-	}
+-	vdso_ts->nsec	= nsec;
++	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
+ 
+ 	if (__arch_use_vsyscall(vdata))
+ 		update_vdso_data(vdata, tk);
