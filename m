@@ -2,116 +2,83 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D917C73C73
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E59C73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F21D20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4C720838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562738062;
+	bh=Ljmkhznzerdq6lPRmNr087kgdnCLj9XSJ2ycEHrizro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zIXVag1Cu79ZljsTF7UcJqn0kiN0iETT2CdyeRpAKjUQSNkFHs+RuAWlwxpGt05K2
+	 o0Od+05+R8hn/4lS1ySo81B4kIYOWzuxbn6foZn48JgiUsQbSgvsMXS5tims0ppO1e
+	 gA7ESSGf/+G+h+iHlikeEI2e1YLjFBGWDIxxm0cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfGJFtm (ORCPT
+        id S1726168AbfGJFyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:49:42 -0400
-Received: from relay.sw.ru ([185.231.240.75]:49196 "EHLO relay.sw.ru"
+        Wed, 10 Jul 2019 01:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfGJFtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:49:41 -0400
-Received: from [172.16.24.21]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1hl5Ti-0002oO-18; Wed, 10 Jul 2019 08:49:18 +0300
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     Xiaoming Ni <nixiaoming@huawei.com>, adobriyan@gmail.com,
-        akpm@linux-foundation.org, anna.schumaker@netapp.com,
-        arjan@linux.intel.com, bfields@fieldses.org,
-        chuck.lever@oracle.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, jlayton@kernel.org, luto@kernel.org,
-        mingo@kernel.org, Nadia.Derbey@bull.net,
-        paulmck@linux.vnet.ibm.com, semen.protsenko@linaro.org,
-        stable@kernel.org, stern@rowland.harvard.edu, tglx@linutronix.de,
-        torvalds@linux-foundation.org, trond.myklebust@hammerspace.com,
-        viresh.kumar@linaro.org
-Cc:     alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
-Date:   Wed, 10 Jul 2019 08:49:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1725791AbfGJFyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:54:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8498B20838;
+        Wed, 10 Jul 2019 05:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562738060;
+        bh=Ljmkhznzerdq6lPRmNr087kgdnCLj9XSJ2ycEHrizro=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q8RbnzC0QTCX1b0xyF+5bia3Pnn890GSi36zzMOkPm0iBluo0DWJKZ6cqfS7OiAPl
+         LTECJSosy5xaWsRZ68qC1GpkM6pI17bAK/8v19fuBk/tIAhBQSOy6ljC6+Dt1a8EuZ
+         77ipsiE7CKvjuZnp2nY/riuOCm4VZndcJsTDJhxc=
+Date:   Wed, 10 Jul 2019 07:54:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        atull@kernel.org
+Subject: Re: [PATCH v2 00/11] FPGA DFL updates
+Message-ID: <20190710055417.GA5778@kroah.com>
+References: <1562286238-11413-1-git-send-email-hao.wu@intel.com>
+ <20190710050746.GA28620@hao-dev>
 MIME-Version: 1.0
-In-Reply-To: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710050746.GA28620@hao-dev>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/19 6:09 AM, Xiaoming Ni wrote:
-> Registering the same notifier to a hook repeatedly can cause the hook
-> list to form a ring or lose other members of the list.
+On Wed, Jul 10, 2019 at 01:07:46PM +0800, Wu Hao wrote:
+> On Fri, Jul 05, 2019 at 08:23:47AM +0800, Wu Hao wrote:
+> > Hi Greg / Moritz
+> > 
+> > This is v2 patchset which adds more features to FPGA DFL. This patchset
+> > is made on top of patch[1] and char-misc-next tree. Documentation patch
+> > for DFL is dropped from this patchset, and will resubmit it later to
+> > avoid conflict.
+> 
+> Hi Greg,
+> 
+> Did you get a chance to take a look at this new version to see if these
+> patches are good to take?
+> 
+> Hope we can catch up with the merge window.
 
-I think is not enough to _prevent_ 2nd register attempt,
-it's enough to detect just attempt and generate warning to mark host in bad state.
+You sent them last Friday.  I actually tried to not do kernel work last
+weekend.  The merge window opened up on Sunday.  My trees should have
+been closed last week, so no, this missed this merge window, I'll
+review these patches once 5.3-rc1 is out.
 
-Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
-and it can lead to host crash in any time: 
-you can unregister notifier on first attempt it can be too early, it can be still in use.
-on the other hand you can never call 2nd unregister at all.
+thanks
 
-Unfortunately I do not see any ways to handle such cases properly,
-and it seems for me your patches does not resolve this problem.
-
-Am I missed something probably?
- 
-> case1: An infinite loop in notifier_chain_register() can cause soft lockup
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_chain_register(&test_notifier_list, &test2);
-> 
-> case2: An infinite loop in notifier_chain_register() can cause soft lockup
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
-> 
-> case3: lose other hook test2
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
->         atomic_notifier_chain_register(&test_notifier_list, &test2);
->         atomic_notifier_chain_register(&test_notifier_list, &test1);
-> 
-> case4: Unregister returns 0, but the hook is still in the linked list,
->         and it is not really registered. If you call notifier_call_chain
->         after ko is unloaded, it will trigger oops. if the system is
->        	configured with softlockup_panic and the same hook is repeatedly
->        	registered on the panic_notifier_list, it will cause a loop panic.
-> 
-> so. need add a check in in notifier_chain_register() to avoid duplicate
-> registration
-> 
-> v1:
-> * use notifier_chain_cond_register replace notifier_chain_register
-> 
-> v2:
-> * Add a check in notifier_chain_register() to avoid duplicate registration
-> * remove notifier_chain_cond_register() to avoid duplicate code 
-> * remove blocking_notifier_chain_cond_register() to avoid duplicate code
-> 
-> v3:
-> * Add a cover letter.
-> 
-> Xiaoming Ni (3):
->   kernel/notifier.c: avoid duplicate registration
->   kernel/notifier.c: remove notifier_chain_cond_register()
->   kernel/notifier.c: remove blocking_notifier_chain_cond_register()
-> 
->  include/linux/notifier.h |  4 ----
->  kernel/notifier.c        | 41 +++--------------------------------------
->  net/sunrpc/rpc_pipe.c    |  2 +-
->  3 files changed, 4 insertions(+), 43 deletions(-)
-> 
+greg k-h
