@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E7EC74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B202C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8209214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91952064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562771087;
-	bh=9cJTPCAd2MNPKjKkWiNPROOryIVjvrJ+nrLrWGjAeGA=;
+	s=default; t=1562771093;
+	bh=ePFrobjKeHYy4J+mj2GbAq/bzV6Kl0Uu5zEQW+zh/bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6Z8gudRj5cJDG0xoiMJmFPEbXnkb+SdwhFeT4E2fkuiVtXbGjjFuaAMgV2x7lbhd
-	 uBiBy8NfCpvGAxEQ/NqdOllis+QLoQeLS5DLTZerBmf/z9LJtex6NcxHWCYJU1gPr6
-	 DFcR9/suD485SmUDlfNUVQBu4aqviDwDnJl6JlLQ=
+	b=PxkExCJGeWps9fLbBT4EHGw+9AZ57xxO8P0HXJp6ki8GfGvFw3ZM+TG8n+BOr2nOI
+	 RJBGk7RGgmh19ESordruvPgvBpVUNlxiMgtCg0ZI/XywXYAdOuGxB0DvLwfXBg7TYm
+	 u75eLfNExtLuoP05eupxl1dY1qUKn6rqC89j+NVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfGJPDa (ORCPT
+        id S1728141AbfGJPDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 11:03:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727948AbfGJPDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:03:25 -0400
+        id S1728117AbfGJPDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:03:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED2D2086D;
-        Wed, 10 Jul 2019 15:03:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CEE32064A;
+        Wed, 10 Jul 2019 15:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562771004;
-        bh=9cJTPCAd2MNPKjKkWiNPROOryIVjvrJ+nrLrWGjAeGA=;
+        s=default; t=1562770995;
+        bh=ePFrobjKeHYy4J+mj2GbAq/bzV6Kl0Uu5zEQW+zh/bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YoEn0+ye9yKOFrRp8As9Q7JVv6jJZiHY7KHrhdUSbIH1YFJ63VUm0C4WlO0UTLupj
-         FqryW2Y4SoQ80aV0mFfDvYGK/UOb/ulMgGEQ8ZoSrPFmmKkD4kCK2QoHwVKYBH7St4
-         9QaCs//+0YJL2THkVrFa+sDTUC3JVX/Lf1EkKzjk=
+        b=I/0dGTSNiRAfxcfAqR5nqwFzI2XpsQRWqcIQktIyqtO5fh1LHSEW1G2UPeNaH/08J
+         m/4w5Z5gssmjkhhRGjNhVTuBc6W14z5X9VYxTcuwJavakxia4BhaihZHjW7vpbkrF6
+         O5+kquuZ4krhpHea3j5gzqAiRY6J87sLrisyCNPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Jo-Philipp Wich <jo@mein.io>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 2/8] MIPS: fix build on non-linux hosts
-Date:   Wed, 10 Jul 2019 11:03:12 -0400
-Message-Id: <20190710150319.7258-2-sashal@kernel.org>
+Cc:     Robert Beckett <bob.beckett@collabora.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 7/9] drm/imx: notify drm core before sending event during crtc disable
+Date:   Wed, 10 Jul 2019 11:02:57 -0400
+Message-Id: <20190710150301.7129-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190710150319.7258-1-sashal@kernel.org>
-References: <20190710150319.7258-1-sashal@kernel.org>
+In-Reply-To: <20190710150301.7129-1-sashal@kernel.org>
+References: <20190710150301.7129-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,64 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+From: Robert Beckett <bob.beckett@collabora.com>
 
-[ Upstream commit 1196364f21ffe5d1e6d83cafd6a2edb89404a3ae ]
+[ Upstream commit 78c68e8f5cd24bd32ba4ca1cdfb0c30cf0642685 ]
 
-calc_vmlinuz_load_addr.c requires SZ_64K to be defined for alignment
-purposes.  It included "../../../../include/linux/sizes.h" to define
-that size, however "sizes.h" tries to include <linux/const.h> which
-assumes linux system headers.  These may not exist eg. the following
-error was encountered when building Linux for OpenWrt under macOS:
+Notify drm core before sending pending events during crtc disable.
+This fixes the first event after disable having an old stale timestamp
+by having drm_crtc_vblank_off update the timestamp to now.
 
-In file included from arch/mips/boot/compressed/calc_vmlinuz_load_addr.c:16:
-arch/mips/boot/compressed/../../../../include/linux/sizes.h:11:10: fatal error: 'linux/const.h' file not found
-         ^~~~~~~~~~
+This was seen while debugging weston log message:
+Warning: computed repaint delay is insane: -8212 msec
 
-Change makefile to force building on local linux headers instead of
-system headers.  Also change eye-watering relative reference in include
-file spec.
+This occurred due to:
+1. driver starts up
+2. fbcon comes along and restores fbdev, enabling vblank
+3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
+seq number and time set at current value
+(some time later)
+4. weston starts and does a modeset
+5. atomic commit disables crtc while it does the modeset
+6. ipu_crtc_atomic_disable sends vblank with old seq number and time
 
-Thanks to Jo-Philip Wich & Petr Štetiar for assistance in tracking this
-down & fixing.
+Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
 
-Suggested-by: Jo-Philipp Wich <jo@mein.io>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
-Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/compressed/Makefile                 | 2 ++
- arch/mips/boot/compressed/calc_vmlinuz_load_addr.c | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index adce180f3ee4..331b9e0a8072 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -75,6 +75,8 @@ OBJCOPYFLAGS_piggy.o := --add-section=.image=$(obj)/vmlinux.bin.z \
- $(obj)/piggy.o: $(obj)/dummy.o $(obj)/vmlinux.bin.z FORCE
- 	$(call if_changed,objcopy)
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 11e2dcdd6b18..1b5870e7bacc 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -98,14 +98,14 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	ipu_dc_disable(ipu);
+ 	ipu_prg_disable(ipu);
  
-+HOSTCFLAGS_calc_vmlinuz_load_addr.o += $(LINUXINCLUDE)
++	drm_crtc_vblank_off(crtc);
 +
- # Calculate the load address of the compressed kernel image
- hostprogs-y := calc_vmlinuz_load_addr
+ 	spin_lock_irq(&crtc->dev->event_lock);
+ 	if (crtc->state->event) {
+ 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+ 		crtc->state->event = NULL;
+ 	}
+ 	spin_unlock_irq(&crtc->dev->event_lock);
+-
+-	drm_crtc_vblank_off(crtc);
+ }
  
-diff --git a/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c b/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-index 542c3ede9722..d14f75ec8273 100644
---- a/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-+++ b/arch/mips/boot/compressed/calc_vmlinuz_load_addr.c
-@@ -13,7 +13,7 @@
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
--#include "../../../../include/linux/sizes.h"
-+#include <linux/sizes.h>
- 
- int main(int argc, char *argv[])
- {
+ static void imx_drm_crtc_reset(struct drm_crtc *crtc)
 -- 
 2.20.1
 
