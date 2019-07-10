@@ -2,86 +2,119 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EF6C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C670EC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1966220693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9753A20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:58:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUPTKU6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfGJI6d (ORCPT
+        id S1727684AbfGJI6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:58:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47130 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbfGJI6d (ORCPT
+        Wed, 10 Jul 2019 04:58:54 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39205 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbfGJI6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:58:33 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hl8Ql-0006xp-9o; Wed, 10 Jul 2019 10:58:27 +0200
-Date:   Wed, 10 Jul 2019 10:58:25 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Will Deacon <will@kernel.org>
-cc:     John Stultz <john.stultz@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Huw Davies <huw@codeweavers.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Peter Collingbourne <pcc@google.com>
-Subject: Re: [PATCH v7 10/25] arm64: compat: Add vDSO
-In-Reply-To: <20190710082750.mvm3e6myzpqsurga@willie-the-truck>
-Message-ID: <alpine.DEB.2.21.1907101057190.1758@nanos.tec.linutronix.de>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com> <20190621095252.32307-11-vincenzo.frascino@arm.com> <CALAqxLXxE5B+vVLj7NcW8S05nhDQ+XSKVn=_MNDci667JDFEhA@mail.gmail.com> <20190710082750.mvm3e6myzpqsurga@willie-the-truck>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 10 Jul 2019 04:58:54 -0400
+Received: by mail-io1-f66.google.com with SMTP id f4so3078885ioh.6;
+        Wed, 10 Jul 2019 01:58:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uA2No6QVt9wdOYNPWysRV0rTiNNXcnR1a0unn8liVIo=;
+        b=CUPTKU6B9ue+G87vzCA2/SKs+OCfZP6SxxQ9vBphfmnZ/O6MPYcY4f3NXcpJBdqFHj
+         mJCy+V2HlX+eOPEa7h/Y7TdFFkEAi5IzTen/a1p42P7DPOKAoYA6nUub4dopPNUNeFrZ
+         U/eqGXhOffKt2IzFm0JgfT4E3BefKkwq0JqXHKrVAOqiKTv0FqrmdbUselJ/pYinwLvM
+         u5yYnMWxPrxmRTtOVFeqYUI4DdGcUN562YG15z7tmadVjqNlZoV6CbQEYag7xdgJNxa2
+         OG/E1L1JPrMHEFPYNch+lcLm90Pp/sXoPLs50ne6lMBuMBpsaYxipUW+19x4q0GavV0q
+         QB4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uA2No6QVt9wdOYNPWysRV0rTiNNXcnR1a0unn8liVIo=;
+        b=mkHFHAoge1RgR424vVeESLYfpY4qa/quYsIZ3tOPSsAc2OiXBYRmNqPQOa7BYVAt/g
+         nmHettctGaVKqjgLbe7jayeUTrIIyjkxK4ZgdbnYTadnQvy4Yy+1WHhkL00x+xYnRwXR
+         YC8x/uwIDOANoDiHO53S23K5UiNnrxM0NDanZH8eMPWuGmzCDwN4Hz2wtEdVVlBW8S1L
+         Qo5cbDaAJ9kHh1TC4MVVFu0QI0P5UXwRFQrkd/1NkcR/uhA26QBugdFtkfPFLfPSktEc
+         RFFpKltjJyQq+CtKess+0vsGm/9Bz6KMcGmIGk3+bF63tG8WZcBDt3WrSAots51JG/t8
+         rxJA==
+X-Gm-Message-State: APjAAAWT9Qk1Ur20a6kMql27/6spSar7D1/ULZXGoWkA3aDui54KGgQ8
+        Z19u8EjtGPzmieMAlq0EUxCD1Q4hT5cSEHBSeTE=
+X-Google-Smtp-Source: APXvYqwfjOqCTAL0HtLf70MMCfT2U67F5rYDDxdV+OsDquJYjlIIwuPjw8N7E6bdZfzCpNNOrHSWAG3ZfRL9F79hF9s=
+X-Received: by 2002:a5d:8b52:: with SMTP id c18mr11958098iot.89.1562749132167;
+ Wed, 10 Jul 2019 01:58:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190710025859.6025-1-crag0715@gmail.com>
+In-Reply-To: <20190710025859.6025-1-crag0715@gmail.com>
+From:   Crag Wang <crag0715@gmail.com>
+Date:   Wed, 10 Jul 2019 16:58:40 +0800
+Message-ID: <CAP-8N0hTEXkK3iqGP=+gtuVVcqo-+KYHC_N6+8Q90ndf_UVJpA@mail.gmail.com>
+Subject: Re: [PATCH] input: touchscreen: add delay time to device power on
+To:     yjjung@melfas.com, jsj1012@melfas.com, leesh832@lgdisplay.com
+Cc:     Mario Limonciello <mario_limonciello@dell.com>,
+        chrome.os.engineering@dell.com, "Crag.Wang" <crag.wang@dell.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Will Deacon wrote:
-> On Tue, Jul 09, 2019 at 09:02:54PM -0700, John Stultz wrote:
-> > I tried to bisect things down a bit, but as some later fixes are
-> > required (at one point, date was returning the start epoch and never
-> > increasing), this hasn't worked too well. But I'm guessing since I
-> > see: "CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will
-> > not be built", and the system is half working, I'm guessing this is an
-> > issue with just the 32bit code failing.  While I can try to sort out
-> > the proper CROSS_COMPILE_COMPAT in my build environment, I assume
-> > userland shouldn't be crashing if that value isn't set.
-> > 
-> > Any chance this issue has already been raised?
-> 
-> First I've seen of it, although Vincenzo is likely to know better than me.
-> In the meantime, please can you share your .config?
+Adding more
 
-I think the key is: CROSS_COMPILE_COMPAT not defined or empty. And then run
-32bit userspace.
-
-Thanks,
-
-	tglx
+On Wed, Jul 10, 2019 at 10:59 AM <crag0715@gmail.com> wrote:
+>
+> From: "Crag.Wang" <crag.wang@dell.com>
+>
+> Delay time for MELFAS MIP4 controller is required at power on stage
+> regardless the existence of GPIO consumer lookup from devicetree or
+> ACPI device table.
+>
+> There is an issue if GPIO ce is undefined in the ACPI results no delay
+> time for deive power on, the controller ended up in an abnormal state.
+>
+> TEST=echo i2c-MLFS0000:00 > /sys/bus/i2c/drivers/mip4_ts/unbind
+>      verify the touch function is off
+>
+>      echo i2c-MLFS0000:00 > /sys/bus/i2c/drivers/mip4_ts/bind
+>      verify the touch function is on
+>
+> Signed-off-by: Crag.Wang <crag.wang@dell.com>
+> ---
+>  drivers/input/touchscreen/melfas_mip4.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/input/touchscreen/melfas_mip4.c b/drivers/input/touchscreen/melfas_mip4.c
+> index 430a2bc5f7ca..8e803658fb43 100644
+> --- a/drivers/input/touchscreen/melfas_mip4.c
+> +++ b/drivers/input/touchscreen/melfas_mip4.c
+> @@ -374,12 +374,11 @@ static int mip4_query_device(struct mip4_ts *ts)
+>
+>  static int mip4_power_on(struct mip4_ts *ts)
+>  {
+> -       if (ts->gpio_ce) {
+> +       if (ts->gpio_ce)
+>                 gpiod_set_value_cansleep(ts->gpio_ce, 1);
+>
+> -               /* Booting delay : 200~300ms */
+> -               usleep_range(200 * 1000, 300 * 1000);
+> -       }
+> +       /* Booting delay : 200~300ms */
+> +       usleep_range(200 * 1000, 300 * 1000);
+>
+>         return 0;
+>  }
+> --
+> 2.20.1
+>
