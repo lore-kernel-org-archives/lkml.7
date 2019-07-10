@@ -2,107 +2,62 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC69C606D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7A2C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1212320651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE64020651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 09:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfGJJs7 (ORCPT
+        id S1727363AbfGJJtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 05:48:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:58636 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbfGJJs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 05:48:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9DEE344;
-        Wed, 10 Jul 2019 02:48:57 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F5283F246;
-        Wed, 10 Jul 2019 02:48:55 -0700 (PDT)
-Subject: Re: [PATCH v7 10/25] arm64: compat: Add vDSO
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     linux-arch@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Huw Davies <huw@codeweavers.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Peter Collingbourne <pcc@google.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-11-vincenzo.frascino@arm.com>
- <CALAqxLXxE5B+vVLj7NcW8S05nhDQ+XSKVn=_MNDci667JDFEhA@mail.gmail.com>
- <alpine.DEB.2.21.1907100811170.1758@nanos.tec.linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <b2dccce1-8cf2-1330-7ea9-7636e0da3c42@arm.com>
-Date:   Wed, 10 Jul 2019 10:48:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907100811170.1758@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 10 Jul 2019 05:49:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55496 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725994AbfGJJtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 05:49:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1D4E5B090;
+        Wed, 10 Jul 2019 09:49:32 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 11:49:31 +0200
+Message-ID: <s5himsarzh0.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Hariprasad Kelam" <hariprasad.kelam@gmail.com>
+Cc:     <alsa-devel@alsa-project.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        "Allison Randal" <allison@lohutok.net>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sound: pci: lx6464es: Remove unneeded variable err
+In-Reply-To: <20190710023059.GA14204@hari-Inspiron-1545>
+References: <20190710023059.GA14204@hari-Inspiron-1545>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/07/2019 07:12, Thomas Gleixner wrote:
-> On Tue, 9 Jul 2019, John Stultz wrote:
->> Though unfortunately, it seems the arm64 vdso code that just landed is
->> breaking AOSP for me.
->>
->> I see a lot of the following errors:
->> 01-01 01:22:14.097   755   755 F libc    : Fatal signal 11 (SIGSEGV),
->> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 755 (cameraserver),
->> pid 755 (cameraserver)
->> 01-01 01:22:14.112   759   759 F libc    : Fatal signal 11 (SIGSEGV),
->> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 759
->> (android.hardwar), pid 759 (android.hardwar)
->> 01-01 01:22:14.120   756   756 F libc    : Fatal signal 11 (SIGSEGV),
->> code 1 (SEGV_MAPERR), fault addr 0x3cf2c96c in tid 756 (drmserver),
->> pid 756 (drmserver)
->>
->> Which go away if I revert the vdso merge that went in via tip/timers.
->>
->> I tried to bisect things down a bit, but as some later fixes are
->> required (at one point, date was returning the start epoch and never
->> increasing), this hasn't worked too well. But I'm guessing since I
->> see: "CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will
->> not be built", and the system is half working, I'm guessing this is an
->> issue with just the 32bit code failing.  While I can try to sort out
->> the proper CROSS_COMPILE_COMPAT in my build environment, I assume
->> userland shouldn't be crashing if that value isn't set.
+On Wed, 10 Jul 2019 04:30:59 +0200,
+Hariprasad Kelam wrote:
 > 
-> The obvious question is whether the VDSO is mapped to the 32bit process in
-> that case. It shouldn't...
->
-
-Agreed. I am investing if/why this is happening and will post a fix accordingly.
-
-> Thanks,
+> This patch fixes below issue reported by coccicheck
+> sound/pci/lx6464es/lx6464es.c:256:5-8: Unneeded variable: "err". Return
+> "0" on line 258
 > 
-> 	tglx
+> We cannot change return value as its registered with snd_pcm_ops->close
 > 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
--- 
-Regards,
-Vincenzo
+Applied, thanks.
+
+
+Takashi
