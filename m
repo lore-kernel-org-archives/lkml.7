@@ -2,94 +2,97 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C133C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9C6C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C905120844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C1320844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:27:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="a+cMnKl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbfGJTWv (ORCPT
+        id S1727685AbfGJT1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:22:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48473 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727476AbfGJTWv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:22:51 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlIAm-0001ET-DR; Wed, 10 Jul 2019 21:22:36 +0200
-Date:   Wed, 10 Jul 2019 21:22:35 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-cc:     Sodagudi Prasad <psodagud@codeaurora.org>,
-        gregkh@linuxfoundation.org, john.stultz@linaro.org,
-        chang-an.chen@mediatek.com, mingo@kernel.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, linux-kernel@vger.kernel.org,
-        tsoni@codeaurora.org
-Subject: Re: sched_clock and device suspend/resume
-In-Reply-To: <alpine.DEB.2.21.1907102114480.1758@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1907102121250.1758@nanos.tec.linutronix.de>
-References: <1d6ef4687c87dd4d2ec88d0d593a9c1d@codeaurora.org> <20190710113609.7b63c5d6@gandalf.local.home> <alpine.DEB.2.21.1907102034190.1758@nanos.tec.linutronix.de> <20190710145744.7279b355@gandalf.local.home> <alpine.DEB.2.21.1907102104490.1758@nanos.tec.linutronix.de>
- <20190710151334.49158be3@gandalf.local.home> <alpine.DEB.2.21.1907102114480.1758@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 10 Jul 2019 15:27:04 -0400
+Received: from first.geanix.com ([116.203.34.67]:39892 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727406AbfGJT1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:27:04 -0400
+Received: from zen.localdomain (unknown [85.184.140.241])
+        by first.geanix.com (Postfix) with ESMTPSA id 511C530A;
+        Wed, 10 Jul 2019 19:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1562786819; bh=SNo7N95GK7AKcH92YrsiSLTrGaZYQdN8khIIua9jIxg=;
+        h=From:To:Cc:Subject:Date;
+        b=a+cMnKl5ehemINHAzfKAtjy3CrFQtWHddWVSQ5OJhiLBcNwA33wvSY6774MY1eM+r
+         ooif5pUlTDJ//Lq1xlAiMb1iPsutJ/Dov2AbvsZbuorq9b+PNUgSBcxgA3OQnUREg/
+         bcOfAj1nnwfDqgxm9Igf83vKVbHEJdLM62vO4He/tJ1gKuxixhaSIu2NcEfhdcx4tG
+         J0i+ZzgTH4JjEMFNHHUIbPXc/R0dclynbuvoKJmhA+itfuAkykgT3LnnhvSdwNk2kc
+         UmuDvz3oFKUxNTPIAGxwTeiaVVuEq1u4YWVbm0OQ+2zBVN2kcVy0HbYfz/lLg8yMP9
+         rfgfrH/1RWTUA==
+From:   =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
+        =?UTF-8?q?Sean=20Nyekj=C3=A6r?= <sean@geanix.com>,
+        Esben Haabendal <esben@geanix.com>
+Subject: [PATCHv3 1/4] tty: n_gsm: remove obsolete mknod doc example
+Date:   Wed, 10 Jul 2019 21:26:53 +0200
+Message-Id: <20190710192656.60381-1-martin@geanix.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Thomas Gleixner wrote:
+The n_gsm driver handles registration of /dev/gsmttyX nodes, so there's
+no need to do mknod manually.
 
-> On Wed, 10 Jul 2019, Steven Rostedt wrote:
-> > 
-> > [ Removed the two emails that were bouncing ]
-> > 
-> > On Wed, 10 Jul 2019 21:06:57 +0200 (CEST)
-> > Thomas Gleixner <tglx@linutronix.de> wrote:
-> > 
-> > > > > > sched_clock_continuous() ? (I know, horrible name), that simply keeps
-> > > > > > track of the time delta at suspend and returns:
-> > > > > > 
-> > > > > > 	sched_clock() + delta;    
-> > > > > 
-> > > > > Which you get already when you do
-> > > > > 
-> > > > > # echo boot > /sys/kernel/debug/tracing/trace_clock
-> > > > >   
-> > > > 
-> > > > So basically the answer here is to change printk to use
-> > > > ktime_get_boot_fast_ns() instead of local_clock()?  
-> > > 
-> > > Aargh. That was tracing.
-> > > 
-> > > There was a patchset floating around which actually implemented that clock
-> > > choice for sched_clock as well. Don't know why that was never merged.
-> > 
-> > Will it cause issues with the scheduler though. If it doesn't stop
-> > during suspend, can't that make the scheduler think that processes were
-> > using the CPU during the entire suspend and screw up the accounting?
-> 
-> Duh. My brain is not working.
-> 
-> Not sched_clock, the patches were for printk so you could select a printk
-> clock. Can't find them right now.
+Signed-off-by: Martin Hundebøll <martin@geanix.com>
+---
+ Documentation/serial/n_gsm.rst | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-Ah, we actually tried to merge them. Here is the full story:
+diff --git a/Documentation/serial/n_gsm.rst b/Documentation/serial/n_gsm.rst
+index f3ad9fd26408..4f37198423f7 100644
+--- a/Documentation/serial/n_gsm.rst
++++ b/Documentation/serial/n_gsm.rst
+@@ -63,24 +63,14 @@ Major parts of the initialization program :
+ 	daemon(0,0);
+ 	pause();
+ 
+-4. create the devices corresponding to the "virtual" serial ports (take care,
+-   each modem has its configuration and some DLC have dedicated functions,
+-   for example GPS), starting with minor 1 (DLC0 is reserved for the management
+-   of the mux)::
+-
+-     MAJOR=`cat /proc/devices |grep gsmtty | awk '{print $1}`
+-     for i in `seq 1 4`; do
+-	mknod /dev/ttygsm$i c $MAJOR $i
+-     done
+-
+-5. use these devices as plain serial ports.
++4. use these devices as plain serial ports.
+ 
+    for example, it's possible:
+ 
+    - and to use gnokii to send / receive SMS on ttygsm1
+    - to use ppp to establish a datalink on ttygsm2
+ 
+-6. first close all virtual ports before closing the physical port.
++5. first close all virtual ports before closing the physical port.
+ 
+    Note that after closing the physical port the modem is still in multiplexing
+    mode. This may prevent a successful re-opening of the port later. To avoid
+-- 
+2.22.0
 
-  https://lore.kernel.org/lkml/alpine.DEB.2.20.1711131023170.1851@nanos/
-
-Thanks,
-
-	tglx
-	
