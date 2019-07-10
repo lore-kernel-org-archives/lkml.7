@@ -2,113 +2,70 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC79CC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD748C74A3B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D35D208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:43:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViG9maV7"
+	by mail.kernel.org (Postfix) with ESMTP id A8F0620844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfGJSnF (ORCPT
+        id S1727857AbfGJSnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 14:43:05 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44185 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfGJSnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:43:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i18so1637359pgl.11;
-        Wed, 10 Jul 2019 11:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0Hm/9BlG2vs6dalxd4Lxl0B723YTAQ0cgyoNTbJ0CW4=;
-        b=ViG9maV71yomRUGX8jU5hhY5FVev8TYVmQqF/yL4Rt2nkfJS0UWVtCUg0F8uGgMBQ0
-         v/h4zXJ5uYVk9Lr7XNnNzUJ2wI3XITjx8HyNTX7cOlA40N/JZ2eaJueAfF6grg3NssY+
-         lYVhizviWNbIZJNhSF53wq+A1xp/iulzeBsQLuy52pT3IcXFo56Pw2x1AK6TiNAUlmJT
-         GQNg3uTrhUyo9ArPgFz5HHAqpjf08fPU6NgJaKrPVxxdf+z5zBLa7a3hGLhdwcDB2MOi
-         NMmszQVoEOlBa2oLL4zDYSxTpRCtCw9QQtbaoEXMQA9JwfW6S//mHLQKy51BLSFgHYFN
-         EFVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0Hm/9BlG2vs6dalxd4Lxl0B723YTAQ0cgyoNTbJ0CW4=;
-        b=csB5tVyVPflzroDp29JgZe4fTx7iIEge5Wu6/uQRw2lPRZEdB/+U/dxSZImfBCAVyH
-         aTpbG0Fb7BhllVwzma2l8VUrNS5Dumr+399w7ieKCHlwTaH8vyqQsKUeRMXd3ziM5NQO
-         1skI6U0EvNg7NzXc2o91/cGGz62n75ILQzQ+xqQG7wAOCzMYf+61cXPBqIv5I5gyJBOe
-         /yeKTwf3+PQ/n2tcLI2nqKZk29a3kZtyzBLeiZVExaItyPZwRLQsbS5PUcBlzv+MoroZ
-         cI8gz/v8Usp6KFThV/c4nSMQiy9GXKX9WdCMkjTLm8BxJ6DgssXqO9vYnqsRq/QVeu4D
-         wySQ==
-X-Gm-Message-State: APjAAAXebIl8RlxaJRGX3LSQHtVwi4OfHTa6+3K7P+fV2mMZN2nhmpfM
-        JRfTWCWxLMAc+LcQiTwjrX4=
-X-Google-Smtp-Source: APXvYqwEY9f/6Aqc9JPG54Pxy9aLQuyajI9Ihr11NbBTwvDbuIOfGWIMRv1meOxBcIUf0FABfqdSog==
-X-Received: by 2002:a63:e1e:: with SMTP id d30mr38588995pgl.100.1562784183684;
-        Wed, 10 Jul 2019 11:43:03 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m4sm5238919pgs.71.2019.07.10.11.43.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 11:43:02 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 11:43:01 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog: digicolor_wdt: drop unused variable
-Message-ID: <20190710184301.GA2961@roeck-us.net>
-References: <20190710080904.317599-1-arnd@arndb.de>
+        Wed, 10 Jul 2019 14:43:31 -0400
+Received: from smtp3.jd.com ([59.151.64.88]:2126 "EHLO smtp3.jd.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbfGJSnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 14:43:31 -0400
+Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
+ BJMAILD1MBX48.360buyAD.local (172.31.0.48) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Thu, 11 Jul 2019 02:43:20 +0800
+Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
+ BJMAILD1MBX36.360buyAD.local (172.31.0.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Thu, 11 Jul 2019 02:43:20 +0800
+Received: from BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893]) by
+ BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893%24]) with mapi id
+ 15.01.1415.002; Thu, 11 Jul 2019 02:43:20 +0800
+From:   =?utf-8?B?6buE5LmQ?= <huangle1@jd.com>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>
+CC:     "jlayton@kernel.org" <jlayton@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Thread-Topic: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Thread-Index: AQHVLRYrJwxAvKxXXkKWwBVCcQfpA6bChWMAgAG9lPU=
+Date:   Wed, 10 Jul 2019 18:43:20 +0000
+Message-ID: <4dd1fe21e11344e5969bb112e954affb@jd.com>
+References: <720b91b1204b4c73be1b6ec2ff44dbab@jd.com>,<20190710000300.GD1536@fieldses.org>
+In-Reply-To: <20190710000300.GD1536@fieldses.org>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.31.14.12]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710080904.317599-1-arnd@arndb.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:08:57AM +0200, Arnd Bergmann wrote:
-> The last cleanup patch left behind an unused variable
-> that should have been removed as well:
-> 
-> drivers/watchdog/digicolor_wdt.c:121:6: error: unused variable 'ret' [-Werror,-Wunused-variable]
-> 
-> Fixes: cdad26977e3f ("watchdog: digicolor_wdt: drop warning after registering device")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Already submitted as https://patchwork.kernel.org/patch/11037487/ ...
-
-Guenter
-
-> ---
->  drivers/watchdog/digicolor_wdt.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/digicolor_wdt.c b/drivers/watchdog/digicolor_wdt.c
-> index 33cda95bd238..073d37867f47 100644
-> --- a/drivers/watchdog/digicolor_wdt.c
-> +++ b/drivers/watchdog/digicolor_wdt.c
-> @@ -118,7 +118,6 @@ static int dc_wdt_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct dc_wdt *wdt;
-> -	int ret;
->  
->  	wdt = devm_kzalloc(dev, sizeof(struct dc_wdt), GFP_KERNEL);
->  	if (!wdt)
-> -- 
-> 2.20.0
-> 
+SXQncyBzYWZlIGJlY2F1c2Ugd2hlbiB3ZSByZWFjaCBtb3ZlX3RvX2Nsb3NlX2xydSgpLCB3ZSBr
+bm93IHdlIGFyZSB0aGUNCipsb2dpY2FsKiBsYXN0IGNhbGwgYW1vbmcgYWxsIHJhY2luZyBjYWxs
+cywgaXQgaXMgYWN0dWFsbHkgdGhlIHJlYXNvbiB3ZQ0KZG8gdGhlIHdhaXRpbmcgaGVyZSBhdCBm
+aXN0IHBsYWNlLiAgTm93IGp1c3QgYmVjYXVzZSBvZiByYWNpbmcsIHdlIGdhaW4NCnRoZSBycF9t
+dXRleCBmaXJzdCBhbmQgaGF2ZSBhICpsb3dlciogc2VxaWQgdmFsdWUsIHNvIGl0IGlzIHdoYXQg
+d2UgbmVlZA0KZXhhY3RseSB0byBsZXQgdGhlIHNlcWlkIGJ1bXAgd2l0aCBvdGhlciByYWNpbmcg
+Y2FsbHMgYmVmb3JlIHdlIGNvbnRpbnVlLA0KdGhhdCBlbnN1cmVzIHBvc3NpYmxlIGZ1dHVyZSBD
+TE9TRSBjYWxsIGNvdWxkIGJlIHJlcGxheWVkIGNvcnJlY3RseS4NCg0KDQpPbiBXZWQsIEp1bCAx
+MCwgMjAxOSwgYmZpZWxkc0BmaWVsZHNlcy5vcmcgd3JvdGU6DQo+IEkgZG9uJ3QgdW5kZXJzdGFu
+ZCB3aHkgdGhhdCdzIHNhZmUuwqAgTWF5YmUgaXQgaXMsIGJ1dCBJIGRvbid0IHVuZGVyc3RhbmQN
+Cj4geWV0LsKgIElmIHdlIHRha2UgdGhlIG11dGV4LCBidW1wIHRoZSBzZXFpZCwgZHJvcCB0aGUg
+bXV0ZXgsIHNvbWVvbmUgZWxzZQ0KPiBjb21lcyBpbiBhbmQgYnVtcHMgdGhlIHNlcWlkIGFnYWlu
+LCB0aGVuIHdlIHJlYWNxdWlyZSB0aGUgbXV0ZXguLi4gd2hhdA0KPiBoYXBwZW5zPw0KPiANCj4g
+LS1iLg0K
