@@ -2,297 +2,207 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86D9C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE27C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1DF820844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3672064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nDA+v6BO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfGJUNR (ORCPT
+        id S1728408AbfGJUNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 16:13:17 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49227 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbfGJUNP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 16:13:15 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id D3203805EE; Wed, 10 Jul 2019 22:13:00 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 22:13:11 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, sfr@canb.auug.org.au,
-        Andrew Morton <akpm@osdl.org>
-Subject: next-20190708: kernel BUG at lib/lockref.c:189, softlockups in
- shrink_dcache...?
-Message-ID: <20190710201311.GA8519@amd>
+        Wed, 10 Jul 2019 16:13:16 -0400
+Received: from mail-eopbgr820053.outbound.protection.outlook.com ([40.107.82.53]:63365
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728386AbfGJUNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 16:13:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sQvreOEwLJ48Px+BRQHIu8mrV7n0aansT6V5mrldoy8=;
+ b=nDA+v6BOFWXPHJopGdqmY/sB3hz9o12qyqMT+Gr9enN7f5m5oTbuu3QL9QKy7ipzBgawPvnCVDv6+NxnwIE44N49aMCIP/e+GueosjUWR2r+QBMhKPHaLwV4ZCbJsuj5OtSCnYqy36+Kz8H2J6xd2xd5umL2Z6FkSQkrWwr+E4c=
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.116.31) by
+ DM6PR12MB2988.namprd12.prod.outlook.com (20.178.29.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Wed, 10 Jul 2019 20:13:00 +0000
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::bc1a:a30d:9da2:1cdd]) by DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::bc1a:a30d:9da2:1cdd%6]) with mapi id 15.20.2073.008; Wed, 10 Jul 2019
+ 20:13:00 +0000
+From:   "Singh, Brijesh" <brijesh.singh@amd.com>
+To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 01/11] KVM: SVM: Add KVM_SEV SEND_START command
+Thread-Topic: [PATCH v3 01/11] KVM: SVM: Add KVM_SEV SEND_START command
+Thread-Index: AQHVN1vfwI3dyIr5KUOzgRYnzjsexA==
+Date:   Wed, 10 Jul 2019 20:13:00 +0000
+Message-ID: <20190710201244.25195-2-brijesh.singh@amd.com>
+References: <20190710201244.25195-1-brijesh.singh@amd.com>
+In-Reply-To: <20190710201244.25195-1-brijesh.singh@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0501CA0014.namprd05.prod.outlook.com
+ (2603:10b6:803:40::27) To DM6PR12MB2682.namprd12.prod.outlook.com
+ (2603:10b6:5:4a::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1aa97e64-7ce8-447c-a378-08d7057301bc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2988;
+x-ms-traffictypediagnostic: DM6PR12MB2988:
+x-microsoft-antispam-prvs: <DM6PR12MB29882EF4F465533F01CE2D6CE5F00@DM6PR12MB2988.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0094E3478A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(1730700003)(81156014)(81166006)(7416002)(478600001)(8676002)(486006)(446003)(7736002)(6116002)(476003)(2616005)(305945005)(71190400001)(71200400001)(3846002)(26005)(11346002)(64756008)(66946007)(66556008)(66476007)(66446008)(66066001)(186003)(76176011)(102836004)(14454004)(386003)(6506007)(36756003)(5660300002)(2501003)(52116002)(6916009)(1076003)(99286004)(86362001)(68736007)(6436002)(2906002)(25786009)(6486002)(50226002)(4326008)(5640700003)(316002)(256004)(54906003)(6512007)(53936002)(8936002)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2988;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ChEvIs6b3uE/9PJ3uTdioPEumeVLhqfX/9QkTTieLkcRiRj856GqF8fn+rMe7+3N+1q58Adh6I5TpQ0Bk9i0H9S6mJkZLsTymwdjN1qwoa9DmdqNwwVJieGgVOxeKf7GOz5TwNAAiJwlKUGxNYG/+Gup3LSUKOrmlQLcVsgb/dBrM8weMLCliIG9LD0v0bgGDJlz1JE1jnO9dmyjAyhSSLecDYRgiymtvqCH3MLrzkzyb4DCFjrGOJ6z+OQPMAY38qq4iMWH+uZuLE0YJKFmOVTRc9dfQu81vvNrOMiqe2FQF/vh1jiLRLC4rAsRuXJY4kgKjQZ415bwyQFrqA4DlxUNHQb3NLiAMvSa8FnwDfKHhaP5yhAfRztmUyraJ0WHcd1PaEF30vIpPzmE1IejDdPOBYk/kMaHDac6OhsuoBI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F425C57DD6A20147A83E20F389EC05C1@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1aa97e64-7ce8-447c-a378-08d7057301bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 20:13:00.6971
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sbrijesh@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2988
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-I'm getting some nastyness from lockref / memory management.
-
-Any ideas? Any ideas who to talk to?
-
-									Pavel
-
-
-
-[    0.000000] Linux version 5.2.0-next-20190708+ (pavel@pollux.denx.de) (g=
-cc version 9.1.1 20190503 (Red Hat 9.1.1-1) (GCC)) #55 SMP Wed Jul 10 09:30=
-:51 CEST 2019
-[    0.000000] Disabled fast string operations
-[    0.000000] x86/fpu: x87 FPU will use FXSAVE
-[    0.000000] BIOS-provided physical RAM map:
-[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009efff] usable
-=2E..
-[ 5347.093378] wlan0: authenticate with 5c:f4:ab:10:d2:bb
-[ 5347.093511] wlan0: send auth to 5c:f4:ab:10:d2:bb (try 1/3)
-[ 5347.096461] wlan0: authenticated
-[ 5347.100328] wlan0: associate with 5c:f4:ab:10:d2:bb (try 1/3)
-[ 5347.103232] wlan0: RX AssocResp from 5c:f4:ab:10:d2:bb (capab=3D0x411 st=
-atus=3D0 aid=3D2)
-[ 5347.105009] wlan0: associated
-[ 6552.596393] ------------[ cut here ]------------
-[ 6552.596412] kernel BUG at lib/lockref.c:189!
-[ 6552.596433] invalid opcode: 0000 [#1] SMP PTI
-[ 6552.596442] CPU: 0 PID: 8494 Comm: Chrome_ProcessL Not tainted 5.2.0-nex=
-t-20190708+ #55
-[ 6552.596447] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 )=
- 03/31/2011
-[ 6552.596463] EIP: lockref_mark_dead+0x10/0x20
-[ 6552.596471] Code: c0 01 be 01 00 00 00 89 43 20 89 d8 e8 f9 5d 93 00 89 =
-f0 5b 5e 5d c3 8d 76 00 8b 10 85 d2 74 0a c7 40 20 80 ff ff ff c3 66 90 <0f=
-> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89 c2 83 e0 0f c0
-[ 6552.596478] EAX: ef4b7830 EBX: ef4b77d8 ECX: 00000001 EDX: 00000000
-[ 6552.596484] ESI: e647a3f0 EDI: ef4b7830 EBP: d9bfde0c ESP: d9bfddfc
-[ 6552.596491] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
-[ 6552.596497] CR0: 80050033 CR2: 071e03d0 CR3: 203e2000 CR4: 000006b0
-[ 6552.596502] Call Trace:
-[ 6552.596515]  ? __dentry_kill+0x1f/0x160
-[ 6552.596524]  shrink_dcache_parent+0xb0/0x110
-[ 6552.596532]  d_invalidate+0x48/0xc0
-[ 6552.596541]  proc_flush_task+0x78/0x150
-[ 6552.596552]  release_task+0x4f/0x450
-[ 6552.596560]  wait_consider_task+0x7c9/0x850
-[ 6552.596568]  do_wait+0x11b/0x230
-[ 6552.596575]  kernel_wait4+0x8b/0x130
-[ 6552.596583]  ? task_stopped_code+0x40/0x40
-[ 6552.596590]  sys_waitpid+0x13/0x15
-[ 6552.596597]  do_int80_syscall_32+0x4b/0xf0
-[ 6552.596608]  entry_INT80_32+0x110/0x110
-[ 6552.596614] EIP: 0xb7f8cc42
-[ 6552.596621] Code: 65 8b 15 04 00 00 00 8b 0e 8b 0c ca 83 f9 ff 75 0c 89 =
-04 24 89 f0 e8 b3 fe ff ff eb 05 8b 46 04 01 c8 83 c4 14 5b 5e c3 cd 80 <c3=
-> 8d b6 00 00 00 00 8d bc 27 00 00 00 00 8b 1c 24 c3 8d b6 00 00
-[ 6552.596628] EAX: ffffffda EBX: 0000212d ECX: 00000000 EDX: 00000000
-[ 6552.596635] ESI: 8aec3b40 EDI: 09004d20 EBP: 8aec3158 ESP: 8aec3110
-[ 6552.596641] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000293
-[ 6552.596647] Modules linked in:
-[ 6552.596658] ---[ end trace 8058c26986d91112 ]---
-[ 6552.596667] EIP: lockref_mark_dead+0x10/0x20
-[ 6552.596674] Code: c0 01 be 01 00 00 00 89 43 20 89 d8 e8 f9 5d 93 00 89 =
-f0 5b 5e 5d c3 8d 76 00 8b 10 85 d2 74 0a c7 40 20 80 ff ff ff c3 66 90 <0f=
-> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 89 c2 83 e0 0f c0
-[ 6552.596681] EAX: ef4b7830 EBX: ef4b77d8 ECX: 00000001 EDX: 00000000
-[ 6552.596687] ESI: e647a3f0 EDI: ef4b7830 EBP: d9bfde0c ESP: d9bfddfc
-[ 6552.596693] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
-[ 6552.596700] CR0: 80050033 CR2: 071e03d0 CR3: 203e2000 CR4: 000006b0
-[ 6580.173598] watchdog: BUG: soft lockup - CPU#1 stuck for 23s! [WorkerPoo=
-l/7703:7703]
-[ 6580.173608] Modules linked in:
-[ 6580.173620] CPU: 1 PID: 7703 Comm: WorkerPool/7703 Tainted: G      D    =
-       5.2.0-next-20190708+ #55
-[ 6580.173626] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 )=
- 03/31/2011
-[ 6580.173642] EIP: queued_spin_lock_slowpath+0x40/0x1d0
-[ 6580.173651] Code: f0 0f ba 29 08 0f 92 c2 8b 01 0f b6 d2 c1 e2 08 30 e4 =
-09 d0 a9 00 01 ff ff 75 27 85 c0 74 13 8b 01 84 c0 74 0d 8d 74 26 00 90 <f3=
-> 90 8b 01 84 c0 75 f8 b8 01 00 00 00 66 89 01 c3 8d b4 26 00 00
-[ 6580.173658] EAX: 00000101 EBX: e647a448 ECX: e647a448 EDX: 00000000
-[ 6580.173664] ESI: ddd18358 EDI: e647a448 EBP: eefe1b44 ESP: eefe1b3c
-[ 6580.173671] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00000202
-[ 6580.173678] CR0: 80050033 CR2: 0a0e4748 CR3: 203e2000 CR4: 000006b0
-[ 6580.173684] Call Trace:
-[ 6580.173694]  ? do_raw_spin_lock+0xb9/0xc0
-[ 6580.173705]  _raw_spin_lock+0x22/0x30
-[ 6580.173715]  ? shrink_lock_dentry.part.0+0x9f/0xf0
-[ 6580.173723]  shrink_lock_dentry.part.0+0x9f/0xf0
-[ 6580.173731]  shrink_dentry_list+0x27/0x100
-[ 6580.173739]  prune_dcache_sb+0x42/0x60
-[ 6580.173747]  ? d_lru_shrink_move+0x50/0x50
-[ 6580.173755]  super_cache_scan+0xc9/0x160
-[ 6580.173763]  shrink_slab.constprop.0+0x1ae/0x390
-[ 6580.173772]  shrink_node+0x7b1/0x9d0
-[ 6580.173781]  do_try_to_free_pages+0xa1/0x250
-[ 6580.173788]  ? do_try_to_free_pages+0xa1/0x250
-[ 6580.173795]  try_to_free_pages+0x15e/0x430
-[ 6580.173805]  __alloc_pages_nodemask+0x44d/0xd00
-[ 6580.173816]  wp_page_copy+0x67/0x680
-[ 6580.173825]  do_wp_page+0x75/0x450
-[ 6580.173833]  ? _raw_spin_lock+0x22/0x30
-[ 6580.173840]  handle_mm_fault+0x598/0xbd3
-[ 6580.173848]  ? __lock_acquire.isra.0+0x2b8/0x4f0
-[ 6580.173858]  __do_page_fault+0x15e/0x410
-[ 6580.173865]  ? vmalloc_sync_all+0x220/0x220
-[ 6580.173872]  do_page_fault+0x24/0x137
-[ 6580.173879]  ? vmalloc_sync_all+0x220/0x220
-[ 6580.173886]  common_exception+0x166/0x16e
-[ 6580.173892] EIP: 0x8cad20
-[ 6580.173899] Code: a8 73 5b fe 89 4c 24 04 c7 44 24 08 76 00 00 00 c7 04 =
-24 01 00 00 00 89 44 24 4c e8 4a 98 ff ff 8b 44 24 4c 8b 4c 24 48 89 31 <89=
-> 7e 04 e9 84 02 00 00 89 7c 24 08 89 44 24 04 89 34 24 e8 a8 ea
-[ 6580.173907] EAX: 0f6c1230 EBX: 08d83524 ECX: 08fbc8c0 EDX: fffffb9b
-[ 6580.173913] ESI: 0f85a000 EDI: fffffb9b EBP: b2af35d8 ESP: b2af30b0
-[ 6580.173920] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00010246
-[ 6608.173599] watchdog: BUG: soft lockup - CPU#1 stuck for 23s! [WorkerPoo=
-l/7703:7703]
-[ 6608.173607] Modules linked in:
-[ 6608.173619] CPU: 1 PID: 7703 Comm: WorkerPool/7703 Tainted: G      D    =
-  L    5.2.0-next-20190708+ #55
-[ 6608.173624] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 )=
- 03/31/2011
-[ 6608.173640] EIP: queued_spin_lock_slowpath+0x44/0x1d0
-[ 6608.173648] Code: 08 0f 92 c2 8b 01 0f b6 d2 c1 e2 08 30 e4 09 d0 a9 00 =
-01 ff ff 75 27 85 c0 74 13 8b 01 84 c0 74 0d 8d 74 26 00 90 f3 90 8b 01 <84=
-> c0 75 f8 b8 01 00 00 00 66 89 01 c3 8d b4 26 00 00 00 00 f6 c4
-[ 6608.173655] EAX: 00000101 EBX: e647a448 ECX: e647a448 EDX: 00000000
-[ 6608.173661] ESI: ddd18358 EDI: e647a448 EBP: eefe1b44 ESP: eefe1b3c
-[ 6608.173668] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00000202
-[ 6608.173675] CR0: 80050033 CR2: 0a0e4748 CR3: 203e2000 CR4: 000006b0
-[ 6608.173680] Call Trace:
-[ 6608.173690]  ? do_raw_spin_lock+0xb9/0xc0
-[ 6608.173701]  _raw_spin_lock+0x22/0x30
-[ 6608.173712]  ? shrink_lock_dentry.part.0+0x9f/0xf0
-[ 6608.173719]  shrink_lock_dentry.part.0+0x9f/0xf0
-[ 6608.173727]  shrink_dentry_list+0x27/0x100
-[ 6608.173735]  prune_dcache_sb+0x42/0x60
-[ 6608.173743]  ? d_lru_shrink_move+0x50/0x50
-[ 6608.173751]  super_cache_scan+0xc9/0x160
-[ 6608.173760]  shrink_slab.constprop.0+0x1ae/0x390
-[ 6608.173768]  shrink_node+0x7b1/0x9d0
-[ 6608.173777]  do_try_to_free_pages+0xa1/0x250
-[ 6608.173784]  ? do_try_to_free_pages+0xa1/0x250
-[ 6608.173791]  try_to_free_pages+0x15e/0x430
-[ 6608.173801]  __alloc_pages_nodemask+0x44d/0xd00
-[ 6608.173813]  wp_page_copy+0x67/0x680
-[ 6608.173822]  do_wp_page+0x75/0x450
-[ 6608.173829]  ? _raw_spin_lock+0x22/0x30
-[ 6608.173836]  handle_mm_fault+0x598/0xbd3
-[ 6608.173844]  ? __lock_acquire.isra.0+0x2b8/0x4f0
-[ 6608.173854]  __do_page_fault+0x15e/0x410
-[ 6608.173862]  ? vmalloc_sync_all+0x220/0x220
-[ 6608.173869]  do_page_fault+0x24/0x137
-[ 6608.173876]  ? vmalloc_sync_all+0x220/0x220
-[ 6608.173883]  common_exception+0x166/0x16e
-[ 6608.173889] EIP: 0x8cad20
-[ 6608.173896] Code: a8 73 5b fe 89 4c 24 04 c7 44 24 08 76 00 00 00 c7 04 =
-24 01 00 00 00 89 44 24 4c e8 4a 98 ff ff 8b 44 24 4c 8b 4c 24 48 89 31 <89=
-> 7e 04 e9 84 02 00 00 89 7c 24 08 89 44 24 04 89 34 24 e8 a8 ea
-[ 6608.173903] EAX: 0f6c1230 EBX: 08d83524 ECX: 08fbc8c0 EDX: fffffb9b
-[ 6608.173909] ESI: 0f85a000 EDI: fffffb9b EBP: b2af35d8 ESP: b2af30b0
-[ 6608.173916] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00010246
-[ 6612.628114] rcu: INFO: rcu_sched self-detected stall on CPU
-[ 6612.628114] rcu: 	1-....: (14999 ticks this GP) idle=3D07a/1/0x40000002 =
-softirq=3D778997/778997 fqs=3D7465=20
-[ 6612.628114] 	(t=3D15000 jiffies g=3D940129 q=3D41142)
-[ 6612.628146] NMI backtrace for cpu 1
-[ 6612.628146] CPU: 1 PID: 7703 Comm: WorkerPool/7703 Tainted: G      D    =
-  L    5.2.0-next-20190708+ #55
-[ 6612.628146] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 )=
- 03/31/2011
-[ 6612.628165] Call Trace:
-[ 6612.628165]  dump_stack+0x47/0x5e
-[ 6612.628165]  nmi_cpu_backtrace.cold+0x10/0x48
-[ 6612.628165]  ? lapic_can_unplug_cpu.cold+0x3d/0x3d
-[ 6612.628165]  nmi_trigger_cpumask_backtrace+0x8f/0x91
-[ 6612.628165]  arch_trigger_cpumask_backtrace+0x10/0x20
-[ 6612.628165]  rcu_dump_cpu_stacks+0x6a/0x90
-[ 6612.628165]  rcu_sched_clock_irq.cold+0x18f/0x352
-[ 6612.628165]  update_process_times+0x23/0x60
-[ 6612.628165]  tick_sched_handle.isra.0+0x2e/0x60
-[ 6612.628165]  tick_sched_timer+0x3c/0x90
-[ 6612.628165]  ? tick_sched_handle.isra.0+0x60/0x60
-[ 6612.628165]  __hrtimer_run_queues+0x105/0x2e0
-[ 6612.628165]  ? tick_sched_handle.isra.0+0x60/0x60
-[ 6612.628165]  hrtimer_interrupt+0x10e/0x260
-[ 6612.628165]  smp_apic_timer_interrupt+0x68/0x160
-[ 6612.628165]  apic_timer_interrupt+0x11b/0x120
-[ 6612.628165] EIP: queued_spin_lock_slowpath+0x42/0x1d0
-[ 6612.628165] Code: ba 29 08 0f 92 c2 8b 01 0f b6 d2 c1 e2 08 30 e4 09 d0 =
-a9 00 01 ff ff 75 27 85 c0 74 13 8b 01 84 c0 74 0d 8d 74 26 00 90 f3 90 <8b=
-> 01 84 c0 75 f8 b8 01 00 00 00 66 89 01 c3 8d b4 26 00 00 00 00
-[ 6612.628165] EAX: 00000101 EBX: e647a448 ECX: e647a448 EDX: 00000000
-[ 6612.628165] ESI: ddd18358 EDI: e647a448 EBP: eefe1b44 ESP: eefe1b3c
-[ 6612.628165] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00000202
-[ 6612.628165]  ? queued_spin_lock_slowpath+0x42/0x1d0
-[ 6612.628165]  ? do_raw_spin_lock+0xb9/0xc0
-[ 6612.628165]  _raw_spin_lock+0x22/0x30
-[ 6612.628165]  ? shrink_lock_dentry.part.0+0x9f/0xf0
-[ 6612.628165]  shrink_lock_dentry.part.0+0x9f/0xf0
-[ 6612.628165]  shrink_dentry_list+0x27/0x100
-[ 6612.628165]  prune_dcache_sb+0x42/0x60
-[ 6612.628165]  ? d_lru_shrink_move+0x50/0x50
-[ 6612.628165]  super_cache_scan+0xc9/0x160
-[ 6612.628165]  shrink_slab.constprop.0+0x1ae/0x390
-[ 6612.628165]  shrink_node+0x7b1/0x9d0
-[ 6612.628165]  do_try_to_free_pages+0xa1/0x250
-[ 6612.628165]  ? do_try_to_free_pages+0xa1/0x250
-[ 6612.628165]  try_to_free_pages+0x15e/0x430
-[ 6612.628165]  __alloc_pages_nodemask+0x44d/0xd00
-[ 6612.628165]  wp_page_copy+0x67/0x680
-[ 6612.628165]  do_wp_page+0x75/0x450
-[ 6612.628165]  ? _raw_spin_lock+0x22/0x30
-[ 6612.628165]  handle_mm_fault+0x598/0xbd3
-[ 6612.628165]  ? __lock_acquire.isra.0+0x2b8/0x4f0
-[ 6612.628165]  __do_page_fault+0x15e/0x410
-[ 6612.628165]  ? vmalloc_sync_all+0x220/0x220
-[ 6612.628165]  do_page_fault+0x24/0x137
-[ 6612.628165]  ? vmalloc_sync_all+0x220/0x220
-[ 6612.628165]  common_exception+0x166/0x16e
-[ 6612.628165] EIP: 0x8cad20
-[ 6612.628165] Code: a8 73 5b fe 89 4c 24 04 c7 44 24 08 76 00 00 00 c7 04 =
-24 01 00 00 00 89 44 24 4c e8 4a 98 ff ff 8b 44 24 4c 8b 4c 24 48 89 31 <89=
-> 7e 04 e9 84 02 00 00 89 7c 24 08 89 44 24 04 89 34 24 e8 a8 ea
-[ 6612.628165] EAX: 0f6c1230 EBX: 08d83524 ECX: 08fbc8c0 EDX: fffffb9b
-[ 6612.628165] ESI: 0f85a000 EDI: fffffb9b EBP: b2af35d8 ESP: b2af30b0
-[ 6612.628165] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00010246
-
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0mRtcACgkQMOfwapXb+vKeegCgl0FATEDnjbLvn8/vaQxNadcj
-2KYAnRAZzh/D06fLj5m6EGTz0jo6egZv
-=U67j
------END PGP SIGNATURE-----
-
---Qxx1br4bt0+wmkIi--
+VGhlIGNvbW1hbmQgaXMgdXNlZCB0byBjcmVhdGUgYW4gb3V0Z29pbmcgU0VWIGd1ZXN0IGVuY3J5
+cHRpb24gY29udGV4dC4NCg0KQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRl
+Pg0KQ2M6IEluZ28gTW9sbmFyIDxtaW5nb0ByZWRoYXQuY29tPg0KQ2M6ICJILiBQZXRlciBBbnZp
+biIgPGhwYUB6eXRvci5jb20+DQpDYzogUGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNv
+bT4NCkNjOiAiUmFkaW0gS3LEjW3DocWZIiA8cmtyY21hckByZWRoYXQuY29tPg0KQ2M6IEpvZXJn
+IFJvZWRlbCA8am9yb0A4Ynl0ZXMub3JnPg0KQ2M6IEJvcmlzbGF2IFBldGtvdiA8YnBAc3VzZS5k
+ZT4NCkNjOiBUb20gTGVuZGFja3kgPHRob21hcy5sZW5kYWNreUBhbWQuY29tPg0KQ2M6IHg4NkBr
+ZXJuZWwub3JnDQpDYzoga3ZtQHZnZXIua2VybmVsLm9yZw0KQ2M6IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmcNClNpZ25lZC1vZmYtYnk6IEJyaWplc2ggU2luZ2ggPGJyaWplc2guc2luZ2hA
+YW1kLmNvbT4NCi0tLQ0KIC4uLi92aXJ0dWFsL2t2bS9hbWQtbWVtb3J5LWVuY3J5cHRpb24ucnN0
+ICAgICB8ICAyNyArKysrKw0KIGFyY2gveDg2L2t2bS9zdm0uYyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8IDEwNSArKysrKysrKysrKysrKysrKysNCiBpbmNsdWRlL3VhcGkvbGludXgva3Zt
+LmggICAgICAgICAgICAgICAgICAgICAgfCAgMTIgKysNCiAzIGZpbGVzIGNoYW5nZWQsIDE0NCBp
+bnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2Ft
+ZC1tZW1vcnktZW5jcnlwdGlvbi5yc3QgYi9Eb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2FtZC1t
+ZW1vcnktZW5jcnlwdGlvbi5yc3QNCmluZGV4IGQxOGM5N2I0ZTE0MC4uMGU5ZTFlOWY5Njg3IDEw
+MDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi92aXJ0dWFsL2t2bS9hbWQtbWVtb3J5LWVuY3J5cHRp
+b24ucnN0DQorKysgYi9Eb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2FtZC1tZW1vcnktZW5jcnlw
+dGlvbi5yc3QNCkBAIC0yMzgsNiArMjM4LDMzIEBAIFJldHVybnM6IDAgb24gc3VjY2VzcywgLW5l
+Z2F0aXZlIG9uIGVycm9yDQogICAgICAgICAgICAgICAgIF9fdTMyIHRyYW5zX2xlbjsNCiAgICAg
+ICAgIH07DQogDQorMTAuIEtWTV9TRVZfU0VORF9TVEFSVA0KKy0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0NCisNCitUaGUgS1ZNX1NFVl9TRU5EX1NUQVJUIGNvbW1hbmQgY2FuIGJlIHVzZWQgYnkgdGhl
+IGh5cGVydmlzb3IgdG8gY3JlYXRlIGFuDQorb3V0Z29pbmcgZ3Vlc3QgZW5jcnlwdGlvbiBjb250
+ZXh0Lg0KKw0KK1BhcmFtZXRlcnMgKGluKTogc3RydWN0IGt2bV9zZXZfc2VuZF9zdGFydA0KKw0K
+K1JldHVybnM6IDAgb24gc3VjY2VzcywgLW5lZ2F0aXZlIG9uIGVycm9yDQorDQorOjoNCisgICAg
+ICAgIHN0cnVjdCBrdm1fc2V2X3NlbmRfc3RhcnQgew0KKyAgICAgICAgICAgICAgICBfX3UzMiBw
+b2xpY3k7ICAgICAgICAgICAgICAgICAvKiBndWVzdCBwb2xpY3kgKi8NCisNCisgICAgICAgICAg
+ICAgICAgX191NjQgcGRoX2NlcnRfdWFkZHI7ICAgICAgICAgLyogcGxhdGZvcm0gRGlmZmllLUhl
+bGxtYW4gY2VydGlmaWNhdGUgKi8NCisgICAgICAgICAgICAgICAgX191MzIgcGRoX2NlcnRfbGVu
+Ow0KKw0KKyAgICAgICAgICAgICAgICBfX3U2NCBwbGF0X2NlcnRfdWFkZHI7ICAgICAgICAvKiBw
+bGF0Zm9ybSBjZXJ0aWZpY2F0ZSBjaGFpbiAqLw0KKyAgICAgICAgICAgICAgICBfX3UzMiBwbGF0
+X2NlcnRfbGVuOw0KKw0KKyAgICAgICAgICAgICAgICBfX3U2NCBhbWRfY2VydF91YWRkcjsgICAg
+ICAgICAvKiBBTUQgY2VydGlmaWNhdGUgKi8NCisgICAgICAgICAgICAgICAgX191MzIgYW1kX2Nl
+cnRfbGVuOw0KKw0KKyAgICAgICAgICAgICAgICBfX3U2NCBzZXNzaW9uX3VhZGRyOyAgICAgICAg
+IC8qIEd1ZXN0IHNlc3Npb24gaW5mb3JtYXRpb24gKi8NCisgICAgICAgICAgICAgICAgX191MzIg
+c2Vzc2lvbl9sZW47DQorICAgICAgICB9Ow0KKw0KIFJlZmVyZW5jZXMNCiA9PT09PT09PT09DQog
+DQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3N2bS5jIGIvYXJjaC94ODYva3ZtL3N2bS5jDQpp
+bmRleCA0OGM4NjVhNGU1ZGQuLjBiMDkzN2Y1MzUyMCAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2t2
+bS9zdm0uYw0KKysrIGIvYXJjaC94ODYva3ZtL3N2bS5jDQpAQCAtNjk1Nyw2ICs2OTU3LDEwOCBA
+QCBzdGF0aWMgaW50IHNldl9sYXVuY2hfc2VjcmV0KHN0cnVjdCBrdm0gKmt2bSwgc3RydWN0IGt2
+bV9zZXZfY21kICphcmdwKQ0KIAlyZXR1cm4gcmV0Ow0KIH0NCiANCitzdGF0aWMgaW50IHNldl9z
+ZW5kX3N0YXJ0KHN0cnVjdCBrdm0gKmt2bSwgc3RydWN0IGt2bV9zZXZfY21kICphcmdwKQ0KK3sN
+CisJc3RydWN0IGt2bV9zZXZfaW5mbyAqc2V2ID0gJnRvX2t2bV9zdm0oa3ZtKS0+c2V2X2luZm87
+DQorCXZvaWQgKmFtZF9jZXJ0ID0gTlVMTCwgKnNlc3Npb25fZGF0YSA9IE5VTEw7DQorCXZvaWQg
+KnBkaF9jZXJ0ID0gTlVMTCwgKnBsYXRfY2VydCA9IE5VTEw7DQorCXN0cnVjdCBzZXZfZGF0YV9z
+ZW5kX3N0YXJ0ICpkYXRhID0gTlVMTDsNCisJc3RydWN0IGt2bV9zZXZfc2VuZF9zdGFydCBwYXJh
+bXM7DQorCWludCByZXQ7DQorDQorCWlmICghc2V2X2d1ZXN0KGt2bSkpDQorCQlyZXR1cm4gLUVO
+T1RUWTsNCisNCisJaWYgKGNvcHlfZnJvbV91c2VyKCZwYXJhbXMsICh2b2lkIF9fdXNlciAqKSh1
+aW50cHRyX3QpYXJncC0+ZGF0YSwNCisJCQkJc2l6ZW9mKHN0cnVjdCBrdm1fc2V2X3NlbmRfc3Rh
+cnQpKSkNCisJCXJldHVybiAtRUZBVUxUOw0KKw0KKwlkYXRhID0ga3phbGxvYyhzaXplb2YoKmRh
+dGEpLCBHRlBfS0VSTkVMKTsNCisJaWYgKCFkYXRhKQ0KKwkJcmV0dXJuIC1FTk9NRU07DQorDQor
+CS8qIHVzZXJzcGFjZSB3YW50cyB0byBxdWVyeSB0aGUgc2Vzc2lvbiBsZW5ndGggKi8NCisJaWYg
+KCFwYXJhbXMuc2Vzc2lvbl9sZW4pDQorCQlnb3RvIGNtZDsNCisNCisJaWYgKCFwYXJhbXMucGRo
+X2NlcnRfdWFkZHIgfHwgIXBhcmFtcy5wZGhfY2VydF9sZW4gfHwNCisJICAgICFwYXJhbXMuc2Vz
+c2lvbl91YWRkcikNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwkvKiBjb3B5IHRoZSBjZXJ0aWZp
+Y2F0ZSBibG9icyBmcm9tIHVzZXJzcGFjZSAqLw0KKwlwZGhfY2VydCA9IHBzcF9jb3B5X3VzZXJf
+YmxvYihwYXJhbXMucGRoX2NlcnRfdWFkZHIsIHBhcmFtcy5wZGhfY2VydF9sZW4pOw0KKwlpZiAo
+SVNfRVJSKHBkaF9jZXJ0KSkgew0KKwkJcmV0ID0gUFRSX0VSUihwZGhfY2VydCk7DQorCQlnb3Rv
+IGVfZnJlZTsNCisJfQ0KKw0KKwlkYXRhLT5wZGhfY2VydF9hZGRyZXNzID0gX19wc3BfcGEocGRo
+X2NlcnQpOw0KKwlkYXRhLT5wZGhfY2VydF9sZW4gPSBwYXJhbXMucGRoX2NlcnRfbGVuOw0KKw0K
+KwlwbGF0X2NlcnQgPSBwc3BfY29weV91c2VyX2Jsb2IocGFyYW1zLnBsYXRfY2VydF91YWRkciwg
+cGFyYW1zLnBsYXRfY2VydF9sZW4pOw0KKwlpZiAoSVNfRVJSKHBsYXRfY2VydCkpIHsNCisJCXJl
+dCA9IFBUUl9FUlIocGxhdF9jZXJ0KTsNCisJCWdvdG8gZV9mcmVlX3BkaDsNCisJfQ0KKw0KKwlk
+YXRhLT5wbGF0X2NlcnRfYWRkcmVzcyA9IF9fcHNwX3BhKHBsYXRfY2VydCk7DQorCWRhdGEtPnBs
+YXRfY2VydF9sZW4gPSBwYXJhbXMucGxhdF9jZXJ0X2xlbjsNCisNCisJYW1kX2NlcnQgPSBwc3Bf
+Y29weV91c2VyX2Jsb2IocGFyYW1zLmFtZF9jZXJ0X3VhZGRyLCBwYXJhbXMuYW1kX2NlcnRfbGVu
+KTsNCisJaWYgKElTX0VSUihhbWRfY2VydCkpIHsNCisJCXJldCA9IFBUUl9FUlIoYW1kX2NlcnQp
+Ow0KKwkJZ290byBlX2ZyZWVfcGxhdF9jZXJ0Ow0KKwl9DQorDQorCWRhdGEtPmFtZF9jZXJ0X2Fk
+ZHJlc3MgPSBfX3BzcF9wYShhbWRfY2VydCk7DQorCWRhdGEtPmFtZF9jZXJ0X2xlbiA9IHBhcmFt
+cy5hbWRfY2VydF9sZW47DQorDQorCXJldCA9IC1FSU5WQUw7DQorCWlmIChwYXJhbXMuc2Vzc2lv
+bl9sZW4gPiBTRVZfRldfQkxPQl9NQVhfU0laRSkNCisJCWdvdG8gZV9mcmVlX2FtZF9jZXJ0Ow0K
+Kw0KKwlyZXQgPSAtRU5PTUVNOw0KKwlzZXNzaW9uX2RhdGEgPSBrbWFsbG9jKHBhcmFtcy5zZXNz
+aW9uX2xlbiwgR0ZQX0tFUk5FTCk7DQorCWlmICghc2Vzc2lvbl9kYXRhKQ0KKwkJZ290byBlX2Zy
+ZWVfYW1kX2NlcnQ7DQorDQorCWRhdGEtPnNlc3Npb25fYWRkcmVzcyA9IF9fcHNwX3BhKHNlc3Np
+b25fZGF0YSk7DQorCWRhdGEtPnNlc3Npb25fbGVuID0gcGFyYW1zLnNlc3Npb25fbGVuOw0KK2Nt
+ZDoNCisJZGF0YS0+aGFuZGxlID0gc2V2LT5oYW5kbGU7DQorCXJldCA9IHNldl9pc3N1ZV9jbWQo
+a3ZtLCBTRVZfQ01EX1NFTkRfU1RBUlQsIGRhdGEsICZhcmdwLT5lcnJvcik7DQorDQorCS8qIGlm
+IHdlIHF1ZXJpZWQgdGhlIHNlc3Npb24gbGVuZ3RoLCBGVyByZXNwb25kZWQgd2l0aCBleHBlY3Rl
+ZCBkYXRhICovDQorCWlmICghcGFyYW1zLnNlc3Npb25fbGVuKQ0KKwkJZ290byBkb25lOw0KKw0K
+KwlpZiAoY29weV90b191c2VyKCh2b2lkIF9fdXNlciAqKSh1aW50cHRyX3QpIHBhcmFtcy5zZXNz
+aW9uX3VhZGRyLA0KKwkJCXNlc3Npb25fZGF0YSwgcGFyYW1zLnNlc3Npb25fbGVuKSkgew0KKwkJ
+cmV0ID0gLUVGQVVMVDsNCisJCWdvdG8gZV9mcmVlX3Nlc3Npb247DQorCX0NCisNCisJcGFyYW1z
+LnBvbGljeSA9IGRhdGEtPnBvbGljeTsNCisNCitkb25lOg0KKwlwYXJhbXMuc2Vzc2lvbl9sZW4g
+PSBkYXRhLT5zZXNzaW9uX2xlbjsNCisJaWYgKGNvcHlfdG9fdXNlcigodm9pZCBfX3VzZXIgKiko
+dWludHB0cl90KWFyZ3AtPmRhdGEsICZwYXJhbXMsDQorCQkJCXNpemVvZihzdHJ1Y3Qga3ZtX3Nl
+dl9zZW5kX3N0YXJ0KSkpDQorCQlyZXQgPSAtRUZBVUxUOw0KKw0KK2VfZnJlZV9zZXNzaW9uOg0K
+KwlrZnJlZShzZXNzaW9uX2RhdGEpOw0KK2VfZnJlZV9hbWRfY2VydDoNCisJa2ZyZWUoYW1kX2Nl
+cnQpOw0KK2VfZnJlZV9wbGF0X2NlcnQ6DQorCWtmcmVlKHBsYXRfY2VydCk7DQorZV9mcmVlX3Bk
+aDoNCisJa2ZyZWUocGRoX2NlcnQpOw0KK2VfZnJlZToNCisJa2ZyZWUoZGF0YSk7DQorCXJldHVy
+biByZXQ7DQorfQ0KKw0KIHN0YXRpYyBpbnQgc3ZtX21lbV9lbmNfb3Aoc3RydWN0IGt2bSAqa3Zt
+LCB2b2lkIF9fdXNlciAqYXJncCkNCiB7DQogCXN0cnVjdCBrdm1fc2V2X2NtZCBzZXZfY21kOw0K
+QEAgLTY5OTgsNiArNzEwMCw5IEBAIHN0YXRpYyBpbnQgc3ZtX21lbV9lbmNfb3Aoc3RydWN0IGt2
+bSAqa3ZtLCB2b2lkIF9fdXNlciAqYXJncCkNCiAJY2FzZSBLVk1fU0VWX0xBVU5DSF9TRUNSRVQ6
+DQogCQlyID0gc2V2X2xhdW5jaF9zZWNyZXQoa3ZtLCAmc2V2X2NtZCk7DQogCQlicmVhazsNCisJ
+Y2FzZSBLVk1fU0VWX1NFTkRfU1RBUlQ6DQorCQlyID0gc2V2X3NlbmRfc3RhcnQoa3ZtLCAmc2V2
+X2NtZCk7DQorCQlicmVhazsNCiAJZGVmYXVsdDoNCiAJCXIgPSAtRUlOVkFMOw0KIAkJZ290byBv
+dXQ7DQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS91YXBpL2xpbnV4L2t2bS5oIGIvaW5jbHVkZS91YXBp
+L2xpbnV4L2t2bS5oDQppbmRleCAyZmUxMmI0MGQ1MDMuLjRlOWU3YTViMjA2NiAxMDA2NDQNCi0t
+LSBhL2luY2x1ZGUvdWFwaS9saW51eC9rdm0uaA0KKysrIGIvaW5jbHVkZS91YXBpL2xpbnV4L2t2
+bS5oDQpAQCAtMTUzMSw2ICsxNTMxLDE4IEBAIHN0cnVjdCBrdm1fc2V2X2RiZyB7DQogCV9fdTMy
+IGxlbjsNCiB9Ow0KIA0KK3N0cnVjdCBrdm1fc2V2X3NlbmRfc3RhcnQgew0KKwlfX3UzMiBwb2xp
+Y3k7DQorCV9fdTY0IHBkaF9jZXJ0X3VhZGRyOw0KKwlfX3UzMiBwZGhfY2VydF9sZW47DQorCV9f
+dTY0IHBsYXRfY2VydF91YWRkcjsNCisJX191MzIgcGxhdF9jZXJ0X2xlbjsNCisJX191NjQgYW1k
+X2NlcnRfdWFkZHI7DQorCV9fdTMyIGFtZF9jZXJ0X2xlbjsNCisJX191NjQgc2Vzc2lvbl91YWRk
+cjsNCisJX191MzIgc2Vzc2lvbl9sZW47DQorfTsNCisNCiAjZGVmaW5lIEtWTV9ERVZfQVNTSUdO
+X0VOQUJMRV9JT01NVQkoMSA8PCAwKQ0KICNkZWZpbmUgS1ZNX0RFVl9BU1NJR05fUENJXzJfMwkJ
+KDEgPDwgMSkNCiAjZGVmaW5lIEtWTV9ERVZfQVNTSUdOX01BU0tfSU5UWAkoMSA8PCAyKQ0KLS0g
+DQoyLjE3LjENCg0K
