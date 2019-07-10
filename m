@@ -2,75 +2,100 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093AFC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C21C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE8420693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABF2208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbfGJRlp (ORCPT
+        id S1728044AbfGJRlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:41:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33852 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 13:41:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43884 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbfGJRlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:41:45 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727095AbfGJRlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:41:50 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBBC020693;
-        Wed, 10 Jul 2019 17:41:43 +0000 (UTC)
-Date:   Wed, 10 Jul 2019 13:41:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-trace-users@vger.kernel.org" 
-        <linux-trace-users@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Subject: Submit to the Tracing Microconference at Linux Plumbers 2019
-Message-ID: <20190710134142.6aeafa38@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id B753130C34C0;
+        Wed, 10 Jul 2019 17:41:50 +0000 (UTC)
+Received: from gimli.home (ovpn-116-83.phx2.redhat.com [10.3.116.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C84D60BFB;
+        Wed, 10 Jul 2019 17:41:48 +0000 (UTC)
+Subject: [PATCH v3] mdev: Send uevents around parent device registration
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kwankhede@nvidia.com, alex.williamson@redhat.com, cohuck@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 10 Jul 2019 11:41:48 -0600
+Message-ID: <156278027422.16516.5157992389394627876.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 10 Jul 2019 17:41:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+This allows udev to trigger rules when a parent device is registered
+or unregistered from mdev.
 
-There will be a Tracing microconference this year at Linux Plumbers.
-Linux Plumbers (https://linuxplumbersconf.org) will be held in Lisbon,
-Portugal from September 9-11. The Tracing MC will be approximately a
-four hour session focused on improving the Linux tracing infrastructure.
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
 
-If there's a subject you would like to discuss at this microconference,
-please submit a topic and abstract here:
+v3: Add Connie's R-b
+    Add comment clarifying expected device requirements for unreg
 
-  https://linuxplumbersconf.org/event/4/abstracts/
+ drivers/vfio/mdev/mdev_core.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Select "Submit new proposal"
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index ae23151442cb..23976db6c6c7 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+ {
+ 	int ret;
+ 	struct mdev_parent *parent;
++	char *env_string = "MDEV_STATE=registered";
++	char *envp[] = { env_string, NULL };
+ 
+ 	/* check for mandatory ops */
+ 	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+@@ -197,6 +199,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+ 	mutex_unlock(&parent_list_lock);
+ 
+ 	dev_info(dev, "MDEV: Registered\n");
++	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
++
+ 	return 0;
+ 
+ add_dev_err:
+@@ -220,6 +224,8 @@ EXPORT_SYMBOL(mdev_register_device);
+ void mdev_unregister_device(struct device *dev)
+ {
+ 	struct mdev_parent *parent;
++	char *env_string = "MDEV_STATE=unregistered";
++	char *envp[] = { env_string, NULL };
+ 
+ 	mutex_lock(&parent_list_lock);
+ 	parent = __find_parent_device(dev);
+@@ -243,6 +249,9 @@ void mdev_unregister_device(struct device *dev)
+ 	up_write(&parent->unreg_sem);
+ 
+ 	mdev_put_parent(parent);
++
++	/* We still have the caller's reference to use for the uevent */
++	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+ }
+ EXPORT_SYMBOL(mdev_unregister_device);
+ 
 
-Fill out the title, the content and who will be leading the session,
-then select the "Tracing MC topic" track and hit "Submit". Of course
-you will also need to agree to follow the anti-harassment policy.
-
-Remember, we are looking for discussions on improving tracing within
-Linux. You can have up to 5 (maybe 7) minutes of presentation to bring
-the audience up to speed with the issues at hand, but then the rest of
-the time will be dedicated to discussion on how to solve and/or
-implement the solution.
-
-All submissions should be in by August 2, and I will hopefully be able
-to decided what to discuss by August 9.
-
-Even if you don't submit a topic, I hope to see you there to discuss
-Linux tracing at Linux Plumbers in Lisbon.
-
-Cheers,
-
--- Steve
