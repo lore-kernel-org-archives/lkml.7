@@ -2,95 +2,112 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A3EC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8FFC74A3E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532C82064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4571B2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 20:02:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=p1hq.onmicrosoft.com header.i=@p1hq.onmicrosoft.com header.b="hp9k7O18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfGJUBK (ORCPT
+        id S1728157AbfGJUC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 16:01:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48522 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfGJUBJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 16:01:09 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hlIlw-000213-DB; Wed, 10 Jul 2019 22:01:00 +0200
-Date:   Wed, 10 Jul 2019 22:00:59 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Kees Cook <keescook@chromium.org>
-cc:     Xi Ruoyao <xry111@mengyan1223.wang>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH] x86/asm: Move native_write_cr0/3() out of line
-In-Reply-To: <201907101258.FE97AEC86@keescook>
-Message-ID: <alpine.DEB.2.21.1907102200360.1758@nanos.tec.linutronix.de>
-References: <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang> <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de> <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm> <768463eb26a2feb0fcc374fd7f9cc28b96976917.camel@mengyan1223.wang>
- <20190710134433.GN3402@hirez.programming.kicks-ass.net> <nycvar.YFH.7.76.1907101621050.5899@cbobk.fhfr.pm> <20190710142653.GJ3419@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1907101709340.1758@nanos.tec.linutronix.de>
- <a822cf447949582e2a11b7899f22b11da02f0ece.camel@mengyan1223.wang> <alpine.DEB.2.21.1907102140340.1758@nanos.tec.linutronix.de> <201907101258.FE97AEC86@keescook>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 10 Jul 2019 16:02:28 -0400
+Received: from mail-eopbgr20069.outbound.protection.outlook.com ([40.107.2.69]:2052
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727595AbfGJUC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 16:02:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=p1hq.onmicrosoft.com;
+ s=selector2-p1hq-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G0vStd5LdcHDtjmzw820gkQRwygP2SeKMALDPVnksxs=;
+ b=hp9k7O18b3hpt9wbENGPXy70/W4LhGouVsG4zlzueD8Wcxz8aazhSvvzD7So2JQRdc9/E6EwwjrG5i9fyZKCE+nblxhOJCX69XVqdZ0nIJV+OhyUxmuTZfMSeL+JDXvqRfQCX22iDGo6R5RaJR4YZKb7fo6HPJ5lhKa4Z4WHg7g=
+Received: from HE1PR01MB3001.eurprd01.prod.exchangelabs.com (10.170.254.142)
+ by HE1PR01MB3707.eurprd01.prod.exchangelabs.com (20.176.161.144) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2052.20; Wed, 10 Jul
+ 2019 20:02:22 +0000
+Received: from HE1PR01MB3001.eurprd01.prod.exchangelabs.com
+ ([fe80::74c9:e863:a713:f675]) by HE1PR01MB3001.eurprd01.prod.exchangelabs.com
+ ([fe80::74c9:e863:a713:f675%5]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
+ 20:02:22 +0000
+From:   "Claus H. Stovgaard" <cst@phaseone.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
+Thread-Topic: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
+Thread-Index: AQHVNWaygtE5YLg6GUS3ZZF6c1XknKbCSh0AgAH/2YA=
+Date:   Wed, 10 Jul 2019 20:02:22 +0000
+Message-ID: <41aedb602385b66772c4d2003f9be1df6f93a528.camel@phaseone.com>
+References: <20190708082343.30726-1-brgl@bgdev.pl>
+         <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+In-Reply-To: <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2.110.44.75]
+user-agent: Evolution 3.30.5 
+x-clientproxiedby: HE1PR0902CA0040.eurprd09.prod.outlook.com
+ (2603:10a6:7:15::29) To HE1PR01MB3001.eurprd01.prod.exchangelabs.com
+ (2603:10a6:7:1d::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=cst@phaseone.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3f4dd2ea-4eaf-49a2-bd1c-08d70571857a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:HE1PR01MB3707;
+x-ms-traffictypediagnostic: HE1PR01MB3707:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <HE1PR01MB37075A202542958483DBC908DAF00@HE1PR01MB3707.eurprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0094E3478A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(39850400004)(376002)(346002)(366004)(199004)(189003)(186003)(102836004)(386003)(26005)(66556008)(66946007)(66476007)(6506007)(55236004)(5660300002)(478600001)(6436002)(64756008)(53936002)(66066001)(66446008)(86362001)(305945005)(7736002)(8676002)(4744005)(99286004)(76176011)(52116002)(54906003)(58126008)(110136005)(14454004)(316002)(36756003)(6246003)(71190400001)(71200400001)(118296001)(68736007)(6116002)(3846002)(229853002)(2616005)(476003)(6486002)(486006)(6512007)(6306002)(966005)(2906002)(11346002)(446003)(4326008)(81156014)(8936002)(81166006)(14444005)(256004)(25786009)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR01MB3707;H:HE1PR01MB3001.eurprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: phaseone.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ju+IlTRUqAhRneuOEMRJfjE9KCTKbPMTkyr12ZpQxdGXdYi+4LG506Ga17tqNrTlSxD3tMdyQVkAaDKgP7g2IkkFW/K6nzxvdMc00TpzBE9Udt980XAhJdAI7o2wWfQ/rtcpEcGS0OJYXZs7zGADRZoxQS40wNXPXbGJ4W8tnRnly+HqKU6RijxG8wLP3ZuqU/LO7wrc7YK+AXERDzodTIM3VCI0oq1xd1aSRVbRlsi+JxpSI7tZtto8xa3BbHCIOUcXaE32IxzgjCoJfodVDYApAVUTgFNNBtT911vJnGajc1GU2O2HQazMSAo5vociTVStrPUxjK1YEPv6ha8TLI+c+E0U/8BsGbJdQtucO4aFIXvtYsK+C09563A6+wHJEDLnxKf7hPMgOSv0WLmS4w5M1I/ufuuIG0XL3KFqrqY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B3DB97DC24C9D74399B7BA81FE758217@eurprd01.prod.exchangelabs.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-OriginatorOrg: phaseone.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f4dd2ea-4eaf-49a2-bd1c-08d70571857a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 20:02:22.8369
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: cbe5b4c6-877a-4fe4-be65-3be424dd0574
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cst@phaseone.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR01MB3707
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019, Kees Cook wrote:
-
-> On Wed, Jul 10, 2019 at 09:42:46PM +0200, Thomas Gleixner wrote:
-> > The pinning of sensitive CR0 and CR4 bits caused a boot crash when loading
-> > the kvm_intel module on a kernel compiled with CONFIG_PARAVIRT=n.
-> > 
-> > The reason is that the static key which controls the pinning is marked RO
-> > after init. The kvm_intel module contains a CR4 write which requires to
-> > update the static key entry list. That obviously does not work when the key
-> > is in a RO section.
-> > 
-> > With CONFIG_PARAVIRT enabled this does not happen because the CR4 write
-> > uses the paravirt indirection and the actual write function is built in.
-> > 
-> > As the key is intended to be immutable after init, move
-> > native_write_cr0/3() out of line.
-> > 
-> > While at it consolidate the update of the cr4 shadow variable and store the
-> > value right away when the pinning is initialized on a booting CPU. No point
-> > in reading it back 20 instructions later. This allows to confine the static
-> > key and the pinning variable to cpu/common and allows to mark them static.
-> > 
-> > Fixes: 8dbec27a242c ("x86/asm: Pin sensitive CR0 bits")
-> > Fixes: 873d50d58f67 ("x86/asm: Pin sensitive CR4 bits")
-> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Reported-by: Xi Ruoyao <xry111@mengyan1223.wang>
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Tested-by: Xi Ruoyao <xry111@mengyan1223.wang>
-> 
-> Thank you for tracking this down and solving it!
-> 
-> Nit: should be "cr0/4()" in Subject and in paragraph 4.
-
-Yeah. My brain is not working today.
+SGkgTGludXMNCg0KT24gdGlyLCAyMDE5LTA3LTA5IGF0IDE1OjMwICswMjAwLCBMaW51cyBXYWxs
+ZWlqIHdyb3RlOg0KPiANCj4gSSByZW1lbWJlciBJIGhhZCB0aGlzIGRpc2N1c3Npb24gaW4gdGhl
+IHBhc3QsIGFuZCBJIG1hZGUgYSBsYXJnZQ0KPiByZWZhY3RvcmluZyB0byBtYWtlIGl0IHBvc3Np
+YmxlIGZvciBkcml2ZXJzIHRoYXQgbmVlZCBncGlvZF8qDQo+IGNhbGxzIHRvIHNpbXBseSBkbzoN
+Cj4gDQo+IHNlbGVjdCBHUElPTElCDQo+IA0KPiBpbiBLY29uZmlnLg0KPiANCj4gVGhpcyBzaG91
+bGQgc29sdmUgYWxzbyB0aGlzIHByb2JsZW0gSSB0aGluay4NCj4gDQo+IEhvd2V2ZXIgSSBkbyBy
+ZWFsaXplIHRoYXQgdGhlcmUgbWF5IGJlIHNpdHVhdGlvbnMgd2hlcmUgcGVvcGxlDQo+IHNpbXBs
+eSB3YW50IHRvIG1ha2UgR1BJTyBzdXBwb3J0IGVudGlyZWx5IG9wdGlvbmFsIHdpdGhvdXQNCj4g
+aGF2aW5nIHRvIGUuZy4gY3JlYXRlIGN1c3RvbSBzdHVicyBhbmQgZW5jYXBzdWxhdGUgdGhpbmdz
+DQo+IGluc2lkZSBpZiBJU19FTkFCTEVEKENPTkZJR19HUElPTElCKS4NCg0KWW91IHByb3Blcmx5
+IHNhdyB0aGUgZW1haWwgaW4gbGludXgtaTJjLCBidXQgd2lsbCBqdXN0IGl0IGZvcg0KY29tcGxl
+dGVuZXNzLg0KaHR0cHM6Ly9tYXJjLmluZm8vP2w9bGludXgtaTJjJm09MTU2MjU3NDQyMTI0NTY2
+Jnc9Mg0KDQpUaGUgYmFja2dyb3VuZCBmb3IgZ2V0dGluZyB0aGUgd2FybmluZywgd2FzIHVwZ3Jh
+ZGluZyBhIHN5c3RlbSBvbg0KWGlsaW54IFp5bnFNUCBTb0MgZnJvbSA0LjE0IHRvIDQuMTkuIEFz
+IHBhcnQgb2YgdGhpcyB1cGdyYWRlIHdwICh3cml0ZQ0KcHJvdGVjdCkgaGFzIGJlZW4gaW50cm9k
+dWNlZCBpbiB0aGUgYXQyNCBkcml2ZXIsIHJlc3VsdGluZyBpbiB0aGUNCndhcm5pbmcgZnJvbSBj
+b21zdW1lci5oIGFzIEkgZG9uJ3QgaGF2ZSBlbmFibGVkIEdQSU9MSUIuDQoNClJlZ2FyZHMNCkNs
+YXVzDQoNCg0K
