@@ -2,168 +2,128 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF41C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28BBC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9236C20844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:27:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="XwZcbkTh"
+	by mail.kernel.org (Postfix) with ESMTP id A49A42087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562786904;
+	bh=tAIHtXQdly/i2Qksl+8ropRftvcjny0e4UjJ9xE4LBE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zz1N/J2arYuZ/Vd77iEAFxqEHVC2piJAeQgQrbSVhdu38VZ+7vQZRBc1bDseWLD+v
+	 aMpHBQTQmd2DVpjFZIwz1TLvNHTWzciDTjH0zGiSC/oTnrlSIgWVewcYPJESC6FiKf
+	 QZDN7HIagxHTP2H6BS+Yv/Gu5Vbdlec1vlsnAlKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfGJT1N (ORCPT
+        id S1727956AbfGJT2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:27:13 -0400
-Received: from first.geanix.com ([116.203.34.67]:39924 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfGJT1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:27:07 -0400
-Received: from zen.localdomain (unknown [85.184.140.241])
-        by first.geanix.com (Postfix) with ESMTPSA id 8098AE752;
-        Wed, 10 Jul 2019 19:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1562786822; bh=ILqtxYtATybWf2oh+2HQCxnfZwc0z0hE9pMs8n5bHqo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=XwZcbkThNkw6mQ7sKtA6B5TnccPhIEYEGHZo7/GQZZbCDQGQgFOVZTiVCR3OV0b4e
-         1J1wsH9/6+TyK88gIy2sYbjSB5xMnFnaWTtlS5xQnR5/nriQGRm7HojBsLsJkuXS6A
-         O60VApose2P5J73VzsucZdEgN1VAE7XcGcZRSnzfKkbKi6qgXUDo2Zu2ng52sRvXuU
-         1H2tmX1OjVUraXm3NvlZGGOea+/XRhse7o/zQsQ5XOEQonWeq8aCwFKyC28GC9o23z
-         eI30qiqZIDIlZbejawp5l1u+aI2tGbiZ8J1qHMbSQNLB8lAS3oKVNwslCyRkk0jC0I
-         4bkNIx6j5OGXg==
-From:   =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>,
-        =?UTF-8?q?Sean=20Nyekj=C3=A6r?= <sean@geanix.com>,
-        Esben Haabendal <esben@geanix.com>
-Subject: [PATCHv3 4/4] tty: n_gsm: add ioctl to map serial device to mux'ed tty
-Date:   Wed, 10 Jul 2019 21:26:56 +0200
-Message-Id: <20190710192656.60381-4-martin@geanix.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190710192656.60381-1-martin@geanix.com>
-References: <20190710192656.60381-1-martin@geanix.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 10 Jul 2019 15:28:23 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45169 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfGJT2X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:28:23 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y8so1691304plr.12;
+        Wed, 10 Jul 2019 12:28:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=CpMUxXYROfvhBoXBWchsYgi/GL+ZYe3ofBF371/+9jo=;
+        b=lx/oCtKy/5MvXaUgXoDIwJYizVVpoBeqjISK7vsQbdLE33zb2r4sqotNdJ/koXxU9H
+         XFtrW9Xsjo/gN6EGemAuOVexvQLGsKEIzEaiqwapR1wPqRdowaFWfy7M0WTh2tb8AbCA
+         FwuanQXmwF8Eyfu+wZ67Re5mLHttjACgYbqyXcmrimB1ViHg3jTrdIw5GywewC0mYCWH
+         VW4gfgyZczGbUOtfx6zlKC7AoG7ROSVVaZG0URMfZfTQwNn3MrGnkbX56j168SIntrnC
+         djmemCFMHjVZh4eeaTwhxJachILWcG1U/LTloCRiMoyJWAEwVunTL6LolAgj+1QxepDO
+         spgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=CpMUxXYROfvhBoXBWchsYgi/GL+ZYe3ofBF371/+9jo=;
+        b=nkgiW4Xwe17IlysrFXXgv1eqKwxAeAP3cHf0k6hFQxrvBoeYBsvYG+NWvTdf/EWUWx
+         N9n58SMyy55sJ6vUxKXyOihRmeS5VLZh/eoTC83v7fb2qAAyIOZjOsJWXB2xAedcg7+A
+         3AxZwH7ipEuCrzVTck+rPtVJDYM5kteMjw4kDEiMo77lWENR+zdKgzQ/0/1f4lmuAtph
+         m6IwkSDLVYbulaOWjdQDBk3yUtmZME6b4N8/q5X/CtfOkzs8/bF6PgWliq8u2IxdtD+m
+         lLDBulKVyKUIT6PDT5qlV2gKTsGj3AeFreVEaFshSnNI9OmyQoVd+cnh64HxwQPW3K5x
+         fScg==
+X-Gm-Message-State: APjAAAWv5lO8hovBg5ynbvgAJkY2QgLy/bhBbtzAUcgQzTm6739/FAlz
+        RAPeAA6xnPjB0IRzZNYHV0EK1xV/C/Q=
+X-Google-Smtp-Source: APXvYqyVo7fUxbfdp2PB/TDEcvULVtT5PZytfZiXey3deyz+uJlP8ejxl60X+h7N1jJfUHuGiUnP/w==
+X-Received: by 2002:a17:902:b68f:: with SMTP id c15mr40153806pls.104.1562786902275;
+        Wed, 10 Jul 2019 12:28:22 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:2bbe])
+        by smtp.gmail.com with ESMTPSA id f64sm3103555pfa.115.2019.07.10.12.28.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 12:28:21 -0700 (PDT)
+From:   Tejun Heo <tj@kernel.org>
+To:     josef@toxicpanda.com, clm@fb.com, dsterba@suse.com
+Cc:     axboe@kernel.dk, jack@suse.cz, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCHSET v3 btrfs/for-next] btrfs: fix cgroup writeback support
+Date:   Wed, 10 Jul 2019 12:28:13 -0700
+Message-Id: <20190710192818.1069475-1-tj@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guessing the first tty for a gsm0710 multiplexed serial device is not
-currently possible, which makes it racy to use with multiple modems.
+Hello,
 
-Add a way to map the physical serial tty to its related mux devices
-using an ioctl.
+This patchset contains only the btrfs part of the following patchset.
 
-Signed-off-by: Martin Hundebøll <martin@geanix.com>
----
+  [1] [PATCHSET v2 btrfs/for-next] blkcg, btrfs: fix cgroup writeback support
 
-Changes since v2:
- * rename IOCTL from GSMIOC_GETBASE to GSMIOC_GETFIRST
- * return first usable line instead of private control line
- * return uint32_t instead of int
+The block part has already been applied to
 
-Changes since v1:
- * use put_user() instead of copy_to_user()
- * add missing opening quote
+  https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/ for-linus
 
- Documentation/serial/n_gsm.rst | 11 +++++++++--
- drivers/tty/n_gsm.c            |  4 ++++
- include/uapi/linux/gsmmux.h    |  2 ++
- 3 files changed, 15 insertions(+), 2 deletions(-)
+with some naming changes.  This patchset has been updated accordingly.
 
-diff --git a/Documentation/serial/n_gsm.rst b/Documentation/serial/n_gsm.rst
-index 0ba731ab00b2..286e7ff4d2d9 100644
---- a/Documentation/serial/n_gsm.rst
-+++ b/Documentation/serial/n_gsm.rst
-@@ -18,10 +18,13 @@ How to use it
- 2. switch the serial line to using the n_gsm line discipline by using
-    TIOCSETD ioctl,
- 3. configure the mux using GSMIOC_GETCONF / GSMIOC_SETCONF ioctl,
-+4. obtain base gsmtty number for the used serial port,
- 
- Major parts of the initialization program :
- (a good starting point is util-linux-ng/sys-utils/ldattach.c)::
- 
-+  #include <stdio.h>
-+  #include <stdint.h>
-   #include <linux/gsmmux.h>
-   #include <linux/tty.h>
-   #define DEFAULT_SPEED	B115200
-@@ -30,6 +33,7 @@ Major parts of the initialization program :
- 	int ldisc = N_GSM0710;
- 	struct gsm_config c;
- 	struct termios configuration;
-+	uint32_t first;
- 
- 	/* open the serial port connected to the modem */
- 	fd = open(SERIAL_PORT, O_RDWR | O_NOCTTY | O_NDELAY);
-@@ -58,19 +62,22 @@ Major parts of the initialization program :
- 	c.mtu = 127;
- 	/* set the new configuration */
- 	ioctl(fd, GSMIOC_SETCONF, &c);
-+	/* get first gsmtty device node */
-+	ioctl(fd, GSMIOC_GETFIRST, &first);
-+	printf("first muxed line: /dev/gsmtty%i\n", first);
- 
- 	/* and wait for ever to keep the line discipline enabled */
- 	daemon(0,0);
- 	pause();
- 
--4. use these devices as plain serial ports.
-+5. use these devices as plain serial ports.
- 
-    for example, it's possible:
- 
-    - and to use gnokii to send / receive SMS on ttygsm1
-    - to use ppp to establish a datalink on ttygsm2
- 
--5. first close all virtual ports before closing the physical port.
-+6. first close all virtual ports before closing the physical port.
- 
-    Note that after closing the physical port the modem is still in multiplexing
-    mode. This may prevent a successful re-opening of the port later. To avoid
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index a60be591f1fc..dac98f3ead3d 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -2613,6 +2613,7 @@ static int gsmld_ioctl(struct tty_struct *tty, struct file *file,
- {
- 	struct gsm_config c;
- 	struct gsm_mux *gsm = tty->disc_data;
-+	unsigned int base;
- 
- 	switch (cmd) {
- 	case GSMIOC_GETCONF:
-@@ -2624,6 +2625,9 @@ static int gsmld_ioctl(struct tty_struct *tty, struct file *file,
- 		if (copy_from_user(&c, (void *)arg, sizeof(c)))
- 			return -EFAULT;
- 		return gsm_config(gsm, &c);
-+	case GSMIOC_GETFIRST:
-+		base = mux_num_to_base(gsm);
-+		return put_user(base + 1, (uint32_t __user *)arg);
- 	default:
- 		return n_tty_ioctl_helper(tty, file, cmd, arg);
- 	}
-diff --git a/include/uapi/linux/gsmmux.h b/include/uapi/linux/gsmmux.h
-index 101d3c469acb..e292869245dc 100644
---- a/include/uapi/linux/gsmmux.h
-+++ b/include/uapi/linux/gsmmux.h
-@@ -37,5 +37,7 @@ struct gsm_netconfig {
- #define GSMIOC_ENABLE_NET      _IOW('G', 2, struct gsm_netconfig)
- #define GSMIOC_DISABLE_NET     _IO('G', 3)
- 
-+/* get the base tty number for a configured gsmmux tty */
-+#define GSMIOC_GETFIRST		_IOR('G', 4, uint32_t)
- 
- #endif
--- 
-2.22.0
+When writeback is executed asynchronously (e.g. for compression), bios
+are bounced to and issued by worker pool shared by all cgroups.  This
+leads to significant priority inversions when cgroup IO control is in
+use - IOs for a low priority cgroup can tie down the workers forcing
+higher priority IOs to wait behind them.
+
+This patchset updates btrfs to issue async IOs through the new bio
+punt mechanism.  A bio tagged with REQ_CGROUP_PUNT flag is bounced to
+the asynchronous issue context of the associated blkcg on
+bio_submit().  As the bios are issued from per-blkcg work items,
+there's no concern for priority inversions and it doesn't require
+invasive changes to the filesystems.
+
+This patchset contains the following 5 patches.
+
+ 0001-Btrfs-stop-using-btrfs_schedule_bio.patch
+ 0002-Btrfs-delete-the-entire-async-bio-submission-framewo.patch
+ 0003-Btrfs-only-associate-the-locked-page-with-one-async_.patch
+ 0004-Btrfs-use-REQ_CGROUP_PUNT-for-worker-thread-submitte.patch
+ 0005-Btrfs-extent_write_locked_range-should-attach-inode-.patch
+
+The patches are also available in the following branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-btrfs-cgroup-updates-v3
+
+Thanks, diffstat follows.
+
+ fs/btrfs/compression.c |   16 ++
+ fs/btrfs/compression.h |    3 
+ fs/btrfs/ctree.h       |    1 
+ fs/btrfs/disk-io.c     |   25 +---
+ fs/btrfs/extent_io.c   |   15 +-
+ fs/btrfs/inode.c       |   62 +++++++++--
+ fs/btrfs/super.c       |    1 
+ fs/btrfs/volumes.c     |  264 -------------------------------------------------
+ fs/btrfs/volumes.h     |   10 -
+ 9 files changed, 90 insertions(+), 307 deletions(-)
+
+--
+tejun
+
+[1] http://lkml.kernel.org/r/20190615182453.843275-1-tj@kernel.org
 
