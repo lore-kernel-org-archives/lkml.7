@@ -2,148 +2,114 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61907C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FABDC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F8D2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91F92084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zJBWF8s3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gO7Fk8sL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfGJK5q (ORCPT
+        id S1727381AbfGJK6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:57:46 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46464 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfGJK5q (ORCPT
+        Wed, 10 Jul 2019 06:58:48 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42764 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfGJK6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:57:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=utBFxVhyB8ZxzFitDOrwnqSfnKM7QaqPSKn/G6kD5cE=; b=zJBWF8s3nJ9WwOHnQb+FPJ960
-        iG6NREH6eSAXowzaL6SBU8qaJ4aPLgNFBlMNteQ+ZEUT5sWlmt29rdGiQ7deipxwsnRV+txjI+O82
-        TxrGKgf0g+mXgARL3UCS5IzmOpHoC6lR5TtADEENuDktciv3xiTouudFvzIh0FFM7k6T+tjKyQVpP
-        BXBKk/xVu6AuJOdI/tzlYb/fkMfew6johgeoPsb/CWhBQCynuTeBGZ3BZVeJM5qADmKAhdQDb5tak
-        iUNdFmkSThIGjimFLFOD2tdNBO5OyaCZqWWXh8f42oZvql8eGkjlndf8F2U3UyOd6C0ml4XXFM3KP
-        O/Sk7rgqg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlAI6-0003m6-LT; Wed, 10 Jul 2019 10:57:38 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 35A3F20977440; Wed, 10 Jul 2019 12:57:36 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 12:57:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] scheduler changes for v5.3
-Message-ID: <20190710105736.GK3402@hirez.programming.kicks-ass.net>
-References: <20190708115349.GA14779@gmail.com>
- <CANcMJZAYhqdO5sGbwW7GszL9NtNgMy0+uMe+bVSQHqyewQcy_g@mail.gmail.com>
+        Wed, 10 Jul 2019 06:58:47 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a10so1945549wrp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 03:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2sT+oGvC0W6TXp3DJLMLSUCPXzdSnjaT6jI9OQ5BPH4=;
+        b=gO7Fk8sLsyUWXz44hx5WnF9wFLqzfaSjOcDy15DI2kpmYpjR9c0Nmbcmy6HEKP7SZy
+         pIbKRt03eJNCGslrDwoGRfWRqkqh/e82F+kiqtPAZ2hnU4jY+5zRmUnPEU0BExOzFecb
+         TW6nURXyFIKv7kM5jzh8fvf3Kb2O2d6m9dX3R0qnXri9LPR2AcYXgIpC/2fvAmjdQR+4
+         WCreZwsx8AARBm2GbJac2+Vd3sor7Exu6fOclQ9KV4S2TJAFRPHeKfydhQZOMbbaGFEG
+         9YCFeMNwOinlwxcahrrTOHfXTJNNrM9u10uqu6PGB2ZzgvQqy1BqTxMXUfkcaa4HxHCS
+         WPjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2sT+oGvC0W6TXp3DJLMLSUCPXzdSnjaT6jI9OQ5BPH4=;
+        b=DsUYJltbG439jbd8RGhsCzrsO4N88zuhT8S2aBXq4hmY8Lmzqyk3GwUZ/JYyO2+GMn
+         e9vZliLhQ/NcYQPtRZEfUmC3QlIy0L9u5QOq3qpyBjhbzCimKpf0D3UVDMtCmTv0hSvF
+         rRBfsJZKRddYJZakQzieI4RKVtCEBoOGjTAHnUZ3OAxFrwMmKaGSA5sjvgpZpk0XsQSV
+         eHn+ZQd0FUqrcoH5j8cVCQzMo9tqYYeafaG3srZAC0vW1AA+ZC2OBszLs5sAdEcjfFos
+         tal/aRn951+E4Nz1HIMt5TI+0bP1vVRYw6xhsBwwLCO/rfNYYKtY8jU1zkmp3Emqt6Wx
+         jADg==
+X-Gm-Message-State: APjAAAUYXTzygVXnN0UcUvUqD/ijCBiAcMOfksGwcqGujUqvxTNkVU6J
+        dqhD8z5Xh/8/a7SVhaQUAUu69+/f
+X-Google-Smtp-Source: APXvYqw8KUi86oRLtvVJh6b2yivIxG8Q6GKE2mrwk4yEnFE6iV6Lycols/Yc7V6/xDCjTS26tmYmUg==
+X-Received: by 2002:a5d:56c7:: with SMTP id m7mr31232112wrw.64.1562756325658;
+        Wed, 10 Jul 2019 03:58:45 -0700 (PDT)
+Received: from [192.168.8.147] (31.172.185.81.rev.sfr.net. [81.185.172.31])
+        by smtp.gmail.com with ESMTPSA id e3sm1788460wrt.93.2019.07.10.03.58.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 03:58:45 -0700 (PDT)
+Subject: Re: [PATCH] fs/seq_file.c: Fix a UAF vulnerability in seq_release()
+To:     bsauce <bsauce00@gmail.com>, alexander.h.duyck@intel.com
+Cc:     vbabka@suse.cz, mgorman@suse.de, l.stach@pengutronix.de,
+        vdavydov.dev@gmail.com, akpm@linux-foundation.org, alex@ghiti.fr,
+        adobriyan@gmail.com, mike.kravetz@oracle.com, rientjes@google.com,
+        rppt@linux.vnet.ibm.com, mhocko@suse.com, ksspiers@google.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1562754389-29217-1-git-send-email-bsauce00@gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <32e544a6-575e-a47e-fd8a-647145ac1972@gmail.com>
+Date:   Wed, 10 Jul 2019 12:58:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANcMJZAYhqdO5sGbwW7GszL9NtNgMy0+uMe+bVSQHqyewQcy_g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1562754389-29217-1-git-send-email-bsauce00@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 10:48:49PM -0700, John Stultz wrote:
-> On Mon, Jul 8, 2019 at 9:33 AM Ingo Molnar <mingo@kernel.org> wrote:
-> > Please pull the latest sched-core-for-linus git tree from:
-> >
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-for-linus
-> ....
-> > Peter Zijlstra (1):
-> >       sched/core: Optimize try_to_wake_up() for local wakeups
+
+
+On 7/10/19 12:26 PM, bsauce wrote:
+> In seq_release(), 'm->buf' points to a chunk. It is freed but not cleared to null right away. It can be reused by seq_read() or srm_env_proc_write().
+> For example, /arch/alpha/kernel/srm_env.c provide several interfaces to userspace, like 'single_release', 'seq_read' and 'srm_env_proc_write'.
+> Thus in userspace, one can exploit this UAF vulnerability to escape privilege.
+> Even if 'm->buf' is cleared by kmem_cache_free(), one can still create several threads to exploit this vulnerability.
+> And 'm->buf' should be cleared right after being freed.
 > 
-> Hey Peter, Ingo,
->    Since this change landed in Linus' tree, I've been seeing a lot of
-> the following dmesg noise when running AOSP on the HiKey960 board.
+> Signed-off-by: bsauce <bsauce00@gmail.com>
+> ---
+>  fs/seq_file.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> [  173.162712] CPU: 2 PID: 731 Comm: ndroid.systemui Tainted: G S
->           5.2.0-rc5-00110-g6751c43d94d6 #447
-> [  173.162721] Hardware name: HiKey960 (DT)
-> [  173.171194] caller is try_to_wake_up+0x3e4/0x788
-> [  173.179605] Call trace:
-> [  173.179617]  dump_backtrace+0x0/0x140
-> [  173.179626]  show_stack+0x14/0x20
-> [  173.179638]  dump_stack+0x9c/0xc4
-> [  173.179649]  debug_smp_processor_id+0x148/0x150
-> [  173.179659]  try_to_wake_up+0x3e4/0x788
-> [  173.179669]  wake_up_q+0x5c/0x98
-> [  173.179681]  futex_wake+0x170/0x1a8
-> [  173.179696]  do_futex+0x560/0xf30
-> [  173.284541]  __arm64_sys_futex+0xfc/0x148
-> [  173.288570]  el0_svc_common.constprop.0+0x64/0x188
-> [  173.293371]  el0_svc_handler+0x28/0x78
-> [  173.297131]  el0_svc+0x8/0xc
-> [  173.300045] CPU: 0 PID: 1258 Comm: Binder:363_5 Tainted: G S
->         5.2.0-rc5-00110-g6751c43d94d6 #447
-> [  173.301130] BUG: using smp_processor_id() in preemptible [00000000]
-> code: ndroid.systemui/731
-> [  173.310074] Hardware name: HiKey960 (DT)
-> [  173.310084] Call trace:
-> [  173.310112]  dump_backtrace+0x0/0x140
-> [  173.310131]  show_stack+0x14/0x20
-> [  173.318685] caller is try_to_wake_up+0x3e4/0x788
-> [  173.322583]  dump_stack+0x9c/0xc4
-> [  173.322595]  debug_smp_processor_id+0x148/0x150
-> [  173.322605]  try_to_wake_up+0x3e4/0x788
-> [  173.322615]  wake_up_q+0x5c/0x98
-> [  173.322628]  futex_wake+0x170/0x1a8
-> [  173.322641]  do_futex+0x560/0xf30
-> [  173.358367]  __arm64_sys_futex+0xfc/0x148
-> [  173.362397]  el0_svc_common.constprop.0+0x64/0x188
-> [  173.367199]  el0_svc_handler+0x28/0x78
-> [  173.370956]  el0_svc+0x8/0xc
+> diff --git a/fs/seq_file.c b/fs/seq_file.c
+> index abe27ec..de5e266 100644
+> --- a/fs/seq_file.c
+> +++ b/fs/seq_file.c
+> @@ -358,6 +358,7 @@ int seq_release(struct inode *inode, struct file *file)
+>  {
+>  	struct seq_file *m = file->private_data;
+>  	kvfree(m->buf);
+> +	m->buf = NULL;
+>  	kmem_cache_free(seq_file_cache, m);
+>  	return 0;
+>  }
 > 
 
-Urgh.. however didn't we find that before :/ stupid stats.
+This makes no sense, since m is freed right away anyway.
 
-Something like the below ought to fix, but let me see if I can come up
-with something saner...
+So whatever is trying to 'reuse' m is in big trouble.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 108449526f11..0b22e55cebe8 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2399,6 +2399,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	unsigned long flags;
- 	int cpu, success = 0;
- 
-+	preempt_disable();
- 	if (p == current) {
- 		/*
- 		 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
-@@ -2412,7 +2413,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 		 *    it disabling IRQs (this allows not taking ->pi_lock).
- 		 */
- 		if (!(p->state & state))
--			return false;
-+			goto out;
- 
- 		success = 1;
- 		cpu = task_cpu(p);
-@@ -2526,6 +2527,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- out:
- 	if (success)
- 		ttwu_stat(p, cpu, wake_flags);
-+	preempt_enable();
- 
- 	return success;
- }
