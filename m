@@ -2,148 +2,117 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC74C73C64
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DFEC606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BAC2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504A72084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:28:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRN+1ygj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfGJM1H (ORCPT
+        id S1727193AbfGJM2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:27:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:39054 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfGJM1H (ORCPT
+        Wed, 10 Jul 2019 08:28:11 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33876 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfGJM2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:27:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id y13so2671490iol.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 05:27:06 -0700 (PDT)
+        Wed, 10 Jul 2019 08:28:10 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n5so1947630otk.1;
+        Wed, 10 Jul 2019 05:28:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9FNqx+M2R51JE04Z34tCRtE1I2zuoMlX/VVUP9urQ/g=;
+        b=cRN+1ygji015bntIuNNMqDL5Hhvz9UEFPR3wPkgOd9pZ0sb8Pp6JS2cxZ/6Ck9aJZ6
+         slcqy2QAylFSWD4AZkxn5Bpfo9f3TuRqaNv1y8ffzX6ubNCA+Udge0FdoXinLWh+NVsS
+         VCnGASm/tVS8oWXMoqO9ufoKto1DbMJGmEZfUyai1gHAVkJYHxZjBQq02gLm9aN4oZcL
+         zuPGYJsuDgJO1+gJexcT2ymPZob4d6bKWcPLuIsqByOSS5+oq1iYO66/C7rE+oIKCYQ4
+         Oe+nVSxEfPTEuYVebEkSW4FfE2PGDL+uov5nucedyg1dhivtPIfCXoUyz9U+Yn8wbvzo
+         ToUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cbPNdpQzJQPTb9HVJLsYy4CtPaAMZo5y7btz9Zpm/eg=;
-        b=GLUJUzrW0C6ip/3PF0fQG2jd0GKOhs62prsdEO6vvMqjzwQ9VL58skJ/6pgHv9LwvA
-         rh3jgwdoMA9wO4+j2/6Yq8wCZWSVqVtjQSCu19oOhClYPJ2pdoZoPcmAG0LD4OAbhklJ
-         vX3DdjjnxyfXMl0I4z5haM5/PoOZZnWbT+exYlL3tc7YMDnFsRlhUZQ16KnCKfZDkfMX
-         azjDvcHAlw7o8woLRetYQAtcxJk21t94wGysajqOIirB0EeIoOV4WKtHPpjbAQbfpenp
-         AD08V+U0eTBJKDsUsoiPszh3ocsfrJMZ59zD20niS4duS8Howt58V0aT4PumvhErWtX3
-         y44g==
-X-Gm-Message-State: APjAAAWX0U8gNp+I2scG6j74735VNf94OWXAyBjTpXwzturSHw1sClCL
-        m4gE91esRet1ykBUG3rY9ptbqSs5k4f84GOZ4X2li3/Qg2id
-X-Google-Smtp-Source: APXvYqxC2WOJ+cMECsMY6rhDnMnZuVe8xq6CgMdJNzgdj0lXOR81S2XqmvUD1obUIH9M7EPQw9pjCYi/1HOGKe0PWWB6pykne2b2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9FNqx+M2R51JE04Z34tCRtE1I2zuoMlX/VVUP9urQ/g=;
+        b=avJnukx/EgcaSkaV0kxOkES0PR2itp8wKNc96nl3XTQG8dUezggB+s3KdJLkivkLSj
+         Ev4KLRdJ3Pc+p1Z4M56lcEfBJnEhmbYVwtXhcQYX2uyvg4ggbm8hbCriy75IBF+ERGP2
+         U7hdws6MBs/xB56XqyjwW4tJSYxN3z4ur4aQwo7uj28pLInTZ1JOeqyRV3xxrhlkfLr/
+         zcVgDd4HrtO4o/qdl9IBzAB3AKGoiLxpSsjWpkEpcY0yTkPOjn5cKuyWpXsOEK+nEqpC
+         gS8NEjQ8QivvgDO6gfse2ni4TPI/RFgO733szeHnoj9PwNliM5qYOPUm/4eq/nExCF/1
+         2utA==
+X-Gm-Message-State: APjAAAXQ99plM7X3eSrrPbHvf+c9qfOjdELn2jOqn38FxM4yQLwX3APx
+        qu0zWGLZ3TK3rh6Thq6URayJ+IyDzHzJl9aLh8E=
+X-Google-Smtp-Source: APXvYqzEWNBdZe9q7RPZCtKpqe0c0GbIay/OZ2Z1mJrHeMez83o2JTAzAdGZ3NJ3TfKDfeJ7z6jA9RE3ZCouyFwvx6s=
+X-Received: by 2002:a9d:6194:: with SMTP id g20mr2471325otk.149.1562761689474;
+ Wed, 10 Jul 2019 05:28:09 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:a708:: with SMTP id b8mr32636747iod.25.1562761626213;
- Wed, 10 Jul 2019 05:27:06 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 05:27:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000996786058d52cb39@google.com>
-Subject: WARNING in mcba_usb_probe/usb_submit_urb
-From:   syzbot <syzbot+3bc1dce0cc0052d60fde@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190208150826.44EBC68DD2@newverein.lst.de> <0f8d2e77-7e51-fba8-b179-102318d9ff84@arm.com>
+ <20190311114945.GA5625@lst.de> <20190408153628.GL6139@lakrids.cambridge.arm.com>
+ <20190409175238.GE9255@fuggles.cambridge.arm.com>
+In-Reply-To: <20190409175238.GE9255@fuggles.cambridge.arm.com>
+From:   Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Date:   Wed, 10 Jul 2019 15:27:58 +0300
+Message-ID: <CAB=otbRXuDHSmh9NrGYoep=hxOKkXVsy6R84ACZ9xELwNr=4AA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] arm64: ftrace with regs
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Torsten Duwe <duwe@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Apr 9, 2019 at 8:52 PM Will Deacon <will.deacon@arm.com> wrote:
+>
+> On Mon, Apr 08, 2019 at 04:36:28PM +0100, Mark Rutland wrote:
+> > On Mon, Mar 11, 2019 at 12:49:46PM +0100, Torsten Duwe wrote:
+> > > On Wed, Feb 13, 2019 at 11:11:04AM +0000, Julien Thierry wrote:
+> > > > Hi Torsten,
+> > > >
+> > > > On 08/02/2019 15:08, Torsten Duwe wrote:
+> > > > > Patch series v8, as discussed.
+> > > > > The whole series applies cleanly on 5.0-rc5
+> > >
+> > > So what's the status now? Besides debatable minor style
+> > > issues there were no more objections to v8. Would this
+> > > go through the ARM repo or via the ftrace repo?
+> >
+> > Sorry agains for the delay on this. I'm now back in the office and in
+> > front of a computer daily, so I can spend a bit more time on this.
+> >
+> > Regardless of anything else, I think that we should queue the first
+> > three patches now. I've poked the relevant maintainers for their acks so
+> > that those can be taken via the arm64 tree.
+> >
+> > I'm happy to do the trivial cleanups on the last couple of patches (e.g.
+> > s/lr/x30), and I'm actively looking at the API rework I requested.
+>
+> Ok, I've picked up patches 1-3 and I'll wait for you to spin updates to the
+> last two.
 
-syzbot found the following crash on:
+Ok, I see that patches 1-3 are picked up and are already present in recent
+kernels.
 
-HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=16519490600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
-dashboard link: https://syzkaller.appspot.com/bug?extid=3bc1dce0cc0052d60fde
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13354217a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1071b7bfa00000
+Is there any progress on remaining two patches?
+Any help required?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3bc1dce0cc0052d60fde@syzkaller.appspotmail.com
-
-usb 1-1: New USB device found, idVendor=04d8, idProduct=0a30,  
-bcdDevice=e4.81
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-usb 1-1: string descriptor 0 read error: -71
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 3 != type 1
-WARNING: CPU: 1 PID: 21 at drivers/usb/core/urb.c:477  
-usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x292/0x6c9 kernel/panic.c:219
-  __warn.cold+0x20/0x4b kernel/panic.c:576
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Code: 4d 85 ed 74 2c e8 78 db e8 fd 4c 89 f7 e8 a0 36 13 ff 41 89 d8 44 89  
-e1 4c 89 ea 48 89 c6 48 c7 c7 80 23 1a 86 e8 03 a0 be fd <0f> 0b e9 20 f4  
-ff ff e8 4c db e8 fd 4c 89 f2 48 b8 00 00 00 00 00
-RSP: 0018:ffff8881d9eff140 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3dfe1a
-RBP: ffff8881d1450700 R08: ffff8881d9e36000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000003
-R13: ffff8881d7f83a08 R14: ffff8881d0c5d5a0 R15: ffff8881d56ed200
-  mcba_usb_start drivers/net/can/usb/mcba_usb.c:660 [inline]
-  mcba_usb_probe+0x83a/0xbca drivers/net/can/usb/mcba_usb.c:846
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+Ruslan
