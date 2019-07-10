@@ -2,84 +2,107 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59D0C74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2B5C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A762086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TvPQbZEF"
+	by mail.kernel.org (Postfix) with ESMTP id 8A0EA208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfGJPqI (ORCPT
+        id S1728309AbfGJPqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:46:08 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:44922 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfGJPqH (ORCPT
+        Wed, 10 Jul 2019 11:46:12 -0400
+Received: from smtprelay0051.hostedemail.com ([216.40.44.51]:58243 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725832AbfGJPqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:46:07 -0400
-Received: by mail-wr1-f49.google.com with SMTP id p17so2976092wrf.11
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 08:46:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6KxY4HdGn+JBikXMjPRoVFYwUizM9J6xdE3k9w37RmQ=;
-        b=TvPQbZEFfZRU3q8st2eKFVhA8cTKUj1CNmsgxkDTtPLo8XhZyPlvewn1WrDXQjq5nB
-         jMMKtEOFQao6RtTegCYbn8xZZmyUhs91OeGCqqMRIixmsr1p2dMHZhGSYMOOGxPHWTf+
-         4PIbrthpitm3IYTnZiKd36JUSmukie/YE+pF0g/I26KfK+JESCAaCclIdc4hlR3In82k
-         S+hUB8zuWEkJM2UhuiexJrMH8/vlnAvqNLwDAq7G75JuZwIunt4oJbtzlqUeLvUN94Bb
-         m0u3qkAqUMxDun9N+V7Gu65gN6ocZGnr3bqooozLKKiRLaFjZmUFAZnU9FI7gcgADr85
-         s3+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6KxY4HdGn+JBikXMjPRoVFYwUizM9J6xdE3k9w37RmQ=;
-        b=QQWZygj/q2dxWtHu8Hu5FGtrbb9ccl6OoG1W4O+iKhCyY4tbUt0O0EUTjwAi4s3waL
-         rADIOXiWUoTIPUkRkY1ErNfGRgTdzwQw4Kam+l85ksxPzTYuNnRREZXCzifthSjT2w5s
-         qx6VoG2Z+jV2xngz7c0jLAcNG1BAFBfs39Hr808VDXcfZOuPIWub5QkSSX6VjGqqA/S4
-         1J/fUejwj5j5qEFbNHefFmeBsmOJBXVX3H1FKnImtx2aFKoXK5PyYq6bgFmugBpgHAth
-         siXXCIWmoVfUqmLhx0WsURq6BaAkZ8CG83l0vi3mZNaUdM+a5kczwmuUKIl+ZD8LeJc8
-         Lt9w==
-X-Gm-Message-State: APjAAAUK9BQswIEO7JF71SMHiw2QPeH8MVA1naWWHKqASWB1PaDmTgIy
-        +GFWuix/qC5pdCyVJqT00ioabbnQmEVSkFHH1HX38Q==
-X-Google-Smtp-Source: APXvYqxnnSDTACHlYuPmxTfLY3bbaScFXMa+P+OX8aWMleEDD5IR1Uyu3tshmJYF74rvN5I8DePvvxVcEM6oCFO0fN8=
-X-Received: by 2002:adf:ed4a:: with SMTP id u10mr12476265wro.284.1562773565701;
- Wed, 10 Jul 2019 08:46:05 -0700 (PDT)
+        Wed, 10 Jul 2019 11:46:11 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id C502F1802912E;
+        Wed, 10 Jul 2019 15:46:09 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: range96_50d7d845d712e
+X-Filterd-Recvd-Size: 3121
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 10 Jul 2019 15:45:54 +0000 (UTC)
+Message-ID: <b9c3b83c9be50286062ae8cefd5d38e2baa0fb22.camel@perches.com>
+Subject: Re: [PATCH 00/12] treewide: Fix GENMASK misuses
+From:   Joe Perches <joe@perches.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        alsa-devel@alsa-project.org, linux-mmc@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Date:   Wed, 10 Jul 2019 08:45:53 -0700
+In-Reply-To: <20190710094337.wf2lftxzfjq2etro@shell.armlinux.org.uk>
+References: <cover.1562734889.git.joe@perches.com>
+         <5fa1fa6998332642c49e2d5209193ffe2713f333.camel@sipsolutions.net>
+         <20190710094337.wf2lftxzfjq2etro@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-References: <20190708115349.GA14779@gmail.com> <CANcMJZAYhqdO5sGbwW7GszL9NtNgMy0+uMe+bVSQHqyewQcy_g@mail.gmail.com>
- <20190710105736.GK3402@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190710105736.GK3402@hirez.programming.kicks-ass.net>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 10 Jul 2019 08:45:54 -0700
-Message-ID: <CALAqxLXKVsCsUq3HHs0LuPFd6_aA4S0bBR4vp-xDiRKgEDnoAw@mail.gmail.com>
-Subject: Re: [GIT PULL] scheduler changes for v5.3
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 3:57 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Urgh.. however didn't we find that before :/ stupid stats.
->
-> Something like the below ought to fix, but let me see if I can come up
-> with something saner...
+On Wed, 2019-07-10 at 10:43 +0100, Russell King - ARM Linux admin wrote:
+> On Wed, Jul 10, 2019 at 11:17:31AM +0200, Johannes Berg wrote:
+> > On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
+> > > These GENMASK uses are inverted argument order and the
+> > > actual masks produced are incorrect.  Fix them.
+> > > 
+> > > Add checkpatch tests to help avoid more misuses too.
+> > > 
+> > > Joe Perches (12):
+> > >   checkpatch: Add GENMASK tests
+> > 
+> > IMHO this doesn't make a lot of sense as a checkpatch test - just throw
+> > in a BUILD_BUG_ON()?
 
-Yep. This works for me, but let me know if you have anything else you
-want me to test as well.
+I tried that.
 
-thanks again!
--john
+It'd can't be done as it's used in declarations
+and included in asm files and it uses the UL()
+macro.
+
+I also tried just making it do the right thing
+whatever the argument order.
+
+Oh well.
+
+> My personal take on this is that GENMASK() is really not useful, it's
+> just pure obfuscation and leads to exactly these kinds of mistakes.
+> 
+> Yes, I fully understand the argument that you can just specify the
+> start and end bits, and it _in theory_ makes the code more readable.
+> 
+> However, the problem is when writing code.  GENMASK(a, b).  Is a the
+> starting bit or ending bit?  Is b the number of bits?  It's confusing
+> and causes mistakes resulting in incorrect code.  A BUILD_BUG_ON()
+> can catch some of the cases, but not all of them.
+
+It's a horrid little macro and I agree with Russell.
+
+I also think if it existed at all it should have been
+GENMASK(low, high) not GENMASK(high, low).
+
+I
+
