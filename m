@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3993C73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C231C73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C9B20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F26B20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 03:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfGJDJZ (ORCPT
+        id S1727024AbfGJDJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 23:09:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2248 "EHLO huawei.com"
+        Tue, 9 Jul 2019 23:09:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38016 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725941AbfGJDJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 23:09:24 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 942637021D84FE204553;
-        Wed, 10 Jul 2019 11:09:18 +0800 (CST)
+        id S1726844AbfGJDJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 23:09:26 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A43D330CDE34CFC04A64;
+        Wed, 10 Jul 2019 11:09:23 +0800 (CST)
 Received: from use12-sp2.huawei.com (10.67.189.174) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 10 Jul 2019 11:09:12 +0800
+ 14.3.439.0; Wed, 10 Jul 2019 11:09:15 +0800
 From:   Xiaoming Ni <nixiaoming@huawei.com>
 To:     <adobriyan@gmail.com>, <akpm@linux-foundation.org>,
         <anna.schumaker@netapp.com>, <arjan@linux.intel.com>,
@@ -39,9 +39,9 @@ To:     <adobriyan@gmail.com>, <akpm@linux-foundation.org>,
 CC:     <alex.huangjianhui@huawei.com>, <dylix.dailei@huawei.com>,
         <nixiaoming@huawei.com>, <linux-kernel@vger.kernel.org>,
         <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH v3 1/3] kernel/notifier.c: avoid duplicate registration
-Date:   Wed, 10 Jul 2019 11:09:10 +0800
-Message-ID: <1562728150-30301-1-git-send-email-nixiaoming@huawei.com>
+Subject: [PATCH v3 2/3] kernel/notifier.c: remove notifier_chain_cond_register()
+Date:   Wed, 10 Jul 2019 11:09:12 +0800
+Message-ID: <1562728152-30341-1-git-send-email-nixiaoming@huawei.com>
 X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -52,55 +52,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Registering the same notifier to a hook repeatedly can cause the hook
-list to form a ring or lose other members of the list.
-
-case1: An infinite loop in notifier_chain_register() can cause soft lockup
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test2);
-
-case2: An infinite loop in notifier_chain_register() can cause soft lockup
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
-
-case3: lose other hook test2
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-        atomic_notifier_chain_register(&test_notifier_list, &test2);
-        atomic_notifier_chain_register(&test_notifier_list, &test1);
-
-case4: Unregister returns 0, but the hook is still in the linked list,
-        and it is not really registered. If you call notifier_call_chain
-        after ko is unloaded, it will trigger oops.
-
-If the system is configured with softlockup_panic and the same
-hook is repeatedly registered on the panic_notifier_list, it
-will cause a loop panic.
-
-Add a check in notifier_chain_register() to avoid duplicate registration
+The only difference between notifier_chain_cond_register() and
+notifier_chain_register() is the lack of warning hints for duplicate
+registrations.
+Consider using notifier_chain_register() instead of
+notifier_chain_cond_register() to avoid duplicate code
 
 Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
 ---
- kernel/notifier.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/notifier.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
 
 diff --git a/kernel/notifier.c b/kernel/notifier.c
-index d9f5081..30bedb8 100644
+index 30bedb8..e3d221f 100644
 --- a/kernel/notifier.c
 +++ b/kernel/notifier.c
-@@ -23,7 +23,10 @@ static int notifier_chain_register(struct notifier_block **nl,
+@@ -36,21 +36,6 @@ static int notifier_chain_register(struct notifier_block **nl,
+ 	return 0;
+ }
+ 
+-static int notifier_chain_cond_register(struct notifier_block **nl,
+-		struct notifier_block *n)
+-{
+-	while ((*nl) != NULL) {
+-		if ((*nl) == n)
+-			return 0;
+-		if (n->priority > (*nl)->priority)
+-			break;
+-		nl = &((*nl)->next);
+-	}
+-	n->next = *nl;
+-	rcu_assign_pointer(*nl, n);
+-	return 0;
+-}
+-
+ static int notifier_chain_unregister(struct notifier_block **nl,
  		struct notifier_block *n)
  {
- 	while ((*nl) != NULL) {
--		WARN_ONCE(((*nl) == n), "double register detected");
-+		if (unlikely((*nl) == n)) {
-+			WARN(1, "double register detected");
-+			return 0;
-+		}
- 		if (n->priority > (*nl)->priority)
- 			break;
- 		nl = &((*nl)->next);
+@@ -252,7 +237,7 @@ int blocking_notifier_chain_cond_register(struct blocking_notifier_head *nh,
+ 	int ret;
+ 
+ 	down_write(&nh->rwsem);
+-	ret = notifier_chain_cond_register(&nh->head, n);
++	ret = notifier_chain_register(&nh->head, n);
+ 	up_write(&nh->rwsem);
+ 	return ret;
+ }
 -- 
 1.8.5.6
 
