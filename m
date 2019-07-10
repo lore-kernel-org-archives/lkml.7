@@ -2,205 +2,92 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA5FC74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6D3C74A22
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7D32064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E482064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digidescorp.com header.i=@digidescorp.com header.b="c6tGrN62"
+	dkim=pass (2048-bit key) header.d=mengyan1223.wang header.i=@mengyan1223.wang header.b="xZgPkVoG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfGJNYN (ORCPT
+        id S1727503AbfGJNZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:24:13 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43138 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbfGJNYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 09:24:12 -0400
-Received: by mail-io1-f65.google.com with SMTP id k20so4594875ios.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 06:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digidescorp.com; s=google;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=x+gc9GZtHp422tQIfawx4zs0fYbybr4yBJpSkctzV1g=;
-        b=c6tGrN626dGm/p0X1AMQX4LFqgrGjf6QtN8qn97tfRy7GPaqeRdrMoklTq9N5WmLP6
-         AAz8gk6grD/OfwWPobVsSJ1t1AjzBi9/7sllazpEyFMqIJRjA+/ZUFMHxYgYR2Eu+7Pr
-         QJYWMYxCXP3f9yiaBoX9RaG75pJDXbh9qAD5U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=x+gc9GZtHp422tQIfawx4zs0fYbybr4yBJpSkctzV1g=;
-        b=OGGfHMnA9oXB6QuxC+66/XI2WtLV84+Fr2QMwKCeqe2vrTeCRHXtc+pJWCH85gS5cJ
-         fWgSCIE/GglHMWivZ4GS50yf4jbA80ySSF7cEhqC82RoQqXcsidHSr3pwtFcx8ZS/Ky1
-         10UBKjkrt2i2/jm37arkRZ6CFAs3fBv2BZRWsNdqivI/ddY2wxw95umgJDxfh18wMu6N
-         HAvA5lTLsvc8T2n3hfPuY2GusFY8VXrQqd02LLU87pxtHJ0AYi2Vgw/ofO7ejANPrpI9
-         DrmxqIhK7/Nnag9Z6XCFtT8QLm0fixEnz7+n7HMFprK01cBGGp84EEpUi2TjWGmtxmpd
-         ldKg==
-X-Gm-Message-State: APjAAAUhmq133ZvuIIX9+QFtfB8WZwfpHgghppmzhKfc7LlTpPN+lYr8
-        t6EOQRp6r6c7GNvPfA94wmfXW9ZIvtE=
-X-Google-Smtp-Source: APXvYqy6nQtQZbt8QJGAfncQMWkzH2hLSafcXQ2x1/OpTWyK8iMthcfk3vX0PcoXz6pINEBJCmo19Q==
-X-Received: by 2002:a02:ce37:: with SMTP id v23mr34346376jar.2.1562765050853;
-        Wed, 10 Jul 2019 06:24:10 -0700 (PDT)
-Received: from [10.10.7.141] ([50.73.98.161])
-        by smtp.googlemail.com with ESMTPSA id j14sm1700858ioa.78.2019.07.10.06.24.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 06:24:10 -0700 (PDT)
-From:   Steve Magnani <steve.magnani@digidescorp.com>
-Subject: Re: [RFC] udf: 2.01 interoperability issues with Windows 10
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        =?UTF-8?Q?Vojt=c4=9bch_Vladyka?= <vojtech.vladyka@foxyco.cz>,
-        linux-fsdevel@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <96e1ea00-ac12-015d-5c54-80a83f08b898@digidescorp.com>
- <20190709185638.pcgdbdqoqgur6id3@pali>
- <958ea915-3568-8f5a-581c-e5f0a673d30f@digidescorp.com>
- <20190709210457.kzjnigu6fwgxxq27@pali>
-Message-ID: <2994ee3a-9e38-0ed0-652a-e85de704f8d1@digidescorp.com>
-Date:   Wed, 10 Jul 2019 08:24:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 10 Jul 2019 09:25:26 -0400
+Received: from mengyan1223.wang ([89.208.246.23]:38616 "EHLO mengyan1223.wang"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727110AbfGJNZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 09:25:26 -0400
+Received: from xry111-laptop.lan (unknown [124.115.222.149])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: xry111@mengyan1223.wang)
+        by mengyan1223.wang (Postfix) with ESMTPSA id A989465B48;
+        Wed, 10 Jul 2019 09:25:20 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mengyan1223.wang;
+        s=mail; t=1562765123;
+        bh=F7jfGWTtAY0jJd0ZKJkp5Z7M3XVcQTbZJ3SkCYLC5Mo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=xZgPkVoGvbOZq1gB+Hn8iJcqZrRP8AKy5IyvEjbORtJLD4u/aEeun61EidPSuenF2
+         75aZNQt0XFcIAeAEHf7s5tnMkAqFxxGuDeVCt/taNnKl0ehKMOpU/oK2Rj2MBbXgZ8
+         EDTwUFVqh70jmqhR1CT7ZyFrev0nl4mHQeStxYvdG/jQjn+G8sCkO4KrNLfcOK2sZR
+         cRsrmWFfX8lk8GGLNlUxY8UtTlDb6ncKDWCH54HBSKbN42wgtdDuO9h8dIQGlAXeSX
+         LGcrOJ7c9Cb8c+qm/VvJX58ds7bZab4lpFX7Nh5pvssXiBd9UqsvfO2lWsfyg9hueT
+         Icgtora5jHzkA==
+Message-ID: <768463eb26a2feb0fcc374fd7f9cc28b96976917.camel@mengyan1223.wang>
+Subject: Re: [GIT PULL] x86/topology changes for v5.3
+From:   Xi Ruoyao <xry111@mengyan1223.wang>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Nadav Amit <namit@vmware.com>
+Date:   Wed, 10 Jul 2019 21:25:16 +0800
+In-Reply-To: <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
+References: <20190708162756.GA69120@gmail.com>
+          <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com>
+          <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>
+          <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
+         <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>
+          <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>
+          <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de>
+          <alpine.DEB.2.21.1907100115220.1758@nanos.tec.linutronix.de>
+         <201907091727.91CC6C72D8@keescook>
+          <1ad2de95e694a29909801d022fe2d556df9a4bd5.camel@mengyan1223.wang>
+         <cb6d381ed7cd0bf732ae9d8f30c806b849b0f94b.camel@mengyan1223.wang>
+         <alpine.DEB.2.21.1907101404570.1758@nanos.tec.linutronix.de>
+         <nycvar.YFH.7.76.1907101425290.5899@cbobk.fhfr.pm>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 
 MIME-Version: 1.0
-In-Reply-To: <20190709210457.kzjnigu6fwgxxq27@pali>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-07-10 14:31 +0200, Jiri Kosina wrote:
+> Adding Daniel to check whether this couldn't be some fallout of jumplabel 
+> batching.
 
-On 7/9/19 4:04 PM, Pali Rohár wrote:
-> On Tuesday 09 July 2019 15:14:38 Steve Magnani wrote:
->> On 7/9/19 1:56 PM, Pali Rohár wrote:
->>> Can grub2 recognize such disks?
->> I'm not sure what you're asking here. The physical interface to this drive is USB,
-> It is USB mass storage device? If yes, then grub2 should be able to
-> normally use. Read its content, etc... You can use "ls" grub command to
-> list content of disk with supported filesystem.
-
-Yes, Mass Storage Bulk-Only Transport.
-
->
->> and it's not designed for general-purpose storage (or booting). That said, if you
->> have some grub2 commands you want me to run against this drive/partition let me know.
-> There is also some way for using grub's fs implementation to read disk
-> images. It is primary used by grub's automated tests. I do not know
-> right now how to use, I need to look grub documentation. But I have
-> already used it during implementation of UDF UUID in grub.
-
-Grub is not recognizing my USB drive, i.e. 'ls' does not show usb0 as an option.
-I tried 'insmod usb' but that made no difference. Maybe grub does not support my
-USB 3.0 host controller, I will retry on a USB2 port when I have a chance.
-
->>> Also can you check if libparted from git master branch can recognize
->>> such disk? In following commit I added support for recognizing UDF
->>> filesystem in libparted, it is only in git master branch, not released:
->>>
->>> http://git.savannah.gnu.org/cgit/parted.git/commit/?id=8740cfcff3ea839dd6dc8650dec0a466e9870625
->> Build failed:
->>    In file included from pt-tools.c:114:0:
->>    pt-tools.c: In function 'pt_limit_lookup':
->>    pt-limit.gperf:78:1: error: function might be candidate for attribute 'pure' [-Werror=suggest-attribute=pure]
->>
->> If you send me some other SHA to try I can attempt a rebuild.
-> Try to use top of master branch. That mentioned commit is already in git
-> master.
->
-> And if it still produce that error, compile without -Werror flag (or add
-> -Wno-error).
-
-I had to configure with CFLAGS=-Wno-error.
-
-It does not recognize Windows-formatted 4K-sector media:
-   Disk /dev/sdb: 17.6TB
-   Sector size (logical/physical): 4096B/4096B
-   Partition Table: msdos
-   Disk Flags:
-
-   Number  Start   End     Size    Type     File system  Flags
-    1      1049kB  17.6TB  17.6TB  primary
-
-
-It does recognize mkudffs-formatted media.
-
->
->>> ISSUE 2: Inability of Windows chkdsk to analyze 4K-sector media
->>>            formatted by mkudffs.
->>> This is really bad :-(
->>>
->>>> It would be possible to work around this by tweaking mkudffs to
->>>> insert dummy BOOT2 components in between the BEA/NSR/TEA:
->>>>
->>>>     0000: 00 42 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .BEA01..........
->>>>     0800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
->>>>     1000: 00 4e 53 52 30 33 01 00 00 00 00 00 00 00 00 00  .NSR03..........
->>>>     1800: 00 42 4f 4f 54 32 01 00 00 00 00 00 00 00 00 00  .BOOT2..........
->>>>     2000: 00 54 45 41 30 31 01 00 00 00 00 00 00 00 00 00  .TEA01..........
->>>>
->>>> That would introduce a slight ECMA-167 nonconformity, but Linux
->>>> does not object and Windows actually performs better. I would
->>>> have to tweak udffsck though since I believe this could confuse
->>>> its automatic detection of medium block size.
->>> I would like to avoid this hack. If chkdsk is unable to detect such
->>> filesystem, it is really a good idea to let it do try doing filesystem
->>> checks and recovery? You are saying that udfs.sys can recognize such
->>> disk and mount it. I think this should be enough.
->> Fair enough, but it's also reasonable to assume the bugginess is
->> limited to the VRS corner case. AFAIK that's the only place in ECMA-167
->> where there is a difference in layout specific to 4K sectors.
->> With the BOOT2 band-aid chkdsk is able to analyze filesystems on 4Kn media.
-> Main problem with this hack is that it breaks detection of valid UDF
-> filesystems which use VRS for block size detection. I do not know which
-> implementation may use VRS for block size detection, but I do not see
-> anything wrong in this approach.
-
-I went through this with udffsck. The VRS is not very helpful in
-determining block size because the only time the block size can be
-determined conclusively is when the interval between VRS components
-is > 2048 bytes. With an interval of 2048 bytes, the only conclusion
-that can be drawn is that blocks are no larger than 2048 bytes.
-
->> I use chkdsk frequently to double-check UDF generation firmware
-> Vojtěch wrote in his thesis that MS's chkdsk sometimes put UDF
-> filesystem into more broken state as before.
-
-Yes, I have personally experienced this. I don't have chkdsk do
-repairs any more. In my case the problem may be that chkdsk
-poorly handles the cascading corruption that resulted from this:
-
-     https://lkml.org/lkml/2019/2/8/740
-
->> I am writing, and also udffsck work-in-progress.
-> Have you used some Vojtěch's parts? Or are you writing it from scratch?
->
-A udffsck discussion should probably continue in another thread.
-Here let me just say that I have been enhancing Vojtěch's code,
-in this fork:
-
-   https://github.com/smagnani/udftools
-
-...as time permits. Since winter ended the time I have available
-for this has plummeted, so progress is very slow. But this recent
-kernel driver patch grew out of work to make sure that udffsck
-handles the UDF "file tail" properly:
-
-   https://lkml.org/lkml/2019/6/4/551
-   https://lkml.org/lkml/2019/6/30/181
-
-------------------------------------------------------------------------
-  Steven J. Magnani               "I claim this network for MARS!
-  www.digidescorp.com               Earthling, return my space modulator!"
-
-  #include <standard.disclaimer>
+I don't think so.  I tried to revert Daniel's jumplabel batching commits and the
+issue wasn't solved.  But reverting Kees' CR0 and CR4 commits can "fix" it
+(apprently).
+-- 
+Xi Ruoyao <xry111@mengyan1223.wang>
+School of Aerospace Science and Technology, Xidian University
 
