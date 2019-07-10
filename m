@@ -2,94 +2,184 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3DFC73C66
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322F4C73C65
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBE720844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A49620693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bdqZj66S"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iThLhAoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfGJBY6 (ORCPT
+        id S1726990AbfGJBZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 21:24:58 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8784 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfGJBY6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 21:24:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d253e6e0002>; Tue, 09 Jul 2019 18:25:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 09 Jul 2019 18:24:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 09 Jul 2019 18:24:57 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
- 2019 01:24:57 +0000
-Subject: Re: [PATCH] mm/hmm: Fix bad subpage pointer in try_to_unmap_one
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-References: <20190709223556.28908-1-rcampbell@nvidia.com>
- <20190709172823.9413bb2333363f7e33a471a0@linux-foundation.org>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <05fffcad-cf5e-8f0c-f0c7-6ffbd2b10c2e@nvidia.com>
-Date:   Tue, 9 Jul 2019 18:24:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 9 Jul 2019 21:25:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56039 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726218AbfGJBZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 21:25:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45k1hH68Znz9sNr;
+        Wed, 10 Jul 2019 11:25:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1562721904;
+        bh=Mplpc+ScQIMcplkOolvxj8oC+zCo/Kw+CWEEKiYK6QQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iThLhAoLtJ23JwcgavEK7yuTra83OTCUTo3iiSWOByOha6KKK8eCS3T1/a9cRyckk
+         aQl1Bg9K91bj/tHE9dAHCN64mxj61F4QfJj3cSrnj7vnqDYHQUDzJX86JXzbLQ8dWY
+         IbTRXk6hon01u2QAuRq8zR/CNAkHJjodFzbIiOZ6q1eqw5b7tIM2U0g4e5hbTaUru3
+         0WXHO0CQAiX55AfyLNB2cJ9qWlui6unjJdmo9DCiWHxjHfq12sr1yzJtv7MDtBXE0+
+         xYQG/47U1837Vz2CmQRzhhCJaWdd6C2kYocQ8fehLn0HX8+MizqT4ZkH/gMRV8KYXi
+         IdYJkBW/TLJzQ==
+Date:   Wed, 10 Jul 2019 11:25:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: linux-next: manual merge of the iomap tree with Linus' tree
+Message-ID: <20190710112503.30e2ad08@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190709172823.9413bb2333363f7e33a471a0@linux-foundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562721902; bh=7k/lgMwyAOSzNGQqdDXXYMv79vityN/pwh1Ws1jVVNs=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bdqZj66SSKe/Sej2HEmOBrXJF+zC/5PRqfyUvCr6pR8GfmbS1yp5prYZc/+vQeU11
-         +2fuVzrvi2SZd/aDuTcIlMzu7sf7T1kK4E0C9ThIPyJt+GyxmtMYTfrYTI3WUyBQ7S
-         +6sp5Z11zhxQ54RUOpuTxIXG6ddnyycB9I+s4NZYlGqbISCfwy+xe0qyJxnibrjLOa
-         IbXVXKq0PzfXx2np9JUzGj7empCUXNl/cmmb0f5RZttV/ZFDmwMrWJxt9sqKUQHICq
-         gWBtYR07FoHZy1mtc1BmG0WrxibQgD7Hf0aSBCLARpAs6lPNveVsx3oBmKuAzxtJtT
-         U9fy2s4k1Gd+A==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/w8Z2ruBOddqr4cCayhOvFZm"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/w8Z2ruBOddqr4cCayhOvFZm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/9/19 5:28 PM, Andrew Morton wrote:
-> On Tue, 9 Jul 2019 15:35:56 -0700 Ralph Campbell <rcampbell@nvidia.com> wrote:
-> 
->> When migrating a ZONE device private page from device memory to system
->> memory, the subpage pointer is initialized from a swap pte which computes
->> an invalid page pointer. A kernel panic results such as:
->>
->> BUG: unable to handle page fault for address: ffffea1fffffffc8
->>
->> Initialize subpage correctly before calling page_remove_rmap().
-> 
-> I think this is
-> 
-> Fixes:  a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE page in migration")
-> Cc: stable
-> 
-> yes?
-> 
+Hi all,
 
-Yes. Can you add this or should I send a v2?
+Today's linux-next merge of the iomap tree got a conflict in:
+
+  fs/iomap.c
+
+between commits:
+
+  147a60538d91 ("iomap: use bio_release_pages in iomap_dio_bio_end_io")
+  ff896738be38 ("block: return from __bio_try_merge_page if merging occured=
+ in the same page")
+  79d08f89bb1b ("block: fix .bi_size overflow")
+
+from Linus' tree and commits:
+
+  c8934e8fa92f ("iomap: move the direct IO code into a separate file")
+  66148f9b8b2e ("iomap: move the buffered read code into a separate file")
+  79d08f89bb1b ("block: fix .bi_size overflow")
+
+from the iomap tree.
+
+I fixed it up (I removed the file and applied the following merge fix
+patch) and can carry the fix as necessary. This is now fixed as far as
+linux-next is concerned, but any non trivial conflicts should be
+mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 10 Jul 2019 11:18:41 +1000
+Subject: [PATCH] iomap: fix for block changes and split of iomap.c
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/iomap/direct-io.c |  8 +-------
+ fs/iomap/read.c      | 14 +++++++++-----
+ 2 files changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index 33d303cf0e59..6885450496c9 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -174,13 +174,7 @@ static void iomap_dio_bio_end_io(struct bio *bio)
+ 	if (should_dirty) {
+ 		bio_check_pages_dirty(bio);
+ 	} else {
+-		if (!bio_flagged(bio, BIO_NO_PAGE_REF)) {
+-			struct bvec_iter_all iter_all;
+-			struct bio_vec *bvec;
+-
+-			bio_for_each_segment_all(bvec, bio, iter_all)
+-				put_page(bvec->bv_page);
+-		}
++		bio_release_pages(bio, false);
+ 		bio_put(bio);
+ 	}
+ }
+diff --git a/fs/iomap/read.c b/fs/iomap/read.c
+index 117626cd7ead..6478436fd05a 100644
+--- a/fs/iomap/read.c
++++ b/fs/iomap/read.c
+@@ -143,7 +143,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, l=
+off_t length, void *data,
+ 	struct iomap_readpage_ctx *ctx =3D data;
+ 	struct page *page =3D ctx->cur_page;
+ 	struct iomap_page *iop =3D iomap_page_create(inode, page);
+-	bool is_contig =3D false;
++	bool same_page =3D false, is_contig =3D false;
+ 	loff_t orig_pos =3D pos;
+ 	unsigned poff, plen;
+ 	sector_t sector;
+@@ -171,10 +171,14 @@ iomap_readpage_actor(struct inode *inode, loff_t pos,=
+ loff_t length, void *data,
+ 	 * Try to merge into a previous segment if we can.
+ 	 */
+ 	sector =3D iomap_sector(iomap, pos);
+-	if (ctx->bio && bio_end_sector(ctx->bio) =3D=3D sector) {
+-		if (__bio_try_merge_page(ctx->bio, page, plen, poff, true))
+-			goto done;
++	if (ctx->bio && bio_end_sector(ctx->bio) =3D=3D sector)
+ 		is_contig =3D true;
++
++	if (is_contig &&
++	    __bio_try_merge_page(ctx->bio, page, plen, poff, &same_page)) {
++		if (!same_page && iop)
++			atomic_inc(&iop->read_count);
++		goto done;
+ 	}
+=20
+ 	/*
+@@ -185,7 +189,7 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, l=
+off_t length, void *data,
+ 	if (iop)
+ 		atomic_inc(&iop->read_count);
+=20
+-	if (!ctx->bio || !is_contig || bio_full(ctx->bio)) {
++	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
+ 		gfp_t gfp =3D mapping_gfp_constraint(page->mapping, GFP_KERNEL);
+ 		int nr_vecs =3D (length + PAGE_SIZE - 1) >> PAGE_SHIFT;
+=20
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/w8Z2ruBOddqr4cCayhOvFZm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0lPm8ACgkQAVBC80lX
+0Gyh1Af8DIM7rWvpgB+zZrKHYeRjYRP0keOjh7orhDQYYwQ9iu70QLmrSbEfLyQ8
+DLi+NQ1D0GXpB3OIT9xEv7HCHgYpQrhmm7Wmftzk7HgWgVm3HidqEzfm2fc0AAXM
+3WRfjuRO+6X2W4NLqDWVdMAMym8DkRK9EaXwQEWhw7+XNlmYGIoHmCW34AfOdqG8
+v1ELWo7etzEIxEiog7KZ8tB6/AEzcEayM0neMMU5HzHvAqLloV1fkoC76ei6bpqj
+JkjssN6x+HFuon1QIKBf/2irF81L8qkmtWbra6xpqycTuHzdSfOSdKpWXAyADClq
+vptRzBIaoZbf02bkBIXYI4Qa1cAOTw==
+=JCzO
+-----END PGP SIGNATURE-----
+
+--Sig_/w8Z2ruBOddqr4cCayhOvFZm--
