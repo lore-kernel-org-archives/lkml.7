@@ -2,111 +2,90 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C01CC73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202EAC73C68
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5132020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E766F20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:24:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mNA1e83g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfGJFYg (ORCPT
+        id S1727032AbfGJFY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:24:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:11139 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfGJFYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:24:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jul 2019 22:24:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,473,1557212400"; 
-   d="scan'208";a="364363437"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Jul 2019 22:24:33 -0700
-Date:   Wed, 10 Jul 2019 13:07:46 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     gregkh@linuxfoundation.org, mdf@kernel.org,
-        linux-fpga@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        atull@kernel.org
-Subject: Re: [PATCH v2 00/11] FPGA DFL updates
-Message-ID: <20190710050746.GA28620@hao-dev>
-References: <1562286238-11413-1-git-send-email-hao.wu@intel.com>
+        Wed, 10 Jul 2019 01:24:58 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40216 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfGJFY6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:24:58 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e8so899551otl.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 22:24:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ioMDB4xCRfyih9blEfQfFq/5H+9f5r/eOiGuXZsKTpM=;
+        b=mNA1e83gi656UXPR8nqOQSjw8wH59lM6GanNHXNRGXbg3bq0gEGgsCw16oi+sZU9DJ
+         eQZNOeldrdnuV/5hnGKQpKr1o2kQF/+U+p3TsmIt5rF6zYyIyCNLkjBN4/L5YKqKT399
+         fjPfPjemWu2HGAWRYhrVRBy+683K0HsvchE32sejFHgVZACcqHIZ+f/pqMUocPt7Vl4L
+         KWMDPgOhI1YaN2NTfaA9ps2KehruPFGrFg/YgM5cP42ecPkX2bSaw3Ozx3KQ593gVsOd
+         gw5i9X/nIAPz3i1KLeKE3PdtZ5ohiIMDa+//oPJUWKzQddrhWXjk6v1O30WeFi5CPm/K
+         /Etg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ioMDB4xCRfyih9blEfQfFq/5H+9f5r/eOiGuXZsKTpM=;
+        b=trz9ZFUoMmpYF2As7Hq3/v0oo12LDMbwpQNSZs8+aQ+oYf0thm/Z4VURIclTIlR7GN
+         t4tJ1j2mQlN7Oe19zFpx/wlWqCMhvsykFtatFFCSZtD1xHzDTy2ba26jmHECZtXxohCK
+         LskumLex6DG0ylLnl8TaUyfsBANSoRwtgrp5Syns9aswiRlJeFPmFe9+4IJaTCmGcWh2
+         ElH4hcArYbQW9dPq820ps6W5dEF1ePRrWJiuLb52h787ugZ7r3ds9b9kze1HamDEXVjp
+         Uu4d0VnEhRyZMX51Ba5PXCF44SU/K0t+/YiZbzO+rNNrkt5UifEDh9MCVIDoRj6l3HeH
+         Qe6g==
+X-Gm-Message-State: APjAAAUmRQc/VQTOWFiwfKzJFK4Sn5Uw1IytskYdVO3dFsR5tkM22zAW
+        77fXkcJzuxKeNwel59om9WAQjqVSzKibZ2pLrl1JTg==
+X-Google-Smtp-Source: APXvYqzNWCTp+PGnXinfRndYKaIVZTZf7jZeNiuotZqNqZys/IitGZeb1egfuAbp/LgydGLR3qx1qbqBFaufmhseWLw=
+X-Received: by 2002:a05:6830:2010:: with SMTP id e16mr9197123otp.344.1562736296734;
+ Tue, 09 Jul 2019 22:24:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562286238-11413-1-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190709182543.GA6611@hari-Inspiron-1545>
+In-Reply-To: <20190709182543.GA6611@hari-Inspiron-1545>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Wed, 10 Jul 2019 13:24:45 +0800
+Message-ID: <CA+Px+wVMn-wZ_aoAV2OMEg4zE7aoYG__my2EJM_PP5ghaXjoFw@mail.gmail.com>
+Subject: Re: [PATCH] sound: soc: codecs: mt6358: change return type of mt6358_codec_init_reg
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shunli Wang <shunli.wang@mediatek.com>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 08:23:47AM +0800, Wu Hao wrote:
-> Hi Greg / Moritz
-> 
-> This is v2 patchset which adds more features to FPGA DFL. This patchset
-> is made on top of patch[1] and char-misc-next tree. Documentation patch
-> for DFL is dropped from this patchset, and will resubmit it later to
-> avoid conflict.
+On Wed, Jul 10, 2019 at 2:25 AM Hariprasad Kelam
+<hariprasad.kelam@gmail.com> wrote:
+>
+> As mt6358_codec_init_reg function always returns 0 , change return type
+> from int to void.
+>
+> fixes below issue reported by coccicheck
+> sound/soc/codecs/mt6358.c:2260:5-8: Unneeded variable: "ret". Return "0"
+> on line 2289
+>
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Acked-by: Tzung-Bi Shih <tzungbi@google.com>
 
-Hi Greg,
-
-Did you get a chance to take a look at this new version to see if these
-patches are good to take?
-
-Hope we can catch up with the merge window.
-
-Thanks
-Hao
-
-> 
-> Main changes from v1:
->   - remove DRV/MODULE_VERSION modifications. (patch #1, #3, #4, #6)
->   - remove argsz from new ioctls. (patch #2)
->   - replace sysfs_create/remove_* with device_add/remove_* for sysfs entries.
->     (patch #5, #8, #11)
-> 
-> [1] [PATCH] fpga: dfl: use driver core functions, not sysfs ones.
->     https://lkml.org/lkml/2019/7/4/36
-> 
-> Wu Hao (11):
->   fpga: dfl: fme: support 512bit data width PR
->   fpga: dfl: fme: add DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
->   fpga: dfl: pci: enable SRIOV support.
->   fpga: dfl: afu: add AFU state related sysfs interfaces
->   fpga: dfl: afu: add userclock sysfs interfaces.
->   fpga: dfl: add id_table for dfl private feature driver
->   fpga: dfl: afu: export __port_enable/disable function.
->   fpga: dfl: afu: add error reporting support.
->   fpga: dfl: afu: add STP (SignalTap) support
->   fpga: dfl: fme: add capability sysfs interfaces
->   fpga: dfl: fme: add global error reporting support
-> 
->  Documentation/ABI/testing/sysfs-platform-dfl-fme  |  98 ++++++
->  Documentation/ABI/testing/sysfs-platform-dfl-port | 104 ++++++
->  drivers/fpga/Makefile                             |   3 +-
->  drivers/fpga/dfl-afu-error.c                      | 225 +++++++++++++
->  drivers/fpga/dfl-afu-main.c                       | 328 +++++++++++++++++-
->  drivers/fpga/dfl-afu.h                            |   7 +
->  drivers/fpga/dfl-fme-error.c                      | 385 ++++++++++++++++++++++
->  drivers/fpga/dfl-fme-main.c                       |  93 +++++-
->  drivers/fpga/dfl-fme-mgr.c                        | 110 ++++++-
->  drivers/fpga/dfl-fme-pr.c                         |  50 ++-
->  drivers/fpga/dfl-fme.h                            |   7 +-
->  drivers/fpga/dfl-pci.c                            |  39 +++
->  drivers/fpga/dfl.c                                | 166 +++++++++-
->  drivers/fpga/dfl.h                                |  54 ++-
->  include/uapi/linux/fpga-dfl.h                     |  19 ++
->  15 files changed, 1617 insertions(+), 71 deletions(-)
->  create mode 100644 drivers/fpga/dfl-afu-error.c
->  create mode 100644 drivers/fpga/dfl-fme-error.c
-> 
-> -- 
-> 1.8.3.1
+Thanks for cleaning this up.
