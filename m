@@ -2,167 +2,238 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D095CC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DAEC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFC920693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE2320693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="UCVfirEt"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="KMlYx9EO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfGJIyT (ORCPT
+        id S1727629AbfGJIy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:54:19 -0400
-Received: from mail-eopbgr50075.outbound.protection.outlook.com ([40.107.5.75]:35623
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726695AbfGJIyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:54:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UjyT/+L+T/ZvR/I42bhYm8OUoAouD8gsXx3xkSetZrU=;
- b=UCVfirEtCRwOimoF+11IGBGS84WmpGQfCawPZVQgSNv10NXACyAF9SMW6nuwcHPtFG/H8kXtYvkCf5sMmH9v2OyniwSGsjlc6NNTldg5QBJefQhGhLcX8Wt7jb55UBiJDqB3Ap0rwhKmtEOQycpPD7/Zifz6FDD0yvD2wcZUO2A=
-Received: from AM3PR05CA0141.eurprd05.prod.outlook.com (2603:10a6:207:3::19)
- by AM0PR0502MB3972.eurprd05.prod.outlook.com (2603:10a6:208:8::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2052.18; Wed, 10 Jul
- 2019 08:54:15 +0000
-Received: from DB5EUR03FT003.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::205) by AM3PR05CA0141.outlook.office365.com
- (2603:10a6:207:3::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2052.18 via Frontend
- Transport; Wed, 10 Jul 2019 08:54:15 +0000
-Authentication-Results: spf=pass (sender IP is 193.47.165.134)
- smtp.mailfrom=mellanox.com; kalray.eu; dkim=none (message not signed)
- header.d=none;kalray.eu; dmarc=pass action=none header.from=mellanox.com;
-Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
- 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
-Received: from mtlcas13.mtl.com (193.47.165.134) by
- DB5EUR03FT003.mail.protection.outlook.com (10.152.20.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2052.18 via Frontend Transport; Wed, 10 Jul 2019 08:54:14 +0000
-Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4; Wed, 10 Jul 2019 11:54:13
- +0300
-Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Wed,
- 10 Jul 2019 11:54:13 +0300
-Received: from [10.223.3.162] (10.223.3.162) by MTLCAS01.mtl.com (10.0.8.71)
- with Microsoft SMTP Server (TLS) id 14.3.301.0; Wed, 10 Jul 2019 11:53:40
- +0300
-Subject: Re: [PATCH v2] nvme: fix multipath crash when ANA desactivated
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Marta Rybczynska <mrybczyn@kalray.eu>, <kbusch@kernel.org>,
-        <axboe@fb.com>, <sagi@grimberg.me>,
-        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Samuel Jones <sjones@kalray.eu>,
-        Jean-Baptiste Riaux <jbriaux@kalray.eu>
-References: <1575872828.30576006.1562335512322.JavaMail.zimbra@kalray.eu>
- <989987da-6711-0abc-785c-6574b3bb768c@mellanox.com>
- <20190709212904.GB9636@lst.de>
-From:   Max Gurtovoy <maxg@mellanox.com>
-Message-ID: <0d113713-0198-0dc2-2a8f-a9fbcabbf05a@mellanox.com>
-Date:   Wed, 10 Jul 2019 11:53:40 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 04:54:58 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46094 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727588AbfGJIy5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 04:54:57 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so2975770iol.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 01:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6btS87boNqG1W/9Ztpa2IpNskVJOh6JYgS9t3inEIQI=;
+        b=KMlYx9EOkoY8Qy/PDR4ey635CnLrzEeFzu2f9fIL5n1fifS9gS8a1BkIkyU31MnjiM
+         Y3nz80EheAksIOa13APe2tRja5415pH7L5g5lEo41gMjbs9pP3JgbBNq+h9gTE8zSjBv
+         rmYvAck4xvjmpWCOMDGXtQqInmhZtJ0dulXOs/yqW9QDzmu578ULxBUex3izQ/Vudti+
+         leN8v/A+HVewkXLG8ycgF6WvQ/9J/Z+2I9myzqHeA5cXITUrWiiuay3Tjsvh+0n8kdOp
+         j7LEOhW7cuhaZBsZGIclq/X0Huql21CWkgL4DdRYBtAMEkgaP1Pq2PxBFR1Pwvtqs5rH
+         AVsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6btS87boNqG1W/9Ztpa2IpNskVJOh6JYgS9t3inEIQI=;
+        b=cViN1wVr5qoXNZ0w+w5geLMfJ8rbMLWtI+4s1XG3di75CDoDdUvgYSwWDGZI9+dmqr
+         HQ6W5LPUo36GwxxUyF48CsAFtcaSArr1RyKzuyb1OIJIMHLHVWicoJ38h1mINOky/7Bm
+         VxD6bkojwKOgZeY+5Zg6lfMaadnks66vKEcMeparwP2wnWKyn2VVuwh/5FHobSWjoV1/
+         oXZfuO97xPZALs0YfiWCefpx6cH3Vd0wckRORV4oW/lRROmkkrjQRVKUaPQ9ssVzeHt4
+         kHXa860sn7VDDweW76VKIm2+FNlollUOLBV0Q2o6+NjostR2MzFUw9xprE/EajwiQYQd
+         d+7A==
+X-Gm-Message-State: APjAAAWAhFe5tVJvZOGe7UghbBCD+fXey9cFJp1+AngOpU+6YIjh/l/H
+        /JX139NMfSaF49VhVOUAiHtRFY1xcILN13kiaUuWtw==
+X-Google-Smtp-Source: APXvYqzd0nxeZ9lB5IZ76B3/bU7p8OUZW8Srs3S5MbtTinl4Liud6ku3Tq/DVCe/x6WFKpP5lVM6DWxlctD43KSfvXE=
+X-Received: by 2002:a02:b10b:: with SMTP id r11mr6018114jah.140.1562748896251;
+ Wed, 10 Jul 2019 01:54:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190709212904.GB9636@lst.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.223.3.162]
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(376002)(2980300002)(199004)(189003)(11346002)(7736002)(67846002)(478600001)(336012)(16526019)(26005)(65826007)(186003)(31686004)(47776003)(3846002)(446003)(316002)(2616005)(58126008)(54906003)(14444005)(50466002)(16576012)(8676002)(476003)(126002)(81156014)(70586007)(70206006)(486006)(86362001)(31696002)(6916009)(36756003)(230700001)(2906002)(6246003)(76176011)(6116002)(65956001)(65806001)(8936002)(229853002)(356004)(64126003)(5660300002)(23676004)(2486003)(305945005)(81166006)(53546011)(106002)(4326008)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0502MB3972;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c24efeae-0d16-4235-ca11-08d705142f52
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:AM0PR0502MB3972;
-X-MS-TrafficTypeDiagnostic: AM0PR0502MB3972:
-X-Microsoft-Antispam-PRVS: <AM0PR0502MB3972A4DC6449927E2FD9F995B6F00@AM0PR0502MB3972.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 0094E3478A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: 8AVHLRJZ+EBqNXvqm95HKz+YLkEOVj24bng4j98NvFwHhqdC4CxewlJuCU0cR6dDu2U9d1//typloprPQkx74zCm6LoKmEFUxUO3aUW3SrcWpTmsnPOG8T3JrVyoGkrJG7z5HheWu1PZofHphTb8hYmFeJNjJOQuZhbJvumTQSBK3I2VhElFF22PliQM3jKKrT1rLRM2IESrD4Ywuy4hqSpj5vZrpi0RoSoU1gAcPZuEqROgsuShGm99+mu2a21/11zTLfEz6Xdl+iMsJvCnWLK8UIcAE5FV80u2iOeouL86uJy2owe6tn2Uq/LH7B/LOQBn7pPZP44KKBe9auxO+H+V98Y8UZwDq1tFvU43dWWf9iOYqFHYDAxgIcnW/iTST8aWpezYYlqk94NfBbbSg//VpuCy/qXB7t3yvfG+1Ok=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2019 08:54:14.3911
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c24efeae-0d16-4235-ca11-08d705142f52
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3972
+References: <20190708063252.4756-1-jian-hong@endlessm.com> <20190709102059.7036-1-jian-hong@endlessm.com>
+ <F7CD281DE3E379468C6D07993EA72F84D1864779@RTITMBSVM04.realtek.com.tw>
+In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D1864779@RTITMBSVM04.realtek.com.tw>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Wed, 10 Jul 2019 16:54:19 +0800
+Message-ID: <CAPpJ_ee+CVCu5uUK_Ki6s+yxqrJ_fS5Wm=7y1cDV2MQ8+XyNkA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] rtw88: pci: Rearrange the memory usage for skb in
+ RX ISR
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        David Laight <David.Laight@aculab.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@endlessm.com" <linux@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/10/2019 12:29 AM, Christoph Hellwig wrote:
-> On Sat, Jul 06, 2019 at 01:06:44PM +0300, Max Gurtovoy wrote:
->>> +	/* check if multipath is enabled and we have the capability */
->>> +	if (!multipath)
->>> +		return 0;
->>> +	if (!ctrl->subsys || ((ctrl->subsys->cmic & (1 << 3)) != 0))
->> shouldn't it be:
->>
->> if (!ctrl->subsys || ((ctrl->subsys->cmic & (1 << 3)) == 0))
->>
->> or
->>
->> if (!ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
->>
->>
->> Otherwise, you don't really do any initialization and return 0 in case you have the capability, right ?
-> Yes.  FYI, my idea how to fix this would be something like:
+Tony Chuang <yhchuang@realtek.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=8810=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:37=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-> index a9a927677970..cdb3e5baa329 100644
-> --- a/drivers/nvme/host/multipath.c
-> +++ b/drivers/nvme/host/multipath.c
-> @@ -12,11 +12,6 @@ module_param(multipath, bool, 0444);
->   MODULE_PARM_DESC(multipath,
->   	"turn on native support for multiple controllers per subsystem");
->   
-> -inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
-> -{
-> -	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
-> -}
-> -
->   /*
->    * If multipathing is enabled we need to always use the subsystem instance
->    * number for numbering our devices to avoid conflicts between subsystems that
-> @@ -622,7 +617,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
->   {
->   	int error;
->   
-> -	if (!nvme_ctrl_use_ana(ctrl))
-> +	if (!multipath || !ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
->   		return 0;
->   
->   	ctrl->anacap = id->anacap;
-> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-> index 716a876119c8..14eca76bec5c 100644
-> --- a/drivers/nvme/host/nvme.h
-> +++ b/drivers/nvme/host/nvme.h
-> @@ -485,7 +485,10 @@ extern const struct attribute_group *nvme_ns_id_attr_groups[];
->   extern const struct block_device_operations nvme_ns_head_ops;
->   
->   #ifdef CONFIG_NVME_MULTIPATH
-> -bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl);
-> +static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
-> +{
-> +	return ctrl->ana_log_buf != NULL;
-> +}
->   void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
->   			struct nvme_ctrl *ctrl, int *flags);
->   void nvme_failover_req(struct request *req);
+> > Subject: [PATCH v2 1/2] rtw88: pci: Rearrange the memory usage for skb =
+in
+> > RX ISR
+> >
+> > Testing with RTL8822BE hardware, when available memory is low, we
+> > frequently see a kernel panic and system freeze.
+> >
+> > First, rtw_pci_rx_isr encounters a memory allocation failure (trimmed):
+> >
+> > rx routine starvation
+> > WARNING: CPU: 7 PID: 9871 at drivers/net/wireless/realtek/rtw88/pci.c:8=
+22
+> > rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
+> > [ 2356.580313] RIP: 0010:rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpc=
+i]
+> >
+> > Then we see a variety of different error conditions and kernel panics,
+> > such as this one (trimmed):
+> >
+> > rtw_pci 0000:02:00.0: pci bus timeout, check dma status
+> > skbuff: skb_over_panic: text:00000000091b6e66 len:415 put:415
+> > head:00000000d2880c6f data:000000007a02b1ea tail:0x1df end:0xc0
+> > dev:<NULL>
+> > ------------[ cut here ]------------
+> > kernel BUG at net/core/skbuff.c:105!
+> > invalid opcode: 0000 [#1] SMP NOPTI
+> > RIP: 0010:skb_panic+0x43/0x45
+> >
+> > When skb allocation fails and the "rx routine starvation" is hit, the
+> > function returns immediately without updating the RX ring. At this
+> > point, the RX ring may continue referencing an old skb which was alread=
+y
+> > handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
+> > bad things happen.
+> >
+> > This patch allocates a new, data-sized skb first in RX ISR. After
+> > copying the data in, we pass it to the upper layers. However, if skb
+> > allocation fails, we effectively drop the frame. In both cases, the
+> > original, full size ring skb is reused.
+> >
+> > In addition, to fixing the kernel crash, the RX routine should now
+> > generally behave better under low memory conditions.
+> >
+> > Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=3D204053
+> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> > Cc: <stable@vger.kernel.org>
+> > ---
+> >  drivers/net/wireless/realtek/rtw88/pci.c | 49 +++++++++++-------------
+> >  1 file changed, 22 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c
+> > b/drivers/net/wireless/realtek/rtw88/pci.c
+> > index cfe05ba7280d..e9fe3ad896c8 100644
+> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> > @@ -763,6 +763,7 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev,
+> > struct rtw_pci *rtwpci,
+> >       u32 pkt_offset;
+> >       u32 pkt_desc_sz =3D chip->rx_pkt_desc_sz;
+> >       u32 buf_desc_sz =3D chip->rx_buf_desc_sz;
+> > +     u32 new_len;
+> >       u8 *rx_desc;
+> >       dma_addr_t dma;
+> >
+> > @@ -790,40 +791,34 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev=
+,
+> > struct rtw_pci *rtwpci,
+> >               pkt_offset =3D pkt_desc_sz + pkt_stat.drv_info_sz +
+> >                            pkt_stat.shift;
+> >
+> > -             if (pkt_stat.is_c2h) {
+> > -                     /* keep rx_desc, halmac needs it */
+> > -                     skb_put(skb, pkt_stat.pkt_len + pkt_offset);
+> > +             /* discard current skb if the new skb cannot be allocated=
+ as a
+> > +              * new one in rx ring later
+> > +              */
+> > +             new_len =3D pkt_stat.pkt_len + pkt_offset;
+> > +             new =3D dev_alloc_skb(new_len);
+> > +             if (WARN_ONCE(!new, "rx routine starvation\n"))
+> > +                     goto next_rp;
+> > +
+> > +             /* put the DMA data including rx_desc from phy to new skb=
+ */
+> > +             skb_put_data(new, skb->data, new_len);
+> >
+> > -                     /* pass offset for further operation */
+> > -                     *((u32 *)skb->cb) =3D pkt_offset;
+> > -                     skb_queue_tail(&rtwdev->c2h_queue, skb);
+> > +             if (pkt_stat.is_c2h) {
+> > +                      /* pass rx_desc & offset for further operation *=
+/
+> > +                     *((u32 *)new->cb) =3D pkt_offset;
+> > +                     skb_queue_tail(&rtwdev->c2h_queue, new);
+> >                       ieee80211_queue_work(rtwdev->hw, &rtwdev->c2h_wor=
+k);
+> >               } else {
+> > -                     /* remove rx_desc, maybe use skb_pull? */
+> > -                     skb_put(skb, pkt_stat.pkt_len);
+> > -                     skb_reserve(skb, pkt_offset);
+> > -
+> > -                     /* alloc a smaller skb to mac80211 */
+> > -                     new =3D dev_alloc_skb(pkt_stat.pkt_len);
+> > -                     if (!new) {
+> > -                             new =3D skb;
+> > -                     } else {
+> > -                             skb_put_data(new, skb->data, skb->len);
+> > -                             dev_kfree_skb_any(skb);
+> > -                     }
+> > -                     /* TODO: merge into rx.c */
+> > -                     rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
+> > +                     /* remove rx_desc */
+> > +                     skb_pull(new, pkt_offset);
+> > +
+> > +                     rtw_rx_stats(rtwdev, pkt_stat.vif, new);
+> >                       memcpy(new->cb, &rx_status, sizeof(rx_status));
+> >                       ieee80211_rx_irqsafe(rtwdev->hw, new);
+> >               }
+> >
+> > -             /* skb delivered to mac80211, alloc a new one in rx ring =
+*/
+> > -             new =3D dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+> > -             if (WARN(!new, "rx routine starvation\n"))
+> > -                     return;
+> > -
+> > -             ring->buf[cur_rp] =3D new;
+> > -             rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_desc=
+_sz);
+> > +next_rp:
+> > +             /* new skb delivered to mac80211, re-enable original skb =
+DMA */
+> > +             rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_desc=
+_sz);
+> >
+> >               /* host read next element in ring */
+> >               if (++cur_rp >=3D ring->r.len)
+> > --
+> > 2.22.0
+>
+> Now it looks good to me. Thanks.
+>
+> Acked-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+>
+> Yan-Hsuan
 
-Yes this looks good.
+Uh!  Thanks for your ack.
+But I just sent version 3 patches (including [PATCH v3 2/2] rtw88:
+pci: Use DMA sync instead of remapping in RX ISR) by following
+Christoph's comment. [1]
 
+Could you please also review the 2 patches of version 3?  Thank you.
+
+[1]: https://lkml.org/lkml/2019/7/9/507
+
+Jian-Hong Pan
