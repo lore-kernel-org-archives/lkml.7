@@ -2,129 +2,156 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F042C74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FC4C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205D020838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F3F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SVtPgNJ4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yS+wamjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfGJVhd (ORCPT
+        id S1727906AbfGJVhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:37:33 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38891 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfGJVhd (ORCPT
+        Wed, 10 Jul 2019 17:37:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40834 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfGJVhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:37:33 -0400
-Received: by mail-qk1-f194.google.com with SMTP id a27so3165254qkk.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 14:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=St1qYh9tlVeaUB7eh4n72DWxZ8GSBB5lPnCn4WHYVHw=;
-        b=SVtPgNJ4ZIv0M43ejuyHAoXp14LcG2YNYCLbuptnvVYUFBvaYofNKYUM+z0OB/1aoC
-         o9XLnsSpDDfFesjJAkj5VQTU4+coitlcwGHfTMh7+UOgiU2r2vWzPtkKne+tISqHX6kR
-         oH/4ISlffM3fENAdWCMtvJS/ZC8B+KbTYjj4vVe40e4i2L+7NcAGkuAmgTVUfAJYQNNU
-         J8WRG5hlE5y2LGHYuvz7y0v+VjGIhk7AIlhVa4EcYr1ICxvXe5Lhh2TNSPvmVCglMtd9
-         sjJoDmyPSgDJCFghTRWf/6Nw2aTfxUV3w6ojnp4eNkDtmw1+t+CeMIYs+HMQCfNeHmEi
-         cjXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=St1qYh9tlVeaUB7eh4n72DWxZ8GSBB5lPnCn4WHYVHw=;
-        b=Zz5bBdHAqUGhLRDiDps4FmdVIeIkykIAWY0RLZshRHKZAgDML2wHpp33xhVInZXuf8
-         aokEfye0cTKdptKv5T0aId1iuY4CY+BO2GivQYlpKHBT9pwOpyab5zM+30xSctKiuJmE
-         lCI/nYF3pA6mO0R9RUNZ9j7rEJtK4BgAhhkRQUm1t442BiZECcjgxisgyIWSOlBWOK0w
-         DTRnNc/priwwH5PwZ5DPoFroN5GXFSTfE3lRYSqhDPqHjn70DUxmakKi5Hq9mvsid2CO
-         fNvGBTKsOmqNsIAynX5s1lsyLCs88HuxCVmo04Emeh3X0KjST48gRaPF6YIw6hCyAKbW
-         U0xw==
-X-Gm-Message-State: APjAAAWAzu2POhVK1VTX4fmTnFkw9b6NC8f3oNRfbgMFPvAhUXziTuwj
-        GWLVz+nkUQhnE4LfnjEPrTYv8ZBIpANXkQ==
-X-Google-Smtp-Source: APXvYqxtsgCH3Yb5EvQyvFkbLrmMWRJmYeFGMIyDCPFqJarGrAZ+ibbxy/7KEh30njTYCZ7k1vQUmA==
-X-Received: by 2002:a05:620a:685:: with SMTP id f5mr293718qkh.238.1562794651499;
-        Wed, 10 Jul 2019 14:37:31 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id y3sm1729926qtj.46.2019.07.10.14.37.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 14:37:30 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     jroedel@suse.de
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] iommu/amd: fix a crash in iova_magazine_free_pfns
-Date:   Wed, 10 Jul 2019 17:37:15 -0400
-Message-Id: <1562794635-8988-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 10 Jul 2019 17:37:42 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ALYxw8129323;
+        Wed, 10 Jul 2019 21:36:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=0W6M2v+RzuMaZIKsyxLacBLW5qRq+E1Z+EV6R9iu5Og=;
+ b=yS+wamjo8eakdVzQiyu9LCXeeH0Dlu9JAsF+b7KqaCUhOWDXXCm4fXcFTIzx4kyqdHXt
+ /+l0z1GX7oCK5cH0V4I5NQgUH2Srl1O9Yxv+CE5hJKRHJuws9SyhWPqTvkQnvFCsEyma
+ dCpMa5u8qGsSpx97lnzdq6brhtTsxtqwwwMGC8u3pC5csQyk6+/UW4o0+sEgEYEY6wNP
+ cdxUcs4YjgfheMalrz5/HK+UBBZhYPXUdHYG2jjdl62mdw+kSEmdlAEa7TZXMB32KiPK
+ 7+jBoESLnc5S3+/uQB3JOMMRXof83p1x1KPLdfiVNqARouMno+HVWEnVYqduAfvVMM1X 7w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2tjkkpvknt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jul 2019 21:36:42 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ALXFuT070524;
+        Wed, 10 Jul 2019 21:36:41 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 2tmmh3sn6a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jul 2019 21:36:41 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6ALafvD076812;
+        Wed, 10 Jul 2019 21:36:41 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2tmmh3sn67-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jul 2019 21:36:41 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6ALaetK025541;
+        Wed, 10 Jul 2019 21:36:40 GMT
+Received: from localhost (/10.159.211.102)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Jul 2019 14:36:40 -0700
+Date:   Wed, 10 Jul 2019 17:36:37 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Kris Van Hees <kris.van.hees@oracle.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Chris Mason <clm@fb.com>, brendan.d.gregg@gmail.com,
+        davem@davemloft.net
+Subject: Re: [PATCH V2 1/1 (was 0/1 by accident)] tools/dtrace: initial
+ implementation of DTrace
+Message-ID: <20190710213637.GB13962@oracle.com>
+References: <201907101537.x6AFboMR015946@aserv0122.oracle.com>
+ <201907101542.x6AFgOO9012232@userv0121.oracle.com>
+ <20190710181227.GA9925@oracle.com>
+ <c7f15d1d-1696-4d95-1729-4c4e97bdc43e@iogearbox.net>
+ <20190710143048.3923d1d9@lwn.net>
+ <1de27d29-65bb-89d3-9fca-7c452cd66934@iogearbox.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1de27d29-65bb-89d3-9fca-7c452cd66934@iogearbox.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907100249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a system is under heavy memory pressure, the allocation in
-alloc_iova_fast() could still fail even flush_rcache=true, and then
-causes dma_ops_alloc_iova() return 0.
+On Wed, Jul 10, 2019 at 11:19:43PM +0200, Daniel Borkmann wrote:
+> On 07/10/2019 10:30 PM, Jonathan Corbet wrote:
+> > On Wed, 10 Jul 2019 21:32:25 +0200
+> > Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > 
+> >> Looks like you missed Brendan Gregg's prior feedback from v1 [0]. I haven't
+> >> seen a strong compelling argument for why this needs to reside in the kernel
+> >> tree given we also have all the other tracing tools and many of which also
+> >> rely on BPF such as bcc, bpftrace, ply, systemtap, sysdig, lttng to just name
+> >> a few.
+> > 
+> > So I'm just watching from the sidelines here, but I do feel the need to
+> > point out that Kris appears to be trying to follow the previous feedback
+> > he got from Alexei, where creating tools/dtrace is exactly what he was
+> > told to do:
+> > 
+> >   https://lwn.net/ml/netdev/20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com/
+> > 
+> > Now he's being told the exact opposite.  Not the best experience for
+> > somebody who is trying to make the kernel better.
+> 
+> Ugh, agree, sorry for the misleading direction. Alexei is currently offgrid
+> this week, he might comment later.
+> 
+> It has nothing to do with making the _kernel_ better, it's a /user space/ front
+> end for the existing kernel infrastructure like many of the other tracers out
+> there. Don't get me wrong, adding the missing /kernel parts/ for it is a totally
+> different subject [and _that_ is what is making the kernel better, not the former].
 
-pqi_scsi_queue_command
-  pqi_raid_submit_scsi_cmd_with_io_request
-    scsi_dma_map
-      map_sg
-        dma_ops_alloc_iova
-         alloc_iova_fast
+I disagree.  Yes, the current patch obviously isn't making the kernel better
+because it doesn't touch the kernel.  But DTrace as a whole is not just a
+/front end/ to the existing kernel infrastructure, and I did make that point
+at LPC 2018 and in my emails.  Some of its more advanced features will lead
+to contributions to the kernel that (by virtue of being developed as part of
+this DTrace re-implementation) will more often than not be able to benefit
+other tracers as well.  I do think that aspect qualifies as working towards
+making the kenrel better.
 
-Later, map_sg()->iommu_map_page() would probably fail due to the invalid
-PFN 0, and call free_iova_fast()->iova_rcache_insert() to insert it to
-the rcache. Finally, it will trigger the BUG_ON(!iova) here.
+> Hypothetical question: does it make the _kernel_ better if we suddenly add a huge
+> and complex project like tools/mysql/ to the kernel tree? Nope.
+> 
+> > There are still people interested in DTrace out there.  How would you
+> > recommend that Kris proceed at this point?
+> 
+> My recommendation to proceed is to maintain the dtrace user space tooling in
+> its own separate project like the vast majority of all the other tracing projects
+> (see also the other advantages that Steven pointed out from his experience), and
+> extend the kernel bits whenever needed.
 
-    kernel BUG at drivers/iommu/iova.c:801!
-    Workqueue: kblockd blk_mq_run_work_fn
-    RIP: 0010:iova_magazine_free_pfns+0x7d/0xc0
-    Call Trace:
-     free_cpu_cached_iovas+0xbd/0x150
-     alloc_iova_fast+0x8c/0xba
-     dma_ops_alloc_iova.isra.6+0x65/0xa0
-     map_sg+0x8c/0x2a0
-     scsi_dma_map+0xc6/0x160
-     pqi_aio_submit_io+0x1f6/0x440 [smartpqi]
-     pqi_scsi_queue_command+0x90c/0xdd0 [smartpqi]
-     scsi_queue_rq+0x79c/0x1200
-     blk_mq_dispatch_rq_list+0x4dc/0xb70
-     blk_mq_sched_dispatch_requests+0x249/0x310
-     __blk_mq_run_hw_queue+0x128/0x200
-     blk_mq_run_work_fn+0x27/0x30
-     process_one_work+0x522/0xa10
-     worker_thread+0x63/0x5b0
-     kthread+0x1d2/0x1f0
-     ret_from_fork+0x22/0x40
+I wish that would have been the initial recommendation because it certainly
+would have avoided me going down a path that was going to lead to rejection.
 
-Fix it by validating the return from the 2nd alloc_iova_fast() in
-dma_ops_alloc_iova(), so map_sg() could handle the error condition
-immediately.
+Either way, I do hope that as work progresses and contributions to the kernel
+code are submitted in support of advancing tracing on Linux, those patches
+will receive a fair review and consideration.  I can appreciate that some
+people do not like DTrace or feel that it is not necessary, but personal
+opinions about tools should not be a deciding factor in whether a contribution
+has merit or not.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/iommu/amd_iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 73740b969e62..f24c689b4e01 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1697,6 +1697,8 @@ static unsigned long dma_ops_alloc_iova(struct device *dev,
- 	if (!pfn)
- 		pfn = alloc_iova_fast(&dma_dom->iovad, pages,
- 				      IOVA_PFN(dma_mask), true);
-+	if (!pfn)
-+		return DMA_MAPPING_ERROR;
- 
- 	return (pfn << PAGE_SHIFT);
- }
--- 
-1.8.3.1
-
+	Kris
