@@ -2,115 +2,148 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC692C73C64
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DF1C606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C7A20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D0520651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:14:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="djB6tFez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfGJMMj (ORCPT
+        id S1727255AbfGJMOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:12:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36076 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfGJMMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:12:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9FB0EAC1E;
-        Wed, 10 Jul 2019 12:12:36 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id F3A27E0E06; Wed, 10 Jul 2019 14:12:31 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 14:12:31 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 04/15] ethtool: introduce ethtool netlink
- interface
-Message-ID: <20190710121231.GA5700@unicorn.suse.cz>
-References: <cover.1562067622.git.mkubecek@suse.cz>
- <e7fa3ad7e9cf4d7a8f9a2085e3166f7260845b0a.1562067622.git.mkubecek@suse.cz>
- <20190702122521.GN2250@nanopsycho>
- <20190702145241.GD20101@unicorn.suse.cz>
- <20190703084151.GR2250@nanopsycho>
- <20190708172729.GC24474@unicorn.suse.cz>
- <20190708192629.GD2282@nanopsycho.orion>
- <20190708202219.GE24474@unicorn.suse.cz>
- <20190709134212.GD2301@nanopsycho.orion>
+        Wed, 10 Jul 2019 08:14:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34277 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfGJMOE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 08:14:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id w9so4512349wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 05:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VIGpiD/b4QvsY5xkdx7aEJIrxrp4vS+C6jbYnop4lsE=;
+        b=djB6tFezqr/i8CmI83Ds8pwgO9bKTWl7LzJ4Xkno8saZ+BdnHeBFTyd0v5wYoi1ED/
+         0IMAfMZLUWU1E4z+BolmBXOwrR/6Wjkv1mifepGsjFaraQsYkJGQqza0W5Q7Ghtk6F3k
+         Wp6d40/xP/qYG5UO8x8zvDhuA7kDmNSTw0cZbecLUSz8udZj/0RCMGNNWQovVjAMEzjd
+         OTTOv4RPlHMAoNCsn7PwN0oWMrqSFBW+GxmdlsqjmdKPqMF/x3veVY6hk8bEAT6n0R0T
+         p86asswZJimf9zD4DBolzuuOyivx4jIZzz2MLR2mZ2SrZpq4PjP+FQJ1FJzIm13WkfGK
+         bwdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VIGpiD/b4QvsY5xkdx7aEJIrxrp4vS+C6jbYnop4lsE=;
+        b=KJEbA+TSvU8fN8OjhQuSfIdotPX37eruvwzkcpJnNNSywLGBagak7XGagWlEjiZQtb
+         Qh78ITmyxNY4bFZFnSND4JawNZwWxqDLG2HI2DbDqVbq8/q6Fvg7o6h9rIXYh9B4g+Bb
+         G58VsP5BpWZECXk6/S8MUsXxQqMzS7kI1f2lWVDCMmEDXymp3AAGzFNFokde+gi0dUKd
+         IyHM6q8uos6uhg8tDH3ScmTkZhMctF2SZKOjq05dbOJafulc+qdsEtm9FokeEDrnq8Gq
+         kePIepuRudnDMWnHyeZT3919WYKMxikh1dJ2oQvI5NnHIdGqELc6/Her05eld+WDo2qO
+         dkEA==
+X-Gm-Message-State: APjAAAXRo2DD8DzBRKnW2ENPLT85p0KXuQAiEUP0as0R3nOoLTu+npAO
+        205GiJMH8+3Z6mI9sKCAuql/Cg==
+X-Google-Smtp-Source: APXvYqyTB/Y4Qj0MHXp2GOWt42OVm+gtHhNUSrt1QVllGDOab+5Rxb2PRv/VLRP8/UmVfYjXS2aDBA==
+X-Received: by 2002:a1c:1a4c:: with SMTP id a73mr5435637wma.109.1562760841772;
+        Wed, 10 Jul 2019 05:14:01 -0700 (PDT)
+Received: from apalos (athedsl-428434.home.otenet.gr. [79.131.225.144])
+        by smtp.gmail.com with ESMTPSA id r21sm4885127wrc.83.2019.07.10.05.13.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 05:14:01 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 15:13:58 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Thirupathaiah Annapureddy <thiruan@microsoft.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
+        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
+        "tee-dev@lists.linaro.org" <tee-dev@lists.linaro.org>,
+        "sumit.garg@linaro.org" <sumit.garg@linaro.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        Joakim Bech <joakim.bech@linaro.org>
+Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190710121358.GA12965@apalos>
+References: <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
+ <20190627133004.GA3757@apalos>
+ <0893dc429d4c3f3b52d423f9e61c08a5012a7519.camel@linux.intel.com>
+ <20190702142109.GA32069@apalos>
+ <CY4PR21MB0279B99FB0097309ADE83809BCF80@CY4PR21MB0279.namprd21.prod.outlook.com>
+ <20190703065813.GA12724@apalos>
+ <CAC_iWjK2F13QxjuvqzqNLx00SiGz_FQ5X=MQxJyDev57bo3=LQ@mail.gmail.com>
+ <CY4PR21MB02791B5EF653514DC0223694BCFA0@CY4PR21MB0279.namprd21.prod.outlook.com>
+ <20190704181120.GA21445@apalos>
+ <CY4PR21MB027937ADCEBF85826FF3516FBCF50@CY4PR21MB0279.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190709134212.GD2301@nanopsycho.orion>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CY4PR21MB027937ADCEBF85826FF3516FBCF50@CY4PR21MB0279.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 03:42:12PM +0200, Jiri Pirko wrote:
-> Mon, Jul 08, 2019 at 10:22:19PM CEST, mkubecek@suse.cz wrote:
-> >On Mon, Jul 08, 2019 at 09:26:29PM +0200, Jiri Pirko wrote:
-> >> Mon, Jul 08, 2019 at 07:27:29PM CEST, mkubecek@suse.cz wrote:
-> >> >
-> >> >There are two reasons for this design. First is to reduce the number of
-> >> >requests needed to get the information. This is not so much a problem of
-> >> >ethtool itself; the only existing commands that would result in multiple
-> >> >request messages would be "ethtool <dev>" and "ethtool -s <dev>". Maybe
-> >> >also "ethtool -x/-X <dev>" but even if the indirection table and hash
-> >> >key have different bits assigned now, they don't have to be split even
-> >> >if we split other commands. It may be bigger problem for daemons wanting
-> >> >to keep track of system configuration which would have to issue many
-> >> >requests whenever a new device appears.
-> >> >
-> >> >Second reason is that with 8-bit genetlink command/message id, the space
-> >> >is not as infinite as it might seem. I counted quickly, right now the
-> >> >full series uses 14 ids for kernel messages, with split you propose it
-> >> >would most likely grow to 44. For full implementation of all ethtool
-> >> >functionality, we could get to ~60 ids. It's still only 1/4 of the
-> >> >available space but it's not clear what the future development will look
-> >> >like. We would certainly need to be careful not to start allocating new
-> >> >commands for single parameters and try to be foreseeing about what can
-> >> >be grouped together. But we will need to do that in any case.
-> >> >
-> >> >On kernel side, splitting existing messages would make some things a bit
-> >> >easier. It would also reduce the number of scenarios where only part of
-> >> >requested information is available or only part of a SET request fails.
-> >> 
-> >> Okay, I got your point. So why don't we look at if from the other angle.
-> >> Why don't we have only single get/set command that would be in general
-> >> used to get/set ALL info from/to the kernel. Where we can have these
-> >> bits (perhaps rather varlen bitfield) to for user to indicate which data
-> >> is he interested in? This scales. The other commands would be
-> >> just for action.
-> >> 
-> >> Something like RTM_GETLINK/RTM_SETLINK. Makes sense?
-> >
-> >It's certainly an option but at the first glance it seems as just moving
-> >what I tried to avoid one level lower. It would work around the u8 issue
-> >(but as Johannes pointed out, we can handle it with genetlink when/if
-> >the time comes). We would almost certainly have to split the replies
-> >into multiple messages to keep the packet size reasonable. I'll have to
-> >think more about the consequences for both kernel and userspace.
-> >
-> >My gut feeling is that out of the two extreme options (one universal
-> >message type and message types corresponding to current infomask bits),
-> >the latter is more appealing. After all, ethtool has been gathering
-> >features that would need those ~60 message types for 20 years.
+Hi Thirupathaiah
+
+Apologies for tha lte reply, i somehow misplaced this mail.
+
+[...]
+> > 
+> > Please check the previous mail from Sumit. It explains exaclty what's going on.
+> > The tl;dr version is that the storage is up only when the supplicant is
+> > running.
 > 
-> Yeah, but I think that we have to do one or another. Anything in between
-> makes the code complex and uapi confusing. Let's start clean :)
+> I definitely know that OP-TEE can access storage only when the "user mode" supplicant 
+> is running :). But fTPM NV storage should have been initialized in 
+> in the preboot environment (UEFI/U-boot). 
+> 
+> It would also be helpful to understand the overall use case/scenario (Measured boot?)you
+> are trying to exercise with the fTPM. 
 
-I'll split the messages for v7.
+In the future yesm measured boot/ For now it's more like like try running it in
+QEMU to demonstrate firmware TPM makes sense and has use cases. 
 
-Michal
+> 
+> I also want to emphasize that this discussion is turning into more of how 
+> fTPM gets integrated/enabled in a new HW platform.  
+> fTPM is hosted in github and you definitely bring any issues/feature requests there. 
+> 
+
+Ok
+
+> 
+> > 
+> > > If you let me know the HW platform details, I am happy to work with you to
+> > enable/integrate
+> > > fTPM TA on that HW platform.
+> > >
+> > Thanks,
+> > The hardware i am waiting for for has an eMMC RPMB. In theory the U-Boot
+> > supplicant support will be there so i'll be able to test it.
+> Can you give me the details of HW so that I can order one for myself? 
+
+It's QEMU for now. We plan on doing something similar in an ST disco board
+though.
+
+> Is it one of the 96boards? 
+
+stm32mp157c-dk2 is one of our targets.
+
+> The reason for the ask is that we have not upstreamd u-boot fTPM stack yet, 
+> although we have future plans for it. 
+> 
+> --Thiru
+> 
+
+Thanks
+/Ilias
