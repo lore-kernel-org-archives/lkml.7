@@ -2,197 +2,130 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826C3C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20702C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A0520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB2B20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxwTMw9Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brITT/5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfGJX3m (ORCPT
+        id S1727709AbfGJXfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 19:29:42 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41839 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727188AbfGJX3m (ORCPT
+        Wed, 10 Jul 2019 19:35:37 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:35018 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727463AbfGJXfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 19:29:42 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d17so4384657qtj.8;
-        Wed, 10 Jul 2019 16:29:40 -0700 (PDT)
+        Wed, 10 Jul 2019 19:35:36 -0400
+Received: by mail-pg1-f173.google.com with SMTP id s27so1980403pgl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 16:35:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fk89bVjmURxGvXV7OaZ71cWqbOQvM2q6nM1dAeGQkB8=;
-        b=QxwTMw9QnCZz5nzXj6stf/DipgvoZMFB1gd/wY5O4AbNgO/lrr0Pn8X4wFKthqKu6+
-         tc7FI9wTWPwb16mAd9wdEZ0Jqmy9YwNuiBFMNiYPQXg5BXDoZtzNJexYI4FjXYUS4lEZ
-         IpV1wmYjcXd3hoCJUMG4p4LwAVB8bIcLmha/x542MQZ9nhijiDJ7UZbYlXN9RscQJk3U
-         kyxbIqvBu/4PpwmS2p3y+KJsvlIWrKRqJdkqE20zlfXTopVchRXgT1GtoVXdUfe386j8
-         H85n4x75U9O67+Z32y/Y8CkIH5J+Lz/8F23c5K3Dv2k5HNxLOk8SnLIIe9VNroN5Godm
-         2fbw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fo3zNx7q8KOphF4/0k8ry1Exilbv+0XYzkMqa1pkdPw=;
+        b=brITT/5d5a9WyodVg5ZUQsakATJo0F+/1F0NZxiiEO4WZQws6EdiwGGKUFKY2pt/Zo
+         CYrZAOfPL/cCfxp3dHvE1aabIU8b7cgowtd3fXrrYR35j+w9wSFI4/MnhtzBbTlu/r6f
+         JEKXEkQJ8j3TQqvb0K33a80yiZ+zyjPj5Z0pWmtYCvMAWLp/UJAgsVYiQ8MZ2pqd06Fp
+         zjAAh5jbOtcdf3eu7kihy5eqVXw3cEWFA1QhWDw/g3HaPszaNu2XlkvfcZEoFxHBZ2vN
+         4/RaulelQD0Ma3GGYGzUZGqEEk/VKTIwXHs0hbdk8/rAh81ECwzdFDbV1PeVNjYcWwM+
+         vBQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fk89bVjmURxGvXV7OaZ71cWqbOQvM2q6nM1dAeGQkB8=;
-        b=f03kFZi9FntWzxDS7hLaP7Exg0kM40LxA1x00jRy/npspB3XNA//N2fzHZG7X80ZvF
-         iyHUU8B2PIuX9ymRsepbngU4FDhfcq37vyvLmxi+wXJ4LYx16SwEhGCH64jNT+3ruLvP
-         ELrtaSLabkuM5uyo6rJKt2yEwNLQmXdajrcvoeCPJNGcDkXAjU0ddXSJkBNynEpcALZb
-         M5tHTFAuanPFrgxWi2Xn/BikisUK9HOs+YhuagYZIWC7CTf0Og805N9wAP+u+gh3nJ1G
-         hRZAqCRbOGetaQTUu9l2vohBmw+q0PH2QLAvWk758fqmI+TDs0K1VMWgEg3buwsjczTu
-         Dvog==
-X-Gm-Message-State: APjAAAXPTgL5mjuJVBDUozAc+eM/qWBieq4w5rUMMby8pl143SptDLNa
-        8bsDZAV5P/bpAj6ojUmetwsOd8Kiy3dQUrmKQj0=
-X-Google-Smtp-Source: APXvYqzEr2Ef2KQ3C0RaPc0rVkUuQbb1jwQZrKtZm9qxNqAUATqXkNWXWd2Uk+8y3/dUBbbSkj1UbnZeDYkD/JvYrG0=
-X-Received: by 2002:ac8:21b7:: with SMTP id 52mr488797qty.59.1562801380073;
- Wed, 10 Jul 2019 16:29:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fo3zNx7q8KOphF4/0k8ry1Exilbv+0XYzkMqa1pkdPw=;
+        b=s3E34wTLi9246JwatdKgbgSy1w1rjUpTcVCiX1PWOtlnArZCsnGugPrpPB9gCGA3TQ
+         rQHYgolICSCcs9h1WM8ATJTLOlADaiwYRfVbJD0WJqjPEPOF7+18ydyNrfS5w7DL9yf4
+         VyAX4+Sx9TFfMzFDv7tIgjai7ae6JJulThSr6kKJnp/CYjWVI/amfjKkQL11iHOmy2iR
+         Po+2Pdd59Gu3hhK2zvZDIaysKax3k0A6peILFt8n9lTwz7pWVIU79DwkAnU7XtTc/Nu1
+         mGhhu0p04oViZmLUrrGlf5gw7XKv7kCW1Ff863f+yi1YAHlMnRDI/cmQMhxtsl2w7/V4
+         A98A==
+X-Gm-Message-State: APjAAAXPT7lpfqXVave2d3g8oH6bGbD2e/LJ9OWDXkCVteF+VHjEgt0P
+        BbJHJAhPWLtrUh7nbQ+Vwug=
+X-Google-Smtp-Source: APXvYqxyqTCbrq1xdCzkoYVL+c48dQADntW+6Bi3tN/r4jmGUpVWI/udlq43jQcwlgvVT5ebKnuk1w==
+X-Received: by 2002:a17:90a:36e4:: with SMTP id t91mr1101282pjb.22.1562801735794;
+        Wed, 10 Jul 2019 16:35:35 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id q1sm6318517pfn.178.2019.07.10.16.35.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jul 2019 16:35:35 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 16:36:06 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     shengjiu.wang@nxp.com
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 2/2] ASoC: fsl_esai: recover the channel swap after
+ xrun
+Message-ID: <20190710233605.GA9886@Asurada-Nvidia.nvidia.com>
+References: <cover.1562566531.git.shengjiu.wang@nxp.com>
+ <a055d9d590124aad2de70e97266e50d2bae752c8.1562566531.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-References: <CAEf4BzaUEWwGL3k0VeiFYFqyJexQU9cDZWN69jSDpBjP1ZEcpw@mail.gmail.com>
- <000000000000a94981058d37f1a4@google.com>
-In-Reply-To: <000000000000a94981058d37f1a4@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 10 Jul 2019 16:29:29 -0700
-Message-ID: <CAEf4BzabgRE6qZChfw=7nptxYAyZFcj0+Jk_PMSZQP0ZVagQzg@mail.gmail.com>
-Subject: bpf_prog_free_deferred bug. WAS: Re: WARNING in mark_chain_precision
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+f21251a7468cd46efc60@syzkaller.appspotmail.com>,
-        aaron.f.brown@intel.com, Alexei Starovoitov <ast@kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        jeffrey.t.kirsher@intel.com,
-        john fastabend <john.fastabend@gmail.com>,
-        Martin Lau <kafai@fb.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, sasha.neftin@intel.com,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a055d9d590124aad2de70e97266e50d2bae752c8.1562566531.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 9:08 PM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> Mon, 08 Jul 2019 21:25:00 -0700 (PDT)
-> > Hello,
-> >
-> > syzbot has tested the proposed patch but the reproducer still triggered
-> > crash:
-> > WARNING in bpf_jit_free
-> >
-> > WARNING: CPU: 0 PID: 9077 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 0 PID: 9077 Comm: kworker/0:3 Not tainted 5.2.0-rc6+ #1
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: events bpf_prog_free_deferred
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> >   panic+0x2cb/0x744 kernel/panic.c:219
-> >   __warn.cold+0x20/0x4d kernel/panic.c:576
-> >   report_bug+0x263/0x2b0 lib/bug.c:186
-> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-> >   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-> >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> > RIP: 0010:bpf_jit_free+0x157/0x1b0
-> > Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00
-> > 00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 09 7f f4 ff <0f> 0b e9 f9 fe
-> > ff ff e8 2d 02 2e 00 e9 d9 fe ff ff 48 89 7d e0 e8
-> > RSP: 0018:ffff888084affcb0 EFLAGS: 00010293
-> > RAX: ffff88808a622100 RBX: ffff88809639d580 RCX: ffffffff817b0b0d
-> > RDX: 0000000000000000 RSI: ffffffff817c4557 RDI: ffff88809639d5f0
-> > RBP: ffff888084affcd0 R08: 1ffffffff150daa8 R09: fffffbfff150daa9
-> > R10: fffffbfff150daa8 R11: ffffffff8a86d547 R12: ffffc90001921000
-> > R13: ffff88809639d5e8 R14: ffff8880a0589800 R15: ffff8880ae834d40
-> >   bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1982
-> >   process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-> >   worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-> >   kthread+0x354/0x420 kernel/kthread.c:255
-> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
-> >
-> >
-> > Tested on:
-> >
-> > commit:         b9321614 bpf: fix precision bit propagation for BPF_ST ins..
-> > git tree:       https://github.com/anakryiko/linux bpf-fix-precise-bpf_st
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=112f0dfda00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=6bb3e6e7997c14f9
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
->
-> 1, currently, bpf_prog_put(), the put helper, deletes all kallsyms before
-> invoking the free helper, bpf_prog_free(); the latter complains if kallsyms
-> are detected not all off.
->
-> 2, before commit 538950a1b752 ("soreuseport: setsockopt
-> SO_ATTACH_REUSEPORT_[CE]BPF"), __bpf_prog_release() already called the put
-> helper or the free one for a given prog depending on its type: put for
-> BPF_PROG_TYPE_SOCKET_FILTER.
->
-> In the commit we can see bpf_prog_destroy(), __bpf_prog_free(),
-> bpf_prog_put(), here and then; Note in __get_bpf() the put for
-> !BPF_PROG_TYPE_SOCKET_FILTER.
->
-> 3, in commit 113214be7f6c ("bpf: refactor bpf_prog_get and type check into
-> helper") bpf_prog_get_type() was added and put in __get_bpf().
->
-> In the commit we can see other types like BPF_PROG_TYPE_SCHED_ACT and
-> BPF_PROG_TYPE_SCHED_CLS.
->
-> 4, in commit 8217ca653ec6 ("bpf: Enable BPF_PROG_TYPE_SK_REUSEPORT bpf prog
-> in reuseport selection") sk_reuseport_prog_free() was added without a word
-> in the log for it.
->
-> 5, enrich prog type in __bpf_prog_release().
+Hi Shengjiu,
 
-Thanks for investigation!
+Mostly looks good to me, just some small comments.
 
-I'm curious what makes BPF_PROG_TYPE_SOCKET_FILTER (and
-BPF_PROG_TYPE_SK_REUSEPORT) special, compared to all the other types
-of BPF programs. If it's something to do with sockets specifically,
-there are a bunch of other programs that deal with sockets, so should
-they be handled specially as well (e.g., BPF_PROG_TYPE_CGROUP_SOCK)?
+On Mon, Jul 08, 2019 at 02:38:52PM +0800, shengjiu.wang@nxp.com wrote:
+  
+> +static void fsl_esai_hw_reset(unsigned long arg)
+> +{
+> +	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
+> +	u32 saisr, tfcr, rfcr;
+> +	bool tx = true, rx = false, enabled[2];
 
-Daniel, do you have any insight here?
+Could we swap the lines of u32 and bool? It'd look better.
 
->
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -1142,11 +1142,15 @@ static void bpf_release_orig_filter(stru
->
->  static void __bpf_prog_release(struct bpf_prog *prog)
->  {
-> -       if (prog->type == BPF_PROG_TYPE_SOCKET_FILTER) {
-> +       switch (prog->type) {
-> +       case BPF_PROG_TYPE_SOCKET_FILTER:
-> +       case BPF_PROG_TYPE_SK_REUSEPORT:
->                 bpf_prog_put(prog);
-> -       } else {
-> +               break;
-> +       default:
->                 bpf_release_orig_filter(prog);
->                 bpf_prog_free(prog);
-> +               break;
->         }
->  }
->
-> --
->
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
+> +			   ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
+> +			   ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
+
+Let's add a line of comments for these two:
+	/* Enforce ESAI personal resets for both TX and RX */
+
+> +	/*
+> +	 * Restore registers by regcache_sync, and ignore
+> +	 * return value
+> +	 */
+
+Could fit into single-line?
+
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
+> +			   ESAI_xCR_xPR_MASK, 0);
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
+> +			   ESAI_xCR_xPR_MASK, 0);
+> +
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_PRRC,
+> +			   ESAI_PRRC_PDC_MASK, ESAI_PRRC_PDC(ESAI_GPIO));
+> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_PCRC,
+> +			   ESAI_PCRC_PC_MASK, ESAI_PCRC_PC(ESAI_GPIO));
+
+Could remove the blank line and add a line of comments:
+	/* Remove ESAI personal resets by configuring PCRC and PRRC also */
+
+Btw, I still feel this personal reset can be stuffed into one
+of the wrapper functions. But let's keep this simple for now.
+
+> +	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
+
+Why do we read saisr here? All its bits would get cleared by
+the hardware reset. If it's a must to clear again, we should
+add a line of comments to emphasize it.
+
+Thank you
