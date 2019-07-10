@@ -2,116 +2,436 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD354C74820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FEEC74821
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE582084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZMHBsxJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8750620651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 13:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562763611;
+	bh=nW60n256p38QfKb4m+3sYjj1tSFQoPLPqtb36WqsHg0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=pUB/DNc2voatj01qj8gbPrqw0+1qE9ANbJV1F4Lsl822ATLQkAK34OHPKvrxThqDo
+	 I0B0oKv0cpUT0krNVo1xlzI1ESw/RA7taZfYPjGgVHrHba03CwxsxWhbKtFKLa+Xix
+	 NggQWKcMudKSGdw5v7VXp6TenGheV5wCMgvZUgIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfGJNAB (ORCPT
+        id S1727516AbfGJNAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 09:00:01 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35412 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbfGJM77 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:59:59 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x25so2013578ljh.2;
-        Wed, 10 Jul 2019 05:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=z7ylOxfLdhUvUzU0fEvFs37rFjaeIPMVCihg4Np+yiM=;
-        b=bZMHBsxJ8aQL5q16//D1P0Kakf6jjGLqfBX3KWpIqnfbjKhyhGk4JFP5Zh8yrBtV9D
-         yFUwyD214OB4RhTTE1FwWKvcdaWQFSiw86DE44C9ki+NtX3vZ0L3n77ohnZcsGRbsLx2
-         M7HVjLcUUKFUpTgouNnuV+cpmxk0P7YjuMLW0/N8mx4Ggi7R+tqniIOBgEA4u/cgrblq
-         aDn/4dTj+lxZlnpniTeuTTdPwa67iIphdYc7aORIUU8JiWyp2ja2P9RBa5qlptkddm9Z
-         DWOORKvuDKvLSMm5CGF6djJsk40gY/vrBl5yfI0zEcmeqIErTzHb7DpDyrelEQROElba
-         VIeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=z7ylOxfLdhUvUzU0fEvFs37rFjaeIPMVCihg4Np+yiM=;
-        b=gGDlPyKovbX0Z33dh0uxvfp2ZkoPXCjZMYW+xPqEIcUOhM37BdcFrGlKCIOXlahdz1
-         oU3fbU6sDnr7Cn7eK4Kqp9aqOszjjTifSH4m/k6K0D+P+TyL4uWoziUmvWJbaN3ZcGjB
-         DAc1AmcLhVEeVgwdxPhscN1EwzEHrssaIGOhHPTNM+I1eueJ6FDux+ej0e/kHLD+a2G2
-         WzEInV2prDlzFBx+U8yfPk7P59SRJKOqqAdhF5Js38p5NoXpyVn4JuAtkFBA9R27Y4kT
-         5bIxejo4DuzV0bO+pXgpvXiYD6Kfw1sJAXQA3ov6q5Lyd7OutslREhvHcHkLmfsK+CEP
-         jJFg==
-X-Gm-Message-State: APjAAAX7sdnZT+PoEgxRaeFiF5hcpdmRYwcpEstLj4Gh3/ABQLKMcb8M
-        T2famRihTf2KR2uwx9nt/aQdbAeT
-X-Google-Smtp-Source: APXvYqyAyHtKzYMLhhmkEVzL6+xprN6WUNXA9HHsaLCcX60VB8Jr0lUDrhqT1ogbtvOM4mRgykGpIg==
-X-Received: by 2002:a2e:9e81:: with SMTP id f1mr17744867ljk.29.1562763596585;
-        Wed, 10 Jul 2019 05:59:56 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id f24sm380661lfk.72.2019.07.10.05.59.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 05:59:55 -0700 (PDT)
-Subject: Re: [PATCH v1] drm/modes: Skip invalid cmdline mode
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190709145151.23086-1-digetx@gmail.com>
- <20190710101229.54ufuhmh22dfxclr@flea>
- <4ad69d15-07f8-9753-72d6-a51402c94c20@gmail.com>
- <20190710125552.qvmnh6qs63ikiu2k@flea>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f530844d-70f2-c3cc-d5f6-b435f1dbdfd2@gmail.com>
-Date:   Wed, 10 Jul 2019 15:59:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 09:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727421AbfGJNAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 09:00:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE2B2084B;
+        Wed, 10 Jul 2019 13:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562763608;
+        bh=nW60n256p38QfKb4m+3sYjj1tSFQoPLPqtb36WqsHg0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=wCVgOgs1SwS/QOXUod/d5LwGmGQU6wZIpHlPmpf6TP+9Ohd0NPGpe01G4CsBunoCT
+         KRdP5RP9dgRjsisBgSeykEBLdIJVHN4fl9GhoSHggHR52AR6zGZDoSaZY3csYCfPcu
+         pKz2fT1tvnUrv9+Co4Muu95O6vMfnbVEfMzHGaVU=
+Date:   Wed, 10 Jul 2019 15:00:04 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.19.58
+Message-ID: <20190710130004.GA15450@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190710125552.qvmnh6qs63ikiu2k@flea>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.07.2019 15:55, Maxime Ripard пишет:
-> On Wed, Jul 10, 2019 at 03:42:28PM +0300, Dmitry Osipenko wrote:
->> 10.07.2019 13:12, Maxime Ripard пишет:
->>> On Tue, Jul 09, 2019 at 05:51:51PM +0300, Dmitry Osipenko wrote:
->>>> The named mode could be invalid and then cmdline parser misses to validate
->>>> mode's dimensions, happily adding 0x0 mode as a valid mode. One case where
->>>> this happens is NVIDIA Tegra devices that are using downstream bootloader
->>>> which adds "video=tegrafb" to the kernel's cmdline and thus upstream Tegra
->>>> DRM driver fails to probe because of the invalid mode.
->>>>
->>>> Fixes: 3aeeb13d8996 ("drm/modes: Support modes names on the command line")
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>
->>> Applied to drm-misc-next-fixes
->>>
->>> Thanks for figuring this out!
->>
->> Thank you very much! So the driver now doesn't fail to probe because
->> of the cmdline, but what else I noticed is that the framebuffer
->> console is now rotated by 90° on a 800x1280 panel, while display in
->> Xorg is vertical as it was before. Seems something else is still
->> missing, reverting "drm/modes: Rewrite the command line parser"
->> returns the framebuffer's console orientation into the original
->> state.
-> 
-> What is the whole command line passed by the bootloader ?
 
-tegraid=30.1.3.0.0 mem=1022M@2048M android.commchip=0 vmalloc=512M androidboot.serialno=015d3f18c9081210 video=tegrafb no_console_suspend=1 console=none
-debug_uartport=hsport usbcore.old_scheme_first=1 lp0_vec=8192@0xbddf9000 tegra_fbmem=8195200@0xabe01000 core_edp_mv=0 audio_codec=rt5640 board_info=f41:a00:1:44:2
-root=/dev/sda1 rw rootwait tegraboot=sdmmc gpt gpt_sector=61079551 androidboot.bootloader=4.23 androidboot.baseband=1231_0.18.0_0409
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+I'm announcing the release of the 4.19.58 kernel.
+
+All users of the 4.19 kernel series must upgrade.
+
+The updated 4.19.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.19.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
+
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile                                                    |    2=20
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi                   |    8 ++
+ arch/arm64/kernel/module.c                                  |    8 +-
+ arch/mips/Makefile                                          |    3=20
+ arch/mips/mm/mmap.c                                         |    2=20
+ arch/mips/mm/tlbex.c                                        |   29 +++++---
+ arch/x86/boot/compressed/head_64.S                          |    2=20
+ arch/x86/include/asm/intel-family.h                         |    3=20
+ arch/x86/kernel/ftrace.c                                    |    3=20
+ arch/x86/kvm/lapic.c                                        |    2=20
+ arch/x86/kvm/x86.c                                          |    6 -
+ block/blk-core.c                                            |    5 -
+ crypto/cryptd.c                                             |    1=20
+ crypto/crypto_user.c                                        |    3=20
+ drivers/dma/imx-sdma.c                                      |    4 -
+ drivers/dma/qcom/bam_dma.c                                  |    3=20
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c                       |   19 -----
+ drivers/gpu/drm/amd/powerplay/hwmgr/process_pptables_v1_0.c |    4 -
+ drivers/gpu/drm/amd/powerplay/inc/hwmgr.h                   |    1=20
+ drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c     |    4 +
+ drivers/gpu/drm/drm_fb_helper.c                             |    6 +
+ drivers/gpu/drm/drm_panel_orientation_quirks.c              |   32 +++++++=
+++
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c                       |    7 +-
+ drivers/gpu/drm/i915/intel_csr.c                            |   18 +++++
+ drivers/gpu/drm/imx/ipuv3-crtc.c                            |    6 -
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c                      |    8 --
+ drivers/gpu/drm/mediatek/mtk_dsi.c                          |   12 +++
+ drivers/i2c/busses/i2c-pca-platform.c                       |    3=20
+ drivers/md/raid0.c                                          |    2=20
+ drivers/media/platform/s5p-mfc/s5p_mfc.c                    |    1=20
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c          |    5 +
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c              |   10 ++
+ drivers/platform/mellanox/mlxreg-hotplug.c                  |    1=20
+ drivers/platform/x86/asus-nb-wmi.c                          |    8 ++
+ drivers/platform/x86/asus-wmi.c                             |    2=20
+ drivers/platform/x86/asus-wmi.h                             |    1=20
+ drivers/platform/x86/intel-vbtn.c                           |   16 ++++
+ drivers/platform/x86/mlx-platform.c                         |    2=20
+ drivers/scsi/hpsa.c                                         |    7 +-
+ drivers/scsi/hpsa_cmd.h                                     |    1=20
+ drivers/spi/spi-bitbang.c                                   |    2=20
+ drivers/target/target_core_user.c                           |    3=20
+ drivers/tty/rocket.c                                        |    2=20
+ drivers/tty/serial/sc16is7xx.c                              |    2=20
+ drivers/usb/gadget/udc/fusb300_udc.c                        |    5 +
+ drivers/usb/gadget/udc/lpc32xx_udc.c                        |    3=20
+ fs/btrfs/dev-replace.c                                      |   26 ++++---
+ fs/btrfs/volumes.c                                          |    2=20
+ fs/btrfs/volumes.h                                          |    5 +
+ fs/f2fs/debug.c                                             |   19 +++--
+ fs/f2fs/super.c                                             |    5 +
+ fs/nfsd/nfs4state.c                                         |    2=20
+ fs/userfaultfd.c                                            |   42 +++++++=
+-----
+ include/linux/filter.h                                      |    2=20
+ include/net/ipv6_frag.h                                     |    1=20
+ kernel/bpf/core.c                                           |   21 ++++--
+ kernel/cgroup/cpuset.c                                      |   15 ++++
+ kernel/livepatch/core.c                                     |    6 +
+ kernel/ptrace.c                                             |    4 -
+ kernel/trace/ftrace.c                                       |   12 ++-
+ kernel/trace/trace.c                                        |   10 +-
+ lib/mpi/mpi-pow.c                                           |    6 -
+ mm/mlock.c                                                  |    4 -
+ mm/vmscan.c                                                 |   27 ++++---
+ net/bluetooth/l2cap_core.c                                  |    2=20
+ net/core/sysctl_net_core.c                                  |   20 ++++-
+ net/ipv6/netfilter/nf_conntrack_reasm.c                     |   22 +++---
+ net/mac80211/mesh_pathtbl.c                                 |    2=20
+ net/netfilter/nf_flow_table_ip.c                            |    3=20
+ net/netfilter/nft_flow_offload.c                            |   31 ++++++--
+ net/rds/send.c                                              |    4 -
+ net/smc/af_smc.c                                            |    6 -
+ net/sunrpc/xprtrdma/svc_rdma_transport.c                    |    7 +-
+ scripts/decode_stacktrace.sh                                |    2=20
+ sound/core/seq/oss/seq_oss_ioctl.c                          |    2=20
+ sound/core/seq/oss/seq_oss_rw.c                             |    2=20
+ sound/firewire/amdtp-am824.c                                |    2=20
+ sound/hda/ext/hdac_ext_bus.c                                |    1=20
+ sound/pci/hda/hda_codec.c                                   |    1=20
+ sound/pci/hda/patch_realtek.c                               |    8 +-
+ sound/soc/codecs/ak4458.c                                   |   18 +++--
+ sound/soc/codecs/cs4265.c                                   |    2=20
+ sound/soc/codecs/max98090.c                                 |   16 ++++
+ sound/soc/codecs/rt274.c                                    |    3=20
+ sound/soc/soc-pcm.c                                         |    3=20
+ sound/soc/sunxi/sun4i-i2s.c                                 |    6 +
+ sound/usb/line6/pcm.c                                       |    5 +
+ sound/usb/mixer_quirks.c                                    |    4 -
+ tools/testing/selftests/net/fib_rule_tests.sh               |    4 -
+ 89 files changed, 465 insertions(+), 197 deletions(-)
+
+Alex Deucher (1):
+      drm/amdgpu/gfx9: use reset default for PA_SC_FIFO_SIZE
+
+Alexandre Belloni (1):
+      usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
+
+Amadeusz S=C5=82awi=C5=84ski (2):
+      ALSA: hdac: fix memory release for SST and SOF drivers
+      SoC: rt274: Fix internal jack assignment in set_jack callback
+
+Ard Biesheuvel (1):
+      arm64: kaslr: keep modules inside module region when KASAN is enabled
+
+Cedric Hombourger (1):
+      MIPS: have "plain" make calls build dtbs for selected platforms
+
+Chuck Lever (1):
+      svcrdma: Ignore source port when computing DRC hash
+
+Colin Ian King (3):
+      ALSA: seq: fix incorrect order of dest_client/dest_ports arguments
+      ALSA: usb-audio: fix sign unintended sign extension on left shifts
+      net: hns: fix unsigned comparison to less than zero
+
+Daniel Borkmann (1):
+      bpf: fix bpf_jit_limit knob for PAGE_SIZE >=3D 64K
+
+David Ahern (1):
+      selftests: fib_rule_tests: Fix icmp proto with ipv6
+
+David S. Miller (1):
+      rds: Fix warning.
+
+Dennis Wassenberg (1):
+      ALSA: hda/realtek - Change front mic location for Lenovo M710q
+
+Dmitry Korotin (1):
+      MIPS: Add missing EHB in mtc0 -> mfc0 sequence.
+
+Don Brace (1):
+      scsi: hpsa: correct ioaccel2 chaining
+
+Eiichi Tsukata (1):
+      tracing/snapshot: Resize spare buffer if size changed
+
+Eric Biggers (2):
+      crypto: user - prevent operating on larval algorithms
+      fs/userfaultfd.c: disable irqs for fault_pending and event locks
+
+Eric Dumazet (1):
+      ip6: fix skb leak in ip6frag_expire_frag_queue()
+
+Evan Quan (1):
+      drm/amd/powerplay: use hardware fan control if no powerplay fan table
+
+Florian Westphal (4):
+      netfilter: nf_flow_table: ignore DF bit setting
+      netfilter: nft_flow_offload: set liberal tracking mode for tcp
+      netfilter: nft_flow_offload: don't offload when sequence numbers need=
+ adjustment
+      netfilter: nft_flow_offload: IPCB is only valid for ipv4 family
+
+Greg Kroah-Hartman (1):
+      Linux 4.19.58
+
+Guilherme G. Piccoli (2):
+      block: Fix a NULL pointer dereference in generic_make_request()
+      md/raid0: Do not bypass blocking queue entered for raid0 bios
+
+Guillaume Nault (2):
+      netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments
+      netfilter: ipv6: nf_defrag: accept duplicate fragments again
+
+Guoqing Jiang (1):
+      sc16is7xx: move label 'err_spi' to correct section
+
+Hans de Goede (3):
+      drm: panel-orientation-quirks: Add quirk for GPD pocket2
+      drm: panel-orientation-quirks: Add quirk for GPD MicroPC
+      platform/x86: asus-wmi: Only Tell EC the OS will handle display hotke=
+ys from asus_nb_wmi
+
+Hauke Mehrtens (1):
+      MIPS: Fix bounds check virt_addr_valid
+
+Herbert Xu (1):
+      lib/mpi: Fix karactx leak in mpi_powm
+
+Hsin-Yi Wang (5):
+      drm/mediatek: fix unbind functions
+      drm/mediatek: unbind components in mtk_drm_unbind()
+      drm/mediatek: call drm_atomic_helper_shutdown() when unbinding driver
+      drm/mediatek: clear num_pipes when unbind driver
+      drm/mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
+
+Ido Schimmel (1):
+      mlxsw: spectrum: Handle VLAN device unlinking
+
+Jaegeuk Kim (1):
+      f2fs: don't access node/meta inode mapping after iput
+
+Jann Horn (1):
+      ptrace: Fix ->ptracer_cred handling for PTRACE_TRACEME
+
+Joel Savitz (1):
+      cpuset: restore sanity to cpuset_cpus_allowed_fallback()
+
+Josh Poimboeuf (1):
+      module: Fix livepatch/ftrace module text permissions race
+
+Joshua Scott (1):
+      ARM: dts: armada-xp-98dx3236: Switch to armada-38x-uart serial node
+
+Kan Liang (1):
+      x86/CPU: Add more Icelake model numbers
+
+Kirill A. Shutemov (1):
+      x86/boot/compressed/64: Do not corrupt EDX on EFER.LME=3D1 setting
+
+Libin Yang (1):
+      ASoC: soc-pcm: BE dai needs prepare when pause release after resume
+
+Linus Torvalds (1):
+      tty: rocket: fix incorrect forward declaration of 'rp_init()'
+
+Linus Walleij (1):
+      i2c: pca-platform: Fix GPIO lookup code
+
+Lucas De Marchi (1):
+      drm/i915/dmc: protect against reading random memory
+
+Lucas Stach (1):
+      drm/etnaviv: add missing failure path to destroy suballoc
+
+Manuel Traut (1):
+      scripts/decode_stacktrace.sh: prefix addr2line with $CROSS_COMPILE
+
+Marcus Cooper (2):
+      ASoC: sun4i-i2s: Fix sun8i tx channel offset mask
+      ASoC: sun4i-i2s: Add offset to RX channel select
+
+Marek Szyprowski (1):
+      media: s5p-mfc: fix incorrect bus assignment in virtual child device
+
+Mathew King (1):
+      platform/x86: intel-vbtn: Report switch events when event wakes device
+
+Matias Karhumaa (1):
+      Bluetooth: Fix faulty expression for minimum encryption key size check
+
+Matt Flax (1):
+      ASoC : cs4265 : readable register too low
+
+Nikolay Borisov (1):
+      btrfs: Ensure replaced device doesn't have pending chunk allocation
+
+Noralf Tr=C3=B8nnes (1):
+      drm/fb-helper: generic: Don't take module ref for fbcon
+
+Paolo Bonzini (1):
+      KVM: x86: degrade WARN to pr_warn_ratelimited
+
+Paul Menzel (1):
+      nfsd: Fix overflow causing non-working mounts on 1 TB machines
+
+Petr Mladek (1):
+      ftrace/x86: Remove possible deadlock between register_kprobe() and ft=
+race_run_update_code()
+
+Richard Sailer (1):
+      ALSA: hda/realtek: Add quirks for several Clevo notebook barebones
+
+Robert Beckett (2):
+      drm/imx: notify drm core before sending event during crtc disable
+      drm/imx: only send event on crtc disable if kept disabled
+
+Robin Gong (1):
+      dmaengine: imx-sdma: remove BD_INTR for channel0
+
+Salil Mehta (1):
+      net: hns: Fixes the missing put_device in positive leg for roce reset
+
+Shakeel Butt (1):
+      mm/vmscan.c: prevent useless kswapd loops
+
+Sricharan R (1):
+      dmaengine: qcom: bam_dma: Fix completed descriptors count
+
+Takashi Iwai (2):
+      ALSA: line6: Fix write on zero-sized buffer
+      ALSA: hda: Initialize power_state field properly
+
+Takashi Sakamoto (1):
+      ALSA: firewire-lib/fireworks: fix miss detection of received MIDI mes=
+sages
+
+Ursula Braun (1):
+      net/smc: move unhash before release of clcsock
+
+Vadim Pasternak (2):
+      platform/x86: mlx-platform: Fix parent device in i2c-mux-reg device r=
+egistration
+      platform/mellanox: mlxreg-hotplug: Add devm_free_irq call to remove f=
+low
+
+Vasily Gorbik (1):
+      tracing: avoid build warning with HAVE_NOP_MCOUNT
+
+Vincent Whitchurch (1):
+      crypto: cryptd - Fix skcipher instance memory leak
+
+Viorel Suman (2):
+      ASoC: ak4458: add return value for ak4458_probe
+      ASoC: ak4458: rstn_control - return a non-zero on error only
+
+Wanpeng Li (1):
+      KVM: LAPIC: Fix pending interrupt in IRR blocked by software disable =
+LAPIC
+
+Wei Li (1):
+      ftrace: Fix NULL pointer dereference in free_ftrace_func_mapper()
+
+Wei Yongjun (1):
+      mac80211: mesh: fix missing unlock on error in table_path_del()
+
+Xiubo Li (1):
+      scsi: tcmu: fix use after free
+
+Young Xiao (1):
+      usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
+
+Yu-Hsuan Hsu (1):
+      ASoC: max98090: remove 24-bit format support if RJ is 0
+
+YueHaibing (1):
+      spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
+
+swkhack (1):
+      mm/mlock.c: change count_mm_mlocked_page_nr return type
+
+
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl0l4VQACgkQONu9yGCS
+aT47Jg/+KjM6G0RCidSchvpzbTGx9uAPhjcaNqlLDWQ3/3Sdf7ttJJ5Mg95pJcyK
+aDou3CO2mqTGF7K5QTH+yg5Lv+0DDs+xArefXal+qQniNLmOofcQrudSGV/hK54g
+PnqRCmjqmZ370oBUumqCt7aiSskA5GTydCwEfNE6aHYOXN1KrG9Gu+YXv3y2wp37
+Ijpd3enZRT264ZaL2DjQmUA3iHAFR1xX+kryTys8c2N0zABaRJdBEPvJEYixCGHa
+ToHq+9vGHxSocD20oT9p2aDONNnARQu0s6f9+cRFz8bEBFlAn6EC4M2cT7/Mu0me
+tiTj+EEDnfol0OqTLdaEVwLDipmjTCs+b4Z7+vTXVzMH2z239iUVyTFm6xWBt/Yp
+9u7K8y4LZ5etiTYBgI7If92QnFa5YQ5UOViiqvV2wdvHBsCEJNQau9NPVl4l2s/w
+DGMWRYNEfpcACdEmcHAyyIqFYHzprsDZnQjEc74mmEeatrv5vqba/nDmaMLmzYrC
+akJA0PYUpO3OIik8V2FGJKkb7NtN6EwhOo8u+ZxyvIZmn8yIpaMRLGLYItVnAJoI
+ERza5+p87vKGG2xS0Cy0nFkoejozB9lH97VOzqgmWQSTStnIaHO6oF44TOc0lB2G
+cMj5hd/BPriUze5XTaS8jd9JgNLFvExYhQeat5T4rGcTLMfII2I=
+=ZvSg
+-----END PGP SIGNATURE-----
+
+--CE+1k2dSO48ffgeK--
