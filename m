@@ -2,166 +2,87 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A29AC73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20873C73C68
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F1720838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:19:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q3XLbdwj"
+	by mail.kernel.org (Postfix) with ESMTP id E39B12083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 05:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562736021;
+	bh=4yM1npzftBpxuVgRC3mLUgT1oBnr8PRgpCmOAd29ZGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AvZ42WETKQNHg+Pgjs4KxNb8KU5nZj9ya87KHiIqGx7ZIsNL7MZFjbbpdjlmxFds8
+	 cVtkqu2fC6llnA/Z9LxGunaZCPQ4h429gpiLkISp1VO00FGFPout2eK+HpoGaWOiIw
+	 NG+S7/WbSb4xLbastGmOYGkrzkPgASXmq2Io2yHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfGJFTG (ORCPT
+        id S1726436AbfGJFUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 01:19:06 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18097 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfGJFTG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 01:19:06 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d25754c0000>; Tue, 09 Jul 2019 22:19:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 09 Jul 2019 22:19:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 09 Jul 2019 22:19:03 -0700
-Received: from [10.24.44.109] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
- 2019 05:18:56 +0000
-Subject: Re: [PATCH V12 01/12] PCI: Add #defines for some of PCIe spec r4.0
- features
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190701124010.7484-1-vidyas@nvidia.com>
- <20190701124010.7484-2-vidyas@nvidia.com> <20190709141427.GB35486@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <d76dbaf9-6193-9ba6-a183-c60c4cedf1ff@nvidia.com>
-Date:   Wed, 10 Jul 2019 10:48:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 10 Jul 2019 01:20:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfGJFUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 01:20:19 -0400
+Received: from localhost (unknown [37.142.3.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80CAE20838;
+        Wed, 10 Jul 2019 05:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562736018;
+        bh=4yM1npzftBpxuVgRC3mLUgT1oBnr8PRgpCmOAd29ZGU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AyfxZBd3hPL236CCsdQX4V3ldQ43ZRvUj3Mbu4KFGsJPrbpYfzPIAkpYG5VtQQU0y
+         9Y8wGhJAvHxDpquoLDYwzFaF6vtJateswyLzvp8yoWIZKgTjFNeEBixcuQeAzacD/K
+         qcGhvjyQoDSOswK8uGJqtK/VCdTCUydCnqA3A5A8=
+Date:   Wed, 10 Jul 2019 08:20:05 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Message-ID: <20190710052005.GB7034@mtr-leonro.mtl.com>
+References: <20190709135636.4d36e19f@canb.auug.org.au>
+ <20190709064346.GF7034@mtr-leonro.mtl.com>
+ <20190710143158.6e4bf706@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190709141427.GB35486@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562735949; bh=yxF/cnGRW+W6waCVCeurAKL/HMafBLOVE75sBLZ2LHU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Q3XLbdwj7QbrVih65s3Gt3jmVoPIne6/uZ51ADt6hsq7rsK3b1JgOX44dlNbXOXCj
-         nyb71fcyLHHWa8+17h7Qr8IVhCZ6EKt8Fvq65mmTOuvbZo7WZvwQxWkUMG9oZuCDYF
-         tFFwWqutchhzePIcXcd6+2hD11KtA9Uf38aAYeWj6AG8p1tM9wDkYACF4CaW83K1cV
-         oa7Qw8g4i1AYUChnAZSwGys3PgtyapKw8/yS94UXq49rhbXJcKiLZ1fvzXA8bCGIGe
-         cLYln0zRRvHRJt5iRcMZ/1UJzRrLwOP2vfJjdEnTxS32vcCUVvi4Y6QC8j6prE6V8G
-         gJZmygVitq8HQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710143158.6e4bf706@canb.auug.org.au>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/9/2019 7:44 PM, Bjorn Helgaas wrote:
-> On Mon, Jul 01, 2019 at 06:09:59PM +0530, Vidya Sagar wrote:
->> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
->> features.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> 
-> Please include spec references in the commit log, e.g., PCIe r5.0, sec
-> 7.7.4, for Data Link Feature and sec 7.7.5 for Physical Layer 16 GT/s.
-Done.
+On Wed, Jul 10, 2019 at 02:31:58PM +1000, Stephen Rothwell wrote:
+> Hi Leon,
+>
+> On Tue, 9 Jul 2019 09:43:46 +0300 Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > From 56c9e15ec670af580daa8c3ffde9503af3042d67 Mon Sep 17 00:00:00 2001
+> > From: Leon Romanovsky <leonro@mellanox.com>
+> > Date: Sun, 7 Jul 2019 10:43:42 +0300
+> > Subject: [PATCH] Fixup to build SIW issue
+> >
+> > Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+>
+> I applied this to linux-next today and it fixes my build problems.
 
-> 
->>   include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->>   1 file changed, 21 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->> index f28e562d7ca8..1c79f6a097d2 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -713,7 +713,9 @@
->>   #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->>   #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->>   #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
->> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
->> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
->> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
-> 
-> Maybe PCI_EXT_CAP_ID_PL_16GT so there's a little more hint of what
-> this is for?
-Ok. I'll add 16GT.
+Thanks
 
-> 
->> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
->>   
->>   #define PCI_EXT_CAP_DSN_SIZEOF	12
->>   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
->> @@ -1053,4 +1055,22 @@
->>   #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
->>   #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
->>   
->> +/* Data Link Feature */
->> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
->> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
->> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
->> +#define PCI_DLF_STS		0x08	/* Status Register */
->> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
->> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
-> 
-> I'm a little bit ambivalent about adding #defines that aren't used.  I
-> personally would probably just add the things we use, so the header
-> file gives a clue about what's currently implemented.  But I guess
-> either way is fine.
-Fine. I'll remove all unused defines in the next patch.
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-> 
->> +/* Physical Layer 16.0 GT/s */
->> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
->> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
->> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
->> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
->> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
-> 
-> Use lower-case hex consistently here.  There's no global consistency
-> in this file, but we can at least be consistent in each section.  But
-> I'm even more hesitant about included unused #defines for "reserved"
-> fields, so if you drop this it would take care of both :)
-Done.
-
-> 
->> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
-> 
-> This is the only register you actually use.  You defined a local
-> PL16G_CAP_OFF_DSP_16G_TX_PRESET_MASK for this register.  Shouldn't
-> that be defined here instead of in
-> drivers/pci/controller/dwc/pcie-tegra194.c?
-I'll take care of it in the next patch.
-
-> 
->>   #endif /* LINUX_PCI_REGS_H */
->> -- 
->> 2.17.1
->>
 
