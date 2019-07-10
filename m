@@ -2,99 +2,187 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611DBC73C6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C9EC73C6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3364020693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B4820838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l6WF16GV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfGJHSN (ORCPT
+        id S1727046AbfGJHTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:18:13 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40480 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfGJHSM (ORCPT
+        Wed, 10 Jul 2019 03:19:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38825 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfGJHTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:18:12 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w196so836287oie.7;
-        Wed, 10 Jul 2019 00:18:12 -0700 (PDT)
+        Wed, 10 Jul 2019 03:19:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z75so781341pgz.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 00:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jfz7M1UfeMHHXZWoXYgXDdb2h4DdykfBMsEUwpNEPMQ=;
+        b=l6WF16GVYe5eCc/5x8O8KdIpdGxyu4cFn2VT370ERVLkliFZoRrSfvp79LhBQiNSIN
+         Fc3VEBYfnK22TfTFupWFCOy7wIIOmCBSmWzp151VVHjXiu08YEAd1cUyMwfMhn+dU/bF
+         UHlZhZc0wk0wQTnNlXcS52uWXZ0GmfQuDPOS9e4OHx48QXa6/or/tZHQSVGwKXE40j8J
+         tydITPKv4HnEgptGj8+2KN4wvn2CgD7bTL5YD2VkAUKcTMoyzgx29qn2jFdugUlBv9P8
+         +GIsXjY1xdI2IPhRGGizyMRas0HBWbQ4T3n7MZP9ykXTcG22rpDfaxe6v7izwrk4jBVj
+         l8OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+66WptPslvEPgd/65JkLpfo/5RQSrFyShnLhyw9s5hs=;
-        b=fWUS0Xr/QRTsmeu6u0oXHc0trHvii3RL4dDi9/7UhwtUEy9OXNO/GjOOeCtsPyh1rB
-         C4MdDpR+Os9nYrLeJNEdOCjYzj8psH/Sb6fBxfoy9ziXcfQ96AUgu6IAVp8Xz32OVh8U
-         zA9LgacKsJ2eJxbgaWJwVISTyalyGFJi3Ovs5z29KMs5DBFgZVIT/xp/sSYG8AU1kBLO
-         NyTm/+ckq4CO2sL84Jr1qwryJZ3m7wq2uUu0fcnV3GTNS5zpKrtp8FZlcn39tjHAIyDZ
-         iLi3bplCH6K7KwSb2AfGfDAL+erwF6D8/vC3O63oi7DUjRAnM0dgumGCml9TFNk0Ps1d
-         VRGQ==
-X-Gm-Message-State: APjAAAUVIzGFL28oNbqSgD1EaY7ZviLDdVRAwSq+WmJ1kgjhKUxnn3lG
-        RfgbeXGyEbPEcgiog9AQn/RCQrM+NlQiLtMrnpBV2bXW
-X-Google-Smtp-Source: APXvYqy2I+l892aw7i5aJ/0OUWJQ+Pt3I+xgUHl3uaQiFntdXS8NhASUc/nbjpE8yzmZmtEsYh/zZ4RBTRxDM5p/o6E=
-X-Received: by 2002:aca:bd43:: with SMTP id n64mr2302244oif.148.1562743091643;
- Wed, 10 Jul 2019 00:18:11 -0700 (PDT)
+        bh=jfz7M1UfeMHHXZWoXYgXDdb2h4DdykfBMsEUwpNEPMQ=;
+        b=QeEADICxgH36yJh6xuA7KNTmaNiSQg98AH+WReuIHM+/bm7GeuPV42uNIREOHTkw98
+         mgXKrm6fSDd7bR/CsOaNnmfQFfPSjwcX2bgxxSLWpOP5usoo7DZtpjr6U3s6EmjgoXnv
+         Pe4ioKbIYO9+YbYUovUD+latVdtvVYT9noV9+Z69AwUQaSvQ/tG4oM336h3JsLyuRcmi
+         dhFgVb379x59tIds/NCy/0Ri6r3KZHWmiSuDhlZheMXnxyXbnkwbRGBraeAPHx+8jDAT
+         EL6CVhgmiYyc6Z0lrezoakKNCHHSz9aKQfwu8+T6D+xtHXzUWKc0f6JjJfLswT2a+r05
+         M/ww==
+X-Gm-Message-State: APjAAAV3IE6Jp2y6vNMBIqAKfoAdOO0h/rG3y6ozmEgJY5H/6r03fvrK
+        f3T7kGh1ldWvj5mQUGM+ImKOFzzu3sf3KBiqWzbe1Q==
+X-Google-Smtp-Source: APXvYqxygjuZUTtP3o1i+spSO/ODX76iUOPUnBSEPfKtnKohaqyGP7q59QAPXICI+tZgCfUcyvNAo+y5G+f5zV4sog8=
+X-Received: by 2002:a17:90a:ab0d:: with SMTP id m13mr4975325pjq.84.1562743158492;
+ Wed, 10 Jul 2019 00:19:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <cf9d62c7-2b47-e234-ee35-2562b125a411@linux-m68k.org>
-In-Reply-To: <cf9d62c7-2b47-e234-ee35-2562b125a411@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 10 Jul 2019 09:18:00 +0200
-Message-ID: <CAMuHMdVTq1mftwsLuePwzNN33bsNFWyL99bwnvJLhAO0RgSeXQ@mail.gmail.com>
-Subject: Re: [git pull] m68knommu changes for v5.3
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
+References: <20190709063023.251446-1-brendanhiggins@google.com>
+ <20190709063023.251446-7-brendanhiggins@google.com> <CAK7LNATx30AhZ51xozde=nO06-8UzuC0M9nfZXrqkyfmEFdu5w@mail.gmail.com>
+In-Reply-To: <CAK7LNATx30AhZ51xozde=nO06-8UzuC0M9nfZXrqkyfmEFdu5w@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 10 Jul 2019 00:19:06 -0700
+Message-ID: <CAFd5g479H3pS9preU6-oCnN5adwBPDe4zQkiFPatKPbxpT5r6w@mail.gmail.com>
+Subject: Re: [PATCH v7 06/18] kbuild: enable building KUnit
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        "Cc: Shuah Khan" <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, DTML <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Tim Bird <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Michal Marek <michal.lkml@markovi.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-On Wed, Jul 10, 2019 at 7:22 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
-> Can you please pull the m68knommu git tree, for-next branch.
+On Tue, Jul 9, 2019 at 9:00 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> A series of cleanups for the FLAT format binary loader, binfmt_flat,
-> from Christoph. The end goal is to support no-MMU on RISC-V, and the
-> last patch enables that.
+> On Tue, Jul 9, 2019 at 3:34 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > KUnit is a new unit testing framework for the kernel and when used is
+> > built into the kernel as a part of it. Add KUnit to the root Kconfig and
+> > Makefile to allow it to be actually built.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Michal Marek <michal.lkml@markovi.net>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> > ---
+> >  Kconfig  | 2 ++
+> >  Makefile | 2 +-
+> >  2 files changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Kconfig b/Kconfig
+> > index 48a80beab6853..10428501edb78 100644
+> > --- a/Kconfig
+> > +++ b/Kconfig
+> > @@ -30,3 +30,5 @@ source "crypto/Kconfig"
+> >  source "lib/Kconfig"
+> >
+> >  source "lib/Kconfig.debug"
+> > +
+> > +source "kunit/Kconfig"
+> > diff --git a/Makefile b/Makefile
+> > index 3e4868a6498b2..60cf4f0813e0d 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -991,7 +991,7 @@ endif
+> >  PHONY += prepare0
+> >
+> >  ifeq ($(KBUILD_EXTMOD),)
+> > -core-y         += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
+> > +core-y         += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/ kunit/
+> >
+> >  vmlinux-dirs   := $(patsubst %/,%,$(filter %/, $(init-y) $(init-m) \
+> >                      $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
+> > --
+> > 2.22.0.410.gd8fdbe21b5-goog
+>
+>
+> This is so trivial, and do not need to get ack from me.
 
-Please note there will be two add/add merge conflicts in
-arch/m68k/Kconfig.  The correct resolution is to keep the additions from
-both sides (and keep them sorted).
+Oh, sorry about that.
 
-Sorry for the troubles.
+> Just a nit.
+>
+>
+> When CONFIG_KUNIT is disable, is there any point in descending into kunit/ ?
+>
+> core-$(CONFIG_KUNIT) += kunit/
+>
+> ... might be useful to skip kunit/ entirely.
+
+Makes sense. I just sent out a new change that does this.
 
 Thanks!
 
-> The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
+> If you look at the top-level Makefile, some entries are doing this:
 >
->    Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
 >
-> are available in the Git repository at:
+> init-y          := init/
+> drivers-y       := drivers/ sound/
+> drivers-$(CONFIG_SAMPLES) += samples/
+> drivers-$(CONFIG_KERNEL_HEADER_TEST) += include/
+> net-y           := net/
+> libs-y          := lib/
+> core-y          := usr/
 >
->    git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git for-next
 >
-> for you to fetch changes up to ad97f9df0fee4ddc9ef056dda4dcbc6630d9f972:
 >
->    riscv: add binfmt_flat support (2019-06-24 09:16:47 +1000)
-
->   arch/m68k/Kconfig                                  |  2 +
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
