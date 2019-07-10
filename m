@@ -2,196 +2,128 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B2FC74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EE4C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354B52064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F0B2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 14:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfGJOTW (ORCPT
+        id S1727552AbfGJOT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 10:19:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:34390 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfGJOTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 10:19:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A34B72B;
-        Wed, 10 Jul 2019 07:19:20 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17BC03F71F;
-        Wed, 10 Jul 2019 07:19:17 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 15:19:08 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V13 05/12] PCI: dwc: Add ext config space capability
- search API
-Message-ID: <20190710141900.GA8781@e121166-lin.cambridge.arm.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-6-vidyas@nvidia.com>
- <20190710103709.GA4063@e121166-lin.cambridge.arm.com>
- <fd1fc10e-47d0-aaac-158d-1c19363ec8d3@nvidia.com>
+        Wed, 10 Jul 2019 10:19:59 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46568 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfGJOT7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 10:19:59 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so1294500plz.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 07:19:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ggCy5DaAoOLhu/lmTeaYRX9QH2HBX0XI6WkttIONUks=;
+        b=RJ3288irNliVTsV/uvSS+F542RR4i5nQFEifCBXHv6vijqqG8AtNCZ1g2M2aqY5+2I
+         K3o+MY4ZI/wgBpAF/U3PwsG4pEK+JpWhpyOP27CF3Vx2GamoocadHi0ZB7UA7uBu8k7J
+         zuweP+WigqTbD5IPyfpfMxeTabYYAkrAZPwa/eM1/i2/DYiQBgljLdRBGWfEg9Gq3pit
+         yZcjzPMBVdTs15e387AWwGo3MYKJiuLTmcWlfnrzbFF3giRiGC639O2xGJB+X7A5AQpp
+         HPIGbyXO47aCh7gPG0qAamLV5OHsZ8Q0YQpPyG8WEtD0/s7DY+avGgpP27ChDMf0wlDD
+         lewA==
+X-Gm-Message-State: APjAAAUrttqfg6uGUxo9vLZd4qznQf2yZ7GAyO9XSqrc390K3ri93ljH
+        Ha+swdkyzS/hYOat71GXV4M=
+X-Google-Smtp-Source: APXvYqxkLxFzT59ZGUCfkBBn58eoKFPBOrUWcdmRGpB3x5w002gS8dsXdtGEutt6QguFnJ3jXDnDxA==
+X-Received: by 2002:a17:902:549:: with SMTP id 67mr39154016plf.86.1562768398246;
+        Wed, 10 Jul 2019 07:19:58 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:5dd1:f8eb:b8a1:fefa:e83f])
+        by smtp.gmail.com with ESMTPSA id y10sm2555415pfm.66.2019.07.10.07.19.56
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 07:19:57 -0700 (PDT)
+Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+References: <00000000000089a718058556e1d8@google.com>
+ <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
+ <20190710053030.GB2152@sol.localdomain>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <b378a903-d0fc-a137-e6b9-dec55277cf16@acm.org>
+Date:   Wed, 10 Jul 2019 07:19:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fd1fc10e-47d0-aaac-158d-1c19363ec8d3@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190710053030.GB2152@sol.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 04:57:23PM +0530, Vidya Sagar wrote:
-> On 7/10/2019 4:07 PM, Lorenzo Pieralisi wrote:
-> > On Wed, Jul 10, 2019 at 11:52:05AM +0530, Vidya Sagar wrote:
-> > > Add extended configuration space capability search API using struct dw_pcie *
-> > > pointer
-> > 
-> > Sentences are terminated with a period and this is v13 not v1, which
-> > proves that you do not read the commit logs you write.
-> > 
-> > I need you guys to understand that I can't rewrite commit logs all
-> > the time, I do not want to go as far as not accepting your patches
-> > anymore so please do pay attention to commit log details they
-> > are as important as the code itself.
-> > 
-> > https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
-> My sincere apologies.
-> Since I didn't touch this patch much all through this series, I missed it.
-> I'll make a point to not make such mistakes again.
-> Do you want me to send a new version fixing it?
-
-I will update it, I just wanted to get the point across, no
-problems.
-
-Lorenzo
-
-> Thanks,
-> Vidya Sagar
+On 7/9/19 10:30 PM, Eric Biggers wrote:
+> [Moved most people to Bcc; syzbot added way too many random people to this.]
 > 
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > Acked-by: Thierry Reding <treding@nvidia.com>
-> > > ---
-> > > V13:
-> > > * None
-> > > 
-> > > V12:
-> > > * None
-> > > 
-> > > V11:
-> > > * None
-> > > 
-> > > V10:
-> > > * None
-> > > 
-> > > V9:
-> > > * Added Acked-by from Thierry
-> > > 
-> > > V8:
-> > > * Changed data types of return and arguments to be inline with data being returned
-> > >    and passed.
-> > > 
-> > > V7:
-> > > * None
-> > > 
-> > > V6:
-> > > * None
-> > > 
-> > > V5:
-> > > * None
-> > > 
-> > > V4:
-> > > * None
-> > > 
-> > > V3:
-> > > * None
-> > > 
-> > > V2:
-> > > * This is a new patch in v2 series
-> > > 
-> > >   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
-> > >   drivers/pci/controller/dwc/pcie-designware.h |  1 +
-> > >   2 files changed, 42 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index 7818b4febb08..181449e342f1 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
-> > >   }
-> > >   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
-> > > +static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
-> > > +					    u8 cap)
-> > > +{
-> > > +	u32 header;
-> > > +	int ttl;
-> > > +	int pos = PCI_CFG_SPACE_SIZE;
-> > > +
-> > > +	/* minimum 8 bytes per capability */
-> > > +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> > > +
-> > > +	if (start)
-> > > +		pos = start;
-> > > +
-> > > +	header = dw_pcie_readl_dbi(pci, pos);
-> > > +	/*
-> > > +	 * If we have no capabilities, this is indicated by cap ID,
-> > > +	 * cap version and next pointer all being 0.
-> > > +	 */
-> > > +	if (header == 0)
-> > > +		return 0;
-> > > +
-> > > +	while (ttl-- > 0) {
-> > > +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-> > > +			return pos;
-> > > +
-> > > +		pos = PCI_EXT_CAP_NEXT(header);
-> > > +		if (pos < PCI_CFG_SPACE_SIZE)
-> > > +			break;
-> > > +
-> > > +		header = dw_pcie_readl_dbi(pci, pos);
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
-> > > +{
-> > > +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
-> > > +
-> > >   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
-> > >   {
-> > >   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index d8c66a6827dc..11c223471416 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -252,6 +252,7 @@ struct dw_pcie {
-> > >   		container_of((endpoint), struct dw_pcie, ep)
-> > >   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
-> > > +u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
-> > >   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
-> > >   int dw_pcie_write(void __iomem *addr, int size, u32 val);
-> > > -- 
-> > > 2.17.1
-> > > 
+> Hi Bart,
 > 
+> On Sat, Mar 30, 2019 at 07:17:09PM -0700, Bart Van Assche wrote:
+>> On 3/30/19 2:58 PM, syzbot wrote:
+>>> syzbot has bisected this bug to:
+>>>
+>>> commit 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+>>> Author: Bart Van Assche <bvanassche@acm.org>
+>>> Date:   Thu Feb 14 23:00:54 2019 +0000
+>>>
+>>>       kernel/workqueue: Use dynamic lockdep keys for workqueues
+>>>
+>>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f1bacd200000
+>>> start commit:   0e40da3e Merge tag 'kbuild-fixes-v5.1' of
+>>> git://git.kernel..
+>>> git tree:       upstream
+>>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1409bacd200000
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=1009bacd200000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
+>>> dashboard link:
+>>> https://syzkaller.appspot.com/bug?extid=6f39a9deb697359fe520
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e1bacd200000
+>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1120fe0f200000
+>>>
+>>> Reported-by: syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com
+>>> Fixes: 669de8bda87b ("kernel/workqueue: Use dynamic lockdep keys for
+>>> workqueues")
+>>>
+>>> For information about bisection process see:
+>>> https://goo.gl/tpsmEJ#bisection
+>>
+>> Hi Dmitry,
+>>
+>> This bisection result doesn't make sense to me. As one can see, the message
+>> "BUG: MAX_STACK_TRACE_ENTRIES too low!" does not occur in the console output
+>> the above console output URL points at.
+>>
+>> Bart.
+> 
+> This is still happening on mainline, and I think this bisection result is
+> probably correct.  syzbot did start hitting something different at the very end
+> of the bisection ("WARNING: CPU: 0 PID: 9153 at kernel/locking/lockdep.c:747")
+> but that seems to be just because your commit had a lot of bugs in it, which had
+> to be fixed by later commits.  In particular, the WARNING seems to have been
+> fixed by commit 28d49e282665e ("locking/lockdep: Shrink struct lock_class_key").
+> 
+> What seems to still be happening is that the dynamic lockdep keys which you
+> added make it possible for an unbounded number of entries to be added to the
+> fixed length stack_trace[] array in kernel/locking/lockdep.c.  Hence the "BUG:
+> MAX_STACK_TRACE_ENTRIES too low!".
+> 
+> Am I understanding it correctly?  How did you intend this to work?
+
+The last two paragraphs do not make sense to me. My changes do not 
+increase the number of stack traces that get recorded by the lockdep code.
+
+Bart.
