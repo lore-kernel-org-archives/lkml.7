@@ -2,85 +2,235 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68236C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B1AC73C7F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F2C20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B9D20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FYbMRpLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfGJHjZ (ORCPT
+        id S1726695AbfGJHoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:39:25 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32077 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfGJHjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:39:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 00:39:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,473,1557212400"; 
-   d="scan'208";a="176757754"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga002.jf.intel.com with ESMTP; 10 Jul 2019 00:39:21 -0700
-Date:   Wed, 10 Jul 2019 15:22:34 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        atull@kernel.org
-Subject: Re: [PATCH v2 00/11] FPGA DFL updates
-Message-ID: <20190710072234.GA26817@hao-dev>
-References: <1562286238-11413-1-git-send-email-hao.wu@intel.com>
- <20190710050746.GA28620@hao-dev>
- <20190710055417.GA5778@kroah.com>
+        Wed, 10 Jul 2019 03:44:39 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52246 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfGJHoj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 03:44:39 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6A7iY4C038946;
+        Wed, 10 Jul 2019 02:44:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1562744674;
+        bh=KqOX5GKrtxsX6vmTiOa6nM4rOWB6IU6WDwN21PLg08w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FYbMRpLE64yppi2sX24VhkY/mDTKMiuG/k7EYDomU9rPd3JejLVyXpf9x1D9yb8gB
+         u2RbmTiLmuBte0VLHE6isiVd09vShS6U7Ocobvc4T3BljX8FGNUEGhdtF/6MXUqDG0
+         tQDNYu+vrJcEt1BxN+sm9FlKdUDByK82Slsz1izk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6A7iY6a005936
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Jul 2019 02:44:34 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 10
+ Jul 2019 02:44:33 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 10 Jul 2019 02:44:34 -0500
+Received: from [10.250.97.31] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6A7iWj1122857;
+        Wed, 10 Jul 2019 02:44:32 -0500
+Subject: Re: [PATCH v2 1/2] leds: tlc591xx: simplify driver by using the
+ managed led API
+To:     Dan Murphy <dmurphy@ti.com>, <jacek.anaszewski@gmail.com>,
+        <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <tomi.valkeinen@ti.com>
+References: <20190708100620.22388-1-jjhiblot@ti.com>
+ <20190708100620.22388-2-jjhiblot@ti.com>
+ <127551c1-d642-0603-f2f2-6fd4cc43bb93@ti.com>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <6242726a-ddb9-ab87-a28e-a1fa0ecbf87e@ti.com>
+Date:   Wed, 10 Jul 2019 09:44:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710055417.GA5778@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <127551c1-d642-0603-f2f2-6fd4cc43bb93@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 07:54:17AM +0200, Greg KH wrote:
-> On Wed, Jul 10, 2019 at 01:07:46PM +0800, Wu Hao wrote:
-> > On Fri, Jul 05, 2019 at 08:23:47AM +0800, Wu Hao wrote:
-> > > Hi Greg / Moritz
-> > > 
-> > > This is v2 patchset which adds more features to FPGA DFL. This patchset
-> > > is made on top of patch[1] and char-misc-next tree. Documentation patch
-> > > for DFL is dropped from this patchset, and will resubmit it later to
-> > > avoid conflict.
-> > 
-> > Hi Greg,
-> > 
-> > Did you get a chance to take a look at this new version to see if these
-> > patches are good to take?
-> > 
-> > Hope we can catch up with the merge window.
-> 
-> You sent them last Friday.  I actually tried to not do kernel work last
-> weekend.  The merge window opened up on Sunday.  My trees should have
-> been closed last week, so no, this missed this merge window, I'll
-> review these patches once 5.3-rc1 is out.
+Hi Dan,
 
-Oh..... I see...
+On 08/07/2019 20:08, Dan Murphy wrote:
+> JJ
+>
+> On 7/8/19 5:06 AM, Jean-Jacques Hiblot wrote:
+>> Use the managed API of the LED class (devm_led_classdev_register()
+>> instead of led_classdev_register()).
+>> This allows us to remove the code used to track-and-destroy the LED 
+>> devices
+>
+> What changed from v1?
 
-Ok. Then let me resend it with documentation patch added back once 5.3-rc1
-is out.
+What changed is a bug fix in the loop: replaced led = &priv->leds[idx] 
+with led = &priv->leds[reg];
 
-Thanks
-Hao
 
-> 
-> thanks
-> 
-> greg k-h
+>
+> I don't see any changes especially the bounds on the reg property.
+
+It is not quite apparent in the diff, but there is such a check. Here is 
+what we have in the probe():
+
+     for_each_child_of_node(np, child) {
+         struct tlc591xx_led *led;
+
+         err = of_property_read_u32(child, "reg", &reg);
+         if (err) {
+             of_node_put(child);
+             return err;
+         }
+         if (reg < 0 || reg >= tlc591xx->max_leds ||
+             priv->leds[reg].active) {
+             of_node_put(child);
+             return -EINVAL;
+         }
+         led = &priv->leds[reg];
+
+[...]
+         }
+     }
+
+>
+> Dan
+>
+>
+>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>> ---
+>>   drivers/leds/leds-tlc591xx.c | 79 +++++++++---------------------------
+>>   1 file changed, 20 insertions(+), 59 deletions(-)
+>>
+>> diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
+>> index 59ff088c7d75..3d5a4b92f016 100644
+>> --- a/drivers/leds/leds-tlc591xx.c
+>> +++ b/drivers/leds/leds-tlc591xx.c
+>> @@ -128,51 +128,6 @@ tlc591xx_brightness_set(struct led_classdev 
+>> *led_cdev,
+>>       return err;
+>>   }
+>>   -static void
+>> -tlc591xx_destroy_devices(struct tlc591xx_priv *priv, unsigned int j)
+>> -{
+>> -    int i = j;
+>> -
+>> -    while (--i >= 0) {
+>> -        if (priv->leds[i].active)
+>> - led_classdev_unregister(&priv->leds[i].ldev);
+>> -    }
+>> -}
+>> -
+>> -static int
+>> -tlc591xx_configure(struct device *dev,
+>> -           struct tlc591xx_priv *priv,
+>> -           const struct tlc591xx *tlc591xx)
+>> -{
+>> -    unsigned int i;
+>> -    int err = 0;
+>> -
+>> -    tlc591xx_set_mode(priv->regmap, MODE2_DIM);
+>> -    for (i = 0; i < TLC591XX_MAX_LEDS; i++) {
+>> -        struct tlc591xx_led *led = &priv->leds[i];
+>> -
+>> -        if (!led->active)
+>> -            continue;
+>> -
+>> -        led->priv = priv;
+>> -        led->led_no = i;
+>> -        led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
+>> -        led->ldev.max_brightness = LED_FULL;
+>> -        err = led_classdev_register(dev, &led->ldev);
+>> -        if (err < 0) {
+>> -            dev_err(dev, "couldn't register LED %s\n",
+>> -                led->ldev.name);
+>> -            goto exit;
+>> -        }
+>> -    }
+>> -
+>> -    return 0;
+>> -
+>> -exit:
+>> -    tlc591xx_destroy_devices(priv, i);
+>> -    return err;
+>> -}
+>> -
+>>   static const struct regmap_config tlc591xx_regmap = {
+>>       .reg_bits = 8,
+>>       .val_bits = 8,
+>> @@ -225,7 +180,11 @@ tlc591xx_probe(struct i2c_client *client,
+>>         i2c_set_clientdata(client, priv);
+>>   +    tlc591xx_set_mode(priv->regmap, MODE2_DIM);
+>> +
+>>       for_each_child_of_node(np, child) {
+>> +        struct tlc591xx_led *led;
+>> +
+>>           err = of_property_read_u32(child, "reg", &reg);
+>>           if (err) {
+>>               of_node_put(child);
+>> @@ -236,22 +195,25 @@ tlc591xx_probe(struct i2c_client *client,
+>>               of_node_put(child);
+>>               return -EINVAL;
+>>           }
+>> -        priv->leds[reg].active = true;
+>> -        priv->leds[reg].ldev.name =
+>> +        led = &priv->leds[reg];
+>> +
+>> +        led->active = true;
+>> +        led->ldev.name =
+>>               of_get_property(child, "label", NULL) ? : child->name;
+>> -        priv->leds[reg].ldev.default_trigger =
+>> +        led->ldev.default_trigger =
+>>               of_get_property(child, "linux,default-trigger", NULL);
+>> -    }
+>> -    return tlc591xx_configure(dev, priv, tlc591xx);
+>> -}
+>> -
+>> -static int
+>> -tlc591xx_remove(struct i2c_client *client)
+>> -{
+>> -    struct tlc591xx_priv *priv = i2c_get_clientdata(client);
+>> -
+>> -    tlc591xx_destroy_devices(priv, TLC591XX_MAX_LEDS);
+>>   +        led->priv = priv;
+>> +        led->led_no = reg;
+>> +        led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
+>> +        led->ldev.max_brightness = LED_FULL;
+>> +        err = devm_led_classdev_register(dev, &led->ldev);
+>> +        if (err < 0) {
+>> +            dev_err(dev, "couldn't register LED %s\n",
+>> +                led->ldev.name);
+>> +            return err;
+>> +        }
+>> +    }
+>>       return 0;
+>>   }
+>>   @@ -268,7 +230,6 @@ static struct i2c_driver tlc591xx_driver = {
+>>           .of_match_table = of_match_ptr(of_tlc591xx_leds_match),
+>>       },
+>>       .probe = tlc591xx_probe,
+>> -    .remove = tlc591xx_remove,
+>>       .id_table = tlc591xx_id,
+>>   };
