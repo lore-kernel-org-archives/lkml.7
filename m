@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154CFC73C75
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C368C73C75
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3BBB20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBB720838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 06:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfGJGkc (ORCPT
+        id S1727174AbfGJGkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 02:40:32 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:57758 "EHLO inva020.nxp.com"
+        Wed, 10 Jul 2019 02:40:35 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:57912 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbfGJGk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 02:40:28 -0400
+        id S1727128AbfGJGkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 02:40:32 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4A4BD1A0293;
-        Wed, 10 Jul 2019 08:40:27 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E2FEF1A029D;
+        Wed, 10 Jul 2019 08:40:30 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4818B1A0192;
-        Wed, 10 Jul 2019 08:40:14 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 225361A001F;
+        Wed, 10 Jul 2019 08:40:18 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7C3BD402DB;
-        Wed, 10 Jul 2019 14:40:00 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AE08E4030D;
+        Wed, 10 Jul 2019 14:40:02 +0800 (SGT)
 From:   Anson.Huang@nxp.com
 To:     catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
@@ -40,9 +40,9 @@ To:     catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V5 3/5] arm64: dts: imx8mm: Add system counter node
-Date:   Wed, 10 Jul 2019 14:30:54 +0800
-Message-Id: <20190710063056.35689-3-Anson.Huang@nxp.com>
+Subject: [PATCH V5 4/5] arm64: dts: imx8mq: Add system counter node
+Date:   Wed, 10 Jul 2019 14:30:55 +0800
+Message-Id: <20190710063056.35689-4-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20190710063056.35689-1-Anson.Huang@nxp.com>
 References: <20190710063056.35689-1-Anson.Huang@nxp.com>
@@ -54,7 +54,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Add i.MX8MM system counter node to enable timer-imx-sysctr
+Add i.MX8MQ system counter node to enable timer-imx-sysctr
 broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
@@ -64,14 +64,14 @@ Changes since V4:
 	- correct the reg range;
 	- update the interrupt number as the system counter driver ONLY uses 1 irq now.
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index b5637f8..8cf7f34 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -560,6 +560,14 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index a1bbd80..2991172 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -644,6 +644,14 @@
  				#pwm-cells = <2>;
  				status = "disabled";
  			};
@@ -80,12 +80,12 @@ index b5637f8..8cf7f34 100644
 +				compatible = "nxp,sysctr-timer";
 +				reg = <0x306a0000 0x20000>;
 +				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&osc_24m>;
++				clocks = <&osc_25m>;
 +				clock-names = "per";
 +			};
  		};
  
- 		aips3: bus@30800000 {
+ 		bus@30800000 { /* AIPS3 */
 -- 
 2.7.4
 
