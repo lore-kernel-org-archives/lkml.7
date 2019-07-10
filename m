@@ -2,142 +2,93 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793E7C74A2B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE343C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B9C208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:31:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="UUzVeCXT"
+	by mail.kernel.org (Postfix) with ESMTP id 9AAF32087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562772852;
+	bh=u3p6fk/eNzvNwJBVFwrcRvH5vQ9TKbqI7pjV0FMUxXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j1O5w4BKozw0yFF41OV5wypxXB0iy7Ov6bFzZ0Yn0ySRxhCSYt3aOqmlNV0RvHm0w
+	 QL8GQfBVWy1X36dvKSKeTxRBIYKniOCl9QLodFnbKbMyfcHEdSBMmbQylI2znBkY28
+	 JSi0EOqLLCLwxxm924SA+tBD7TQhG2+wpbRvLecQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbfGJPbu (ORCPT
+        id S1727291AbfGJPeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:31:50 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43872 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbfGJPbl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:31:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c19so1905847lfm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 08:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eng.ucsd.edu; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iaKa3sSy2TMJewprEBabjIU4mKVmcxPtQBjA4QDbmn0=;
-        b=UUzVeCXTViOeS329ulCFq+Hz43TUVXtDWlWrCHNGfGXF3mlN4g7U3i42I7j+vqjga3
-         l3MGHSL71cjlI5wcM9ZbWkTGQrgF2eOGsDBvdIdNh+HE4oxSzYNz8U0ldOgdcEGv5k2v
-         wqdOsIcf3eCSbyTwe/UGRVNsb/5OFLGQTbX4g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iaKa3sSy2TMJewprEBabjIU4mKVmcxPtQBjA4QDbmn0=;
-        b=iHgYbSCbH8UeSIoQ9zJ1tU5CRHP2JD0c6xahtUzombvjPb4sQnAaEq9Jf60MMOFa0Z
-         qucEzeE73fkedjlCI20WIbwcnCE9W4cz9PECsL8Bc8gDjFQ3WmacqfiLKGBzPYuDfuEY
-         zvt82UY+t5TW+5XTTomWe2qWz0Fxz/2q20K6j7gJkuGv/GKJISzvc0weKdhJ/w2xnBet
-         LKTb9aLv1UbIAnY3y7AmOs0V/y0KanmZcqIHe0PXOT+iAtgSns1Q+IRMf+ygrc+Btc31
-         KHoVINzH/eswwxWJZTNUE5YPVCIpLFq1g8IwE8wfOAPZSGBg1sUwefRwLY19WO092FrA
-         KhWw==
-X-Gm-Message-State: APjAAAWvrZQdiNW0Q2RsSPGmt04E3KL5dntLVy1jVY/qXj91rsOHzEkF
-        pL97TJQVd9MX2X/k2hfHqp31Ng==
-X-Google-Smtp-Source: APXvYqye8Vs3VVDTfx2ic4t433ZNvo5KeS/BLYowQ8YqT568ojQnM+RFldGQEiyEYzmEvpN4l6RS4Q==
-X-Received: by 2002:ac2:495e:: with SMTP id o30mr15233962lfi.140.1562772699900;
-        Wed, 10 Jul 2019 08:31:39 -0700 (PDT)
-Received: from luke-XPS-13.home (159-205-76-204.adsl.inetia.pl. [159.205.76.204])
-        by smtp.gmail.com with ESMTPSA id o17sm517208ljg.71.2019.07.10.08.31.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Jul 2019 08:31:39 -0700 (PDT)
-From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
-X-Google-Original-From: Luke Nowakowski-Krijger <lnowakow@neg.ucsd.edu>
-To:     linux-kernel-mentees@lists.linuxfoundation.org
-Cc:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>,
-        pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] Documentation: virtual: Add toctree hooks
-Date:   Wed, 10 Jul 2019 08:30:54 -0700
-Message-Id: <20190710153054.29564-4-lnowakow@neg.ucsd.edu>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190710153054.29564-1-lnowakow@neg.ucsd.edu>
-References: <20190710153054.29564-1-lnowakow@neg.ucsd.edu>
+        Wed, 10 Jul 2019 11:34:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727063AbfGJPeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:34:11 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C752620844;
+        Wed, 10 Jul 2019 15:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562772850;
+        bh=u3p6fk/eNzvNwJBVFwrcRvH5vQ9TKbqI7pjV0FMUxXE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xB9CdbEClpPfPI0vPARiZ0gwN6+7iFKMa/Q6vtKPEn+BTk071lxLLim3DRSs5rhGS
+         YEMhJDQPf6WlV+/PbkAiF+Emt36Savs17iN3blCrw90XwIX8/5HALkRQchW0YUyLlX
+         EhuZwYyyY8wVp/MmFhbfhELslk2Fn6Hd4ryQxDhQ=
+Date:   Wed, 10 Jul 2019 17:34:07 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/2] perf/hw_breakpoint: Fix breakpoint overcommit issue
+Message-ID: <20190710153406.GA18838@lenoir>
+References: <20190709134821.8027-1-frederic@kernel.org>
+ <20190710140421.GP3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710140421.GP3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+On Wed, Jul 10, 2019 at 04:04:21PM +0200, Peter Zijlstra wrote:
+> On Tue, Jul 09, 2019 at 03:48:19PM +0200, Frederic Weisbecker wrote:
+> > 
+> > Syzbot has found a breakpoint overcommit issue:
+> > 
+> > https://lore.kernel.org/lkml/000000000000639f6a0584d11b82@google.com/
+> > 
+> > It took me a long time to find out what the actual root problem was. Also
+> > its reproducer only worked on a few month old kernel but it didn't feel like
+> > the issue was actually solved.
+> > 
+> > I eventually cooked a reproducer that works with latest upstream, see in
+> > the end of this message.
+> > 
+> > The fix is just a few liner but implies to shut down the context swapping
+> > optimization for contexts containing breakpoints.
+> > 
+> > Also I feel like uprobes may be concerned as well as it seems to make use
+> > of event.hw->target after pmu::init().
+> 
+> Can't we simply swizzle event.hw->target along too?
 
-Added toctree hooks for indexing. Hooks added only for newly added
-files.
+You mean remove it? But it's still needed by breakpoint code during all the event
+lifecycle (init, destroy and anytime in-between).
 
-The hook for the top of the tree will be added in a later patch series
-when a few more substantial changes have been added.
-
-Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
----
- Changes since v3:
- none
- Changes since v2:
- - Removed vcpu-request from hooks that was added in v1
- Changes since v1:
- + Added index.rst file in virtual directory
- + Added index.rst file in virtual/kvm directory
-
- Documentation/virtual/index.rst     | 18 ++++++++++++++++++
- Documentation/virtual/kvm/index.rst | 11 +++++++++++
- 2 files changed, 29 insertions(+)
- create mode 100644 Documentation/virtual/index.rst
- create mode 100644 Documentation/virtual/kvm/index.rst
-
-diff --git a/Documentation/virtual/index.rst b/Documentation/virtual/index.rst
-new file mode 100644
-index 000000000000..19c9fa2266f4
---- /dev/null
-+++ b/Documentation/virtual/index.rst
-@@ -0,0 +1,18 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===========================
-+Linux Virtual Documentation
-+===========================
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   kvm/index
-+   paravirt_ops
-+
-+.. only:: html and subproject
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/virtual/kvm/index.rst b/Documentation/virtual/kvm/index.rst
-new file mode 100644
-index 000000000000..0b206a06f5be
---- /dev/null
-+++ b/Documentation/virtual/kvm/index.rst
-@@ -0,0 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===
-+KVM
-+===
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   amd-memory-encryption
-+   cpuid
--- 
-2.20.1
-
+I wish we could use event->ctx->task instead but on pmu::init() there is no ctx yet (we could pass
+the task in parameter though) and on event->destroy() it's TASK_TOMBSTONE and retrieving the task
+at that time would be non trivial.
