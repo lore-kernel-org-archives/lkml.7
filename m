@@ -2,129 +2,70 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A78BC74A3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82BCC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D85320645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B562B2087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 19:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562787848;
+	bh=eHGI2UH/1bx+uOYu8VQv93m0Mv4AyHid8CuZx3p8J24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nitVns8S2hM6aR77czAfNxCfWy+TuAUI2LfjId1SO5F8yjO7S9FzdnjfJVqP5+1dz
+	 BhUM4A5mahE3iD14NaP6Q7n+E5idGGZbBcLUYPIVFSbG1Blc2wqBlIzqyLpYapVVLS
+	 PJqiGCp/B6OX6KJTaQFUw/74ioUk6mbHymyDd+f4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfGJTni (ORCPT
+        id S1728049AbfGJToH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 15:43:38 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33595 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfGJTni (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 15:43:38 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u15so2609101oiv.0;
-        Wed, 10 Jul 2019 12:43:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aBeg5u7rV+bMV5EqKauG05KOk0ihpzkj5CrP7OIiW7A=;
-        b=iczZZC7y+hxpNMvIcOZRtbPqCEZYFSczj6ZM3y/g3jKHFC1PmtSUEhSlzumZSwmAY1
-         ucGfvtrnj/nqlKYlTwvm6qDy6WplQ1XfCmSChxoTXmjif6Vk2YubNe4dsawBpqYLsKiQ
-         YQpkxuHh3uk+90AjcN/RLdPiWeXoaFFX6evFUSFsx3Kaik7zmXuV6u/h32UK0oI/LwUZ
-         CMU7NA7PdtwXc5SrakasQg/To796JDOWSuRRmOMmkLAaQHZd8i5B29ErbKpRxRPGvW88
-         vM4F22818nI62pB46Zq5li8cxSTFtGbpm8keKSKc+r7bQF4miteclNMelmKqUgNZFqcU
-         utyw==
-X-Gm-Message-State: APjAAAXBIrP3yyPSTL3fmCds2VS/OI6IaQxDXHkAmbYdvWgKf4FVjviu
-        2ZYVffwnea1oEF1wVeLifcgitx0R
-X-Google-Smtp-Source: APXvYqxiu7sqTEGElu3MaaJKrMb0D6yZnrjapkZhNipwv7xY+vIqDLFwq3Y7ZoqpUnrsCurUPaNt+Q==
-X-Received: by 2002:aca:edc6:: with SMTP id l189mr44881oih.86.1562787816462;
-        Wed, 10 Jul 2019 12:43:36 -0700 (PDT)
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
-        by smtp.gmail.com with ESMTPSA id b138sm1122585oii.7.2019.07.10.12.43.35
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 12:43:35 -0700 (PDT)
-Received: by mail-ot1-f53.google.com with SMTP id q10so3347785otk.10;
-        Wed, 10 Jul 2019 12:43:35 -0700 (PDT)
-X-Received: by 2002:a9d:5510:: with SMTP id l16mr47230oth.63.1562787815427;
- Wed, 10 Jul 2019 12:43:35 -0700 (PDT)
+        Wed, 10 Jul 2019 15:44:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46482 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727618AbfGJToH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 15:44:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 15100AC37;
+        Wed, 10 Jul 2019 19:44:05 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 21:44:03 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Hillf Danton <hdanton@sina.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@suse.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [Question] Should direct reclaim time be bounded?
+Message-ID: <20190710194403.GR29695@dhcp22.suse.cz>
+References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
+ <80036eed-993d-1d24-7ab6-e495f01b1caa@oracle.com>
+ <885afb7b-f5be-590a-00c8-a24d2bc65f37@oracle.com>
 MIME-Version: 1.0
-References: <20190705101800.44561-1-biwen.li@nxp.com> <20190705101800.44561-2-biwen.li@nxp.com>
-In-Reply-To: <20190705101800.44561-2-biwen.li@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Wed, 10 Jul 2019 14:43:24 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTg52BNx6bN1P9+WQnf+gG8p2hnLuxWEUXoy1CSt55Npw@mail.gmail.com>
-Message-ID: <CADRPPNTg52BNx6bN1P9+WQnf+gG8p2hnLuxWEUXoy1CSt55Npw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-To:     Biwen Li <biwen.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <885afb7b-f5be-590a-00c8-a24d2bc65f37@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 5, 2019 at 6:26 AM Biwen Li <biwen.li@nxp.com> wrote:
->
-> The patch adds binding for ftm alarm driver
->
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+On Wed 10-07-19 11:42:40, Mike Kravetz wrote:
+[...]
+> As Michal suggested, I'm going to do some testing to see what impact
+> dropping the __GFP_RETRY_MAYFAIL flag for these huge page allocations
+> will have on the number of pages allocated.
 
-Please add dts maintainer for binding patches.  I have added Rob.
-
-> ---
->  .../devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt  | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
->
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> new file mode 100644
-> index 0000000..0f330b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> @@ -0,0 +1,33 @@
-> +Freescale FlexTimer Module (FTM) Alarm
-> +
-> +Required properties:
-> +
-> +- compatible : Should be "fsl,ftm-alarm" or "fsl,<chip>-ftm-alarm", the
-> +              supported chips include
-> +              "fsl,ls1012a-ftm-alarm"
-> +              "fsl,ls1021a-ftm-alarm"
-> +              "fsl,ls1028a-ftm-alarm"
-> +              "fsl,ls1043a-ftm-alarm"
-> +              "fsl,ls1046a-ftm-alarm"
-> +              "fsl,ls1088a-ftm-alarm"
-> +              "fsl,ls208xa-ftm-alarm"
-> +- reg : Specifies base physical address and size of the register sets for the
-> +  FlexTimer Module and base physical address of IP Powerdown Exception Control
-> +  Register.
-> +- reg-names: names of the mapped memory regions listed in regs property.
-> +  should include the following entries:
-> +  "ftm":    Address of the register sets for FlexTimer Module
-> +  "pmctrl": Address of IP Powerdown Exception Control register
-
-I assume we don't need this after we let the rcpm driver to deal with this.
-
-> +- interrupts : Should be the FlexTimer Module interrupt.
-> +- big-endian: If the host controller is big-endian mode, specify this property.
-> +  The default endian mode is little-endian.
-
-If it is optional as suggested by the description, put it in the
-optinal property section.
-
-> +
-> +Example:
-> +ftm_alarm0: timer@29d0000 {
-> +       compatible = "fsl,ls1043a-ftm-alarm";
-> +       reg = <0x0 0x29d0000 0x0 0x10000>,
-> +             <0x0 0x1ee2140 0x0 0x4>;
-> +       reg-names = "ftm", "pmctrl";
-> +       interrupts = <0 86 0x4>;
-> +       big-endian;
-> +};
-> --
-> 2.7.4
->
+Just to clarify. I didn't mean to drop __GFP_RETRY_MAYFAIL from the
+allocation request. I meant to drop the special casing of the flag in
+should_continue_reclaim. I really have hard time to argue for this
+special casing TBH. The flag is meant to retry harder but that shouldn't
+be reduced to a single reclaim attempt because that alone doesn't really
+help much with the high order allocation. It is more about compaction to
+be retried harder.
+-- 
+Michal Hocko
+SUSE Labs
