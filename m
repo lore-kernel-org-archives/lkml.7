@@ -2,130 +2,127 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20702C74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02EAC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB2B20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942EB20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 23:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brITT/5d"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kDswq2kM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfGJXfh (ORCPT
+        id S1727734AbfGJXhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 19:35:37 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:35018 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727463AbfGJXfg (ORCPT
+        Wed, 10 Jul 2019 19:37:21 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38026 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbfGJXhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 19:35:36 -0400
-Received: by mail-pg1-f173.google.com with SMTP id s27so1980403pgl.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 16:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fo3zNx7q8KOphF4/0k8ry1Exilbv+0XYzkMqa1pkdPw=;
-        b=brITT/5d5a9WyodVg5ZUQsakATJo0F+/1F0NZxiiEO4WZQws6EdiwGGKUFKY2pt/Zo
-         CYrZAOfPL/cCfxp3dHvE1aabIU8b7cgowtd3fXrrYR35j+w9wSFI4/MnhtzBbTlu/r6f
-         JEKXEkQJ8j3TQqvb0K33a80yiZ+zyjPj5Z0pWmtYCvMAWLp/UJAgsVYiQ8MZ2pqd06Fp
-         zjAAh5jbOtcdf3eu7kihy5eqVXw3cEWFA1QhWDw/g3HaPszaNu2XlkvfcZEoFxHBZ2vN
-         4/RaulelQD0Ma3GGYGzUZGqEEk/VKTIwXHs0hbdk8/rAh81ECwzdFDbV1PeVNjYcWwM+
-         vBQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fo3zNx7q8KOphF4/0k8ry1Exilbv+0XYzkMqa1pkdPw=;
-        b=s3E34wTLi9246JwatdKgbgSy1w1rjUpTcVCiX1PWOtlnArZCsnGugPrpPB9gCGA3TQ
-         rQHYgolICSCcs9h1WM8ATJTLOlADaiwYRfVbJD0WJqjPEPOF7+18ydyNrfS5w7DL9yf4
-         VyAX4+Sx9TFfMzFDv7tIgjai7ae6JJulThSr6kKJnp/CYjWVI/amfjKkQL11iHOmy2iR
-         Po+2Pdd59Gu3hhK2zvZDIaysKax3k0A6peILFt8n9lTwz7pWVIU79DwkAnU7XtTc/Nu1
-         mGhhu0p04oViZmLUrrGlf5gw7XKv7kCW1Ff863f+yi1YAHlMnRDI/cmQMhxtsl2w7/V4
-         A98A==
-X-Gm-Message-State: APjAAAXPT7lpfqXVave2d3g8oH6bGbD2e/LJ9OWDXkCVteF+VHjEgt0P
-        BbJHJAhPWLtrUh7nbQ+Vwug=
-X-Google-Smtp-Source: APXvYqxyqTCbrq1xdCzkoYVL+c48dQADntW+6Bi3tN/r4jmGUpVWI/udlq43jQcwlgvVT5ebKnuk1w==
-X-Received: by 2002:a17:90a:36e4:: with SMTP id t91mr1101282pjb.22.1562801735794;
-        Wed, 10 Jul 2019 16:35:35 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id q1sm6318517pfn.178.2019.07.10.16.35.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jul 2019 16:35:35 -0700 (PDT)
-Date:   Wed, 10 Jul 2019 16:36:06 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     shengjiu.wang@nxp.com
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 2/2] ASoC: fsl_esai: recover the channel swap after
- xrun
-Message-ID: <20190710233605.GA9886@Asurada-Nvidia.nvidia.com>
-References: <cover.1562566531.git.shengjiu.wang@nxp.com>
- <a055d9d590124aad2de70e97266e50d2bae752c8.1562566531.git.shengjiu.wang@nxp.com>
+        Wed, 10 Jul 2019 19:37:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ANYiiS015651;
+        Wed, 10 Jul 2019 23:37:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=0APovDijHG6PwMSfhaesG8TZJSRCkJcQP5cEbaYB8ww=;
+ b=kDswq2kM9t+wCwvFNJYyU0TrxV21pjy/M9lYa3StIs3pnj3l4kJvj8zJCYnIOp4If51F
+ Nr1dOTH+0YlC2OWMnZxMrjLnKIe/AOpLghBdk28iNkeBJmtjUmzUR0jkSmvfEWGtL4MS
+ YRtCGDh5rSkJd51kXyPGhmY21vP4SxiBeoNbznJkeRd7JXnpBWDMZ02pHrKMPQKJdKKB
+ E2Un0r3ziXKC04h5Z3MvHSyykh3cv4f2V1OvzJ6a6elKSlN+Ma/EXiIwwg3dUxq9YCqf
+ ou/sRP15idTp6Bqm98Bs/FIdUxntZ/MMwP6ME7WdcEJxqusU75NyzyuPZsWKyAs+3o6e FQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2tjkkpvwtt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jul 2019 23:37:04 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6ANXBMl092682;
+        Wed, 10 Jul 2019 23:37:04 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2tmmh3twx4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jul 2019 23:37:04 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6ANaxxv003472;
+        Wed, 10 Jul 2019 23:36:59 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Jul 2019 16:36:59 -0700
+Subject: Re: [Question] Should direct reclaim time be bounded?
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Hillf Danton <hdanton@sina.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@suse.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
+ <80036eed-993d-1d24-7ab6-e495f01b1caa@oracle.com>
+ <885afb7b-f5be-590a-00c8-a24d2bc65f37@oracle.com>
+ <20190710194403.GR29695@dhcp22.suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <9d6c8b74-3cf6-4b9e-d3cb-a7ef49f838c7@oracle.com>
+Date:   Wed, 10 Jul 2019 16:36:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a055d9d590124aad2de70e97266e50d2bae752c8.1562566531.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190710194403.GR29695@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907100274
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9314 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907100274
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shengjiu,
+On 7/10/19 12:44 PM, Michal Hocko wrote:
+> On Wed 10-07-19 11:42:40, Mike Kravetz wrote:
+> [...]
+>> As Michal suggested, I'm going to do some testing to see what impact
+>> dropping the __GFP_RETRY_MAYFAIL flag for these huge page allocations
+>> will have on the number of pages allocated.
+> 
+> Just to clarify. I didn't mean to drop __GFP_RETRY_MAYFAIL from the
+> allocation request. I meant to drop the special casing of the flag in
+> should_continue_reclaim. I really have hard time to argue for this
+> special casing TBH. The flag is meant to retry harder but that shouldn't
+> be reduced to a single reclaim attempt because that alone doesn't really
+> help much with the high order allocation. It is more about compaction to
+> be retried harder.
 
-Mostly looks good to me, just some small comments.
+Thanks Michal.  That is indeed what you suggested earlier.  I remembered
+incorrectly.  Sorry.
 
-On Mon, Jul 08, 2019 at 02:38:52PM +0800, shengjiu.wang@nxp.com wrote:
-  
-> +static void fsl_esai_hw_reset(unsigned long arg)
-> +{
-> +	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
-> +	u32 saisr, tfcr, rfcr;
-> +	bool tx = true, rx = false, enabled[2];
+Removing the special casing for __GFP_RETRY_MAYFAIL in should_continue_reclaim
+implies that it will return false if nothing was reclaimed (nr_reclaimed == 0)
+in the previous pass.
 
-Could we swap the lines of u32 and bool? It'd look better.
+When I make such a modification and test, I see long stalls as a result
+of should_compact_retry returning true too often.  On a system I am currently
+testing, should_compact_retry has returned true 36000000 times.  My guess
+is that this may stall forever.  Vlastmil previously asked about this behavior,
+so I am capturing the reason.  Like before [1], should_compact_retry is
+returning true mostly because compaction_withdrawn() returns COMPACT_DEFERRED.
 
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-> +			   ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-> +			   ESAI_xCR_xPR_MASK, ESAI_xCR_xPR);
+Total 36000000
+      35437500	COMPACT_DEFERRED
+        562500  COMPACT_PARTIAL_SKIPPED
 
-Let's add a line of comments for these two:
-	/* Enforce ESAI personal resets for both TX and RX */
 
-> +	/*
-> +	 * Restore registers by regcache_sync, and ignore
-> +	 * return value
-> +	 */
-
-Could fit into single-line?
-
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCR,
-> +			   ESAI_xCR_xPR_MASK, 0);
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCR,
-> +			   ESAI_xCR_xPR_MASK, 0);
-> +
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_PRRC,
-> +			   ESAI_PRRC_PDC_MASK, ESAI_PRRC_PDC(ESAI_GPIO));
-> +	regmap_update_bits(esai_priv->regmap, REG_ESAI_PCRC,
-> +			   ESAI_PCRC_PC_MASK, ESAI_PCRC_PC(ESAI_GPIO));
-
-Could remove the blank line and add a line of comments:
-	/* Remove ESAI personal resets by configuring PCRC and PRRC also */
-
-Btw, I still feel this personal reset can be stuffed into one
-of the wrapper functions. But let's keep this simple for now.
-
-> +	regmap_read(esai_priv->regmap, REG_ESAI_SAISR, &saisr);
-
-Why do we read saisr here? All its bits would get cleared by
-the hardware reset. If it's a must to clear again, we should
-add a line of comments to emphasize it.
-
-Thank you
+[1] https://lkml.org/lkml/2019/6/5/643
+-- 
+Mike Kravetz
