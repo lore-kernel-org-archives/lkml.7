@@ -2,185 +2,102 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A461C73C68
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6979CC73C68
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69FF2083D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:51:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVAM8eQh"
+	by mail.kernel.org (Postfix) with ESMTP id 3C5F420651
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 04:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbfGJEvK (ORCPT
+        id S1726134AbfGJEzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 00:51:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37903 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfGJEvJ (ORCPT
+        Wed, 10 Jul 2019 00:55:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25872 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725839AbfGJEzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 00:51:09 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so1008849wrr.5;
-        Tue, 09 Jul 2019 21:51:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VkPnMs3HmAmmFrAKLUEfzR7Ay2skJ2U8keJBE/Qc5gc=;
-        b=ZVAM8eQhqUuizwqHSBQuOgH1OkLYxNqvUltyPNUAEGcfAS0dNh8dcKfMi6t5ehqHgX
-         Dtjcg2khRwUXnoIe9RKcUCi5PgVfcXDq82k4oIaZXOx2bQfQToucJCoV1V6MoRtth+jw
-         XCc0/q3GhF2yP6iVlSyZKH39KFcPuHH2HSqRH25F3InA1PCf5L/J50ZZDJrc/Wz9I1QT
-         GgR3DQXaMre1UyLmECjPN8/ySA3M6xKPjvrTDEEW6XPLV7ULIsNC9+5bEufHZ+FVCLWD
-         L4t8/ooJWbmNgSQ/J7iUxr81CIXJtycQY/aKLdR9xn6iWptuURv4UbeDcjpNy6/Joisl
-         vt4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VkPnMs3HmAmmFrAKLUEfzR7Ay2skJ2U8keJBE/Qc5gc=;
-        b=OhuRCttSx61nvNcOzTPH7bE0vv77xewc+RQUruFXJ4dbaORA8CwTleFpOrI0xL54dH
-         Ahr1yGI/NS/3AlG8+II7/V5WYPRiRVBh5VXu7Twvwu/DzDp72QBvQoFSDRWTLWsNhTlA
-         oJ3MT8kk0Pb5CtMHbXr02UoqrjxQ3Y1cwSZnfQa0XNuVLv03RCCSG+VfAfQ352ydH6F3
-         7b5Ub4UaQzVlKTWoIfJwn9nhQ0zSI9tEmbhOLZx9yVT1WtGjSGyUZ3BZ7XmeHbM0v12h
-         DrbImFi9kA/1K2QNtDqTvOiQYl+0N+dRDQqqsC57I/JlWrcnV9JU23/eJ1sIxvc2Le36
-         PzyQ==
-X-Gm-Message-State: APjAAAXKuN6c1KnmwrpZItgET1RXoxVL9UKKUYN8ciMu1044y68NCHo9
-        /KwBZvLhzAZTcLTuT2HNg7E=
-X-Google-Smtp-Source: APXvYqw9neJXKOJhEamkL4lzRwIS2ZsVUqHUfADty6RTIqN83DdJZbVmvqur2ZWevdiGtP9XpKjQ8g==
-X-Received: by 2002:adf:eccd:: with SMTP id s13mr19990585wro.193.1562734266991;
-        Tue, 09 Jul 2019 21:51:06 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id q193sm762542wme.8.2019.07.09.21.51.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 21:51:05 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v2] net/mlx5e: Refactor switch statements to avoid using uninitialized variables
-Date:   Tue,  9 Jul 2019 21:47:49 -0700
-Message-Id: <20190710044748.3924-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190708231154.89969-1-natechancellor@gmail.com>
-References: <20190708231154.89969-1-natechancellor@gmail.com>
+        Wed, 10 Jul 2019 00:55:07 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6A4rEHf089930
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 00:55:06 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tn651dr4m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 00:55:05 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 10 Jul 2019 05:55:04 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 10 Jul 2019 05:54:59 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6A4swsM18022644
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jul 2019 04:54:58 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BC07A405F;
+        Wed, 10 Jul 2019 04:54:58 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B27A9A4059;
+        Wed, 10 Jul 2019 04:54:55 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.102.1.122])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 10 Jul 2019 04:54:55 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au, mikey@neuling.org
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, christophe.leroy@c-s.fr,
+        naveen.n.rao@linux.vnet.ibm.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v3 0/3] Powerpc64/Watchpoint: Few important fixes
+Date:   Wed, 10 Jul 2019 10:24:42 +0530
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071004-0012-0000-0000-00000330D9C3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071004-0013-0000-0000-0000216A40EE
+Message-Id: <20190710045445.31037-1-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-10_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=786 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907100059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns:
+v2: https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-July/192967.html
 
-drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:251:2:
-warning: variable 'rec_seq_sz' is used uninitialized whenever switch
-default is taken [-Wsometimes-uninitialized]
-        default:
-        ^~~~~~~
-drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:255:46: note:
-uninitialized use occurs here
-        skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
-                                                    ^~~~~~~~~~
-drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c:239:16: note:
-initialize the variable 'rec_seq_sz' to silence this warning
-        u16 rec_seq_sz;
-                      ^
-                       = 0
-1 warning generated.
+v2->v3:
+ - Rebase to powerpc/next
+ - PATCH 2/3 is new
 
-The default case statement should return in tx_post_resync_params like
-in fill_static_params_ctx. However, as Nick and Leon point out, the
-switch statements converted into if statements to clean up the code a
-bit since there is only one cipher supported. Do that to clear up the
-code.
+Ravi Bangoria (3):
+  Powerpc64/Watchpoint: Fix length calculation for unaligned target
+  Powerpc64/Watchpoint: Don't ignore extraneous exceptions
+  Powerpc64/Watchpoint: Rewrite ptrace-hwbreak.c selftest
 
-Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
-Link: https://github.com/ClangBuiltLinux/linux/issues/590
-Suggested-by: Leon Romanovsky <leon@kernel.org>
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+ arch/powerpc/include/asm/debug.h              |   1 +
+ arch/powerpc/include/asm/hw_breakpoint.h      |   9 +-
+ arch/powerpc/kernel/dawr.c                    |   6 +-
+ arch/powerpc/kernel/hw_breakpoint.c           |  33 +-
+ arch/powerpc/kernel/process.c                 |  46 ++
+ arch/powerpc/kernel/ptrace.c                  |  37 +-
+ arch/powerpc/xmon/xmon.c                      |   3 +-
+ .../selftests/powerpc/ptrace/ptrace-hwbreak.c | 535 +++++++++++-------
+ 8 files changed, 413 insertions(+), 257 deletions(-)
 
-v1 -> v2:
-
-* Refactor switch statements into if statements
-
- .../mellanox/mlx5/core/en_accel/ktls_tx.c     | 33 +++++++------------
- 1 file changed, 11 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
-index 3f5f4317a22b..ea032f54197e 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
-@@ -25,23 +25,17 @@ static void
- fill_static_params_ctx(void *ctx, struct mlx5e_ktls_offload_context_tx *priv_tx)
- {
- 	struct tls_crypto_info *crypto_info = priv_tx->crypto_info;
-+	struct tls12_crypto_info_aes_gcm_128 *info;
- 	char *initial_rn, *gcm_iv;
- 	u16 salt_sz, rec_seq_sz;
- 	char *salt, *rec_seq;
- 	u8 tls_version;
- 
--	switch (crypto_info->cipher_type) {
--	case TLS_CIPHER_AES_GCM_128: {
--		struct tls12_crypto_info_aes_gcm_128 *info =
--			(struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
--
--		EXTRACT_INFO_FIELDS;
--		break;
--	}
--	default:
--		WARN_ON(1);
-+	if (WARN_ON(crypto_info->cipher_type != TLS_CIPHER_AES_GCM_128))
- 		return;
--	}
-+
-+	info = (struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
-+	EXTRACT_INFO_FIELDS;
- 
- 	gcm_iv      = MLX5_ADDR_OF(tls_static_params, ctx, gcm_iv);
- 	initial_rn  = MLX5_ADDR_OF(tls_static_params, ctx, initial_record_number);
-@@ -234,23 +228,18 @@ tx_post_resync_params(struct mlx5e_txqsq *sq,
- 		      u64 rcd_sn)
- {
- 	struct tls_crypto_info *crypto_info = priv_tx->crypto_info;
-+	struct tls12_crypto_info_aes_gcm_128 *info;
- 	__be64 rn_be = cpu_to_be64(rcd_sn);
- 	bool skip_static_post;
- 	u16 rec_seq_sz;
- 	char *rec_seq;
- 
--	switch (crypto_info->cipher_type) {
--	case TLS_CIPHER_AES_GCM_128: {
--		struct tls12_crypto_info_aes_gcm_128 *info =
--			(struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
-+	if (WARN_ON(crypto_info->cipher_type != TLS_CIPHER_AES_GCM_128))
-+		return;
- 
--		rec_seq = info->rec_seq;
--		rec_seq_sz = sizeof(info->rec_seq);
--		break;
--	}
--	default:
--		WARN_ON(1);
--	}
-+	info = (struct tls12_crypto_info_aes_gcm_128 *)crypto_info;
-+	rec_seq = info->rec_seq;
-+	rec_seq_sz = sizeof(info->rec_seq);
- 
- 	skip_static_post = !memcmp(rec_seq, &rn_be, rec_seq_sz);
- 	if (!skip_static_post)
 -- 
-2.22.0
+2.20.1
 
