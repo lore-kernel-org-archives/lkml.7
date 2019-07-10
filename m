@@ -2,165 +2,125 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BCBC73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0E7C73C7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3A72064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFA72083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfGJHbb (ORCPT
+        id S1727218AbfGJHbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:31:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:56798 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbfGJHbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:31:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44192344;
-        Wed, 10 Jul 2019 00:31:30 -0700 (PDT)
-Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCE8E3F246;
-        Wed, 10 Jul 2019 00:33:25 -0700 (PDT)
-Subject: Re: [RFC V3 00/18] objtool: Add support for arm64
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, julien.thierry@arm.com
-References: <20190624095548.8578-1-raphael.gault@arm.com>
-From:   Raphael Gault <raphael.gault@arm.com>
-Message-ID: <e4ce2867-1d9c-54f4-73a5-668057e423a7@arm.com>
-Date:   Wed, 10 Jul 2019 08:31:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Jul 2019 03:31:37 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2250 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726162AbfGJHbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 03:31:37 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 40D38EDBC7DF22691293;
+        Wed, 10 Jul 2019 15:31:34 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 10 Jul 2019
+ 15:31:31 +0800
+Subject: Re: [PATCH -next v4] drm/amdgpu: return 'ret' immediately if failed
+ in amdgpu_pmu_init
+To:     "Kim, Jonathan" <Jonathan.Kim@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "julia.lawall@lip6.fr" <julia.lawall@lip6.fr>
+References: <20190624094850.GQ18776@kadam>
+ <20190624112318.149299-1-maowenan@huawei.com>
+ <CH2PR12MB3831BE36FF61D74FC529F64F85E00@CH2PR12MB3831.namprd12.prod.outlook.com>
+ <2d7c2525-4503-3706-7d00-0b9bf230266d@huawei.com>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <8008fcf8-47a1-111f-4467-1a16171129dd@huawei.com>
+Date:   Wed, 10 Jul 2019 15:31:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190624095548.8578-1-raphael.gault@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <2d7c2525-4503-3706-7d00-0b9bf230266d@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-Just a gentle ping to see if anyone has comments to make about this 
-version :)
+gentle ping
 
-On 6/24/19 10:55 AM, Raphael Gault wrote:
-> As of now, objtool only supports the x86_64 architecture but the
-> groundwork has already been done in order to add support for other
-> architectures without too much effort.
+
+On 2019/6/26 19:35, maowenan wrote:
 > 
-> This series of patches adds support for the arm64 architecture
-> based on the Armv8.5 Architecture Reference Manual.
 > 
-> Objtool will be a valuable tool to progress and provide more guarentees
-> on live patching which is a work in progress for arm64.
+> On 2019/6/25 1:42, Kim, Jonathan wrote:
+>> Immediate return should be ok since perf registration isn't dependent on gpu hw.
+>>
+>> Reviewed-by: Jonathan Kim <Jonathan.Kim@amd.com>
 > 
-> Once we have the base of objtool working the next steps will be to
-> port Peter Z's uaccess validation for arm64.
+> thanks for review.
 > 
-> Changes since previous version:
-> * Rebased on tip/master: Note that I had to re-expose the
-> `struct alternative` using check.h because it is now used outside of
-> check.c.
-> * Reorder commits for a more coherent progression
-> * Introduce GCC plugin to help detect switch-tables for arm64
-> This plugins could be improve: It plugs in after the RTL control flow
-> graph passes but only extract information about the switch tables. I
-> originally intended for it to introduce new code_label/note within the
-> RTL representation in order to reference them and thus get the address
-> of the branch instruction. However I did not manage to do it properly
-> using gen_rtx_CODE_LABEL/emit_label_before/after. If anyone has some
-> experience with RTL plugins I am all ears for advices.
+>>
+>> -----Original Message-----
+>> From: Mao Wenan <maowenan@huawei.com> 
+>> Sent: Monday, June 24, 2019 7:23 AM
+>> To: airlied@linux.ie; daniel@ffwll.ch; Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian <Christian.Koenig@amd.com>; Zhou, David(ChunMing) <David1.Zhou@amd.com>; dan.carpenter@oracle.com; julia.lawall@lip6.fr
+>> Cc: kernel-janitors@vger.kernel.org; amd-gfx@lists.freedesktop.org; linux-kernel@vger.kernel.org; Kim, Jonathan <Jonathan.Kim@amd.com>; Mao Wenan <maowenan@huawei.com>
+>> Subject: [PATCH -next v4] drm/amdgpu: return 'ret' immediately if failed in amdgpu_pmu_init
+>>
+>> [CAUTION: External Email]
+>>
+>> There is one warning:
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+>>   int ret = 0;
+>>       ^
+>> amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
+>> which will use the return value. So it should return 'ret' immediately if init_pmu_by_type() failed.
+>> amdgpu_device_init()
+>>         r = amdgpu_pmu_init(adev);
+>>
+>> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
+>>
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> ---
+>>  v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in  amdgpu_pmu_init().
+>>  v2->v3: change the subject for this patch; return 'ret' immediately if failed to call init_pmu_by_type().
+>>  v3->v4: delete the indenting for init_pmu_by_type() arguments. The original indenting is correct.
+>>
+>>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>> index 0e6dba9f60f0..c98cf77a37f3 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+>> @@ -254,6 +254,8 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
+>>                 ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
+>>                                        "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
+>>                                        DF_V3_6_MAX_COUNTERS);
+>> +               if (ret)
+>> +                       return ret;
+>>
+>>                 /* other pmu types go here*/
+>>                 break;
+>> --
+>> 2.20.1
+>>
 > 
-> Raphael Gault (18):
->    objtool: Add abstraction for computation of symbols offsets
->    objtool: orc: Refactor ORC API for other architectures to implement.
->    objtool: Move registers and control flow to arch-dependent code
->    objtool: arm64: Add required implementation for supporting the aarch64
->      architecture in objtool.
->    objtool: special: Adapt special section handling
->    objtool: arm64: Adapt the stack frame checks for arm architecture
->    objtool: Introduce INSN_UNKNOWN type
->    objtool: Refactor switch-tables code to support other architectures
->    gcc-plugins: objtool: Add plugin to detect switch table on arm64
->    objtool: arm64: Implement functions to add switch tables alternatives
->    arm64: alternative: Mark .altinstr_replacement as containing
->      executable instructions
->    arm64: assembler: Add macro to annotate asm function having non
->      standard stack-frame.
->    arm64: sleep: Prevent stack frame warnings from objtool
->    arm64: kvm: Annotate non-standard stack frame functions
->    arm64: kernel: Add exception on kuser32 to prevent stack analysis
->    arm64: crypto: Add exceptions for crypto object to prevent stack
->      analysis
->    arm64: kernel: Annotate non-standard stack frame functions
->    objtool: arm64: Enable stack validation for arm64
 > 
->   arch/arm64/Kconfig                            |    1 +
->   arch/arm64/crypto/Makefile                    |    3 +
->   arch/arm64/include/asm/alternative.h          |    2 +-
->   arch/arm64/include/asm/assembler.h            |   13 +
->   arch/arm64/kernel/Makefile                    |    3 +
->   arch/arm64/kernel/hyp-stub.S                  |    2 +
->   arch/arm64/kernel/sleep.S                     |    4 +
->   arch/arm64/kvm/hyp-init.S                     |    2 +
->   arch/arm64/kvm/hyp/entry.S                    |    2 +
->   scripts/Makefile.gcc-plugins                  |    2 +
->   scripts/gcc-plugins/Kconfig                   |    9 +
->   .../arm64_switch_table_detection_plugin.c     |   58 +
->   tools/objtool/Build                           |    2 -
->   tools/objtool/arch.h                          |   21 +-
->   tools/objtool/arch/arm64/Build                |    8 +
->   tools/objtool/arch/arm64/arch_special.c       |  173 +
->   tools/objtool/arch/arm64/bit_operations.c     |   67 +
->   tools/objtool/arch/arm64/decode.c             | 2809 +++++++++++++++++
->   .../objtool/arch/arm64/include/arch_special.h |   52 +
->   .../arch/arm64/include/asm/orc_types.h        |   96 +
->   .../arch/arm64/include/bit_operations.h       |   24 +
->   tools/objtool/arch/arm64/include/cfi.h        |   74 +
->   .../objtool/arch/arm64/include/insn_decode.h  |  210 ++
->   tools/objtool/arch/arm64/orc_dump.c           |   26 +
->   tools/objtool/arch/arm64/orc_gen.c            |   40 +
->   tools/objtool/arch/x86/Build                  |    3 +
->   tools/objtool/arch/x86/arch_special.c         |  101 +
->   tools/objtool/arch/x86/decode.c               |   16 +
->   tools/objtool/arch/x86/include/arch_special.h |   45 +
->   tools/objtool/{ => arch/x86/include}/cfi.h    |    0
->   tools/objtool/{ => arch/x86}/orc_dump.c       |    4 +-
->   tools/objtool/{ => arch/x86}/orc_gen.c        |  104 +-
->   tools/objtool/check.c                         |  309 +-
->   tools/objtool/check.h                         |   10 +
->   tools/objtool/elf.c                           |    3 +-
->   tools/objtool/orc.h                           |    4 +-
->   tools/objtool/special.c                       |   28 +-
->   tools/objtool/special.h                       |   13 +-
->   38 files changed, 4119 insertions(+), 224 deletions(-)
->   create mode 100644 scripts/gcc-plugins/arm64_switch_table_detection_plugin.c
->   create mode 100644 tools/objtool/arch/arm64/Build
->   create mode 100644 tools/objtool/arch/arm64/arch_special.c
->   create mode 100644 tools/objtool/arch/arm64/bit_operations.c
->   create mode 100644 tools/objtool/arch/arm64/decode.c
->   create mode 100644 tools/objtool/arch/arm64/include/arch_special.h
->   create mode 100644 tools/objtool/arch/arm64/include/asm/orc_types.h
->   create mode 100644 tools/objtool/arch/arm64/include/bit_operations.h
->   create mode 100644 tools/objtool/arch/arm64/include/cfi.h
->   create mode 100644 tools/objtool/arch/arm64/include/insn_decode.h
->   create mode 100644 tools/objtool/arch/arm64/orc_dump.c
->   create mode 100644 tools/objtool/arch/arm64/orc_gen.c
->   create mode 100644 tools/objtool/arch/x86/arch_special.c
->   create mode 100644 tools/objtool/arch/x86/include/arch_special.h
->   rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
->   rename tools/objtool/{ => arch/x86}/orc_dump.c (98%)
->   rename tools/objtool/{ => arch/x86}/orc_gen.c (66%)
+> .
 > 
 
-Cheers,
-
--- 
-Raphael Gault
