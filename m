@@ -2,195 +2,192 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85895C73C63
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F3DC73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537B02073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:17:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="CgnZ01od"
+	by mail.kernel.org (Postfix) with ESMTP id EA5B52064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfGJBRA (ORCPT
+        id S1726917AbfGJBVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 21:17:00 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44266 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbfGJBQz (ORCPT
+        Tue, 9 Jul 2019 21:21:24 -0400
+Received: from lgeamrelo12.lge.com ([156.147.23.52]:43015 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726518AbfGJBVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 21:16:55 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d79so612401qke.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 18:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=CVTJCjL61cT1sLEtn2w9JvdFUT6cQxdBQbzitEZ8G3w=;
-        b=CgnZ01od2X5o9ZxnU3YxLA5iP6DGIirNV+yqbmaGGd37pbDw+kMM0vJ0slJQWHOgGz
-         89n/NsZaNntd/HsoETEEEWONOoRpUvU+swsq3e0sogqmdn7o3c+6pgPWb0uMVxE0WqLg
-         +7f3548VjFl28RcqVuZy3NVuR0FeaZeD2MTcqLaGipojj6pr7WHfHlZaKZDd6uR230L0
-         JT4sctjsx1qzKG+wB2YuOCU2TWArwX6x/FgTtjBrPZrz5jK0b+CWmWzZQlS4c5VoVZtr
-         JemrX7sEW8IBBYGZikmfiz6eQN+ryIQdDAWkxCVDBjzH3tTwnd+byUmpjy4XiunxSWhU
-         BXQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CVTJCjL61cT1sLEtn2w9JvdFUT6cQxdBQbzitEZ8G3w=;
-        b=E6Tp1eR8R1PdpD+wyjU+E7EVTg9uuQ11/nFTg1gz3If93SXyW2vL69FoSuNnXO0Fh7
-         0hZOegqjE2zmt7kDbMO8yKD6yismpHcKP24wF6DuvDQD00d+XdEXB2Dz61rcUtvCwVtv
-         3TDb67QHcHedTpVUowRTYaoC8ubJVN/jb5K3YC/7ePXk/stkck3PFRmTW0LnAoilsiuk
-         xw63mIZKdy6Q4e6TZVMhAnqoy/gNcklwAS86VkEBMkn5T9jG9J+B21RU9pEk0TLw5Ipy
-         Lc2R5qWESQJYh9jXMelhA6SBgYmKDWG8M0uopFiqzssiQzw/DMVmY10t9c5U3DIw3GMQ
-         avqw==
-X-Gm-Message-State: APjAAAV0oVusOxdoTxgUGcXu1u9cJTzowpe50Jp1PpH/2u/PKfB2UnI0
-        950vpVui8EMxNBoTXmiTcWZKwB1OiNs=
-X-Google-Smtp-Source: APXvYqys9rzeaiHpJCQSMGWFJQogIT5Nl/kLTQmCtVzEY7YWfkQtFYUrb2NcrUN7cHm0A3qL/HJzCg==
-X-Received: by 2002:a05:620a:1661:: with SMTP id d1mr21322876qko.192.1562721414251;
-        Tue, 09 Jul 2019 18:16:54 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id u7sm260057qta.82.2019.07.09.18.16.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 09 Jul 2019 18:16:53 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, akpm@linux-foundation.org,
-        mhocko@suse.com, dave.hansen@linux.intel.com,
-        dan.j.williams@intel.com, keith.busch@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, zwisler@kernel.org,
-        thomas.lendacky@amd.com, ying.huang@intel.com,
-        fengguang.wu@intel.com, bp@suse.de, bhelgaas@google.com,
-        baiyaowei@cmss.chinamobile.com, tiwai@suse.de, jglisse@redhat.com,
-        david@redhat.com
-Subject: [v7 3/3] device-dax: "Hotremove" persistent memory that is used like normal RAM
-Date:   Tue,  9 Jul 2019 21:16:47 -0400
-Message-Id: <20190710011647.10944-4-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190710011647.10944-1-pasha.tatashin@soleen.com>
-References: <20190710011647.10944-1-pasha.tatashin@soleen.com>
+        Tue, 9 Jul 2019 21:21:23 -0400
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+        by 156.147.23.52 with ESMTP; 10 Jul 2019 10:21:19 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.126 with ESMTP; 10 Jul 2019 10:21:19 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Wed, 10 Jul 2019 10:20:25 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Message-ID: <20190710012025.GA20711@X58A-UD3R>
+References: <1562565609-12482-1-git-send-email-byungchul.park@lge.com>
+ <20190708125013.GG26519@linux.ibm.com>
+ <20190708130359.GA42888@google.com>
+ <20190709055815.GA19459@X58A-UD3R>
+ <20190709124102.GR26519@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709124102.GR26519@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is now allowed to use persistent memory like a regular RAM, but
-currently there is no way to remove this memory until machine is
-rebooted.
+On Tue, Jul 09, 2019 at 05:41:02AM -0700, Paul E. McKenney wrote:
+> > Hi Paul,
+> > 
+> > IMHO, as much as we want to tune the time for fqs to be initiated, we
+> > can also want to tune the time for the help from scheduler to start.
+> > I thought only difference between them is a level of urgency. I might be
+> > wrong. It would be appreciated if you let me know if I miss something.
+> 
+> Hello, Byungchul,
+> 
+> I understand that one hypothetically might want to tune this at runtime,
+> but have you had need to tune this at runtime on a real production
+> workload?  If so, what problem was happening that caused you to want to
+> do this tuning?
 
-This work expands the functionality to also allows hotremoving
-previously hotplugged persistent memory, and recover the device for use
-for other purposes.
+Not actually.
 
-To hotremove persistent memory, the management software must first
-offline all memory blocks of dax region, and than unbind it from
-device-dax/kmem driver. So, operations should look like this:
+> > And it's ok even if the patch is turned down based on your criteria. :)
+> 
+> If there is a real need, something needs to be provided to meet that
+> need.  But in the absence of a real need, past experience has shown
+> that speculative tuning knobs usually do more harm than good.  ;-)
 
-echo offline > /sys/devices/system/memory/memoryN/state
-...
-echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+It makes sense, "A speculative tuning knobs do more harm than good".
 
-Note: if unbind is done without offlining memory beforehand, it won't be
-possible to do dax0.0 hotremove, and dax's memory is going to be part of
-System RAM until reboot.
+Then, it would be better to leave jiffies_till_{first,next}_fqs tunnable
+but jiffies_till_sched_qs until we need it.
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/dax/dax-private.h |  2 ++
- drivers/dax/kmem.c        | 41 +++++++++++++++++++++++++++++++++++----
- 2 files changed, 39 insertions(+), 4 deletions(-)
+However,
 
-diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-index b4177aafbbd1..9ee659ed5566 100644
---- a/drivers/dax/dax-private.h
-+++ b/drivers/dax/dax-private.h
-@@ -45,6 +45,7 @@ struct dax_region {
-  * @pgmap - pgmap for memmap setup / lifetime (driver owned)
-  * @ref: pgmap reference count (driver owned)
-  * @cmp: @ref final put completion (driver owned)
-+ * @dax_mem_res: physical address range of hotadded DAX memory
+(1) In case that jiffies_till_sched_qs is tunnable:
+
+	We might need all of jiffies_till_{first,next}_qs,
+	jiffies_till_sched_qs and jiffies_to_sched_qs because
+	jiffies_to_sched_qs can be affected by any of them. So we
+	should be able to read each value at any time.
+
+(2) In case that jiffies_till_sched_qs is not tunnable:
+
+	I think we don't have to keep the jiffies_till_sched_qs any
+	longer since that's only for setting jiffies_to_sched_qs at
+	*booting time*, which can be done with jiffies_to_sched_qs too.
+	It's meaningless to keep all of tree variables.
+
+The simpler and less knobs that we really need we have, the better.
+
+what do you think about it?
+
+In the following patch, I (1) removed jiffies_till_sched_qs and then
+(2) renamed jiffies_*to*_sched_qs to jiffies_*till*_sched_qs because I
+think jiffies_till_sched_qs is a much better name for the purpose. I
+will resend it with a commit msg after knowing your opinion on it.
+
+Thanks,
+Byungchul
+
+---8<---
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index e72c184..94b58f5 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3792,10 +3792,6 @@
+ 			a value based on the most recent settings
+ 			of rcutree.jiffies_till_first_fqs
+ 			and rcutree.jiffies_till_next_fqs.
+-			This calculated value may be viewed in
+-			rcutree.jiffies_to_sched_qs.  Any attempt to set
+-			rcutree.jiffies_to_sched_qs will be cheerfully
+-			overwritten.
+ 
+ 	rcutree.kthread_prio= 	 [KNL,BOOT]
+ 			Set the SCHED_FIFO priority of the RCU per-CPU
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index a2f8ba2..ad9dc86 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -421,10 +421,8 @@ static int rcu_is_cpu_rrupt_from_idle(void)
+  * How long the grace period must be before we start recruiting
+  * quiescent-state help from rcu_note_context_switch().
   */
- struct dev_dax {
- 	struct dax_region *region;
-@@ -54,6 +55,7 @@ struct dev_dax {
- 	struct dev_pagemap pgmap;
- 	struct percpu_ref ref;
- 	struct completion cmp;
-+	struct resource *dax_kmem_res;
- };
+-static ulong jiffies_till_sched_qs = ULONG_MAX;
++static ulong jiffies_till_sched_qs = ULONG_MAX; /* See adjust_jiffies_till_sched_qs(). */
+ module_param(jiffies_till_sched_qs, ulong, 0444);
+-static ulong jiffies_to_sched_qs; /* See adjust_jiffies_till_sched_qs(). */
+-module_param(jiffies_to_sched_qs, ulong, 0444); /* Display only! */
  
- static inline struct dev_dax *to_dev_dax(struct device *dev)
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index 4c0131857133..c52a8e5f2345 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -71,21 +71,54 @@ int dev_dax_kmem_probe(struct device *dev)
- 		kfree(new_res);
- 		return rc;
- 	}
-+	dev_dax->dax_kmem_res = new_res;
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_MEMORY_HOTREMOVE
-+static int dev_dax_kmem_remove(struct device *dev)
-+{
-+	struct dev_dax *dev_dax = to_dev_dax(dev);
-+	struct resource *res = dev_dax->dax_kmem_res;
-+	resource_size_t kmem_start = res->start;
-+	resource_size_t kmem_size = resource_size(res);
-+	int rc;
-+
-+	/*
-+	 * We have one shot for removing memory, if some memory blocks were not
-+	 * offline prior to calling this function remove_memory() will fail, and
-+	 * there is no way to hotremove this memory until reboot because device
-+	 * unbind will succeed even if we return failure.
-+	 */
-+	rc = remove_memory(dev_dax->target_node, kmem_start, kmem_size);
-+	if (rc) {
-+		dev_err(dev,
-+			"region %pR cannot be hotremoved, error (%d)\n",
-+			res, rc);
-+		return rc;
-+	}
-+
-+	/* Release and free dax resources */
-+	release_resource(res);
-+	kfree(res);
-+	dev_dax->dax_kmem_res = NULL;
-+
-+	return 0;
-+}
-+#else
- static int dev_dax_kmem_remove(struct device *dev)
+ /*
+  * Make sure that we give the grace-period kthread time to detect any
+@@ -436,18 +434,13 @@ static void adjust_jiffies_till_sched_qs(void)
  {
- 	/*
--	 * Purposely leak the request_mem_region() for the device-dax
--	 * range and return '0' to ->remove() attempts. The removal of
--	 * the device from the driver always succeeds, but the region
--	 * is permanently pinned as reserved by the unreleased
-+	 * Without hotremove purposely leak the request_mem_region() for the
-+	 * device-dax range and return '0' to ->remove() attempts. The removal
-+	 * of the device from the driver always succeeds, but the region is
-+	 * permanently pinned as reserved by the unreleased
- 	 * request_mem_region().
- 	 */
- 	return 0;
- }
-+#endif /* CONFIG_MEMORY_HOTREMOVE */
+ 	unsigned long j;
  
- static struct dax_device_driver device_dax_kmem_driver = {
- 	.drv = {
--- 
-2.22.0
-
+-	/* If jiffies_till_sched_qs was specified, respect the request. */
+-	if (jiffies_till_sched_qs != ULONG_MAX) {
+-		WRITE_ONCE(jiffies_to_sched_qs, jiffies_till_sched_qs);
+-		return;
+-	}
+ 	/* Otherwise, set to third fqs scan, but bound below on large system. */
+ 	j = READ_ONCE(jiffies_till_first_fqs) +
+ 		      2 * READ_ONCE(jiffies_till_next_fqs);
+ 	if (j < HZ / 10 + nr_cpu_ids / RCU_JIFFIES_FQS_DIV)
+ 		j = HZ / 10 + nr_cpu_ids / RCU_JIFFIES_FQS_DIV;
+ 	pr_info("RCU calculated value of scheduler-enlistment delay is %ld jiffies.\n", j);
+-	WRITE_ONCE(jiffies_to_sched_qs, j);
++	WRITE_ONCE(jiffies_till_sched_qs, j);
+ }
+ 
+ static int param_set_first_fqs_jiffies(const char *val, const struct kernel_param *kp)
+@@ -1033,16 +1026,16 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
+ 
+ 	/*
+ 	 * A CPU running for an extended time within the kernel can
+-	 * delay RCU grace periods: (1) At age jiffies_to_sched_qs,
+-	 * set .rcu_urgent_qs, (2) At age 2*jiffies_to_sched_qs, set
++	 * delay RCU grace periods: (1) At age jiffies_till_sched_qs,
++	 * set .rcu_urgent_qs, (2) At age 2*jiffies_till_sched_qs, set
+ 	 * both .rcu_need_heavy_qs and .rcu_urgent_qs.  Note that the
+ 	 * unsynchronized assignments to the per-CPU rcu_need_heavy_qs
+ 	 * variable are safe because the assignments are repeated if this
+ 	 * CPU failed to pass through a quiescent state.  This code
+-	 * also checks .jiffies_resched in case jiffies_to_sched_qs
++	 * also checks .jiffies_resched in case jiffies_till_sched_qs
+ 	 * is set way high.
+ 	 */
+-	jtsq = READ_ONCE(jiffies_to_sched_qs);
++	jtsq = READ_ONCE(jiffies_till_sched_qs);
+ 	ruqp = per_cpu_ptr(&rcu_data.rcu_urgent_qs, rdp->cpu);
+ 	rnhqp = &per_cpu(rcu_data.rcu_need_heavy_qs, rdp->cpu);
+ 	if (!READ_ONCE(*rnhqp) &&
+@@ -3383,7 +3376,8 @@ static void __init rcu_init_geometry(void)
+ 		jiffies_till_first_fqs = d;
+ 	if (jiffies_till_next_fqs == ULONG_MAX)
+ 		jiffies_till_next_fqs = d;
+-	adjust_jiffies_till_sched_qs();
++	if (jiffies_till_sched_qs == ULONG_MAX)
++		adjust_jiffies_till_sched_qs();
+ 
+ 	/* If the compile-time values are accurate, just leave. */
+ 	if (rcu_fanout_leaf == RCU_FANOUT_LEAF &&
