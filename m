@@ -2,104 +2,147 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C634BC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EABBC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99AD5208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3328D214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1562793708;
+	bh=V/Wa8OqWtFdGckahHkvEhfXCx2DmBiBGDL79DnzH1vk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dXIBhAUQvq1jNRBmzSzQcxOgfgfVgfP19l9FPJvzFAtrSqk1mih14v6NDBV4X0oxW
+	 znXsVpAuBC2mTeByU3VnxsP8NXiELd+6nzZFpO4XxqWebyZTHMySNFvvi/GPvAiyQu
+	 yco7Ag14dPR2H5wGLvj9W2D4ZSDNt6vX6K7JVGlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfGJVUT (ORCPT
+        id S1727761AbfGJVVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:20:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35912 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727220AbfGJVUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:20:19 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C4F8F30B259D;
-        Wed, 10 Jul 2019 21:20:18 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-122-237.rdu2.redhat.com [10.10.122.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 153CB60BFB;
-        Wed, 10 Jul 2019 21:20:17 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Forney <mforney@mforney.org>
-Subject: [PATCH] objtool: Rename elf_open() to prevent conflict with libelf from elftoolchain
-Date:   Wed, 10 Jul 2019 16:20:11 -0500
-Message-Id: <7ce2d1b35665edf19fd0eb6fbc0b17b81a48e62f.1562793604.git.jpoimboe@redhat.com>
+        Wed, 10 Jul 2019 17:21:46 -0400
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:40971 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfGJVVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 17:21:46 -0400
+Received: by mail-pf1-f169.google.com with SMTP id m30so1674118pff.8;
+        Wed, 10 Jul 2019 14:21:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=siIn1w9IRj9EyAz1dx7Gl8hkgFfIWbx6jNb+pkUBwDM=;
+        b=CWXXPYiJmNO2VkL3MT7DkHV+hmD6kdOoGicSmCBWezxnW3FtZWUaM6vZU1jQNA/eS+
+         ln6xoL5gaBXAKj+Ud0V0NkTKNiTDmbUXXBzRXsgE1yQmVCRot+YPhZcGoM758uw19VmT
+         CnnGu6vGxos82NuqzEfkrNw+TtW7B1jITstDIG5KEQR4BKgB2lIqHSCLaqrsgNMQxsfj
+         Zcpjs6nphhqe+2Bt9te7fqFOQ0J1rBiZI3EyD11sChA1bbYVICRaNWJ6c+cVl2mprSR7
+         4YfoDL5JUBiN7h9J+arYvdtZjXF4lBEAxb5wNcCPLRGk4SlBvVCGts/PESbNS7CE3hqa
+         K6rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=siIn1w9IRj9EyAz1dx7Gl8hkgFfIWbx6jNb+pkUBwDM=;
+        b=G31mc882SuOiuD0N1mw7JnNKERYDORTa67csrSf2+wZtJS1WbvacojJa08pYUdwVOz
+         SQ18iWt9eVpMRKC9l0/IkrgmigzF/3e7xZNs0cooV7r8aWnzoQlMvzS6WINk0XDeuDaJ
+         B1DDPp918zLoBc+Ukg4YqEvmsBrk+i+erXyX/lfmz+Axk5WngVovw65qFyam/5yNr3Cy
+         VWcnmo/1DCVg2+1qXZ1lYalxQ3UEWTzfjqlyOyifUw4i1kleQ6aAMzx3MsddNSJ4XGK+
+         jZ6dWyhufFjPbP4wgjkuOIzJ2XbOUr0W6Jy08/OH5WpIUSOOaFd4O/r+R+Ft6llzH3Al
+         gsPw==
+X-Gm-Message-State: APjAAAV8u15dOr7ORhUpFdg28PyneAkQtmR/io4PtZVHXMETu2jnT8jf
+        hAOH6V7C+B7rY2HSO5JweFg=
+X-Google-Smtp-Source: APXvYqxQfsexkWldj+RCgTAbmj+xZvqfEumit5Aa+odfoOiHhmjsD1wG+GkD6dTNi1iGZIz2KvODBQ==
+X-Received: by 2002:a63:5550:: with SMTP id f16mr363820pgm.426.1562793705481;
+        Wed, 10 Jul 2019 14:21:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:2bbe])
+        by smtp.gmail.com with ESMTPSA id f19sm3851402pfk.180.2019.07.10.14.21.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Jul 2019 14:21:44 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 14:21:42 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
+        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org
+Subject: [PATCH 11/10] block: omit request->pre_start_time_ns if
+ !CONFIG_BLK_CGROUP_IOCOST work-conserving porportional controller
+Message-ID: <20190710212142.GP657710@devbig004.ftw2.facebook.com>
+References: <20190710205128.1316483-1-tj@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 10 Jul 2019 21:20:18 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710205128.1316483-1-tj@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Forney <mforney@mforney.org>
+From e2693136fa64d5c9dde73d2d663bde84f8326877 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Wed, 10 Jul 2019 14:18:12 -0700
 
-The elftoolchain version of libelf has a function named elf_open().
+request->pre_start_time is currently only used by the iocost
+controller.  Let's omit the field if disabled and avoid wasting space
+in struct request.
 
-The function name isn't quite accurate anyway, since it also reads all
-the ELF data.  Rename it to elf_read(), which is more accurate.
-
-[ jpoimboe: rename to elf_read(); write commit description ]
-
-Signed-off-by: Michael Forney <mforney@mforney.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Suggested-by: Jens Axboe <axboe@kernel.dk>
 ---
- tools/objtool/check.c | 2 +-
- tools/objtool/elf.c   | 2 +-
- tools/objtool/elf.h   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+The git branch is updated accordingly.
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 172f99195726..de8f40730b37 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2407,7 +2407,7 @@ int check(const char *_objname, bool orc)
+Thanks.
+
+ block/blk-mq.c         | 2 ++
+ include/linux/blkdev.h | 7 +++++++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 90b46988cc02..ce96bcd7e260 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -325,7 +325,9 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
+ 	RB_CLEAR_NODE(&rq->rb_node);
+ 	rq->rq_disk = NULL;
+ 	rq->part = NULL;
++#ifdef CONFIG_BLK_CGROUP_IOCOST
+ 	rq->pre_start_time_ns = pre_start_time_ns;
++#endif
+ 	if (blk_mq_need_time_stamp(rq))
+ 		rq->start_time_ns = ktime_get_ns();
+ 	else
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 4247a9bc44b7..2425af6d3f5e 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -194,8 +194,10 @@ struct request {
  
- 	objname = _objname;
+ 	struct gendisk *rq_disk;
+ 	struct hd_struct *part;
++#ifdef CONFIG_BLK_CGROUP_IOCOST
+ 	/* Time that the first bio started allocating this request. */
+ 	u64 pre_start_time_ns;
++#endif
+ 	/* Time that this request was allocated for this IO. */
+ 	u64 start_time_ns;
+ 	/* Time that I/O was submitted to the device. */
+@@ -635,8 +637,13 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+ 	test_bit(QUEUE_FLAG_SCSI_PASSTHROUGH, &(q)->queue_flags)
+ #define blk_queue_pci_p2pdma(q)	\
+ 	test_bit(QUEUE_FLAG_PCI_P2PDMA, &(q)->queue_flags)
++
++#ifdef CONFIG_BLK_CGROUP_IOCOST
+ #define blk_queue_rec_prestart(q)	\
+ 	test_bit(QUEUE_FLAG_REC_PRESTART, &(q)->queue_flags)
++#else
++#define blk_queue_rec_prestart(q)		false
++#endif
  
--	file.elf = elf_open(objname, orc ? O_RDWR : O_RDONLY);
-+	file.elf = elf_read(objname, orc ? O_RDWR : O_RDONLY);
- 	if (!file.elf)
- 		return 1;
- 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index e99e1be19ad9..1121926bdc1b 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -401,7 +401,7 @@ static int read_relas(struct elf *elf)
- 	return 0;
- }
- 
--struct elf *elf_open(const char *name, int flags)
-+struct elf *elf_read(const char *name, int flags)
- {
- 	struct elf *elf;
- 	Elf_Cmd cmd;
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index e44ca5d51871..2fe0b0aa741d 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -74,7 +74,7 @@ struct elf {
- };
- 
- 
--struct elf *elf_open(const char *name, int flags);
-+struct elf *elf_read(const char *name, int flags);
- struct section *find_section_by_name(struct elf *elf, const char *name);
- struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset);
- struct symbol *find_symbol_by_name(struct elf *elf, const char *name);
+ #define blk_noretry_request(rq) \
+ 	((rq)->cmd_flags & (REQ_FAILFAST_DEV|REQ_FAILFAST_TRANSPORT| \
 -- 
-2.20.1
+2.17.1
 
