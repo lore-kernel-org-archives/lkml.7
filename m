@@ -2,88 +2,99 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE015C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA46AC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9819020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFFA20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 10:26:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MyEPM7fw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuNcOFBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfGJK0Z (ORCPT
+        id S1727331AbfGJK0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 06:26:25 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:45614 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfGJK0Z (ORCPT
+        Wed, 10 Jul 2019 06:26:43 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46766 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfGJK0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:26:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=v7EIF64Wkq9L2U08cgfJ9QXJ/QICE1LcS3K3e2v/4c4=; b=MyEPM7fw/XW5Lt3m9+rpuMph9
-        QwBfKkpHSu5UkP561Kk8ywf0HtzkNrLfMvQQHJHZYdTcVmlPINSB9Ul4273RDB1Fr92xoxyHanSXK
-        JnYOzBdjHyXcHWYyfu/x2m9WX1HcsDuSzoNtWHs1WN64RfnH1TvY26RUvYRLbD5whMq8RRtRwUWMM
-        MRtQGcVeNcLdcBWxsnQFs3yRDPqvwNNsKprWyfozj3/jcQ++ekZWHsSwCdpuQgMvaoUBlJ0fOGSBG
-        hAFMlOzqbaWnqnjKvG/krh4YJZ634GTzEqgLrIhfOdh5rGjB8hhh/Hr305Ya4Fg1BrW/EQe40C3JO
-        P9t9FT5UQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:59430)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hl9nn-00066F-An; Wed, 10 Jul 2019 11:26:19 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hl9nl-0003pO-Sx; Wed, 10 Jul 2019 11:26:17 +0100
-Date:   Wed, 10 Jul 2019 11:26:17 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Question about ARM FASTFPE
-Message-ID: <20190710102617.nhbsm4lpby3mtfc6@shell.armlinux.org.uk>
-References: <CAK7LNASSCvLSXVikR7GenXyb8KywpWKVc1Z=5v3c93rxJ+G73w@mail.gmail.com>
- <20190710082335.uzusesefimzpjd3f@shell.armlinux.org.uk>
- <CAK7LNAQpiY4CBawEFhQHeTPSrbrRkNoYCtK4jBak+skyyMqESA@mail.gmail.com>
- <20190710100206.yls4piu36wciefbz@shell.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710100206.yls4piu36wciefbz@shell.armlinux.org.uk>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Wed, 10 Jul 2019 06:26:43 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i8so1020772pgm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 03:26:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=85BGws/O2/x8Hh97uEaqbM8uDSOfynBf5b84MXFpylY=;
+        b=uuNcOFBPSBE6CLV/X72nYWisfAXdtWj0WQ7usY4zK84QoNKtM0+XsWbFtr1qCxbLVu
+         9x40rd6bAIY+pZeQU9XUsy4V/9iXFk62WFUE6p0dEKZeMDoH3uowZHMSqQpT/G1QwWjm
+         HgfUe+MgvOuzCCDqPCIumx1NuzTTO9Jb+SZ11j4AsEK49TvvQjvXLBxyMtueqPC3neI/
+         0o0wUC4sRffpTJylLjKG+g1WTkP0oGwIlq89lZasHKf2K4f5cDRwRKXJdDy8wqhP+AHb
+         /6j6ziNaBy/87k7GFp/TotPUTNhV8sSD7x9drY+8CnT2CK8EbRW0nhHQb4JKQswIZWfo
+         UbcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=85BGws/O2/x8Hh97uEaqbM8uDSOfynBf5b84MXFpylY=;
+        b=WPPPRly6PArecPXjK4f/EWAagszAdnY6MfVtGM4jsqRqjV+wqajSNVzN/xw8wH9NoO
+         AEoa7BMxSXtkp29b9yvEHLQPdzK0TBVfpEbsv1a9JIEmlTHL/uQPXP7MZLwxNcZQIlb0
+         hhdVFlcRf0J5YjpoUremx9AL6hCr2TjtgW3Mst/YteLsLFm2BUFNWgSFiRtv55CI+/n1
+         jkRBXy5ve0EJdKJgxja74hn+oHITncyERGPVBxNeyrXw5Rq04szZn6YzUg6eDK1XNhwb
+         NVM8r/N9BB5rNypHqJf0jOAwNpdtz48XAhuPQvMiACaRe1su5GQAeKHSnaMY60r3Pplm
+         lL0g==
+X-Gm-Message-State: APjAAAUQf7AA7vaspeclV9X6ccF/6MRb7tlHrtnzJ3IAwpga5juSCg+X
+        /+4HFDMlyeash3HhWaJwtmk=
+X-Google-Smtp-Source: APXvYqyFtEN7ijsGT5VEadU8zygjMAvqFqbCiuu/hEw9S4jnvRnpL5hm84ehC5SIENU1gu4GFvccIg==
+X-Received: by 2002:a17:90a:9a95:: with SMTP id e21mr5971516pjp.98.1562754403043;
+        Wed, 10 Jul 2019 03:26:43 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.7])
+        by smtp.gmail.com with ESMTPSA id g6sm1601983pgh.64.2019.07.10.03.26.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 10 Jul 2019 03:26:42 -0700 (PDT)
+From:   bsauce <bsauce00@gmail.com>
+To:     alexander.h.duyck@intel.com
+Cc:     vbabka@suse.cz, mgorman@suse.de, l.stach@pengutronix.de,
+        vdavydov.dev@gmail.com, akpm@linux-foundation.org, alex@ghiti.fr,
+        adobriyan@gmail.com, mike.kravetz@oracle.com, rientjes@google.com,
+        rppt@linux.vnet.ibm.com, mhocko@suse.com, ksspiers@google.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        bsauce <bsauce00@gmail.com>
+Subject: [PATCH] fs/seq_file.c: Fix a UAF vulnerability in seq_release()
+Date:   Wed, 10 Jul 2019 18:26:29 +0800
+Message-Id: <1562754389-29217-1-git-send-email-bsauce00@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 11:02:06AM +0100, Russell King - ARM Linux admin wrote:
-> On Wed, Jul 10, 2019 at 06:54:06PM +0900, Masahiro Yamada wrote:
-> > On Wed, Jul 10, 2019 at 5:23 PM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> > > On Wed, Jul 10, 2019 at 01:30:24PM +0900, Masahiro Yamada wrote:
-> > > > $(wildcard ...) checks if this directory exists in the *objtree*,
-> > > > while scripts/Makefile.build needs to include
-> > > > arch/arm/fastfpe/Makefile from *srctree*.
-> > > >
-> > > > I think the correct code should be like follows:
-> > > >
-> > > > # Do we have FASTFPE?
-> > > > FASTFPE :=arch/arm/fastfpe
-> > > > ifneq ($(wildcard $(srctree)/$(FASTFPE)),)
-> > > > FASTFPE_OBJ :=$(FASTFPE)/
-> > > > endif
+In seq_release(), 'm->buf' points to a chunk. It is freed but not cleared to null right away. It can be reused by seq_read() or srm_env_proc_write().
+For example, /arch/alpha/kernel/srm_env.c provide several interfaces to userspace, like 'single_release', 'seq_read' and 'srm_env_proc_write'.
+Thus in userspace, one can exploit this UAF vulnerability to escape privilege.
+Even if 'm->buf' is cleared by kmem_cache_free(), one can still create several threads to exploit this vulnerability.
+And 'm->buf' should be cleared right after being freed.
 
-That does indeed work for split object builds.
- 
+Signed-off-by: bsauce <bsauce00@gmail.com>
+---
+ fs/seq_file.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/seq_file.c b/fs/seq_file.c
+index abe27ec..de5e266 100644
+--- a/fs/seq_file.c
++++ b/fs/seq_file.c
+@@ -358,6 +358,7 @@ int seq_release(struct inode *inode, struct file *file)
+ {
+ 	struct seq_file *m = file->private_data;
+ 	kvfree(m->buf);
++	m->buf = NULL;
+ 	kmem_cache_free(seq_file_cache, m);
+ 	return 0;
+ }
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.7.4
+
