@@ -2,171 +2,114 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99E3C73C63
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88927C73C66
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F7E2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8EF2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 02:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="N5HOs7+r";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rFoFNF7V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rSjHXX5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfGJCQG (ORCPT
+        id S1726896AbfGJCQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 22:16:06 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:36031 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725832AbfGJCQG (ORCPT
+        Tue, 9 Jul 2019 22:16:36 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40945 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfGJCQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 22:16:06 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2EC4122460;
-        Tue,  9 Jul 2019 22:16:05 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 09 Jul 2019 22:16:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=5bWrIcP8UjAg5UmoomU2W8F9lAlb5kN
-        yGswff6nCzsI=; b=N5HOs7+r/2TZvYRABQ4YWWnYO2Ie8R/7nMD6N3kktwfqBsc
-        WFBGym4M379zo71+ww9HItVnfeB+UfwDN0ImjXLJn0ObHQhKAMJYelRmTpiq8Yew
-        +b/fMAxaPcLLvHZr8zmf90JfWqg+THvTNaTR+2bzgFJ8YI7+XiF3wJ7QTeRg64ky
-        jFeGA+wL7FmPh4Om49B1wfHybk7FYpKEE8tcbBvCa3FLOqLRBHlQgbrOcl1VChhd
-        fTtr5u7kd6D5v3wj6lLdDNGicPCPYkIIagN2IWFZxM2XhF1B4xZ5vXlIlIp9OI1i
-        1QT0G+pmCzKmK50fMWD0rLVk2Y+1IEDCZ3d2IvA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=5bWrIc
-        P8UjAg5UmoomU2W8F9lAlb5kNyGswff6nCzsI=; b=rFoFNF7VTheq4MajAP4eWv
-        tCsH1eTUG0hw6Jrj4alZRgVhsi9z+1yo5Ki4CcyHJeTQrUKgA0eBjlBT4cpB+zbh
-        YwnEMC9DNOCYG9yj0wXMcPpNLc61O0XEGuVi4N3pCtoON5S3G535G8rKiDI+ST5x
-        JvXYjl0BYv7/OT8u48OCPXIjzRlq1NSXcNYUo0bn9ptWy8Kt+To1Ax4EA9CrCLq/
-        USWx/QMWwveWfEX/khKk3vNvAejc6gXrxAoDyvXuQVXgmjeMWOiautovFyB/Gnte
-        ce571NETXRQCPiZdoQov0gMqwyvSbnQZvf4MKq8WrZbbW9/yyrHrUmbmJhr6x8Qw
-        ==
-X-ME-Sender: <xms:ZEolXR3XnW_F9wcBrukA_vPC2dshfB1wGZn2h4ZUZ0bQjppNTjH8wQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrgeehgddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:ZEolXS43bZlKOBuVAFi2pePMIKLwiGbiXq37QxMkh0yqvzh_t-HQFA>
-    <xmx:ZEolXQKfowdlI6P6qiLUQ9hrUZy1MZCBAAWumnxtXs0luTEi4dUC1Q>
-    <xmx:ZEolXeY3Rp21OAB7TFnCNpY1KXNW-ANyIw6U73CgV89AwKq_qGmvuQ>
-    <xmx:ZUolXeCjcCokGqAaci2yJaWt4bTUso15OfSVoGw9WKt9nsq8t9lb8Q>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 660EFE0193; Tue,  9 Jul 2019 22:16:04 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
-Mime-Version: 1.0
-Message-Id: <9c998f5f-42ef-43bd-b024-839ee00126de@www.fastmail.com>
-In-Reply-To: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
-References: <1562184069-22332-1-git-send-email-hongweiz@ami.com>
-Date:   Wed, 10 Jul 2019 11:46:09 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Hongwei Zhang" <hongweiz@ami.com>, devicetree@vger.kernel.org,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [linux,dev-5.1 v1] dt-bindings: gpio: aspeed: Add SGPIO support
-Content-Type: text/plain
+        Tue, 9 Jul 2019 22:16:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p184so290301pfp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 19:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=IZY6bRwRAQjzoXQqf8HuJovnIklLNuUq+A5t+/AooUA=;
+        b=rSjHXX5vdjCegktJNlazWg3hrKdWgPp1/UN6PCwb8y2g2db+sbKKA2yiv/7eUD679w
+         qol/0/0On+lk1JFARxqxj/GWoiSTxfk861mv3xLN/2EK+HORDzSwW0du4f+rXYqC4bZj
+         jRvpHIUpfeKQ+WhWOvXKsbBkWYepuEa3BWzXShSq5kZbFhz9sLHFbqiaJDcvvW7hS5GH
+         8FSvlDMkpHcvcCQMyoIW7zRMTd25W4uw+2xdu2S83k+golNx+kwVv1K1R7PDb2HfhtJr
+         iVjBzmuhIPaYIcTZg+/Hc3GZ4bcXTa9SOefa51arS82sl7q+7yxo0K36tye+Zy5VwoEJ
+         hR8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=IZY6bRwRAQjzoXQqf8HuJovnIklLNuUq+A5t+/AooUA=;
+        b=A/4Xp4pnXEiVHv4jz/JLoe/EIfgscDtaKrwrp+kNBMQCQNXT+9YMSfq5nKkYRc03bZ
+         2H8047bHcHFq6aFTFuDK5XfL5MemUAjx2OI8g8ROQoIpjC+QDsb9vObtZsBct01moAlp
+         vYVNoQs6hjA6XflQxyZkApt/hIyPrIJsbZecsTkzfl9Wpvf9DN75pGj0dkYfgddDeWnG
+         aC0usirvbFgDiEDwdpDXFZ31otJ9WjU8pdrQ5reZAiLES3mcrD5gwLER6eNZ4IdUKbRm
+         95nPaCTyYQHQqivemKbcujT5UuP2ueWU81Mxh2kEMx6/ffZJNG8iF3NI9OqDA6pY1pEh
+         H76Q==
+X-Gm-Message-State: APjAAAU+wSRZuJxIZzsF6zBfBJifUjZYI5Ipp3F0vS+XtGE2R3+Vzv1s
+        IOUyBhnH5VpiChkf8kfQJ0I=
+X-Google-Smtp-Source: APXvYqxWbZI7rdrR4yEM0s/9je9rCJge8KVD+rD7iWvAP0hkCUC2Z51r9a1d4bA37gHPdkE1Xxnpig==
+X-Received: by 2002:a63:7e42:: with SMTP id o2mr33754977pgn.162.1562724994909;
+        Tue, 09 Jul 2019 19:16:34 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id z20sm404943pfk.72.2019.07.09.19.16.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Jul 2019 19:16:34 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 07:46:27 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Gen Zhang <blackgod016574@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [Patch v2] sound: soc: codecs: wcd9335: add irqflag IRQF_ONESHOT flag
+Message-ID: <20190710021627.GA13396@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add IRQF_ONESHOT to ensure "Interrupt is not reenabled after the hardirq
+handler finished".
 
+fixes below issue reported by coccicheck
 
-On Thu, 4 Jul 2019, at 05:31, Hongwei Zhang wrote:
-> Add bindings to support SGPIO on AST2400 or AST2500.
-> 
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> ---
->  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt 
-> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> new file mode 100644
-> index 0000000..f5fc6ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> @@ -0,0 +1,36 @@
-> +Aspeed SGPIO controller Device Tree Bindings
-> +-------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> +
-> +- #gpio-cells 		: Should be two
-> +			  - First cell is the GPIO line number
-> +			  - Second cell is used to specify optional
-> +			    parameters (unused)
-> +
-> +- reg			: Address and length of the register set for the device
-> +- gpio-controller	: Marks the device node as a GPIO controller.
-> +- interrupts		: Interrupt specifier (see interrupt bindings for
-> +			  details)
-> +- interrupt-controller	: Mark the GPIO controller as an 
-> interrupt-controller
+sound/soc/codecs/wcd9335.c:4068:8-33: ERROR: Threaded IRQ with no
+primary handler requested without IRQF_ONESHOT
 
-As this is a serial GPIO controller, a critical piece of configuration
-information is how many GPIOs we wish to serialise. This is done
-in multiples of 8, up to 80 pins.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+v1 : add IRQF_ONESHOT and introduce irqflags variable 
+v2 : remove irqflags variable
 
-The bindings need to describe the "ngpios" property from the
-generic GPIO bindings and how this affects the behaviour of
-the controller.
+ sound/soc/codecs/wcd9335.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-We also need to add the "bus-frequency" property here to control
-the rate of SGPMCK.
+diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+index 1bbbe42..9566027 100644
+--- a/sound/soc/codecs/wcd9335.c
++++ b/sound/soc/codecs/wcd9335.c
+@@ -4062,7 +4062,8 @@ static int wcd9335_setup_irqs(struct wcd9335_codec *wcd)
+ 
+ 		ret = devm_request_threaded_irq(wcd->dev, irq, NULL,
+ 						wcd9335_irqs[i].handler,
+-						IRQF_TRIGGER_RISING,
++						IRQF_TRIGGER_RISING |
++						IRQF_ONESHOT,
+ 						wcd9335_irqs[i].name, wcd);
+ 		if (ret) {
+ 			dev_err(wcd->dev, "Failed to request %s\n",
+-- 
+2.7.4
 
-> +
-> +Optional properties:
-> +
-> +- clocks                : A phandle to the clock to use for debounce 
-> timings
-
-We need this, but not for the reason specified, and it should be a
-required property. We need PCLK (the APB clock) to derive the SGPIO
-bus frequency. Despite what the datasheet blurb says, there's no
-debounce control for the SGPIO master (this is a copy/paste mistake
-from the description of the parallel GPIO master).
-
-> +
-> +The sgpio and interrupt properties are further described in their 
-> respective
-> +bindings documentation:
-> +
-> +- Documentation/devicetree/bindings/sgpio/gpio.txt
-> +- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +
-> +  Example:
-> +	sgpio@1e780200 {
-> +		#gpio-cells = <2>;
-> +		compatible = "aspeed,ast2500-sgpio";
-> +		gpio-controller;
-> +		interrupts = <40>;
-> +		reg = <0x1e780200 0x0100>;
-> +		interrupt-controller;
-> +	};
-
-You'll need to fix up the example after making the changes mentioned
-above.
-
-Andrew
-
-> -- 
-> 2.7.4
-> 
->
