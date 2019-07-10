@@ -2,70 +2,113 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD748C74A3B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9F3C74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F0620844
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8759F20844
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="0JgoCRt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfGJSnb (ORCPT
+        id S1727954AbfGJSne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 10 Jul 2019 14:43:34 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37201 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfGJSnb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Jul 2019 14:43:31 -0400
-Received: from smtp3.jd.com ([59.151.64.88]:2126 "EHLO smtp3.jd.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbfGJSnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:43:31 -0400
-Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
- BJMAILD1MBX48.360buyAD.local (172.31.0.48) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Thu, 11 Jul 2019 02:43:20 +0800
-Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
- BJMAILD1MBX36.360buyAD.local (172.31.0.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Thu, 11 Jul 2019 02:43:20 +0800
-Received: from BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893]) by
- BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893%24]) with mapi id
- 15.01.1415.002; Thu, 11 Jul 2019 02:43:20 +0800
-From:   =?utf-8?B?6buE5LmQ?= <huangle1@jd.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>
-CC:     "jlayton@kernel.org" <jlayton@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
-Thread-Topic: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
-Thread-Index: AQHVLRYrJwxAvKxXXkKWwBVCcQfpA6bChWMAgAG9lPU=
-Date:   Wed, 10 Jul 2019 18:43:20 +0000
-Message-ID: <4dd1fe21e11344e5969bb112e954affb@jd.com>
-References: <720b91b1204b4c73be1b6ec2ff44dbab@jd.com>,<20190710000300.GD1536@fieldses.org>
-In-Reply-To: <20190710000300.GD1536@fieldses.org>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.31.14.12]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6AIhGfV2541654
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 10 Jul 2019 11:43:16 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6AIhGfV2541654
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1562784196;
+        bh=jmBnu3T2PgSdwgYSqr1z4MBYxeHZf+emBUh2okLE/Xs=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=0JgoCRt2srBioc4CAv4xhgGBWPTz2bhGRUKtuT6gFvdiX6p0ZnpRb1gdt/+mkcj+D
+         0CYuQl2jMCmR8g6K+qru2L47MNL7FqcyJ2MI2WGRdsaQreY/zdm0R4TvTrXz2HO+9H
+         h+ZtdJx5WmqvFE0Y6QZP+s5kai/yWhUAAhe/hjBrYP1pznsQIFQDiIvXcr6uwNE6Vr
+         zFq4jUhYI1L7y/TiO8z2lMOisS0Trm2b8oXn3DeRT1UJ1YWj53rA2YAZYafqC9AhDU
+         lm70Cc7G5y83kG7nPkDqXG6OZsDYOmDV2BgdT6M6Fljjq0DCTU0aeTH2r3MkvoW6SZ
+         Ly5vXGJF87RIA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6AIhFFj2541648;
+        Wed, 10 Jul 2019 11:43:15 -0700
+Date:   Wed, 10 Jul 2019 11:43:15 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnd Bergmann <tipbot@zytor.com>
+Message-ID: <tip-0df1c9868c3a1916198ee09c323ca5932a0b8a11@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, hpa@zytor.com,
+        natechancellor@gmail.com, tglx@linutronix.de, mingo@kernel.org
+Reply-To: mingo@kernel.org, natechancellor@gmail.com, tglx@linutronix.de,
+          hpa@zytor.com, arnd@arndb.de, linux-kernel@vger.kernel.org
+In-Reply-To: <20190710130206.1670830-1-arnd@arndb.de>
+References: <20190710130206.1670830-1-arnd@arndb.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/urgent] timekeeping/vsyscall: Use __iter_div_u64_rem()
+Git-Commit-ID: 0df1c9868c3a1916198ee09c323ca5932a0b8a11
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SXQncyBzYWZlIGJlY2F1c2Ugd2hlbiB3ZSByZWFjaCBtb3ZlX3RvX2Nsb3NlX2xydSgpLCB3ZSBr
-bm93IHdlIGFyZSB0aGUNCipsb2dpY2FsKiBsYXN0IGNhbGwgYW1vbmcgYWxsIHJhY2luZyBjYWxs
-cywgaXQgaXMgYWN0dWFsbHkgdGhlIHJlYXNvbiB3ZQ0KZG8gdGhlIHdhaXRpbmcgaGVyZSBhdCBm
-aXN0IHBsYWNlLiAgTm93IGp1c3QgYmVjYXVzZSBvZiByYWNpbmcsIHdlIGdhaW4NCnRoZSBycF9t
-dXRleCBmaXJzdCBhbmQgaGF2ZSBhICpsb3dlciogc2VxaWQgdmFsdWUsIHNvIGl0IGlzIHdoYXQg
-d2UgbmVlZA0KZXhhY3RseSB0byBsZXQgdGhlIHNlcWlkIGJ1bXAgd2l0aCBvdGhlciByYWNpbmcg
-Y2FsbHMgYmVmb3JlIHdlIGNvbnRpbnVlLA0KdGhhdCBlbnN1cmVzIHBvc3NpYmxlIGZ1dHVyZSBD
-TE9TRSBjYWxsIGNvdWxkIGJlIHJlcGxheWVkIGNvcnJlY3RseS4NCg0KDQpPbiBXZWQsIEp1bCAx
-MCwgMjAxOSwgYmZpZWxkc0BmaWVsZHNlcy5vcmcgd3JvdGU6DQo+IEkgZG9uJ3QgdW5kZXJzdGFu
-ZCB3aHkgdGhhdCdzIHNhZmUuwqAgTWF5YmUgaXQgaXMsIGJ1dCBJIGRvbid0IHVuZGVyc3RhbmQN
-Cj4geWV0LsKgIElmIHdlIHRha2UgdGhlIG11dGV4LCBidW1wIHRoZSBzZXFpZCwgZHJvcCB0aGUg
-bXV0ZXgsIHNvbWVvbmUgZWxzZQ0KPiBjb21lcyBpbiBhbmQgYnVtcHMgdGhlIHNlcWlkIGFnYWlu
-LCB0aGVuIHdlIHJlYWNxdWlyZSB0aGUgbXV0ZXguLi4gd2hhdA0KPiBoYXBwZW5zPw0KPiANCj4g
-LS1iLg0K
+Commit-ID:  0df1c9868c3a1916198ee09c323ca5932a0b8a11
+Gitweb:     https://git.kernel.org/tip/0df1c9868c3a1916198ee09c323ca5932a0b8a11
+Author:     Arnd Bergmann <arnd@arndb.de>
+AuthorDate: Wed, 10 Jul 2019 15:01:53 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 10 Jul 2019 20:37:49 +0200
+
+timekeeping/vsyscall: Use __iter_div_u64_rem()
+
+On 32-bit x86 when building with clang-9, the 'division' loop gets turned
+back into an inefficient division that causes a link error:
+
+kernel/time/vsyscall.o: In function `update_vsyscall':
+vsyscall.c:(.text+0xe3): undefined reference to `__udivdi3'
+
+Use the existing __iter_div_u64_rem() function which is used to address the
+same issue in other places.
+
+Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lkml.kernel.org/r/20190710130206.1670830-1-arnd@arndb.de
+---
+ kernel/time/vsyscall.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index a80893180826..8cf3596a4ce6 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -104,11 +104,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+ 	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+ 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
+-	while (nsec >= NSEC_PER_SEC) {
+-		nsec = nsec - NSEC_PER_SEC;
+-		vdso_ts->sec++;
+-	}
+-	vdso_ts->nsec	= nsec;
++	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
+ 
+ 	if (__arch_use_vsyscall(vdata))
+ 		update_vdso_data(vdata, tk);
