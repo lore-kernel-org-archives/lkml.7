@@ -2,233 +2,73 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDDDC74A35
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79986C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC522087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UISwE8VL"
+	by mail.kernel.org (Postfix) with ESMTP id 5C2162087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbfGJSaC (ORCPT
+        id S1728310AbfGJSaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 14:30:02 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:39526 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbfGJSaC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:30:02 -0400
-Received: by mail-yw1-f66.google.com with SMTP id x74so1131486ywx.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 11:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c+r8Si1/xsvr/kvF0Vd+C34ZR6g5MzaCPwwwwZS7UmU=;
-        b=UISwE8VLrQE18tscTLVjTu4xfQSpU+Ngw5t+WgzRdUNsnTYWOTuDHJaO1Mm174HOa9
-         V0Qn2OG/+VKb1yZFCBYg/97ApKmCSfsi/WJ5YbGYHfUmnNpA7FsqsWKWHhgk46kpSZyR
-         z5ih3MsJI4tZMGw0ibr6s4wsJinWrM18EKhFy828Djih7f+bt4AT688Z2WSbFlL6zyyY
-         Y0AaAjiPi9jCN7pzE0TY7PFp3yErbKtBJZUzXBGUjNNMrhgXOwwm15vMwGdqiJyLrOTI
-         D8rQBbTzdD3rJbrXWCVcAhWtQttOyLd3f3mL99dqYokEW5oJqLDAomLG+PYTDXkMMOj0
-         TPNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c+r8Si1/xsvr/kvF0Vd+C34ZR6g5MzaCPwwwwZS7UmU=;
-        b=neNi+SpQ49aH0uLozqaQaOTx3+ThESXIB7G4Pt+dIde2LS9IJb15lJQmesiwJ2PVHX
-         jboxhKUSWd3jAfdB/mAhdSsTPPvssnowFKcndgLwaBdh+am2QUhICFV53xEKSZHaxI93
-         8J7zuVlHHKd1tTsKDaUyngSnURi4ooOKF5VgLbkE+oKqJfj8Kg+1O7NQ0YcTUA325k6/
-         /DNG7wpRcim1LX4+wJpEfr+mPxskZfxpr/HtrDr37NpI9bEIVcgjrstLntXpBQIOgnW6
-         uwUwYWugsLYYRgIm1BFxZ8Xkb2phivDDWUoPFfu24imCKt2WONqRchvMbc81E6R6ZA+t
-         goQw==
-X-Gm-Message-State: APjAAAVQP0Fmpveoe7HHe73hnjmVdHWJYxrW762Mr/nBJl4USgkbLhut
-        iDRACQKuPZsmWCK2PPTFL7Kfs/I3GOCbGT5ll4h3Jg==
-X-Google-Smtp-Source: APXvYqzXmDnInD7oBIfKeMDVYoRiXgQhXnLoOXS9ddftPuk/y94pUc7FWGWjBNflVWsCOllIvgXB6WbFdmk0hPRfkW0=
-X-Received: by 2002:a81:ae0e:: with SMTP id m14mr20723285ywh.308.1562783400564;
- Wed, 10 Jul 2019 11:30:00 -0700 (PDT)
+        Wed, 10 Jul 2019 14:30:06 -0400
+Received: from relay.sw.ru ([185.231.240.75]:47678 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727315AbfGJSaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 14:30:04 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hlHLb-0006Lj-N7; Wed, 10 Jul 2019 21:29:43 +0300
+Subject: Re: [PATCH v5 0/5] Add object validation in ksize()
+To:     Marco Elver <elver@google.com>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        kbuild test robot <lkp@intel.com>
+References: <20190708170706.174189-1-elver@google.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <75963ba0-7ed2-9e4a-171b-d2cb5d16af2b@virtuozzo.com>
+Date:   Wed, 10 Jul 2019 21:29:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190605100630.13293-1-teawaterz@linux.alibaba.com> <20190605100630.13293-2-teawaterz@linux.alibaba.com>
-In-Reply-To: <20190605100630.13293-2-teawaterz@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 10 Jul 2019 11:29:49 -0700
-Message-ID: <CALvZod41ywjh56T1E1cPJcuYDCydvpnqq3AhyJVny655Tj7jjQ@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] zswap: Use movable memory if zpool support
- allocate movable memory
-To:     Hui Zhu <teawaterz@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Dan Streetman <ddstreet@ieee.org>,
-        Minchan Kim <minchan@kernel.org>, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com,
-        Seth Jennings <sjenning@redhat.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190708170706.174189-1-elver@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: akpm@linux-foundation.org
 
-The email starts at
 
-http://lkml.kernel.org/r/20190605100630.13293-2-teawaterz@linux.alibaba.com
+On 7/8/19 8:07 PM, Marco Elver wrote:
+> This version fixes several build issues --
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> Previous version here:
+> http://lkml.kernel.org/r/20190627094445.216365-1-elver@google.com
+> 
+> Marco Elver (5):
+>   mm/kasan: Introduce __kasan_check_{read,write}
+>   mm/kasan: Change kasan_check_{read,write} to return boolean
+>   lib/test_kasan: Add test for double-kzfree detection
+>   mm/slab: Refactor common ksize KASAN logic into slab_common.c
+>   mm/kasan: Add object validation in ksize()
+> 
 
-On Wed, Jun 5, 2019 at 3:06 AM Hui Zhu <teawaterz@linux.alibaba.com> wrote:
->
-> This is the third version that was updated according to the comments
-> from Sergey Senozhatsky https://lkml.org/lkml/2019/5/29/73 and
-> Shakeel Butt https://lkml.org/lkml/2019/6/4/973
->
-> zswap compresses swap pages into a dynamically allocated RAM-based
-> memory pool.  The memory pool should be zbud, z3fold or zsmalloc.
-> All of them will allocate unmovable pages.  It will increase the
-> number of unmovable page blocks that will bad for anti-fragment.
->
-> zsmalloc support page migration if request movable page:
->         handle = zs_malloc(zram->mem_pool, comp_len,
->                 GFP_NOIO | __GFP_HIGHMEM |
->                 __GFP_MOVABLE);
->
-> And commit "zpool: Add malloc_support_movable to zpool_driver" add
-> zpool_malloc_support_movable check malloc_support_movable to make
-> sure if a zpool support allocate movable memory.
->
-> This commit let zswap allocate block with gfp
-> __GFP_HIGHMEM | __GFP_MOVABLE if zpool support allocate movable memory.
->
-> Following part is test log in a pc that has 8G memory and 2G swap.
->
-> Without this commit:
-> ~# echo lz4 > /sys/module/zswap/parameters/compressor
-> ~# echo zsmalloc > /sys/module/zswap/parameters/zpool
-> ~# echo 1 > /sys/module/zswap/parameters/enabled
-> ~# swapon /swapfile
-> ~# cd /home/teawater/kernel/vm-scalability/
-> /home/teawater/kernel/vm-scalability# export unit_size=$((9 * 1024 * 1024 * 1024))
-> /home/teawater/kernel/vm-scalability# ./case-anon-w-seq
-> 2717908992 bytes / 4826062 usecs = 549973 KB/s
-> 2717908992 bytes / 4864201 usecs = 545661 KB/s
-> 2717908992 bytes / 4867015 usecs = 545346 KB/s
-> 2717908992 bytes / 4915485 usecs = 539968 KB/s
-> 397853 usecs to free memory
-> 357820 usecs to free memory
-> 421333 usecs to free memory
-> 420454 usecs to free memory
-> /home/teawater/kernel/vm-scalability# cat /proc/pagetypeinfo
-> Page block order: 9
-> Pages per block:  512
->
-> Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
-> Node    0, zone      DMA, type    Unmovable      1      1      1      0      2      1      1      0      1      0      0
-> Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      3
-> Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type    Unmovable      6      5      8      6      6      5      4      1      1      1      0
-> Node    0, zone    DMA32, type      Movable     25     20     20     19     22     15     14     11     11      5    767
-> Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type    Unmovable   4753   5588   5159   4613   3712   2520   1448    594    188     11      0
-> Node    0, zone   Normal, type      Movable     16      3    457   2648   2143   1435    860    459    223    224    296
-> Node    0, zone   Normal, type  Reclaimable      0      0     44     38     11      2      0      0      0      0      0
-> Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
->
-> Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
-> Node 0, zone      DMA            1            7            0            0            0            0
-> Node 0, zone    DMA32            4         1652            0            0            0            0
-> Node 0, zone   Normal          931         1485           15            0            0            0
->
-> With this commit:
-> ~# echo lz4 > /sys/module/zswap/parameters/compressor
-> ~# echo zsmalloc > /sys/module/zswap/parameters/zpool
-> ~# echo 1 > /sys/module/zswap/parameters/enabled
-> ~# swapon /swapfile
-> ~# cd /home/teawater/kernel/vm-scalability/
-> /home/teawater/kernel/vm-scalability# export unit_size=$((9 * 1024 * 1024 * 1024))
-> /home/teawater/kernel/vm-scalability# ./case-anon-w-seq
-> 2717908992 bytes / 4689240 usecs = 566020 KB/s
-> 2717908992 bytes / 4760605 usecs = 557535 KB/s
-> 2717908992 bytes / 4803621 usecs = 552543 KB/s
-> 2717908992 bytes / 5069828 usecs = 523530 KB/s
-> 431546 usecs to free memory
-> 383397 usecs to free memory
-> 456454 usecs to free memory
-> 224487 usecs to free memory
-> /home/teawater/kernel/vm-scalability# cat /proc/pagetypeinfo
-> Page block order: 9
-> Pages per block:  512
->
-> Free pages count per migrate type at order       0      1      2      3      4      5      6      7      8      9     10
-> Node    0, zone      DMA, type    Unmovable      1      1      1      0      2      1      1      0      1      0      0
-> Node    0, zone      DMA, type      Movable      0      0      0      0      0      0      0      0      0      1      3
-> Node    0, zone      DMA, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone      DMA, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type    Unmovable     10      8     10      9     10      4      3      2      3      0      0
-> Node    0, zone    DMA32, type      Movable     18     12     14     16     16     11      9      5      5      6    775
-> Node    0, zone    DMA32, type  Reclaimable      0      0      0      0      0      0      0      0      0      0      1
-> Node    0, zone    DMA32, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone    DMA32, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type    Unmovable   2669   1236    452    118     37     14      4      1      2      3      0
-> Node    0, zone   Normal, type      Movable   3850   6086   5274   4327   3510   2494   1520    934    438    220    470
-> Node    0, zone   Normal, type  Reclaimable     56     93    155    124     47     31     17      7      3      0      0
-> Node    0, zone   Normal, type   HighAtomic      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type          CMA      0      0      0      0      0      0      0      0      0      0      0
-> Node    0, zone   Normal, type      Isolate      0      0      0      0      0      0      0      0      0      0      0
->
-> Number of blocks type     Unmovable      Movable  Reclaimable   HighAtomic          CMA      Isolate
-> Node 0, zone      DMA            1            7            0            0            0            0
-> Node 0, zone    DMA32            4         1650            2            0            0            0
-> Node 0, zone   Normal           79         2326           26            0            0            0
->
-> You can see that the number of unmovable page blocks is decreased
-> when the kernel has this commit.
->
-> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
-> ---
->  mm/zswap.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index a4e4d36ec085..c6bf92bf5890 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -1006,6 +1006,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->         char *buf;
->         u8 *src, *dst;
->         struct zswap_header zhdr = { .swpentry = swp_entry(type, offset) };
-> +       gfp_t gfp;
->
->         /* THP isn't supported */
->         if (PageTransHuge(page)) {
-> @@ -1079,9 +1080,10 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
->
->         /* store */
->         hlen = zpool_evictable(entry->pool->zpool) ? sizeof(zhdr) : 0;
-> -       ret = zpool_malloc(entry->pool->zpool, hlen + dlen,
-> -                          __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM,
-> -                          &handle);
-> +       gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
-> +       if (zpool_malloc_support_movable(entry->pool->zpool))
-> +               gfp |= __GFP_HIGHMEM | __GFP_MOVABLE;
-> +       ret = zpool_malloc(entry->pool->zpool, hlen + dlen, gfp, &handle);
->         if (ret == -ENOSPC) {
->                 zswap_reject_compress_poor++;
->                 goto put_dstmem;
-> --
-> 2.21.0 (Apple Git-120)
->
+Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
