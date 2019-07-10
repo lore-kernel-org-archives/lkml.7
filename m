@@ -2,151 +2,138 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE14C73C63
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FA1C73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA84A2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LafklzLd"
+	by mail.kernel.org (Postfix) with ESMTP id ADC8F2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 00:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfGJABo (ORCPT
+        id S1726768AbfGJADB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 20:01:44 -0400
-Received: from ozlabs.org ([203.11.71.1]:43261 "EHLO ozlabs.org"
+        Tue, 9 Jul 2019 20:03:01 -0400
+Received: from fieldses.org ([173.255.197.46]:52814 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfGJABn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 20:01:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45jzr24tKxz9sN4;
-        Wed, 10 Jul 2019 10:01:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1562716900;
-        bh=ZWT4dSLXGeBs9XVigkI+30TBQ9J8kSZ60+J4UqtPvYM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LafklzLdksK/zVUdYrI/ey0rB/HWstyncJSsMtWq0eDwGu/awoMl+ujmWHD7c4DaB
-         YJ0E6aD4Ze7MsDDVdb8YGIKMnKFs9s6D+fJJxoRMVAVNmNLBnsC+vDk3hkPrJcsYtH
-         2jYoYNrr+0/xY8N8ORenC23+mytneUu6m5ru81PAxTO0g/4wKOxzFhEqnDHz9Y36Gg
-         s8T1W63kTEUAQQXDAKWnFc3op6KPsi4weshNR7W6WtHYMwVYxFnZK/5bmEgBRcnoy1
-         lTKUmHzIhqB5LpjynDDRCwxu3llfOiNbP7biNmOyCwIiC398/Mr372LjiojWqCseaP
-         DHlxys483Ll+A==
-Date:   Wed, 10 Jul 2019 10:01:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sage Weil <sage@newdream.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20190710100138.0aa36d47@canb.auug.org.au>
-In-Reply-To: <20190709165459.11b353d8@canb.auug.org.au>
-References: <20190709165459.11b353d8@canb.auug.org.au>
+        id S1726444AbfGJADB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 20:03:01 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 7B5B11C9D; Tue,  9 Jul 2019 20:03:00 -0400 (EDT)
+Date:   Tue, 9 Jul 2019 20:03:00 -0400
+From:   "bfields@fieldses.org" <bfields@fieldses.org>
+To:     =?utf-8?B?6buE5LmQ?= <huangle1@jd.com>
+Cc:     "jlayton@kernel.org" <jlayton@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Message-ID: <20190710000300.GD1536@fieldses.org>
+References: <720b91b1204b4c73be1b6ec2ff44dbab@jd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/K8zLqV=lrMVaNpLiLljZFRd"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <720b91b1204b4c73be1b6ec2ff44dbab@jd.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/K8zLqV=lrMVaNpLiLljZFRd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 27, 2019 at 06:30:27PM +0000, 黄乐 wrote:
+> from: Huang Le <huangle1@jd.com>
+> 
+> In move_to_close_lru(), which only be called on path of nfsd4 CLOSE op,
+> the code could wait for its stid ref count drop to 2 while holding its
+> state owner replay mutex.  However, the other stid ref holder (normally
+> a parallel CLOSE op) that move_to_close_lru() is waiting for might be
+> accquiring the same replay mutex.
+> 
+> This patch fix the issue by clearing the replay owner before waiting, and
+> assign it back after then.
 
-Hi all,
+I don't understand why that's safe.  Maybe it is, but I don't understand
+yet.  If we take the mutex, bump the seqid, drop the mutex, someone else
+comes in and bumps the seqid again, then we reacquire the mutex... what
+happens?
 
-On Tue, 9 Jul 2019 16:54:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
->=20
-> drivers/block/rbd.c: In function 'wake_lock_waiters':
-> drivers/block/rbd.c:3933:2: error: implicit declaration of function 'lock=
-dep_assert_held_exclusive'; did you mean 'lockdep_assert_held_write'? [-Wer=
-ror=3Dimplicit-function-declaration]
->   lockdep_assert_held_exclusive(&rbd_dev->lock_rwsem);
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   lockdep_assert_held_write
->=20
-> Caused by commit
->=20
->   9ffbe8ac05db ("locking/lockdep: Rename lockdep_assert_held_exclusive() =
--> lockdep_assert_held_write()")
->=20
-> interacting with commits
->=20
->   637cd060537d ("rbd: new exclusive lock wait/wake code")
->   a2b1da09793d ("rbd: lock should be quiesced on reacquire")
->=20
-> from the ceph tree.
->=20
-> I have added the following merge fix patch for today.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 9 Jul 2019 16:46:12 +1000
-> Subject: [PATCH] rbd: fix up for lockdep_assert_held_exclusive rename
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+--b.
+
+> 
+> Signed-off-by: Huang Le <huangle1@jd.com>
 > ---
->  drivers/block/rbd.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index 723c3ef4bd59..02216fbdb854 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -3930,7 +3930,7 @@ static void wake_lock_waiters(struct rbd_device *rb=
-d_dev, int result)
->  	struct rbd_img_request *img_req;
-> =20
->  	dout("%s rbd_dev %p result %d\n", __func__, rbd_dev, result);
-> -	lockdep_assert_held_exclusive(&rbd_dev->lock_rwsem);
-> +	lockdep_assert_held_write(&rbd_dev->lock_rwsem);
-> =20
->  	cancel_delayed_work(&rbd_dev->lock_dwork);
->  	if (!completion_done(&rbd_dev->acquire_wait)) {
-> @@ -4209,7 +4209,7 @@ static bool rbd_quiesce_lock(struct rbd_device *rbd=
-_dev)
->  	bool need_wait;
-> =20
->  	dout("%s rbd_dev %p\n", __func__, rbd_dev);
-> -	lockdep_assert_held_exclusive(&rbd_dev->lock_rwsem);
-> +	lockdep_assert_held_write(&rbd_dev->lock_rwsem);
-> =20
->  	if (rbd_dev->lock_state !=3D RBD_LOCK_STATE_LOCKED)
->  		return false;
-
-This fix now needs to be applied to the merge of the ceph tree.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/K8zLqV=lrMVaNpLiLljZFRd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0lKuIACgkQAVBC80lX
-0Gzkhwf9HBh6ZtEpp4PTwOrsoynTc3CYF5zxyUoT7jOwCjrWBNvxSwhzrM/fdbKs
-0YSAtiOQEWC7BJo1DpYgs0XQIig/LkJAoVFuOETE7AB14qTLaxjlvLnJ1dkhaM2l
-9sZmbsbuJgGlJV/MbxVgVlbh0hb4S/lg+DQqXndjgxgt5C0rA+K4FjCBx0mwMv99
-lmJIn+o1car8FcF+BXQKs2X+dzFByjhQCnrWzso+HvJnL09vLga6DYsrcsZUTeEm
-wQ2L6JzM0GvPjnuZHaf/nlLOE1FVv4tPnsvf5CmDBlDiZT10XiUEXUP85rMKvn6E
-B3VSAWgTYDkkkarDl7NhNf/NtDWy4A==
-=o5q5
------END PGP SIGNATURE-----
-
---Sig_/K8zLqV=lrMVaNpLiLljZFRd--
+> 
+> I guess we should cc this patch to stable tree, since a malicious client
+> could craft parallel CLOSE ops to put all nfsd tasks in D state shortly.
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 618e660..5f6a48f 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -3829,12 +3829,12 @@ static void nfs4_free_openowner(struct nfs4_stateowner *so)
+>   * them before returning however.
+>   */
+>  static void
+> -move_to_close_lru(struct nfs4_ol_stateid *s, struct net *net)
+> +move_to_close_lru(struct nfsd4_compound_state *cstate, struct nfs4_ol_stateid *s,
+> +		struct net *net)
+>  {
+>  	struct nfs4_ol_stateid *last;
+>  	struct nfs4_openowner *oo = openowner(s->st_stateowner);
+> -	struct nfsd_net *nn = net_generic(s->st_stid.sc_client->net,
+> -						nfsd_net_id);
+> +	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+>  
+>  	dprintk("NFSD: move_to_close_lru nfs4_openowner %p\n", oo);
+>  
+> @@ -3846,8 +3846,19 @@ static void nfs4_free_openowner(struct nfs4_stateowner *so)
+>  	 * Wait for the refcount to drop to 2. Since it has been unhashed,
+>  	 * there should be no danger of the refcount going back up again at
+>  	 * this point.
+> +	 *
+> +	 * Before waiting, we clear cstate->replay_owner to release its
+> +	 * so_replay.rp_mutex, since other reference holder might be accquiring
+> +	 * the same mutex before they could drop the references.  The replay_owner
+> +	 * can be assigned back safely after they done their jobs.
+>  	 */
+> -	wait_event(close_wq, refcount_read(&s->st_stid.sc_count) == 2);
+> +	if (refcount_read(&s->st_stid.sc_count) != 2) {
+> +		struct nfs4_stateowner *so = cstate->replay_owner;
+> +
+> +		nfsd4_cstate_clear_replay(cstate);
+> +		wait_event(close_wq, refcount_read(&s->st_stid.sc_count) == 2);
+> +		nfsd4_cstate_assign_replay(cstate, so);
+> +	}
+>  
+>  	release_all_access(s);
+>  	if (s->st_stid.sc_file) {
+> @@ -5531,7 +5542,8 @@ static inline void nfs4_stateid_downgrade(struct nfs4_ol_stateid *stp, u32 to_ac
+>  	return status;
+>  }
+>  
+> -static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+> +static void nfsd4_close_open_stateid(struct nfsd4_compound_state *cstate,
+> +		struct nfs4_ol_stateid *s)
+>  {
+>  	struct nfs4_client *clp = s->st_stid.sc_client;
+>  	bool unhashed;
+> @@ -5549,7 +5561,7 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+>  		spin_unlock(&clp->cl_lock);
+>  		free_ol_stateid_reaplist(&reaplist);
+>  		if (unhashed)
+> -			move_to_close_lru(s, clp->net);
+> +			move_to_close_lru(cstate, s, clp->net);
+>  	}
+>  }
+>  
+> @@ -5587,7 +5599,7 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+>  	 */
+>  	nfs4_inc_and_copy_stateid(&close->cl_stateid, &stp->st_stid);
+>  
+> -	nfsd4_close_open_stateid(stp);
+> +	nfsd4_close_open_stateid(cstate, stp);
+>  	mutex_unlock(&stp->st_mutex);
+>  
+>  	/* v4.1+ suggests that we send a special stateid in here, since the
