@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5090C71142
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0C2C606CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7AF2087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2C320861
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 12:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfGJMgx (ORCPT
+        id S1727363AbfGJMg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 08:36:53 -0400
+        Wed, 10 Jul 2019 08:36:56 -0400
 Received: from mga09.intel.com ([134.134.136.24]:22835 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfGJMgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 08:36:51 -0400
+        id S1725911AbfGJMgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 08:36:54 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 05:36:51 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 05:36:54 -0700
 X-IronPort-AV: E=Sophos;i="5.63,474,1557212400"; 
-   d="scan'208";a="170906934"
+   d="scan'208";a="170906941"
 Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 05:36:48 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jul 2019 05:36:51 -0700
 From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
 To:     Chris Wilson <chris@chris-wilson.co.uk>
 Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
@@ -38,9 +38,9 @@ Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org,
         Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-Subject: [RFC PATCH 3/6] drm/i915: Propagate "_release" function name suffix down
-Date:   Wed, 10 Jul 2019 14:36:28 +0200
-Message-Id: <20190710123631.26575-4-janusz.krzysztofik@linux.intel.com>
+Subject: [RFC PATCH 4/6] drm/i915: Propagate "_remove" function name suffix down
+Date:   Wed, 10 Jul 2019 14:36:29 +0200
+Message-Id: <20190710123631.26575-5-janusz.krzysztofik@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190710123631.26575-1-janusz.krzysztofik@linux.intel.com>
 References: <20190710123631.26575-1-janusz.krzysztofik@linux.intel.com>
@@ -51,223 +51,266 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace mixed "_fini"/"_cleanup"/"_cleanup_hw" suffixes found in names
-of fucntions called from i915_driver_release() with "_release" suffix
-consistently.  This provides better code readability, especially
-helpful when trying to work out which phase the code is in.
+Similar to the "_release" case, consistently replace mixed
+"_cleanup"/"_fini"/"_fini_hw" components found in names of functions
+called from i915_driver_remove() with "_remove" or "_driver_remove"
+suffixes for better code readability.
 
-Functions names starting with "i915_driver_", i.e., those defined in
-drivers/gpu/dri/i915/i915_drv.c, just have their "cleanup" or "fini"
-parts of their names replaced with the "_release" suffix, while names
-of functions coming from other source files have been suffixed with
-"_driver_release" to avoid ambiguity with other possible .release entry
-points.
-
-Suggested-by: Chris Wilson <chris@chris-wilson.co.uk>
 Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
 ---
- drivers/gpu/drm/i915/i915_drv.c         | 33 +++++++++++++------------
- drivers/gpu/drm/i915/i915_drv.h         |  2 +-
- drivers/gpu/drm/i915/i915_gem.c         |  2 +-
- drivers/gpu/drm/i915/i915_gem_gtt.c     |  4 +--
- drivers/gpu/drm/i915/i915_gem_gtt.h     |  2 +-
- drivers/gpu/drm/i915/intel_runtime_pm.c |  2 +-
- drivers/gpu/drm/i915/intel_runtime_pm.h |  2 +-
- 7 files changed, 24 insertions(+), 23 deletions(-)
+ drivers/gpu/drm/i915/display/intel_bios.c     |  4 ++--
+ drivers/gpu/drm/i915/display/intel_bios.h     |  2 +-
+ drivers/gpu/drm/i915/display/intel_display.c  |  2 +-
+ .../drm/i915/display/intel_display_power.c    |  6 ++---
+ .../drm/i915/display/intel_display_power.h    |  2 +-
+ drivers/gpu/drm/i915/i915_drv.c               | 24 +++++++++----------
+ drivers/gpu/drm/i915/i915_drv.h               |  4 ++--
+ drivers/gpu/drm/i915/i915_gem.c               |  2 +-
+ drivers/gpu/drm/i915/intel_gvt.c              |  5 ++--
+ drivers/gpu/drm/i915/intel_gvt.h              |  4 ++--
+ 10 files changed, 28 insertions(+), 27 deletions(-)
 
+diff --git a/drivers/gpu/drm/i915/display/intel_bios.c b/drivers/gpu/drm/i915/display/intel_bios.c
+index 0c9808132d67..3c725edc79ef 100644
+--- a/drivers/gpu/drm/i915/display/intel_bios.c
++++ b/drivers/gpu/drm/i915/display/intel_bios.c
+@@ -1891,10 +1891,10 @@ void intel_bios_init(struct drm_i915_private *dev_priv)
+ }
+ 
+ /**
+- * intel_bios_cleanup - Free any resources allocated by intel_bios_init()
++ * intel_bios_driver_remove - Free any resources allocated by intel_bios_init()
+  * @dev_priv: i915 device instance
+  */
+-void intel_bios_cleanup(struct drm_i915_private *dev_priv)
++void intel_bios_driver_remove(struct drm_i915_private *dev_priv)
+ {
+ 	kfree(dev_priv->vbt.child_dev);
+ 	dev_priv->vbt.child_dev = NULL;
+diff --git a/drivers/gpu/drm/i915/display/intel_bios.h b/drivers/gpu/drm/i915/display/intel_bios.h
+index 0b7be6389a07..4969189e620f 100644
+--- a/drivers/gpu/drm/i915/display/intel_bios.h
++++ b/drivers/gpu/drm/i915/display/intel_bios.h
+@@ -228,7 +228,7 @@ struct mipi_pps_data {
+ } __packed;
+ 
+ void intel_bios_init(struct drm_i915_private *dev_priv);
+-void intel_bios_cleanup(struct drm_i915_private *dev_priv);
++void intel_bios_driver_remove(struct drm_i915_private *dev_priv);
+ bool intel_bios_is_valid_vbt(const void *buf, size_t size);
+ bool intel_bios_is_tv_present(struct drm_i915_private *dev_priv);
+ bool intel_bios_is_lvds_present(struct drm_i915_private *dev_priv, u8 *i2c_pin);
+diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+index f09eda75711a..47dd682c9a62 100644
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -17062,7 +17062,7 @@ static void intel_hpd_poll_fini(struct drm_device *dev)
+ 	drm_connector_list_iter_end(&conn_iter);
+ }
+ 
+-void intel_modeset_cleanup(struct drm_device *dev)
++void intel_modeset_driver_remove(struct drm_device *dev)
+ {
+ 	struct drm_i915_private *dev_priv = to_i915(dev);
+ 
+diff --git a/drivers/gpu/drm/i915/display/intel_display_power.c b/drivers/gpu/drm/i915/display/intel_display_power.c
+index 7437fc71d289..5f4939a9ca90 100644
+--- a/drivers/gpu/drm/i915/display/intel_display_power.c
++++ b/drivers/gpu/drm/i915/display/intel_display_power.c
+@@ -4427,7 +4427,7 @@ static void intel_power_domains_verify_state(struct drm_i915_private *dev_priv);
+  *
+  * It will return with power domains disabled (to be enabled later by
+  * intel_power_domains_enable()) and must be paired with
+- * intel_power_domains_fini_hw().
++ * intel_power_domains_driver_remove().
+  */
+ void intel_power_domains_init_hw(struct drm_i915_private *i915, bool resume)
+ {
+@@ -4479,7 +4479,7 @@ void intel_power_domains_init_hw(struct drm_i915_private *i915, bool resume)
+ }
+ 
+ /**
+- * intel_power_domains_fini_hw - deinitialize hw power domain state
++ * intel_power_domains_driver_remove - deinitialize hw power domain state
+  * @i915: i915 device instance
+  *
+  * De-initializes the display power domain HW state. It also ensures that the
+@@ -4489,7 +4489,7 @@ void intel_power_domains_init_hw(struct drm_i915_private *i915, bool resume)
+  * intel_power_domains_disable()) and must be paired with
+  * intel_power_domains_init_hw().
+  */
+-void intel_power_domains_fini_hw(struct drm_i915_private *i915)
++void intel_power_domains_driver_remove(struct drm_i915_private *i915)
+ {
+ 	intel_wakeref_t wakeref __maybe_unused =
+ 		fetch_and_zero(&i915->power_domains.wakeref);
+diff --git a/drivers/gpu/drm/i915/display/intel_display_power.h b/drivers/gpu/drm/i915/display/intel_display_power.h
+index 8f43f7051a16..dbd1f5ef01d1 100644
+--- a/drivers/gpu/drm/i915/display/intel_display_power.h
++++ b/drivers/gpu/drm/i915/display/intel_display_power.h
+@@ -214,7 +214,7 @@ void gen9_enable_dc5(struct drm_i915_private *dev_priv);
+ int intel_power_domains_init(struct drm_i915_private *dev_priv);
+ void intel_power_domains_cleanup(struct drm_i915_private *dev_priv);
+ void intel_power_domains_init_hw(struct drm_i915_private *dev_priv, bool resume);
+-void intel_power_domains_fini_hw(struct drm_i915_private *dev_priv);
++void intel_power_domains_driver_remove(struct drm_i915_private *dev_priv);
+ void icl_display_core_init(struct drm_i915_private *dev_priv, bool resume);
+ void icl_display_core_uninit(struct drm_i915_private *dev_priv);
+ void intel_power_domains_enable(struct drm_i915_private *dev_priv);
 diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-index ad24957ad86d..36c872220f68 100644
+index 36c872220f68..6e83fe96d930 100644
 --- a/drivers/gpu/drm/i915/i915_drv.c
 +++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -752,7 +752,7 @@ static int i915_load_modeset_init(struct drm_device *dev)
+@@ -751,16 +751,16 @@ static int i915_load_modeset_init(struct drm_device *dev)
+ 
  cleanup_gem:
  	i915_gem_suspend(dev_priv);
- 	i915_gem_fini_hw(dev_priv);
--	i915_gem_fini(dev_priv);
-+	i915_gem_driver_release(dev_priv);
+-	i915_gem_fini_hw(dev_priv);
++	i915_gem_driver_remove(dev_priv);
+ 	i915_gem_driver_release(dev_priv);
  cleanup_modeset:
- 	intel_modeset_cleanup(dev);
+-	intel_modeset_cleanup(dev);
++	intel_modeset_driver_remove(dev);
  cleanup_irq:
-@@ -962,10 +962,11 @@ static int i915_driver_init_early(struct drm_i915_private *dev_priv)
+ 	intel_irq_uninstall(dev_priv);
+ 	intel_gmbus_teardown(dev_priv);
+ cleanup_csr:
+ 	intel_csr_ucode_fini(dev_priv);
+-	intel_power_domains_fini_hw(dev_priv);
++	intel_power_domains_driver_remove(dev_priv);
+ 	vga_switcheroo_unregister_client(pdev);
+ cleanup_vga_client:
+ 	vga_client_register(pdev, NULL, NULL, NULL);
+@@ -1692,10 +1692,10 @@ static int i915_driver_init_hw(struct drm_i915_private *dev_priv)
  }
  
  /**
-- * i915_driver_cleanup_early - cleanup the setup done in i915_driver_init_early()
-+ * i915_driver_early_release - cleanup the setup done in
-+ *			       i915_driver_init_early()
+- * i915_driver_cleanup_hw - cleanup the setup done in i915_driver_init_hw()
++ * i915_driver_hw_remove - cleanup the setup done in i915_driver_hw_probe()
   * @dev_priv: device private
   */
--static void i915_driver_cleanup_early(struct drm_i915_private *dev_priv)
-+static void i915_driver_early_release(struct drm_i915_private *dev_priv)
+-static void i915_driver_cleanup_hw(struct drm_i915_private *dev_priv)
++static void i915_driver_hw_remove(struct drm_i915_private *dev_priv)
  {
- 	intel_irq_fini(dev_priv);
- 	intel_power_domains_cleanup(dev_priv);
-@@ -1028,10 +1029,10 @@ static int i915_driver_init_mmio(struct drm_i915_private *dev_priv)
- }
+ 	struct pci_dev *pdev = dev_priv->drm.pdev;
  
- /**
-- * i915_driver_cleanup_mmio - cleanup the setup done in i915_driver_init_mmio()
-+ * i915_driver_mmio_release - cleanup the setup done in i915_driver_init_mmio()
-  * @dev_priv: device private
-  */
--static void i915_driver_cleanup_mmio(struct drm_i915_private *dev_priv)
-+static void i915_driver_mmio_release(struct drm_i915_private *dev_priv)
- {
- 	intel_teardown_mchbar(dev_priv);
- 	intel_uncore_fini_mmio(&dev_priv->uncore);
-@@ -1684,7 +1685,7 @@ static int i915_driver_init_hw(struct drm_i915_private *dev_priv)
- 		pci_disable_msi(pdev);
- 	pm_qos_remove_request(&dev_priv->pm_qos);
- err_ggtt:
--	i915_ggtt_cleanup_hw(dev_priv);
-+	i915_ggtt_driver_release(dev_priv);
- err_perf:
- 	i915_perf_fini(dev_priv);
- 	return ret;
-@@ -1929,15 +1930,15 @@ int i915_driver_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+@@ -1929,7 +1929,7 @@ int i915_driver_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	return 0;
  
  out_cleanup_hw:
- 	i915_driver_cleanup_hw(dev_priv);
--	i915_ggtt_cleanup_hw(dev_priv);
-+	i915_ggtt_driver_release(dev_priv);
+-	i915_driver_cleanup_hw(dev_priv);
++	i915_driver_hw_remove(dev_priv);
+ 	i915_ggtt_driver_release(dev_priv);
  
  	/* Paranoia: make sure we have disabled everything before we exit. */
- 	intel_sanitize_gt_powersave(dev_priv);
- out_cleanup_mmio:
--	i915_driver_cleanup_mmio(dev_priv);
-+	i915_driver_mmio_release(dev_priv);
- out_runtime_pm_put:
+@@ -1970,11 +1970,11 @@ void i915_driver_remove(struct drm_device *dev)
+ 
+ 	drm_atomic_helper_shutdown(dev);
+ 
+-	intel_gvt_cleanup(dev_priv);
++	intel_gvt_driver_remove(dev_priv);
+ 
+-	intel_modeset_cleanup(dev);
++	intel_modeset_driver_remove(dev);
+ 
+-	intel_bios_cleanup(dev_priv);
++	intel_bios_driver_remove(dev_priv);
+ 
+ 	vga_switcheroo_unregister_client(pdev);
+ 	vga_client_register(pdev, NULL, NULL, NULL);
+@@ -1985,11 +1985,11 @@ void i915_driver_remove(struct drm_device *dev)
+ 	cancel_delayed_work_sync(&dev_priv->gpu_error.hangcheck_work);
+ 	i915_reset_error_state(dev_priv);
+ 
+-	i915_gem_fini_hw(dev_priv);
++	i915_gem_driver_remove(dev_priv);
+ 
+-	intel_power_domains_fini_hw(dev_priv);
++	intel_power_domains_driver_remove(dev_priv);
+ 
+-	i915_driver_cleanup_hw(dev_priv);
++	i915_driver_hw_remove(dev_priv);
+ 
  	enable_rpm_wakeref_asserts(&dev_priv->runtime_pm);
--	i915_driver_cleanup_early(dev_priv);
-+	i915_driver_early_release(dev_priv);
- out_pci_disable:
- 	pci_disable_device(pdev);
- out_fini:
-@@ -2000,19 +2001,19 @@ static void i915_driver_release(struct drm_device *dev)
- 
- 	disable_rpm_wakeref_asserts(rpm);
- 
--	i915_gem_fini(dev_priv);
-+	i915_gem_driver_release(dev_priv);
- 
--	i915_ggtt_cleanup_hw(dev_priv);
-+	i915_ggtt_driver_release(dev_priv);
- 
- 	/* Paranoia: make sure we have disabled everything before we exit. */
- 	intel_sanitize_gt_powersave(dev_priv);
- 
--	i915_driver_cleanup_mmio(dev_priv);
-+	i915_driver_mmio_release(dev_priv);
- 
- 	enable_rpm_wakeref_asserts(rpm);
--	intel_runtime_pm_cleanup(rpm);
-+	intel_runtime_pm_driver_release(rpm);
- 
--	i915_driver_cleanup_early(dev_priv);
-+	i915_driver_early_release(dev_priv);
- 	i915_driver_destroy(dev_priv);
  }
- 
-@@ -2205,7 +2206,7 @@ static int i915_drm_suspend_late(struct drm_device *dev, bool hibernation)
- out:
- 	enable_rpm_wakeref_asserts(rpm);
- 	if (!dev_priv->uncore.user_forcewake.count)
--		intel_runtime_pm_cleanup(rpm);
-+		intel_runtime_pm_driver_release(rpm);
- 
- 	return ret;
- }
-@@ -2969,7 +2970,7 @@ static int intel_runtime_suspend(struct device *kdev)
- 	}
- 
- 	enable_rpm_wakeref_asserts(rpm);
--	intel_runtime_pm_cleanup(rpm);
-+	intel_runtime_pm_driver_release(rpm);
- 
- 	if (intel_uncore_arm_unclaimed_mmio_detection(&dev_priv->uncore))
- 		DRM_ERROR("Unclaimed access detected prior to suspending\n");
 diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
-index 4deadec2e20b..be9a2adab5dc 100644
+index be9a2adab5dc..23d9853c5930 100644
 --- a/drivers/gpu/drm/i915/i915_drv.h
 +++ b/drivers/gpu/drm/i915/i915_drv.h
-@@ -2538,7 +2538,7 @@ void i915_gem_init_mmio(struct drm_i915_private *i915);
+@@ -2537,7 +2537,7 @@ bool i915_gem_unset_wedged(struct drm_i915_private *dev_priv);
+ void i915_gem_init_mmio(struct drm_i915_private *i915);
  int __must_check i915_gem_init(struct drm_i915_private *dev_priv);
  int __must_check i915_gem_init_hw(struct drm_i915_private *dev_priv);
- void i915_gem_fini_hw(struct drm_i915_private *dev_priv);
--void i915_gem_fini(struct drm_i915_private *dev_priv);
-+void i915_gem_driver_release(struct drm_i915_private *dev_priv);
+-void i915_gem_fini_hw(struct drm_i915_private *dev_priv);
++void i915_gem_driver_remove(struct drm_i915_private *dev_priv);
+ void i915_gem_driver_release(struct drm_i915_private *dev_priv);
  int i915_gem_wait_for_idle(struct drm_i915_private *dev_priv,
  			   unsigned int flags, long timeout);
- void i915_gem_suspend(struct drm_i915_private *dev_priv);
+@@ -2693,7 +2693,7 @@ mkwrite_device_info(struct drm_i915_private *dev_priv)
+ /* modesetting */
+ extern void intel_modeset_init_hw(struct drm_device *dev);
+ extern int intel_modeset_init(struct drm_device *dev);
+-extern void intel_modeset_cleanup(struct drm_device *dev);
++extern void intel_modeset_driver_remove(struct drm_device *dev);
+ extern int intel_modeset_vga_set_state(struct drm_i915_private *dev_priv,
+ 				       bool state);
+ extern void intel_display_resume(struct drm_device *dev);
 diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
-index 015208741405..51a0fbaa781b 100644
+index 51a0fbaa781b..37fe2ed2f582 100644
 --- a/drivers/gpu/drm/i915/i915_gem.c
 +++ b/drivers/gpu/drm/i915/i915_gem.c
-@@ -1620,7 +1620,7 @@ void i915_gem_fini_hw(struct drm_i915_private *dev_priv)
- 	i915_gem_drain_freed_objects(dev_priv);
+@@ -1600,7 +1600,7 @@ int i915_gem_init(struct drm_i915_private *dev_priv)
+ 	return ret;
  }
  
--void i915_gem_fini(struct drm_i915_private *dev_priv)
-+void i915_gem_driver_release(struct drm_i915_private *dev_priv)
+-void i915_gem_fini_hw(struct drm_i915_private *dev_priv)
++void i915_gem_driver_remove(struct drm_i915_private *dev_priv)
  {
- 	mutex_lock(&dev_priv->drm.struct_mutex);
- 	intel_engines_cleanup(dev_priv);
-diff --git a/drivers/gpu/drm/i915/i915_gem_gtt.c b/drivers/gpu/drm/i915/i915_gem_gtt.c
-index 236c964dd761..e8b156b14769 100644
---- a/drivers/gpu/drm/i915/i915_gem_gtt.c
-+++ b/drivers/gpu/drm/i915/i915_gem_gtt.c
-@@ -2910,10 +2910,10 @@ static void ggtt_cleanup_hw(struct i915_ggtt *ggtt)
+ 	GEM_BUG_ON(dev_priv->gt.awake);
+ 
+diff --git a/drivers/gpu/drm/i915/intel_gvt.c b/drivers/gpu/drm/i915/intel_gvt.c
+index 842ee26effd4..c66b2d8a6219 100644
+--- a/drivers/gpu/drm/i915/intel_gvt.c
++++ b/drivers/gpu/drm/i915/intel_gvt.c
+@@ -122,13 +122,14 @@ int intel_gvt_init(struct drm_i915_private *dev_priv)
  }
  
  /**
-- * i915_ggtt_cleanup_hw - Clean up GGTT hardware initialization
-+ * i915_ggtt_driver_release - Clean up GGTT hardware initialization
-  * @i915: i915 device
+- * intel_gvt_cleanup - cleanup GVT components when i915 driver is unloading
++ * intel_gvt_driver_remove - cleanup GVT components when i915 driver is
++ *			     unbinding
+  * @dev_priv: drm i915 private *
+  *
+  * This function is called at the i915 driver unloading stage, to shutdown
+  * GVT components and release the related resources.
   */
--void i915_ggtt_cleanup_hw(struct drm_i915_private *i915)
-+void i915_ggtt_driver_release(struct drm_i915_private *i915)
+-void intel_gvt_cleanup(struct drm_i915_private *dev_priv)
++void intel_gvt_driver_remove(struct drm_i915_private *dev_priv)
  {
- 	struct pagevec *pvec;
+ 	if (!intel_gvt_active(dev_priv))
+ 		return;
+diff --git a/drivers/gpu/drm/i915/intel_gvt.h b/drivers/gpu/drm/i915/intel_gvt.h
+index 85ce37eb7cd6..21d58f6b9e89 100644
+--- a/drivers/gpu/drm/i915/intel_gvt.h
++++ b/drivers/gpu/drm/i915/intel_gvt.h
+@@ -28,7 +28,7 @@ struct drm_i915_private;
  
-diff --git a/drivers/gpu/drm/i915/i915_gem_gtt.h b/drivers/gpu/drm/i915/i915_gem_gtt.h
-index 57a68ef4eda7..75c6f11d3df5 100644
---- a/drivers/gpu/drm/i915/i915_gem_gtt.h
-+++ b/drivers/gpu/drm/i915/i915_gem_gtt.h
-@@ -617,7 +617,7 @@ int i915_ggtt_enable_hw(struct drm_i915_private *dev_priv);
- void i915_ggtt_enable_guc(struct drm_i915_private *i915);
- void i915_ggtt_disable_guc(struct drm_i915_private *i915);
- int i915_init_ggtt(struct drm_i915_private *dev_priv);
--void i915_ggtt_cleanup_hw(struct drm_i915_private *dev_priv);
-+void i915_ggtt_driver_release(struct drm_i915_private *dev_priv);
- 
- int i915_ppgtt_init_hw(struct intel_gt *gt);
- 
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-index 8d1aebc3e857..b2a05850ea42 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -592,7 +592,7 @@ void intel_runtime_pm_disable(struct intel_runtime_pm *rpm)
- 		pm_runtime_put(kdev);
+ #ifdef CONFIG_DRM_I915_GVT
+ int intel_gvt_init(struct drm_i915_private *dev_priv);
+-void intel_gvt_cleanup(struct drm_i915_private *dev_priv);
++void intel_gvt_driver_remove(struct drm_i915_private *dev_priv);
+ int intel_gvt_init_device(struct drm_i915_private *dev_priv);
+ void intel_gvt_clean_device(struct drm_i915_private *dev_priv);
+ int intel_gvt_init_host(void);
+@@ -38,7 +38,7 @@ static inline int intel_gvt_init(struct drm_i915_private *dev_priv)
+ {
+ 	return 0;
+ }
+-static inline void intel_gvt_cleanup(struct drm_i915_private *dev_priv)
++static inline void intel_gvt_driver_remove(struct drm_i915_private *dev_priv)
+ {
  }
  
--void intel_runtime_pm_cleanup(struct intel_runtime_pm *rpm)
-+void intel_runtime_pm_driver_release(struct intel_runtime_pm *rpm)
- {
- 	int count = atomic_read(&rpm->wakeref_count);
- 
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.h b/drivers/gpu/drm/i915/intel_runtime_pm.h
-index 473c4850c01d..89f8d284239a 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.h
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.h
-@@ -173,7 +173,7 @@ enable_rpm_wakeref_asserts(struct intel_runtime_pm *rpm)
- void intel_runtime_pm_init_early(struct intel_runtime_pm *rpm);
- void intel_runtime_pm_enable(struct intel_runtime_pm *rpm);
- void intel_runtime_pm_disable(struct intel_runtime_pm *rpm);
--void intel_runtime_pm_cleanup(struct intel_runtime_pm *rpm);
-+void intel_runtime_pm_driver_release(struct intel_runtime_pm *rpm);
- 
- intel_wakeref_t intel_runtime_pm_get(struct intel_runtime_pm *rpm);
- intel_wakeref_t intel_runtime_pm_get_if_in_use(struct intel_runtime_pm *rpm);
 -- 
 2.21.0
 
