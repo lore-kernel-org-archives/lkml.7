@@ -4,175 +4,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6827C73C65
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E60C73C63
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886E120693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66DF20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GD9MiTsx"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DbrMHflP";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="LBh7tE+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfGJBaq (ORCPT
+        id S1727065AbfGJBbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 21:30:46 -0400
-Received: from mail-eopbgr80074.outbound.protection.outlook.com ([40.107.8.74]:51468
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726218AbfGJBaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 21:30:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N2IBnVTAEyvdR1MQ49f13eVt6MXjGwfzTKdRSGrhXVxR7HXn0v3JW5eAheHdbGiAfifdGSu84uIKUBHm9E+zwNHQvqa5L7wmwhMlekmlCEm9wBJS0liOvWzqz/TajThiX40Sh0PUPgmm250cRd1m/x2HNUFQbAKc7xE0g/RqK/xZkWj14tc3+gOCHEpbvjjaHJUNHJFvyyiHjc7nWBzjDoeDM7LqWQhFsoIjJF7FlKa+VFp2RnhVAtfKVDmjqUMiUT7DT0sTTAUa8Yv4SDJd2oSqG/gT7Am2qNGSyy4eqzMjVftjOCQW3esprAK5FkCDfbogmWy3LOqG98Drnvim4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
+        Tue, 9 Jul 2019 21:31:15 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:4882 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726218AbfGJBbP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Jul 2019 21:31:15 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x6A1R57V014613;
+        Tue, 9 Jul 2019 18:31:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=Yo+nMAgCISsh/6qPmf+HArUmccudeopyRCbaYu4G0a8=;
+ b=DbrMHflP0n8NqEnbGKHZDaGlcV9ACq183IeOhOJGo1uGVd4yjs3gAciCON2xlT2rFuyA
+ hY3IBKb6rC3ip5QVheeD5ifNJyGx8oHOBDnSUnQNU/G5UeRSmePsGRaOVT8+xNmZ/Lgo
+ tdPzyi2VzCctTfQJVIGjD7V0L0nm8nm27rs= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2tmxrb1kmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jul 2019 18:31:09 -0700
+Received: from prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 9 Jul 2019 18:31:07 -0700
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 9 Jul 2019 18:31:07 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 9 Jul 2019 18:31:07 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0/+GyMmVS/scMWnNx7/qPdLuUu8JgFpGswysIyL0Ulc=;
- b=Qeukn5ecOjzSmkrTHMP0VE02MzC2+mD4apnhDB73V4x6udfNNID/5RoSScc0ZLKId/biBB9B734QENFQ/7waTCSWeTK57yfn0yRuEI/DtUziTpUlVNdsSFjTuo2SRfS6BpVCp0jqDc/CZQmryzMZweQk6EMCzuv5aLKLZWdK98rggTdo8wNLjYhLpx/mtEWQKdJduB9g+3xdE0z2YUUttxS3gNI81Vi7V1allaftxNt7WO9L6KPDNGgwKvra9owf1aQXcvR7CuF1viNu7STXW2DHwfER/Mn2n3NbFm4Ttzpm2/0TlJAtzqJLvHYotTH9mUrWALmJOOmnuTzYFF0NVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0/+GyMmVS/scMWnNx7/qPdLuUu8JgFpGswysIyL0Ulc=;
- b=GD9MiTsxSUJGAu/uIfMDp2Q9UgqsyivjLofcwb4dIlPi7xHUsrZROZuaSniXn2ERtj2MeLBa0fxsdGWBf+Gdw7fA94/pt7+h6AxHcPFPh4s6NvECjsur4XMetPag8zkwHTV8WwnXXUWpahKUJAS9/odVvBOTpJZ5NLpPx7//n+A=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3657.eurprd04.prod.outlook.com (52.134.69.142) with Microsoft SMTP
+ bh=Yo+nMAgCISsh/6qPmf+HArUmccudeopyRCbaYu4G0a8=;
+ b=LBh7tE+zX4EqhzR9StgMDTu9O8jHN6X5SEDLD5AjwnKc7qxEZF2UyBvUOCgzGXY61D+IdKCAJyML93PSnEPiSGvLX1TMb+9s4Koa8B8ijSQskpepf9fU/My3n98hzhNP3wkiJvO9vkjgZzYl3rV/OJ25+/ITPEu5A6+VrFCkaRA=
+Received: from DM6PR15MB2635.namprd15.prod.outlook.com (20.179.161.152) by
+ DM6PR15MB3050.namprd15.prod.outlook.com (20.179.16.89) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Wed, 10 Jul 2019 01:30:40 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8875:8e81:7be1:b0a0]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8875:8e81:7be1:b0a0%5]) with mapi id 15.20.2073.008; Wed, 10 Jul 2019
- 01:30:40 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?utf-8?B?R3VpZG8gR8O8bnRoZXI=?= <agx@sigxcpu.org>,
+ 15.20.2052.18; Wed, 10 Jul 2019 01:31:05 +0000
+Received: from DM6PR15MB2635.namprd15.prod.outlook.com
+ ([fe80::fc39:8b78:f4df:a053]) by DM6PR15MB2635.namprd15.prod.outlook.com
+ ([fe80::fc39:8b78:f4df:a053%3]) with mapi id 15.20.2073.008; Wed, 10 Jul 2019
+ 01:31:05 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V4 2/5] clocksource/drivers/sysctr: Add clock-frequency
- property
-Thread-Topic: [PATCH V4 2/5] clocksource/drivers/sysctr: Add clock-frequency
- property
-Thread-Index: AQHVL/II1Ibi8cGYOUSIKmrgeiNcLabCyoSAgABPmdA=
-Date:   Wed, 10 Jul 2019 01:30:40 +0000
-Message-ID: <DB3PR0402MB39167FC68991F071E9E58D81F5F00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190701093826.5472-1-Anson.Huang@nxp.com>
- <20190701093826.5472-2-Anson.Huang@nxp.com>
- <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com>
-In-Reply-To: <CAL_JsqKeu-b8mbMJBtnNn1vL=RSvUXbo+g40haZnjXTW11CJ6w@mail.gmail.com>
+        Kernel Team <Kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH RESEND] mm: show number of vmalloc pages in /proc/meminfo
+Thread-Topic: [PATCH RESEND] mm: show number of vmalloc pages in /proc/meminfo
+Thread-Index: AQHVNhuLGO3yqyJ4/UmBmYR/KZa3WabDEgsA
+Date:   Wed, 10 Jul 2019 01:31:05 +0000
+Message-ID: <20190710013100.GA21604@tower.DHCP.thefacebook.com>
+References: <20190514235111.2817276-1-guro@fb.com>
+ <20190514235111.2817276-2-guro@fb.com>
+ <CAEwNFnALK=aAnyBypHbvw4khRwbOeMN=5gtgLWY+3F3HEpb2Ng@mail.gmail.com>
+In-Reply-To: <CAEwNFnALK=aAnyBypHbvw4khRwbOeMN=5gtgLWY+3F3HEpb2Ng@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
+x-clientproxiedby: CO2PR04CA0196.namprd04.prod.outlook.com
+ (2603:10b6:104:5::26) To DM6PR15MB2635.namprd15.prod.outlook.com
+ (2603:10b6:5:1a6::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:164b]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 74c29fd7-3894-48a8-0674-08d704d63829
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB3PR0402MB3657;
-x-ms-traffictypediagnostic: DB3PR0402MB3657:
-x-microsoft-antispam-prvs: <DB3PR0402MB3657D04A9CF4510DC5D5063AF5F00@DB3PR0402MB3657.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-office365-filtering-correlation-id: 49f663c1-64c4-4000-e87c-08d704d646bf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR15MB3050;
+x-ms-traffictypediagnostic: DM6PR15MB3050:
+x-microsoft-antispam-prvs: <DM6PR15MB30505BA33DA27AB2DAA4D04DBEF00@DM6PR15MB3050.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0094E3478A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(189003)(199004)(76176011)(478600001)(7736002)(4326008)(2906002)(99286004)(6436002)(5660300002)(53546011)(66066001)(52536014)(7416002)(74316002)(229853002)(54906003)(8936002)(186003)(6506007)(256004)(316002)(102836004)(305945005)(9686003)(6246003)(81166006)(486006)(81156014)(33656002)(25786009)(26005)(86362001)(3846002)(6116002)(8676002)(53936002)(68736007)(446003)(476003)(44832011)(7696005)(66446008)(55016002)(66476007)(66556008)(64756008)(11346002)(71190400001)(71200400001)(14454004)(66946007)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3657;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(396003)(136003)(39860400002)(189003)(199004)(305945005)(7736002)(11346002)(6436002)(2906002)(53936002)(6116002)(186003)(99286004)(5660300002)(476003)(6506007)(14454004)(486006)(76176011)(386003)(446003)(52116002)(71190400001)(316002)(54906003)(86362001)(256004)(478600001)(81166006)(8676002)(66476007)(102836004)(8936002)(81156014)(53546011)(46003)(71200400001)(9686003)(25786009)(6246003)(68736007)(229853002)(33656002)(110136005)(6486002)(66556008)(66446008)(66946007)(64756008)(6512007)(4326008)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3050;H:DM6PR15MB2635.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GFnAN5i/pyUaxAd/0zEIrolL/AngVN5xzIM0ps0QFeuqdb2MoJ+EgGEKnEubQTP2GJ8x1lsnvIHVKWtXVBT8NWiKRjkceCX/Q0SlgAFL7sDcT5WR+42Kjoy/igh9c1FKO2+tojLd6a5TkogDop0zTmoLQMIQaGx3iiuDfTyDLPBM/PDwJYJjHhUhOixdLVeHjewaimRdaUqmWSVrxiwzeusjdM8LVbt7KGrQVxtjx4utVJi7AT8u23bjgJcNe/pcxKgtRXA8xI3l6g1iPqkO9RGPfgDFqynnU/sY+mvFV+kHNye3TV+d00ummC+WOsaxZq8ee5H7BeUPY39pDqvANUA6FqYrksZMBt2Wz4MZ1yuddm/HPZkW+T4lXqFWb3TIofnX8kvA1y1oA5LDa0adHzD0dVibeSMnYvkQ9t3hPl8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: i+OCVHUoRVLGupd3HDiTdCOsxVffu0dnl2LRl9qOwscjFRp+PwgNyb+KALOtHvOQVwunz57AEu18Eg3HgHkmxeumHf9LzlkYfQpaTBYuyHR9YvWgIGnSRZQmC46kZoeLpYEONrZSfPEcuXzz5aaL2oOmexaOrRZUJBwmKrlwZhRbWt4ITsDhZA61j1QZ5ACmM0Y3vqBXZtuNztAIP22cdKwc/XmhPfvx+SR37m5oVeIbSrDf0IAtnQaCs1hDt4gfYyl+o1AUlVrYaiqm9b1WJu6tOi2sQntHRN/IaAtoGPKq/1TSdS8CQ/6VJ+rBlqtYt7BXvkhyW2dCCLavehIjNq3W70NNSy38qGlc/WGkBP0xEIOSEMiiGFhfRrESwOrpjnrJncwPlI+NSUUnCZeWuRZIomqNfouP19EuZkDihFU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5D13729F1F2ACD44A07E9894FB8EA387@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74c29fd7-3894-48a8-0674-08d704d63829
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 01:30:40.5760
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49f663c1-64c4-4000-e87c-08d704d646bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 01:31:05.6067
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3657
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3050
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-10_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907100016
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFJvYg0KDQo+IE9uIE1vbiwgSnVsIDEsIDIwMTkgYXQgMzo0NyBBTSA8QW5zb24uSHVhbmdA
-bnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdA
-bnhwLmNvbT4NCj4gDQo+ICdkdC1iaW5kaW5nczogdGltZXI6IC4uLicgZm9yIHRoZSBzdWJqZWN0
-Lg0KDQpPSywgSSBtYWRlIGEgbWlzdGFrZS4NCg0KPiANCj4gPg0KPiA+IFN5c3RlbXMgd2hpY2gg
-dXNlIHBsYXRmb3JtIGRyaXZlciBtb2RlbCBmb3IgY2xvY2sgZHJpdmVyIHJlcXVpcmUgdGhlDQo+
-ID4gY2xvY2sgZnJlcXVlbmN5IHRvIGJlIHN1cHBsaWVkIHZpYSBkZXZpY2UgdHJlZSB3aGVuIHN5
-c3RlbSBjb3VudGVyDQo+ID4gZHJpdmVyIGlzIGVuYWJsZWQuDQo+IA0KPiBUaGlzIGlzIGEgRFQg
-YmluZGluZy4gV2hhdCdzIGEgcGxhdGZvcm0gZHJpdmVyPw0KDQpJdCBpcyBqdXN0IHRyeWluZyB0
-byBleHBsYWluIHdoeSB3ZSBuZWVkIHRvIGludHJvZHVjZSB0aGlzICJjbG9jay1mcmVxdWVuY3ki
-DQpwcm9wZXJ0eSwgbm90aGluZyBhYm91dCB0aGUgYmluZGluZyBhbmQgcGxhdGZvcm0gZHJpdmVy
-Lg0KDQo+IA0KPiA+DQo+ID4gVGhpcyBpcyBuZWNlc3NhcnkgYXMgaW4gdGhlIHBsYXRmb3JtIGRy
-aXZlciBtb2RlbCB0aGUgb2ZfY2xrDQo+ID4gb3BlcmF0aW9ucyBkbyBub3Qgd29yayBjb3JyZWN0
-bHkgYmVjYXVzZSBzeXN0ZW0gY291bnRlciBkcml2ZXIgaXMNCj4gPiBpbml0aWFsaXplZCBpbiBl
-YXJseSBwaGFzZSBvZiBzeXN0ZW0gYm9vdCB1cCwgYW5kIGNsb2NrIGRyaXZlciB1c2luZw0KPiA+
-IHBsYXRmb3JtIGRyaXZlciBtb2RlbCBpcyBOT1QgcmVhZHkgYXQgdGhhdCB0aW1lLCBpdCB3aWxs
-IGNhdXNlIHN5c3RlbQ0KPiA+IGNvdW50ZXIgZHJpdmVyIGluaXRpYWxpemF0aW9uIGZhaWxlZC4N
-Cj4gPg0KPiA+IEFkZCBjbG9jay1mcmVxdWVuY3kgcHJvcGVydHkgdG8gdGhlIGRldmljZSB0cmVl
-IGJpbmRpbmdzIG9mIHRoZSBOWFANCj4gPiBzeXN0ZW0gY291bnRlciwgc28gdGhlIGRyaXZlciBj
-YW4gdGVsbCB0aW1lci1vZiBkcml2ZXIgdG8gZ2V0IGNsb2NrDQo+ID4gZnJlcXVlbmN5IGZyb20g
-RFQgZGlyZWN0bHkgaW5zdGVhZCBvZiBkb2luZyBvZl9jbGsgb3BlcmF0aW9ucyB2aWEgY2xrDQo+
-ID4gQVBJcy4NCj4gDQo+IFdoaWxlIHlvdSd2ZSBub3cgZ2l2ZW4gYSBnb29kIGV4cGxhbmF0aW9u
-IHdoeSB5b3UgbmVlZCB0aGlzLCBpdCBhbGwgc291bmRzDQo+IGxpa2UgbGludXggc3BlY2lmaWMg
-aXNzdWVzIGFuZCBhIERUIGNoYW5nZSBzaG91bGQgbm90IGJlIG5lY2Vzc2FyeS4NCj4gDQo+IFBy
-ZXN1bWFibHksICdjbG9ja3MnIHBvaW50cyB0byBhIGZpeGVkLWNsb2NrIG5vZGUsIHJpZ2h0PyBK
-dXN0IHBhcnNlIHRoZSAnY2xvY2tzJw0KPiBwaGFuZGxlIGFuZCBmZXRjaCB0aGUgZnJlcXVlbmN5
-IGZyb20gdGhhdCBub2RlIGlmIHlvdSBuZWVkIHRvIGdldCB0aGUNCj4gZnJlcXVlbmN5ICdlYXJs
-eScuDQoNClNvdW5kIGxpa2UgYSBiZXR0ZXIgc29sdXRpb24sIEkgd2lsbCB0cnkgdGhhdCwgc2lu
-Y2UgdGhlIHN5c3RlbSBjb3VudGVyJ3MgY2xvY2sgaXMNCmZyb20gb3NjXzI0bSBhbmQgZGl2aWRl
-ZCBieSAzLCBzaW5jZSBkaWZmZXJlbnQgcGxhdGZvcm1zIG1heSBoYXZlIGRpZmZlcmVudCBkaXZp
-ZGVyLA0Kc28gbWF5YmUgSSBjYW4gY3JlYXRlIGEgZml4ZWQtY2xvY2sgbm9kZSBpbiBEVCwgdGhl
-biBzeXN0ZW0gY291bnRlciBkcml2ZXIgY2FuIHBhcnNlDQp0aGUgY2xvY2sgYW5kIGZldGNoIHRo
-ZSBmcmVxdWVuY3kgZnJvbSB0aGF0IG5vZGUsIHdpbGwgcmVkbyBhIFY1IHBhdGNoLg0KDQo+IA0K
-PiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+
-IC0tLQ0KPiA+IE5vIGNoYW5nZS4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdGltZXIvbnhwLHN5c2N0ci10aW1lci50eHQgICAgICAgIHwgMTUgKysrKysrKysrLS0tLS0t
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdGltZXIvbnhwLHN5c2N0ci10aW1lci50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy90aW1lci9ueHAsc3lzY3RyLXRpbWVyLnR4dA0KPiA+IGluZGV4IGQ1NzY1
-OTkuLjcwODhhMGUgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3RpbWVyL254cCxzeXNjdHItdGltZXIudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL254cCxzeXNjdHItdGltZXIudHh0DQo+ID4gQEAg
-LTExLDE1ICsxMSwxOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAtIHJlZyA6ICAgICAg
-ICAgICAgIFNwZWNpZmllcyB0aGUgYmFzZSBwaHlzaWNhbCBhZGRyZXNzIGFuZCBzaXplIG9mIHRo
-ZSBjb21hcHJlDQo+ID4gICAgICAgICAgICAgICAgICAgICAgZnJhbWUgYW5kIHRoZSBjb3VudGVy
-IGNvbnRyb2wsIHJlYWQgJiBjb21wYXJlLg0KPiA+ICAtIGludGVycnVwdHMgOiAgICAgIHNob3Vs
-ZCBiZSB0aGUgZmlyc3QgY29tcGFyZSBmcmFtZXMnIGludGVycnVwdA0KPiA+IC0tIGNsb2NrcyA6
-ICAgICAgICAgU3BlY2lmaWVzIHRoZSBjb3VudGVyIGNsb2NrLg0KPiA+IC0tIGNsb2NrLW5hbWVz
-OiAgICAgICAgICAgICBTcGVjaWZpZXMgdGhlIGNsb2NrJ3MgbmFtZSBvZiB0aGlzIG1vZHVsZQ0K
-PiA+ICstIGNsb2NrcyA6ICAgICAgICAgIFNwZWNpZmllcyB0aGUgY291bnRlciBjbG9jaywgbXV0
-dWFsbHkgZXhjbHVzaXZlIHdpdGggY2xvY2stDQo+IGZyZXF1ZW5jeS4NCj4gPiArLSBjbG9jay1u
-YW1lcyA6ICAgICBTcGVjaWZpZXMgdGhlIGNsb2NrJ3MgbmFtZSBvZiB0aGlzIG1vZHVsZSwgbXV0
-dWFsbHkNCj4gZXhjbHVzaXZlIHdpdGgNCj4gPiArICAgICAgICAgICAgICAgICAgIGNsb2NrLWZy
-ZXF1ZW5jeS4NCj4gPiArLSBjbG9jay1mcmVxdWVuY3kgOiBTcGVjaWZpZXMgc3lzdGVtIGNvdW50
-ZXIgY2xvY2sgZnJlcXVlbmN5LCBtdXR1YWxseQ0KPiBleGNsdXNpdmUgd2l0aA0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgY2xvY2tzL2Nsb2NrLW5hbWVzLg0KPiANCj4gSXQgZG9lc24ndCByZWFs
-bHkgd29yayB0byBzYXkgb25lIG9yIHRoZSBvdGhlciBpcyBuZWVkZWQgdW5sZXNzIHlvdSBtYWtl
-IHRoZQ0KPiBPUyBzdXBwb3J0IGJvdGggY2FzZXMuDQoNClRoZSBPUyBhbHJlYWR5IHN1cHBvcnQg
-Ym90aCBjYXNlcyBub3cgd2l0aCB0aGlzIHBhdGNoIHNlcmllcy4NCg0KVGhhbmtzLA0KQW5zb24N
-Cg==
+On Tue, Jul 09, 2019 at 02:59:42PM +0900, Minchan Kim wrote:
+> Hi Roman,
+>=20
+>=20
+> On Wed, May 15, 2019 at 8:51 AM Roman Gushchin <guro@fb.com> wrote:
+> >
+> > Vmalloc() is getting more and more used these days (kernel stacks,
+> > bpf and percpu allocator are new top users), and the total %
+> > of memory consumed by vmalloc() can be pretty significant
+> > and changes dynamically.
+> >
+> > /proc/meminfo is the best place to display this information:
+> > its top goal is to show top consumers of the memory.
+> >
+> > Since the VmallocUsed field in /proc/meminfo is not in use
+> > for quite a long time (it has been defined to 0 by the
+> > commit a5ad88ce8c7f ("mm: get rid of 'vmalloc_info' from
+> > /proc/meminfo")), let's reuse it for showing the actual
+> > physical memory consumption of vmalloc().
+> >
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> Acked-by: Minchan Kim <minchan@kernel.org>
+>=20
+> How it's going on?
+> Android needs this patch since it has gathered vmalloc pages from
+> /proc/vmallocinfo. It's too slow.
+>=20
+
+Andrew, can you, please, pick this one?
+
+It has been in the mm tree already, but then it was dropped
+because of some other non-related patches in the series
+conflicted with some x86 changes. This patch is useful
+by itself, and doesn't depend on anything else.
+
+Thanks!
