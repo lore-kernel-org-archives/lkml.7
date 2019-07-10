@@ -2,99 +2,95 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9908C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0D1C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D9E2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF9D2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562770949;
-	bh=dt2T9p3en1FkUV0mTJUmaqRdiLQSD66+9/mvSrFhE1M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zf4oroRJJ4mBTKTobMziQI4KM0HR45d2mUAIgNR1lXIxzMOJIhKJSGJGatQkNVccr
-	 7ee1Ehr4xoM9aGwlKsEksfSGLyTpzA+T9858VsEo8RRHthF7mqH5gsqd5rfToPIA46
-	 v7IVNiaNSaR7sp1yxCoy3zJyMgUC4vYhzkKK1IUk=
+	s=default; t=1562770964;
+	bh=/vtEnW8CheOg/PZakRy0pEmXXolFD9Kz9w6eiA82Mds=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DDZ376+GZO/9k3Z8N93ZOHRxZoSYCVKCsD4mHt3duRnzDrCFE1AlBixB+MiXpvNp7
+	 cAEihv7ijNE9aFop0UbiKSUYv/+jqdODcvy0iuolDcP5ch8+nsDm7aot/bfQahZRxP
+	 sZKZKPxyge0G1h71IX3vyskFAAmAUyzgS4Cknk8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfGJPC2 (ORCPT
+        id S1727946AbfGJPCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:02:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47588 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJPC2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:02:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UkJApDVtYdjMZ/Ry2QgZ6VYCCwj+gEO2YxXHCf2mZhU=; b=f2E0/B7VukYp8wrlzR1MyP8vF
-        CNF7UQFCyToADC3pQib4MtOu0YqRmK9PRe87TNaHkya7/jexN8YOIOpXlXEqczXyMrRKtnTgK4Adr
-        b52ZmIRNqY/4ZOfJURi/7bpBrLoCHBqUweWotftHSbiojG8e1BNpG9eCxO1AL/op7o3yE=;
-Received: from [217.140.106.53] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hlE6u-0007xy-Im; Wed, 10 Jul 2019 15:02:20 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 9F8DCD02D51; Wed, 10 Jul 2019 16:02:19 +0100 (BST)
-Date:   Wed, 10 Jul 2019 16:02:19 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-kernel@vger.kernel.org, lorenzo@kernel.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        bbrezillon@knernel.org, Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v3 1/3] regmap: add i3c bus support
-Message-ID: <20190710150219.GE14859@sirena.co.uk>
-References: <cover.1562767521.git.vitor.soares@synopsys.com>
- <7deb1300474b68ebb6fc3ecb02577e4f657250a5.1562767521.git.vitor.soares@synopsys.com>
+        Wed, 10 Jul 2019 11:02:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfGJPCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:02:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E6832064B;
+        Wed, 10 Jul 2019 15:02:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562770962;
+        bh=/vtEnW8CheOg/PZakRy0pEmXXolFD9Kz9w6eiA82Mds=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wb78yEgYy9CFrCJxhvzs2FDFBcwSXnSMXYJvUSO4ZcctzJIDBca1s+ixJ7rzzPkoH
+         0C7PJ1zLhNUYMmiMKzqqGQ2cXIuspQulEJ3GLeuVMbltxfRQQxU6Ru90BCxL8De3H0
+         Mhq+W3jUY5FJH/KxjfTzZhBMbWLb89dZU6/65a9s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stefan Hellermann <stefan@the2masters.de>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 01/11] MIPS: ath79: fix ar933x uart parity mode
+Date:   Wed, 10 Jul 2019 11:02:28 -0400
+Message-Id: <20190710150240.6984-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0H629O+sVkh21xTi"
-Content-Disposition: inline
-In-Reply-To: <7deb1300474b68ebb6fc3ecb02577e4f657250a5.1562767521.git.vitor.soares@synopsys.com>
-X-Cookie: Visit beautiful Vergas, Minnesota.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Stefan Hellermann <stefan@the2masters.de>
 
---0H629O+sVkh21xTi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit db13a5ba2732755cf13320f3987b77cf2a71e790 ]
 
-On Wed, Jul 10, 2019 at 04:56:37PM +0200, Vitor Soares wrote:
-> Add basic support for i3c bus.
-> This is a simple implementation that only give support
-> for SDR Read and Write commands.
+While trying to get the uart with parity working I found setting even
+parity enabled odd parity insted. Fix the register settings to match
+the datasheet of AR9331.
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
+A similar patch was created by 8devices, but not sent upstream.
+https://github.com/8devices/openwrt-8devices/commit/77c5586ade3bb72cda010afad3f209ed0c98ea7c
 
---0H629O+sVkh21xTi
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Stefan Hellermann <stefan@the2masters.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/include/asm/mach-ath79/ar933x_uart.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/mips/include/asm/mach-ath79/ar933x_uart.h b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
+index c2917b39966b..bba2c8837951 100644
+--- a/arch/mips/include/asm/mach-ath79/ar933x_uart.h
++++ b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
+@@ -27,8 +27,8 @@
+ #define AR933X_UART_CS_PARITY_S		0
+ #define AR933X_UART_CS_PARITY_M		0x3
+ #define	  AR933X_UART_CS_PARITY_NONE	0
+-#define	  AR933X_UART_CS_PARITY_ODD	1
+-#define	  AR933X_UART_CS_PARITY_EVEN	2
++#define	  AR933X_UART_CS_PARITY_ODD	2
++#define	  AR933X_UART_CS_PARITY_EVEN	3
+ #define AR933X_UART_CS_IF_MODE_S	2
+ #define AR933X_UART_CS_IF_MODE_M	0x3
+ #define	  AR933X_UART_CS_IF_MODE_NONE	0
+-- 
+2.20.1
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0l/foACgkQJNaLcl1U
-h9BZPwf/WPHj9YcR+r2Om/TweeAd3+ERdBF7OVYLsMho7Wh2Yu4ERp5W9oapTfrD
-NktupKnonwBoMO+mXGXbnIwP0AwNouliXGCqKKohFHw4LJcEPYSwETopror8nwgU
-SKGDdEMJtUurQcgDGMAtXB3nWYjAOQJVUgwmLTBQs3apb25uum0AOpu0TQhHPkti
-8tHrWbii5lsXzL5w3eRXV8hTvW7/cDXY+mkzEYcLG+I2PByHTpqRK8Ina8hGAw/i
-hIKmFBS+n79F8qimM5CJQZFbGD9beT5j6vaBFuP488ltvfY9DIry8e4rfyXfT2z+
-p/wOzZKQh7QNqUvalWGsGFujFfJDxw==
-=ww1C
------END PGP SIGNATURE-----
-
---0H629O+sVkh21xTi--
