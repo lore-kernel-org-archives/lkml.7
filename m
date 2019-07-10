@@ -2,112 +2,157 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F026C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362D3C74A21
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10FB21537
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="v/lKp/WG"
+	by mail.kernel.org (Postfix) with ESMTP id 1141521530
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfGJPZM (ORCPT
+        id S1727879AbfGJPZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:25:12 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:37529 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfGJPZM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:25:12 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6AFP3SF2477761
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 10 Jul 2019 08:25:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6AFP3SF2477761
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1562772303;
-        bh=iEh2pz6PIDbm4ws6R1XTs5nVHRi6d1QzlH+xLKepvJo=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=v/lKp/WG3oczgkvO6hv6gSUTTCa1sSudxu/3CoBfq3LM5TnmeIGBIez+JfiM+jHxk
-         8aq1kzFDJrYNVMUNVrBnsTdd5i/U4/UPIPVa00P9KXUyRst11e1N4d+YKyEqCSW14V
-         jtfucYARaaYCeJTuWSILe7l2QcWlUJ8WWeUuT+8mgD/9UdNsC4pCIrKLvNOwq9bG+w
-         PaSHSScNSpTzAolL/GyZWL7yC940mtG9EMgn4RiqHd5Oyq7BVGCCYIIpSNIgLc89HG
-         /PKLaTYIcwYDz8zPuLDMKuxNL/4nUXtjttHvgAi7XplkQ3TQxANtvTEefhNkpqUKyw
-         YT8l1aYd2uxuQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6AFP2F62477753;
-        Wed, 10 Jul 2019 08:25:02 -0700
-Date:   Wed, 10 Jul 2019 08:25:02 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnd Bergmann <tipbot@zytor.com>
-Message-ID: <tip-26515699863d68058e290e18e83f444925920be5@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de, tglx@linutronix.de,
-        hpa@zytor.com, mingo@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, arnd@arndb.de, mingo@kernel.org,
-          hpa@zytor.com, tglx@linutronix.de
-In-Reply-To: <20190710130522.1802800-1-arnd@arndb.de>
-References: <20190710130522.1802800-1-arnd@arndb.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/pgtable/32: Fix LOWMEM_PAGES constant
-Git-Commit-ID: 26515699863d68058e290e18e83f444925920be5
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 10 Jul 2019 11:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfGJPZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:25:52 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B9F20645;
+        Wed, 10 Jul 2019 15:25:50 +0000 (UTC)
+Date:   Wed, 10 Jul 2019 11:25:49 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Need to remove char pointers from trace events
+Message-ID: <20190710112549.0366bb03@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  26515699863d68058e290e18e83f444925920be5
-Gitweb:     https://git.kernel.org/tip/26515699863d68058e290e18e83f444925920be5
-Author:     Arnd Bergmann <arnd@arndb.de>
-AuthorDate: Wed, 10 Jul 2019 15:04:55 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 10 Jul 2019 17:19:58 +0200
+I was doing a bit of an audit on trace events and found this:
 
-x86/pgtable/32: Fix LOWMEM_PAGES constant
+# cat /debug/tracing/events/i915/intel_disable_plane/format
+name: intel_disable_plane
+ID: 1358
+format:
+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+	field:int common_pid;	offset:4;	size:4;	signed:1;
 
-clang points out that the computation of LOWMEM_PAGES causes a signed
-integer overflow on 32-bit x86:
+	field:enum pipe pipe;	offset:8;	size:4;	signed:1;
+	field:const char * name;	offset:16;	size:8;	signed:0;
+	field:u32 frame;	offset:24;	size:4;	signed:0;
+	field:u32 scanline;	offset:28;	size:4;	signed:0;
 
-arch/x86/kernel/head32.c:83:20: error: signed shift result (0x100000000) requires 34 bits to represent, but 'int' only has 32 bits [-Werror,-Wshift-overflow]
-                (PAGE_TABLE_SIZE(LOWMEM_PAGES) << PAGE_SHIFT);
-                                 ^~~~~~~~~~~~
-arch/x86/include/asm/pgtable_32.h:109:27: note: expanded from macro 'LOWMEM_PAGES'
- #define LOWMEM_PAGES ((((2<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
-                         ~^ ~~
-arch/x86/include/asm/pgtable_32.h:98:34: note: expanded from macro 'PAGE_TABLE_SIZE'
- #define PAGE_TABLE_SIZE(pages) ((pages) / PTRS_PER_PGD)
+print fmt: "pipe %c, plane %s, frame=%u, scanline=%u", ((REC->pipe) + 'A'), REC->name, REC->frame, REC->scanline
 
-Use the _ULL() macro to make it a 64-bit constant.
 
-Fixes: 1e620f9b23e5 ("x86/boot/32: Convert the 32-bit pgtable setup code from assembly to C")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190710130522.1802800-1-arnd@arndb.de
+Same goes for intel_update_plane.
 
----
- arch/x86/include/asm/pgtable_32.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
-index 4fe9e7fc74d3..c78da8eda8f2 100644
---- a/arch/x86/include/asm/pgtable_32.h
-+++ b/arch/x86/include/asm/pgtable_32.h
-@@ -106,6 +106,6 @@ do {						\
-  * with only a host target support using a 32-bit type for internal
-  * representation.
-  */
--#define LOWMEM_PAGES ((((2<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
-+#define LOWMEM_PAGES ((((_ULL(2)<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
+The problem here is:
+
+	field:const char * name;	offset:16;	size:8;	signed:0;
+
+print fmt: "pipe %c, plane %s, frame=%u, scanline=%u", ((REC->pipe) + 'A'), REC->name, REC->frame, REC->scanline
+
+
+Where the TRACE_EVENT() macro has:
+
+	    TP_fast_assign(
+			   __entry->pipe = crtc->pipe;
+			   __entry->name = plane->name;
+			   __entry->frame = crtc->base.dev->driver->get_vblank_counter(crtc->base.dev,
+										       crtc->pipe);
+			   __entry->scanline = intel_get_crtc_scanline(crtc);
+			   ),
+
+	    TP_printk("pipe %c, plane %s, frame=%u, scanline=%u",
+		      pipe_name(__entry->pipe), __entry->name,
+		      __entry->frame, __entry->scanline)
+
+
+The issue here is that you record a pointer address to "plane->name"
+and then sometime in the distant future access that same address.
+There's usually no guarantee that the contents at that address will
+exist when the buffer is read.
+
+The proper way to record strings, is to record the string into the ring
+buffer itself, and not rely on it existing hours or days later.
+
+I recommend the following patch:
+
+-- Steve
+
+diff --git a/drivers/gpu/drm/i915/i915_trace.h b/drivers/gpu/drm/i915/i915_trace.h
+index 12893304c8f8..d41d914a16ca 100644
+--- a/drivers/gpu/drm/i915/i915_trace.h
++++ b/drivers/gpu/drm/i915/i915_trace.h
+@@ -298,16 +298,16 @@ TRACE_EVENT(intel_update_plane,
  
- #endif /* _ASM_X86_PGTABLE_32_H */
+ 	    TP_STRUCT__entry(
+ 			     __field(enum pipe, pipe)
+-			     __field(const char *, name)
+ 			     __field(u32, frame)
+ 			     __field(u32, scanline)
+ 			     __array(int, src, 4)
+ 			     __array(int, dst, 4)
++			     __string(name, plane->name)
+ 			     ),
+ 
+ 	    TP_fast_assign(
++			   __assign_str(name, plane->name);
+ 			   __entry->pipe = crtc->pipe;
+-			   __entry->name = plane->name;
+ 			   __entry->frame = crtc->base.dev->driver->get_vblank_counter(crtc->base.dev,
+ 										       crtc->pipe);
+ 			   __entry->scanline = intel_get_crtc_scanline(crtc);
+@@ -316,7 +316,7 @@ TRACE_EVENT(intel_update_plane,
+ 			   ),
+ 
+ 	    TP_printk("pipe %c, plane %s, frame=%u, scanline=%u, " DRM_RECT_FP_FMT " -> " DRM_RECT_FMT,
+-		      pipe_name(__entry->pipe), __entry->name,
++		      pipe_name(__entry->pipe), __get_str(name),
+ 		      __entry->frame, __entry->scanline,
+ 		      DRM_RECT_FP_ARG((const struct drm_rect *)__entry->src),
+ 		      DRM_RECT_ARG((const struct drm_rect *)__entry->dst))
+@@ -328,21 +328,21 @@ TRACE_EVENT(intel_disable_plane,
+ 
+ 	    TP_STRUCT__entry(
+ 			     __field(enum pipe, pipe)
+-			     __field(const char *, name)
+ 			     __field(u32, frame)
+ 			     __field(u32, scanline)
++			     __string(name, plane->name)
+ 			     ),
+ 
+ 	    TP_fast_assign(
++			   __assign_str(name, plane->name);
+ 			   __entry->pipe = crtc->pipe;
+-			   __entry->name = plane->name;
+ 			   __entry->frame = crtc->base.dev->driver->get_vblank_counter(crtc->base.dev,
+ 										       crtc->pipe);
+ 			   __entry->scanline = intel_get_crtc_scanline(crtc);
+ 			   ),
+ 
+ 	    TP_printk("pipe %c, plane %s, frame=%u, scanline=%u",
+-		      pipe_name(__entry->pipe), __entry->name,
++		      pipe_name(__entry->pipe), __get_str(name),
+ 		      __entry->frame, __entry->scanline)
+ );
+ 
