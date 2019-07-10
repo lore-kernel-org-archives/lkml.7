@@ -2,130 +2,96 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BA1C74A3E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A58C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0361221019
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7541D20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pMiktFKk"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nPv/43Tb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfGJVvx (ORCPT
+        id S1727780AbfGJVwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:51:53 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40888 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfGJVvx (ORCPT
+        Wed, 10 Jul 2019 17:52:03 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39948 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfGJVwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:51:53 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so1706872pfp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 14:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4raB3IqyErqkg+JW+87rFy9oaXPi9i1d2UYtDB+hVu8=;
-        b=pMiktFKkY/frqdyoQe7sXxn6LL1Cu1eJU2aCdvxnAIjKEfBMVT2/a7GBTubBVbfWa+
-         VrkYciVMRwRGNBsyxWRacUlQbz9KrF+YgOEQ71hxJjkKxT2GbmMOnuU6hw3Edpz1rbCX
-         TVaEQ4RgH61os6AyO9go6PMGvQHfA26T17tshvtfCu+Y4EWNOD1RFFj6LJF3db0kSaGw
-         8Y52qRyryah4clumr06EeeGgyEUDxNrK5Yj8CqCVoefgScQMSh511m0RPf+Ki7n+w5rf
-         lcuyhHFh80YdhFGhsoBdDpij2xLcvg2j6MpWyUseC13csarlkuF/J5ijYVFflfpMRiG4
-         GUig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4raB3IqyErqkg+JW+87rFy9oaXPi9i1d2UYtDB+hVu8=;
-        b=Ni6Tc8tINniwWOc/oSkF43orDneHCXZi0yzwvsmR2Ftle+QyqUY19DQyfA6cPb9kts
-         zC3RhXOSCV+RiNTzdjKwKMTKiWzlE6zLDHqElmaWiMuNhkmkWYgAMDK90kz212SgnzaP
-         dtpmaghLFfNRJtgttoRLnLDsSRvVPw7g3VvhB0LQ/TRZhzVhvDKogv8HCKJyNaIOKrzB
-         2CqLFgTgSASU3b9OkUQYYf7D3wtJ2E9CZJF/VsHkmV5Vl1rpn0nuuNdTt/DEwBA72ZIy
-         RILaKLvxTU72ZQgCX/3oL+qgxZSKKH7G8KDekTmZ4ZxnwZtRig4TzJ3Esd3wRyOtsg5Z
-         0D0w==
-X-Gm-Message-State: APjAAAURESH2dRC/xUQIYp2dFa/D3HeX5fz8lBJvz6nEVTgvk0zdHLLe
-        XDAEI/0jNPV0HjN8RXcLQttMZBU/Z0iYo3nIJuUckA==
-X-Google-Smtp-Source: APXvYqzpotPnFgfn8F3Q6TpCTjeRegyu0pJeMseHXkiht1BvBEBtrWB5K160JbdnR1FiaSX66t4gclal9uiAjRoVwZs=
-X-Received: by 2002:a17:90a:380d:: with SMTP id w13mr620824pjb.138.1562795512264;
- Wed, 10 Jul 2019 14:51:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190710213238.91835-1-henryburns@google.com> <CALvZod7kMX5Xika8nqywyXHuBKqTfSPP7uZ1-OU2M4kmHLiuUw@mail.gmail.com>
-In-Reply-To: <CALvZod7kMX5Xika8nqywyXHuBKqTfSPP7uZ1-OU2M4kmHLiuUw@mail.gmail.com>
-From:   Henry Burns <henryburns@google.com>
-Date:   Wed, 10 Jul 2019 14:51:16 -0700
-Message-ID: <CAGQXPTip1aMtChuKAYtYOti1QcZQOz4=Jy0w9O478KTMoT1c0A@mail.gmail.com>
-Subject: Re: [PATCH] mm/z3fold.c: remove z3fold_migration trylock
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Vitaly Wool <vitalywool@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Snild Dolkow <snild@sony.com>,
+        Wed, 10 Jul 2019 17:52:02 -0400
+Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1E52054B;
+        Wed, 10 Jul 2019 23:51:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1562795519;
+        bh=n9Pm9Mc4TgImTCNTyykIU/BdefXoMk27hoxsRwtAEf4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nPv/43TbmXMd3Dvb1afM5V++ioSzUNFPm0UnkVjEvj0BXJuwVc0hvmCUbPWWgooJa
+         xOrK98+2FvN0L3pD6WuPuoUFqo8WuoGpd/EBdCvK1bVhCyw+9JdDKDtbJXuGwNujVX
+         mN8rKf+b8wcHtDbbPHN0qqTY+wRcpdpLxEx+LDmk=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/6] media: radio: si4713: Convert to new i2c device probe()
+Date:   Wed, 10 Jul 2019 22:51:44 +0100
+Message-Id: <20190710215149.9208-2-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
+References: <20190710215149.9208-1-kieran.bingham+renesas@ideasonboard.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > z3fold_page_migrate() will never succeed because it attempts to acquire a
-> > lock that has already been taken by migrate.c in __unmap_and_move().
-> >
-> > __unmap_and_move() migrate.c
-> >   trylock_page(oldpage)
-> >   move_to_new_page(oldpage_newpage)
-> >     a_ops->migrate_page(oldpage, newpage)
-> >       z3fold_page_migrate(oldpage, newpage)
-> >         trylock_page(oldpage)
-> >
-> >
-> > Signed-off-by: Henry Burns <henryburns@google.com>
->
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
->
-> Please add the Fixes tag as well.
-Fixes: 1f862989b04a ("mm/z3fold.c: support page migration")
->
-> > ---
-> >  mm/z3fold.c | 6 ------
-> >  1 file changed, 6 deletions(-)
-> >
-> > diff --git a/mm/z3fold.c b/mm/z3fold.c
-> > index 985732c8b025..9fe9330ab8ae 100644
-> > --- a/mm/z3fold.c
-> > +++ b/mm/z3fold.c
-> > @@ -1335,16 +1335,11 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
-> >         zhdr = page_address(page);
-> >         pool = zhdr_to_pool(zhdr);
-> >
-> > -       if (!trylock_page(page))
-> > -               return -EAGAIN;
-> > -
-> >         if (!z3fold_page_trylock(zhdr)) {
-> > -               unlock_page(page);
-> >                 return -EAGAIN;
-> >         }
-> >         if (zhdr->mapped_count != 0) {
-> >                 z3fold_page_unlock(zhdr);
-> > -               unlock_page(page);
-> >                 return -EBUSY;
-> >         }
-> >         new_zhdr = page_address(newpage);
-> > @@ -1376,7 +1371,6 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
-> >         queue_work_on(new_zhdr->cpu, pool->compact_wq, &new_zhdr->work);
-> >
-> >         page_mapcount_reset(page);
-> > -       unlock_page(page);
-> >         put_page(page);
-> >         return 0;
-> >  }
-> > --
-> > 2.22.0.410.gd8fdbe21b5-goog
-> >
+The I2C core framework provides a simplified probe framework from commit
+b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new() call-back type").
+
+This driver does not utilise the i2c_device_id table in the probe, so we can
+easily convert it to utilise the simplfied i2c driver registration.
+
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+---
+ drivers/media/radio/si4713/si4713.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/radio/si4713/si4713.c b/drivers/media/radio/si4713/si4713.c
+index 7d97de2fa56c..7f3aee495ed3 100644
+--- a/drivers/media/radio/si4713/si4713.c
++++ b/drivers/media/radio/si4713/si4713.c
+@@ -1427,8 +1427,7 @@ static const struct v4l2_ctrl_config si4713_alt_freqs_ctrl = {
+  * I2C driver interface
+  */
+ /* si4713_probe - probe for the device */
+-static int si4713_probe(struct i2c_client *client,
+-					const struct i2c_device_id *id)
++static int si4713_probe(struct i2c_client *client)
+ {
+ 	struct si4713_device *sdev;
+ 	struct v4l2_ctrl_handler *hdl;
+@@ -1660,7 +1659,7 @@ static struct i2c_driver si4713_i2c_driver = {
+ 		.name	= "si4713",
+ 		.of_match_table = of_match_ptr(si4713_of_match),
+ 	},
+-	.probe		= si4713_probe,
++	.probe_new	= si4713_probe,
+ 	.remove         = si4713_remove,
+ 	.id_table       = si4713_id,
+ };
+-- 
+2.20.1
+
