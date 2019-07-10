@@ -2,165 +2,122 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCA5C74A30
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B18C74A30
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA472086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1E12086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 17:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562778061;
-	bh=7vKvYWdX4S8o2s9oDSKpEGdJvxz3Mgvwxghgnbv2IbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K2VJMcBs9pgmzA9YXfhWcTukO5ZiwanOcRQoxkNK22yjBwtj0Gwz0ziPy8mrmCYRS
-	 nJxKpa1LCuPU9lU6kZhCog8/5ZxZobprnD9Yh7dEzjcYVgtBDWYy5tcYjAOd8zOK2s
-	 yC5ezmpwIZqLmwb9MP9eXWBH+ZLNFyGWDOQ88/oA=
+	s=default; t=1562778077;
+	bh=TxbpTbFTB6tcLStSvP+aZxI9Q0R2lb9U8jlmNMNQU/k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=09z8qooflSzUDr+qTZ/OQ+15l6BgPqy+elhHsh6W91qO2V///X2AGlR1KEm5LyGim
+	 WMmXOexrXRSFMQWTlodwrpmOjp5M6ARvFrtpwb9yHqFhZaiY4i0nYlTa5BWTX4bLck
+	 jtfmr4aXt8womxhgXhtRXV7wL6mUZsz0x86sVFdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfGJRBA (ORCPT
+        id S1727945AbfGJRBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 13:01:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40840 "EHLO mail.kernel.org"
+        Wed, 10 Jul 2019 13:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727644AbfGJRBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 13:01:00 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725956AbfGJRBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 13:01:16 -0400
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9997820665;
-        Wed, 10 Jul 2019 17:00:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 324EE214AF;
+        Wed, 10 Jul 2019 17:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562778058;
-        bh=7vKvYWdX4S8o2s9oDSKpEGdJvxz3Mgvwxghgnbv2IbM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bwGjlWgNGPx3PPkvRVH/itm8xLcI1B8V25qsDvhZqTuAyTya1xzfsTcHiVaB7A3jD
-         n9+HTO4bgGhe9wGkNiwm45Ag8G8/iB5xPqeSwDOn1JIkZ4ro/CRdp3ZL9RjKWQ6skd
-         4FT+zdc/WWR8lv9++0M36W0sN0IFDDga0kCzZuDI=
-Date:   Wed, 10 Jul 2019 10:00:57 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
-Message-ID: <20190710170057.GB801@sol.localdomain>
-Mail-Followup-To: Bart Van Assche <bvanassche@acm.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-References: <00000000000089a718058556e1d8@google.com>
- <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
- <20190710053030.GB2152@sol.localdomain>
- <b378a903-d0fc-a137-e6b9-dec55277cf16@acm.org>
+        s=default; t=1562778075;
+        bh=TxbpTbFTB6tcLStSvP+aZxI9Q0R2lb9U8jlmNMNQU/k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U//DVdj8YeqqMqoEDtUVuLtXzsBFDbK43r7r+8WEjfC1VRimpCIv2wgciP4TBN/1i
+         J5jJLff9enx6GJSi0qmcn2fHltBH8KhSQR0qMHQ+By8LbYiJ+S6vw1yXceuxXgquR4
+         s/H+wScP71uIDBVJapDktsBgEARQrR4kG7GwHgdk=
+Received: by mail-lf1-f51.google.com with SMTP id c9so2115694lfh.4;
+        Wed, 10 Jul 2019 10:01:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAUbiZMC6q38omAa10AuY0h6+6LlHSdDc25ibITfGMHVEIgyfHwf
+        Qs0EIr3P3aLcQH9UpO2e7cmh69r/Jvsdh33m1F0=
+X-Google-Smtp-Source: APXvYqxUw6gRJ6UeOU32AlyJP63sp59JGRy6Bmn26fDc8R5P8j2rXUGuDLf2Ue/ajr7oZwhSM/V1T6YgEMGuHxdFzX0=
+X-Received: by 2002:ac2:4d1c:: with SMTP id r28mr14953327lfi.159.1562778073455;
+ Wed, 10 Jul 2019 10:01:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b378a903-d0fc-a137-e6b9-dec55277cf16@acm.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CGME20190708141158eucas1p17d4b50978dbe1e5c876ce6d8f433cc95@eucas1p1.samsung.com>
+ <20190708141140.24379-1-k.konieczny@partner.samsung.com> <CAJKOXPd+UZ2MdrTVfBv5UYzK5LgKNQHUFzRbRNeq271EaDSchg@mail.gmail.com>
+ <91f65527-3440-90fd-4096-5824fba1df78@partner.samsung.com>
+ <CAJKOXPc1rOyFujyWk4HwmQb6YEXd=CEHKwN8AH_pKxk-6CA08w@mail.gmail.com> <631ffd68-7aab-2483-8799-2019bf3bb444@partner.samsung.com>
+In-Reply-To: <631ffd68-7aab-2483-8799-2019bf3bb444@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 10 Jul 2019 19:01:02 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcX9vzoK-w16P4LiWjYMwXLUjSvNxdjp6nUXDjAK0rEcw@mail.gmail.com>
+Message-ID: <CAJKOXPcX9vzoK-w16P4LiWjYMwXLUjSvNxdjp6nUXDjAK0rEcw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] add coupled regulators for Exynos5422/5800
+To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 07:19:55AM -0700, Bart Van Assche wrote:
-> On 7/9/19 10:30 PM, Eric Biggers wrote:
-> > [Moved most people to Bcc; syzbot added way too many random people to this.]
-> > 
-> > Hi Bart,
-> > 
-> > On Sat, Mar 30, 2019 at 07:17:09PM -0700, Bart Van Assche wrote:
-> > > On 3/30/19 2:58 PM, syzbot wrote:
-> > > > syzbot has bisected this bug to:
-> > > > 
-> > > > commit 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
-> > > > Author: Bart Van Assche <bvanassche@acm.org>
-> > > > Date:   Thu Feb 14 23:00:54 2019 +0000
-> > > > 
-> > > >       kernel/workqueue: Use dynamic lockdep keys for workqueues
-> > > > 
-> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17f1bacd200000
-> > > > start commit:   0e40da3e Merge tag 'kbuild-fixes-v5.1' of
-> > > > git://git.kernel..
-> > > > git tree:       upstream
-> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1409bacd200000
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1009bacd200000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
-> > > > dashboard link:
-> > > > https://syzkaller.appspot.com/bug?extid=6f39a9deb697359fe520
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e1bacd200000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1120fe0f200000
-> > > > 
-> > > > Reported-by: syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com
-> > > > Fixes: 669de8bda87b ("kernel/workqueue: Use dynamic lockdep keys for
-> > > > workqueues")
-> > > > 
-> > > > For information about bisection process see:
-> > > > https://goo.gl/tpsmEJ#bisection
-> > > 
-> > > Hi Dmitry,
-> > > 
-> > > This bisection result doesn't make sense to me. As one can see, the message
-> > > "BUG: MAX_STACK_TRACE_ENTRIES too low!" does not occur in the console output
-> > > the above console output URL points at.
-> > > 
-> > > Bart.
-> > 
-> > This is still happening on mainline, and I think this bisection result is
-> > probably correct.  syzbot did start hitting something different at the very end
-> > of the bisection ("WARNING: CPU: 0 PID: 9153 at kernel/locking/lockdep.c:747")
-> > but that seems to be just because your commit had a lot of bugs in it, which had
-> > to be fixed by later commits.  In particular, the WARNING seems to have been
-> > fixed by commit 28d49e282665e ("locking/lockdep: Shrink struct lock_class_key").
-> > 
-> > What seems to still be happening is that the dynamic lockdep keys which you
-> > added make it possible for an unbounded number of entries to be added to the
-> > fixed length stack_trace[] array in kernel/locking/lockdep.c.  Hence the "BUG:
-> > MAX_STACK_TRACE_ENTRIES too low!".
-> > 
-> > Am I understanding it correctly?  How did you intend this to work?
-> 
-> The last two paragraphs do not make sense to me. My changes do not increase
-> the number of stack traces that get recorded by the lockdep code.
-> 
-> Bart.
-> 
+On Wed, 10 Jul 2019 at 15:51, Kamil Konieczny
+<k.konieczny@partner.samsung.com> wrote:
+>
+> On 10.07.2019 12:14, Krzysztof Kozlowski wrote:
+> > On Wed, 10 Jul 2019 at 12:03, Kamil Konieczny
+> > <k.konieczny@partner.samsung.com> wrote:
+> >>
+> >> On 10.07.2019 11:00, Krzysztof Kozlowski wrote:
+> >>> On Mon, 8 Jul 2019 at 16:12, <k.konieczny@partner.samsung.com> wrote:
+> >>>>
+> >>>> From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>> The main purpose of this patch series is to add coupled regulators for
+> >>>> Exynos5422/5800 to keep constrain on voltage difference between vdd_arm
+> >>>> and vdd_int to be at most 300mV. In exynos-bus instead of using
+> >>>> regulator_set_voltage_tol() with default voltage tolerance it should be
+> >>>> used regulator_set_voltage_triplet() with volatege range, and this is
+> >>>> already present in opp/core.c code, so it can be reused. While at this,
+> >>>> move setting regulators into opp/core.
+> >>>>
+> >>>> This patchset was tested on Odroid XU3.
+> >>>>
+> >>>> The last patch depends on two previous.
+> >>>
+> >>> So you break the ABI... I assume that patchset maintains
+> >>> bisectability. However there is no explanation why ABI break is needed
+> >>> so this does not look good...
+> >>
+> >> Patchset is bisectable, first one is simple and do not depends on others,
+> >> second depends on first, last depends on first and second.
+> >>
+> >> What do you mean by breaking ABI ?
+> >
+> > I mean, that Linux kernel stops working with existing DTBs... or am I
+> > mistaken and there is no problem? Maybe I confused the order...
+>
+> It is not ABI break, it should work with existing DTBs
 
-Interesting.  How do we explain that repeatedly allocating and freeing a
-workqueue is causing the number of lockdep stack trace entries to grow without
-bound, though?
+Ah, thanks. My misunderstanding then. Looks good.
 
-This can be reproduced with the following (which I simplified from the C
-reproducer that syzbot generated and used for its bisection):
-
-	#include <fcntl.h>
-	#include <unistd.h>
-
-	int main()
-	{
-		for (;;) {
-			int fd = open("/dev/infiniband/rdma_cm", O_RDWR);
-
-			close(fd);
-		}
-	}
-
-The workqueue is allocated in ucma_open() and freed in ucma_close().  If I run
-'grep stack-trace /proc/lockdep_stats' while reproducer is running, I can see
-the number is growing continuously until it hits the limit.
-
-There is also a reproducer using io_uring instead of rdma_cm
-(https://syzkaller.appspot.com/text?tag=ReproC&x=16483bf8600000).
-In both cases the workqueue is associated with a file descriptor; the workqueue
-is allocated and freed as the file descriptor is opened and closed.
-
-Anyone have any ideas?
-
-- Eric
+Best regards,
+Krzysztof
