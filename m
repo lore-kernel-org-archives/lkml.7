@@ -2,164 +2,163 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6A1C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8327C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7F920861
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SChbYa6v"
+	by mail.kernel.org (Postfix) with ESMTP id 9662120838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfGJIkY (ORCPT
+        id S1727487AbfGJIl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:40:24 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45033 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbfGJIkY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:40:24 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so2909467iob.11
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 01:40:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Z6YmTEgTEwKg2yvsPJh1tPfsth8NlCli3K7+n36xF4o=;
-        b=SChbYa6vqOPxSrVss4jvB9tAF5OwMipdIy0s56Usv1Xte2BSlygDBfiNDqi2CdjODl
-         Ug0jrCu+bv0/xHwZxDoEA7p7qrHLq5Qjrg43WWGsFxU97ztP5tAdsTE07lPSBp7pi1Y/
-         k0rD9Jlj6IQREds6kXolxrcTDAbr9qxnAWH0S7d5YXjySeQofztuYqTGmOJ0XyLirdOc
-         B+lkGRWenHKBU0Y29efsJHEsE+DpBsrEU8ctJGCdyawBpkBc9zpIOf7DYiMV50yXoQZw
-         0ydFObFgoNJFiGgjTiHlvwygdQe6YuN9Dl0LhsUPxsSfXcOfUpPaE5oV4aBKgjoQeXWe
-         1x6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z6YmTEgTEwKg2yvsPJh1tPfsth8NlCli3K7+n36xF4o=;
-        b=ksxEYGBevsJ77jSrxn72WQ8AxV1kO+sY+98Ij9J+gGU2Bf+8SA/GiAxqvvGJT3oZut
-         2wETW4fXeO/Ubg1G82O1NZ4AbAluOMLvWTE/tYVD7FvvL4D7eFfh0Utwh834hAs/UBgQ
-         X1nnSLPXmSlNNcbvKMMbgZkxDOyFkrwrFkAkjw7l43auOBC7s01HqrwnHf+IOzvJlHxi
-         b3rvYz7r5oIpoZVp7FJtYiLBdAqhLwbl2YXpEzsf0HsgLC5rYIoUMwu0ewYJ62pbeBAD
-         Pk/NCjXQhYXuCsPXYoSYjNNMrRfWnWgrle24wjON1SBX6ykAK7EYLmTu4JfG/YStMLO6
-         bLhw==
-X-Gm-Message-State: APjAAAXsX3lWYk6GXyWQS0nBTU4qWn6ZmVO8YelSQCGEEU8U6LrNb8ha
-        0R9c/hWwVgAGhsTsCNcG5kyNOYviyMkKQKU1qA==
-X-Google-Smtp-Source: APXvYqyf8ILBm+7MuZ4uDo+ul82G2IUmOV2LrKOdiouZHwiVejCLx4x6FlOy+TF5NqGRZGxV1T2S3iyyyzLIPzkC5G4=
-X-Received: by 2002:a05:6602:2413:: with SMTP id s19mr17062108ioa.161.1562748023178;
- Wed, 10 Jul 2019 01:40:23 -0700 (PDT)
+        Wed, 10 Jul 2019 04:41:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60498 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726198AbfGJIl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 04:41:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 413FDAE15;
+        Wed, 10 Jul 2019 08:41:54 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 239281E3F45; Wed, 10 Jul 2019 10:41:53 +0200 (CEST)
+Date:   Wed, 10 Jul 2019 10:41:53 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jan Kara <jack@suse.cz>, Boaz Harrosh <openosd@gmail.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: pagecache locking
+Message-ID: <20190710084153.GA962@quack2.suse.cz>
+References: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+ <20190617224714.GR14363@dread.disaster.area>
+ <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
+ <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
+ <20190619103838.GB32409@quack2.suse.cz>
+ <20190619223756.GC26375@dread.disaster.area>
+ <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
+ <20190705233157.GD7689@dread.disaster.area>
+ <20190708133114.GC20507@quack2.suse.cz>
+ <20190709234712.GL7689@dread.disaster.area>
 MIME-Version: 1.0
-References: <1562300143-11671-1-git-send-email-kernelfans@gmail.com>
- <1562300143-11671-2-git-send-email-kernelfans@gmail.com> <alpine.DEB.2.21.1907072133310.3648@nanos.tec.linutronix.de>
- <CAFgQCTvwS+yEkAmCJnsCfnr0JS01OFtBnDg4cr41_GqU79A4Gg@mail.gmail.com>
- <alpine.DEB.2.21.1907081125300.3648@nanos.tec.linutronix.de>
- <CAFgQCTvAOeerLHQvgvFXy_kLs=H=CuUFjYE+UAN+vhPCG+s=pQ@mail.gmail.com>
- <alpine.DEB.2.21.1907090810490.1961@nanos.tec.linutronix.de>
- <CAFgQCTui7D6_FQ_v_ijj6k_=+TQzQ3PaGvzxd6p+XEGjQ2S6jw@mail.gmail.com> <4AF3459B-28F2-425F-8E4B-40311DEF30C6@amacapital.net>
-In-Reply-To: <4AF3459B-28F2-425F-8E4B-40311DEF30C6@amacapital.net>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Wed, 10 Jul 2019 16:40:11 +0800
-Message-ID: <CAFgQCTtK7G9NPQgHa_gJkr8WLzYqagBVLaqBY7-w+tirX-+w-g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86/numa: instance all parsed numa node
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, Qian Cai <cai@lca.pw>,
-        Barret Rhoden <brho@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709234712.GL7689@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 9:34 PM Andy Lutomirski <luto@amacapital.net> wrote:
->
->
->
-> > On Jul 9, 2019, at 1:24 AM, Pingfan Liu <kernelfans@gmail.com> wrote:
+On Wed 10-07-19 09:47:12, Dave Chinner wrote:
+> On Mon, Jul 08, 2019 at 03:31:14PM +0200, Jan Kara wrote:
+> > I'd be really careful with nesting range locks. You can have nasty
+> > situations like:
+> > 
+> > Thread 1		Thread 2
+> > read_lock(0,1000)	
+> > 			write_lock(500,1500) -> blocks due to read lock
+> > read_lock(1001,1500) -> blocks due to write lock (or you have to break
+> >   fairness and then deal with starvation issues).
 > >
-> >> On Tue, Jul 9, 2019 at 2:12 PM Thomas Gleixner <tglx@linutronix.de> wr=
-ote:
-> >>
-> >>> On Tue, 9 Jul 2019, Pingfan Liu wrote:
-> >>>> On Mon, Jul 8, 2019 at 5:35 PM Thomas Gleixner <tglx@linutronix.de> =
-wrote:
-> >>>> It can and it does.
-> >>>>
-> >>>> That's the whole point why we bring up all CPUs in the 'nosmt' case =
-and
-> >>>> shut the siblings down again after setting CR4.MCE. Actually that's =
-in fact
-> >>>> a 'let's hope no MCE hits before that happened' approach, but that's=
- all we
-> >>>> can do.
-> >>>>
-> >>>> If we don't do that then the MCE broadcast can hit a CPU which has s=
-ome
-> >>>> firmware initialized state. The result can be a full system lockup, =
-triple
-> >>>> fault etc.
-> >>>>
-> >>>> So when the MCE hits a CPU which is still in the crashed kernel lala=
- state,
-> >>>> then all hell breaks lose.
-> >>> Thank you for the comprehensive explain. With your guide, now, I have
-> >>> a full understanding of the issue.
-> >>>
-> >>> But when I tried to add something to enable CR4.MCE in
-> >>> crash_nmi_callback(), I realized that it is undo-able in some case (i=
-f
-> >>> crashed, we will not ask an offline smt cpu to online), also it is
-> >>> needless. "kexec -l/-p" takes the advantage of the cpu state in the
-> >>> first kernel, where all logical cpu has CR4.MCE=3D1.
-> >>>
-> >>> So kexec is exempt from this bug if the first kernel already do it.
-> >>
-> >> No. If the MCE broadcast is handled by a CPU which is stuck in the old
-> >> kernel stop loop, then it will execute on the old kernel and eventuall=
-y run
-> >> into the memory corruption which crashed the old one.
-> >>
-> > Yes, you are right. Stuck cpu may execute the old do_machine_check()
-> > code. But I just found out that we have
-> > do_machine_check()->__mc_check_crashing_cpu() to against this case.
-> >
-> > And I think the MCE issue with nr_cpus is not closely related with
-> > this series, can
-> > be a separated issue. I had question whether Andy will take it, if
-> > not, I am glad to do it.
-> >
-> >
->
-> Go for it. I=E2=80=99m not familiar enough with the SMP boot stuff that I=
- would be able to do it any faster than you. I=E2=80=99ll gladly help revie=
-w it.
-I had sent out a patch to fix maxcpus "[PATCH] smp: force all cpu to
-boot once under maxcpus option"
-But for the case of nrcpus, I think things will not be so easy due to
-percpu area, and I think it may take a quite different way.
+> > So once you allow nesting of range locks, you have to very carefully define
+> > what is and what is not allowed.
+> 
+> Yes. I do understand the problem with rwsem read nesting and how
+> that can translate to reange locks.
+> 
+> That's why my range locks don't even try to block on other pending
+> waiters. The case where read nesting vs write might occur like above
+> is something like copy_file_range() vs truncate, but otherwise for
+> IO locks we simply don't have arbitrarily deep nesting of range
+> locks.
+> 
+> i.e. for your example my range lock would result in:
+> 
+> Thread 1		Thread 2
+> read_lock(0,1000)	
+> 			write_lock(500,1500)
+> 			<finds conflicting read lock>
+> 			<marks read lock as having a write waiter>
+> 			<parks on range lock wait list>
+> <...>
+> read_lock_nested(1001,1500)
+> <no overlapping range in tree>
+> <gets nested range lock>
+> 
+> <....>
+> read_unlock(1001,1500)	<stays blocked because nothing is waiting
+> 		         on (1001,1500) so no wakeup>
+> <....>
+> read_unlock(0,1000)
+> <sees write waiter flag, runs wakeup>
+> 			<gets woken>
+> 			<retries write lock>
+> 			<write lock gained>
+> 
+> IOWs, I'm not trying to complicate the range lock implementation
+> with complex stuff like waiter fairness or anti-starvation semantics
+> at this point in time. Waiters simply don't impact whether a new lock
+> can be gained or not, and hence the limitations of rwsem semantics
+> don't apply.
+> 
+> If such functionality is necessary (and I suspect it will be to
+> prevent AIO from delaying truncate and fallocate-like operations
+> indefinitely) then I'll add a "barrier" lock type (e.g.
+> range_lock_write_barrier()) that will block new range lock attempts
+> across it's span.
+> 
+> However, because this can cause deadlocks like the above, a barrier
+> lock will not block new *_lock_nested() or *_trylock() calls, hence
+> allowing runs of nested range locking to complete and drain without
+> deadlocking on a conflicting barrier range. And that still can't be
+> modelled by existing rwsem semantics....
 
-Thanks,
-  Pingfan
+Clever :). Thanks for explanation.
+
+> > That's why in my range lock implementation
+> > ages back I've decided to treat range lock as a rwsem for deadlock
+> > verification purposes.
+> 
+> IMO, treating a range lock as a rwsem for deadlock purposes defeats
+> the purpose of adding range locks in the first place. The
+> concurrency models are completely different, and some of the
+> limitations on rwsems are a result of implementation choices rather
+> than limitations of a rwsem construct.
+
+Well, even a range lock that cannot nest allows concurrent non-overlapping
+read and write to the same file which rwsem doesn't allow. But I agree that
+your nesting variant offers more (but also at the cost of higher complexity
+of the lock semantics).
+
+> In reality I couldn't care less about what lockdep can or can't
+> verify. I've always said lockdep is a crutch for people who don't
+> understand locks and the concurrency model of the code they
+> maintain. That obviously extends to the fact that lockdep
+> verification limitations should not limit what we allow new locking
+> primitives to do.
+
+I didn't say we have to constrain new locking primitives to what lockdep
+can support. It is just a locking correctness verification tool so naturally
+lockdep should be taught to what it needs to know about any locking scheme
+we come up with. And sometimes it is just too much effort which is why e.g.
+page lock still doesn't have lockdep coverage.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
