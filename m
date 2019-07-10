@@ -2,119 +2,146 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FDBC74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA39C74A36
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128C92087F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A662087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 21:28:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="daN8MuF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfGJVXn convert rfc822-to-8bit (ORCPT
+        id S1727794AbfGJV2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 17:23:43 -0400
-Received: from mail-pf1-f179.google.com ([209.85.210.179]:36426 "EHLO
-        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfGJVXm (ORCPT
+        Wed, 10 Jul 2019 17:28:07 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34362 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfGJV2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 17:23:42 -0400
-Received: by mail-pf1-f179.google.com with SMTP id r7so1683694pfl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 14:23:42 -0700 (PDT)
+        Wed, 10 Jul 2019 17:28:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b13so1692105pfo.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 14:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=2/LQ+syV8algN2h7OJBFggoQfWNkjHh3ATrB2VsxuKc=;
+        b=daN8MuF1/lEGfilGDX6IF+SUiDKa9qpZAq8GG3koP/7y04fK++4Bl5JwtbyEu4fRWw
+         JxFekoZVPITR2x4/Ygb4Mf1Bq3ym8zT8Nag4L/ZzC2S2E+BjL/5zdX0J2Et+TVa+GtbS
+         B23SiD5fg5Vogz8Glol23Wsb0tnyEwDbE/5/QCXkstf5X9Yu8rWdcg3NImLDdqIINf0R
+         /YMHnRxm0orEoeLSZzUr2MQ4Of5iIo3RNkXb+nKrQBdJdDAj/f7qqmuIdiC3/FwjWJ5u
+         5MST2J+yggJWzGX50XBQteW2dBMf7SizdIQWNn8MnYROs3SW6eT0cHQ/OSOGgn08O3Ck
+         E9Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MhpZZPIM+jtY/RxKzKNQu6iCuRkCXn2XWuBJcSklOcQ=;
-        b=oLpQqPUQ3p5wCfXl9X9cFxhoRrrmMwYe5SJQxst3XV8Ct/rg1H/Wzp8JaMIVunKY1a
-         w+dFoGKBrIIFCYapM3PXV9UKUUS596AqY8R8jnYpIhwAv7iMWGUCeDvbyi/qjSuhXB6O
-         wzKr8J4TQXbd0oSrhj0jEyRvW0XI11loKgqOwrQvlVemrI3p7F0C3kyuHfzlPDDOBAo+
-         1lBjURroshhVj2KvM4pedJ03GXTKiji9RG6Tr1v0jGtFkEOrZgbgRtqNCllCPra3VWFo
-         rvMlxOu25vCcuZAtDsDpFVEfSTbe2fygJKyjyCQ95AG+fh0SX7055aL5+cQHEzxr0sMM
-         jHoQ==
-X-Gm-Message-State: APjAAAUJhyWtr5OPrZj/df5As9o9xSRIwpSdseupyeDv8SKfaBhofe/7
-        Pv3SOW70mpZ0IIeU0TAosDfeYX8f
-X-Google-Smtp-Source: APXvYqxKVVN1uBpm7COLolP4/x4Bl8Qg9NrHilI+B5XGNlm4XEbyKuh3eE6AbXgzkXTMLmRIBBSYRw==
-X-Received: by 2002:a17:90a:9505:: with SMTP id t5mr509782pjo.96.1562793821682;
-        Wed, 10 Jul 2019 14:23:41 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:fb9c:664d:d2ad:c9b5? ([2620:15c:2c1:200:fb9c:664d:d2ad:c9b5])
-        by smtp.gmail.com with ESMTPSA id y128sm3238799pgy.41.2019.07.10.14.23.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 14:23:40 -0700 (PDT)
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-References: <00000000000089a718058556e1d8@google.com>
- <f71aaffa-ecf4-1def-fe50-91f37c677537@acm.org>
- <20190710053030.GB2152@sol.localdomain>
- <b378a903-d0fc-a137-e6b9-dec55277cf16@acm.org>
- <20190710170057.GB801@sol.localdomain> <20190710172123.GC801@sol.localdomain>
- <f498d8cc-ba82-d3dc-7557-142a1b35976a@acm.org>
- <20190710180242.GA193819@gmail.com>
- <a19779d0-0192-8dc0-d51b-e6938a455f31@acm.org>
- <47a9287d-1f02-95d5-a5cf-55f0c0d38378@gmail.com>
- <cdfeb3f8-8dc5-aa60-2782-7b3c5110edf5@acm.org>
- <ee3bac8d-d061-7d07-5990-59871e7e2a4b@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <9219c421-0868-f97f-2d84-df48aed9f8a8@acm.org>
-Date:   Wed, 10 Jul 2019 14:23:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=2/LQ+syV8algN2h7OJBFggoQfWNkjHh3ATrB2VsxuKc=;
+        b=awn75KjupT1RUED4RiSzc01qXPfDMhzGGCQuxMFXcWoQnrRAcW0D1ODR+/Vhk7tgVG
+         XTqt5rrlTtm66Fs4Tydvg9OSCC4YQXaYxvA5gQJEY974z16lbiYkxveKZ3R17FEp4/QY
+         KsiN/cVA1Eq2GaTCqANlvk4MhXMN1OJ7SPOv+oSF9TQisUzdVq4BnJlNCG1yrTBMV62t
+         ljhZWrkocGY34NUhJz8huL2FM+NxkAoQtQyXajZ1/bWL2a29vA5F2xl04LaUlSNkYLu4
+         34jWJh031HZDnuaGUXvED8molaR9MyhAK+1OSnNPR9FhCNeryfjMmFlCAAMHHk9UAGHz
+         tONQ==
+X-Gm-Message-State: APjAAAUA9w+MDNkVnZp/+wa8b6YgCaUQslfKnjS7MlLvcNi/z1Uga6+l
+        p7xqjWMn6iJ44Pzia5ynISghVg==
+X-Google-Smtp-Source: APXvYqy3KbwmvZ8Ja3wu6WerM1ugQjC9s4Qj0nEwijNHOzchNo+fuXoacPeYA+nP96bUoYEgkDaDxA==
+X-Received: by 2002:a17:90a:c588:: with SMTP id l8mr558340pjt.16.1562794085970;
+        Wed, 10 Jul 2019 14:28:05 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id w18sm3209783pfj.37.2019.07.10.14.28.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 14:28:05 -0700 (PDT)
+Date:   Wed, 10 Jul 2019 14:28:04 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+cc:     Cfir Cohen <cfir@google.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [patch] crypto: ccp - Fix SEV_VERSION_GREATER_OR_EQUAL
+Message-ID: <alpine.DEB.2.21.1907101426290.2777@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <ee3bac8d-d061-7d07-5990-59871e7e2a4b@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/10/19 1:47 PM, Eric Dumazet wrote:
-> 
-> 
-> On 7/10/19 9:09 PM, Bart Van Assche wrote:
->> On 7/10/19 11:44 AM, Eric Dumazet wrote:
->>> If anything using workqueues in dynamically allocated objects can turn off lockdep,
->>> we have a serious issue.
->>
->> As far as I know that issue is only hit by syzbot tests.
-> 
-> 
-> 
->> Anyway, I see
->> two possible paths forward:
->> * Revert the patch that makes workqueues use dynamic lockdep keys and
->> thereby reintroduce the false positives that lockdep reports if
->> different workqueues share a lockdep key. I think there is agreement
->> that having to analyze lockdep false positives is annoying, time
->> consuming and something nobody likes.
->> * Modify lockdep such that space in its fixed size arrays that is no
->> longer in use gets reused. Since the stack traces saved in the
->> stack_trace[] array have a variable size that array will have to be
->> compacted to avoid fragmentation.
->>
-> 
-> Can not destroy_workqueue() undo what alloc_workqueue() did ?
+SEV_VERSION_GREATER_OR_EQUAL() will fail if upgrading from 2.2 to 3.1, for
+example, because the minor version is not equal to or greater than the
+major.
 
-destroy_workqueue() already calls lockdep_unregister_key(). If that
-wouldn't happen then sooner or later one of the warning statements in
-the lockdep code would be triggered, e.g. the WARN_ON_ONCE() statement
-in lockdep_register_key(). I think the root cause is that
-lockdep_unregister_key() does not free the stack traces recorded by the
-lockdep save_trace() function. save_trace() is called every time a lock
-is acquired and lockdep encounters a new lock dependency chain.
+Fix this and move to a static inline function for appropriate type
+checking.
 
-As one can see in remove_class_from_lock_chain() there is already code
-present in lockdep for compacting the chain_hlocks[] array. Similar code
-is not yet available for the stack_trace[] array because I had not
-encountered any overflows of that array during my tests.
+Fixes: edd303ff0e9e ("crypto: ccp - Add DOWNLOAD_FIRMWARE SEV command")
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ drivers/crypto/ccp/psp-dev.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-Bart.
-
+diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+--- a/drivers/crypto/ccp/psp-dev.c
++++ b/drivers/crypto/ccp/psp-dev.c
+@@ -24,10 +24,6 @@
+ #include "sp-dev.h"
+ #include "psp-dev.h"
+ 
+-#define SEV_VERSION_GREATER_OR_EQUAL(_maj, _min)	\
+-		((psp_master->api_major) >= _maj &&	\
+-		 (psp_master->api_minor) >= _min)
+-
+ #define DEVICE_NAME		"sev"
+ #define SEV_FW_FILE		"amd/sev.fw"
+ #define SEV_FW_NAME_SIZE	64
+@@ -47,6 +43,15 @@ MODULE_PARM_DESC(psp_probe_timeout, " default timeout value, in seconds, during
+ static bool psp_dead;
+ static int psp_timeout;
+ 
++static inline bool sev_version_greater_or_equal(u8 maj, u8 min)
++{
++	if (psp_master->api_major > maj)
++		return true;
++	if (psp_master->api_major >= maj && psp_master->api_minor >= min)
++		return true;
++	return false;
++}
++
+ static struct psp_device *psp_alloc_struct(struct sp_device *sp)
+ {
+ 	struct device *dev = sp->dev;
+@@ -588,7 +593,7 @@ static int sev_ioctl_do_get_id2(struct sev_issue_cmd *argp)
+ 	int ret;
+ 
+ 	/* SEV GET_ID is available from SEV API v0.16 and up */
+-	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
++	if (!sev_version_greater_or_equal(0, 16))
+ 		return -ENOTSUPP;
+ 
+ 	if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
+@@ -651,7 +656,7 @@ static int sev_ioctl_do_get_id(struct sev_issue_cmd *argp)
+ 	int ret;
+ 
+ 	/* SEV GET_ID available from SEV API v0.16 and up */
+-	if (!SEV_VERSION_GREATER_OR_EQUAL(0, 16))
++	if (!sev_version_greater_or_equal(0, 16))
+ 		return -ENOTSUPP;
+ 
+ 	/* SEV FW expects the buffer it fills with the ID to be
+@@ -1053,7 +1058,7 @@ void psp_pci_init(void)
+ 		psp_master->sev_state = SEV_STATE_UNINIT;
+ 	}
+ 
+-	if (SEV_VERSION_GREATER_OR_EQUAL(0, 15) &&
++	if (sev_version_greater_or_equal(0, 15) &&
+ 	    sev_update_firmware(psp_master->dev) == 0)
+ 		sev_get_api_version();
+ 
