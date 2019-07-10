@@ -2,105 +2,205 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FA9C73C65
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623EBC73C65
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661EF20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562720936;
-	bh=F71BOyPnjr02173+roHGTIr/+ykJmXCEgpsxjH8h97Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lVenU4Iro27bIGpOsLxqMyQZ2AJtKglNuwECD+8aXmMfZmKbmINZ7LGaRd7zXy8r0
-	 vITy6FwhuVmsRVJD2Ic3GCwIYduiM8Y2PZ1WKBggMsKNpFVv8mgpr2R0WzI20a8FF0
-	 I5Bq2f552pixuSddFXxZXWVKo9GtwxKtIfVMyylw=
+	by mail.kernel.org (Postfix) with ESMTP id 2F4D82064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 01:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgTKjobe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfGJBIz (ORCPT
+        id S1726823AbfGJBOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Jul 2019 21:08:55 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34405 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfGJBIy (ORCPT
+        Tue, 9 Jul 2019 21:14:40 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35179 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfGJBOk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Jul 2019 21:08:54 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p17so326388ljg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 18:08:53 -0700 (PDT)
+        Tue, 9 Jul 2019 21:14:40 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y4so704422wrm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 18:14:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3Up9iZjHgNCrq6ieA7OVjWsH/10kzcc/oi8LMzBf69I=;
-        b=Rf0xOIMPoXeM5arzCpWk0X8A7YdXx/q5SGa1Od6cG77Y3DQ+U7tiaIfxjxVQrso7wv
-         RlVDVJyckSktKk5/NVoyVC5yHcdFsiyRiIigpFCbq9Qvzie6U4YZ/Xub0zDPilFL9VeL
-         h0ue94X6HQsyBTkcJmVfS7PDivZLhW2Ae2Ujk=
+        bh=MwwPgMlpib0YNxOhBeaKLTfi6njFAbVNKpSqvnQjupQ=;
+        b=lgTKjobeSutdAuf3Be1gwrRO4/Zw1Ey6aAPxUlZIB+nlmvvkex+qoSgK/qgUQzc29s
+         VWbuhlHQCSB0++Nqgxg/9J9nQnpfNGO/lFe97leaMSVrpzH/bjXM8LGS/e5UYRIOLQBO
+         unIIlS2FRMBuDnpGpUCifBQpkgLjRy1Pzoe/lwi3uvsjSku5PBW2EPUiPgdajGMtJmhS
+         l2O3vbGNs0ZCI9tCWsaeUSQkXx7Apa3SUneX07y7J+f5wQgBoIXTrR33wyRGjonLkhzo
+         rbsJbPptunq7VJS1IN4Y1LStA+LTxFw1Nvm26Gfx5fQOddOAC4qWRamLNG+wqHZ66rX+
+         gWfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3Up9iZjHgNCrq6ieA7OVjWsH/10kzcc/oi8LMzBf69I=;
-        b=Kfoo6QKlaOLKrlTpxITGsMn9HTr+FAoVS84EL2ZneyVRibxVw3L6VbozS6SRKysxOX
-         zuIOA+wI/Voo49iQwo1UswgD2GS10jl3LevW/z5KjF0edf7QWCXesK0SBjps4V238M1o
-         1phK2UsSFjPXtX0y4dhF4eHlR5ms1N37L0/CrFu9/N6fmKNCZY/R9qVbp7azNJOods/Q
-         jeMu7XovbKEOzaMgiDGnzgdexajyXIHD03ydFt+1JWVvef5g88t0yr/atAzO4ZMytlC7
-         SSnF8M8lWaMcWsXmqCbBznKHlipIlgXMxEN6tPTLtniRzaT/pBhWAhdxT21lQirpkBbz
-         eLbw==
-X-Gm-Message-State: APjAAAVaxrcr53On7BH9koaw0+qGZ0jirpXF/6ZlPswGQjnJDWEwAgZU
-        c4gvU1i+FEkNJ0KExZnJ5NYpq4vJTDc=
-X-Google-Smtp-Source: APXvYqwIgUCsbS3Nbj76VqBsANuS54NJrbctg7zcdQx7um/bsrkBoAy7Wts2Z4ChoeON8E5JsRlfzQ==
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr15006182lje.46.1562720931662;
-        Tue, 09 Jul 2019 18:08:51 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id p15sm141698lji.80.2019.07.09.18.08.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jul 2019 18:08:50 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id r9so308864ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Jul 2019 18:08:50 -0700 (PDT)
-X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr15908516ljj.156.1562720929921;
- Tue, 09 Jul 2019 18:08:49 -0700 (PDT)
+        bh=MwwPgMlpib0YNxOhBeaKLTfi6njFAbVNKpSqvnQjupQ=;
+        b=kY/Vk9QNBDl+dxCTSMU/kPBtiJB8jPXbQIUV1EL0cbs0aUnJsBqls+ODBVYll5pYnK
+         vDu/ztn33jsfGwCiIJVVY6RNcD3SJCVwGQT7Y3zvSZeUQmJKPYNVqxC1rn0hKPqCDxjU
+         BCjM1yJsUuEwqQ3hJ7PeETtskT9knSu7zkpaoe+sm8x9wYftOWdpMHs518z3t7YsBQ2f
+         638UUbpQTCrZly7cHYNn6wrWpKb3dYQAohYLV+juTqFr2lSuqaQUcQqEo6ujYF3t5LNJ
+         UA8+mM6sHKE8Waz81bLqClhp458WATxE2Cz/8zqb1CFkulLYcGw73k4aPQXmqy+bEUt5
+         c/fg==
+X-Gm-Message-State: APjAAAWgoSVFTrpLfBcdnkZXjXJ5Echkn/SvKgXEzz+03DGITpRHVqO9
+        JKEpCCx9Pl7hMC9AD+pQvzb7b//s2kjZ7tYOEwY=
+X-Google-Smtp-Source: APXvYqxB3jc5ZTe0h4/P1Sp2GkiAsAgXwHd859qS9N1zQ5LSog5Z7SFDaPiMZSJJtbrcZj1HvxeeMJ9AOTbWEe/VY+E=
+X-Received: by 2002:a5d:4e8a:: with SMTP id e10mr9368339wru.26.1562721276910;
+ Tue, 09 Jul 2019 18:14:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708162756.GA69120@gmail.com> <CAHk-=wigbHd6wXcrpH+6jnDe=e+OHFy6-KdVSUP2yU5aip-UAg@mail.gmail.com>
- <CAHk-=wgkWTtW-JWVAO0Y6s=dRgZGAaTWAsOuYaTFNJzkF+Z_Jg@mail.gmail.com>
- <CAHk-=whJtbQFHNtNG7t7y6+oEKLpjj3eSQOrr3OPCVGbMaRz-A@mail.gmail.com>
- <CAHk-=wh7NChJP+WkaDd3qCz847Fq4NdQ6z6m-VFpbr3py_EknQ@mail.gmail.com>
- <alpine.DEB.2.21.1907100023020.1758@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907100039540.1758@nanos.tec.linutronix.de> <CAHk-=wj5E=WTz3jfNFnupCPoLXDyFZdW1xgKvuuU-M1_7MEqaw@mail.gmail.com>
-In-Reply-To: <CAHk-=wj5E=WTz3jfNFnupCPoLXDyFZdW1xgKvuuU-M1_7MEqaw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 9 Jul 2019 18:08:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wghD6CzP7NxHzG4_-bAqOiad_aAohdETDTpUpyci55kfg@mail.gmail.com>
-Message-ID: <CAHk-=wghD6CzP7NxHzG4_-bAqOiad_aAohdETDTpUpyci55kfg@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/topology changes for v5.3
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+References: <20190625075227.15193-1-osalvador@suse.de> <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
+ <20190626080249.GA30863@linux> <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
+ <20190626081516.GC30863@linux> <887b902e-063d-a857-d472-f6f69d954378@redhat.com>
+ <9143f64391d11aa0f1988e78be9de7ff56e4b30b.camel@gmail.com>
+ <20190702074806.GA26836@linux> <CAC6rBskRyh5Tj9L-6T4dTgA18H0Y8GsMdC-X5_0Jh1SVfLLYtg@mail.gmail.com>
+In-Reply-To: <CAC6rBskRyh5Tj9L-6T4dTgA18H0Y8GsMdC-X5_0Jh1SVfLLYtg@mail.gmail.com>
+From:   Rashmica Gupta <rashmica.g@gmail.com>
+Date:   Wed, 10 Jul 2019 11:14:25 +1000
+Message-ID: <CAC6rBsn5Q1kEB3z2f+wuCfY+=UPWUTRi5Eqyr8GNsv9+BmmDjw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     David Hildenbrand <david@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Jiri Kosina <jkosina@suse.cz>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        pasha.tatashin@soleen.com, Jonathan.Cameron@huawei.com,
+        anshuman.khandual@arm.com, Vlastimil Babka <vbabka@suse.cz>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 5:59 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+Woops, looks like my phone doesn't send plain text emails :/
+
+On Tue, Jul 2, 2019 at 6:52 PM Rashmica Gupta <rashmica.g@gmail.com> wrote:
 >
-> On my laptop (which I am at right now), the hang is different, and
-> maybe it's similar to your ACPI hang issue. I will try that revert,
-> and at least see if that solves the laptop side.
-
-Nope, that wasn't it.  Apparently there are three different issues.
-
-I guess I'll just have to do a full bisect on the laptop too. That's
-going to take forever.
-
-                    Linus
+> On Tue, Jul 2, 2019 at 5:48 PM Oscar Salvador <osalvador@suse.de> wrote:
+>>
+>> On Tue, Jul 02, 2019 at 04:42:34PM +1000, Rashmica Gupta wrote:
+>> > Hi David,
+>> >
+>> > Sorry for the late reply.
+>> >
+>> > On Wed, 2019-06-26 at 10:28 +0200, David Hildenbrand wrote:
+>> > > On 26.06.19 10:15, Oscar Salvador wrote:
+>> > > > On Wed, Jun 26, 2019 at 10:11:06AM +0200, David Hildenbrand wrote:
+>> > > > > Back then, I already mentioned that we might have some users that
+>> > > > > remove_memory() they never added in a granularity it wasn't
+>> > > > > added. My
+>> > > > > concerns back then were never fully sorted out.
+>> > > > >
+>> > > > > arch/powerpc/platforms/powernv/memtrace.c
+>> > > > >
+>> > > > > - Will remove memory in memory block size chunks it never added
+>> > > > > - What if that memory resides on a DIMM added via
+>> > > > > MHP_MEMMAP_DEVICE?
+>> > > > >
+>> > > > > Will it at least bail out? Or simply break?
+>> > > > >
+>> > > > > IOW: I am not yet 100% convinced that MHP_MEMMAP_DEVICE is save
+>> > > > > to be
+>> > > > > introduced.
+>> > > >
+>> > > > Uhm, I will take a closer look and see if I can clear your
+>> > > > concerns.
+>> > > > TBH, I did not try to use arch/powerpc/platforms/powernv/memtrace.c
+>> > > > yet.
+>> > > >
+>> > > > I will get back to you once I tried it out.
+>> > > >
+>> > >
+>> > > BTW, I consider the code in arch/powerpc/platforms/powernv/memtrace.c
+>> > > very ugly and dangerous.
+>> >
+>> > Yes it would be nice to clean this up.
+>> >
+>> > > We should never allow to manually
+>> > > offline/online pages / hack into memory block states.
+>> > >
+>> > > What I would want to see here is rather:
+>> > >
+>> > > 1. User space offlines the blocks to be used
+>> > > 2. memtrace installs a hotplug notifier and hinders the blocks it
+>> > > wants
+>> > > to use from getting onlined.
+>> > > 3. memory is not added/removed/onlined/offlined in memtrace code.
+>> > >
+>> >
+>> > I remember looking into doing it a similar way. I can't recall the
+>> > details but my issue was probably 'how does userspace indicate to
+>> > the kernel that this memory being offlined should be removed'?
+>> >
+>> > I don't know the mm code nor how the notifiers work very well so I
+>> > can't quite see how the above would work. I'm assuming memtrace would
+>> > register a hotplug notifier and when memory is offlined from userspace,
+>> > the callback func in memtrace would be called if the priority was high
+>> > enough? But how do we know that the memory being offlined is intended
+>> > for usto touch? Is there a way to offline memory from userspace not
+>> > using sysfs or have I missed something in the sysfs interface?
+>> >
+>> > On a second read, perhaps you are assuming that memtrace is used after
+>> > adding new memory at runtime? If so, that is not the case. If not, then
+>> > would you be able to clarify what I'm not seeing?
+>>
+>> Hi Rashmica,
+>>
+>> let us go the easy way here.
+>> Could you please explain:
+>>
+>
+> Sure!
+>
+>>
+>> 1) How memtrace works
+>
+>
+>  You write the size of the chunk of memory you want into the debugfs file
+> and memtrace will attempt to find a contiguous section of memory of that size
+> that can be offlined. If it finds that, then the memory is removed from the
+> kernel's mappings. If you want a different size, then you write that to the
+> debugsfs file and memtrace will re-add the memory it first removed and then
+> try to offline and remove the a chunk of the new size.
+>
+>
+>>
+>> 2) Why it was designed, what is the goal of the interface?
+>> 3) When it is supposed to be used?
+>>
+>
+> There is a hardware debugging facility (htm) on some power chips. To use
+> this you need a contiguous portion of memory for the output to be dumped
+> to - and we obviously don't want this memory to be simultaneously used by
+> the kernel.
+>
+> At boot time we can portion off a section of memory for this (and not tell the
+> kernel about it), but sometimes you want to be able to use the hardware
+> debugging facilities and you haven't done this and you don't want to reboot
+> your machine - and memtrace is the solution for this.
+>
+> If you're curious one tool that uses this debugging facility is here:
+> https://github.com/open-power/pdbg. Relevant files are libpdbg/htm.c and src/htm.c.
+>
+>
+>> I have seen a couple of reports in the past from people running memtrace
+>> and failing to do so sometimes, and back then I could not grasp why people
+>> was using it, or under which circumstances was nice to have.
+>> So it would be nice to have a detailed explanation from the person who wrote
+>> it.
+>>
+>
+> Is that enough detail?
+>
+>>
+>> Thanks
+>>
+>> --
+>> Oscar Salvador
+>> SUSE L3
