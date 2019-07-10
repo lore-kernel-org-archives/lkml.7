@@ -2,163 +2,132 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8327C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71233C73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9662120838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4012E20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dM7LIw5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfGJIl5 (ORCPT
+        id S1727535AbfGJImT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:41:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60498 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726198AbfGJIl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:41:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 413FDAE15;
-        Wed, 10 Jul 2019 08:41:54 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 239281E3F45; Wed, 10 Jul 2019 10:41:53 +0200 (CEST)
-Date:   Wed, 10 Jul 2019 10:41:53 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Jan Kara <jack@suse.cz>, Boaz Harrosh <openosd@gmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking
-Message-ID: <20190710084153.GA962@quack2.suse.cz>
-References: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
- <20190619103838.GB32409@quack2.suse.cz>
- <20190619223756.GC26375@dread.disaster.area>
- <3f394239-f532-23eb-9ff1-465f7d1f3cb4@gmail.com>
- <20190705233157.GD7689@dread.disaster.area>
- <20190708133114.GC20507@quack2.suse.cz>
- <20190709234712.GL7689@dread.disaster.area>
+        Wed, 10 Jul 2019 04:42:19 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9818 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbfGJImS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 04:42:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d25a4e80000>; Wed, 10 Jul 2019 01:42:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 10 Jul 2019 01:42:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 10 Jul 2019 01:42:17 -0700
+Received: from [10.26.11.158] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 08:42:15 +0000
+Subject: Re: [PATCH] dmaengine: tegra210-adma: mark PM funtions as
+ __maybe_unused
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Sameer Pujar <spujar@nvidia.com>,
+        Vinod Koul <vinod.koul@intel.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190709185703.3298951-1-arnd@arndb.de>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b61434c4-12e6-0c50-79cc-ac15f19d23e6@nvidia.com>
+Date:   Wed, 10 Jul 2019 09:42:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709234712.GL7689@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190709185703.3298951-1-arnd@arndb.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562748136; bh=bi8N7CWE6lC4ARXtO4s5ldFSbTpMxdLou7FJCsAXw/g=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dM7LIw5R5ylXOhzW7mX5YFFXLcuvsULHmfWDylGOu7R2idV8m+fe5i6lVbdXziTmt
+         lqhaTZ/NWO60TlT8fC2OHRJt7dAdywrZijioqw0pAkIFfsbTVluMrFlVZOIwbenK0l
+         56ILcowl4HYCus1m+41Z9Hh35zCmZTQ2EF0ErdQbiUpUxUvT9Y3r4Zuf+JZSzG8Of4
+         765Li784TLcym31p4M5Xtn6vovxEn8nvwFK9kvc/ahuDdhu2J10a7o0pw4BcRA5l9w
+         tQGPVdqssQJNtIGNNQyXc5AV5kRojetcQg8cHOSiSdOGTJUFee/G/YInxROcNunNOw
+         M2U8whkNj7pIg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-07-19 09:47:12, Dave Chinner wrote:
-> On Mon, Jul 08, 2019 at 03:31:14PM +0200, Jan Kara wrote:
-> > I'd be really careful with nesting range locks. You can have nasty
-> > situations like:
-> > 
-> > Thread 1		Thread 2
-> > read_lock(0,1000)	
-> > 			write_lock(500,1500) -> blocks due to read lock
-> > read_lock(1001,1500) -> blocks due to write lock (or you have to break
-> >   fairness and then deal with starvation issues).
-> >
-> > So once you allow nesting of range locks, you have to very carefully define
-> > what is and what is not allowed.
-> 
-> Yes. I do understand the problem with rwsem read nesting and how
-> that can translate to reange locks.
-> 
-> That's why my range locks don't even try to block on other pending
-> waiters. The case where read nesting vs write might occur like above
-> is something like copy_file_range() vs truncate, but otherwise for
-> IO locks we simply don't have arbitrarily deep nesting of range
-> locks.
-> 
-> i.e. for your example my range lock would result in:
-> 
-> Thread 1		Thread 2
-> read_lock(0,1000)	
-> 			write_lock(500,1500)
-> 			<finds conflicting read lock>
-> 			<marks read lock as having a write waiter>
-> 			<parks on range lock wait list>
-> <...>
-> read_lock_nested(1001,1500)
-> <no overlapping range in tree>
-> <gets nested range lock>
-> 
-> <....>
-> read_unlock(1001,1500)	<stays blocked because nothing is waiting
-> 		         on (1001,1500) so no wakeup>
-> <....>
-> read_unlock(0,1000)
-> <sees write waiter flag, runs wakeup>
-> 			<gets woken>
-> 			<retries write lock>
-> 			<write lock gained>
-> 
-> IOWs, I'm not trying to complicate the range lock implementation
-> with complex stuff like waiter fairness or anti-starvation semantics
-> at this point in time. Waiters simply don't impact whether a new lock
-> can be gained or not, and hence the limitations of rwsem semantics
-> don't apply.
-> 
-> If such functionality is necessary (and I suspect it will be to
-> prevent AIO from delaying truncate and fallocate-like operations
-> indefinitely) then I'll add a "barrier" lock type (e.g.
-> range_lock_write_barrier()) that will block new range lock attempts
-> across it's span.
-> 
-> However, because this can cause deadlocks like the above, a barrier
-> lock will not block new *_lock_nested() or *_trylock() calls, hence
-> allowing runs of nested range locking to complete and drain without
-> deadlocking on a conflicting barrier range. And that still can't be
-> modelled by existing rwsem semantics....
 
-Clever :). Thanks for explanation.
-
-> > That's why in my range lock implementation
-> > ages back I've decided to treat range lock as a rwsem for deadlock
-> > verification purposes.
+On 09/07/2019 19:56, Arnd Bergmann wrote:
+> Without the CONFIG_PM_CLK dependency, we can now build this file
+> in kernels that don't have CONFIG_PM at all, resulting in a harmless
+> warning from code that was always there since it got merged:
 > 
-> IMO, treating a range lock as a rwsem for deadlock purposes defeats
-> the purpose of adding range locks in the first place. The
-> concurrency models are completely different, and some of the
-> limitations on rwsems are a result of implementation choices rather
-> than limitations of a rwsem construct.
+> drivers/dma/tegra210-adma.c:747:12: error: 'tegra_adma_runtime_resume' defined but not used [-Werror=unused-function]
+>  static int tegra_adma_runtime_resume(struct device *dev)
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/dma/tegra210-adma.c:715:12: error: 'tegra_adma_runtime_suspend' defined but not used [-Werror=unused-function]
+>  static int tegra_adma_runtime_suspend(struct device *dev)
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Mark them __maybe_unused to let the compiler silently drop
+> those two functions.
+> 
+> Fixes: 3145d73e69ba ("dmaengine: tegra210-adma: remove PM_CLK dependency")
+> Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/dma/tegra210-adma.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> index 2805853e963f..2b4be5557b37 100644
+> --- a/drivers/dma/tegra210-adma.c
+> +++ b/drivers/dma/tegra210-adma.c
+> @@ -712,7 +712,7 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
+>  	return chan;
+>  }
+>  
+> -static int tegra_adma_runtime_suspend(struct device *dev)
+> +static __maybe_unused int tegra_adma_runtime_suspend(struct device *dev)
+>  {
+>  	struct tegra_adma *tdma = dev_get_drvdata(dev);
+>  	struct tegra_adma_chan_regs *ch_reg;
+> @@ -744,7 +744,7 @@ static int tegra_adma_runtime_suspend(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static int tegra_adma_runtime_resume(struct device *dev)
+> +static __maybe_unused int tegra_adma_runtime_resume(struct device *dev)
+>  {
+>  	struct tegra_adma *tdma = dev_get_drvdata(dev);
+>  	struct tegra_adma_chan_regs *ch_reg;
+> 
 
-Well, even a range lock that cannot nest allows concurrent non-overlapping
-read and write to the same file which rwsem doesn't allow. But I agree that
-your nesting variant offers more (but also at the cost of higher complexity
-of the lock semantics).
+Thanks Arnd, but looks like Yue has beaten you to it again ;-)
 
-> In reality I couldn't care less about what lockdep can or can't
-> verify. I've always said lockdep is a crutch for people who don't
-> understand locks and the concurrency model of the code they
-> maintain. That obviously extends to the fact that lockdep
-> verification limitations should not limit what we allow new locking
-> primitives to do.
+https://www.lkml.org/lkml/2019/7/9/209
 
-I didn't say we have to constrain new locking primitives to what lockdep
-can support. It is just a locking correctness verification tool so naturally
-lockdep should be taught to what it needs to know about any locking scheme
-we come up with. And sometimes it is just too much effort which is why e.g.
-page lock still doesn't have lockdep coverage.
+Cheers
+Jon
 
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+nvpublic
