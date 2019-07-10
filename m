@@ -2,100 +2,157 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F80C74A36
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB0FC74A35
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18CC2216E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D022087F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 18:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nHTREbiy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdE1Snln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfGJS01 (ORCPT
+        id S1728281AbfGJS2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 14:26:27 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35091 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbfGJS01 (ORCPT
+        Wed, 10 Jul 2019 14:28:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45720 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfGJS2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 14:26:27 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r21so2705283qke.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 11:26:26 -0700 (PDT)
+        Wed, 10 Jul 2019 14:28:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so1617864pgp.12;
+        Wed, 10 Jul 2019 11:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=g2+6yeYN+3vI29rODOmLOhqDB3fSrrUGXJ7yMKJfWBA=;
-        b=nHTREbiykhoxsXUKbKVDSyCrN9c1C+4e+EPeTqBJfniHHpLXBTAQ5/6FJhrlG0OmNy
-         LDI2ZrHB/YWFEeYno4nlYcqMMaDxG4p4vYKjpcHX4m0wvU+VutA5sAu+1FKcIboPjp41
-         LejgcDFeqRGHyOLQu/6AQE5ocMW13bW9Apj1L5NtqlCf8ihRJuu3a3cuo6+EbaX/DnmJ
-         s3LWaYjPB56WRS2bDdv1euUVESWEecbR6ZQ5ML+GERIcgeHFPSCmtJrvsVHaB7w2/Zdc
-         cduq0R8tdGcJAstHZW75gbZNvWoWVS5SwWgfu5xj0kvrk0lUcMqvbZ71FudVk1n/0vRZ
-         cGOQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=X2wPmom3sJSwZ6VYG/6JKsbwq16BGxAUHYVA29t4WUs=;
+        b=bdE1SnlndmJmWXI4tshCAMHf1y6EjPIbK8Fbzi7N09M0t7c7CXz9jPaAF+U4zpK2Ar
+         qgCiZ/PtW4leBd9a9AxyI8AX8KAj2qjw9PES2Zr2jdM0CYFXuuMwafu1VW3XyuIX85ze
+         WyeGDguVLVu37gQ+z7B90eyFqfNkom1MP3LikG5lNXvgTOw7RM96ogRtu5S7/ndJUKBX
+         SFSf82JGBHHIEmapCMaggiqsSGmD80h/HwjFTvWjD5i1CXq8qlzCKfCl22YLtstT+vsh
+         abGOlhy9STPiO77wHf6EZUAMV63/A7eAJBWH/kg8JCzyNogW1v4N+kxJ1fDAn8+Wu7uz
+         ddfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g2+6yeYN+3vI29rODOmLOhqDB3fSrrUGXJ7yMKJfWBA=;
-        b=CgGgkINm8lsQxT0YctlpGS7thaO4u2vLpvpkyvc2SHly/je+GU/TAzKw9rTqcT1mPH
-         SdJkPCd9PJnSB/ku4dK8a+yKfNyhVukfX2bKXlk4tnXktAnlURIAGr00x+410RQ6PjYK
-         cv+ZDXT6L8zMIf1Zd1htdINP0UsYWfLRpAoYnBUt8Lw1AibiCWeyLx3WfftyyX7r7aez
-         dkMdb/lzESCArZ2/2uFc7HxKYCkeMo8TKy7C+4s0kel6T3ZYLgBdp5NR7JzkZlqWb8/p
-         MtQ6y0Czodsb2JVGwURdb6qSKeKEQZxUpsQnU9XwtrYUfvVp98lQ3BUPllDGvRPUB3l8
-         0Z6Q==
-X-Gm-Message-State: APjAAAX+gnB8G0QT28tLy4bvaKGfI7c4UXqwgkmSmPzmDcpJixnWoxOV
-        mcAuctEMNStK81SQ7UOVrVEA4g==
-X-Google-Smtp-Source: APXvYqwfZcwhFY9pJB/xMLdQlIh6iSHBKEb0/JDEEeFmpBZa/4TMmX4e2vCJC6uxFdd/4HVuFcZjsg==
-X-Received: by 2002:a37:4e8f:: with SMTP id c137mr24147053qkb.127.1562783186289;
-        Wed, 10 Jul 2019 11:26:26 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id w16sm1303926qki.36.2019.07.10.11.26.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Jul 2019 11:26:25 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hlHIO-00023S-VL; Wed, 10 Jul 2019 15:26:24 -0300
-Date:   Wed, 10 Jul 2019 15:26:24 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Bernard Metzler <bmt@zurich.ibm.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] rdma/siw: Use proper enumerated type in map_cqe_status
-Message-ID: <20190710182624.GG4051@ziepe.ca>
-References: <20190710174800.34451-1-natechancellor@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=X2wPmom3sJSwZ6VYG/6JKsbwq16BGxAUHYVA29t4WUs=;
+        b=mJhQbxV02/aZS4ZIhBRHQEWogTHEUOezzeSGhJqHTFL9MsLOlbmzrGdjRNMq4OoHid
+         x8p7NBNPgkDKsRroQ+SgbXhb/D98N5DQmCIw9/0VNdCD+BZBhfVSfFrneJE5diTiAoPM
+         cAAstayO7G4fm5MARvtbaKlOLV6+P3oCQw50OEObYhV5tu9gBugAqM47oClGvl2d16MZ
+         wKebb76nMwIXIP5oVbyCymCX2GAUGj3nTO6azCyGfu+b/vShLSOcB7ORzAKOOqPaYe7H
+         Hpm6J+wC+28/gByQzJ3658xnQtwHSLGpV7Td3GJDN7qJkvBmiggwCGf5UFS2wU/mKGzR
+         e6cg==
+X-Gm-Message-State: APjAAAVIWcVPBAzMksrxkN+KVc0WO4jd7TvNWr5sXRhhD4oFjFYHDYOW
+        tQkUfpchd5M+aYBRjWswLjM=
+X-Google-Smtp-Source: APXvYqzxVJwORPZh7pa+tFmbtMmG7GfDyUMvQifbBp9D3WGXW+RU3JFqDMMKkm/CNidWkfL1FXSk/Q==
+X-Received: by 2002:a65:454c:: with SMTP id x12mr38500524pgr.354.1562783332011;
+        Wed, 10 Jul 2019 11:28:52 -0700 (PDT)
+Received: from localhost ([2620:15c:f:fd00:4c3b:936:8dc5:a2ad])
+        by smtp.gmail.com with ESMTPSA id d16sm2943054pgb.4.2019.07.10.11.28.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 10 Jul 2019 11:28:51 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     iommu@lists.linux-foundation.org
+Cc:     linux-arm-msm@vger.kernel.org, aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Joe Perches <joe@perches.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iommu: add support for drivers that manage iommu explicitly
+Date:   Wed, 10 Jul 2019 11:28:30 -0700
+Message-Id: <20190710182844.25032-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190702202631.32148-2-robdclark@gmail.com>
+References: <20190702202631.32148-2-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710174800.34451-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:48:00AM -0700, Nathan Chancellor wrote:
-> clang warns several times:
-> 
-> drivers/infiniband/sw/siw/siw_cq.c:31:4: warning: implicit conversion
-> from enumeration type 'enum siw_wc_status' to different enumeration type
-> 'enum siw_opcode' [-Wenum-conversion]
->         { SIW_WC_SUCCESS, IB_WC_SUCCESS },
->         ~ ^~~~~~~~~~~~~~
-> 
-> Fixes: b0fff7317bb4 ("rdma/siw: completion queue methods")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/596
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/infiniband/sw/siw/siw_cq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+From: Rob Clark <robdclark@chromium.org>
 
-Weird that gcc doesn't warn on this by default..
+Avoid attaching any non-driver managed domain if the driver indicates
+that it manages the iommu directly.
 
-Applied to for-next, thanks
+This avoids a problem on devices where the bootloader takes the SMMU out
+of bypass and enables scanout, such as is the case on snapdragon aarch64
+laptops and newer snapdragon android devices.  Attaching an IDENTITY or
+DMA domain before the driver has a chance to intervene will break efifb
+scanout and start triggering iommu faults.
 
-Jason
+If the driver manages the iommu directly (as does drm/msm), it can
+shut down scanout when it is ready to take over the display, before
+attaching an UNMANAGED domain.
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+v2. Move the check into arm_smmu_attach_dev() (as I *think* this is
+    what Robin preferred; update commit msg to focus on the display
+    related issue that this solves.
+
+We also need Bjorn's patch set to inherit SMR and CB config during
+init:
+
+https://www.spinics.net/lists/arm-kernel/msg732246.html
+
+ drivers/iommu/arm-smmu.c | 11 +++++++++++
+ include/linux/device.h   |  3 ++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 1a5efa7c8767..4a80710124db 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1411,6 +1411,17 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 		return -ENXIO;
+ 	}
+ 
++	/*
++	 * If driver is going to manage iommu directly, then avoid
++	 * attaching any non driver managed domain.  There could
++	 * be already active dma underway (ie. scanout in case of
++	 * bootloader enabled display), and interfering with that
++	 * will make things go *boom*
++	 */
++	if ((domain->type != IOMMU_DOMAIN_UNMANAGED) &&
++	    dev->driver && dev->driver->driver_manages_iommu)
++		return 0;
++
+ 	/*
+ 	 * FIXME: The arch/arm DMA API code tries to attach devices to its own
+ 	 * domains between of_xlate() and add_device() - we have no way to cope
+diff --git a/include/linux/device.h b/include/linux/device.h
+index e138baabe01e..d98aa4d3c8c3 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -282,7 +282,8 @@ struct device_driver {
+ 	struct module		*owner;
+ 	const char		*mod_name;	/* used for built-in modules */
+ 
+-	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
++	bool suppress_bind_attrs:1;	/* disables bind/unbind via sysfs */
++	bool driver_manages_iommu:1;	/* driver manages IOMMU explicitly */
+ 	enum probe_type probe_type;
+ 
+ 	const struct of_device_id	*of_match_table;
+-- 
+2.20.1
+
