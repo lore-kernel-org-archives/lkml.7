@@ -2,133 +2,167 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9047C73C7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D095CC73C7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC4620838
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFC920693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 08:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xnmpTU4I"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="UCVfirEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfGJIty (ORCPT
+        id S1727586AbfGJIyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 04:49:54 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:20104 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfGJItx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 04:49:53 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x6A8nZdo002597
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 17:49:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x6A8nZdo002597
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1562748576;
-        bh=gRr2ZHUsW0batlIlf8edBpkoC6M7UhDY2/Z2A5dF2Ew=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xnmpTU4IcXS6svt7Sp0VlAPV2kVqUlLzi5fdSVKo5ncwjrjfGnO31Y1/ry2qiq+MO
-         HTyR8jI99t2xgBK3uaIKPqn9AIyBS6LHKT8WfBxtSGlUyMU4obiu0Z5C08IIjkhGCD
-         w0cEV7UqVLUlCJxf47GlLed9hQHBPAe++3oqSKDFuy/tB9Am9g1wIT2EaMtH5Gx3Dt
-         ryeIyD392ScrSRuIt0ndiHVW8qVdvkysXpEZCs6+3+VuezFHwrc5VzpUkXBTRnS3ZF
-         oeuZ9UqN7otAP3nOwS4B6F4vSv8YJzr6ZXyROzHWimX8Ow2lAcEiQd2nCTweIKID5L
-         53NYPatHHT9lQ==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id 190so983754vsf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 01:49:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAV0ekKGAz2fU+SLtzefT4v5+zZDTurm2g98A/ZNtgKH8ORUGX3f
-        DoeIv+CrOsaMRC5X7BTfuOymKuLOc0Xbj4rD6M8=
-X-Google-Smtp-Source: APXvYqzFxzkXZ2NAx0kDLHL52rsFnvrI7eVB2fACWs44a57/zNDvmjzCiZgA+le0ZccJ22O59ldz9VzzgKa9qZwZZCU=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr16648858vsl.155.1562748574672;
- Wed, 10 Jul 2019 01:49:34 -0700 (PDT)
+        Wed, 10 Jul 2019 04:54:19 -0400
+Received: from mail-eopbgr50075.outbound.protection.outlook.com ([40.107.5.75]:35623
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726695AbfGJIyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 04:54:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UjyT/+L+T/ZvR/I42bhYm8OUoAouD8gsXx3xkSetZrU=;
+ b=UCVfirEtCRwOimoF+11IGBGS84WmpGQfCawPZVQgSNv10NXACyAF9SMW6nuwcHPtFG/H8kXtYvkCf5sMmH9v2OyniwSGsjlc6NNTldg5QBJefQhGhLcX8Wt7jb55UBiJDqB3Ap0rwhKmtEOQycpPD7/Zifz6FDD0yvD2wcZUO2A=
+Received: from AM3PR05CA0141.eurprd05.prod.outlook.com (2603:10a6:207:3::19)
+ by AM0PR0502MB3972.eurprd05.prod.outlook.com (2603:10a6:208:8::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2052.18; Wed, 10 Jul
+ 2019 08:54:15 +0000
+Received: from DB5EUR03FT003.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::205) by AM3PR05CA0141.outlook.office365.com
+ (2603:10a6:207:3::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2052.18 via Frontend
+ Transport; Wed, 10 Jul 2019 08:54:15 +0000
+Authentication-Results: spf=pass (sender IP is 193.47.165.134)
+ smtp.mailfrom=mellanox.com; kalray.eu; dkim=none (message not signed)
+ header.d=none;kalray.eu; dmarc=pass action=none header.from=mellanox.com;
+Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
+ 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
+Received: from mtlcas13.mtl.com (193.47.165.134) by
+ DB5EUR03FT003.mail.protection.outlook.com (10.152.20.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2052.18 via Frontend Transport; Wed, 10 Jul 2019 08:54:14 +0000
+Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4; Wed, 10 Jul 2019 11:54:13
+ +0300
+Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Wed,
+ 10 Jul 2019 11:54:13 +0300
+Received: from [10.223.3.162] (10.223.3.162) by MTLCAS01.mtl.com (10.0.8.71)
+ with Microsoft SMTP Server (TLS) id 14.3.301.0; Wed, 10 Jul 2019 11:53:40
+ +0300
+Subject: Re: [PATCH v2] nvme: fix multipath crash when ANA desactivated
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Marta Rybczynska <mrybczyn@kalray.eu>, <kbusch@kernel.org>,
+        <axboe@fb.com>, <sagi@grimberg.me>,
+        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Samuel Jones <sjones@kalray.eu>,
+        Jean-Baptiste Riaux <jbriaux@kalray.eu>
+References: <1575872828.30576006.1562335512322.JavaMail.zimbra@kalray.eu>
+ <989987da-6711-0abc-785c-6574b3bb768c@mellanox.com>
+ <20190709212904.GB9636@lst.de>
+From:   Max Gurtovoy <maxg@mellanox.com>
+Message-ID: <0d113713-0198-0dc2-2a8f-a9fbcabbf05a@mellanox.com>
+Date:   Wed, 10 Jul 2019 11:53:40 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190617104237.2082388-1-arnd@arndb.de> <20190617112652.GB30800@fuggles.cambridge.arm.com>
- <CAK8P3a2aJNiLTyfRDqazJa2sAc-Jf-QShSZ7+4-whHSxKbLUVQ@mail.gmail.com>
- <20190617161330.GD30800@fuggles.cambridge.arm.com> <CAKv+Gu9Fh3anh6-TeDWZ+pL7rs7EBWZqvLXASRNjicGu7k+WKw@mail.gmail.com>
- <20190617164553.GI30800@fuggles.cambridge.arm.com> <20190618120259.GA31041@fuggles.cambridge.arm.com>
- <CAK8P3a2NQSm3sPcJq=6=Espa5da_L+2RNtyS=jkkzD3tx-4ehA@mail.gmail.com>
- <95d721d1-2ccc-321c-f688-15e5bb53c30b@redhat.com> <20190710081515.ffghx4kouqpsh4m3@willie-the-truck>
-In-Reply-To: <20190710081515.ffghx4kouqpsh4m3@willie-the-truck>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 10 Jul 2019 17:48:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASV6Txo-yKq+zSGiyts4cNdNwgXz0w4yFRMFJ3ozHcH7A@mail.gmail.com>
-Message-ID: <CAK7LNASV6Txo-yKq+zSGiyts4cNdNwgXz0w4yFRMFJ3ozHcH7A@mail.gmail.com>
-Subject: Re: [PATCH] arm64/sve: fix genksyms generation
-To:     Will Deacon <will@kernel.org>
-Cc:     Laura Abbott <labbott@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Julien Grall <julien.grall@arm.com>,
-        Alan Hayward <alan.hayward@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190709212904.GB9636@lst.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.223.3.162]
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(376002)(2980300002)(199004)(189003)(11346002)(7736002)(67846002)(478600001)(336012)(16526019)(26005)(65826007)(186003)(31686004)(47776003)(3846002)(446003)(316002)(2616005)(58126008)(54906003)(14444005)(50466002)(16576012)(8676002)(476003)(126002)(81156014)(70586007)(70206006)(486006)(86362001)(31696002)(6916009)(36756003)(230700001)(2906002)(6246003)(76176011)(6116002)(65956001)(65806001)(8936002)(229853002)(356004)(64126003)(5660300002)(23676004)(2486003)(305945005)(81166006)(53546011)(106002)(4326008)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0502MB3972;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c24efeae-0d16-4235-ca11-08d705142f52
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328)(7193020);SRVR:AM0PR0502MB3972;
+X-MS-TrafficTypeDiagnostic: AM0PR0502MB3972:
+X-Microsoft-Antispam-PRVS: <AM0PR0502MB3972A4DC6449927E2FD9F995B6F00@AM0PR0502MB3972.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0094E3478A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 8AVHLRJZ+EBqNXvqm95HKz+YLkEOVj24bng4j98NvFwHhqdC4CxewlJuCU0cR6dDu2U9d1//typloprPQkx74zCm6LoKmEFUxUO3aUW3SrcWpTmsnPOG8T3JrVyoGkrJG7z5HheWu1PZofHphTb8hYmFeJNjJOQuZhbJvumTQSBK3I2VhElFF22PliQM3jKKrT1rLRM2IESrD4Ywuy4hqSpj5vZrpi0RoSoU1gAcPZuEqROgsuShGm99+mu2a21/11zTLfEz6Xdl+iMsJvCnWLK8UIcAE5FV80u2iOeouL86uJy2owe6tn2Uq/LH7B/LOQBn7pPZP44KKBe9auxO+H+V98Y8UZwDq1tFvU43dWWf9iOYqFHYDAxgIcnW/iTST8aWpezYYlqk94NfBbbSg//VpuCy/qXB7t3yvfG+1Ok=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2019 08:54:14.3911
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c24efeae-0d16-4235-ca11-08d705142f52
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3972
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 5:15 PM Will Deacon <will@kernel.org> wrote:
->
-> Hi Laura, [+Masahiro]
->
-> On Tue, Jul 09, 2019 at 03:06:49PM -0400, Laura Abbott wrote:
-> > On 6/18/19 10:15 AM, Arnd Bergmann wrote:
-> > > On Tue, Jun 18, 2019 at 2:03 PM Will Deacon <will.deacon@arm.com> wrote:
-> > > >  From 6e004b8824d4eb6a4e61cd794fbc3a761b50135b Mon Sep 17 00:00:00 2001
-> > > > From: Will Deacon <will.deacon@arm.com>
-> > > > Date: Tue, 18 Jun 2019 12:56:49 +0100
-> > > > Subject: [PATCH] genksyms: Teach parse about __uint128_t built-in type
-> > > >
-> > > > __uint128_t crops up in a few files that export symbols to modules, so
-> > > > teach genksyms about it so that we don't end up skipping the CRC
-> > > > generation for some symbols due to the parser failing to spot them:
-> > > >
-> > > >    | WARNING: EXPORT symbol "kernel_neon_begin" [vmlinux] version
-> > > >    |          generation failed, symbol will not be versioned.
-> > > >    | ld: arch/arm64/kernel/fpsimd.o: relocation R_AARCH64_ABS32 against
-> > > >    |     `__crc_kernel_neon_begin' can not be used when making a shared
-> > > >    |     object
-> > > >    | ld: arch/arm64/kernel/fpsimd.o:(.data+0x0): dangerous relocation:
-> > > >    |     unsupported relocation
-> > > >
-> > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > > > Reported-by: Arnd Bergmann <arnd@arndb.de>
-> > > > Signed-off-by: Will Deacon <will.deacon@arm.com>
-> > >
-> > > Looks good to me,
-> > >
-> > > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> > >
-> > > I've added this to my randconfig build setup, replacing my earlier
-> > > patch, and will let you know if any problems with it remain.
-> > >
-> >
-> > I just hit this on 5ad18b2e60b75c7297a998dea702451d33a052ed on Linus'
-> > branch. The fix works for me (feel free to add Tested-by). Is this
-> > already queued up for Linus?
->
-> I think there's a fix queued via the kbuild tree:
->
-> https://lkml.kernel.org/r/CAK7LNAQRMnovWQA0F8A6mEqDjPxXOGM-1AHoyh1gQa367f+FqQ@mail.gmail.com
->
-> Will
 
+On 7/10/2019 12:29 AM, Christoph Hellwig wrote:
+> On Sat, Jul 06, 2019 at 01:06:44PM +0300, Max Gurtovoy wrote:
+>>> +	/* check if multipath is enabled and we have the capability */
+>>> +	if (!multipath)
+>>> +		return 0;
+>>> +	if (!ctrl->subsys || ((ctrl->subsys->cmic & (1 << 3)) != 0))
+>> shouldn't it be:
+>>
+>> if (!ctrl->subsys || ((ctrl->subsys->cmic & (1 << 3)) == 0))
+>>
+>> or
+>>
+>> if (!ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
+>>
+>>
+>> Otherwise, you don't really do any initialization and return 0 in case you have the capability, right ?
+> Yes.  FYI, my idea how to fix this would be something like:
+>
+> diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+> index a9a927677970..cdb3e5baa329 100644
+> --- a/drivers/nvme/host/multipath.c
+> +++ b/drivers/nvme/host/multipath.c
+> @@ -12,11 +12,6 @@ module_param(multipath, bool, 0444);
+>   MODULE_PARM_DESC(multipath,
+>   	"turn on native support for multiple controllers per subsystem");
+>   
+> -inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
+> -{
+> -	return multipath && ctrl->subsys && (ctrl->subsys->cmic & (1 << 3));
+> -}
+> -
+>   /*
+>    * If multipathing is enabled we need to always use the subsystem instance
+>    * number for numbering our devices to avoid conflicts between subsystems that
+> @@ -622,7 +617,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+>   {
+>   	int error;
+>   
+> -	if (!nvme_ctrl_use_ana(ctrl))
+> +	if (!multipath || !ctrl->subsys || !(ctrl->subsys->cmic & (1 << 3)))
+>   		return 0;
+>   
+>   	ctrl->anacap = id->anacap;
+> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+> index 716a876119c8..14eca76bec5c 100644
+> --- a/drivers/nvme/host/nvme.h
+> +++ b/drivers/nvme/host/nvme.h
+> @@ -485,7 +485,10 @@ extern const struct attribute_group *nvme_ns_id_attr_groups[];
+>   extern const struct block_device_operations nvme_ns_head_ops;
+>   
+>   #ifdef CONFIG_NVME_MULTIPATH
+> -bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl);
+> +static inline bool nvme_ctrl_use_ana(struct nvme_ctrl *ctrl)
+> +{
+> +	return ctrl->ana_log_buf != NULL;
+> +}
+>   void nvme_set_disk_name(char *disk_name, struct nvme_ns *ns,
+>   			struct nvme_ctrl *ctrl, int *flags);
+>   void nvme_failover_req(struct request *req);
 
-Yes, I will send a pull request shortly.
+Yes this looks good.
 
-
-
--- 
-Best Regards
-Masahiro Yamada
