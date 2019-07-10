@@ -2,134 +2,113 @@ Return-Path: <SRS0=5O2B=VH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36E7C74A21
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240E6C74A2B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7615E2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1562774127;
-	bh=qCL+I0bGVObTidwDwHaXu9MuDIyEKZp4oVrDcqJBmnE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SPChfEK8J4fHmeP1g8tIJJYFKm+TaaVrNa1uJSuipUnOT30JltuNa7Cnv2RG2d3Su
-	 6UCaCOEbHps3c8h+LqD2sAA5HSfBnPGzurz4E56SnmDX5uL/oIsmE0p9golrnjbm/F
-	 SEkhUpLp1Nu2sKs2a/G5lIzIC8Fv1ViwybdHupQY=
+	by mail.kernel.org (Postfix) with ESMTP id ECA9D2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 15:57:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="LEi6/Pje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfGJPz0 (ORCPT
+        id S1728190AbfGJP5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 11:55:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727428AbfGJPzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:55:25 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 883F5208C4;
-        Wed, 10 Jul 2019 15:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562774124;
-        bh=qCL+I0bGVObTidwDwHaXu9MuDIyEKZp4oVrDcqJBmnE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BqTAEyBoL49l6a9wlkoVxEC2QkECtLLQgg0p2FkHMetUlluZXPDwPsE2QW9d1TBqF
-         sF7c7Qnrz+MMhfdoGaZLj+erkj3gN7i8HX4bU4Ek6q9xWf40Jbjb4CUhv5T1mJDzHW
-         I1M7GeJeC4asrRo73RWTJBWK9C865hwA3GCjVKjI=
-Received: by mail-qk1-f178.google.com with SMTP id s145so2274324qke.7;
-        Wed, 10 Jul 2019 08:55:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAU/b3nCGhfig6W4zYB/E8YdFzg11ZSxE6jXDU5DZ3TSFpLsaTPT
-        kzFBAtLKAmhPZp8NX3YGVGw3Wg+51YfJH4b1ZA==
-X-Google-Smtp-Source: APXvYqwKfK396n6gL35FIM1KH5iVePKtER3VtkXQjd6pS6o1UtucpUKv3qUu8+77/xQX/zm28J4oPAu1ze3k+toJGEU=
-X-Received: by 2002:a37:a48e:: with SMTP id n136mr24536697qke.223.1562774123770;
- Wed, 10 Jul 2019 08:55:23 -0700 (PDT)
+        Wed, 10 Jul 2019 11:57:02 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33112 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727263AbfGJP5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:57:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i11so2694276edq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 08:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CZgPHxQSyDYYtNmHA3/wZ3DRhIFFkShs7w2jP3T5tpc=;
+        b=LEi6/PjejGkEIcti1eTkHdTyR2J5jxYV6psjYv6r+R4rq9PfMgiJvyz3sGPckQrQjf
+         lbugIKfybDu0Y7zKpFpaEvuHTT2l8vGEYy0HOBao0Cd4zR061ANMYJt6m/w7HHj6E1tb
+         ocYgs+QcC8JNjAUstT+ETcrq/OJtYTOLtc1b+S24v+b0gwp3Hyivo1pqM/mbRS6+5jdh
+         WnlzF7qZHETDtcyr28wnUTIMG2EIZHypwQqXV3z2p5ZjOi9Gv2nhDxwzoWBiIcs2kcrW
+         xTtxPMaM5lL20VjS6uVfPnp7Rlbf/WgAjHAi1S0bhstA9g1OCdvgp9kI3SWayKUOO6zT
+         WtmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CZgPHxQSyDYYtNmHA3/wZ3DRhIFFkShs7w2jP3T5tpc=;
+        b=Q+dBTnH8DqBK/chR23EIq6jUQwTTPOuRccMbr00C35yN3cQx9I0B6+Pa7wXXOg7e75
+         lq7P1/bk28dHwwFju6/vEpcNhtN0MwoJFwsU29zRfnf96aJVpIYXrBxoJ26K1Cbv/ztq
+         veTusLQvE4olWCLg/NkUMtprCRZUkmc+Wa5UvIQ+Gr2UgSZ6MR+Iz6VifKGi/g+Gtg+s
+         QYo1YOuY4dmmlJp84/kdu8Wxf+s0Uj7cFblsVEMPMdGA6uzyGytaoArILQHnrvi+BRQ7
+         RnC9B1khY0VYoDcoZ4Imwy9o68WSLndQaGODXXkVj8P4CPuRM5ioL7OHSfejjdunPEoX
+         Kk+g==
+X-Gm-Message-State: APjAAAXbCnOSI0YL7jZiFSW5GhP5vJwF9tL1hbD/0SdfSHas9RYuQ6vD
+        1YJp7XxqZuhhoW17IG0V6YhbYMA5VFJ5s/ybZ67zeA==
+X-Google-Smtp-Source: APXvYqw7x9BGSNLqWpKAPyh4/6mWWF6JBu/hcFz0l/xjgqeQSiFxs1kaM3mPVPaebQipBv1gm8i9kkO9aBNr+FGCS6c=
+X-Received: by 2002:a50:a4ef:: with SMTP id x44mr32799017edb.304.1562774220761;
+ Wed, 10 Jul 2019 08:57:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190703193724.246854-1-mka@chromium.org> <20190703193724.246854-6-mka@chromium.org>
- <e8fe7baf-e4e0-c713-7b93-07a3859c33c6@gmail.com> <20190703232331.GL250418@google.com>
-In-Reply-To: <20190703232331.GL250418@google.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 10 Jul 2019 09:55:12 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
-Message-ID: <CAL_JsqL_AU+JV0c2mNbXiPh2pvfYbPbLV-2PHHX0hC3vUH4QWg@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] dt-bindings: net: realtek: Add property to
- configure LED mode
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>
+References: <20190708211528.12392-1-pasha.tatashin@soleen.com>
+ <CACi5LpNGWhTnXyM8gB0Tn=682+08s-ppfDpX2SawfxMvue1GTQ@mail.gmail.com>
+ <CA+CK2bBrwBHhD-PFO_gVnDYoFi0Su6t456WNdtBWpOe4qM+oww@mail.gmail.com>
+ <2d60f302-5161-638a-76cd-d7d79e5631fe@arm.com> <CA+CK2bA40wQvX=KieE5Qg2Ny5ZyiDAAjAb9W7Phu2Ou_9r6bOA@mail.gmail.com>
+ <f9bea5bd-370a-47b5-8ad1-a30bd43d6cca@arm.com>
+In-Reply-To: <f9bea5bd-370a-47b5-8ad1-a30bd43d6cca@arm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 10 Jul 2019 11:56:50 -0400
+Message-ID: <CA+CK2bBWis8TgyOmDhVgLYrOU95Za-UhSGSB3ufsjiNDt-Zd_w@mail.gmail.com>
+Subject: Re: [v1 0/5] allow to reserve memory for normal kexec kernel
+To:     James Morse <james.morse@arm.com>
+Cc:     Bhupesh Sharma <bhsharma@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 5:23 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+On Wed, Jul 10, 2019 at 11:19 AM James Morse <james.morse@arm.com> wrote:
 >
-> Hi Florian,
+> Hi Pasha,
 >
-> On Wed, Jul 03, 2019 at 02:37:47PM -0700, Florian Fainelli wrote:
-> > On 7/3/19 12:37 PM, Matthias Kaehlcke wrote:
-> > > The LED behavior of some Realtek PHYs is configurable. Add the
-> > > property 'realtek,led-modes' to specify the configuration of the
-> > > LEDs.
-> > >
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > > Changes in v2:
-> > > - patch added to the series
-> > > ---
-> > >  .../devicetree/bindings/net/realtek.txt         |  9 +++++++++
-> > >  include/dt-bindings/net/realtek.h               | 17 +++++++++++++++++
-> > >  2 files changed, 26 insertions(+)
-> > >  create mode 100644 include/dt-bindings/net/realtek.h
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/net/realtek.txt b/Documentation/devicetree/bindings/net/realtek.txt
-> > > index 71d386c78269..40b0d6f9ee21 100644
-> > > --- a/Documentation/devicetree/bindings/net/realtek.txt
-> > > +++ b/Documentation/devicetree/bindings/net/realtek.txt
-> > > @@ -9,6 +9,12 @@ Optional properties:
-> > >
-> > >     SSC is only available on some Realtek PHYs (e.g. RTL8211E).
-> > >
-> > > +- realtek,led-modes: LED mode configuration.
-> > > +
-> > > +   A 0..3 element vector, with each element configuring the operating
-> > > +   mode of an LED. Omitted LEDs are turned off. Allowed values are
-> > > +   defined in "include/dt-bindings/net/realtek.h".
+> On 09/07/2019 14:07, Pavel Tatashin wrote:
+> >>> Enabling MMU and D-Cache for relocation  would essentially require the
+> >>> same changes in kernel. Could you please share exactly why these were
+> >>> not accepted upstream into kexec-tools?
+> >>
+> >> Because '--no-checks' is a much simpler alternative.
+> >>
+> >> More of the discussion:
+> >> https://lore.kernel.org/linux-arm-kernel/5599813d-f83c-d154-287a-c131c48292ca@arm.com/
+> >>
+> >> While you can make purgatory a fully-fledged operating system, it doesn't really need to
+> >> do anything on arm64. Errata-workarounds alone are a reason not do start down this path.
 > >
-> > This should probably be made more general and we should define LED modes
-> > that makes sense regardless of the PHY device, introduce a set of
-> > generic functions for validating and then add new function pointer for
-> > setting the LED configuration to the PHY driver. This would allow to be
-> > more future proof where each PHY driver could expose standard LEDs class
-> > devices to user-space, and it would also allow facilities like: ethtool
-> > -p to plug into that.
-> >
-> > Right now, each driver invents its own way of configuring LEDs, that
-> > does not scale, and there is not really a good reason for that other
-> > than reviewing drivers in isolation and therefore making it harder to
-> > extract the commonality. Yes, I realize that since you are the latest
-> > person submitting something in that area, you are being selected :)
+> > Thank you James. I will summaries the information gathered from the
+> > yesterday's/today's discussion and add it to the cover letter together
+> > with ARM64 tag. I think, the patch series makes sense for ARM64 only,
+> > unless there are other platforms that disable caching/MMU during
+> > relocation.
+>
+> I'd prefer not to reserve additional memory for regular kexec just to avoid the relocation.
+> If the kernel's relocation work is so painful we can investigate doing it while the MMU is
+> enabled. If you can compare regular-kexec with kexec_file_load() you eliminate the
+> purgatory part of the work.
 
-I agree.
+Relocation time is exactly the same for regular-kexec and
+kexec_file_load(). So, the relocation is indeed painful for our case.
+I am working on adding MMU enabled kernel relocation.
 
-> I see the merit of your proposal to come up with a generic mechanism
-> to configure Ethernet LEDs, however I can't justify spending much of
-> my work time on this. If it is deemed useful I'm happy to send another
-> version of the current patchset that addresses the reviewer's comments,
-> but if the implementation of a generic LED configuration interface is
-> a requirement I will have to abandon at least the LED configuration
-> part of this series.
-
-Can you at least define a common binding for this. Maybe that's just
-removing 'realtek'. While the kernel side can evolve to a common
-infrastructure, the DT bindings can't.
-
-Rob
+Pasha
