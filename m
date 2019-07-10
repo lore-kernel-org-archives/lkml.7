@@ -8,52 +8,52 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C31C73C75
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF017C73C75
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B8F20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D40D2083D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Jul 2019 07:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XFTjyNCf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RjICyuOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfGJHIo (ORCPT
+        id S1727114AbfGJHIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Jul 2019 03:08:44 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37350 "EHLO
+        Wed, 10 Jul 2019 03:08:54 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42714 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfGJHIn (ORCPT
+        with ESMTP id S1726098AbfGJHIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Jul 2019 03:08:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id g15so769116pgi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 00:08:43 -0700 (PDT)
+        Wed, 10 Jul 2019 03:08:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so757170pgb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Jul 2019 00:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=L+eKwrZa/F89dB8NfDOZ+87/z4L5EP9Qja22HRzGycY=;
-        b=XFTjyNCfLxVVIdDsJKJTxrbqVs0USy8TBcD29bfpp9mVPErgv4JI65f8wjNoJ1d6Fp
-         zy1R0cXBmn3mc2Iqdrnt9zXwcELjWa86VdCg0OlTymIOHeaCjha9Y9EJu++SFCHa8ynh
-         GOsnfmZZzgKWbwups7Zqxws4e4nhIo/XsylBE=
+        bh=opTBgfSTSFi3V1ce9YlYEnYQO/1kKdgFofPaGYJTBOY=;
+        b=RjICyuOquidt6LyqOASElFqobDNn4mo6EWt1hQsD6iwRx26+bMSTRwY0lCmMrVaHSG
+         6a47JWfUcXiJfqoCtNQ7lq7rjKXQcz2UUkE2pHMU2JgLeyFB7HyoZ+a4e8q03awEvrPl
+         4wQTV2TDpVxnBFrbqJ7OGM83LJNpTu4ZxCalU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=L+eKwrZa/F89dB8NfDOZ+87/z4L5EP9Qja22HRzGycY=;
-        b=CBDgBrwsSZVleksn2F5/EIGVOYqpeIgihz87l4fd/wRjVcmaOoWouc/C45U36DDwPf
-         PB+z2OEZjIbf2N0q+5LiwqZYWh2t5DiTRt9pK0DJFcq5WhsbxGsEZf2zRZQVZFD3Hg87
-         WYiKjgH2igOSCV8ysSfSnJ0jxopvD/R5Ah7noH0II0o2p426CRzEZ5N1JRMQ3kc1EiBO
-         ewX+LllOTfuox6pyW9IVRknv70RhEvGAzHacQAqR/KW4njIx/dNIg8IEdZhqVweLxmqL
-         HuGTqUvGjRqsyYiG+kpmEGjAxABg3sP+p66di+w16nu1ArNXNjgjYG87SJsPsev2yPnf
-         CKDw==
-X-Gm-Message-State: APjAAAVxdiCRB66UGiVmIyu1Rk/GVXLqv39+btpYYEHfiy8Ou7739qu7
-        7681Bo+RpVV1NAx1IHrJzlUAxd6Ycrg=
-X-Google-Smtp-Source: APXvYqxwHDMBAaKz1DcnINvpml/sCNo/rYrsfWAGHAyBlozKXb/VBRWr8hddVcPveycu7vIsRAPHBw==
-X-Received: by 2002:a63:2148:: with SMTP id s8mr34672466pgm.336.1562742522299;
-        Wed, 10 Jul 2019 00:08:42 -0700 (PDT)
+        bh=opTBgfSTSFi3V1ce9YlYEnYQO/1kKdgFofPaGYJTBOY=;
+        b=I7MnTbz5sniFwkqV1Mh6OwO9e552ihQ5EcKlaktUK3mYS6ZRMwTnaSsk35Sr2xjgdc
+         7CTeiK8RxIt6N58WsCBlJf6uGcQlyrzZHKAyPmAb/MxooTLFX1NBd/8d/Xzwtw7ZJw5I
+         1vaWPd1U9tQOdt6p3l0KlrdvA/3ewZFoiwbHBFkZLZPPB3CzT/ZczU3N3BpIwPKSo5K6
+         2KRQNLE4+RdO+cNcECDxIZlMjLSyNmnx4UAQWYq3UKZEIoD+B1XxVHdsuQR39VNoPKDf
+         XFawhx6adtT4M9KZO8+0us9E1cSfmH9lWDJFIrlrjq/msmdjZg2pcych5jq56eY/s6rE
+         ZfFg==
+X-Gm-Message-State: APjAAAWLLqXmW7Yo20+6MinBl41DGtnCFyJQsP2FiywA85hlds+EglR3
+        Q3fO0ho2y7XdIxKG2fQOQTCUpJlhgDc=
+X-Google-Smtp-Source: APXvYqyla6Le8Sl5C5IFq+BMbhDM8PgxLabMwmqWmWurGv0zA2QcXauHAgdORrx2hOafDqZMEhT1zA==
+X-Received: by 2002:a65:4045:: with SMTP id h5mr36503650pgp.247.1562742532604;
+        Wed, 10 Jul 2019 00:08:52 -0700 (PDT)
 Received: from localhost ([2401:fa00:1:b:e688:dfd2:a1a7:2956])
-        by smtp.gmail.com with ESMTPSA id v12sm1029001pgr.86.2019.07.10.00.08.38
+        by smtp.gmail.com with ESMTPSA id b36sm3319370pjc.16.2019.07.10.00.08.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 00:08:41 -0700 (PDT)
+        Wed, 10 Jul 2019 00:08:52 -0700 (PDT)
 From:   Cheng-Yi Chiang <cychiang@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Mark Brown <broonie@kernel.org>,
@@ -71,9 +71,9 @@ Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Mark Brown <broonie@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org,
         Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH v2 3/4] ASoC: rockchip_max98090: Add dai_link for HDMI
-Date:   Wed, 10 Jul 2019 15:07:50 +0800
-Message-Id: <20190710070751.260061-4-cychiang@chromium.org>
+Subject: [PATCH v2 4/4] ASoC: rockchip_max98090: Add HDMI jack support
+Date:   Wed, 10 Jul 2019 15:07:51 +0800
+Message-Id: <20190710070751.260061-5-cychiang@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 In-Reply-To: <20190710070751.260061-1-cychiang@chromium.org>
 References: <20190710070751.260061-1-cychiang@chromium.org>
@@ -84,187 +84,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use two dai_links. One for HDMI and one for max98090.
-With this setup, audio can play to speaker and HDMI selectively.
+In machine driver, create a jack and let hdmi-codec report jack status.
 
 Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
 ---
- sound/soc/rockchip/rockchip_max98090.c | 95 +++++++++++++++++++-------
- 1 file changed, 72 insertions(+), 23 deletions(-)
+ sound/soc/rockchip/rockchip_max98090.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-index c5fc24675a33..3617012692ea 100644
+index 3617012692ea..177c8a7ec8de 100644
 --- a/sound/soc/rockchip/rockchip_max98090.c
 +++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -41,6 +41,7 @@ static const struct snd_soc_dapm_widget rk_dapm_widgets[] = {
- 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
- 	SND_SOC_DAPM_MIC("Int Mic", NULL),
- 	SND_SOC_DAPM_SPK("Speaker", NULL),
-+	SND_SOC_DAPM_LINE("HDMI", NULL),
+@@ -15,6 +15,7 @@
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
++#include <sound/hdmi-codec.h>
+ 
+ #include "rockchip_i2s.h"
+ #include "../codecs/ts3a227e.h"
+@@ -133,6 +134,25 @@ enum {
+ 	DAILINK_HDMI,
  };
  
- static const struct snd_soc_dapm_route rk_audio_map[] = {
-@@ -52,6 +53,7 @@ static const struct snd_soc_dapm_route rk_audio_map[] = {
- 	{"Headphone", NULL, "HPR"},
- 	{"Speaker", NULL, "SPKL"},
- 	{"Speaker", NULL, "SPKR"},
-+	{"HDMI", NULL, "TX"},
- };
- 
- static const struct snd_kcontrol_new rk_mc_controls[] = {
-@@ -59,6 +61,7 @@ static const struct snd_kcontrol_new rk_mc_controls[] = {
- 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
- 	SOC_DAPM_PIN_SWITCH("Int Mic"),
- 	SOC_DAPM_PIN_SWITCH("Speaker"),
-+	SOC_DAPM_PIN_SWITCH("HDMI"),
- };
- 
- static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
-@@ -92,38 +95,63 @@ static int rk_aif1_hw_params(struct snd_pcm_substream *substream,
- 
- 	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
- 				     SND_SOC_CLOCK_OUT);
--	if (ret < 0) {
--		dev_err(codec_dai->dev, "Can't set codec clock %d\n", ret);
++static struct snd_soc_jack rk_hdmi_jack;
++
++static int rk_hdmi_init(struct snd_soc_pcm_runtime *runtime)
++{
++	struct snd_soc_card *card = runtime->card;
++	struct snd_soc_component *component = runtime->codec_dai->component;
++	int ret;
++
++	/* enable jack detection */
++	ret = snd_soc_card_jack_new(card, "HDMI Jack", SND_JACK_LINEOUT,
++				    &rk_hdmi_jack, NULL, 0);
 +	if (ret) {
-+		dev_err(cpu_dai->dev, "Can't set cpu dai clock %d\n", ret);
- 		return ret;
- 	}
- 
-+	/* HDMI codec dai does not need to set sysclk. */
-+	if (!strcmp(rtd->dai_link->name, "HDMI"))
-+		return 0;
-+
- 	ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
- 				     SND_SOC_CLOCK_IN);
--	if (ret < 0) {
--		dev_err(codec_dai->dev, "Can't set codec clock %d\n", ret);
-+	if (ret) {
-+		dev_err(codec_dai->dev, "Can't set codec dai clock %d\n", ret);
- 		return ret;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static const struct snd_soc_ops rk_aif1_ops = {
- 	.hw_params = rk_aif1_hw_params,
- };
- 
--SND_SOC_DAILINK_DEFS(hifi,
-+SND_SOC_DAILINK_DEFS(analog,
- 	DAILINK_COMP_ARRAY(COMP_EMPTY()),
- 	DAILINK_COMP_ARRAY(COMP_CODEC(NULL, "HiFi")),
- 	DAILINK_COMP_ARRAY(COMP_EMPTY()));
- 
--static struct snd_soc_dai_link rk_dailink = {
--	.name = "max98090",
--	.stream_name = "Audio",
--	.ops = &rk_aif1_ops,
--	/* set max98090 as slave */
--	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
--		SND_SOC_DAIFMT_CBS_CFS,
--	SND_SOC_DAILINK_REG(hifi),
-+SND_SOC_DAILINK_DEFS(hdmi,
-+	DAILINK_COMP_ARRAY(COMP_EMPTY()),
-+	DAILINK_COMP_ARRAY(COMP_CODEC("hdmi-audio-codec.3.auto", "i2s-hifi")),
-+	DAILINK_COMP_ARRAY(COMP_EMPTY()));
-+
-+enum {
-+	DAILINK_MAX98090,
-+	DAILINK_HDMI,
-+};
-+
-+/* max98090 and HDMI codec dai_link */
-+static struct snd_soc_dai_link rk_dailinks[] = {
-+	[DAILINK_MAX98090] = {
-+		.name = "max98090",
-+		.stream_name = "Analog",
-+		.ops = &rk_aif1_ops,
-+		/* set max98090 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+		SND_SOC_DAILINK_REG(analog),
-+	},
-+	[DAILINK_HDMI] = {
-+		.name = "HDMI",
-+		.stream_name = "HDMI",
-+		.ops = &rk_aif1_ops,
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+		SND_SOC_DAILINK_REG(hdmi),
-+	}
- };
- 
- static int rk_98090_headset_init(struct snd_soc_component *component);
-@@ -136,8 +164,8 @@ static struct snd_soc_aux_dev rk_98090_headset_dev = {
- static struct snd_soc_card snd_soc_card_rk = {
- 	.name = "ROCKCHIP-I2S",
- 	.owner = THIS_MODULE,
--	.dai_link = &rk_dailink,
--	.num_links = 1,
-+	.dai_link = rk_dailinks,
-+	.num_links = ARRAY_SIZE(rk_dailinks),
- 	.aux_dev = &rk_98090_headset_dev,
- 	.num_aux_devs = 1,
- 	.dapm_widgets = rk_dapm_widgets,
-@@ -173,27 +201,48 @@ static int snd_rk_mc_probe(struct platform_device *pdev)
- 	int ret = 0;
- 	struct snd_soc_card *card = &snd_soc_card_rk;
- 	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np_analog;
-+	struct device_node *np_cpu;
-+	struct of_phandle_args args;
- 
- 	/* register the soc card */
- 	card->dev = &pdev->dev;
- 
--	rk_dailink.codecs->of_node = of_parse_phandle(np,
--			"rockchip,audio-codec", 0);
--	if (!rk_dailink.codecs->of_node) {
-+	np_analog = of_parse_phandle(np, "rockchip,audio-codec", 0);
-+	if (!np_analog) {
- 		dev_err(&pdev->dev,
- 			"Property 'rockchip,audio-codec' missing or invalid\n");
- 		return -EINVAL;
- 	}
-+	rk_dailinks[DAILINK_MAX98090].codecs->of_node = np_analog;
-+
-+	ret = of_parse_phandle_with_fixed_args(np, "rockchip,audio-codec",
-+					       0, 0, &args);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Unable to parse property 'rockchip,audio-codec'\n");
++		dev_err(card->dev, "Can't new HDMI Jack %d\n", ret);
 +		return ret;
 +	}
 +
-+	ret = snd_soc_get_dai_name(
-+			&args, &rk_dailinks[DAILINK_MAX98090].codecs->dai_name);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to get codec dai_name\n");
-+		return ret;
-+	}
++	return hdmi_codec_set_jack_detect(component, &rk_hdmi_jack);
++}
 +
-+	np_cpu = of_parse_phandle(np, "rockchip,i2s-controller", 0);
- 
--	rk_dailink.cpus->of_node = of_parse_phandle(np,
--			"rockchip,i2s-controller", 0);
--	if (!rk_dailink.cpus->of_node) {
-+	if (!np_cpu) {
- 		dev_err(&pdev->dev,
- 			"Property 'rockchip,i2s-controller' missing or invalid\n");
- 		return -EINVAL;
+ /* max98090 and HDMI codec dai_link */
+ static struct snd_soc_dai_link rk_dailinks[] = {
+ 	[DAILINK_MAX98090] = {
+@@ -150,6 +170,7 @@ static struct snd_soc_dai_link rk_dailinks[] = {
+ 		.ops = &rk_aif1_ops,
+ 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+ 			SND_SOC_DAIFMT_CBS_CFS,
++		.init = rk_hdmi_init,
+ 		SND_SOC_DAILINK_REG(hdmi),
  	}
- 
--	rk_dailink.platforms->of_node = rk_dailink.cpus->of_node;
-+	rk_dailinks[DAILINK_MAX98090].cpus->of_node = np_cpu;
-+	rk_dailinks[DAILINK_MAX98090].platforms->of_node = np_cpu;
-+	rk_dailinks[DAILINK_HDMI].cpus->of_node = np_cpu;
-+	rk_dailinks[DAILINK_HDMI].platforms->of_node = np_cpu;
- 
- 	rk_98090_headset_dev.codec_of_node = of_parse_phandle(np,
- 			"rockchip,headset-codec", 0);
+ };
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
